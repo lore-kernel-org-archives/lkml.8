@@ -2,332 +2,386 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D454C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA57C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC65C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzoH2I2F"
+	by mail.kernel.org (Postfix) with ESMTP id E364D206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:49:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgCXRs4 (ORCPT
+        id S1727928AbgCXRtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:48:56 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38457 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727663AbgCXRs4 (ORCPT
+        Tue, 24 Mar 2020 13:49:31 -0400
+Received: from mailoutvs44.siol.net ([185.57.226.235]:41667 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727257AbgCXRtb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:48:56 -0400
-Received: by mail-wr1-f68.google.com with SMTP id s1so22635653wrv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:48:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TzOHB9g3KOGeLI2ijxAL8EBdgHfC4lrNr/2ltbuc77Y=;
-        b=UzoH2I2FTY/43x5y/+X27TaBy4MSRZk6YoxxSda9ZgsFSJJOavyd0PVOCwCFvLH2kf
-         1lwZOyArtktkS38izq82lULyNjOEUb5pCzaGZi9jYz6Dkh/tWBdF/g6qTtUI2XxnuTyf
-         iUe6lrpgdTpXcKKtWcpg+9BG5GV/WWpLAdCnCQWBKr75baAN+LE+kRIbYidhfHK8WeCJ
-         41lcg4rSKPXSVU4OP2wXo/+jKQr098kKuTCdYlR/oZt3norpZYS0TtMex4ykrJt8cVGc
-         hylCWZctBTRhgtBuZR8AJDE/EeEtlpAJeTNML1DH+USLxqkQUKu04gazc2WwrWHWkxl8
-         Uzrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TzOHB9g3KOGeLI2ijxAL8EBdgHfC4lrNr/2ltbuc77Y=;
-        b=uVXmmA4Jpn4KwOjyit+ZhtqYMlSBeEui4m9ibZIv9BVUtySaZJhIBR/bFBLKKcaAwn
-         ierDyoSeImDCcvleLbzXQmC1USqD05gWgsdFxd6f+KTQ5llBPJGEIlSna/QhTMn4GteQ
-         xd/t4TpbgoRhyaIEvnIhainWAc/9cxfPlTURKJ+0kp8DhajudP7D0wkhhfCEV/6HKC+b
-         P0hGPZ0MpIVxj4XYkxpFS4scMn4iXRVq1tS7EVCy4K1igdKamz58XK4Zt7ByO0JPs+s0
-         fbdtzvkSBlzscnx98hAa890o4ELdt9yBn+hlT5BqENKxHZ3ZXIN//MhbSGWhOyB6+x+Q
-         eA5Q==
-X-Gm-Message-State: ANhLgQ0GtF7OZ9tm400prMxTB//MmDufVgVbEd55FJlD5GBxILPFDeyW
-        XrY62BzJtZ4qlgWTgSmDATTaB386Ld98wU3feekz8Q==
-X-Google-Smtp-Source: ADFU+vv3p6YM06Db/TDNBgWIMF4qoiVsL3C4E4QOO5ns7h/8ij0/+G9aheTpeLDxHlakVbqiaj3sy5cV+cT1D6s5h/s=
-X-Received: by 2002:adf:efc9:: with SMTP id i9mr17429674wrp.23.1585072133363;
- Tue, 24 Mar 2020 10:48:53 -0700 (PDT)
+        Tue, 24 Mar 2020 13:49:31 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id C5D455203C2;
+        Tue, 24 Mar 2020 18:49:26 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id GHJdAO5FWp1p; Tue, 24 Mar 2020 18:49:26 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id 00C10524752;
+        Tue, 24 Mar 2020 18:49:25 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 8F7C45203C2;
+        Tue, 24 Mar 2020 18:49:21 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     mripard@kernel.org, wens@csie.org,
+        Roman Stratiienko <r.stratiienko@gmail.com>
+Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        Roman Stratiienko <r.stratiienko@gmail.com>
+Subject: Re: [PATCH v4 3/4] drm/sun4i: Add support for premulti/coverage blending mode handling
+Date:   Tue, 24 Mar 2020 18:49:21 +0100
+Message-ID: <20591297.EfDdHjke4D@jernej-laptop>
+In-Reply-To: <20200302103138.17916-4-r.stratiienko@gmail.com>
+References: <20200302103138.17916-4-r.stratiienko@gmail.com>
 MIME-Version: 1.0
-References: <20200319164227.87419-1-trishalfonso@google.com>
- <20200319164227.87419-3-trishalfonso@google.com> <alpine.LRH.2.21.2003241640150.30637@localhost>
-In-Reply-To: <alpine.LRH.2.21.2003241640150.30637@localhost>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Tue, 24 Mar 2020 10:48:42 -0700
-Message-ID: <CAKFsvUKog1m77u+Jx58OHCXuxNNmw=joDZ-0VZ93FT4H7s0zSQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/3] KUnit: KASAN Integration
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 9:45 AM Alan Maguire <alan.maguire@oracle.com> wrote:
->
->
-> On Thu, 19 Mar 2020, Patricia Alfonso wrote:
->
-> > Integrate KASAN into KUnit testing framework.
-> >       - Fail tests when KASAN reports an error that is not expected
-> >       - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
-> >       - Expected KASAN reports pass tests and are still printed when run
-> >       without kunit_tool (kunit_tool still bypasses the report due to the
-> >       test passing)
-> >       - KUnit struct in current task used to keep track of the current test
-> >       from KASAN code
-> >
-> > Make use of "[RFC PATCH kunit-next 1/2] kunit: generalize
-> > kunit_resource API beyond allocated resources" and "[RFC PATCH
-> > kunit-next 2/2] kunit: add support for named resources" from Alan
-> > Maguire [1]
-> >       - A named resource is added to a test when a KASAN report is
-> >        expected
-> >         - This resource contains a struct for kasan_data containing
-> >         booleans representing if a KASAN report is expected and if a
-> >         KASAN report is found
-> >
-> > [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
-> >
-> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > ---
-> >  include/kunit/test.h | 10 ++++++++++
-> >  lib/kunit/test.c     | 10 +++++++++-
-> >  lib/test_kasan.c     | 37 +++++++++++++++++++++++++++++++++++++
-> >  mm/kasan/report.c    | 33 +++++++++++++++++++++++++++++++++
-> >  4 files changed, 89 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index 70ee581b19cd..2ab265f4f76c 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -19,9 +19,19 @@
-> >
-> >  struct kunit_resource;
-> >
-> > +#ifdef CONFIG_KASAN
-> > +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
-> > +struct kunit_kasan_expectation {
-> > +     bool report_expected;
-> > +     bool report_found;
-> > +};
-> > +#endif /* CONFIG_KASAN */
-> > +
->
-> Above should be moved to mm/kasan/kasan.h I think.
->
-> >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
-> >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
-> >
-> > +void kunit_set_failure(struct kunit *test);
-> > +
->
-> Can you explain a bit more about why we need this exported?
-> I see where it's used but I'd just like to make sure I
-> understand what you're trying to do. Thanks!
->
-I need the ability to set a KUnit test failure from outside the KUnit
-code so that a test that does not expect a KASAN failure, but reaches
-the point in the KASAN code where a report is printed will properly
-fail due to this found KASAN failure.
+Hi!
 
-> >  /**
-> >   * struct kunit_resource - represents a *test managed resource*
-> >   * @data: for the user to store arbitrary data.
-> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> > index 86a4d9ca0a45..3f927ef45827 100644
-> > --- a/lib/kunit/test.c
-> > +++ b/lib/kunit/test.c
-> > @@ -10,11 +10,12 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/kref.h>
-> >  #include <linux/sched/debug.h>
-> > +#include <linux/sched.h>
-> >
-> >  #include "string-stream.h"
-> >  #include "try-catch-impl.h"
-> >
-> > -static void kunit_set_failure(struct kunit *test)
-> > +void kunit_set_failure(struct kunit *test)
-> >  {
-> >       WRITE_ONCE(test->success, false);
-> >  }
-> > @@ -237,6 +238,10 @@ static void kunit_try_run_case(void *data)
-> >       struct kunit_suite *suite = ctx->suite;
-> >       struct kunit_case *test_case = ctx->test_case;
-> >
-> > +#if (IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT))
-> > +     current->kunit_test = test;
-> > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT) */
-> > +
-> >       /*
-> >        * kunit_run_case_internal may encounter a fatal error; if it does,
-> >        * abort will be called, this thread will exit, and finally the parent
-> > @@ -590,6 +595,9 @@ void kunit_cleanup(struct kunit *test)
-> >               spin_unlock(&test->lock);
-> >               kunit_remove_resource(test, res);
-> >       }
-> > +#if (IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT))
-> > +     current->kunit_test = NULL;
->
-> As per patch 1, I'd suggest changing here and elsewhere to
-> "IS_ENABLED(CONFIG_KUNIT)".
->
-"IS_ENABLED(CONFIG_KUNIT)" does not work because KASAN is built-in so
-it can't rely on modules so this patchset relies on KUnit being
-built-in.
+Dne ponedeljek, 02. marec 2020 ob 11:31:37 CET je Roman Stratiienko 
+napisal(a):
+> Argument:
+> 
+> All information below is author's understanding of underlying processes.
+> This information was obtained from DE2.0-3.0 datasheet analysis and
+> analysis of different DRM driver source code and commit messages.
+> 
+> Input buffers could have 2 ways of holding pixel alpha channel value.
+> 1. Coverage means that in case of transparency - only alpha channel changes.
+> Example of 50% transparent white pixel: R=0xff B=0xff B=0xff A=0x7f
+> 
+> 2. Premultiply means that RGB pixel values should be dimmed proportional to
+>    alpha channel value. Alpha channel value has also to be set in this case.
+> Example of 50% transparent white pixel: R=0x7f B=0x7f B=0x7f A=0x7f
+> 
+> Userspace informs DRM/KMS which blending type frame buffer uses with
+> 'pixel blend mode' property.
+> 
+> Allwinner DE2.0 and DE3.0 have 2 block of image processing:
+> Overlay and Blending. Both should aware of blending type are used in the
+> buffer.
+> 
+> Overlay block uses this information to:
+> 1. Unify blending types if more then 1 overlay channel are used. It can
+> unify it only as premultiplied by converting coverage to premultiplied.
+> 2. Calculate correct pixel value in case of applying plane alpha.
+>    For coverage alpha only alpha channel should be affected:
+>      [Ro=Ri, Go=Gi, Bo=Bi, Ao=Ai*AGlobal]
+>    For premultiplied alpha all 4 channels should be affected:
+>      [Ro=Ri*AGlobal, Go=Gi*AGlobal, Bo=Bi*AGlobal, Ao=Ai*AGlobal]
+> 
+> Blending functional block should aware of blending type each pipe
+> channel uses. Otherwise image can't blend correctly.
+> 
+> In case we've specified premultiplied format for blending PIPE0, blender
+> converts premultiplied RGB values to original (divides by normalized Alpha).
+> In case for some reason pixel value after division exceeds 0xff, blender
+> clamps it to 0xff. [Was discovered in experimental way]
+> If image that passed through PIPE1-3 restored to coverage before mixing or
+> used in premultiplied form still require testing and out of scope of this
+> patch.
+> 
+> Implementation:
+> 
+> 1. Add blend property to UI channel
+> 2. Add blend property to VI channel in case of DE3.0 used
+> 3. Make all DE2.0 UI and DE3.0 VI overlay channels to use premultiply
+> format. Mark all blending pipes as premultiply except DE2.0 VI plane.
+> 4. If DRM plane uses coverage blending format, set blending mode register
+>    to convert it to premultiply.
 
-> > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT)*/
-> >  }
-> >  EXPORT_SYMBOL_GPL(kunit_cleanup);
-> >
-> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> > index 3872d250ed2c..cf73c6bee81b 100644
-> > --- a/lib/test_kasan.c
-> > +++ b/lib/test_kasan.c
-> > @@ -23,6 +23,43 @@
-> >
-> >  #include <asm/page.h>
-> >
-> > +#include <kunit/test.h>
-> > +
-> > +struct kunit_resource resource;
-> > +struct kunit_kasan_expectation fail_data;
-> > +
-> > +#define KUNIT_SET_KASAN_DATA(test) do { \
-> > +     fail_data.report_expected = true; \
-> > +     fail_data.report_found = false; \
-> > +     kunit_add_named_resource(test, \
-> > +                             NULL, \
-> > +                             NULL, \
-> > +                             &resource, \
-> > +                             "kasan_data", &fail_data); \
-> > +} while (0)
-> > +
-> > +#define KUNIT_DO_EXPECT_KASAN_FAIL(test, condition) do { \
-> > +     struct kunit_resource *resource; \
-> > +     struct kunit_kasan_expectation *kasan_data; \
-> > +     condition; \
-> > +     resource = kunit_find_named_resource(test, "kasan_data"); \
-> > +     kasan_data = resource->data; \
-> > +     KUNIT_EXPECT_EQ(test, \
-> > +                     kasan_data->report_expected, \
-> > +                     kasan_data->report_found); \
-> > +     kunit_put_resource(resource); \
-> > +} while (0)
-> > +
-> > +/**
-> > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
-> > + * not cause a KASAN error.
-> > + *
-> > + */
-> > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
-> > +     KUNIT_SET_KASAN_DATA(test); \
-> > +     KUNIT_DO_EXPECT_KASAN_FAIL(test, condition); \
-> > +} while (0)
-> > +
-> >  /*
-> >   * Note: test functions are marked noinline so that their names appear in
-> >   * reports.
-> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> > index 5ef9f24f566b..ef3d0f54097e 100644
-> > --- a/mm/kasan/report.c
-> > +++ b/mm/kasan/report.c
-> > @@ -32,6 +32,8 @@
-> >
-> >  #include <asm/sections.h>
-> >
-> > +#include <kunit/test.h>
-> > +
-> >  #include "kasan.h"
-> >  #include "../slab.h"
-> >
-> > @@ -455,12 +457,38 @@ static bool report_enabled(void)
-> >       return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
-> >  }
-> >
-> > +#if IS_BUILTIN(CONFIG_KUNIT)
->
-> again we could tweak this to IS_ENABLED(CONFIG_KUNIT); BTW
-> the reason we can compile kunit as a module for these tests
-> is the KASAN tests are tristate themselves. If they were
-> builtin only it wouldn't be possible to build kunit as
-> a module.
->
-> > +void kasan_update_kunit_status(struct kunit *cur_test)
-> > +{
-> > +     struct kunit_resource *resource;
-> > +     struct kunit_kasan_expectation *kasan_data;
-> > +
-> > +     if (kunit_find_named_resource(cur_test, "kasan_data")) {
-> > +             resource = kunit_find_named_resource(cur_test, "kasan_data");
-> > +             kasan_data = resource->data;
-> > +             kasan_data->report_found = true;
-> > +
-> > +             if (!kasan_data->report_expected)
-> > +                     kunit_set_failure(current->kunit_test);
-> > +             else
-> > +                     return;
-> > +     } else
-> > +             kunit_set_failure(current->kunit_test);
-> > +}
-> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> > +
-> >  void kasan_report_invalid_free(void *object, unsigned long ip)
-> >  {
-> >       unsigned long flags;
-> >       u8 tag = get_tag(object);
-> >
-> >       object = reset_tag(object);
-> > +
-> > +#if IS_BUILTIN(CONFIG_KUNIT)
->
-> same comment as above.
->
-> > +     if (current->kunit_test)
-> > +             kasan_update_kunit_status(current->kunit_test);
-> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> > +
-> >       start_report(&flags);
-> >       pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
-> >       print_tags(tag, object);
-> > @@ -481,6 +509,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
-> >       if (likely(!report_enabled()))
-> >               return;
-> >
-> > +#if IS_BUILTIN(CONFIG_KUNIT)
->
-> here too.
->
-> > +     if (current->kunit_test)
-> > +             kasan_update_kunit_status(current->kunit_test);
-> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> > +
-> >       disable_trace_on_warning();
-> >
-> >       tagged_addr = (void *)addr;
-> > --
-> > 2.25.1.696.g5e7596f4ac-goog
-> >
-> >
+Regarding 3 and 4 - do we really need to convert everything to premultiply? 
+Currently only one overlay is used in each channel, so there is no need to 
+convert coverage to premultiply if I understand datasheet correctly. Just mark 
+it accordingly in BLD premultiply control register.
 
--- 
-Best,
-Patricia
+> 
+> Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+> 
+> --
+> 
+> v4:
+> - Initial version (Depends on unmerged patches from patchset)
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  2 ++
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 33 ++++++++++++++++++-----
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.h |  5 ++++
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 36 +++++++++++++++++++++-----
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.h |  5 ++++
+>  5 files changed, 69 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> b/drivers/gpu/drm/sun4i/sun8i_mixer.h index 915479cc3077..8a18372938d5
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> @@ -70,6 +70,8 @@
+>  #define SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(n)	(0xf << ((n) << 2))
+>  #define SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(n)	((n) << 2)
+> 
+> +#define SUN8I_MIXER_BLEND_PREMULTIPLY_EN(pipe)	BIT(pipe)
+> +
+>  #define SUN8I_MIXER_BLEND_OUTCTL_INTERLACED	BIT(1)
+> 
+>  #define SUN50I_MIXER_BLEND_CSC_CTL_EN(ch)	BIT(ch)
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index 5278032567a3..dd6145f80c36
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> @@ -73,10 +73,12 @@ static void sun8i_ui_layer_enable(struct sun8i_mixer
+> *mixer, int channel, }
+> 
+>  static void sun8i_ui_layer_update_alpha(struct sun8i_mixer *mixer, int
+> channel, -					int overlay, struct 
+drm_plane *plane)
+> +					int overlay, struct 
+drm_plane *plane,
+> +					unsigned int zpos)
+>  {
+> -	u32 mask, val, ch_base;
+> +	u32 mask, val, ch_base, bld_base;
+> 
+> +	bld_base = sun8i_blender_base(mixer);
+>  	ch_base = sun8i_channel_base(mixer, channel);
+> 
+>  	mask = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_MASK |
+> @@ -84,13 +86,27 @@ static void sun8i_ui_layer_update_alpha(struct
+> sun8i_mixer *mixer, int channel,
+> 
+>  	val = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA(plane->state->alpha >> 
+8);
+> 
+> -	val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
+> -		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL :
+> -		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_COMBINED;
+> +	if (plane->state->pixel_blend_mode == DRM_MODE_BLEND_PIXEL_NONE) {
+> +		val |= SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_LAYER;
+> +	} else {
+> +		val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
+> +			
+SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL :
+> +			
+SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_COMBINED;
+> +
+> +		if (plane->state->pixel_blend_mode == 
+DRM_MODE_BLEND_COVERAGE)
+> +			val |= 
+SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_COV2PREMUL;
+> +		else
+> +			val |= 
+SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_PREMULTI;
+> +	}
+> 
+>  	regmap_update_bits(mixer->engine.regs,
+>  			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base, 
+overlay),
+>  			   mask, val);
+> +
+> +	regmap_update_bits(mixer->engine.regs,
+> +			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
+> +			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
+> +			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos));
+
+As you already figured out in previous patch [1], register values based on zpos 
+can only be properly determined in sun8i_mixer_commit(). To be honest, I would 
+like to see patch [1] to go in before this.
+
+Note: Comment is also applicable to VI layer changes.
+
+Best regards,
+Jernej
+
+[1] https://patchwork.freedesktop.org/patch/346998/
+
+>  }
+> 
+>  static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int
+> channel, @@ -280,7 +296,7 @@ static void
+> sun8i_ui_layer_atomic_update(struct drm_plane *plane,
+> sun8i_ui_layer_update_coord(mixer, layer->channel,
+>  				    layer->overlay, plane, zpos);
+>  	sun8i_ui_layer_update_alpha(mixer, layer->channel,
+> -				    layer->overlay, plane);
+> +				    layer->overlay, plane, zpos);
+>  	sun8i_ui_layer_update_formats(mixer, layer->channel,
+>  				      layer->overlay, plane);
+>  	sun8i_ui_layer_update_buffer(mixer, layer->channel,
+> @@ -361,6 +377,11 @@ struct sun8i_ui_layer *sun8i_ui_layer_init_one(struct
+> drm_device *drm, return ERR_PTR(ret);
+>  	}
+> 
+> +	drm_plane_create_blend_mode_property(&layer->plane,
+> +					     
+BIT(DRM_MODE_BLEND_PREMULTI) |
+> +					     
+BIT(DRM_MODE_BLEND_COVERAGE) |
+> +					     
+BIT(DRM_MODE_BLEND_PIXEL_NONE));
+> +
+>  	ret = drm_plane_create_zpos_property(&layer->plane, channel,
+>  					     0, plane_cnt - 
+1);
+>  	if (ret) {
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
+> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.h index e3e32ee1178d..c5136f4841bc
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
+> @@ -41,6 +41,11 @@
+>  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_OFFSET	8
+>  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
+>  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA(x)		((x) << 24)
+> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_MASK	GENMASK(16, 17)
+> +
+> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_COVERAGE		
+((0) << 16)
+> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_COV2PREMUL		
+((1) << 16)
+> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_PREMULTI		
+((2) << 16)
+> 
+>  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL		
+((0) << 1)
+>  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_LAYER		
+((1) << 1)
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index f2469b5e97ee..e6d8a539614f
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
+> @@ -66,11 +66,13 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer
+> *mixer, int channel, }
+> 
+>  static void sun8i_vi_layer_update_alpha(struct sun8i_mixer *mixer, int
+> channel, -					int overlay, struct 
+drm_plane *plane)
+> +					int overlay, struct 
+drm_plane *plane,
+> +					unsigned int zpos)
+>  {
+> -	u32 mask, val, ch_base;
+> +	u32 mask, val, ch_base, bld_base;
+> 
+>  	ch_base = sun8i_channel_base(mixer, channel);
+> +	bld_base = sun8i_blender_base(mixer);
+> 
+>  	if (mixer->cfg->is_de3) {
+>  		mask = SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK |
+> @@ -78,9 +80,18 @@ static void sun8i_vi_layer_update_alpha(struct
+> sun8i_mixer *mixer, int channel, val =
+> SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA
+>  			(plane->state->alpha >> 8);
+> 
+> -		val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) 
+?
+> -			
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL :
+> -			
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED;
+> +		if (plane->state->pixel_blend_mode == 
+DRM_MODE_BLEND_PIXEL_NONE) {
+> +			val |= 
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_LAYER;
+> +		} else {
+> +			val |= (plane->state->alpha == 
+DRM_BLEND_ALPHA_OPAQUE) ?
+> +				
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL :
+> +				
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED;
+> +
+> +			if (plane->state->pixel_blend_mode == 
+DRM_MODE_BLEND_COVERAGE)
+> +				val |= 
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_COV2PREMUL;
+> +			else
+> +				val |= 
+SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_PREMULTI;
+> +		}
+> 
+>  		regmap_update_bits(mixer->engine.regs,
+>  				   
+SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
+> @@ -93,6 +104,13 @@ static void sun8i_vi_layer_update_alpha(struct
+> sun8i_mixer *mixer, int channel, SUN8I_MIXER_FCC_GLOBAL_ALPHA
+>  					(plane->state->alpha 
+>> 8));
+>  	}
+> +
+> +	regmap_update_bits(mixer->engine.regs,
+> +			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
+> +			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
+> +			   (mixer->cfg->is_de3) ?
+> +				
+SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos) : 0);
+> +
+>  }
+> 
+>  static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int
+> channel, @@ -396,7 +414,7 @@ static void
+> sun8i_vi_layer_atomic_update(struct drm_plane *plane,
+> sun8i_vi_layer_update_coord(mixer, layer->channel,
+>  				    layer->overlay, plane, zpos);
+>  	sun8i_vi_layer_update_alpha(mixer, layer->channel,
+> -				    layer->overlay, plane);
+> +				    layer->overlay, plane, zpos);
+>  	sun8i_vi_layer_update_formats(mixer, layer->channel,
+>  				      layer->overlay, plane);
+>  	sun8i_vi_layer_update_buffer(mixer, layer->channel,
+> @@ -504,6 +522,12 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct
+> drm_device *drm, }
+>  	}
+> 
+> +	if (mixer->cfg->is_de3)
+> +		drm_plane_create_blend_mode_property
+> +			(&layer->plane, BIT(DRM_MODE_BLEND_PREMULTI) 
+|
+> +			 BIT(DRM_MODE_BLEND_COVERAGE) |
+> +			 BIT(DRM_MODE_BLEND_PIXEL_NONE));
+> +
+>  	ret = drm_plane_create_zpos_property(&layer->plane, index,
+>  					     0, plane_cnt - 
+1);
+>  	if (ret) {
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h index 48c399e1c86d..a1cf0ff16543
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> @@ -43,6 +43,11 @@
+>  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_MASK	GENMASK(2, 1)
+>  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
+>  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(x)	((x) << 24)
+> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_MASK	GENMASK(16, 17)
+> +
+> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_COVERAGE		
+((0) << 16)
+> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_COV2PREMUL	((1) << 16)
+> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_PREMULTI		
+((2) << 16)
+> 
+>  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL	((0) << 1)
+>  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_LAYER	((1) << 1)
+
+
+
+
