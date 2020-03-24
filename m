@@ -2,91 +2,109 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6788C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C798C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC56205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbrZCbzm"
+	by mail.kernel.org (Postfix) with ESMTP id D59E9205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585040791;
+	bh=gYVo3vXUCpPxsNjxo+ialPZllvTngSepFgiVoyRn2Is=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MzXUi0xI1U/14CcPOWE8OWAja3PNyCzOdbxpussmU9Ks8Id9m73HKqJkv/8Z4aqYx
+	 c0x6l5Ep8Z12Mdt8l6o46vrmyucqdkU5XwrsubySG1n3tqFqlmyPwDgyTidJX0knK+
+	 oWucHGzYmLWIKSYbmjYClfToDbfOocg1xlHprRgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgCXJGZ (ORCPT
+        id S1727129AbgCXJGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:06:25 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42865 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgCXJGY (ORCPT
+        Tue, 24 Mar 2020 05:06:30 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:58977 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgCXJGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:06:24 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q19so17673432ljp.9
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uXJW3NYqkzBJPg9G4K5LGYBd3XGQpGvoVNtbcm5Oumc=;
-        b=LbrZCbzmZx+Kfb1Pm57HvFHXuRgH444WCs3KnlNJ9YLTcdWzcACe0XYOMLFNxSnkVH
-         wN88biDhrK+6HtUJj35VD4dFzg9cGhbGQzAhpXmOrRsqZITX0hTej20qj+VRoR4uNBfZ
-         3tUJpYkAFikVpIS6Bp8KePAb0Bq5MOTC1YBDjTrdFWYIi4okAdmrkjf7eH+cDjfvswnY
-         eNJfCdKTpTYuGH9iE99z6qcWe86ldjM8DxZknJTAJcGlNvFpAvX0Pfg/dQO7bRVTt3WB
-         AbQPQpSOS9CCHsoTsEYTkgwyICLIzP9k6ivxee5YATXOa10Axoo/TbZqZvmtGqKAQxpo
-         32Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uXJW3NYqkzBJPg9G4K5LGYBd3XGQpGvoVNtbcm5Oumc=;
-        b=ZHZYMEycSvXlh1SYuEa83numRzWQ4ztkYxWhGgi3YuZvOMCb1a0AkAmYVe6Q3UzLHH
-         o2gacF8tIMMcgoriiVmvxsyVaf8pYmTOgMSj53cnU1Ki7d0ZGAW2bDgXho195uXMtCJo
-         O/ZZCH2j0ZiuaujZvscE8qTeLdsDtFin9Y0IZ2ZWzPV6MCrVxH1x1R0AYOQRQ6u5YZc/
-         JxhrX5nJl8PPKDWR855KFkHarsY7A9YQTP8kU1qvZig4wC7GiEutuHXJ44H/MMhfACKS
-         7spv7cCfAhW+sfdqQbnOdE0MNdzmyre8NS2ieLh64eyuiBhrGgdM0YdYpKHw70vddIY9
-         Mfwg==
-X-Gm-Message-State: ANhLgQ0CYOasTtnTwXfETIpAmKANiD3GOXq29quJQyB6AL/iqMWD6udN
-        a3VvOtCgXZYaOkPTRUABPLbhZVykVyPMe+Wo+OXCxQ==
-X-Google-Smtp-Source: ADFU+vsS0Vgh95i3gLQkXN72OAT1r7M91nH8bLgfI97o39Kb3z7Gj4YEOvUgl0V1KX45mkYxQ/82vB1+XBwxrugyzW4=
-X-Received: by 2002:a2e:8ecf:: with SMTP id e15mr17140251ljl.223.1585040782184;
- Tue, 24 Mar 2020 02:06:22 -0700 (PDT)
+        Tue, 24 Mar 2020 05:06:30 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id 02O96OYB016945
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 18:06:25 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com 02O96OYB016945
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585040785;
+        bh=qOMGdUkveaVDXO2a8tz7KDZMeyMjPwlo2zkk9aWn2yk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=abGPExP4D1sYBI7tPhEZcdatkhXRKqNWlNd7xPenlzv8y2Vn6rzO8UoOAVHb+IG5g
+         glzcLqemGnSi9Wk09pGESHDhNS7m+NIch8FbmBu0bSijii7+ciTWysQ6YOHULWeQHw
+         W0a+oYGxrYcJmEb62rrbzLkEY15/ZXt8D4F8D+gwLyF5URLGelpDNt+08xi5bHeEfT
+         foFrk5p2mwogfea59ZWytYhm3xX63WcyEOYU1+KXarswWYPxUATxJYjmEAlO/Jz0uw
+         eU5qA1VIIy/TbJ60Vb1K8d9Y2l9nX/hJbTSh73rJZfDhYURpCJ5Xf7/sH7n42uwKfA
+         yndAMBaTfdgOw==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id r47so5995168uad.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:06:25 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1aObmZgKC1VTy1rZMlK0xkfOb6G/8hCbfljXQviRFW+GGDQfb9
+        euBLxHpG1y2Z463fk1fmnYsuFvBCOw0n5dwkqEo=
+X-Google-Smtp-Source: ADFU+vtTr9ggPn7FesvFuHnglv5MtvnxnuDVGKuKqUPW04U7K+2TYBqG5kpqPNh3Go/OGTDteyzcCatZgbB4q1/WETc=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr16446308uar.109.1585040784226;
+ Tue, 24 Mar 2020 02:06:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200323184501.5756-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200323184501.5756-1-lukas.bulwahn@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 24 Mar 2020 10:06:10 +0100
-Message-ID: <CACRpkdYUURewhao=uDbKOmn2OnhBN6G6qnjUXgN2OBH_w_u2Qw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust entry to ICST clocks YAML schema creation
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200323021053.17319-1-masahiroy@kernel.org>
+In-Reply-To: <20200323021053.17319-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 24 Mar 2020 18:05:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARf0VwM309LsT_HaoF1Jq4Dx0XuFCAOOSr6yHXw50bR9g@mail.gmail.com>
+Message-ID: <CAK7LNARf0VwM309LsT_HaoF1Jq4Dx0XuFCAOOSr6yHXw50bR9g@mail.gmail.com>
+Subject: Re: [PATCH] drm/i915: remove always-defined CONFIG_AS_MOVNTDQA
+To:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        intel-gfx@lists.freedesktop.org
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 7:45 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+Hi i915 maintainers,
 
-> Commit 78c7d8f96b6f ("dt-bindings: clock: Create YAML schema for ICST
-> clocks") transformed arm-integrator.txt into arm,syscon-icst.yaml, but did
-> not adjust the reference to that file in the ARM INTEGRATOR, VERSATILE AND
-> REALVIEW SUPPORT entry in MAINTAINERS.
->
-> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
->
->   warning: no file matches \
->   F: Documentation/devicetree/bindings/clock/arm-integrator.txt
->
-> Update the file entry in MAINTAINERS to the new transformed yaml file.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-Thanks!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Mon, Mar 23, 2020 at 11:12 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> CONFIG_AS_MOVNTDQA was introduced by commit 0b1de5d58e19 ("drm/i915:
+> Use SSE4.1 movntdqa to accelerate reads from WC memory").
+>
+> We raise the minimal supported binutils version from time to time.
+> The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
+> required binutils version to 2.21").
+>
+> I confirmed the code in $(call as-instr,...) can be assembled by the
+> binutils 2.21 assembler and also by Clang's integrated assembler.
+>
+> Remove CONFIG_AS_MOVNTDQA, which is always defined.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
 
-Yours,
-Linus Walleij
+
+Please discard this.
+
+I decided to fold this (10/16) into the following big series
+because I was suggested to do so.
+
+https://lore.kernel.org/patchwork/project/lkml/list/?series=435391
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
