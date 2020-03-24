@@ -2,182 +2,177 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A7EC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BDF0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620F720870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CAF20936
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Ca64qgUo"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="pT25pjC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgCXLwb (ORCPT
+        id S1727348AbgCXLzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:52:31 -0400
-Received: from mta-02.yadro.com ([89.207.88.252]:35964 "EHLO mta-01.yadro.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727400AbgCXLwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:52:31 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-01.yadro.com (Postfix) with ESMTP id EFA3241286;
-        Tue, 24 Mar 2020 11:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
-        content-transfer-encoding:mime-version:user-agent:content-type
-        :content-type:organization:references:in-reply-to:date:date:from
-        :from:subject:subject:message-id:received:received:received; s=
-        mta-01; t=1585050747; x=1586865148; bh=r/+JpB/tzVggc5+uUHeVaa6fh
-        /sE674WIfm1mQzEXGE=; b=Ca64qgUokGK2sYLawspct1XYaPuroDblVruX3BjtG
-        s/bWrsVasOqeFifGlhcXXYeyBR7+Y03KBxOwUTNqh65RgPkdxYCRZBZ9hdFOOZIn
-        Bpb01eb6sFlx0VpvgNi8EnP45mAtJxrZ654Bt9qIV3L1AlzXrPaC1G5+/voM0nEk
-        gc=
-X-Virus-Scanned: amavisd-new at yadro.com
-Received: from mta-01.yadro.com ([127.0.0.1])
-        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lmXVjV-HORA3; Tue, 24 Mar 2020 14:52:27 +0300 (MSK)
-Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Postfix) with ESMTPS id 1286441259;
-        Tue, 24 Mar 2020 14:52:27 +0300 (MSK)
-Received: from localhost.localdomain (10.199.1.182) by
- T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
- 15.1.669.32; Tue, 24 Mar 2020 14:52:27 +0300
-Message-ID: <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
-Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 24 Mar 2020 14:52:30 +0300
-In-Reply-To: <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com>
-         <20200323103926.21271-3-i.mikhaylov@yadro.com>
-         <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
-Organization: YADRO
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
+        Tue, 24 Mar 2020 07:55:45 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34749 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727227AbgCXLzo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:55:44 -0400
+Received: by mail-qt1-f196.google.com with SMTP id 10so14642683qtp.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w1YWm4F/uaQ5OYqNJamoxbnrEIFgzKhIqyElOppFU5I=;
+        b=pT25pjC8buxYmrlihdNvLu+wRRYwjgGQrAyYVoKbCfUxBGdR12W1egcMG9e4xz3YtL
+         iRNrD87Us1LrJS0Mns/670+/pV2oYj3vpLVBhbs+x06bwDfPkQ9ENan/4x7Fwkf2NQw8
+         MqW0lEC1xz+kRVUOEymctRt+r5x2KjtT3102m2w5xfryGLJiwJ4GWWiKQq26rV43f3QR
+         oIHpCDCaz09ZRgBWHeucaVDMXTHbz8Gxiaz1tACsnHZTllZtmKSWVLv6LSNKgTAjFlkr
+         19uDaOv1Bw2C14v0UsFV2pL55FtI81uT4URanBCJ1A9PFbaQM7E2/gKSvyxDLBxcZpLd
+         50sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w1YWm4F/uaQ5OYqNJamoxbnrEIFgzKhIqyElOppFU5I=;
+        b=IilRwS/t6MCb+qPhBSTo3B6S8OqCdzE3X+ZDbzbu1AtrTstU5HHSoDOF164MqAXuU6
+         /DMyYaP8MwCjOtug6G4/RhDYhIErVx01AcIBobwNiXl+m/oMkPxABF7NvqCNLkoSQ8I9
+         i+mbw3xaMzdF2KypOXhznkBx7WR3q1u3ER1OrI/uhtLvCZcgLOeh+kaUACWdgzGNDHyu
+         T50yZYpNIJkd9JJyKCVN8t4K3DCUH6ohzH4JEu/tO9IeUVi2x1L14XlRMmG7BPSKAsYz
+         xGAv1PzdvMeB/VFSYDRPbM366kwc9y2Lwm+QfG/4cU8hLVrhm90TShSxbCG4R/hbK9qb
+         Qw9w==
+X-Gm-Message-State: ANhLgQ3ZB4e7xsZiBN+yFKvI4QWZ8wpDWt13JJn5tdtRAQuD2DI2ckfv
+        R9pMDpoE8EsnDHDpMDRFFBRD6Q==
+X-Google-Smtp-Source: ADFU+vtqQmsl96/BHuBLkeo81EPEC4/F6MmK+fNUA2yXeLXS6wRo/nyPq47akLBUzP+GcH5YLso85g==
+X-Received: by 2002:ac8:184f:: with SMTP id n15mr25478318qtk.371.1585050943209;
+        Tue, 24 Mar 2020 04:55:43 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id v75sm13301271qkb.22.2020.03.24.04.55.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Mar 2020 04:55:42 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jGi9l-00010Q-R6; Tue, 24 Mar 2020 08:55:41 -0300
+Date:   Tue, 24 Mar 2020 08:55:41 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+Cc:     Mike Kravetz <mike.kravetz@oracle.com>, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        arei.gonglei@huawei.com, weidong.huang@huawei.com,
+        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+Message-ID: <20200324115541.GH20941@ziepe.ca>
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <20200323160955.GY20941@ziepe.ca>
+ <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
+ <20200323180706.GC20941@ziepe.ca>
+ <88698dd7-eb87-4b0b-7ba7-44ef6eab6a6c@oracle.com>
+ <20200323225225.GF20941@ziepe.ca>
+ <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.199.1.182]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-02.corp.yadro.com (172.17.10.102)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-23 at 14:10 +0200, Andy Shevchenko wrote:
-> On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> > Proximity sensor driver based on light/vcnl4000.c code.
-> > For now supports only the single on-demand measurement.
+On Tue, Mar 24, 2020 at 10:37:49AM +0800, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
+> 
+> 
+> On 2020/3/24 6:52, Jason Gunthorpe wrote:
+> > On Mon, Mar 23, 2020 at 01:35:07PM -0700, Mike Kravetz wrote:
+> >> On 3/23/20 11:07 AM, Jason Gunthorpe wrote:
+> >>> On Mon, Mar 23, 2020 at 10:27:48AM -0700, Mike Kravetz wrote:
+> >>>
+> >>>>>  	pgd = pgd_offset(mm, addr);
+> >>>>> -	if (!pgd_present(*pgd))
+> >>>>> +	if (!pgd_present(READ_ONCE(*pgd)))
+> >>>>>  		return NULL;
+> >>>>>  	p4d = p4d_offset(pgd, addr);
+> >>>>> -	if (!p4d_present(*p4d))
+> >>>>> +	if (!p4d_present(READ_ONCE(*p4d)))
+> >>>>>  		return NULL;
+> >>>>>  
+> >>>>>       pud = pud_offset(p4d, addr);
+> >>>>
+> >>>> One would argue that pgd and p4d can not change from present to !present
+> >>>> during the execution of this code.  To me, that seems like the issue which
+> >>>> would cause an issue.  Of course, I could be missing something.
+> >>>
+> >>> This I am not sure of, I think it must be true under the read side of
+> >>> the mmap_sem, but probably not guarenteed under RCU..
+> >>>
+> >>> In any case, it doesn't matter, the fact that *p4d can change at all
+> >>> is problematic. Unwinding the above inlines we get:
+> >>>
+> >>>   p4d = p4d_offset(pgd, addr)
+> >>>   if (!p4d_present(*p4d))
+> >>>       return NULL;
+> >>>   pud = (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
+> >>>
+> >>> According to our memory model the compiler/CPU is free to execute this
+> >>> as:
+> >>>
+> >>>   p4d = p4d_offset(pgd, addr)
+> >>>   p4d_for_vaddr = *p4d;
+> >>>   if (!p4d_present(*p4d))
+> >>>       return NULL;
+> >>>   pud = (pud_t *)p4d_page_vaddr(p4d_for_vaddr) + pud_index(address);
+> >>>
+> >>
+> >> Wow!  How do you know this?  You don't need to answer :)
 > > 
-> > The VCNL3020 is a fully integrated proximity sensor. Fully
-> > integrated means that the infrared emitter is included in the
-> > package. It has 16-bit resolution. It includes a signal
-> > processing IC and features standard I2C communication
-> > interface. It features an interrupt function.
+> > It says explicitly in Documentation/memory-barriers.txt - see
+> > section COMPILER BARRIER:
+> > 
+> >  (*) The compiler is within its rights to reorder loads and stores
+> >      to the same variable, and in some cases, the CPU is within its
+> >      rights to reorder loads to the same variable.  This means that
+> >      the following code:
+> > 
+> >         a[0] = x;
+> >         a[1] = x;
+> > 
+> >      Might result in an older value of x stored in a[1] than in a[0].
+> > 
+> > It also says READ_ONCE puts things in program order, but we don't use
+> > READ_ONCE inside pud_offset(), so it doesn't help us.
+> > 
+> > Best answer is to code things so there is exactly one dereference of
+> > the pointer protected by READ_ONCE. Very clear to read, very safe.
+> > 
+> > Maybe Longpeng can rework the patch around these principles?
+> > 
+> Thanks Jason and Mike, I learn a lot from your analysis.
 > 
-> Thank you for a patch, my comments below.
-> 
-> > Datasheet available at:
-> > http://www.vishay.com/docs/84150/vcnl3020.pdf
-> 
-> I'm thinking that we may simple introduce new tag, called Datesheet:
-> to put such links.
-> 
-> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
-> 
-> ...
-> 
-> >  obj-$(CONFIG_SRF08)            += srf08.o
-> >  obj-$(CONFIG_SX9500)           += sx9500.o
-> >  obj-$(CONFIG_VL53L0X_I2C)      += vl53l0x-i2c.o
-> > +obj-$(CONFIG_VCNL3020)         += vcnl3020.o
-> 
-> Perhaps keep ordered?
+> So... the patch should like this ?
 
-Oops.
+Yes, the pattern looks right
 
-> 
-> ...
-> 
-> > +static int32_t vcnl3020_init(struct vcnl3020_data *data)
-> 
-> int32_t...
-> 
-> > +{
-> > +       s32 rc;
-> 
-> ...s32?!
-> 
-> Applies to entire code.
+The commit message should reference the above section of COMPILER
+BARRIER and explain that de-referencing the entries is a data race, so
+we must consolidate all the reads into one single place.
 
-checkpatch.pl --strict doesn't show anything bad in it but I can change from
-int32_t/s32 into int easily, it's not a problem for me.
+Also, since CH moved all the get_user_pages_fast code out of the
+arch's many/all archs can drop their arch specific version of this
+routine. This is really just a specialized version of gup_fast's
+algorithm..
 
-> 
-> > +       u32 led_current;
-> > +       struct device *dev = &data->client->dev;
-> 
-> Reversed xmas tree order looks better.
-> 
-> > +       rc = i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
-> 
-> Can you use regmap I²C API?
-> 
+(also the arch versions seem different, why do some return actual
+ ptes, not null?)
 
-That's a nice idea.
-
-> ...
-> 
-> > +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-> > +                data->rev);
-> 
-> Noise.
-
-Doesn't it help to determine the presence of driver to a common user?
-
-> 
-> > +               goto out;
-> > +
-> > +       return rc;
-> > +out:
-> > +       devm_iio_device_free(&client->dev, indio_dev);
-> > +       return rc;
-> 
-> Managed resources are exactly for this not to be appeared in the code.
-
-I can do something like this:
-return devm_iio_device_register(&client->dev, indio_dev);
-
-Would it suffice?
-
-> 
-> > +}
-> 
-> ...
-> 
-> > +static const struct of_device_id vcnl3020_of_match[] = {
-> > +       {
-> > +               .compatible = "vishay,vcnl3020",
-> > +       },
-> 
-> Missed terminator. How did you test this?
-
-All works fine with real hw, I'll add terminator.
-Agree with everything else.
-
-Thanks. 
-
+Jason
