@@ -2,204 +2,129 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC12C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FD4C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F349820B80
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:23:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A712080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eldXL0yS"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P5IX6jxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgCXWXe (ORCPT
+        id S1728365AbgCXWYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:23:34 -0400
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:33228 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727747AbgCXWXd (ORCPT
+        Tue, 24 Mar 2020 18:24:21 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:52796 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728094AbgCXWYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:23:33 -0400
-Received: by mail-yb1-f195.google.com with SMTP id p196so125500ybc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IVSbSvfz1gZI9ivjqElu8FogAPNCky/2IShtkcLGE5c=;
-        b=eldXL0yS3Q3EDVEFAKBWhmWQw023zxMm5bk0EQYWJsHN0RXHhZkuhnruXptdlHs7gR
-         axVsJylivgh7YStpxeALbgVusM2S9A8YyJ18r0GfFWAuT/Ah/8WIGyTp9uZXI3LLW0oU
-         snjF9CufYzyZnOwnkDuD1Z5vsQNj02Z1tCH2nLz5SkQQqPu0353kKUIaHuAvAx8HaEp4
-         OjDzPGmYCMFh0NZayPZfvcqkugb9bIKHE5tVRJRJ18cjOhk6UwS37s6mSMg0FVlUDUSa
-         fpVXSPzgEVwg4RcT+pRmEHZ13JEeqx6M7vEMrwQwYR3ql4XSpCe3WKbwgFzdh9fLX7OU
-         V5ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IVSbSvfz1gZI9ivjqElu8FogAPNCky/2IShtkcLGE5c=;
-        b=FvBUMnp1eJ0oHQML16Ivl7hbODnOyI/5zcqmHuohrxGBbDVwtzdHwR0wRuFoA8ruOl
-         60kubOImUQeE3IekGUidlzblBEbU2lh1BOW1IJs2gsT7zoMnTg3BtEnopHexuqxCPMVo
-         r/uvBwrbWBe753Wu6AlRCQPYPjnlBLm1PciRLyvGa0pZ2JPybflUe43s5fHzIAUQSa2W
-         uBzyc7b4jTrCYLpwA8YsrfvHlCrDWvgXk2vnMIbqAq0Z6WcCW15cIUVamcOBowEbOyfF
-         Ljc7p1HynsMTVaTOECN909NhajQvqidyYrMmwu3CuNdb03eBYJK0xHTTGJG9WWwClfCB
-         UReA==
-X-Gm-Message-State: ANhLgQ3Hr+9KgtrA8fN4X+9P+znZ5FpV5B6Fz7JFBqbw8mwLCk4b4T7Q
-        UGb5GTZ6ccxH8+n+3S86zt2NNXHvHGdRl57WAkMmCQ==
-X-Google-Smtp-Source: ADFU+vvtHPA1BUZ9RZvFsr3GPm+xhQ5DwpJJ71dQ3GblWeF3v+joWD70McIxrAasQibK6I3x2vtnBAqabGB4crXMU58=
-X-Received: by 2002:a25:a4c5:: with SMTP id g63mr773676ybi.318.1585088611639;
- Tue, 24 Mar 2020 15:23:31 -0700 (PDT)
+        Tue, 24 Mar 2020 18:24:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585088660;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=G8nN1RDTdKYi6NthCsAuttkRiEIYGf9wul0Mc+P97qw=;
+        b=P5IX6jxj/2xbskInhzUo5lpObzVNPCocL7nvMKq6e76g1Or6GCnR3Og0B1BG1Mn/2AuikL
+        KAoTSuZycXdEA1Wm+ZA5Ugg6Tkdxgpy5XcQrUHCVEeU5wd6HbOaBtZ4Bq43jrLAuzj+U3N
+        pOWhv1+o36xSH0wdy7RSBWiHg7XlVzg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-RFhOdzFxMaesDO5F0xBetw-1; Tue, 24 Mar 2020 18:24:12 -0400
+X-MC-Unique: RFhOdzFxMaesDO5F0xBetw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0776D190B2A1;
+        Tue, 24 Mar 2020 22:24:11 +0000 (UTC)
+Received: from treble (unknown [10.10.119.253])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6CA8D5C1B2;
+        Tue, 24 Mar 2020 22:24:09 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 17:24:06 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Tree for Mar 18 (objtool)
+Message-ID: <20200324222406.zg6hylzqux353jhq@treble>
+References: <20200318182352.2dgwwl4ugbwndi4x@treble>
+ <20200318200542.GK20730@hirez.programming.kicks-ass.net>
+ <20200319173101.wufpymi7obhqgoqd@treble>
+ <20200319173326.oj4qs24x4ly5lrgt@treble>
+ <20200319174028.azzaisoj5gbss7zk@treble>
+ <20200319174550.4wpx4j357nw67nzz@treble>
+ <20200320082613.GA20696@hirez.programming.kicks-ass.net>
+ <202003201131.9B688BC@keescook>
+ <20200324164433.qusyu5h7ykx3f2bu@treble>
+ <202003241105.4707F983@keescook>
 MIME-Version: 1.0
-References: <20200324144754.v2.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
-In-Reply-To: <20200324144754.v2.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 24 Mar 2020 15:23:20 -0700
-Message-ID: <CABXOdTf4kVgcp2AGWe6qvbhZbDjQ++30ASr1R9gt77hjRrcBpQ@mail.gmail.com>
-Subject: Re: [PATCH v2] bdev: Reduce time holding bd_mutex in sync in blkdev_close()
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Salman Qazi <sqazi@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-fsdevel@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202003241105.4707F983@keescook>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 2:48 PM Douglas Anderson <dianders@chromium.org> wrote:
->
-> While trying to "dd" to the block device for a USB stick, I
-> encountered a hung task warning (blocked for > 120 seconds).  I
-> managed to come up with an easy way to reproduce this on my system
-> (where /dev/sdb is the block device for my USB stick) with:
->
->   while true; do dd if=/dev/zero of=/dev/sdb bs=4M; done
->
-> With my reproduction here are the relevant bits from the hung task
-> detector:
->
->  INFO: task udevd:294 blocked for more than 122 seconds.
->  ...
->  udevd           D    0   294      1 0x00400008
->  Call trace:
->   ...
->   mutex_lock_nested+0x40/0x50
->   __blkdev_get+0x7c/0x3d4
->   blkdev_get+0x118/0x138
->   blkdev_open+0x94/0xa8
->   do_dentry_open+0x268/0x3a0
->   vfs_open+0x34/0x40
->   path_openat+0x39c/0xdf4
->   do_filp_open+0x90/0x10c
->   do_sys_open+0x150/0x3c8
->   ...
->
->  ...
->  Showing all locks held in the system:
->  ...
->  1 lock held by dd/2798:
->   #0: ffffff814ac1a3b8 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0x50/0x204
->  ...
->  dd              D    0  2798   2764 0x00400208
->  Call trace:
->   ...
->   schedule+0x8c/0xbc
->   io_schedule+0x1c/0x40
->   wait_on_page_bit_common+0x238/0x338
->   __lock_page+0x5c/0x68
->   write_cache_pages+0x194/0x500
->   generic_writepages+0x64/0xa4
->   blkdev_writepages+0x24/0x30
->   do_writepages+0x48/0xa8
->   __filemap_fdatawrite_range+0xac/0xd8
->   filemap_write_and_wait+0x30/0x84
->   __blkdev_put+0x88/0x204
->   blkdev_put+0xc4/0xe4
->   blkdev_close+0x28/0x38
->   __fput+0xe0/0x238
->   ____fput+0x1c/0x28
->   task_work_run+0xb0/0xe4
->   do_notify_resume+0xfc0/0x14bc
->   work_pending+0x8/0x14
->
-> The problem appears related to the fact that my USB disk is terribly
-> slow and that I have a lot of RAM in my system to cache things.
-> Specifically my writes seem to be happening at ~15 MB/s and I've got
-> ~4 GB of RAM in my system that can be used for buffering.  To write 4
-> GB of buffer to disk thus takes ~4000 MB / ~15 MB/s = ~267 seconds.
->
-> The 267 second number is a problem because in __blkdev_put() we call
-> sync_blockdev() while holding the bd_mutex.  Any other callers who
-> want the bd_mutex will be blocked for the whole time.
->
-> The problem is made worse because I believe blkdev_put() specifically
-> tells other tasks (namely udev) to go try to access the device at right
-> around the same time we're going to hold the mutex for a long time.
->
-> Putting some traces around this (after disabling the hung task detector),
-> I could confirm:
->  dd:    437.608600: __blkdev_put() right before sync_blockdev() for sdb
->  udevd: 437.623901: blkdev_open() right before blkdev_get() for sdb
->  dd:    661.468451: __blkdev_put() right after sync_blockdev() for sdb
->  udevd: 663.820426: blkdev_open() right after blkdev_get() for sdb
->
-> A simple fix for this is to realize that sync_blockdev() works fine if
-> you're not holding the mutex.  Also, it's not the end of the world if
-> you sync a little early (though it can have performance impacts).
-> Thus we can make a guess that we're going to need to do the sync and
-> then do it without holding the mutex.  We still do one last sync with
-> the mutex but it should be much, much faster.
->
-> With this, my hung task warnings for my test case are gone.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
-> I didn't put a "Fixes" annotation here because, as far as I can tell,
-> this issue has been here "forever" unless someone knows of something
-> else that changed that made this possible to hit.  This could probably
-> get picked back to any stable tree that anyone is still maintaining.
->
-> Changes in v2:
-> - Don't bother holding the mutex when checking "bd_openers".
->
+On Tue, Mar 24, 2020 at 11:18:07AM -0700, Kees Cook wrote:
+> On Tue, Mar 24, 2020 at 11:44:33AM -0500, Josh Poimboeuf wrote:
+> > On Fri, Mar 20, 2020 at 11:35:37AM -0700, Kees Cook wrote:
+> > > On Fri, Mar 20, 2020 at 09:26:13AM +0100, Peter Zijlstra wrote:
+> > > > On Thu, Mar 19, 2020 at 12:45:50PM -0500, Josh Poimboeuf wrote:
+> > > > > > On Thu, Mar 19, 2020 at 12:33:31PM -0500, Josh Poimboeuf wrote:
+> > > > 
+> > > > > > > Actually I suspect it's the __builtin_unreachable() annotation which is
+> > > > > > > making UBSAN add the __builtin_trap()...  because I don't see any double
+> > > > > > > UD2s for WARNs.
+> > > > 
+> > > > > Actually, removing __builtin_unreachable() *does* make the extra UD2 go
+> > > > > away -- I forgot I had some silly debug code.
+> > > > 
+> > > > LOL, check this:
+> > > > 
+> > > > "Built-in Function: void __builtin_unreachable (void)
+> > > > 
+> > > >     If control flow reaches the point of the __builtin_unreachable, the
+> > > >     program is undefined. It is useful in situations where the compiler
+> > > >     cannot deduce the unreachability of the code. "
+> > > > 
+> > > > Which, I bet, is what makes UBSAN insert that __builtin_trap().
+> > > > 
+> > > > What a friggin mess :/
+> > > 
+> > > What I'd like is to be able to specify to UBSAN what function to call
+> > > for the trap. I'd prefer to specify a well-defined exception handler,
+> > > but at present, UBSAN just inserts __builtin_trap().
+> > > 
+> > > Can't objtool be told to ignore a ud2 that lacks an execution path to it?
+> > 
+> > It can ignore unreachable UD2s, if we think that's the right fix.
+> > 
+> > I was hoping we could find a way to get rid of the double UD2s, but I
+> > couldn't figure out a way to do that when I looked at it last week.
+> 
+> As far as I could tell, this needs patches to the UBSAN support in gcc
+> and clang. I have opened bugs for each:
+> 
+> https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94307
+> https://bugs.llvm.org/show_bug.cgi?id=45295
 
-The checking-under-lock had bothered me as well in v1.
-I like this version much more.
+So it sounds like this would replace the second UD2 with a "call
+some_ubsan_function()"?
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+That might be slightly better, though it would still need an objtool
+change to ignore unreachable warnings for such calls.
 
->
->  fs/block_dev.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/fs/block_dev.c b/fs/block_dev.c
-> index 9501880dff5e..40c57a9cc91a 100644
-> --- a/fs/block_dev.c
-> +++ b/fs/block_dev.c
-> @@ -1892,6 +1892,16 @@ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part)
->         struct gendisk *disk = bdev->bd_disk;
->         struct block_device *victim = NULL;
->
-> +       /*
-> +        * Sync early if it looks like we're the last one.  If someone else
-> +        * opens the block device between now and the decrement of bd_openers
-> +        * then we did a sync that we didn't need to, but that's not the end
-> +        * of the world and we want to avoid long (could be several minute)
-> +        * syncs while holding the mutex.
-> +        */
-> +       if (bdev->bd_openers == 1)
-> +               sync_blockdev(bdev);
-> +
->         mutex_lock_nested(&bdev->bd_mutex, for_part);
->         if (for_part)
->                 bdev->bd_part_count--;
-> --
-> 2.25.1.696.g5e7596f4ac-goog
->
+In the meantime I can still change objtool to ignore unreachable UD2s if
+there aren't any better ideas.
+
+-- 
+Josh
+
