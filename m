@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB8ACC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C890C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4A0E206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CFE208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056463;
-	bh=Dx6k0GLLmgPCqWvaZNBL/L4NZ2kAZQoCDGH+zulMf1k=;
+	s=default; t=1585056465;
+	bh=hA3gBctLWAPyif8p+Euj0bVCjmDtWTU30v68aHGHpKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=irRYmfbbn5jn8CyIT52zx0m0VT03Fxx+MkCV4+QDT07nthCn7QhffR161xiMl6mVV
-	 /ETbLlckVB0YgXQo1LNHjfKHwT7JQOS2Ct9cgyc/S+hdTC44lrJiaz37IU0acsW8Ra
-	 vqdxVWY6rQhQkI/XrR6ex6W+PrfD6VaBRoTouU1Y=
+	b=z5N6BDrP0/s+Rtb398aF37NcVaS+kuD53+gp9wU0BSPNqlEFdaMHKutW0CxIgxnB9
+	 cdVMpTB5azcNxCw5QfSy3nPqMktWMTzMzZFRpL8PmuPZkPVIsvbX6xeTWj7JbwU7CI
+	 7EhBssEra78zxnFuQkT7h4+iNBhmUC+m1dlIqzpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgCXN1l (ORCPT
+        id S1727800AbgCXN1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:27:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53248 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:27:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbgCXN1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:27:34 -0400
+        id S1729957AbgCXN1i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:27:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23D9C206F6;
-        Tue, 24 Mar 2020 13:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12633208C3;
+        Tue, 24 Mar 2020 13:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056453;
-        bh=Dx6k0GLLmgPCqWvaZNBL/L4NZ2kAZQoCDGH+zulMf1k=;
+        s=default; t=1585056457;
+        bh=hA3gBctLWAPyif8p+Euj0bVCjmDtWTU30v68aHGHpKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDtkkNdd5GQ2RJiw7Lzz1iK7GOEc8GPkMXgqJWqVYnS+XCdwTAge16Jp9EFPg6bbZ
-         2idWWMg95GI7fVHDH0dmfz90rn0oD++wE3py0GibUDOAw6V3Zlv1tsT3Ib0cI1P6H1
-         e5LEkybkJ7mU2o7RkjMfWKK9Im6tC9JlI7t29o4A=
+        b=eL9Uoio7xWY6BuYcMs9VAKKLLHJnknLp6vuqBmvI5Bf5dMzVc3SB6H+yoMc+M4kbr
+         JkHjnejM/qR63jEP3ouJZC5efVfwUCJf/rFijBvJ7jOFZ+gPnQlCJGMpBfNw+6KO34
+         dHRMGTHZks8KAoL9r4XKk/GhdGsvUxSQL+RjCDV4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.5 086/119] arm64: compat: Fix syscall number of compat_clock_getres
-Date:   Tue, 24 Mar 2020 14:11:11 +0100
-Message-Id: <20200324130816.836640833@linuxfoundation.org>
+        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.5 087/119] xhci: Do not open code __print_symbolic() in xhci trace events
+Date:   Tue, 24 Mar 2020 14:11:12 +0100
+Message-Id: <20200324130816.926811409@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -61,39 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 3568b88944fef28db3ee989b957da49ffc627ede upstream.
+commit 045706bff837ee89c13f1ace173db71922c1c40b upstream.
 
-The syscall number of compat_clock_getres was erroneously set to 247
-(__NR_io_cancel!) instead of 264. This causes the vDSO fallback of
-clock_getres() to land on the wrong syscall for compat tasks.
+libtraceevent (used by perf and trace-cmd) failed to parse the
+xhci_urb_dequeue trace event. This is because the user space trace
+event format parsing is not a full C compiler. It can handle some basic
+logic, but is not meant to be able to handle everything C can do.
 
-Fix the numbering.
+In cases where a trace event field needs to be converted from a number
+to a string, there's the __print_symbolic() macro that should be used:
 
-Cc: <stable@vger.kernel.org>
-Fixes: 53c489e1dfeb6 ("arm64: compat: Add missing syscall numbers")
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+ See samples/trace_events/trace-events-sample.h
+
+Some xhci trace events open coded the __print_symbolic() causing the
+user spaces tools to fail to parse it. This has to be replaced with
+__print_symbolic() instead.
+
+CC: stable@vger.kernel.org
+Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206531
+Fixes: 5abdc2e6e12ff ("usb: host: xhci: add urb_enqueue/dequeue/giveback tracers")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200306150858.21904-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/unistd.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-trace.h |   23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -25,8 +25,8 @@
- #define __NR_compat_gettimeofday	78
- #define __NR_compat_sigreturn		119
- #define __NR_compat_rt_sigreturn	173
--#define __NR_compat_clock_getres	247
- #define __NR_compat_clock_gettime	263
-+#define __NR_compat_clock_getres	264
- #define __NR_compat_clock_gettime64	403
- #define __NR_compat_clock_getres_time64	406
- 
+--- a/drivers/usb/host/xhci-trace.h
++++ b/drivers/usb/host/xhci-trace.h
+@@ -289,23 +289,12 @@ DECLARE_EVENT_CLASS(xhci_log_urb,
+ 	),
+ 	TP_printk("ep%d%s-%s: urb %p pipe %u slot %d length %d/%d sgs %d/%d stream %d flags %08x",
+ 			__entry->epnum, __entry->dir_in ? "in" : "out",
+-			({ char *s;
+-			switch (__entry->type) {
+-			case USB_ENDPOINT_XFER_INT:
+-				s = "intr";
+-				break;
+-			case USB_ENDPOINT_XFER_CONTROL:
+-				s = "control";
+-				break;
+-			case USB_ENDPOINT_XFER_BULK:
+-				s = "bulk";
+-				break;
+-			case USB_ENDPOINT_XFER_ISOC:
+-				s = "isoc";
+-				break;
+-			default:
+-				s = "UNKNOWN";
+-			} s; }), __entry->urb, __entry->pipe, __entry->slot_id,
++			__print_symbolic(__entry->type,
++				   { USB_ENDPOINT_XFER_INT,	"intr" },
++				   { USB_ENDPOINT_XFER_CONTROL,	"control" },
++				   { USB_ENDPOINT_XFER_BULK,	"bulk" },
++				   { USB_ENDPOINT_XFER_ISOC,	"isoc" }),
++			__entry->urb, __entry->pipe, __entry->slot_id,
+ 			__entry->actual, __entry->length, __entry->num_mapped_sgs,
+ 			__entry->num_sgs, __entry->stream, __entry->flags
+ 		)
 
 
