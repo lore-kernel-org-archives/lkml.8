@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27864C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69AD0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0048A2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43BAC2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585070111;
-	bh=6iz/00lA67PKU53GPRZ6djTMfIMd00kLqbqrKNWFlLw=;
+	s=default; t=1585070113;
+	bh=3nGwtPclZmvQxYrp54AVxAccCNjmiKHtgqLUAaLIc5A=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Y/uUl79fIGtpSWdgnc7+1UI1VV051yeghT+sVL3vMUfItf2C3YNWclvmHX02kTvno
-	 4muiefuP1QoK/NmmDKr96wa95K7hge8ZyUrsxLhrGoyjagBzqIhoTyE1OXQtCaWMYj
-	 Lkfzp8bCYk17+xkZNiImxvJ2vP1UdMpjruKmxNvE=
+	b=XMqYcgNPSeDgOntVTeIx7UreU8G2I7lL4ebTclV0PL4f4u+utOjpNVD3mlPN3rVPq
+	 OYRdm0qTVchUPv2swmFCBfsbZaLw+gHhmNZvmq7aJxNW89SuB3y/tg09cmJmVJy8p+
+	 Vdr+v8PftTLjJ6KugNt0gCV6n3Dheba+sCrLsAkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgCXRPK (ORCPT
+        id S1727320AbgCXRPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:15:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51578 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 13:15:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbgCXRPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:15:09 -0400
-Subject: Re: [GIT PULL] x86 fix
+        id S1727161AbgCXRPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:15:11 -0400
+Subject: Re: [GIT PULL]: dmaengine fixes for v5.6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585070108;
-        bh=6iz/00lA67PKU53GPRZ6djTMfIMd00kLqbqrKNWFlLw=;
+        s=default; t=1585070107;
+        bh=3nGwtPclZmvQxYrp54AVxAccCNjmiKHtgqLUAaLIc5A=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vrrcIy9FSRLFdYOXlCrRx+4EyAr0i3FZPf6lgzL5xd2sBSnzpGOzhJl8DzEkWM2p1
-         Cz+P4s1jsd356oXgHULkeMLxNeCwJnfgcHW4KiFwuOwuZ3IA/nSBkmoOyO9RjLuSvw
-         8SLhgWArr2OxKOuS1/iDiW7eyUwITc4g2jvhOb2U=
+        b=Y/UxV21oAigP8vdKrzLAwK6wSJH5Q3pkXbXYBjBA3JsmJNnG9vLSz0d7vLkkaSuNF
+         xrr8Iq1T98z9q6wyjUtLlWWadoU57OYpyQMGgeWZy4lR+JavhLy/L2V6puzeorZrRN
+         a/WTRSoPNQJc71ttSI7ko3Al46VgeETfnduLjWko=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200324090627.GA46739@gmail.com>
-References: <20200324090627.GA46739@gmail.com>
+In-Reply-To: <20200324054017.GU72691@vkoul-mobl>
+References: <20200324054017.GU72691@vkoul-mobl>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200324090627.GA46739@gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
- x86-urgent-for-linus
-X-PR-Tracked-Commit-Id: 870b4333a62e45b0b2000d14b301b7b8b8cad9da
+X-PR-Tracked-Message-Id: <20200324054017.GU72691@vkoul-mobl>
+X-PR-Tracked-Remote: git://git.infradead.org/users/vkoul/slave-dma.git
+ tags/dmaengine-fix-5.6
+X-PR-Tracked-Commit-Id: 018af9be3dd54e6f24f828966bdd873f4d63ad9b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 3f3ee43a462344f6509bd15c988e39d330af91b3
-Message-Id: <158507010802.16590.2166787800981748763.pr-tracker-bot@kernel.org>
-Date:   Tue, 24 Mar 2020 17:15:08 +0000
-To:     Ingo Molnar <mingo@kernel.org>
+X-PR-Merge-Commit-Id: c6ac7188c1142c450eb601563ad69204bf1e9286
+Message-Id: <158507010775.16590.3548326940708705089.pr-tracker-bot@kernel.org>
+Date:   Tue, 24 Mar 2020 17:15:07 +0000
+To:     Vinod Koul <vkoul@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
+        dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 24 Mar 2020 10:06:27 +0100:
+The pull request you sent on Tue, 24 Mar 2020 11:10:17 +0530:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
+> git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/3f3ee43a462344f6509bd15c988e39d330af91b3
+https://git.kernel.org/torvalds/c/c6ac7188c1142c450eb601563ad69204bf1e9286
 
 Thank you!
 
