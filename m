@@ -2,111 +2,140 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 859F2C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F90C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6278020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585074300;
-	bh=BRk1zWa2KIAD8ZVBGXTm/WReYp6lXgOaW2wcIaRZ5RE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UsSkZKHYpiOiM93jkVXtPza6uVAozpNEL8ByWcF4PeRFHW1ukBIIsfWFR1BW82DpN
-	 OCK/s7kF0oSbbp1JeNAAaCCBnGzECx6VzJ2WfiOt/kcXaQn+y1sfZJw4GyAxGWCT6/
-	 KidK9OUdeE5RdHT3Rz9kwnuirWAYA1xHEbpxsevk=
+	by mail.kernel.org (Postfix) with ESMTP id 6008A2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:26:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="XviXDdgR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727696AbgCXSY7 (ORCPT
+        id S1728100AbgCXS0D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:24:59 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33809 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727333AbgCXSY7 (ORCPT
+        Tue, 24 Mar 2020 14:26:03 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36595 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbgCXS0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:24:59 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i6so11253878qke.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:24:57 -0700 (PDT)
+        Tue, 24 Mar 2020 14:26:02 -0400
+Received: by mail-qk1-f195.google.com with SMTP id d11so20366659qko.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:26:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RconwbLGvobrkQrLA8HZT5QCPO0hEEsGfTPRzr6x1ls=;
-        b=qWQ0JOE3fCDg+RdT+hVndA3MY+mCBruUcX/KRXX1erbOlMR8BmWY+rmW0XC5KEltTK
-         Esqctl8cGeg6M5mbdM8kJg6O7WkZBUw3rNFBdmELweVdBaRROiXkV4Idm8F4A2Xw8FGn
-         codkCjZJZWnEcuySG4NFSH1GOpywlWqjp/ZObBdqDN8LWcvTkIpYJySbrrlqjHUJVnMK
-         6B1SmqHfjnjazYbnBSmOXN1FZ9FQHMPPeavkMV5IlGpVuubHIlf9/n0dhUS8aE/UTp9h
-         ykQLr1yTU0sskkIulH6GAJcxxy6mDya6Pta2xnH7x6y56Jqqh4TVShb+eO9r1Ar3lO9I
-         awnA==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iEmpsAyt9B1Qcdkh4hlRJzHYHPiVdMatdhGGO+kX6u0=;
+        b=XviXDdgRMR3A1ee54Wowb70vIsLpggnUxurOugFzJ+rMRbEWy19ZdXhIQG8po0nuoq
+         +zQF77o09zsBvEAMrLmPfUbOj/iB/K7nHwJmK5u3waH0Ns6p9BDbathMFtZ6NE3rNO/a
+         eUJzkjun1iZzOBflcQHA8PWiD8khlP9p5A0R0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=RconwbLGvobrkQrLA8HZT5QCPO0hEEsGfTPRzr6x1ls=;
-        b=L91GKKCz53WW+mDRrymWsYG/yI8iHBvmbY6B0JCaTNT03Py6/RtVpSAcRAQQtC66Nc
-         blHXOfE088xs2N7bMoidaLX+IA/1jDXngFGnJvpYpUG7hX22nIMb8RiaPlpxq/ah5Nni
-         Eg1g5d6+VTWwUcRRQgA8uo2EdSVphI9MhJfIfIMo6/QPgdFNy/UkKfiKDWIuYV9UToDZ
-         6yRwRZKwvBNya3XXq4bp+hOkdRSrkPSQ/IkdhQRGsSX4X0AjXMzV2WGMKUMngMJRU23A
-         eyAMs17ulXz1ABIAwT7pur/uxDcO6WVsKLOS1c8XNBrlYBxB9YKCIWWJC3BoUvscFtrf
-         T7XQ==
-X-Gm-Message-State: ANhLgQ1AB78tbm0MhkirD/6xhu7KLLDqEd9oTbtHZOdDg0TBto/SGU9g
-        miGEL3cOpf+msi2UI9DCZww=
-X-Google-Smtp-Source: ADFU+vtqLe2wnw4h8YDpEepGFhKK7We9Rhe1ZxfEVlqXh61lSnV6dWCn407Z4KLJK4FVGOuzufntxQ==
-X-Received: by 2002:a37:91c3:: with SMTP id t186mr26109176qkd.239.1585074296754;
-        Tue, 24 Mar 2020 11:24:56 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::19c2])
-        by smtp.gmail.com with ESMTPSA id h5sm13514266qkc.118.2020.03.24.11.24.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iEmpsAyt9B1Qcdkh4hlRJzHYHPiVdMatdhGGO+kX6u0=;
+        b=br1YcNUup1SKH7LsDrPmoKcYCFUU1Apx2/bCzc7GgeXPHJ4TIHrFSjd4dIYGnQHQ+x
+         HjnjtYIMfrhPQ/6U9TjdHnBKH6hajcdcNmc5e9a+wGfq2SStrdtleQBtST97hn4Tn8Ma
+         M6h0tBVnvTnQPc9HOMCHCsK5216VDVvFYsew/2O41LF3DTXnhEXPG8GHs2IpbdGktzS6
+         25dAGFp7qH5sqaUcL79dZ330n+cm8TBEWOaQwPrX0uDETKn6mF6Fbg6F9l4intkaL9+z
+         D3JV92IpaYr+Obbzjvy+Ahy1rXrwQCBeOJpOdKTJVPUZmh4HIW0bjuD9RIloH9qKvsPZ
+         ayCQ==
+X-Gm-Message-State: ANhLgQ2ivm4Z4xMp2DOghtbYgLrPQaM0AKDpp1/57f1FQ0QBBekSbc5Q
+        uE5C9z8dplLuTLTYqxmk3okVbQ==
+X-Google-Smtp-Source: ADFU+vsDFgrzlLzo7PWHXfC4Na59e1GjR7LhLOqmWSGaiqojVW66Z6eiEsCwPhPF2x51Legtscepqg==
+X-Received: by 2002:a05:620a:1250:: with SMTP id a16mr12752127qkl.497.1585074361932;
+        Tue, 24 Mar 2020 11:26:01 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id y5sm14014261qkb.123.2020.03.24.11.26.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 11:24:56 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 14:24:54 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Mina Almasry <almasrymina@google.com>
-Cc:     syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Giuseppe Scrivano <gscrivan@redhat.com>,
-        mike.kravetz@oracle.com, rientjes@google.com
-Subject: Re: [PATCH -next] hugetlb_cgroup: fix illegal access to memory
-Message-ID: <20200324182454.GE162390@mtj.duckdns.org>
-References: <20200313223920.124230-1-almasrymina@google.com>
+        Tue, 24 Mar 2020 11:26:01 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 14:26:01 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] Documentation: Clarify better about the rwsem non-owner
+ release issue
+Message-ID: <20200324182601.GC257597@google.com>
+References: <20200322021938.175736-1-joel@joelfernandes.org>
+ <87a748khlo.fsf@kamboji.qca.qualcomm.com>
+ <20200323182349.GA203600@google.com>
+ <20200324081538.GA8696@willie-the-truck>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200313223920.124230-1-almasrymina@google.com>
+In-Reply-To: <20200324081538.GA8696@willie-the-truck>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 13, 2020 at 03:39:20PM -0700, Mina Almasry wrote:
-> This appears to be a mistake in commit faced7e0806cf ("mm: hugetlb
-> controller for cgroups v2"). Essentially that commit does
-> a hugetlb_cgroup_from_counter assuming that page_counter_try_charge has
-> initialized counter, but if page_counter_try_charge has failed then it
-> seems it does not initialize counter, so
-> hugetlb_cgroup_from_counter(counter) ends up pointing to random memory,
-> causing kasan to complain.
+On Tue, Mar 24, 2020 at 08:15:39AM +0000, Will Deacon wrote:
+> On Mon, Mar 23, 2020 at 02:23:49PM -0400, Joel Fernandes wrote:
+> > On Sun, Mar 22, 2020 at 08:51:15AM +0200, Kalle Valo wrote:
+> > > "Joel Fernandes (Google)" <joel@joelfernandes.org> writes:
+> > > 
+> > > > Reword and clarify better about the rwsem non-owner release issue.
+> > > >
+> > > > Link: https://lore.kernel.org/linux-pci/20200321212144.GA6475@google.com/
+> > > >
+> > > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > > 
+> > > There's something wrong with your linux-pci and linux-usb addresses:
+> > > 
+> > > 	"linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
+> > > 
+> > > 
+> > > 	"linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>,
+> > 
+> > Not sure. It appears fine in the archive.
 > 
-> Solution, simply use h_cg, instead of
-> hugetlb_cgroup_from_counter(counter), since that is a reference to the
-> hugetlb_cgroup anyway. After this change kasan ceases to complain.
+> Hmm, I don't think it does. Here's the copy from LKML:
 > 
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Reported-by: syzbot+cac0c4e204952cf449b1@syzkaller.appspotmail.com
-> Fixes: commit faced7e0806cf ("mm: hugetlb controller for cgroups v2")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-mm@kvack.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Giuseppe Scrivano <gscrivan@redhat.com>
-> Cc: Tejun Heo <tj@kernel.org>
-> Cc: mike.kravetz@oracle.com
-> Cc: rientjes@google.com
+> https://lore.kernel.org/lkml/20200322021938.175736-1-joel@joelfernandes.org/
+> 
+> Which works because it's in the To: correctly. But both linux-pci and
+> linux-usb were *not* CC'd:
+> 
+> "linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>
+> "linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>
+> 
+> and searching for the message in the linux-pci archives doesn't find it:
+> 
+> https://lore.kernel.org/linux-pci/?q=Reword+and+clarify+better+about+the+rwsem+non-owner+release+issue
+> 
+> So it looks like there is an issue with your mail setup.
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Hi Will and Kalle,
+Thank you for confirming it. You are right, the archive shows the issue. I
+will double check my client and see what's going on.
 
-Thanks.
+thanks,
 
--- 
-tejun
+ - Joel
+
