@@ -2,54 +2,52 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A13BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D396C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A27206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B98208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055795;
-	bh=9dMFvrNqxpUvePmXG+6FIyrL9b0WiSp7fU/JGA6+lSs=;
+	s=default; t=1585055797;
+	bh=qCYjcy87AHTdBtX6thdiLbV/Uf2jTV1RI/V3ReuSw6Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ulJOsyvWL4OfZuEyUEjpfrmQbw4G0V9jE2y+YjlOb4JDYzQxhK3Xbrysk4673zE+j
-	 9WNTccCWaO8xMcb9bupR9S8oiMW57ppXDlNgGCuTkEs47Tzm72jC6VsWZ8QXemyhhg
-	 r3LKEPruHDyIyfWeL9DX922JBr4cVE5QNQyzD1n8=
+	b=vXOIkfmyyJRdLplMRr4Y3ymYvTumrxJajubm9fUBvignzBujfWBWU2WF3O4sPLx7t
+	 1vXUQ+VzxdrD3r+yAmMqLxT2kHh2BF5O6AIBsXdLx8Ugq520m5pqEGyiwZzv3w9LtW
+	 eaSkSFvtUnKuqQgFE5juPYDkczb9nG9CNdd3mtDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbgCXNQe (ORCPT
+        id S1727993AbgCXNQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36076 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728470AbgCXNQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbgCXNQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AAC8206F6;
-        Tue, 24 Mar 2020 13:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EEE9206F6;
+        Tue, 24 Mar 2020 13:16:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055792;
-        bh=9dMFvrNqxpUvePmXG+6FIyrL9b0WiSp7fU/JGA6+lSs=;
+        s=default; t=1585055790;
+        bh=qCYjcy87AHTdBtX6thdiLbV/Uf2jTV1RI/V3ReuSw6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wxoZQf1W5hEabs6qAVxAD7PebLk0cpS0xTco4QQk1XiTmkJZ6AYzA91pTJJs7w6QV
-         Zu8b3bC2BGdhmORpQq6NUZ2RWTwdPGpikYkdtcYJpWpAgubnvkOLLlo7ucGH6mJrJ0
-         gPq8Q3UOgMm7/G9/gAG0QkXNKx+yKu5wyfgEP61w=
+        b=fc71FPol5/qkUWOYS68FIj3ozWYfevhihy92SwsAsKs0jFrqW9aUCGGmGdMp2oBlC
+         yMFhERd8Q1u1OlLzBnuIKClQB5BUjCUXi5Caf8GhVl+Ff7TfEQaHwlUcSwcf0WzSUa
+         9y2rmqttTo8zLth8mCf5VyO2HN0kR2Irb2N6hS70=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josip Pavic <Josip.Pavic@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 030/102] drm/amd/display: fix dcc swath size calculations on dcn1
-Date:   Tue, 24 Mar 2020 14:10:22 +0100
-Message-Id: <20200324130809.552286024@linuxfoundation.org>
+Subject: [PATCH 5.4 003/102] spi: spi-omap2-mcspi: Support probe deferral for DMA channels
+Date:   Tue, 24 Mar 2020 14:09:55 +0100
+Message-Id: <20200324130806.836811477@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -62,47 +60,187 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josip Pavic <Josip.Pavic@amd.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-[ Upstream commit a0275dfc82c9034eefbeffd556cca6dd239d7925 ]
+[ Upstream commit 32f2fc5dc3992b4b60cc6b1a6a31be605cc9c3a2 ]
 
-[Why]
-Swath sizes are being calculated incorrectly. The horizontal swath size
-should be the product of block height, viewport width, and bytes per
-element, but the calculation uses viewport height instead of width. The
-vertical swath size is similarly incorrectly calculated. The effect of
-this is that we report the wrong DCC caps.
+dma_request_channel() can return -EPROBE_DEFER, if DMA driver is not
+ready. Currently driver just falls back to PIO mode on probe deferral.
+Fix this by requesting all required channels during probe and
+propagating EPROBE_DEFER error code.
 
-[How]
-Use viewport width in the horizontal swath size calculation and viewport
-height in the vertical swath size calculation.
-
-Signed-off-by: Josip Pavic <Josip.Pavic@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Link: https://lore.kernel.org/r/20200204124816.16735-3-vigneshr@ti.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/spi/spi-omap2-mcspi.c |   77 ++++++++++++++++++++----------------------
+ 1 file changed, 38 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-index a02c10e23e0d6..d163388c99a06 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-@@ -840,8 +840,8 @@ static void hubbub1_det_request_size(
+--- a/drivers/spi/spi-omap2-mcspi.c
++++ b/drivers/spi/spi-omap2-mcspi.c
+@@ -985,20 +985,12 @@ static int omap2_mcspi_setup_transfer(st
+  * Note that we currently allow DMA only if we get a channel
+  * for both rx and tx. Otherwise we'll do PIO for both rx and tx.
+  */
+-static int omap2_mcspi_request_dma(struct spi_device *spi)
++static int omap2_mcspi_request_dma(struct omap2_mcspi *mcspi,
++				   struct omap2_mcspi_dma *mcspi_dma)
+ {
+-	struct spi_master	*master = spi->master;
+-	struct omap2_mcspi	*mcspi;
+-	struct omap2_mcspi_dma	*mcspi_dma;
+ 	int ret = 0;
  
- 	hubbub1_get_blk256_size(&blk256_width, &blk256_height, bpe);
+-	mcspi = spi_master_get_devdata(master);
+-	mcspi_dma = mcspi->dma_channels + spi->chip_select;
+-
+-	init_completion(&mcspi_dma->dma_rx_completion);
+-	init_completion(&mcspi_dma->dma_tx_completion);
+-
+-	mcspi_dma->dma_rx = dma_request_chan(&master->dev,
++	mcspi_dma->dma_rx = dma_request_chan(mcspi->dev,
+ 					     mcspi_dma->dma_rx_ch_name);
+ 	if (IS_ERR(mcspi_dma->dma_rx)) {
+ 		ret = PTR_ERR(mcspi_dma->dma_rx);
+@@ -1006,7 +998,7 @@ static int omap2_mcspi_request_dma(struc
+ 		goto no_dma;
+ 	}
  
--	swath_bytes_horz_wc = height * blk256_height * bpe;
--	swath_bytes_vert_wc = width * blk256_width * bpe;
-+	swath_bytes_horz_wc = width * blk256_height * bpe;
-+	swath_bytes_vert_wc = height * blk256_width * bpe;
+-	mcspi_dma->dma_tx = dma_request_chan(&master->dev,
++	mcspi_dma->dma_tx = dma_request_chan(mcspi->dev,
+ 					     mcspi_dma->dma_tx_ch_name);
+ 	if (IS_ERR(mcspi_dma->dma_tx)) {
+ 		ret = PTR_ERR(mcspi_dma->dma_tx);
+@@ -1015,20 +1007,40 @@ static int omap2_mcspi_request_dma(struc
+ 		mcspi_dma->dma_rx = NULL;
+ 	}
  
- 	*req128_horz_wc = (2 * swath_bytes_horz_wc <= detile_buf_size) ?
- 			false : /* full 256B request */
--- 
-2.20.1
-
++	init_completion(&mcspi_dma->dma_rx_completion);
++	init_completion(&mcspi_dma->dma_tx_completion);
++
+ no_dma:
+ 	return ret;
+ }
+ 
++static void omap2_mcspi_release_dma(struct spi_master *master)
++{
++	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
++	struct omap2_mcspi_dma	*mcspi_dma;
++	int i;
++
++	for (i = 0; i < master->num_chipselect; i++) {
++		mcspi_dma = &mcspi->dma_channels[i];
++
++		if (mcspi_dma->dma_rx) {
++			dma_release_channel(mcspi_dma->dma_rx);
++			mcspi_dma->dma_rx = NULL;
++		}
++		if (mcspi_dma->dma_tx) {
++			dma_release_channel(mcspi_dma->dma_tx);
++			mcspi_dma->dma_tx = NULL;
++		}
++	}
++}
++
+ static int omap2_mcspi_setup(struct spi_device *spi)
+ {
+ 	int			ret;
+ 	struct omap2_mcspi	*mcspi = spi_master_get_devdata(spi->master);
+ 	struct omap2_mcspi_regs	*ctx = &mcspi->ctx;
+-	struct omap2_mcspi_dma	*mcspi_dma;
+ 	struct omap2_mcspi_cs	*cs = spi->controller_state;
+ 
+-	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+-
+ 	if (!cs) {
+ 		cs = kzalloc(sizeof *cs, GFP_KERNEL);
+ 		if (!cs)
+@@ -1053,13 +1065,6 @@ static int omap2_mcspi_setup(struct spi_
+ 		}
+ 	}
+ 
+-	if (!mcspi_dma->dma_rx || !mcspi_dma->dma_tx) {
+-		ret = omap2_mcspi_request_dma(spi);
+-		if (ret)
+-			dev_warn(&spi->dev, "not using DMA for McSPI (%d)\n",
+-				 ret);
+-	}
+-
+ 	ret = pm_runtime_get_sync(mcspi->dev);
+ 	if (ret < 0) {
+ 		pm_runtime_put_noidle(mcspi->dev);
+@@ -1076,12 +1081,8 @@ static int omap2_mcspi_setup(struct spi_
+ 
+ static void omap2_mcspi_cleanup(struct spi_device *spi)
+ {
+-	struct omap2_mcspi	*mcspi;
+-	struct omap2_mcspi_dma	*mcspi_dma;
+ 	struct omap2_mcspi_cs	*cs;
+ 
+-	mcspi = spi_master_get_devdata(spi->master);
+-
+ 	if (spi->controller_state) {
+ 		/* Unlink controller state from context save list */
+ 		cs = spi->controller_state;
+@@ -1090,19 +1091,6 @@ static void omap2_mcspi_cleanup(struct s
+ 		kfree(cs);
+ 	}
+ 
+-	if (spi->chip_select < spi->master->num_chipselect) {
+-		mcspi_dma = &mcspi->dma_channels[spi->chip_select];
+-
+-		if (mcspi_dma->dma_rx) {
+-			dma_release_channel(mcspi_dma->dma_rx);
+-			mcspi_dma->dma_rx = NULL;
+-		}
+-		if (mcspi_dma->dma_tx) {
+-			dma_release_channel(mcspi_dma->dma_tx);
+-			mcspi_dma->dma_tx = NULL;
+-		}
+-	}
+-
+ 	if (gpio_is_valid(spi->cs_gpio))
+ 		gpio_free(spi->cs_gpio);
+ }
+@@ -1313,6 +1301,9 @@ static bool omap2_mcspi_can_dma(struct s
+ 	if (spi_controller_is_slave(master))
+ 		return true;
+ 
++	master->dma_rx = mcspi_dma->dma_rx;
++	master->dma_tx = mcspi_dma->dma_tx;
++
+ 	return (xfer->len >= DMA_MIN_BYTES);
+ }
+ 
+@@ -1475,6 +1466,11 @@ static int omap2_mcspi_probe(struct plat
+ 	for (i = 0; i < master->num_chipselect; i++) {
+ 		sprintf(mcspi->dma_channels[i].dma_rx_ch_name, "rx%d", i);
+ 		sprintf(mcspi->dma_channels[i].dma_tx_ch_name, "tx%d", i);
++
++		status = omap2_mcspi_request_dma(mcspi,
++						 &mcspi->dma_channels[i]);
++		if (status == -EPROBE_DEFER)
++			goto free_master;
+ 	}
+ 
+ 	status = platform_get_irq(pdev, 0);
+@@ -1512,6 +1508,7 @@ disable_pm:
+ 	pm_runtime_put_sync(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
+ free_master:
++	omap2_mcspi_release_dma(master);
+ 	spi_master_put(master);
+ 	return status;
+ }
+@@ -1521,6 +1518,8 @@ static int omap2_mcspi_remove(struct pla
+ 	struct spi_master *master = platform_get_drvdata(pdev);
+ 	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
+ 
++	omap2_mcspi_release_dma(master);
++
+ 	pm_runtime_dont_use_autosuspend(mcspi->dev);
+ 	pm_runtime_put_sync(mcspi->dev);
+ 	pm_runtime_disable(&pdev->dev);
 
 
