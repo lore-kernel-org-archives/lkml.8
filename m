@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5DCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE62C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA54C21473
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F33D21473
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PEc2stQ8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="P9H1UW53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgCXQMx (ORCPT
+        id S1728982AbgCXQMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:12:53 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36930 "EHLO
+        Tue, 24 Mar 2020 12:12:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:36936 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728314AbgCXQLg (ORCPT
+        with ESMTP id S1728321AbgCXQLg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 12:11:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=pSGP6r2NLE6dzWu1sb8wNttMOQP+/GZ86JZyVLYhiRo=; b=PEc2stQ8jB0ujDASoy8qNKNtVX
-        HZzWZJkfqdJ5K94nUKqqeRA1ESXJI1UtZI2lhRPnDRjE7XiKygCqwYgCLI9pkunVfUPy3GBbqvBSL
-        gX9LpS4cs1c6RqFtmF7JL0ypxG7uBnNLHnE9PHlIgzWhGGq/cJJXkYm2ZLaSZFKFBENnxBB8qxKzO
-        u3xRshEcchDxiN83PXgxUiemEGl78WnyXvmbEvTnvtYbpGTDZbydtLm5AfZkBdPOc9CM0EZoMdt4k
-        a/Isl/M4dF7q4ByN2MZBMQhgSFt7aXiSaFhzM1Qp488UivTw5TBQ+PzhdjcjXKzhahC4iqK/FbEBI
-        O4Kjs/9A==;
+        bh=C3SBLsl5IQm3J/77kbkHaTHa59IzxaTUSyP9RsjyyXI=; b=P9H1UW53DazYAghbnn3x363Z34
+        OJDeHEL00kKXi+7jHwClPuRD2dfdWQqUhK/T8UALDHYrGRZLfowy/LXpJjOeWm4RKpGvGGHQbsVOI
+        aROy/OxHDk/B3czvmhxACl0B/o4PDgHOhsDYdkGDtGYnDyDBpJkf7suYJYnTyOEfwXNB9+/BBFQKj
+        PZvyjBm0D+s0Y93sjJerHkKk6DUQHT9e2FjOA8+cFgsfWn3k8MDJIG1DsYJp7O877N/FJGyKq2XWN
+        cCz0yHWOJDry7Y6knf36r9kYofXXMHGb/ByczTXdb2Zxa0LRJEtsm3JDX9K0JedXM3OF9xZmiMy0H
+        gXNunKpQ==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGm9L-0006bT-6i; Tue, 24 Mar 2020 16:11:31 +0000
+        id 1jGm9L-0006bU-79; Tue, 24 Mar 2020 16:11:31 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 448E4306118;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4679F3070F4;
         Tue, 24 Mar 2020 17:11:28 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 271E729A490F6; Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Message-Id: <20200324160924.202621656@infradead.org>
+        id 2C68529A490F7; Tue, 24 Mar 2020 17:11:28 +0100 (CET)
+Message-Id: <20200324160924.321381240@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 24 Mar 2020 16:31:18 +0100
+Date:   Tue, 24 Mar 2020 16:31:20 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     tglx@linutronix.de, jpoimboe@redhat.com
 Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
         mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v3 05/26] x86/kexec: Make relocate_kernel_64.S objtool clean
+Subject: [PATCH v3 07/26] objtool: Add a statistics mode
 References: <20200324153113.098167666@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,76 +58,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Having fixed the biggest objtool issue in this file; fix up the rest
-and remove the exception.
+Have it print a few numbers which can be used to size the hashtables.
 
-Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- arch/x86/kernel/Makefile             |    1 -
- arch/x86/kernel/relocate_kernel_64.S |    7 +++++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ tools/objtool/builtin-check.c |    3 ++-
+ tools/objtool/builtin.h       |    2 +-
+ tools/objtool/check.c         |    5 +++++
+ tools/objtool/elf.c           |   18 +++++++++++++++++-
+ 4 files changed, 25 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -32,7 +32,6 @@ KASAN_SANITIZE_paravirt.o				:= n
- # by several compilation units. To be safe, disable all instrumentation.
- KCSAN_SANITIZE := n
+--- a/tools/objtool/builtin-check.c
++++ b/tools/objtool/builtin-check.c
+@@ -17,7 +17,7 @@
+ #include "builtin.h"
+ #include "check.h"
  
--OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
- OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
- OBJECT_FILES_NON_STANDARD_paravirt_patch.o		:= y
+-bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess;
++bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
  
---- a/arch/x86/kernel/relocate_kernel_64.S
-+++ b/arch/x86/kernel/relocate_kernel_64.S
-@@ -9,6 +9,8 @@
- #include <asm/kexec.h>
- #include <asm/processor-flags.h>
- #include <asm/pgtable_types.h>
-+#include <asm/nospec-branch.h>
-+#include <asm/unwind_hints.h>
+ static const char * const check_usage[] = {
+ 	"objtool check [<options>] file.o",
+@@ -31,6 +31,7 @@ const struct option check_options[] = {
+ 	OPT_BOOLEAN('m', "module", &module, "Indicates the object will be part of a kernel module"),
+ 	OPT_BOOLEAN('b', "backtrace", &backtrace, "unwind on error"),
+ 	OPT_BOOLEAN('a', "uaccess", &uaccess, "enable uaccess checking"),
++	OPT_BOOLEAN('s', "stats", &stats, "print statistics"),
+ 	OPT_END(),
+ };
  
- /*
-  * Must be relocatable PIC code callable as a C function
-@@ -39,6 +41,7 @@
- 	.align PAGE_SIZE
- 	.code64
- SYM_CODE_START_NOALIGN(relocate_kernel)
-+	UNWIND_HINT_EMPTY
- 	/*
- 	 * %rdi indirection_page
- 	 * %rsi page_list
-@@ -105,6 +108,7 @@ SYM_CODE_START_NOALIGN(relocate_kernel)
- SYM_CODE_END(relocate_kernel)
+--- a/tools/objtool/builtin.h
++++ b/tools/objtool/builtin.h
+@@ -8,7 +8,7 @@
+ #include <subcmd/parse-options.h>
  
- SYM_CODE_START_LOCAL_NOALIGN(identity_mapped)
-+	UNWIND_HINT_EMPTY
- 	/* set return address to 0 if not preserving context */
- 	pushq	$0
- 	/* store the start address on the stack */
-@@ -192,6 +196,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_ma
- 1:
- 	popq	%rdx
- 	leaq	PAGE_SIZE(%r10), %rsp
-+	ANNOTATE_RETPOLINE_SAFE
- 	call	*%rdx
+ extern const struct option check_options[];
+-extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess;
++extern bool no_fp, no_unreachable, retpoline, module, backtrace, uaccess, stats;
  
- 	/* get the re-entry point of the peer system */
-@@ -209,6 +214,7 @@ SYM_CODE_START_LOCAL_NOALIGN(identity_ma
- SYM_CODE_END(identity_mapped)
+ extern int cmd_check(int argc, const char **argv);
+ extern int cmd_orc(int argc, const char **argv);
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -239,6 +239,7 @@ static int decode_instructions(struct ob
+ 	struct symbol *func;
+ 	unsigned long offset;
+ 	struct instruction *insn;
++	unsigned long nr_insns = 0;
+ 	int ret;
  
- SYM_CODE_START_LOCAL_NOALIGN(virtual_mapped)
-+	UNWIND_HINT_EMPTY
- 	movq	RSP(%r8), %rsp
- 	movq	CR4(%r8), %rax
- 	movq	%rax, %cr4
-@@ -230,6 +236,7 @@ SYM_CODE_END(virtual_mapped)
+ 	for_each_sec(file, sec) {
+@@ -274,6 +275,7 @@ static int decode_instructions(struct ob
  
- 	/* Do the copies */
- SYM_CODE_START_LOCAL_NOALIGN(swap_pages)
-+	UNWIND_HINT_EMPTY
- 	movq	%rdi, %rcx 	/* Put the page_list in %rcx */
- 	xorl	%edi, %edi
- 	xorl	%esi, %esi
+ 			hash_add(file->insn_hash, &insn->hash, insn->offset);
+ 			list_add_tail(&insn->list, &file->insn_list);
++			nr_insns++;
+ 		}
+ 
+ 		list_for_each_entry(func, &sec->symbol_list, list) {
+@@ -291,6 +293,9 @@ static int decode_instructions(struct ob
+ 		}
+ 	}
+ 
++	if (stats)
++		printf("nr_insns: %lu\n", nr_insns);
++
+ 	return 0;
+ 
+ err:
+--- a/tools/objtool/elf.c
++++ b/tools/objtool/elf.c
+@@ -15,6 +15,7 @@
+ #include <string.h>
+ #include <unistd.h>
+ #include <errno.h>
++#include "builtin.h"
+ 
+ #include "elf.h"
+ #include "warn.h"
+@@ -202,6 +203,9 @@ static int read_sections(struct elf *elf
+ 		sec->len = sec->sh.sh_size;
+ 	}
+ 
++	if (stats)
++		printf("nr_sections: %lu\n", (unsigned long)sections_nr);
++
+ 	/* sanity check, one more call to elf_nextscn() should return NULL */
+ 	if (elf_nextscn(elf->elf, s)) {
+ 		WARN("section entry mismatch");
+@@ -299,6 +303,9 @@ static int read_symbols(struct elf *elf)
+ 		hash_add(elf->symbol_hash, &sym->hash, sym->idx);
+ 	}
+ 
++	if (stats)
++		printf("nr_symbols: %lu\n", (unsigned long)symbols_nr);
++
+ 	/* Create parent/child links for any cold subfunctions */
+ 	list_for_each_entry(sec, &elf->sections, list) {
+ 		list_for_each_entry(sym, &sec->symbol_list, list) {
+@@ -360,6 +367,7 @@ static int read_relas(struct elf *elf)
+ 	struct rela *rela;
+ 	int i;
+ 	unsigned int symndx;
++	unsigned long nr_rela, max_rela = 0, tot_rela = 0;
+ 
+ 	list_for_each_entry(sec, &elf->sections, list) {
+ 		if (sec->sh.sh_type != SHT_RELA)
+@@ -374,6 +382,7 @@ static int read_relas(struct elf *elf)
+ 
+ 		sec->base->rela = sec;
+ 
++		nr_rela = 0;
+ 		for (i = 0; i < sec->sh.sh_size / sec->sh.sh_entsize; i++) {
+ 			rela = malloc(sizeof(*rela));
+ 			if (!rela) {
+@@ -401,8 +410,15 @@ static int read_relas(struct elf *elf)
+ 
+ 			list_add_tail(&rela->list, &sec->rela_list);
+ 			hash_add(sec->rela_hash, &rela->hash, rela->offset);
+-
++			nr_rela++;
+ 		}
++		max_rela = max(max_rela, nr_rela);
++		tot_rela += nr_rela;
++	}
++
++	if (stats) {
++		printf("max_rela: %lu\n", max_rela);
++		printf("tot_rela: %lu\n", tot_rela);
+ 	}
+ 
+ 	return 0;
 
 
