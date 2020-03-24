@@ -2,117 +2,156 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B3FC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 325DBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D646420775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC1B20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:12:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkAWj/6V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725922AbgCXIIN (ORCPT
+        id S1726957AbgCXIMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:08:13 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:50229 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbgCXIIM (ORCPT
+        Tue, 24 Mar 2020 04:12:42 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:44996 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726166AbgCXIMm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:08:12 -0400
-Received: by mail-io1-f72.google.com with SMTP id s2so14267651iot.17
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 01:08:12 -0700 (PDT)
+        Tue, 24 Mar 2020 04:12:42 -0400
+Received: by mail-vs1-f67.google.com with SMTP id e138so10539436vsc.11;
+        Tue, 24 Mar 2020 01:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7791Abzq1umUvVU26oR9Lb3nGzS5O2yHRMAjIUKDNR4=;
+        b=lkAWj/6VVsRJAulgQX07slAihBeYz0uOa0kYMNHRVbfGBDvkOXRRWt2RIj3BjAqN87
+         JAY9cBxd+9s5OoUeBIOFkaCqELRhU1hyvEdQu+JypgwQWCo7hsusXizfjeIXS7L21TIF
+         fAz34hzvUTIvK1x1a1hNq11S+6feKoJsfsF8YcOy2u11fdk6/UBRgYqa8giiSYvQKPhE
+         F32sXN+SIAeIAE4Hq9nyOSMwQceZnaTSlPHAoJ2E7Cv5/hlAoIH0OZyFwaDCdVxir4Mi
+         HF5kM7ohNxhnZlom19P9eZgFVr2kvCyacfo18hlDEGOUkSR1tIA6rbJIoeQL8VeAuwRS
+         0Q5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hHXlzX2YhutrAXAO/2d9zPrQ+gr2qIaq8tPdZuhbzNc=;
-        b=U4R2ZBpiKIz16FWVQzLmPWov7A34TZHr61uAbO7eOjMOhnlEEyR4AhLERk9n+3Gnhf
-         +yXglMDs7+jwl+jdPsUmrtikCruLnG7h5GM9o7jnjr/CU4t7PQMJfdSPHU4MwJbNBRbU
-         VZulKSOzCrJj1eiVaeg+b3EbmMuByN5f0/GJZV+2MNUesH9ihTbiIm7DzIFuFk7DP2Gt
-         VgBUeQGyYtyBP7DryYqIrQp1hPItLphHqcLaolbL3tlswmhc4o3lcHnluyLQK2XmSmoB
-         ukOMY2S0kyreSsughc9uCQWJO44iVBETO8TVr5QbhGGipK/ChTXUBUkQaLAbWv+8/2t0
-         NQdw==
-X-Gm-Message-State: ANhLgQ3j5UG96n4VmMiO+fbV487bp+2vqKWRqbjNHcv9m8IVpZWZTTBY
-        5z202OB9yBV4fDNQ+PxrDUuhZAiGxBg4NMyf8FiV5hWXbgir
-X-Google-Smtp-Source: ADFU+vveVCtjZFe00P8L3XaLLQqnYWVVmmBwqGMbFCFoBQ1tSt95B7Zv+mSEhz6cOYO8MKdGXim2hF2cI87+uh34wivVtdtgOkSM
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7791Abzq1umUvVU26oR9Lb3nGzS5O2yHRMAjIUKDNR4=;
+        b=oKuhWoyNsLUDJoYpZx8HtydiQM2Tbw9or6epMeHbgCzVKtAekn2+y9dHZ6HQc+7KQZ
+         XJEEiYAKiTG4tm8vGIoSvraVFv63jMtR+33FzMM1BlzJmk5OgKsrV2ijUvtKZCpwhQ1k
+         L7wuZGgJJ2W0RnQXwCiHhp6GFRuMOTl5gT8tV8n+CvFjv2G342B94KUGxaqt8bnwcn/S
+         9AkH7YXva73e8+vAkygm3Fobsq/5Iq8wQlVarIe/3unIV0WXR2m0rPeLdRWTDNFStRve
+         /z4IWgIJ/fDDh+YfbSzFOF/kbHjrG4hrRSBTbDkp1WZ+7KZNCTm7btaT+XNfGfAWVo6n
+         H6mA==
+X-Gm-Message-State: ANhLgQ1K+NtPXkaCd+CJuT7t57a+l6eBHDHDBa9/EM3lxsdPLdRCVDoB
+        8KTp6eEm+F93FyQTlIUSIWQie8/t8b85+hluA5Qn6FGoxCA=
+X-Google-Smtp-Source: ADFU+vtt8m2MROBC4og15kzFKoSDaxAGSgsEAX/9SeviJWNRXX0N8o5p3XMonV+0J1FJcSx78yNmGXI1Tqw5Q2m/JpQ=
+X-Received: by 2002:a67:c189:: with SMTP id h9mr8193773vsj.91.1585037561167;
+ Tue, 24 Mar 2020 01:12:41 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:3808:: with SMTP id b8mr24506069jaa.136.1585037291793;
- Tue, 24 Mar 2020 01:08:11 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 01:08:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bbb17d05a19540cd@google.com>
-Subject: KCSAN: data-race in decode_data.part.0 / sixpack_receive_buf
-From:   syzbot <syzbot+673c2668e8c71c021637@syzkaller.appspotmail.com>
-To:     ajk@comnets.uni-bremen.de, davem@davemloft.net, elver@google.com,
-        linux-hams@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn> <F85A21BA-31A2-4230-BFF8-7B5F355BB125@flygoat.com>
+In-Reply-To: <F85A21BA-31A2-4230-BFF8-7B5F355BB125@flygoat.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Tue, 24 Mar 2020 16:12:29 +0800
+Message-ID: <CADG63jARzp+c9gbp5LO1a7ujgFbBoTD9kZQREFSca+Ung1wEqg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add basic support for Loongson 7A1000 bridge chip
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Mar 24, 2020 at 3:53 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote=
+:
+>
+>
+>
+> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
+10:59:12, Tiezhu Yang <yangtiezhu@loongson.cn> =E5=86=99=E5=88=B0:
+> >The Loongson 7A1000 bridge chip has been released for several years
+> >since the second half of 2017, but it is not supported by the Linux
+> >mainline kernel while it only works well with the Loongson internal
+> >kernel version. When I update the latest version of Linux mainline
+> >kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
+> >the boot process failed and I feel depressed.
+> >
+> >The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
+> >the most Loongson desktop and sever products, it is important to
+> >support Loongson 7A1000 bridge chip by the Linux mainline kernel.
+> >
+> >This patch series adds the basic support for the Loongson 7A1000
+> >bridge chip, when apply these patches based on linux-5.6-rc7, the
+> >boot process is successful and we can login normally used with the
+>
+> Is it still true without IRQ driver?
+>
+> >latest firmware and discrete graphics card, the next work to do is
+> >power management and some other controller device drivers.
+> >
+> >Additionally, when I git clone mips code [1], the speed is too slow
+> >and clone always failed, so this patch series is based on the latest
+> >linux-5.6-rc7 [2].
+>
+> You can clone stable tree from mirrors in China[1] at first,
+> then add mips tree as a remote and fetch from it.
+> In this way it will only download a minimal difference set from foreign s=
+erver so won't spend a lot of time.
+>
+>
+> [1]: https://mirrors.tuna.tsinghua.edu.cn/git/linux-stable.git
 
-syzbot found the following crash on:
+Maybe the mirror is better
+https://kernel.source.codeaurora.cn/pub/scm/linux/kernel/git//stable/linux.=
+git
 
-HEAD commit:    245a4300 Merge branch 'rcu/kcsan' into tip/locking/kcsan
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=16543101e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a4b9db179318d21f
-dashboard link: https://syzkaller.appspot.com/bug?extid=673c2668e8c71c021637
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+673c2668e8c71c021637@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in decode_data.part.0 / sixpack_receive_buf
-
-read to 0xffff8880a68aa8f6 of 1 bytes by task 8699 on cpu 1:
- decode_data.part.0+0x8d/0x120 drivers/net/hamradio/6pack.c:846
- decode_data drivers/net/hamradio/6pack.c:965 [inline]
- sixpack_decode drivers/net/hamradio/6pack.c:968 [inline]
- sixpack_receive_buf+0x901/0xb90 drivers/net/hamradio/6pack.c:458
- tiocsti drivers/tty/tty_io.c:2200 [inline]
- tty_ioctl+0xb75/0xe10 drivers/tty/tty_io.c:2576
- vfs_ioctl fs/ioctl.c:47 [inline]
- file_ioctl fs/ioctl.c:545 [inline]
- do_vfs_ioctl+0x84f/0xcf0 fs/ioctl.c:732
- ksys_ioctl+0xbd/0xe0 fs/ioctl.c:749
- __do_sys_ioctl fs/ioctl.c:756 [inline]
- __se_sys_ioctl fs/ioctl.c:754 [inline]
- __x64_sys_ioctl+0x4c/0x60 fs/ioctl.c:754
- do_syscall_64+0xcc/0x3a0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-write to 0xffff8880a68aa8f6 of 1 bytes by task 8154 on cpu 0:
- decode_data drivers/net/hamradio/6pack.c:837 [inline]
- sixpack_decode drivers/net/hamradio/6pack.c:968 [inline]
- sixpack_receive_buf+0x40e/0xb90 drivers/net/hamradio/6pack.c:458
- tty_ldisc_receive_buf+0xeb/0xf0 drivers/tty/tty_buffer.c:465
- tty_port_default_receive_buf+0x87/0xd0 drivers/tty/tty_port.c:38
- receive_buf drivers/tty/tty_buffer.c:481 [inline]
- flush_to_ldisc+0x1d5/0x260 drivers/tty/tty_buffer.c:533
- process_one_work+0x3d4/0x890 kernel/workqueue.c:2264
- worker_thread+0xa0/0x800 kernel/workqueue.c:2410
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 8154 Comm: kworker/u4:5 Not tainted 5.5.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events_unbound flush_to_ldisc
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> >
+> >If you have any questions and suggestions, please let me know.
+> >
+> >Thanks,
+> >
+> >Tiezhu Yang
+> >
+> >v2:
+> >  - The split patch series about Loongson vendor ID and SATA controller
+> >    has been merged into the linux-block.git by Jens Axboe [3].
+> >
+> >  - Think about using hierarchy IRQ domain in the patch of interrupt
+> >    controller, and this maybe depend on the patch series by Jiaxun
+> >    ("Modernize Loongson64 Machine"), so the patch about interrupt is
+> >    not included in this v2 patch series.
+> >
+> >[1] git clone
+> >https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
+> >[2] git clone https://github.com/torvalds/linux.git
+> >[3]
+> >https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/co=
+mmit/?h=3Dfor-next&id=3D9acb9fe18d86
+> >https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/co=
+mmit/?h=3Dfor-next&id=3De49bd683e00b
+> >
+> >Tiezhu Yang (3):
+> >  MIPS: Loongson: Get host bridge information
+> >  MIPS: Loongson: Add DMA support for 7A1000
+> >  MIPS: Loongson: Add PCI support for 7A1000
+> >
+> > arch/mips/include/asm/mach-loongson64/boot_param.h | 20 ++++++
+> > arch/mips/loongson64/dma.c                         |  9 ++-
+> > arch/mips/loongson64/env.c                         | 20 ++++++
+> > arch/mips/loongson64/init.c                        | 17 +++++
+> >arch/mips/pci/ops-loongson3.c                      | 72
+> >++++++++++++++++++++--
+> > 5 files changed, 131 insertions(+), 7 deletions(-)
+>
+> --
+> Jiaxun Yang
