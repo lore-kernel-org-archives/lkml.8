@@ -4,58 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CCC8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E463C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 222E120774
+	by mail.kernel.org (Postfix) with ESMTP id D30032076F
 	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rpETRG8x"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YHsHf9RC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgCXP6z (ORCPT
+        id S1728335AbgCXP64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:58:55 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:32977 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbgCXP6x (ORCPT
+        Tue, 24 Mar 2020 11:58:56 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54064 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728016AbgCXP6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:58:53 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w25so37757wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:58:51 -0700 (PDT)
+        Tue, 24 Mar 2020 11:58:54 -0400
+Received: by mail-wm1-f65.google.com with SMTP id b12so3793655wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:58:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YPXTp5qjoojtUwOKaMWOgJgogwlThEl+Qmy36Dg38C4=;
-        b=rpETRG8x+xc/5PfrYyKYVF+Ev/1UU28xWSwJ/lIdcjZeII+np4CR48UpGRcAW564Nu
-         g3pDbDoAxM2+wDvnkry0RFVNjw3i64fcDBHOCDJIbc4RG807J7jhcEY3e5gcIF6crN8A
-         t7OTB1nM/7LsLuPvJo/9VyADD141EJCIWQbEyLxOLHQw1FISRUx9gXJ1hu/sPxDtMla4
-         uhlORhEcvmPjdGcuaKIcn47ZYhs1pghTucxRC8QfH/IFJBhaUaly6Pr4YMCPZm5A4ZNM
-         /wtpy1R0YfUhOWoZLsOpOeI3NPGkK/jsr5yaJoVbiZhOMhgO5r99si0CijMm/skADJW9
-         EXjw==
+        bh=XPYOl9OSvnlb7pbajpjD/KFcLeeFx7WRfchUdrcylgw=;
+        b=YHsHf9RCWJ9Rkt8w6oePRTlQPhaIlN8o9yI18GdZk6d549IZQI9P0+hsaofIYyEuYJ
+         Pu4WSGVwS4cBplZPuQ3WqdbIeCm+pJ8I7Q55t8f5yS57f49NCTL6DeIx97+mL4ijqlXM
+         Sy+4gHnjl43p9nDSLap7RJ3f7oMqOMH7TO1cruo0H8JyPGX9id6qeoDIJzaTjBskAav7
+         uQu6aJZCeEM/zClNuaDzR74lg++HuvFmB41duTI54392uEqAuGclZmUHHpfCUabph7fX
+         BFrXxCxj3bYBkmJuiK7X8NVRLWhBcm8zMQchXuJ3gpD9r3GZhHgLzqyaMcFTyTbxfKVf
+         ufJw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YPXTp5qjoojtUwOKaMWOgJgogwlThEl+Qmy36Dg38C4=;
-        b=GWGorsHRjHdDykfPL8BnSiNbLyYolesQJnwChkcJy8K3SQtzcdlIdpVEqrRvKwdRqf
-         LORl/PXybft+6oleYSZ2MVdkzyc+2gBjFPDIF29rwsPVmF4Fjp/sAhlMupE92WPcoZiC
-         mn7l5uG6LVs9p7ZsIVE5hLIxbc+LQSl5cB0Hy/JsP6nU5H2zASqXOFtIsWA8FKgW24V1
-         VS49zke+CUtZAp1MF2HSvb+IM0dQimcuLOANvBhqHvmAlCkFjBCDYoOa+Qj+wagAVqqx
-         X0jQiFyUZV5rMShMdSBjRuCLTYVn3SpEbgyjxpXrXl9Vzi6Z/WfxoGVeGkXUzwF1OCqY
-         mfAg==
-X-Gm-Message-State: ANhLgQ1ikIdy76iUdh6iy0M1oOcOt7QIRqvFwZjPmeM+SpAWp6KmOTnz
-        IsLFP3rXUwqzs2pqyHZjcyMS1w==
-X-Google-Smtp-Source: ADFU+vuRoADbG3q5yu8n7Ne4gC1B+yIMrcsW6YQOOMW3QmgdTv3+DZKX3n2h4/mdvGaZ4ajDaV5cpA==
-X-Received: by 2002:a7b:ca4e:: with SMTP id m14mr6099145wml.164.1585065530480;
-        Tue, 24 Mar 2020 08:58:50 -0700 (PDT)
+        bh=XPYOl9OSvnlb7pbajpjD/KFcLeeFx7WRfchUdrcylgw=;
+        b=WJsTp7t2qYUabKkla21a52MZEeFHiKX7IxQnxda2UGdBP+0gVFVw/RkCXEDYHcQm/w
+         1ILiC0J/ptFnP8CHckEqb8Xx4ulVkezG+qskz4zDz2WQAXPeq8Cx8IblQCaEPDi6Lj/F
+         52wOMqLY68E6Rvya1VLqNf9xDQ6BxEmprJYJRlJRpLBu0ESnny6UYI0qXNGV5nvmab9t
+         5eOB2Sfb2AiUPEikjbI0fgP7JQDN5Uk37X286kJYd90XmnejQFpzI4tc5FfWPhU/5zVO
+         7oz/lYKtT7bZaLKOdH5JJmJOodnRw3puSQdfjfdWWE9hkRn82pn9HC3pnUlg/qLUeoUG
+         /zGA==
+X-Gm-Message-State: ANhLgQ10XI5ofCMNN2buqenOcq2f5e9YQINYrEAxf4cfZfeuCuSpcSPU
+        EWbgvkP6TIcBtsUGuf7aMRL0LA==
+X-Google-Smtp-Source: ADFU+vuZkUbQmRe+H1djjQ4pvSEQwOP24JfoxEbqOVwByz2BSkhjvCiifE7uaI//6oPP5ccMUuMJrA==
+X-Received: by 2002:a1c:9ecb:: with SMTP id h194mr6657099wme.49.1585065531892;
+        Tue, 24 Mar 2020 08:58:51 -0700 (PDT)
 Received: from xps7590.local ([2a02:2450:102f:13b8:e15d:2127:89a:e5dc])
-        by smtp.gmail.com with ESMTPSA id t124sm4993321wmg.13.2020.03.24.08.58.49
+        by smtp.gmail.com with ESMTPSA id t124sm4993321wmg.13.2020.03.24.08.58.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 08:58:49 -0700 (PDT)
+        Tue, 24 Mar 2020 08:58:51 -0700 (PDT)
 From:   Robert Foss <robert.foss@linaro.org>
 To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
@@ -67,9 +67,9 @@ To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
         Loic Poulain <loic.poulain@linaro.org>,
         Luca Weiss <luca@z3ntu.xyz>
 Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v3 1/6] arm64: dts: msm8916: Add i2c-qcom-cci node
-Date:   Tue, 24 Mar 2020 16:58:37 +0100
-Message-Id: <20200324155843.10719-2-robert.foss@linaro.org>
+Subject: [v3 2/6] arm64: dts: apq8016-sbc: Add CCI/Sensor nodes
+Date:   Tue, 24 Mar 2020 16:58:38 +0100
+Message-Id: <20200324155843.10719-3-robert.foss@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200324155843.10719-1-robert.foss@linaro.org>
 References: <20200324155843.10719-1-robert.foss@linaro.org>
@@ -82,7 +82,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Loic Poulain <loic.poulain@linaro.org>
 
-The msm8916 CCI controller provides one CCI/I2C bus.
+Add cci device to msm8916.dtsi.
+Add default 96boards camera node for db410c (apq8016-sbc).
 
 Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
 Signed-off-by: Robert Foss <robert.foss@linaro.org>
@@ -90,52 +91,112 @@ Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
- - Add label to cci node
- - Sort cci node by address
- - Relabel cci0 i2c bus to cci-i2c0
+ - Reference CCI by label
+ - Don't use generic node names
+ - Move regulator nodes out of /soc
+ - Use CCI label and move node out of /soc
+ - Use reference for camss and move node out of /soc
+ - Use reference for cci-i2c0 and move out of /cci
+ - Disable camera_read by default, since no mezzanine board is guaranteed
 
 
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 76 +++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index 9f31064f2374..1d5cb3fef906 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -1584,6 +1584,33 @@ ports {
- 		};
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index 037e26b3f8d5..d98c7e9e6eb9 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -51,6 +51,30 @@ chosen {
+ 		stdout-path = "serial0";
  	};
  
-+	cci: cci@1b0c000 {
-+		compatible = "qcom,msm8916-cci";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x1b0c000 0x1000>;
-+		interrupts = <GIC_SPI 50 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CCI_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CCI_CLK>,
-+			<&gcc GCC_CAMSS_AHB_CLK>;
-+		clock-names = "camss_top_ahb", "cci_ahb",
-+				  "cci", "camss_ahb";
-+		assigned-clocks = <&gcc GCC_CAMSS_CCI_AHB_CLK>,
-+				  <&gcc GCC_CAMSS_CCI_CLK>;
-+		assigned-clock-rates = <80000000>, <19200000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cci0_default>;
-+		status = "disabled";
-+
-+		cci_i2c0: i2c-bus@0 {
-+			reg = <0>;
-+			clock-frequency = <400000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
++	camera_vdddo_1v8: camera_vdddo_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdddo";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
 +	};
 +
- 	smd {
- 		compatible = "qcom,smd";
++	camera_vdda_2v8: camera_vdda_2v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vdda";
++		regulator-min-microvolt = <2800000>;
++		regulator-max-microvolt = <2800000>;
++		regulator-always-on;
++	};
++
++	camera_vddd_1v5: camera_vddd_1v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "camera_vddd";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++	};
++
+ 	reserved-memory {
+ 		ramoops@bff00000{
+ 			compatible = "ramoops";
+@@ -538,6 +562,58 @@ button@0 {
+ 	};
+ };
  
++&camss {
++	status = "ok";
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		port@0 {
++			reg = <0>;
++			csiphy0_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&ov5640_ep>;
++				status = "okay";
++			};
++		};
++	};
++};
++
++&cci {
++	status = "ok";
++};
++
++&cci_i2c0 {
++	camera_rear@3b {
++		compatible = "ovti,ov5640";
++		reg = <0x3b>;
++
++		enable-gpios = <&msmgpio 34 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&msmgpio 35 GPIO_ACTIVE_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&camera_rear_default>;
++
++		clocks = <&gcc GCC_CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		clock-frequency = <23880000>;
++
++		vdddo-supply = <&camera_vdddo_1v8>;
++		vdda-supply = <&camera_vdda_2v8>;
++		vddd-supply = <&camera_vddd_1v5>;
++
++		/* No camera mezzanine by default */
++		status = "disabled";
++
++		port {
++			ov5640_ep: endpoint {
++				clock-lanes = <1>;
++				data-lanes = <0 2>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
++};
++
+ &spmi_bus {
+ 	pm8916_0: pm8916@0 {
+ 		pon@800 {
 -- 
 2.25.1
 
