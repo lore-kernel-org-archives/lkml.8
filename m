@@ -2,157 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB20C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E154FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DE920774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEFB20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:50:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A9CiRgGu"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="bvYpkG8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgCXOuM (ORCPT
+        id S1728169AbgCXOuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:50:12 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:36251 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727837AbgCXOuM (ORCPT
+        Tue, 24 Mar 2020 10:50:16 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36784 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbgCXOuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:50:12 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 31so15776124wrs.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:50:11 -0700 (PDT)
+        Tue, 24 Mar 2020 10:50:14 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g12so18891066ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=oGbi1kK4rZ5Jg0cdOf4BlknnOlqmymkgqgzxdZFk9xc=;
-        b=A9CiRgGuc0FzDG8Jea7fRV9it5TL0VjdcTyRfjSQ7U6FCuWl+0j9LmRVYnApg12iUa
-         2FrYHGgTGEObTGVfsbzvatv/yw//8Y8xyP7ubTh8hHoCVdlpsnSjckPtRjenc1x0QOhd
-         n3PsTLkaVT6G+ohUiS6sU/8kAAkOTJj4oFtkk=
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=46/qQ50l1vh+J9wzA3xpUZxvvo8d7tioQFsg4+TJ/o8=;
+        b=bvYpkG8m/ns3rG4ZA+zT/M4MjsHPmDeoGGnpZ5cpYzMvSfGA4iOGMFepedJZweWbNe
+         2iyBmESEUeF6IAQJfDmsoYgZ5UsV0INu6mmp3Yare9tsponpOhbkMHgg+tPLmXvgBtpe
+         8jeYLQx+pLubdj8l4AUXte+u0jX5TjBmNmpw79Qd/FNhuoQS4mUrMfs6399CzGjQNsxt
+         +cIiJC7mz00fj6BWt/lAM9WLf99bZ7mzCNNef1hULoqwBw6HjopoNZdlf8423OjoRHx+
+         34/AGy3xW1NxXaHFhRAmQu0tBqSNYOitMsFSXZBpS8G4+ZNExQxXFjHa75IYB247HWho
+         VgYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=oGbi1kK4rZ5Jg0cdOf4BlknnOlqmymkgqgzxdZFk9xc=;
-        b=pxFwC7KsbjMoVlVNPW9qM2wWcJpsTP4Cp+bV8PpvlQeKbO3VwRI/gOupnrOtuI+sFY
-         WIarfteQ6KBneHh7xcap6FHicEbEsjSK7rX9Qks1+PA0DdNp8mqwCz2qw8ooz+wWMZru
-         BnXe2IOcJQjqzL64bS6rsxLy+Bqw7sgWGFz17JukjxlIFTJu1lyxE1LoS470m3dIxI/e
-         /VjMiIHHGCiMrIgQo4AYnlPBVPAhZWLjQPp3O8vs7WEm03EHcPDTrwhyVydMcL4UGlYR
-         ndyyqQ+1fUBxgL4F8MqdurSpIHtJUq03BZpssqQU6P3TGSna159QV4Qg5ndtVntSaZxf
-         QY9w==
-X-Gm-Message-State: ANhLgQ251ylpn9bOA3kmqlFt/74tulu7YOUueyuKxr2BhiX07Gx4YJlO
-        AZlIZhkcM8ebAkkprwF0Q0sAcg==
-X-Google-Smtp-Source: ADFU+vtsBplmFb4Y6HIsHkRuws6sb8YO/62KkZdxsazEbdRgj7TzX90VeMndzuqAH2a1dHAS+iNnog==
-X-Received: by 2002:adf:f0c5:: with SMTP id x5mr10031231wro.415.1585061410761;
-        Tue, 24 Mar 2020 07:50:10 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id y7sm6619108wrq.54.2020.03.24.07.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 07:50:10 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 24 Mar 2020 15:50:03 +0100
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <20200324145003.GA2685@chromium.org>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-5-kpsingh@chromium.org>
- <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=46/qQ50l1vh+J9wzA3xpUZxvvo8d7tioQFsg4+TJ/o8=;
+        b=QzUOeWDfH9kt/rhdZvldeO4KcD6LIIpKja/E2GcH5QHQ+PTOTGQy6mrMpWRw3dedwi
+         BJ9qSoVCbWFOjGJL/vT8gsUlJXyolbxYpce8YzowMBx84lvdJcVCFHeIMfZGG5XGFdk2
+         uuwJzcPw7R7YiGHTaWtwZ6s+Rjss+LDa8XZVLmppmnV6GD06HIoV/ieL/jfB0y4IgwcV
+         C5G0gOasIBz8tDP7o5mhmQDb5/SaZU/HXStwZwGJT072o7xVnQa+dr67tmFpEA2sZHM7
+         8v4MbSCD7/D2ZWe3EgtrlHByFoKcm6r04ohJsSHhJXOvI+VnMXorRIbOk3WC+kVwQDFv
+         SU7g==
+X-Gm-Message-State: ANhLgQ1qhdPlRMoGQesTr+W5QXfQNqoAcD+ykphWMc3PP9maN5D3gfuz
+        cRTvKziDAUZDSb5MLw5g6KeDOPsOGdpwJQ==
+X-Google-Smtp-Source: ADFU+vsduWqt1Gs363mlpwe4KUHBbe4xPS+tER4rFbeA45hsI3KGrYgm1BWdEuzCSeE6tQZKCp8hmQ==
+X-Received: by 2002:a2e:9f07:: with SMTP id u7mr11833365ljk.115.1585061409797;
+        Tue, 24 Mar 2020 07:50:09 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:42d3:3567:1f77:9f32:8c0:b337])
+        by smtp.gmail.com with ESMTPSA id x11sm1431543ljm.7.2020.03.24.07.50.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 07:50:09 -0700 (PDT)
+Subject: Re: [PATCH v2]usb: gadget: bcm63xx_udc:remove redundant variable
+ assignment
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, cernekee@gmail.com,
+        balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200324132029.16296-1-tangbin@cmss.chinamobile.com>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <a0afd44f-177d-ad21-02b5-93b15b29399e@cogentembedded.com>
+Date:   Tue, 24 Mar 2020 17:50:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324132029.16296-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-Mär 10:35, Stephen Smalley wrote:
-> On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > JITed BPF programs are dynamically attached to the LSM hooks
-> > using BPF trampolines. The trampoline prologue generates code to handle
-> > conversion of the signature of the hook to the appropriate BPF context.
-> >
-> > The allocated trampoline programs are attached to the nop functions
-> > initialized as LSM hooks.
-> >
-> > BPF_PROG_TYPE_LSM programs must have a GPL compatible license and
-> > and need CAP_SYS_ADMIN (required for loading eBPF programs).
-> >
-> > Upon attachment:
-> >
-> > * A BPF fexit trampoline is used for LSM hooks with a void return type.
-> > * A BPF fmod_ret trampoline is used for LSM hooks which return an
-> >   int. The attached programs can override the return value of the
-> >   bpf LSM hook to indicate a MAC Policy decision.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> > Reviewed-by: Florent Revest <revest@google.com>
-> > ---
+Hello!
+
+On 03/24/2020 04:20 PM, Tang Bin wrote:
+
+> --v1------------------------------------
+> In this function, the variable 'rc' is assigned after this place,
+> so the definition is invalid.
 > 
-> > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> > index 530d137f7a84..2a8131b640b8 100644
-> > --- a/kernel/bpf/bpf_lsm.c
-> > +++ b/kernel/bpf/bpf_lsm.c
-> > @@ -9,6 +9,9 @@
-> >  #include <linux/btf.h>
-> >  #include <linux/lsm_hooks.h>
-> >  #include <linux/bpf_lsm.h>
-> > +#include <linux/jump_label.h>
-> > +#include <linux/kallsyms.h>
-> > +#include <linux/bpf_verifier.h>
-> >
-> >  /* For every LSM hook  that allows attachment of BPF programs, declare a NOP
-> >   * function where a BPF program can be attached as an fexit trampoline.
-> > @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
-> >  #include <linux/lsm_hook_names.h>
-> >  #undef LSM_HOOK
-> >
-> > +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
-> > +
-> > +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
-> > +                       const struct bpf_prog *prog)
-> > +{
-> > +       /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
-> > +        */
-> > +       if (!capable(CAP_MAC_ADMIN))
-> > +               return -EPERM;
+> --v2------------------------------------
+> In this function, the variable 'rc' will be assigned by the function
+> 'usb_add_gadget_udc()',so the assignment here is redundant,we should
+> remove it.
 > 
-> I had asked before, and will ask again: please provide an explicit LSM
-> hook for mediating whether one can make changes to the LSM hooks.
-> Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SELinux.
+> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
 
-What do you think about:
+   NAK.
 
-  int security_check_mutable_hooks(void)
+> ---
+>  drivers/usb/gadget/udc/bcm63xx_udc.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/usb/gadget/udc/bcm63xx_udc.c b/drivers/usb/gadget/udc/bcm63xx_udc.c
+> index 54501814d..a7afa8c35 100644
+> --- a/drivers/usb/gadget/udc/bcm63xx_udc.c
+> +++ b/drivers/usb/gadget/udc/bcm63xx_udc.c
+> @@ -2321,8 +2321,6 @@ static int bcm63xx_udc_probe(struct platform_device *pdev)
+>  	if (rc)
+>  		return rc;
+>  
+> -	rc = -ENXIO;
+> -
+>  	/* IRQ resource #0: control interrupt (VBUS, speed, etc.) */
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq < 0)
 
-Do you have any suggestions on the signature of this hook? Does this
-hook need to be BPF specific?
+   This *if* branch goes to the 'out_uninit' label which uses 'rc' (and it should
+be negative).
+   In principle, if you change 'rc' to 'irq' below, this patch would be sane.
+It's not as is.
 
-- KP
+MBR, Sergei
