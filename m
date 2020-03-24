@@ -2,330 +2,256 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C4CC54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464B3C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772EB20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 223E520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:02:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgCXKB6 (ORCPT
+        id S1727324AbgCXKC1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:01:58 -0400
-Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:50588 "EHLO
-        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726563AbgCXKB4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:01:56 -0400
-Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
-  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 24 Mar 2020 15:31:47 +0530
-Received: from kalyant-linux.qualcomm.com ([10.204.66.210])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 24 Mar 2020 15:31:30 +0530
-Received: by kalyant-linux.qualcomm.com (Postfix, from userid 94428)
-        id 67F1A4718; Tue, 24 Mar 2020 15:31:29 +0530 (IST)
-From:   Kalyan Thota <kalyan_t@codeaurora.org>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
-        linux-kernel@vger.kernel.org, robdclark@gmail.com,
-        seanpaul@chromium.org, hoegsberg@chromium.org,
-        dianders@chromium.org, jsanka@codeaurora.org,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Subject: [PATCH 2/2] drm/msm/dpu: add support for pcc color block in dpu driver
-Date:   Tue, 24 Mar 2020 15:31:19 +0530
-Message-Id: <1585044079-358-2-git-send-email-kalyan_t@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org>
-References: <1585044079-358-1-git-send-email-kalyan_t@codeaurora.org>
+        Tue, 24 Mar 2020 06:02:27 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:43818 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726994AbgCXKC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:02:26 -0400
+Received: from [10.130.0.79] (unknown [113.200.148.30])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Axpumr2nlecnMfAA--.28S3;
+        Tue, 24 Mar 2020 18:02:19 +0800 (CST)
+Subject: Re: [PATCH v2 3/3] MIPS: Loongson: Add PCI support for 7A1000
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+ <1584932355-3642-4-git-send-email-yangtiezhu@loongson.cn>
+ <2518452B-57E0-4327-8154-0FBD9D2EC27A@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <e95cb514-11aa-96f4-a934-533db8515d9e@loongson.cn>
+Date:   Tue, 24 Mar 2020 18:02:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
+MIME-Version: 1.0
+In-Reply-To: <2518452B-57E0-4327-8154-0FBD9D2EC27A@flygoat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf9Axpumr2nlecnMfAA--.28S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxtr45tFWrCF1DZFyUJFyxXwb_yoWxAF18pr
+        43J3WUKr4FqF1fGFnYv398GF1fAFsxJF92kFW7tFyjv3sIvryFqryUWF15Kr4S9r4DZa4j
+        9FWSgF17G3W0kaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
+        Y487MxkIecxEwVAFwVW8twCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
+        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
+        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
+        v20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73Uj
+        IFyTuYvjfUOlkVUUUUU
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change adds support for color correction sub block
-for SC7180 device.
+On 03/24/2020 03:28 PM, Jiaxun Yang wrote:
+>
+> 于 2020年3月23日 GMT+08:00 上午10:59:15, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
+>> Add PCI support for 7A1000 to detect PCI device.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> Hi Tiezhu,
+>
+> See my comments below.
+>
+>> ---
+>> arch/mips/include/asm/mach-loongson64/boot_param.h |  9 +++
+>> arch/mips/loongson64/env.c                         |  2 +
+>> arch/mips/pci/ops-loongson3.c                      | 72
+>> ++++++++++++++++++++--
+>> 3 files changed, 79 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h
+>> b/arch/mips/include/asm/mach-loongson64/boot_param.h
+>> index c759b7c..d766a36 100644
+>> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
+>> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
+>> @@ -195,6 +195,7 @@ enum loongson_bridge_type {
+>> 	LS7A1000 = 2
+>> };
+>>
+>> +struct pci_bus;
+>> struct loongson_system_configuration {
+>> 	u32 nr_cpus;
+>> 	u32 nr_nodes;
+>> @@ -220,6 +221,8 @@ struct loongson_system_configuration {
+>> 	struct sensor_device sensors[MAX_SENSORS];
+>> 	u64 workarounds;
+>> 	void (*early_config)(void);
+>> +	int (*pci_config_access)(unsigned char access_type, struct pci_bus
+>> *bus,
+>> +				 unsigned int devfn, int where, u32 *data);
+>> };
+>>
+>> extern struct efi_memory_map_loongson *loongson_memmap;
+>> @@ -228,5 +231,11 @@ extern struct loongson_system_configuration
+>> loongson_sysconf;
+>> extern u32 node_id_offset;
+>> extern void rs780e_early_config(void);
+>> extern void ls7a1000_early_config(void);
+>> +extern int rs780e_pci_config_access(unsigned char access_type,
+>> +		struct pci_bus *bus, unsigned int devfn,
+>> +		int where, u32 *data);
+>> +extern int ls7a1000_pci_config_access(unsigned char access_type,
+>> +		struct pci_bus *bus, unsigned int devfn,
+>> +		int where, u32 *data);
+>>
+>> #endif
+>> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
+>> index 32a3822..1c27f46 100644
+>> --- a/arch/mips/loongson64/env.c
+>> +++ b/arch/mips/loongson64/env.c
+>> @@ -168,9 +168,11 @@ void __init prom_init_env(void)
+>> 		pr_info("The bridge chip is Loongson 7A1000\n");
+>> 		loongson_sysconf.bridgetype = LS7A1000;
+>> 		loongson_sysconf.early_config = ls7a1000_early_config;
+>> +		loongson_sysconf.pci_config_access = ls7a1000_pci_config_access;
+>> 	} else {
+>> 		pr_info("The bridge chip is AMD RS780E or SR5690\n");
+>> 		loongson_sysconf.bridgetype = RS780E;
+>> 		loongson_sysconf.early_config = rs780e_early_config;
+>> +		loongson_sysconf.pci_config_access = rs780e_pci_config_access;
+>> 	}
+>> }
+>> diff --git a/arch/mips/pci/ops-loongson3.c
+>> b/arch/mips/pci/ops-loongson3.c
+>> index 2f6ad36..0b8fc5e 100644
+>> --- a/arch/mips/pci/ops-loongson3.c
+>> +++ b/arch/mips/pci/ops-loongson3.c
+>> @@ -13,7 +13,10 @@
+>> #define HT1LO_PCICFG_BASE      0x1a000000
+>> #define HT1LO_PCICFG_BASE_TP1  0x1b000000
+>>
+>> -static int loongson3_pci_config_access(unsigned char access_type,
+>> +#define HT1LO_PCICFG_BASE_EXT 0xefe00000000
+>> +#define HT1LO_PCICFG_BASE_TP1_EXT 0xefe10000000
+>> +
+>> +int rs780e_pci_config_access(unsigned char access_type,
+>> 		struct pci_bus *bus, unsigned int devfn,
+>> 		int where, u32 *data)
+>> {
+>> @@ -62,11 +65,72 @@ static int loongson3_pci_config_access(unsigned
+>> char access_type,
+>> 	return PCIBIOS_SUCCESSFUL;
+>> }
+>>
+>> +
+>> +int ls7a1000_pci_config_access(unsigned char access_type,
+>> +		struct pci_bus *bus, unsigned int devfn,
+>> +		int where, u32 *data)
+>> +{
+>> +	u_int64_t addr;
+>> +	void *addrp;
+>> +	unsigned char busnum = bus->number;
+>> +	int device = PCI_SLOT(devfn);
+>> +	int function = PCI_FUNC(devfn);
+>> +	int reg = where & ~3;
+>> +
+>> +	if (where >= PCI_CFG_SPACE_EXP_SIZE)
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>> +	if (busnum == 0 && device > 23)
+>> +		return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>> +	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
+>> +		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
+>> +		if (busnum == 0) {
+>> +			addr = HT1LO_PCICFG_BASE | addr;
+>> +			addrp = (void *)TO_UNCAC(addr);
+>> +		} else {
+>> +			addr = HT1LO_PCICFG_BASE_TP1 | addr;
+>> +			addrp = (void *)TO_UNCAC(addr);
+>> +		}
+>> +	} else { /* extended config */
+>> +		reg = (reg & 0xff) | ((reg & 0xf00) << 16);
+>> +		addr = (busnum << 16) | (device << 11) | (function << 8) | reg;
+>> +		if (busnum == 0) {
+>> +			addr = HT1LO_PCICFG_BASE_EXT | addr;
+>> +			addrp = (void *)TO_UNCAC(addr);
+>> +		} else {
+>> +			addr = HT1LO_PCICFG_BASE_TP1_EXT | addr;
+>> +			addrp = (void *)TO_UNCAC(addr);
+>> +		}
+>> +	}
+>> +
+>> +	if (access_type == PCI_ACCESS_WRITE)
+>> +		*(unsigned int *)addrp = cpu_to_le32(*data);
+>> +	else {
+>> +		*data = le32_to_cpu(*(unsigned int *)addrp);
+>> +		if (*data == 0xffffffff) {
+>> +			*data = -1;
+>> +			return PCIBIOS_DEVICE_NOT_FOUND;
+>> +		}
+>> +	}
+>> +
+>> +	return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +static void ls7a1000_pci_class_quirk(struct pci_dev *dev)
+>> +{
+>> +	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>> +}
+>> +
+>> +DECLARE_PCI_FIXUP_EARLY(0x0014, 0x7a09, ls7a1000_pci_class_quirk);
+>> +DECLARE_PCI_FIXUP_EARLY(0x0014, 0x7a19, ls7a1000_pci_class_quirk);
+>> +DECLARE_PCI_FIXUP_EARLY(0x0014, 0x7a29, ls7a1000_pci_class_quirk);
+> Please place them to fixup-loongson3.c,
+> don't mess up with operations.
+>
+> And you've already added vendor ID to pci_ids.h.
+> You can use it and tell us "it depends on pci-next tree's commit".
 
-Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c       | 77 ++++++++++++++++++++++++++
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c |  9 ++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c    | 49 +++++++++++++++-
- drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h    | 33 ++++++++++-
- 4 files changed, 164 insertions(+), 4 deletions(-)
+OK, I will do it. Thank you very much.
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-index bf51341..156a997 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
-@@ -9,6 +9,7 @@
- #include <linux/sort.h>
- #include <linux/debugfs.h>
- #include <linux/ktime.h>
-+#include <linux/bits.h>
- 
- #include <drm/drm_crtc.h>
- #include <drm/drm_flip_work.h>
-@@ -20,6 +21,7 @@
- #include "dpu_kms.h"
- #include "dpu_hw_lm.h"
- #include "dpu_hw_ctl.h"
-+#include "dpu_hw_dspp.h"
- #include "dpu_crtc.h"
- #include "dpu_plane.h"
- #include "dpu_encoder.h"
-@@ -40,6 +42,9 @@
- /* timeout in ms waiting for frame done */
- #define DPU_CRTC_FRAME_DONE_TIMEOUT_MS	60
- 
-+#define	CONVERT_S3_15(val) \
-+	(((((u64)val) & ~BIT_ULL(63)) >> 17) & GENMASK_ULL(17, 0))
-+
- static struct dpu_kms *_dpu_crtc_get_kms(struct drm_crtc *crtc)
- {
- 	struct msm_drm_private *priv = crtc->dev->dev_private;
-@@ -422,6 +427,74 @@ static void _dpu_crtc_setup_lm_bounds(struct drm_crtc *crtc,
- 	drm_mode_debug_printmodeline(adj_mode);
- }
- 
-+static void _dpu_crtc_get_pcc_coeff(struct drm_crtc_state *state,
-+		struct dpu_hw_pcc_cfg *cfg)
-+{
-+	struct drm_color_ctm *ctm;
-+
-+	memset(cfg, 0, sizeof(struct dpu_hw_pcc_cfg));
-+
-+	ctm = (struct drm_color_ctm *)state->ctm->data;
-+
-+	if (!ctm)
-+		return;
-+
-+	cfg->r.r = CONVERT_S3_15(ctm->matrix[0]);
-+	cfg->g.r = CONVERT_S3_15(ctm->matrix[1]);
-+	cfg->b.r = CONVERT_S3_15(ctm->matrix[2]);
-+
-+	cfg->r.g = CONVERT_S3_15(ctm->matrix[3]);
-+	cfg->g.g = CONVERT_S3_15(ctm->matrix[4]);
-+	cfg->b.g = CONVERT_S3_15(ctm->matrix[5]);
-+
-+	cfg->r.b = CONVERT_S3_15(ctm->matrix[6]);
-+	cfg->g.b = CONVERT_S3_15(ctm->matrix[7]);
-+	cfg->b.b = CONVERT_S3_15(ctm->matrix[8]);
-+}
-+
-+static void _dpu_crtc_setup_cp_blocks(struct drm_crtc *crtc)
-+{
-+	struct drm_crtc_state *state = crtc->state;
-+	struct dpu_crtc_state *cstate = to_dpu_crtc_state(crtc->state);
-+	struct dpu_crtc_mixer *mixer = cstate->mixers;
-+	struct dpu_hw_pcc_cfg cfg;
-+	struct dpu_hw_ctl *ctl;
-+	struct dpu_hw_mixer *lm;
-+	struct dpu_hw_dspp *dspp;
-+	int i;
-+
-+
-+	if (!state->color_mgmt_changed)
-+		return;
-+
-+	for (i = 0; i < cstate->num_mixers; i++) {
-+		ctl = mixer[i].lm_ctl;
-+		lm = mixer[i].hw_lm;
-+		dspp = mixer[i].hw_dspp;
-+
-+		if (!dspp || !dspp->ops.setup_pcc)
-+			continue;
-+
-+		if (!state->ctm) {
-+			dspp->ops.setup_pcc(dspp, NULL);
-+		} else {
-+			_dpu_crtc_get_pcc_coeff(state, &cfg);
-+			dspp->ops.setup_pcc(dspp, &cfg);
-+		}
-+
-+		mixer[i].flush_mask |= ctl->ops.get_bitmask_dspp(ctl,
-+			mixer[i].hw_dspp->idx);
-+
-+		/* stage config flush mask */
-+		ctl->ops.update_pending_flush(ctl, mixer[i].flush_mask);
-+
-+		DPU_DEBUG("lm %d, ctl %d, flush mask 0x%x\n",
-+			mixer[i].hw_lm->idx - DSPP_0,
-+			ctl->idx - CTL_0,
-+			mixer[i].flush_mask);
-+	}
-+}
-+
- static void dpu_crtc_atomic_begin(struct drm_crtc *crtc,
- 		struct drm_crtc_state *old_state)
- {
-@@ -475,6 +548,8 @@ static void dpu_crtc_atomic_begin(struct drm_crtc *crtc,
- 
- 	_dpu_crtc_blend_setup(crtc);
- 
-+	_dpu_crtc_setup_cp_blocks(crtc);
-+
- 	/*
- 	 * PP_DONE irq is only used by command mode for now.
- 	 * It is better to request pending before FLUSH and START trigger
-@@ -1317,6 +1392,8 @@ struct drm_crtc *dpu_crtc_init(struct drm_device *dev, struct drm_plane *plane,
- 
- 	drm_crtc_helper_add(crtc, &dpu_crtc_helper_funcs);
- 
-+	drm_crtc_enable_color_mgmt(crtc, 0, true, 0);
-+
- 	/* save user friendly CRTC name for later */
- 	snprintf(dpu_crtc->name, DPU_CRTC_NAME_SIZE, "crtc%u", crtc->base.id);
- 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-index 19d065a..731b4fb 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_catalog.c
-@@ -41,7 +41,7 @@
- #define PINGPONG_SDM845_SPLIT_MASK \
- 	(PINGPONG_SDM845_MASK | BIT(DPU_PINGPONG_TE2))
- 
--#define DSPP_SC7180_MASK 0
-+#define DSPP_SC7180_MASK BIT(DPU_DSPP_PCC)
- 
- #define DEFAULT_PIXEL_RAM_SIZE		(50 * 1024)
- #define DEFAULT_DPU_LINE_WIDTH		2048
-@@ -339,12 +339,17 @@
- /*************************************************************
-  * DSPP sub blocks config
-  *************************************************************/
-+static const struct dpu_dspp_sub_blks sc7180_dspp_sblk = {
-+	.pcc = {.id = DPU_DSPP_PCC, .base = 0x1700,
-+		.len = 0x90, .version = 0x10000},
-+};
-+
- #define DSPP_BLK(_name, _id, _base) \
- 		{\
- 		.name = _name, .id = _id, \
- 		.base = _base, .len = 0x1800, \
- 		.features = DSPP_SC7180_MASK, \
--		.sblk = NULL, \
-+		.sblk = &sc7180_dspp_sblk \
- 		}
- 
- static const struct dpu_dspp_cfg sc7180_dspp[] = {
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
-index 75c82e9..b5189ce 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.c
-@@ -9,10 +9,57 @@
- #include "dpu_kms.h"
- 
- 
-+/* DSPP_PCC */
-+#define PCC_EN BIT(0)
-+#define PCC_DIS 0
-+#define PCC_RED_R_OFF 0x10
-+#define PCC_RED_G_OFF 0x1C
-+#define PCC_RED_B_OFF 0x28
-+#define PCC_GREEN_R_OFF 0x14
-+#define PCC_GREEN_G_OFF 0x20
-+#define PCC_GREEN_B_OFF 0x2C
-+#define PCC_BLUE_R_OFF 0x18
-+#define PCC_BLUE_G_OFF 0x24
-+#define PCC_BLUE_B_OFF 0x30
-+
-+void dpu_setup_dspp_pcc(struct dpu_hw_dspp *ctx,
-+		struct dpu_hw_pcc_cfg *cfg)
-+{
-+
-+	u32 base = ctx->cap->sblk->pcc.base;
-+
-+	if (!ctx || !base) {
-+		DRM_ERROR("invalid ctx %pK pcc base 0x%x\n", ctx, base);
-+		return;
-+	}
-+
-+	if (!cfg) {
-+		DRM_DEBUG_DRIVER("disable pcc feature\n");
-+		DPU_REG_WRITE(&ctx->hw, base, PCC_DIS);
-+		return;
-+	}
-+
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_RED_R_OFF, cfg->r.r);
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_RED_G_OFF, cfg->r.g);
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_RED_B_OFF, cfg->r.b);
-+
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_GREEN_R_OFF, cfg->g.r);
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_GREEN_G_OFF, cfg->g.g);
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_GREEN_B_OFF, cfg->g.b);
-+
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_BLUE_R_OFF, cfg->b.r);
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_BLUE_G_OFF, cfg->b.g);
-+	DPU_REG_WRITE(&ctx->hw, base + PCC_BLUE_B_OFF, cfg->b.b);
-+
-+	DPU_REG_WRITE(&ctx->hw, base, PCC_EN);
-+}
-+
- static void _setup_dspp_ops(struct dpu_hw_dspp *c,
- 		unsigned long features)
- {
--	return;
-+	if (test_bit(DPU_DSPP_PCC, &features) &&
-+		IS_SC7180_TARGET(c->hw.hwversion))
-+		c->ops.setup_pcc = dpu_setup_dspp_pcc;
- }
- 
- static const struct dpu_dspp_cfg *_dspp_offset(enum dpu_dspp dspp,
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h
-index 09807ea..7fa189c 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_dspp.h
-@@ -10,13 +10,44 @@
- struct dpu_hw_dspp;
- 
- /**
-+ * struct dpu_hw_pcc_coeff - PCC coefficient structure for each color
-+ *                            component.
-+ * @r: red coefficient.
-+ * @g: green coefficient.
-+ * @b: blue coefficient.
-+ */
-+
-+struct dpu_hw_pcc_coeff {
-+	__u32 r;
-+	__u32 g;
-+	__u32 b;
-+};
-+
-+/**
-+ * struct dpu_hw_pcc - pcc feature structure
-+ * @r: red coefficients.
-+ * @g: green coefficients.
-+ * @b: blue coefficients.
-+ */
-+struct dpu_hw_pcc_cfg {
-+	struct dpu_hw_pcc_coeff r;
-+	struct dpu_hw_pcc_coeff g;
-+	struct dpu_hw_pcc_coeff b;
-+};
-+
-+/**
-  * struct dpu_hw_dspp_ops - interface to the dspp hardware driver functions
-  * Caller must call the init function to get the dspp context for each dspp
-  * Assumption is these functions will be called after clocks are enabled
-  */
- struct dpu_hw_dspp_ops {
-+	/**
-+	 * setup_pcc - setup dspp pcc
-+	 * @ctx: Pointer to dspp context
-+	 * @cfg: Pointer to configuration
-+	 */
-+	void (*setup_pcc)(struct dpu_hw_dspp *ctx, struct dpu_hw_pcc_cfg *cfg);
- 
--	void (*dummy)(struct dpu_hw_dspp *ctx);
- };
- 
- /**
--- 
-1.9.1
+>
+>> +
+>> static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int
+>> devfn,
+>> 				 int where, int size, u32 *val)
+>> {
+>> 	u32 data = 0;
+>> -	int ret = loongson3_pci_config_access(PCI_ACCESS_READ,
+>> +	int ret = loongson_sysconf.pci_config_access(PCI_ACCESS_READ,
+>> 			bus, devfn, where, &data);
+>>
+>> 	if (ret != PCIBIOS_SUCCESSFUL)
+>> @@ -91,7 +155,7 @@ static int loongson3_pci_pcibios_write(struct
+>> pci_bus *bus, unsigned int devfn,
+>> 	if (size == 4)
+>> 		data = val;
+>> 	else {
+>> -		ret = loongson3_pci_config_access(PCI_ACCESS_READ,
+>> +		ret = loongson_sysconf.pci_config_access(PCI_ACCESS_READ,
+>> 				bus, devfn, where, &data);
+>> 		if (ret != PCIBIOS_SUCCESSFUL)
+>> 			return ret;
+>> @@ -104,7 +168,7 @@ static int loongson3_pci_pcibios_write(struct
+>> pci_bus *bus, unsigned int devfn,
+>> 			    (val << ((where & 3) << 3));
+>> 	}
+>>
+>> -	ret = loongson3_pci_config_access(PCI_ACCESS_WRITE,
+>> +	ret = loongson_sysconf.pci_config_access(PCI_ACCESS_WRITE,
+>> 			bus, devfn, where, &data);
+>>
+>> 	return ret;
 
