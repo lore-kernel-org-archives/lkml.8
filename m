@@ -2,131 +2,64 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C28CC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25176C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100652051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07E8B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbgCXJte (ORCPT
+        id S1727231AbgCXJuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:49:34 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:58551 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgCXJtd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:49:33 -0400
-Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jGgBZ-0008G8-MI; Tue, 24 Mar 2020 10:49:25 +0100
-Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <pza@pengutronix.de>)
-        id 1jGgBY-00070X-Ea; Tue, 24 Mar 2020 10:49:24 +0100
-Date:   Tue, 24 Mar 2020 10:49:24 +0100
-From:   Philipp Zabel <pza@pengutronix.de>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
- based SOCs
-Message-ID: <20200324094924.GA22281@pengutronix.de>
-References: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
- <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
+        Tue, 24 Mar 2020 05:50:05 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:43292 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726413AbgCXJuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:50:04 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 9C3D06FFE1308FAF180B;
+        Tue, 24 Mar 2020 17:49:48 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 24 Mar
+ 2020 17:49:43 +0800
+Subject: Re: [PATCH v2] f2fs: compress: support zstd compress algorithm
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200303094602.50372-1-yuchao0@huawei.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <1ee0c565-930b-2379-b22b-40ddca271de3@huawei.com>
+Date:   Tue, 24 Mar 2020 17:49:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 10:44:11 up 33 days, 17:14, 83 users,  load average: 0.32, 0.42,
- 0.32
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
-X-SA-Exim-Mail-From: pza@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20200303094602.50372-1-yuchao0@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wesley,
+Hi Jaegeuk,
 
-On Mon, Mar 23, 2020 at 01:17:10PM -0700, Wesley Cheng wrote:
-> This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
-> are potentially multiple instances of this UTMI PHY on the
-> SOC, all which can utilize this driver.
+On 2020/3/3 17:46, Chao Yu wrote:
+> Add zstd compress algorithm support, use "compress_algorithm=zstd"
+> mountoption to enable it.
 > 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 > ---
->  drivers/phy/qualcomm/Kconfig             |  10 ++
->  drivers/phy/qualcomm/Makefile            |   1 +
->  drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
->  3 files changed, 305 insertions(+)
->  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> 
-[...]
-> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> new file mode 100644
-> index 0000000..8d4ba53
-> --- /dev/null
-> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
-> @@ -0,0 +1,294 @@
-[...]
-> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct qcom_snps_hsphy *hsphy;
-> +	struct phy_provider *phy_provider;
-> +	struct phy *generic_phy;
-> +	struct resource *res;
-> +	int ret, i;
-> +	int num;
-> +
-> +	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
-> +	if (!hsphy)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	hsphy->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(hsphy->base))
-> +		return PTR_ERR(hsphy->base);
-> +
-> +	hsphy->ref_clk = devm_clk_get(dev, "ref");
-> +	if (IS_ERR(hsphy->ref_clk)) {
-> +		ret = PTR_ERR(hsphy->ref_clk);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get ref clk, %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
-> +	if (IS_ERR(hsphy->phy_reset)) {
-> +		dev_err(dev, "failed to get phy core reset\n");
-> +		return PTR_ERR(hsphy->phy_reset);
-> +	}
+> v2:
+> - avoid accessing invalid address
+> - introduce .{init,destroy}_{,de}compress_ctx callback functions.
 
-There is only a single reset specified, so there is no need for
-_by_index. Also please explicitly request exclusive reset control
-for this driver, I suggest:
+I guess we merged related patches with wrong sequence as this patch
+depends on ("f2fs: compress: add .{init,destroy}_decompress_ctx callback").
 
-	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-
-If you do want to prepare for future addition of other resets to the
-bindings (but if so, why not specify those right now?), you should add
-a reset-names property and request the reset control by id string
-instead.
-
-regards
-Philipp
+Thanks,
