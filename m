@@ -2,136 +2,179 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC506C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868F3C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE161208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D802051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S13aR4qA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727286AbgCXJb3 (ORCPT
+        id S1727137AbgCXJfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:31:29 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:38172 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726565AbgCXJb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:31:29 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn91c03lezXAfAA--.4S3;
-        Tue, 24 Mar 2020 17:31:10 +0800 (CST)
-Subject: Re: [PATCH v2 0/3] Add basic support for Loongson 7A1000 bridge chip
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
- <F85A21BA-31A2-4230-BFF8-7B5F355BB125@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <79f960cc-4360-8941-a89d-a61dd86a16bd@loongson.cn>
-Date:   Tue, 24 Mar 2020 17:31:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 24 Mar 2020 05:35:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51438 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgCXJfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:35:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c187so2400793wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Q6O4NDT/2jSNxv8wTDNHBRmghCW+QBEdHsbQoGWcHos=;
+        b=S13aR4qAwIp0D7xm0U5Q68vNOq2eHTfb38YtC0PADuUyTp/tp7K7F2GueIZ7fW1sbf
+         wq0bCCh3WdSkA+cOG6EEMikECXLb0X3KFCgk/qlTpWkomAsRGFt/LiFhTeWXSzJSNzGZ
+         upM9wh+/FA/DoRM2+vTnzofaKUelnPWywlDGhCnQhadSF70SORpKT6hWfV3O/blkoPxk
+         PXqvRfdOF5r580g9g6ZeT7EiDIGGOtpPiRB2jjxSt3tj6exH8OQPvbV5G3r/rvYDFsc8
+         TTAolYGibVgsz211DCbdEKetlxL6UeZbzYQditnoDdbqrNEJ7p6tJgEfLFKWHCmRLu0O
+         CnNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Q6O4NDT/2jSNxv8wTDNHBRmghCW+QBEdHsbQoGWcHos=;
+        b=dMeNu/o9xZreD9hsqcdqXRrp0tDJd3Nr4UcyD7Zqo/jrkCZJDe1jjhSEM7Tzn1plFB
+         33T2h25qLnAoOi23WELnPDbzrcqOAqmSleYBr6kef9LHjK1eu/au/ZpXBKnhaXAXmHX/
+         kdL6GfAZ8Wxgk/NxUejkdg2n4eqWnsZxiGBOIeBpZYSDPJoAz4Eezb3U8nR4wtaQonPG
+         fFCcm6rq3iNjU7Hn5qHXYdo1lzhMghIaYsSa6Z1+7VytMUM21LIsrucL9YDvR7lVd1pZ
+         qb50neYBW6sOEb2tEsouEBHmCYum38fe3mxbNkiGcaRqRk8rj4rV8KJdoPY7+72fNG+s
+         R0rA==
+X-Gm-Message-State: ANhLgQ0YBUO+mi8ZWuV/ycj29cO8U13zZNXYW/H0nzSjyaq3FV8+InJx
+        lntzFy17g4vdQm3tPgRuaiu6pUcj
+X-Google-Smtp-Source: ADFU+vsFdPJmPvM+trCC43o/Pd05TzqadXvetSpUYCH8uqcHA4kv2ZI3zEl40aAvfnCHmj1Dt9zdjQ==
+X-Received: by 2002:a1c:4c02:: with SMTP id z2mr4674411wmf.151.1585042504589;
+        Tue, 24 Mar 2020 02:35:04 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id t124sm3571402wmg.13.2020.03.24.02.35.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Mar 2020 02:35:02 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 11:35:01 +0200
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs pull request for kernel 5.7
+Message-ID: <20200324093501.GA27782@ogabbay-VM>
 MIME-Version: 1.0
-In-Reply-To: <F85A21BA-31A2-4230-BFF8-7B5F355BB125@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxn91c03lezXAfAA--.4S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxWr4UGw45ZF4rXw48WFWkXrb_yoW5Cryfpa
-        y5uanIgFs8Wry7AFyfuw48CFWYyrs3XrZrW3W7Gr1kCas8ZF10qr929a15G3W7ur92k3W2
-        vryUW3yDGa15CaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8Jw
-        C20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAF
-        wI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjx
-        v20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2
-        z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73Uj
-        IFyTuYvjfUeID7DUUUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/24/2020 03:49 PM, Jiaxun Yang wrote:
->
-> 于 2020年3月23日 GMT+08:00 上午10:59:12, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
->> The Loongson 7A1000 bridge chip has been released for several years
->> since the second half of 2017, but it is not supported by the Linux
->> mainline kernel while it only works well with the Loongson internal
->> kernel version. When I update the latest version of Linux mainline
->> kernel on the Loongson 3A3000 CPU and 7A1000 bridge chip system,
->> the boot process failed and I feel depressed.
->>
->> The 7A1000 bridge chip is used a lot with 3A3000 or 3A4000 CPU in
->> the most Loongson desktop and sever products, it is important to
->> support Loongson 7A1000 bridge chip by the Linux mainline kernel.
->>
->> This patch series adds the basic support for the Loongson 7A1000
->> bridge chip, when apply these patches based on linux-5.6-rc7, the
->> boot process is successful and we can login normally used with the
-> Is it still true without IRQ driver?
+Hello Greg,
 
-No, I will modify the description.
+This is the pull request for habanalabs driver for kernel 5.7.
 
->
->> latest firmware and discrete graphics card, the next work to do is
->> power management and some other controller device drivers.
->>
->> Additionally, when I git clone mips code [1], the speed is too slow
->> and clone always failed, so this patch series is based on the latest
->> linux-5.6-rc7 [2].
-> You can clone stable tree from mirrors in China[1] at first,
-> then add mips tree as a remote and fetch from it.
-> In this way it will only download a minimal difference set from foreign server so won't spend a lot of time.
+It mainly contains improvements to MMU, hwmon sensors and a new debugfs
+interface to improve debug speed when reading large internal memories.
 
-Thanks for your suggestion.
+Please see the tag message for more details on what this pull request
+contains.
 
->
->
-> [1]: https://mirrors.tuna.tsinghua.edu.cn/git/linux-stable.git
->
->> If you have any questions and suggestions, please let me know.
->>
->> Thanks,
->>
->> Tiezhu Yang
->>
->> v2:
->>   - The split patch series about Loongson vendor ID and SATA controller
->>     has been merged into the linux-block.git by Jens Axboe [3].
->>
->>   - Think about using hierarchy IRQ domain in the patch of interrupt
->>     controller, and this maybe depend on the patch series by Jiaxun
->>     ("Modernize Loongson64 Machine"), so the patch about interrupt is
->>     not included in this v2 patch series.
->>
->> [1] git clone
->> https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git
->> [2] git clone https://github.com/torvalds/linux.git
->> [3]
->> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=9acb9fe18d86
->> https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-next&id=e49bd683e00b
->>
->> Tiezhu Yang (3):
->>   MIPS: Loongson: Get host bridge information
->>   MIPS: Loongson: Add DMA support for 7A1000
->>   MIPS: Loongson: Add PCI support for 7A1000
->>
->> arch/mips/include/asm/mach-loongson64/boot_param.h | 20 ++++++
->> arch/mips/loongson64/dma.c                         |  9 ++-
->> arch/mips/loongson64/env.c                         | 20 ++++++
->> arch/mips/loongson64/init.c                        | 17 +++++
->> arch/mips/pci/ops-loongson3.c                      | 72
->> ++++++++++++++++++++--
->> 5 files changed, 131 insertions(+), 7 deletions(-)
+Thanks,
+Oded
 
+The following changes since commit bbde5709ee4f60a43b7372545454947044655728:
+
+  nvmem: mxs-ocotp: Use devm_add_action_or_reset() for cleanup (2020-03-23 20:05:23 +0100)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-03-24
+
+for you to fetch changes up to 1184550155013f2672198c4c68f3a6961fccab09:
+
+  habanalabs: fix pm manual->auto in GOYA (2020-03-24 10:54:17 +0200)
+
+----------------------------------------------------------------
+This tag contains the following changes for kernel 5.7:
+
+- MMU code improvements that includes:
+  - Flush MMU TLB cache only once, at the end of mapping/unmapping
+    function, instead of flushing after mapping of every page.
+  - Add future ASIC support by splitting properties of ASIC capabilities
+    regarding mapping of host memory to regular and huge pages.
+
+- Add debugfs interface to write and read 64-bit values from the device's
+  memory/registers. Previously the driver provided interface for 32-bit
+  values and this will allow the user to debug much more quickly. We saw it
+  gives a boost of around 1.5 - 1.7 when reading internal memories.
+
+- Support temperature offset via sysfs as defined in
+  https://www.kernel.org/doc/Documentation/hwmon/sysfs-interface
+
+- Display historical maximum of various sensors.
+
+- Print to kernel log when clock throttling occurs to due breach of power
+  or thermal envelope. Also prints when clock throttling is finished
+  (clock is back to optimal).
+
+- Fix bug when moving from manual to auto power-management mode.
+
+- Print a message ("unsupported device") to kernel log in case a GAUDI device
+  is recognized.
+
+- Small bug fixes and minor improvements to code.
+
+----------------------------------------------------------------
+Christine Gharzuzi (1):
+      habanalabs: provide historical maximum of various sensors
+
+Jules Irenge (2):
+      habanalabs: Add missing annotation for goya_hw_queues_lock()
+      habanalabs: Add missing annotation for goya_hw_queues_unlock()
+
+Moti Haimovski (3):
+      habanalabs: add debugfs write64/read64
+      habanalabs: support temperature offset via sysfs
+      habanalabs: modify the return values of hl_read/write routines
+
+Oded Gabbay (5):
+      habanalabs: removing extra ;
+      habanalabs: ratelimit error prints of IRQs
+      habanalabs: update goya firmware register map
+      habanalabs: show unsupported message for GAUDI
+      habanalabs: fix pm manual->auto in GOYA
+
+Omer Shpigelman (4):
+      habanalabs: use the user CB size as a default job size
+      habanalabs: split the host MMU properties
+      habanalabs: fix DDR bar address setting
+      habanalabs: add print upon clock change
+
+Pawel Piskorski (1):
+      habanalabs: flush only at the end of the map/unmap
+
+Tomer Tayar (3):
+      habanalabs: Modify CS jobs counter to u16
+      habanalabs: Avoid running restore chunks if no execute chunks
+      habanalabs: Remove unused parse_cnt variable
+
+ .../ABI/testing/debugfs-driver-habanalabs          |  14 ++
+ drivers/misc/habanalabs/command_submission.c       |  51 +++--
+ drivers/misc/habanalabs/debugfs.c                  |  92 ++++++++-
+ drivers/misc/habanalabs/device.c                   |   2 +-
+ drivers/misc/habanalabs/goya/goya.c                | 204 ++++++++++++++++---
+ drivers/misc/habanalabs/goya/goya_coresight.c      |   4 +-
+ drivers/misc/habanalabs/goya/goya_hwmgr.c          |   2 +-
+ drivers/misc/habanalabs/habanalabs.h               |  62 +++---
+ drivers/misc/habanalabs/habanalabs_drv.c           |  11 +-
+ drivers/misc/habanalabs/hwmon.c                    | 106 +++++++---
+ drivers/misc/habanalabs/include/armcp_if.h         |  20 +-
+ .../habanalabs/include/goya/goya_async_events.h    |   4 +
+ .../misc/habanalabs/include/goya/goya_reg_map.h    |  39 ++--
+ drivers/misc/habanalabs/include/hl_boot_if.h       |  39 ++--
+ drivers/misc/habanalabs/memory.c                   | 222 ++++++++++++++-------
+ drivers/misc/habanalabs/mmu.c                      | 110 ++++++----
+ 16 files changed, 709 insertions(+), 273 deletions(-)
