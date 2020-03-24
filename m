@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6573C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50040C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 880E8208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5B620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055988;
-	bh=7nN6GI7/68woCdwk5Vi3mTAd6ov6wAQsoBiRvtFyc1E=;
+	s=default; t=1585055991;
+	bh=Mj4njnD9Bq21s8YvyxPwfN39vipUPGwGVgkRwvddbT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1btDSXE1M/sakpdFZh0dXm7HSXiCX1nt0C46fRfOm73TfUZ/lSqiKdLQR7qrGfkE
-	 8oErGwJHre4KXonWM1J6/yh3tYEGYYr9jzTuIJzd0YtL5TcP58A8edD7grJB0nojqY
-	 a6yWutyH5RTJDDlcJ0YcbFtcNIPNounbu8T8l3MQ=
+	b=FYw9V7c6KauJPJw4WxxCDNluxSfh2e1td8g5zQTrB5sp1LdhL+aEwXAmc3e5igWU0
+	 7HJnTa6FD+F76xvgkPD+4VV1ekvOfn/8D0eZ0CGqL1gJpPVkdfahwtVQH5G16aJhH0
+	 pRXPlkmFjCa9dS8e7hd3UnB37q6TDMUDE8koVQ1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgCXNTr (ORCPT
+        id S1728866AbgCXNTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40550 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728857AbgCXNTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:43 -0400
+        id S1728466AbgCXNTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC4AA208FE;
-        Tue, 24 Mar 2020 13:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22749206F6;
+        Tue, 24 Mar 2020 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055982;
-        bh=7nN6GI7/68woCdwk5Vi3mTAd6ov6wAQsoBiRvtFyc1E=;
+        s=default; t=1585055986;
+        bh=Mj4njnD9Bq21s8YvyxPwfN39vipUPGwGVgkRwvddbT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0qvplBYZ4s4AUtDCjOPM/Rm91QL5cdyMqpeRvYLJ0vlY67rwF8D46LaYkpBCDiOdT
-         gzdzv/aC+7gt2jGOZ9JiHZWJSLeaykQSYg1x1aA2BI3NkkHua0a7TpF6YpI74aHdnE
-         Gs1TNgim1XyvCefN15IhYuLMM5fpZu/pj+Hlp3FE=
+        b=YHPew+O7tQytrOLtYXNLWz9+CBKcYzm8ltMy6eYngmGaHDHHxUdxjnrSqIleZS08R
+         6seYr2lfjF/RGoNJS1tVw/jG0XA0UlP50bAzRlzkM2RyIMEvYBFLVUyeKhP5pC0XT3
+         e3i+TStPGTJFq+Gu3tZUXZA8zWYXwD8vsFA3+VMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom St Denis <tom.stdenis@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.4 081/102] drm/amd/amdgpu: Fix GPR read from debugfs (v2)
-Date:   Tue, 24 Mar 2020 14:11:13 +0100
-Message-Id: <20200324130814.746983505@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 090/102] mm: slub: be more careful about the double cmpxchg of freelist
+Date:   Tue, 24 Mar 2020 14:11:22 +0100
+Message-Id: <20200324130816.018538799@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,51 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom St Denis <tom.stdenis@amd.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-commit 5bbc6604a62814511c32f2e39bc9ffb2c1b92cbe upstream.
+commit 5076190daded2197f62fe92cf69674488be44175 upstream.
 
-The offset into the array was specified in bytes but should
-be in terms of 32-bit words.  Also prevent large reads that
-would also cause a buffer overread.
+This is just a cleanup addition to Jann's fix to properly update the
+transaction ID for the slub slowpath in commit fd4d9c7d0c71 ("mm: slub:
+add missing TID bump..").
 
-v2:  Read from correct offset from internal storage buffer.
+The transaction ID is what protects us against any concurrent accesses,
+but we should really also make sure to make the 'freelist' comparison
+itself always use the same freelist value that we then used as the new
+next free pointer.
 
-Signed-off-by: Tom St Denis <tom.stdenis@amd.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Jann points out that if we do all of this carefully, we could skip the
+transaction ID update for all the paths that only remove entries from
+the lists, and only update the TID when adding entries (to avoid the ABA
+issue with cmpxchg and list handling re-adding a previously seen value).
+
+But this patch just does the "make sure to cmpxchg the same value we
+used" rather than then try to be clever.
+
+Acked-by: Jann Horn <jannh@google.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/slub.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
-@@ -694,11 +694,11 @@ static ssize_t amdgpu_debugfs_gpr_read(s
- 	ssize_t result = 0;
- 	uint32_t offset, se, sh, cu, wave, simd, thread, bank, *data;
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -2977,11 +2977,13 @@ redo:
+ 	barrier();
  
--	if (size & 3 || *pos & 3)
-+	if (size > 4096 || size & 3 || *pos & 3)
- 		return -EINVAL;
+ 	if (likely(page == c->page)) {
+-		set_freepointer(s, tail_obj, c->freelist);
++		void **freelist = READ_ONCE(c->freelist);
++
++		set_freepointer(s, tail_obj, freelist);
  
- 	/* decode offset */
--	offset = *pos & GENMASK_ULL(11, 0);
-+	offset = (*pos & GENMASK_ULL(11, 0)) >> 2;
- 	se = (*pos & GENMASK_ULL(19, 12)) >> 12;
- 	sh = (*pos & GENMASK_ULL(27, 20)) >> 20;
- 	cu = (*pos & GENMASK_ULL(35, 28)) >> 28;
-@@ -729,7 +729,7 @@ static ssize_t amdgpu_debugfs_gpr_read(s
- 	while (size) {
- 		uint32_t value;
+ 		if (unlikely(!this_cpu_cmpxchg_double(
+ 				s->cpu_slab->freelist, s->cpu_slab->tid,
+-				c->freelist, tid,
++				freelist, tid,
+ 				head, next_tid(tid)))) {
  
--		value = data[offset++];
-+		value = data[result >> 2];
- 		r = put_user(value, (uint32_t *)buf);
- 		if (r) {
- 			result = r;
+ 			note_cmpxchg_failure("slab_free", s, tid);
 
 
