@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D746EC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC67C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B14B92073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECD3120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:40:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="DssRYcty"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="UTbZb8No"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgCXPkH (ORCPT
+        id S1728804AbgCXPkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:40:07 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17801 "EHLO
+        Tue, 24 Mar 2020 11:40:11 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17891 "EHLO
         sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727665AbgCXPkH (ORCPT
+        by vger.kernel.org with ESMTP id S1727216AbgCXPkK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:40:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064281;
+        Tue, 24 Mar 2020 11:40:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064333;
         s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
         h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=xZKLAkmJ3p4vaTmh3kFSXV3wDhQH3iUKqe9BfCmhbuk=;
-        b=DssRYctyLDc6coGjtrxpUhL6V4aJdXR8WsqGH6B4IM2tY61QYHpT3ZfzPx8NaADP
-        xDx6dyC0/hUGFJPU8WyUaErg4jCo+vAsx0rWpraiG6wDkICbRC8QqaU+P0hr0+Xkp+4
-        PiB3/5yCUhOvU1LQc1VRleW2s+KPBamlW1p0aAh8=
+        bh=VorRDEPWeqnYtf4F2THRNmiIzjtl4UXW7taZV3OXnYM=;
+        b=UTbZb8NoEoj65jOvIOLKA6V4VbAf/ndSfM7IMp3XihK+ntw+cRFFqQAcb5GRWmLL
+        89WcbU53857Vkevr8r3Hg77golzr25V5gKu40ekpe5n4HEhM79HAnE44k6ZkNyJ2ukV
+        fGhJU6FS0ZVACb7O0hXM257DJFaXcOuhnWrz5zt8=
 Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585064279398694.8568644949094; Tue, 24 Mar 2020 23:37:59 +0800 (CST)
+        with SMTPS id 1585064331396463.64959543394366; Tue, 24 Mar 2020 23:38:51 +0800 (CST)
 From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
 To:     linux-mips@vger.kernel.org
 Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
@@ -45,9 +45,9 @@ Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Allison Randal <allison@lohutok.net>,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200324153624.23109-6-jiaxun.yang@flygoat.com>
-Subject: [PATCH v6 05/11] dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
-Date:   Tue, 24 Mar 2020 23:36:02 +0800
+Message-ID: <20200324153624.23109-9-jiaxun.yang@flygoat.com>
+Subject: [PATCH v6 08/11] dt-bindings: mips: Add loongson boards
+Date:   Tue, 24 Mar 2020 23:36:05 +0800
 X-Mailer: git-send-email 2.26.0.rc2
 In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
 References: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
@@ -60,86 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document Loongson-3 HyperTransport PIC controller.
+Prepare for later dts.
 
 Co-developed-by: Huacai Chen <chenhc@lemote.com>
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../interrupt-controller/loongson,htpic.yaml  | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/=
-loongson,htpic.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongso=
-n,htpic.yaml b/Documentation/devicetree/bindings/interrupt-controller/loong=
-son,htpic.yaml
-new file mode 100644
-index 000000000000..c8861cbbb8b5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,htpic=
+--
+v4-v5:
+=09Remove unnecessary kernel details.
+v5-v6:
+=09Use quad & octa instead of 4 and 8.
+---
+ .../bindings/mips/loongson/devices.yaml       | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices=
 .yaml
-@@ -0,0 +1,59 @@
+
+diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b=
+/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+new file mode 100644
+index 000000000000..74ed4e397a78
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
+@@ -0,0 +1,27 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: "http://devicetree.org/schemas/interrupt-controller/loongson,htpic.ya=
-ml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Loongson-3 HyperTransport Interrupt Controller
++title: Loongson based Platforms Device Tree Bindings
 +
 +maintainers:
 +  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+
-+allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
-+
 +description: |
-+  This interrupt controller is found in the Loongson-3 family of chips to =
-transmit
-+  interrupts from PCH PIC connected on HyperTransport bus.
++  Devices with a Loongson CPU shall have the following properties.
 +
 +properties:
++  $nodename:
++    const: '/'
 +  compatible:
-+    const: loongson,htpic-1.0
++    oneOf:
 +
-+  reg:
-+    maxItems: 1
++      - description: Generic Loongson3 Quad Core + RS780E
++        items:
++          - const: loongson,loongson3-4core-rs780e
 +
-+  interrupts:
-+    minItems: 1
-+    maxItems: 4
-+    description: |
-+      Four parent interrupts that receive chained interrupts.
-+
-+  interrupt-controller: true
-+
-+  '#interrupt-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-controller
-+  - '#interrupt-cells'
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    htintc: interrupt-controller@1fb000080 {
-+      compatible =3D "loongson,htintc-1.0";
-+      reg =3D <0xfb000080 0x40>;
-+      interrupt-controller;
-+      #interrupt-cells =3D <1>;
-+
-+      interrupt-parent =3D <&liointc>;
-+      interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
-+                    <25 IRQ_TYPE_LEVEL_HIGH>,
-+                    <26 IRQ_TYPE_LEVEL_HIGH>,
-+                    <27 IRQ_TYPE_LEVEL_HIGH>;
-+    };
++      - description: Generic Loongson3 Octa Core + RS780E
++        items:
++          - const: loongson,loongson3-8core-rs780e
 +...
 --=20
 2.26.0.rc2
