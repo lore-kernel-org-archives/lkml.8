@@ -2,134 +2,121 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 631F7C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39382C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B3220774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114A920774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ACG7Xe7Q"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="ac0mxzqn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbgCXOwB (ORCPT
+        id S1727952AbgCXOx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:52:01 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37191 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbgCXOwA (ORCPT
+        Tue, 24 Mar 2020 10:53:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:43695 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgCXOx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:52:00 -0400
-Received: by mail-wm1-f67.google.com with SMTP id d1so3816978wmb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:51:58 -0700 (PDT)
+        Tue, 24 Mar 2020 10:53:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id u12so9119875pgb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:53:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7e4KDLTmWgu/QQJEIVFCVN/w7UIWM4C7k1L+cgO3etw=;
-        b=ACG7Xe7QJOeqLq9nxQgo/2Hmd7TANG6OyUfm9KlhXXEDFRJCJA5UGjhkxMgV5E3HlJ
-         lcKpAHAeeWRt9+4yASeJo8ob176WIaXSIzV0Hv0Ni0SNxelTVnxKe57ObyCHBbqq5Pmr
-         Kofe0bXI1xmqL8NJfeXLDIyJrJ40lD8Aicbd4=
+        d=android.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=QVduhjXWCW00OJd/ZTpW4kWOwCgt6BaHgBSZwaL9YvA=;
+        b=ac0mxzqnJvdjFusvzY2BcTccxLg8YyQ7c51h0qnsozG+IkL7o2DXPkmarhaV7Yup8b
+         HKL2RWBDzs9HmfCFgoxwZOz7D3MUcIEv1NZi5G0JvQxw/3Gz5IS0l4fdaH4UEmWHPGHb
+         og1Xaejyn/+UVhB4irSmT0vqPb8awJjwUUyCK+btX8LNEqmIcSG1bN7qvSlkZT0apWEF
+         5DwTJQNYW3y2vh1iuscQVR2PoO8U/+eM360Bft4YNgKBJgt+gxtrDgFjra/2+PqMQDpg
+         qcrRYNAwLVYYfFZLJtVca2CS20FiXvrjic9yLq7i04iiBwlDDVSXSsy1hrbCnJ7mFHPN
+         1IAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7e4KDLTmWgu/QQJEIVFCVN/w7UIWM4C7k1L+cgO3etw=;
-        b=Uu2sVGLS7UwMJl64Vg1y7fjM/fwWP4pZYvRKLCxuD0Fi3pc4VtkxwZsOtWnj9kt+zn
-         F12o0oL98H+HJb8Co+6ektX7iZGyJ/OEfU9/462cq6VSsPLMdUh++CcV54IVTZT4AeSN
-         /tcVhhNdaI0j6yyETx1t7PmMQk/XEHRS4hAMgSmALSX5hcQZopQuUVVFGEzwcsF0k8Yt
-         T25yu2n6DyZmjIm8kS0KUnpqIR/B/0hwssmLEzG0QTaeFUXF8x5NP2+JkB54m++SyQmz
-         btkSPKIrgYmrYe8YkgW/UlWH3SYQqHAXVl36jgQtmbR7oGJd9Hb7QSkTkFJfVQ9L8iDG
-         R0lg==
-X-Gm-Message-State: ANhLgQ04pR4wUB7fXt4Gbk0rAWLNe0lz297WZGvEdS6bFF8nM0HQ5f+G
-        ZLFfukfrvMHifJIz4j1qUDyrwg==
-X-Google-Smtp-Source: ADFU+vum9D07o2DYTLiqEmlmU481OTm0K/ZD8B4oN/2zUqHNg6zKveeWlRzSLOOalwgn2Y/BsRssRA==
-X-Received: by 2002:a1c:26c4:: with SMTP id m187mr5927248wmm.43.1585061518182;
-        Tue, 24 Mar 2020 07:51:58 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id t5sm22977367wrr.93.2020.03.24.07.51.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 07:51:57 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 24 Mar 2020 15:51:55 +0100
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
-Message-ID: <20200324145155.GB2685@chromium.org>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-6-kpsingh@chromium.org>
- <6d45de0d-c59d-4ca7-fcc5-3965a48b5997@schaufler-ca.com>
- <20200324015217.GA28487@chromium.org>
- <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
- <20200324144214.GA1040@chromium.org>
- <CAEjxPJ7GDA2PvYkoFhnE7gjr_n=ADCjy3XOwacfELY7evVJtJw@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=QVduhjXWCW00OJd/ZTpW4kWOwCgt6BaHgBSZwaL9YvA=;
+        b=OLwcdXMLzWzcdijbc7hJY64goCYsf1GVqADsN3m4WC2NlO2UXX0sD9/WRJVO08Ex9i
+         bR/qc+mSn2XL4CexsFzIAGAB/2dPdQ1Gl3vwuk0bjq8W8SeoHb46a4BjM8TI/zEQ2VuP
+         tb49Z2iUNV4PT8uF1i5dxtCuy8hHUWt6KmVgCUQqOxhq/Vz27tk0T7wk27RI7I+OiFw3
+         daW+83PP+W+tqmlnmSMpAHWpJpl/bzPeJIRS9INv4B4go5x/b2n9OYVmBEbCM6CEKaJA
+         Gk1TqAA5hVaT1vxjlwmOpuczgIgNQZYHWWD3N+mZMuJdG/kLfwW0Qf0n9sq93rluupxQ
+         g2Lw==
+X-Gm-Message-State: ANhLgQ02TiX6TPvkxMB7r05uDlCezgQkTYsTkyCveTgdF1Lm3gty3u8w
+        8FC1ybpZ0KOaPkXl09PkOg05dWWFrprRyA==
+X-Google-Smtp-Source: ADFU+vtpua5I87p/4y8NFbZWT4Wgn5mB76vtJd0xqd+xckxhQ93AleIpG7Npipof2OjCFaYwvpCsIA==
+X-Received: by 2002:a05:6a00:2cb:: with SMTP id b11mr415184pft.42.1585061633502;
+        Tue, 24 Mar 2020 07:53:53 -0700 (PDT)
+Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
+        by smtp.googlemail.com with ESMTPSA id b25sm16218138pfd.185.2020.03.24.07.53.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 07:53:52 -0700 (PDT)
+Subject: Re: locks use-after-free stable request
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     stable <stable@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <52be02d3-3a6a-c8b8-4177-5cc1d67aedd4@android.com>
+ <20200324144338.GA2507446@kroah.com>
+From:   Mark Salyzyn <salyzyn@android.com>
+Message-ID: <29c96b7a-5964-5d89-304a-92673b68e8ef@android.com>
+Date:   Tue, 24 Mar 2020 07:53:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjxPJ7GDA2PvYkoFhnE7gjr_n=ADCjy3XOwacfELY7evVJtJw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324144338.GA2507446@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-Mär 10:51, Stephen Smalley wrote:
-> On Tue, Mar 24, 2020 at 10:42 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > On 24-Mär 10:37, Stephen Smalley wrote:
-> > > On Mon, Mar 23, 2020 at 9:52 PM KP Singh <kpsingh@chromium.org> wrote:
-> > > >
-> > > > On 23-Mär 18:13, Casey Schaufler wrote:
-> > > > > Have you given up on the "BPF must be last" requirement?
-> > > >
-> > > > Yes, we dropped it for as the BPF programs require CAP_SYS_ADMIN
-> > > > anwyays so the position ~shouldn't~ matter. (based on some of the
-> > > > discussions we had on the BPF_MODIFY_RETURN patches).
-> > > >
-> > > > However, This can be added later (in a separate patch) if really
-> > > > deemed necessary.
-> > >
-> > > It matters for SELinux, as I previously explained.  A process that has
-> > > CAP_SYS_ADMIN is not assumed to be able to circumvent MAC policy.
-> > > And executing prior to SELinux allows the bpf program to access and
-> > > potentially leak to userspace information that wouldn't be visible to
-> > > the
-> > > process itself. However, I thought you were handling the order issue
-> > > by putting it last in the list of lsms?
-> >
-> > We can still do that if it does not work for SELinux.
-> >
-> > Would it be okay to add bpf as LSM_ORDER_LAST?
-> >
-> > LSMs like Landlock can then add LSM_ORDER_UNPRIVILEGED to even end up
-> > after bpf?
-> 
-> I guess the question is whether we need an explicit LSM_ORDER_LAST or
-> can just handle it via the default
-> values for the lsm= parameter, where you are already placing bpf last
-> IIUC?  If someone can mess with the kernel boot
-> parameters, they already have options to mess with SELinux, so it is no worse...
+On 3/24/20 7:43 AM, Greg KH wrote:
+> On Tue, Mar 24, 2020 at 07:24:49AM -0700, Mark Salyzyn wrote:
+>> Referencing upstream fixes commit dcf23ac3e846ca0cf626c155a0e3fcbbcf4fae8a
+>> ("locks: reinstate locks_delete_block optimization") and commit
+>> 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da ("locks: fix a potential
+>> use-after-free problem when wakeup a waiter") and possibly address
+>> CVE-2019-19769.
+>>
+>> Please apply to all relevant stable trees including 5.4, 4.19 and below.
+>> Confirmed they apply cleanly to 5.4 and 4.19.
+>>
+>>
+>> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+>>
+>> Cc: stable@vger.kernel.org
+>>
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Cc: kernel-team@android.com
+>>
+> These are all queued up for the next round of 5.4 and 5.5 stable
+> releases,but they do not seem to apply to 4.19.
+>
+> And why do you think they apply to 4.19, that's not what 6d390e4b5d48
+> ("locks: fix a potential use-after-free problem when wakeup a waiter")
+> says.
 
-Yeah, we do add BPF as the last LSM in the default list. So, I will
-avoid adding LSM_ORDER_LAST for now.
+When I used my tool to apply the pair by sha, I failed to notice that 
+they were _both_ skipped because they are _both_ already present and 
+read that as clean without looking at _what_ got applied or not.
 
-- KP
+(I will be fixing my tool)
+
+> confused,
+
+<sorry>
+
+>
+> greg k-h
+
+
