@@ -2,239 +2,190 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F79FC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AB8C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4BF20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585054802;
-	bh=ftHW6K2DFsXS/LfDVwMTnU8ysFh6LBvOe8/DLO8UHKI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Jw3/bNzuoegHNSP8aO3K49iasTOdsv6EdbLuiEQoS5r2RgaqC76gXsDDj1W55qlY8
-	 EkH3jLYuX5PJz8SFSCpYRSCARRCmaBpIIM1ls4UKfOI/mD91RMxq4I3/DEIZAcC1Ow
-	 46lTEc99OCcuOfLKFPfDH+wVLlfjSZeYF5Z6ltzI=
+	by mail.kernel.org (Postfix) with ESMTP id B35B62070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:00:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYEhOfKL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgCXNAB (ORCPT
+        id S1727464AbgCXNA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:00:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbgCXNAB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:00:01 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 535C32070A;
-        Tue, 24 Mar 2020 13:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585054800;
-        bh=ftHW6K2DFsXS/LfDVwMTnU8ysFh6LBvOe8/DLO8UHKI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=fs5PlPAYCmGz0kh9z4uz6nTDHF6IK/aV/K6BXhELTO3dZn0QIUt/rGZyPRRDMoC1W
-         YtR5yNtqlbu5y5WYZlg6diyi9lbJVEiX834sTLfdsqyN5H5fMv02a5M6krcdcS4/Tt
-         Qjb03KQNBjcp/AH9nJTxpaPoyUPhDVeZ8eHqw5pU=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 23DBC35226BE; Tue, 24 Mar 2020 06:00:00 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 06:00:00 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Josh Triplett <josh@joshtriplett.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: Hit WARN_ON() in rcutorture.c:1055
-Message-ID: <20200324130000.GT3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200323154309.nah44so2556ee56g@e107158-lin.cambridge.arm.com>
- <20200323155731.GK3199@paulmck-ThinkPad-P72>
- <20200323170609.w64xrfahd2snfz6h@e107158-lin.cambridge.arm.com>
- <20200323171751.GL3199@paulmck-ThinkPad-P72>
- <20200323174147.lneh4rp4tazhtm6x@e107158-lin.cambridge.arm.com>
- <20200323181010.GN3199@paulmck-ThinkPad-P72>
- <20200323182351.xr764b6wafzs6fse@e107158-lin.cambridge.arm.com>
- <20200323184437.GP3199@paulmck-ThinkPad-P72>
- <20200324113918.bnlnsip5crehxvlo@e107158-lin>
+        Tue, 24 Mar 2020 09:00:57 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34703 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727225AbgCXNA5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:00:57 -0400
+Received: by mail-qk1-f193.google.com with SMTP id i6so9971121qke.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 06:00:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Ba16nWV/RV0Cz2u6692GPI7pcBz0klhTBLMRiyR006I=;
+        b=aYEhOfKLN9ZhHQ6qsF9yRQZbJdp5qLE6VG/WiV3IMktT7OZPKVXM4Q7M3pciHMlbSL
+         3JGlbyRaN3t3ec9VtNhmOhV7tCzs9JA6xcIykANFuiBzbMUjFmB/yGtCDkMQoUvqklXc
+         uiHcBoMS9SYRf02XIqS6bfwC4FWM41w2FnuqP5ra6ZFTR9hoHzaktczDd2ZFIqf+mtjt
+         ldsu613xA9ggzR77Me71NwapMzx3YvN1xOWPf/Lfs4cZdV6kXFljQtq+rbQYjBaOSh/8
+         36RrSz77/xdGKBCUyKAqBkQLCCH8DmwS8GH2ZvuXwnZxXgE7rFeG46vkmxhEguIgu2B6
+         A2Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Ba16nWV/RV0Cz2u6692GPI7pcBz0klhTBLMRiyR006I=;
+        b=QmbfdEEGrKBBREwk2G+CEdDsXfYkkXI5fANvWtNdw2D7qwD2CuZMC/ABUNA3fonBFR
+         VoSLT586CCi5gY2GBMWcKDoi6erWa2MjYVMxXwed/Nf6eT+gzxw5bIF+akd1Idvqvrid
+         gOeLdnvd6/s8WHtjQB2SbVVNSGYP2zxEuV54I2Mv8Sj025IXhsZ9YfKCDNAUTrBb8XgV
+         4/la1Uuoaix+u6CcQGCDa3Mo7sIR9mheTShe+UOZhPU7kATlGocI4JZ9qK7FbsjqhbzH
+         brwOgQ1a9DuCDW+TVgKtkQO78y2rvDaudeOwPDncyA/ukrvTsFnWcuWivPcjxZxBxnbe
+         Ki5Q==
+X-Gm-Message-State: ANhLgQ35iV7K013QmaI277CvL2VrzNUOk5W8HOpwlbmxQUJ26aUUwvMJ
+        zyj6uG636zTLIKIwXqtVmGx1n5rd
+X-Google-Smtp-Source: ADFU+vssnynhn++cNNMUV7zMf7W/sRDKPz52gbWnkNK/KGmmnLAFjL1oHpk3EK6r8vhqjLxGnz+5WA==
+X-Received: by 2002:a05:620a:129b:: with SMTP id w27mr935841qki.140.1585054855657;
+        Tue, 24 Mar 2020 06:00:55 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id d9sm13397723qth.34.2020.03.24.06.00.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 06:00:54 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 883D840F77; Tue, 24 Mar 2020 10:00:52 -0300 (-03)
+Date:   Tue, 24 Mar 2020 10:00:52 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        mark.rutland@arm.com, naveen.n.rao@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf dso: Fix dso comparison
+Message-ID: <20200324130052.GB21569@kernel.org>
+References: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
+ <20200324104843.GS1534489@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324113918.bnlnsip5crehxvlo@e107158-lin>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200324104843.GS1534489@krava>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:39:19AM +0000, Qais Yousef wrote:
-> On 03/23/20 11:44, Paul E. McKenney wrote:
-> > > > > {register, unregister}_pm_notifier() don't seem to be too hard to use.
-> > > > 
-> > > > That part is easy.  It would also be necessary to find all the affected
-> > > > warnings in rcutorture and suppress them, not only during this time,
-> > > > but also for some period of time afterwards.  Maybe this is the only one,
-> > > > but that would be surprising.  ;-)
-> > > 
-> > > Wouldn't be easier to just deinit/init()? ie: treat it like unload/load module.
-> > > 
-> > > But you'll lose some info then that maybe you'd like to keep across
-> > > suspend/resume cycles.
+Em Tue, Mar 24, 2020 at 11:48:43AM +0100, Jiri Olsa escreveu:
+> On Tue, Mar 24, 2020 at 09:54:24AM +0530, Ravi Bangoria wrote:
+> > Perf gets dso details from two different sources. 1st, from builid
+> > headers in perf.data and 2nd from MMAP2 samples. Dso from buildid
+> > header does not have dso_id detail. And dso from MMAP2 samples does
+> > not have buildid information. If detail of the same dso is present
+> > at both the places, filename is common.
 > > 
-> > Hmmm...  Are you running rcutorture as a loadable module or built into
-> > your kernel?  In the latter case, it starts up automatically shortly
-> > after boot.
+> > Previously, __dsos__findnew_link_by_longname_id() used to compare only
+> > long or short names, but Commit 0e3149f86b99 ("perf dso: Move dso_id
+> > from 'struct map' to 'struct dso'") also added a dso_id comparison.
+> > Because of that, now perf is creating two different dso objects of the
+> > same file, one from buildid header (with dso_id but without buildid)
+> > and second from MMAP2 sample (with buildid but without dso_id).
+> > 
+> > This is causing issues with archive, buildid-list etc subcommands. Fix
+> > this by comparing dso_id only when it's present. And incase dso is
+> > present in 'dsos' list without dso_id, inject dso_id detail as well.
+> > 
+> > Before:
+> > 
+> >   $ sudo ./perf buildid-list -H
+> >   0000000000000000000000000000000000000000 /usr/bin/ls
+> >   0000000000000000000000000000000000000000 /usr/lib64/ld-2.30.so
+> >   0000000000000000000000000000000000000000 /usr/lib64/libc-2.30.so
+> > 
+> >   $ ./perf archive
+> >   perf archive: no build-ids found
+> > 
+> > After:
+> > 
+> >   $ ./perf buildid-list -H
+> >   b6b1291d0cead046ed0fa5734037fa87a579adee /usr/bin/ls
+> >   641f0c90cfa15779352f12c0ec3c7a2b2b6f41e8 /usr/lib64/ld-2.30.so
+> >   675ace3ca07a0b863df01f461a7b0984c65c8b37 /usr/lib64/libc-2.30.so
+> > 
+> >   $ ./perf archive
+> >   Now please run:
+> > 
+> >   $ tar xvf perf.data.tar.bz2 -C ~/.debug
+> > 
+> >   wherever you need to run 'perf report' on.
+> > 
+> > Reported-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 > 
-> Built-in. Sorry maybe I wasn't clear. I meant something like the attached.
-> Which still generates this warning, so yeah I get your point about suppressing
-> some warnings in the right places now.
+> looks good, do we need to add the dso_id check to sort__dso_cmp?
 
-What my approach will be is to think through how to deal with this.
-It might be that I can come up with a simple strategy, and if so, I will
-make the changes.
+Jiri:
 
-But yes, I never had considered this in any of my rcutorture design or
-implementation, so there is likely to be 15 years worth of bugs that
-would need to be fixed.
+Humm, you mean sort__dso_cmp() -> _sort__dso_cmp() should consider the
+dso_id and not just its name? Humm, when "dso" sort key is used that
+means just the short_name (or long_name, if verbose), if we use the ID
+for "dso" then we need to somehow show the id in the output, otherwise
+we'd have multiple lines with the same DSO name, when multiple versions
+exist... Perhaps we should do a first pass, figure out if there are DSOs
+with the same name/different IDs and mark them for showing the ID to
+differentiate them on the output? But this is something that should be
+dealt with in a separece cset, I think.
 
-Unless I can come up with something a bit more targeted.  Which might
-happen.  It sometimes has in past encounters with this sort of thing.  ;-)
+With that in mind, can I add your Acked-by for this patch, with my
+changes described below?
 
-							Thanx, Paul
+Ravi:
 
-> [   48.898066] rcu-torture: Stopping rcu_torture_fwd_prog task
-> [   48.908998] rcu-torture: Stopping rcu_torture_reader
-> [   48.917052] rcu-torture: Stopping rcu_torture_fakewriter
-> [   48.926987] ------------[ cut here ]------------
-> [   48.927025] WARNING: CPU: 4 PID: 261 at kernel/rcu/rcutorture.c:1085 rcu_torture_writer+0x49c/0xa90
-> [   48.927038] rcu-torture: Stopping rcu_torture_fakewriter
-> [   48.927041] Modules linked in:
-> [   48.927070] CPU: 4 PID: 261 Comm: rcu_torture_wri Not tainted 5.6.0-rc6-00002-g533440e608d2-dirty #540
-> [   48.927085] Hardware name: ARM Juno development board (r2) (DT)
-> [   48.927103] pstate: 00000005 (nzcv daif -PAN -UAO)
-> [   48.927124] pc : rcu_torture_writer+0x49c/0xa90
-> [   48.927144] lr : rcu_torture_writer+0x494/0xa90
-> [   48.927157] sp : ffff800018bfbde0
-> [   48.927172] x29: ffff800018bfbde0 x28: ffff80001426da58
-> [   48.927198] x27: ffff80001426cf08 x26: ffff80001426cf08
-> [   48.927224] x25: ffff8000121b5000 x24: 0000000000000001
-> [   48.927250] x23: ffff80001426d650 x22: ffff80001426b000
-> [   48.927275] x21: ffff800013439000 x20: 0000000000000001
-> [   48.927301] x19: ffff80001426c000 x18: 0000000000000000
-> [   48.927326] x17: 0000000000000000 x16: 0000000000000000
-> [   48.927351] x15: 0000000000000000 x14: 0000000000000000
-> [   48.927376] x13: 0000000000000000 x12: 0000000000000000
-> [   48.927401] x11: 00000000000001fa x10: 0000000000000000
-> [   48.927426] x9 : ffff800013a130a0 x8 : ffff0009757f0850
-> [   48.927450] x7 : 0000000000000000 x6 : ffff800018bfbcc0
-> [   48.927475] x5 : 0000000000000001 x4 : 0000000000000000
-> [   48.927499] x3 : 0000000000000080 x2 : 0000000000000000
-> [   48.927524] x1 : 0000000000000000 x0 : 0000000000000001
-> [   48.927548] Call trace:
-> [   48.927569]  rcu_torture_writer+0x49c/0xa90
-> [   48.927590]  kthread+0x13c/0x140
-> [   48.927611]  ret_from_fork+0x10/0x18
-> [   48.927627] irq event stamp: 34170
-> [   48.927654] hardirqs last  enabled at (34169): [<ffff800010114300>] __local_bh_enable_ip+0x98/0x148
-> [   48.927680] hardirqs last disabled at (34170): [<ffff8000100a95d0>] do_debug_exception+0x1a8/0x258
-> [   48.927702] softirqs last  enabled at (34168): [<ffff8000101b949c>] rcu_torture_free+0x84/0x98
-> [   48.927725] softirqs last disabled at (34166): [<ffff8000101b9478>] rcu_torture_free+0x60/0x98
-> [   48.927740] ---[ end trace 57f88d092825f447 ]---
-> 
-> Thanks
-> 
-> --
-> Qais Yousef
+I'm applying it with the changes below, to keep namespacing consistency, ok?
 
-> diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-> index 1aeecc165b21..defad882b236 100644
-> --- a/kernel/rcu/rcutorture.c
-> +++ b/kernel/rcu/rcutorture.c
-> @@ -45,6 +45,7 @@
->  #include <linux/sched/sysctl.h>
->  #include <linux/oom.h>
->  #include <linux/tick.h>
-> +#include <linux/suspend.h>
->  
->  #include "rcu.h"
->  
-> @@ -1628,7 +1629,7 @@ static int rcu_torture_stall(void *args)
->  }
->  
->  /* Spawn CPU-stall kthread, if stall_cpu specified. */
-> -static int __init rcu_torture_stall_init(void)
-> +static int rcu_torture_stall_init(void)
->  {
->  	if (stall_cpu <= 0)
->  		return 0;
-> @@ -2008,7 +2009,7 @@ static int rcu_torture_fwd_prog(void *args)
->  }
->  
->  /* If forward-progress checking is requested and feasible, spawn the thread. */
-> -static int __init rcu_torture_fwd_prog_init(void)
-> +static int rcu_torture_fwd_prog_init(void)
->  {
->  	struct rcu_fwd *rfp;
->  
-> @@ -2359,7 +2360,7 @@ static void rcutorture_sync(void)
->  		cur_ops->sync();
->  }
->  
-> -static int __init
-> +static int
->  rcu_torture_init(void)
->  {
->  	long i;
-> @@ -2549,5 +2550,47 @@ rcu_torture_init(void)
->  	return firsterr;
->  }
->  
-> -module_init(rcu_torture_init);
-> -module_exit(rcu_torture_cleanup);
-> +static int rcu_torture_notify(struct notifier_block *nb,
-> +			      unsigned long mode, void *_unused)
-> +{
-> +	switch (mode) {
-> +	case PM_HIBERNATION_PREPARE:
-> +	case PM_SUSPEND_PREPARE:
-> +		pr_info("Shutdodwn rcu torture..");
-> +		rcu_torture_cleanup();
-> +		break;
-> +
-> +	case PM_POST_RESTORE:
-> +		pr_info("Restart rcu torture..");
-> +		rcu_torture_init();
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct notifier_block rcu_nb = {
-> +	.notifier_call = rcu_torture_notify
-> +};
-> +
-> +static int nb_failed;
-> +
-> +int rcu_torture_module_init(void)
-> +{
-> +	nb_failed = register_pm_notifier(&rcu_nb);
-> +	if (nb_failed)
-> +		pr_warn("Failed to register PM notifier");
-> +
-> +	return rcu_torture_init();
-> +}
-> +
-> +void rcu_torture_module_exit(void)
-> +{
-> +	if (!nb_failed)
-> +		unregister_pm_notifier(&rcu_nb);
-> +
-> +	rcu_torture_cleanup();
-> +}
-> +
-> +module_init(rcu_torture_module_init);
-> +module_exit(rcu_torture_module_exit);
+- Arnaldo
 
+diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+index 5c5bfa2538a9..939471731ea6 100644
+--- a/tools/perf/util/dsos.c
++++ b/tools/perf/util/dsos.c
+@@ -26,7 +26,7 @@ static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
+ 	return 0;
+ }
+ 
+-static bool is_empty_dso_id(struct dso_id *id)
++static bool dso_id__empty(struct dso_id *id)
+ {
+ 	if (!id)
+ 		return true;
+@@ -34,7 +34,7 @@ static bool is_empty_dso_id(struct dso_id *id)
+ 	return !id->maj && !id->min && !id->ino && !id->ino_generation;
+ }
+ 
+-static void inject_dso_id(struct dso *dso, struct dso_id *id)
++static void dso__inject_id(struct dso *dso, struct dso_id *id)
+ {
+ 	dso->id.maj = id->maj;
+ 	dso->id.min = id->min;
+@@ -48,7 +48,7 @@ static int dso_id__cmp(struct dso_id *a, struct dso_id *b)
+ 	 * The second is always dso->id, so zeroes if not set, assume passing
+ 	 * NULL for a means a zeroed id
+ 	 */
+-	if (is_empty_dso_id(a) || is_empty_dso_id(b))
++	if (dso_id__empty(a) || dso_id__empty(b))
+ 		return 0;
+ 
+ 	return __dso_id__cmp(a, b);
+@@ -266,8 +266,8 @@ static struct dso *__dsos__findnew_id(struct dsos *dsos, const char *name, struc
+ {
+ 	struct dso *dso = __dsos__find_id(dsos, name, id, false);
+ 
+-	if (dso && is_empty_dso_id(&dso->id) && !is_empty_dso_id(id))
+-		inject_dso_id(dso, id);
++	if (dso && dso_id__empty(&dso->id) && !dso_id__empty(id))
++		dso__inject_id(dso, id);
+ 
+ 	return dso ? dso : __dsos__addnew_id(dsos, name, id);
+ }
