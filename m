@@ -2,167 +2,81 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AEB0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:40:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D99C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FE6B20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:40:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="drSQstK+"
+	by mail.kernel.org (Postfix) with ESMTP id C205B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:41:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCXRkY (ORCPT
+        id S1727708AbgCXRlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:40:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46727 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRkY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:40:24 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v16so12492876ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:40:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oHdHSXeaggEKXTuBPUsj+Dax4+iq/FMGBOOC34Ttl8I=;
-        b=drSQstK+tdROKRR/LjOj0ucrd3VEKgjwndat96gIt+pKISyoD4RCEXpolqW2DSz887
-         NXDT3WHFlNiBYqtYaJhxvGLK/i0ts8BKmntpzqOqXMEG3/nwDTJqCvmppkci0sgKx8aJ
-         BZQn9m3oSQgMvJILG91fD7vdJijttO+lLvgeo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oHdHSXeaggEKXTuBPUsj+Dax4+iq/FMGBOOC34Ttl8I=;
-        b=MwGdHeIJjZJvMl8tJgrEF+26BpajNq3D3DDSzNypNbyngbQsaPcSVJ0HIQeBTN1Z/+
-         q9zndFGkRs3bIoeW5u2X0vG6Rk8aXdKrYNPEgiun5okZXCD3EIasfV2JUOqle+JcXKuz
-         Tn13nYzeh5k6Gh3YAAn2r09Es7iXlB4zMz7q6fh2mJGAE4MSlGYIs6/p5fFNc0tX7BsD
-         rHd9bDO2eqpxpXfm8IwBHwNs8wgkMRB9/jKdLgtUxSl6elvkRSB1ALhL4IkzDxJKhijU
-         bqfnoQ1i30aOYHRfgzFGjqsjONXgRggyGPlzv4c8KpEqYsbyO9exjQuvnFJrBEzSk6Rn
-         dP8w==
-X-Gm-Message-State: ANhLgQ1Uv3DuwZPj5H5K+9JI7bPXgHU8JYoIr8iMPWMP6wK39iUwtNta
-        PAoMRIazr03EqF1W9mNlNzSZLPKSWXU=
-X-Google-Smtp-Source: ADFU+vto8fJSsQkSb1fEdYZTxC6E1TR9AVIjxPsj6r+P2rpsS7IRtMmymg3WeS12cFOY9yT+DV2Ypg==
-X-Received: by 2002:a2e:9194:: with SMTP id f20mr7218782ljg.33.1585071622017;
-        Tue, 24 Mar 2020 10:40:22 -0700 (PDT)
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com. [209.85.208.181])
-        by smtp.gmail.com with ESMTPSA id t8sm10534006lfe.46.2020.03.24.10.40.20
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 10:40:21 -0700 (PDT)
-Received: by mail-lj1-f181.google.com with SMTP id v16so12492769ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:40:20 -0700 (PDT)
-X-Received: by 2002:a2e:a495:: with SMTP id h21mr6019658lji.123.1585071619722;
- Tue, 24 Mar 2020 10:40:19 -0700 (PDT)
+        Tue, 24 Mar 2020 13:41:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:38842 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727316AbgCXRlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:41:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27F291FB;
+        Tue, 24 Mar 2020 10:41:39 -0700 (PDT)
+Received: from mbp (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14E383F71F;
+        Tue, 24 Mar 2020 10:41:37 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 17:41:35 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     peng.fan@nxp.com
+Cc:     will@kernel.org, nsaenzjulienne@suse.de,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] arm64: mm: make CONFIG_ZONE_DMA configurable without
+ EXPERT
+Message-ID: <20200324174134.GH3901@mbp>
+References: <1583844526-24229-1-git-send-email-peng.fan@nxp.com>
 MIME-Version: 1.0
-References: <1580822300-4491-1-git-send-email-pillair@codeaurora.org>
-In-Reply-To: <1580822300-4491-1-git-send-email-pillair@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Tue, 24 Mar 2020 10:39:43 -0700
-X-Gmail-Original-Message-ID: <CAE=gft7EOALEMUWzoR3+pjoxCUTYWbiXoXY=dXH1BDhS3KwBzg@mail.gmail.com>
-Message-ID: <CAE=gft7EOALEMUWzoR3+pjoxCUTYWbiXoXY=dXH1BDhS3KwBzg@mail.gmail.com>
-Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-To:     Rakesh Pillai <pillair@codeaurora.org>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1583844526-24229-1-git-send-email-peng.fan@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rakesh,
+On Tue, Mar 10, 2020 at 08:48:46PM +0800, peng.fan@nxp.com wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+> enables both ZONE_DMA and ZONE_DMA32. The lower 1GB memory
+> will be occupied by ZONE_DMA, this will cause CMA allocation
+> fail on some platforms, because CMA area could not across
+> different type of memory zones.
+> 
+> Make CONFIG_ZONE_DMA configurable without EXPERT option
+> could let people build non debug kernel image with
+> CONFIG_ZONE_DMA disabled.
 
-On Tue, Feb 4, 2020 at 5:21 AM Rakesh Pillai <pillair@codeaurora.org> wrote:
->
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on sc7180 soc.
->
-> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+While I see why you need to toggle this feature, I'd rather try to
+figure out whether there is a better solution that does not break the
+single kernel image aim (i.e. the same config works for all supported
+SoCs).
 
-What is the status of this? Looks like you have some feedback from
-Sibi. Can you reply and spin this? Also a comment below:
+When we decided to go ahead with a static 1GB ZONE_DMA for Raspberry Pi
+4, we thought that other platforms would be fine, ZONE_DMA32 allocations
+fall back to ZONE_DMA. We missed the large CMA case.
 
-> ---
->  arch/arm64/boot/dts/qcom/sc7180-idp.dts |  5 +++++
->  arch/arm64/boot/dts/qcom/sc7180.dtsi    | 27 +++++++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> index 388f50a..167f68ac 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
-> @@ -287,6 +287,11 @@
->         vdda-pll-supply = <&vreg_l4a_0p8>;
->  };
->
-> +&wifi {
-> +       status = "okay";
-> +       qcom,msa-fixed-perm;
-> +};
-> +
->  /* PINCTRL - additions to nodes defined in sc7180.dtsi */
->
->  &qspi_clk {
-> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> index 8011c5f..e3e8610 100644
-> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-> @@ -75,6 +75,11 @@
->                         reg = <0x0 0x80900000 0x0 0x200000>;
->                         no-map;
->                 };
-> +
-> +               wlan_fw_mem: memory@93900000 {
-> +                       reg = <0 0x93900000 0 0x200000>;
-> +                       no-map;
-> +               };
->         };
->
->         cpus {
-> @@ -1490,6 +1495,28 @@
->
->                         #freq-domain-cells = <1>;
->                 };
-> +
-> +               wifi: wifi@18800000 {
-> +                       compatible = "qcom,wcn3990-wifi";
-> +                       reg = <0 0x18800000 0 0x800000>;
-> +                       reg-names = "membase";
-> +                       iommus = <&apps_smmu 0xc0 0x1>;
-> +                       interrupts =
-> +                               <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH /* CE0 */ >,
-> +                               <GIC_SPI 415 IRQ_TYPE_LEVEL_HIGH /* CE1 */ >,
-> +                               <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH /* CE2 */ >,
-> +                               <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH /* CE3 */ >,
-> +                               <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH /* CE4 */ >,
-> +                               <GIC_SPI 419 IRQ_TYPE_LEVEL_HIGH /* CE5 */ >,
-> +                               <GIC_SPI 420 IRQ_TYPE_LEVEL_HIGH /* CE6 */ >,
-> +                               <GIC_SPI 421 IRQ_TYPE_LEVEL_HIGH /* CE7 */ >,
-> +                               <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH /* CE8 */ >,
-> +                               <GIC_SPI 423 IRQ_TYPE_LEVEL_HIGH /* CE9 */ >,
-> +                               <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH /* CE10 */>,
-> +                               <GIC_SPI 425 IRQ_TYPE_LEVEL_HIGH /* CE11 */>;
-> +                       memory-region = <&wlan_fw_mem>;
+I see a few potential options:
 
-The clocks are missing:
+a) Ensure the CMA is contained within a single zone. How large is it in
+   your case? Is it allocated by the kernel dynamically or a fixed start
+   set by the boot loader?
 
-clocks = <&rpmhcc RPMH_RF_CLK2>;
-clock-names = "cxo_ref_clk_pin";
+b) Change the CMA allocator to allow spanning multiple zones (last time
+   I looked it wasn't trivial since it relied on some per-zone lock).
 
-> +                       status = "disabled";
-> +               };
->         };
->
->         thermal-zones {
-> --
-> 2.7.4
->
+c) Make ZONE_DMA dynamic on arm64 and only enable it if RPi4.
+
+-- 
+Catalin
