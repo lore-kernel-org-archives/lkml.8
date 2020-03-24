@@ -2,83 +2,76 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF7BC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD84AC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCF421D7E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24F920658
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgCXJUs (ORCPT
+        id S1727317AbgCXJVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:20:48 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43876 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbgCXJQb (ORCPT
+        Tue, 24 Mar 2020 05:21:35 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32971 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgCXJVe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:16:31 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGffg-0007uX-8T; Tue, 24 Mar 2020 10:16:28 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id D566C1C0470;
-        Tue, 24 Mar 2020 10:16:27 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:27 -0000
-From:   "tip-bot2 for SeongJae Park" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] doc/RCU/rcu: Use https instead of http if possible
-Cc:     SeongJae Park <sjpark@amazon.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Tue, 24 Mar 2020 05:21:34 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGfkZ-0005UZ-S6; Tue, 24 Mar 2020 10:21:31 +0100
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGfkZ-0005lD-I0; Tue, 24 Mar 2020 10:21:31 +0100
+Date:   Tue, 24 Mar 2020 10:21:31 +0100
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Adrian Ratiu <adrian.ratiu@collabora.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
+        kernel@pengutronix.de, Tim Harvey <tharvey@gateworks.com>
+Subject: Re: [PATCH 2/2] media: coda: be more flexible wrt jpeg dimensions
+Message-ID: <20200324092131.GB12488@pengutronix.de>
+References: <20200323130937.3666244-1-adrian.ratiu@collabora.com>
+ <20200323130937.3666244-3-adrian.ratiu@collabora.com>
 MIME-Version: 1.0
-Message-ID: <158504138752.28353.11257216746174831460.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323130937.3666244-3-adrian.ratiu@collabora.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:11:42 up 33 days, 16:42, 79 users,  load average: 0.12, 0.20,
+ 0.23
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/rcu branch of tip:
+Hi Adrian,
 
-Commit-ID:     06a649b314b3e579cfe1c50112c30e3127a36dba
-Gitweb:        https://git.kernel.org/tip/06a649b314b3e579cfe1c50112c30e3127a36dba
-Author:        SeongJae Park <sjpark@amazon.de>
-AuthorDate:    Mon, 06 Jan 2020 21:08:01 +01:00
-Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 27 Feb 2020 07:03:13 -08:00
+On Mon, Mar 23, 2020 at 03:09:37PM +0200, Adrian Ratiu wrote:
+> Don't require jpeg dimensions to exactly match format dimensions,
+> so we are able to decode and display a wider range jpegs instead
+> of outright rejecting the ones which don't match.
 
-doc/RCU/rcu: Use https instead of http if possible
+I don't think this is right. If userspace feeds us an incomatible
+JPEG we should probably stop decoding and send a source change
+event instead [1].
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- Documentation/RCU/rcu.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+[1] https://linuxtv.org/downloads/v4l-dvb-apis-new/uapi/v4l/dev-decoder.html#dynamic-resolution-change
 
-diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
-index 2a830c5..0e03c6e 100644
---- a/Documentation/RCU/rcu.rst
-+++ b/Documentation/RCU/rcu.rst
-@@ -79,7 +79,7 @@ Frequently Asked Questions
-   Of these, one was allowed to lapse by the assignee, and the
-   others have been contributed to the Linux kernel under GPL.
-   There are now also LGPL implementations of user-level RCU
--  available (http://liburcu.org/).
-+  available (https://liburcu.org/).
- 
- - I hear that RCU needs work in order to support realtime kernels?
- 
+regards
+Philipp
