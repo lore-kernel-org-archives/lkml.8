@@ -5,217 +5,146 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B78C54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EC0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD2D3206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:45:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238D1206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="d5jUFdTK"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="neABOikZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbgCXNpY (ORCPT
+        id S1727604AbgCXNpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:45:24 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:40752 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728078AbgCXNpU (ORCPT
+        Tue, 24 Mar 2020 09:45:25 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:35954 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728191AbgCXNpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:45:20 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200324134519euoutp01f00c668b1d9aad33612889bd0917ccaa~-QWqF1ml43236532365euoutp01O
+        Tue, 24 Mar 2020 09:45:21 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200324134519euoutp029061962dc8e50da6af8ba755aa8ed897~-QWpxL0XI3077330773euoutp02j
         for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:45:19 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200324134519euoutp01f00c668b1d9aad33612889bd0917ccaa~-QWqF1ml43236532365euoutp01O
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200324134519euoutp029061962dc8e50da6af8ba755aa8ed897~-QWpxL0XI3077330773euoutp02j
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
         s=mail20170921; t=1585057519;
-        bh=SajSZrgSCmkiA3SOS/mxic5vQrlN9IelcIMWcE8/GLM=;
+        bh=yXh2RcsZrYf2EbSKBQkmhmg+sHAmDch+gTjfbijzcbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d5jUFdTKQaVFPWpAf0uipwEun6bC3mIFdbwYT2aaQXRhrlXv0ylqWUVS0LKDMAAXY
-         /CuyuQ/tuyr/jIH5975jyyiZPEbTM2OHyFEp7k/mlBeYhZSLQZiPDLj3kZAGq5EdM9
-         HCqZuoEQx1BPk1iTGaA3FekP7TTM59M8IcoaTQvM=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200324134519eucas1p2344c54ba5a04d90fe5361359c66b0040~-QWp2_HGz3229632296eucas1p2J;
-        Tue, 24 Mar 2020 13:45:19 +0000 (GMT)
+        b=neABOikZ4nqsjyc3v6hvgQtqmQ2T7Pn78RypvHTWVVwjUAvxGDZLNXV8t58n49P8H
+         Wg9nZwftKX1VBfeCnc+qk1rBPCy73yrKhD+7j302fhWOJIkmuz5CBt8shrZjcsXF2j
+         qIJXH8PVM/uuPdQliVV4SC0hGJmYuZmb4y2cePTw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200324134518eucas1p186a71391f432238701705559ec0af916~-QWpdBeby1322113221eucas1p1X;
+        Tue, 24 Mar 2020 13:45:18 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 76.48.60679.FEE0A7E5; Tue, 24
-        Mar 2020 13:45:19 +0000 (GMT)
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id C3.05.61286.EEE0A7E5; Tue, 24
+        Mar 2020 13:45:18 +0000 (GMT)
 Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200324134518eucas1p2441fc1b4d095d4320afe5e8a86e3430f~-QWpegDiz0141301413eucas1p2A;
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200324134518eucas1p16e1a39c14dfd101f5a6d86218a9e19af~-QWpKax371592915929eucas1p1R;
         Tue, 24 Mar 2020 13:45:18 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200324134518eusmtrp137ac898f6d27c7cdcc3e13dfaeb80009~-QWpd7sUb2619426194eusmtrp1p;
+        20200324134518eusmtrp1d4ce6f0970fcaf01bbce7bfa205456c3~-QWpJuYsM2608326083eusmtrp1k;
         Tue, 24 Mar 2020 13:45:18 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-c3-5e7a0eef31a1
+X-AuditID: cbfec7f2-ef1ff7000001ef66-48-5e7a0eeedb29
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id EB.E6.08375.EEE0A7E5; Tue, 24
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F8.56.07950.EEE0A7E5; Tue, 24
         Mar 2020 13:45:18 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200324134518eusmtip20667bf1fa79e19ce481678e76e0bad2d~-QWpJt6Ht2961629616eusmtip2_;
+        20200324134518eusmtip2036fcadcccc7c972512ce3d33fbd27af~-QWo2jwJP2918929189eusmtip2h;
         Tue, 24 Mar 2020 13:45:18 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
 Cc:     Andrzej Hajda <a.hajda@samsung.com>,
         Sam Ravnborg <sam@ravnborg.org>, b.zolnierkie@samsung.com
-Subject: [PATCH v2 2/6] video: fbdev: controlfb: add COMPILE_TEST support
-Date:   Tue, 24 Mar 2020 14:45:04 +0100
-Message-Id: <20200324134508.25120-3-b.zolnierkie@samsung.com>
+Subject: [PATCH v2 1/6] video: fbdev: controlfb: fix sparse warning about
+ using incorrect type
+Date:   Tue, 24 Mar 2020 14:45:03 +0100
+Message-Id: <20200324134508.25120-2-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200324134508.25120-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djP87rv+ariDA5sELW4te4cq8XGGetZ
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprCKsWRmVeSWpSXmKPExsWy7djP87rv+KriDP4cMra4te4cq8XGGetZ
         La58fc9mcaLvA6vF5V1z2CxW/NzK6MDmcb/7OJPHkmlX2Tz6tqxi9Pi8SS6AJYrLJiU1J7Ms
-        tUjfLoEr4/uLHWwFxyQrXlxxbGCcI9rFyMkhIWAicX1LL2MXIxeHkMAKRonTfy5DOV8YJXqO
-        fmaFcD4zSjw/d5cNpuX4zSNMEInljBIzd21igWtp7rvIClLFJmAlMbF9FSOILSKQILFi+gww
-        m1kgReLDlv9MILawgKfErPbvYHEWAVWJz8c+sXcxcnDwCthKzHwbCLFMXmLrt09gIzkF7CR6
-        px1iBrF5BQQlTs58wgIxUl6ieetsZpAbJASa2SUmHz4OdamLxOsZM1khbGGJV8e3sEPYMhKn
-        J/ewQDSsY5T42/ECqns7o8Tyyf+guq0l7pz7xQZyEbOApsT6XfoQYUeJ9d+fMYGEJQT4JG68
-        FYQ4gk9i0rbpzBBhXomONiGIajWJDcs2sMGs7dq5khnC9pB4tPQr2wRGxVlI3pmF5J1ZCHsX
-        MDKvYhRPLS3OTU8tNspLLdcrTswtLs1L10vOz93ECEwrp/8d/7KDcdefpEOMAhyMSjy8Gg8r
-        44RYE8uKK3MPMUpwMCuJ8G5OrYgT4k1JrKxKLcqPLyrNSS0+xCjNwaIkzmu86GWskEB6Yklq
-        dmpqQWoRTJaJg1OqgXFiyeQb9/z+f5JgzVA6NGWzFFvyjX6zXZdO347VWvj/2+NQoYoH6lNu
-        sQs7nJnQvPzMRUOGIwwrF3zgfX62kfN+TuC1s8VJHw+ecf//s7jDwuYip7D7lod8xxq22nbL
-        WJ+JKRUXNFCJ/6762mZtbV3nyaxO30BGppSGdGlF/ojy7qyXIhVCFUosxRmJhlrMRcWJAMrL
-        6kMnAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpgkeLIzCtJLcpLzFFi42I5/e/4Pd13fFVxBm8nWFjcWneO1WLjjPWs
-        Fle+vmezONH3gdXi8q45bBYrfm5ldGDzuN99nMljybSrbB59W1YxenzeJBfAEqVnU5RfWpKq
-        kJFfXGKrFG1oYaRnaGmhZ2RiqWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX8f3FDraCY5IVL644
-        NjDOEe1i5OSQEDCROH7zCFMXIxeHkMBSRolrP84ydzFyACVkJI6vL4OoEZb4c62LDaLmE6PE
-        ox9b2UESbAJWEhPbVzGC2CICSRKdDSeZQWxmgTSJSWfvMoHYwgKeErPav4PVsAioSnw+9okd
-        ZD6vgK3EzLeBEPPlJbZ++8QKYnMK2En0TjsENkYIqOTd+uNgrbwCghInZz5hgRgvL9G8dTbz
-        BEaBWUhSs5CkFjAyrWIUSS0tzk3PLTbUK07MLS7NS9dLzs/dxAgM/W3Hfm7ewXhpY/AhRgEO
-        RiUeXo2HlXFCrIllxZW5hxglOJiVRHg3p1bECfGmJFZWpRblxxeV5qQWH2I0BfphIrOUaHI+
-        MC7zSuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwKr8pWMjyadvD
-        pXxGS/g/lvpJ6m1aZHOi9MXf0vLjyRyTOs81vTpYJsfqfNHvkqn+5lV3L9zL/GiUPaMsrUC7
-        rnOL7aMpPXXnszeXTRPbPeV8+vF05Tu7g01u2L25uvjwqsoaX1G/TQndX+t3OX5S3Zwaryw+
-        Z/ET7+DLL8RdDVZO/uuc2f8oTImlOCPRUIu5qDgRAKNwfZeTAgAA
-X-CMS-MailID: 20200324134518eucas1p2441fc1b4d095d4320afe5e8a86e3430f
+        tUjfLoEr48/E2ILdXBW3LvSzNzC+5uhi5OSQEDCR6JrXyt7FyMUhJLCCUaL/ViMLhPOFUWL+
+        20+sEM5nRom/n6YzwrQ0/JrODJFYziixeco7hJaXC9YxgVSxCVhJTGxfBdYhIpAgsWL6DDCb
+        WSBF4sOW/2A1wkDxXTNvs4LYLAKqEl2T3wMdwsHBK2ArsWBVOMQyeYmt3z6BlXAK2En0TjvE
+        DGLzCghKnJz5hAVipLxE89bZYAdJCPxnk7h5ZCkzRLOLxJs3V5kgbGGJV8e3sEPYMhKnJ/ew
+        QDSsA3qt4wVU93ZGieWT/7FBVFlL3Dn3iw3kImYBTYn1u/Qhwo4SxybNYQUJSwjwSdx4Kwhx
+        BJ/EpG2gUAEJ80p0tAlBVKtJbFi2gQ1mbdfOlVCneUj8vjCBfQKj4iwk78xC8s4shL0LGJlX
+        MYqnlhbnpqcWG+allusVJ+YWl+al6yXn525iBKaV0/+Of9rB+PVS0iFGAQ5GJR5ejYeVcUKs
+        iWXFlbmHGCU4mJVEeDenVsQJ8aYkVlalFuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1
+        ILUIJsvEwSnVwFiQk7ntVrlbz/ddR35I/7r7fcFM4XW738jsFEx0ufTJjL8+QmmfnMLRNr+Z
+        zMHp5VHrZaJdlq4KZJUT8l2Vesx6gk2ezzIGlr0rt3zexF90uvdrg8dDdbv2RZ1KOqurTpyT
+        dudck9sy3/igpr+Xd+DSKyerVtqbbeSZFTOpYWP+HZVt4tr765RYijMSDbWYi4oTAZkCy+An
+        AwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPLMWRmVeSWpSXmKPExsVy+t/xe7rv+KriDN4cULG4te4cq8XGGetZ
+        La58fc9mcaLvA6vF5V1z2CxW/NzK6MDmcb/7OJPHkmlX2Tz6tqxi9Pi8SS6AJUrPpii/tCRV
+        ISO/uMRWKdrQwkjP0NJCz8jEUs/Q2DzWyshUSd/OJiU1J7MstUjfLkEv48/E2ILdXBW3LvSz
+        NzC+5uhi5OSQEDCRaPg1nRnEFhJYyiix76xDFyMHUFxG4vj6MogSYYk/17rYuhi5gEo+MUpM
+        P/sIrJ5NwEpiYvsqRhBbRCBJorPhJFicWSBNYtLZu0wgtrBAnMTaTYfZQWwWAVWJrsnv2UHm
+        8wrYSixYFQ4xX15i67dPrCA2p4CdRO+0Q1Dn2Eq8W38cbDyvgKDEyZlPWCDGy0s0b53NPIFR
+        YBaS1CwkqQWMTKsYRVJLi3PTc4uN9IoTc4tL89L1kvNzNzECA3/bsZ9bdjB2vQs+xCjAwajE
+        w6vxsDJOiDWxrLgy9xCjBAezkgjv5tSKOCHelMTKqtSi/Pii0pzU4kOMpkA/TGSWEk3OB0Zl
+        Xkm8oamhuYWlobmxubGZhZI4b4fAwRghgfTEktTs1NSC1CKYPiYOTqkGRq2KNUWX/bKZL4uf
+        KWwPL1q3hUUlP7dz3qPMWVPKXn4p9XGOddJb/yeotYc763uVFXOLqcXPQ+3FixcdUi871W15
+        YlnqcoOYNMPdS7q/1Kuxi1pff3o8YSVbQ1Z89pmTettkfO5oaSTdytcqCI4uPS0hfynRxaBE
+        cd6B6jXr98m9eRSSMXGJEktxRqKhFnNRcSIAlQpAI5ICAAA=
+X-CMS-MailID: 20200324134518eucas1p16e1a39c14dfd101f5a6d86218a9e19af
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200324134518eucas1p2441fc1b4d095d4320afe5e8a86e3430f
+X-RootMTR: 20200324134518eucas1p16e1a39c14dfd101f5a6d86218a9e19af
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200324134518eucas1p2441fc1b4d095d4320afe5e8a86e3430f
+X-CMS-RootMailID: 20200324134518eucas1p16e1a39c14dfd101f5a6d86218a9e19af
 References: <20200324134508.25120-1-b.zolnierkie@samsung.com>
-        <CGME20200324134518eucas1p2441fc1b4d095d4320afe5e8a86e3430f@eucas1p2.samsung.com>
+        <CGME20200324134518eucas1p16e1a39c14dfd101f5a6d86218a9e19af@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add COMPILE_TEST support to controlfb driver for better compile
-testing coverage.
+Use in_le32() instead of le32_to_cpup() to fix sparse warning about
+improper type of the argument.
 
-While at it:
-- convert driver to use eieio() and dcbf() helpers instead of
-  open-coding them
-- add invalid_vram_cache() helper to avoid code duplication
+Also add missing inline keyword to control_par_to_var() definition
+(to match function prototype).
 
 Acked-by: Sam Ravnborg <sam@ravnborg.org>
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/video/fbdev/Kconfig     |  2 +-
- drivers/video/fbdev/controlfb.c | 41 ++++++++++++++++++++++-----------
- 2 files changed, 29 insertions(+), 14 deletions(-)
+ drivers/video/fbdev/controlfb.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/Kconfig b/drivers/video/fbdev/Kconfig
-index 91b0a719d221..fa88e8b9a83d 100644
---- a/drivers/video/fbdev/Kconfig
-+++ b/drivers/video/fbdev/Kconfig
-@@ -472,7 +472,7 @@ config FB_OF
- 
- config FB_CONTROL
- 	bool "Apple \"control\" display support"
--	depends on (FB = y) && PPC_PMAC && PPC32
-+	depends on (FB = y) && ((PPC_PMAC && PPC32) || COMPILE_TEST)
- 	select FB_CFB_FILLRECT
- 	select FB_CFB_COPYAREA
- 	select FB_CFB_IMAGEBLIT
 diff --git a/drivers/video/fbdev/controlfb.c b/drivers/video/fbdev/controlfb.c
-index 9625792f4413..b347bc78bc4a 100644
+index 38b61cdb5ca4..9625792f4413 100644
 --- a/drivers/video/fbdev/controlfb.c
 +++ b/drivers/video/fbdev/controlfb.c
-@@ -48,12 +48,37 @@
- #include <linux/nvram.h>
- #include <linux/adb.h>
- #include <linux/cuda.h>
-+#ifdef CONFIG_PPC_PMAC
- #include <asm/prom.h>
- #include <asm/btext.h>
-+#endif
- 
- #include "macmodes.h"
- #include "controlfb.h"
- 
-+#ifndef CONFIG_PPC_PMAC
-+#define invalid_vram_cache(addr)
-+#undef in_8
-+#undef out_8
-+#undef in_le32
-+#undef out_le32
-+#define in_8(addr)		0
-+#define out_8(addr, val)
-+#define in_le32(addr)		0
-+#define out_le32(addr, val)
-+#define pgprot_cached_wthru(prot) (prot)
-+#else
-+static void invalid_vram_cache(void __force *addr)
-+{
-+	eieio();
-+	dcbf(addr);
-+	mb();
-+	eieio();
-+	dcbf(addr);
-+	mb();
-+}
-+#endif
-+
- struct fb_par_control {
- 	int	vmode, cmode;
- 	int	xres, yres;
-@@ -309,7 +334,7 @@ static int controlfb_mmap(struct fb_info *info,
- 
- static int controlfb_blank(int blank_mode, struct fb_info *info)
- {
--	struct fb_info_control *p =
-+	struct fb_info_control __maybe_unused *p =
+@@ -313,7 +313,7 @@ static int controlfb_blank(int blank_mode, struct fb_info *info)
  		container_of(info, struct fb_info_control, info);
  	unsigned ctrl;
  
-@@ -605,12 +630,7 @@ static void __init find_vram_size(struct fb_info_control *p)
+-	ctrl = le32_to_cpup(CNTRL_REG(p,ctrl));
++	ctrl = in_le32(CNTRL_REG(p, ctrl));
+ 	if (blank_mode > 0)
+ 		switch (blank_mode) {
+ 		case FB_BLANK_VSYNC_SUSPEND:
+@@ -952,7 +952,8 @@ static int control_var_to_par(struct fb_var_screeninfo *var,
+  * Convert hardware data in par to an fb_var_screeninfo
+  */
  
- 	out_8(&p->frame_buffer[0x600000], 0xb3);
- 	out_8(&p->frame_buffer[0x600001], 0x71);
--	asm volatile("eieio; dcbf 0,%0" : : "r" (&p->frame_buffer[0x600000])
--					: "memory" );
--	mb();
--	asm volatile("eieio; dcbi 0,%0" : : "r" (&p->frame_buffer[0x600000])
--					: "memory" );
--	mb();
-+	invalid_vram_cache(&p->frame_buffer[0x600000]);
- 
- 	bank2 = (in_8(&p->frame_buffer[0x600000]) == 0xb3)
- 		&& (in_8(&p->frame_buffer[0x600001]) == 0x71);
-@@ -624,12 +644,7 @@ static void __init find_vram_size(struct fb_info_control *p)
- 
- 	out_8(&p->frame_buffer[0], 0x5a);
- 	out_8(&p->frame_buffer[1], 0xc7);
--	asm volatile("eieio; dcbf 0,%0" : : "r" (&p->frame_buffer[0])
--					: "memory" );
--	mb();
--	asm volatile("eieio; dcbi 0,%0" : : "r" (&p->frame_buffer[0])
--					: "memory" );
--	mb();
-+	invalid_vram_cache(&p->frame_buffer[0]);
- 
- 	bank1 = (in_8(&p->frame_buffer[0]) == 0x5a)
- 		&& (in_8(&p->frame_buffer[1]) == 0xc7);
+-static void control_par_to_var(struct fb_par_control *par, struct fb_var_screeninfo *var)
++static inline void control_par_to_var(struct fb_par_control *par,
++	struct fb_var_screeninfo *var)
+ {
+ 	struct control_regints *rv;
+ 	
 -- 
 2.24.1
 
