@@ -2,214 +2,155 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC13C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C137C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30ADB20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25C182078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3EVV1Pm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Sr2qjPRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgCXOHY (ORCPT
+        id S1727916AbgCXOHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:07:24 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46749 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727553AbgCXOHY (ORCPT
+        Tue, 24 Mar 2020 10:07:52 -0400
+Received: from mail-vs1-f74.google.com ([209.85.217.74]:48336 "EHLO
+        mail-vs1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbgCXOHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:07:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585058842;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=guf8LTdbi3wmRiN5ykm7zFmobl16wEpjKymIGyI7jz0=;
-        b=E3EVV1Pmzwj8o32QwAK4iz7cpYP+eMfLkyhoCBgB1NegkbbxkaljZY0mals24FzXXrvvbT
-        /qv8be2Y/myHSN4+oD0HUJbgxw1LMGh8coU6yqL9NF2ADDjouZQnICmInlS4xK4eMH/i/e
-        VJha6MV+yS6DY58YU/gZcDwb4pzL7k8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-388-Y-hw-xkwP0KoK8tU2EARNg-1; Tue, 24 Mar 2020 10:07:20 -0400
-X-MC-Unique: Y-hw-xkwP0KoK8tU2EARNg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2537813FD;
-        Tue, 24 Mar 2020 14:07:19 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 87BF05C241;
-        Tue, 24 Mar 2020 14:07:04 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 22:06:56 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [PATCH v3 1/3] block/diskstats: more accurate approximation of
- io_ticks for slow disks
-Message-ID: <20200324140656.GA23550@ming.t460p>
-References: <158503038812.1955.7827988255138056389.stgit@buzz>
- <158503198072.1955.16227279292140721351.stgit@buzz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <158503198072.1955.16227279292140721351.stgit@buzz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+        Tue, 24 Mar 2020 10:07:51 -0400
+Received: by mail-vs1-f74.google.com with SMTP id x185so2211436vsc.15
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
+        bh=/WDuZWap/v8Iy/M+2OXxOt9NiRFVqlUjqdsfClorLXo=;
+        b=Sr2qjPRlgPkAUNThsPMi7tdJY4FEjCggCaBkUOigBm1BPouHiNu4N9XGxCUTgGGGo7
+         MBN3x8/tke0Di7ut7R4kVF415AmL5EALBGN1f7adO6qTl1UrHDEwEHjAmmxqU4Dv4rWx
+         mZpwn771XICjrXe7cL/CytU0ujh3ncZp/3LDdL0/9b3gJy/8VDTfn8Mcd4WYVIosktJg
+         Ws9kAMw8OvJp7IA6PX7D2WE/sG38WGTxXDYK/EPAk3loQUu09yDdoj2WoYZimBl1EUtN
+         ioHjfxFO1LysVbJPIzqUSX9WaWiaX97coUvoitmtypDCDNgdyZw2dvOxZhJpnGn7dXLW
+         J3lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:cc;
+        bh=/WDuZWap/v8Iy/M+2OXxOt9NiRFVqlUjqdsfClorLXo=;
+        b=MAD6Q62UrTWBLjTbek1aoeyFWWjkD4ZXrOPq1IWTK53ea/Zvm7nLpW83KSBPuIeRqD
+         HN9n67EUG2qAJNOrdWWoaHk3S4vpKztIn6ark8cyLfUDMCtPzkPFZNLGhR5Hue/IvEVP
+         jyIfnWPyUP0YsA98kwOVxOnubaLLu61r6q0W0RDmxRasJGkuRSDRtROCLafsQAzL+yox
+         dyJX7bD7NiEPidIDkt/wI2p4nlS+hciBPfgmW/ny78C4iXOT8usC7wZKtiyxRP2ZRXv0
+         JxuobTRLEGSa5hKWK+3VBzAVIRJ3siTJNdWRtjyFOJ5j1d0wab52Q5W2hgyh0mHkbtQs
+         79bQ==
+X-Gm-Message-State: ANhLgQ2hLqTX0faUYpxM6rKgsrwgoMJz2QH/jpG3vYDVa6+MzyHwhitH
+        WB007oczA0zAd7niFWdoGamXVhjoOIF/
+X-Google-Smtp-Source: ADFU+vvWAWa1ZME92RpGWIUWGOme/tyDXMElIiMWTIu0OsBqcrvCNBV955//MSXX4aTdS5Ml+8SZD/DlZaHM
+X-Received: by 2002:a1f:3fc8:: with SMTP id m191mr16816183vka.71.1585058870481;
+ Tue, 24 Mar 2020 07:07:50 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 15:07:41 +0100
+In-Reply-To: <20200323114207.222412-1-courbet@google.com>
+Message-Id: <20200324140742.71850-1-courbet@google.com>
+Mime-Version: 1.0
+References: <20200323114207.222412-1-courbet@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v2]     x86: Alias memset to __builtin_memset.
+From:   Clement Courbet <courbet@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Clement Courbet <courbet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:39:40AM +0300, Konstantin Khlebnikov wrote:
-> Currently io_ticks is approximated by adding one at each start and end of
-> requests if jiffies counter has changed. This works perfectly for requests
-> shorter than a jiffy or if one of requests starts/ends at each jiffy.
-> 
-> If disk executes just one request at a time and they are longer than two
-> jiffies then only first and last jiffies will be accounted.
-> 
-> Fix is simple: at the end of request add up into io_ticks jiffies passed
-> since last update rather than just one jiffy.
-> 
-> Example: common HDD executes random read 4k requests around 12ms.
-> 
-> fio --name=test --filename=/dev/sdb --rw=randread --direct=1 --runtime=30 &
-> iostat -x 10 sdb
-> 
-> Note changes of iostat's "%util" 8,43% -> 99,99% before/after patch:
-> 
-> Before:
-> 
-> Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-> sdb               0,00     0,00   82,60    0,00   330,40     0,00     8,00     0,96   12,09   12,09    0,00   1,02   8,43
-> 
-> After:
-> 
-> Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-> sdb               0,00     0,00   82,50    0,00   330,00     0,00     8,00     1,00   12,10   12,10    0,00  12,12  99,99
-> 
-> For load estimation "%util" is not as useful as average queue length,
-> but it clearly shows how often disk queue is completely empty.
-> 
-> Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
-> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-> ---
->  Documentation/admin-guide/iostats.rst |    5 ++++-
->  block/bio.c                           |    8 ++++----
->  block/blk-core.c                      |    4 ++--
->  include/linux/genhd.h                 |    2 +-
->  4 files changed, 11 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
-> index df5b8345c41d..9b14b0c2c9c4 100644
-> --- a/Documentation/admin-guide/iostats.rst
-> +++ b/Documentation/admin-guide/iostats.rst
-> @@ -100,7 +100,7 @@ Field 10 -- # of milliseconds spent doing I/Os (unsigned int)
->  
->      Since 5.0 this field counts jiffies when at least one request was
->      started or completed. If request runs more than 2 jiffies then some
-> -    I/O time will not be accounted unless there are other requests.
-> +    I/O time might be not accounted in case of concurrent requests.
->  
->  Field 11 -- weighted # of milliseconds spent doing I/Os (unsigned int)
->      This field is incremented at each I/O start, I/O completion, I/O
-> @@ -143,6 +143,9 @@ are summed (possibly overflowing the unsigned long variable they are
->  summed to) and the result given to the user.  There is no convenient
->  user interface for accessing the per-CPU counters themselves.
->  
-> +Since 4.19 request times are measured with nanoseconds precision and
-> +truncated to milliseconds before showing in this interface.
-> +
->  Disks vs Partitions
->  -------------------
->  
-> diff --git a/block/bio.c b/block/bio.c
-> index 0985f3422556..b1053eb7af37 100644
-> --- a/block/bio.c
-> +++ b/block/bio.c
-> @@ -1762,14 +1762,14 @@ void bio_check_pages_dirty(struct bio *bio)
->  	schedule_work(&bio_dirty_work);
->  }
->  
-> -void update_io_ticks(struct hd_struct *part, unsigned long now)
-> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
->  {
->  	unsigned long stamp;
->  again:
->  	stamp = READ_ONCE(part->stamp);
->  	if (unlikely(stamp != now)) {
->  		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
-> -			__part_stat_add(part, io_ticks, 1);
-> +			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
->  		}
->  	}
->  	if (part->partno) {
-> @@ -1785,7 +1785,7 @@ void generic_start_io_acct(struct request_queue *q, int op,
->  
->  	part_stat_lock();
->  
-> -	update_io_ticks(part, jiffies);
-> +	update_io_ticks(part, jiffies, false);
->  	part_stat_inc(part, ios[sgrp]);
->  	part_stat_add(part, sectors[sgrp], sectors);
->  	part_inc_in_flight(q, part, op_is_write(op));
-> @@ -1803,7 +1803,7 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
->  
->  	part_stat_lock();
->  
-> -	update_io_ticks(part, now);
-> +	update_io_ticks(part, now, true);
->  	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
->  	part_stat_add(part, time_in_queue, duration);
->  	part_dec_in_flight(q, part, op_is_write(req_op));
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index abfdcf81a228..4401b30a1751 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1337,7 +1337,7 @@ void blk_account_io_done(struct request *req, u64 now)
->  		part_stat_lock();
->  		part = req->part;
->  
-> -		update_io_ticks(part, jiffies);
-> +		update_io_ticks(part, jiffies, true);
->  		part_stat_inc(part, ios[sgrp]);
->  		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
->  		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
-> @@ -1379,7 +1379,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
->  		rq->part = part;
->  	}
->  
-> -	update_io_ticks(part, jiffies);
-> +	update_io_ticks(part, jiffies, false);
->  
->  	part_stat_unlock();
->  }
-> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-> index d5c75df64bba..f1066f10b062 100644
-> --- a/include/linux/genhd.h
-> +++ b/include/linux/genhd.h
-> @@ -467,7 +467,7 @@ static inline void free_part_info(struct hd_struct *part)
->  	kfree(part->info);
->  }
->  
-> -void update_io_ticks(struct hd_struct *part, unsigned long now);
-> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end);
->  
->  /* block/genhd.c */
->  extern void device_add_disk(struct device *parent, struct gendisk *disk,
-> 
+    Recent compilers know the meaning of builtins (`memset`,
+    `memcpy`, ...) and can replace calls by inline code when
+    deemed better. For example, `memset(p, 0, 4)` will be lowered
+    to a four-byte zero store.
 
-Looks fine:
+    When using -ffreestanding (this is the case e.g. building on
+    clang), these optimizations are disabled. This means that **all**
+    memsets, including those with small, constant sizes, will result
+    in an actual call to memset.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+    We have identified several spots where we have high CPU usage
+    because of this. For example, a single one of these memsets is
+    responsible for about 0.3% of our total CPU usage in the kernel.
 
-Thanks,
-Ming
+    Aliasing `memset` to `__builtin_memset` allows the compiler to
+    perform this optimization even when -ffreestanding is used.
+    There is no change when -ffreestanding is not used.
+
+    Below is a diff (clang) for `update_sg_lb_stats()`, which
+    includes the aforementionned hot memset:
+        memset(sgs, 0, sizeof(*sgs));
+
+    Diff:
+        movq %rsi, %rbx        ~~~>  movq $0x0, 0x40(%r8)
+        movq %rdi, %r15        ~~~>  movq $0x0, 0x38(%r8)
+        movl $0x48, %edx       ~~~>  movq $0x0, 0x30(%r8)
+        movq %r8, %rdi         ~~~>  movq $0x0, 0x28(%r8)
+        xorl %esi, %esi        ~~~>  movq $0x0, 0x20(%r8)
+        callq <memset>         ~~~>  movq $0x0, 0x18(%r8)
+                               ~~~>  movq $0x0, 0x10(%r8)
+                               ~~~>  movq $0x0, 0x8(%r8)
+                               ~~~>  movq $0x0, (%r8)
+
+    In terms of code size, this grows the clang-built kernel a
+    bit (+0.022%):
+    440285512 vmlinux.clang.after
+    440383608 vmlinux.clang.before
+
+Signed-off-by: Clement Courbet <courbet@google.com>
+
+---
+
+changes in v2:
+  - Removed ifdef(GNUC >= 4).
+  - Disabled change when CONFIG_FORTIFY_SOURCE is set.
+---
+ arch/x86/include/asm/string_64.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+index 75314c3dbe47..9cfce0a840a4 100644
+--- a/arch/x86/include/asm/string_64.h
++++ b/arch/x86/include/asm/string_64.h
+@@ -18,6 +18,15 @@ extern void *__memcpy(void *to, const void *from, size_t len);
+ void *memset(void *s, int c, size_t n);
+ void *__memset(void *s, int c, size_t n);
+ 
++/* Recent compilers can generate much better code for known size and/or
++ * fill values, and will fallback on `memset` if they fail.
++ * We alias `memset` to `__builtin_memset` explicitly to inform the compiler to
++ * perform this optimization even when -ffreestanding is used.
++ */
++#if !defined(CONFIG_FORTIFY_SOURCE)
++#define memset(s, c, count) __builtin_memset(s, c, count)
++#endif
++
+ #define __HAVE_ARCH_MEMSET16
+ static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
+ {
+@@ -74,6 +83,7 @@ int strcmp(const char *cs, const char *ct);
+ #undef memcpy
+ #define memcpy(dst, src, len) __memcpy(dst, src, len)
+ #define memmove(dst, src, len) __memmove(dst, src, len)
++#undef memset
+ #define memset(s, c, n) __memset(s, c, n)
+ 
+ #ifndef __NO_FORTIFY
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
