@@ -2,427 +2,203 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4456EC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 744F8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F91208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40F9C20788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:19:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vGhUzRHE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lYFABNE+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728366AbgCXQTB (ORCPT
+        id S1728507AbgCXQTN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:19:01 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41281 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgCXQTA (ORCPT
+        Tue, 24 Mar 2020 12:19:13 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:41420 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgCXQTN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:19:00 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z65so9511587pfz.8;
-        Tue, 24 Mar 2020 09:18:58 -0700 (PDT)
+        Tue, 24 Mar 2020 12:19:13 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k9so6379169oia.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:19:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=xHHHZO3RcIy83lINgOXUuaIUXlORCN+5eJIKniNCw1k=;
-        b=vGhUzRHEeI8wxzGRCex9YLWwvpMk5FaAozZZ7q/gHcbJWPNE/EqbwytEh7RvZMyJE4
-         zhG5+5aq/dLRkPEgQn4HCXWiqB7EnirkIQYc/Aan3TJ0mU6i5Im31+wZ5b76zQx9jk9H
-         Vo6pxFEDyDNTKZOuLuHhY6WvCyLr1ePgffnBfLE2CscccotmEuYXcbFYc/YzVFn+kqip
-         NqKfmu7sb1iU9oSwrdcjmcehWWd9FjyFn4Dz2cUTYqmAG3SVBeomDDXyaSIXrIBs/laf
-         KSa3GfoT29K8SiG9DTaoZbTNkxLhmKJ5SUn752mvjQ+WuDkFOHUjrl+Y7i91U47jf2iF
-         +WWQ==
+        bh=pobu9cS6bUflR0KwvjXAAtTNFOMb0By6mtlowEYO2hg=;
+        b=lYFABNE+cuSadVsTijH5IHU23HqDKUaMc8S6S/+jpoTM+rQ1GaZzN3RUzry0x5xRS6
+         8xJruo/CS4xR5MshNC/wWoU/Ji0RcHXBCsS9EEjEQ02rHY78OfMjDbK9hZgMx0krfkNW
+         Auwd0vZbPHBfYXfsGgNgcfK7YTcTwfN5rxOSv40AZOHiSg2Z7fZVpMzfOhP1WhOkf3+L
+         C0VADoWhqgWqnKDbCa7ru+5DJn6d83QV2sYnmVUdkS8O7OZOsUxjCn9z7b13FynEhWP/
+         zxlS25nD3V7egLUgMebEDclCGSyFDBME09qjpbtFEK+uRgNm5jQKEp3+c5YAjz7syaLa
+         U6Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=xHHHZO3RcIy83lINgOXUuaIUXlORCN+5eJIKniNCw1k=;
-        b=KB4hTcM2UAqFfTJqgPwXNrgw9Nvq9WfmJ33IxTvpFSDDo8E6MusbU5sZWm4SHXfeyz
-         6zJF/wIT9K9FlTLgOG0csqVfZ10IK/n1wqPpjLmhYMRTj3W9F2hcu3g29EN6JoAcreey
-         Me/im13DLvvzRvDLlRueJDFAv92dGQqww0uVJMskxZoYIRX6z0KAO8jDLBzVg6mbkWta
-         REM5mcB+ChJ7hpOHdVpa3HIfCrk3G/HQWgujT4NbmsCXlg/iPzE1Qfb0e55MpFUWDILT
-         AI/lhkKLqQikjB+HpizIaRLtHVW09K5aOcgJo0LG2jZW+UQvXPGY7mbwFhGwyWMJw/7+
-         e2XQ==
-X-Gm-Message-State: ANhLgQ041naYnM3DfTzMYTgOGVzhaAfLLtPxu7GxU025/8/ReHoDvPcY
-        /ioVJRh/SyazqzrtWX4wEQpfTEx/7qXUBOyLpfs=
-X-Google-Smtp-Source: ADFU+vtJaivKr61psxMKMtawW8A25tsAXLtPBpEvY8GKRr2SOHcqk87vYeSYdfnCh+taB7GSWDiwcq6RNx7rmA5OMLw=
-X-Received: by 2002:aa7:958f:: with SMTP id z15mr29368817pfj.130.1585066737681;
- Tue, 24 Mar 2020 09:18:57 -0700 (PDT)
+        bh=pobu9cS6bUflR0KwvjXAAtTNFOMb0By6mtlowEYO2hg=;
+        b=bfaMvivSsOOXnMKCI7TlGVxmSyZtkhfyKcxdfRmoEeeNWBuRnkUMLUqgsSbB3O3mOj
+         Y8/R8aPtATCqD8XPH/gTWLtlvROrtH7CrBiRL6RD1a/LZ65gM59h3UtwD5/QkwKw6sgv
+         oYGNBD726GQi5Svh8wMqXriNewN2/Xssa6JbtnbUm2L4oRMJdRD4m0yqTA4I/gDYI7Cl
+         5bPbxoURwPxKL4dT9uW//CYlTdulhhQMFLdfEZTkP42XFIJJTMC/75molQYPJ1FoUPUb
+         aurwgyVKYAIfG1WiDvUrHXqOjKP2AArIgadAVNo6O4NGGlZUIPLUpZR7tK+dWOZa7dSO
+         SIIQ==
+X-Gm-Message-State: ANhLgQ1F4s3r0/nZF/W8W3PM5H4JpYub7oML9dTzvNxZ6yB9UYgEGcPs
+        09bD3d418fFpkl01e5ITyh5+l00wpKr534ljd6Y=
+X-Google-Smtp-Source: ADFU+vtKf2iJ79EEL3W76HFA/yKOlVYfTqziJHnkK2h0DgPSmcpjhHjTrr5DnFkb8D/0bBBVpWb7N3GdoNgqzespekw=
+X-Received: by 2002:aca:5d8a:: with SMTP id r132mr4068886oib.129.1585066752665;
+ Tue, 24 Mar 2020 09:19:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200323124310.1.I6ed779cd21abf3e70f21c1562bbda81f590976ab@changeid>
- <20200323124310.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
-In-Reply-To: <20200323124310.2.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Mar 2020 18:18:50 +0200
-Message-ID: <CAHp75VfHiKqjaEKPGa=ymmsu44AMB5FCNKFEKhDeazW5vWZkBg@mail.gmail.com>
-Subject: Re: [PATCH 2/2 v5] iio: Add SEMTECH SX9310/9311 sensor driver
-To:     Daniel Campello <campello@chromium.org>
-Cc:     LKML <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
+ <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
+ <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
+ <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com>
+ <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com>
+ <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
+ <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
+ <CAP6exYLCFp8AMFx_d3XJtYiSibF76Fo-km4vB5MwSbqE8D8DNA@mail.gmail.com> <2837291a-b682-bd6d-4e08-ffa76d3097b0@infradead.org>
+In-Reply-To: <2837291a-b682-bd6d-4e08-ffa76d3097b0@infradead.org>
+From:   ron minnich <rminnich@gmail.com>
+Date:   Tue, 24 Mar 2020 09:19:01 -0700
+Message-ID: <CAP6exYLK11rhreX=6QPyDQmW7wPHsKNEFtXE47pjx41xS6O7-A@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>,
+        Matthew Garrett <mjg59@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio <linux-iio@vger.kernel.org>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 8:46 PM Daniel Campello <campello@chromium.org> wrote:
->
-> Add SEMTECH SX9310/9311 driver.
->
-> The device has the following entry points:
->
-> Usual frequency:
-> - sampling_frequency
-> - sampling_frequency_available
->
-> Instant reading of current values for different sensors:
-> - in_proximity0_raw
-> - in_proximity1_raw
-> - in_proximity2_raw
-> - in_proximity3_comb_raw
-> and associated events in events/
-
-...
-
-> +#include <linux/acpi.h>
-
-> +#include <linux/of.h>
-
-No users for these (see ID table handling below), but property.h would
-be needed.
-
-...
-
-> +#define   SX9310_EVENT_IRQ                             (SX9310_FAR_IRQ | \
-> +                                                        SX9310_CLOSE_IRQ)
-
-Better formatting is
-#define FOO \
-  (BAR | ZOO)
-
-...
-
-> +struct sx9310_data {
-
-> +       struct i2c_client *client;
-
-Do you really need client? Perhaps struct device will be enough?
-
-> +       struct iio_trigger *trig;
-> +       struct regmap *regmap;
-> +       /*
-> +        * Last reading of the proximity status for each channel.
-> +        * We only send an event to user space when this changes.
-> +        */
-> +       bool prox_stat[SX9310_NUM_CHANNELS];
-> +       bool trigger_enabled;
-
-> +       __be16 buffer[SX9310_NUM_CHANNELS +
-> +                     4]; /* 64-bit data + 64-bit timestamp */
-
-Please, fix formatting.
-
-> +};
-
-...
-
-> +static int sx9310_update_chan_en(struct sx9310_data *data,
-> +                                unsigned int chan_read,
-> +                                unsigned int chan_event)
-> +{
-> +       int ret;
-> +
-
-> +       if ((data->chan_read | data->chan_event) != (chan_read | chan_event)) {
-> +               ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
-> +                                        SX9310_CHAN_ENABLED_MASK,
-> +                                        chan_read | chan_event);
-
-unsigned int readevent = chan_read | chan_event;
-...
-if (... != readevent) {
-  ..., readevent);
-}
-
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +       data->chan_read = chan_read;
-> +       data->chan_event = chan_event;
-> +       return 0;
-> +}
-
-...
-
-> +static int sx9310_read_prox_data(struct sx9310_data *data,
-> +                                const struct iio_chan_spec *chan, __be16 *val)
-> +{
-> +       int ret;
-> +
-> +       ret = regmap_write(data->regmap, SX9310_REG_SENSOR_SEL, chan->channel);
-> +       if (ret < 0)
-> +               return ret;
-> +
-
-> +       return regmap_bulk_read(data->regmap, chan->address, val, 2);
-
-sizeof()?
-
-> +}
-
-...
-
-> +       if (data->client->irq > 0) {
-> +               ret = wait_for_completion_interruptible(&data->completion);
-> +               reinit_completion(&data->completion);
-
-Logically reinit better to be called before you start measurement.
-
-> +       } else {
-> +               ret = sx9310_wait_for_sample(data);
-> +       }
-
-...
-
-> +       *val = sign_extend32(be16_to_cpu(rawval),
-> +                            (chan->address == SX9310_REG_DIFF_MSB ? 11 : 15));
-
-Too many parentheses.
-
-...
-
-> +       mutex_lock(&data->mutex);
-> +
-> +       ret = regmap_update_bits(data->regmap, SX9310_REG_PROX_CTRL0,
-> +                                SX9310_SCAN_PERIOD_MASK,
-> +                                i << SX9310_SCAN_PERIOD_SHIFT);
-> +
-> +       mutex_unlock(&data->mutex);
-
-Btw, can you use locking provided by regmap?
-
-...
-
-> +       /*
-> +        * Even if no event is enabled, we need to wake the thread to
-
-> +        * clear the interrupt state by reading SX9310_REG_IRQ_SRC.  It
-
-Move it to the next line.
-
-> +        * is not possible to do that here because regmap_read takes a
-> +        * mutex.
-> +        */
-
-...
-
-> +       for (chan = 0; chan < SX9310_NUM_CHANNELS; chan++) {
-> +               int dir;
-> +               u64 ev;
-> +               bool new_prox = val & BIT(chan);
-> +
-
-> +               if (!(data->chan_event & BIT(chan)))
-> +                       continue;
-
-for_each_set_bit()
-
-> +               if (new_prox == data->prox_stat[chan])
-> +                       /* No change on this channel. */
-> +                       continue;
-
-> +       }
-
-...
-
-> +static struct attribute *sx9310_attributes[] = {
-> +       &iio_dev_attr_sampling_frequency_available.dev_attr.attr,
-
-> +       NULL,
-
-Comma is not needed for terminator.
-
-> +};
-
-...
-
-> +static int sx9310_buffer_preenable(struct iio_dev *indio_dev)
-> +{
-> +       struct sx9310_data *data = iio_priv(indio_dev);
-> +       unsigned int channels = 0;
-> +       int bit, ret;
-> +
-> +       mutex_lock(&data->mutex);
-> +       for_each_set_bit(bit, indio_dev->active_scan_mask,
-> +                        indio_dev->masklength)
-
-> +               channels |= BIT(indio_dev->channels[bit].channel);
-
-unsigned long channels;
-...
-__set_bit(...);
-
-> +       ret = sx9310_update_chan_en(data, channels, data->chan_event);
-> +       mutex_unlock(&data->mutex);
-> +       return ret;
-> +}
-
-...
-
-> +#define SX_INIT(_reg, _def)                    \
-> +       {                                       \
-> +               .reg = SX9310_REG_##_reg,       \
-> +               .def = _def,                    \
-> +       }
-
-Usually it's a good tone to #undef custom macro when they are not
-needed anymore.
-
-...
-
-> +       for (i = 100; i >= 0; i--) {
-> +               msleep(20);
-> +               ret = regmap_read(data->regmap, SX9310_REG_STAT1, &val);
-> +               if (ret < 0)
-> +                       goto out;
-> +               if (!(val & SX9310_COMPSTAT_MASK))
-> +                       break;
-> +       }
-
-NIH of regmap_real_poll_timeout();
-
-> +
-> +       if (i < 0) {
-> +               dev_err(&data->client->dev,
-> +                       "initial compensation timed out: 0x%02x", val);
-> +               ret = -ETIMEDOUT;
-> +       }
-
-...
-
-> +               ret = regmap_write(data->regmap, initval->reg, initval->def);
-> +               if (ret < 0)
-
-Do you need all these ' < 0'?
-
-> +                       return ret;
-
-...
-
-> +       const struct acpi_device_id *acpi_id;
-
-> +       /* id will be NULL when enumerated via ACPI */
-> +       if (id) {
-> +               if (id->driver_data != whoami)
-> +                       dev_err(dev, "WHOAMI does not match i2c_device_id: %s",
-> +                               id->name);
-> +       } else if (ACPI_HANDLE(dev)) {
-> +               acpi_id = acpi_match_device(dev->driver->acpi_match_table, dev);
-> +               if (!acpi_id)
-> +                       return -ENODEV;
-> +               if (acpi_id->driver_data != whoami)
-> +                       dev_err(dev, "WHOAMI does not match acpi_device_id: %s",
-> +                               acpi_id->id);
-> +       } else
-> +               return -ENODEV;
-
-device_get_match_data().
-
-...
-
-> +static int sx9310_probe(struct i2c_client *client,
-> +                       const struct i2c_device_id *id)
-
-Can you switch to ->probe_new()?
-
-...
-
-> +       indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-
-> +       if (indio_dev == NULL)
-
-if (!indio_dev)
-
-> +               return -ENOMEM;
-
-...
-
-> +               dev_err(&client->dev, "error in reading WHOAMI register: %d",
-> +                       ret);
-
-If you introduce temporary variable the code will be better to read
-
-  struct device *dev = &client->dev;
-
-> +       ret = sx9310_set_indio_dev_name(&client->dev, indio_dev, id,
-> +                                       data->whoami);
-> +       if (ret < 0)
-> +               return ret;
-
-...
-
-> +static const struct acpi_device_id sx9310_acpi_match[] = {
-> +       { "STH9310", SX9310_WHOAMI_VALUE },
-> +       { "STH9311", SX9311_WHOAMI_VALUE },
-
-Hmm... May I ask some official proof that these IDs are real and
-issued by vendor?
-
-> +       {},
-
-No comma.
-
-> +};
-> +MODULE_DEVICE_TABLE(acpi, sx9310_acpi_match);
-
-> +static const struct of_device_id sx9310_of_match[] = {
-> +       { .compatible = "semtech,sx9310" },
-> +       { .compatible = "semtech,sx9311" },
-
-> +       {},
-
-No comma.
-
-> +};
-> +MODULE_DEVICE_TABLE(of, sx9310_of_match);
-> +
-> +static const struct i2c_device_id sx9310_id[] = {
-> +       { "sx9310", SX9310_WHOAMI_VALUE },
-> +       { "sx9311", SX9311_WHOAMI_VALUE },
-
-> +       {},
-
-No comma.
-
-> +};
-> +MODULE_DEVICE_TABLE(i2c, sx9310_id);
-
-...
-
-> +               .acpi_match_table = ACPI_PTR(sx9310_acpi_match),
-> +               .of_match_table = of_match_ptr(sx9310_of_match),
-
-Drop these macros. You probably didn't test with !ACPI and/or !OF --
-should be compiler warning.
-
-> +               .pm = &sx9310_pm_ops,
-> +       },
-
---
-With Best Regards,
-Andy Shevchenko
+Subject: [PATCH 1/1] initrdmem= option to specify initrd physical address
+
+This patch adds the initrdmem option:
+initrdmem=ss[KMG],nn[KMG]
+which is used to specify the physical address of the initrd,
+almost always an address in FLASH. It also adds code for
+x86 to use the existing phys_init_start and
+phys_init_size variables in the kernel.
+This is useful in cases where we wish to place a kernel
+and initrd in FLASH, but there is no firmware file
+system structure in the FLASH.
+
+One such situation occurs when we have reclaimed unused FLASH
+space on UEFI systems by, e.g., taking it from the Management
+Engine. For example, on many systems, the ME is given half the
+FLASH part; not only is 2.75M of an 8M part unused; but 10.75M
+of a 16M part is unused. We can use this space to contain
+an initrd, but need to tell Linux where it is.
+
+This space is "raw": due to, e.g., UEFI limitations:
+it can not be added to UEFI firmware volumes without rebuilding
+UEFI from source or writing a UEFI device driver. We can reference it
+only as a physical address and size.
+
+At the same time, should we netboot a kernel or load it from
+GRUB or syslinux, we want to have the option of not using
+the physical address specification. Then, should we wish, it
+is easy to boot the kernel and provide an initrd; or boot the
+the kernel and let it use the initrd in FLASH. In practice this
+has proven to be very helpful as we integrate Linux into FLASH
+on x86.
+
+Hence, the most flexible and convenient path is to enable the
+initrdmem command line flag in a way that it is the last choice tried.
+
+For example, on the DigitalLoggers Atomic Pi, we burn an image into
+FLASH with a built-in command line which includes:
+initrdmem=0xff968000,0x200000
+which specifies a location and size.
+
+Signed-off-by: Ronald G. Minnich <rminnich@gmail.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+ arch/x86/kernel/setup.c                         |  6 ++++++
+ init/do_mounts_initrd.c                         | 13 ++++++++++++-
+ 3 files changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt
+b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d230bc..9cd356958a7f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1714,6 +1714,13 @@
+
+     initrd=        [BOOT] Specify the location of the initial ramdisk
+
++    initrdmem=    [KNL] Specify a physical adddress and size from which
++            to load the initrd. If an initrd is compiled in or
++            specified in the bootparams, it takes priority
++            over this setting.
++            Format: ss[KMG],nn[KMG]
++            Default is 0, 0
++
+     init_on_alloc=    [MM] Fill newly allocated pages and heap objects with
+             zeroes.
+             Format: 0 | 1
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index a74262c71484..1b04ef8ea12d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
+
+     ramdisk_image |= (u64)boot_params.ext_ramdisk_image << 32;
+
++    if (ramdisk_image == 0) {
++        ramdisk_image = phys_initrd_start;
++    }
+     return ramdisk_image;
+ }
+ static u64 __init get_ramdisk_size(void)
+@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
+
+     ramdisk_size |= (u64)boot_params.ext_ramdisk_size << 32;
+
++    if (ramdisk_size == 0) {
++        ramdisk_size = phys_initrd_size;
++    }
+     return ramdisk_size;
+ }
+
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index dab8b1151b56..d72beda824aa 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -28,7 +28,7 @@ static int __init no_initrd(char *str)
+
+ __setup("noinitrd", no_initrd);
+
+-static int __init early_initrd(char *p)
++static int __init early_initrdmem(char *p)
+ {
+     phys_addr_t start;
+     unsigned long size;
+@@ -43,6 +43,17 @@ static int __init early_initrd(char *p)
+     }
+     return 0;
+ }
++early_param("initrdmem", early_initrdmem);
++
++/*
++ * This is here as the initrd keyword has been in use since 11/2018
++ * on ARM, PowerPC, and MIPS.
++ * It should not be; it is reserved for bootloaders.
++ */
++static int __init early_initrd(char *p)
++{
++    return early_initrdmem(p);
++}
+ early_param("initrd", early_initrd);
+
+ static int init_linuxrc(struct subprocess_info *info, struct cred *new)
+-- 
+2.17.1
