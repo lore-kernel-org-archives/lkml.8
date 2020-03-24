@@ -2,239 +2,199 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC78C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D33C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F43320663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:11:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="ZeWj9wPN"
+	by mail.kernel.org (Postfix) with ESMTP id 220B82074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbgCXHLF (ORCPT
+        id S1727394AbgCXHNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 03:11:05 -0400
-Received: from mx0b-00128a01.pphosted.com ([148.163.139.77]:34664 "EHLO
-        mx0b-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbgCXHLE (ORCPT
+        Tue, 24 Mar 2020 03:13:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8630 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725905AbgCXHNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 03:11:04 -0400
-Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
-        by mx0b-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O74lXY012985;
-        Tue, 24 Mar 2020 03:10:48 -0400
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2059.outbound.protection.outlook.com [104.47.44.59])
-        by mx0b-00128a01.pphosted.com with ESMTP id 2ywfj6qx5x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 03:10:48 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nQl/qe+E+AoQVVK82mj+SS2NYS2XWEs3tfH6iQbWoWbRhkLtA6XlHkPaWFxX96qaqWZ5p89kREnwKX5MuJSHy3tE8nk+tTadJ8xI1QRTz7dDGcIppTecaFkJhCCJ2HBMTzoRlW/MU56Pk6naf/KQhMAm0NjJtrMvkqFyeOrd6DMQaKRW2+KsHwrFQchzhXvIbL6x3bUskjWmMwMdYmPvCP2TSfsXBcR5yXqVvynLUGs9m811hw0NQpuFoI3wGvYvjSFPsz77hwFJzrO8RspY1vx9gtGoNZ/5pi3Clq8FoRdJlagUt5i5r4aLi6PN3KLXOlptY6+LHJg5H3l3iJ5IFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HNDIBbVelRqIsbf0bb9eW5XDV63T9M4B0Tbah2+MeQ0=;
- b=mxBq/lCVEAQkoPNo6TUmCVc3+DlYu9DaZHMJQqgdBvRuGidXv2tA+dgUygJjhTljUBJDL3XvysvucyeelShozqjoNXZvYP5ut3rtOpKAvSfgg/HILNVauaU9ze+DLA/Gu48ICv8Sy7Yfp+u4aYhHVKRQocRaVLTC/TVkywkjdZK3wRw3XaKuRk3p04pN82sG5R3zoP1U4aDsaxZMweyLGpoYRYmwd+VWm9qjwH8xQIeB/P13DZSYYqgPXvEzATvO+6NDB1b8dUpZ83z0onUGKkuxpL8q18NhrnbpkxW4WUka0/0Qsh//f51LluFJgS39vQclZ3KMn4+VIxRyZkLJ3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HNDIBbVelRqIsbf0bb9eW5XDV63T9M4B0Tbah2+MeQ0=;
- b=ZeWj9wPNExYr0iRQOd9g2EQglJ/KB8TClt9DIi2sy5UkeyoJYgMVrRGcO+d1j5le394/kR7PKEBgG19SXRlYrWS6LJyq0lMfw6qSEzNibC+1/7HByrofuL0da3PMC4IAbM4XmfCuWXPpb5xMceGLiO7aO24+j6uoPSlmAaP2HCo=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB4985.namprd03.prod.outlook.com (2603:10b6:5:1f0::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19; Tue, 24 Mar
- 2020 07:10:44 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2835.023; Tue, 24 Mar 2020
- 07:10:44 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "jic23@kernel.org" <jic23@kernel.org>
-CC:     "Bogdan, Dragos" <Dragos.Bogdan@analog.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "Grozav, Andrei" <Andrei.Grozav@analog.com>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
-        "Costina, Adrian" <Adrian.Costina@analog.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "Nagy, Laszlo" <Laszlo.Nagy@analog.com>,
-        "Csomortani, Istvan" <Istvan.Csomortani@analog.com>
-Subject: Re: [PATCH v11 5/8] iio: adc: adi-axi-adc: add support for AXI ADC IP
- core
-Thread-Topic: [PATCH v11 5/8] iio: adc: adi-axi-adc: add support for AXI ADC
- IP core
-Thread-Index: AQHV/15DYGjLW+byS0qvSggjrAf5zqhTk1UAgADIgICAABN7gIAAXHgAgAAKQICAAA4mAIAAC/EAgAJoxwA=
-Date:   Tue, 24 Mar 2020 07:10:44 +0000
-Message-ID: <b3fda4bafe52bc184da2c880c6ace14d870da4dc.camel@analog.com>
-References: <20200321085315.11030-1-alexandru.ardelean@analog.com>
-         <20200321085315.11030-6-alexandru.ardelean@analog.com>
-         <CAHp75VecnornqckmG_WgN-V9A1VSQfRT85TxFzwHgaLw9dAHeA@mail.gmail.com>
-         <979ef870a4f0935e41e95e7759847eba8bd0407c.camel@analog.com>
-         <CAHp75Vdna2+txY=w87n+SWE3x3FYJLeMjYbYa6V-co3z0mYx_g@mail.gmail.com>
-         <202003220901.880A6DF@keescook> <20200322165317.0b1f0674@archlinux>
-         <319e36a6e4553a54812c63d89df181aee165bd4b.camel@analog.com>
-         <20200322182640.20b83ce0@archlinux>
-In-Reply-To: <20200322182640.20b83ce0@archlinux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.26.73.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 748b93b3-4fd9-4aa1-1d28-08d7cfc27884
-x-ms-traffictypediagnostic: DM6PR03MB4985:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR03MB49855BDD418110788B0535B2F9F10@DM6PR03MB4985.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(54906003)(2906002)(36756003)(6916009)(53546011)(6506007)(498600001)(8936002)(966005)(71200400001)(81156014)(81166006)(8676002)(76116006)(86362001)(107886003)(6512007)(186003)(2616005)(4326008)(26005)(64756008)(66556008)(5660300002)(66476007)(91956017)(6486002)(66946007)(66446008);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB4985;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: xgzNeUucuond3pVR0VjEFRvKofCsc1pnbQ9h6+P+YOT+F8pEyQgHMy8AJFh8Gan8faMpd397rI2GDVo6d+PTMwgkOyq2TRsfUHNzrG+G+oVSq0/MZVjBJT2iScifJX6qIPi5LoeNmlm0RmcwT8lFz2soN3lz8awSQtLhBg9o3m5/HrhXNLzhDN+Uc1L6/pyVfCbTx+unAPjfkwzJm+9KFJIjpHkmc7TEv0AtLCYaqlk7Oc/vUVv9goMp4aBjpMfxU1z5+D8Eu82MBT+D3zoDBybvFUDsvPB2YzZC4T8R0Brc5WGweFWLGmDMtLDqqVBrvyBeq5/rKpQ4bZI2607cvHwoaGVAX7d5yoxTqdZGRJChDzybhkt1kmGjvBoEAAP5nynLaRtRkaDQgTFWm+DVijrAobFB6H4kbqgJM7ldDZpdcrByyTpi0dUGgbGlbjKUv/uV8PRzL7tbOQOFTA1z/Ym5KWIUEx37Cpr5ItHctRFAEt0nIF3oYWL/yz7uPUyXGd82evWHuVLV5DNbXijAEQ==
-x-ms-exchange-antispam-messagedata: Hr//gbypI8GgXDoB82N0IMM3GkM+Afz4eFCmVH5Z/iVDPOz6XMN2wEyCtVkQ9NnLdi8zY5aUvHAVbB/rTSG2bGHl1REWVWbYq3hM9Fy8hukKIlROG8wwQ7JlgrNDcEvTGExm1Oeitz587eWjgHjfPQ==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <2081260F6AAAA64E995279261A88291F@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 24 Mar 2020 03:13:12 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O72mtK127478
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:13:11 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywchwhxpv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:13:11 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 24 Mar 2020 07:13:09 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 24 Mar 2020 07:13:05 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02O7C2iR31523250
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 07:12:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9EB71A4055;
+        Tue, 24 Mar 2020 07:13:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8AFB3A4040;
+        Tue, 24 Mar 2020 07:13:01 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.0.161])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Mar 2020 07:13:01 +0000 (GMT)
+Subject: Re: [PATCH 1/7] KVM: Fix out of range accesses to memslots
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Peter Xu <peterx@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
+ <20200320205546.2396-2-sean.j.christopherson@intel.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Tue, 24 Mar 2020 08:12:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 748b93b3-4fd9-4aa1-1d28-08d7cfc27884
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 07:10:44.6435
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nVf57Et254MOpeiXyjthhxerVR6+OQKzyHQ1A0XsFKBw+0nORwF/Pxk621MktPfAYxNxTdkQlm3Ivka9BgN9zn82c6fNTniC0LL4XIcB8s8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB4985
+In-Reply-To: <20200320205546.2396-2-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20032407-0028-0000-0000-000003EA6697
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032407-0029-0000-0000-000024AFCF2F
+Message-Id: <6f62f9db-a4c5-051c-2189-670d5c8707da@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-24_01:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 malwarescore=0 clxscore=1015 phishscore=0
- priorityscore=1501 mlxscore=0 impostorscore=0 adultscore=0 spamscore=0
- bulkscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240036
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 mlxlogscore=716 impostorscore=0
+ suspectscore=27 clxscore=1015 spamscore=0 malwarescore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gU3VuLCAyMDIwLTAzLTIyIGF0IDE4OjI2ICswMDAwLCBKb25hdGhhbiBDYW1lcm9uIHdyb3Rl
-Og0KPiBPbiBTdW4sIDIyIE1hciAyMDIwIDE3OjQwOjMwICswMDAwDQo+ICJBcmRlbGVhbiwgQWxl
-eGFuZHJ1IiA8YWxleGFuZHJ1LkFyZGVsZWFuQGFuYWxvZy5jb20+IHdyb3RlOg0KPiANCj4gPiBP
-biBTdW4sIDIwMjAtMDMtMjIgYXQgMTY6NTMgKzAwMDAsIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6
-DQo+ID4gPiBPbiBTdW4sIDIyIE1hciAyMDIwIDA5OjE2OjM2IC0wNzAwDQo+ID4gPiBLZWVzIENv
-b2sgPGtlZXNjb29rQGNocm9taXVtLm9yZz4gd3JvdGU6DQo+ID4gPiAgIA0KPiA+ID4gPiBPbiBT
-dW4sIE1hciAyMiwgMjAyMCBhdCAxMjo0NTozOVBNICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3Jv
-dGU6ICANCj4gPiA+ID4gPiArQ2MgS2VlcyAoc2VlIGJlbG93IGFib3V0IGFsbG9jYXRpb24gc2l6
-ZSBjaGVja3MpDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gT24gU3VuLCBNYXIgMjIsIDIwMjAgYXQg
-MTE6MzYgQU0gQXJkZWxlYW4sIEFsZXhhbmRydQ0KPiA+ID4gPiA+IDxhbGV4YW5kcnUuQXJkZWxl
-YW5AYW5hbG9nLmNvbT4gd3JvdGU6ICAgIA0KPiA+ID4gPiA+ID4gT24gU2F0LCAyMDIwLTAzLTIx
-IGF0IDIzOjM4ICswMjAwLCBBbmR5IFNoZXZjaGVua28gd3JvdGU6ICAgIA0KPiA+ID4gPiA+ID4g
-PiBPbiBTYXQsIE1hciAyMSwgMjAyMCBhdCAxMDo1NSBBTSBBbGV4YW5kcnUgQXJkZWxlYW4NCj4g
-PiA+ID4gPiA+ID4gPGFsZXhhbmRydS5hcmRlbGVhbkBhbmFsb2cuY29tPiB3cm90ZTogICAgDQo+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gLi4uDQo+ID4gPiA+ID4gICAgIA0KPiA+ID4gPiA+ID4gPiA+
-ICtzdGF0aWMgc3RydWN0IGFkaV9heGlfYWRjX2NvbnYNCj4gPiA+ID4gPiA+ID4gPiAqYWRpX2F4
-aV9hZGNfY29udl9yZWdpc3RlcihzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4gPiBkZXZpY2UNCj4gPiA+
-ID4gPiA+ID4gPiAqZGV2LA0KPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpbnQNCj4gPiA+ID4gPiA+ID4gPiBz
-aXplb2ZfcHJpdikNCj4gPiA+ID4gPiA+ID4gPiArew0KPiA+ID4gPiA+ID4gPiA+ICsgICAgICAg
-c3RydWN0IGFkaV9heGlfYWRjX2NsaWVudCAqY2w7DQo+ID4gPiA+ID4gPiA+ID4gKyAgICAgICBz
-aXplX3QgYWxsb2Nfc2l6ZTsNCj4gPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ID4gKyAg
-ICAgICBhbGxvY19zaXplID0gc2l6ZW9mKHN0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQpOw0KPiA+
-ID4gPiA+ID4gPiA+ICsgICAgICAgaWYgKHNpemVvZl9wcml2KSB7DQo+ID4gPiA+ID4gPiA+ID4g
-KyAgICAgICAgICAgICAgIGFsbG9jX3NpemUgPSBBTElHTihhbGxvY19zaXplLCBJSU9fQUxJR04p
-Ow0KPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBhbGxvY19zaXplICs9IHNpemVvZl9w
-cml2Ow0KPiA+ID4gPiA+ID4gPiA+ICsgICAgICAgfQ0KPiA+ID4gPiA+ID4gPiA+ICsgICAgICAg
-YWxsb2Nfc2l6ZSArPSBJSU9fQUxJR04gLSAxOyAgICANCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gPiA+IEhhdmUgeW91IGxvb2tlZCBhdCBsaW51eC9vdmVyZmxvdy5oPyAgICANCj4gPiA+ID4g
-PiA+IA0KPiA+ID4gPiA+ID4gaSBkaWQgbm93Ow0KPiA+ID4gPiA+ID4gYW55IGhpbnRzIHdoZXJl
-IGkgc2hvdWxkIGxvb2sgY2xvc2VyPyAgICANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBJdCBzZWVt
-cyBpdCBsYWNrcyBvZiB0aGlzIGtpbmQgb2YgYWxsb2NhdGlvbiBzaXplIGNoZWNrcy4uLiBQZXJo
-YXBzDQo+ID4gPiA+ID4gYWRkDQo+ID4gPiA+ID4gb25lPw0KPiA+ID4gPiA+IEtlZXMsIHdoYXQg
-ZG8geW91IHRoaW5rPw0KPiA+ID4gPiA+ICAgICANCj4gPiA+ID4gPiA+ID4gPiArICAgICAgIGNs
-ID0ga3phbGxvYyhhbGxvY19zaXplLCBHRlBfS0VSTkVMKTsNCj4gPiA+ID4gPiA+ID4gPiArICAg
-ICAgIGlmICghY2wpDQo+ID4gPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiBFUlJf
-UFRSKC1FTk9NRU0pOyAgICANCj4gPiA+ID4gDQo+ID4gPiA+IE15IGhlYWQgaHVydHMgdHJ5aW5n
-IHRvIHJlYWQgdGhpcyEgOykgT2theSwgc28gdGhlIGJhc2Ugc2l6ZSBpcw0KPiA+ID4gPiBzaXpl
-b2Yoc3RydWN0IGFkaV9heGlfYWRjX2NsaWVudCkuIEJ1dCBpZiBzaXplb2ZfcHJpdiBpcyBub24t
-emVybw0KPiA+ID4gPiAodGhpcyBhcmcgc2hvdWxkIGJlIHNpemVfdCBub3QgaW50KSwgdGhlbiB3
-ZSBuZWVkIHRvIG1ha2UgdGhlIHN0cnVjdA0KPiA+ID4gPiBzaXplIEFMSUdOZWQ/IEFuZCB0aGVu
-IHdoYXQgaXMgdGhlICIrPSBJSU9fQUxJR04gLSAxIiBmb3I/ICANCj4gPiA+IA0KPiA+ID4gSSdt
-IGEgYml0IGVtYmFycmFzc2VkLiAgSSBjYW4ndCByZW1lbWJlciB3aGF0IHRoZSArPSBJSU9fQUxJ
-R04gLSAxDQo+ID4gPiB3YXMgZm9yIGluIHRoZSBmaXJzdCBwbGFjZSBhbmQgSSBjYW4ndCB3b3Jr
-IGl0IG91dCBub3cuDQo+ID4gPiANCj4gPiA+IFRoZSBwdXJwb3NlIG9mIHRoZSBmdW4gaGVyZSB3
-YXMgdG8gZW5kIHVwIHdpdGggYSBzdHJ1Y3R1cmUgdGhhdA0KPiA+ID4gd2FzIGVpdGhlcg0KPiA+
-ID4gYSkgc2l6ZW9mKHN0cnVjdCBpaW9fZGV2KSBsb25nLA0KPiA+ID4gYikgc2l6ZW9mKHN0cnVj
-dCBpaW9fZGV2KSArIHBhZGRpbmcgKyBzaXplb2ZfcHJpdiANCj4gPiA+IHdoZXJlIHRoZSBwYWRk
-aW5nIGVuc3VyZWQgdGhhdCBhbnkgX19jYWNoZWxpbmVfYWxpZ25lZCBlbGVtZW50cw0KPiA+ID4g
-aW4gdGhlIHByaXZhdGUgc3RydWN0dXJlIHdlcmUgY2FjaGVsaW5lIGFsaWduZWQgd2l0aGluIHJl
-c3VsdGluZw0KPiA+ID4gYWxsb2NhdGlvbi4NCj4gPiA+IA0KPiA+ID4gU28gd2h5IHRoZSBleHRy
-YSBJSU9fQUxJR04gLSAxLi4uLg0KPiA+ID4gDQo+ID4gPiBUaGUgb3JpZ2luYWwgcGF0Y2ggZG9l
-c24ndCBoZWxwIG11Y2ggZWl0aGVyIGdpdmVuIGl0J3MgZ290IGEgcXVlc3Rpb24NCj4gPiA+IGlu
-IHRoZXJlIGZvciB3aHkgdGhpcyBiaXQgaXMgbmVlZGVkLg0KPiA+ID4gDQo+ID4gPiBodHRwczov
-L2xvcmUua2VybmVsLm9yZy9saW51eC1paW8vMTMwMjg5MDE2MC04ODIzLTUtZ2l0LXNlbmQtZW1h
-aWwtamljMjNAY2FtLmFjLnVrLw0KPiA+ID4gDQo+ID4gPiBIb3dldmVyLCBpdCByYW5nIGEgc2xp
-Z2h0IGJlbGwuICBTZWVtcyBJIGxpZnRlZCB0aGUgY29kZSBmcm9tIG5ldGRldi4NCj4gPiA+IGh0
-dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvbmV0L2NvcmUvZGV2
-LmMjTDk3MTgNCj4gPiA+IA0KPiA+ID4gSSdtIGZhaXJseSBzdXJlIHdlIGRvbid0IG5lZWQgdGhh
-dCBwYWRkaW5nIGhlcmUuLiAgV2hhdCBjYW4gSSBzYXksDQo+ID4gPiBJIHdhcyB5b3VuZyBhbmQg
-c3R1cGlkIDopDQo+ID4gPiANCj4gPiA+IEkgZGlkIGFkZCBhIHF1ZXN0aW9uIG1hcmsgc28gY2xl
-YXJseSBtZWFudCB0byBjb21lIGJhY2sgYW5kDQo+ID4gPiB0YWtlIGFub3RoZXIgbG9vayA7KQ0K
-PiA+ID4gDQo+ID4gPiBPbmUgdmFndWUgdGhvdWdodCBpcyB0aGF0IGl0J3MgYWJvdXQgZW5zdXJp
-bmcgd2UgYXJlIGJpZyBlbm91Z2ggdG8NCj4gPiA+IGVuc3VyZSB3ZSBhcmUgY2FjaGVsaW5lIGFs
-aWduZWQuICBUaGF0J3Mgb2J2aW91c2x5IG5vdCBhIHByb2JsZW0gd2l0aA0KPiA+ID4gY3VycmVu
-dCBzdHJ1Y3QgaWlvX2RldiB3aGljaCBpcyBmYXIgZnJvbSBzbWFsbCwNCj4gPiA+IGJ1dCBpbiB0
-aGVvcnkgaXQgY291bGQgaGF2ZSBiZWVuLiAgQWxzbywgdGhpbmtpbmcgYWJvdXQgaXQgd2Ugb25s
-eQ0KPiA+ID4gbmVlZCB0aGUgc3RydWN0IGlpb19kZXYgdG8gYmUgY2FjaGVsaW5lIGFsaWduZWQg
-aWYgd2UgaGF2ZQ0KPiA+ID4gYW4gaWlvX3ByaXYgc3RydWN0dXJlLiAgSWYgd2UgaGF2ZSBvbmUg
-b2YgdGhvc2UgaXQgd2lsbCBkZWZpbml0ZWx5DQo+ID4gPiBiZSBiaWcgZW5vdWdoIGFueXdheS4N
-Cj4gPiA+IA0KPiA+ID4gQXQgc29tZXBvaW50IEknZCBsaWtlIHRvIGxvb2sgYXQgY2xlYW5pbmcg
-aXQgdXAgZm9yIGlpb19kZXZpY2VfYWxsb2MNCj4gPiA+IGJ1dCB3aXRoIGEgbG90IG9mIHRlc3Rp
-bmcgYXMgd2hvIGtub3dzIHdoYXQgaXMgcmVseWluZyBvbiB0aGlzIGJlaGF2aW91cg0KPiA+ID4g
-b3IgaWYgSSd2ZSBtaXNzZWQgc29tZXRoaW5nLiAgQ3Jhc2hlcyBhcm91bmQgdGhpcyBhbGlnbm1l
-bnQgYXJlDQo+ID4gPiBpbmZyZXF1ZW50IGFuZCBuYXN0eSB0byB0cmFjZSBhdCB0aGUgYmVzdCBv
-ZiB0aW1lcy4gIA0KPiA+IA0KPiA+IEluIHRoZSBtZWFudGltZSwgYXJlIHRoZXJlIGFueSBvYmpl
-Y3Rpb25zIGlmIEkgbGVhdmUgdGhlIGFsbG9jYXRpb24gYXMtaXMNCj4gPiBmb3INCj4gPiB0aGlz
-IGRyaXZlciBhcyB3ZWxsPw0KPiA+IEkndmUgdGVzdGVkIHRoZSBkcml2ZXIgYSBiaXQgbW9yZSB3
-aXRoIHRoaXMgZm9ybS4NCj4gDQo+IEhtbS4gSSdkIHJhdGhlciB3ZSBkaWRuJ3QgaW50cm9kdWNl
-IHRoaXMgd2l0aCB0aGUgZXh0cmEgcGFkZGluZyB1bmxlc3Mgd2UNCj4gY2FuIGZpZ3VyZSBvdXQg
-d2h5IGl0IHdvdWxkIG5lZWQgaXQuICBJdCB3b3VsZCBiZSBhIGJpdCBob3JyaWJsZSB0bw0KPiBw
-YXRjaCB0aGlzIGluIGEgZmV3IHdlZWtzIHRpbWUgZm9yIHRoaXMgcmVhc29uLg0KPiANCj4gSWYg
-eW91IGFic29sdXRlbHkgY2FuJ3QgcmV0ZXN0IGZvciByZW1vdGUgcmVhc29ucyB0aGVuIEkgc3Vw
-cG9zZSB3ZSBjb3VsZA0KPiBtZXJnZSBpdCBhbmQgdGlkeSB1cCBsYXRlci4NCg0KSSdsbCBkbyB0
-aGUgY2hhbmdlcyBhbmQgcmUtdGVzdC4NCg0KPiANCj4gSm9uYXRoYW4NCj4gDQo+ID4gPiBKb25h
-dGhhbg0KPiA+ID4gICANCj4gPiA+ID4gSXQncyBub3QgY2xlYXIgdG8gbWUgd2hhdCB0aGUgZXhw
-ZWN0IGFsaWdubWVudC9wYWRkaW5nIGlzIGhlcmUuDQo+ID4gPiA+IA0KPiA+ID4gPiBJIHdvdWxk
-IHByb2JhYmx5IGNvbnN0cnVjdCB0aGlzIGFzOg0KPiA+ID4gPiANCj4gPiA+ID4gCXNpemVvZl9z
-ZWxmID0gc2l6ZW9mKHN0cnVjdCBhZGlfYXhpX2FkY19jbGllbnQpOw0KPiA+ID4gPiAJaWYgKHNp
-emVvZl9wcml2KQ0KPiA+ID4gPiAJCXNpemVvZl9zZWxmID0gQUxJR04oc2l6ZW9mX3NlbGYsIElJ
-T19BTElHTik7DQo+ID4gPiA+IAlpZiAoY2hlY2tfYWRkX292ZXJmbG93KHNpemVvZl9zZWxmLCBz
-aXplb2ZfcHJpdiwgJnNpemVvZl9hbGxvYykpDQo+ID4gPiA+IAkJcmV0dXJuIEVSUl9QVFIoLUVO
-T01FTSk7DQo+ID4gPiA+IAlpZiAoY2hlY2tfYWRkX292ZXJmbG93KHNpemVvZl9hbGxvYywgSUlP
-X0FMSUdOIC0gMSwNCj4gPiA+ID4gJnNpemVvZl9hbGxvYykpDQo+ID4gPiA+IAkJcmV0dXJuIEVS
-Ul9QVFIoLUVOT01FTSk7DQo+ID4gPiA+IA0KPiA+ID4gPiBCdXQgSSBkb24ndCB1bmRlcnN0YW5k
-IHRoZSAiSUlPX0FMSUdOIC0gMSIgcGFydCwgc28gSSBhc3N1bWUgdGhpcyBjb3VsZA0KPiA+ID4g
-PiBiZSBzaG9ydGVuZWQgd2l0aCBiZXR0ZXIgdXNlIG9mIEFMSUdOKCk/DQo+ID4gPiA+IA0KPiA+
-ID4gPiBBbHNvLCB0aGlzIGZlZWxzIGxpa2UgYSB3ZWlyZCBkcml2ZXIgYWxsb2NhdGlvbiBvdmVy
-YWxsOg0KPiA+ID4gPiANCj4gPiA+ID4gKwlzdHJ1Y3QgYWRpX2F4aV9hZGNfY29udiAqKnB0ciwg
-KmNvbnY7DQo+ID4gPiA+ICsNCj4gPiA+ID4gKwlwdHIgPSBkZXZyZXNfYWxsb2MoZGV2bV9hZGlf
-YXhpX2FkY19jb252X3JlbGVhc2UsIHNpemVvZigqcHRyKSwNCj4gPiA+ID4gKwkJCSAgIEdGUF9L
-RVJORUwpOw0KPiA+ID4gPiArCWlmICghcHRyKQ0KPiA+ID4gPiArCQlyZXR1cm4gRVJSX1BUUigt
-RU5PTUVNKTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArCWNvbnYgPSBhZGlfYXhpX2FkY19jb252X3Jl
-Z2lzdGVyKGRldiwgc2l6ZW9mX3ByaXYpOw0KPiA+ID4gPiANCj4gPiA+ID4gZGV2cmVzX2FsbG9j
-KCkgYWxsb2NhdGVzIHN0b3JhZ2UgZm9yIGEgX3NpbmdsZSBwb2ludGVyXy4gOlAgVGhhdCdzIG5v
-dA0KPiA+ID4gPiB1c2VmdWwgZm9yIHJlc291cmNlIHRyYWNraW5nLiBXaHkgaXMgZGV2cmVzX2Fs
-bG9jKCkgYmVpbmcgY2FsbGVkIGhlcmUNCj4gPiA+ID4gYW5kIG5vdCBkb3duIGluIGFkaV9heGlf
-YWRjX2NvbnZfcmVnaXN0ZXIoKSBhbmQganVzdCBwYXNzaW5nIHRoZSBwb2ludGVyDQo+ID4gPiA+
-IGJhY2sgdXA/DQo+ID4gPiA+ICAgDQo=
+
+
+On 20.03.20 21:55, Sean Christopherson wrote:
+> Reset the LRU slot if it becomes invalid when deleting a memslot to fix
+> an out-of-bounds/use-after-free access when searching through memslots.
+> 
+> Explicitly check for there being no used slots in search_memslots(), and
+> in the caller of s390's approximation variant.
+> 
+> Fixes: 36947254e5f9 ("KVM: Dynamically size memslot array based on number of used slots")
+> Reported-by: Qian Cai <cai@lca.pw>
+> Cc: Peter Xu <peterx@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 3 +++
+>  include/linux/kvm_host.h | 3 +++
+>  virt/kvm/kvm_main.c      | 3 +++
+>  3 files changed, 9 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 807ed6d722dd..cb15fdda1fee 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2002,6 +2002,9 @@ static int kvm_s390_get_cmma(struct kvm *kvm, struct kvm_s390_cmma_log *args,
+
+Adding Claudio, but
+>  	struct kvm_memslots *slots = kvm_memslots(kvm);
+>  	struct kvm_memory_slot *ms;
+>  
+> +	if (unlikely(!slots->used_slots))
+> +		return 0;
+> +
+
+this looks sane and like the right fix.
+
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+>  	cur_gfn = kvm_s390_next_dirty_cmma(slots, args->start_gfn);
+>  	ms = gfn_to_memslot(kvm, cur_gfn);
+>  	args->count = 0;
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 35bc52e187a2..b19dee4ed7d9 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -1032,6 +1032,9 @@ search_memslots(struct kvm_memslots *slots, gfn_t gfn)
+>  	int slot = atomic_read(&slots->lru_slot);
+>  	struct kvm_memory_slot *memslots = slots->memslots;
+>  
+> +	if (unlikely(!slots->used_slots))
+> +		return NULL;
+> +
+>  	if (gfn >= memslots[slot].base_gfn &&
+>  	    gfn < memslots[slot].base_gfn + memslots[slot].npages)
+>  		return &memslots[slot];
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 28eae681859f..f744bc603c53 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -882,6 +882,9 @@ static inline void kvm_memslot_delete(struct kvm_memslots *slots,
+>  
+>  	slots->used_slots--;
+>  
+> +	if (atomic_read(&slots->lru_slot) >= slots->used_slots)
+> +		atomic_set(&slots->lru_slot, 0);
+> +
+>  	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots; i++) {
+>  		mslots[i] = mslots[i + 1];
+>  		slots->id_to_index[mslots[i].id] = i;
+> 
+
