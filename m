@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3771AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED464C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D66520775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C768D20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056125;
-	bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
+	s=default; t=1585056128;
+	bh=sbcOsYXnhpXmaQx4myG3ua1PjG2xin3piGkzhpcyMI8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z39W/7E8X3JUuJebkXPXfsoi8gVzKXRkxBVFd2rT5/rYNzESD5RJWuPx97npkovED
-	 U1LNKyIQEunU99LY2B/P3WhpJPnp+/p9z5xh6ROehhpRMg3NRifjuMJAx0wGu7xztp
-	 0jJ1N+zWMSsUL9ef9h3CIBuh9gSqEIWM8wbtNOec=
+	b=xoCXVEEzHpfOQCX+HOG5sjVR85pvId/5YgoXL/iPJ1DL2eIinCAP3pj6hlcJ1xpKB
+	 XDVQbxITA/7Vs9Xuo/R0C20h0qsv7GjSdognL/sqK9yEHjDZkHdn3BSISs0XVAFcEZ
+	 +e7YKlHnixYFIZ03LUQmA3Hewc5W4uImq0FveylQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbgCXNV5 (ORCPT
+        id S1729127AbgCXNWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgCXNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:52 -0400
+        id S1727341AbgCXNWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:22:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5807720775;
-        Tue, 24 Mar 2020 13:21:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6405208CA;
+        Tue, 24 Mar 2020 13:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056111;
-        bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
+        s=default; t=1585056124;
+        bh=sbcOsYXnhpXmaQx4myG3ua1PjG2xin3piGkzhpcyMI8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGUWqOWTSsGM78UNvC1caJtRoO0fVhBWimlL8ODbxpj1x0OIcCjOCNVpU0601GdSH
-         JmpWovaI/RskqAPROp7kkEZR1EsnuIqda+vQoKbrcsWhanITBuZrCgIf1yicARYrm2
-         HcpH+Jhp4aAJ+Xro+Bqp4QNx9hBbAom6s08C1Gwo=
+        b=un71z1DK/fJVsNgydZFRtzrTwn7RMUeKZSeHbgbbHvliUTHACNueWn3jePYo5truY
+         1obSAr5B5sO+0EyGx2rox0GAxKawFZO4cgNTUR2zMmFMpSYnwi0ifnMvLi7xhXdt2q
+         Z+HjMYmzWrE+PPyokJsk9YpE/RI3SzN+Wcou+tJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 025/119] dm bio record: save/restore bi_end_io and bi_integrity
-Date:   Tue, 24 Mar 2020 14:10:10 +0100
-Message-Id: <20200324130810.883526748@linuxfoundation.org>
+Subject: [PATCH 5.5 029/119] spi: spi_register_controller(): free bus id on error paths
+Date:   Tue, 24 Mar 2020 14:10:14 +0100
+Message-Id: <20200324130811.287685284@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,62 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-[ Upstream commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b ]
+[ Upstream commit f9981d4f50b475d7dbb70f3022b87a3c8bba9fd6 ]
 
-Also, save/restore __bi_remaining in case the bio was used in a
-BIO_CHAIN (e.g. due to blk_queue_split).
+Some error paths leave the bus id allocated. As a result the IDR
+allocation will fail after a deferred probe. Fix by freeing the bus id
+always on error.
 
-Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-bio-record.h | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/spi/spi.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/md/dm-bio-record.h b/drivers/md/dm-bio-record.h
-index c82578af56a5b..2ea0360108e1d 100644
---- a/drivers/md/dm-bio-record.h
-+++ b/drivers/md/dm-bio-record.h
-@@ -20,8 +20,13 @@
- struct dm_bio_details {
- 	struct gendisk *bi_disk;
- 	u8 bi_partno;
-+	int __bi_remaining;
- 	unsigned long bi_flags;
- 	struct bvec_iter bi_iter;
-+	bio_end_io_t *bi_end_io;
-+#if defined(CONFIG_BLK_DEV_INTEGRITY)
-+	struct bio_integrity_payload *bi_integrity;
-+#endif
- };
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 8994545367a2d..0e70af2677fee 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2615,7 +2615,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		if (ctlr->use_gpio_descriptors) {
+ 			status = spi_get_gpio_descs(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 			/*
+ 			 * A controller using GPIO descriptors always
+ 			 * supports SPI_CS_HIGH if need be.
+@@ -2625,7 +2625,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 			/* Legacy code path for GPIOs from DT */
+ 			status = of_spi_get_gpio_numbers(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 		}
+ 	}
  
- static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
-@@ -30,6 +35,11 @@ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
- 	bd->bi_partno = bio->bi_partno;
- 	bd->bi_flags = bio->bi_flags;
- 	bd->bi_iter = bio->bi_iter;
-+	bd->__bi_remaining = atomic_read(&bio->__bi_remaining);
-+	bd->bi_end_io = bio->bi_end_io;
-+#if defined(CONFIG_BLK_DEV_INTEGRITY)
-+	bd->bi_integrity = bio_integrity(bio);
-+#endif
+@@ -2633,17 +2633,14 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	 * Even if it's just one always-selected device, there must
+ 	 * be at least one chipselect.
+ 	 */
+-	if (!ctlr->num_chipselect)
+-		return -EINVAL;
++	if (!ctlr->num_chipselect) {
++		status = -EINVAL;
++		goto free_bus_id;
++	}
+ 
+ 	status = device_add(&ctlr->dev);
+-	if (status < 0) {
+-		/* free bus id */
+-		mutex_lock(&board_lock);
+-		idr_remove(&spi_master_idr, ctlr->bus_num);
+-		mutex_unlock(&board_lock);
+-		goto done;
+-	}
++	if (status < 0)
++		goto free_bus_id;
+ 	dev_dbg(dev, "registered %s %s\n",
+ 			spi_controller_is_slave(ctlr) ? "slave" : "master",
+ 			dev_name(&ctlr->dev));
+@@ -2659,11 +2656,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		status = spi_controller_initialize_queue(ctlr);
+ 		if (status) {
+ 			device_del(&ctlr->dev);
+-			/* free bus id */
+-			mutex_lock(&board_lock);
+-			idr_remove(&spi_master_idr, ctlr->bus_num);
+-			mutex_unlock(&board_lock);
+-			goto done;
++			goto free_bus_id;
+ 		}
+ 	}
+ 	/* add statistics */
+@@ -2678,7 +2671,12 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	/* Register devices from the device tree and ACPI */
+ 	of_register_spi_devices(ctlr);
+ 	acpi_register_spi_devices(ctlr);
+-done:
++	return status;
++
++free_bus_id:
++	mutex_lock(&board_lock);
++	idr_remove(&spi_master_idr, ctlr->bus_num);
++	mutex_unlock(&board_lock);
+ 	return status;
  }
- 
- static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
-@@ -38,6 +48,11 @@ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
- 	bio->bi_partno = bd->bi_partno;
- 	bio->bi_flags = bd->bi_flags;
- 	bio->bi_iter = bd->bi_iter;
-+	atomic_set(&bio->__bi_remaining, bd->__bi_remaining);
-+	bio->bi_end_io = bd->bi_end_io;
-+#if defined(CONFIG_BLK_DEV_INTEGRITY)
-+	bio->bi_integrity = bd->bi_integrity;
-+#endif
- }
- 
- #endif
+ EXPORT_SYMBOL_GPL(spi_register_controller);
 -- 
 2.20.1
 
