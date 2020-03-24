@@ -7,39 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA3C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FCFC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336A4208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39C2E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgCXJLF (ORCPT
+        id S1727333AbgCXJLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:11:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43741 "EHLO
+        Tue, 24 Mar 2020 05:11:08 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43758 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726818AbgCXJLC (ORCPT
+        with ESMTP id S1727262AbgCXJLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:11:02 -0400
+        Tue, 24 Mar 2020 05:11:05 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfaM-0007V0-FW; Tue, 24 Mar 2020 10:10:58 +0100
+        id 1jGfaP-0007XP-Fo; Tue, 24 Mar 2020 10:11:01 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 82DE81C0475;
-        Tue, 24 Mar 2020 10:10:56 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:10:56 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 147791C0494;
+        Tue, 24 Mar 2020 10:10:59 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:10:58 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Add test to generate conflicts via debugfs
+Subject: [tip: locking/kcsan] kcsan: Add option to assume plain aligned writes
+ up to word size are atomic
 Cc:     Marco Elver <elver@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504105622.28353.4207063450407939838.tip-bot2@tip-bot2>
+Message-ID: <158504105870.28353.16942994599560100840.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,117 +56,135 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     a312013578e4775003689e31c1f487df11f362a3
-Gitweb:        https://git.kernel.org/tip/a312013578e4775003689e31c1f487df11f362a3
+Commit-ID:     1e6ee2f0fe8ae682757960edf455e99f611268a0
+Gitweb:        https://git.kernel.org/tip/1e6ee2f0fe8ae682757960edf455e99f611268a0
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Thu, 06 Feb 2020 16:46:26 +01:00
+AuthorDate:    Tue, 04 Feb 2020 18:21:10 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 21 Mar 2020 09:43:30 +01:00
+CommitterDate: Sat, 21 Mar 2020 09:42:18 +01:00
 
-kcsan: Add test to generate conflicts via debugfs
+kcsan: Add option to assume plain aligned writes up to word size are atomic
 
-Add 'test=<iters>' option to KCSAN's debugfs interface to invoke KCSAN
-checks on a dummy variable. By writing 'test=<iters>' to the debugfs
-file from multiple tasks, we can generate real conflicts, and trigger
-data race reports.
+This adds option KCSAN_ASSUME_PLAIN_WRITES_ATOMIC. If enabled, plain
+aligned writes up to word size are assumed to be atomic, and also not
+subject to other unsafe compiler optimizations resulting in data races.
+
+This option has been enabled by default to reflect current kernel-wide
+preferences.
 
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/kcsan/debugfs.c | 51 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 46 insertions(+), 5 deletions(-)
+ kernel/kcsan/core.c | 22 +++++++++++++++++-----
+ lib/Kconfig.kcsan   | 27 ++++++++++++++++++++-------
+ 2 files changed, 37 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index a9dad44..9bbba0e 100644
---- a/kernel/kcsan/debugfs.c
-+++ b/kernel/kcsan/debugfs.c
-@@ -6,6 +6,7 @@
- #include <linux/debugfs.h>
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index 64b30f7..e3c7d8f 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -5,6 +5,7 @@
+ #include <linux/delay.h>
+ #include <linux/export.h>
  #include <linux/init.h>
- #include <linux/kallsyms.h>
-+#include <linux/sched.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/sort.h>
-@@ -69,9 +70,9 @@ void kcsan_counter_dec(enum kcsan_counter_id id)
- /*
-  * The microbenchmark allows benchmarking KCSAN core runtime only. To run
-  * multiple threads, pipe 'microbench=<iters>' from multiple tasks into the
-- * debugfs file.
-+ * debugfs file. This will not generate any conflicts, and tests fast-path only.
-  */
--static void microbenchmark(unsigned long iters)
-+static noinline void microbenchmark(unsigned long iters)
- {
- 	cycles_t cycles;
- 
-@@ -81,18 +82,52 @@ static void microbenchmark(unsigned long iters)
- 	while (iters--) {
- 		/*
- 		 * We can run this benchmark from multiple tasks; this address
--		 * calculation increases likelyhood of some accesses overlapping
--		 * (they still won't conflict because all are reads).
-+		 * calculation increases likelyhood of some accesses
-+		 * overlapping. Make the access type an atomic read, to never
-+		 * set up watchpoints and test the fast-path only.
- 		 */
- 		unsigned long addr =
- 			iters % (CONFIG_KCSAN_NUM_WATCHPOINTS * PAGE_SIZE);
--		__kcsan_check_read((void *)addr, sizeof(long));
-+		__kcsan_check_access((void *)addr, sizeof(long), KCSAN_ACCESS_ATOMIC);
- 	}
- 	cycles = get_cycles() - cycles;
- 
- 	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
++#include <linux/kernel.h>
+ #include <linux/percpu.h>
+ #include <linux/preempt.h>
+ #include <linux/random.h>
+@@ -169,10 +170,20 @@ static __always_inline struct kcsan_ctx *get_ctx(void)
+ 	return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
  }
  
-+/*
-+ * Simple test to create conflicting accesses. Write 'test=<iters>' to KCSAN's
-+ * debugfs file from multiple tasks to generate real conflicts and show reports.
-+ */
-+static long test_dummy;
-+static noinline void test_thread(unsigned long iters)
-+{
-+	const struct kcsan_ctx ctx_save = current->kcsan_ctx;
-+	cycles_t cycles;
-+
-+	/* We may have been called from an atomic region; reset context. */
-+	memset(&current->kcsan_ctx, 0, sizeof(current->kcsan_ctx));
-+
-+	pr_info("KCSAN: %s begin | iters: %lu\n", __func__, iters);
-+
-+	cycles = get_cycles();
-+	while (iters--) {
-+		__kcsan_check_read(&test_dummy, sizeof(test_dummy));
-+		__kcsan_check_write(&test_dummy, sizeof(test_dummy));
-+		ASSERT_EXCLUSIVE_WRITER(test_dummy);
-+		ASSERT_EXCLUSIVE_ACCESS(test_dummy);
-+
-+		/* not actually instrumented */
-+		WRITE_ONCE(test_dummy, iters);  /* to observe value-change */
-+	}
-+	cycles = get_cycles() - cycles;
-+
-+	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
-+
-+	/* restore context */
-+	current->kcsan_ctx = ctx_save;
-+}
-+
- static int cmp_filterlist_addrs(const void *rhs, const void *lhs)
+-static __always_inline bool is_atomic(const volatile void *ptr)
++static __always_inline bool
++is_atomic(const volatile void *ptr, size_t size, int type)
  {
- 	const unsigned long a = *(const unsigned long *)rhs;
-@@ -242,6 +277,12 @@ debugfs_write(struct file *file, const char __user *buf, size_t count, loff_t *o
- 		if (kstrtoul(&arg[sizeof("microbench=") - 1], 0, &iters))
- 			return -EINVAL;
- 		microbenchmark(iters);
-+	} else if (!strncmp(arg, "test=", sizeof("test=") - 1)) {
-+		unsigned long iters;
+-	struct kcsan_ctx *ctx = get_ctx();
++	struct kcsan_ctx *ctx;
 +
-+		if (kstrtoul(&arg[sizeof("test=") - 1], 0, &iters))
-+			return -EINVAL;
-+		test_thread(iters);
- 	} else if (!strcmp(arg, "whitelist")) {
- 		set_report_filterlist_whitelist(true);
- 	} else if (!strcmp(arg, "blacklist")) {
++	if ((type & KCSAN_ACCESS_ATOMIC) != 0)
++		return true;
+ 
++	if (IS_ENABLED(CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC) &&
++	    (type & KCSAN_ACCESS_WRITE) != 0 && size <= sizeof(long) &&
++	    IS_ALIGNED((unsigned long)ptr, size))
++		return true; /* Assume aligned writes up to word size are atomic. */
++
++	ctx = get_ctx();
+ 	if (unlikely(ctx->atomic_next > 0)) {
+ 		/*
+ 		 * Because we do not have separate contexts for nested
+@@ -193,7 +204,8 @@ static __always_inline bool is_atomic(const volatile void *ptr)
+ 	return kcsan_is_atomic(ptr);
+ }
+ 
+-static __always_inline bool should_watch(const volatile void *ptr, int type)
++static __always_inline bool
++should_watch(const volatile void *ptr, size_t size, int type)
+ {
+ 	/*
+ 	 * Never set up watchpoints when memory operations are atomic.
+@@ -202,7 +214,7 @@ static __always_inline bool should_watch(const volatile void *ptr, int type)
+ 	 * should not count towards skipped instructions, and (2) to actually
+ 	 * decrement kcsan_atomic_next for consecutive instruction stream.
+ 	 */
+-	if ((type & KCSAN_ACCESS_ATOMIC) != 0 || is_atomic(ptr))
++	if (is_atomic(ptr, size, type))
+ 		return false;
+ 
+ 	if (this_cpu_dec_return(kcsan_skip) >= 0)
+@@ -460,7 +472,7 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
+ 	if (unlikely(watchpoint != NULL))
+ 		kcsan_found_watchpoint(ptr, size, type, watchpoint,
+ 				       encoded_watchpoint);
+-	else if (unlikely(should_watch(ptr, type)))
++	else if (unlikely(should_watch(ptr, size, type)))
+ 		kcsan_setup_watchpoint(ptr, size, type);
+ }
+ 
+diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
+index 3552990..6612685 100644
+--- a/lib/Kconfig.kcsan
++++ b/lib/Kconfig.kcsan
+@@ -91,13 +91,13 @@ config KCSAN_REPORT_ONCE_IN_MS
+ 	  limiting reporting to avoid flooding the console with reports.
+ 	  Setting this to 0 disables rate limiting.
+ 
+-# Note that, while some of the below options could be turned into boot
+-# parameters, to optimize for the common use-case, we avoid this because: (a)
+-# it would impact performance (and we want to avoid static branch for all
+-# {READ,WRITE}_ONCE, atomic_*, bitops, etc.), and (b) complicate the design
+-# without real benefit. The main purpose of the below options is for use in
+-# fuzzer configs to control reported data races, and they are not expected
+-# to be switched frequently by a user.
++# The main purpose of the below options is to control reported data races (e.g.
++# in fuzzer configs), and are not expected to be switched frequently by other
++# users. We could turn some of them into boot parameters, but given they should
++# not be switched normally, let's keep them here to simplify configuration.
++#
++# The defaults below are chosen to be very conservative, and may miss certain
++# bugs.
+ 
+ config KCSAN_REPORT_RACE_UNKNOWN_ORIGIN
+ 	bool "Report races of unknown origin"
+@@ -116,6 +116,19 @@ config KCSAN_REPORT_VALUE_CHANGE_ONLY
+ 	  the data value of the memory location was observed to remain
+ 	  unchanged, do not report the data race.
+ 
++config KCSAN_ASSUME_PLAIN_WRITES_ATOMIC
++	bool "Assume that plain aligned writes up to word size are atomic"
++	default y
++	help
++	  Assume that plain aligned writes up to word size are atomic by
++	  default, and also not subject to other unsafe compiler optimizations
++	  resulting in data races. This will cause KCSAN to not report data
++	  races due to conflicts where the only plain accesses are aligned
++	  writes up to word size: conflicts between marked reads and plain
++	  aligned writes up to word size will not be reported as data races;
++	  notice that data races between two conflicting plain aligned writes
++	  will also not be reported.
++
+ config KCSAN_IGNORE_ATOMICS
+ 	bool "Do not instrument marked atomic accesses"
+ 	help
