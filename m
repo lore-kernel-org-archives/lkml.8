@@ -2,126 +2,125 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C937C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA76C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41F8C20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1740B20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:46:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iB9wbzaX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbgCXIl1 (ORCPT
+        id S1727066AbgCXIqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:41:27 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23114 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726129AbgCXIl0 (ORCPT
+        Tue, 24 Mar 2020 04:46:43 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:51766 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgCXIqm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:41:26 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O8XtGS058800
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:41:25 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywbuv4uyg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:41:25 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <kamalesh@linux.vnet.ibm.com>;
-        Tue, 24 Mar 2020 08:41:22 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Mar 2020 08:41:17 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02O8fHBa58327132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 08:41:17 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87A22A4051;
-        Tue, 24 Mar 2020 08:41:17 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62EAAA4069;
-        Tue, 24 Mar 2020 08:41:15 +0000 (GMT)
-Received: from JAVRIS.in.ibm.com (unknown [9.199.56.74])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 24 Mar 2020 08:41:15 +0000 (GMT)
-Subject: Re: [PATCH] objtool: Documentation: document UACCESS warnings
-To:     Nick Desaulniers <ndesaulniers@google.com>, jpoimboe@redhat.com,
-        peterz@infradead.org
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Raphael Gault <raphael.gault@arm.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-References: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
- <20200324001321.39562-1-ndesaulniers@google.com>
-From:   Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>
-Date:   Tue, 24 Mar 2020 14:11:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 24 Mar 2020 04:46:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c187so2251533wme.1;
+        Tue, 24 Mar 2020 01:46:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=vqE7J9avKRSB75CS08tA1XMoBisXuxlVqJUICDm2RMc=;
+        b=iB9wbzaXPETI8Jb4Po7UfmfNXF6g7zdHRjpkGrdg+WTzOJRbBAx2+GP7gcOQS/Vzs5
+         +C+Pi9XP8VtWYdqYg/gHoDei+hXFTHyCSbL6eII5G6A0LIpmETLm/pG87ekJ+EINYE/E
+         zrA73dd/jf7HTdinDv4q3tlxozFIwRNicWm0FXioCDqu3YW3mMjfJWvdJex1KIZR6qMI
+         kI3MToyfz87GWNGZh4U8kB2iw5xIcV/A+UJBA2c0mCbvQvW0krQqvMwjkdSDvNaoQZF7
+         UtBwA1IiMoQOjNUx3EA1ajUgOr6Pnnzk0A0Fic8eL2OYmtc7y0mFCxEkRbvvr78mYnyq
+         m8lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=vqE7J9avKRSB75CS08tA1XMoBisXuxlVqJUICDm2RMc=;
+        b=PO4Rp3vDhsPNw2QoujVgXZc63iRF/2LPh4ENh9nERtiqAahtuK1O1LHAg+K3lpIQud
+         tBNJDMabDCTooRq6wEzFzu6BSUX3RMrIO6keXpYr4QxDRnIp59jYf+ggAbWDkc5Y+TBp
+         7jZl5sMx12RuIo72PlwXNxYvOK7Idoj0XrN6ppHrslA/PaSHBzO8kNuyB2204Bf0886x
+         f/B3BIYA1wvmKf5cZ13y77p8VYs3vLpe2/oLe6q+Jk7e64O9dxvmWOtNJV+2DCIQd0Xc
+         xQL9TRWpYCF4KrS7oqN5T8PrATj48I36wFDe8dPMv0cBR45LIrHHg6qxO1te+kO6tbJt
+         +w/g==
+X-Gm-Message-State: ANhLgQ02cnskAVs7lWCMOslMEf7r1sJH3fkeSC/aMLfZHTKg6IFRgv6K
+        MUt0Ifry0fkZf9Uf1pzSUgt64wsMqidBhP5fuWKo8CVWgHI=
+X-Google-Smtp-Source: ADFU+vu3SGbdVgIeiQ031Be5sYxOpTkuy1gw7+8uJLrstgU/URuYpZnDw+A4NvU7i0GqhuMsIPrA0BEnrww0jHe9CBY=
+X-Received: by 2002:a1c:41d6:: with SMTP id o205mr4183235wma.122.1585039600829;
+ Tue, 24 Mar 2020 01:46:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200324001321.39562-1-ndesaulniers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032408-0008-0000-0000-00000362E1E3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032408-0009-0000-0000-00004A844D4C
-Message-Id: <90c16f02-9364-651e-6dea-8758a698d2ce@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_02:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 bulkscore=0
- adultscore=0 mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
- suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240042
+References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
+ <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
+ <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
+ <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
+ <CA+icZUUjP7e2zgrVCFenO_YJfpcOQWV++kuU5UWGKN_5udZXSw@mail.gmail.com> <CAHmME9quSMLwLacntdhvLKVDVtg6QVGhOQxADzz_4kVZYOJxNA@mail.gmail.com>
+In-Reply-To: <CAHmME9quSMLwLacntdhvLKVDVtg6QVGhOQxADzz_4kVZYOJxNA@mail.gmail.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 24 Mar 2020 09:46:29 +0100
+Message-ID: <CA+icZUVCftYBYzxe+YJkN1WRGX+nQkHVaFxvW-S64k6WtdB64g@mail.gmail.com>
+Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>, X86 ML <x86@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Armijn Hemel <armijn@tjaldur.nl>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Song Liu <songliubraving@fb.com>,
+        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 5:43 AM, Nick Desaulniers wrote:
-> Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
->   call to memset() with UACCESS enabled
-> 
-> Document how to fix these for future travelers.
-> 
-> Link: https://github.com/ClangBuiltLinux/linux/issues/876
-> Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+On Mon, Mar 23, 2020 at 8:50 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 
-Looks good, a minor nitpick below.
+> > I would have expected your arch/x86/Kconfig.assembler file as
+> > arch/x86/crypto/Kconfig (source include needs to be adapted in
+> > arch/x86/Kconfig).
+>
+> CONFIG_AS_* is required for more than just the crypto.
+>
 
-> ---
->  .../Documentation/stack-validation.txt        | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
-> index de094670050b..156fee13ba02 100644
-> --- a/tools/objtool/Documentation/stack-validation.txt
-> +++ b/tools/objtool/Documentation/stack-validation.txt
-> @@ -289,6 +289,26 @@ they mean, and suggestions for how to fix them.
->        might be corrupt due to a gcc bug.  For more details, see:
->        https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
-> 
-> +9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
-> +
-> +   This means that an unexpected call to a non-whitelisted function exists
-> +   outside of arch-specific guards.
-> +   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
-> +   ARM: PAN: uaccess_enable()/uaccess_enable()
-                                 ^^^^^^ 
-                                uaccess_disable() 
+OK. I was not aware of this.
 
-> +
-> +   These functions should called to denote a minimal critical section around
-> +   access to __user variables. See also: https://lwn.net/Articles/517475/
+> > What about a commit subject like "x86: crypto: Probe assembler options
+> > via Kconfig instead of makefile"?
+>
+> Thanks. Will fix silly verbiage and update branch.
+>
 
--- 
-Kamalesh
+Just looked to what I see new in [0].
 
+Would you mind to add the patch
+
+   "Documentation/changes: Raise minimum supported binutils version to 2.23"
+
+from [1] to your series, please?
+
+For the meantime and clarification - you can drop it later (with
+adding Link-tag to [1]) when it landed in tip Git [2] where I am not
+seeing it.
+
+Thanks for taking care to you an Masah*e*ro :-).
+
+- Sedat -
+
+[0] https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
+[1] https://lore.kernel.org/lkml/20200316160259.GN26126@zn.tnic/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
