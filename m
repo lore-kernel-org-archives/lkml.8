@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE02C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A38C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30732080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C3620722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gLuEIvUm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IGbRH++V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728521AbgCXWpn (ORCPT
+        id S1728559AbgCXWpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:45:43 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34808 "EHLO
+        Tue, 24 Mar 2020 18:45:47 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46382 "EHLO
         mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728428AbgCXWpm (ORCPT
+        with ESMTP id S1728496AbgCXWpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:45:42 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p10so232467ljn.1;
-        Tue, 24 Mar 2020 15:45:40 -0700 (PDT)
+        Tue, 24 Mar 2020 18:45:44 -0400
+Received: by mail-lj1-f195.google.com with SMTP id v16so400033ljk.13;
+        Tue, 24 Mar 2020 15:45:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=nZnryKytso1ZYRkSpMtMSAQGQFfGmBLvG2yuSqscEJw=;
-        b=gLuEIvUmPczlzxnWAp0Rql4/wGU4KU+CC7ROBviiX4S4CwdI6K/KMwJe9oik7yTw14
-         KDY/kUFSjLQCupaLkF5wkeFrhtfY8DCLN+xej1yj9jP5nNH2iRVSEvIM61kOEHkhW6VF
-         BcMaCJh6rVwKiMTB0LVqkDdBokDXPO9HoxRDUZH48rsQKrVlh/UpEwjZAprPkRA9qaNv
-         Zfzj16jqNhfEdidnPyrk9B/3LJi2rv5Bo62+Mg6m55L29iNE7tbYjVg1fefl9dg7LnYK
-         d5/hVcPdFoGRrOpSsWYvIatqzOXSOGxN2t7QmEI9uX8vF9EIiPLRGXso9C0FSfdd5xWn
-         kmIw==
+        bh=+Hy+gQXXd2yXLzvlo+vKQ0DCaXHroqYu+Fy+jYraxjM=;
+        b=IGbRH++VoABOyGXkuQVc93OU/loUgy9XQLhh0juQ/zuocAHQcRI5jaBnikUVcEFxyi
+         IcYfdYX18WPtyyLqg+cnNVHG/XhI38r/7fBrK4J6pGh4fZQ3LxE3hKuRXxeYRJvJmuw3
+         mTYaQgXYE/0pqWM7BkRWCMoRblZD2IgrPMvkbWtFk42uvq3DXOE3lZ4ek+24ea37xzYS
+         0prL0TKHL+48w79UFWvui7h4krG4fUery12qRMLlYcdbn82MvowHrgwe1tTnrY/LdzUe
+         ksNX33NJOuywRiQ9ChlJ6Jheg98NyMNhn1FFpEnedcO0RUxMa/LDr5zTO8eUkHlMPBug
+         EkdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nZnryKytso1ZYRkSpMtMSAQGQFfGmBLvG2yuSqscEJw=;
-        b=S6hyqSXs1dQC3YiVtR49sAngZrffCocVMF0qejrh2Z32KQkuclneUhfvLKkBP1XCMU
-         Og25C6lhZgexx+cinadyv/8ZA6p3Ce1LDZFJqHuI9ZkU5UltG97SR9TJy5AEfUSJQvoZ
-         GBq8RkSye+lLSQXKBbZSkE0Q+WNyK1B8huRhULPmDVfBYBeRwcKjlujhyJLMIuJTXkQa
-         4Zy6lzYXspgWVZrQLDP/RgF0syga97aABn8hQufCtYenlNB0Rxmmf4Qj8Jhc4bTAxT4S
-         PFYbwETrp/WmYJYMUWIkm4csnvPUbO89I0M8k1vMFzWAJ0856SUrkUoF86PvO8WeW/my
-         +HHA==
-X-Gm-Message-State: AGi0PuY4MqiGzn+cT1IBJ8tChXQMKSEn6ptQX0pS2ffk3IL8VoBZUuhE
-        zg7gl3/0jAYdUl4vEsD4CCP5ZiKy
-X-Google-Smtp-Source: APiQypJ8wQXTKirLKDTVstbN6/k+c8vXzM+qdDOvQd2IoLzp7nwIH82W8GtePSWRJfdjhfsAoYQ+xw==
-X-Received: by 2002:a2e:80cd:: with SMTP id r13mr28124ljg.224.1585089939928;
-        Tue, 24 Mar 2020 15:45:39 -0700 (PDT)
+        bh=+Hy+gQXXd2yXLzvlo+vKQ0DCaXHroqYu+Fy+jYraxjM=;
+        b=qlScfDfn2/iVqmbstCFgUvJo8t7qazF5ztfdtfgRAshI38OfPErwTjCOqIHaYpEoj1
+         YmIKCTQgRIQCDXSTgUq8Y5dBvTl2qS+91cD08cYl+xILcPfMm3QykBQweAGlIfK+kciQ
+         KMfeEcQAYIIPngixtJoOoa0oVoIRYLprpSWVN+Dk2mDX/siR8qiwF02tA+cbXRQv/xcx
+         qNP8cZcsQGRbp7Pj4tUjb832sou4Sae4kMDuHFAgt/uKFhkAKXyfywDvvj5PJJwoEU6y
+         p2JRfyjoSuTYE/1nmqan4Dg4S5fukYrR03FM2x4uLssgzvVkE3UT+bWmrekyWAkcwU/6
+         bsdQ==
+X-Gm-Message-State: AGi0PubJmYdXs9PVdW8hQDSDXgyf3rVX7BMm7IrPyoKTDiBaf2motUNz
+        4ylYnuM29pF3ogtg9j72A68xDiqG
+X-Google-Smtp-Source: APiQypJTc7454E7D3MdGDJTaCybxAhN7+8nt5udksXN5OeHNHwUkZ2VMvrRG/S2bIdDirFVEf3HnWg==
+X-Received: by 2002:a2e:989a:: with SMTP id b26mr23227ljj.274.1585089942074;
+        Tue, 24 Mar 2020 15:45:42 -0700 (PDT)
 Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id d4sm10534279lfa.75.2020.03.24.15.45.38
+        by smtp.gmail.com with ESMTPSA id d4sm10534279lfa.75.2020.03.24.15.45.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 15:45:39 -0700 (PDT)
+        Tue, 24 Mar 2020 15:45:41 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -69,9 +69,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Peter Geis <pgwipeout@gmail.com>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 1/3] ARM: tegra: Initialize r0 register for firmware wake-up
-Date:   Wed, 25 Mar 2020 01:43:33 +0300
-Message-Id: <20200324224335.5825-2-digetx@gmail.com>
+Subject: [PATCH v1 3/3] cpuidle: tegra: Support CPU cluster power-down state on Tegra30
+Date:   Wed, 25 Mar 2020 01:43:35 +0300
+Message-Id: <20200324224335.5825-4-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200324224335.5825-1-digetx@gmail.com>
 References: <20200324224335.5825-1-digetx@gmail.com>
@@ -83,11 +83,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Downstream kernel of ASUS TF300T sets r0 to #3. There is no explanation in
-downstream code whether this is really needed and some of T30 downstream
-kernels have and explicit comment telling that all arguments are ignored
-by firmware. Let's take a safe side by replicating behavior of the TF300T
-downstream kernel. This change works fine on Ouya and Nexus 7 devices.
+The new Tegra CPU Idle driver now has a unified code path for the coupled
+CC6 (LP2) state, this allows to enable the deepest idling state on Tegra30
+SoC where the whole CPU cluster is power-gated.
 
 Tested-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 Tested-by: Jasper Korten <jja2000@gmail.com>
@@ -95,27 +93,21 @@ Tested-by: David Heidelberg <david@ixit.cz>
 Tested-by: Peter Geis <pgwipeout@gmail.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/mach-tegra/reset-handler.S | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/cpuidle/cpuidle-tegra.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/mach-tegra/reset-handler.S b/arch/arm/mach-tegra/reset-handler.S
-index 53123ae4ac3b..06ca44b09381 100644
---- a/arch/arm/mach-tegra/reset-handler.S
-+++ b/arch/arm/mach-tegra/reset-handler.S
-@@ -98,7 +98,12 @@ ENTRY(tegra_resume_trusted_foundations)
- 	reteq	lr
+diff --git a/drivers/cpuidle/cpuidle-tegra.c b/drivers/cpuidle/cpuidle-tegra.c
+index 313b0290e97b..150045849d78 100644
+--- a/drivers/cpuidle/cpuidle-tegra.c
++++ b/drivers/cpuidle/cpuidle-tegra.c
+@@ -365,7 +365,6 @@ static int tegra_cpuidle_probe(struct platform_device *pdev)
+ 		break;
  
-  .arch_extension sec
--	/* First call after suspend wakes firmware. No arguments required. */
-+	/*
-+	 * First call after suspend wakes firmware. No arguments required
-+	 * for some firmware versions. Downstream kernel of ASUS TF300T uses
-+	 * r0=3 for the wake-up notification.
-+	 */
-+	mov	r0, #3
- 	smc	#0
+ 	case TEGRA30:
+-		tegra_cpuidle_disable_state(TEGRA_CC6);
+ 		break;
  
- 	b	cpu_resume
+ 	case TEGRA114:
 -- 
 2.25.1
 
