@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC1AC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123D6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 358C3208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2C120775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056022;
-	bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
+	s=default; t=1585056024;
+	bh=Rvw76bgZz5+IaPYOxJneAii40lN5m9nN0Xq5J2alXuk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0GUQdhTmOoT/ita6/on8GaJq7D97vdLUhm4mC5lmeejg+2XstoJlLC36uV9wKo3Ef
-	 trlSZM4phx9+XLR2mYs8R5iWGytpy+ed84yBr77gfOO4ljp6qrh+y3mK+DYp4t1J4b
-	 IKHlhNF3XGR5YlzTZyH4TY8ILCz2CNYIuPAOrafg=
+	b=ysDnmRu6tmragtHiwU5ghXpmA6tUKDpo9/E6dCasRkAj63bxcj0qoKejZiAxdX3rq
+	 0qJncteIV3ZJzDa7e/H1hR/U2CmmDzmgMTJb+xfcx9HHPPfTAEGmStHq3JNh5uXzrF
+	 scURVKXJOwN0xmcAPS4sPyUbQhJ3LnZynndITLP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbgCXNUV (ORCPT
+        id S1728933AbgCXNUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:20:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbgCXNUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:16 -0400
+        id S1728531AbgCXNUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E18F20775;
-        Tue, 24 Mar 2020 13:20:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C99208CA;
+        Tue, 24 Mar 2020 13:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056016;
-        bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
+        s=default; t=1585056019;
+        bh=Rvw76bgZz5+IaPYOxJneAii40lN5m9nN0Xq5J2alXuk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qOmwJc+Nkm6AeMTtXQBN1BeXTsNngWqGWoFCINjrXqdy3pu19BrP3FBKzY8D/V+je
-         bTAoVYv85glfYC3SCt5b8lJdiNiyavXhd+KR3JtFjvkj/g4DV8kx3OJcF3JkcERCB5
-         SAWk4PHKQjjI0Ej7RFMnSDRvcKHPsYCPo2rVh7B0=
+        b=QKPyNp/ekPp7trbVz+dC8sSePsf0jbdgnsd5yLzo+hO6tZLQyh0SIicmnDt9x3iDb
+         elLdGMePYKpuNY42rhtWWhwpdCPtRBX4EjGYVjTQiKOIib0KxOG39zJLHwAzareMjt
+         7bHIpOpxfOetF/my+AeWVmLohNyvyJ0mYWGJeWUc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Subject: [PATCH 5.4 082/102] drm/lease: fix WARNING in idr_destroy
-Date:   Tue, 24 Mar 2020 14:11:14 +0100
-Message-Id: <20200324130814.847513002@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: [PATCH 5.4 100/102] drm/bridge: dw-hdmi: fix AVI frame colorimetry
+Date:   Tue, 24 Mar 2020 14:11:32 +0100
+Message-Id: <20200324130816.854039520@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,52 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-commit b216a8e7908cd750550c0480cf7d2b3a37f06954 upstream.
+commit e8dca30f7118461d47e1c3510d0e31b277439151 upstream.
 
-drm_lease_create takes ownership of leases. And leases will be released
-by drm_master_put.
+CTA-861-F explicitly states that for RGB colorspace colorimetry should
+be set to "none". Fix that.
 
-drm_master_put
-    ->drm_master_destroy
-            ->idr_destroy
-
-So we needn't call idr_destroy again.
-
-Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and encodings")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200304232512.51616-2-jernej.skrabec@siol.net
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_lease.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c |   46 ++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct d
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1576,28 +1576,34 @@ static void hdmi_config_AVI(struct dw_hd
+ 		frame.colorspace = HDMI_COLORSPACE_RGB;
+ 
+ 	/* Set up colorimetry */
+-	switch (hdmi->hdmi_data.enc_out_encoding) {
+-	case V4L2_YCBCR_ENC_601:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
++	if (!hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
++		switch (hdmi->hdmi_data.enc_out_encoding) {
++		case V4L2_YCBCR_ENC_601:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		case V4L2_YCBCR_ENC_709:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
++			break;
++		default: /* Carries no data */
+ 			frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		}
++	} else {
++		frame.colorimetry = HDMI_COLORIMETRY_NONE;
+ 		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
+-	case V4L2_YCBCR_ENC_709:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
+-			frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
+-		break;
+-	default: /* Carries no data */
+-		frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
++			HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
  	}
  
- 	DRM_DEBUG_LEASE("Creating lease\n");
-+	/* lessee will take the ownership of leases */
- 	lessee = drm_lease_create(lessor, &leases);
- 
- 	if (IS_ERR(lessee)) {
- 		ret = PTR_ERR(lessee);
-+		idr_destroy(&leases);
- 		goto out_leases;
- 	}
- 
-@@ -580,7 +582,6 @@ out_lessee:
- 
- out_leases:
- 	put_unused_fd(fd);
--	idr_destroy(&leases);
- 
- 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
- 	return ret;
+ 	frame.scan_mode = HDMI_SCAN_MODE_NONE;
 
 
