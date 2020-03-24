@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0230AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4367C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0ACC208D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A99A208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055751;
-	bh=v/Wz4plAgvjjF7sucgQLg7aMYvf24MKAYIfDptGUdWY=;
+	s=default; t=1585055755;
+	bh=OVFFe6LVDT1McSdceRcLJ0lU84O4es66sWRpFFWGBb4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a11whKdNAGX4ykfzC2UhOnfpuikjWcZRvG4CQ8i3ToOPwzxyoFklT4sXEeoJpiNpi
-	 kqucQl0+bLFxNR3npD1Q9CmjUEx4eVWTr2t1iz6w2jR6e3GxSeHQUTfMPD6E8JKQZx
-	 /brwcf7I5iiolLJb3sCvSYyGJddD5WxEY/0rVnVo=
+	b=zi7c83D3axA4cENuV457Tz2nbkL7gRTCpYnz3mCqGzukcGmceOQn2y5CkWbMaUa+l
+	 x6uBJQ/as3tu3YxiJ9EBpNldfh56+Y0mCBKHZRroe71i8ctpCmkzTcBbsdkXT+hVaf
+	 5IenJxt1vzdoB8ORqfs7oAiEHUuJ8h3WD3Bd7c90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbgCXNPu (ORCPT
+        id S1728334AbgCXNPy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:15:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34874 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:15:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727504AbgCXNPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:47 -0400
+        id S1728217AbgCXNPx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:15:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87F54206F6;
-        Tue, 24 Mar 2020 13:15:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1150206F6;
+        Tue, 24 Mar 2020 13:15:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055747;
-        bh=v/Wz4plAgvjjF7sucgQLg7aMYvf24MKAYIfDptGUdWY=;
+        s=default; t=1585055752;
+        bh=OVFFe6LVDT1McSdceRcLJ0lU84O4es66sWRpFFWGBb4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ndds6NoOhR60qtBjK5mDpxr7pu+FdripT8wfEFtaKMxein/5ee0H/GYoES61KyO0D
-         vLvGihyYW2/+0em0LbZIdK4VPySJvDIiB0iu1fqLsql2Nl+TLCuXEu2n2I1M881Pma
-         019RSKg/4HTqYb6GbWnOLHmOudZ0KcaAowIMR/BQ=
+        b=KLkZsk9mhfBz4Izod+3RLXASE6UorwLim3tTVqi1FGTNFO+wZB1k4XwQjAiYul9+2
+         3d6TqgBN7rFtSBI+egJyd3TnXBCpS7fv68EOVavJzvKkdPoqudP2PmsclKrijYfJC+
+         VF66Xti/dBE4E0/2ilAUtG4Ytv/euu5kv6w0HJW0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 016/102] drm/exynos: dsi: fix workaround for the legacy clock name
-Date:   Tue, 24 Mar 2020 14:10:08 +0100
-Message-Id: <20200324130808.202151113@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 018/102] drivers/perf: fsl_imx8_ddr: Correct the CLEAR bit definition
+Date:   Tue, 24 Mar 2020 14:10:10 +0100
+Message-Id: <20200324130808.390666280@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -62,72 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-[ Upstream commit c0fd99d659ba5582e09625c7a985d63fc2ca74b5 ]
+[ Upstream commit 049d919168458ac54e7fad27cd156a958b042d2f ]
 
-Writing to the built-in strings arrays doesn't work if driver is loaded
-as kernel module. This is also considered as a bad pattern. Fix this by
-adding a call to clk_get() with legacy clock name. This fixes following
-kernel oops if driver is loaded as module:
+When disabling a counter from ddr_perf_event_stop(), the counter value
+is reset to 0 at the same time.
 
-Unable to handle kernel paging request at virtual address bf047978
- pgd = (ptrval)
- [bf047978] *pgd=59344811, *pte=5903c6df, *ppte=5903c65f
- Internal error: Oops: 80f [#1] SMP ARM
- Modules linked in: mc exynosdrm(+) analogix_dp rtc_s3c exynos_ppmu i2c_gpio
- CPU: 1 PID: 212 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219 #326
- videodev: Linux video capture interface: v2.00
- Hardware name: Samsung Exynos (Flattened Device Tree)
- PC is at exynos_dsi_probe+0x1f0/0x384 [exynosdrm]
- LR is at exynos_dsi_probe+0x1dc/0x384 [exynosdrm]
- ...
- Process systemd-udevd (pid: 212, stack limit = 0x(ptrval))
- ...
- [<bf03cf14>] (exynos_dsi_probe [exynosdrm]) from [<c09b1ca0>] (platform_drv_probe+0x6c/0xa4)
- [<c09b1ca0>] (platform_drv_probe) from [<c09afcb8>] (really_probe+0x210/0x350)
- [<c09afcb8>] (really_probe) from [<c09aff74>] (driver_probe_device+0x60/0x1a0)
- [<c09aff74>] (driver_probe_device) from [<c09b0254>] (device_driver_attach+0x58/0x60)
- [<c09b0254>] (device_driver_attach) from [<c09b02dc>] (__driver_attach+0x80/0xbc)
- [<c09b02dc>] (__driver_attach) from [<c09ade00>] (bus_for_each_dev+0x68/0xb4)
- [<c09ade00>] (bus_for_each_dev) from [<c09aefd8>] (bus_add_driver+0x130/0x1e8)
- [<c09aefd8>] (bus_add_driver) from [<c09b0d64>] (driver_register+0x78/0x110)
- [<c09b0d64>] (driver_register) from [<bf038558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
- [<bf038558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
- [<c0302fa8>] (do_one_initcall) from [<c03dd02c>] (do_init_module+0x60/0x210)
- [<c03dd02c>] (do_init_module) from [<c03dbf44>] (load_module+0x1c0c/0x2310)
- [<c03dbf44>] (load_module) from [<c03dc85c>] (sys_finit_module+0xac/0xbc)
- [<c03dc85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
- Exception stack(0xd979bfa8 to 0xd979bff0)
- ...
- ---[ end trace db16efe05faab470 ]---
+Preserve the counter value by performing a read-modify-write of the
+PMU register and clearing only the enable bit.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_drm_dsi.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/perf/fsl_imx8_ddr_perf.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index 2767408c4750e..8ed94c9948008 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -1765,9 +1765,10 @@ static int exynos_dsi_probe(struct platform_device *pdev)
- 		dsi->clks[i] = devm_clk_get(dev, clk_names[i]);
- 		if (IS_ERR(dsi->clks[i])) {
- 			if (strcmp(clk_names[i], "sclk_mipi") == 0) {
--				strcpy(clk_names[i], OLD_SCLK_MIPI_CLK_NAME);
--				i--;
--				continue;
-+				dsi->clks[i] = devm_clk_get(dev,
-+							OLD_SCLK_MIPI_CLK_NAME);
-+				if (!IS_ERR(dsi->clks[i]))
-+					continue;
- 			}
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 0e51baa48b149..6eef47de8fccc 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -327,9 +327,10 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
  
- 			dev_info(dev, "failed to get the clock: %s\n",
+ 	if (enable) {
+ 		/*
+-		 * must disable first, then enable again
+-		 * otherwise, cycle counter will not work
+-		 * if previous state is enabled.
++		 * cycle counter is special which should firstly write 0 then
++		 * write 1 into CLEAR bit to clear it. Other counters only
++		 * need write 0 into CLEAR bit and it turns out to be 1 by
++		 * hardware. Below enable flow is harmless for all counters.
+ 		 */
+ 		writel(0, pmu->base + reg);
+ 		val = CNTL_EN | CNTL_CLEAR;
+@@ -337,7 +338,8 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
+ 		writel(val, pmu->base + reg);
+ 	} else {
+ 		/* Disable counter */
+-		writel(0, pmu->base + reg);
++		val = readl_relaxed(pmu->base + reg) & CNTL_EN_MASK;
++		writel(val, pmu->base + reg);
+ 	}
+ }
+ 
 -- 
 2.20.1
 
