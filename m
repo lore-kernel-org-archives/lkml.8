@@ -2,434 +2,749 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E2EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B79C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:36:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C6E2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:35:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mkn9ysj5"
+	by mail.kernel.org (Postfix) with ESMTP id 3F48D2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:36:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727948AbgCXQfZ (ORCPT
+        id S1727560AbgCXQgY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:35:25 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40855 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727257AbgCXQfZ (ORCPT
+        Tue, 24 Mar 2020 12:36:24 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51788 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCXQgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:35:25 -0400
-Received: by mail-pl1-f194.google.com with SMTP id h11so7600278plk.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:35:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vff69t2B7SQ1Pw7zvoBcJmdMnx/6FGItZ4cwDATRo48=;
-        b=mkn9ysj5s7yf+bDP9/trY8miOqmNkIxwScT2coC6IYNMr9DD4KWk/LUKGbvrGGXCWQ
-         j6Az2+CId0v7n+xaGEnNGMtqRFjBNcw30gHjVhE/K4icX8YjXyJrH2o4t90KaPh6lKJ7
-         BO9fSrUyh0NKWp5lz+OmBz3JA//lD9MaCkeVDjQKlcgVTFebRpK8SZGPsGOYLrUJZAoN
-         4lXWl/EzdUHU0vcN0dgSO5zI4pLV0FsBdscOE+/wNl+Ds/TDJoxOvOwKTu3/XWSZzjnB
-         UNWtZU23ZIuZmHtTBJQz7d6fOvIEwKD3+j75aye6JFWrl28Mbfg+9fwsNZf1N08y8eh7
-         IseQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vff69t2B7SQ1Pw7zvoBcJmdMnx/6FGItZ4cwDATRo48=;
-        b=Xo6P0cxh+GIk2+1JPlV4nrxLFjfSC3wqmsmqJipxFQRcRTiEMGwi06YHZQLhUjieu2
-         53WDkkOr9/0Qsgz58y4WxE6gDvyruHl8gkbveRzoheh3xc24Tivqnq6/ieUxYBMW04Wf
-         3sfYUcrqmhxOhHwtfY/AzdGY7UnFKj3b/lQwZhmtL6J5/VqcDrlQiuJON+1v8UZYfv7K
-         buDMpKHgQ5CF7a4uLpTpT9pzjahNAx9m6kce2hlgFmc4Y246R9LBZwLZZDl2sUjGOZWP
-         0uJIQVYLNRPzhuZes/YgMp4n+6zP8I+eG37wo39JfbyaU0063zbK0se2KewzP89x+ENF
-         j71A==
-X-Gm-Message-State: ANhLgQ3XUXPSK5i9OJPYkJ4Ed6CSX0bcvsiVLWcLYUoteIpzlf3AvQ4l
-        w2JaAzVBOg7Jhv6xLA26BmlICQ==
-X-Google-Smtp-Source: ADFU+vvXOWNiFKM/L1VZ5/OEuKRqecgHEi4Dvo+xrcMaNZTXgseSUMaouXJp9KO3QaU+FSFcvgNYNA==
-X-Received: by 2002:a17:902:b60f:: with SMTP id b15mr13456088pls.14.1585067722880;
-        Tue, 24 Mar 2020 09:35:22 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id h4sm16588503pfg.177.2020.03.24.09.35.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 09:35:22 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 10:35:20 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        s-anna@ti.com, afd@ti.com
-Subject: Re: [PATCHv9 14/15] remoteproc/omap: Add watchdog functionality for
- remote processors
-Message-ID: <20200324163520.GA17283@xps15>
-References: <20200324110035.29907-1-t-kristo@ti.com>
- <20200324110035.29907-15-t-kristo@ti.com>
+        Tue, 24 Mar 2020 12:36:23 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0F1392968D7
+Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        linux-kernel@vger.kernel.org
+Cc:     vbendeb@chromium.org, groeck@chromium.org, bleung@chromium.org,
+        dtor@chromium.org, gwendal@chromium.org, andy@infradead.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
+ <f29b78b579ae04cfedbe7a7aebaa7a1f4dcc3a68.camel@linux.intel.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <abf77d1e-b0d3-eafc-d3e5-abb6f03e1aaa@collabora.com>
+Date:   Tue, 24 Mar 2020 17:36:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324110035.29907-15-t-kristo@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f29b78b579ae04cfedbe7a7aebaa7a1f4dcc3a68.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:00:34PM +0200, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> Remote processors can be stuck in a loop, and may not be recoverable
-> if they do not have a built-in watchdog. The watchdog implementation
-> for OMAP remote processors uses external gptimers that can be used
-> to interrupt both the Linux host as well as the remote processor.
-> 
-> Each remote processor is responsible for refreshing the timer during
-> normal behavior - during OS task scheduling or entering the idle loop
-> properly. During a watchdog condition (executing a tight loop causing
-> no scheduling), the host processor gets interrupts and schedules a
-> recovery for the corresponding remote processor. The remote processor
-> may also get interrupted to be able to print a back trace.
-> 
-> A menuconfig option has also been added to enable/disable the Watchdog
-> functionality, with the default as disabled.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> Reviewed-by: Andrew F. Davis <afd@ti.com>
-> ---
-> v9:
->   * split out the counting of watchdog timers to separate func, and added this behind the config flag
->  drivers/remoteproc/Kconfig           |  12 ++
->  drivers/remoteproc/omap_remoteproc.c | 166 +++++++++++++++++++++++++--
->  2 files changed, 167 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index b52abc2268cc..5f33358eb2f1 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -52,6 +52,18 @@ config OMAP_REMOTEPROC
->  	  It's safe to say N here if you're not interested in multimedia
->  	  offloading or just want a bare minimum kernel.
->  
-> +config OMAP_REMOTEPROC_WATCHDOG
-> +	bool "OMAP remoteproc watchdog timer"
-> +	depends on OMAP_REMOTEPROC
-> +	default n
-> +	help
-> +	  Say Y here to enable watchdog timer for remote processors.
-> +
-> +	  This option controls the watchdog functionality for the remote
-> +	  processors in OMAP. Dedicated OMAP DMTimers are used by the remote
-> +	  processors and triggers the timer interrupt upon a watchdog
-> +	  detection.
-> +
->  config WKUP_M3_RPROC
->  	tristate "AMx3xx Wakeup M3 remoteproc support"
->  	depends on SOC_AM33XX || SOC_AM43XX
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index cee6c33869b3..cdb546f7232e 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -24,6 +24,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/interrupt.h>
->  #include <linux/remoteproc.h>
->  #include <linux/mailbox_client.h>
->  #include <linux/omap-iommu.h>
-> @@ -72,10 +73,12 @@ struct omap_rproc_mem {
->   * struct omap_rproc_timer - data structure for a timer used by a omap rproc
->   * @odt: timer pointer
->   * @timer_ops: OMAP dmtimer ops for @odt timer
-> + * @irq: timer irq
->   */
->  struct omap_rproc_timer {
->  	struct omap_dm_timer *odt;
->  	const struct omap_dm_timer_ops *timer_ops;
-> +	int irq;
->  };
->  
->  /**
-> @@ -86,6 +89,7 @@ struct omap_rproc_timer {
->   * @mem: internal memory regions data
->   * @num_mems: number of internal memory regions
->   * @num_timers: number of rproc timer(s)
-> + * @num_wd_timers: number of rproc watchdog timers
->   * @timers: timer(s) info used by rproc
->   * @autosuspend_delay: auto-suspend delay value to be used for runtime pm
->   * @need_resume: if true a resume is needed in the system resume callback
-> @@ -102,6 +106,7 @@ struct omap_rproc {
->  	struct omap_rproc_mem *mem;
->  	int num_mems;
->  	int num_timers;
-> +	int num_wd_timers;
->  	struct omap_rproc_timer *timers;
->  	int autosuspend_delay;
->  	bool need_resume;
-> @@ -219,6 +224,79 @@ static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
->  	return timer->timer_ops->free(timer->odt);
->  }
->  
-> +/**
-> + * omap_rproc_get_timer_irq() - get the irq for a timer
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This function is used to get the irq associated with a watchdog timer. The
-> + * function is called by the OMAP remoteproc driver to register a interrupt
-> + * handler to handle watchdog events on the remote processor.
-> + *
-> + * Return: irq id on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_get_timer_irq(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->get_irq(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_ack_timer_irq() - acknowledge a timer irq
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This function is used to clear the irq associated with a watchdog timer. The
-> + * The function is called by the OMAP remoteproc upon a watchdog event on the
-> + * remote processor to clear the interrupt status of the watchdog timer.
-> + */
-> +static inline void omap_rproc_ack_timer_irq(struct omap_rproc_timer *timer)
-> +{
-> +	timer->timer_ops->write_status(timer->odt, OMAP_TIMER_INT_OVERFLOW);
-> +}
-> +
-> +/**
-> + * omap_rproc_watchdog_isr() - Watchdog ISR handler for remoteproc device
-> + * @irq: IRQ number associated with a watchdog timer
-> + * @data: IRQ handler data
-> + *
-> + * This ISR routine executes the required necessary low-level code to
-> + * acknowledge a watchdog timer interrupt. There can be multiple watchdog
-> + * timers associated with a rproc (like IPUs which have 2 watchdog timers,
-> + * one per Cortex M3/M4 core), so a lookup has to be performed to identify
-> + * the timer to acknowledge its interrupt.
-> + *
-> + * The function also invokes rproc_report_crash to report the watchdog event
-> + * to the remoteproc driver core, to trigger a recovery.
-> + *
-> + * Return: IRQ_HANDLED on success, otherwise IRQ_NONE
-> + */
-> +static irqreturn_t omap_rproc_watchdog_isr(int irq, void *data)
-> +{
-> +	struct rproc *rproc = data;
-> +	struct omap_rproc *oproc = rproc->priv;
-> +	struct device *dev = rproc->dev.parent;
-> +	struct omap_rproc_timer *timers = oproc->timers;
-> +	struct omap_rproc_timer *wd_timer = NULL;
-> +	int num_timers = oproc->num_timers + oproc->num_wd_timers;
-> +	int i;
-> +
-> +	for (i = oproc->num_timers; i < num_timers; i++) {
-> +		if (timers[i].irq > 0 && irq == timers[i].irq) {
-> +			wd_timer = &timers[i];
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!wd_timer) {
-> +		dev_err(dev, "invalid timer\n");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	omap_rproc_ack_timer_irq(wd_timer);
-> +
-> +	rproc_report_crash(rproc, RPROC_WATCHDOG);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  /**
->   * omap_rproc_enable_timers() - enable the timers for a remoteproc
->   * @rproc: handle of a remote processor
-> @@ -242,19 +320,26 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  	struct omap_rproc_timer *timers = oproc->timers;
->  	struct device *dev = rproc->dev.parent;
->  	struct device_node *np = NULL;
-> +	int num_timers = oproc->num_timers + oproc->num_wd_timers;
->  
-> -	if (!oproc->num_timers)
-> +	if (!num_timers)
->  		return 0;
->  
->  	if (!configure)
->  		goto start_timers;
->  
-> -	for (i = 0; i < oproc->num_timers; i++) {
-> -		np = of_parse_phandle(dev->of_node, "ti,timers", i);
-> +	for (i = 0; i < num_timers; i++) {
-> +		if (i < oproc->num_timers)
-> +			np = of_parse_phandle(dev->of_node, "ti,timers", i);
-> +		else
-> +			np = of_parse_phandle(dev->of_node,
-> +					      "ti,watchdog-timers",
-> +					      (i - oproc->num_timers));
->  		if (!np) {
->  			ret = -ENXIO;
->  			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
-> -				i, ret);
-> +				i < oproc->num_timers ? i :
-> +				i - oproc->num_timers, ret);
->  			goto free_timers;
->  		}
->  
-> @@ -277,12 +362,14 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  		if (!timer_ops || !timer_ops->request_by_node ||
->  		    !timer_ops->set_source || !timer_ops->set_load ||
->  		    !timer_ops->free || !timer_ops->start ||
-> -		    !timer_ops->stop) {
-> +		    !timer_ops->stop || !timer_ops->get_irq ||
-> +		    !timer_ops->write_status) {
->  			ret = -EINVAL;
->  			dev_err(dev, "device does not have required timer ops\n");
->  			goto put_node;
->  		}
->  
-> +		timers[i].irq = -1;
->  		timers[i].timer_ops = timer_ops;
->  		ret = omap_rproc_request_timer(dev, np, &timers[i]);
->  		if (ret) {
-> @@ -291,10 +378,33 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  			goto put_node;
->  		}
->  		of_node_put(np);
-> +
-> +		if (i >= oproc->num_timers) {
-> +			timers[i].irq = omap_rproc_get_timer_irq(&timers[i]);
-> +			if (timers[i].irq < 0) {
-> +				dev_err(dev, "get_irq for timer %p failed: %d\n",
-> +					np, timers[i].irq);
-> +				ret = -EBUSY;
-> +				goto free_timers;
-> +			}
-> +
-> +			ret = request_irq(timers[i].irq,
-> +					  omap_rproc_watchdog_isr, IRQF_SHARED,
-> +					  "rproc-wdt", rproc);
-> +			if (ret) {
-> +				dev_err(dev, "error requesting irq for timer %p\n",
-> +					np);
-> +				omap_rproc_release_timer(&timers[i]);
-> +				timers[i].odt = NULL;
-> +				timers[i].timer_ops = NULL;
-> +				timers[i].irq = -1;
-> +				goto free_timers;
-> +			}
-> +		}
->  	}
->  
->  start_timers:
-> -	for (i = 0; i < oproc->num_timers; i++) {
-> +	for (i = 0; i < num_timers; i++) {
->  		ret = omap_rproc_start_timer(&timers[i]);
->  		if (ret) {
->  			dev_err(dev, "start timer %p failed failed: %d\n", np,
-> @@ -316,9 +426,12 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  		of_node_put(np);
->  free_timers:
->  	while (i--) {
-> +		if (i >= oproc->num_timers)
-> +			free_irq(timers[i].irq, rproc);
->  		omap_rproc_release_timer(&timers[i]);
->  		timers[i].odt = NULL;
->  		timers[i].timer_ops = NULL;
-> +		timers[i].irq = -1;
->  	}
->  
->  	return ret;
-> @@ -341,16 +454,20 @@ static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
->  	int i;
->  	struct omap_rproc *oproc = rproc->priv;
->  	struct omap_rproc_timer *timers = oproc->timers;
-> +	int num_timers = oproc->num_timers + oproc->num_wd_timers;
->  
-> -	if (!oproc->num_timers)
-> +	if (!num_timers)
->  		return 0;
->  
-> -	for (i = 0; i < oproc->num_timers; i++) {
-> +	for (i = 0; i < num_timers; i++) {
->  		omap_rproc_stop_timer(&timers[i]);
->  		if (configure) {
-> +			if (i >= oproc->num_timers)
-> +				free_irq(timers[i].irq, rproc);
->  			omap_rproc_release_timer(&timers[i]);
->  			timers[i].odt = NULL;
->  			timers[i].timer_ops = NULL;
-> +			timers[i].irq = -1;
->  		}
->  	}
->  
-> @@ -1104,12 +1221,35 @@ static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_OMAP_REMOTEPROC_WATCHDOG
-> +static int omap_rproc_count_wdog_timers(struct device *dev)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	int ret;
-> +
-> +	ret = of_count_phandle_with_args(np, "ti,watchdog-timers", NULL);
-> +	if (ret <= 0) {
-> +		dev_dbg(dev, "device does not have watchdog timers, status = %d\n",
-> +			ret);
-> +		ret = 0;
-> +	}
-> +
-> +	return ret;
-> +}
-> +#else
-> +static int omap_rproc_count_wdog_timers(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int omap_rproc_of_get_timers(struct platform_device *pdev,
->  				    struct rproc *rproc)
->  {
->  	struct device_node *np = pdev->dev.of_node;
->  	struct omap_rproc *oproc = rproc->priv;
->  	struct device *dev = &pdev->dev;
-> +	int num_timers;
->  
->  	/*
->  	 * Timer nodes are directly used in client nodes as phandles, so
-> @@ -1122,14 +1262,18 @@ static int omap_rproc_of_get_timers(struct platform_device *pdev,
->  		oproc->num_timers = 0;
->  	}
->  
-> -	if (oproc->num_timers) {
-> -		oproc->timers = devm_kcalloc(dev, oproc->num_timers,
-> +	oproc->num_wd_timers = omap_rproc_count_wdog_timers(dev);
-> +
-> +	num_timers = oproc->num_timers + oproc->num_wd_timers;
-> +	if (num_timers) {
-> +		oproc->timers = devm_kcalloc(dev, num_timers,
->  					     sizeof(*oproc->timers),
->  					     GFP_KERNEL);
->  		if (!oproc->timers)
->  			return -ENOMEM;
->  
-> -		dev_dbg(dev, "device has %d tick timers\n", oproc->num_timers);
-> +		dev_dbg(dev, "device has %d tick timers and %d watchdog timers\n",
-> +			oproc->num_timers, oproc->num_wd_timers);
->  	}
+Hi Srinivas,
 
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Thanks for your quick answer.
 
->  
->  	return 0;
-> -- 
-> 2.17.1
+On 22/3/20 16:21, Srinivas Pandruvada wrote:
+> On Sun, 2020-03-22 at 10:43 +0100, Enric Balletbo i Serra wrote:
+>> This driver attaches to the ChromeOS ACPI device and then exports the
+>> values
+>> reported by the ACPI in a sysfs directory. The ACPI values are
+>> presented in
+>> the string form (numbers as decimal values) or binary blobs, and can
+>> be
+>> accessed as the contents of the appropriate read only files in the
+>> sysfs
+>> directory tree originating in /sys/devices/platform/chromeos_acpi.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ---
+>>
 > 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> [...]
+> 
+>>  /sys/devices/platform/chromeos_acpi/BINF.2 : 1
+> Just wondering why don't you create additional attributes under ACPI
+> device itself, like in your case:
+> /sys/bus/acpi/devices/GGL0001/*
+> 
+
+As I commented in my previous email, it was to no not break current ChromeOS
+userspace. But I assume we will need to break it, so I'll investigate how hard
+is to do that change on the userspace side.
+
+Thanks,
+Enric B.S.
+
+
+> Additional attributes are added for ACPI device objects at such
+> location in other cases also for some PNP* and INT3* objects.
+> 
+> This will make your driver simple with one attr group.
+> 
+> Thanks,
+> Srinivas 
+> 
+> 
+>>  /sys/devices/platform/chromeos_acpi/FMAP : -2031616
+>>  /sys/devices/platform/chromeos_acpi/HWID : SAMUS E25-G7R-W35
+>>  /sys/devices/platform/chromeos_acpi/BINF.0 : 0
+>>  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.2 : -1
+>>  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.0 : 1
+>>  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.3 : INT3437:00
+>>  /sys/devices/platform/chromeos_acpi/GPIO.0/GPIO.1 : 0
+>>  /sys/devices/platform/chromeos_acpi/FRID : Google_Samus.6300.102.0
+>>  /sys/devices/platform/chromeos_acpi/VBNV.0 : 38
+>>  /sys/devices/platform/chromeos_acpi/BINF.3 : 2
+>>  /sys/devices/platform/chromeos_acpi/BINF.1 : 1
+>>  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.2 : 16
+>>  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.0 : 3
+>>  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.3 : INT3437:00
+>>  /sys/devices/platform/chromeos_acpi/GPIO.1/GPIO.1 : 1
+>>  /sys/devices/platform/chromeos_acpi/CHSW : 0
+>>  /sys/devices/platform/chromeos_acpi/FWID : Google_Samus.6300.330.0
+>>  /sys/devices/platform/chromeos_acpi/VBNV.1 : 16
+>>  /sys/devices/platform/chromeos_acpi/BINF.4 : 0
+>>
+>> And for binary packages:
+>>
+>> cat /sys/devices/platform/chromeos_acpi/MECK | hexdump
+>>  0000000 02fb 8e72 a025 0a73 0f13 095e 9e07 41e6
+>>  0000010 f9e6 bb4e 76cc bef9 cca7 70e2 8f6d 863d
+>>  0000020
+>>
+>> cat /sys/devices/platform/chromeos_acpi/VDAT | hexdump
+>>  0000000 6256 4453 0002 0000 0448 0000 0000 0000
+>>  0000010 0c00 0000 0000 0000 0850 0000 0000 0000
+>>  0000020 7c54 0003 0000 0000 0420 0000 0000 0000
+>>  0000030 0408 0000 0000 0000 0007 0000 0000 0000
+>>  0000040 0003 0000 0000 0000 0448 0000 0000 0000
+>>  0000050 0408 0000 0000 0000 9335 1f80 0000 0000
+>>  0000060 69a8 21f3 0000 0000 1d02 21f9 0000 0000
+>>  0000070 ba55 371b 0000 0000 0000 0000 0000 0000
+>>  0000080 bcae 001d 0000 0000 0003 0001 0001 0003
+>>  0000090 000c 0000 0003 0001 0003 0001 0001 0000
+>>  00000a0 0001 0000 0000 0000 cc00 01da 0000 0000
+>>  00000b0 0200 0000 0204 0000 0001 0000 0000 0000
+>>  00000c0 0800 0000 0000 0000 0000 0001 0000 0000
+>>  00000d0 0001 0001 1301 0000 0000 0000 0000 0000
+>>  00000e0 0000 0000 0000 0000 0000 0000 0000 0000
+>>  *
+>>
+>> Thanks,
+>>  Enric
+>>
+>> [1] https://lkml.org/lkml/2017/7/31/378
+>>
+>> Changes in v2:
+>> - Note that this version is a total rework, with those major changes:
+>>   - Use lists to track dinamically allocated attributes and groups.
+>>   - Use sysfs binary attributes to store the ACPI contents.
+>>   - Remove all the functionalities except the one that creates the
+>> sysfs files.
+>>
+>>  drivers/platform/x86/Kconfig         |  12 +
+>>  drivers/platform/x86/Makefile        |   1 +
+>>  drivers/platform/x86/chromeos_acpi.c | 489
+>> +++++++++++++++++++++++++++
+>>  3 files changed, 502 insertions(+)
+>>  create mode 100644 drivers/platform/x86/chromeos_acpi.c
+>>
+>> diff --git a/drivers/platform/x86/Kconfig
+>> b/drivers/platform/x86/Kconfig
+>> index 587403c44598..917a1c1a0758 100644
+>> --- a/drivers/platform/x86/Kconfig
+>> +++ b/drivers/platform/x86/Kconfig
+>> @@ -72,6 +72,18 @@ config ACERHDF
+>>  	  If you have an Acer Aspire One netbook, say Y or M
+>>  	  here.
+>>  
+>> +config ACPI_CHROMEOS
+>> +	tristate "ChromeOS specific ACPI extensions"
+>> +	depends on ACPI
+>> +	depends on CHROME_PLATFORMS
+>> +	help
+>> +	  This driver provides the firmware interface for the services
+>> +	  exported through the ChromeOS interfaces when using ChromeOS
+>> +	  ACPI firmware.
+>> +
+>> +	  If you have an ACPI-compatible Chromebook, say Y or M
+>> +	  here.
+>> +
+>>  config ALIENWARE_WMI
+>>  	tristate "Alienware Special feature control"
+>>  	depends on ACPI
+>> diff --git a/drivers/platform/x86/Makefile
+>> b/drivers/platform/x86/Makefile
+>> index 3747b1f07cf1..222e2e88ccb8 100644
+>> --- a/drivers/platform/x86/Makefile
+>> +++ b/drivers/platform/x86/Makefile
+>> @@ -83,6 +83,7 @@ obj-$(CONFIG_SAMSUNG_Q10)	+= samsung-q10.o
+>>  obj-$(CONFIG_APPLE_GMUX)	+= apple-gmux.o
+>>  obj-$(CONFIG_INTEL_RST)		+= intel-rst.o
+>>  obj-$(CONFIG_INTEL_SMARTCONNECT)	+= intel-smartconnect.o
+>> +obj-$(CONFIG_ACPI_CHROMEOS)	+= chromeos_acpi.o
+>>  
+>>  obj-$(CONFIG_ALIENWARE_WMI)	+= alienware-wmi.o
+>>  obj-$(CONFIG_INTEL_PMC_IPC)	+= intel_pmc_ipc.o
+>> diff --git a/drivers/platform/x86/chromeos_acpi.c
+>> b/drivers/platform/x86/chromeos_acpi.c
+>> new file mode 100644
+>> index 000000000000..4d9addee2473
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/chromeos_acpi.c
+>> @@ -0,0 +1,489 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * ChromeOS specific ACPI extensions
+>> + *
+>> + * Copyright 2011 Google, Inc.
+>> + * Copyright 2020 Google LLC
+>> + *
+>> + * This file is a rework and part of the code is ported from
+>> + * drivers/platform/x86/chromeos_acpi.c of the chromeos-3.18 kernel
+>> and
+>> + * was originally written by Vadim Bendebury <vbendeb@chromium.org>.
+>> + *
+>> + * This driver attaches to the ChromeOS ACPI device and then exports
+>> the
+>> + * values reported by the ACPI in a sysfs directory. All values are
+>> + * presented in the string form (numbers as decimal values) and can
+>> be
+>> + * accessed as the contents of the appropriate read only files in
+>> the
+>> + * sysfs directory tree originating in
+>> /sys/devices/platform/chromeos_acpi.
+>> + */
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/list.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +/*
+>> + * ACPI method name for MLST; the response for this method is a
+>> package of
+>> + * strings listing the methods which should be reflected in sysfs.
+>> + */
+>> +#define MLST "MLST"
+>> +
+>> +/*
+>> + * The default list of methods the ChromeOS ACPI device is supposed
+>> to export,
+>> + * if the MLST method is not present or is poorly formed.  The MLST
+>> method
+>> + * itself is included, to aid in debugging.
+>> + */
+>> +static char *chromeos_acpi_default_methods[] = {
+>> +	"CHSW", "HWID", "BINF", "GPIO", "CHNV", "FWID", "FRID", MLST
+>> +};
+>> +
+>> +/*
+>> + * Representation of a single sysfs attribute. In addition to the
+>> standard
+>> + * bin_attribute structure has a list of these structures (to keep
+>> track for
+>> + * de-allocation when removing the driver) and a pointer to the
+>> actual
+>> + * attribute name and value, reported when accessing the appropriate
+>> sysfs
+>> + * file.
+>> + */
+>> +struct chromeos_acpi_attribute {
+>> +	struct bin_attribute bin_attr;
+>> +	struct list_head list;
+>> +	char *name;
+>> +	char *data;
+>> +};
+>> +
+>> +/*
+>> + * Representation of a sysfs attribute group (a sub directory in the
+>> device's
+>> + * sysfs directory). In addition to the standard structure has lists
+>> to allow
+>> + * to keep track of the allocated structures.
+>> + */
+>> +struct chromeos_acpi_attribute_group {
+>> +	struct list_head attribs;
+>> +	struct list_head list;
+>> +	struct kobject *kobj;	/* chromeos_acpi/name directory */
+>> +	char *name;
+>> +};
+>> +
+>> +/*
+>> + * This is the main structure, we use it to store data and adds
+>> links pointing
+>> + * at lists of allocated attributes and attribute groups.
+>> + */
+>> +struct chromeos_acpi_dev {
+>> +	struct platform_device *pdev;
+>> +
+>> +	struct chromeos_acpi_attribute_group root;
+>> +	struct list_head groups;
+>> +};
+>> +
+>> +static struct chromeos_acpi_dev chromeos_acpi;
+>> +
+>> +static ssize_t chromeos_acpi_read_bin_attribute(struct file *filp,
+>> +						struct kobject *kobj,
+>> +						struct bin_attribute
+>> *bin_attr,
+>> +						char *buffer, loff_t
+>> pos,
+>> +						size_t count)
+>> +{
+>> +	struct chromeos_acpi_attribute *info = bin_attr->private;
+>> +
+>> +	return memory_read_from_buffer(buffer, count, &pos, info->data,
+>> +				       info->bin_attr.size);
+>> +}
+>> +
+>> +static char *chromeos_acpi_alloc_name(char *name, int count, int
+>> index)
+>> +{
+>> +	char *str;
+>> +
+>> +	if (count == 1)
+>> +		str = kstrdup(name, GFP_KERNEL);
+>> +	else
+>> +		str = kasprintf(GFP_KERNEL, "%s.%d", name, index);
+>> +
+>> +	return str;
+>> +}
+>> +
+>> +static int
+>> +chromeos_acpi_add_attr(struct chromeos_acpi_attribute_group *aag,
+>> +		       union acpi_object *element, char *name,
+>> +		       int count, int index)
+>> +{
+>> +	struct chromeos_acpi_attribute *info;
+>> +	char buffer[24]; /* enough to store a u64 and "\n\0" */
+>> +	int length;
+>> +	int ret;
+>> +
+>> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
+>> +	if (!info)
+>> +		return -ENOMEM;
+>> +
+>> +	info->name = chromeos_acpi_alloc_name(name, count, index);
+>> +	if (!info->name) {
+>> +		ret = -ENOMEM;
+>> +		goto free_attribute;
+>> +	}
+>> +
+>> +	sysfs_bin_attr_init(&info->bin_attr);
+>> +	info->bin_attr.attr.name = info->name;
+>> +	info->bin_attr.attr.mode = 0444;
+>> +
+>> +	switch (element->type) {
+>> +	case ACPI_TYPE_BUFFER:
+>> +		length = element->buffer.length;
+>> +		info->data = kmemdup(element->buffer.pointer,
+>> +				     length, GFP_KERNEL);
+>> +		break;
+>> +	case ACPI_TYPE_INTEGER:
+>> +		length = snprintf(buffer, sizeof(buffer), "%d",
+>> +				  (int)element->integer.value);
+>> +		info->data = kmemdup(buffer, length, GFP_KERNEL);
+>> +		break;
+>> +	case ACPI_TYPE_STRING:
+>> +		length = element->string.length + 1;
+>> +		info->data = kstrdup(element->string.pointer,
+>> GFP_KERNEL);
+>> +		break;
+>> +	default:
+>> +		ret = -EINVAL;
+>> +		goto free_attr_name;
+>> +	}
+>> +
+>> +	if (!info->data) {
+>> +		ret = -ENOMEM;
+>> +		goto free_attr_name;
+>> +	}
+>> +
+>> +	info->bin_attr.size = length;
+>> +	info->bin_attr.read = chromeos_acpi_read_bin_attribute;
+>> +	info->bin_attr.private = info;
+>> +
+>> +	INIT_LIST_HEAD(&info->list);
+>> +
+>> +	ret = sysfs_create_bin_file(aag->kobj, &info->bin_attr);
+>> +	if (ret)
+>> +		goto free_attr_data;
+>> +
+>> +	list_add(&info->list, &aag->attribs);
+>> +
+>> +	return 0;
+>> +
+>> +free_attr_data:
+>> +	kfree(info->data);
+>> +free_attr_name:
+>> +	kfree(info->name);
+>> +free_attribute:
+>> +	kfree(info);
+>> +	return ret;
+>> +}
+>> +
+>> +static void
+>> +chromeos_acpi_remove_attribs(struct chromeos_acpi_attribute_group
+>> *aag)
+>> +{
+>> +	struct chromeos_acpi_attribute *attr, *tmp_attr;
+>> +
+>> +	list_for_each_entry_safe(attr, tmp_attr, &aag->attribs, list) {
+>> +		sysfs_remove_bin_file(aag->kobj, &attr->bin_attr);
+>> +		kfree(attr->name);
+>> +		kfree(attr->data);
+>> +		kfree(attr);
+>> +	}
+>> +}
+>> +
+>> +/**
+>> + * chromeos_acpi_add_group() - Create a sysfs group including
+>> attributes
+>> + *			       representing a nested ACPI package.
+>> + *
+>> + * @obj: Package contents as returned by ACPI.
+>> + * @name: Name of the group.
+>> + * @num_attrs: Number of attributes of this package.
+>> + * @index: Index number of this particular group.
+>> + *
+>> + * The created group is called @name in case there is a single
+>> instance, or
+>> + * @name.@index otherwise.
+>> + *
+>> + * All group and attribute storage allocations are included in the
+>> lists for
+>> + * tracking of allocated memory.
+>> + *
+>> + * Return: 0 on success, negative errno on failure.
+>> + */
+>> +static int chromeos_acpi_add_group(union acpi_object *obj, char
+>> *name,
+>> +				   int num_attrs, int index)
+>> +{
+>> +	struct device *dev = &chromeos_acpi.pdev->dev;
+>> +	struct chromeos_acpi_attribute_group *aag;
+>> +	union acpi_object *element;
+>> +	int i, count, ret;
+>> +
+>> +	aag = kzalloc(sizeof(*aag), GFP_KERNEL);
+>> +	if (!aag)
+>> +		return -ENOMEM;
+>> +
+>> +	aag->name = chromeos_acpi_alloc_name(name, num_attrs, index);
+>> +	if (!aag->name) {
+>> +		ret = -ENOMEM;
+>> +		goto free_group;
+>> +	}
+>> +
+>> +	aag->kobj = kobject_create_and_add(aag->name, &dev->kobj);
+>> +	if (!aag->kobj) {
+>> +		ret = -EINVAL;
+>> +		goto free_group_name;
+>> +	}
+>> +
+>> +	INIT_LIST_HEAD(&aag->attribs);
+>> +	INIT_LIST_HEAD(&aag->list);
+>> +
+>> +	count = obj->package.count;
+>> +	element = obj->package.elements;
+>> +	for (i = 0; i < count; i++, element++) {
+>> +		ret = chromeos_acpi_add_attr(aag, element, name, count,
+>> i);
+>> +		if (ret)
+>> +			goto free_group_attr;
+>> +	}
+>> +
+>> +	list_add(&aag->list, &chromeos_acpi.groups);
+>> +
+>> +	return 0;
+>> +
+>> +free_group_attr:
+>> +	chromeos_acpi_remove_attribs(aag);
+>> +	kobject_put(aag->kobj);
+>> +free_group_name:
+>> +	kfree(aag->name);
+>> +free_group:
+>> +	kfree(aag);
+>> +	return ret;
+>> +}
+>> +
+>> +static void chromeos_acpi_remove_groups(void)
+>> +{
+>> +	struct chromeos_acpi_attribute_group *aag, *tmp_aag;
+>> +
+>> +	list_for_each_entry_safe(aag, tmp_aag, &chromeos_acpi.groups,
+>> list) {
+>> +		chromeos_acpi_remove_attribs(aag);
+>> +		kfree(aag->name);
+>> +		kobject_put(aag->kobj);
+>> +		kfree(aag);
+>> +	}
+>> +}
+>> +
+>> +/**
+>> + * chromeos_acpi_handle_package() - Create sysfs group including
+>> attributes
+>> + *				    representing an ACPI package.
+>> + *
+>> + * @obj: Package contents as returned by ACPI.
+>> + * @name: Name of the group.
+>> + *
+>> + * Scalar objects included in the package get sysfs attributes
+>> created for
+>> + * them. Nested packages are passed to a function creating a sysfs
+>> group per
+>> + * package.
+>> + *
+>> + * Return: 0 on success, negative errno on failure.
+>> + */
+>> +static int chromeos_acpi_handle_package(union acpi_object *obj, char
+>> *name)
+>> +{
+>> +	struct device *dev = &chromeos_acpi.pdev->dev;
+>> +	int count = obj->package.count;
+>> +	union acpi_object *element;
+>> +	int i, ret = 0;
+>> +
+>> +	element = obj->package.elements;
+>> +	for (i = 0; i < count; i++, element++) {
+>> +		if (element->type == ACPI_TYPE_BUFFER ||
+>> +		    element->type == ACPI_TYPE_STRING ||
+>> +		    element->type == ACPI_TYPE_INTEGER)
+>> +			/* Create a single attribute in the root
+>> directory */
+>> +			ret =
+>> chromeos_acpi_add_attr(&chromeos_acpi.root,
+>> +						     element, name,
+>> +						     count, i);
+>> +		else if (element->type == ACPI_TYPE_PACKAGE)
+>> +			/* Create a group of attributes */
+>> +			ret = chromeos_acpi_add_group(element, name,
+>> +						      count, i);
+>> +		else
+>> +			ret = -EINVAL;
+>> +		if (ret)
+>> +			dev_err(dev,
+>> +				"failed to create group attributes
+>> (%d)\n",
+>> +				ret);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +/**
+>> + * chromeos_acpi_add_method() - Evaluate an ACPI method and create
+>> sysfs
+>> + *				attributes.
+>> + *
+>> + * @adev: ACPI device
+>> + * @name: Name of the method to evaluate
+>> + *
+>> + * Return: 0 on success, non-zero on failure
+>> + */
+>> +static int chromeos_acpi_add_method(struct acpi_device *adev, char
+>> *name)
+>> +{
+>> +	struct device *dev = &chromeos_acpi.pdev->dev;
+>> +	struct acpi_buffer output;
+>> +	union acpi_object *obj;
+>> +	acpi_status status;
+>> +	int ret = 0;
+>> +
+>> +	output.length = ACPI_ALLOCATE_BUFFER;
+>> +
+>> +	status = acpi_evaluate_object(adev->handle, name, NULL,
+>> &output);
+>> +	if (ACPI_FAILURE(status)) {
+>> +		dev_err(dev, "failed to retrieve %s (%d)\n", name,
+>> status);
+>> +		return status;
+>> +	}
+>> +
+>> +	obj = output.pointer;
+>> +	if (obj->type == ACPI_TYPE_PACKAGE)
+>> +		ret = chromeos_acpi_handle_package(obj, name);
+>> +
+>> +	kfree(output.pointer);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +/**
+>> + * chromeos_acpi_process_mlst() - Evaluate the MLST method and add
+>> methods
+>> + *				  listed in the response.
+>> + *
+>> + * @adev: ACPI device
+>> + *
+>> + * Returns: 0 if successful, non-zero if error.
+>> + */
+>> +static int chromeos_acpi_process_mlst(struct acpi_device *adev)
+>> +{
+>> +	char name[ACPI_NAMESEG_SIZE + 1];
+>> +	union acpi_object *element, *obj;
+>> +	struct acpi_buffer output;
+>> +	acpi_status status;
+>> +	int ret = 0;
+>> +	int size;
+>> +	int i;
+>> +
+>> +	output.length = ACPI_ALLOCATE_BUFFER;
+>> +	status = acpi_evaluate_object(adev->handle, MLST, NULL,
+>> +				      &output);
+>> +	if (ACPI_FAILURE(status))
+>> +		return status;
+>> +
+>> +	obj = output.pointer;
+>> +	if (obj->type != ACPI_TYPE_PACKAGE) {
+>> +		ret = -EINVAL;
+>> +		goto free_acpi_buffer;
+>> +	}
+>> +
+>> +	element = obj->package.elements;
+>> +	for (i = 0; i < obj->package.count; i++, element++) {
+>> +		if (element->type == ACPI_TYPE_STRING) {
+>> +			size = min(element->string.length + 1,
+>> +				   (u32)ACPI_NAMESEG_SIZE + 1);
+>> +			strlcpy(name, element->string.pointer, size);
+>> +			ret = chromeos_acpi_add_method(adev, name);
+>> +			if (ret) {
+>> +				chromeos_acpi_remove_groups();
+>> +				break;
+>> +			}
+>> +		}
+>> +	}
+>> +
+>> +free_acpi_buffer:
+>> +	kfree(output.pointer);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int chromeos_acpi_device_add(struct acpi_device *adev)
+>> +{
+>> +	struct chromeos_acpi_attribute_group *aag =
+>> &chromeos_acpi.root;
+>> +	struct device *dev = &chromeos_acpi.pdev->dev;
+>> +	int i, ret;
+>> +
+>> +	INIT_LIST_HEAD(&aag->attribs);
+>> +	INIT_LIST_HEAD(&aag->list);
+>> +
+>> +	aag->kobj = &dev->kobj;
+>> +
+>> +	/*
+>> +	 * Attempt to add methods by querying the device's MLST method
+>> +	 * for the list of methods.
+>> +	 */
+>> +	if (!chromeos_acpi_process_mlst(adev))
+>> +		return 0;
+>> +
+>> +	dev_info(dev, "falling back to default list of methods\n");
+>> +
+>> +	for (i = 0; i < ARRAY_SIZE(chromeos_acpi_default_methods); i++)
+>> {
+>> +		ret = chromeos_acpi_add_method(adev,
+>> +					     chromeos_acpi_default_meth
+>> ods[i]);
+>> +		if (ret) {
+>> +			dev_err(dev, "failed to add default methods
+>> (%d)\n",
+>> +				ret);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int chromeos_acpi_device_remove(struct acpi_device *adev)
+>> +{
+>> +	/* Remove dinamically allocated sysfs groups and attributes */
+>> +	chromeos_acpi_remove_groups();
+>> +	/* Remove attributes from the root group */
+>> +	chromeos_acpi_remove_attribs(&chromeos_acpi.root);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct acpi_device_id chromeos_device_ids[] = {
+>> +	{ "GGL0001", 0 },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, chromeos_device_ids);
+>> +
+>> +static struct acpi_driver chromeos_acpi_driver = {
+>> +	.name = "ChromeOS ACPI driver",
+>> +	.class = "chromeos-acpi",
+>> +	.ids = chromeos_device_ids,
+>> +	.ops = {
+>> +		.add = chromeos_acpi_device_add,
+>> +		.remove = chromeos_acpi_device_remove,
+>> +	},
+>> +	.owner = THIS_MODULE,
+>> +};
+>> +
+>> +static int __init chromeos_acpi_init(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	chromeos_acpi.pdev =
+>> platform_device_register_simple("chromeos_acpi",
+>> +						PLATFORM_DEVID_NONE,
+>> NULL, 0);
+>> +	if (IS_ERR(chromeos_acpi.pdev)) {
+>> +		pr_err("unable to register chromeos_acpi platform
+>> device\n");
+>> +		return PTR_ERR(chromeos_acpi.pdev);
+>> +	}
+>> +
+>> +	INIT_LIST_HEAD(&chromeos_acpi.groups);
+>> +
+>> +	ret = acpi_bus_register_driver(&chromeos_acpi_driver);
+>> +	if (ret < 0) {
+>> +		pr_err("failed to register chromeos_acpi driver
+>> (%d)\n", ret);
+>> +		platform_device_unregister(chromeos_acpi.pdev);
+>> +		chromeos_acpi.pdev = NULL;
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void __exit chromeos_acpi_exit(void)
+>> +{
+>> +	acpi_bus_unregister_driver(&chromeos_acpi_driver);
+>> +	platform_device_unregister(chromeos_acpi.pdev);
+>> +}
+>> +
+>> +module_init(chromeos_acpi_init);
+>> +module_exit(chromeos_acpi_exit);
+>> +
+>> +MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>> ");
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_DESCRIPTION("ChromeOS specific ACPI extensions");
+> 
+> 
