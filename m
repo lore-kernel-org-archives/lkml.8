@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26696C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA9FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35A420870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3393F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056000;
-	bh=cvGcIc2c7FEbl/5gIogoRTLaX9Jd2iA3AwynJj81h5Q=;
+	s=default; t=1585056004;
+	bh=vEE9Y225QIK4Llp+vuWKYxM49/expVtdDER2Jh9XvDg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dt6mfk1yxg3aqnVsv/FbhJWR7PPvz7H+SKJIz6RWWaz02UOilkZSCmjIBCuV1zbYR
-	 hetJ2l4NngZSRxNwmUKufCmHjZ6mLHXi3tUL8X+h+OkEx6IaLn5CME31KpWc75U8E0
-	 c40CPy4N+Y01h2tMpp1aOCWzodpr5jL383nP8wdg=
+	b=mKAfAI5Funzlix/CDpGuPftQdNOZ11cXsQh5JIOVyUmD4CTmRDYMLL5KqSZ41Mp8W
+	 9aFT4vkJY9Zps5wWPgwmyhHlZHI3gKYZgIYUhU1Xyav1RUFye+0KbklNiuh7oIz/cK
+	 w8uxnYuOeWFauZ4YmAKIPnEOk4DrxU545mNV3454=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgCXNT6 (ORCPT
+        id S1728894AbgCXNUC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:20:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbgCXNTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:53 -0400
+        id S1728888AbgCXNT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B58D20870;
-        Tue, 24 Mar 2020 13:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27C3320CC7;
+        Tue, 24 Mar 2020 13:19:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055992;
-        bh=cvGcIc2c7FEbl/5gIogoRTLaX9Jd2iA3AwynJj81h5Q=;
+        s=default; t=1585055997;
+        bh=vEE9Y225QIK4Llp+vuWKYxM49/expVtdDER2Jh9XvDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eVDxCchVAExufYKo118WBKAgEBZUY1KeO4UOIEVir+DvQ8lNRwPCZnyqaOI/IQ+TW
-         5WoMeU1D7XHbkRiooGsRCF168QZx7gTReEC5nLi8KjIYJhl1InNpQCa70P/ezs/drS
-         2hyFonaLCvosJlggnn13PCZ0AzYVjvGARwk1Svfo=
+        b=BLsyTZpcLdZs4HYHkv+6QSI0WBy6UbIp/g2KXymzw47otTfXHNbSnEWGyM5o1Fze1
+         U9wFQ2xLhIPgdT0S75xSrv/8GtNRuNTd520Kn9KuZDyxsCDFLaE8bt4a0AORhQ+V5P
+         suO/UqhmfbnKc0+ZfNnoKY65l5sKdfK3JSiOOrIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        Rafael Aquini <aquini@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 092/102] page-flags: fix a crash at SetPageError(THP_SWAP)
-Date:   Tue, 24 Mar 2020 14:11:24 +0100
-Message-Id: <20200324130816.171850987@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 5.4 094/102] futex: Fix inode life-time issue
+Date:   Tue, 24 Mar 2020 14:11:26 +0100
+Message-Id: <20200324130816.339499753@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -63,66 +60,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Peter Zijlstra <peterz@infradead.org>
 
-commit d72520ad004a8ce18a6ba6cde317f0081b27365a upstream.
+commit 8019ad13ef7f64be44d4f892af9c840179009254 upstream.
 
-Commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped
-out") supported writing THP to a swap device but forgot to upgrade an
-older commit df8c94d13c7e ("page-flags: define behavior of FS/IO-related
-flags on compound pages") which could trigger a crash during THP
-swapping out with DEBUG_VM_PGFLAGS=y,
+As reported by Jann, ihold() does not in fact guarantee inode
+persistence. And instead of making it so, replace the usage of inode
+pointers with a per boot, machine wide, unique inode identifier.
 
-  kernel BUG at include/linux/page-flags.h:317!
+This sequence number is global, but shared (file backed) futexes are
+rare enough that this should not become a performance issue.
 
-  page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
-  page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0 compound_pincount:0
-  anon flags: 0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
-
-  end_swap_bio_write()
-    SetPageError(page)
-      VM_BUG_ON_PAGE(1 && PageCompound(page))
-
-  <IRQ>
-  bio_endio+0x297/0x560
-  dec_pending+0x218/0x430 [dm_mod]
-  clone_endio+0xe4/0x2c0 [dm_mod]
-  bio_endio+0x297/0x560
-  blk_update_request+0x201/0x920
-  scsi_end_request+0x6b/0x4b0
-  scsi_io_completion+0x509/0x7e0
-  scsi_finish_command+0x1ed/0x2a0
-  scsi_softirq_done+0x1c9/0x1d0
-  __blk_mqnterrupt+0xf/0x20
-  </IRQ>
-
-Fix by checking PF_NO_TAIL in those places instead.
-
-Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Acked-by: "Huang, Ying" <ying.huang@intel.com>
-Acked-by: Rafael Aquini <aquini@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200310235846.1319-1-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: Jann Horn <jannh@google.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/page-flags.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/inode.c            |    1 
+ include/linux/fs.h    |    1 
+ include/linux/futex.h |   17 +++++----
+ kernel/futex.c        |   89 +++++++++++++++++++++++++++++---------------------
+ 4 files changed, 65 insertions(+), 43 deletions(-)
 
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -311,7 +311,7 @@ static inline int TestClearPage##uname(s
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -137,6 +137,7 @@ int inode_init_always(struct super_block
+ 	inode->i_sb = sb;
+ 	inode->i_blkbits = sb->s_blocksize_bits;
+ 	inode->i_flags = 0;
++	atomic64_set(&inode->i_sequence, 0);
+ 	atomic_set(&inode->i_count, 1);
+ 	inode->i_op = &empty_iops;
+ 	inode->i_fop = &no_open_fops;
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -698,6 +698,7 @@ struct inode {
+ 		struct rcu_head		i_rcu;
+ 	};
+ 	atomic64_t		i_version;
++	atomic64_t		i_sequence; /* see futex */
+ 	atomic_t		i_count;
+ 	atomic_t		i_dio_count;
+ 	atomic_t		i_writecount;
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -31,23 +31,26 @@ struct task_struct;
  
- __PAGEFLAG(Locked, locked, PF_NO_TAIL)
- PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
--PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
-+PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
- PAGEFLAG(Referenced, referenced, PF_HEAD)
- 	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
- 	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
+ union futex_key {
+ 	struct {
++		u64 i_seq;
+ 		unsigned long pgoff;
+-		struct inode *inode;
+-		int offset;
++		unsigned int offset;
+ 	} shared;
+ 	struct {
++		union {
++			struct mm_struct *mm;
++			u64 __tmp;
++		};
+ 		unsigned long address;
+-		struct mm_struct *mm;
+-		int offset;
++		unsigned int offset;
+ 	} private;
+ 	struct {
++		u64 ptr;
+ 		unsigned long word;
+-		void *ptr;
+-		int offset;
++		unsigned int offset;
+ 	} both;
+ };
+ 
+-#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
++#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = 0ULL } }
+ 
+ #ifdef CONFIG_FUTEX
+ enum {
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -429,7 +429,7 @@ static void get_futex_key_refs(union fut
+ 
+ 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
+ 	case FUT_OFF_INODE:
+-		ihold(key->shared.inode); /* implies smp_mb(); (B) */
++		smp_mb();		/* explicit smp_mb(); (B) */
+ 		break;
+ 	case FUT_OFF_MMSHARED:
+ 		futex_get_mm(key); /* implies smp_mb(); (B) */
+@@ -463,7 +463,6 @@ static void drop_futex_key_refs(union fu
+ 
+ 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
+ 	case FUT_OFF_INODE:
+-		iput(key->shared.inode);
+ 		break;
+ 	case FUT_OFF_MMSHARED:
+ 		mmdrop(key->private.mm);
+@@ -505,6 +504,46 @@ futex_setup_timer(ktime_t *time, struct
+ 	return timeout;
+ }
+ 
++/*
++ * Generate a machine wide unique identifier for this inode.
++ *
++ * This relies on u64 not wrapping in the life-time of the machine; which with
++ * 1ns resolution means almost 585 years.
++ *
++ * This further relies on the fact that a well formed program will not unmap
++ * the file while it has a (shared) futex waiting on it. This mapping will have
++ * a file reference which pins the mount and inode.
++ *
++ * If for some reason an inode gets evicted and read back in again, it will get
++ * a new sequence number and will _NOT_ match, even though it is the exact same
++ * file.
++ *
++ * It is important that match_futex() will never have a false-positive, esp.
++ * for PI futexes that can mess up the state. The above argues that false-negatives
++ * are only possible for malformed programs.
++ */
++static u64 get_inode_sequence_number(struct inode *inode)
++{
++	static atomic64_t i_seq;
++	u64 old;
++
++	/* Does the inode already have a sequence number? */
++	old = atomic64_read(&inode->i_sequence);
++	if (likely(old))
++		return old;
++
++	for (;;) {
++		u64 new = atomic64_add_return(1, &i_seq);
++		if (WARN_ON_ONCE(!new))
++			continue;
++
++		old = atomic64_cmpxchg_relaxed(&inode->i_sequence, 0, new);
++		if (old)
++			return old;
++		return new;
++	}
++}
++
+ /**
+  * get_futex_key() - Get parameters which are the keys for a futex
+  * @uaddr:	virtual address of the futex
+@@ -517,9 +556,15 @@ futex_setup_timer(ktime_t *time, struct
+  *
+  * The key words are stored in @key on success.
+  *
+- * For shared mappings, it's (page->index, file_inode(vma->vm_file),
+- * offset_within_page).  For private mappings, it's (uaddr, current->mm).
+- * We can usually work out the index without swapping in the page.
++ * For shared mappings (when @fshared), the key is:
++ *   ( inode->i_sequence, page->index, offset_within_page )
++ * [ also see get_inode_sequence_number() ]
++ *
++ * For private mappings (or when !@fshared), the key is:
++ *   ( current->mm, address, 0 )
++ *
++ * This allows (cross process, where applicable) identification of the futex
++ * without keeping the page pinned for the duration of the FUTEX_WAIT.
+  *
+  * lock_page() might sleep, the caller should not hold a spinlock.
+  */
+@@ -659,8 +704,6 @@ again:
+ 		key->private.mm = mm;
+ 		key->private.address = address;
+ 
+-		get_futex_key_refs(key); /* implies smp_mb(); (B) */
+-
+ 	} else {
+ 		struct inode *inode;
+ 
+@@ -692,40 +735,14 @@ again:
+ 			goto again;
+ 		}
+ 
+-		/*
+-		 * Take a reference unless it is about to be freed. Previously
+-		 * this reference was taken by ihold under the page lock
+-		 * pinning the inode in place so i_lock was unnecessary. The
+-		 * only way for this check to fail is if the inode was
+-		 * truncated in parallel which is almost certainly an
+-		 * application bug. In such a case, just retry.
+-		 *
+-		 * We are not calling into get_futex_key_refs() in file-backed
+-		 * cases, therefore a successful atomic_inc return below will
+-		 * guarantee that get_futex_key() will still imply smp_mb(); (B).
+-		 */
+-		if (!atomic_inc_not_zero(&inode->i_count)) {
+-			rcu_read_unlock();
+-			put_page(page);
+-
+-			goto again;
+-		}
+-
+-		/* Should be impossible but lets be paranoid for now */
+-		if (WARN_ON_ONCE(inode->i_mapping != mapping)) {
+-			err = -EFAULT;
+-			rcu_read_unlock();
+-			iput(inode);
+-
+-			goto out;
+-		}
+-
+ 		key->both.offset |= FUT_OFF_INODE; /* inode-based key */
+-		key->shared.inode = inode;
++		key->shared.i_seq = get_inode_sequence_number(inode);
+ 		key->shared.pgoff = basepage_index(tail);
+ 		rcu_read_unlock();
+ 	}
+ 
++	get_futex_key_refs(key); /* implies smp_mb(); (B) */
++
+ out:
+ 	put_page(page);
+ 	return err;
 
 
