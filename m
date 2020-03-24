@@ -2,172 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AEDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:49:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5241C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58CED20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:49:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585093792;
-	bh=vpN9VZ3/XqMMlM29y3ksAh6NJ5OS375WskdTFbdbfKA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=rV3+oJVj7S3m9lZjM+MITlFNnSmfHus5GeNUHqv4GpjMhNW6z+vvn7bX3ETh7p5OC
-	 enzDG78AKVNuCA807sLE8PuhsyBWBKtGA2qCBoNNH7TVqY0r9MDRpIdPzNEPYcU4SQ
-	 gAEBUPf/IfB/elSmvG/fyQVKes+TBlN4ZAgIfiFo=
+	by mail.kernel.org (Postfix) with ESMTP id 99B4920719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlgbV5xu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727217AbgCXXtu (ORCPT
+        id S1727259AbgCXXty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbgCXXtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:49:47 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 688B020771;
-        Tue, 24 Mar 2020 23:49:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585093786;
-        bh=vpN9VZ3/XqMMlM29y3ksAh6NJ5OS375WskdTFbdbfKA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=03TcxpuWLlgAm5WWVV0XMINrlghzoU7/EZbpHYbBn90HrEVzboRSYClTlJ6sEOnmv
-         qcE5pEzfkJbrbE9fUuQtMrY/057+dB0eFB7VE3gwOXs5tVrISU1ei3nyvy5mrv3wgV
-         uvDHrPY85jawP5GSNelPoo5GQlCYzBXe5E3kMcyc=
-Date:   Tue, 24 Mar 2020 18:49:44 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v18 03/11] PCI/DPC: Fix DPC recovery issue in non hotplug
- case
-Message-ID: <20200324234944.GA73526@google.com>
+        Tue, 24 Mar 2020 19:49:54 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:34027 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727229AbgCXXtw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 19:49:52 -0400
+Received: by mail-qv1-f67.google.com with SMTP id o18so96658qvf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 16:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WXqXTT1DtLqmzmjkBBjicSNrZ08h/rCoq4NTECASZpg=;
+        b=MlgbV5xu2HcOCHYISh0rVhd+WtayGujV639SF0pMVYOPBWa9mmR3nMtF48SELl2ysP
+         7G21E1OdkwGZSy8BHKsRbU0l/TTeqe66xOfovpT5JymE1R6no9KvAqXN5IfRxgwxRn97
+         E6dZgY8mKO4RwVKCG5Lat9F3akPYWk2QWKHUMe0tUMM5jUjxLFD3wDZ4nK8Vzj7It+Dv
+         7loXXUmJGjeZaWnONh6H9nkOXpGfPgDZlcaVnB2eDGupFlcIhHIbMo+FxrC7Qh7DfVQ+
+         k9MY6g9tzLyPCH21xYXbIhpTC2HD2Ne50xls6DqInS9w30jAM/in/lVeIsXKZq6LR2qG
+         ETsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WXqXTT1DtLqmzmjkBBjicSNrZ08h/rCoq4NTECASZpg=;
+        b=fBVul6PQ2zgEXxvpqoSXvlW/zEu4CmDcCMZD/XgvjXdeF3KAnKcfhwN2HqMAAWnj+q
+         9+0SKoepJPIeFG3ohK0TjFR/VckE7EOdmNRVZa2l355XfygI97XOzTSjBy5yTER5zS2Z
+         sUOh32i31C8mIrHzilNiLhNaOaCUyrWVXChQy/ze1U1z5ByPqx4ZQxUHQUQ4Z7/6PI1m
+         1wr7QtZb94F92yrVG6xZxEDLbLPDuO0cku+KtlUm9eHiOaL2fe9QbiliujbrbiSxXs9u
+         aJDFF5X1d3JvzZobFGI5kh0uMtSvvOgTeV9wx+3KP5M42mBTmRnxmCfbFzEY9lbjB63G
+         Weyg==
+X-Gm-Message-State: ANhLgQ2x3J8XmIBk9wP2mqftms4VBrQrcx1cEditjXG36W/wiChh/Xm0
+        kXBRydex/Vp+WsXJCT85tXA=
+X-Google-Smtp-Source: ADFU+vuIJBh70Otd4fILE2e+dqN3YxFo09aCCJYbQPKmRh8Kj1efsqpVmSl0JkK7bkpITDRiLc1OOg==
+X-Received: by 2002:ad4:5427:: with SMTP id g7mr694573qvt.23.1585093790911;
+        Tue, 24 Mar 2020 16:49:50 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d25sm13238573qtj.86.2020.03.24.16.49.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 16:49:50 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 24 Mar 2020 19:49:48 -0400
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Borislav Petkov <bp@alien8.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+Message-ID: <20200324234947.GA3373941@rani.riverdale.lan>
+References: <20200323204454.GA2611336@zx2c4.com>
+ <202003231350.7D35351@keescook>
+ <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+ <20200324091437.GB22931@zn.tnic>
+ <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
+ <20200324162843.GE22931@zn.tnic>
+ <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
+ <20200324164812.GG22931@zn.tnic>
+ <20200324214204.GB3220053@rani.riverdale.lan>
+ <CAHk-=wiFfi8J+vMccQ5VYZMecxyAeA9Cpt-Kui-GHZBbB29OhA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CAHk-=wiFfi8J+vMccQ5VYZMecxyAeA9Cpt-Kui-GHZBbB29OhA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:26:00PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Tue, Mar 24, 2020 at 03:14:38PM -0700, Linus Torvalds wrote:
+> On Tue, Mar 24, 2020 at 2:42 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > This is just a documentation patch right?
 > 
-> If hotplug is supported, during DPC event, hotplug
-> driver would remove the affected devices and detach
-> the drivers on DLLSC link down event and will
-> re-enumerate it once the DPC recovery is handled
-> and link comes back online (on DLLSC LINK up event).
-> Hence we don't depend on .mmio_enabled or .slot_reset
-> callbacks in error recovery handler to restore the
-> device.
+> That patch, yes.
 > 
-> But if hotplug is not supported/enabled, then we need
-> to let the error recovery handler attempt
-> the recovery of the devices using slot reset.
+> However, there's a second patch that knows that if we have binutils >=
+> 2.22, then we don't need to check for AVX2 or ADX support, because we
+> know it's there.
 > 
-> So if hotplug is not supported, then instead of
-> returning PCI_ERS_RESULT_RECOVERED, return
-> PCI_ERS_RESULT_NEED_RESET.
-> 
-> Also modify the way error recovery handler processes
-> the recovery value.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pcie/dpc.c | 8 ++++++++
->  drivers/pci/pcie/err.c | 5 +++--
->  2 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index e06f42f58d3d..0e356ed0d73f 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -13,6 +13,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/init.h>
->  #include <linux/pci.h>
-> +#include <linux/pci_hotplug.h>
->  
->  #include "portdrv.h"
->  #include "../pci.h"
-> @@ -144,6 +145,13 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
->  	if (!pcie_wait_for_link(pdev, true))
->  		return PCI_ERS_RESULT_DISCONNECT;
->  
-> +	/*
-> +	 * If hotplug is not supported/enabled then let the device
-> +	 * recover using slot reset.
-> +	 */
-> +	if (!hotplug_is_native(pdev))
-> +		return PCI_ERS_RESULT_NEED_RESET;
+>            Linus
 
-I don't understand why hotplug is relevant here.  This path
-(dpc_reset_link()) is only used for downstream ports that support DPC.
-DPC has already disabled the link, which resets everything below the
-port, regardless of whether the port supports hotplug.
+Ok. But if you're otherwise ok taking those AVX2/ADX patches for 5.7, as
+noted in my other email [1], the x86 build has been broken with
+binutils <= 2.22 since v5.3.
 
-I do see that PCI_ERS_RESULT_NEED_RESET seems to promise a lot more
-than it actually *does*.  The doc (pci-error-recovery.rst) says
-.error_detected() can return PCI_ERS_RESULT_NEED_RESET to *request* a
-slot reset.  But if that happens, pcie_do_recovery() doesn't do a
-reset at all.  It calls the driver's .slot_reset() method, which tells
-the driver "we've reset your device; please re-initialize the
-hardware."
-
-I guess this abuses PCI_ERS_RESULT_NEED_RESET by taking advantage of
-that implementation deficiency in pcie_do_recovery(): we know the
-downstream devices have already been reset via DPC, and returning
-PCI_ERS_RESULT_NEED_RESET means we'll call .slot_reset() to tell the
-driver about that reset.
-
-I can see how this achieves the desired result, but if/when we fix
-pcie_do_recovery() to actually *do* the reset promised by
-PCI_ERS_RESULT_NEED_RESET, we will be doing *two* resets: the first
-via DPC and a second via whatever slot reset mechanism
-pcie_do_recovery() would use.
-
-So I guess the real issue (as you allude to in the commit log) is that
-we rely on hotplug to unbind/rebind the driver, and without hotplug we
-need to at least tell the driver the device was reset.
-
-I'll try to expand the comment here so it reminds me what's going on
-when we have to look at this again :)  Let me know if I'm on the right
-track.
-
->  	return PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index 1ac57e9e1e71..6e52591a4722 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -178,7 +178,8 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
->  		return PCI_ERS_RESULT_DISCONNECT;
->  	}
->  
-> -	if (status != PCI_ERS_RESULT_RECOVERED) {
-> +	if ((status != PCI_ERS_RESULT_RECOVERED) &&
-> +	    (status != PCI_ERS_RESULT_NEED_RESET)) {
->  		pci_printk(KERN_DEBUG, dev, "link reset at upstream device %s failed\n",
->  			pci_name(dev));
->  		return PCI_ERS_RESULT_DISCONNECT;
-> @@ -206,7 +207,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  	if (state == pci_channel_io_frozen) {
->  		pci_walk_bus(bus, report_frozen_detected, &status);
->  		status = reset_link(dev, service);
-> -		if (status != PCI_ERS_RESULT_RECOVERED)
-> +		if (status == PCI_ERS_RESULT_DISCONNECT)
->  			goto failed;
->  	} else {
->  		pci_walk_bus(bus, report_normal_detected, &status);
-> -- 
-> 2.17.1
-> 
+[1] https://lore.kernel.org/lkml/20200324220147.GA3253486@rani.riverdale.lan/
