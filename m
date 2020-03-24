@@ -2,52 +2,52 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F135C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18D47C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357B8208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E23BB208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056216;
-	bh=oEOJMqvdsCj6GYOHbmui3Nl1PCCd6blChJqMhhQrgQI=;
+	s=default; t=1585056218;
+	bh=AL7hoBSzUmkmWDlkQMwp9cp9Ui5kceVTauOdV7/oyJ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pyTOH4bRrFsD4OsxtnCglU2modpoAPlBoyjip5OxJzj6JoMgF7svyfCtoay/bEzwJ
-	 dkxW/Fdw2n/Ncm+8rkW3dwI2T7wdxgHYkfzS567H87NVvUU8RwMQM8INMTa6/QC7YV
-	 GM1uUqvG0OKZUYwubf60nNCdTtetP54HdAiLOG50=
+	b=dF/BWogbZZseiYm8PdZZzY6z6dNbHGuABApTe12NdUjSW6rgvbWty+J2A+BZ5CRAX
+	 lATuKlPY+uIEUmWTUEUvW3Wl5HjpJEMNjukuwWZ2ZfPctHSZ/2vfiRI0pG2mr96bd/
+	 Uyx5bjN6zcNeCl6odaRWkkvpz9Dw0rFDuogp0RbE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgCXNXe (ORCPT
+        id S1729175AbgCXNXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46618 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:23:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729422AbgCXNXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:23:32 -0400
+        id S1728899AbgCXNXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:23:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 419E9208D6;
-        Tue, 24 Mar 2020 13:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D12EA208DB;
+        Tue, 24 Mar 2020 13:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056211;
-        bh=oEOJMqvdsCj6GYOHbmui3Nl1PCCd6blChJqMhhQrgQI=;
+        s=default; t=1585056214;
+        bh=AL7hoBSzUmkmWDlkQMwp9cp9Ui5kceVTauOdV7/oyJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hDqnbOutvaSlsdMx4DqAcP/yehHB8EdL6JxTi8s8/Rk88t0ARyviatYWw4ESds9Hj
-         0JYlfDoYYPaoUQwzQRTLIhDF6Cs7lVue0g/b1lIOYhguLKTL40cfclcI30nWq290Ck
-         K+F2ClLv3DOLWN1qYVkC/I2n+ytdSc20rrPGvy/o=
+        b=ivJ4EKDpV2dBPkT87sSzBtlBzydmitc6+zCZb5dXMkhCMYFz4kuwBfEakGnOyV/DM
+         Sa44P8krb1hNyZS4YMcnl+uY3JkOvTAt7I8DH2ZjNLjtJxKJLFAgQIft+xSNqv4S1Z
+         uUS2ebIJeIDm9rwK12k7EASSg4uZY39VN/A0rdmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Todd Kjos <tkjos@google.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 040/119] binderfs: use refcount for binder control devices too
-Date:   Tue, 24 Mar 2020 14:10:25 +0100
-Message-Id: <20200324130812.380720407@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 058/119] ALSA: pcm: oss: Avoid plugin buffer overflow
+Date:   Tue, 24 Mar 2020 14:10:43 +0100
+Message-Id: <20200324130814.025319543@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,55 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 211b64e4b5b6bd5fdc19cd525c2cc9a90e6b0ec9 ]
+commit f2ecf903ef06eb1bbbfa969db9889643d487e73a upstream.
 
-Binderfs binder-control devices are cleaned up via binderfs_evict_inode
-too() which will use refcount_dec_and_test(). However, we missed to set
-the refcount for binderfs binder-control devices and so we underflowed
-when the binderfs instance got unmounted. Pretty obvious oversight and
-should have been part of the more general UAF fix. The good news is that
-having test cases (suprisingly) helps.
+Each OSS PCM plugins allocate its internal buffer per pre-calculation
+of the max buffer size through the chain of plugins (calling
+src_frames and dst_frames callbacks).  This works for most plugins,
+but the rate plugin might behave incorrectly.  The calculation in the
+rate plugin involves with the fractional position, i.e. it may vary
+depending on the input position.  Since the buffer size
+pre-calculation is always done with the offset zero, it may return a
+shorter size than it might be; this may result in the out-of-bound
+access as spotted by fuzzer.
 
-Technically, we could detect that we're about to cleanup the
-binder-control dentry in binderfs_evict_inode() and then simply clean it
-up. But that makes the assumption that the binder driver itself will
-never make use of a binderfs binder-control device after the binderfs
-instance it belongs to has been unmounted and the superblock for it been
-destroyed. While it is unlikely to ever come to this let's be on the
-safe side. Performance-wise this also really doesn't matter since the
-binder-control device is only every really when creating the binderfs
-filesystem or creating additional binder devices. Both operations are
-pretty rare.
+This patch addresses those possible buffer overflow accesses by simply
+setting the upper limit per the given buffer size for each plugin
+before src_frames() and after dst_frames() calls.
 
-Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-Link: https://lore.kernel.org/r/CA+G9fYusdfg7PMfC9Xce-xLT7NiyKSbgojpK35GOm=Pf9jXXrA@mail.gmail.com
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Todd Kjos <tkjos@google.com>
-Link: https://lore.kernel.org/r/20200311105309.1742827-1-christian.brauner@ubuntu.com
+Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
+Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/android/binderfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/core/oss/pcm_plugin.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index 110e41f920c27..f303106b3362b 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -448,6 +448,7 @@ static int binderfs_binder_ctl_create(struct super_block *sb)
- 	inode->i_uid = info->root_uid;
- 	inode->i_gid = info->root_gid;
- 
-+	refcount_set(&device->ref, 1);
- 	device->binderfs_inode = inode;
- 	device->miscdev.minor = minor;
- 
--- 
-2.20.1
-
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin && drv_frames > 0) {
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames)
+ 				drv_frames = plugin->src_frames(plugin, drv_frames);
+@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_si
+ 			plugin_next = plugin->next;
+ 			if (plugin->dst_frames)
+ 				drv_frames = plugin->dst_frames(plugin, drv_frames);
++			if (drv_frames > plugin->buf_frames)
++				drv_frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else
+@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_siz
+ 				if (frames < 0)
+ 					return frames;
+ 			}
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin = plugin_next;
+ 		}
+ 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
+ 		plugin = snd_pcm_plug_last(plug);
+ 		while (plugin) {
++			if (frames > plugin->buf_frames)
++				frames = plugin->buf_frames;
+ 			plugin_prev = plugin->prev;
+ 			if (plugin->src_frames) {
+ 				frames = plugin->src_frames(plugin, frames);
 
 
