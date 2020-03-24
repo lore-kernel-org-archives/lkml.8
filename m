@@ -2,95 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B547EC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645DBC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D64C20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SspgN/eS"
+	by mail.kernel.org (Postfix) with ESMTP id 38A2C206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585068484;
+	bh=PNu1cBEwyzzfPoT37OV9ratEn1KWxSdUE0FieGmawyY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LpxIeXtxybjrZ7brL621mJYkLqp6U6kYrMF+to7RZmZ9HaX0V0zTUU9wXgjrLwH3s
+	 qd16HM2r3y+eikTQaMAAL/4viwCzWIlROrgITEIH7IrFpThnT8iSyHZgOvP9jBIJwx
+	 IfBZEJQIAsxWbCosWm2xVUNH+Z7Xr50bjLD1nVNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgCXQrU (ORCPT
+        id S1728076AbgCXQsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:47:20 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54917 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727065AbgCXQrU (ORCPT
+        Tue, 24 Mar 2020 12:48:03 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:45387 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbgCXQsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:47:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585068439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mam0WR1HiPsEyv0fa7dCXxsiI1zo2JaAd8tLMKwZM84=;
-        b=SspgN/eSL5wcfmuZVBpLnTm/h5GXNF2tS1CJagrZtpPTDk34YOHfNXqEIE2fcUBCk9wFe2
-        D46Th64M8FCuT5UKEClM1CDlAxNWz1xbsidnIo2GPDkM7cCustEd6sZ9JsGWdqlJUFwDVd
-        fILR7E8ezA0Aga7Y3NHbKsd25k/NKyA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-60-6o_Gt0a5ObepHe7A6CD7Fg-1; Tue, 24 Mar 2020 12:47:13 -0400
-X-MC-Unique: 6o_Gt0a5ObepHe7A6CD7Fg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC9B38017CC;
-        Tue, 24 Mar 2020 16:47:12 +0000 (UTC)
-Received: from treble (unknown [10.10.119.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C16C619C6A;
-        Tue, 24 Mar 2020 16:47:11 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 11:47:09 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: linux-next: Tree for Mar 20 (objtool warnings)
-Message-ID: <20200324164709.ux4riz7v7uy32nlj@treble>
-References: <20200320201539.3a3a8640@canb.auug.org.au>
- <ca0078e2-89b5-09a7-f61e-7f2906900622@infradead.org>
+        Tue, 24 Mar 2020 12:48:02 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02OGljW1002189
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:47:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02OGljW1002189
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585068466;
+        bh=4nGjHOPn1Qdp00y4tfz/8sjCtUPREPQ1cB4wp92G+Go=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=i+xU4e061XbZEPioDSUPsgzKIthqclxHFXo1j4yUVASbGKS00sS7mN0dbzrlGZuIT
+         Lt0PpDUtLZTV8hf9V6BjXNlOFvFgkhbMet/YSVVWckEHGB0UQufM5duFUonjXRS8ow
+         KBrxmwNE1qLHzzuP5IlOmGGOMl1C5mamEQvoasTI/ymMnvAn6LKbVcuv9RuIrPvjJd
+         vbSIflnmVZQnwvKt4iOar5Fu3KG2odXAsxVtC5HNWvxsybPPmadBqTSsjfGnw0zc6O
+         851IfrugrDZNwwEc/UN4yvqy8IeqPayxY2mscJBiYfCTs1jcJkPx2okN4fgnZyFutL
+         Aa1jHd1z4T+zA==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id a6so1716040uao.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:47:46 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1+M4G0TFdcmPLmIQ44m6OogWZE6Syor4Tywwok9oB3cFSLnIoR
+        DQ6/u5TH45MmD2SOPcr7Nm74H1z/F3z5DIU0Xgg=
+X-Google-Smtp-Source: ADFU+vtGiho80TDqAX96Yus6mxMxFu6xRjT221tw+EdgnOczkcdQo8Ti4tq0HKei8/xRnz73F3jsLDM/saoD+O6lBls=
+X-Received: by 2002:a9f:32da:: with SMTP id f26mr18821086uac.40.1585068464826;
+ Tue, 24 Mar 2020 09:47:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ca0078e2-89b5-09a7-f61e-7f2906900622@infradead.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20200213153928.28407-1-masahiroy@kernel.org>
+In-Reply-To: <20200213153928.28407-1-masahiroy@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 01:47:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
+Message-ID: <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] drm/radeon: remove unneeded header include path
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?B?Q2hyaXN0aWFuIEvvv73vv73Dk25pZw==?= 
+        <christian.koenig@amd.com>, David Zhou <David1.Zhou@amd.com>,
+        amd-gfx@lists.freedesktop.org
+Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 10:43:05AM -0700, Randy Dunlap wrote:
-> On 3/20/20 2:15 AM, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200319:
-> > 
-> 
-> 
-> Today's linux-next gives these objtool warnings:
-> 
-> arch/x86/entry/vdso/vma.o: warning: objtool: vdso_fault()+0x201: unreachable instruction
-> 
-> drivers/ide/ide-tape.o: warning: objtool: idetape_chrdev_release()+0x109: unreachable instruction
-> 
-> drivers/media/i2c/ir-kbd-i2c.o: warning: objtool: ir_probe()+0xdaa: unreachable instruction
-> 
-> kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0x89: call to __ubsan_handle_load_invalid_value() with UACCESS enabled
-> 
-> 
-> all in (4) separate builds (.configs).
-> Do you want all 4 randconfig files?
+Hi,
 
-For the "unreachable instruction" warnings, if the configs have
-CONFIG_UBSAN_TRAP, that's a known issue.
+I think this series is a good clean-up.
 
-Otherwise, yeah, configs (and .o files if possible) would be good.
+Could you take a look at this please?
 
--- 
-Josh
 
+
+On Fri, Feb 14, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> A header include path without $(srctree)/ is suspicious because it does
+> not work with O= builds.
+>
+> You can build drivers/gpu/drm/radeon/ without this include path.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  drivers/gpu/drm/radeon/Makefile | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/radeon/Makefile b/drivers/gpu/drm/radeon/Makefile
+> index c693b2ca0329..9d5d3dc1011f 100644
+> --- a/drivers/gpu/drm/radeon/Makefile
+> +++ b/drivers/gpu/drm/radeon/Makefile
+> @@ -3,8 +3,6 @@
+>  # Makefile for the drm device driver.  This driver provides support for the
+>  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+>
+> -ccflags-y := -Idrivers/gpu/drm/amd/include
+> -
+>  hostprogs := mkregtable
+>  clean-files := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
+>
+> --
+> 2.17.1
+>
+
+
+--
+Best Regards
+Masahiro Yamada
