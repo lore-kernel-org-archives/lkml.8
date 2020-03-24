@@ -2,193 +2,137 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A95C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88069C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FFF22080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A0B2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:30:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NTK8kBzw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eD7IEbsq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgCXW3K (ORCPT
+        id S1728407AbgCXWaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:29:10 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:43386 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728184AbgCXW3K (ORCPT
+        Tue, 24 Mar 2020 18:30:00 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:34504 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728094AbgCXWaA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:29:10 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200324222907epoutp03b8738b0c8168366f595c376665e685be~-Xf-jOK6C2667226672epoutp03M
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 22:29:07 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200324222907epoutp03b8738b0c8168366f595c376665e685be~-Xf-jOK6C2667226672epoutp03M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1585088947;
-        bh=Nx1yBUUy5HsYqeDfSoeruzmyY780DIbR3vsGN0YWcNk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=NTK8kBzw2O7Z5RjzXzkGr8bCgf1lecEiNni3zpcCgcnt+EQrgBAUCOJR0k3J/m0K0
-         kVhuhhoo1pyt2jpXP92Q0ySCp8Go2Xlk+qy+gOXebwrzwzlxu7ZKoYjPAvrLlejiRW
-         oS8JN+kcctg/ocTFvDKMR4EpnO+dot2hqYZoBW+o=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200324222907epcas1p3bd1ca82cc2fc87f328d9c555e6240ad6~-Xf-IzWAM1889418894epcas1p3R;
-        Tue, 24 Mar 2020 22:29:07 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.156]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 48n5Wh5sCKzMqYkW; Tue, 24 Mar
-        2020 22:29:04 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        16.4B.04071.0B98A7E5; Wed, 25 Mar 2020 07:29:04 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200324222903epcas1p241bb9a19d8e75e784c6f7dcd4214b24b~-Xf8NzcDG0883108831epcas1p2O;
-        Tue, 24 Mar 2020 22:29:03 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200324222903epsmtrp27fd01daea93f40c2c6e6da95bdd5b427~-Xf8NDc-E3079530795epsmtrp2c;
-        Tue, 24 Mar 2020 22:29:03 +0000 (GMT)
-X-AuditID: b6c32a37-7afff70000000fe7-a3-5e7a89b0627f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4B.8E.04158.FA98A7E5; Wed, 25 Mar 2020 07:29:03 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200324222903epsmtip13cc70bfe80a456013b5f396cb8a161e3~-Xf8GJX7f0788207882epsmtip1-;
-        Tue, 24 Mar 2020 22:29:03 +0000 (GMT)
-Subject: Re: [PATCH resend] extcon: axp288: Add wakeup support
-To:     Hans de Goede <hdegoede@redhat.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <cf0700cf-caed-0451-f8ba-b536e01488f6@samsung.com>
-Date:   Wed, 25 Mar 2020 07:37:59 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 24 Mar 2020 18:30:00 -0400
+Received: by mail-pj1-f68.google.com with SMTP id q16so1631848pje.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=x05q+wZ49/Pk/12UuvPipPbvrgDmK5ko/9El70Dqc1M=;
+        b=eD7IEbsqdA0EdD/6H0QwiA/EGsrPJQdYtlFQOYWrSXBeyMN9bdTuHuyh78rgG+fjJD
+         RKHRKGzqUKPoVTAif9N3I9MkyPKkLfXwYHfzMim9KbX49SAKChtq9cA02yLbhhJVMswK
+         C+XVNeiczmeyWyLeUcXOgujZLRCrOOr8aanHD7I/LIr6onAKDYUaZRtQcxR0bavT+YWF
+         XERP/n/kscfA1xMEQSJAxB6s9qxNL7rDfCleVkgBpXTEtjApSHAjPTn3NsQ82Qbvr9se
+         8MOIqcSd6XW5bv83I5CIFkYtg3GAMKP7Dd4qIIklG7oiA08EqbBv72t1lHlKJMtuUFi6
+         f84Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=x05q+wZ49/Pk/12UuvPipPbvrgDmK5ko/9El70Dqc1M=;
+        b=JFykygR2U8dhSfRB61ibLunKTwJyl4ZnVXwXCBJUUGt7XURKYnU946Jj8wUur3i8po
+         6FTTlHS+YkJvRdDUdzfnvM11UPRso7xaFvS9WMQCwM26AiFOkHPRz9q8UDxp/VEtzg+p
+         wh9HmtwkfmJC408ln6TeA8sApcMjCnJehajjEDX4I9jbzuKwTwZwqM4DFJLD4hD4Bi0f
+         Jug4rRssnq/UbbX3p+pwpmcAxPgRhwRtUltOy2W+y8xUGWXZ2cSJOyhlVZDazJYX531W
+         ZQBJfjTwdQ/ktXOVNfU6gncBvlZmaDnBMaYYLVPu23fGfRekGK6s7UKUHOcmmtmGHc91
+         IsXQ==
+X-Gm-Message-State: ANhLgQ0bfFggiuGhQgCf9aiwu0Ww7NS2bbJ58P95H7+E7dyTwGy59WT4
+        zIc5G08dyHq4rcALfJ9Q0/g=
+X-Google-Smtp-Source: ADFU+vtt1BEGsdHYbjJjJk3uLa12ICwoXGAunw/Rg1kDwGKfpOgAvQ3Tj2ZqDRVSYJ09FKBu2mN/OQ==
+X-Received: by 2002:a17:902:7886:: with SMTP id q6mr216928pll.237.1585088999126;
+        Tue, 24 Mar 2020 15:29:59 -0700 (PDT)
+Received: from Gentoo ([103.231.90.172])
+        by smtp.gmail.com with ESMTPSA id m13sm3101250pjq.26.2020.03.24.15.29.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 15:29:58 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 03:59:46 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     linux@leemhuis.info, rdunlap@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] rearrange the output text, cosmetic changes
+Message-ID: <20200324222943.GA18504@Gentoo>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Joe Perches <joe@perches.com>, linux@leemhuis.info,
+        rdunlap@infradead.org, linux-kernel@vger.kernel.org
+References: <20200324084513.18237-1-unixbhaskar@gmail.com>
+ <fb5a17c67f504f5761069ee446cc1b703dd8b54f.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <20200323215939.79008-1-hdegoede@redhat.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm29mOR2l6nGlv+1HzSJSK5nHOjpISZLHIQAj6IbF1mJ+buJs7
-        UzIJNCKvSRJZahfByktIOuelwgwviUUWSBcVJbSrqZVSGSG0eYz897zv+zzf8z3f91KEoppU
-        UllWJ3ZYeTND+km7BsKjo9pKT+liXC6Wmx++LOHG7l8lucmiJpKrb59B3O/+55J9Mm3bzB2Z
-        9uvDl6S20t2CtMuubWnS9Oy9JsxnYIcKWw22jCyrMYk5fFS/X6+Jj2Gj2ARuD6Oy8hacxKSk
-        pkUdzDJ7fBlVHm/O9bTSeEFgdifvddhynVhlsgnOJAbbM8z2BHu0wFuEXKsx2mCzJLIxMbEa
-        D/FEtqnmZgdpHww8+evJDVSIqv3LkC8FdBycr3sgLUN+lILuQdD4uAOJxRKCuqGx9eInghdz
-        85J/kiH3Nx9x0Ivgs/stKRZfEVS2dhJeVhCdDMVXZtcUm2k7FK10eUgURdAcFPdpvG2SjoC+
-        T29ILw6gQ+HlyizyYrlHWvdsQebFUnoHzFyeWDsmmD4GI11n1zmBMFLzTurFvnQCNLYOrJ1D
-        0Ftg4t0NiYi3Q/fCVcJ7N6AnSXjfMYrEBClQU7qyniYI5obdPiJWwvJiLyniAmgeGSRFcQkC
-        d98LmThQQ9+tixIxTDjcvb9bbIfCvT/XkGjsD4s/KmReCtByKDmnEClhMPZ2at12KzQUl5IX
-        EFO7IU7thgi1GyLU/jerR9IWFILtgsWIBdau3vjbLrS2kxF7elDbaGo/oinEbJIXzubrFDI+
-        T8i39COgCGazvAOf1CnkGXz+Keyw6R25Ziz0I43ntasIZbDB5tlwq1PPamLVajUXx8ZrWJbZ
-        Ir/02qxT0EbeibMxtmPHP52E8lUWoiDtxKg+kU2KHA9aamLrF12WsO/pxe0543OhyurTZX4h
-        JqJLd9y/c7Q8X1h1fqhsnOZTbmduLeAnrifS1c2PKqZ8JxtWu1sP1O1a2hl8RpUzbfgY1/jF
-        aijLuViQ57PqxzeUDyDjkfRM/0UccKCos+oQcY+L8on882ryaWBOLCMVTDwbQTgE/i/JF3ED
-        qQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPLMWRmVeSWpSXmKPExsWy7bCSnO76zqo4g7enjS3eHJ/OZHF51xw2
-        i9uNK9gsFmx8xGjx89B5JgdWjw2PVrN6vN93lc2jb8sqRo/Pm+QCWKK4bFJSczLLUov07RK4
-        MmYu2cxWcESw4vup+YwNjNP4uhg5OSQETCSObvnA3sXIxSEksJtR4v7hD6wQCUmJaRePMncx
-        cgDZwhKHDxdD1LxllNg2Yy8zSI2wgJ1E+4zHTCA1IgIFEn3fKkFMZgELifb9phDlPYwSbz6+
-        AytnE9CS2P/iBhuIzS+gKHH1x2NGEJsXaMzss2/B1rIIqEo8mn6LCcQWFQiT2LnkMRNEjaDE
-        yZlPWEBsTgFLieVrD4PNYRZQl/gz7xIzhC0ucevJfCYIW15i+9s5zBMYhWchaZ+FpGUWkpZZ
-        SFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIjhYtrR2MJ07EH2IU4GBU4uHV
-        eFgZJ8SaWFZcmXuIUYKDWUmEd3NqRZwQb0piZVVqUX58UWlOavEhRmkOFiVxXvn8Y5FCAumJ
-        JanZqakFqUUwWSYOTqkGRqUwq7Uyl76zz9hoeHDZt8oHv/hXMpR6HPs0oSEvuXHth5z+G78Z
-        LjqZSWeunrtHZlP2kU0CpXX6H+zVbkTJp9+fl3aJK6X6zMnp6zJq/v5XP5Dgw/ZPM/Duuk8J
-        jyqd039WH1Np/8vCpBjQtvDx2lpTAb97zIEMyU+fW3tmZdwMapsyZ42gmxJLcUaioRZzUXEi
-        AI3B2a6SAgAA
-X-CMS-MailID: 20200324222903epcas1p241bb9a19d8e75e784c6f7dcd4214b24b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200323215949epcas1p33af2bba09c458dd09ed22e3de200955a
-References: <CGME20200323215949epcas1p33af2bba09c458dd09ed22e3de200955a@epcas1p3.samsung.com>
-        <20200323215939.79008-1-hdegoede@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
+Content-Disposition: inline
+In-Reply-To: <fb5a17c67f504f5761069ee446cc1b703dd8b54f.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 6:59 AM, Hans de Goede wrote:
-> On devices with an AXP288, we need to wakeup from suspend when a charger
-> is plugged in, so that we can do charger-type detection and so that the
-> axp288-charger driver, which listens for our extcon events, can configure
-> the input-current-limit accordingly.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/extcon/extcon-axp288.c | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp288.c
-> index a7f216191493..710a3bb66e95 100644
-> --- a/drivers/extcon/extcon-axp288.c
-> +++ b/drivers/extcon/extcon-axp288.c
-> @@ -443,9 +443,40 @@ static int axp288_extcon_probe(struct platform_device *pdev)
->  	/* Start charger cable type detection */
->  	axp288_extcon_enable(info);
->  
-> +	device_init_wakeup(dev, true);
-> +	platform_set_drvdata(pdev, info);
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused axp288_extcon_suspend(struct device *dev)
-> +{
-> +	struct axp288_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +	if (device_may_wakeup(dev))
-> +		enable_irq_wake(info->irq[VBUS_RISING_IRQ]);
-> +
->  	return 0;
->  }
->  
-> +static int __maybe_unused axp288_extcon_resume(struct device *dev)
-> +{
-> +	struct axp288_extcon_info *info = dev_get_drvdata(dev);
-> +
-> +	/*
-> +	 * Wakeup when a charger is connected to do charger-type
-> +	 * connection and generate an extcon event which makes the
-> +	 * axp288 charger driver set the input current limit.
-> +	 */
-> +	if (device_may_wakeup(dev))
-> +		disable_irq_wake(info->irq[VBUS_RISING_IRQ]);
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(axp288_extcon_pm_ops, axp288_extcon_suspend,
-> +			 axp288_extcon_resume);
-> +
->  static const struct platform_device_id axp288_extcon_table[] = {
->  	{ .name = "axp288_extcon" },
->  	{},
-> @@ -457,6 +488,7 @@ static struct platform_driver axp288_extcon_driver = {
->  	.id_table = axp288_extcon_table,
->  	.driver = {
->  		.name = "axp288_extcon",
-> +		.pm = &axp288_extcon_pm_ops,
->  	},
->  };
->  
-> 
 
-Applied it. Thanks.
+--C7zPtVaVf+AK4Oqc
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On 08:15 Tue 24 Mar 2020, Joe Perches wrote:
+>On Tue, 2020-03-24 at 14:15 +0530, Bhaskar Chowdhury wrote:
+>> As the subject like says, purely cosmetic changes to read cleanly.
+>> Jumbled up the line.
+>
+>Subject line should show tools or kernel-chktaint
+>
+>and:
+>
+>> diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-ch=
+ktaint
+>[]
+>> @@ -195,8 +195,9 @@ else
+>>  	echo " * kernel was built with the struct randomization plugin (#17)"
+>>  fi
+>>=20
+>> -echo "For a more detailed explanation of the various taint flags see"
+>> -echo " Documentation/admin-guide/tainted-kernels.rst in the the Linux k=
+ernel sources"
+>> -echo " or https://kernel.org/doc/html/latest/admin-guide/tainted-kernel=
+s.html"
+>>  echo "Raw taint value as int/string: $taint/'$out'"
+>> +echo
+>> +echo "For a more detailed explanation of the various taint flags see be=
+low pointers:"
+>> +echo "1) Documentation/admin-guide/tainted-kernels.rst in  the Linux ke=
+rnel sources"
+>
+>One extra space between "in  the"
+>
+>
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Thanks, Joe ...fixing! next patch should have fixed them.
+
+--C7zPtVaVf+AK4Oqc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl56idQACgkQsjqdtxFL
+KRU+FQgA0vWZXAC46/cFThHhqi3APYLNXvP1Za3YAOM6bPABw4++toTOsXlD+Bf0
+ezijTIc6cqeU8nQaiyQRjh4k3JQ0p6PAL53+Syqip4su+y3CoTSKg23o4r6S/hGi
+79zwSZWu0MZxIskiL25P+66QUOMM/AiLMNkibU7+MtPPEtB5xNVLmt/vepmXAtyy
+NQ9H9pP7I31d08Zjs3dwXuqo/rl36EEagQ1YfQ0LE34PqVR+PlVv5GE9t+ZSDwWH
+pYDcLwobvsfuMM60skTqS3w0GVxwctuSUjRtcg0UBnyqrLVUeLn+YZn8voYyvZWZ
+lV1YZ0oqOyfbVVEglxsnxslukJhj7Q==
+=aKGe
+-----END PGP SIGNATURE-----
+
+--C7zPtVaVf+AK4Oqc--
