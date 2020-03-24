@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B6CEC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12852C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 419392098B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6AB120936
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055524;
-	bh=54Z3IOKPM0nkcNth/I4oXAr63XpSif6SnvZmDt9Fi5Q=;
+	s=default; t=1585055526;
+	bh=RU0Lq8UlK/cuo32sdGpDmu2ST0CReyarNIWqqjH87Vw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EAUd3lDDic+VaHthZFYaIifEo6KOhWrj2+Rs6DYJwwYLnryEaK9MUn5UV8p+wZqeo
-	 SnAxywsqEeEbBcf3A5MWn/2ciqyMCneqwdvt2PXytgVwm34R53pejzWEJUMtiMc8nz
-	 Cq1dg82aGzkCQLObonrFdieJpECyLz0Q/A+5+PNk=
+	b=WDot5DR7cG5TR1qLn0N2RPwcHwgf44MF8itGTSIvL3JJcfmJiVfOg8gKbXWGe/vZd
+	 shpcnQo7t20xrwDXX1f2UW+lZogOxJ7ltS2FOmLzD2c5mgZwq6HLrT1P7flbT7BjgY
+	 GLOgVVgUvoVKmepNfvWrPFnsUn2DXB6UWS1a7ZZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCXNMD (ORCPT
+        id S1727480AbgCXNMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:12:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57466 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbgCXNMB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:12:01 -0400
+        id S1727453AbgCXNMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 244D2208D6;
-        Tue, 24 Mar 2020 13:11:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6E19208E4;
+        Tue, 24 Mar 2020 13:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055520;
-        bh=54Z3IOKPM0nkcNth/I4oXAr63XpSif6SnvZmDt9Fi5Q=;
+        s=default; t=1585055523;
+        bh=RU0Lq8UlK/cuo32sdGpDmu2ST0CReyarNIWqqjH87Vw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=myqAi8y5CcHo6kRH3gyU2p2xbJB0VC1uUMM96ECPWT3tQf+YD/3NTiJDcfwSZFoDn
-         x0LluwOaZiu7/JtOPCdkOfczpJtsdrZWuRCbclnQc9az3nrlxHTRjuakUINOQRI1xR
-         msn4sy5hWw/5UBL7eECMtwhTmP7lPcO6XMdb0GtM=
+        b=LY/92bSAh7GTDR0Tb2KEArnCv9yOlEzlaNHP1v2R0nEHTtywz89/T7FxxafYmLAuE
+         I2tgqZrWdaWxmW4MuJ9/j+hydq9fVyv2+tgvqe7ZrmFpf9NzbQrHm1CHCA6cGgJ00/
+         7RaAmk0HnT2fvc7pbfQKpqM6dDweJVWcdCwg1EeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 03/65] powerpc: Include .BTF section
-Date:   Tue, 24 Mar 2020 14:10:24 +0100
-Message-Id: <20200324130757.172126709@linuxfoundation.org>
+Subject: [PATCH 4.19 04/65] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+Date:   Tue, 24 Mar 2020 14:10:25 +0100
+Message-Id: <20200324130757.271872621@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -61,40 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-[ Upstream commit cb0cc635c7a9fa8a3a0f75d4d896721819c63add ]
+[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
 
-Selecting CONFIG_DEBUG_INFO_BTF results in the below warning from ld:
-  ld: warning: orphan section `.BTF' from `.btf.vmlinux.bin.o' being placed in section `.BTF'
+'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
+devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
+has RAM above 32-bit boundary (accessible with LPAE config) though the
+PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
+property in PCIe RC DT nodes to indicate the host bridge can access
+only 32 bits.
 
-Include .BTF section in vmlinux explicitly to fix the same.
-
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200220113132.857132-1-naveen.n.rao@linux.vnet.ibm.com
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/vmlinux.lds.S | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/dra7.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index fd35eddf32669..d081d726ca8ea 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -322,6 +322,12 @@ SECTIONS
- 		*(.branch_lt)
- 	}
- 
-+#ifdef CONFIG_DEBUG_INFO_BTF
-+	.BTF : AT(ADDR(.BTF) - LOAD_OFFSET) {
-+		*(.BTF)
-+	}
-+#endif
-+
- 	.opd : AT(ADDR(.opd) - LOAD_OFFSET) {
- 		__start_opd = .;
- 		KEEP(*(.opd))
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 7ce24b282d421..c1ef3201950ae 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -324,6 +324,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
+@@ -376,6 +377,7 @@
+ 				device_type = "pci";
+ 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
+ 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
++				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+ 				bus-range = <0x00 0xff>;
+ 				#interrupt-cells = <1>;
+ 				num-lanes = <1>;
 -- 
 2.20.1
 
