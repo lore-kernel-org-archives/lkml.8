@@ -6,97 +6,79 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47999C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4928DC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB882076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6D020775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585070539;
-	bh=rPZNWgIqDJSdIGBhxAarYEhP+ICwAfgI9o9ldX+Ii+Y=;
+	s=default; t=1585070553;
+	bh=bp10Mc3LqwR+gWIk4APSHLbda5xk89sidknnuv0bdm8=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y/N67lXwPU8C/MqNT8ZnX1O5qry2P5M6DsASfWbYlxSTGxnXCLxr4tIxQxn0XFn+d
-	 OD2RtXEn1V4E0PTOTBQCSACJE5nYxFZxlWLZKqJDHsLbboA7sIVHNnyiiFnNhefsBW
-	 BE4jD0ugzGQXzgBj5vMGEOvYc2ee3LGQtYKH5Fo8=
+	b=czZVZPuO1WCYLLbUH+SGwasEMb9RwERoI0lJAITDrAOfR34qDoPYor97PWdL5+cOV
+	 2C8r3o1khFWeDWQeSfLqa3vAOU15LfxcZWvjGlcHyr1bBVb+CnRPtGlmt6OkFKe+5a
+	 U9I2NB9LErx4dWevJMSau8/0zAze9AeFlKnOTY0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727565AbgCXRWS (ORCPT
+        id S1727590AbgCXRWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:22:18 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:51052 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRWS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:22:18 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02OHM8hB027872;
-        Wed, 25 Mar 2020 02:22:08 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02OHM8hB027872
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585070529;
-        bh=bPCRwIwldAM4HwybdFdRYHiHqpgNqlDdX4WV8XKCpgQ=;
+        Tue, 24 Mar 2020 13:22:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54894 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727295AbgCXRWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:22:31 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A32A20789
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 17:22:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585070551;
+        bh=bp10Mc3LqwR+gWIk4APSHLbda5xk89sidknnuv0bdm8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=AAffemBMcj/pRI1GXSqDaRqeVNwXvSgGAJMx5lv0WUkBJKpxHMQEFBTQ0dSb77Th9
-         T/lQ+GowmCoBmXu38B/OVfdN0YCzrB3mzSJM3oGZa8d0WQjoGs70HLz8NIu2WXJZcs
-         E7W81ziHmBmRtUTjyDJ2qQVpf0aR8G3kQGjPxyZpxf7Buqhfkq9xH5p+VVCouwqSW3
-         JcxYssSq/v1DpR8KH3LS+FGPkl6DH+jKdw1xVaiPpLmu6GHcecjAn47x2SGZ3yJmvp
-         LMIpasWLGNKKsw5JHg5NblRyu1gd5qTxrZLTkxmoTX95kayf4As7oMIQ/99DjdU4Mh
-         WPjtDq4IqCNeQ==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id s10so3220589vsi.9;
-        Tue, 24 Mar 2020 10:22:08 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3iI96xpUmSzkHLCOxQaJ1liDtLFrKe2XoX0rTcCieB70Grg8Eb
-        vbxIPgG9glyydn5w3ive4YoH+iE7SARCXmYKYNA=
-X-Google-Smtp-Source: ADFU+vtUc5X8HF0cd25yHwBLsXgCCmhP5dTghG8L4rR7TJM9y01vynxbjz5/o6OhEUXD89jZqGHaOyPYng8JpiRE1WA=
-X-Received: by 2002:a67:8745:: with SMTP id j66mr19305626vsd.181.1585070522434;
- Tue, 24 Mar 2020 10:22:02 -0700 (PDT)
+        b=TARocf7sBQj7ls/goJ+3p5ExlEas9ycfg5RJCbV+92DNQHfVlzWvVimDS4HeaBGPs
+         tkl112VjpdagQn/Mu31TWqyw1dbyKL9lgcZC+CLxf7qFevo+LJc9PvtmNy877Lzjsu
+         TPfZuG2o/ZDDLl6uRIlc6SfxZth417m7SwFkCV9I=
+Received: by mail-wm1-f53.google.com with SMTP id 26so3022843wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:22:31 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0D8hkH/ns2fLSDSuW4H9MKI3rMpV6wf56WLR8nc8EwbANW7QOr
+        mOb6sVpCL/Kf2quZ8uw3Q9a6tl+/wLnfBmSNnSYpaw==
+X-Google-Smtp-Source: ADFU+vuTP/sjpgu7PiSnr/YVpY1CTTUfMjcZ1larcHyvpiup0Xp2j2NELmfyiILtE6gG1uE+GZo2Co4gWCOVGVBUaQA=
+X-Received: by 2002:a1c:f407:: with SMTP id z7mr6596789wma.36.1585070549715;
+ Tue, 24 Mar 2020 10:22:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-12-masahiroy@kernel.org>
- <CAKwvOdkj3dDNcbY4hwyManfviPdFoBooJJmFOAKL2YJCZNuhtA@mail.gmail.com> <CAHmME9pV93Zey2=XghxzThTHbZarFrnxwnGatXHyQjevPf7R=g@mail.gmail.com>
-In-Reply-To: <CAHmME9pV93Zey2=XghxzThTHbZarFrnxwnGatXHyQjevPf7R=g@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 25 Mar 2020 02:21:26 +0900
-X-Gmail-Original-Message-ID: <CAK7LNATV4GeDDYwecZWNH7xxikZjY2VFZ3EYgXAbnbbVsVM+MQ@mail.gmail.com>
-Message-ID: <CAK7LNATV4GeDDYwecZWNH7xxikZjY2VFZ3EYgXAbnbbVsVM+MQ@mail.gmail.com>
-Subject: Re: [PATCH 11/16] x86: probe assembler capabilities via kconfig
- instead of makefile
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+References: <20200324145120.42194-1-vincenzo.frascino@arm.com> <20200324145120.42194-3-vincenzo.frascino@arm.com>
+In-Reply-To: <20200324145120.42194-3-vincenzo.frascino@arm.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 24 Mar 2020 10:22:18 -0700
+X-Gmail-Original-Message-ID: <CALCETrUPaJCgY_herAUJAfqUbXS6S9xOaLz9abFEWOjEouNf+A@mail.gmail.com>
+Message-ID: <CALCETrUPaJCgY_herAUJAfqUbXS6S9xOaLz9abFEWOjEouNf+A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] kselftest: Extend vDSO selftest
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+        Andy Lutomirski <luto@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 2:17 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+On Tue, Mar 24, 2020 at 7:51 AM Vincenzo Frascino
+<vincenzo.frascino@arm.com> wrote:
 >
-> On Tue, Mar 24, 2020 at 11:01 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > Can 11 just be rebased with 8 dropped?
+> The current version of the multiarch vDSO selftest verifies only
+> gettimeofday.
 >
-> 8 adds comments to one place. 11 moves them to another place, while
-> doing other things.
+> Extend the vDSO selftest to the other library functions:
+>  - time
+>  - clock_getres
+>  - clock_gettime
 >
-> Your desire is to skip the first step? I guess there's no problem with
-> this, but I'm curious to learn why.
+> The extension has been used to verify the unified vdso library on the
+> supported architectures.
 
-If desired, I will swap the order of 8 and 11.
-
-
--- 
-Best Regards
-Masahiro Yamada
+The code in tools/testing/selftests/x86/test_vdso.c actually checks
+that the times returned by the vDSO are correct.  Perhaps that code
+should be copied or moved here?
