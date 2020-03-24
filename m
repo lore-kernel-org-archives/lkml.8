@@ -2,122 +2,120 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F62C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB21C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8439B20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jf4pz+xx"
+	by mail.kernel.org (Postfix) with ESMTP id 548DD206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585008945;
+	bh=FDoEBBs+HnI4gFuEm/Z1p13b6BibN0GLHt8TNDh+blI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hkR0ptaY2v2+ijcOD0XR2ckk6gL1hFFauC/7PnfXyZ5urQFB+nS9dR5zzceIxFDje
+	 Q2E2ydfFzWx2pBXamEFKdI4jjJx6kw7UYjkwdLE+m6DlCR1E0wNapQCvFDLArtb+GO
+	 0m1gdRaeCTHO8yA7/v1vFYAUYSRE9GuLR8wWLeew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCXANr (ORCPT
+        id S1727453AbgCXAPo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:13:47 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:43524 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727421AbgCXANr (ORCPT
+        Mon, 23 Mar 2020 20:15:44 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:29608 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727395AbgCXAPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:13:47 -0400
-Received: by mail-pg1-f202.google.com with SMTP id v11so12175220pgs.10
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:13:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=5zop4gGexKIVuUBB/XuZx8+PSEnhloPSs1GUWTBRoug=;
-        b=Jf4pz+xxWi1KLV5c9bDhFE8MrJh2Z8f07O3zUs2S+qlfcK2qJtUoYANW2BzQQaoT8L
-         IRTh8WIS1U0hVw30sN77abfdN2QIxNYkE46rMnTB6cmzUzo9eYxmipwUvo3NefssikD9
-         UZ8rxuOKe6gWEBeIoGWxhJWfPgHUO3d2wq6FIuMfyiZXiRQ/t6nvN6CNCAV1R+kL4mXo
-         hjrhcL8mL0+D+GgO5Vp6RLcQ3RsArsOwwBbLbga8FNvMteKjYyH/Im+ruWp0X34xa3+X
-         mGD0Nq1uEhXYgvEEumDLNHBlmF6NtGZGTZojYYNjsQIp0CbiPoQ6bYrnXbqrUi76vPH0
-         A9oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=5zop4gGexKIVuUBB/XuZx8+PSEnhloPSs1GUWTBRoug=;
-        b=GMKLfQf2LriFBzUvWntLDcc7M+zriotDHuJAdbruK0XSDVe2mdFWVqjLqlhuFb9nY8
-         EO4bnS2IUgGMFyMV0PiuZ4qVwxoTeOWYDtQMeH+CAGWfOpxN9ZTzjh7cmCEKajcp81zL
-         MqOgbRN14dsoLg1SLWAcoLsG2zYZrYK1eWGsERwuBvTxc0Uv58v0tY9SDDeMD7TuDap6
-         2d277t3mFkSXzy0XUuj+gG9zsECZxD9HmBAIArSTnPfFXrPIU/lslX52Czzh+rBp6ENM
-         jeGuOmCaHpEPU4PXg9OdAUipJuYV/8YCgmsLsapMe7vjXA7RhUKgnyBqdycpuXn+Fd+L
-         InHg==
-X-Gm-Message-State: ANhLgQ3HWzcUEGd9DXh/HlM9jyhOlcJXYPg8+WxvQ6R+lAXYXOsRCUMP
-        7XXmQReRtP7dXShPvGKRNHDwUCKkj2sSJWVYUdY=
-X-Google-Smtp-Source: ADFU+vt3lydh3JoLaoOtiqK4WlY5WttupzLLsNDbgg1w+lBrgP7ionKzEtTS+zugoiiIHVVSt6oD9WuWyJ28ZfLgK1w=
-X-Received: by 2002:a63:c44b:: with SMTP id m11mr9425702pgg.313.1585008824657;
- Mon, 23 Mar 2020 17:13:44 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 17:13:20 -0700
-In-Reply-To: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
-Message-Id: <20200324001321.39562-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH] objtool: Documentation: document UACCESS warnings
-From:   Nick Desaulniers <ndesaulniers@google.com>
-To:     jpoimboe@redhat.com, peterz@infradead.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        Raphael Gault <raphael.gault@arm.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 23 Mar 2020 20:15:44 -0400
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 02O0EHnw026701;
+        Tue, 24 Mar 2020 09:14:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O0EHnw026701
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585008867;
+        bh=eQUmDsxcuakkVwkNBx9dyHAfCNiv3XqyWmjW773HKZg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KbYcN4ltycVuHSGlbZhSF02txyBiFZVaz8eVguMOcep4QSh8A03F2G1b05ffHSpZA
+         YqaLDRnQuQdI7sHagJb1nGRkEurleUcDVuPc1Qxgk1YNuvYWwCE/ftHPTrRW4NALzN
+         d+tGEJPRyZv6w+0Cs2jUI9URPe+CObQzjRBe6W+eKxxeB6zE8kS/fR/d3cZVgQGOPg
+         cBo8rogLmZn21vXUgH47JdRGXAZoITD+vcqLerWYdmVLFQrtlJitiIdIBC7fDPZ/jV
+         G2Y4LpH6OwZscN9zc6kKkqxocKkPOIegkYrdBbKw2OigB5JwSbjJV20+48kRgOTVuj
+         dJbEilZlPiwLg==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, linux-crypto@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH v2 9/9] x86: replace arch macros from compiler with CONFIG_X86_{32,64}
+Date:   Tue, 24 Mar 2020 09:13:58 +0900
+Message-Id: <20200324001358.4520-10-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324001358.4520-1-masahiroy@kernel.org>
+References: <20200324001358.4520-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
-  call to memset() with UACCESS enabled
+If the intention is to check i386/x86_64 excluding UML,
+checking CONFIG_X86_{32,64} is simpler.
 
-Document how to fix these for future travelers.
+The reason for checking __i386__ / __x86_64__ was perhaps because
+lib/raid6/algos.c is built not only for the kernel but also for
+testing the library code from userspace.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/876
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+However, lib/raid6/test/Makefile passes -DCONFIG_X86_{32,64} for
+this case. So, I do not see a reason to not use CONFIG option here.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- .../Documentation/stack-validation.txt        | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
 
-diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
-index de094670050b..156fee13ba02 100644
---- a/tools/objtool/Documentation/stack-validation.txt
-+++ b/tools/objtool/Documentation/stack-validation.txt
-@@ -289,6 +289,26 @@ they mean, and suggestions for how to fix them.
-       might be corrupt due to a gcc bug.  For more details, see:
-       https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
+Changes in v2: None
+
+ kernel/signal.c   | 2 +-
+ lib/raid6/algos.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 5b2396350dd1..db557e1629e5 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1246,7 +1246,7 @@ static void print_fatal_signal(int signr)
+ 	struct pt_regs *regs = signal_pt_regs();
+ 	pr_info("potentially unexpected fatal signal %d.\n", signr);
  
-+9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
-+
-+   This means that an unexpected call to a non-whitelisted function exists
-+   outside of arch-specific guards.
-+   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
-+   ARM: PAN: uaccess_enable()/uaccess_enable()
-+
-+   These functions should called to denote a minimal critical section around
-+   access to __user variables. See also: https://lwn.net/Articles/517475/
-+
-+   The intention of the warning is to prevent calls to funcB() from eventually
-+   calling schedule(), potentially leaking the AC flags state, and not
-+   restoring them correctly.
-+
-+   To fix, either:
-+   1) add the correct guards before and after calls to low level functions like
-+      __get_user_size()/__put_user_size().
-+   2) add funcB to uaccess_safe_builtin whitelist in tools/objtool/check.c, if
-+      funcB obviously does not call schedule().
-+
+-#if defined(__i386__) && !defined(__arch_um__)
++#ifdef CONFIG_X86_32
+ 	pr_info("code at %08lx: ", regs->ip);
+ 	{
+ 		int i;
+diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+index df08664d3432..b5a02326cfb7 100644
+--- a/lib/raid6/algos.c
++++ b/lib/raid6/algos.c
+@@ -29,7 +29,7 @@ struct raid6_calls raid6_call;
+ EXPORT_SYMBOL_GPL(raid6_call);
  
- If the error doesn't seem to make sense, it could be a bug in objtool.
- Feel free to ask the objtool maintainer for help.
+ const struct raid6_calls * const raid6_algos[] = {
+-#if defined(__i386__) && !defined(__arch_um__)
++#ifdef CONFIG_X86_32
+ #ifdef CONFIG_AS_AVX512
+ 	&raid6_avx512x2,
+ 	&raid6_avx512x1,
+@@ -45,7 +45,7 @@ const struct raid6_calls * const raid6_algos[] = {
+ 	&raid6_mmxx2,
+ 	&raid6_mmxx1,
+ #endif
+-#if defined(__x86_64__) && !defined(__arch_um__)
++#ifdef CONFIG_X86_64
+ #ifdef CONFIG_AS_AVX512
+ 	&raid6_avx512x4,
+ 	&raid6_avx512x2,
 -- 
-2.25.1.696.g5e7596f4ac-goog
+2.17.1
 
