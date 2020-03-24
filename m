@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA22AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98225C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D36208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB20206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055981;
-	bh=Zh6Q81xz4S7Uy/uL5Zghtt2qm145iElh7QjBAawbpiU=;
+	s=default; t=1585055985;
+	bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t1cAJ7NFny7K+i8hYT4d/VdfB6cQsLfa0sHpDL9aFQQJCHq9fGZJZsQJdUpKTIhNU
-	 UCVVtr8Yp2kv58ryzQvbGIVso5gN1BlOnxzGdIHB01I0lw4ONlQxcgEt7HR86D01AA
-	 WBf92KwrCK2wijeRKy9X/6QpJUiNO7FDYNhFivNI=
+	b=EHPOv8Ef/726tQkjGTOfYaXWzppXaAHQaHM4VkbPP8OQDFkc4bZUt8TBUBHZjUktU
+	 vJv+NqXQmmSiUzqwS3w8XcTjIfIg8CXFgVdA6Jk7hfHovxbSS2lpPGrZlWtlJEpMkj
+	 LRprhlkj3noGETKhobb7zKbcGQCd/mONjhPJ3FSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbgCXNTk (ORCPT
+        id S1728281AbgCXNTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728617AbgCXNTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:36 -0400
+        id S1728466AbgCXNTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32A2620775;
-        Tue, 24 Mar 2020 13:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5202E208E0;
+        Tue, 24 Mar 2020 13:19:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055975;
-        bh=Zh6Q81xz4S7Uy/uL5Zghtt2qm145iElh7QjBAawbpiU=;
+        s=default; t=1585055979;
+        bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0hiXq1J9EMue4iEkcyN0wdpx8FhvLi40mh8hNnSyeg2XlZ0a7jPW2haeJ1oMeCpH
-         JFE00XCZSFLJ+8QD7o1Y866EvgFgKY2RTUSWWhmAwaRp8NSWKcYjOReN5Jly1hmlq4
-         iKKUoKpRoy/1Zp69Qqt+szWlbh5hH9AdLvWab3G4=
+        b=PNkbOZmEVJKmqVnEiXZNwG+/u/wEo2TjBIU28JWsR5iKW0iqzbtCqBnGviOnPkoAr
+         4ybkORJzrGBUFkp9aAeYGJyeUIsYb5twpKjUM4XRM7A+wVTrQ/R1jD86BexF8apQJs
+         aPs1clkPSRg4H04KaXRDRl+JavuCbUwa3x7rt2AQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 047/102] ALSA: line6: Fix endless MIDI read loop
-Date:   Tue, 24 Mar 2020 14:10:39 +0100
-Message-Id: <20200324130811.517312000@linuxfoundation.org>
+        stable@vger.kernel.org, russianneuromancer@ya.ru,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.4 038/102] usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
+Date:   Tue, 24 Mar 2020 14:10:30 +0100
+Message-Id: <20200324130810.637352654@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,55 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 upstream.
+commit 75d7676ead19b1fbb5e0ee934c9ccddcb666b68c upstream.
 
-The MIDI input event parser of the LINE6 driver may enter into an
-endless loop when the unexpected data sequence is given, as it tries
-to continue the secondary bytes without termination.  Also, when the
-input data is too short, the parser returns a negative error, while
-the caller doesn't handle it properly.  This would lead to the
-unexpected behavior as well.
+We have been receiving bug reports that ethernet connections over
+RTL8153 based ethernet adapters stops working after a while with
+errors like these showing up in dmesg when the ethernet stops working:
 
-This patch addresses those issues by checking the return value
-correctly and handling the one-byte event in the parser properly.
+[12696.189484] r8152 6-1:1.0 enp10s0u1: Tx timeout
+[12702.333456] r8152 6-1:1.0 enp10s0u1: Tx timeout
+[12707.965422] r8152 6-1:1.0 enp10s0u1: Tx timeout
 
-The bug was reported by syzkaller.
+This has been reported on Dell WD15 docks, Belkin USB-C Express Dock 3.1
+docks and with generic USB to ethernet dongles using the RTL8153
+chipsets. Some users have tried adding usbcore.quirks=0bda:8153:k to
+the kernel commandline and all users who have tried this report that
+this fixes this.
 
-Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
-Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Also note that we already have an existing NO_LPM quirk for the RTL8153
+used in the Microsoft Surface Dock (where it uses a different usb-id).
+
+This commit adds a NO_LPM quirk for the generic Realtek RTL8153
+0bda:8153 usb-id, fixing the Tx timeout errors on these devices.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=198931
+Cc: stable@vger.kernel.org
+Cc: russianneuromancer@ya.ru
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200313120708.100339-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/line6/driver.c  |    2 +-
- sound/usb/line6/midibuf.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -305,7 +305,7 @@ static void line6_data_received(struct u
- 				line6_midibuf_read(mb, line6->buffer_message,
- 						LINE6_MIDI_MESSAGE_MAXLEN);
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -381,6 +381,9 @@ static const struct usb_device_id usb_qu
+ 	/* Realtek hub in Dell WD19 (Type-C) */
+ 	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
  
--			if (done == 0)
-+			if (done <= 0)
- 				break;
- 
- 			line6->message_length = done;
---- a/sound/usb/line6/midibuf.c
-+++ b/sound/usb/line6/midibuf.c
-@@ -159,7 +159,7 @@ int line6_midibuf_read(struct midi_buffe
- 			int midi_length_prev =
- 			    midibuf_message_length(this->command_prev);
- 
--			if (midi_length_prev > 0) {
-+			if (midi_length_prev > 1) {
- 				midi_length = midi_length_prev - 1;
- 				repeat = 1;
- 			} else
++	/* Generic RTL8153 based ethernet adapters */
++	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* Action Semiconductor flash disk */
+ 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
+ 			USB_QUIRK_STRING_FETCH_255 },
 
 
