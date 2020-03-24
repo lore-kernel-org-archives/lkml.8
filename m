@@ -2,113 +2,182 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9E9C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A7EC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18C7020870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 620F720870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:52:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RSjzwYXi"
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="Ca64qgUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCXLwU (ORCPT
+        id S1727446AbgCXLwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:52:20 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:58080 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727231AbgCXLwU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:52:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585050739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HDcbnhb2CZmJ8WitnXmrm/BJAQp0xMBlNqjvRvVjyfc=;
-        b=RSjzwYXimve50dMpmqxtKAZmm9cdysQlVDsphVLFEC0bTtgxSC3HO2Phyyz5I56y0fwZcp
-        6t/GLterJzA5/YBMXAU288/OKSqRdVbIeYpykPocPZW8FDA63oTYWQGcos5l3KE6Y5v3qp
-        69Rnou5mPnZRXDRf3BQLaQt0p3ayS6M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-43-G05fTsOFNwWCiWaLAYf4aw-1; Tue, 24 Mar 2020 07:52:17 -0400
-X-MC-Unique: G05fTsOFNwWCiWaLAYf4aw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 24 Mar 2020 07:52:31 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:35964 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727400AbgCXLwb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:52:31 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id EFA3241286;
+        Tue, 24 Mar 2020 11:52:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1585050747; x=1586865148; bh=r/+JpB/tzVggc5+uUHeVaa6fh
+        /sE674WIfm1mQzEXGE=; b=Ca64qgUokGK2sYLawspct1XYaPuroDblVruX3BjtG
+        s/bWrsVasOqeFifGlhcXXYeyBR7+Y03KBxOwUTNqh65RgPkdxYCRZBZ9hdFOOZIn
+        Bpb01eb6sFlx0VpvgNi8EnP45mAtJxrZ654Bt9qIV3L1AlzXrPaC1G5+/voM0nEk
+        gc=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id lmXVjV-HORA3; Tue, 24 Mar 2020 14:52:27 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC9B21005516;
-        Tue, 24 Mar 2020 11:52:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.28])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 0254294979;
-        Tue, 24 Mar 2020 11:52:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 24 Mar 2020 12:52:15 +0100 (CET)
-Date:   Tue, 24 Mar 2020 12:52:12 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ipc/mqueue.c: change __do_notify() to bypass
- check_kill_permission()
-Message-ID: <20200324115212.GA10095@redhat.com>
-References: <20200322110901.GA25108@redhat.com>
- <87lfnsh3tm.fsf@x220.int.ebiederm.org>
- <20200322202929.GA1614@redhat.com>
- <87imivc92n.fsf@x220.int.ebiederm.org>
- <20200323191214.81a60c4ae1a59fdbd5c5d46d@linux-foundation.org>
- <87bloma29h.fsf@x220.int.ebiederm.org>
+        by mta-01.yadro.com (Postfix) with ESMTPS id 1286441259;
+        Tue, 24 Mar 2020 14:52:27 +0300 (MSK)
+Received: from localhost.localdomain (10.199.1.182) by
+ T-EXCH-02.corp.yadro.com (172.17.10.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id
+ 15.1.669.32; Tue, 24 Mar 2020 14:52:27 +0300
+Message-ID: <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
+Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
+ proximity sensor
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 24 Mar 2020 14:52:30 +0300
+In-Reply-To: <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
+References: <20200323103926.21271-1-i.mikhaylov@yadro.com>
+         <20200323103926.21271-3-i.mikhaylov@yadro.com>
+         <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bloma29h.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.199.1.182]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/23, Eric W. Biederman wrote:
->
-> So far what we have is a report Oleg has read somewhere that some
-> program doing something regressed, and his patch to fix that specific
-> program.  This problem was not noticed for several years.
+On Mon, 2020-03-23 at 14:10 +0200, Andy Shevchenko wrote:
+> On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> > Proximity sensor driver based on light/vcnl4000.c code.
+> > For now supports only the single on-demand measurement.
+> > 
+> > The VCNL3020 is a fully integrated proximity sensor. Fully
+> > integrated means that the infrared emitter is included in the
+> > package. It has 16-bit resolution. It includes a signal
+> > processing IC and features standard I2C communication
+> > interface. It features an interrupt function.
+> 
+> Thank you for a patch, my comments below.
+> 
+> > Datasheet available at:
+> > http://www.vishay.com/docs/84150/vcnl3020.pdf
+> 
+> I'm thinking that we may simple introduce new tag, called Datesheet:
+> to put such links.
+> 
+> > Signed-off-by: Ivan Mikhaylov <i.mikhaylov@yadro.com>
+> 
+> ...
+> 
+> >  obj-$(CONFIG_SRF08)            += srf08.o
+> >  obj-$(CONFIG_SX9500)           += sx9500.o
+> >  obj-$(CONFIG_VL53L0X_I2C)      += vl53l0x-i2c.o
+> > +obj-$(CONFIG_VCNL3020)         += vcnl3020.o
+> 
+> Perhaps keep ordered?
 
-Yes, this was reported on bugzilla.redhat.com, I'll add you to CC list.
+Oops.
 
-> Presumably the problem is that a message queue was written to by one
-> user and was read by another user to cause check_kill_permission to
-> fail. Can someone tell me if that was the case?
+> 
+> ...
+> 
+> > +static int32_t vcnl3020_init(struct vcnl3020_data *data)
+> 
+> int32_t...
+> 
+> > +{
+> > +       s32 rc;
+> 
+> ...s32?!
+> 
+> Applies to entire code.
 
-I do not know. Yoji, did you hit this bug or did you find it by code
-inspection ?
+checkpatch.pl --strict doesn't show anything bad in it but I can change from
+int32_t/s32 into int easily, it's not a problem for me.
 
-> So I am looking for something that makes it clear we are not removing
-> a permission checking and backporting a security hole.
+> 
+> > +       u32 led_current;
+> > +       struct device *dev = &data->client->dev;
+> 
+> Reversed xmas tree order looks better.
+> 
+> > +       rc = i2c_smbus_read_byte_data(data->client, VCNL_PROD_REV);
+> 
+> Can you use regmap I²C API?
+> 
 
-Yes, I thought about this too. I can be easily wrong, please correct me,
-but I came to conclusion the old behaviour (no permission check) is fine
-security-wise.
+That's a nice idea.
 
-> Further even if in the common case it is the right thing to do to remove
-> the permission check, the handling around exec looks bad enough that we
-> will be backporting a security hole if we don't fix that and backport
-> that at the same time.
+> ...
+> 
+> > +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
+> > +                data->rev);
+> 
+> Noise.
 
-could you explain what exactly you do not like wrt mq_notify/exec ?
-I must have missed something.
+Doesn't it help to determine the presence of driver to a common user?
 
-> p.s. I am grouchy as temporary fixes in this part of the code base
->      don't tend to be temporary  and the entire signal/exec/ptrace world
->      is bordering on unmaintainble and incomprehensible as a result.
+> 
+> > +               goto out;
+> > +
+> > +       return rc;
+> > +out:
+> > +       devm_iio_device_free(&client->dev, indio_dev);
+> > +       return rc;
+> 
+> Managed resources are exactly for this not to be appeared in the code.
 
-Eric, please feel free to make another fix you like more. I know that
-I can't convince you anyway, I won't argue.
-Oleg.
+I can do something like this:
+return devm_iio_device_register(&client->dev, indio_dev);
+
+Would it suffice?
+
+> 
+> > +}
+> 
+> ...
+> 
+> > +static const struct of_device_id vcnl3020_of_match[] = {
+> > +       {
+> > +               .compatible = "vishay,vcnl3020",
+> > +       },
+> 
+> Missed terminator. How did you test this?
+
+All works fine with real hw, I'll add terminator.
+Agree with everything else.
+
+Thanks. 
 
