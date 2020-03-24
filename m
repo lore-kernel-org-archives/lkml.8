@@ -2,186 +2,135 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75D9C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2F3C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB4242070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:39:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h5BvdxgS"
+	by mail.kernel.org (Postfix) with ESMTP id 357002070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585046399;
+	bh=Vr30dNMEWIjGd6IiJI50wytyImepg0RxkrgoIh9ce/M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wxV5QoiBTrY2mz93dyW+MbT8PP7WMlGcdWV8VpvD7QntdxN/nmvplAsE/t1ZBWScG
+	 kSaWhzOEXuy2b+HXk0NS5nBfoNtSvis7HR4x1DHMWMlS97entVMA4YCdgbbF4VNEmR
+	 0Ti/SH/KQ307ebtQ/AsPin5jK18zR90kHfYaetH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727333AbgCXKjP (ORCPT
+        id S1727376AbgCXKj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:39:15 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45040 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727066AbgCXKjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:39:15 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m17so11775698wrw.11
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=WNURfYwUOPAnuz+U3UbPZyrljqXKCvMA7vRxyxXRqHM=;
-        b=h5BvdxgSXNE2/jma/jYDLUTdGPiB158yhJaCdf6uihjZuDF6ED9XbYBj9gs+33cFnL
-         BR1q8lLb2zZjJ4RN+Z9haG820tRE9+3+kaOsQwpzzfqSE2Up3YZf6krsbiTbZGf9WN4m
-         xsvkfvQuQ/lQQBEIFooS67t8NoZu9oZvSpcBE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=WNURfYwUOPAnuz+U3UbPZyrljqXKCvMA7vRxyxXRqHM=;
-        b=VB5TBgfjbMfVmcEeLusG7rtL7ud9EZ+j54YRUsh/3Ad8Pw0fZl9G56sTvarfruJMsY
-         V7QXlpAc5BiYfre2wUmZf3Ge1W81YZz/i4dsadbrxKvCMDaXIDZhyWaoAWgvzVkVyfsE
-         mkk1CC5qLTLWTVc8xC8O+rcPmVm9DVJRZWPJntYPkSC/+o3jB1prkkYO6IM9XowR2c0w
-         QqK1FGs34+4LmexnGz1+zZ3PlcIbyzIzxet4g3ik50Am0BvYyu3PKNtNb61K7/OuCZf5
-         RITop+c4oH2C5cOEb8NdJS/ZOWXawpg3l/SqXeNWDvgGYNwCAYJ9e9atUKwzkLuCWXxP
-         vMkQ==
-X-Gm-Message-State: ANhLgQ1bhnXbEgZgY2k7EXaTZcuW2V2PoNlwY4AQHVrXJrr1/Dj02EFq
-        qxRZHTCvpE514Fm43D6+qqVxLg==
-X-Google-Smtp-Source: ADFU+vutESD3P5pBkNWr+6YYHHHInBJvKSWgEdKsOHk7IwwLDwihiRPSXNB3MeFkJv8Gax2/4ZxY2A==
-X-Received: by 2002:a5d:6187:: with SMTP id j7mr12220191wru.419.1585046353498;
-        Tue, 24 Mar 2020 03:39:13 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id b187sm3828624wmb.42.2020.03.24.03.39.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 03:39:12 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 24 Mar 2020 11:39:10 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200324103910.GA7135@chromium.org>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-4-kpsingh@chromium.org>
- <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
+        Tue, 24 Mar 2020 06:39:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbgCXKj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:39:57 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 422622070A;
+        Tue, 24 Mar 2020 10:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585046397;
+        bh=Vr30dNMEWIjGd6IiJI50wytyImepg0RxkrgoIh9ce/M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OwII8d/0znQrCeCBrD91pnGAB1RdIbDPCXxoWnRUIAAuvsi3hbq5vNOz4g2jgiSq3
+         P2K2KT1+FyA85uWb7GFU6wGJj+K4IbN9V5YZSGIWZMyLa8DVjqIYugBVcArbCISbj1
+         uyKTZ0zUiELLBH/m9Uk+CeeHPQPI4rciHJOM81AI=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jGgyR-0021eA-2k; Tue, 24 Mar 2020 11:39:55 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH] media: Kconfig: make filtering devices optional
+Date:   Tue, 24 Mar 2020 11:39:53 +0100
+Message-Id: <b0b805a9e89136607f4dbb018d5e0c2498eb6aa2.1585046350.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-Mär 12:59, Andrii Nakryiko wrote:
-> On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
-> > generated for each LSM hook. These nops are initialized as LSM hooks in
-> > a subsequent patch.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> > Reviewed-by: Florent Revest <revest@google.com>
-> > ---
-> >  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
-> >  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
-> >  2 files changed, 40 insertions(+)
-> >  create mode 100644 include/linux/bpf_lsm.h
-> >
-> > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> > new file mode 100644
-> > index 000000000000..c6423a140220
-> > --- /dev/null
-> > +++ b/include/linux/bpf_lsm.h
-> > @@ -0,0 +1,21 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * Copyright (C) 2020 Google LLC.
-> > + */
-> > +
-> > +#ifndef _LINUX_BPF_LSM_H
-> > +#define _LINUX_BPF_LSM_H
-> > +
-> > +#include <linux/bpf.h>
-> > +#include <linux/lsm_hooks.h>
-> > +
-> > +#ifdef CONFIG_BPF_LSM
-> > +
-> > +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
-> > +#include <linux/lsm_hook_names.h>
-> > +#undef LSM_HOOK
-> > +
-> > +#endif /* CONFIG_BPF_LSM */
-> > +
-> > +#endif /* _LINUX_BPF_LSM_H */
-> > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> > index 82875039ca90..530d137f7a84 100644
-> > --- a/kernel/bpf/bpf_lsm.c
-> > +++ b/kernel/bpf/bpf_lsm.c
-> > @@ -7,6 +7,25 @@
-> >  #include <linux/filter.h>
-> >  #include <linux/bpf.h>
-> >  #include <linux/btf.h>
-> > +#include <linux/lsm_hooks.h>
-> > +#include <linux/bpf_lsm.h>
-> > +
-> > +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
-> > + * function where a BPF program can be attached as an fexit trampoline.
-> > + */
-> > +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
-> > +
-> > +#define LSM_HOOK_int(NAME, ...)                        \
-> > +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
-> > +{                                              \
-> > +       return 0;                               \
-> > +}
-> > +
-> > +#define LSM_HOOK_void(NAME, ...) \
-> > +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
-> > +
-> 
-> Could unify with:
-> 
-> #define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)
-> {
->     return (RET)0;
-> }
-> 
-> then you don't need LSM_HOOK_int and LSM_HOOK_void.
+The per-device option selection is a feature that some
+developers love, while others hate...
 
-Nice.
+So, let's make both happy by making it optional.
 
-But, given that we are adding default values and that
-they are only needed for int hooks, we will need to keep the macros
-separate for int and void. Or, Am I missing a trick here?
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-- KP
+ drivers/media/Kconfig | 41 ++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 38 insertions(+), 3 deletions(-)
 
-> 
-> > +#include <linux/lsm_hook_names.h>
-> > +#undef LSM_HOOK
-> >
-> >  const struct bpf_prog_ops lsm_prog_ops = {
-> >  };
-> > --
-> > 2.20.1
-> >
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index 4c06728a4ab7..85476197837c 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -25,9 +25,13 @@ menuconfig MEDIA_SUPPORT
+ 	  Additional info and docs are available on the web at
+ 	  <https://linuxtv.org>
+ 
+-menu "Types of devices to be supported"
++if MEDIA_SUPPORT
++
++menuconfig MEDIA_SUPPORT_FILTER
++	bool "Filter devices by their types"
+ 	depends on MEDIA_SUPPORT
+ 
++if MEDIA_SUPPORT_FILTER
+ #
+ # Multimedia support - automatically enable V4L2 and DVB core
+ #
+@@ -106,10 +110,41 @@ config MEDIA_TEST_SUPPORT
+ 	  have regressions.
+ 
+ 	  Say Y when you have a software defined radio device.
++endif #MEDIA_SUPPORT_FILTER
+ 
+-endmenu # media support types
++if !MEDIA_SUPPORT_FILTER
++config MEDIA_CAMERA_SUPPORT
++	bool
++	default y
+ 
+-if MEDIA_SUPPORT
++config MEDIA_ANALOG_TV_SUPPORT
++	bool
++	default y
++
++config MEDIA_DIGITAL_TV_SUPPORT
++	bool
++	default y
++
++config MEDIA_RADIO_SUPPORT
++	bool
++	default y
++
++config MEDIA_SDR_SUPPORT
++	bool
++	default y
++
++config MEDIA_CEC_SUPPORT
++	bool
++	default y
++
++config MEDIA_EMBEDDED_SUPPORT
++	bool
++	default y
++
++config MEDIA_TEST_SUPPORT
++	bool
++	default y
++endif #MEDIA_SUPPORT_FILTER
+ 
+ comment "Media core options"
+ 
+-- 
+2.24.1
+
+
