@@ -2,97 +2,122 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E66C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F62C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9AFE20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8439B20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:13:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lXJcxWQk"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jf4pz+xx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCXAMQ (ORCPT
+        id S1727462AbgCXANr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:12:16 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37329 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbgCXAMQ (ORCPT
+        Mon, 23 Mar 2020 20:13:47 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:43524 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbgCXANr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:12:16 -0400
-Received: by mail-io1-f66.google.com with SMTP id q9so16381428iod.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:12:15 -0700 (PDT)
+        Mon, 23 Mar 2020 20:13:47 -0400
+Received: by mail-pg1-f202.google.com with SMTP id v11so12175220pgs.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:13:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=Frtkek3ERXBMHbMs52Wt6U/vIOFGM5o4rI98r+84Zvs=;
-        b=lXJcxWQki4RLClZml8Uw1p+iCf3elgEZQ2BtbaWtCNm1C9BhktBTPbc1u0UC+Jc/Hn
-         9i3RcocLtEXdzm5Jj6dRfLKDnJ88IWUkFHFcfsaevwXH+e2m4A0u0dLIUrRPekJEPlUR
-         a8jwh6/Et+DysEHpmcULQ7m/0JfZSHRpxiVbOmMMn9Z54MJEZYzx9409Cke7Kvm5W+YV
-         jpgdlPhbqqoX+69GZisysMSNsXD1aMg68XiM7VC34eBRh4KRZGi0P0HLNtPjn1XXK3ed
-         nS06qZ3is+xYDLAM0kT0P5DY6GF0B8Aob0NHAYPJhNYMciUK6sjrXNVNuuIYM36HGUSw
-         pMYg==
+        bh=5zop4gGexKIVuUBB/XuZx8+PSEnhloPSs1GUWTBRoug=;
+        b=Jf4pz+xxWi1KLV5c9bDhFE8MrJh2Z8f07O3zUs2S+qlfcK2qJtUoYANW2BzQQaoT8L
+         IRTh8WIS1U0hVw30sN77abfdN2QIxNYkE46rMnTB6cmzUzo9eYxmipwUvo3NefssikD9
+         UZ8rxuOKe6gWEBeIoGWxhJWfPgHUO3d2wq6FIuMfyiZXiRQ/t6nvN6CNCAV1R+kL4mXo
+         hjrhcL8mL0+D+GgO5Vp6RLcQ3RsArsOwwBbLbga8FNvMteKjYyH/Im+ruWp0X34xa3+X
+         mGD0Nq1uEhXYgvEEumDLNHBlmF6NtGZGTZojYYNjsQIp0CbiPoQ6bYrnXbqrUi76vPH0
+         A9oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Frtkek3ERXBMHbMs52Wt6U/vIOFGM5o4rI98r+84Zvs=;
-        b=C6AFIr9qk/QApFAaMjw7GORpfGg83MPoRydsAg9MdUPsw2euX7T0NT/hdXAT86dJeU
-         KyJKiojuGuJZwgWudsbok0WDWrBjXIjYmRc61ighEcDKOCSQXf3Ps8F+lyiNlms7ulO5
-         sLyzJ+eUjdmp8+gWAQSacl3LvXkubIC2CwYjUVNEGcDDeXhGTgeLjMxxf2ChLBQDEfJ9
-         j9qbeQv/B4/nd/6QFYAOCrL37cyUGU7sPfwrhf19ngZG71XvADO8SMG6URRvs2j+yfd/
-         Z5YXsR8PHqqcQO+s7qE/8h3/uRGgFZJv8j8FLB3WohBBc/miCjF5DkUTo29T3NXZCfus
-         wC6g==
-X-Gm-Message-State: ANhLgQ1h0DsmvGbWGQJtyaCaAxW5T209mkrvscW+OhWNgHVD/F9BUntB
-        OhCB59MKPprHkmhV4FvQcFq4llPeBSfcQZ+vYpTHrQ==
-X-Google-Smtp-Source: ADFU+vs4T4owZbp9NLgLiyMN+JqDFKJAzoNdh7TqSfJJEEkuFCgXdRh0KDDS5vdk0H/LlQPyZnmJEXu4ihoSzeyHN6k=
-X-Received: by 2002:a02:5a87:: with SMTP id v129mr21018278jaa.48.1585008735321;
- Mon, 23 Mar 2020 17:12:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
- <20200320212833.3507-4-sean.j.christopherson@intel.com> <CALMp9eR5Uu7nRDOS2nQHGzb+Gi6vjDEk1AmuiqkkGWFjKNG+sA@mail.gmail.com>
- <20200323162807.GN28711@linux.intel.com> <CALMp9eR42eM7g81EgHieyNky+kP2mycO7UyMN+y2ibLoqrD2Yg@mail.gmail.com>
- <20200323164447.GQ28711@linux.intel.com> <8d99cdf0-606a-f4df-35e7-3b856bb3ea0e@redhat.com>
-In-Reply-To: <8d99cdf0-606a-f4df-35e7-3b856bb3ea0e@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 23 Mar 2020 17:12:04 -0700
-Message-ID: <CALMp9eQ-rzdZHdM0DFzVyaynEhf0+e9rYGqi57fhN54VTFcNnA@mail.gmail.com>
-Subject: Re: [PATCH v3 03/37] KVM: nVMX: Invalidate all EPTP contexts when
- emulating INVEPT for L1
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=5zop4gGexKIVuUBB/XuZx8+PSEnhloPSs1GUWTBRoug=;
+        b=GMKLfQf2LriFBzUvWntLDcc7M+zriotDHuJAdbruK0XSDVe2mdFWVqjLqlhuFb9nY8
+         EO4bnS2IUgGMFyMV0PiuZ4qVwxoTeOWYDtQMeH+CAGWfOpxN9ZTzjh7cmCEKajcp81zL
+         MqOgbRN14dsoLg1SLWAcoLsG2zYZrYK1eWGsERwuBvTxc0Uv58v0tY9SDDeMD7TuDap6
+         2d277t3mFkSXzy0XUuj+gG9zsECZxD9HmBAIArSTnPfFXrPIU/lslX52Czzh+rBp6ENM
+         jeGuOmCaHpEPU4PXg9OdAUipJuYV/8YCgmsLsapMe7vjXA7RhUKgnyBqdycpuXn+Fd+L
+         InHg==
+X-Gm-Message-State: ANhLgQ3HWzcUEGd9DXh/HlM9jyhOlcJXYPg8+WxvQ6R+lAXYXOsRCUMP
+        7XXmQReRtP7dXShPvGKRNHDwUCKkj2sSJWVYUdY=
+X-Google-Smtp-Source: ADFU+vt3lydh3JoLaoOtiqK4WlY5WttupzLLsNDbgg1w+lBrgP7ionKzEtTS+zugoiiIHVVSt6oD9WuWyJ28ZfLgK1w=
+X-Received: by 2002:a63:c44b:: with SMTP id m11mr9425702pgg.313.1585008824657;
+ Mon, 23 Mar 2020 17:13:44 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 17:13:20 -0700
+In-Reply-To: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
+Message-Id: <20200324001321.39562-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH] objtool: Documentation: document UACCESS warnings
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     jpoimboe@redhat.com, peterz@infradead.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Raphael Gault <raphael.gault@arm.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 4:51 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 23/03/20 17:44, Sean Christopherson wrote:
-> > So I think
-> >
-> >   Fixes: 14c07ad89f4d ("x86/kvm/mmu: introduce guest_mmu")
-> >
-> > would be appropriate?
-> >
->
-> Yes.
+Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
+  call to memset() with UACCESS enabled
 
-I think it was actually commit efebf0aaec3d ("KVM: nVMX: Do not flush
-TLB on L1<->L2 transitions if L1 uses VPID and EPT").
+Document how to fix these for future travelers.
+
+Link: https://github.com/ClangBuiltLinux/linux/issues/876
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ .../Documentation/stack-validation.txt        | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
+index de094670050b..156fee13ba02 100644
+--- a/tools/objtool/Documentation/stack-validation.txt
++++ b/tools/objtool/Documentation/stack-validation.txt
+@@ -289,6 +289,26 @@ they mean, and suggestions for how to fix them.
+       might be corrupt due to a gcc bug.  For more details, see:
+       https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
+ 
++9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
++
++   This means that an unexpected call to a non-whitelisted function exists
++   outside of arch-specific guards.
++   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
++   ARM: PAN: uaccess_enable()/uaccess_enable()
++
++   These functions should called to denote a minimal critical section around
++   access to __user variables. See also: https://lwn.net/Articles/517475/
++
++   The intention of the warning is to prevent calls to funcB() from eventually
++   calling schedule(), potentially leaking the AC flags state, and not
++   restoring them correctly.
++
++   To fix, either:
++   1) add the correct guards before and after calls to low level functions like
++      __get_user_size()/__put_user_size().
++   2) add funcB to uaccess_safe_builtin whitelist in tools/objtool/check.c, if
++      funcB obviously does not call schedule().
++
+ 
+ If the error doesn't seem to make sense, it could be a bug in objtool.
+ Feel free to ask the objtool maintainer for help.
+-- 
+2.25.1.696.g5e7596f4ac-goog
+
