@@ -2,138 +2,139 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557FCC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D601C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4702076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:22:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585084940;
-	bh=X6ebq0WcchKrdaWOlTlc8AvYM4jWLIYlXO6WwrHjwSA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Y6XZMzRMH+9su8zRL/09zPYFprPb6B0wUVQtCNkPmt1p8NERFQLYE71DvCLVW2i0O
-	 7yJW3tyrbFiMTwRimFudWmnzvPeE8mtt6q/rcyKI5RlQpJeuFgIq4DUf+mVo78ptY5
-	 pomKKkoEAauJyhQhwHcPwiLjNBY9R+6M1zU28Q4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2C3F42070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:25:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgCXVWT (ORCPT
+        id S1728088AbgCXVZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:22:19 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46342 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgCXVWS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:22:18 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v16so213180ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 14:22:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K0AQOrscsNAyPOgnjIz1wdZ8BwbWscK7BvSW7dZFNMU=;
-        b=TU+v6vgTqqL8DSRyHNIS3zPA2Au3s8bOdz4RjYVrI59y/xJG37DuCzUkFedo8prEM1
-         kEhbDC8RUbuZ44J4woqibSX2DnsCF77IrNvFFBgUdsgFnP87BEfOj65kKyLU5UPa/XiH
-         yLDUovevdVM9pFj6antE7mF1/9gnUPays5DSg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K0AQOrscsNAyPOgnjIz1wdZ8BwbWscK7BvSW7dZFNMU=;
-        b=Mau47tj/vxmXRguB0cinbmpu0kY/ERXDf4tRTW8biTDmyD9m6Ice6zbmuMdcjcL/bx
-         0vdY1xzqSnBvyT3uwrxJvz43TWWUGbBvsbkPBhnq+fiwirmDhnjLunAkBkNAdo4mPAtQ
-         Wu79+oku7BbnNgPAPqay2R9W5/qJeH/DPG0L+foRAm196XyQTazUyaYKZ6CipDogVV3K
-         U2P20GXKaOB+uSAzjL8t8mMgpupOpNoCPmkGdCaFsIEh5L2gZ2vkLa4MhDEHlKuo/i6N
-         G6wiY+oHt0DaenCGKwmnZDAEn5KIVmoLxJf3Y9WcqBPLE6L0qIMxkTemn6Tz6zOgPV7h
-         XWKg==
-X-Gm-Message-State: ANhLgQ0f812tmcz7coJ8S46F0a1zCpu5Ni8X/AV2qj2SVh9Ka+g1sr5s
-        GkQMnLHPMvvVnaUtI1KoRg4Xpr1ZQgk=
-X-Google-Smtp-Source: ADFU+vv1guZMSt2tjhx3HD9nfghEKRjSMy0ZQlf7MIKaUGGlXOc5kKzqVWQOEgZC2Ok1zUrAt+PB4Q==
-X-Received: by 2002:a2e:3206:: with SMTP id y6mr6666471ljy.231.1585084936008;
-        Tue, 24 Mar 2020 14:22:16 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id d23sm937823lji.62.2020.03.24.14.22.15
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 14:22:15 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id j11so46903lfg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 14:22:15 -0700 (PDT)
-X-Received: by 2002:a19:f015:: with SMTP id p21mr60990lfc.10.1585084934903;
- Tue, 24 Mar 2020 14:22:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324204449.7263-1-gladkov.alexey@gmail.com> <20200324204449.7263-4-gladkov.alexey@gmail.com>
-In-Reply-To: <20200324204449.7263-4-gladkov.alexey@gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 24 Mar 2020 14:21:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whXbgW7-FYL4Rkaoh8qX+CkS5saVGP2hsJPV0c+EZ6K7A@mail.gmail.com>
-Message-ID: <CAHk-=whXbgW7-FYL4Rkaoh8qX+CkS5saVGP2hsJPV0c+EZ6K7A@mail.gmail.com>
-Subject: Re: [PATCH RESEND v9 3/8] proc: move hide_pid, pid_gid from
- pid_namespace to proc_fs_info
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>
+        Tue, 24 Mar 2020 17:25:12 -0400
+Received: from mga04.intel.com ([192.55.52.120]:51063 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgCXVZL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 17:25:11 -0400
+IronPort-SDR: aTiYPWRRZI44Mc9Jr8IYnfPbtBwcjtHEpAYFsDNqxT8hv0toer9TnbxMdFS9mQZ8jKq4ZyAt2u
+ Bkd9UBNui91w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 14:25:11 -0700
+IronPort-SDR: mN5mW36bByfx8u23caSwnMSwzlVG0gkUNRt7tD/10fEzNJJZ2RY/DgvZQ40y7vKwPOVR487G31
+ vY7WdAYs8ORA==
+X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
+   d="scan'208";a="265298598"
+Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.251.4.28])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 14:25:09 -0700
+Message-ID: <a01e6b2f0a19f0ace0b5f2c8a50cafccc9b4ef60.camel@linux.intel.com>
+Subject: Re: [RFC PATCH 05/11] x86: Makefile: Add build and config option
+ for CONFIG_FG_KASLR
+From:   Kristen Carlson Accardi <kristen@linux.intel.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        arjan@linux.intel.com, keescook@chromium.org,
+        rick.p.edgecombe@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+Date:   Tue, 24 Mar 2020 14:24:51 -0700
+In-Reply-To: <20200225175544.GA1385238@rani.riverdale.lan>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+         <20200205223950.1212394-6-kristen@linux.intel.com>
+         <20200225175544.GA1385238@rani.riverdale.lan>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:46 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
->
-> +/* definitions for hide_pid field */
-> +enum {
-> +       HIDEPID_OFF       = 0,
-> +       HIDEPID_NO_ACCESS = 1,
-> +       HIDEPID_INVISIBLE = 2,
-> +};
+On Tue, 2020-02-25 at 12:55 -0500, Arvind Sankar wrote:
+> On Wed, Feb 05, 2020 at 02:39:44PM -0800, Kristen Carlson Accardi
+> wrote:
+> > Allow user to select CONFIG_FG_KASLR if dependencies are met.
+> > Change
+> > the make file to build with -ffunction-sections if CONFIG_FG_KASLR
+> > 
+> > Signed-off-by: Kristen Carlson Accardi <kristen@linux.intel.com>
+> > ---
+> >  Makefile         |  4 ++++
+> >  arch/x86/Kconfig | 13 +++++++++++++
+> >  2 files changed, 17 insertions(+)
+> > 
+> > diff --git a/Makefile b/Makefile
+> > index c50ef91f6136..41438a921666 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -846,6 +846,10 @@ ifdef CONFIG_LIVEPATCH
+> >  KBUILD_CFLAGS += $(call cc-option, -flive-patching=inline-clone)
+> >  endif
+> >  
+> > +ifdef CONFIG_FG_KASLR
+> > +KBUILD_CFLAGS += -ffunction-sections
+> > +endif
+> > +
+> 
+> With -ffunction-sections I get a few unreachable code warnings from
+> objtool.
+> 
+> arch/x86/kernel/dumpstack.o: warning: objtool: show_iret_regs()+0x10:
+> unreachable instruction
+> fs/sysfs/dir.o: warning: objtool: sysfs_create_mount_point()+0x4f:
+> unreachable instruction
+> kernel/time/clocksource.o: warning: objtool:
+> __clocksource_register_scale()+0x21: unreachable instruction
+> drivers/tty/sysrq.o: warning: objtool: sysrq_filter()+0x2ef:
+> unreachable instruction
+> arch/x86/mm/fault.o: warning: objtool: pgtable_bad()+0x3f:
+> unreachable instruction
+> drivers/acpi/pci_root.o: warning: objtool:
+> acpi_pci_osc_control_set()+0x123: unreachable instruction
+> drivers/rtc/class.o: warning: objtool:
+> devm_rtc_device_register()+0x40: unreachable instruction
+> kernel/power/process.o: warning: objtool:
+> freeze_processes.cold()+0x0: unreachable instruction
+> drivers/pnp/quirks.o: warning: objtool: quirk_awe32_resources()+0x42:
+> unreachable instruction
+> drivers/acpi/utils.o: warning: objtool: acpi_evaluate_dsm()+0xf1:
+> unreachable instruction
+> kernel/reboot.o: warning: objtool: __do_sys_reboot()+0x1b6:
+> unreachable instruction
+> kernel/power/swap.o: warning: objtool: swsusp_read()+0x185:
+> unreachable instruction
+> drivers/hid/hid-core.o: warning: objtool: hid_hw_start()+0x38:
+> unreachable instruction
+> drivers/acpi/battery.o: warning: objtool:
+> sysfs_add_battery.cold()+0x1a: unreachable instruction
+> arch/x86/kernel/cpu/mce/core.o: warning: objtool:
+> do_machine_check.cold()+0x33: unreachable instruction
+> drivers/pcmcia/cistpl.o: warning: objtool: pccard_store_cis()+0x4e:
+> unreachable instruction
+> drivers/gpu/vga/vgaarb.o: warning: objtool: pci_notify()+0x35:
+> unreachable instruction
+> arch/x86/kernel/tsc.o: warning: objtool:
+> determine_cpu_tsc_frequencies()+0x45: unreachable instruction
+> drivers/pcmcia/yenta_socket.o: warning: objtool:
+> ti1250_override()+0x50: unreachable instruction
+> fs/proc/proc_sysctl.o: warning: objtool:
+> sysctl_print_dir.isra.0()+0x19: unreachable instruction
+> drivers/iommu/intel-iommu.o: warning: objtool:
+> intel_iommu_init()+0x4f4: unreachable instruction
+> net/mac80211/ibss.o: warning: objtool:
+> ieee80211_ibss_work.cold()+0x157: unreachable instruction
+> drivers/net/ethernet/intel/e1000/e1000_main.o: warning: objtool:
+> e1000_clean.cold()+0x0: unreachable instruction
+> net/core/skbuff.o: warning: objtool: skb_dump.cold()+0x3fd:
+> unreachable instruction
 
-Should this enum be named...
+I'm still working on a solution, but the issue here is that any .cold
+function is going to be in a different section than the related
+function, and when objtool is searching for instructions in
+find_insn(), it assumes that it must be in the same section as the
+caller.
 
->  struct proc_fs_info {
->         struct pid_namespace *pid_ns;
->         struct dentry *proc_self;        /* For /proc/self */
->         struct dentry *proc_thread_self; /* For /proc/thread-self */
-> +       kgid_t pid_gid;
-> +       int hide_pid;
->  };
-
-.. and then used here instead of "int"?
-
-Same goes for 'struct proc_fs_context' too, for that matter?
-
-And maybe in the function declarations and definitions too? In things
-like 'has_pid_permissions()' (the series adds some other cases later,
-like hidepid2str() etc)
-
-Yeah, enums and ints are kind of interchangeable in C, but even if it
-wouldn't give us any more typechecking (except perhaps with sparse if
-you mark it so), it would be documenting the use.
-
-Or am I missing something?
-
-Anyway, I continue to think the series looks fine, bnut would love to
-see it in -next and perhaps comments from Al and Alexey Dobriyan..
-
-            Linus
