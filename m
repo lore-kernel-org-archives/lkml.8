@@ -2,134 +2,133 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430E9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B5DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193092070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585053312;
-	bh=1JmNFomT0l3uDtttAy7pqv/qb5pJWZXxKY5fJT8GM/k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IG6KR6z9I35OyGynsWIIacLE4mjIXsGvi/nShoDDl4PGA2Wxt1TeLqsfIN8GC7Eux
-	 ajAsrLVZsj4ZjD2ICd6IxiCwU9+prVbLMUz70codVao9hckpRyFuXZSqgl4MJlUI3x
-	 mUc5Hj1jOhIRTGjgMOiO2i2GklxeUlB/FUNzLmsU=
+	by mail.kernel.org (Postfix) with ESMTP id AD1082070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:35:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lrkNOvRm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgCXMfL (ORCPT
+        id S1727555AbgCXMf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35818 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727130AbgCXMfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:35:10 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24C3D2080C;
-        Tue, 24 Mar 2020 12:35:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585053310;
-        bh=1JmNFomT0l3uDtttAy7pqv/qb5pJWZXxKY5fJT8GM/k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fZDmtzWt0FD2a12FpTHubNlYWp9GDkmFviVJyK6WuK9xHBDKCImt7q1gGHmBTZwlt
-         F+n8rX3WkyMa8JQ8up5AA97HK5uQEo3r5sTt8sBHMIwZOvATBD8/ftB4OkyuSEes8p
-         qkWe+2Miv9jT/3+ICE2sXw2LFsTMuhYbPLbCYGUI=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGilw-00FFxJ-8y; Tue, 24 Mar 2020 12:35:08 +0000
-Date:   Tue, 24 Mar 2020 12:35:06 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zenghui Yu <yuzenghui@huawei.com>
-Cc:     <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Tue, 24 Mar 2020 08:35:27 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:43799 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727523AbgCXMf1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:35:27 -0400
+Received: by mail-pl1-f202.google.com with SMTP id z9so11835393pln.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 05:35:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=5LJBH8xQN/jQBYcxN7fADpsh/S4ILyM2BLQ/YSrufN0=;
+        b=lrkNOvRmUfIaF/A680qHGLiVgg0GQPkzG6FPhLtY747Zb6pLNG8Zgn8lppIsH1ATDA
+         qi2aczpwz1DwrvZaRiIJjdZuljpnhbxcIlV3tH30rFehu9n/VcQCT72NRCumITBYwZcs
+         u2vqZHudgsefVYz+OnKrpUocL7ncCUxYD1sWAeTYAVKhNG36dPUFEeG2EsskGXE8Gqv7
+         W6t9VEvV6CZYmMIXsJng/CIAM5+9WkHrlLR16tuWvMJ5B0LjGhrKJnMuf5yTBkRfeVcS
+         7vQ9gQmNzQA/SHCh04nyP551vhjc9mEyIRgpsmkCP+XyWgTn8pTj+emFXRd7rC+KrqDH
+         BUPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=5LJBH8xQN/jQBYcxN7fADpsh/S4ILyM2BLQ/YSrufN0=;
+        b=gefU9NmJEQ7YzSJnWj/weoHx5id4sgIx+K1m4SPs6axnS/IG/HQjMmS6EJobFpN19D
+         f7WRhJ++nqzM7KXS6f0LChs057DIslEL0grUZjBXH1hQeJow4ogmp8YcFvirpBa8DrFg
+         0GC20wfMegJE6GvBLwrtBluwPJ45cM/HMIubKOyml6yU/dGtyCckcyUXkK9I1kgLpz8z
+         pHwmS2k6jqSTej3oXfKod36vMRWUbnrLqjyLMP5zTeTLlbY3uxAU3T68R93Zn5NxSqhG
+         pyqzg6zuOuz+79uwFuRq/s0miY/H2F/PILwwNrvOVLtdqZ7BPgdTnJ1UNFYlnW8qVDUD
+         yooQ==
+X-Gm-Message-State: ANhLgQ0bhzdwpSRbKC3gG8ETXVwhUVku/U4ZJ1biS81tKkr093w5irb0
+        Ybn4o4fTLOsDOOw/XT4CLEPMLNfls2OE
+X-Google-Smtp-Source: ADFU+vu288sFSt11Qek/NJ9edzx6Ik5VpV0z7KGXLXL8qHNO1/Re0wIomUu+WPPbOweT/mkzeqW3EKHV9Tjl
+X-Received: by 2002:a17:90a:ba93:: with SMTP id t19mr4040036pjr.67.1585053326283;
+ Tue, 24 Mar 2020 05:35:26 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 05:35:14 -0700
+Message-Id: <20200324123518.239768-1-rajatja@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v2 1/5] input/serio/i8042: Attach fwnode to serio i8042 kbd device
+From:   Rajat Jain <rajatja@google.com>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajat Jain <rajatja@google.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCH v6 14/23] irqchip/gic-v4.1: Add VSGI allocation/teardown
-Message-ID: <20200324123506.6d71b04a@why>
-In-Reply-To: <f778d757-0312-5412-668c-db9aee889cf0@huawei.com>
-References: <20200320182406.23465-1-maz@kernel.org>
-        <20200320182406.23465-15-maz@kernel.org>
-        <f778d757-0312-5412-668c-db9aee889cf0@huawei.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, furquan@google.com,
+        dlaurie@google.com, bleung@google.com, zentaro@google.com,
+        dbehr@google.com
+Cc:     rajatxjain@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 10:43:09 +0800
-Zenghui Yu <yuzenghui@huawei.com> wrote:
+Attach the firmware node to the serio i8042 kbd device so that device
+properties can be passed from the firmware.
 
-> Hi Marc,
-> 
-> On 2020/3/21 2:23, Marc Zyngier wrote:
-> > Allocate per-VPE SGIs when initializing the GIC-specific part of the
-> > VPE data structure.
-> > 
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
-> > Link: https://lore.kernel.org/r/20200304203330.4967-15-maz@kernel.org
-> > ---
-> >   drivers/irqchip/irq-gic-v3-its.c   |  2 +-
-> >   drivers/irqchip/irq-gic-v4.c       | 68 +++++++++++++++++++++++++++++-
-> >   include/linux/irqchip/arm-gic-v4.h |  4 +-
-> >   3 files changed, 71 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> > index 15250faa9ef7..7ad46ff5f0b9 100644
-> > --- a/drivers/irqchip/irq-gic-v3-its.c
-> > +++ b/drivers/irqchip/irq-gic-v3-its.c
-> > @@ -4053,7 +4053,7 @@ static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
-> >   	struct its_cmd_info *info = vcpu_info;  
-> >   >   	switch (info->cmd_type) {  
-> > -	case PROP_UPDATE_SGI:
-> > +	case PROP_UPDATE_VSGI:
-> >   		vpe->sgi_config[d->hwirq].priority = info->priority;
-> >   		vpe->sgi_config[d->hwirq].group = info->group;
-> >   		its_configure_sgi(d, false);  
-> 
-> [...]
-> 
-> > @@ -103,7 +105,7 @@ enum its_vcpu_info_cmd_type {
-> >   	SCHEDULE_VPE,
-> >   	DESCHEDULE_VPE,
-> >   	INVALL_VPE,
-> > -	PROP_UPDATE_SGI,
-> > +	PROP_UPDATE_VSGI,
-> >   };  
-> >   >   struct its_cmd_info {  
-> 
-> As Eric pointed out, this belongs to patch #12.
+Signed-off-by: Rajat Jain <rajatja@google.com>
+---
+v2: Remove the Change-Id from the commit log
 
-Dammit. This is the *3rd* time I fsck the rebase. Someone *please* hit
-me on the head. Hard.
+ drivers/input/serio/i8042-x86ia64io.h | 1 +
+ drivers/input/serio/i8042.c           | 3 +++
+ 2 files changed, 4 insertions(+)
 
-Now *really* fixed:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git/commit/?h=kvm-arm64/gic-v4.1&id=05d32df13c6b3c0850b68928048536e9a736d520
-
-Thanks,
-
-	M.
+diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
+index dc974c288e880..ed9ec4310d976 100644
+--- a/drivers/input/serio/i8042-x86ia64io.h
++++ b/drivers/input/serio/i8042-x86ia64io.h
+@@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
+ 	}
+ 	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
+ 			       sizeof(i8042_kbd_firmware_id));
++	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
+ 
+ 	/* Keyboard ports are always supposed to be wakeup-enabled */
+ 	device_set_wakeup_enable(&dev->dev, true);
+diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
+index 20ff2bed3917a..0dddf273afd94 100644
+--- a/drivers/input/serio/i8042.c
++++ b/drivers/input/serio/i8042.c
+@@ -21,6 +21,7 @@
+ #include <linux/i8042.h>
+ #include <linux/slab.h>
+ #include <linux/suspend.h>
++#include <linux/property.h>
+ 
+ #include <asm/io.h>
+ 
+@@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
+ static bool i8042_bypass_aux_irq_test;
+ static char i8042_kbd_firmware_id[128];
+ static char i8042_aux_firmware_id[128];
++static struct fwnode_handle *i8042_kbd_fwnode;
+ 
+ #include "i8042.h"
+ 
+@@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
+ 	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
+ 	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
+ 		sizeof(serio->firmware_id));
++	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
+ 
+ 	port->serio = serio;
+ 	port->irq = I8042_KBD_IRQ;
 -- 
-Jazz is not dead. It just smells funny...
+2.25.1.696.g5e7596f4ac-goog
+
