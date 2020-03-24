@@ -2,121 +2,155 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B81D8C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C4C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0132076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:03:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585058585;
-	bh=nZheRtnEx8p5KPd5Sx+dBSzlY74POjtd9VyQ8pp502Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=aXtILuBxSpUV0CZwiwQ8Ujvq9kl3oD1uJWtRDYCPgYsBKjxfFSlf7jDRoUlNbJtO5
-	 c0BlIguQiiH0tEuAxuPREWC8qS/RjZWif+cGRgksTDfdOOuonLk7OM/voxGiiHNAaf
-	 TYSJ7kMDeXVR/+GG6UAaa9MgGyRWbzAIkychAj9k=
+	by mail.kernel.org (Postfix) with ESMTP id A00A62076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbgCXODE (ORCPT
+        id S1727787AbgCXOD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726188AbgCXODE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:03:04 -0400
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B25FF205ED;
-        Tue, 24 Mar 2020 14:03:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585058584;
-        bh=nZheRtnEx8p5KPd5Sx+dBSzlY74POjtd9VyQ8pp502Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kw0j4nhJWqpbk1JdoTcnIE0HHfHnre7W0Rfcuski5nX85ulIIY2ebZYgY26zMo9sB
-         moY9eCEscP9YWFnMqp91LKQKU63KrX2cZtsIHahGapEejvMhHuYFGOPoUi1p/m/8YZ
-         /Jqw19sx9Kuaof5LPKzNzlJVQBIDwPASfo8+NPr4=
-Date:   Tue, 24 Mar 2020 15:02:58 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        linux1394-devel@lists.sourceforge.net,
-        Helen Koike <helen.koike@collabora.com>
-Subject: Re: [PATCH v2 00/20] Reorganize media Kconfig
-Message-ID: <20200324150258.492000e4@coco.lan>
-In-Reply-To: <20200324135359.GA21251@pendragon.ideasonboard.com>
-References: <cover.1585057134.git.mchehab+huawei@kernel.org>
-        <20200324135359.GA21251@pendragon.ideasonboard.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 24 Mar 2020 10:03:28 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:38815 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727213AbgCXOD2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:03:28 -0400
+X-Originating-IP: 83.155.44.161
+Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
+        (Authenticated sender: hadess@hadess.net)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 2DA9BC0017;
+        Tue, 24 Mar 2020 14:03:24 +0000 (UTC)
+Message-ID: <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
+Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
+ connection
+From:   Bastien Nocera <hadess@hadess.net>
+To:     Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <superm1@gmail.com>,
+        Richard Hughes <hughsient@gmail.com>
+Date:   Tue, 24 Mar 2020 15:03:24 +0100
+In-Reply-To: <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+         <20200318192721.390630-1-lains@archlinux.org>
+         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
+         <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0 (3.36.0-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 24 Mar 2020 15:53:59 +0200
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> escreveu:
-
-> Hi Mauro,
+On Tue, 2020-03-24 at 13:46 +0000, Filipe Laíns wrote:
+> On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
+> > On Wed, 2020-03-18 at 19:27 +0000, Filipe Laíns wrote:
+> > > As discussed in the mailing list:
+> > > 
+> > > > Right now the hid-logitech-dj driver will export one node for
+> > > > each
+> > > > connected device, even when the device is not connected. That
+> > > > causes
+> > > > some trouble because in userspace we don't have have any way to
+> > > > know if
+> > > > the device is connected or not, so when we try to communicate,
+> > > > if
+> > > > the
+> > > > device is disconnected it will fail.
+> > 
+> > Why is it a problem that user-space communication fails? Note that
+> > sending a signal without any way to fetch the state means that it's
+> > always going to be racy.
 > 
-> Thank you for the patches.
+> It failing is not the problem. The problem is knowing when the device
+> is available again. Right now the only way to do that is to listen
+> for
+> events or periodically ping it.
 > 
-> On Tue, Mar 24, 2020 at 02:42:53PM +0100, Mauro Carvalho Chehab wrote:
-> > This patch series do lots of reorg at the media Kconfig options.
-> > It also move test drivers from platform dir to a new one.
-> > 
-> > After this change, the main config is organized on menus, allowing to
-> > select:
-> > 
-> > 	- type of devices selection - the filtering options
-> > 	- Media core options - with API and other core stuff
-> > 	- Media core extra options
-> > 	- Media drivers
-> > 	- Media ancillary drivers
-> > 
-> > The "type of devices" menu has the filtering options for:
-> > 
-> > 	- Cameras and video grabbers
-> > 	- Analog TV
-> > 	- Digital TV
-> > 	- AM/FM radio receivers/transmitters
-> > 	- SDR
-> > 	- CEC
-> > 	- Embeded devices (SoC)
-> > 	- Test drivers
-> > 
-> > This way, one interested only on embedded devices can unselect
-> > everything but "Embedded devices (SoC)" option.
-> > 
-> > Distros for PC/Laptops can enable everything but 
-> > "Embedded devices (SoC)" and "Test drivers".
+> We want to only export the HID++ hidraw node when the device is
+> available but that will take a while. We will have to test and sync
+> up
+> userspace. I also want to write tests for the driver before, to make
+> sure there are no regressions. We had a thread discussing this, IIRC
+> you were in CC.
+
+If I need to remember some old thread to know what we're talking about,
+then that means that the commit message is probably not good enough...
+
+Please add some links to the relevant discussion on bug forums if
+there's interesting data there too.
+
+
 > 
-> How about a device such as the Intel IPU3 ? It's a SoC, and is present
-> in laptops. Unlike the physical interface which is a fairly well defined
-> way to categorize devices, creating artificial classes will always leave
-> some devices without a home. We could have a capture card that supports
-> both analog and digital TV. A digital TV capture card with an HDMI input
-> can have a CEC device. Lots of combinations are possible.
+> > > The solution reached to solve this issue is to trigger an udev
+> > > change
+> > > event when the device connects, this way userspace can just wait
+> > > on
+> > > those connections instead of trying to ping the device.
+> > > 
+> > > Signed-off-by: Filipe Laíns <lains@archlinux.org>
+> > > 
+> > > ---
+> > > 
+> > > v2:
+> > >   - Issue udev change event on the connected hid device, not on
+> > > the
+> > >   receiver
+> > > 
+> > > ---
+> > >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
+> > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> > > logitech-dj.c
+> > > index 48dff5d6b605..282e57dd467d 100644
+> > > --- a/drivers/hid/hid-logitech-dj.c
+> > > +++ b/drivers/hid/hid-logitech-dj.c
+> > > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct
+> > > hid_device
+> > > *hdev,
+> > >  {
+> > >  	struct dj_receiver_dev *djrcv_dev = hid_get_drvdata(hdev);
+> > >  	struct dj_report *dj_report = (struct dj_report *) data;
+> > > +	struct dj_device *dj_dev;
+> > >  	unsigned long flags;
+> > >  
+> > >  	/*
+> > > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct
+> > > hid_device
+> > > *hdev,
+> > >  
+> > >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
+> > >  
+> > > -	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
+> > > +	dj_dev = djrcv_dev->paired_dj_devices[dj_report->device_index];
+> > > +
+> > > +	if (!dj_dev) {
+> > >  		/* received an event for an unknown device, bail out */
+> > >  		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
+> > >  		goto out;
+> > > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct
+> > > hid_device
+> > > *hdev,
+> > >  		if (dj_report-
+> > > > report_params[CONNECTION_STATUS_PARAM_STATUS] ==
+> > >  		    STATUS_LINKLOSS) {
+> > >  			logi_dj_recv_forward_null_report(djrcv_dev,
+> > > dj_report);
+> > > +		} else {
+> > > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
+> > > KOBJ_CHANGE);
+> > >  		}
+> > >  		break;
+> > >  	default:
 
-This is basically what we had before, just better organized. 
-
-It is a hints based selection. So, a multi-function device like IPU3
-would basically do (either directly or the menu which contains it):
-
-	depends on MEDIA_EMBEDDED_SUPPORT || MEDIA_CAMERA_SUPPORT
-
-When the filter is disabled, both options tune to "y".
-
-
-Thanks,
-Mauro
