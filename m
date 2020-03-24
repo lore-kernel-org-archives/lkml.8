@@ -2,126 +2,88 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D33C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 283A5C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220B82074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1F922076A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgCXHNN (ORCPT
+        id S1727431AbgCXHNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 03:13:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8630 "EHLO
+        Tue, 24 Mar 2020 03:13:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23944 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbgCXHNM (ORCPT
+        by vger.kernel.org with ESMTP id S1725905AbgCXHNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 03:13:12 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O72mtK127478
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:13:11 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywchwhxpv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:13:11 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 24 Mar 2020 07:13:09 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Mar 2020 07:13:05 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02O7C2iR31523250
+        Tue, 24 Mar 2020 03:13:52 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O73tpT095384;
+        Tue, 24 Mar 2020 03:13:41 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywbuv2b88-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 03:13:41 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02O75stb017615;
+        Tue, 24 Mar 2020 07:13:40 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 2ywaw1v8p0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 07:13:40 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02O7Dc9O38011136
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 07:12:02 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EB71A4055;
-        Tue, 24 Mar 2020 07:13:04 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AFB3A4040;
-        Tue, 24 Mar 2020 07:13:01 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.0.161])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Mar 2020 07:13:01 +0000 (GMT)
-Subject: Re: [PATCH 1/7] KVM: Fix out of range accesses to memslots
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
-        Peter Xu <peterx@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-References: <20200320205546.2396-1-sean.j.christopherson@intel.com>
- <20200320205546.2396-2-sean.j.christopherson@intel.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 24 Mar 2020 08:12:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 07:13:38 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D59AF13604F;
+        Tue, 24 Mar 2020 07:13:38 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9D884136051;
+        Tue, 24 Mar 2020 07:13:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.58.144])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Mar 2020 07:13:34 +0000 (GMT)
+Subject: Re: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200212054102.9259-1-kjain@linux.ibm.com>
+ <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
+ <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
+ <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <648e08fb-ffd2-16f6-005d-527ac3fee6c0@linux.ibm.com>
+Date:   Tue, 24 Mar 2020 12:43:32 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200320205546.2396-2-sean.j.christopherson@intel.com>
+In-Reply-To: <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20032407-0028-0000-0000-000003EA6697
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032407-0029-0000-0000-000024AFCF2F
-Message-Id: <6f62f9db-a4c5-051c-2189-670d5c8707da@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-24_01:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=716 impostorscore=0
- suspectscore=27 clxscore=1015 spamscore=0 malwarescore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2003240032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -130,71 +92,154 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 20.03.20 21:55, Sean Christopherson wrote:
-> Reset the LRU slot if it becomes invalid when deleting a memslot to fix
-> an out-of-bounds/use-after-free access when searching through memslots.
+On 3/20/20 12:17 PM, Joakim Zhang wrote:
 > 
-> Explicitly check for there being no used slots in search_memslots(), and
-> in the caller of s390's approximation variant.
+> [...]
+>>>>> Hi Kajol,
+>>>>>
+>>>>> I am not sure if it is good to ask a question here :-)
+>>>>>
+>>>>> I encountered a perf metricgroup issue, the result is incorrect when
+>>>>> the
+>>>> metric includes more than 2 events.
+>>>>>
+>>>>> git log --oneline tools/perf/util/metricgroup.c
+>>>>> 3635b27cc058 perf metricgroup: Fix printing event names of metric
+>>>>> group with multiple events f01642e4912b perf metricgroup: Support
+>>>>> multiple events for metricgroup
+>>>>> 287f2649f791 perf metricgroup: Scale the metric result
+>>>>>
+>>>>> I did a simple test, below is the JSON file and result.
+>>>>> [
+>>>>>         {
+>>>>>              "PublicDescription": "Calculate DDR0 bus actual
+>>>>> utilization
+>>>> which vary from DDR0 controller clock frequency",
+>>>>>              "BriefDescription": "imx8qm: ddr0 bus actual utilization",
+>>>>>              "MetricName": "imx8qm-ddr0-bus-util",
+>>>>>              "MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ +
+>>>> imx8_ddr0\\/write\\-cycles\\/ )",
+>>>>>              "MetricGroup": "i.MX8QM_DDR0_BUS_UTIL"
+>>>>>         }
+>>>>> ]
+>>>>> ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
+>>>>> #           time             counts unit events
+>>>>>      1.000104250              16720      imx8_ddr0/read-cycles/
+>>>> #  22921.0 imx8qm-ddr0-bus-util
+>>>>>      1.000104250               6201
+>> imx8_ddr0/write-cycles/
+>>>>>      2.000525625               8316      imx8_ddr0/read-cycles/
+>>>> #  12785.5 imx8qm-ddr0-bus-util
+>>>>>      2.000525625               2738
+>> imx8_ddr0/write-cycles/
+>>>>>      3.000819125               1056      imx8_ddr0/read-cycles/
+>>>> #   4136.7 imx8qm-ddr0-bus-util
+>>>>>      3.000819125                303
+>> imx8_ddr0/write-cycles/
+>>>>>      4.001103750               6260      imx8_ddr0/read-cycles/
+>>>> #   9149.8 imx8qm-ddr0-bus-util
+>>>>>      4.001103750               2317
+>> imx8_ddr0/write-cycles/
+>>>>>      5.001392750               2084      imx8_ddr0/read-cycles/
+>>>> #   4516.0 imx8qm-ddr0-bus-util
+>>>>>      5.001392750                601
+>> imx8_ddr0/write-cycles/
+>>>>>
+>>>>> You can see that only the first result is correct, could this be
+>>>>> reproduced at
+>>>> you side?
+>>>>
+>>>> Hi Joakim,
+>>>>         Will try to look into it from my side.
+>>>
+>>
+>>> Thanks Kajol for your help, I look into this issue, but don't know how to fix it.
+>>>
+>>> The results are always correct if signal event used in "MetricExpr" with "-I"
+>> parameters, but the results are incorrect when more than one events used in
+>> "MetricExpr".
+>>>
+>>
+>> Hi Joakim,
+>>     So, I try to look into this issue and understand the flow. From my
+>> understanding, whenever we do
+>>     calculation of metric expression we don't use exact count we are getting.
+>>     Basically we use mean value of each event in the calculation of metric
+>> expression.
+>>
+>> So, I am taking same example you refer.
+>>
+>> Metric Event: imx8qm-ddr0-bus-util
+>> MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles\\/ )"
+>>
+>> command#: ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
+>>
+>> #           time             counts unit events
+>>      1.000104250              16720      imx8_ddr0/read-cycles/
+>> #  22921.0 imx8qm-ddr0-bus-util
+>>      1.000104250               6201      imx8_ddr0/write-cycles/
+>>      2.000525625               8316      imx8_ddr0/read-cycles/
+>> #  12785.5 imx8qm-ddr0-bus-util
+>>      2.000525625               2738      imx8_ddr0/write-cycles/
+>>      3.000819125               1056      imx8_ddr0/read-cycles/
+>> #   4136.7 imx8qm-ddr0-bus-util
+>>      3.000819125                303      imx8_ddr0/write-cycles/
+>>      4.001103750               6260      imx8_ddr0/read-cycles/
+>> #   9149.8 imx8qm-ddr0-bus-util
+>>      4.001103750               2317      imx8_ddr0/write-cycles/
+>>      5.001392750               2084      imx8_ddr0/read-cycles/
+>> #   4516.0 imx8qm-ddr0-bus-util
+>>      5.001392750                601      imx8_ddr0/write-cycles/
+>>
+>> If you see we have a function called 'update_stats' in file util/stat.c where we
+>> do this calculation and updating stats->mean value. And this mean value is
+>> what we are using actually in our metric expression calculation.
+>>
+>> We call this function in each iteration where we update stats->mean and
+>> stats->n for each event.
+>> But one weird issue is, for very first event, stat->n is always 1 that is why we
+>> are getting mean same as count.
+>> So this is the reason for single event you get exact aggregate of metric
+>> expression.
+>> So doesn't matter how many events you have in your metric expression, every
+>> time you take exact count for first one and normalized value for rest which is
+>> weird.
+>>
+>> According to update_stats function:  We are updating mean as:
+>>
+>> stats->mean += delta / stats->n where,  delta = val - stats->mean.
+>>
+>> If we take write-cycles here. Initially mean = 0 and n = 1.
+>>
+>> 1st iteration: n=1, write cycle : 6201 and mean = 6201  (Final agg value: 16720
+>> + 6201 = 22921) 2nd iteration: n=2, write cycles:  6201 + (2738 - 6201)/2 =
+>> 4469.5  (Final aggr value: 8316 + 4469.5 = 12785.5) 3rd iteration: n=3, write
+>> cycles: 4469.5 + (303 - 4469.5)/3 = 3080.6667 (Final aggr value: 1056 +
+>> 3080.6667 = 4136.7)
+>>
+>> Andi and Jiri, I am not sure if its expected behavior. I mean shouldn't we either
+>> take mean value of each event or take n as 1 for each event. And one more
+>> question, Should we add an option to say whether user want exact aggregate
+>> or this normalize aggregate to remove the confusion? I try to find it out if we
+>> already have one but didn't get.
+>> Please let me know if my understanding is fine.
 > 
-> Fixes: 36947254e5f9 ("KVM: Dynamically size memslot array based on number of used slots")
-> Reported-by: Qian Cai <cai@lca.pw>
-> Cc: Peter Xu <peterx@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 3 +++
->  include/linux/kvm_host.h | 3 +++
->  virt/kvm/kvm_main.c      | 3 +++
->  3 files changed, 9 insertions(+)
+> Hi Kajol,
 > 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 807ed6d722dd..cb15fdda1fee 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2002,6 +2002,9 @@ static int kvm_s390_get_cmma(struct kvm *kvm, struct kvm_s390_cmma_log *args,
-
-Adding Claudio, but
->  	struct kvm_memslots *slots = kvm_memslots(kvm);
->  	struct kvm_memory_slot *ms;
->  
-> +	if (unlikely(!slots->used_slots))
-> +		return 0;
-> +
-
-this looks sane and like the right fix.
-
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-
->  	cur_gfn = kvm_s390_next_dirty_cmma(slots, args->start_gfn);
->  	ms = gfn_to_memslot(kvm, cur_gfn);
->  	args->count = 0;
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 35bc52e187a2..b19dee4ed7d9 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -1032,6 +1032,9 @@ search_memslots(struct kvm_memslots *slots, gfn_t gfn)
->  	int slot = atomic_read(&slots->lru_slot);
->  	struct kvm_memory_slot *memslots = slots->memslots;
->  
-> +	if (unlikely(!slots->used_slots))
-> +		return NULL;
-> +
->  	if (gfn >= memslots[slot].base_gfn &&
->  	    gfn < memslots[slot].base_gfn + memslots[slot].npages)
->  		return &memslots[slot];
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 28eae681859f..f744bc603c53 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -882,6 +882,9 @@ static inline void kvm_memslot_delete(struct kvm_memslots *slots,
->  
->  	slots->used_slots--;
->  
-> +	if (atomic_read(&slots->lru_slot) >= slots->used_slots)
-> +		atomic_set(&slots->lru_slot, 0);
-> +
->  	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots; i++) {
->  		mslots[i] = mslots[i + 1];
->  		slots->id_to_index[mslots[i].id] = i;
+> Sorry, your reply was buried in a sea of emails, it comes into my eyes when I searched any feedback from you. Much thanks for your great details!!!!!
+> 
+> I can quite understand what you explained. As a user, I think we always want to get the exact result according to the metric expression.
+> 
+> Can you take this case as an example then send out a formal email into mailing list to reflect this weird issue, more people can participate and discuss about it. Or you need me clear up and sent out the email?
+> This could attract maintainers' attention.
 > 
 
+Hi Joakim,
+    Yes you are right, I will send separate mail on lkml. That way it will be better.
+
+Thanks,
+Kajol
+
+> Best Regards,
+> Joakim Zhang
+> 
