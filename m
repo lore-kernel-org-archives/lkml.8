@@ -2,267 +2,230 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8247BC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BD5C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ACFD2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 139ED20658
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bhro6EjB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgCXMWX (ORCPT
+        id S1727431AbgCXMX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:22:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:5249 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727241AbgCXMWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:22:23 -0400
-IronPort-SDR: yb4NWUgA3aIqL166v6n0xKi/4ojBI6r11AxUcVtAzmuWJvw7l1owO529EFmjdivOoLnhXZAw0I
- WJstt/391bSw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 05:22:21 -0700
-IronPort-SDR: mqTxCfSFaBhHjZxM72j/gkpQ5rcdY36qil8NK7yodAUufj5QhuL+zr+cXzg3oviRmkziYAoB8s
- 9V/HG0qhd8tg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="357409870"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Mar 2020 05:22:17 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 24 Mar 2020 14:22:16 +0200
-Date:   Tue, 24 Mar 2020 14:22:16 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 18/19] platform/x86: intel_pmc_ipc: Convert to MFD
-Message-ID: <20200324122216.GG2564@lahna.fi.intel.com>
-References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
- <20200303133649.39819-19-mika.westerberg@linux.intel.com>
- <20200324115219.GB437932@dell>
+        Tue, 24 Mar 2020 08:23:27 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37655 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbgCXMX1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:23:27 -0400
+Received: by mail-wm1-f65.google.com with SMTP id d1so3229672wmb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 05:23:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=mufZG5/pHTT/BU7NPug772ycUZmf+Hdmb7Tdh23IbLY=;
+        b=bhro6EjBkXlkItYYnrONWxE3yLRkV/9Ru6VZaTipS1qPzkuNggmuwscJyyu8h5wft6
+         b2qsEVSp9WAnyERCJloIcZVaWF8TDPo8nRLMjOqGdwDILl+rjksMuxexUbiatQMb/4Rc
+         UP8iU52IwEZLQoBXoCnqWXxsE0ednzM/Cj45c0DZlL/eE92BX2OKQdu7DRhWm9YWJ15I
+         ZwpN/m3k9xjEpJxZVZ+zecJ0oMm6tqfyh1zBt59YnfrVNYJEU513pQ8f5pE8FkWNj8Up
+         PpkrxwG+/5MP33bmcpQTFQS8mCtgypTKsnxhrq6cZDbOvSFRyPjq0knxitnSLtse8gqv
+         IFAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mufZG5/pHTT/BU7NPug772ycUZmf+Hdmb7Tdh23IbLY=;
+        b=SvVGZ6zUql3gm7k7SyhQR/VR5LLPTBifYjq1A6v+nLCI2qOQY0xa2zeVHfg4l59HN6
+         SgH4tgTT7gxKONmVpHAM/LAtW9xSNo5lcTR02Cd1BsQ5qNg73fqbevdwC2tfsA80wL6a
+         EozP08E9PfQndrD5xwZ0hpMTJ5qyY828jO1AhTnhNMzC4ErVN1WsvEi394hzeJJvt/Cu
+         1w+ELmyS0xzUVYZgGKrrJxObewiHcs3jCvnnF/2eXF752SNFK3NcO2Q5BPeT2E2WKm1a
+         kR65SHEIryLSJdSguu8KAg76Jj2PCAatG34Ft6f+q9s6b90cGeSTU3EAuEQ8zHedJ5Vz
+         W3fw==
+X-Gm-Message-State: ANhLgQ3XTXGQbiNpM2ELKZqsZf2ktPHMct/UNCBg7H67r0Ier78NIUec
+        vqC1GaMyAECJ6ATmtG0NqvraYw==
+X-Google-Smtp-Source: ADFU+vtufQEdeZrQkE61849birJR56e2XJjUDfj0eArVmoszUWlXpy58ujbtCnw1lhwDO8qPSVZQIQ==
+X-Received: by 2002:a7b:c359:: with SMTP id l25mr5369621wmj.149.1585052605119;
+        Tue, 24 Mar 2020 05:23:25 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id f9sm29463391wro.47.2020.03.24.05.23.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 05:23:24 -0700 (PDT)
+Subject: Re: [PATCH v5 1/1] nvmem: Add support for write-only instances
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+References: <PSXP216MB0438D2F2D9B648BAF9A007A580F70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <2565d557-0425-1a80-18c9-bab34355364c@linaro.org>
+Date:   Tue, 24 Mar 2020 12:23:23 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324115219.GB437932@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <PSXP216MB0438D2F2D9B648BAF9A007A580F70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:52:19AM +0000, Lee Jones wrote:
-> On Tue, 03 Mar 2020, Mika Westerberg wrote:
-> 
-> > This driver only creates a bunch of platform devices sharing resources
-> > belonging to the PMC device. This is pretty much what MFD subsystem is
-> > for so move the driver there, renaming it to intel_pmc_bxt.c which
-> > should be more clear what it is.
-> > 
-> > MFD subsystem provides nice helper APIs for subdevice creation so
-> > convert the driver to use those. Unfortunately the ACPI device includes
-> > separate resources for most of the subdevices so we cannot simply call
-> > mfd_add_devices() to create all of them but instead we need to call it
-> > separately for each device.
-> > 
-> > The new MFD driver continues to expose two sysfs attributes that allow
-> > userspace to send IPC commands to the PMC/SCU to avoid breaking any
-> > existing applications that may use these. Generally this is bad idea so
-> > document this in the ABI documentation.
-> > 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
-> >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
-> >  arch/x86/include/asm/intel_telemetry.h        |   1 +
-> >  drivers/mfd/Kconfig                           |  16 +-
-> >  drivers/mfd/Makefile                          |   1 +
-> >  drivers/mfd/intel_pmc_bxt.c                   | 504 ++++++++++++++
-> >  drivers/platform/x86/Kconfig                  |  16 +-
-> >  drivers/platform/x86/Makefile                 |   1 -
-> >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
-> >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
-> >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
-> >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
-> >  include/linux/mfd/intel_pmc_bxt.h             |  43 ++
-> >  13 files changed, 602 insertions(+), 710 deletions(-)
-> >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
-> >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
-> >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
-> >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
-> >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
-> 
-> [...]
-> 
-> > +/*
-> > + * We use the below templates to construct MFD cells. The struct
-> > + * intel_pmc_dev instance holds the real MFD cells where we first copy
-> > + * these and then fill the dynamic parts based on the extracted resources.
-> > + */
-> > +
-> > +static const struct mfd_cell punit = {
-> > +	.name = "intel_punit_ipc",
-> > +};
-> > +
-> > +static int update_no_reboot_bit(void *priv, bool set)
-> > +{
-> > +	struct intel_pmc_dev *pmc = priv;
-> > +	u32 bits = PMC_CFG_NO_REBOOT_EN;
-> > +	u32 value = set ? bits : 0;
-> > +
-> > +	return intel_pmc_gcr_update(pmc, PMC_GCR_PMC_CFG_REG, bits, value);
-> > +}
-> > +
-> > +static const struct itco_wdt_platform_data tco_pdata = {
-> > +	.name = "Apollo Lake SoC",
-> > +	.version = 5,
-> > +	.update_no_reboot_bit = update_no_reboot_bit,
-> > +};
-> > +
-> > +static const struct mfd_cell tco = {
-> > +	.name = "iTCO_wdt",
-> > +	.ignore_resource_conflicts = true,
-> > +};
-> > +
-> > +static const struct resource telem_res[] = {
-> > +	DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
-> > +	DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
-> > +};
-> > +
-> > +static const struct mfd_cell telem = {
-> > +	.name = "intel_telemetry",
-> > +	.resources = telem_res,
-> > +	.num_resources = ARRAY_SIZE(telem_res),
-> > +};
-> > +
-> > +static int intel_pmc_get_tco_resources(struct platform_device *pdev,
-> > +				       struct intel_pmc_dev *pmc)
-> > +{
-> > +	struct itco_wdt_platform_data *pdata;
-> > +	struct resource *res, *tco_res;
-> > +
-> > +	if (acpi_has_watchdog())
-> > +		return 0;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_IO,
-> > +				    PLAT_RESOURCE_ACPI_IO_INDEX);
-> > +	if (!res) {
-> > +		dev_err(&pdev->dev, "Failed to get IO resource\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	tco_res = devm_kcalloc(&pdev->dev, 2, sizeof(*tco_res), GFP_KERNEL);
-> > +	if (!tco_res)
-> > +		return -ENOMEM;
-> > +
-> > +	tco_res[0].flags = IORESOURCE_IO;
-> > +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
-> > +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
-> > +	tco_res[1].flags = IORESOURCE_IO;
-> > +	tco_res[1].start = res->start + SMI_EN_OFFSET;
-> > +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
-> > +
-> > +	pmc->cells[PMC_TCO].resources = tco_res;
-> > +	pmc->cells[PMC_TCO].num_resources = 2;
-> > +
-> > +	pdata = devm_kmemdup(&pdev->dev, &tco_pdata, sizeof(*pdata), GFP_KERNEL);
-> > +	if (!pdata)
-> > +		return -ENOMEM;
-> 
-> Why do you need to take a copy?
-> 
-> This can be referenced directly in 'mfd_cell tco', no?
+Sorry for such late review, but I did endup finding two new issues with 
+this patch.
 
-No because I'm filling the priv pointer dynamically. I've tried to
-explain the same thing in the previous iterations already.
-
-> > +	pdata->no_reboot_priv = pmc;
+On 18/03/2020 15:20, Nicholas Johnson wrote:
+> There is at least one real-world use-case for write-only nvmem
+> instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
+> non-active NVMem file is read").
 > 
-> You're putting device data inside platform data?
+> Add support for write-only nvmem instances by adding attrs for 0200.
 > 
-> This doesn't sit right with me at all.
->
-> You already saved it using platform_set_drvdata(), why do you need it
-> twice?  Why can't you export update_no_reboot_bit() and make it take
-> 'struct intel_pmc_dev' or better yet 'pdev' as an argument?
-
-This is a property of the iTCO_wdt driver, not part of this patch
-series. I'm just using the interface it provides.
-
-iTCO_wdt interface can of course be made better but I don't think it
-should be part of this series.
-
-> > +	pmc->cells[PMC_TCO].platform_data = pdata;
-> > +	pmc->cells[PMC_TCO].pdata_size = sizeof(*pdata);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int intel_pmc_get_resources(struct platform_device *pdev,
-> > +				   struct intel_pmc_dev *pmc,
-> > +				   struct intel_scu_ipc_data *scu_data)
-> > +{
-> > +	struct resource *res, *punit_res;
-> > +	struct resource gcr_res;
-> > +	size_t npunit_res = 0;
-> > +	int ret;
-> > +
-> > +	scu_data->irq = platform_get_irq_optional(pdev, 0);
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> > +				    PLAT_RESOURCE_IPC_INDEX);
-> > +	if (!res) {
-> > +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* IPC registers */
-> > +	scu_data->mem.flags = res->flags;
-> > +	scu_data->mem.start = res->start;
-> > +	scu_data->mem.end = res->start + PLAT_RESOURCE_IPC_SIZE - 1;
-> > +
-> > +	/* GCR registers */
-> > +	gcr_res.flags = res->flags;
-> > +	gcr_res.start = res->start + PLAT_RESOURCE_GCR_OFFSET;
-> > +	gcr_res.end = gcr_res.start + PLAT_RESOURCE_GCR_SIZE - 1;
-> > +
-> > +	pmc->gcr_mem_base = devm_ioremap_resource(&pdev->dev, &gcr_res);
-> > +	if (IS_ERR(pmc->gcr_mem_base))
-> > +		return PTR_ERR(pmc->gcr_mem_base);
-> > +
-> > +	pmc->cells[PMC_TCO] = tco;
-> > +	pmc->cells[PMC_PUNIT] = punit;
-> > +	pmc->cells[PMC_TELEM] = telem;
+> Change nvmem_register() to abort if NULL group is returned from
+> nvmem_sysfs_get_groups().
 > 
-> Why are you still saving these to device data?
+> Return NULL from nvmem_sysfs_get_groups() in invalid cases.
 > 
-> What's stopping you operating on the structures directly?
+> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> ---
+>   drivers/nvmem/core.c        | 10 +++++--
+>   drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
+>   2 files changed, 56 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
+> index 77d890d36..ddc7be514 100644
+> --- a/drivers/nvmem/core.c
+> +++ b/drivers/nvmem/core.c
+> @@ -381,6 +381,14 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	nvmem->type = config->type;
+>   	nvmem->reg_read = config->reg_read;
+>   	nvmem->reg_write = config->reg_write;
+> +	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
+> +	if (!nvmem->dev.groups) {
+> +		ida_simple_remove(&nvmem_ida, nvmem->id);
+> +		gpiod_put(nvmem->wp_gpio);
+> +		kfree(nvmem);
+> +		return ERR_PTR(-EINVAL);
+> +	}
 
-OK, I've explained this in the previous iterations but here goes. The
-problem is that the resources need to be filled dynamically as they are
-whatever there is in the ACPI table.
+returning NULL is valid usecase here, consider it like not having 
+CONFIG_NVMEM_SYSFS so no need to check the return value.
 
-Now, Consider that we have two PMC devices. It is possible that the
-driver is bind to both in paraller which means that both are racing to
-fill and use these structures leading to a corruption.
+But a warning/error message from nvmem_sysfs_get_groups would help debug 
+in case of invalid configurations.
 
-Another issue is that even if we have single device, the driver fills in
-the structures and then we unbind it. These structures now are left with
-that data which does not feel right.
+> +
+>   	if (!config->no_of_node)
+>   		nvmem->dev.of_node = config->dev->of_node;
+>   
+> @@ -395,8 +403,6 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
+>   	nvmem->read_only = device_property_present(config->dev, "read-only") ||
+>   			   config->read_only || !nvmem->reg_write;
+>   
+> -	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
+> -
+Moving this to before read_only flag is set would not work! as 
+nvmem_sysfs_get_groups() is going to use read_only flag.
 
-Therefore I've put all we know in advance as const version of these
-structures and then we use those as template to build custom ones based
-on resources extracted from ACPI to individual instances.
+Ideally you do not need to change anything in core.c file and just 
+update nvmem-sysfs.c should be enough.
+
+
+>   	device_initialize(&nvmem->dev);
+>   
+>   	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
+> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+> index 9e0c429cd..4ceac8680 100644
+> --- a/drivers/nvmem/nvmem-sysfs.c
+> +++ b/drivers/nvmem/nvmem-sysfs.c
+> @@ -196,16 +196,49 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
+>   	NULL,
+>   };
+>   
+> +/* write only permission, root only */
+> +static struct bin_attribute bin_attr_wo_root_nvmem = {
+> +	.attr	= {
+> +		.name	= "nvmem",
+> +		.mode	= 0200,
+> +	},
+> +	.write	= bin_attr_nvmem_write,
+> +};
+> +
+> +static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
+> +	&bin_attr_wo_root_nvmem,
+> +	NULL,
+> +};
+> +
+> +static const struct attribute_group nvmem_bin_wo_root_group = {
+> +	.bin_attrs	= nvmem_bin_wo_root_attributes,
+> +	.attrs		= nvmem_attrs,
+> +};
+> +
+> +static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
+> +	&nvmem_bin_wo_root_group,
+> +	NULL,
+> +};
+> +
+>   const struct attribute_group **nvmem_sysfs_get_groups(
+>   					struct nvmem_device *nvmem,
+>   					const struct nvmem_config *config)
+>   {
+> -	if (config->root_only)
+> -		return nvmem->read_only ?
+> -			nvmem_ro_root_dev_groups :
+> -			nvmem_rw_root_dev_groups;
+> +	/* Read-only */
+> +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
+> +		return config->root_only ?
+> +			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
+> +
+> +	/* Read-write */
+> +	if (nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
+> +		return config->root_only ?
+> +			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
+> +
+> +	/* Write-only, do not honour request for global writable entry */
+> +	if (!nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
+> +		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
+>   
+> -	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
+> +	return NULL;
+>   }
+>   
+>   /*
+> @@ -224,17 +257,24 @@ int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
+>   	if (!config->base_dev)
+>   		return -EINVAL;
+>   
+> -	if (nvmem->read_only) {
+> +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only)) {
+>   		if (config->root_only)
+>   			nvmem->eeprom = bin_attr_ro_root_nvmem;
+>   		else
+>   			nvmem->eeprom = bin_attr_ro_nvmem;
+> -	} else {
+> +	} else if (!nvmem->reg_read && nvmem->reg_write && !nvmem->read_only) {
+> +		if (config->root_only)
+> +			nvmem->eeprom = bin_attr_wo_root_nvmem;
+> +		else
+> +			return -EINVAL;
+> +	} else if (nvmem->reg_read && nvmem->reg_write && !nvmem->read_only) {
+>   		if (config->root_only)
+>   			nvmem->eeprom = bin_attr_rw_root_nvmem;
+>   		else
+>   			nvmem->eeprom = bin_attr_rw_nvmem;
+> -	}
+> +	} else
+> +		return -EINVAL;
+> +
+>   	nvmem->eeprom.attr.name = "eeprom";
+>   	nvmem->eeprom.size = nvmem->size;
+>   #ifdef CONFIG_DEBUG_LOCK_ALLOC
+> 
