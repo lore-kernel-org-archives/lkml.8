@@ -2,143 +2,110 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E12EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB31C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1389320870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056351;
-	bh=+xpPjaMhoBadtcvnqh6t0mLef2amTpzfhjgOuazpDck=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=prMu2mfqT4MCXJ7lf+LH5FKbupgAge+7/z1GhLahF/PSJLe5j3kep3WR4evoDOXGe
-	 nViUHQXf0Zt4HfFeVPKGGgGmoF2QKJw+AGrD/LXJkmChR+qmJQ6dr9o1CPHba2mPAB
-	 RxIs03opdCJ/YMgk4dMdc02NTAOF0I5KXGf4N2PU=
+	by mail.kernel.org (Postfix) with ESMTP id 8ABA320870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pL0afxlg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729247AbgCXNZt (ORCPT
+        id S1729315AbgCXNZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727935AbgCXNZr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:25:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3148D208C3;
-        Tue, 24 Mar 2020 13:25:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056346;
-        bh=+xpPjaMhoBadtcvnqh6t0mLef2amTpzfhjgOuazpDck=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dj4039sctKGa66VgQ2viA5vk3ZtXlRwwN6N6CqJU1sWnE8KmILP5DIF5UXA5idXTw
-         wdqtYRnTJOBr3JtyKNNV4xqxPUSmk2SNZzavVzfolpl1Y4TD+soLvs8HoLqLwbPgck
-         8I+XCxWkiQ6pC4CqMb2sHtFVX6cGUWlVtlyLQ9hM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Minchan Kim <minchan@kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 096/119] mm: do not allow MADV_PAGEOUT for CoW pages
-Date:   Tue, 24 Mar 2020 14:11:21 +0100
-Message-Id: <20200324130817.757717214@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 24 Mar 2020 09:25:52 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53991 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728858AbgCXNZu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:25:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id b12so3179917wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 06:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4JgEAVo+h2KzvKgD9gohdz9+sy8MG1M0rMtQ0IMKIBo=;
+        b=pL0afxlgyYuxlAy2aJ2f4pMyRnBNpJaFAeGBzOfuByV8sqh7q4WkP4g9L9dsM0TrMJ
+         MsjcFXmG1ZcLN/1ZRneJ5NM46sGAEY9HJbRecxzwaLNDu10MGoahXqm5sUL/TvCX1eVX
+         R+4PqmQJDx1NqVV9ky4GBDsh8QeQnQmd20BtEtBp7bOOeGxgiInxgEYLbAjV6/YWUBnd
+         rw8bOv1bzgciSgiz7TPQE5Mej8mMvDVHrRnNqZtAnRzOH1q0GNQSyQouSBwxXCHSpDEp
+         6hmSR5gvZrQCMnM6ZIRK3k/1R3PX/vGg0Dopc5UjbKkAZ5qVR+IgcRqv7uB0wqDPauUr
+         iDsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4JgEAVo+h2KzvKgD9gohdz9+sy8MG1M0rMtQ0IMKIBo=;
+        b=DD2uPfwqCo/dXNNhAJGvpT4L0OfnbarMJdRIVNGUxFUEEf1OoA08XZDw4SrdQqvMZM
+         xsVwLN7gT1fb1PfM08bMDQWhszmrSY/+UfZu/dzSZJWkEujc7tIbaJ4V6Say3s42l6/G
+         CSRBEhiVC67MmzAjklpCOExTC8zHDAOGFt4WVkYrdnTcj1XpE01M+rWBUmvDgzKHcGfj
+         brF/+wkvckMAfcw97n6KaKRFO3yk5h8vau8AIYQDgAHYpTHlIumLDEvcv4EuWs1eju7r
+         E70XSEuSxaZr3yvyClknoI6P1YicSH4ZM1nCEb492zTATJM5Ej0d0j4SXVNusxqGUkbl
+         ckGA==
+X-Gm-Message-State: ANhLgQ1kWA4pqJQFYAVHZaU2PpAwBwzbLMv1IdER1WCqp8esVk3Inx1L
+        qIJh9FDCL+whcrGgkkvqEQbE9XeKdfs=
+X-Google-Smtp-Source: ADFU+vuygn50u5viVRe8jA1Uma1ZZIS4i0ebBLXI3yMDQMl6EY0lt8IYptSFHGUFVZvEFRcT7Lip6Q==
+X-Received: by 2002:a7b:c004:: with SMTP id c4mr1277278wmb.108.1585056347989;
+        Tue, 24 Mar 2020 06:25:47 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id i21sm4689117wmb.23.2020.03.24.06.25.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 06:25:47 -0700 (PDT)
+Subject: Re: [PATCH 5/5] nvmem: Add support for write-only instances
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-kernel@vger.kernel.org
+References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
+ <20200323150007.7487-6-srinivas.kandagatla@linaro.org>
+ <20200323190505.GB632476@kroah.com>
+ <4820047d-9a99-749c-491d-dbb91a2f5447@linaro.org>
+ <20200324122939.GA2348009@kroah.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <300e8095-3af4-15a2-069f-87ac7cbb83bb@linaro.org>
+Date:   Tue, 24 Mar 2020 13:25:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324122939.GA2348009@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Hocko <mhocko@suse.com>
-
-commit 12e967fd8e4e6c3d275b4c69c890adc838891300 upstream.
-
-Jann has brought up a very interesting point [1].  While shared pages
-are excluded from MADV_PAGEOUT normally, CoW pages can be easily
-reclaimed that way.  This can lead to all sorts of hard to debug
-problems.  E.g.  performance problems outlined by Daniel [2].
-
-There are runtime environments where there is a substantial memory
-shared among security domains via CoW memory and a easy to reclaim way
-of that memory, which MADV_{COLD,PAGEOUT} offers, can lead to either
-performance degradation in for the parent process which might be more
-privileged or even open side channel attacks.
-
-The feasibility of the latter is not really clear to me TBH but there is
-no real reason for exposure at this stage.  It seems there is no real
-use case to depend on reclaiming CoW memory via madvise at this stage so
-it is much easier to simply disallow it and this is what this patch
-does.  Put it simply MADV_{PAGEOUT,COLD} can operate only on the
-exclusively owned memory which is a straightforward semantic.
-
-[1] http://lkml.kernel.org/r/CAG48ez0G3JkMq61gUmyQAaCq=_TwHbi1XKzWRooxZkv08PQKuw@mail.gmail.com
-[2] http://lkml.kernel.org/r/CAKOZueua_v8jHCpmEtTB6f3i9e2YnmX4mqdYVWhV4E=Z-n+zRQ@mail.gmail.com
-
-Fixes: 9c276cc65a58 ("mm: introduce MADV_COLD")
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Michal Hocko <mhocko@suse.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Daniel Colascione <dancol@google.com>
-Cc: Dave Hansen <dave.hansen@intel.com>
-Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200312082248.GS23944@dhcp22.suse.cz
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/madvise.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
-
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -335,12 +335,14 @@ static int madvise_cold_or_pageout_pte_r
- 		}
- 
- 		page = pmd_page(orig_pmd);
-+
-+		/* Do not interfere with other mappings of this page */
-+		if (page_mapcount(page) != 1)
-+			goto huge_unlock;
-+
- 		if (next - addr != HPAGE_PMD_SIZE) {
- 			int err;
- 
--			if (page_mapcount(page) != 1)
--				goto huge_unlock;
--
- 			get_page(page);
- 			spin_unlock(ptl);
- 			lock_page(page);
-@@ -426,6 +428,10 @@ regular_page:
- 			continue;
- 		}
- 
-+		/* Do not interfere with other mappings of this page */
-+		if (page_mapcount(page) != 1)
-+			continue;
-+
- 		VM_BUG_ON_PAGE(PageTransCompound(page), page);
- 
- 		if (pte_young(ptent)) {
 
 
+On 24/03/2020 12:29, Greg KH wrote:
+>> But the Idea here is :
+>> We ended up with providing different options like read-only,root-only to
+>> nvmem providers combined with read/write callbacks.
+>> With that, there are some cases which are totally invalid, existing code
+>> does very minimal check to ensure that before populating with correct
+>> attributes to sysfs file. One of such case is with thunderbolt provider
+>> which supports only write callback.
+>>
+>> With this new checks in place these flags and callbacks are correctly
+>> validated, would result in correct file attributes.
+> Why this crazy set of different groups?  You can set the mode of a sysfs
+> file in the callback for when the file is about to be created, that's so
+> much simpler and is what it is for.  This feels really hacky and almost
+> impossible to follow:(
+Thanks for the inputs, That definitely sounds much simpler to deal with.
+
+Am guessing you are referring to is_bin_visible callback?
+
+I will try to clean this up!
+
+thanks,
+srini
+> 
+> thanks,
+> 
+> greg k-h
