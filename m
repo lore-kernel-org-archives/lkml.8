@@ -6,39 +6,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A55C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5839C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843DE2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62E42076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgCXA0j (ORCPT
+        id S1727837AbgCXA0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:26:39 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60461 "EHLO mga14.intel.com"
+        Mon, 23 Mar 2020 20:26:47 -0400
+Received: from mga14.intel.com ([192.55.52.115]:60459 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbgCXA0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:26:25 -0400
-IronPort-SDR: tBJs3oVt9C9mcgKpTHM5q4jkyfy00v9q6DYnegjJRUTP/r4ys4r6HY4/ilDMdHUU2hTR8b7n8n
- x1ekYK2fMStA==
+        id S1727421AbgCXA0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:26:22 -0400
+IronPort-SDR: pBDYIPRvU/uKKvRrN3cwsOEWZyxeL1UTqU7kCCoipF1BZv4NR7WOltwdFBKeJWBqWuS7pIoj/T
+ IZHNN3WqMi7g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:25 -0700
-IronPort-SDR: SP/1jlarBGzBmhn75XRTjEb4S/t+l28ROOFK2KwQ6gPuEY6iRHk7M6tnLK3jqkrBRZ5qqDYR+Q
- GAQvlNKxOgdw==
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:21 -0700
+IronPort-SDR: Ou3m9MgYCxOn4I3E/7b673eCIgjVWmvtddS6pF7MMwj585KJif6sdbbbTF3EeKBZ+rdOGxYhKV
+ 9fFFOy7I1/mw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="419692248"
+   d="scan'208";a="419692229"
 Received: from bhaveshm-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.134.88.197])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:24 -0700
+  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:21 -0700
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v18 07/11] PCI/DPC: Cache DPC capabilities in pci_init_capabilities()
-Date:   Mon, 23 Mar 2020 17:26:04 -0700
-Message-Id: <5888380657c8b9551675b5dbd48e370e4fd2703d.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v18 02/11] PCI: move {pciehp,shpchp}_is_native() definitions to pci.c
+Date:   Mon, 23 Mar 2020 17:25:59 -0700
+Message-Id: <201bd9ecd241cce0242af90a6c0f29356b472c6f.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -49,105 +49,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Since Error Disconnect Recover needs to use DPC error handling routines
-even if the OS doesn't have control of DPC, move the initalization and
-caching of DPC capabilities from the DPC driver to pci_init_capabilities().
+Currently pciehp_is_native() and shpchp_is_native() API's
+always returns true if CONFIG_ACPI is not defined. But
+these APIs does not have any dependency on ACPI. In non
+ACPI case, we should return true only if slot supports it.
 
-Link: https://lore.kernel.org/r/6ac4e893e7d1054fe43efed0f89ca02f072c3190.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
+So move the definitions out of pci-acpi.c and always evaluate
+the function before returning the status.
+
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/dpc.c | 33 +++++++++++++++++++++------------
- drivers/pci/probe.c    |  1 +
- 3 files changed, 24 insertions(+), 12 deletions(-)
+ drivers/pci/pci-acpi.c      | 38 -------------------------------------
+ drivers/pci/pci.c           | 38 +++++++++++++++++++++++++++++++++++++
+ include/linux/pci_hotplug.h |  7 +++----
+ 3 files changed, 41 insertions(+), 42 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index efbe94096050..e48677a0ba42 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -448,9 +448,11 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
- #ifdef CONFIG_PCIE_DPC
- void pci_save_dpc_state(struct pci_dev *dev);
- void pci_restore_dpc_state(struct pci_dev *dev);
-+void pci_dpc_init(struct pci_dev *pdev);
- #else
- static inline void pci_save_dpc_state(struct pci_dev *dev) {}
- static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-+static inline void pci_dpc_init(struct pci_dev *pdev) {}
- #endif
- 
- #ifdef CONFIG_PCI_ATS
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index 0c45133a9a91..5870a0f154fc 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -257,6 +257,27 @@ static irqreturn_t dpc_irq(int irq, void *context)
- 	return IRQ_HANDLED;
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 0c02d500158f..1bf8765c41bd 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -781,44 +781,6 @@ int pci_acpi_program_hp_params(struct pci_dev *dev)
+ 	return -ENODEV;
  }
  
-+void pci_dpc_init(struct pci_dev *pdev)
+-/**
+- * pciehp_is_native - Check whether a hotplug port is handled by the OS
+- * @bridge: Hotplug port to check
+- *
+- * Returns true if the given @bridge is handled by the native PCIe hotplug
+- * driver.
+- */
+-bool pciehp_is_native(struct pci_dev *bridge)
+-{
+-	const struct pci_host_bridge *host;
+-	u32 slot_cap;
+-
+-	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
+-		return false;
+-
+-	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
+-	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
+-		return false;
+-
+-	if (pcie_ports_native)
+-		return true;
+-
+-	host = pci_find_host_bridge(bridge->bus);
+-	return host->native_pcie_hotplug;
+-}
+-
+-/**
+- * shpchp_is_native - Check whether a hotplug port is handled by the OS
+- * @bridge: Hotplug port to check
+- *
+- * Returns true if the given @bridge is handled by the native SHPC hotplug
+- * driver.
+- */
+-bool shpchp_is_native(struct pci_dev *bridge)
+-{
+-	return bridge->shpc_managed;
+-}
+-
+ /**
+  * pci_acpi_wake_bus - Root bus wakeup notification fork function.
+  * @context: Device wakeup context.
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index d828ca835a98..e724341cefff 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -4783,6 +4783,44 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
+ 	}
+ }
+ 
++/**
++ * pciehp_is_native - Check whether a hotplug port is handled by the OS
++ * @bridge: Hotplug port to check
++ *
++ * Returns true if the given @bridge is handled by the native PCIe hotplug
++ * driver.
++ */
++bool pciehp_is_native(struct pci_dev *bridge)
 +{
-+	u16 cap;
++	const struct pci_host_bridge *host;
++	u32 slot_cap;
 +
-+	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
-+	if (!pdev->dpc_cap)
-+		return;
++	if (!IS_ENABLED(CONFIG_HOTPLUG_PCI_PCIE))
++		return false;
 +
-+	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-+	if (!(cap & PCI_EXP_DPC_CAP_RP_EXT))
-+		return;
++	pcie_capability_read_dword(bridge, PCI_EXP_SLTCAP, &slot_cap);
++	if (!(slot_cap & PCI_EXP_SLTCAP_HPC))
++		return false;
 +
-+	pdev->dpc_rp_extensions = true;
-+	pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-+	if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
-+		pci_err(pdev, "RP PIO log size %u is invalid\n",
-+			pdev->dpc_rp_log_size);
-+		pdev->dpc_rp_log_size = 0;
-+	}
++	if (pcie_ports_native)
++		return true;
++
++	host = pci_find_host_bridge(bridge->bus);
++	return host->native_pcie_hotplug;
 +}
 +
- #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
- static int dpc_probe(struct pcie_device *dev)
++/**
++ * shpchp_is_native - Check whether a hotplug port is handled by the OS
++ * @bridge: Hotplug port to check
++ *
++ * Returns true if the given @bridge is handled by the native SHPC hotplug
++ * driver.
++ */
++bool shpchp_is_native(struct pci_dev *bridge)
++{
++	return bridge->shpc_managed;
++}
++
+ void pci_reset_secondary_bus(struct pci_dev *dev)
  {
-@@ -268,8 +289,6 @@ static int dpc_probe(struct pcie_device *dev)
- 	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
- 		return -ENOTSUPP;
+ 	u16 ctrl;
+diff --git a/include/linux/pci_hotplug.h b/include/linux/pci_hotplug.h
+index b482e42d7153..11660e19a133 100644
+--- a/include/linux/pci_hotplug.h
++++ b/include/linux/pci_hotplug.h
+@@ -88,9 +88,7 @@ void pci_hp_deregister(struct hotplug_slot *slot);
  
--	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
--
- 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
- 					   dpc_handler, IRQF_SHARED,
- 					   "pcie-dpc", pdev);
-@@ -282,16 +301,6 @@ static int dpc_probe(struct pcie_device *dev)
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
- 	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
+ #ifdef CONFIG_ACPI
+ #include <linux/acpi.h>
+-bool pciehp_is_native(struct pci_dev *bridge);
+ int acpi_get_hp_hw_control_from_firmware(struct pci_dev *bridge);
+-bool shpchp_is_native(struct pci_dev *bridge);
+ int acpi_pci_check_ejectable(struct pci_bus *pbus, acpi_handle handle);
+ int acpi_pci_detect_ejectable(acpi_handle handle);
+ #else
+@@ -98,10 +96,11 @@ static inline int acpi_get_hp_hw_control_from_firmware(struct pci_dev *bridge)
+ {
+ 	return 0;
+ }
+-static inline bool pciehp_is_native(struct pci_dev *bridge) { return true; }
+-static inline bool shpchp_is_native(struct pci_dev *bridge) { return true; }
+ #endif
  
--	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
--	if (pdev->dpc_rp_extensions) {
--		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
--		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
--			pci_err(pdev, "RP PIO log size %u is invalid\n",
--				pdev->dpc_rp_log_size);
--			pdev->dpc_rp_log_size = 0;
--		}
--	}
--
- 	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
- 	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
- 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 512cb4312ddd..c6f91f886818 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2329,6 +2329,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_enable_acs(dev);		/* Enable ACS P2P upstream forwarding */
- 	pci_ptm_init(dev);		/* Precision Time Measurement */
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
-+	pci_dpc_init(dev);		/* Downstream Port Containment */
- 
- 	pcie_report_downtraining(dev);
- 
++bool pciehp_is_native(struct pci_dev *bridge);
++bool shpchp_is_native(struct pci_dev *bridge);
++
+ static inline bool hotplug_is_native(struct pci_dev *bridge)
+ {
+ 	return pciehp_is_native(bridge) || shpchp_is_native(bridge);
 -- 
 2.17.1
 
