@@ -2,158 +2,199 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6F3C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB37C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DE120775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E2A20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:35:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y0J5xjgA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OCWtSj/B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgCXKfY (ORCPT
+        id S1727405AbgCXKfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:35:24 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:36507 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727159AbgCXKfX (ORCPT
+        Tue, 24 Mar 2020 06:35:38 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43873 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727150AbgCXKfh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:35:23 -0400
-Received: by mail-lj1-f195.google.com with SMTP id g12so18006179ljj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:35:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2LHYyFGD9Er8JMcaofOCqcMt+HKxQKQvAYYRYfkCj9U=;
-        b=Y0J5xjgAnUnYrUo8xGTuOnthRalZYZyLc4M3fa5aGrwS3WhV5JEKs7Rp8QaynTxHPr
-         WH/lM9Ec2U/Dnz++lSfQZvBdMbxXUUnbdFe0cMA6wxvs72X3p392jPwmg4oBLuVeIfDh
-         0uhPjACF0EBl+Idcbp3SFfFUc4c3PJH0cDhwvFXErP9tOAPHyofkZHiNbFtesJKXX1cH
-         moJkxKk/MrrnYJ2AlgMaEZ1M+3DykMsA7jPUu+wxiIjpuycIbCPG39junbMgi9BQRDV8
-         0nQGIay3/5dB7hHS65JHEbVhYrRD9+qCskyZyL+RtzIu5JD++3LNvkPlhI7JIIRFthp4
-         cgUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2LHYyFGD9Er8JMcaofOCqcMt+HKxQKQvAYYRYfkCj9U=;
-        b=eMXBilp1LRHAziFOR3aS0U1hYuqqChn0KVfYsNFYmDv9FDpo/r1ub/CLjQsPuAmy9f
-         aPNoWMvT152yrdZYx2AWNqiObOu9I+i/Yoh0sQT8aKyVCGRw4v71OF7UG9SJmz15+woA
-         ogHxHRRV4RgM/ELknscU8IK+742zYE0vLYMCgame+Poy89q3InnXX5/lYncGzm28Rtyk
-         203bL8S13guhF5dF6KmHxa6loXHDlpEhdA+p1B4xWiXuSxmI/Qtm2u0RqcPsfAcaZuGP
-         Hdkj3QH32drSj2Ko7uSpeqzWKIQNyzorGWI9AmeJ42B2pJ+7fIq4XbKF7zoMJJHkyg4w
-         +0MA==
-X-Gm-Message-State: ANhLgQ3HQ43m/Lz6WhZPleAvZQhZk3geKpgjgMFrg0sAMM7iN5be7tLW
-        tg+O62aI59Sf0aMvyx31FcPUHP540h0fzMknv6lRSg==
-X-Google-Smtp-Source: ADFU+vsM2m8/z81QygyaT/ce4V34TY21p1mB2AC1wH972BTitDk7DVBGXUuxoK3NjpJx62o1qCQQF34ZYpU3WdoUz4E=
-X-Received: by 2002:a2e:9091:: with SMTP id l17mr15600874ljg.154.1585046119623;
- Tue, 24 Mar 2020 03:35:19 -0700 (PDT)
+        Tue, 24 Mar 2020 06:35:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585046137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=dKS/RfVF4eulbBrkNwlmTIp2WZwb03WGz25ab59iW3k=;
+        b=OCWtSj/B6epX5peZ5PkqE2005GFnloTGeObWn5QM8m0TsQwSbNS+Z6ElfVocP441n/yEOs
+        7u9bAJ/ma8NIWabHi/GkJSt2o+9sBMo1PmkbUjYMywJM1XFZ7c+H32MqgKOT0W2am1Q4HS
+        6i8FOpv0IhvU+1yxq9/3g25MHcwmM5E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-336-fd3bZE4sPrO112SAWPmfgg-1; Tue, 24 Mar 2020 06:35:33 -0400
+X-MC-Unique: fd3bZE4sPrO112SAWPmfgg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7C3D1005510;
+        Tue, 24 Mar 2020 10:35:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.28])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C00DD5C21B;
+        Tue, 24 Mar 2020 10:35:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 24 Mar 2020 11:35:31 +0100 (CET)
+Date:   Tue, 24 Mar 2020 11:35:28 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipc/mqueue.c: change __do_notify() to bypass
+ check_kill_permission()
+Message-ID: <20200324103528.GA9061@redhat.com>
+References: <20200322110901.GA25108@redhat.com>
+ <87lfnsh3tm.fsf@x220.int.ebiederm.org>
+ <20200322202929.GA1614@redhat.com>
+ <87imivc92n.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-References: <20200320151245.21152-1-mgorman@techsingularity.net>
- <20200320151245.21152-5-mgorman@techsingularity.net> <CAKfTPtAUuO1Jp6P73gAiP+g5iLTx16UeBgBjm_5zjFxwiBD9=Q@mail.gmail.com>
- <20200320164432.GE3818@techsingularity.net> <CAKfTPtBixZKDES_i3Lnsj1eAa_kVi-zHv-0uE8uTsKOBcjmkYg@mail.gmail.com>
- <20200320174304.GF3818@techsingularity.net>
-In-Reply-To: <20200320174304.GF3818@techsingularity.net>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 24 Mar 2020 11:35:08 +0100
-Message-ID: <CAKfTPtBQ5Y5CAtbJ2YSVxFtQWUVsdxTLjz+NxTHcLj-UnAQWqg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] sched/fair: Track possibly overloaded domains and
- abort a scan if necessary
-To:     Mel Gorman <mgorman@techsingularity.net>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Phil Auld <pauld@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imivc92n.fsf@x220.int.ebiederm.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 20 Mar 2020 at 18:43, Mel Gorman <mgorman@techsingularity.net> wrote:
+On 03/23, Eric W. Biederman wrote:
 >
-> On Fri, Mar 20, 2020 at 05:54:57PM +0100, Vincent Guittot wrote:
-> > On Fri, 20 Mar 2020 at 17:44, Mel Gorman <mgorman@techsingularity.net> wrote:
-> > >
-> > > On Fri, Mar 20, 2020 at 04:48:39PM +0100, Vincent Guittot wrote:
-> > > > > ---
-> > > > >  include/linux/sched/topology.h |  1 +
-> > > > >  kernel/sched/fair.c            | 65 +++++++++++++++++++++++++++++++++++++++---
-> > > > >  kernel/sched/features.h        |  3 ++
-> > > > >  3 files changed, 65 insertions(+), 4 deletions(-)
-> > > > >
-> > > > > diff --git a/include/linux/sched/topology.h b/include/linux/sched/topology.h
-> > > > > index af9319e4cfb9..76ec7a54f57b 100644
-> > > > > --- a/include/linux/sched/topology.h
-> > > > > +++ b/include/linux/sched/topology.h
-> > > > > @@ -66,6 +66,7 @@ struct sched_domain_shared {
-> > > > >         atomic_t        ref;
-> > > > >         atomic_t        nr_busy_cpus;
-> > > > >         int             has_idle_cores;
-> > > > > +       int             is_overloaded;
-> > > >
-> > > > Can't nr_busy_cpus compared to sd->span_weight give you similar status  ?
-> > > >
-> > >
-> > > It's connected to nohz balancing and I didn't see how I could use that
-> > > for detecting overload. Also, I don't think it ever can be larger than
-> > > the sd weight and overload is based on the number of running tasks being
-> > > greater than the number of available CPUs. Did I miss something obvious?
-> >
-> > IIUC you try to estimate if there is a chance to find an idle cpu
-> > before starting the loop and scanning the domain and abort early if
-> > the possibility is low.
-> >
-> > if nr_busy_cpus equals to sd->span_weight it means that there is no
-> > free cpu so there is no need to scan
-> >
+> Oleg Nesterov <oleg@redhat.com> writes:
 >
-> Ok, I see what you are getting at but I worry there are multiple
-> problems there. First, the nr_busy_cpus is decremented only when a CPU
-> is entering idle with the tick stopped. If nohz is disabled then this
-> breaks, no? Secondly, a CPU can be idle but the tick not stopped if
-
-But this can be changed if that make the statistic useful
-
-> __tick_nohz_idle_stop_tick knows there is an event in the near future
-> so using busy_cpus, we potentially miss a sibling that was adequate
-> for running a task. Finally, the threshold for cutting off the search
-> entirely seems low. The patch marks a domain as overloaded if there are
-> twice as many running tasks as runqueues scanned. In that scenario, even
-> if tasks are rapidly switching between busy/idle, it's still unlikely
-> the task will go idle. When cutting off at just the fully-busy mark, we
-> could miss a CPU that is going idle, almost idle or is running SCHED_IDLE
-> tasks where are acceptable target candidates for select_idle_sibling. I
-> think there are too many cases where nr_busy_cpus are problematic to
-> make it a good alternative.
-
-I don't really like this patch because it adds yet another metrics and
-yet another feature which is set true by default. Also the current
-proposal seems a bit fragile because it uses an arbitrary ratio of 2
-on an arbitrary number of CPUs. This threshold probably works in your
-case and your system but probably not for others and the threshold
-really looks like a heuristic that works for you but without any real
-meaning.
-
-Then, the update is done at each and every task wake up and by all
-CPUs in the LLC. It means that the same variable is updated
-simultaneously by all CPUs: one CPU can set it and the next one might
-clear it immediately because they haven't scanned the same CPUs. At
-the end, 2 threads waking up simultaneously on different CPUS, might
-end up using 2 different policy without any other reason than a random
-ordering.
-
-I agree that the concept of detecting that a LLC domain is overloaded
-can be useful to decide to skip searching for an idle cpu but this
-proposal seems to be not really generic
-
-Vincent
-
+> > And this is what we had before cc731525f26a, so this patch tries to fix
+> > the regression.
 >
-> --
-> Mel Gorman
-> SUSE Labs
+> I was intending to suggest a new function that took a pid and did not do
+> the permission checks.
+
+Can't we do this on top of this patch? I want a trivially backportable fix
+for -stable.
+
+And who else can use this helper? And what exactly it should do? Should it
+be called with rcu lock held? Should it check sig != 0? Name?
+
+> Looking a little further I think there is a reasonbly strong argument
+> that this code should be using send_sigqueue with a preallocated signal,
+> just like timers do.
+
+Hmm. How can mqueue use SIGQUEUE_PREALLOC/send_sigqueue ? The timer can
+pre-allocate sigqueue because it won't be used again until dequeued by
+its single target, otherwise it just increments overrun.
+
+mqueue can't. Just suppose that the user of mq_notify() blocks this signal,
+then another task does mq_notify() and then __do_notify() is called again.
+
+> > Oh, can we discuss the possible cleanups separately? On top of this fix,
+> > if possible.
+>
+> I was saying that from my perspective your proposed fix appears to make
+> the code more of a mess, and harder to maintain.
+
+I don't really agree, but I won't argue.
+
+> >> Looking at the code I currently see several places where we have this
+> >> kind of semantic (sending a requested signal to a process from the
+> >> context of another process): do_notify_parent, pdeath_signal, f_setown,
+> >> and mq_notify.
+> >
+> > To me they all differ, I am not sure I understand how exactly you want
+> > to unify them...
+>
+> The common thread is they all are requested by the receiver of the
+> signal (so don't need permission checks) and thus need to be canceled by
+> appropriate versions of exec.
+
+Yes. Yet I think they all differ, in particular in how they handle the
+exec case. So I still do not understand a) how you are going to unify this
+logic and b) why should we do this _before_ the fix.
+
+> > I can easily misread this code, never looked into ipc/mqueue.c before.
+> > But it seems that it is not possible to send a signal after exec, suid
+> > or not,
+> >
+> > 	- sys_mq_open() uses O_CLOEXEC
+> >
+> > 	- mqueue_flush_file() does
+> >
+> > 		if (task_tgid(current) == info->notify_owner)
+> > 			remove_notification(info);
+>
+> That is weird.  It looks like we are attempt to handle file descriptor
+> passing.  The unix98 description of exec says all mq file descriptors
+> shall be closed, but I can't find a word about file descriptor passing
+> with af_unix sockets.
+
+Not sure I understand how this connects to fd-passing...
+
+What I tried to say is that mqueue_fd will be closed on exec. This is not
+not enough, but mqueue_flush_file==mqueue_file_operations->flush called
+by filp_close() will remove the notification to ensure the signal can't
+be sent after that.
+
+> > I know absolutely nothing about ipc/mqueue, and when I read this code
+> > or manpage I find the semantics of mq_notify is very strange.
+>
+> Well at least a small comment please that says the code started
+> performing the permission check and userspace code regressed.
+
+Ah, OK, agreed, I'll add a comment.
+
+> Perhaps with the description of the userspace code in the commit log.
+> Perhaps a test case?
+
+OK, how about
+
+	static int notified;
+
+	static void sigh(int sig)
+	{
+		notified = 1;
+	}
+
+	int main(void)
+	{
+		signal(SIGIO, sigh);
+
+		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
+		assert(fd >= 0);
+
+		struct sigevent se = {
+			.sigev_notify	= SIGEV_SIGNAL,
+			.sigev_signo	= SIGIO,
+		};
+		assert(mq_notify(fd, &se) == 0);
+
+		if (!fork()) {
+			setuid(1);
+			mq_send(fd, "",1,0);
+			return 0;
+		}
+
+		wait(NULL);
+		mq_unlink("/mq");
+		assert(notified);
+		return 0;
+	}
+
+? Needs root.
+
+Just in case... it passes on my machine running 4.2.8-300.fc23.x86_64, fails
+with upstream kernel, the patch seems to work and looks very simple.
+
+Oleg.
+
