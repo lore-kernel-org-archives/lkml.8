@@ -2,207 +2,104 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1035C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ACEC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09DF206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:31:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HGfgC4P9"
+	by mail.kernel.org (Postfix) with ESMTP id 1EBE62070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585085528;
+	bh=WAEG2qvqlmwF1kcQfLLblGPBwt/+mnbg8XT6Bvt/JzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S5/RPBR41Ztq+fe1mrYQHg2K8pFIZj0SjFx+Y3PparPM4VXVv7bX3SdizgbDHUPAa
+	 +hPpdpwVezEGFtDXvP++HRFdlROMeedQ1EIuzNBvTVDEAveI+A/NNgPQYT61yi1jMh
+	 57Tfumpu+jjlOWu1V3tFdYznEA76alRqmXrZ5U1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgCXVbX (ORCPT
+        id S1728184AbgCXVcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:31:23 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:55144 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCXVbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:31:23 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OLJBA3072086;
-        Tue, 24 Mar 2020 21:31:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=yjVJersXVqbrRLg88fDfyrB3yVDE5LyqcnA1q1agUfc=;
- b=HGfgC4P9RWmuz1rfq1u8B0qDO1FAIlYu+QZNu+4U7xSoLNJZ5h4+05y5Bj+Gnm1eg9Xf
- dVxfNNo4Fq1LwtirCiitxISCWmUYuwMIGb1o8fQqAHgXB8+AhtQdRY+zj7lsDuZ13BA4
- /XCLUYFUlEf3Efzftpsr/yok/E1NteuBwK5lzVMhq9aQ8Yc4DDTdD5tKwvHqPTLdzPoZ
- 6f1obNFs5KZszKe1e6M7sko+1QOpptytRhLcDXrEXPhV33lLjIGcYotN9yJGtPzXpBe4
- n/d+6Jn0pXxJE6aKRw4v0Bruxiz9nQbZkv0Aesb1Jq0uY+aM1YH1++OrpgFSN/WAHBsZ Dw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ywabr6syn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 21:31:01 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OLKYtc050217;
-        Tue, 24 Mar 2020 21:31:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3020.oracle.com with ESMTP id 2yymbuexnn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 21:31:00 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02OLUnJc028150;
-        Tue, 24 Mar 2020 21:30:55 GMT
-Received: from [192.168.1.67] (/94.61.1.144)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Mar 2020 14:30:49 -0700
-Subject: Re: [PATCH v2 6/6] ACPI: HMAT: Attach a device for each soft-reserved
- range
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Brice Goglin <Brice.Goglin@inria.fr>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        X86 ML <x86@kernel.org>
-References: <158489354353.1457606.8327903161927980740.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158489357825.1457606.17352509511987748598.stgit@dwillia2-desk3.amr.corp.intel.com>
- <e9d36833-6606-da13-9dda-47abc1928273@oracle.com>
- <CAPcyv4iyfP88KXaK4VbaUgFWRjsRutdFF8OH7nwT-zUiv3fV7Q@mail.gmail.com>
-From:   Joao Martins <joao.m.martins@oracle.com>
-Message-ID: <ecfd5f74-cc03-5590-82df-6f7a3dbcdb50@oracle.com>
-Date:   Tue, 24 Mar 2020 21:30:42 +0000
+        Tue, 24 Mar 2020 17:32:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727023AbgCXVcG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 17:32:06 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B51B206F6;
+        Tue, 24 Mar 2020 21:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585085526;
+        bh=WAEG2qvqlmwF1kcQfLLblGPBwt/+mnbg8XT6Bvt/JzM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XX6bno7D7g8zvIKr88jks2+DO+aByMHZAU1xp4RtU01CeTnn/b6I7lqzXtSZsziOh
+         AfEt7apQ8lT6qPLpDCTIiZ61oloIGP/8cmXQjODGz9mSHQTeVTMfQ660utCXUNa0OO
+         /aUabDZwpOhhyegZa1iTUpYJBgg8u7z7F/lxGClY=
+Date:   Tue, 24 Mar 2020 21:32:01 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel-team <kernel-team@android.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [RFC PATCH 03/21] list: Annotate lockless list primitives with
+ data_race()
+Message-ID: <20200324213200.GA21176@willie-the-truck>
+References: <20200324153643.15527-1-will@kernel.org>
+ <20200324153643.15527-4-will@kernel.org>
+ <20200324165128.GS20696@hirez.programming.kicks-ass.net>
+ <CAG48ez2WJo5+wqWi1nxstR=WWyseVfZPMnpdDBsZKW5G+Tt3KQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iyfP88KXaK4VbaUgFWRjsRutdFF8OH7nwT-zUiv3fV7Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=5
- adultscore=0 malwarescore=0 bulkscore=0 spamscore=0 mlxlogscore=999
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240107
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=5
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1015 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240107
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2WJo5+wqWi1nxstR=WWyseVfZPMnpdDBsZKW5G+Tt3KQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 9:06 PM, Dan Williams wrote:
-> On Tue, Mar 24, 2020 at 12:41 PM Joao Martins <joao.m.martins@oracle.com> wrote:
->>
->> On 3/22/20 4:12 PM, Dan Williams wrote:
->>> The hmem enabling in commit 'cf8741ac57ed ("ACPI: NUMA: HMAT: Register
->>> "soft reserved" memory as an "hmem" device")' only registered ranges to
->>> the hmem driver for each soft-reservation that also appeared in the
->>> HMAT. While this is meant to encourage platform firmware to "do the
->>> right thing" and publish an HMAT, the corollary is that platforms that
->>> fail to publish an accurate HMAT will strand memory from Linux usage.
->>> Additionally, the "efi_fake_mem" kernel command line option enabling
->>> will strand memory by default without an HMAT.
->>>
->>> Arrange for "soft reserved" memory that goes unclaimed by HMAT entries
->>> to be published as raw resource ranges for the hmem driver to consume.
->>>
->>> Include a module parameter to disable either this fallback behavior, or
->>> the hmat enabling from creating hmem devices. The module parameter
->>> requires the hmem device enabling to have unique name in the module
->>> namespace: "device_hmem".
->>>
->>> Rather than mark this x86-only, include an interim phys_to_target_node()
->>> implementation for arm64.
->>>
->>> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>> Cc: Brice Goglin <Brice.Goglin@inria.fr>
->>> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
->>> Cc: Jeff Moyer <jmoyer@redhat.com>
->>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>> Cc: Will Deacon <will@kernel.org>
->>> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
->>> ---
->>>  arch/arm64/mm/numa.c      |   13 +++++++++++++
->>>  drivers/dax/Kconfig       |    1 +
->>>  drivers/dax/hmem/Makefile |    3 ++-
->>>  drivers/dax/hmem/device.c |   33 +++++++++++++++++++++++++++++++++
->>>  4 files changed, 49 insertions(+), 1 deletion(-)
->>>
->>
->> [...]
->>
->>> diff --git a/drivers/dax/hmem/device.c b/drivers/dax/hmem/device.c
->>> index 99bc15a8b031..f9c5fa8b1880 100644
->>> --- a/drivers/dax/hmem/device.c
->>> +++ b/drivers/dax/hmem/device.c
->>> @@ -4,6 +4,9 @@
->>>  #include <linux/module.h>
->>>  #include <linux/mm.h>
->>>
->>> +static bool nohmem;
->>> +module_param_named(disable, nohmem, bool, 0444);
->>> +
->>>  void hmem_register_device(int target_nid, struct resource *r)
->>>  {
->>>       /* define a clean / non-busy resource for the platform device */
->>> @@ -16,6 +19,9 @@ void hmem_register_device(int target_nid, struct resource *r)
->>>       struct memregion_info info;
->>>       int rc, id;
->>>
->>> +     if (nohmem)
->>> +             return;
->>> +
->>>       rc = region_intersects(res.start, resource_size(&res), IORESOURCE_MEM,
->>>                       IORES_DESC_SOFT_RESERVED);
->>>       if (rc != REGION_INTERSECTS)
->>> @@ -62,3 +68,30 @@ void hmem_register_device(int target_nid, struct resource *r)
->>>  out_pdev:
->>>       memregion_free(id);
->>>  }
->>> +
->>> +static __init int hmem_register_one(struct resource *res, void *data)
->>> +{
->>> +     /*
->>> +      * If the resource is not a top-level resource it was already
->>> +      * assigned to a device by the HMAT parsing.
->>> +      */
->>> +     if (res->parent != &iomem_resource)
->>> +             return 0;
->>> +
->>> +     hmem_register_device(phys_to_target_node(res->start), res);
->>> +
->>> +     return 0;
->>
->> Should we add an error returning value to hmem_register_device() perhaps this
->> ought to be reflected in hmem_register_one().
->>
->>> +}
->>> +
->>> +static __init int hmem_init(void)
->>> +{
->>> +     walk_iomem_res_desc(IORES_DESC_SOFT_RESERVED,
->>> +                     IORESOURCE_MEM, 0, -1, NULL, hmem_register_one);
->>> +     return 0;
->>> +}
->>> +
->>
->> (...) and then perhaps here returning in the initcall if any of the resources
->> failed hmem registration?
-> 
-> Except that hmem_register_one() is a stop-gap to collect soft-reserved
-> ranges that were not already registered, and it's not an error to find
-> already registered devices. 
-> 
-/nods
+[mutt crashed while I was sending this; apologies if you receive it twice]
 
-And if we were to return an error (say for hmem0 out of 4 hmem ones)  before
-walking through all soft-reserved found resources, if would skip registration
-for the remaining ones.
+On Tue, Mar 24, 2020 at 05:56:15PM +0100, Jann Horn wrote:
+> On Tue, Mar 24, 2020 at 5:51 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > On Tue, Mar 24, 2020 at 03:36:25PM +0000, Will Deacon wrote:
+> > > diff --git a/include/linux/list.h b/include/linux/list.h
+> > > index 4fed5a0f9b77..4d9f5f9ed1a8 100644
+> > > --- a/include/linux/list.h
+> > > +++ b/include/linux/list.h
+> > > @@ -279,7 +279,7 @@ static inline int list_is_last(const struct list_head *list,
+> > >   */
+> > >  static inline int list_empty(const struct list_head *head)
+> > >  {
+> > > -     return READ_ONCE(head->next) == head;
+> > > +     return data_race(READ_ONCE(head->next) == head);
+> > >  }
+> >
+> > list_empty() isn't lockless safe, that's what we have
+> > list_empty_careful() for.
+> 
+> That thing looks like it could also use some READ_ONCE() sprinkled in...
 
-  Joao
+Crikey, how did I miss that? I need to spend some time understanding the
+ordering there.
+
+So it sounds like the KCSAN splats relating to list_empty() and loosely
+referred to by 1c97be677f72 ("list: Use WRITE_ONCE() when adding to lists
+and hlists") are indicative of real bugs and we should actually restore
+list_empty() to its former glory prior to 1658d35ead5d ("list: Use
+READ_ONCE() when testing for empty lists"). Alternatively, assuming
+list_empty_careful() does what it says on the tin, we could just make that
+the default.
+
+Will
