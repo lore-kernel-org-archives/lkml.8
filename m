@@ -1,861 +1,280 @@
-Return-Path: <SRS0=M7MX=5I=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E71C10DCE
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7733C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:01:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E40C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 23 Mar 2020 23:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B11F420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jLb05nSZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i0cOm9TQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgCWX6x (ORCPT
+        id S1727380AbgCXABS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 19:58:53 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:32829 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgCWX6w (ORCPT
+        Mon, 23 Mar 2020 20:01:18 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45981 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727234AbgCXABS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 19:58:52 -0400
-Received: by mail-qt1-f202.google.com with SMTP id d5so13702778qtw.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 16:58:51 -0700 (PDT)
+        Mon, 23 Mar 2020 20:01:18 -0400
+Received: by mail-ot1-f65.google.com with SMTP id c9so5236200otl.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:01:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=tvqjU3a3xzDAgq/u90DSMdiDCYAQ1r1dFHALfZQSGDQ=;
-        b=jLb05nSZs7LshM0YjgmDnKrYok4OfQ9Hw6Op/CGps/l8Xeh9I8DzH9EgZxrGnM3ccM
-         pu8wr3g6m7EwMBZy8WWUic8Y87rnCYKQ4fq/HuFRyYOZmrfar5oYoASpuy6VG6815F8i
-         Mtmhn/UuHTFQh1nDOaMaWZDnWk5ZRPneK3UcGkcZhUz5xU/C9+jpOae6A0C9rqdBIv2p
-         FlVklt7xbr3DUHhrIBQ+tNS2TGjng70E45J7PWrOuqjioWYnTubHuTjvt7UsLYORzKm9
-         7WMLWgityCaglcbeX+q07GL/FInAl3ronCKBNeLR+9i9ZcBzIZaDYEanKA1Hm2Fr56mA
-         YSSQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sqPZ2z3T4bVbn5CSqvppVC02naKBuOD8eHFIwC2ddWU=;
+        b=i0cOm9TQV68sXJ0DQ91NNAhtq+pDWjUK5zu+KcEwsG8ia8K1UXo8MdBSfHtqTw0eOF
+         wLVy3GaItEUxo/w9TyALg2fc8pQNsqWg8rTlPP7biFm4TGqoOFc+94Xdf0Azy0VdDvrJ
+         GsgcU+AIPXOgt78/mgUI4iZ5JUBrgCwT8lKs1LSl+Hc3oX79rS3J/hztsQPGg6QBftyt
+         m/lhbG0pevXe5m5ZOfJxqdDKWRK6C9q74yQw8fUE7thCyCR9VF6D8IG/patZlaNsDZxt
+         T4aE9OJPLAu52PYwkcyjgvOf3JOoNGfpEo60ovVpid0K+yT74FTxhSCdeN5kqxVhdPit
+         UwFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=tvqjU3a3xzDAgq/u90DSMdiDCYAQ1r1dFHALfZQSGDQ=;
-        b=lqMlX/6xG7xUZOSeeta3/tENGi6lhbrx631QhZd7DoXA9QoyVwU14ZNBty75dSxcEU
-         Fbf0bHOf+LLjizF4zKaSeG40WUyAvx734pWJdRDE7SWqiB7xIRMcIdV28amccLyaUYEW
-         EJlflD3wSX/jClhF120+XH68CjvKjUZTwGz/Yd/qJIHq1sSiCkXQLNgXhPW7zi/SDZw6
-         zY3MtA9q+cvzr+U4xnHMeZSba/DghQVfIRfOkOKrHX2hJ+ClfN6fsU1XRzY7T/2O5ZfS
-         jR33cF19+TmOMCq+gxa+JlE2e2tWgeDbkwkVOhTxiNZJj5CPx5VSprpDWeT+u6/01ZYY
-         2O5A==
-X-Gm-Message-State: ANhLgQ2culRrDpboyxZWVmrvYwNLnQ1lXhAbivoGpdn+RI0FVL6k51kM
-        9Zh1MfwY2Qt8B1DNCAj7xQK+A5Qwr8WW
-X-Google-Smtp-Source: ADFU+vvxFY64kfq04qP6GQkQsSgZn2sZrFj8tZeh96y2UE5ijqq/HeQgLq/gMCGdzFv3aBAI+A6I1DqgawS3
-X-Received: by 2002:a05:6214:60d:: with SMTP id z13mr23584174qvw.183.1585007930437;
- Mon, 23 Mar 2020 16:58:50 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 16:58:46 -0700
-Message-Id: <20200323235846.104937-1-irogers@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v5] perf tools: add support for libpfm4
-From:   Ian Rogers <irogers@google.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sqPZ2z3T4bVbn5CSqvppVC02naKBuOD8eHFIwC2ddWU=;
+        b=aeNOwq+uTdOc5ZOJkHRpf+SFjjnHPkcPKdZ2mYnXEGJKgNWPp4fNIoVjqu2NpOVx/l
+         jJLIgZ7Y0RAMKqSWb/LtaKtyTB+KeQ55ujszjsgh34DvdWfwFAQ/SI9WqbyKH1xKWLBi
+         4O4Z1jTfZW+RPOSJPZMbr+24jSv+ulyF7N4YOXWLko0lacWWmd5bvOCVhqsGILlmmfJz
+         VMzQVMQ/iiT9wRH34YQzZjI/jHJxlu4rG7R83T/gcoa0Im/tncvI/bq0QgRZcuGXjY6F
+         TRvCjuV4KUXiG4p2XDPshtntdcWFZ7uxCjXO2BS8OSB8mlgxGWP/IYMLhx0//A/rycje
+         0Ulw==
+X-Gm-Message-State: ANhLgQ02vBsBpExs42tPAf830auKgcY/UWMGC5pv+4RoFDqx3Khb+riw
+        IF6LwRw5xcII+BX0uZyf07QwsoydOlr4OBuM/GSQKg==
+X-Google-Smtp-Source: ADFU+vvwTD4yTP5DiMILCp8Sgf2fqVaqD38Rdy0wy/vLgfgLVLyTqOkHl6AXz6v+TkaX5d9PyMdj9yDyyZHt2WedcIQ=
+X-Received: by 2002:a05:6830:1e10:: with SMTP id s16mr4035137otr.33.1585008076067;
+ Mon, 23 Mar 2020 17:01:16 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200318220634.32100-1-mike.kravetz@oracle.com> <20200318220634.32100-4-mike.kravetz@oracle.com>
+In-Reply-To: <20200318220634.32100-4-mike.kravetz@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 23 Mar 2020 17:01:03 -0700
+Message-ID: <CAHS8izN1Q+yiZq8zcU8hoojafcQ19W7XQx-HyFm3Ud8hSvN1Nw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] hugetlbfs: remove hugetlb_add_hstate() warning for
+ existing hstate
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jiwei Sun <jiwei.sun@windriver.com>,
-        yuzhoujian <yuzhoujian@didichuxing.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc:     Stephane Eranian <eranian@google.com>,
-        Ian Rogers <irogers@google.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch links perf with the libpfm4 library if it is available and
-NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
-event tables for all processors supported by perf_events. It is a helper
-library that helps convert from a symbolic event name to the event
-encoding required by the underlying kernel interface. This
-library is open-source and available from: http://perfmon2.sf.net.
+On Wed, Mar 18, 2020 at 3:07 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> The routine hugetlb_add_hstate prints a warning if the hstate already
+> exists.  This was originally done as part of kernel command line
+> parsing.  If 'hugepagesz=' was specified more than once, the warning
+>         pr_warn("hugepagesz= specified twice, ignoring\n");
+> would be printed.
+>
+> Some architectures want to enable all huge page sizes.  They would
+> call hugetlb_add_hstate for all supported sizes.  However, this was
+> done after command line processing and as a result hstates could have
+> already been created for some sizes.  To make sure no warning were
+> printed, there would often be code like:
+>         if (!size_to_hstate(size)
+>                 hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT)
+>
+> The only time we want to print the warning is as the result of command
+> line processing.  So, remove the warning from hugetlb_add_hstate and
+> add it to the single arch independent routine processing "hugepagesz=".
+> After this, calls to size_to_hstate() in arch specific code can be
+> removed and hugetlb_add_hstate can be called without worrying about
+> warning messages.
+>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  arch/arm64/mm/hugetlbpage.c   | 16 ++++------------
+>  arch/powerpc/mm/hugetlbpage.c |  3 +--
+>  arch/riscv/mm/hugetlbpage.c   |  2 +-
+>  arch/sparc/mm/init_64.c       | 19 ++++---------------
+>  arch/x86/mm/hugetlbpage.c     |  2 +-
+>  mm/hugetlb.c                  | 10 +++++++---
+>  6 files changed, 18 insertions(+), 34 deletions(-)
+>
+> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> index 4aa9534a45d7..050809e6f0a9 100644
+> --- a/arch/arm64/mm/hugetlbpage.c
+> +++ b/arch/arm64/mm/hugetlbpage.c
+> @@ -441,22 +441,14 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
+>         clear_flush(vma->vm_mm, addr, ptep, pgsize, ncontig);
+>  }
+>
+> -static void __init add_huge_page_size(unsigned long size)
+> -{
+> -       if (size_to_hstate(size))
+> -               return;
+> -
+> -       hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+> -}
+> -
+>  static int __init hugetlbpage_init(void)
+>  {
+>  #ifdef CONFIG_ARM64_4K_PAGES
+> -       add_huge_page_size(PUD_SIZE);
+> +       hugetlb_add_hstate(ilog2(PUD_SIZE) - PAGE_SHIFT);
+>  #endif
+> -       add_huge_page_size(CONT_PMD_SIZE);
+> -       add_huge_page_size(PMD_SIZE);
+> -       add_huge_page_size(CONT_PTE_SIZE);
+> +       hugetlb_add_hstate(ilog2(CONT_PMD_SIZE) - PAGE_SHIFT);
+> +       hugetlb_add_hstate(ilog2(PMD_SIZE) - PAGE_SHIFT);
+> +       hugetlb_add_hstate(ilog2(CONT_PTE_SIZE) - PAGE_SHIFT);
+>
+>         return 0;
+>  }
+> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+> index 166960ba1236..f46464ba6fb4 100644
+> --- a/arch/powerpc/mm/hugetlbpage.c
+> +++ b/arch/powerpc/mm/hugetlbpage.c
+> @@ -584,8 +584,7 @@ static int __init add_huge_page_size(unsigned long long size)
+>         if (!arch_hugetlb_valid_size(size))
+>                 return -EINVAL;
+>
+> -       if (!size_to_hstate(size))
+> -               hugetlb_add_hstate(shift - PAGE_SHIFT);
+> +       hugetlb_add_hstate(shift - PAGE_SHIFT);
+>         return 0;
+>  }
+>
+> diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+> index bdf89d7eb714..beaa91941db8 100644
+> --- a/arch/riscv/mm/hugetlbpage.c
+> +++ b/arch/riscv/mm/hugetlbpage.c
+> @@ -26,7 +26,7 @@ bool __init arch_hugetlb_valid_size(unsigned long long size)
+>  static __init int gigantic_pages_init(void)
+>  {
+>         /* With CONTIG_ALLOC, we can allocate gigantic pages at runtime */
+> -       if (IS_ENABLED(CONFIG_64BIT) && !size_to_hstate(1UL << PUD_SHIFT))
+> +       if (IS_ENABLED(CONFIG_64BIT))
+>                 hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+>         return 0;
+>  }
+> diff --git a/arch/sparc/mm/init_64.c b/arch/sparc/mm/init_64.c
+> index 5c29203fd460..8f619edc8f8c 100644
+> --- a/arch/sparc/mm/init_64.c
+> +++ b/arch/sparc/mm/init_64.c
+> @@ -325,23 +325,12 @@ static void __update_mmu_tsb_insert(struct mm_struct *mm, unsigned long tsb_inde
+>  }
+>
+>  #ifdef CONFIG_HUGETLB_PAGE
+> -static void __init add_huge_page_size(unsigned long size)
+> -{
+> -       unsigned int order;
+> -
+> -       if (size_to_hstate(size))
+> -               return;
+> -
+> -       order = ilog2(size) - PAGE_SHIFT;
+> -       hugetlb_add_hstate(order);
+> -}
+> -
+>  static int __init hugetlbpage_init(void)
+>  {
+> -       add_huge_page_size(1UL << HPAGE_64K_SHIFT);
+> -       add_huge_page_size(1UL << HPAGE_SHIFT);
+> -       add_huge_page_size(1UL << HPAGE_256MB_SHIFT);
+> -       add_huge_page_size(1UL << HPAGE_2GB_SHIFT);
+> +       hugetlb_add_hstate(HPAGE_64K_SHIFT - PAGE_SHIFT);
+> +       hugetlb_add_hstate(HPAGE_SHIFT - PAGE_SHIFT);
+> +       hugetlb_add_hstate(HPAGE_256MB_SHIFT - PAGE_SHIFT);
+> +       hugetlb_add_hstate(HPAGE_2GB_SHIFT - PAGE_SHIFT);
+>
+>         return 0;
+>  }
+> diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+> index dd3ed09f6c23..8a3f586e1217 100644
+> --- a/arch/x86/mm/hugetlbpage.c
+> +++ b/arch/x86/mm/hugetlbpage.c
+> @@ -195,7 +195,7 @@ bool __init arch_hugetlb_valid_size(unsigned long long size)
+>  static __init int gigantic_pages_init(void)
+>  {
+>         /* With compaction or CMA we can allocate gigantic pages at runtime */
+> -       if (boot_cpu_has(X86_FEATURE_GBPAGES) && !size_to_hstate(1UL << PUD_SHIFT))
+> +       if (boot_cpu_has(X86_FEATURE_GBPAGES))
+>                 hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+>         return 0;
+>  }
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index cd4ec07080fb..cc85b4f156ca 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -3116,8 +3116,7 @@ static int __init hugetlb_init(void)
+>                 }
+>
+>                 default_hstate_size = HPAGE_SIZE;
+> -               if (!size_to_hstate(default_hstate_size))
+> -                       hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+> +               hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+>         }
+>         default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
+>         if (default_hstate_max_huge_pages) {
+> @@ -3155,7 +3154,6 @@ void __init hugetlb_add_hstate(unsigned int order)
+>         unsigned long i;
+>
+>         if (size_to_hstate(PAGE_SIZE << order)) {
+> -               pr_warn("hugepagesz= specified twice, ignoring\n");
+>                 return;
+>         }
+>         BUG_ON(hugetlb_max_hstate >= HUGE_MAX_HSTATE);
+> @@ -3231,6 +3229,12 @@ static int __init hugepagesz_setup(char *s)
+>                 return 0;
+>         }
+>
+> +       if (size_to_hstate(size)) {
+> +               pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n",
+> +                       saved_s);
+> +               return 0;
+> +       }
+> +
 
-With this patch, it is possible to specify full hardware events
-by name. Hardware filters are also supported. Events must be
-specified via the --pfm-events and not -e option. Both options
-are active at the same time and it is possible to mix and match:
+Not too familiar with the code but I'm a bit confused by this print.
+AFAICT this prints the warning when hugepagesz= refers to a hugepage
+that is already added via hugetlb_add_hstate, but there is a default
+hstate added here without the user specifying hugepagesz, no? Does
+that mean the warning prints if you specify this size? Maybe then
+clarify the message like:
 
-$ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+'HugeTLB: hugepage size already supported: xxxxx' or
+'HugeTLB: hugepage size xxxx specified twice or is default size, ignoring.'
 
-v5 is a rebase.
-v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
-   branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
-   missed in v3.
-v3 is against acme/perf/core and removes a diagnostic warning.
-v2 of this patch makes the --pfm-events man page documentation
-conditional on libpfm4 behing configured. It tidies some of the
-documentation and adds the feature test missed in the v1 patch.
+Or don't print anything if it's the default size.
 
-Author: Stephane Eranian <eranian@google.com>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/build/Makefile.feature             |   6 +-
- tools/build/feature/Makefile             |   7 +-
- tools/build/feature/test-libpfm4.c       |   8 +
- tools/perf/Documentation/Makefile        |   4 +-
- tools/perf/Documentation/perf-record.txt |  11 +
- tools/perf/Documentation/perf-stat.txt   |  10 +
- tools/perf/Documentation/perf-top.txt    |  11 +
- tools/perf/Makefile.config               |  12 ++
- tools/perf/Makefile.perf                 |   6 +-
- tools/perf/builtin-list.c                |  16 ++
- tools/perf/builtin-record.c              |  20 ++
- tools/perf/builtin-stat.c                |  21 ++
- tools/perf/builtin-top.c                 |  20 ++
- tools/perf/util/evsel.c                  |   2 +-
- tools/perf/util/evsel.h                  |   1 +
- tools/perf/util/parse-events.c           | 246 +++++++++++++++++++++++
- tools/perf/util/parse-events.h           |   5 +
- tools/perf/util/pmu.c                    |  11 +
- tools/perf/util/pmu.h                    |   1 +
- 19 files changed, 410 insertions(+), 8 deletions(-)
- create mode 100644 tools/build/feature/test-libpfm4.c
-
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 574c2e0b9d20..08c6fe5aee2d 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -72,7 +72,8 @@ FEATURE_TESTS_BASIC :=                  \
-         setns				\
-         libaio				\
-         libzstd				\
--        disassembler-four-args
-+        disassembler-four-args		\
-+        libpfm4
- 
- # FEATURE_TESTS_BASIC + FEATURE_TESTS_EXTRA is the complete list
- # of all feature tests
-@@ -127,7 +128,8 @@ FEATURE_DISPLAY ?=              \
-          bpf			\
-          libaio			\
-          libzstd		\
--         disassembler-four-args
-+         disassembler-four-args	\
-+         libpfm4
- 
- # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
- # If in the future we need per-feature checks/flags for features not
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 7ac0d8088565..573072d32545 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -67,7 +67,9 @@ FILES=                                          \
-          test-llvm.bin				\
-          test-llvm-version.bin			\
-          test-libaio.bin			\
--         test-libzstd.bin
-+         test-libzstd.bin			\
-+         test-libpfm4.bin
-+
- 
- FILES := $(addprefix $(OUTPUT),$(FILES))
- 
-@@ -321,6 +323,9 @@ $(OUTPUT)test-libaio.bin:
- $(OUTPUT)test-libzstd.bin:
- 	$(BUILD) -lzstd
- 
-+$(OUTPUT)test-libpfm4.bin:
-+	$(BUILD) -lpfm
-+
- ###############################
- 
- clean:
-diff --git a/tools/build/feature/test-libpfm4.c b/tools/build/feature/test-libpfm4.c
-new file mode 100644
-index 000000000000..7f24df86cf09
---- /dev/null
-+++ b/tools/build/feature/test-libpfm4.c
-@@ -0,0 +1,8 @@
-+#include <sys/types.h>
-+#include <perfmon/pfmlib.h>
-+
-+int main(void)
-+{
-+        pfm_initialize();
-+        return 0;
-+}
-diff --git a/tools/perf/Documentation/Makefile b/tools/perf/Documentation/Makefile
-index 31824d5269cc..6e54979c2124 100644
---- a/tools/perf/Documentation/Makefile
-+++ b/tools/perf/Documentation/Makefile
-@@ -48,7 +48,7 @@ man5dir=$(mandir)/man5
- man7dir=$(mandir)/man7
- 
- ASCIIDOC=asciidoc
--ASCIIDOC_EXTRA = --unsafe -f asciidoc.conf
-+ASCIIDOC_EXTRA += --unsafe -f asciidoc.conf
- ASCIIDOC_HTML = xhtml11
- MANPAGE_XSL = manpage-normal.xsl
- XMLTO_EXTRA =
-@@ -59,7 +59,7 @@ HTML_REF = origin/html
- 
- ifdef USE_ASCIIDOCTOR
- ASCIIDOC = asciidoctor
--ASCIIDOC_EXTRA = -a compat-mode
-+ASCIIDOC_EXTRA += -a compat-mode
- ASCIIDOC_EXTRA += -I. -rasciidoctor-extensions
- ASCIIDOC_EXTRA += -a mansource="perf" -a manmanual="perf Manual"
- ASCIIDOC_HTML = xhtml5
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 7f4db7592467..d0efca8d305e 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -587,6 +587,17 @@ Make a copy of /proc/kcore and place it into a directory with the perf data file
- Limit the sample data max size, <size> is expected to be a number with
- appended unit character - B/K/M/G
- 
-+ifdef::HAVE_LIBPFM[]
-+--pfm-events events::
-+Select a PMU event using libpfm4 syntax (see http://perfmon2.sf.net)
-+including support for event filters. For example '--pfm-events
-+inst_retired:any_p:u:c=1:i'. More than one event can be passed to the
-+option using the comma separator. Hardware events and generic hardware
-+events cannot be mixed together. The latter must be used with the -e
-+option. The -e option and this one can be mixed and matched.  Events
-+can be grouped using the {} notation.
-+endif::HAVE_LIBPFM[]
-+
- SEE ALSO
- --------
- linkperf:perf-stat[1], linkperf:perf-list[1], linkperf:perf-intel-pt[1]
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index 4d56586b2fb9..536952ad592c 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -71,6 +71,16 @@ report::
- --tid=<tid>::
-         stat events on existing thread id (comma separated list)
- 
-+ifdef::HAVE_LIBPFM[]
-+--pfm-events events::
-+Select a PMU event using libpfm4 syntax (see http://perfmon2.sf.net)
-+including support for event filters. For example '--pfm-events
-+inst_retired:any_p:u:c=1:i'. More than one event can be passed to the
-+option using the comma separator. Hardware events and generic hardware
-+events cannot be mixed together. The latter must be used with the -e
-+option. The -e option and this one can be mixed and matched.  Events
-+can be grouped using the {} notation.
-+endif::HAVE_LIBPFM[]
- 
- -a::
- --all-cpus::
-diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
-index 324b6b53c86b..ee81ba153dea 100644
---- a/tools/perf/Documentation/perf-top.txt
-+++ b/tools/perf/Documentation/perf-top.txt
-@@ -310,6 +310,17 @@ Default is to monitor all CPUS.
- 	go straight to the histogram browser, just like 'perf top' with no events
- 	explicitely specified does.
- 
-+ifdef::HAVE_LIBPFM[]
-+--pfm-events events::
-+Select a PMU event using libpfm4 syntax (see http://perfmon2.sf.net)
-+including support for event filters. For example '--pfm-events
-+inst_retired:any_p:u:c=1:i'. More than one event can be passed to the
-+option using the comma separator. Hardware events and generic hardware
-+events cannot be mixed together. The latter must be used with the -e
-+option. The -e option and this one can be mixed and matched.  Events
-+can be grouped using the {} notation.
-+endif::HAVE_LIBPFM[]
-+
- 
- INTERACTIVE PROMPTING KEYS
- --------------------------
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 80e55e796be9..571aa6b1af40 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -999,6 +999,18 @@ ifdef LIBCLANGLLVM
-   endif
- endif
- 
-+ifndef NO_LIBPFM4
-+  ifeq ($(feature-libpfm4), 1)
-+    CFLAGS += -DHAVE_LIBPFM
-+    EXTLIBS += -lpfm
-+    ASCIIDOC_EXTRA = -aHAVE_LIBPFM=1
-+    $(call detected,CONFIG_LIBPFM4)
-+  else
-+    msg := $(warning libpfm4 not found, disables libpfm4 support. Please install libpfm4-dev);
-+    NO_LIBPFM4 := 1
-+  endif
-+endif
-+
- # Among the variables below, these:
- #   perfexecdir
- #   perf_include_dir
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index a02aca9b21f4..2ba05d7499bd 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -118,6 +118,8 @@ include ../scripts/utilities.mak
- #
- # Define LIBBPF_DYNAMIC to enable libbpf dynamic linking.
- #
-+# Define NO_LIBPFM4 to disable libpfm4 extension.
-+#
- 
- # As per kernel Makefile, avoid funny character set dependencies
- unexport LC_ALL
-@@ -188,7 +190,7 @@ AWK     = awk
- # non-config cases
- config := 1
- 
--NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-doc install-man install-html install-info install-pdf doc man html info pdf
-+NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help
- 
- ifdef MAKECMDGOALS
- ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
-@@ -832,7 +834,7 @@ INSTALL_DOC_TARGETS += quick-install-doc quick-install-man quick-install-html
- 
- # 'make doc' should call 'make -C Documentation all'
- $(DOC_TARGETS):
--	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all)
-+	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all) ASCIIDOC_EXTRA=$(ASCIIDOC_EXTRA)
- 
- TAG_FOLDERS= . ../lib ../include
- TAG_FILES= ../../include/uapi/linux/perf_event.h
-diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-index 965ef017496f..5edeb428168a 100644
---- a/tools/perf/builtin-list.c
-+++ b/tools/perf/builtin-list.c
-@@ -18,6 +18,10 @@
- #include <subcmd/parse-options.h>
- #include <stdio.h>
- 
-+#ifdef HAVE_LIBPFM
-+#include <perfmon/pfmlib.h>
-+#endif
-+
- static bool desc_flag = true;
- static bool details_flag;
- 
-@@ -56,6 +60,18 @@ int cmd_list(int argc, const char **argv)
- 	if (!raw_dump && pager_in_use())
- 		printf("\nList of pre-defined events (to be used in -e):\n\n");
- 
-+#ifdef HAVE_LIBPFM
-+	{
-+		int ret;
-+		ret = pfm_initialize();
-+		if (ret != PFM_SUCCESS) {
-+			fprintf(stderr,
-+				"warning libpfm failed to initialize: %s\n",
-+				pfm_strerror(ret));
-+		}
-+	}
-+#endif
-+
- 	if (argc == 0) {
- 		print_events(NULL, raw_dump, !desc_flag, long_desc_flag,
- 				details_flag, deprecated);
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 4c301466101b..10b31f5f5fc1 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -64,6 +64,10 @@
- #include <linux/zalloc.h>
- #include <linux/bitmap.h>
- 
-+#ifdef HAVE_LIBPFM
-+#include <perfmon/pfmlib.h>
-+#endif
-+
- struct switch_output {
- 	bool		 enabled;
- 	bool		 signal;
-@@ -2405,6 +2409,11 @@ static struct option __record_options[] = {
- #endif
- 	OPT_CALLBACK(0, "max-size", &record.output_max_size,
- 		     "size", "Limit the maximum size of the output file", parse_output_max_size),
-+#ifdef HAVE_LIBPFM
-+	OPT_CALLBACK(0, "pfm-events", &record.evlist, "event",
-+		"libpfm4 event selector. use 'perf list' to list available events",
-+		parse_libpfm_events_option),
-+#endif
- 	OPT_END()
- };
- 
-@@ -2445,6 +2454,17 @@ int cmd_record(int argc, const char **argv)
- 	if (rec->evlist == NULL)
- 		return -ENOMEM;
- 
-+#ifdef HAVE_LIBPFM
-+	{
-+		int ret;
-+		ret = pfm_initialize();
-+		if (ret != PFM_SUCCESS) {
-+			ui__warning("warning libpfm failed to initialize: %s\n",
-+				pfm_strerror(ret));
-+		}
-+	}
-+#endif
-+
- 	err = perf_config(perf_record_config, rec);
- 	if (err)
- 		return err;
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index ec053dc1e35c..c47eaf238f0c 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -89,6 +89,10 @@
- #include <linux/ctype.h>
- #include <perf/evlist.h>
- 
-+#ifdef HAVE_LIBPFM
-+#include <perfmon/pfmlib.h>
-+#endif
-+
- #define DEFAULT_SEPARATOR	" "
- #define FREEZE_ON_SMI_PATH	"devices/cpu/freeze_on_smi"
- 
-@@ -933,6 +937,11 @@ static struct option stat_options[] = {
- 		    "Use with 'percore' event qualifier to show the event "
- 		    "counts of one hardware thread by sum up total hardware "
- 		    "threads of same physical core"),
-+#ifdef HAVE_LIBPFM
-+	OPT_CALLBACK(0, "pfm-events", &evsel_list, "event",
-+		"libpfm4 event selector. use 'perf list' to list available events",
-+		parse_libpfm_events_option),
-+#endif
- 	OPT_END()
- };
- 
-@@ -1871,6 +1880,18 @@ int cmd_stat(int argc, const char **argv)
- 	unsigned int interval, timeout;
- 	const char * const stat_subcommands[] = { "record", "report" };
- 
-+#ifdef HAVE_LIBPFM
-+	{
-+		int ret;
-+		ret = pfm_initialize();
-+		if (ret != PFM_SUCCESS) {
-+			fprintf(stderr,
-+				"warning libpfm failed to initialize: %s\n",
-+				pfm_strerror(ret));
-+		}
-+	}
-+#endif
-+
- 	setlocale(LC_ALL, "");
- 
- 	evsel_list = evlist__new();
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index d2539b793f9d..db6da472499b 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -84,6 +84,10 @@
- #include <linux/ctype.h>
- #include <perf/mmap.h>
- 
-+#ifdef HAVE_LIBPFM
-+#include <perfmon/pfmlib.h>
-+#endif
-+
- static volatile int done;
- static volatile int resize;
- 
-@@ -1545,6 +1549,11 @@ int cmd_top(int argc, const char **argv)
- 			"number of thread to run event synthesize"),
- 	OPT_BOOLEAN(0, "namespaces", &opts->record_namespaces,
- 		    "Record namespaces events"),
-+#ifdef HAVE_LIBPFM
-+	OPT_CALLBACK(0, "pfm-events", &top.evlist, "event",
-+		"libpfm4 event selector. use 'perf list' to list available events",
-+		parse_libpfm_events_option),
-+#endif
- 	OPTS_EVSWITCH(&top.evswitch),
- 	OPT_END()
- 	};
-@@ -1558,6 +1567,17 @@ int cmd_top(int argc, const char **argv)
- 	if (status < 0)
- 		return status;
- 
-+#ifdef HAVE_LIBPFM
-+	{
-+		int ret;
-+		ret = pfm_initialize();
-+		if (ret != PFM_SUCCESS) {
-+			ui__warning("warning libpfm failed to initialize: %s\n",
-+				pfm_strerror(ret));
-+		}
-+	}
-+#endif
-+
- 	top.annotation_opts.min_pcnt = 5;
- 	top.annotation_opts.context  = 4;
- 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 15ccd193483f..337eb3812eca 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2433,7 +2433,7 @@ bool perf_evsel__fallback(struct evsel *evsel, int err,
- 
- 		/* Is there already the separator in the name. */
- 		if (strchr(name, '/') ||
--		    strchr(name, ':'))
-+		    (strchr(name, ':') && !evsel->is_libpfm_event))
- 			sep = "";
- 
- 		if (asprintf(&new_name, "%s%su", name, sep) < 0)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 33804740e2ca..c41d610f74d7 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -76,6 +76,7 @@ struct evsel {
- 	bool			ignore_missing_thread;
- 	bool			forced_leader;
- 	bool			use_uncore_alias;
-+	bool			is_libpfm_event;
- 	/* parse modifier helper */
- 	int			exclude_GH;
- 	int			sample_read;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 10107747b361..31ed184566c8 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -37,6 +37,11 @@
- #include "util/evsel_config.h"
- #include "util/event.h"
- 
-+#ifdef HAVE_LIBPFM
-+#include <perfmon/pfmlib_perf_event.h>
-+static void print_libpfm_events(bool name_only);
-+#endif
-+
- #define MAX_NAME_LEN 100
- 
- #ifdef PARSER_DEBUG
-@@ -2794,6 +2799,10 @@ void print_events(const char *event_glob, bool name_only, bool quiet_flag,
- 	print_sdt_events(NULL, NULL, name_only);
- 
- 	metricgroup__print(true, true, NULL, name_only, details_flag);
-+
-+#ifdef HAVE_LIBPFM
-+	print_libpfm_events(name_only);
-+#endif
- }
- 
- int parse_events__is_hardcoded_term(struct parse_events_term *term)
-@@ -3042,3 +3051,240 @@ char *parse_events_formats_error_string(char *additional_terms)
- fail:
- 	return NULL;
- }
-+
-+#ifdef HAVE_LIBPFM
-+static int
-+parse_libpfm_event(char *strp, struct perf_event_attr *attr)
-+{
-+	int ret;
-+
-+	ret = pfm_get_perf_event_encoding(strp, PFM_PLM0|PFM_PLM3,
-+					attr, NULL, NULL);
-+	return ret;
-+}
-+
-+int parse_libpfm_events_option(const struct option *opt, const char *str,
-+			int unset __maybe_unused)
-+{
-+	struct evlist *evlist = *(struct evlist **)opt->value;
-+	struct perf_event_attr attr;
-+	struct perf_pmu *pmu;
-+	struct evsel *evsel, *grp_leader = NULL;
-+	char *p, *q, *p_orig;
-+	const char *sep;
-+	int grp_evt = -1;
-+	int ret;
-+
-+	p_orig = p = strdup(str);
-+	if (!p)
-+		return -1;
-+	/*
-+	 * force loading of the PMU list
-+	 */
-+	perf_pmu__scan(NULL);
-+
-+	for (q = p; strsep(&p, ",{}"); q = p) {
-+		sep = p ? str + (p - p_orig - 1) : "";
-+		if (*sep == '{') {
-+			if (grp_evt > -1) {
-+				fprintf(stderr, "nested event groups not supported\n");
-+				goto error;
-+			}
-+			grp_evt++;
-+		}
-+
-+		/* no event */
-+		if (*q == '\0')
-+			continue;
-+
-+		memset(&attr, 0, sizeof(attr));
-+		event_attr_init(&attr);
-+
-+		ret = parse_libpfm_event(q, &attr);
-+		if (ret != PFM_SUCCESS) {
-+			fprintf(stderr, "failed to parse event %s : %s\n", str, pfm_strerror(ret));
-+			goto error;
-+		}
-+
-+		evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries);
-+		if (evsel == NULL)
-+			goto error;
-+
-+		evsel->name = strdup(q);
-+		if (!evsel->name) {
-+			evsel__delete(evsel);
-+			goto error;
-+		}
-+		evsel->is_libpfm_event = true;
-+
-+		pmu = perf_pmu__find_by_type((unsigned)attr.type);
-+		if (pmu)
-+			evsel->core.own_cpus = perf_cpu_map__get(pmu->cpus);
-+
-+		evlist__add(evlist, evsel);
-+
-+		if (grp_evt == 0)
-+			grp_leader = evsel;
-+
-+		if (grp_evt > -1) {
-+			evsel->leader = grp_leader;
-+			grp_leader->core.nr_members++;
-+			grp_evt++;
-+		}
-+
-+		if (*sep == '}') {
-+			if (grp_evt < 0) {
-+				fprintf(stderr, "cannot close a non-existing event group\n");
-+				goto error;
-+			}
-+			evlist->nr_groups++;
-+			grp_leader = NULL;
-+			grp_evt = -1;
-+		}
-+	}
-+	return 0;
-+error:
-+	free(p_orig);
-+	return -1;
-+}
-+
-+static const char *srcs[PFM_ATTR_CTRL_MAX]={
-+	[PFM_ATTR_CTRL_UNKNOWN] = "???",
-+	[PFM_ATTR_CTRL_PMU] = "PMU",
-+	[PFM_ATTR_CTRL_PERF_EVENT] = "perf_event",
-+};
-+
-+static void
-+print_attr_flags(pfm_event_attr_info_t *info)
-+{
-+	int n = 0;
-+
-+	if (info->is_dfl) {
-+		printf("[default] ");
-+		n++;
-+	}
-+
-+	if (info->is_precise) {
-+		printf("[precise] ");
-+		n++;
-+	}
-+
-+	if (!n)
-+		printf("- ");
-+}
-+
-+static void
-+print_libpfm_detailed_events(pfm_pmu_info_t *pinfo, pfm_event_info_t *info)
-+{
-+	pfm_event_attr_info_t ainfo;
-+	const char *src;
-+	int j, ret;
-+
-+	ainfo.size = sizeof(ainfo);
-+
-+	printf("\nName  : %s\n", info->name);
-+	printf("PMU   : %s\n", pinfo->name);
-+	printf("Desc  : %s\n", info->desc);
-+	printf("Equiv : %s\n", info->equiv ? info->equiv : "None");
-+	printf("Code  : 0x%"PRIx64"\n", info->code);
-+
-+	pfm_for_each_event_attr(j, info) {
-+		ret = pfm_get_event_attr_info(info->idx, j, PFM_OS_PERF_EVENT_EXT, &ainfo);
-+		if (ret != PFM_SUCCESS)
-+			continue;
-+
-+		if (ainfo.ctrl >= PFM_ATTR_CTRL_MAX)
-+			ainfo.ctrl = PFM_ATTR_CTRL_UNKNOWN;
-+
-+		src = srcs[ainfo.ctrl];
-+		switch(ainfo.type) {
-+		case PFM_ATTR_UMASK:
-+			printf("Umask : 0x%02"PRIx64" : %s: [%s] : ", ainfo.code, src, ainfo.name);
-+			print_attr_flags(&ainfo);
-+			printf(": %s\n", ainfo.desc);
-+			break;
-+		case PFM_ATTR_MOD_BOOL:
-+			printf("Modif : %s: [%s] : %s (boolean)\n", src, ainfo.name, ainfo.desc);
-+			break;
-+		case PFM_ATTR_MOD_INTEGER:
-+			printf("Modif : %s: [%s] : %s (integer)\n", src, ainfo.name, ainfo.desc);
-+			break;
-+		case PFM_ATTR_NONE:
-+		case PFM_ATTR_RAW_UMASK:
-+		case PFM_ATTR_MAX:
-+		default:
-+			printf("Attr  : %s: [%s] : %s\n", src, ainfo.name, ainfo.desc);
-+		}
-+	}
-+}
-+
-+/*
-+ * list all pmu::event:umask, pmu::event
-+ * printed events may not be all valid combinations of umask for an event
-+ */
-+static void
-+print_libpfm_simplified_events(pfm_pmu_info_t *pinfo, pfm_event_info_t *info)
-+{
-+	pfm_event_attr_info_t ainfo;
-+	int j, ret;
-+	int um = 0;
-+
-+	ainfo.size = sizeof(ainfo);
-+
-+	pfm_for_each_event_attr(j, info) {
-+		ret = pfm_get_event_attr_info(info->idx, j, PFM_OS_PERF_EVENT_EXT, &ainfo);
-+		if (ret != PFM_SUCCESS)
-+			continue;
-+
-+		if (ainfo.type != PFM_ATTR_UMASK)
-+			continue;
-+
-+		printf("%s::%s:%s\n", pinfo->name, info->name, ainfo.name);
-+		um++;
-+	}
-+	if (um == 0)
-+		printf("%s::%s\n", pinfo->name, info->name);
-+}
-+
-+static void
-+print_libpfm_events(bool name_only)
-+{
-+	pfm_event_info_t info;
-+	pfm_pmu_info_t pinfo;
-+	pfm_event_attr_info_t ainfo;
-+	int i, p, ret;
-+
-+	/* initialize to zero to indicate ABI version */
-+	info.size  = sizeof(info);
-+	pinfo.size = sizeof(pinfo);
-+	ainfo.size = sizeof(ainfo);
-+
-+	putchar('\n');
-+
-+	pfm_for_all_pmus(p) {
-+		ret = pfm_get_pmu_info(p, &pinfo);
-+		if (ret != PFM_SUCCESS)
-+			continue;
-+
-+		/* ony print events that are supported by host HW */
-+		if (!pinfo.is_present)
-+			continue;
-+
-+		/* handled by perf directly */
-+		if (pinfo.pmu == PFM_PMU_PERF_EVENT)
-+			continue;
-+
-+		for (i = pinfo.first_event; i != -1; i = pfm_get_event_next(i)) {
-+
-+			ret = pfm_get_event_info(i, PFM_OS_PERF_EVENT_EXT, &info);
-+			if (ret != PFM_SUCCESS)
-+				continue;
-+
-+			if (!name_only)
-+				print_libpfm_detailed_events(&pinfo, &info);
-+			else
-+				print_libpfm_simplified_events(&pinfo, &info);
-+		}
-+	}
-+}
-+#endif
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index 27596cbd0ba0..84d4799c9a31 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -37,6 +37,11 @@ int parse_events_terms(struct list_head *terms, const char *str);
- int parse_filter(const struct option *opt, const char *str, int unset);
- int exclude_perf(const struct option *opt, const char *arg, int unset);
- 
-+#ifdef HAVE_LIBPFM
-+extern int parse_libpfm_events_option(const struct option *opt, const char *str,
-+				int unset);
-+#endif
-+
- #define EVENTS_HELP_MAX (128*1024)
- 
- enum perf_pmu_event_symbol_type {
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 616fbda7c3fc..11421f5dc9cb 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -869,6 +869,17 @@ static struct perf_pmu *pmu_find(const char *name)
- 	return NULL;
- }
- 
-+struct perf_pmu *perf_pmu__find_by_type(unsigned int type)
-+{
-+	struct perf_pmu *pmu;
-+
-+	list_for_each_entry(pmu, &pmus, list)
-+		if (pmu->type == type)
-+			return pmu;
-+
-+	return NULL;
-+}
-+
- struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
- {
- 	/*
-diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-index 5fb3f16828df..de3b868d912c 100644
---- a/tools/perf/util/pmu.h
-+++ b/tools/perf/util/pmu.h
-@@ -65,6 +65,7 @@ struct perf_pmu_alias {
- };
- 
- struct perf_pmu *perf_pmu__find(const char *name);
-+struct perf_pmu *perf_pmu__find_by_type(unsigned int type);
- int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
- 		     struct list_head *head_terms,
- 		     struct parse_events_error *error);
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+>         hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+>         return 1;
+>  }
+> --
+> 2.24.1
+>
+>
