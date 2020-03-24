@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C128DC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EA6C54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3852076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669622076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056643;
-	bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
+	s=default; t=1585056647;
+	bh=OOHQbU1RbTHQ1Ma7XU0Q9tWR+VuZggUaN4Rhmo7+W4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s6wciPb5+wDxjUaBS0jz92avqbxnyZKZ2CeN0m1SN04SRo2R2FeBIfg5Zs/8HRAjb
-	 9JEtpxGMsGOSCpr7gbjhhhA+EDf4QaoEko/QYOejmx2adNZIr9BqvzmbVmivVZcRyT
-	 cOj69+novgvEbDWufTB4yUYjHPdOocRi+HinvPhU=
+	b=lJ8HmyjCIxqPSDAnzARhVuLxWCu8MWAF8bJazInd3K2yqHQI3Ea3ssMrAhAZj56so
+	 GXCmdzPUU9YIDJrEDo63ztuB/lNcO2W1voTM6Wrd14d2+tzZLGPZpDPx01R6Ym+V0U
+	 y3V1YjzPSqsDP4qnl89EVebwruQ2EMNG+H2g94Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728794AbgCXNWK (ORCPT
+        id S1728827AbgCXNVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgCXNWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:22:01 -0400
+        id S1729060AbgCXNVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8FA3206F6;
-        Tue, 24 Mar 2020 13:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10C7920775;
+        Tue, 24 Mar 2020 13:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056121;
-        bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
+        s=default; t=1585056097;
+        bh=OOHQbU1RbTHQ1Ma7XU0Q9tWR+VuZggUaN4Rhmo7+W4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHpKble/9gCSF5mQMxJXAA4trDni3Ab8IsDtCZ1jklyabhlvvL/z4sMg9C1wlZzTg
-         vyWLtsxUisD8Prhv9xF7IuRDPPjiPh+szlYzUeSaLi4Ngo9iCQ93mNeDCfBEn3pqLl
-         dzKsPFutTTWazAm8GKxaUK9Df9j8u3X5iGS6e57Y=
+        b=O6F81Yq+rjVFPcGdkQ2kSff4aLHud9sCkqYn0gcY/PBDuOw8l65xACHLBSMSnR0HN
+         yDbQlnRlFcU3nZpCYLONNnXoxTWsAN5vpFzGo+tDIyEZJCtrRuhEbRXa7s2BoSF3WI
+         RbPPH75B1+57g2InmNPIOF3maoIy6SwOuoQA79RE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 028/119] ASoC: stm32: sai: manage rebind issue
-Date:   Tue, 24 Mar 2020 14:10:13 +0100
-Message-Id: <20200324130811.168634879@linuxfoundation.org>
+        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 020/119] drivers/perf: fsl_imx8_ddr: Correct the CLEAR bit definition
+Date:   Tue, 24 Mar 2020 14:10:05 +0100
+Message-Id: <20200324130810.453209877@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,97 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olivier Moysan <olivier.moysan@st.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
 
-[ Upstream commit 0d6defc7e0e437a9fd53622f7fd85740f38d5693 ]
+[ Upstream commit 049d919168458ac54e7fad27cd156a958b042d2f ]
 
-The commit e894efef9ac7 ("ASoC: core: add support to card rebind")
-allows to rebind the sound card after a rebind of one of its component.
-With this commit, the sound card is actually rebound,
-but may be no more functional. The following problems have been seen
-with STM32 SAI driver.
+When disabling a counter from ddr_perf_event_stop(), the counter value
+is reset to 0 at the same time.
 
-1) DMA channel is not requested:
+Preserve the counter value by performing a read-modify-write of the
+PMU register and clearing only the enable bit.
 
-With the sound card rebind the simplified call sequence is:
-stm32_sai_sub_probe
-	snd_soc_register_component
-		snd_soc_try_rebind_card
-			snd_soc_instantiate_card
-	devm_snd_dmaengine_pcm_register
-
-The problem occurs because the pcm must be registered,
-before snd_soc_instantiate_card() is called.
-
-Modify SAI driver, to change the call sequence as follows:
-stm32_sai_sub_probe
-	devm_snd_dmaengine_pcm_register
-	snd_soc_register_component
-		snd_soc_try_rebind_card
-
-2) DMA channel is not released:
-
-dma_release_channel() is not called when
-devm_dmaengine_pcm_release() is executed.
-This occurs because SND_DMAENGINE_PCM_DRV_NAME component,
-has already been released through devm_component_release().
-
-devm_dmaengine_pcm_release() should be called before
-devm_component_release() to avoid this problem.
-
-Call snd_dmaengine_pcm_unregister() and snd_soc_unregister_component()
-explicitly from SAI driver, to have the right sequence.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Message-Id: <20200304102406.8093-1-olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/stm/stm32_sai_sub.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
+ drivers/perf/fsl_imx8_ddr_perf.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 30bcd5d3a32a8..10eb4b8e8e7ee 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -1543,20 +1543,20 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
+index 95dca2cb52650..90884d14f95fa 100644
+--- a/drivers/perf/fsl_imx8_ddr_perf.c
++++ b/drivers/perf/fsl_imx8_ddr_perf.c
+@@ -388,9 +388,10 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
+ 
+ 	if (enable) {
+ 		/*
+-		 * must disable first, then enable again
+-		 * otherwise, cycle counter will not work
+-		 * if previous state is enabled.
++		 * cycle counter is special which should firstly write 0 then
++		 * write 1 into CLEAR bit to clear it. Other counters only
++		 * need write 0 into CLEAR bit and it turns out to be 1 by
++		 * hardware. Below enable flow is harmless for all counters.
+ 		 */
+ 		writel(0, pmu->base + reg);
+ 		val = CNTL_EN | CNTL_CLEAR;
+@@ -398,7 +399,8 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
+ 		writel(val, pmu->base + reg);
+ 	} else {
+ 		/* Disable counter */
+-		writel(0, pmu->base + reg);
++		val = readl_relaxed(pmu->base + reg) & CNTL_EN_MASK;
++		writel(val, pmu->base + reg);
  	}
- 
--	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
--					      &sai->cpu_dai_drv, 1);
-+	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Could not register pcm dma\n");
-+		return ret;
-+	}
-+
-+	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
-+					 &sai->cpu_dai_drv, 1);
- 	if (ret)
- 		return ret;
- 
- 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
- 		conf = &stm32_sai_pcm_config_spdif;
- 
--	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
--	if (ret) {
--		dev_err(&pdev->dev, "Could not register pcm dma\n");
--		return ret;
--	}
--
- 	return 0;
  }
  
-@@ -1565,6 +1565,8 @@ static int stm32_sai_sub_remove(struct platform_device *pdev)
- 	struct stm32_sai_sub_data *sai = dev_get_drvdata(&pdev->dev);
- 
- 	clk_unprepare(sai->pdata->pclk);
-+	snd_dmaengine_pcm_unregister(&pdev->dev);
-+	snd_soc_unregister_component(&pdev->dev);
- 
- 	return 0;
- }
 -- 
 2.20.1
 
