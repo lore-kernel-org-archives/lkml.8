@@ -2,112 +2,128 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765BBC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:43:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D64AC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5060D2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:43:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585068194;
-	bh=bOmteieTZntfb2qgK6E4POcndj74a9FGn0pv40GjbJM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=scXIU2UmoeMeyLz/wVTvfYmsewhtw6fugIGSYzsi1AGfRt9YOMeniZg43VruHtB2+
-	 uhEPwUwzhCXbDJdQBRsykFV43J0+fV3kcKHMXI+s7WyXY6CJqYr6RXr7YrBX5n4WF9
-	 nGzSab74emmNgHxC3Hk5h9WSaYTla9gYKNJNyA0g=
+	by mail.kernel.org (Postfix) with ESMTP id 076AF2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:43:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PdrJdf/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgCXQnN (ORCPT
+        id S1727744AbgCXQnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:43:13 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45396 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCXQnM (ORCPT
+        Tue, 24 Mar 2020 12:43:41 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42544 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbgCXQnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:43:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id t17so8660322ljc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:43:11 -0700 (PDT)
+        Tue, 24 Mar 2020 12:43:40 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 22so5961213pfa.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:43:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yNlWnerAXVLzObnsd9PaDqNQnqdC4nXPbLaZYzKZiHQ=;
-        b=cp8PDwcdLi3Sx58HhqjwAnXvUGvkwrx3sFIA6iBiDHu3GALAAUoI3vIIUjOizXWj4j
-         iX4GZZ/pr7nXuay4pa/+Yx8d4j12ZdP3tLJHe+wBHTtAG+Cao64AGMaYtL5taPTgjbtU
-         4/ILHSvXmFYSYfVeVdLpSGUboEgrpHYHi7pes=
+        bh=0ckbAFa8zCaMccZFo+Gs27f6PIvd3NdOwxh/HtsnAf4=;
+        b=PdrJdf/5ys6G3EkHhtXeLqfbI+F9R/JtXgfxhdtfi7xtfWtwBLpicCmJD0uQPiayuy
+         KILQctVB/KRsDuF/iAO4i2lDkvrLBE361kCvNgGZzuoGNOwlS3Hos+htfICMB8QgcuM0
+         8Zf6o6oIEWs+jLE656I8sssd65dAtKsBVPGpL5EZQtxQ7wncHCIzUUHcZZ76h20mAVy7
+         Ybwt4nRtTUceiL5jelbX+fketk0uQvSKIWbV8D6CBucW9drzAfu9FgDMMUxIK+AV/clX
+         6ABIVm85WrKDWOdv5G8YreS7FpcX0IDYwIAGpPYgH/Ii+2xwB5d2LHV1KX3APugdazIt
+         f3Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yNlWnerAXVLzObnsd9PaDqNQnqdC4nXPbLaZYzKZiHQ=;
-        b=rLhBuxnkCSTwqkCxaPxmSpXCfVmTROmgSDJc7+62fbjgUt5FnBa6rA9nwhQZsAE/fe
-         qWsX5JNjSjT6R011CZSwb2wI0X6DhYQh5AVOMvrP+aoVD5CM2yng1LXQJQIZycLxGIXi
-         l46wPPIvL4MCAR4Y1XhX+2/7fBHgQUwmuZ1cqBADV1tulzbzMf6wh01Iv2WJZtTDkpHL
-         +ooVdVrHG9dln4QxggpS7WMcuDz/coGkmJ9/kDomcK57ea/qS5ySPI+7OS2z9LYHGrhT
-         1V+9KhcC1c/0uXP3xtlGFNDkuJy5vioOvPs5oSuvLYOp5KLnC2ihcNgmzeLuD17MVT0G
-         9MdQ==
-X-Gm-Message-State: ANhLgQ3ABLPsHvn2onK6S2Gr+Ro9aQQpubRmyEFfOtMAkKez365ZO9LQ
-        vtnGcZVeO3z+hrUY5ELuHDuU4uk8eBg=
-X-Google-Smtp-Source: ADFU+vuIICIYsSaYKtEobh95fle15FLg+tRBELBXaTXaO9ZySQgIDTj1WS4GcqPUgjHI6kXPDY0pqQ==
-X-Received: by 2002:a2e:b4a1:: with SMTP id q1mr8602491ljm.262.1585068190323;
-        Tue, 24 Mar 2020 09:43:10 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id d12sm10089704lfi.86.2020.03.24.09.43.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 09:43:10 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id j188so9951844lfj.11
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:43:09 -0700 (PDT)
-X-Received: by 2002:a19:c3cf:: with SMTP id t198mr11909345lff.30.1585067849259;
- Tue, 24 Mar 2020 09:37:29 -0700 (PDT)
+        bh=0ckbAFa8zCaMccZFo+Gs27f6PIvd3NdOwxh/HtsnAf4=;
+        b=cC/8WnCQIIX2bRg7S4b5KUWTAlKJIJrGD+/3NjEpCIrSftmlgqH/KvqCfbQ7Kch6KT
+         5qhDECAEGaeu+KDseC34DQIKVXT6KYVrGnhyDhYsxeN9XLFgLM2VBp71VomWP6yQcUXa
+         cWvfMeOM2tOSmgE0DBRJ4V298Gkpbq5HtoSx5IzebgXdh+lhElBaognX3fk9l1sUoAhs
+         bHMbDJjCFs1VT0D/yAsk1lk9aoJx4OSG/2KPEFos9XNMmgokW0vf7ANIkX3GnZ12BT0r
+         7YKlA4itjsU9uecBoc+jfqmwVUpKqoRlIwzAsR9YLRR1GJw6lZ9Vq2cIK2NblQgyRg2y
+         7d2g==
+X-Gm-Message-State: ANhLgQ2YkCHnNcZVPSJKP5Uo1vZGlb5/Zh0wXgebommmCf2nzvneBL/x
+        Ts+9W4IIdvdiemva0L5uEISi4MAELVamvzZSxQ3w7Q==
+X-Google-Smtp-Source: ADFU+vsYLJpgvdYUU6R2yZeo2upmrFukYJCYvpMGWGdaxSJf6OvZ3OIxFLbqDmEhy/067UwZ716Po3aVR6VwoqLuFIA=
+X-Received: by 2002:a63:a34d:: with SMTP id v13mr7028614pgn.10.1585068217691;
+ Tue, 24 Mar 2020 09:43:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <202001131750.C1B8468@keescook> <20200114165135.GK31032@zn.tnic>
- <20200115002131.GA3258770@rani.riverdale.lan> <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic> <20200323204454.GA2611336@zx2c4.com>
- <202003231350.7D35351@keescook> <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
- <20200324091437.GB22931@zn.tnic> <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
- <20200324162843.GE22931@zn.tnic>
-In-Reply-To: <20200324162843.GE22931@zn.tnic>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 24 Mar 2020 09:37:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
-Message-ID: <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
+References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-3-masahiroy@kernel.org>
+In-Reply-To: <20200324084821.29944-3-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 24 Mar 2020 09:43:26 -0700
+Message-ID: <CAKwvOdk6aUuAH_o+P8b+WneQ96yhTPGAXqgzH+FJ5DHB9AqYYA@mail.gmail.com>
+Subject: Re: [PATCH 02/16] x86: remove unneeded defined(__ASSEMBLY__) check
+ from asm/dwarf2.h
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Kees Cook <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 9:28 AM Borislav Petkov <bp@alien8.de> wrote:
+On Tue, Mar 24, 2020 at 1:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> Are you or Kees going to deal with any fallout from upping the binutils
-> version, rushed in in the last week before the merge window?
+> This header file has the following check at the top:
+>
+>   #ifndef __ASSEMBLY__
+>   #warning "asm/dwarf2.h should be only included in pure assembly files"
+>   #endif
+>
+> So, we expect defined(__ASSEMBLY__) is always true.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-I think it's ok. It's not going to cause any _subtle_ failures, it's
-going to cause very clear "oh, now it doesn't build" errors.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-No?
+> ---
+>
+>  arch/x86/include/asm/dwarf2.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+> index ae391f609840..5a0502212bc5 100644
+> --- a/arch/x86/include/asm/dwarf2.h
+> +++ b/arch/x86/include/asm/dwarf2.h
+> @@ -36,7 +36,7 @@
+>  #define CFI_SIGNAL_FRAME
+>  #endif
+>
+> -#if defined(CONFIG_AS_CFI_SECTIONS) && defined(__ASSEMBLY__)
+> +#if defined(CONFIG_AS_CFI_SECTIONS)
+>  #ifndef BUILD_VDSO
+>         /*
+>          * Emit CFI data in .debug_frame sections, not .eh_frame sections.
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200324084821.29944-3-masahiroy%40kernel.org.
 
-And binutils 2.23 is what, 7+ years old by now and apparently had
-known failure cases too.
 
-But if there are silent and subtle failures, that might be a reason to
-be careful. Are there?
 
-              Linus
+-- 
+Thanks,
+~Nick Desaulniers
