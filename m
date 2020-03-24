@@ -2,104 +2,101 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D98CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 068F6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 572942076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:44:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585064695;
-	bh=Xcme7gvaoaEler/5XOMTCI6mA3soOPviGtN4FCyopho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cAkGkW/X7U0WwgIr7p6RFilqe8P5nlEXuUQDUnaUE0Hh1n374uWa4Wp+SJpQwyGL+
-	 2ySL8+OppN77DrbCHy3soZcB3Aa6hiD+WupWeEvPIBEt25jWjxEl82YkavIeyM6i+m
-	 m7Vah4G14fpx0mvC/in1poiAm3y+NRy/wponUMIc=
+	by mail.kernel.org (Postfix) with ESMTP id D0AE62076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ia3J5K09"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgCXPoy (ORCPT
+        id S1728175AbgCXPpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:44:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbgCXPoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:44:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 24 Mar 2020 11:45:32 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:45101 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727702AbgCXPpb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:45:31 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585064731; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=v9dIb51/ZCmNlwPIwP3pchy18wJ6E/8T6dJA5ppS5pE=; b=ia3J5K094C7F3Q6kCTZoOdb5k040bhMuACdWNyfJT82Hhh9gW1/sQXPds1AOKe/jKk2wLTWl
+ uBktolOibVWdUKMfj25TU5yFfkP+XEtlqlQ/T7zlN7fdcwSaJtV91pHOkHt4ZNOJV6/4qZS9
+ OytuQQX1gcRyI2yGX8Tx+DLSBRk=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7a2b09.7feefbb70f10-smtp-out-n04;
+ Tue, 24 Mar 2020 15:45:13 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6B241C433BA; Tue, 24 Mar 2020 15:45:13 +0000 (UTC)
+Received: from jprakash-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2993C2076F;
-        Tue, 24 Mar 2020 15:44:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585064693;
-        bh=Xcme7gvaoaEler/5XOMTCI6mA3soOPviGtN4FCyopho=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qF9LrS4kelpe748kQlZ5E8wVhuGMgtSb4SMICjdzWOLop+7bwmwbLk1wgw5XTOVJC
-         G0aaPPPVVqJ9s9DLzTw1nhQynvTrJJgUgGPocEx927cPJD2fe5etKi9WJrFqxA2G3D
-         /KpZY85qQteOcCtoWrWzNLXzVhPxpXNuw41LHihU=
-Date:   Tue, 24 Mar 2020 16:44:49 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Taehee Yoo <ap420073@gmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, rafael@kernel.org,
-        j.vosburgh@gmail.com, vfalico@gmail.com, andy@greyhouse.net,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mitch.a.williams@intel.com
-Subject: Re: [PATCH RESEND net 1/3] class: add class_find_and_get_file_ns()
- helper function
-Message-ID: <20200324154449.GC2513347@kroah.com>
-References: <20200324141722.21308-1-ap420073@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324141722.21308-1-ap420073@gmail.com>
+        (Authenticated sender: jprakash)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 881B0C433CB;
+        Tue, 24 Mar 2020 15:45:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 881B0C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jprakash@codeaurora.org
+From:   Jishnu Prakash <jprakash@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, linus.walleij@linaro.org, sboyd@codeaurora.org,
+        Jonathan.Cameron@huawei.com, smohanad@codeaurora.org,
+        kgunda@codeaurora.org, aghayal@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org,
+        Jishnu Prakash <jprakash@codeaurora.org>
+Subject: [PATCH 0/3] iio: adc: Add support for QCOM SPMI PMIC7 ADC
+Date:   Tue, 24 Mar 2020 21:14:07 +0530
+Message-Id: <1585064650-16235-1-git-send-email-jprakash@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 02:17:22PM +0000, Taehee Yoo wrote:
-> The new helper function is to find and get a class file.
-> This function is useful for checking whether the class file is existing
-> or not. This function will be used by networking stack to
-> check "/sys/class/net/*" file.
-> 
-> Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-> Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
-> Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-> ---
->  drivers/base/class.c         | 12 ++++++++++++
->  include/linux/device/class.h |  4 +++-
->  2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/base/class.c b/drivers/base/class.c
-> index bcd410e6d70a..dedf41f32f0d 100644
-> --- a/drivers/base/class.c
-> +++ b/drivers/base/class.c
-> @@ -105,6 +105,17 @@ void class_remove_file_ns(struct class *cls, const struct class_attribute *attr,
->  		sysfs_remove_file_ns(&cls->p->subsys.kobj, &attr->attr, ns);
->  }
->  
-> +struct kernfs_node *class_find_and_get_file_ns(struct class *cls,
-> +					       const char *name,
-> +					       const void *ns)
-> +{
-> +	struct kernfs_node *kn = NULL;
-> +
-> +	if (cls)
-> +		kn = kernfs_find_and_get_ns(cls->p->subsys.kobj.sd, name, ns);
-> +	return kn;
-> +}
-> +
+The first patch converts the ADC DT bindings from .txt to .yaml format.
 
-You can put the EXPORT_SYMBOL_GPL() under here.
+The second patch updates the documentation, for PMIC7 ADC. The main
+difference between PMIC5 and PMIC7 for ADC is that for PMIC7, SW requests to
+ADCs (on any PMIC) need to go through the ADC on PMK8350, which communicates with
+the ADCs on other PMICs through PBS. A SID register has been added for SW to specify
+the PMIC with which it needs to communicate.
 
-And can you document what this function actually is in some kerneldoc?
+The third patch adds driver support for PMIC7 ADC. It also adds definitions for
+PMIC7 ADC channels and virtual channel definitions per PMIC (made by combining ADC
+channel number and PMIC SID), to be used by ADC clients for PMIC7.
 
-But, returning a kernfs_node from a driver core is _REALLY_ odd.  Why do
-you need this and who cares about kernfs here?
+Jishnu Prakash (3):
+  iio: adc: Convert the QCOM SPMI ADC bindings to .yaml format
+  iio: adc: Add PMIC7 ADC bindings
+  iio: adc: Add support for PMIC7 ADC
 
-thanks,
+ .../devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 173 --------------
+ .../bindings/iio/adc/qcom,spmi-vadc.yaml           | 192 +++++++++++++++
+ drivers/iio/adc/qcom-spmi-adc5.c                   | 239 ++++++++++++++++++-
+ drivers/iio/adc/qcom-vadc-common.c                 | 260 +++++++++++++++++++++
+ drivers/iio/adc/qcom-vadc-common.h                 |  14 ++
+ include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h    |  67 ++++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h   |  88 +++++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h   |  46 ++++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h   |  28 +++
+ include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h   |  28 +++
+ include/dt-bindings/iio/qcom,spmi-vadc.h           |  78 ++++++-
+ 11 files changed, 1035 insertions(+), 178 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.yaml
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pm8350b.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmk8350.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735a.h
+ create mode 100644 include/dt-bindings/iio/qcom,spmi-adc7-pmr735b.h
 
-greg k-h
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
