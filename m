@@ -2,163 +2,172 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC6CC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28078C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4D2206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qOVK6Fm/"
+	by mail.kernel.org (Postfix) with ESMTP id 0106E2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585072115;
+	bh=uz6dZ8KjquQEnzTFgFMOWuGSPMl35b+hJQ9PsfmtP1o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=sG6Kw/dvdzN9UIC/nhv2Yp4CRWgNhBQUkmxz+0olTBuGNVP11RhFG4hH4X5aJSWLk
+	 dbk3R9HcmuR0RIpRk3ZOjHLSbqJoJo+5EZKJLOj2/e5DdwYeIXwRvNeHWv4gnn95v2
+	 CKIzelx/SoaMbPGMemV2vodznXNk9Aap+N/R4C+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgCXRsZ (ORCPT
+        id S1727894AbgCXRse (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:48:25 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38062 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgCXRsZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:48:25 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t28so17897685ott.5;
-        Tue, 24 Mar 2020 10:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Mbs4aVDmRmC8J/4oqCxwDOIrrZvgADtwZ+k3MwNOOe4=;
-        b=qOVK6Fm/WfSe2eoaOGOghnA2TYwPL/GqS8fesDDQy/usdsJ6vXGscsxOYUQ3t372pa
-         m21MVUH8T6ehMTGaxy9ZwEwreiz3G5lKVn/UvBmnlcMvVG2j47ZflqvTQquplUMTkvaO
-         scCLZHN+uwj1p57pNi2gX+WRX4/fIYwXsys1j81SHxQu++H78vRg6+WcjanHqKweYGxl
-         fYkfStZWRciRAcgcrC89JOL4P9rlopDSrwjOttyKVcgDvaYauZl181ha48+DYQ5SFDSu
-         pHpZL+GIL8+Svli8H2zCBXN6iHHIcMTKpoyDVFQhklqfwZ9z4fcMfunxFeDYXdOk5IHl
-         ZkIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Mbs4aVDmRmC8J/4oqCxwDOIrrZvgADtwZ+k3MwNOOe4=;
-        b=WAjoWzIOLlsKVXnGqNsb33eKMImC3mu3OBUbF/qoTiPK8gsZGx7A7FF1V+1FbtJOnG
-         4fXykRYAgnEmppZG8AiKehbOCdJOV2fDWVSkfgMrRznbvoI/68IrwEZ9j4R3oOZRPJ4X
-         wQrkf4QkLEz+ZaF3ooi9mbtwC3EBkq1wcbwn/ZIoLKLbYvE/SK0S5YWfOcLC5NRmLQ0t
-         ByFV7VI2kK6PT/vruQ+GjATi1nvVLCyahP8SNmbrPnMLKkUX3lwUrvkXByeD2RD0AEM6
-         8sgRNs/9N8DFf0C8li5OWAcw8REUue/oUEExFCbz5rmNp2BAdNxzA8gd4hy4FFHNQxiK
-         OzIw==
-X-Gm-Message-State: ANhLgQ3ov235jwaw7aQ1OUxRqkOuR3e2fn35OnjNNYEQjWYzoltOhAR2
-        6wF96P6BORJgXncE81e8QPlyTeUqO0Zr6WiG/JE=
-X-Google-Smtp-Source: ADFU+vtqWwX4PrG3i0s/E4kJl5NwCDhplDK0CbdgH63HXzbjqGc2T4gLWdm434mcJ+rI/tovsUOo/EKM2Xm3holDqEw=
-X-Received: by 2002:a05:6830:1f39:: with SMTP id e25mr7931301oth.135.1585072104337;
- Tue, 24 Mar 2020 10:48:24 -0700 (PDT)
+        Tue, 24 Mar 2020 13:48:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727697AbgCXRsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:48:33 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53D66206F6;
+        Tue, 24 Mar 2020 17:48:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585072112;
+        bh=uz6dZ8KjquQEnzTFgFMOWuGSPMl35b+hJQ9PsfmtP1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=HDmUvDwhN0NNi3buz6ULiO3RwIqxewBzxYY5RXqBT+AlYyb9a6dh3zMpZ54g+YEWo
+         wVE3sFLhij7SVsj5j9WgrwhF2erYI0jtBibNlyz8n+UbXRhAMu+TwgiohNfMhCTU53
+         22lDOD7W+pKCZ6Xx4zD1JhefC6+T+wSLDeWCmNZg=
+Date:   Tue, 24 Mar 2020 12:48:30 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20200324174830.GA32194@google.com>
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-5-kpsingh@chromium.org>
- <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
- <20200324145003.GA2685@chromium.org> <CAEjxPJ4YnCCeQUTK36Ao550AWProHrkrW1a6K5RKuKYcPcfhyA@mail.gmail.com>
- <d578d19f-1d3b-f60d-f803-2fcb46721a4a@schaufler-ca.com>
-In-Reply-To: <d578d19f-1d3b-f60d-f803-2fcb46721a4a@schaufler-ca.com>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Tue, 24 Mar 2020 13:49:34 -0400
-Message-ID: <CAEjxPJ59wijpB=wa4ZhPyX_PRXrRAX2+PO6e8+f25wrb9xndRA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and execution
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:25 PM Casey Schaufler <casey@schaufler-ca.com> w=
-rote:
->
-> On 3/24/2020 7:58 AM, Stephen Smalley wrote:
-> > On Tue, Mar 24, 2020 at 10:50 AM KP Singh <kpsingh@chromium.org> wrote:
-> >> On 24-M=C3=A4r 10:35, Stephen Smalley wrote:
-> >>> On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrot=
-e:
-> >>>> From: KP Singh <kpsingh@google.com>
-> >>>> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> >>>> index 530d137f7a84..2a8131b640b8 100644
-> >>>> --- a/kernel/bpf/bpf_lsm.c
-> >>>> +++ b/kernel/bpf/bpf_lsm.c
-> >>>> @@ -9,6 +9,9 @@
-> >>>>  #include <linux/btf.h>
-> >>>>  #include <linux/lsm_hooks.h>
-> >>>>  #include <linux/bpf_lsm.h>
-> >>>> +#include <linux/jump_label.h>
-> >>>> +#include <linux/kallsyms.h>
-> >>>> +#include <linux/bpf_verifier.h>
-> >>>>
-> >>>>  /* For every LSM hook  that allows attachment of BPF programs, decl=
-are a NOP
-> >>>>   * function where a BPF program can be attached as an fexit trampol=
-ine.
-> >>>> @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) =
-{}
-> >>>>  #include <linux/lsm_hook_names.h>
-> >>>>  #undef LSM_HOOK
-> >>>>
-> >>>> +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
-> >>>> +
-> >>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
-> >>>> +                       const struct bpf_prog *prog)
-> >>>> +{
-> >>>> +       /* Only CAP_MAC_ADMIN users are allowed to make changes to L=
-SM hooks
-> >>>> +        */
-> >>>> +       if (!capable(CAP_MAC_ADMIN))
-> >>>> +               return -EPERM;
-> >>> I had asked before, and will ask again: please provide an explicit LS=
-M
-> >>> hook for mediating whether one can make changes to the LSM hooks.
-> >>> Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SE=
-Linux.
-> >> What do you think about:
-> >>
-> >>   int security_check_mutable_hooks(void)
-> >>
-> >> Do you have any suggestions on the signature of this hook? Does this
-> >> hook need to be BPF specific?
-> > I'd do something like int security_bpf_prog_attach_security(const
-> > struct bpf_prog *prog) or similar.
-> > Then the security module can do a check based on the current task
-> > and/or the prog.  We already have some bpf-specific hooks.
->
-> I *strongly* disagree with Stephen on this. KRSI and SELinux are peers.
-> Just as Yama policy is independent of SELinux policy so KRSI policy shoul=
-d
-> be independent of SELinux policy. I understand the argument that BDF prog=
-rams
-> ought to be constrained by SELinux, but I don't think it's right. Further=
-,
-> we've got unholy layering when security modules call security_ functions.
-> I'm not saying there is no case where it would be appropriate, but this i=
-s not
-> one of them.
+On Sat, Mar 21, 2020 at 02:02:22AM +0100, Karol Herbst wrote:
+> On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
+> > > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+> > > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+> > >
+> > > Depending on the used kernel there might be messages like those in demsg:
+> > >
+> > > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+> > > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+> > > space inaccessible)"
+> > > followed by backtraces of kernel crashes or timeouts within nouveau.
+> > >
+> > > It's still unkown why this issue exists, but this is a reliable workaround
+> > > and solves a very annoying issue for user having to choose between a
+> > > crashing kernel or higher power consumption of their Laptops.
+> >
+> > Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
+> > list discussion.  Can you include links to some of that?
+> >
+> > IIUC this basically just turns off PCI power management for the GPU.
+> > Can you do that with something like the following?  I don't know
+> > anything about DRM, so I don't know where you could save the pm_cap,
+> > but I'm sure the driver could keep it somewhere.
+> 
+> Sure this would work? From a quick look over the pci code, it looks
+> like a of code would be skipped we really need, like the platform
+> code to turn off the GPU via ACPI. But I could also remember
+> incorrectly on how all of that worked again. I can of course try and
+> see what the effect of this patch would be. 
 
-I explained this previously.  The difference is that the BPF programs
-are loaded from a userspace
-process, not a kernel-resident module.  They already recognize there
-is a difference here or
-they wouldn't have the CAP_MAC_ADMIN check above in their patch.  The
-problem with that
-check is just that CAP_MAC_ADMIN doesn't necessarily mean fully
-privileged with respect to
-SELinux, which is why I want an explicit hook.  This gets a NAK from
-me until there is such a hook.
+I'm not in a position to test this myself.  I would expect that if a
+device lacks a PCI power management capability, we could still use
+ACPI power management.  My idea with this patch was to simulate that
+situation by clearing pdev->pm_cap so we treat the GPU as though it
+had no PCI PM capability.
+
+> And would the parent bus even go into D3hot if it knows one of its
+> children is still at D0? Because that's what the result of that
+> would be as well, no? And I know that if the bus stays in D0, that
+> it has a negative impact on power consumption.
+
+I don't understand this part.  Are you saying you want the GPU in D0
+and the upstream component (root port or switch) in D3hot?
+
+I think the rule for the upstream component (the root port or switch
+leading to the GPU) is in PCIe spec 5.0, sec 5.3.2.  Basically it says
+the upstream component cannot be in a lower power state than the GPU,
+i.e.,
+
+  - if the GPU is in D0, the upstream component must be in D0;
+  - if the GPU is in D2, the upstream component can be in D0-D2;
+  - if the GPU is in D3hot, the upstream component can be in D0-D3hot
+
+So I don't understand how we *could* have the GPU in D0 and the
+upstream component in D3hot.
+
+> Anyway, I will try that out, I am just not seeing how that would help.
+> 
+> > diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > index b65ae817eabf..2ad825e8891c 100644
+> > --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
+> >         kfree(drm);
+> >  }
+> >
+> > +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
+> > +{
+> > +       struct pci_dev *pdev = drm_dev->pdev;
+> > +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
+> > +
+> > +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
+> > +               return;
+> > +
+> > +       switch (bridge->device) {
+> > +       case 0x1901:
+> > +               STASH->pm_cap = pdev->pm_cap;
+> > +               pdev->pm_cap = 0;
+> > +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
+> > +               break;
+> > +       }
+> > +}
+> > +
+> >  static int nouveau_drm_probe(struct pci_dev *pdev,
+> >                              const struct pci_device_id *pent)
+> >  {
+> > @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+> >         if (ret)
+> >                 goto fail_drm_dev_init;
+> >
+> > +       quirk_broken_nv_runpm(drm_dev);
+> >         return 0;
+> >
+> >  fail_drm_dev_init:
+> > @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
+> >  {
+> >         struct drm_device *dev = pci_get_drvdata(pdev);
+> >
+> > +       /* If we disabled PCI power management, restore it */
+> > +       if (STASH->pm_cap)
+> > +               pdev->pm_cap = STASH->pm_cap;
+> >         nouveau_drm_device_remove(dev);
+> >         pci_disable_device(pdev);
+> >  }
+> >
+> 
