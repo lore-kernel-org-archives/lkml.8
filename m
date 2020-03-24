@@ -2,139 +2,119 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B3EC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB3C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2882074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:42:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dkufhUJ9"
+	by mail.kernel.org (Postfix) with ESMTP id 57CE420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727741AbgCXOmT (ORCPT
+        id S1727829AbgCXOnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:42:19 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37589 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgCXOmT (ORCPT
+        Tue, 24 Mar 2020 10:43:17 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:53849 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgCXOnR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:42:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id w10so21800466wrm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:42:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=7vTrTxx0I42zw2BaG0USTFej0dtrrNyaNSAnPWYt9Eo=;
-        b=dkufhUJ9zQgyP8eGpXezEO6a9c0CgpImFYcOb7SPCPnxkVXnUCf9MubJp0Db51xEiq
-         qINGVez4sAiuIZTWVRXxyECGEj+Tt0lNCg0T/cuaWJn6rLAyv22itIBOF196q7ArZrkG
-         Np68R2299lTO/aD1jrc6693/loNDi3KzSYUtE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=7vTrTxx0I42zw2BaG0USTFej0dtrrNyaNSAnPWYt9Eo=;
-        b=ia+8WoHlAeBzeNb/kqt998Rwg9KLcii5up5xnvJlrdRu0W5b9pnsY613z7szvS3ShO
-         hfkC3bWb8D/CSSakLAX08Ly8ZObG2CzuY1sd8v+ekt/8jy5IGOjN9wv5xjNCIyFrXxOW
-         GoAviTfyHgzt9WKfImS9dh1JNXmlOWzvYvB49zb8fqiGNvZHdw8Rvkv3VqgAXeFBpRSO
-         U2jDXOlE+mDEwdu+b3/fev/s4HakV1aqCx8vX1XGSSaAXAtgM7JnFjjm7z0GmQaaCrZd
-         GU7pLUEuxQPi8BmjD9f+x+oA535gDRiycWKg/X3l41CxWzczIQSPfyU62Pj71mOEMP/b
-         kmiA==
-X-Gm-Message-State: ANhLgQ13wQ+EMjr90LwqfadHelqxRU/9X6nlXKGuF43LKlAClLZsikt9
-        sbE6SeVFvE1inAIwuS6ZFZLY7g==
-X-Google-Smtp-Source: ADFU+vvCgG3AatQ3uIwpMlAUCRa8G1ExnmSdd3Fbwn543GAsmTl1Hh4EBhFaLe+iPrfpcTl6xafpCA==
-X-Received: by 2002:a5d:6888:: with SMTP id h8mr27440636wru.159.1585060937530;
-        Tue, 24 Mar 2020 07:42:17 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id s15sm30790432wrr.45.2020.03.24.07.42.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 07:42:16 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 24 Mar 2020 15:42:14 +0100
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
-Message-ID: <20200324144214.GA1040@chromium.org>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-6-kpsingh@chromium.org>
- <6d45de0d-c59d-4ca7-fcc5-3965a48b5997@schaufler-ca.com>
- <20200324015217.GA28487@chromium.org>
- <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
+        Tue, 24 Mar 2020 10:43:17 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jGklo-0001vv-Na; Tue, 24 Mar 2020 15:43:08 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jGkln-0000tK-B5; Tue, 24 Mar 2020 15:43:07 +0100
+Date:   Tue, 24 Mar 2020 15:43:07 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
+Message-ID: <20200324144307.kxhqzyjj4evrouqa@pengutronix.de>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+ <20200320133123.GD5477@dell>
+ <20200324110710.GL5477@dell>
+ <20200324125735.2mjuvbxt5bpon2ft@pengutronix.de>
+ <20200324130410.dwlg767ku6kwequv@holly.lan>
+ <20200324142441.GD442973@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324142441.GD442973@dell>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-Mär 10:37, Stephen Smalley wrote:
-> On Mon, Mar 23, 2020 at 9:52 PM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > On 23-Mär 18:13, Casey Schaufler wrote:
-> > > On 3/23/2020 9:44 AM, KP Singh wrote:
-> > > > From: KP Singh <kpsingh@google.com>
-> > > >
-> > > > The bpf_lsm_ nops are initialized into the LSM framework like any other
-> > > > LSM.  Some LSM hooks do not have 0 as their default return value. The
-> > > > __weak symbol for these hooks is overridden by a corresponding
-> > > > definition in security/bpf/hooks.c
-> > > >
-> > > > +   return 0;
-> >
-> > [...]
-> >
-> > > > +}
-> > > > +
-> > > > +DEFINE_LSM(bpf) = {
-> > > > +   .name = "bpf",
-> > > > +   .init = bpf_lsm_init,
-> > >
-> > > Have you given up on the "BPF must be last" requirement?
-> >
-> > Yes, we dropped it for as the BPF programs require CAP_SYS_ADMIN
-> > anwyays so the position ~shouldn't~ matter. (based on some of the
-> > discussions we had on the BPF_MODIFY_RETURN patches).
-> >
-> > However, This can be added later (in a separate patch) if really
-> > deemed necessary.
+On Tue, Mar 24, 2020 at 02:24:41PM +0000, Lee Jones wrote:
+> On Tue, 24 Mar 2020, Daniel Thompson wrote:
 > 
-> It matters for SELinux, as I previously explained.  A process that has
-> CAP_SYS_ADMIN is not assumed to be able to circumvent MAC policy.
-> And executing prior to SELinux allows the bpf program to access and
-> potentially leak to userspace information that wouldn't be visible to
-> the
-> process itself. However, I thought you were handling the order issue
-> by putting it last in the list of lsms?
+> > On Tue, Mar 24, 2020 at 01:57:35PM +0100, Uwe Kleine-König wrote:
+> > > Hello Lee,
+> > > 
+> > > On Tue, Mar 24, 2020 at 11:07:10AM +0000, Lee Jones wrote:
+> > > > On Fri, 20 Mar 2020, Lee Jones wrote:
+> > > > 
+> > > > > On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
+> > > > > 
+> > > > > > Since the PWM framework is switching struct pwm_state.period's datatype
+> > > > > > to u64, prepare for this transition by using div_u64 to handle a 64-bit
+> > > > > > dividend instead of a straight division operation.
+> > > > > > 
+> > > > > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > > > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > > > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > > > > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > > > > > Cc: linux-pwm@vger.kernel.org
+> > > > > > Cc: dri-devel@lists.freedesktop.org
+> > > > > > Cc: linux-fbdev@vger.kernel.org
+> > > > > > 
+> > > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > > > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > > > ---
+> > > > > >  drivers/video/backlight/pwm_bl.c | 3 ++-
+> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > Can this patch be taken on its own?
+> > > > 
+> > > > Hellooooo ...
+> > > 
+> > > Conceptually it can. As the last patch depends on this one (and the
+> > > others) some coordination might be beneficial. But that's up to Thierry
+> > > to decide how (and if) he want this series to be applied.
+> > 
+> > ... and on the backlight side we definitely need to know about the "if"
+> > otherwise there's no point in taking it.
+> 
+> Right.
+> 
+> I'm happy to wait for Thierry.  Although this isn't the only set he's
+> currently blocking.  Is he okay?  On holiday perhaps?
 
-We can still do that if it does not work for SELinux.
+The newest commit by him in next is from last week. My guess is he
+just didn't come around yet to care for the PWM duties.
 
-Would it be okay to add bpf as LSM_ORDER_LAST?
+Best regards
+Uwe
 
-LSMs like Landlock can then add LSM_ORDER_UNPRIVILEGED to even end up
-after bpf?
-
-- KP
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
