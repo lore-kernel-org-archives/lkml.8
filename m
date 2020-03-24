@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B107C54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D75C54FCF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BB7208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7AB320775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056099;
-	bh=s2rFdOl3aT69qdT0TYXPhW8yEmrIvhPkYwNwwsXfbxU=;
+	s=default; t=1585056103;
+	bh=6FsquY7iFcnNADPoP9NlvSUgozOsnBwZr9Y3ZVymeZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYCtuFLG6WgAlPryq+0KJRXtCAb0ara9IIyYbO/hHqpPp3HH1ZynxKoYq3UqgIiIL
-	 zdv8hTrleN15iKtDMEjz/agW4sxw0V1e5X+MhJOqaeiJeQeSuwXA9r5aKLKqalIBzL
-	 O7ae/z5DJjwLEg8R1SQE0eIOZczn4wDfHzw9mkUg=
+	b=YzANVCcYG1O1eXsad5r+3A8eS1LzlKSwAgTMfOCwpYQ9GAvhnxXY2ART67od3MrJ8
+	 rt7m8th+zda+cwQ6+vhSOHgFJiHY6Na+wEUK1m6jWPkmHKbKHPW1Ba5hDWRq2Q8VwW
+	 s6mL7lk8EFW4Cf+ar6QXSVTre49FcMPztK4MPNzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729067AbgCXNVi (ORCPT
+        id S1728941AbgCXNVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43422 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43502 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728786AbgCXNVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:32 -0400
+        id S1728923AbgCXNVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA36E20775;
-        Tue, 24 Mar 2020 13:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D177208C3;
+        Tue, 24 Mar 2020 13:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056091;
-        bh=s2rFdOl3aT69qdT0TYXPhW8yEmrIvhPkYwNwwsXfbxU=;
+        s=default; t=1585056093;
+        bh=6FsquY7iFcnNADPoP9NlvSUgozOsnBwZr9Y3ZVymeZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rszbBwchHt6F9sak70EMzksDAUBCoL4hsxosPen14Ad8p7P1AMmWMs4A/8zwfHydV
-         +U+6IulP2pUM7OjKtIllu60FgICln5l4wixIrkDMzj5eQlrjfpoc17gW5NDlfIJM+c
-         iNew9elgER9xpfZUtGZklmSGVDcYd5i8WuPdBYYg=
+        b=BVM3BwHmGKXlMiVY/C3KOPYCULCsPIfFako5VEnty6MrWyyx8iPruJ0FJnDHnaNVA
+         6fjYUykcNF3rwAQJCcPWsPvKbGhyG3Gs8WNfJAyxJG0QqEZdEGZ60ICQF+TJHWeGX3
+         QK1s82W8gxFQNyflJeHR5KCGVSofqBizszOBTFjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 019/119] drm/exynos: hdmi: dont leak enable HDMI_EN regulator if probe fails
-Date:   Tue, 24 Mar 2020 14:10:04 +0100
-Message-Id: <20200324130810.390884047@linuxfoundation.org>
+Subject: [PATCH 5.5 002/119] locks: reinstate locks_delete_block optimization
+Date:   Tue, 24 Mar 2020 14:09:47 +0100
+Message-Id: <20200324130808.263988721@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -62,104 +61,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 3b6a9b19ab652efac7ad4c392add6f1235019568 ]
+[ Upstream commit dcf23ac3e846ca0cf626c155a0e3fcbbcf4fae8a ]
 
-Move enabling and disabling HDMI_EN optional regulator to probe() function
-to keep track on the regulator status. This fixes following warning if
-probe() fails (for example when I2C DDC adapter cannot be yet gathered
-due to the missing driver). This fixes following warning observed on
-Arndale5250 board with multi_v7_defconfig:
+There is measurable performance impact in some synthetic tests due to
+commit 6d390e4b5d48 (locks: fix a potential use-after-free problem when
+wakeup a waiter). Fix the race condition instead by clearing the
+fl_blocker pointer after the wake_up, using explicit acquire/release
+semantics.
 
-[drm] Failed to get ddc i2c adapter by node
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 214 at drivers/regulator/core.c:2051 _regulator_put+0x16c/0x184
-Modules linked in: ...
-CPU: 0 PID: 214 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219-00040-g38af1dfafdbb #7570
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0312258>] (unwind_backtrace) from [<c030cc10>] (show_stack+0x10/0x14)
-[<c030cc10>] (show_stack) from [<c0f0d3a0>] (dump_stack+0xcc/0xe0)
-[<c0f0d3a0>] (dump_stack) from [<c0346a58>] (__warn+0xe0/0xf8)
-[<c0346a58>] (__warn) from [<c0346b20>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0346b20>] (warn_slowpath_fmt) from [<c0893f58>] (_regulator_put+0x16c/0x184)
-[<c0893f58>] (_regulator_put) from [<c0893f8c>] (regulator_put+0x1c/0x2c)
-[<c0893f8c>] (regulator_put) from [<c09b2664>] (release_nodes+0x17c/0x200)
-[<c09b2664>] (release_nodes) from [<c09aebe8>] (really_probe+0x10c/0x350)
-[<c09aebe8>] (really_probe) from [<c09aefa8>] (driver_probe_device+0x60/0x1a0)
-[<c09aefa8>] (driver_probe_device) from [<c09af288>] (device_driver_attach+0x58/0x60)
-[<c09af288>] (device_driver_attach) from [<c09af310>] (__driver_attach+0x80/0xbc)
-[<c09af310>] (__driver_attach) from [<c09ace34>] (bus_for_each_dev+0x68/0xb4)
-[<c09ace34>] (bus_for_each_dev) from [<c09ae00c>] (bus_add_driver+0x130/0x1e8)
-[<c09ae00c>] (bus_add_driver) from [<c09afd98>] (driver_register+0x78/0x110)
-[<c09afd98>] (driver_register) from [<bf139558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
-[<bf139558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
-[<c0302fa8>] (do_one_initcall) from [<c03dc02c>] (do_init_module+0x60/0x210)
-[<c03dc02c>] (do_init_module) from [<c03daf44>] (load_module+0x1c0c/0x2310)
-[<c03daf44>] (load_module) from [<c03db85c>] (sys_finit_module+0xac/0xbc)
-[<c03db85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
-Exception stack(0xecca3fa8 to 0xecca3ff0)
-...
----[ end trace 276c91214635905c ]---
+This does mean that we can no longer use the clearing of fl_blocker as
+the wait condition, so switch the waiters over to checking whether the
+fl_blocked_member list_head is empty.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Reviewed-by: yangerkun <yangerkun@huawei.com>
+Reviewed-by: NeilBrown <neilb@suse.de>
+Fixes: 6d390e4b5d48 (locks: fix a potential use-after-free problem when wakeup a waiter)
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_hdmi.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ fs/cifs/file.c |  3 ++-
+ fs/locks.c     | 54 ++++++++++++++++++++++++++++++++++++++++++++------
+ 2 files changed, 50 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index 48159d5d22144..d85e15e816e99 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -1803,18 +1803,10 @@ static int hdmi_resources_init(struct hdmi_context *hdata)
- 
- 	hdata->reg_hdmi_en = devm_regulator_get_optional(dev, "hdmi-en");
- 
--	if (PTR_ERR(hdata->reg_hdmi_en) != -ENODEV) {
-+	if (PTR_ERR(hdata->reg_hdmi_en) != -ENODEV)
- 		if (IS_ERR(hdata->reg_hdmi_en))
- 			return PTR_ERR(hdata->reg_hdmi_en);
- 
--		ret = regulator_enable(hdata->reg_hdmi_en);
--		if (ret) {
--			DRM_DEV_ERROR(dev,
--				      "failed to enable hdmi-en regulator\n");
--			return ret;
--		}
--	}
--
- 	return hdmi_bridge_init(hdata);
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 5b1460486535e..dc195435519b4 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -1175,7 +1175,8 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
+ 	rc = posix_lock_file(file, flock, NULL);
+ 	up_write(&cinode->lock_sem);
+ 	if (rc == FILE_LOCK_DEFERRED) {
+-		rc = wait_event_interruptible(flock->fl_wait, !flock->fl_blocker);
++		rc = wait_event_interruptible(flock->fl_wait,
++					list_empty(&flock->fl_blocked_member));
+ 		if (!rc)
+ 			goto try_again;
+ 		locks_delete_block(flock);
+diff --git a/fs/locks.c b/fs/locks.c
+index 426b55d333d5b..b8a31c1c4fff3 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -725,7 +725,6 @@ static void __locks_delete_block(struct file_lock *waiter)
+ {
+ 	locks_delete_global_blocked(waiter);
+ 	list_del_init(&waiter->fl_blocked_member);
+-	waiter->fl_blocker = NULL;
  }
  
-@@ -2021,6 +2013,15 @@ static int hdmi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (!IS_ERR(hdata->reg_hdmi_en)) {
-+		ret = regulator_enable(hdata->reg_hdmi_en);
-+		if (ret) {
-+			DRM_DEV_ERROR(dev,
-+			      "failed to enable hdmi-en regulator\n");
-+			goto err_hdmiphy;
-+		}
-+	}
+ static void __locks_wake_up_blocks(struct file_lock *blocker)
+@@ -740,6 +739,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
+ 			waiter->fl_lmops->lm_notify(waiter);
+ 		else
+ 			wake_up(&waiter->fl_wait);
 +
- 	pm_runtime_enable(dev);
++		/*
++		 * The setting of fl_blocker to NULL marks the "done"
++		 * point in deleting a block. Paired with acquire at the top
++		 * of locks_delete_block().
++		 */
++		smp_store_release(&waiter->fl_blocker, NULL);
+ 	}
+ }
  
- 	audio_infoframe = &hdata->audio.infoframe;
-@@ -2045,7 +2046,8 @@ static int hdmi_probe(struct platform_device *pdev)
+@@ -753,11 +759,42 @@ int locks_delete_block(struct file_lock *waiter)
+ {
+ 	int status = -ENOENT;
  
- err_rpm_disable:
- 	pm_runtime_disable(dev);
--
-+	if (!IS_ERR(hdata->reg_hdmi_en))
-+		regulator_disable(hdata->reg_hdmi_en);
- err_hdmiphy:
- 	if (hdata->hdmiphy_port)
- 		put_device(&hdata->hdmiphy_port->dev);
++	/*
++	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
++	 * the lock and is the only one that might try to claim the lock.
++	 *
++	 * We use acquire/release to manage fl_blocker so that we can
++	 * optimize away taking the blocked_lock_lock in many cases.
++	 *
++	 * The smp_load_acquire guarantees two things:
++	 *
++	 * 1/ that fl_blocked_requests can be tested locklessly. If something
++	 * was recently added to that list it must have been in a locked region
++	 * *before* the locked region when fl_blocker was set to NULL.
++	 *
++	 * 2/ that no other thread is accessing 'waiter', so it is safe to free
++	 * it.  __locks_wake_up_blocks is careful not to touch waiter after
++	 * fl_blocker is released.
++	 *
++	 * If a lockless check of fl_blocker shows it to be NULL, we know that
++	 * no new locks can be inserted into its fl_blocked_requests list, and
++	 * can avoid doing anything further if the list is empty.
++	 */
++	if (!smp_load_acquire(&waiter->fl_blocker) &&
++	    list_empty(&waiter->fl_blocked_requests))
++		return status;
++
+ 	spin_lock(&blocked_lock_lock);
+ 	if (waiter->fl_blocker)
+ 		status = 0;
+ 	__locks_wake_up_blocks(waiter);
+ 	__locks_delete_block(waiter);
++
++	/*
++	 * The setting of fl_blocker to NULL marks the "done" point in deleting
++	 * a block. Paired with acquire at the top of this function.
++	 */
++	smp_store_release(&waiter->fl_blocker, NULL);
+ 	spin_unlock(&blocked_lock_lock);
+ 	return status;
+ }
+@@ -1350,7 +1387,8 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+ 		error = posix_lock_inode(inode, fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++					list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+@@ -1435,7 +1473,8 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
+ 		error = posix_lock_inode(inode, &fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl.fl_wait, !fl.fl_blocker);
++		error = wait_event_interruptible(fl.fl_wait,
++					list_empty(&fl.fl_blocked_member));
+ 		if (!error) {
+ 			/*
+ 			 * If we've been sleeping someone might have
+@@ -1638,7 +1677,8 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
+ 
+ 	locks_dispose_list(&dispose);
+ 	error = wait_event_interruptible_timeout(new_fl->fl_wait,
+-						!new_fl->fl_blocker, break_time);
++					list_empty(&new_fl->fl_blocked_member),
++					break_time);
+ 
+ 	percpu_down_read(&file_rwsem);
+ 	spin_lock(&ctx->flc_lock);
+@@ -2122,7 +2162,8 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
+ 		error = flock_lock_inode(inode, fl);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++				list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
+@@ -2399,7 +2440,8 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
+ 		error = vfs_lock_file(filp, cmd, fl, NULL);
+ 		if (error != FILE_LOCK_DEFERRED)
+ 			break;
+-		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
++		error = wait_event_interruptible(fl->fl_wait,
++					list_empty(&fl->fl_blocked_member));
+ 		if (error)
+ 			break;
+ 	}
 -- 
 2.20.1
 
