@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 522EEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5379C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B68A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E105208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055881;
-	bh=iBjbZ09cVGZ1XntUHNiVR6x9U+7Uef9bZjfXZREwfb8=;
+	s=default; t=1585055884;
+	bh=mjm9lXsDUkQcojDLhC25W/kDX2lM5gjy9tCWyqwiQg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wwjZlMsSokHmdQR3Q9IMUPD+vJPSAmNLCiT3l+cyPyqOXx566yjAmxk785Txz4yPY
-	 TIS3zqhdRYQb/zdIxsJooFfVwbq1lGHMmcFZp7oXv4akmI6nzcxzGvSexid54yA4ki
-	 WxjCZVRjTlVrG69gULMGDlHZFDlDLJe0A3S+HVoE=
+	b=a6eBXuH7TJP7UaEpEaV6YRZwrhp+ErXcPhT7v81Y74WUJgU7Yo1v0kdC+KFGMgCf9
+	 rVkDc3RE4nSqcsBB17XKpHdlq5mCZ4ed2IMj4tlLaP8jDFifWVRNYzaeNTSx66K17c
+	 6xco0NuV6M6id3YtuiV9FOeZB73M2bymqHpSmQgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgCXNR7 (ORCPT
+        id S1728671AbgCXNSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37908 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:18:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgCXNR5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:17:57 -0400
+        id S1728043AbgCXNSA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:18:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1700208CA;
-        Tue, 24 Mar 2020 13:17:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D04206F6;
+        Tue, 24 Mar 2020 13:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055876;
-        bh=iBjbZ09cVGZ1XntUHNiVR6x9U+7Uef9bZjfXZREwfb8=;
+        s=default; t=1585055880;
+        bh=mjm9lXsDUkQcojDLhC25W/kDX2lM5gjy9tCWyqwiQg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u0dTNzDH0Dk1SAjRGJZzNqE9nkvhzhcsbTrkTpmS3uUbOPH3t48juawAUYz7KhyUc
-         VZaXM8dCDSbqz9pF5Mbbov1V7Ukj+ra8XvyJtEOFX7n7Z0ZLTDEO/oDtUkmwJ+IRLM
-         e3OqXb2mVAXztVxoXh4he+DZeObtjRmeBQpc7gkg=
+        b=FAq43nNCE6XCUb+zPECAFnN5X+UrRfduAIve3Q8qRdszD3V6oVvahM14ZUYNcCDQC
+         EoVncnYVSmdYuw1X0/Jc+yfxbWcVXH1EB4EbVuYy/r7nzf9RxIkRrFvLCy6q2piBun
+         JCWnEYt3gyYrFm/B/dqBlh2D7kKdsTYOdIMTXTE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 5.4 055/102] tty: fix compat TIOCGSERIAL checking wrong function ptr
-Date:   Tue, 24 Mar 2020 14:10:47 +0100
-Message-Id: <20200324130812.314596042@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Petr=20=C5=A0tetiar?= <ynezz@true.cz>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 056/102] iio: chemical: sps30: fix missing triggered buffer dependency
+Date:   Tue, 24 Mar 2020 14:10:48 +0100
+Message-Id: <20200324130812.405543780@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,40 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Petr Štetiar <ynezz@true.cz>
 
-commit 6e622cd8bd888c7fa3ee2b7dfb3514ab53b21570 upstream.
+commit 016a8845f6da65b2203f102f192046fbb624e250 upstream.
 
-Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
-tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
-checking for the presence of the ->set_serial function pointer rather
-than ->get_serial.  This appears to be a copy-and-paste error, since
-->get_serial is the function pointer that is called as well as the
-pointer that is checked by the non-compat version of TIOCGSERIAL.
+SPS30 uses triggered buffer, but the dependency is not specified in the
+Kconfig file.  Fix this by selecting IIO_BUFFER and IIO_TRIGGERED_BUFFER
+config symbols.
 
-Fix this by checking the correct function pointer.
-
-Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
-Cc: <stable@vger.kernel.org> # v4.20+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Acked-by: Jiri Slaby <jslaby@suse.cz>
-Link: https://lore.kernel.org/r/20200224182044.234553-3-ebiggers@kernel.org
+Cc: stable@vger.kernel.org
+Fixes: 232e0f6ddeae ("iio: chemical: add support for Sensirion SPS30 sensor")
+Signed-off-by: Petr Štetiar <ynezz@true.cz>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/tty_io.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/chemical/Kconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -2735,7 +2735,7 @@ static int compat_tty_tiocgserial(struct
- 	memset(&v, 0, sizeof(v));
- 	memset(&v32, 0, sizeof(v32));
- 
--	if (!tty->ops->set_serial)
-+	if (!tty->ops->get_serial)
- 		return -ENOTTY;
- 	err = tty->ops->get_serial(tty, &v);
- 	if (!err) {
+--- a/drivers/iio/chemical/Kconfig
++++ b/drivers/iio/chemical/Kconfig
+@@ -91,6 +91,8 @@ config SPS30
+ 	tristate "SPS30 particulate matter sensor"
+ 	depends on I2C
+ 	select CRC8
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Say Y here to build support for the Sensirion SPS30 particulate
+ 	  matter sensor.
 
 
