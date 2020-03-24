@@ -2,130 +2,97 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5ACC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6BCC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56D3E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F62420775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585056558;
+	bh=fgCakXjwGY+rUhPIQxjVi1O2wIJkX+bF8EbPDUz0qfU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ROcWzFO4zW2XZXFqgXtMyyiE0ayAntiEDWVmn+6vrNolsm147JpMy7Ac/BeTklgyb
+	 IChgQldkPunLb716rvcfMBtMj4Qrxorldj4vTXZrkv3C0FAQofU8cdRhVkfeWFFyVd
+	 awBZsUq0dpXh06gI/iFjS/hNjyo6ilL+bpucFE68=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbgCXN3L (ORCPT
+        id S1729533AbgCXNYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:29:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:34574 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 09:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729543AbgCXNYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15825FEC;
-        Tue, 24 Mar 2020 06:24:05 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8AF23F52E;
-        Tue, 24 Mar 2020 06:24:03 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 07/14] net: axienet: Check for DMA mapping errors
-Date:   Tue, 24 Mar 2020 13:23:40 +0000
-Message-Id: <20200324132347.23709-8-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
-References: <20200324132347.23709-1-andre.przywara@arm.com>
+        id S1729503AbgCXNYA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:00 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27C4F208D6;
+        Tue, 24 Mar 2020 13:23:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585056239;
+        bh=fgCakXjwGY+rUhPIQxjVi1O2wIJkX+bF8EbPDUz0qfU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Zfx51CJNpMx5peKtddl2XwCZh+R1c91/9yzKvbDMpv03yMVu7J3Apq2S+yDcICJv9
+         lsTYdFhQ4yT+AZQR0c3nktf+O4+8uEYtdHU7YeTIkj6R0yh1Yb0uEx8U/qRNBrfruH
+         F90TjG7PtCoSFtO34IFziiR+z3mQpgdnhbkE7bSI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>,
+        Linus Waleij <linus.walleij@linaro.org>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.5 066/119] iio: magnetometer: ak8974: Fix negative raw values in sysfs
+Date:   Tue, 24 Mar 2020 14:10:51 +0100
+Message-Id: <20200324130814.781134005@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
+References: <20200324130808.041360967@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Especially with the default 32-bit DMA mask, DMA buffers are a limited
-resource, so their allocation can fail.
-So as the DMA API documentation requires, add error checking code after
-dma_map_single() calls to catch the case where we run out of "low" memory.
+From: Stephan Gerhold <stephan@gerhold.net>
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+commit b500c086e4110829a308c23e83a7cdc65b26228a upstream.
+
+At the moment, reading from in_magn_*_raw in sysfs tends to return
+large values around 65000, even though the output of ak8974 is actually
+limited to ±32768. This happens because the value is never converted
+to the signed 16-bit integer variant.
+
+Add an explicit cast to s16 to fix this.
+
+Fixes: 7c94a8b2ee8c ("iio: magn: add a driver for AK8974")
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Waleij <linus.walleij@linaro.org>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 31 ++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ drivers/iio/magnetometer/ak8974.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 5c1b53944771..736ac1b7a052 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -248,6 +248,11 @@ static int axienet_dma_bd_init(struct net_device *ndev)
- 						     skb->data,
- 						     lp->max_frm_size,
- 						     DMA_FROM_DEVICE);
-+		if (dma_mapping_error(ndev->dev.parent, lp->rx_bd_v[i].phys)) {
-+			netdev_err(ndev, "DMA mapping error\n");
-+			goto out;
-+		}
-+
- 		lp->rx_bd_v[i].cntrl = lp->max_frm_size;
+--- a/drivers/iio/magnetometer/ak8974.c
++++ b/drivers/iio/magnetometer/ak8974.c
+@@ -564,7 +564,7 @@ static int ak8974_read_raw(struct iio_de
+ 		 * We read all axes and discard all but one, for optimized
+ 		 * reading, use the triggered buffer.
+ 		 */
+-		*val = le16_to_cpu(hw_values[chan->address]);
++		*val = (s16)le16_to_cpu(hw_values[chan->address]);
+ 
+ 		ret = IIO_VAL_INT;
  	}
- 
-@@ -679,6 +684,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 	dma_addr_t tail_p;
- 	struct axienet_local *lp = netdev_priv(ndev);
- 	struct axidma_bd *cur_p;
-+	u32 orig_tail_ptr = lp->tx_bd_tail;
- 
- 	num_frag = skb_shinfo(skb)->nr_frags;
- 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
-@@ -714,9 +720,15 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 		cur_p->app0 |= 2; /* Tx Full Checksum Offload Enabled */
- 	}
- 
--	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
- 	cur_p->phys = dma_map_single(ndev->dev.parent, skb->data,
- 				     skb_headlen(skb), DMA_TO_DEVICE);
-+	if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
-+		if (net_ratelimit())
-+			netdev_err(ndev, "TX DMA mapping error\n");
-+		ndev->stats.tx_dropped++;
-+		return NETDEV_TX_OK;
-+	}
-+	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
- 
- 	for (ii = 0; ii < num_frag; ii++) {
- 		if (++lp->tx_bd_tail >= lp->tx_bd_num)
-@@ -727,6 +739,16 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
- 					     skb_frag_address(frag),
- 					     skb_frag_size(frag),
- 					     DMA_TO_DEVICE);
-+		if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
-+			if (net_ratelimit())
-+				netdev_err(ndev, "TX DMA mapping error\n");
-+			ndev->stats.tx_dropped++;
-+			axienet_free_tx_chain(ndev, orig_tail_ptr, ii + 1,
-+					      NULL);
-+			lp->tx_bd_tail = orig_tail_ptr;
-+
-+			return NETDEV_TX_OK;
-+		}
- 		cur_p->cntrl = skb_frag_size(frag);
- 	}
- 
-@@ -807,6 +829,13 @@ static void axienet_recv(struct net_device *ndev)
- 		cur_p->phys = dma_map_single(ndev->dev.parent, new_skb->data,
- 					     lp->max_frm_size,
- 					     DMA_FROM_DEVICE);
-+		if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
-+			if (net_ratelimit())
-+				netdev_err(ndev, "RX DMA mapping error\n");
-+			dev_kfree_skb(new_skb);
-+			return;
-+		}
-+
- 		cur_p->cntrl = lp->max_frm_size;
- 		cur_p->status = 0;
- 		cur_p->skb = new_skb;
--- 
-2.17.1
+
 
