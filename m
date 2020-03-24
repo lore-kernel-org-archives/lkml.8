@@ -2,77 +2,132 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C260EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:02:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644B2C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964D420775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:02:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D9E320775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:03:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JKNo1auc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3p61EaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgCXPCd (ORCPT
+        id S1727976AbgCXPDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:02:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60696 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgCXPCd (ORCPT
+        Tue, 24 Mar 2020 11:03:13 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45532 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgCXPDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:02:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=wFYim2QYkMQiybbppEhpuH5sqX3Z/8A63mEmIPHre14=; b=JKNo1aucxJAp9DOxiyfngvdx4z
-        FiVtVyxTPHVQiB1L3KLRccnN+VGj5h5+wWfubMPSjtEvkQJXeVlhWxvg1EbJCAxokEYrDfuisCznr
-        zYgkL0WFgzHIkty3g78gt3dn+EcRIR8HJFVRypK0JUp8d/YcfSxs3CK/l5fnXRktLQWooeDPQLjHq
-        mmrWKXgkBHm5QEGMFjM0VThvKSCEJuDxteUX3+EvefFfai0UgAw5/s5+zCO3fG/B+wF4RtNhd3t/I
-        8xfThPBn7bcvR4mPGrraasbnI+0NcqTwEzd0NwmAWIyAllta1lGqcHw/Y1Ty/RWZwl9jafDacemUG
-        9TjAdbFw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGl44-0001kh-1W; Tue, 24 Mar 2020 15:02:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9B539300096;
-        Tue, 24 Mar 2020 16:01:55 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7F491286C138B; Tue, 24 Mar 2020 16:01:55 +0100 (CET)
-Date:   Tue, 24 Mar 2020 16:01:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
-        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
-        npiggin@gmail.com, arnd@arndb.de, rostedt@goodmis.org,
-        maz@kernel.org, suzuki.poulose@arm.com, tglx@linutronix.de,
-        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
-        broonie@kernel.org, guohanjun@huawei.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
-        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
-        zhangshaokun@hisilicon.com
-Subject: Re: [RFC PATCH v4 0/6] arm64: tlb: add support for TTL feature
-Message-ID: <20200324150155.GH20713@hirez.programming.kicks-ass.net>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+        Tue, 24 Mar 2020 11:03:12 -0400
+Received: by mail-lj1-f196.google.com with SMTP id t17so8270234ljc.12;
+        Tue, 24 Mar 2020 08:03:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=I7ST19asnOGG0MvlKCXAazKkdXSFzwFfpgOHQe5IauY=;
+        b=C3p61EaT7Ansyr+VG6Zms58wIAIdlIeXUlQlRWHEzHgosPG4eTbCfxvVKOlyXpuMKJ
+         UMkA1qSBDLqjzZ516QFLp4yt/3qfUxBqxaJvBcj8LZRy5cJV/emrqMeNA2nm29VTd2LB
+         hiEAduSEjAUca7c2TVIcxwNXORz+W2Jp/c7HbXw49iP9KCTBTjVgORNWm9RkbmupOjSv
+         JEVaicWfU4oPm+je2fjhGZATErWWRg61aEQFM2ACPsTnQMSoVrgcqo9qraE09ZGwUs66
+         36Jk6bVFpRsAfcxYVr4XYYsPZgsAxbQbfj2lIAHEjvJvV51/QFoQMSrgcyRDIzF8qS8S
+         XR7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=I7ST19asnOGG0MvlKCXAazKkdXSFzwFfpgOHQe5IauY=;
+        b=FZVoQR+j6Nf7EYVtVNvHf3AeXPz6/MQuJYn0Vbv6cokHAkMVdAmLbPwZDjn9v9wUZ8
+         X2nb4OIZOeICSVLWT59j6YN8LPg9D7RlNRD0sMSno6MaasItL/ruHdWXyPukL3huM4uS
+         P6ZmEV7dvdkgYjKaRI5zS6zB61L48JVaKRavg0DUc9Qat7TGgH8fupwWC60hkQ+mAOFU
+         0RbOoZU+G1+UwkoPMBwSe5ddgfLD+yUoGAz5YqyNx6/i0eORf2uWrldjIk0Pl48CIwmJ
+         9blFRgrh+eW3xEfDZP7VQseNxpVowuMIlmtrf7ABa4pUZqGAmkK1dlOl3uHKEJmBv7El
+         9/AA==
+X-Gm-Message-State: ANhLgQ0RarWSR7xuEm+XwzhcS5GA4jRqR/GzcNpUnSaWXYJIH+mS4H6c
+        wodMcWA4aDkeYrwXTfCNSz8=
+X-Google-Smtp-Source: ADFU+vsH+UIsIfX+xigBdx82/+KW5l3a/4mEXGfuKimOIM5aB97Q/HYnQwUG5Nhu8rQhgSr0M287WA==
+X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr17295986ljp.241.1585062190955;
+        Tue, 24 Mar 2020 08:03:10 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id h10sm10347020ljg.38.2020.03.24.08.03.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 08:03:10 -0700 (PDT)
+Subject: Re: [PATCH v7 00/48] atmel_mxt_ts misc
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     "Wang, Jiada" <jiada_wang@mentor.com>, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, rydberg@bitmath.org,
+        dmitry.torokhov@gmail.com, nick@shmanahar.org, bsz@semihalf.com
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200212084218.32344-1-jiada_wang@mentor.com>
+ <c583d151-9243-cbde-a04b-bc0389d9be5a@gmail.com>
+ <89e4bb0b-b2eb-0b67-4307-fb2af914b1c0@mentor.com>
+ <f9b221e7-f189-3e47-adab-1cbc49490d4b@gmail.com>
+ <bd3c487b-b065-3e4f-6ab1-f344a4113fcd@mentor.com>
+ <5d8fdfc1-cc95-59db-b83e-87bb16ea79e8@gmail.com>
+Message-ID: <60f89c4e-91e0-e660-58e7-5b152bc3e8e7@gmail.com>
+Date:   Tue, 24 Mar 2020 18:03:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324134534.1570-1-yezhenyu2@huawei.com>
+In-Reply-To: <5d8fdfc1-cc95-59db-b83e-87bb16ea79e8@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:45:28PM +0800, Zhenyu Ye wrote:
-> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
-> feature allows TLBs to be issued with a level allowing for quicker
-> invalidation.  This series provide support for this feature. 
+24.03.2020 17:54, Dmitry Osipenko пишет:
+> 23.03.2020 05:25, Wang, Jiada пишет:
+>> Hello Dmitry
+>>
+>> On 2020/03/21 0:53, Dmitry Osipenko wrote:
+>>> Hello Jiada,
+>>>
+>>> 20.03.2020 06:37, Wang, Jiada пишет:
+>>>> Hello Dmitry
+>>>>
+>>>> I have submitted v8 patch-set to address your comments towards v7
+>>>> patch-set,
+>>>> most of checkpatch warnings and errors have been addressed,
+>>>>
+>>>> But I didn't update for following two types of warnings
+>>>> since I want to keep consistency with legacy code
+>>>>
+>>>> WARNING: DEVICE_ATTR unusual permissions '0600' used
+>>>> #290: FILE: drivers/input/touchscreen/atmel_mxt_ts.c:3761:
+>>>> +static DEVICE_ATTR(debug_v2_enable, 0600, NULL,
+>>>
+>>> What will happen if you'll use 0644? Will an empty line be returned or
+>>> driver will crash?
+>>>
+>> debug_v2_enable doesn't have .show callback implemented, so after change
+>> permission to 644, read of it results in an I/O error,
+>>
+>> for other 0600 permission interfaces (t38_data, t25 and debug_enable)
+>> added in this series,
+>> change to 644 can return expected information when read.
+>>
+>> Do you think it's better to change debug_v2_enable to 0200,
+>> and others to 0644?
 > 
-> Patch 1 and Patch 2 was provided by Marc on his NV series[1] patches,
-> which detect the TTL feature and add __tlbi_level interface.
+> Since the debug_enable has mxt_debug_enable_show(), the same should be
+> done for debug_v2_enable, for consistency.
+> 
+> The permissions should be 0644 for everything that is read/write.
+> 
+> The 0200 should be used for everything that is root-only and write-only.
+> 
 
-I realy hate how it makes vma->vm_flags more important for tlbi.
+Also, please take a look at [1], see DEVICE_ATTR_WO() and
+DEVICE_BOOL_ATTR() macros, which should be handy.
+
+[1]
+https://elixir.bootlin.com/linux/v5.6-rc7/source/include/linux/device.h#L125
