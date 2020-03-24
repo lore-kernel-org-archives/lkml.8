@@ -4,54 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804F5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E251C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F88206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 408D3206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056775;
-	bh=ZZnHNSt6W/dTcHetd5j2f9gR0uIYQG3CneTi7NAPW7w=;
+	s=default; t=1585056787;
+	bh=GF0nQgHSqr93FGkRxyrNN14Mg7LyWH6kxP3Xm7fVJ30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PFTEf3P5VvjydwdyB0hHW/hTvYFDVzqE503pF515Phb98SS4/e6pF8qiAZ0kBPkUk
-	 UiBtgSUfiYAFGWwymHm8dl98O+02MZZXv0XLOJQIbZYNyQhlZNqZoV3FxJTi54bMVF
-	 9bID/g7UePY2Na0qbRyHIda0dtI5dW1IETlMRPec=
+	b=OF6bvhdu4C7y7cTTe6iKyMXjOxtkPXkzoTKIEJ1yWWna39/Jokhxgq3avIPEn0XJX
+	 m74riDrvhjZRpX5v63dTgjYhAF1e/UA82swsOVLpF8B1wJ30NJoKyeWForImDvP3N9
+	 Pk/FhoXX1Efha5Xb0ufikgppZPLfiFTCb7Bryxfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgCXNcy (ORCPT
+        id S1728259AbgCXNP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35656 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728392AbgCXNQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:16 -0400
+        id S1727743AbgCXNPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:15:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED6C720775;
-        Tue, 24 Mar 2020 13:16:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F103208CA;
+        Tue, 24 Mar 2020 13:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055775;
-        bh=ZZnHNSt6W/dTcHetd5j2f9gR0uIYQG3CneTi7NAPW7w=;
+        s=default; t=1585055723;
+        bh=GF0nQgHSqr93FGkRxyrNN14Mg7LyWH6kxP3Xm7fVJ30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aZVzl8LCspoVWBnPMzDNUPp5p1q5/nmiHHD0ifIsEfPx+ObN3/Yz+8oxhbl/IjuO8
-         f/r01nzcVSNxcIjtNe+PM4u16yLhOZZ6omGRTbVQtsHGLOYkd53IcsMh35rnAbeKLj
-         LD11UoD+SClY/JlmaCal+PS8ejs9LqTOrvWV4KgA=
+        b=CEBydxHpWfiR67T/Rgl/BuBETfTyI5n+tSiqycLjzYMH2qCyeaCf0uMnS2tongTnd
+         RbzOHiU9GHr3YUFnuZnJDrX4zk6UzJjFMsu6vvu0E4VrH8CrV5dV2QXMFw/7WKy/8k
+         K17pq+v4HI4mrS8752ZyhWIDcd3ULSJQwiglJy50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+        Jeff Layton <jlayton@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 025/102] spi: spi_register_controller(): free bus id on error paths
-Date:   Tue, 24 Mar 2020 14:10:17 +0100
-Message-Id: <20200324130809.060908647@linuxfoundation.org>
+Subject: [PATCH 5.4 001/102] locks: fix a potential use-after-free problem when wakeup a waiter
+Date:   Tue, 24 Mar 2020 14:09:53 +0100
+Message-Id: <20200324130806.654542883@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,95 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: yangerkun <yangerkun@huawei.com>
 
-[ Upstream commit f9981d4f50b475d7dbb70f3022b87a3c8bba9fd6 ]
+[ Upstream commit 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da ]
 
-Some error paths leave the bus id allocated. As a result the IDR
-allocation will fail after a deferred probe. Fix by freeing the bus id
-always on error.
+'16306a61d3b7 ("fs/locks: always delete_block after waiting.")' add the
+logic to check waiter->fl_blocker without blocked_lock_lock. And it will
+trigger a UAF when we try to wakeup some waiter：
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Thread 1 has create a write flock a on file, and now thread 2 try to
+unlock and delete flock a, thread 3 try to add flock b on the same file.
+
+Thread2                         Thread3
+                                flock syscall(create flock b)
+	                        ...flock_lock_inode_wait
+				    flock_lock_inode(will insert
+				    our fl_blocked_member list
+				    to flock a's fl_blocked_requests)
+				   sleep
+flock syscall(unlock)
+...flock_lock_inode_wait
+    locks_delete_lock_ctx
+    ...__locks_wake_up_blocks
+        __locks_delete_blocks(
+	b->fl_blocker = NULL)
+	...
+                                   break by a signal
+				   locks_delete_block
+				    b->fl_blocker == NULL &&
+				    list_empty(&b->fl_blocked_requests)
+	                            success, return directly
+				 locks_free_lock b
+	wake_up(&b->fl_waiter)
+	trigger UAF
+
+Fix it by remove this logic, and this patch may also fix CVE-2019-19769.
+
+Cc: stable@vger.kernel.org
+Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
+Signed-off-by: yangerkun <yangerkun@huawei.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
+ fs/locks.c | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 26b91ee0855dc..c186d3a944cd0 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2452,7 +2452,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		if (ctlr->use_gpio_descriptors) {
- 			status = spi_get_gpio_descs(ctlr);
- 			if (status)
--				return status;
-+				goto free_bus_id;
- 			/*
- 			 * A controller using GPIO descriptors always
- 			 * supports SPI_CS_HIGH if need be.
-@@ -2462,7 +2462,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 			/* Legacy code path for GPIOs from DT */
- 			status = of_spi_get_gpio_numbers(ctlr);
- 			if (status)
--				return status;
-+				goto free_bus_id;
- 		}
- 	}
+diff --git a/fs/locks.c b/fs/locks.c
+index 44b6da0328426..426b55d333d5b 100644
+--- a/fs/locks.c
++++ b/fs/locks.c
+@@ -753,20 +753,6 @@ int locks_delete_block(struct file_lock *waiter)
+ {
+ 	int status = -ENOENT;
  
-@@ -2470,17 +2470,14 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	 * Even if it's just one always-selected device, there must
- 	 * be at least one chipselect.
- 	 */
--	if (!ctlr->num_chipselect)
--		return -EINVAL;
-+	if (!ctlr->num_chipselect) {
-+		status = -EINVAL;
-+		goto free_bus_id;
-+	}
- 
- 	status = device_add(&ctlr->dev);
--	if (status < 0) {
--		/* free bus id */
--		mutex_lock(&board_lock);
--		idr_remove(&spi_master_idr, ctlr->bus_num);
--		mutex_unlock(&board_lock);
--		goto done;
--	}
-+	if (status < 0)
-+		goto free_bus_id;
- 	dev_dbg(dev, "registered %s %s\n",
- 			spi_controller_is_slave(ctlr) ? "slave" : "master",
- 			dev_name(&ctlr->dev));
-@@ -2496,11 +2493,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		status = spi_controller_initialize_queue(ctlr);
- 		if (status) {
- 			device_del(&ctlr->dev);
--			/* free bus id */
--			mutex_lock(&board_lock);
--			idr_remove(&spi_master_idr, ctlr->bus_num);
--			mutex_unlock(&board_lock);
--			goto done;
-+			goto free_bus_id;
- 		}
- 	}
- 	/* add statistics */
-@@ -2515,7 +2508,12 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	/* Register devices from the device tree and ACPI */
- 	of_register_spi_devices(ctlr);
- 	acpi_register_spi_devices(ctlr);
--done:
-+	return status;
-+
-+free_bus_id:
-+	mutex_lock(&board_lock);
-+	idr_remove(&spi_master_idr, ctlr->bus_num);
-+	mutex_unlock(&board_lock);
- 	return status;
- }
- EXPORT_SYMBOL_GPL(spi_register_controller);
+-	/*
+-	 * If fl_blocker is NULL, it won't be set again as this thread
+-	 * "owns" the lock and is the only one that might try to claim
+-	 * the lock.  So it is safe to test fl_blocker locklessly.
+-	 * Also if fl_blocker is NULL, this waiter is not listed on
+-	 * fl_blocked_requests for some lock, so no other request can
+-	 * be added to the list of fl_blocked_requests for this
+-	 * request.  So if fl_blocker is NULL, it is safe to
+-	 * locklessly check if fl_blocked_requests is empty.  If both
+-	 * of these checks succeed, there is no need to take the lock.
+-	 */
+-	if (waiter->fl_blocker == NULL &&
+-	    list_empty(&waiter->fl_blocked_requests))
+-		return status;
+ 	spin_lock(&blocked_lock_lock);
+ 	if (waiter->fl_blocker)
+ 		status = 0;
 -- 
 2.20.1
 
