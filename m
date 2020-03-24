@@ -2,200 +2,102 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42223C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F86AC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8A5208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79583208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:12:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RRT/eNdb"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aSyqwGew"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbgCXQMD (ORCPT
+        id S1728834AbgCXQMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:12:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51034 "EHLO
+        Tue, 24 Mar 2020 12:12:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51070 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728571AbgCXQLj (ORCPT
+        with ESMTP id S1728571AbgCXQME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:11:39 -0400
+        Tue, 24 Mar 2020 12:12:04 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=AtRDJfwHMsY0ORbW7MH7PeCHOIjSQ1EgEUN44fx3SEo=; b=RRT/eNdbgVqw99udqs/C9sk9l1
-        ubqCWMR1KeM25xFIol7CPB1vyMijc7XbLZeAes5UMEi3JxHlzy7Ko0Ty9mFSuXDDY6IcIMRuAhky3
-        Vv88+xqvHGL169o+Nv1Rj7C9ByVjEqIYZtd37h5+Vf61DXsfjbjm4Yoh6hqW9hYaAj6ZQ00HpvLdd
-        j3mUVQ06LKXEovD+shAva1UxnHVpO0+gYoo8tRjU7JpWy+gco5U/3mwhS1z3lKO8dP6nDgS959DNT
-        FZBVIY+Z13fLD63mDFOdVVoFGjgagHzO3Fw71zHHYgFs94YFL310H+C84sPC/qU82iRajX2k1rhRC
-        vC+rNSMA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=1UNukJNSl6CmN8g/B7TvDZCfcdT81GU+Tg6yepq83q4=; b=aSyqwGewwRNOrGoIu6iHCe9UD5
+        cMkwEsYYlKnhJytvjpQPofzS4feDAZYgCfgDICk2nYjB4CfLbIVVdHuP6I/z2i+bPhKlEcPoiaGUa
+        FpR7ktwZqyCKkmjzzEiW1UoT7f8w9uCyB+f179J4TFBGeUfaonh5ODahgZizmvDnSgNY1wEZBy+tr
+        wp3gww3r7iuw6i0IbPxueTA+EQ7alq9AQ33OvobMnK4LS/I+sIhtaE1w4WbOfgeCobv2SByfb5WE8
+        yBbO1XwqtLfDwtRlqCOHX5T8fOUMpfUlQofsA5DPi6f4zh8PwjK2zQNh1kXaubQZuXQbh0QaHpvon
+        GzeJivlQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGm9N-0000CN-Eo; Tue, 24 Mar 2020 16:11:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 75693307648;
-        Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 654B529A490F0; Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Message-Id: <20200324160925.228938117@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 24 Mar 2020 16:31:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v3 22/26] objtool: Detect loading function pointers across noinstr
-References: <20200324153113.098167666@infradead.org>
+        id 1jGm9s-0000Ix-02; Tue, 24 Mar 2020 16:12:04 +0000
+Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
+To:     ron minnich <rminnich@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Matthew Garrett <mjg59@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
+ <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com>
+ <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
+ <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com>
+ <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
+ <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com>
+ <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com>
+ <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com>
+ <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com>
+ <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com>
+ <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
+ <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
+ <CAP6exYLCFp8AMFx_d3XJtYiSibF76Fo-km4vB5MwSbqE8D8DNA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <2837291a-b682-bd6d-4e08-ffa76d3097b0@infradead.org>
+Date:   Tue, 24 Mar 2020 09:12:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CAP6exYLCFp8AMFx_d3XJtYiSibF76Fo-km4vB5MwSbqE8D8DNA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Detect if noinstr text loads functions pointers from regular text,
-doing so is a definite sign that indirect function calls are unsafe.
+On 3/24/20 9:05 AM, ron minnich wrote:
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt
+> b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..9cd356958a7f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1714,6 +1714,13 @@
+> 
+>      initrd=        [BOOT] Specify the location of the initial ramdisk
+> 
+> +    initrdmem=    [KNL] Specify a physical adddress and size from which
+> +            to load the inird. If an initrd is compiled in or
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/arch.h  |    2 +
- tools/objtool/check.c |   71 ++++++++++++++++++++++++++++++++++++++++++++++++++
- tools/objtool/check.h |    2 -
- 3 files changed, 74 insertions(+), 1 deletion(-)
+                           initrd.
 
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -75,4 +75,6 @@ int arch_decode_instruction(struct elf *
- 
- bool arch_callee_saved_reg(unsigned char reg);
- 
-+#define MAX_INSN_SIZE 15
-+
- #endif /* _ARCH_H */
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -42,6 +42,25 @@ struct instruction *find_insn(struct obj
- 	return NULL;
- }
- 
-+static struct instruction *find_insn_containing(struct objtool_file *file, struct section *sec,
-+					 unsigned long offset)
-+{
-+	struct instruction *insn;
-+	unsigned long o;
-+
-+	for_offset_range(o, offset - MAX_INSN_SIZE - 1, offset) {
-+		hash_for_each_possible(file->insn_hash, insn, hash, sec_offset_hash(sec, o)) {
-+			if (insn->sec != sec)
-+				continue;
-+
-+			if (insn->offset <= offset && insn->offset + insn->len > offset)
-+				return insn;
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- static struct instruction *next_insn_same_sec(struct objtool_file *file,
- 					      struct instruction *insn)
- {
-@@ -2101,6 +2120,32 @@ static int validate_return(struct symbol
- 	return 0;
- }
- 
-+static int validate_rela(struct instruction *insn, struct insn_state *state)
-+{
-+	/*
-+	 * Assume that any text rela that's not a CALL or JMP is a load of a
-+	 * function pointer.
-+	 */
-+
-+	switch (insn->type) {
-+	case INSN_CALL:
-+	case INSN_CALL_DYNAMIC:
-+	case INSN_JUMP_CONDITIONAL:
-+	case INSN_JUMP_UNCONDITIONAL:
-+		return 0;
-+
-+	default:
-+		break;
-+	}
-+
-+	if (state->noinstr && state->instr <= 0 && insn->has_text_rela) {
-+		WARN_FUNC("loading non-noinstr function pointer", insn->sec, insn->offset);
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2216,6 +2261,10 @@ static int validate_branch(struct objtoo
- 				return 0;
- 		}
- 
-+		ret = validate_rela(insn, &state);
-+		if (ret)
-+			return ret;
-+
- 		switch (insn->type) {
- 
- 		case INSN_RETURN:
-@@ -2484,6 +2533,25 @@ static bool ignore_unreachable_insn(stru
- 	return false;
- }
- 
-+static void prepare_insn_rela(struct objtool_file *file, struct section *sec)
-+{
-+	struct instruction *insn;
-+	struct rela *rela;
-+
-+	if (!sec->rela)
-+		return;
-+
-+	list_for_each_entry(rela, &sec->rela->rela_list, list) {
-+		insn = find_insn_containing(file, sec, rela->offset);
-+		if (!insn)
-+			continue;
-+
-+		insn->has_text_rela = rela->sym && rela->sym->sec &&
-+				      rela->sym->sec->text &&
-+				      !rela->sym->sec->noinstr;
-+	}
-+}
-+
- static int validate_section(struct objtool_file *file, struct section *sec)
- {
- 	struct symbol *func;
-@@ -2506,6 +2574,9 @@ static int validate_section(struct objto
- 	if (vmlinux)
- 		state.noinstr = sec->noinstr;
- 
-+	if (state.noinstr)
-+		prepare_insn_rela(file, sec);
-+
- 	list_for_each_entry(func, &sec->symbol_list, list) {
- 		if (func->type != STT_FUNC)
- 			continue;
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -36,7 +36,7 @@ struct instruction {
- 	enum insn_type type;
- 	unsigned long immediate;
- 	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
--	bool retpoline_safe;
-+	bool retpoline_safe, has_text_rela;
- 	s8 instr;
- 	u8 visited;
- 	struct symbol *call_dest;
+> +            specified in the bootparams, it takes priority
+> +            over this setting.
+> +            Format: ss[KMG],nn[KMG]
+> +            Defaut is 0, 0
 
+               Default
+
+> +
+>      init_on_alloc=    [MM] Fill newly allocated pages and heap objects with
+>              zeroes.
+>              Format: 0 | 1
+
+
+-- 
+~Randy
 
