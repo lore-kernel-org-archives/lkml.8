@@ -2,175 +2,145 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DC5C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D638C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9A842076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AKITq8tQ"
+	by mail.kernel.org (Postfix) with ESMTP id D2D6F2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585071124;
+	bh=XrbSYSn0v2QhTqwv1gzwq0TtnL+FkC0EuEseXdyHrsI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=m20B24+7E4SMJ+dCE+PmlqmlEnvYrQmvog+C+QoDZoDI1wLV/sboIcfOj/9bCv+pe
+	 2GGJTQflfZxvZzCw17hWydGh2bj0BSXn9fdge4pIbGRYHKBpUZjU36QOl3biix5PPX
+	 8JLXlLH9tX9HNT0kagrh6XgTQ2AN6lbCeD5xbqKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727681AbgCXRb5 (ORCPT
+        id S1727721AbgCXRcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:31:57 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52342 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727223AbgCXRb4 (ORCPT
+        Tue, 24 Mar 2020 13:32:04 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:17456 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgCXRcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:31:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585071115;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
-        b=AKITq8tQjo03kFRbQIXetmVvduN8mg9sjNRQQBSqGsDYlHSXmTmmNEZ4F5+2Eb9RaDQT1p
-        iDcb4KZZedekvdUaKY7Y5iGpLmz+/7Y7UR97MXogyK2n+yXOk1btE/gf3j1KuWT1Wuou4f
-        +Lyxez2D6Xeconu4Q2ZI7rKXaA4dd14=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-463-Wdxi6ELqO4mr7BmbCNtlgw-1; Tue, 24 Mar 2020 13:31:53 -0400
-X-MC-Unique: Wdxi6ELqO4mr7BmbCNtlgw-1
-Received: by mail-qv1-f72.google.com with SMTP id ee5so16371756qvb.23
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
-        b=ZIycLN34ijF/cqlN0QG3kQseeY2pOxU3DWkz4q04e9TemCxP1wT8OXw4aZbENrnndG
-         hbtQFeAQ284+PfTrS+FHEvBFSvlA7w1U5YRcfvQJOXBMAAwpdM2fJ+60GBLt83tLTjjK
-         J5kgNVZ6OSfk4G1MXWYsrjSD75qcEXjs7IXU3yBx8H59injEJ9r2wLfyV8utV7SbHfld
-         ghWQIuPtsika/lk6wWEgif/tpT5gb/eQ2eAgmIgtK3Yjz9mYH48IA7atOPHF3RRi/kSL
-         8Tm2sj7u8T8CzjVBfhL1QXXMUcAQ1+vhFY80iu0U0fwjrubYt3MZ9WBmOgx08XZmcA7N
-         jUrQ==
-X-Gm-Message-State: ANhLgQ2MTE/8dOx6ft7zjEsBEu7BOCsovhNVRU2kXAIPzPUOqbn9PvkL
-        3v9MM2KJJhuBtKh2IHNkV8/y9ZmImzF9+6Z69Zmfd29TPwBN9dLK5DeXRBrnCcRkIqAuayPO1aB
-        jC8UFsaS302O6QyxpbktH0SbzBQKvmYlc0ewL/kVX
-X-Received: by 2002:a37:a151:: with SMTP id k78mr15810451qke.62.1585071113023;
-        Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vsT3+/NsUg5fFEiC7sl/xL5+Je1Wup8Qo3qgB+ijo3E137wcTx+VJFpMve9UNQQtDpuEDBDe/wRAdiHFGyqiS4=
-X-Received: by 2002:a37:a151:: with SMTP id k78mr15810420qke.62.1585071112699;
- Tue, 24 Mar 2020 10:31:52 -0700 (PDT)
+        Tue, 24 Mar 2020 13:32:03 -0400
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02OHVt37003399
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 02:31:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02OHVt37003399
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585071116;
+        bh=Xv8QceqshOBI8Wr/8hADstw0UzLndq6ibetmQTGIu8I=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rBHjS74fHmi/Vsm1h/jZTJ/r+lq/RoOin2H83K6lnhfLB+EvFunVyhfDRBbXSNmXX
+         MXbrywVuxK115JT2wWQ7iy/U8JOFC636+SeO04NanX7qTIhGv0AOt2IxD3sclyd+Bj
+         79lPEEamP6SZ+o6TaQVIuSofw8L4oGjGu49+MqWXTtjjuLrRY/AyhSagT4TZwvlsji
+         aWLB4iFbJVqESFaI+h1FxEM2FVi0SK2VylGWmhQhBBe8cj2SuzQxnUE+2bSuiDJMI1
+         +LNeCkvlTo7RuDx2Z+qJ18+It0TsbbWlWIblF+u2gKljbq0mraGcyNJLtoAgOMlIwW
+         7RFilgyEO5oAg==
+X-Nifty-SrcIP: [209.85.217.44]
+Received: by mail-vs1-f44.google.com with SMTP id a63so11676607vsa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:31:55 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1tnvDuGcYySRJzu22Bo62YSFGZL0RTBgOwZ2LuyB3zWJnT7ltK
+        0gb+vF8WEyNaub9lZsnParIf9vocDpFhABPLVqU=
+X-Google-Smtp-Source: ADFU+vvZ4VMG/RJoeev3JBg2YB1M2xw2PQqyKfmIWy/xpuE7SXvDI/xFaoI/Pm2UPP2WO22YHwWuYtwLBDy7b6AZvu0=
+X-Received: by 2002:a67:33cb:: with SMTP id z194mr21777249vsz.155.1585071114650;
+ Tue, 24 Mar 2020 10:31:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200310192627.437947-1-kherbst@redhat.com> <20200320221931.GA23783@google.com>
- <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
-In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
-From:   Karol Herbst <kherbst@redhat.com>
-Date:   Tue, 24 Mar 2020 18:31:08 +0100
-Message-ID: <CACO55ttvb5uC37ORiLuVBidhfSn-+WSReJ+aCfWR3k-fLtPBnA@mail.gmail.com>
-Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+References: <20200113195337.604646-1-nivedita@alum.mit.edu>
+ <202001131750.C1B8468@keescook> <20200114165135.GK31032@zn.tnic>
+ <20200115002131.GA3258770@rani.riverdale.lan> <20200115122458.GB20975@zn.tnic>
+ <20200316160259.GN26126@zn.tnic> <20200323204454.GA2611336@zx2c4.com>
+ <202003231350.7D35351@keescook> <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+ <CAK7LNARDb4SmQ2Y94CHAzP2qh_Ju7pu-w7kb0XKdP=2P-T+njQ@mail.gmail.com> <20200324153847.GA2870597@rani.riverdale.lan>
+In-Reply-To: <20200324153847.GA2870597@rani.riverdale.lan>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 02:31:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQeeUt6L7xkk2UHE3v6b0e+iD1cx6_JSrZKEYxt2bEhHQ@mail.gmail.com>
+Message-ID: <CAK7LNAQeeUt6L7xkk2UHE3v6b0e+iD1cx6_JSrZKEYxt2bEhHQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 2:02 AM Karol Herbst <kherbst@redhat.com> wrote:
+On Wed, Mar 25, 2020 at 12:38 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> >
-> > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
-> > > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-> > > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+> On Tue, Mar 24, 2020 at 06:12:01PM +0900, Masahiro Yamada wrote:
+> > On Tue, Mar 24, 2020 at 6:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 > > >
-> > > Depending on the used kernel there might be messages like those in demsg:
+> > > Hi.
 > > >
-> > > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-> > > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-> > > space inaccessible)"
-> > > followed by backtraces of kernel crashes or timeouts within nouveau.
 > > >
-> > > It's still unkown why this issue exists, but this is a reliable workaround
-> > > and solves a very annoying issue for user having to choose between a
-> > > crashing kernel or higher power consumption of their Laptops.
+> > >
+> > > On Tue, Mar 24, 2020 at 5:51 AM Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > On Mon, Mar 23, 2020 at 02:44:54PM -0600, Jason A. Donenfeld wrote:
+> > > > > On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
+> > > > > > Long overdue patch, see below.
+> > > > > >
+> > > > > > Plan is to queue it after 5.7-rc1.
+> > > > > >
+> > > > > > ---
+> > > > > > From: Borislav Petkov <bp@suse.de>
+> > > > > > Date: Mon, 16 Mar 2020 16:28:36 +0100
+> > > > > > Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
+> > > > > >
+> > > > > > The currently minimum-supported binutils version 2.21 has the problem of
+> > > > > > promoting symbols which are defined outside of a section into absolute.
+> > > > > > According to Arvind:
+> > > > > >
+> > > > > >   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
+> > > > > >           Invalid absolute R_X86_64_32S relocation: _etext
+> > > > > >   and after fixing that one, with
+> > > > > >           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+> > > > > >
+> > > > > > Those two versions of binutils have a bug when it comes to handling
+> > > > > > symbols defined outside of a section and binutils 2.23 has the proper
+> > > > > > fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
 > >
-> > Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
-> > list discussion.  Can you include links to some of that?
 > >
-> > IIUC this basically just turns off PCI power management for the GPU.
-> > Can you do that with something like the following?  I don't know
-> > anything about DRM, so I don't know where you could save the pm_cap,
-> > but I'm sure the driver could keep it somewhere.
+> > This seems to be also related to
+> > 7883a14339299773b2ce08dcfd97c63c199a9289
+> >
+> >
+> > I had noticed the symbol "_text"
+> > was absolute on binutils <= 2.22,
+> > but I was not sure whether it was a bug of the tool.
+> >
+> > I applied the fix.
+> > Perhaps, it was unneeded given that
+> > we require the binutils 2.23
 > >
 >
-> Sure this would work? From a quick look over the pci code, it looks
-> like a of code would be skipped we really need, like the platform code
-> to turn off the GPU via ACPI. But I could also remember incorrectly on
-> how all of that worked again. I can of course try and see what the
-> effect of this patch would be. And would the parent bus even go into
-> D3hot if it knows one of its children is still at D0? Because that's
-> what the result of that would be as well, no? And I know that if the
-> bus stays in D0, that it has a negative impact on power consumption.
->
-> Anyway, I will try that out, I am just not seeing how that would help.
->
+> Which architecture? x86 at least doesn't even build with <= 2.22, but
+> adding workarounds for that shows _text as section-relative (T in nm
+> output).
 
-so it seems like that has worked unless I screwed up locally. Will do
-some proper testing and then I think we won't need to go through the
-pci tree anymore as no changes are required there with that.
 
-> >
-> > diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> > index b65ae817eabf..2ad825e8891c 100644
-> > --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-> > +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> > @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
-> >         kfree(drm);
-> >  }
-> >
-> > +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
-> > +{
-> > +       struct pci_dev *pdev = drm_dev->pdev;
-> > +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
-> > +
-> > +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-> > +               return;
-> > +
-> > +       switch (bridge->device) {
-> > +       case 0x1901:
-> > +               STASH->pm_cap = pdev->pm_cap;
-> > +               pdev->pm_cap = 0;
-> > +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
-> > +               break;
-> > +       }
-> > +}
-> > +
-> >  static int nouveau_drm_probe(struct pci_dev *pdev,
-> >                              const struct pci_device_id *pent)
-> >  {
-> > @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
-> >         if (ret)
-> >                 goto fail_drm_dev_init;
-> >
-> > +       quirk_broken_nv_runpm(drm_dev);
-> >         return 0;
-> >
-> >  fail_drm_dev_init:
-> > @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
-> >  {
-> >         struct drm_device *dev = pci_get_drvdata(pdev);
-> >
-> > +       /* If we disabled PCI power management, restore it */
-> > +       if (STASH->pm_cap)
-> > +               pdev->pm_cap = STASH->pm_cap;
-> >         nouveau_drm_device_remove(dev);
-> >         pci_disable_device(pdev);
-> >  }
-> >
+The reporter found this for PowerPC,
+but I think this could happen on any architecture.
 
+https://patchwork.kernel.org/patch/11430243/
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
