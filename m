@@ -2,102 +2,117 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FE4C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403B1C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5483E2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585054513;
-	bh=ZfMr0SlM3TpLGRzwPK3aAO+hA15WBB93UvdhlvtxOdU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hFAD1DMpfNiGTIRYROFj12Fxia7HDBwC41v67n/sX8J3ZxoJnT2OEEg2mTdgyNHv7
-	 GclVkBQ/lnY9Q0kdHW3qu8tQ/d6uwB3de7lwMfQp0pspLRSAWz66Ki1NtG3yWW8wys
-	 54DiETzgQtwR/zNriGLVhUmlYhPxlja5cUrQT5fg=
+	by mail.kernel.org (Postfix) with ESMTP id 15A37208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:56:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fu+Yy7CI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgCXMzM (ORCPT
+        id S1727444AbgCXM42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:55:12 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:44021 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727171AbgCXMzM (ORCPT
+        Tue, 24 Mar 2020 08:56:28 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:64730 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727083AbgCXM41 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:55:12 -0400
-Received: by mail-oi1-f193.google.com with SMTP id p125so18305877oif.10;
-        Tue, 24 Mar 2020 05:55:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qLKgIYJQEqHTqd+u1W76X3WMfphIXILu6cZ8FvSyZwA=;
-        b=cqdJ4fradQTITllQb5Kcz2AD5XM5gjkRFksVV7Vp/ZX/CkekUWBawHEDIurVnuh7m2
-         Vk7PWLVIIo4frFIym8naLVMOH6yoxcDwafmioLaESy4hkbgKU2GYr/luO/ZOuZ/vyJnK
-         nT0t/dKpZ+bTh5hmsFSSDfeWTRnGuvZPX1uIW+pNoVqFYNp2ZCNevnTjGC3kBeEL15YM
-         cs3rmpY2FYkT66i9xrbYeMQX3UwBCyfLgvXidmcWv/u+GM2NSzVVsY3hj3nqb3uw4OM3
-         JVnhrz+k77ZqJaSfOIUxOpJi6qCVlRAQIOEWQfCTz82NM+05sXXnZYFb3/stRwcK6RXW
-         PfCA==
-X-Gm-Message-State: ANhLgQ3tg8nfljGSXp4iVTmbFrnlsTL5WUHlHgf/LRI57wXOl8jKanmi
-        r+Y4uWuzmmg8AwVmyHsv9pxXz6vSYcRI2xtkywdo9w==
-X-Google-Smtp-Source: ADFU+vveVI0u0rTnuGesTqV06iz9TMXQNxEAnNwAOUYhvLCWQhsyd1sdoK7k3745+LO4xGe9z3GI62OkaoNJC5rmQ14=
-X-Received: by 2002:a05:6808:8f:: with SMTP id s15mr3366415oic.110.1585054511257;
- Tue, 24 Mar 2020 05:55:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com> <20200324122023.9649-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200324122023.9649-2-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 24 Mar 2020 13:55:00 +0100
-Message-ID: <CAJZ5v0jounauixe8jt1_z9zKmT5BdqhG6hvWREDDrP-VAUUNKQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] driver core: Read atomic counter once in driver_probe_done()
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Ferry Toth <fntoth@gmail.com>
+        Tue, 24 Mar 2020 08:56:27 -0400
+X-UUID: aaa37f338d034e6f9b6edf6c6c0c9f71-20200324
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=ik4urh0s9/sTZNn7i7tAqN7eathzuR+7EqLI9vueugY=;
+        b=fu+Yy7CI4h1f5rxfvRKCQ5QJ5dfNiAccwbs5lldVLq3gsoF3Cs3kXaTjE/w5ViQnMQFA8jYCnYMGqX6DpKAgJjtuATgFiewPB3wbxu/QogHhJmSGXom7fTSPGM0qlJjGAOHd1urNQJrgPA1YnZikwpj5qs2k9hqMPS7G8vWbh9w=;
+X-UUID: aaa37f338d034e6f9b6edf6c6c0c9f71-20200324
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <gtk_ruiwang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 412146991; Tue, 24 Mar 2020 20:56:18 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N2.mediatek.inc
+ (172.27.4.87) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 24 Mar
+ 2020 20:56:16 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 24 Mar 2020 20:56:16 +0800
+Message-ID: <1585054582.6276.24.camel@mhfsdcap03>
+Subject: Re: [PATCH] media: mtk-vpu: load vpu firmware from the new location
+From:   gtk_ruiwang <gtk_ruiwang@mediatek.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Alexandre Courbot <acourbot@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Tomasz Figa" <tfiga@chromium.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Erin Lo <erin.lo@mediatek.com>,
+        Sj Huang <sj.huang@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        "Andrew-CT Chen" <andrew-ct.chen@mediatek.com>,
+        Maoguang Meng <maoguang.meng@mediatek.com>,
+        <srv_heupstream@mediatek.com>
+Date:   Tue, 24 Mar 2020 20:56:22 +0800
+In-Reply-To: <396021fd-ec2e-1ec1-602e-08b9393c5ae9@xs4all.nl>
+References: <20200322075745.6133-1-gtk_ruiwang@mediatek.com>
+         <396021fd-ec2e-1ec1-602e-08b9393c5ae9@xs4all.nl>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: C39E2D690E3AA5905C6E84713D6ABD87D4D1C41A2322D8E148CE3102567C89072000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:20 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Between printing the debug message and actual check atomic counter can be
-> altered. For better debugging experience read atomic counter value only once.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Tested-by: Ferry Toth <fntoth@gmail.com>
+RGVhciBIYW5zLA0KDQpQYXRjaCBWMiBoYXMgc2VudCwgdGhhbmtzIGEgbG90Lg0KDQpTaW5jZXJl
+bHkgUmVnYXJkcw0KDQpPbiBUdWUsIDIwMjAtMDMtMjQgYXQgMTM6MjAgKzAxMDAsIEhhbnMgVmVy
+a3VpbCB3cm90ZToNCj4gT24gMy8yMi8yMCA4OjU3IEFNLCBndGtfcnVpd2FuZ0BtZWRpYXRlay5j
+b20gd3JvdGU6DQo+ID4gRnJvbTogZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNv
+bT4NCj4gPiANCj4gPiBtdDgxNzMgVlBVIGZpcm13YXJlIGhhcyBiZWVuIG1vdmVkIHRvIGEgc3Vi
+LWZvbGRlciBvZg0KPiA+IGxpbnV4LWZpcm13YXJlLCBzbyBsb2FkIHZwdS1mdyBmcm9tIHRoZSBu
+ZXcgbG9jYXRpb24gZmlyc3QsDQo+ID4gaWYgaXQgZmFpbHMsIHRoZW4gZnJvbSB0aGUgb2xkIG9u
+ZS4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBSdWkgV2FuZyA8Z3RrX3J1aXdhbmdAbWVkaWF0
+ZWsuY29tPg0KPiANCj4gSG1tLCBJJ20gZ2V0dGluZyB0aGlzIGZyb20gY2hlY2twYXRjaC5wbCAt
+LXN0cmljdDoNCj4gDQo+IFdBUk5JTkc6IE1pc3NpbmcgU2lnbmVkLW9mZi1ieTogbGluZSBieSBu
+b21pbmFsIHBhdGNoIGF1dGhvciAnZ3RrX3J1aXdhbmcgPGd0a19ydWl3YW5nQG1lZGlhdGVrLmNv
+bT4nDQo+IA0KPiBSYXRoZXIgdGhhbiBzZW5kaW5nIHRoaXMgZnJvbSAnZ3RrX3J1aXdhbmdAbWVk
+aWF0ZWsuY29tJywgY2FuIHlvdSBzZW5kIHRoaXMgZnJvbQ0KPiAnUnVpIFdhbmcgPGd0a19ydWl3
+YW5nQG1lZGlhdGVrLmNvbT4nPw0KPiANCj4gVGhlbiB0aGUgdHdvIGFyZSB0aGUgc2FtZS4NCj4g
+DQo+IFJlZ2FyZHMsDQo+IA0KPiAJSGFucw0KPiANCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9tZWRp
+YS9wbGF0Zm9ybS9tdGstdnB1L210a192cHUuYyB8IDE2ICsrKysrKysrKysrKystLS0NCj4gPiAg
+MSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4gDQo+
+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLXZwdS9tdGtfdnB1LmMg
+Yi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay12cHUvbXRrX3ZwdS5jDQo+ID4gaW5kZXggYTc2
+ODcwN2FiYjk0Li44OTI3NDg0MmUwN2IgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tZWRpYS9w
+bGF0Zm9ybS9tdGstdnB1L210a192cHUuYw0KPiA+ICsrKyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZv
+cm0vbXRrLXZwdS9tdGtfdnB1LmMNCj4gPiBAQCAtNDYsNiArNDYsOCBAQA0KPiA+ICAvKiBiaW5h
+cnkgZmlybXdhcmUgbmFtZSAqLw0KPiA+ICAjZGVmaW5lIFZQVV9QX0ZXCQkidnB1X3AuYmluIg0K
+PiA+ICAjZGVmaW5lIFZQVV9EX0ZXCQkidnB1X2QuYmluIg0KPiA+ICsjZGVmaW5lIFZQVV9QX0ZX
+X05FVwkJIm1lZGlhdGVrL210ODE3My92cHVfcC5iaW4iDQo+ID4gKyNkZWZpbmUgVlBVX0RfRldf
+TkVXCQkibWVkaWF0ZWsvbXQ4MTczL3ZwdV9kLmJpbiINCj4gPiAgDQo+ID4gICNkZWZpbmUgVlBV
+X1JFU0VUCQkweDANCj4gPiAgI2RlZmluZSBWUFVfVENNX0NGRwkJMHgwMDA4DQo+ID4gQEAgLTQ3
+NywxNiArNDc5LDI0IEBAIHN0YXRpYyBpbnQgbG9hZF9yZXF1ZXN0ZWRfdnB1KHN0cnVjdCBtdGtf
+dnB1ICp2cHUsDQo+ID4gIAlzaXplX3QgdGNtX3NpemUgPSBmd190eXBlID8gVlBVX0RUQ01fU0la
+RSA6IFZQVV9QVENNX1NJWkU7DQo+ID4gIAlzaXplX3QgZndfc2l6ZSA9IGZ3X3R5cGUgPyBWUFVf
+RF9GV19TSVpFIDogVlBVX1BfRldfU0laRTsNCj4gPiAgCWNoYXIgKmZ3X25hbWUgPSBmd190eXBl
+ID8gVlBVX0RfRlcgOiBWUFVfUF9GVzsNCj4gPiArCWNoYXIgKmZ3X25ld19uYW1lID0gZndfdHlw
+ZSA/IFZQVV9EX0ZXX05FVyA6IFZQVV9QX0ZXX05FVzsNCj4gPiAgCWNvbnN0IHN0cnVjdCBmaXJt
+d2FyZSAqdnB1X2Z3Ow0KPiA+ICAJc2l6ZV90IGRsX3NpemUgPSAwOw0KPiA+ICAJc2l6ZV90IGV4
+dHJhX2Z3X3NpemUgPSAwOw0KPiA+ICAJdm9pZCAqZGVzdDsNCj4gPiAgCWludCByZXQ7DQo+ID4g
+IA0KPiA+IC0JcmV0ID0gcmVxdWVzdF9maXJtd2FyZSgmdnB1X2Z3LCBmd19uYW1lLCB2cHUtPmRl
+dik7DQo+ID4gKwlyZXQgPSByZXF1ZXN0X2Zpcm13YXJlKCZ2cHVfZncsIGZ3X25ld19uYW1lLCB2
+cHUtPmRldik7DQo+ID4gIAlpZiAocmV0IDwgMCkgew0KPiA+IC0JCWRldl9lcnIodnB1LT5kZXYs
+ICJGYWlsZWQgdG8gbG9hZCAlcywgJWRcbiIsIGZ3X25hbWUsIHJldCk7DQo+ID4gLQkJcmV0dXJu
+IHJldDsNCj4gPiArCQlkZXZfaW5mbyh2cHUtPmRldiwgIkZhaWxlZCB0byBsb2FkICVzLCAlZCwg
+cmV0cnlcbiIsDQo+ID4gKwkJCSBmd19uZXdfbmFtZSwgcmV0KTsNCj4gPiArDQo+ID4gKwkJcmV0
+ID0gcmVxdWVzdF9maXJtd2FyZSgmdnB1X2Z3LCBmd19uYW1lLCB2cHUtPmRldik7DQo+ID4gKwkJ
+aWYgKHJldCA8IDApIHsNCj4gPiArCQkJZGV2X2Vycih2cHUtPmRldiwgIkZhaWxlZCB0byBsb2Fk
+ICVzLCAlZFxuIiwgZndfbmFtZSwNCj4gPiArCQkJCXJldCk7DQo+ID4gKwkJCXJldHVybiByZXQ7
+DQo+ID4gKwkJfQ0KPiA+ICAJfQ0KPiA+ICAJZGxfc2l6ZSA9IHZwdV9mdy0+c2l6ZTsNCj4gPiAg
+CWlmIChkbF9zaXplID4gZndfc2l6ZSkgew0KPiA+IA0KPiANCg0K
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-> ---
-> v2: picked up tags
->  drivers/base/dd.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index 43720beb5300..efd0e4c16ba5 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -669,9 +669,10 @@ static int really_probe_debug(struct device *dev, struct device_driver *drv)
->   */
->  int driver_probe_done(void)
->  {
-> -       pr_debug("%s: probe_count = %d\n", __func__,
-> -                atomic_read(&probe_count));
-> -       if (atomic_read(&probe_count))
-> +       int local_probe_count = atomic_read(&probe_count);
-> +
-> +       pr_debug("%s: probe_count = %d\n", __func__, local_probe_count);
-> +       if (local_probe_count)
->                 return -EBUSY;
->         return 0;
->  }
-> --
-> 2.25.1
->
