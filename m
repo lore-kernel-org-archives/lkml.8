@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D75C54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9D2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7AB320775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3468B20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056103;
-	bh=6FsquY7iFcnNADPoP9NlvSUgozOsnBwZr9Y3ZVymeZg=;
+	s=default; t=1585056109;
+	bh=6h5MTVyaKyz4i4lsW9DXrzFXoUBWZQhfBhzWyfVeCLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YzANVCcYG1O1eXsad5r+3A8eS1LzlKSwAgTMfOCwpYQ9GAvhnxXY2ART67od3MrJ8
-	 rt7m8th+zda+cwQ6+vhSOHgFJiHY6Na+wEUK1m6jWPkmHKbKHPW1Ba5hDWRq2Q8VwW
-	 s6mL7lk8EFW4Cf+ar6QXSVTre49FcMPztK4MPNzE=
+	b=AP22lR4QOgeJBxVX9avYNqszTYHqx5jwlJaLEa1AffIonBURwrEz1sK35D39PBGt9
+	 Y3IyvUoqz20c9s7LnSleGhEh13sNJQhoo/N8zfX6VT2boM7sVrIk6Nmf9u0lgO37wS
+	 TI3tLCuyDRB1x3/FoFgSmPWDLtxASaVclntWHlCM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgCXNVm (ORCPT
+        id S1729082AbgCXNVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43502 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728923AbgCXNVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:34 -0400
+        id S1729071AbgCXNVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D177208C3;
-        Tue, 24 Mar 2020 13:21:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E83A20775;
+        Tue, 24 Mar 2020 13:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056093;
-        bh=6FsquY7iFcnNADPoP9NlvSUgozOsnBwZr9Y3ZVymeZg=;
+        s=default; t=1585056102;
+        bh=6h5MTVyaKyz4i4lsW9DXrzFXoUBWZQhfBhzWyfVeCLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVM3BwHmGKXlMiVY/C3KOPYCULCsPIfFako5VEnty6MrWyyx8iPruJ0FJnDHnaNVA
-         6fjYUykcNF3rwAQJCcPWsPvKbGhyG3Gs8WNfJAyxJG0QqEZdEGZ60ICQF+TJHWeGX3
-         QK1s82W8gxFQNyflJeHR5KCGVSofqBizszOBTFjk=
+        b=C6fALpD7d2wqoHnHld/x250DUC2+ZdL69wUw4T59wWDrodP/r6oDX0wQuWmVsxDbC
+         YM78oI+YCcoZoKZ+imv9HFjnN5DCcvYo5UjraykuH2CFxmSX8/5lflV1ULLMBwQIVN
+         1pCS9fSaORZZqqSw8fQOghwJeGQEAyjyiXXfDRpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 002/119] locks: reinstate locks_delete_block optimization
-Date:   Tue, 24 Mar 2020 14:09:47 +0100
-Message-Id: <20200324130808.263988721@linuxfoundation.org>
+        stable@vger.kernel.org, Pavel Begunkov <asml.silence@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 022/119] io-wq: fix IO_WQ_WORK_NO_CANCEL cancellation
+Date:   Tue, 24 Mar 2020 14:10:07 +0100
+Message-Id: <20200324130810.607084704@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -61,164 +59,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-[ Upstream commit dcf23ac3e846ca0cf626c155a0e3fcbbcf4fae8a ]
+[ Upstream commit fc04c39bae01a607454f7619665309870c60937a ]
 
-There is measurable performance impact in some synthetic tests due to
-commit 6d390e4b5d48 (locks: fix a potential use-after-free problem when
-wakeup a waiter). Fix the race condition instead by clearing the
-fl_blocker pointer after the wake_up, using explicit acquire/release
-semantics.
+To cancel a work, io-wq sets IO_WQ_WORK_CANCEL and executes the
+callback. However, IO_WQ_WORK_NO_CANCEL works will just execute and may
+return next work, which will be ignored and lost.
 
-This does mean that we can no longer use the clearing of fl_blocker as
-the wait condition, so switch the waiters over to checking whether the
-fl_blocked_member list_head is empty.
+Cancel the whole link.
 
-Reviewed-by: yangerkun <yangerkun@huawei.com>
-Reviewed-by: NeilBrown <neilb@suse.de>
-Fixes: 6d390e4b5d48 (locks: fix a potential use-after-free problem when wakeup a waiter)
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c |  3 ++-
- fs/locks.c     | 54 ++++++++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 50 insertions(+), 7 deletions(-)
+ fs/io-wq.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 5b1460486535e..dc195435519b4 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1175,7 +1175,8 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
- 	rc = posix_lock_file(file, flock, NULL);
- 	up_write(&cinode->lock_sem);
- 	if (rc == FILE_LOCK_DEFERRED) {
--		rc = wait_event_interruptible(flock->fl_wait, !flock->fl_blocker);
-+		rc = wait_event_interruptible(flock->fl_wait,
-+					list_empty(&flock->fl_blocked_member));
- 		if (!rc)
- 			goto try_again;
- 		locks_delete_block(flock);
-diff --git a/fs/locks.c b/fs/locks.c
-index 426b55d333d5b..b8a31c1c4fff3 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -725,7 +725,6 @@ static void __locks_delete_block(struct file_lock *waiter)
+diff --git a/fs/io-wq.c b/fs/io-wq.c
+index 25ffb6685baea..1f46fe663b287 100644
+--- a/fs/io-wq.c
++++ b/fs/io-wq.c
+@@ -733,6 +733,17 @@ static bool io_wq_can_queue(struct io_wqe *wqe, struct io_wqe_acct *acct,
+ 	return true;
+ }
+ 
++static void io_run_cancel(struct io_wq_work *work)
++{
++	do {
++		struct io_wq_work *old_work = work;
++
++		work->flags |= IO_WQ_WORK_CANCEL;
++		work->func(&work);
++		work = (work == old_work) ? NULL : work;
++	} while (work);
++}
++
+ static void io_wqe_enqueue(struct io_wqe *wqe, struct io_wq_work *work)
  {
- 	locks_delete_global_blocked(waiter);
- 	list_del_init(&waiter->fl_blocked_member);
--	waiter->fl_blocker = NULL;
- }
- 
- static void __locks_wake_up_blocks(struct file_lock *blocker)
-@@ -740,6 +739,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
- 			waiter->fl_lmops->lm_notify(waiter);
- 		else
- 			wake_up(&waiter->fl_wait);
-+
-+		/*
-+		 * The setting of fl_blocker to NULL marks the "done"
-+		 * point in deleting a block. Paired with acquire at the top
-+		 * of locks_delete_block().
-+		 */
-+		smp_store_release(&waiter->fl_blocker, NULL);
+ 	struct io_wqe_acct *acct = io_work_get_acct(wqe, work);
+@@ -745,8 +756,7 @@ static void io_wqe_enqueue(struct io_wqe *wqe, struct io_wq_work *work)
+ 	 * It's close enough to not be an issue, fork() has the same delay.
+ 	 */
+ 	if (unlikely(!io_wq_can_queue(wqe, acct, work))) {
+-		work->flags |= IO_WQ_WORK_CANCEL;
+-		work->func(&work);
++		io_run_cancel(work);
+ 		return;
  	}
- }
  
-@@ -753,11 +759,42 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status = -ENOENT;
+@@ -882,8 +892,7 @@ static enum io_wq_cancel io_wqe_cancel_cb_work(struct io_wqe *wqe,
+ 	spin_unlock_irqrestore(&wqe->lock, flags);
  
-+	/*
-+	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
-+	 * the lock and is the only one that might try to claim the lock.
-+	 *
-+	 * We use acquire/release to manage fl_blocker so that we can
-+	 * optimize away taking the blocked_lock_lock in many cases.
-+	 *
-+	 * The smp_load_acquire guarantees two things:
-+	 *
-+	 * 1/ that fl_blocked_requests can be tested locklessly. If something
-+	 * was recently added to that list it must have been in a locked region
-+	 * *before* the locked region when fl_blocker was set to NULL.
-+	 *
-+	 * 2/ that no other thread is accessing 'waiter', so it is safe to free
-+	 * it.  __locks_wake_up_blocks is careful not to touch waiter after
-+	 * fl_blocker is released.
-+	 *
-+	 * If a lockless check of fl_blocker shows it to be NULL, we know that
-+	 * no new locks can be inserted into its fl_blocked_requests list, and
-+	 * can avoid doing anything further if the list is empty.
-+	 */
-+	if (!smp_load_acquire(&waiter->fl_blocker) &&
-+	    list_empty(&waiter->fl_blocked_requests))
-+		return status;
-+
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status = 0;
- 	__locks_wake_up_blocks(waiter);
- 	__locks_delete_block(waiter);
-+
-+	/*
-+	 * The setting of fl_blocker to NULL marks the "done" point in deleting
-+	 * a block. Paired with acquire at the top of this function.
-+	 */
-+	smp_store_release(&waiter->fl_blocker, NULL);
- 	spin_unlock(&blocked_lock_lock);
- 	return status;
- }
-@@ -1350,7 +1387,8 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
- 		error = posix_lock_inode(inode, fl, NULL);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-+		error = wait_event_interruptible(fl->fl_wait,
-+					list_empty(&fl->fl_blocked_member));
- 		if (error)
- 			break;
+ 	if (found) {
+-		work->flags |= IO_WQ_WORK_CANCEL;
+-		work->func(&work);
++		io_run_cancel(work);
+ 		return IO_WQ_CANCEL_OK;
  	}
-@@ -1435,7 +1473,8 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
- 		error = posix_lock_inode(inode, &fl, NULL);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl.fl_wait, !fl.fl_blocker);
-+		error = wait_event_interruptible(fl.fl_wait,
-+					list_empty(&fl.fl_blocked_member));
- 		if (!error) {
- 			/*
- 			 * If we've been sleeping someone might have
-@@ -1638,7 +1677,8 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
  
- 	locks_dispose_list(&dispose);
- 	error = wait_event_interruptible_timeout(new_fl->fl_wait,
--						!new_fl->fl_blocker, break_time);
-+					list_empty(&new_fl->fl_blocked_member),
-+					break_time);
+@@ -957,8 +966,7 @@ static enum io_wq_cancel io_wqe_cancel_work(struct io_wqe *wqe,
+ 	spin_unlock_irqrestore(&wqe->lock, flags);
  
- 	percpu_down_read(&file_rwsem);
- 	spin_lock(&ctx->flc_lock);
-@@ -2122,7 +2162,8 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
- 		error = flock_lock_inode(inode, fl);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-+		error = wait_event_interruptible(fl->fl_wait,
-+				list_empty(&fl->fl_blocked_member));
- 		if (error)
- 			break;
+ 	if (found) {
+-		work->flags |= IO_WQ_WORK_CANCEL;
+-		work->func(&work);
++		io_run_cancel(work);
+ 		return IO_WQ_CANCEL_OK;
  	}
-@@ -2399,7 +2440,8 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
- 		error = vfs_lock_file(filp, cmd, fl, NULL);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-+		error = wait_event_interruptible(fl->fl_wait,
-+					list_empty(&fl->fl_blocked_member));
- 		if (error)
- 			break;
- 	}
+ 
 -- 
 2.20.1
 
