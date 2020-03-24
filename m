@@ -2,81 +2,71 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BC2C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2D9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AA520775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585044555;
-	bh=LuLrsI22opq/+1yl39aqKBNIcEn1mW7Q7RRz2dkvH/I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dWBvsbL9VIYH7W0Fqe4Iz0NiVLqZqRat1FkXXVSYE347RIDAxdf+2RmxxwYfgBkEQ
-	 lnq6t4/do7Vrd54VZTrzT6JgmKDJ4Ikl1u6IuzhOO8cwFAVfIIfneHm3cGKXEBLtqE
-	 xs+ojo5Xae3J3mOhBSsIafrDk4K318Mek/KDS0UQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9003B20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbgCXKJO (ORCPT
+        id S1727272AbgCXKJ6 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726818AbgCXKJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:09:14 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36FB820786;
-        Tue, 24 Mar 2020 10:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585044553;
-        bh=LuLrsI22opq/+1yl39aqKBNIcEn1mW7Q7RRz2dkvH/I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6QIE1uwQ+IGQpXvGbcnlrCXM+VfHGSM1MNwxqNuUxu2wToB761VmAJQvAnZ2pWgM
-         /dsqp372K1KB75cscW/a4FG3qPGYZ6B63eDqAgGTIzT+s1lG6Qx22Piqr1pjW/FVcz
-         HnLG9L6m1qRPnzibn5GLODcSoT2mZX/pJ0a5hmJw=
-Date:   Tue, 24 Mar 2020 11:08:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [git pull] habanalabs pull request for kernel 5.7
-Message-ID: <20200324100817.GB2186290@kroah.com>
-References: <20200324093501.GA27782@ogabbay-VM>
+        Tue, 24 Mar 2020 06:09:58 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:58831 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbgCXKJ6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:09:58 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id BA66024000B;
+        Tue, 24 Mar 2020 10:09:55 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 11:09:55 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
+        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] rtc: jz4740: Add support for JZ4760 SoC
+Message-ID: <20200324100955.GJ5504@piout.net>
+References: <20200311182318.22154-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324093501.GA27782@ogabbay-VM>
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200311182318.22154-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:35:01AM +0200, Oded Gabbay wrote:
-> Hello Greg,
+On 11/03/2020 19:23:16+0100, Paul Cercueil wrote:
+> The WENR feature (set a magic value to enable RTC registers read-write)
+> first appeared on the JZ4760; the JZ4780 came much later.
 > 
-> This is the pull request for habanalabs driver for kernel 5.7.
+> Since it would be dangerous to specify a newer SoC's compatible string as
+> the fallback of an older SoC's compatible string, we add support for the
+> "ingenic,jz4760-rtc" compatible string in the driver.
 > 
-> It mainly contains improvements to MMU, hwmon sensors and a new debugfs
-> interface to improve debug speed when reading large internal memories.
+> This will permit to support the JZ4770 by having:
+> compatible = "ingenic,jz4770-rtc", "ingenic,jz4760-rtc";
 > 
-> Please see the tag message for more details on what this pull request
-> contains.
+> Instead of doing:
+> compatible = "ingenic,jz4770-rtc", "ingenic,jz4780-rtc";
 > 
-> Thanks,
-> Oded
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/rtc/rtc-jz4740.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> The following changes since commit bbde5709ee4f60a43b7372545454947044655728:
-> 
->   nvmem: mxs-ocotp: Use devm_add_action_or_reset() for cleanup (2020-03-23 20:05:23 +0100)
-> 
-> are available in the Git repository at:
-> 
->   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-next-2020-03-24
+Applied, thanks.
 
-Pulled and pushed out, thanks.
-
-greg k-h
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
