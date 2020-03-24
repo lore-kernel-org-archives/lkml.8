@@ -2,232 +2,159 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B212C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD12C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1451A2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A1720774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:59:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SsYgwQaU"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PhzSoHHg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbgCXP7M (ORCPT
+        id S1728601AbgCXP72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:59:12 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38340 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgCXP6z (ORCPT
+        Tue, 24 Mar 2020 11:59:28 -0400
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:42129 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727665AbgCXP72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:58:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id l20so4101370wmi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:58:53 -0700 (PDT)
+        Tue, 24 Mar 2020 11:59:28 -0400
+Received: by mail-wr1-f73.google.com with SMTP id o18so6027748wrx.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:59:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TBYaP2vsyfjpwpmYdocpG4qegwrjQ0C3wk8Hsfu1Y/w=;
-        b=SsYgwQaUoSmYVCBWgE9BQzt3RCSVmqXMexs3Ypisb3v86af/zdjtm7+6dQ61ssgEOe
-         9LMAgo/FP1YW6hOwLeTRJtSBad2V5g/rJ2p78jIgr+QZdjSR+0ZYDwbAmXC8+QYIQDVX
-         H3i2n4b+Tp3orgL7YXDu4nC9Lg/RjYREGSOoS6k7Zzr/wztYxTGvVkRVxya2sVwIq+Fn
-         o2sp/PAnCgg/ulkf/iYrOJpKrePmLMHa1Cf5kZ6jvgEektGhojyS9PfsWtJlFJpKHOJi
-         YWK8fcYqB2mxAhToD0I/gohFiPkoEyS+WLQDr/LRj1VQwtvYcZhueB6PyuNJHmxR13Jw
-         eytg==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
+        bh=6vaPWbP6ANUHUHOz8sns0zk878oxF/Up8fDXRsjlrW0=;
+        b=PhzSoHHgm6kzqXckUj1hMJQQ00oWqkLQlPCoaVh2BlJzOv7otdTlVHco/J8wUFyoyU
+         sRv2K12f0v7HbtkZXjfqo14K+kBYEg4LIDXNNy7rcLtJqtN9kl0lOAUuaFiYVB1wt7F1
+         LdfNOyWEu1SSkJ4wpcuhs+fE990IJV/sELuU0t7W/miqEVL0y/OjIZLDbwJq8ERXC/lJ
+         /xDui9edLVHi+oUutjdZCSf02cK8rFjNrS6Puql6opfvPr954sxDjsDzjIO4CgR3tAqr
+         m9x7M30492yYD+ZzIfzSCvTVWvNR0tSoSOXTrWN9caBXY34h9BOLbXI4arRUz0YpywxJ
+         y6aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TBYaP2vsyfjpwpmYdocpG4qegwrjQ0C3wk8Hsfu1Y/w=;
-        b=HwT8g4NSRTyRHpxKuawOdiqqAqQNEoKlmAoHyRp4W3anjGFT3mkl1rQi9nqizypHa+
-         xwPVB/6ukgB1glsxhKjgIL59Ip8+PKQDmYTkGNRMLQ8JKAtLSvuSgXdR+51Y307y7jGi
-         1b3XkP5YX/EwDIkujkdd/7/uRNDv5+eI6Ufd/E2l7K1Wgj6AJAGurBCelncMI6Fhv9u8
-         I532z1hXC9CUsqGXkuhdsaEHfeM/odyaRCHHIew+mSP2Lxe/xIscgDQnDjhDHmw/0cF1
-         lNRS6UGvWo7U6OKjXca3wYz4BhyAZimgOMoykfJ6lOgCn7gAjF5y4ot719FqCUVTGz7c
-         jQCw==
-X-Gm-Message-State: ANhLgQ1gmZ6pMaGFquKdJDm3dOYq+UpCLaXs6hdYPf6L4VehJl8HDBOL
-        pfIGTmPdYYGeTwzdRmEgzKD5Cw==
-X-Google-Smtp-Source: ADFU+vvYiq9W4c0hmv6urRGxwAanhG7SOtOWDVdqA2ynUrbzpq9wr12pHubZf8XKqIXJ6UOSsR9Xjg==
-X-Received: by 2002:a7b:c20d:: with SMTP id x13mr6292071wmi.52.1585065533268;
-        Tue, 24 Mar 2020 08:58:53 -0700 (PDT)
-Received: from xps7590.local ([2a02:2450:102f:13b8:e15d:2127:89a:e5dc])
-        by smtp.gmail.com with ESMTPSA id t124sm4993321wmg.13.2020.03.24.08.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 08:58:52 -0700 (PDT)
-From:   Robert Foss <robert.foss@linaro.org>
-To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, catalin.marinas@arm.com, will@kernel.org,
-        shawnguo@kernel.org, olof@lixom.net, Anson.Huang@nxp.com,
-        dinguyen@kernel.org, leonard.crestez@nxp.com,
-        marcin.juszkiewicz@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Loic Poulain <loic.poulain@linaro.org>,
-        Luca Weiss <luca@z3ntu.xyz>
-Cc:     Robert Foss <robert.foss@linaro.org>
-Subject: [v3 3/6] arm64: dts: sdm845: Add i2c-qcom-cci node
-Date:   Tue, 24 Mar 2020 16:58:39 +0100
-Message-Id: <20200324155843.10719-4-robert.foss@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324155843.10719-1-robert.foss@linaro.org>
-References: <20200324155843.10719-1-robert.foss@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:cc;
+        bh=6vaPWbP6ANUHUHOz8sns0zk878oxF/Up8fDXRsjlrW0=;
+        b=QxgGt5xy4kvg3TzJRrPEcPG8NDhK0cNSk8uzIOdHLEJ07ya+qbeyAh2myiFIXecRmG
+         3zVS+djRh6qZj0hUZ2gGGZIp2g6yAmttJJLhZswurpqL2I02qT6n/SXeQkrY+39llGea
+         JLm5BsZshQFUoUKILDKwS/ait8zwLY8GJvGk48EehZrg9XK4Kf9jcTyilaKmAzzcWPaC
+         TQ8GMnV0z2b00FMF4+MbeCRvpJ6otFSO51I0DV8C5lBBjdFDkULoCky/sN4W1tyYBzqA
+         WsLjdBKo9mPRHiuG26/q0793q2WjSm5rJG36y4YxUNzOFH1U6qNDWR9sEKBjf63/Fu9b
+         5pCw==
+X-Gm-Message-State: ANhLgQ3582C1hxfsLFIYF5PnkfW9CtWg9vE8siE+60BuOWWGpQbcfQ5G
+        B3/r2tCPCXFKunqoqp3H8IiUuXGtImBz
+X-Google-Smtp-Source: ADFU+vtxu3m5pblacH64/JBEURHgvUseOlvDCPG7Bzrb+FzT2BiQR6E0wX3uqBX79CwEAjXozWmw9aPIHC/v
+X-Received: by 2002:a5d:69c7:: with SMTP id s7mr36849068wrw.165.1585065564454;
+ Tue, 24 Mar 2020 08:59:24 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 16:59:06 +0100
+In-Reply-To: <20200323114207.222412-1-courbet@google.com>
+Message-Id: <20200324155907.97184-1-courbet@google.com>
+Mime-Version: 1.0
+References: <20200323114207.222412-1-courbet@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v3]     x86: Alias memset to __builtin_memset.
+From:   Clement Courbet <courbet@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joe Perches <joe@perches.com>,
+        Clement Courbet <courbet@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sdm845 SOC ships with a CCI controller, which
-has two CCI/I2C buses.
+    Recent compilers know the meaning of builtins (`memset`,
+    `memcpy`, ...) and can replace calls by inline code when
+    deemed better. For example, `memset(p, 0, 4)` will be lowered
+    to a four-byte zero store.
 
-Signed-off-by: Robert Foss <robert.foss@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+    When using -ffreestanding (this is the case e.g. building on
+    clang), these optimizations are disabled. This means that **all**
+    memsets, including those with small, constant sizes, will result
+    in an actual call to memset.
+
+    We have identified several spots where we have high CPU usage
+    because of this. For example, a single one of these memsets is
+    responsible for about 0.3% of our total CPU usage in the kernel.
+
+    Aliasing `memset` to `__builtin_memset` allows the compiler to
+    perform this optimization even when -ffreestanding is used.
+    There is no change when -ffreestanding is not used.
+
+    Below is a diff (clang) for `update_sg_lb_stats()`, which
+    includes the aforementionned hot memset:
+        memset(sgs, 0, sizeof(*sgs));
+
+    Diff:
+        movq %rsi, %rbx        ~~~>  movq $0x0, 0x40(%r8)
+        movq %rdi, %r15        ~~~>  movq $0x0, 0x38(%r8)
+        movl $0x48, %edx       ~~~>  movq $0x0, 0x30(%r8)
+        movq %r8, %rdi         ~~~>  movq $0x0, 0x28(%r8)
+        xorl %esi, %esi        ~~~>  movq $0x0, 0x20(%r8)
+        callq <memset>         ~~~>  movq $0x0, 0x18(%r8)
+                               ~~~>  movq $0x0, 0x10(%r8)
+                               ~~~>  movq $0x0, 0x8(%r8)
+                               ~~~>  movq $0x0, (%r8)
+
+    In terms of code size, this shrins the clang-built kernel a
+    bit (-0.022%):
+    440383608 vmlinux.clang.before
+    440285512 vmlinux.clang.after
+
+Signed-off-by: Clement Courbet <courbet@google.com>
+
 ---
 
-Changes since v1:
- - Pad addresses to 8 bytes
- - Sort clock_camcc by address
- - Change cciX pinctrl node names
- - Remove pinmux/pinconf nodes from pinctrl nodes
- - Remove clk suffix from CCI node clock-names
- - Give CCI i2c-bus nodes labels
+changes in v2:
+  - Removed ifdef(GNUC >= 4).
+  - Disabled change when CONFIG_FORTIFY_SOURCE is set.
 
- arch/arm64/boot/dts/qcom/sdm845-db845c.dts |  4 +
- arch/arm64/boot/dts/qcom/sdm845.dtsi       | 92 ++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
+changes in v3:
+  - Fixed commit message: the kernel shrinks in size.
+---
+ arch/x86/include/asm/string_64.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-index eb77aaa6a819..a6b6837c3d68 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-@@ -583,3 +583,7 @@ pinconf-rx {
- 		bias-pull-up;
- 	};
- };
-+
-+&cci {
-+	status = "ok";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index d42302b8889b..91a60847026f 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -5,6 +5,7 @@
-  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-  */
+diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
+index 75314c3dbe47..9cfce0a840a4 100644
+--- a/arch/x86/include/asm/string_64.h
++++ b/arch/x86/include/asm/string_64.h
+@@ -18,6 +18,15 @@ extern void *__memcpy(void *to, const void *from, size_t len);
+ void *memset(void *s, int c, size_t n);
+ void *__memset(void *s, int c, size_t n);
  
-+#include <dt-bindings/clock/qcom,camcc-sdm845.h>
- #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/clock/qcom,gpucc-sdm845.h>
-@@ -1451,6 +1452,42 @@ tlmm: pinctrl@3400000 {
- 			gpio-ranges = <&tlmm 0 0 150>;
- 			wakeup-parent = <&pdc_intc>;
++/* Recent compilers can generate much better code for known size and/or
++ * fill values, and will fallback on `memset` if they fail.
++ * We alias `memset` to `__builtin_memset` explicitly to inform the compiler to
++ * perform this optimization even when -ffreestanding is used.
++ */
++#if !defined(CONFIG_FORTIFY_SOURCE)
++#define memset(s, c, count) __builtin_memset(s, c, count)
++#endif
++
+ #define __HAVE_ARCH_MEMSET16
+ static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
+ {
+@@ -74,6 +83,7 @@ int strcmp(const char *cs, const char *ct);
+ #undef memcpy
+ #define memcpy(dst, src, len) __memcpy(dst, src, len)
+ #define memmove(dst, src, len) __memmove(dst, src, len)
++#undef memset
+ #define memset(s, c, n) __memset(s, c, n)
  
-+			cci0_default: cci0-default {
-+				/* SDA, SCL */
-+				pins = "gpio17", "gpio18";
-+				function = "cci_i2c";
-+
-+				bias-pull-up;
-+				drive-strength = <2>; /* 2 mA */
-+			};
-+
-+			cci0_sleep: cci0-sleep {
-+				/* SDA, SCL */
-+				pins = "gpio17", "gpio18";
-+				function = "cci_i2c";
-+
-+				drive-strength = <2>; /* 2 mA */
-+				bias-pull-down;
-+			};
-+
-+			cci1_default: cci1-default {
-+				/* SDA, SCL */
-+				pins = "gpio19", "gpio20";
-+				function = "cci_i2c";
-+
-+				bias-pull-up;
-+				drive-strength = <2>; /* 2 mA */
-+			};
-+
-+			cci1_sleep: cci1-sleep {
-+				/* SDA, SCL */
-+				pins = "gpio19", "gpio20";
-+				function = "cci_i2c";
-+
-+				drive-strength = <2>; /* 2 mA */
-+				bias-pull-down;
-+			};
-+
- 			qspi_clk: qspi-clk {
- 				pinmux {
- 					pins = "gpio95";
-@@ -2608,6 +2645,61 @@ videocc: clock-controller@ab00000 {
- 			#reset-cells = <1>;
- 		};
- 
-+		cci: cci@ac4a000 {
-+			compatible = "qcom,sdm845-cci";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			reg = <0 0x0ac4a000 0 0x4000>;
-+			interrupts = <GIC_SPI 460 IRQ_TYPE_EDGE_RISING>;
-+			power-domains = <&clock_camcc TITAN_TOP_GDSC>;
-+
-+			clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
-+				<&clock_camcc CAM_CC_SOC_AHB_CLK>,
-+				<&clock_camcc CAM_CC_SLOW_AHB_CLK_SRC>,
-+				<&clock_camcc CAM_CC_CPAS_AHB_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK_SRC>;
-+			clock-names = "camnoc_axi",
-+				"soc_ahb",
-+				"slow_ahb_src",
-+				"cpas_ahb",
-+				"cci",
-+				"cci_src";
-+
-+			assigned-clocks = <&clock_camcc CAM_CC_CAMNOC_AXI_CLK>,
-+				<&clock_camcc CAM_CC_CCI_CLK>;
-+			assigned-clock-rates = <80000000>, <37500000>;
-+
-+			pinctrl-names = "default", "sleep";
-+			pinctrl-0 = <&cci0_default &cci1_default>;
-+			pinctrl-1 = <&cci0_sleep &cci1_sleep>;
-+
-+			status = "disabled";
-+
-+			cci_i2c0: i2c-bus@0 {
-+				reg = <0>;
-+				clock-frequency = <1000000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+
-+			cci_i2c1: i2c-bus@1 {
-+				reg = <1>;
-+				clock-frequency = <1000000>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
-+		clock_camcc: clock-controller@ad00000 {
-+			compatible = "qcom,sdm845-camcc";
-+			reg = <0 0x0ad00000 0 0x10000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
- 			reg = <0 0x0ae00000 0 0x1000>;
+ #ifndef __NO_FORTIFY
 -- 
-2.25.1
+2.25.1.696.g5e7596f4ac-goog
 
