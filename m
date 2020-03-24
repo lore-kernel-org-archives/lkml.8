@@ -2,137 +2,56 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB26EC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A08C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9CE20735
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7768A2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:52:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbgCXVsw (ORCPT
+        id S1728216AbgCXVwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:48:52 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38056 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728277AbgCXVsw (ORCPT
+        Tue, 24 Mar 2020 17:52:15 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:54881 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbgCXVwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:48:52 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGrNd-001z3G-WE; Tue, 24 Mar 2020 21:46:38 +0000
-Date:   Tue, 24 Mar 2020 21:46:37 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
-Message-ID: <20200324214637.GI23230@ZenIV.linux.org.uk>
-References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
+        Tue, 24 Mar 2020 17:52:15 -0400
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C24AA200008;
+        Tue, 24 Mar 2020 21:52:04 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>,
+        miquel.raynal@bootlin.com, vigneshr@ti.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] mtd: spinand: toshiba: Support for new Kioxia Serial NAND
+Date:   Tue, 24 Mar 2020 22:52:03 +0100
+Message-Id: <20200324215203.14118-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <aa69e455beedc5ce0d7141359b9364ed8aec9e65.1584949601.git.ytc-mb-yfuruyama7@kioxia.com>
+References: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: 798fcdd010006e87b3154d6454c657af7b033002
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:06:03PM -0400, Qian Cai wrote:
-> Reverted the series on the top of today's linux-next fixed boot crashes.
+On Tue, 2020-03-24 at 06:49:55 UTC, Yoshio Furuyama wrote:
+> Add support for new Kioxia products.
+> The new Kioxia products support program load x4 command, and have
+> HOLD_D bit which is equivalent to QE bit.
+> 
+> Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Umm...  How about a reproducer (or bisect of vfs.git#work.dotdot, assuming
-it reproduces there)?
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-> [   53.027443][ T3519] BUG: Kernel NULL pointer dereference on read at 0x00000000
-> [   53.027480][ T3519] Faulting instruction address: 0xc0000000004dbfa4
-> [   53.027498][ T3519] Oops: Kernel access of bad area, sig: 11 [#1]
-> [   53.027521][ T3519] LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=256 DEBUG_PAGEALLOC NUMA PowerNV
-> [   53.027538][ T3519] Modules linked in: kvm_hv kvm ip_tables x_tables xfs sd_mod bnx2x ahci libahci mdio libata tg3 libphy firmware_class dm_mirror dm_region_hash dm_log dm_mod
-> [   53.027594][ T3519] CPU: 36 PID: 3519 Comm: polkitd Not tainted 5.6.0-rc7-next-20200324 #1
-> [   53.027618][ T3519] NIP:  c0000000004dbfa4 LR: c0000000004dc040 CTR: 0000000000000000
-> [   53.027634][ T3519] REGS: c0002013879af810 TRAP: 0300   Not tainted  (5.6.0-rc7-next-20200324)
-> [   53.027668][ T3519] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  CR: 24004422  XER: 20040000
-> [   53.027708][ T3519] CFAR: c0000000004dc044 DAR: 0000000000000000 DSISR: 40000000 IRQMASK: 0 
-> [   53.027708][ T3519] GPR00: c0000000004dc040 c0002013879afaa0 c00000000165a500 0000000000000000 
-> [   53.027708][ T3519] GPR04: c000000001511408 0000000000000000 c0002013879af834 0000000000000002 
-> [   53.027708][ T3519] GPR08: 0000000000000001 0000000000000000 0000000000000000 0000000000000001 
-> [   53.027708][ T3519] GPR12: 0000000000004000 c000001ffffe1e00 0000000000000000 0000000000000000 
-> [   53.027708][ T3519] GPR16: 0000000000000000 0000000000000001 0000000000000000 0000000000000000 
-> [   53.027708][ T3519] GPR20: c000200ea1eacf38 c000201c8102f043 2f2f2f2f2f2f2f2f 0000000000000003 
-> [   53.027708][ T3519] GPR24: 0000000000000000 c0002013879afbc8 fffffffffffff000 0000000000200000 
-> [   53.027708][ T3519] GPR28: ffffffffffffffff 61c8864680b583eb 0000000000000000 0000000000002e2e 
-> [   53.027931][ T3519] NIP [c0000000004dbfa4] link_path_walk+0x284/0x4c0
-> __d_entry_type at include/linux/dcache.h:389
-> (inlined by) d_can_lookup at include/linux/dcache.h:404
-> (inlined by) link_path_walk at fs/namei.c:2178
-
-... and apparently NULL nd->path.dentry there.  After walk_component()
-having returned NULL.  Which means either handle_dots() returning NULL
-or step_into() doing the same.  The former means either (for "..")
-step_into() having returned NULL, or nd->path.dentry left unchanged.
-
-So we either have step_into() returning NULL with nd->path.dentry ending up
-NULL, or we'd entered link_path_walk() with nd->path.dentry being NULL (it
-must have been that way on the entry, or we would've barfed on the previous
-iteration).
-
-1) step_into() returns NULL either after
-        if (likely(!d_is_symlink(path.dentry)) ||
-           ((flags & WALK_TRAILING) && !(nd->flags & LOOKUP_FOLLOW)) ||
-           (flags & WALK_NOFOLLOW)) {
-                /* not a symlink or should not follow */
-                if (!(nd->flags & LOOKUP_RCU)) {
-                        dput(nd->path.dentry);
-                        if (nd->path.mnt != path.mnt)
-                                mntput(nd->path.mnt);
-                }  
-                nd->path = path;
-                nd->inode = inode;
-                nd->seq = seq;
-                return NULL;
-in which case nd->path.dentry is left equal to path.dentry, which can't be
-NULL (we would've oopsed on d_is_symlink() if it had been) or it's
-pick_link() returning NULL and leaving NULL nd->path.dentry.
-
-pick_link() either leaves nd->path unchanged (in which case we are back to
-the "had NULL nd->path.dentry on entry into link_path_walk()") or does
-nd_jump_root() (absolute symlinks) or has ->get_link() call nd_jump_link().
-nd_jump_root() cannot survive leaving NULL in ->path.dentry - it hits
-either
-                d = nd->path.dentry;
-                nd->inode = d->d_inode;
-or
-                nd->inode = nd->path.dentry->d_inode;
-and either would've ooped right there.
-nd_jump_link() hits
-        nd->inode = nd->path.dentry->d_inode;
-on the way out, which also should be impossible to survive.
-
-So we appear to have hit link_path_walk() with NULL nd->path.dentry.  And
-it's path_lookupat() from vfs_statx(), so we don't have LOOKUP_DOWN there.
-Which means either path_init() leaving NULL nd->path.dentry or lookup_last()
-returning NULL and leaving NULL nd->path.dentry...  The latter is basically
-walk_component(), so we would've had left link_path_walk() without an
-error, with symlink picked and with NULL nd->path.dentry.  Which means
-having the previous call of link_path_walk() also entered with NULL
-nd->path.dentry...
-
-OK, so it looks like path_init() returning a string and leaving that...
-And I don't see any way for that to happen...
-
-
-Right, so...  Could you slap the following
-	if (WARN_ON(!nd->path.dentry))
-		printk(KERN_ERR "pathname = %s\n", nd->name->name);
-1) into beginning of link_path_walk(), right before
-        while (*name=='/')
-                name++;
-        if (!*name)
-                return 0;
-in there.
-2) into pick_link(), right after
-all_done: // pure jump
-
-and see what your reproducer catches?
+Miquel
