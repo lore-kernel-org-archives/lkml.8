@@ -2,114 +2,95 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5D1C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A00C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081752076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBEFE2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTM1fZIU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c5Q4svt2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727571AbgCXRam (ORCPT
+        id S1727613AbgCXRbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:30:42 -0400
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:35730 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRal (ORCPT
+        Tue, 24 Mar 2020 13:31:25 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:44158 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgCXRbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:30:41 -0400
-Received: by mail-wr1-f47.google.com with SMTP id d5so10225634wrn.2;
-        Tue, 24 Mar 2020 10:30:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=waYMRqT7UwmXphz4d1wXt3KJaI3s/lKvsz6/LN//g4o=;
-        b=KTM1fZIUREMzyWUUwwZOrfUsfuqM6I02SSnfl/hY5iC7Q52xTqXDqpwSAEHKivD3SB
-         QrxjpjXtkiCkOv8eptRLI9bk7cib6r1GCQqk7oGNAJJzQ1NM8HyhkmyQugza1d2jFAWc
-         YvV1Kz3yglRC4cKQ6zPp3LJBn1nzOPiCI9/CWRJGSeikGOd7H39txG6Goza/dpzaO/uR
-         zotIqSulMqlSmhksih9WkI1ybrZ3WPJ4ZgFTDQcB2MqZ3pjAB7niM/nzf6GZXWGmaMqV
-         OnBGhCOSgbRSSipqxOlWdniWKPNWuRIwiM7jfZThWkTa3Hsw4NriHAEjeBmOwDd4OlAs
-         B6cQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=waYMRqT7UwmXphz4d1wXt3KJaI3s/lKvsz6/LN//g4o=;
-        b=ReE5HI+yDci308E7uBJKbAHxW9937VB0AUTeNoE2rcib+2rVZ74TWa/ojiZeyTBclm
-         LYdWrdr84uRzf2NAbniFCNUbIb6E+nMsCl4KyINb4nyzEcocLcJezZaX7KvLYv2SpWKq
-         MjyxspYGpaF38WFjxzeuUC95cSGkVp4tmP5g8x7blJTfHUq0sOKAv/BGuYumhMBZU5wL
-         6w8n13nc9jE4k5+IRM8scRTOPRknENSIL8enFawdg3NKgv6dQpfDsdmK8+pzJkfa4N6/
-         BKz2yzlCflx3oOe+UpRiZG6gJ8+koxiGf5bONJgJYJtEm/9/8ZX3PFLHstEJ5T4U+png
-         Ftcw==
-X-Gm-Message-State: ANhLgQ23pj8b0ZyTidII7q7i23ww7LOE2foJceI5Fg14M76XH3u7hTh/
-        VN1owFXlYTAW2wPuaJBQ8G1nrwDB
-X-Google-Smtp-Source: ADFU+vst5PxEIUoVZSVGlAPPV2/4JWatchld2xrKpRKxU9ytzO/pyHOr3+j9/ptNROkG10jQy3u9nQ==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr31371172wrq.62.1585071038744;
-        Tue, 24 Mar 2020 10:30:38 -0700 (PDT)
-Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
-        by smtp.gmail.com with ESMTPSA id g2sm31042015wrs.42.2020.03.24.10.30.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 10:30:36 -0700 (PDT)
-Subject: Re: Versaclock usage and improvement question
-To:     Adam Ford <aford173@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHCN7xLbV5BxD9PYfxNC7M64WK1nf3Y=zfeg=PqF+XgwvyZBjw@mail.gmail.com>
-From:   Marek Vasut <marek.vasut@gmail.com>
-Message-ID: <1352fbee-c768-315e-4042-d666db3d9456@gmail.com>
-Date:   Tue, 24 Mar 2020 18:30:35 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 13:31:25 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OHEvCk005056;
+        Tue, 24 Mar 2020 17:31:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=wIeRi4ao8R5b/EkoPra/HUsoNLDCY4TwY0SR/Vhrc+0=;
+ b=c5Q4svt25cC7qi2Iw+EfmWqN5wZPEMEtLNnFz28V0tf5c4+wbt4wMrflyu/zY4vMTQyl
+ 5t86WanbVUQe/wg8moPrvNrmj5amiVxmKvB7a7QsvwT5tijnnJoS1PJAoStyqNQYwl0v
+ 3u6oVIbp3jc/z5VZjopTnV1giOnD0Oy+Y+aRS8mqZO4TyympOCKfjFCXeoIu5AJh4pfk
+ HvkjqMISeQyP1PPtv/tfANcypyjxyU7P8cc4jAJ7Yb6+YIBVQm+J7KegZBPaO0pfJGfo
+ 89riBNdBo/PkJ69auZQ1sxSJsMULa4kzTOI/VKherv5Xo6eS561PMns8DZK2bZdETUBg uw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yx8ac2ng1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 17:31:06 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OHJsXd076303;
+        Tue, 24 Mar 2020 17:29:05 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2yxw931bkw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 17:29:05 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02OHT2qd012403;
+        Tue, 24 Mar 2020 17:29:02 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 24 Mar 2020 10:29:01 -0700
+Date:   Tue, 24 Mar 2020 20:28:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] staging: vt6656: change function from always
+ returning 0 to void
+Message-ID: <20200324172850.GG26299@kadam>
+References: <20200324064545.1832227-1-jbwyatt4@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7xLbV5BxD9PYfxNC7M64WK1nf3Y=zfeg=PqF+XgwvyZBjw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324064545.1832227-1-jbwyatt4@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
+ adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=937 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003240089
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
+ mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240089
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 6:15 PM, Adam Ford wrote:
-> Marek,
+Fold these two patches together so its just one patch.
 
-Hi,
+regards,
+dan carpenter
 
-> I am working on a board that uses two versaclock chips using different
-> i2c buses, but it appears to the driver is hard-coding the names of
-> the clocks.  This appears to be a problem when the second instance is
-> loaded, it fails, because the clock names already exist.  I am
-> inquiring to you as how you'd prefer to see the clock names generated
-> so we can do multiple instances. I am planning on using kasprintf and
-> following a pattern similar to drivers/clk/keystone/sci-clk.c.
-
-I never had a board with two of them indeed, sorry.
-
-> Secondly, our Versaclock chips are un-programmed, so we need to both
-> enable the clock signal and set the output type which means adding a
-> few device tree options.  I am curious to know if you have an opinion
-> on how the new flags should be named.
-
-I'd say, send an RFC patch and let's move on from there ?
-The chips I use are factory pre-programmed btw.
-
-> Lastly, we're going to use the versaclock to drive multiple devices,
-> and some of them do not call the function to enable the clocks, so we
-> need some method to force the clocks on.  Is there a method to forcing
-> the clock outputs on similar to a gpio-hog holding a GPIO line in a
-> known state?
-
-I think something around assigned-clock DT props might help here ?
-
--- 
-Best regards,
-Marek Vasut
