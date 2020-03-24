@@ -2,77 +2,196 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF703C54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DAEC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97407208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ofThQBp/"
+	by mail.kernel.org (Postfix) with ESMTP id 7E91E208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgCXOYG (ORCPT
+        id S1728335AbgCXOYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:24:06 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:43253 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728195AbgCXOYE (ORCPT
+        Tue, 24 Mar 2020 10:24:10 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60135 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727681AbgCXOYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:24:04 -0400
-Received: by mail-ed1-f65.google.com with SMTP id bd14so7019956edb.10;
-        Tue, 24 Mar 2020 07:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QvAJMhrVEj0lhCeXiD2t+Sf+5S8zcMc++t+oIIyFqcc=;
-        b=ofThQBp/FPnmd+jt3Us1RKqMosiZ3Ld7CXBzRMIDhVDoYmaAwBY7uU7UZ3mcqeAUgY
-         rOp/qmK2OCIZ3JC4VqMneHfH983Gy421XoLJQ3vwihZRiSeHlC5zsGZshWiwBQEJkWZ3
-         vJvDXa/1N/S4qiiHJuV1wyuw/LBvGPpg/zeT0km+IumovVdONxeBi34sAV0DE9r8RUCi
-         BnSbWEljnUCrx48XJBdTMfPDedTQ7Q26FY+sy3jqj3mZK6IqhcTkUiEws7qZDFzwCGF9
-         8qhYqIeqDEMJuXGAZ9boHindf0mteZyl3iCHYSf3f16vhvRUJmO4RehoU6COPpxa/pOG
-         SSLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QvAJMhrVEj0lhCeXiD2t+Sf+5S8zcMc++t+oIIyFqcc=;
-        b=dAYhBpdGWPKbfDZHR+Z4JFGDAgPIZKlsJpwogZGUogYyBnLskVgyn8E33Q8JoFwwBD
-         cLiozWb22ppVOS+W0zu2Iwm5nUao6Ziwq4cVortnxRXYYbHhYQ7X/QTr6OJQTYAc6ROI
-         tOAP2UbJ7lYAhO6l04rphpSHK08NPagJLpOmuILSQKrjvOoOmLwbU2Qc+Sl4amfDeFmU
-         gs/kH8WWbWUwFE8ZVOP1XMY/Qn5lkPQw1y3i55ldmfF6saTEpMkOicZxOAJ606hoQa+o
-         5YXPdhbSUZOsG5lK1e8HgIMzF/Lcy9kY042B1MSW8n2+y2cTBL6RcTcz0stwjJzbujxZ
-         umvA==
-X-Gm-Message-State: ANhLgQ2LsYOn+p9Mek6wLOokQPZL+KNx4fmom0r326J4mUdnhxWLW6lE
-        uxH/o45bn5pCR+ZJoWTV00Std99I/nD2s94Hf2s=
-X-Google-Smtp-Source: ADFU+vv3y/Han0bqNS7oHPaFZG+M0NVgMJpj16d4Bgc4iE3n14CjrUhR6lEygqPtDHjI6W5B/3MdAYQNafV5Vu0eBek=
-X-Received: by 2002:aa7:de13:: with SMTP id h19mr27875188edv.52.1585059842383;
- Tue, 24 Mar 2020 07:24:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324102030.31000-1-narmstrong@baylibre.com> <20200324102030.31000-5-narmstrong@baylibre.com>
-In-Reply-To: <20200324102030.31000-5-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 24 Mar 2020 15:23:51 +0100
-Message-ID: <CAFBinCA4VwQmd5msALXUrPxJy9gmeRQ5-5=UdNvx2aCGkPq_sw@mail.gmail.com>
-Subject: Re: [PATCH 04/13] usb: dwc3: meson-g12a: get the reset as shared
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+        Tue, 24 Mar 2020 10:24:09 -0400
+X-Originating-IP: 83.155.44.161
+Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
+        (Authenticated sender: hadess@hadess.net)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id EBFE9FF814;
+        Tue, 24 Mar 2020 14:24:03 +0000 (UTC)
+Message-ID: <8d28db34b3075c524c7e5fec49c3f2e252d24552.camel@hadess.net>
+Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
+ connection
+From:   Bastien Nocera <hadess@hadess.net>
+To:     Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <superm1@gmail.com>,
+        Richard Hughes <hughsient@gmail.com>
+Date:   Tue, 24 Mar 2020 15:24:02 +0100
+In-Reply-To: <3c20624ea9d88f13d6f1a768735f08a4a8a59ea6.camel@archlinux.org>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+         <20200318192721.390630-1-lains@archlinux.org>
+         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
+         <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
+         <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
+         <3c20624ea9d88f13d6f1a768735f08a4a8a59ea6.camel@archlinux.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0 (3.36.0-1.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
->
-> In order to support the Amlogic GXL/GXM SoCs, the reset line must
-> be handled as shared since also used by the PHYs.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+On Tue, 2020-03-24 at 14:10 +0000, Filipe Laíns wrote:
+> On Tue, 2020-03-24 at 15:03 +0100, Bastien Nocera wrote:
+> > On Tue, 2020-03-24 at 13:46 +0000, Filipe Laíns wrote:
+> > > On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
+> > > > On Wed, 2020-03-18 at 19:27 +0000, Filipe Laíns wrote:
+> > > > > As discussed in the mailing list:
+> > > > > 
+> > > > > > Right now the hid-logitech-dj driver will export one node
+> > > > > > for
+> > > > > > each
+> > > > > > connected device, even when the device is not connected.
+> > > > > > That
+> > > > > > causes
+> > > > > > some trouble because in userspace we don't have have any
+> > > > > > way to
+> > > > > > know if
+> > > > > > the device is connected or not, so when we try to
+> > > > > > communicate,
+> > > > > > if
+> > > > > > the
+> > > > > > device is disconnected it will fail.
+> > > > 
+> > > > Why is it a problem that user-space communication fails? Note
+> > > > that
+> > > > sending a signal without any way to fetch the state means that
+> > > > it's
+> > > > always going to be racy.
+> > > 
+> > > It failing is not the problem. The problem is knowing when the
+> > > device
+> > > is available again. Right now the only way to do that is to
+> > > listen
+> > > for
+> > > events or periodically ping it.
+> > > 
+> > > We want to only export the HID++ hidraw node when the device is
+> > > available but that will take a while. We will have to test and
+> > > sync
+> > > up
+> > > userspace. I also want to write tests for the driver before, to
+> > > make
+> > > sure there are no regressions. We had a thread discussing this,
+> > > IIRC
+> > > you were in CC.
+> > 
+> > If I need to remember some old thread to know what we're talking
+> > about,
+> > then that means that the commit message is probably not good
+> > enough...
+> 
+> Should I put in the commit message what is planned next?
+
+You should put in everything that explains why this change is needed,
+and how user-space is supposed to use that information. Nobody should
+have to refer back to the mailing-list thread to find this out.
+
+> > Please add some links to the relevant discussion on bug forums if
+> > there's interesting data there too.
+> 
+> You can find the discussion in [1][2].
+> 
+> [1] https://www.spinics.net/lists/linux-input/thrd2.html#65615
+> [2] https://www.spinics.net/lists/linux-input/msg65615.html
+
+I was in CC: because "might be maintaining one of the affected
+userspace stacks", but I don't know what that stack might be for me. Is
+it for upower (which I only work on seldom and definitely don't
+maintain), or something else?
+
+> > > > > The solution reached to solve this issue is to trigger an
+> > > > > udev
+> > > > > change
+> > > > > event when the device connects, this way userspace can just
+> > > > > wait
+> > > > > on
+> > > > > those connections instead of trying to ping the device.
+> > > > > 
+> > > > > Signed-off-by: Filipe Laíns <lains@archlinux.org>
+> > > > > 
+> > > > > ---
+> > > > > 
+> > > > > v2:
+> > > > >   - Issue udev change event on the connected hid device, not
+> > > > > on
+> > > > > the
+> > > > >   receiver
+> > > > > 
+> > > > > ---
+> > > > >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
+> > > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> > > > > logitech-dj.c
+> > > > > index 48dff5d6b605..282e57dd467d 100644
+> > > > > --- a/drivers/hid/hid-logitech-dj.c
+> > > > > +++ b/drivers/hid/hid-logitech-dj.c
+> > > > > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct
+> > > > > hid_device
+> > > > > *hdev,
+> > > > >  {
+> > > > >  	struct dj_receiver_dev *djrcv_dev =
+> > > > > hid_get_drvdata(hdev);
+> > > > >  	struct dj_report *dj_report = (struct dj_report *)
+> > > > > data;
+> > > > > +	struct dj_device *dj_dev;
+> > > > >  	unsigned long flags;
+> > > > >  
+> > > > >  	/*
+> > > > > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct
+> > > > > hid_device
+> > > > > *hdev,
+> > > > >  
+> > > > >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
+> > > > >  
+> > > > > -	if (!djrcv_dev->paired_dj_devices[dj_report-
+> > > > > >device_index]) {
+> > > > > +	dj_dev = djrcv_dev->paired_dj_devices[dj_report-
+> > > > > >device_index];
+> > > > > +
+> > > > > +	if (!dj_dev) {
+> > > > >  		/* received an event for an unknown device,
+> > > > > bail out */
+> > > > >  		logi_dj_recv_queue_notification(djrcv_dev,
+> > > > > dj_report);
+> > > > >  		goto out;
+> > > > > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct
+> > > > > hid_device
+> > > > > *hdev,
+> > > > >  		if (dj_report-
+> > > > > > report_params[CONNECTION_STATUS_PARAM_STATUS] ==
+> > > > >  		    STATUS_LINKLOSS) {
+> > > > >  			logi_dj_recv_forward_null_report(djrcv_
+> > > > > dev,
+> > > > > dj_report);
+> > > > > +		} else {
+> > > > > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
+> > > > > KOBJ_CHANGE);
+> > > > >  		}
+> > > > >  		break;
+> > > > >  	default:
+
