@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42517C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC1AC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1604D208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358C3208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056019;
-	bh=SKKMNxawj+JTG4PwVo9ZHSzlg0hcJb0jdQWP5yeJv6I=;
+	s=default; t=1585056022;
+	bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dLuS0WCRk0G/v78mBFfXL8TtQqaz0RG2P7A455SsYqSTXSyBF+E/P7ualYddWF8Vh
-	 to2JN7+KtE3IITa1pgSAi2ud8mnZhXT9Z2sjaEsXULmSu1bTPuBHp4+E0MSwh5uWHk
-	 S1RyAc9JnhcRT1hOp4rM556ERQuqUj21eGcyxWzk=
+	b=0GUQdhTmOoT/ita6/on8GaJq7D97vdLUhm4mC5lmeejg+2XstoJlLC36uV9wKo3Ef
+	 trlSZM4phx9+XLR2mYs8R5iWGytpy+ed84yBr77gfOO4ljp6qrh+y3mK+DYp4t1J4b
+	 IKHlhNF3XGR5YlzTZyH4TY8ILCz2CNYIuPAOrafg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbgCXNUR (ORCPT
+        id S1728926AbgCXNUV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:20:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbgCXNUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:14 -0400
+        id S1728916AbgCXNUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F2A920870;
-        Tue, 24 Mar 2020 13:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E18F20775;
+        Tue, 24 Mar 2020 13:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056014;
-        bh=SKKMNxawj+JTG4PwVo9ZHSzlg0hcJb0jdQWP5yeJv6I=;
+        s=default; t=1585056016;
+        bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eaInU6RE5wTzHimRoGlBkBK4Q0VCn8dK1du4HKuzpY+2+dKK3rgLPro9gqcKd57cI
-         xVCD3WUB6vr9F5ggSI82o93MCynL3S8L2xTT0FU5gELRcEsiGEOZhXJ4/siganns8r
-         QXlKfxYUR7XJvq4rC7PD6Cm2LU+Y4N8w+VChkfvQ=
+        b=qOmwJc+Nkm6AeMTtXQBN1BeXTsNngWqGWoFCINjrXqdy3pu19BrP3FBKzY8D/V+je
+         bTAoVYv85glfYC3SCt5b8lJdiNiyavXhd+KR3JtFjvkj/g4DV8kx3OJcF3JkcERCB5
+         SAWk4PHKQjjI0Ej7RFMnSDRvcKHPsYCPo2rVh7B0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Wunderlich <mark.wunderlich@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.4 099/102] nvmet-tcp: set MSG_MORE only if we actually have more to send
-Date:   Tue, 24 Mar 2020 14:11:31 +0100
-Message-Id: <20200324130816.773551496@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 082/102] drm/lease: fix WARNING in idr_destroy
+Date:   Tue, 24 Mar 2020 14:11:14 +0100
+Message-Id: <20200324130814.847513002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,70 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 98fd5c723730f560e5bea919a64ac5b83d45eb72 upstream.
+commit b216a8e7908cd750550c0480cf7d2b3a37f06954 upstream.
 
-When we send PDU data, we want to optimize the tcp stack
-operation if we have more data to send. So when we set MSG_MORE
-when:
-- We have more fragments coming in the batch, or
-- We have a more data to send in this PDU
-- We don't have a data digest trailer
-- We optimize with the SUCCESS flag and omit the NVMe completion
-  (used if sq_head pointer update is disabled)
+drm_lease_create takes ownership of leases. And leases will be released
+by drm_master_put.
 
-This addresses a regression in QD=1 with SUCCESS flag optimization
-as we unconditionally set MSG_MORE when we didn't actually have
-more data to send.
+drm_master_put
+    ->drm_master_destroy
+            ->idr_destroy
 
-Fixes: 70583295388a ("nvmet-tcp: implement C2HData SUCCESS optimization")
-Reported-by: Mark Wunderlich <mark.wunderlich@intel.com>
-Tested-by: Mark Wunderlich <mark.wunderlich@intel.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+So we needn't call idr_destroy again.
+
+Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/target/tcp.c |   12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_lease.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/nvme/target/tcp.c
-+++ b/drivers/nvme/target/tcp.c
-@@ -515,7 +515,7 @@ static int nvmet_try_send_data_pdu(struc
- 	return 1;
- }
- 
--static int nvmet_try_send_data(struct nvmet_tcp_cmd *cmd)
-+static int nvmet_try_send_data(struct nvmet_tcp_cmd *cmd, bool last_in_batch)
- {
- 	struct nvmet_tcp_queue *queue = cmd->queue;
- 	int ret;
-@@ -523,9 +523,15 @@ static int nvmet_try_send_data(struct nv
- 	while (cmd->cur_sg) {
- 		struct page *page = sg_page(cmd->cur_sg);
- 		u32 left = cmd->cur_sg->length - cmd->offset;
-+		int flags = MSG_DONTWAIT;
-+
-+		if ((!last_in_batch && cmd->queue->send_list_len) ||
-+		    cmd->wbytes_done + left < cmd->req.transfer_len ||
-+		    queue->data_digest || !queue->nvme_sq.sqhd_disabled)
-+			flags |= MSG_MORE;
- 
- 		ret = kernel_sendpage(cmd->queue->sock, page, cmd->offset,
--					left, MSG_DONTWAIT | MSG_MORE);
-+					left, flags);
- 		if (ret <= 0)
- 			return ret;
- 
-@@ -660,7 +666,7 @@ static int nvmet_tcp_try_send_one(struct
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct d
  	}
  
- 	if (cmd->state == NVMET_TCP_SEND_DATA) {
--		ret = nvmet_try_send_data(cmd);
-+		ret = nvmet_try_send_data(cmd, last_in_batch);
- 		if (ret <= 0)
- 			goto done_send;
+ 	DRM_DEBUG_LEASE("Creating lease\n");
++	/* lessee will take the ownership of leases */
+ 	lessee = drm_lease_create(lessor, &leases);
+ 
+ 	if (IS_ERR(lessee)) {
+ 		ret = PTR_ERR(lessee);
++		idr_destroy(&leases);
+ 		goto out_leases;
  	}
+ 
+@@ -580,7 +582,6 @@ out_lessee:
+ 
+ out_leases:
+ 	put_unused_fd(fd);
+-	idr_destroy(&leases);
+ 
+ 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
+ 	return ret;
 
 
