@@ -2,90 +2,229 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1EBC54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F22CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:39:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE682078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD3120409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:39:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R2nEuWTd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eFbp7iaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgCXWfD (ORCPT
+        id S1728414AbgCXWjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:35:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57444 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbgCXWfC (ORCPT
+        Tue, 24 Mar 2020 18:39:18 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33187 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728241AbgCXWjR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:35:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=1/eBpTZIO0KNns23jwEV+7XSPYVYlHUsVSdS97C3eio=; b=R2nEuWTdhFQzF8AWJwHG9AnAWi
-        nzeNRtFShsZTEl9S5ozMAj90XXir8ElrOLeY3IopGQ0L6JzDdtZCF50M+KNOEcDMViIIP1fFKxfld
-        UKkxLCc+GncqzMs4PAIZ1fMigb8EXW1xh4F4FlrSczaDgaQKHZlHT6z0ke42AFMYzptqdmV3McAAz
-        FRxJTCEzC3pFqEex4Nxgh3KWjBYzSYJ6jk5/Mz/CnDBwe5xEMHhFo1VBPXAQVX2kl7+pfD+ZXPzkx
-        kSQsI6yOXk69CZYrae4PW6wmHNiTDi6S6mLD0H4fzjZc0NeAcIbCSfyLK26DF5M6IShrTv35OhKN1
-        gW11u+sA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGs8P-0008MX-Tr; Tue, 24 Mar 2020 22:34:58 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A9A01983502; Tue, 24 Mar 2020 23:34:55 +0100 (CET)
-Date:   Tue, 24 Mar 2020 23:34:55 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v3 26/26] objtool: Add STT_NOTYPE noinstr validation
-Message-ID: <20200324223455.GV2452@worktop.programming.kicks-ass.net>
-References: <20200324153113.098167666@infradead.org>
- <20200324160925.470421121@infradead.org>
- <20200324221616.2tdljgyay37aiw2t@treble>
+        Tue, 24 Mar 2020 18:39:17 -0400
+Received: by mail-wr1-f65.google.com with SMTP id a25so692289wrd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=CsJTvGpVPmav8scr1f+8vGqJnRDlYhqVnGsY3dWNugM=;
+        b=eFbp7iaJn1hT6hxrzF9p2+uV+G3iYIs+RbR8w+oGK0SWl0M4CdoFe9D5CI8MNBfLsT
+         FhwxLc9CyARUimd4HUlZZOKRqVlcuOlFSP9Za+9D9NKccTdhiyawFfOKdUwa0n4aVQut
+         bdVmJFSTEIUwO6Of5kw0HNRVyFy7EgOsn8Cy8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=CsJTvGpVPmav8scr1f+8vGqJnRDlYhqVnGsY3dWNugM=;
+        b=qCv8nJUt2TJKvTFLYCsC8oW3ECXLdFcR6VIPQCpCaA8hwcllELW4IOKPeJUAby119I
+         Jj+TZFM9dc/tfKOR9E8a7+WVZXqUiU26RIZ0/1vJHu5a2A3q/Pfp/9RTzw77lXSN801o
+         uZ34XGmPJvhHLl0cFHHjYAF6e5YQ+U561GQNdJScbRMFR95HIZGZAILTNh6UMt+ex8Rm
+         x0RsA5dFxkwVN/07f/g9zc3qiUKVa0fK6gLtz+kRHbxWhPuFPCZI8kAoD9lZykHo1+ts
+         L2yeY2GCHeGogXzbQA1zETkG5B/guLKRNf1k5eFy3Ow9e4txPUDTXxGNXCpHJZNTEBVR
+         tPvw==
+X-Gm-Message-State: ANhLgQ2vqeWoqQc6Ql08FkXmKTaPTsDpSzQZQQMFFWBRwDQ8ndIItGiz
+        B+siXHP4MSLQgcOH3D4Bj28GCw==
+X-Google-Smtp-Source: ADFU+vvmq9phB+TJsSu5PlZjdZhx430KLaniYgGVncHAKBv0pYcKZqkSfT8jbwXzYfaMKem6odSqdQ==
+X-Received: by 2002:adf:9322:: with SMTP id 31mr39623063wro.297.1585089553456;
+        Tue, 24 Mar 2020 15:39:13 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id c21sm5509329wmb.13.2020.03.24.15.39.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 15:39:12 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 23:39:10 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <20200324223910.GA5448@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-4-kpsingh@chromium.org>
+ <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
+ <20200324103910.GA7135@chromium.org>
+ <20200324161211.GA11227@chromium.org>
+ <CAEf4BzZZLBf3xRsV4khGCFdTxDFV61KbFfV1mHwM5yiCr4P37w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200324221616.2tdljgyay37aiw2t@treble>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZZLBf3xRsV4khGCFdTxDFV61KbFfV1mHwM5yiCr4P37w@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:16:16PM -0500, Josh Poimboeuf wrote:
-> On Tue, Mar 24, 2020 at 04:31:39PM +0100, Peter Zijlstra wrote:
-
-> > +	if (state.noinstr) {
-> > +		/*
-> > +		 * In vmlinux mode we will not run validate_unwind_hints() by
-> > +		 * default which means we'll not otherwise visit STT_NOTYPE
-> > +		 * symbols.
-> > +		 *
-> > +		 * In case of --duplicate mode, insn->visited will avoid actual
-> > +		 * duplicate work being done.
-> > +		 */
-> > +		list_for_each_entry(func, &sec->symbol_list, list) {
-> > +			if (func->type != STT_NOTYPE)
-> > +				continue;
-> > +
-> > +			warnings += validate_symbol(file, sec, func, &state);
-> > +		}
-> > +	}
-> > +
+On 24-Mär 14:26, Andrii Nakryiko wrote:
+> On Tue, Mar 24, 2020 at 9:12 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > On 24-Mär 11:39, KP Singh wrote:
+> > > On 23-Mär 12:59, Andrii Nakryiko wrote:
+> > > > On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
+> > > > >
+> > > > > From: KP Singh <kpsingh@google.com>
+> > > > >
+> > > > > When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
+> > > > > generated for each LSM hook. These nops are initialized as LSM hooks in
+> > > > > a subsequent patch.
+> > > > >
+> > > > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > > > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > > > > Reviewed-by: Florent Revest <revest@google.com>
+> > > > > ---
+> > > > >  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
+> > > > >  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
+> > > > >  2 files changed, 40 insertions(+)
+> > > > >  create mode 100644 include/linux/bpf_lsm.h
+> > > > >
+> > > > > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..c6423a140220
+> > > > > --- /dev/null
+> > > > > +++ b/include/linux/bpf_lsm.h
+> > > > > @@ -0,0 +1,21 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > > +
+> > > > > +/*
+> > > > > + * Copyright (C) 2020 Google LLC.
+> > > > > + */
+> > > > > +
+> > > > > +#ifndef _LINUX_BPF_LSM_H
+> > > > > +#define _LINUX_BPF_LSM_H
+> > > > > +
+> > > > > +#include <linux/bpf.h>
+> > > > > +#include <linux/lsm_hooks.h>
+> > > > > +
+> > > > > +#ifdef CONFIG_BPF_LSM
+> > > > > +
+> > > > > +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
+> > > > > +#include <linux/lsm_hook_names.h>
+> > > > > +#undef LSM_HOOK
+> > > > > +
+> > > > > +#endif /* CONFIG_BPF_LSM */
+> > > > > +
+> > > > > +#endif /* _LINUX_BPF_LSM_H */
+> > > > > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> > > > > index 82875039ca90..530d137f7a84 100644
+> > > > > --- a/kernel/bpf/bpf_lsm.c
+> > > > > +++ b/kernel/bpf/bpf_lsm.c
+> > > > > @@ -7,6 +7,25 @@
+> > > > >  #include <linux/filter.h>
+> > > > >  #include <linux/bpf.h>
+> > > > >  #include <linux/btf.h>
+> > > > > +#include <linux/lsm_hooks.h>
+> > > > > +#include <linux/bpf_lsm.h>
+> > > > > +
+> > > > > +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
+> > > > > + * function where a BPF program can be attached as an fexit trampoline.
+> > > > > + */
+> > > > > +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
+> > > > > +
+> > > > > +#define LSM_HOOK_int(NAME, ...)                        \
+> > > > > +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
+> > > > > +{                                              \
+> > > > > +       return 0;                               \
+> > > > > +}
+> > > > > +
+> > > > > +#define LSM_HOOK_void(NAME, ...) \
+> > > > > +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
+> > > > > +
+> > > >
+> > > > Could unify with:
+> > > >
+> > > > #define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)
+> > > > {
+> > > >     return (RET)0;
+> > > > }
+> > > >
+> > > > then you don't need LSM_HOOK_int and LSM_HOOK_void.
+> > >
+> > > Nice.
+> > >
+> > > But, given that we are adding default values and that
+> > > they are only needed for int hooks, we will need to keep the macros
+> > > separate for int and void. Or, Am I missing a trick here?
+> > >
+> > > - KP
+> >
+> > Actually, was able to get it work. not setting a default for void
+> > hooks makes the macros messier. So i just set it void. For example:
+> >
+> >   LSM_HOOK(void, void, bprm_committing_creds, struct linux_binprm *bprm)
 > 
-> I guess this is ok, but is there a valid reason why we don't just call
-> validate_unwind_hints()?
+> surprised this works, was going to propose to specify `(void)0` as
+> default value :)
+
+Yeah, you are right that does not work. so I added:
+
+  LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
+
+and as you suggested defined LSM_RET_VOID in lsm_hooks.h:
+
+  /* LSM_RET_VOID is used as the default value in LSM_HOOK definitions for void
+   * for void LSM hooks (in include/linux/lsm_hook_defs.h).
+   */
+  #define LSM_RET_VOID ((void) 0)
+
+I also noticed a few other hooks that were passing an initial return
+value to call_int_hook which were missed in this revision. Have fixed
+these for the next one.
+
+- KP
+
 > 
-> It's also slightly concerning that validate_reachable_instructions()
-> isn't called, I'm not 100% convinced all the code will get checked.
-
-This will only end up running on .noinstr.text, while
-validate_unwind_hints() will run on *everything*. That is, we're
-purposely not checking everything.
-
-It very much relies on the !vmlinux mode to do the unreachable things.
+> >
+> > This also allows me to use the cleanup you suggested and not having
+> > to split every usage into int and void.
+> >
+> 
+> Nice, one of the reasons for proposing this.
+> 
+> > - KP
+> >
+> > >
+> > > >
+> > > > > +#include <linux/lsm_hook_names.h>
+> > > > > +#undef LSM_HOOK
+> > > > >
+> > > > >  const struct bpf_prog_ops lsm_prog_ops = {
+> > > > >  };
+> > > > > --
+> > > > > 2.20.1
+> > > > >
