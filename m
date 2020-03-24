@@ -2,115 +2,102 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B65EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A3C3C54FCF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2FE2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 448CA20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YiMsSpud"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6dCbIM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727628AbgCXOff (ORCPT
+        id S1727731AbgCXOfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:35:35 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:44999 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        Tue, 24 Mar 2020 10:35:37 -0400
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36473 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S1727464AbgCXOff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 10:35:35 -0400
-Received: by mail-vs1-f68.google.com with SMTP id e138so11213693vsc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:35:34 -0700 (PDT)
+Received: by mail-qv1-f68.google.com with SMTP id z13so9309400qvw.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:35:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
-        b=YiMsSpudpT6FxZHxA6De/saSAHGXK7VlyDXtpNtN9hNzxOPelBBcnUkk9LPz8Mz4Ir
-         KztvWvGmrqbAk7jwUQE14sSAWV4hf05oN5i6odmjR/cou/29qpALc9peKPyrjgXDkrAc
-         oq6V4L/S8pZ9LSBWm00J5so+SUpk1hSQ8Va+g=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WMN0urVMLPtZbtsflPFbMuOG7G97DEryqB11mnFTGMQ=;
+        b=I6dCbIM3yXeW03+pJ5ljJGWsrOm6oCK/3pXO/KkpXXRzeutF+45hhRc2mRVbqfJv/O
+         ULyhJnAb4ON0QrdtC9y5BdUROTOF3UlgjcRZMoFT7/SHPfY7IucH+DHCZ8y9TjbX7wvn
+         7rucO+zMmTelk7XzaCrIJiLXmX1dw54NFVvs3PMeZN9w3elcb+dF7NZgQpP4sTWPoPmv
+         obqUV1oTlnUH+dOBIvcEKtJzFou5nyMaOcsXS+MliqcV+LkY7UA9WQZyjdRlVsD9LqRh
+         QgrQqz7lbAN02OPfwKIgojdCxGwMvTXUjhIdWXybRN0zm1XYDBQG8fE4E/F/z9SqDBif
+         04Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
-        b=Rb2VhTczVERztTtCw/M+jPShvvlRiAvh5j8KRz7BtrhQV8rWRT4+WtS5kCBtroABjB
-         2PmBXd4XD+1dEVQ/B0pgs/QSImyIqQDYrZbm6VfwDnOFH/RfhtYgNlstM7vzBoGnLof0
-         2ezgKTm0ISsnwkldCsLUZ98Y9qv6YWWgek1SLSePfn2Wcdd/4/y9WDpoYEWk1bHF6XLh
-         UUpjMwfBd2m3O6msk/1YDXC/ot95KzUXMoNw2zQKbL9W0f+yPwkgoKl4aBaFoAF0hnY2
-         8RrOxmj1of6uayb9SrUWDmG6cpdH8W2Fwr/0fQs8HV0qj/oK2x6v74dXAT2Al94MtJya
-         yZBA==
-X-Gm-Message-State: ANhLgQ1qrfwhxs3eM73vbt8qQwV8bUTuXghk9GT1kjpIK0dDuYoK+2qa
-        mSIPzGFdegn3pG23xAVxxk5+3MqERfQ=
-X-Google-Smtp-Source: ADFU+vsVd1FWSHGswLQAc2fdZnfOkyHI79FbKSjh+JmWme81WubIUf+pK5eflghKFKBRMhpv5PMMJg==
-X-Received: by 2002:a67:68c5:: with SMTP id d188mr9920226vsc.15.1585060533535;
-        Tue, 24 Mar 2020 07:35:33 -0700 (PDT)
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
-        by smtp.gmail.com with ESMTPSA id o39sm10036230uad.6.2020.03.24.07.35.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WMN0urVMLPtZbtsflPFbMuOG7G97DEryqB11mnFTGMQ=;
+        b=dKh8NC687uSiNNYv6h3a0xbgzI64YdA5G2Bn6/Ot5CSSDctSm4GaP6awVG1CgWsGHq
+         CLhrF6tc1yQNI3RVSjNFbCJbARou77ZTZOGsw/HeQeA44eYBWxtklfA1oajOQqZZiGaB
+         ApOd+zTngavvj5M7JpcKu9cWpthJdJDKh0XL1kNO9VExxB3fhqS6T43bo+D+uOD7ezR7
+         3b1ox44qMwAGcNLjT0HkKppGE9g/dz43bqEBlUj47cMQfgDOHbYccsjW50FsNt/pOJJH
+         eoqOUBr51miD/LFnlcelG6D1wew4/+LuFWnrJGqitVgG0phof1s74VmYfmzNGg31jGXg
+         DTOw==
+X-Gm-Message-State: ANhLgQ1dm8/DYvnxtDUipBwN4D2nSL+TWOhuWabdOqyIiC+zyP+VxVke
+        op9mOHKNMrCisC57cV3FzvtnBS8=
+X-Google-Smtp-Source: ADFU+vtm7QJgAzdFn3jnJlSceh7Xq7qYOJV9P+Jcg1UdA5qADOvt5vo/FZ2I48p9L1ihC3aODbWAVw==
+X-Received: by 2002:a05:6214:421:: with SMTP id a1mr26119355qvy.185.1585060534878;
+        Tue, 24 Mar 2020 07:35:34 -0700 (PDT)
+Received: from localhost.localdomain (174-084-153-250.res.spectrum.com. [174.84.153.250])
+        by smtp.gmail.com with ESMTPSA id r40sm14982189qtc.39.2020.03.24.07.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
-Received: by mail-ua1-f41.google.com with SMTP id a6so1528639uao.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
-X-Received: by 2002:a9f:300a:: with SMTP id h10mr18039835uab.91.1585060531555;
- Tue, 24 Mar 2020 07:35:31 -0700 (PDT)
+From:   Brian Gerst <brgerst@gmail.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Brian Gerst <brgerst@gmail.com>
+Subject: [PATCH] x86/entry: Fix build error x86 with !CONFIG_POSIX_TIMERS
+Date:   Tue, 24 Mar 2020 10:35:20 -0400
+Message-Id: <20200324143520.898733-1-brgerst@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
-In-Reply-To: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Tue, 24 Mar 2020 07:35:18 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
-Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Kalyan Thota <kalyan_t@codeaurora.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add missing semicolon.
 
-On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
->
-> "The PM core always increments the runtime usage counter
-> before calling the ->suspend() callback and decrements it
-> after calling the ->resume() callback"
->
-> DPU and DSI are managed as runtime devices. When
-> suspend is triggered, PM core adds a refcount on all the
-> devices and calls device suspend, since usage count is
-> already incremented, runtime suspend was not getting called
-> and it kept the clocks on which resulted in target not
-> entering into XO shutdown.
->
-> Add changes to manage runtime devices during pm sleep.
->
-> Changes in v1:
->  - Remove unnecessary checks in the function
->      _dpu_kms_disable_dpu (Rob Clark).
+Fixes: a74d187c2df3 ("x86/entry: Refactor SYS_NI macros")
+Reported-By: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
+---
+ arch/x86/include/asm/syscall_wrapper.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm wondering what happened with my feedback on v1, AKA:
+diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
+index e10efa1454bc..a84333adeef2 100644
+--- a/arch/x86/include/asm/syscall_wrapper.h
++++ b/arch/x86/include/asm/syscall_wrapper.h
+@@ -86,7 +86,7 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
+ 	}
+ 
+ #define __SYS_NI(abi, name)						\
+-	SYSCALL_ALIAS(__##abi##_##name, sys_ni_posix_timers)
++	SYSCALL_ALIAS(__##abi##_##name, sys_ni_posix_timers);
+ 
+ #ifdef CONFIG_X86_64
+ #define __X64_SYS_STUB0(name)						\
+-- 
+2.25.1
 
-https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
-
-Maybe you didn't see it?  ...or if you or Rob think I'm way off base
-(always possible) then please tell me so.
-
-Thanks!
-
--Doug
