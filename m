@@ -2,128 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC79C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48094C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0931208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F629208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:11:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="RVvi+5ZE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgCXUKI (ORCPT
+        id S1727496AbgCXULp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:10:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34934 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbgCXUJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:09:58 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B55E20B80;
-        Tue, 24 Mar 2020 20:09:58 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.93)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1jGps4-001hRE-UT; Tue, 24 Mar 2020 16:09:56 -0400
-Message-Id: <20200324200956.821799393@goodmis.org>
-User-Agent: quilt/0.65
-Date:   Tue, 24 Mar 2020 16:08:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        Jaewon Kim <jaewon31.kim@samsung.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Kees Cook <keescook@chromium.org>
-Subject: [PATCH 3/3] tools lib traceevent: Add handler for __builtin_expect()
-References: <20200324200845.763565368@goodmis.org>
+        Tue, 24 Mar 2020 16:11:45 -0400
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:60586 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgCXULp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:11:45 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B4C1040735;
+        Tue, 24 Mar 2020 21:11:42 +0100 (CET)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="RVvi+5ZE";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id eO960zhVeZGh; Tue, 24 Mar 2020 21:11:41 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 7D9FC4052C;
+        Tue, 24 Mar 2020 21:11:38 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id B46033602F7;
+        Tue, 24 Mar 2020 21:11:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1585080698; bh=iYRGvlrMx/ASdASJ84Pl19hk1Q5OTvbQxQY5Z288KuM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RVvi+5ZEwHoQCJgicJVVWv/JFpiZgFWj9mKUQ5N20FyV1XHSwezYqEX7od+5yRIID
+         /VFHjzRPj5xSifZ8hirhT3GIVDpFBPGHIW2oElDZGcAoi48hc/djrohrsjPn8VyZFy
+         yMHfHEcx3PJ82Ik+y05DSmRds9J3Gsaq9vtsV49s=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        "Thomas Hellstrom (VMware)" <thomas_os@shipmail.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Roland Scheidegger <sroland@vmware.com>
+Subject: [PATCH v7 1/9] fs: Constify vma argument to vma_is_dax
+Date:   Tue, 24 Mar 2020 21:11:15 +0100
+Message-Id: <20200324201123.3118-2-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200324201123.3118-1-thomas_os@shipmail.org>
+References: <20200324201123.3118-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: "Thomas Hellstrom (VMware)" <thomas_os@shipmail.org>
 
-In order to move pointer checks like IS_ERR_VALUE() out of the hotpath and
-into the reader path of a trace event, user space tools need to be able to
-parse that. IS_ERR_VALUE() is defined as:
+The function is used by upcoming vma_is_special_huge() with which we want
+to use a const vma argument. Since for vma_is_dax() the vma argument is
+only dereferenced for reading, constify it.
 
- #define IS_ERR_VALUE() unlikely((unsigned long)(void *)(x) >= (unsigned long)-MAX_ERRNO)
-
-Which eventually turns into:
-
-  __builtin_expect(!!((unsigned long)(void *)(x) >= (unsigned long)-4095), 0)
-
-Now the traceevent parser can handle most of that except for the
-__builtin_expect(), which needs to be added.
-
-Link: https://lore.kernel.org/linux-mm/20200320055823.27089-3-jaewon31.kim@samsung.com/
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Hellstrom (VMware) <thomas_os@shipmail.org>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Acked-by: Christian König <christian.koenig@amd.com>
 ---
- tools/lib/traceevent/event-parse.c | 35 ++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ include/linux/fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 010e60d5a081..5b36c589a029 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -3084,6 +3084,37 @@ process_func_handler(struct tep_event *event, struct tep_function_handler *func,
- 	return TEP_EVENT_ERROR;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3cd4fe6b845e..2b38ce5b73ad 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3391,7 +3391,7 @@ static inline bool io_is_direct(struct file *filp)
+ 	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
  }
  
-+static enum tep_event_type
-+process_builtin_expect(struct tep_event *event, struct tep_print_arg *arg, char **tok)
-+{
-+	enum tep_event_type type;
-+	char *token = NULL;
-+
-+	/* Handle __builtin_expect( cond, #) */
-+	type = process_arg(event, arg, &token);
-+
-+	if (type != TEP_EVENT_DELIM || token[0] != ',')
-+		goto out_free;
-+
-+	free_token(token);
-+
-+	/* We don't care what the second parameter is of the __builtin_expect() */
-+	if (read_expect_type(TEP_EVENT_ITEM, &token) < 0)
-+		goto out_free;
-+
-+	if (read_expected(TEP_EVENT_DELIM, ")") < 0)
-+		goto out_free;
-+
-+	free_token(token);
-+	type = read_token_item(tok);
-+	return type;
-+
-+out_free:
-+	free_token(token);
-+	*tok = NULL;
-+	return TEP_EVENT_ERROR;
-+}
-+
- static enum tep_event_type
- process_function(struct tep_event *event, struct tep_print_arg *arg,
- 		 char *token, char **tok)
-@@ -3128,6 +3159,10 @@ process_function(struct tep_event *event, struct tep_print_arg *arg,
- 		free_token(token);
- 		return process_dynamic_array_len(event, arg, tok);
- 	}
-+	if (strcmp(token, "__builtin_expect") == 0) {
-+		free_token(token);
-+		return process_builtin_expect(event, arg, tok);
-+	}
- 
- 	func = find_func_handler(event->tep, token);
- 	if (func) {
+-static inline bool vma_is_dax(struct vm_area_struct *vma)
++static inline bool vma_is_dax(const struct vm_area_struct *vma)
+ {
+ 	return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
+ }
 -- 
-2.25.1
-
+2.21.1
 
