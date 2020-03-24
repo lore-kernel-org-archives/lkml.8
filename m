@@ -2,52 +2,51 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F2BC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ED23208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58003208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:17:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055818;
-	bh=oEOJMqvdsCj6GYOHbmui3Nl1PCCd6blChJqMhhQrgQI=;
+	s=default; t=1585055823;
+	bh=EEvvfhmxdev/pFSM7PgnHtvM1QPYghNhCKh9PDwsrys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rA2i8Rbocc4p7UBC2n0yUA4LXF23J45t693mKtUyRTN96jLrqxWYgu6nmeV+nEr7J
-	 FRY2ssrlpcioPBlK8O7wiB4mt5flSQ8O5G0ke4KSSea3elxv9lUXDiQzpElWNC2VBS
-	 keU/wMApKrVB9FDRQWWXZrtIczNg4k04OM0H61cw=
+	b=NNUdRG0l+rsSsrBodtmWlnRjYHoY9wLVfXCJdTph9T/1Sxu+Kygu8h3EOwRkLjl7F
+	 i6CEaLwLQayBU3P46I2Fx9NmwwhMu3rs1fVSlRgpekdASFaXD/HcJ/Dn8nB5ATmS6j
+	 uwI3pZUsG3nyKiWN2neYWaRX65iSxh0fA1AdHjNo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbgCXNQ4 (ORCPT
+        id S1728120AbgCXNRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36496 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:17:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728506AbgCXNQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:53 -0400
+        id S1727977AbgCXNQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F453208D6;
-        Tue, 24 Mar 2020 13:16:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8E2DF208D6;
+        Tue, 24 Mar 2020 13:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055812;
-        bh=oEOJMqvdsCj6GYOHbmui3Nl1PCCd6blChJqMhhQrgQI=;
+        s=default; t=1585055819;
+        bh=EEvvfhmxdev/pFSM7PgnHtvM1QPYghNhCKh9PDwsrys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hrRsUCIrNsKWkWSLG+p/+GnS48qOPfhsNf3gu90Ez+I/TSrJP21qfoFWRclS4pMDN
-         USUsZ+4KYi7b2k9jYY5xshawrJa7nSS37QvTfGl76XQ7vgmBGQKfZia7Yw/ENSVRws
-         YS0mVf4G7NQIyd7LYkZfRjwp6jX6hsLfedKn8WNU=
+        b=R7gXlEQYnzohLIuF97aMlXa6AIchfV1Mifq6MUCMiZijdcB6ndBhuIX4to4h8CzAH
+         CEHtwEgcMi9N5GJBNC2CTMj0l76s13fOYh722EaO5vNN+uIK7EhaufohYug4FrdWDy
+         +QWj751ItJi789N0Qy8TpYmehOdjdIZTRXipFnAs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Todd Kjos <tkjos@google.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 035/102] binderfs: use refcount for binder control devices too
-Date:   Tue, 24 Mar 2020 14:10:27 +0100
-Message-Id: <20200324130810.412840965@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 5.4 037/102] USB: Disable LPM on WD19s Realtek Hub
+Date:   Tue, 24 Mar 2020 14:10:29 +0100
+Message-Id: <20200324130810.550515671@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,55 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christian Brauner <christian.brauner@ubuntu.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 211b64e4b5b6bd5fdc19cd525c2cc9a90e6b0ec9 ]
+commit b63e48fb50e1ca71db301ca9082befa6f16c55c4 upstream.
 
-Binderfs binder-control devices are cleaned up via binderfs_evict_inode
-too() which will use refcount_dec_and_test(). However, we missed to set
-the refcount for binderfs binder-control devices and so we underflowed
-when the binderfs instance got unmounted. Pretty obvious oversight and
-should have been part of the more general UAF fix. The good news is that
-having test cases (suprisingly) helps.
+Realtek Hub (0bda:0x0487) used in Dell Dock WD19 sometimes drops off the
+bus when bringing underlying ports from U3 to U0.
 
-Technically, we could detect that we're about to cleanup the
-binder-control dentry in binderfs_evict_inode() and then simply clean it
-up. But that makes the assumption that the binder driver itself will
-never make use of a binderfs binder-control device after the binderfs
-instance it belongs to has been unmounted and the superblock for it been
-destroyed. While it is unlikely to ever come to this let's be on the
-safe side. Performance-wise this also really doesn't matter since the
-binder-control device is only every really when creating the binderfs
-filesystem or creating additional binder devices. Both operations are
-pretty rare.
+Disabling LPM on the hub during setting link state is not enough, so
+let's disable LPM completely for this hub.
 
-Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
-Link: https://lore.kernel.org/r/CA+G9fYusdfg7PMfC9Xce-xLT7NiyKSbgojpK35GOm=Pf9jXXrA@mail.gmail.com
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Todd Kjos <tkjos@google.com>
-Link: https://lore.kernel.org/r/20200311105309.1742827-1-christian.brauner@ubuntu.com
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200205112633.25995-3-kai.heng.feng@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- drivers/android/binderfs.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
-index 110e41f920c27..f303106b3362b 100644
---- a/drivers/android/binderfs.c
-+++ b/drivers/android/binderfs.c
-@@ -448,6 +448,7 @@ static int binderfs_binder_ctl_create(struct super_block *sb)
- 	inode->i_uid = info->root_uid;
- 	inode->i_gid = info->root_gid;
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -378,6 +378,9 @@ static const struct usb_device_id usb_qu
+ 	{ USB_DEVICE(0x0b05, 0x17e0), .driver_info =
+ 			USB_QUIRK_IGNORE_REMOTE_WAKEUP },
  
-+	refcount_set(&device->ref, 1);
- 	device->binderfs_inode = inode;
- 	device->miscdev.minor = minor;
- 
--- 
-2.20.1
-
++	/* Realtek hub in Dell WD19 (Type-C) */
++	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* Action Semiconductor flash disk */
+ 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
+ 			USB_QUIRK_STRING_FETCH_255 },
 
 
