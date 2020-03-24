@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FC3C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0464AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10076208D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C896C208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056454;
-	bh=ehMOaz+Z5BY8hRWTVYWD5dhPNfhkATZ3WAZTvvc31TE=;
+	s=default; t=1585056457;
+	bh=VFh0nkT/R1OP5NoFWbBkGZPgIv1A+P82MsKX5VmNGfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVKqAvHfkBE8/aR+QT3J/YB7vI3fnnC1Al0Gpp23SFoSJywgjoJ5vdzxr79jDwp02
-	 HKyJ5Ph1+eHOoclyPT9JZWMhbBnULcJfUhJOuJ6ItAym7u5hymvJYOhX4coaZasjeG
-	 OPmA57Qb7osa1fLIkMOCL1BYZCxTqSvSORDIMQYk=
+	b=LpXmiZbg5m9OoMw3W4KiMJemFMSYOTmZ4Le2mYR07PmQTw0YUGQRGdmiq+bPfE1dk
+	 W629ogm2MhVpu7TBbYrLpVndOemac9CV0jAuaAToaNhrzZRxnkELsXS8Ms2a63Jbxh
+	 jy/A5X4VzLC3/4QoeRoCsup9BVUQeVfwNxOJ7rcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729806AbgCXN1Z (ORCPT
+        id S1729954AbgCXN1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:27:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729798AbgCXN1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:27:19 -0400
+        id S1729819AbgCXN13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:27:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B43D208D6;
-        Tue, 24 Mar 2020 13:27:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01D63206F6;
+        Tue, 24 Mar 2020 13:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056438;
-        bh=ehMOaz+Z5BY8hRWTVYWD5dhPNfhkATZ3WAZTvvc31TE=;
+        s=default; t=1585056448;
+        bh=VFh0nkT/R1OP5NoFWbBkGZPgIv1A+P82MsKX5VmNGfY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UWHBdOkAXRoFcxFhfu0aFcKzyhY/zqLn1pr2SKsOBBT1RMImYSdOP+ssgs1TMAqSK
-         g7OYNKJ4ZaK7h2iU3lEYZTwZhz0VvdSDxVcwZjXrfETvRWkmokN7qAsK+1+/64AeOF
-         rhseBhKWc/YsnfEgB8941MgIaD1Y2t9f6hvncsl8=
+        b=tMLicg3Vrp6GA5trO02zYY+1jVLTZP4zll1RHbqc9flL+Solv+r5wQcjdSyLuXrQY
+         s0ot2Pj01dBA49VIxfu5kitZOXqkzLjLRDK83BmRjgf63KI9ugde1P+j3mu6e4505V
+         mzZqYh6rWEPhNHKZty5ICOwHOeUHKMYYgRsSNUc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.5 117/119] staging: greybus: loopback_test: fix potential path truncations
-Date:   Tue, 24 Mar 2020 14:11:42 +0100
-Message-Id: <20200324130819.239561003@linuxfoundation.org>
+        stable@vger.kernel.org, Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 5.5 084/119] modpost: move the namespace field in Module.symvers last
+Date:   Tue, 24 Mar 2020 14:11:09 +0100
+Message-Id: <20200324130816.657498507@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -58,94 +61,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Jessica Yu <jeyu@kernel.org>
 
-commit ae62cf5eb2792d9a818c2d93728ed92119357017 upstream.
+commit 5190044c2965514a973184ca68ef5fad57a24670 upstream.
 
-Newer GCC warns about possible truncations of two generated path names as
-we're concatenating the configurable sysfs and debugfs path prefixes
-with a filename and placing the results in buffers of the same size as
-the maximum length of the prefixes.
+In order to preserve backwards compatability with kmod tools, we have to
+move the namespace field in Module.symvers last, as the depmod -e -E
+option looks at the first three fields in Module.symvers to check symbol
+versions (and it's expected they stay in the original order of crc,
+symbol, module).
 
-	snprintf(d->name, MAX_STR_LEN, "gb_loopback%u", dev_id);
+In addition, update an ancient comment above read_dump() in modpost that
+suggested that the export type field in Module.symvers was optional. I
+suspect that there were historical reasons behind that comment that are
+no longer accurate. We have been unconditionally printing the export
+type since 2.6.18 (commit bd5cbcedf44), which is over a decade ago now.
 
-	snprintf(d->sysfs_entry, MAX_SYSFS_PATH, "%s%s/",
-		 t->sysfs_prefix, d->name);
+Fix up read_dump() to treat each field as non-optional. I suspect the
+original read_dump() code treated the export field as optional in order
+to support pre <= 2.6.18 Module.symvers (which did not have the export
+type field). Note that although symbol namespaces are optional, the
+field will not be omitted from Module.symvers if a symbol does not have
+a namespace. In this case, the field will simply be empty and the next
+delimiter or end of line will follow.
 
-	snprintf(d->debugfs_entry, MAX_SYSFS_PATH, "%sraw_latency_%s",
-		 t->debugfs_prefix, d->name);
-
-Fix this by separating the maximum path length from the maximum prefix
-length and reducing the latter enough to fit the generated strings.
-
-Note that we also need to reduce the device-name buffer size as GCC
-isn't smart enough to figure out that we ever only used MAX_STR_LEN
-bytes of it.
-
-Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200312110151.22028-4-johan@kernel.org
+Cc: stable@vger.kernel.org
+Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+Tested-by: Matthias Maennich <maennich@google.com>
+Reviewed-by: Matthias Maennich <maennich@google.com>
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+Signed-off-by: Jessica Yu <jeyu@kernel.org>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/tools/loopback_test.c |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ Documentation/kbuild/modules.rst |    4 ++--
+ scripts/export_report.pl         |    2 +-
+ scripts/mod/modpost.c            |   24 ++++++++++++------------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
---- a/drivers/staging/greybus/tools/loopback_test.c
-+++ b/drivers/staging/greybus/tools/loopback_test.c
-@@ -19,6 +19,7 @@
- #include <signal.h>
+--- a/Documentation/kbuild/modules.rst
++++ b/Documentation/kbuild/modules.rst
+@@ -470,9 +470,9 @@ build.
  
- #define MAX_NUM_DEVICES 10
-+#define MAX_SYSFS_PREFIX 0x80
- #define MAX_SYSFS_PATH	0x200
- #define CSV_MAX_LINE	0x1000
- #define SYSFS_MAX_INT	0x20
-@@ -67,7 +68,7 @@ struct loopback_results {
- };
+ 	The syntax of the Module.symvers file is::
  
- struct loopback_device {
--	char name[MAX_SYSFS_PATH];
-+	char name[MAX_STR_LEN];
- 	char sysfs_entry[MAX_SYSFS_PATH];
- 	char debugfs_entry[MAX_SYSFS_PATH];
- 	struct loopback_results results;
-@@ -93,8 +94,8 @@ struct loopback_test {
- 	int stop_all;
- 	int poll_count;
- 	char test_name[MAX_STR_LEN];
--	char sysfs_prefix[MAX_SYSFS_PATH];
--	char debugfs_prefix[MAX_SYSFS_PATH];
-+	char sysfs_prefix[MAX_SYSFS_PREFIX];
-+	char debugfs_prefix[MAX_SYSFS_PREFIX];
- 	struct timespec poll_timeout;
- 	struct loopback_device devices[MAX_NUM_DEVICES];
- 	struct loopback_results aggregate_results;
-@@ -907,10 +908,10 @@ int main(int argc, char *argv[])
- 			t.iteration_max = atoi(optarg);
- 			break;
- 		case 'S':
--			snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
-+			snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
- 			break;
- 		case 'D':
--			snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
-+			snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
- 			break;
- 		case 'm':
- 			t.mask = atol(optarg);
-@@ -961,10 +962,10 @@ int main(int argc, char *argv[])
- 	}
+-	<CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
++	<CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
  
- 	if (!strcmp(t.sysfs_prefix, ""))
--		snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", sysfs_prefix);
-+		snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", sysfs_prefix);
+-	0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
++	0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
  
- 	if (!strcmp(t.debugfs_prefix, ""))
--		snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", debugfs_prefix);
-+		snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", debugfs_prefix);
+ 	The fields are separated by tabs and values may be empty (e.g.
+ 	if no namespace is defined for an exported symbol).
+--- a/scripts/export_report.pl
++++ b/scripts/export_report.pl
+@@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
+ #
+ while ( <$module_symvers> ) {
+ 	chomp;
+-	my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
++	my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
+ 	$SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
+ }
+ close($module_symvers);
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -2433,7 +2433,7 @@ static void write_if_changed(struct buff
+ }
  
- 	ret = find_loopback_devices(&t);
- 	if (ret)
+ /* parse Module.symvers file. line format:
+- * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
++ * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
+  **/
+ static void read_dump(const char *fname, unsigned int kernel)
+ {
+@@ -2446,7 +2446,7 @@ static void read_dump(const char *fname,
+ 		return;
+ 
+ 	while ((line = get_next_line(&pos, file, size))) {
+-		char *symname, *namespace, *modname, *d, *export, *end;
++		char *symname, *namespace, *modname, *d, *export;
+ 		unsigned int crc;
+ 		struct module *mod;
+ 		struct symbol *s;
+@@ -2454,16 +2454,16 @@ static void read_dump(const char *fname,
+ 		if (!(symname = strchr(line, '\t')))
+ 			goto fail;
+ 		*symname++ = '\0';
+-		if (!(namespace = strchr(symname, '\t')))
+-			goto fail;
+-		*namespace++ = '\0';
+-		if (!(modname = strchr(namespace, '\t')))
++		if (!(modname = strchr(symname, '\t')))
+ 			goto fail;
+ 		*modname++ = '\0';
+-		if ((export = strchr(modname, '\t')) != NULL)
+-			*export++ = '\0';
+-		if (export && ((end = strchr(export, '\t')) != NULL))
+-			*end = '\0';
++		if (!(export = strchr(modname, '\t')))
++			goto fail;
++		*export++ = '\0';
++		if (!(namespace = strchr(export, '\t')))
++			goto fail;
++		*namespace++ = '\0';
++
+ 		crc = strtoul(line, &d, 16);
+ 		if (*symname == '\0' || *modname == '\0' || *d != '\0')
+ 			goto fail;
+@@ -2514,9 +2514,9 @@ static void write_dump(const char *fname
+ 				namespace = symbol->namespace;
+ 				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
+ 					   symbol->crc, symbol->name,
+-					   namespace ? namespace : "",
+ 					   symbol->module->name,
+-					   export_str(symbol->export));
++					   export_str(symbol->export),
++					   namespace ? namespace : "");
+ 			}
+ 			symbol = symbol->next;
+ 		}
 
 
