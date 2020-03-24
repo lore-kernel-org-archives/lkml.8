@@ -2,118 +2,158 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C83AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5AFC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:41:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435112076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585068086;
-	bh=tuuaU1o5XE5JrAxv/4vS4uyCn9VxF9lZSXPfHZDVrPc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xQWVHW7ITSib+4E8wnefyQa8ihEKwEFk+cs2LLrCsl1hmGxJXM1XRtUgZJjk1kkAV
-	 6ooYXlBCFMWs4tOMeScO+G+Faof2BEZggYNKQCA7iaA0sNdMgQ8EptpMyJaOAMt3FA
-	 oBUMaTYWoBtTJDnXRZyCBHUINKvQ3cGqnQ0tci/g=
+	by mail.kernel.org (Postfix) with ESMTP id 09C8D2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:41:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j98GJB7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727967AbgCXQlZ (ORCPT
+        id S1728066AbgCXQlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:41:25 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40949 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbgCXQlY (ORCPT
+        Tue, 24 Mar 2020 12:41:39 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:39020 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgCXQli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:41:24 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w26so15126670edu.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:41:23 -0700 (PDT)
+        Tue, 24 Mar 2020 12:41:38 -0400
+Received: by mail-pj1-f68.google.com with SMTP id ck23so1697384pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XEAcgrtzlQ0nzsuAIOz6lRZnZyzpLkzKdjSUsUmbaiY=;
-        b=DyaeVbt/mnGOvxpYTVSUTvxDPVQYVS3x1eaUPvsh7Rnx3FOM/j8k6No0xzupqKHlBl
-         grkrG08s2C8Y2S6RpApRxXhiSNAT115kCoNJQmXFlNcT27zq7jafr0hzEJ1L4puKWJWF
-         n5mHXzOpLZGae3EMG6VJK7HG0w8XHQ66cfXo4=
+         :cc;
+        bh=979Mtap+CCQ7tKvldIjbiCeKqDiW28MMMAoe002pSds=;
+        b=j98GJB7If0ApdU2aWtGequ2FE/n663QGTdo6OwpAj5gOsC68crPpU1zhyLu1cxDx+3
+         Sc6xBVPOE9RSYBXgYJsG+eEEaFK2WV+Nx3CFxx0/x8kiT01nL6yKQoFGPZkoY44YTGfL
+         VO21t32jmQN5fZMccfNwR8LQq63XaXlJCWoOF6/T635Yx3ORCPPLWErQ8Y9w2UY6fPfX
+         6E84Ukc5ZNtjooyNnH/bboHJKr6wJU9J8D2rLmfQ7wFUQ2aOTMjY5psjHQ/lalul6np6
+         ZsUd/FjPbkTuYiur6nMqcACieOJyxtWiH3PjWWDtLBZ9zFw4TN8xvo7mr57297aFteJr
+         Dn5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XEAcgrtzlQ0nzsuAIOz6lRZnZyzpLkzKdjSUsUmbaiY=;
-        b=MMsdo1H8SJINLzkjDiZ8A0lrD3E6Gs7yUrGy+pxKqSa6qXnpTLWGkac6QiIo8tvjYI
-         Nf8Hz2TVrxi93c6VMAc4opt9BhL8TWgL+BnjTapcwr3CeZ4MrykZ27M1odRSG1Flrrxc
-         ij0f9Cxw9+OVwo7EcGFxyfpimM0qj/8hsOKZ/CKUQsVpcLW3a4mEga6uMIqkeUMjggZe
-         D/2F09A1RNCfJq+NTDJpBS0kBSa0VHrdeW4ekQzQYdrfWZUok87QBzNwAMbhytnameJ0
-         FFsOd28FlIJHYBg96F9uzUs3xsVFJ/vpmZlRQzUdWzEDZooq7WwvZsxoas/oZK5XeD4f
-         /CUg==
-X-Gm-Message-State: ANhLgQ0O5UG1VXq2U89r+Y4w3R/6LJ7WSRj61VABKg7FdZQQoyMijapO
-        y8GD6EfWNs6KOrhZMY86t/0BpUFNQVo=
-X-Google-Smtp-Source: ADFU+vv3VjHxlQOAr5fL8O8m2cvtardGhCI2ub8u0ASJfzBqA92/e1KhAPqG/9BXRvB6R9qj9LhaPg==
-X-Received: by 2002:a50:f383:: with SMTP id g3mr4367772edm.316.1585068082741;
-        Tue, 24 Mar 2020 09:41:22 -0700 (PDT)
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com. [209.85.208.45])
-        by smtp.gmail.com with ESMTPSA id t13sm1399435edw.49.2020.03.24.09.41.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 09:41:22 -0700 (PDT)
-Received: by mail-ed1-f45.google.com with SMTP id i24so21504844eds.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:41:22 -0700 (PDT)
-X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr17538229ljp.241.1585067617805;
- Tue, 24 Mar 2020 09:33:37 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=979Mtap+CCQ7tKvldIjbiCeKqDiW28MMMAoe002pSds=;
+        b=n7JVlYqjFiy5CosH9XmiW9QkQin0PCb5lYiE4Lp3iLZDEy5725wZ+itklUGR9Wh/sV
+         U16Use4CUi7RzFoo1sch8DD0Mi1C3VjzK0IOZm6A2SBZ7VsmpK5LWbUSJfpqKCQK7kju
+         VVGznhZpGXfA3ZjLPJjCJNbb3SFjaLsECSZ+YMAhxo7RXmv2QuCg+kqMu4OVNMJ1mqRF
+         DH3+YGMaD3i4xvMFQmF8WuK09XzBb/UWMgpwD4sWAkqa1u3TQHxcgVnRpCNuV0DQOEes
+         n0iHkrkbzsdTVpGD0q+29GwPU9asaM5+QBhq5Rz+Oa3tSVPcb2ycqtDcwx/lbobfRBCR
+         ybkw==
+X-Gm-Message-State: ANhLgQ2dg+lUQDGmibFC8/PLy2oXKCflOSJI7hyHvny8QbxadSOqNKNG
+        obBvfiycDDYPwZEddaLARg4kdmQcfMtyC9FvkAv2bw==
+X-Google-Smtp-Source: ADFU+vtqzM/h7+lFa90Wwln9N4BChx0mxDxEdoP4W7HcWwFcKGNGzxlnxh4n480Q5YY7oLXaZIzH0bnX0EyLxWF8PZg=
+X-Received: by 2002:a17:90b:230d:: with SMTP id mt13mr6422700pjb.164.1585068096041;
+ Tue, 24 Mar 2020 09:41:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
- <86D80EA7-9087-4042-8119-12DD5FCEAA87@amacapital.net>
-In-Reply-To: <86D80EA7-9087-4042-8119-12DD5FCEAA87@amacapital.net>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 24 Mar 2020 09:33:21 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
-Message-ID: <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
-Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Jason Baron <jbaron@akamai.com>,
+References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-5-masahiroy@kernel.org>
+In-Reply-To: <20200324084821.29944-5-masahiroy@kernel.org>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 24 Mar 2020 09:41:24 -0700
+Message-ID: <CAKwvOd=3tm+OQhuyM9SzC1Mo6QWphLWipd-=VBRYzEmMC6Bg=A@mail.gmail.com>
+Subject: Re: [PATCH 04/16] x86: remove unneeded (CONFIG_AS_)CFI_SIGNAL_FRAME
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
-        Peter Anvin <hpa@zytor.com>,
-        Andrew Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 9:22 AM Andy Lutomirski <luto@amacapital.net> wrote=
-:
+On Tue, Mar 24, 2020 at 1:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> I haven=E2=80=99t checked if static calls currently support return values=
-, but
-> the conditional case only makes sense for functions that return void.
+> Commit 131484c8da97 ("x86/debug: Remove perpetually broken,
+> unmaintainable dwarf annotations") removes all the users of
+> CFI_SIGNAL_FRAME.
 >
-> Aside from that, it might be nice for passing NULL in to warn or bug
-> when the NULL pointer is stored instead of silently NOPping out the
-> call in cases where having a real implementation isn=E2=80=99t optional.
+> Remove the CFI_SIGNAL_FRAME and CONFIG_AS_CFI_SIGNAL_FRAME.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
 
-Both good points. I take back my question.
+Please remember to clean up the reference to
+CONFIG_AS_CFI_SIGNAL_FRAME in arch/arc/kernel/unwind.c.  It was not
+defined by any Makefile scoped to arch/arc, so the the ifndef guards
+can go, but the code they guard should stay.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-And it aside from warning about passing in NULL then it doesn't work,
-I wonder if we could warn - at build time - when then using the COND
-version with a function that doesn't return void?
+> ---
+>
+>  arch/x86/Makefile             | 6 ++----
+>  arch/x86/include/asm/dwarf2.h | 6 ------
+>  2 files changed, 2 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index 72f8f744ebd7..dd275008fc59 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -177,8 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+>         KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
+>  endif
+>
+> -# is .cfi_signal_frame supported too?
+> -cfi-sigframe := $(call as-instr,.cfi_startproc\n.cfi_signal_frame\n.cfi_endproc,-DCONFIG_AS_CFI_SIGNAL_FRAME=1)
+>  cfi-sections := $(call as-instr,.cfi_sections .debug_frame,-DCONFIG_AS_CFI_SECTIONS=1)
+>
+>  # does binutils support specific instructions?
+> @@ -190,8 +188,8 @@ sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=
+>  sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
+>  adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+>
+> -KBUILD_AFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+> -KBUILD_CFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+> +KBUILD_AFLAGS += $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+> +KBUILD_CFLAGS += $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+>
+>  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+>
+> diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+> index 90807583cad7..f440790f09f9 100644
+> --- a/arch/x86/include/asm/dwarf2.h
+> +++ b/arch/x86/include/asm/dwarf2.h
+> @@ -21,12 +21,6 @@
+>  #define CFI_UNDEFINED          .cfi_undefined
+>  #define CFI_ESCAPE             .cfi_escape
+>
+> -#ifdef CONFIG_AS_CFI_SIGNAL_FRAME
+> -#define CFI_SIGNAL_FRAME       .cfi_signal_frame
+> -#else
+> -#define CFI_SIGNAL_FRAME
+> -#endif
+> -
+>  #if defined(CONFIG_AS_CFI_SECTIONS)
+>  #ifndef BUILD_VDSO
+>         /*
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200324084821.29944-5-masahiroy%40kernel.org.
 
-Of course, one alternative is to just say "instead of using NOP, use
-'xorl %eax,%eax'", and then we'd have the rule that a NULL conditional
-function returns zero (or NULL).
 
-I _think_ a "xorl %eax,%eax ; retq" is just three bytes and would fit
-in the tailcall slot too.
 
-                Linus
+-- 
+Thanks,
+~Nick Desaulniers
