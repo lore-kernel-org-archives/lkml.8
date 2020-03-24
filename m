@@ -2,128 +2,100 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D64AC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB47C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076AF2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570172076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PdrJdf/5"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="F5i6vnOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727744AbgCXQnl (ORCPT
+        id S1727907AbgCXQoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:43:41 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42544 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbgCXQnk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:43:40 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 22so5961213pfa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0ckbAFa8zCaMccZFo+Gs27f6PIvd3NdOwxh/HtsnAf4=;
-        b=PdrJdf/5ys6G3EkHhtXeLqfbI+F9R/JtXgfxhdtfi7xtfWtwBLpicCmJD0uQPiayuy
-         KILQctVB/KRsDuF/iAO4i2lDkvrLBE361kCvNgGZzuoGNOwlS3Hos+htfICMB8QgcuM0
-         8Zf6o6oIEWs+jLE656I8sssd65dAtKsBVPGpL5EZQtxQ7wncHCIzUUHcZZ76h20mAVy7
-         Ybwt4nRtTUceiL5jelbX+fketk0uQvSKIWbV8D6CBucW9drzAfu9FgDMMUxIK+AV/clX
-         6ABIVm85WrKDWOdv5G8YreS7FpcX0IDYwIAGpPYgH/Ii+2xwB5d2LHV1KX3APugdazIt
-         f3Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0ckbAFa8zCaMccZFo+Gs27f6PIvd3NdOwxh/HtsnAf4=;
-        b=cC/8WnCQIIX2bRg7S4b5KUWTAlKJIJrGD+/3NjEpCIrSftmlgqH/KvqCfbQ7Kch6KT
-         5qhDECAEGaeu+KDseC34DQIKVXT6KYVrGnhyDhYsxeN9XLFgLM2VBp71VomWP6yQcUXa
-         cWvfMeOM2tOSmgE0DBRJ4V298Gkpbq5HtoSx5IzebgXdh+lhElBaognX3fk9l1sUoAhs
-         bHMbDJjCFs1VT0D/yAsk1lk9aoJx4OSG/2KPEFos9XNMmgokW0vf7ANIkX3GnZ12BT0r
-         7YKlA4itjsU9uecBoc+jfqmwVUpKqoRlIwzAsR9YLRR1GJw6lZ9Vq2cIK2NblQgyRg2y
-         7d2g==
-X-Gm-Message-State: ANhLgQ2YkCHnNcZVPSJKP5Uo1vZGlb5/Zh0wXgebommmCf2nzvneBL/x
-        Ts+9W4IIdvdiemva0L5uEISi4MAELVamvzZSxQ3w7Q==
-X-Google-Smtp-Source: ADFU+vsYLJpgvdYUU6R2yZeo2upmrFukYJCYvpMGWGdaxSJf6OvZ3OIxFLbqDmEhy/067UwZ716Po3aVR6VwoqLuFIA=
-X-Received: by 2002:a63:a34d:: with SMTP id v13mr7028614pgn.10.1585068217691;
- Tue, 24 Mar 2020 09:43:37 -0700 (PDT)
+        Tue, 24 Mar 2020 12:44:06 -0400
+Received: from mout.gmx.net ([212.227.15.18]:48651 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727376AbgCXQoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:44:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1585068241;
+        bh=uDoUJhkJb4hl+iIZ1m2XaAjLxBbKQqeDdd8yxFyi3Lw=;
+        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:In-Reply-To;
+        b=F5i6vnOXk4KGVO9jJrZMf2E0ahKx9oCRr5pwlnRhp/89kyS+k7FuDf4VkOKT2GB26
+         WiQL/GfTIidtZ8QdvhV+ZxrDh4AuBOeZEtpsIWm/f9YHIq4OM1bru7ywhEI87t9uVO
+         iA/gVa6UdXurJn8FG+Ky/qP70TAnoU3HpwrDcG1Q=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from ubuntu ([83.52.229.196]) by mail.gmx.com (mrgmx004
+ [212.227.17.184]) with ESMTPSA (Nemesis) id 1MxDkw-1jRxkW3PdQ-00xdpA; Tue, 24
+ Mar 2020 17:44:00 +0100
+Date:   Tue, 24 Mar 2020 17:43:45 +0100
+From:   Oscar Carter <oscar.carter@gmx.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Oscar Carter <oscar.carter@gmx.com>,
+        Forest Bond <forest@alittletooquiet.net>,
+        devel@driverdev.osuosl.org, Malcolm Priestley <tvboxspy@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: vt6656: Use DIV_ROUND_UP macro instead of
+ specific code
+Message-ID: <20200324164345.GA3288@ubuntu>
+References: <20200322112342.9040-1-oscar.carter@gmx.com>
+ <20200323104200.GA501377@kroah.com>
 MIME-Version: 1.0
-References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-3-masahiroy@kernel.org>
-In-Reply-To: <20200324084821.29944-3-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 24 Mar 2020 09:43:26 -0700
-Message-ID: <CAKwvOdk6aUuAH_o+P8b+WneQ96yhTPGAXqgzH+FJ5DHB9AqYYA@mail.gmail.com>
-Subject: Re: [PATCH 02/16] x86: remove unneeded defined(__ASSEMBLY__) check
- from asm/dwarf2.h
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323104200.GA501377@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Provags-ID: V03:K1:52Pz4aGzyfh4T83UpBCKGpJwia/di0Cgm2N8bT4Qi2nskYuj65m
+ ROFRFsPh+NT/E9sm98QNva4ILouiGnGF1XouJRF3SPSKaLBsOxs/OBOksTsYXZdidEjVWgn
+ nahL8N+ShzLXoB0IMC/K7cfUiqBDAD1A4GEzulcSthLUhb/+nGnOoQ6RkvRETfrPos+bv6i
+ 46tV4FCSrJ+xcRe+4ylRQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M3qT6mZ0I4o=:Yz/q0MgsTiX+deJiv5SVgP
+ OcOtsYY3cZWP+gjL8c7Q3tU9NHtbMjFkyV/5l4NbCvWjn0LlJVyD9QSlOtimNaHvIuw4Usx2+
+ i3EkCJ167XETU8eL8voOkTuSGeK3V1nd5NXrlUBfZZ3cHI2Af4wPtjMbOp4Gjw7w3yZvZ/EZF
+ ykAJuPI8Xx3yqJUfZPRM0i+QqSIRFOy3GG+8wb7geHsK0q3HDv6N96qIG+rXBzznBZPaS9J0m
+ qjXPvIYySJML3w18sME7nzerBq3oXVWYhjaF1RFcBCc8FlpXd8/h2KCDzkKaTOTmo+yeC2LeW
+ caNleMzZU5TLe4pS9CxFAtBk2tLPf+9NVEuFeE5s8NkAJkLese20JVNekNv74woIgxoQ+QPtx
+ w/3B+1bWW3vI9JE0nbP8E1pjeHzLLWgZhR49Jzpn71l8KX2wfydGen8TBcUz6MGuIfrNelIMz
+ 608Bd+t7tUyl1MM+K+WAH6RfKZC5W/toAzwR6xU6YUL5+aMnuSdW221OB/MhNkPU5N3R9fdwE
+ 35rZkUz8dBfnGjxs5w+DMxBr/E5FISCUQcFbYWZYSmQte49bVoE8C5CgV84acj0EQZy5bHeQk
+ prdjEDSK+les30X9Y6uMFZxoOQPmCsx0Ol16eF3Cr3gaMeEd6y2OnviLl/K4jli9IUokc6uWj
+ GhqdNWZMwxCm5oWr9/U9IeOaXdBB+1gCORftxNRBk/2jh9E/UVL3ZYnyCv9oG9vybNLtweIat
+ YRC7Qje9/61ZerQw9/Qz9k3FpsoclGcKhduyG0HG5blcZgOUJrP8lFxdUQCQqFAFOw1ymCj55
+ fNnqOIZhdwp7XZjjIOB7EqqnGe9KumNHkj22Mvys8I6i2ON0VRzGhGz8QyrMxHaaOU4IhxeMC
+ fqS7sbRrPWJSqge71LhL7phgxZ1ODMOociWlF4l86fmXscCFEyc85+/vckKX4CV8vFVx564Vc
+ pZcxPOMFtsIUl3Ixgze2PcbJtgzUdJEwAiQ8t2Y/tcgg9vrSayqBVrzz8CH0z3sZNSiKoUjiA
+ hRCGq/RVX12mtnOgHhgpKpE8TGqpRasf7s7yc1caj8opgS/8RptrNLgHSTyHQYgKrJB1LRBTg
+ 50Ow/X2WIpWlt9wgRnSDMq9gapTDOQU6OoBP88mAYAe2av0X+jwxTcq1SHtXPvy3/s9joVe4L
+ ACqR39go4zfUOh7PGs6rYz6JlvVYLjJWRVNtOUHtviK1sHNAG91wquHMGWzzVpxyNooNxyIvt
+ Vr9ybXD4slatf/k+e
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Mon, Mar 23, 2020 at 11:42:00AM +0100, Greg Kroah-Hartman wrote:
+> On Sun, Mar 22, 2020 at 12:23:42PM +0100, Oscar Carter wrote:
+> > Use DIV_ROUND_UP macro instead of specific code with the same purpose.
+> > Also, remove the unused variables.
+> >
+> > Signed-off-by: Oscar Carter <oscar.carter@gmx.com>
+> > ---
+> >  drivers/staging/vt6656/baseband.c | 21 ++++-----------------
+> >  1 file changed, 4 insertions(+), 17 deletions(-)
 >
-> This header file has the following check at the top:
+> Please rebase this against my staging-next branch of my staging.git tree
+> and resend it as it does not apply to it at the moment at all.
 >
->   #ifndef __ASSEMBLY__
->   #warning "asm/dwarf2.h should be only included in pure assembly files"
->   #endif
->
-> So, we expect defined(__ASSEMBLY__) is always true.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Ok, I rebase against your staging-next branch and I resend the patch as a =
+new
+version.
 
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-> ---
+> thanks,
 >
->  arch/x86/include/asm/dwarf2.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
-> index ae391f609840..5a0502212bc5 100644
-> --- a/arch/x86/include/asm/dwarf2.h
-> +++ b/arch/x86/include/asm/dwarf2.h
-> @@ -36,7 +36,7 @@
->  #define CFI_SIGNAL_FRAME
->  #endif
->
-> -#if defined(CONFIG_AS_CFI_SECTIONS) && defined(__ASSEMBLY__)
-> +#if defined(CONFIG_AS_CFI_SECTIONS)
->  #ifndef BUILD_VDSO
->         /*
->          * Emit CFI data in .debug_frame sections, not .eh_frame sections.
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200324084821.29944-3-masahiroy%40kernel.org.
-
-
-
--- 
-Thanks,
-~Nick Desaulniers
+> greg k-h
