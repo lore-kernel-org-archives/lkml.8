@@ -2,229 +2,119 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F22CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3D9C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD3120409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C4F2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eFbp7iaJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VT4HeMXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbgCXWjS (ORCPT
+        id S1728415AbgCXWpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:39:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:33187 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728241AbgCXWjR (ORCPT
+        Tue, 24 Mar 2020 18:45:38 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:52317 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbgCXWph (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:39:17 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a25so692289wrd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:39:14 -0700 (PDT)
+        Tue, 24 Mar 2020 18:45:37 -0400
+Received: by mail-pj1-f67.google.com with SMTP id ng8so184144pjb.2;
+        Tue, 24 Mar 2020 15:45:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=CsJTvGpVPmav8scr1f+8vGqJnRDlYhqVnGsY3dWNugM=;
-        b=eFbp7iaJn1hT6hxrzF9p2+uV+G3iYIs+RbR8w+oGK0SWl0M4CdoFe9D5CI8MNBfLsT
-         FhwxLc9CyARUimd4HUlZZOKRqVlcuOlFSP9Za+9D9NKccTdhiyawFfOKdUwa0n4aVQut
-         bdVmJFSTEIUwO6Of5kw0HNRVyFy7EgOsn8Cy8=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PKMeyRQ3YhSpQkcTyPShJRWuaaPt570DhD0K201i24Y=;
+        b=VT4HeMXe1pYBCyO/8Jj2xQWubBmwbFGeXo5JKCqPHd5xsx2F+XgRd8MnWhxf2IswLL
+         PDRWkHUnGh7q4MRz3XYE4vUHSYo8iBArgYFXR3Uhz68F7vTTmSlGRa5lyU9yFT0qQrGa
+         5j5OtxLnMQ6Y/0/YIFr2Wqoq+nKccPSP9eC7XBdQTvbY6euDPwNw7lReUsh1I88mmPco
+         o5OO9pyyJDOODvk7BaXjfRs6QpXgz3DRYdse2sNJgLHvY//oHir1Nbtk0GLIuF5Zbz/0
+         1+kLIe+cEP7aUdUQSZaq9U2bGVY+RFC7LHAZv9eQmDosh3neklP1+FbqMhHM63nmNZq9
+         GcOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=CsJTvGpVPmav8scr1f+8vGqJnRDlYhqVnGsY3dWNugM=;
-        b=qCv8nJUt2TJKvTFLYCsC8oW3ECXLdFcR6VIPQCpCaA8hwcllELW4IOKPeJUAby119I
-         Jj+TZFM9dc/tfKOR9E8a7+WVZXqUiU26RIZ0/1vJHu5a2A3q/Pfp/9RTzw77lXSN801o
-         uZ34XGmPJvhHLl0cFHHjYAF6e5YQ+U561GQNdJScbRMFR95HIZGZAILTNh6UMt+ex8Rm
-         x0RsA5dFxkwVN/07f/g9zc3qiUKVa0fK6gLtz+kRHbxWhPuFPCZI8kAoD9lZykHo1+ts
-         L2yeY2GCHeGogXzbQA1zETkG5B/guLKRNf1k5eFy3Ow9e4txPUDTXxGNXCpHJZNTEBVR
-         tPvw==
-X-Gm-Message-State: ANhLgQ2vqeWoqQc6Ql08FkXmKTaPTsDpSzQZQQMFFWBRwDQ8ndIItGiz
-        B+siXHP4MSLQgcOH3D4Bj28GCw==
-X-Google-Smtp-Source: ADFU+vvmq9phB+TJsSu5PlZjdZhx430KLaniYgGVncHAKBv0pYcKZqkSfT8jbwXzYfaMKem6odSqdQ==
-X-Received: by 2002:adf:9322:: with SMTP id 31mr39623063wro.297.1585089553456;
-        Tue, 24 Mar 2020 15:39:13 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id c21sm5509329wmb.13.2020.03.24.15.39.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PKMeyRQ3YhSpQkcTyPShJRWuaaPt570DhD0K201i24Y=;
+        b=EIL6SYTBlBcW3VtwDjKOFv+kIa5PERQqXdPeX9YIsbtIoPsTk42dSKh92Bl99OqyRw
+         gfP3N0A2KRyVPNf6HJzZLtEkIwE72GhW0H9H39B6e9OvdwvQHK4XrYM9NkpXYmlcqXCc
+         ZQi0V4qkXUyh0dLQYfiePHUKqtXOoezT/u7/gHLqy4NtDyx69fCpAJp59PZecHp10s2d
+         tbjSdpY4fjqIvfu8nSKXnUia7VwQNnnMbYr1ovwCJv4L62apSKYojuyTu5arZWgPCyrZ
+         Y7xIug7LH8gFzvfGDPoR1DIVvhbO7968GFO5BuHA3qzgtU+9ofzA0kWlDemQFh59O4Tt
+         gV9g==
+X-Gm-Message-State: ANhLgQ0LVKtf0F0Vvnkj7i+MV9XtInHw1yMA051I6lgEUEUHnFhRERf/
+        ltcNnXdagL+SVpYeRKBBRxhaKSom
+X-Google-Smtp-Source: ADFU+vunt3Lf+DyFnjTw2mxQvuShMhU0fET7IsfLN9BexNWtrvdwbkM6MrM9WUkCTrOT9kDJpeHZfw==
+X-Received: by 2002:a17:90a:1f07:: with SMTP id u7mr247434pja.24.1585089935907;
+        Tue, 24 Mar 2020 15:45:35 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id u18sm17162622pfl.40.2020.03.24.15.45.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 15:39:12 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 24 Mar 2020 23:39:10 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200324223910.GA5448@chromium.org>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-4-kpsingh@chromium.org>
- <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
- <20200324103910.GA7135@chromium.org>
- <20200324161211.GA11227@chromium.org>
- <CAEf4BzZZLBf3xRsV4khGCFdTxDFV61KbFfV1mHwM5yiCr4P37w@mail.gmail.com>
+        Tue, 24 Mar 2020 15:45:35 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 15:45:33 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Andrew Duggan <aduggan@synaptics.com>
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Paul Hollinsky <phollinsky@holtechnik.com>,
+        Christopher Heiny <Cheiny@synaptics.com>,
+        Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de,
+        patchwork-lst@pengutronix.de
+Subject: Re: [PATCH] Input: synaptics-rmi4 - Do not set reduced reporting
+ mode thresholds are not set by the driver
+Message-ID: <20200324224533.GF75430@dtor-ws>
+References: <20200312005549.29922-1-aduggan@synaptics.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZZLBf3xRsV4khGCFdTxDFV61KbFfV1mHwM5yiCr4P37w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200312005549.29922-1-aduggan@synaptics.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-Mär 14:26, Andrii Nakryiko wrote:
-> On Tue, Mar 24, 2020 at 9:12 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > On 24-Mär 11:39, KP Singh wrote:
-> > > On 23-Mär 12:59, Andrii Nakryiko wrote:
-> > > > On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
-> > > > >
-> > > > > From: KP Singh <kpsingh@google.com>
-> > > > >
-> > > > > When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>, are
-> > > > > generated for each LSM hook. These nops are initialized as LSM hooks in
-> > > > > a subsequent patch.
-> > > > >
-> > > > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > > > > Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> > > > > Reviewed-by: Florent Revest <revest@google.com>
-> > > > > ---
-> > > > >  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
-> > > > >  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
-> > > > >  2 files changed, 40 insertions(+)
-> > > > >  create mode 100644 include/linux/bpf_lsm.h
-> > > > >
-> > > > > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> > > > > new file mode 100644
-> > > > > index 000000000000..c6423a140220
-> > > > > --- /dev/null
-> > > > > +++ b/include/linux/bpf_lsm.h
-> > > > > @@ -0,0 +1,21 @@
-> > > > > +/* SPDX-License-Identifier: GPL-2.0 */
-> > > > > +
-> > > > > +/*
-> > > > > + * Copyright (C) 2020 Google LLC.
-> > > > > + */
-> > > > > +
-> > > > > +#ifndef _LINUX_BPF_LSM_H
-> > > > > +#define _LINUX_BPF_LSM_H
-> > > > > +
-> > > > > +#include <linux/bpf.h>
-> > > > > +#include <linux/lsm_hooks.h>
-> > > > > +
-> > > > > +#ifdef CONFIG_BPF_LSM
-> > > > > +
-> > > > > +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
-> > > > > +#include <linux/lsm_hook_names.h>
-> > > > > +#undef LSM_HOOK
-> > > > > +
-> > > > > +#endif /* CONFIG_BPF_LSM */
-> > > > > +
-> > > > > +#endif /* _LINUX_BPF_LSM_H */
-> > > > > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> > > > > index 82875039ca90..530d137f7a84 100644
-> > > > > --- a/kernel/bpf/bpf_lsm.c
-> > > > > +++ b/kernel/bpf/bpf_lsm.c
-> > > > > @@ -7,6 +7,25 @@
-> > > > >  #include <linux/filter.h>
-> > > > >  #include <linux/bpf.h>
-> > > > >  #include <linux/btf.h>
-> > > > > +#include <linux/lsm_hooks.h>
-> > > > > +#include <linux/bpf_lsm.h>
-> > > > > +
-> > > > > +/* For every LSM hook  that allows attachment of BPF programs, declare a NOP
-> > > > > + * function where a BPF program can be attached as an fexit trampoline.
-> > > > > + */
-> > > > > +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
-> > > > > +
-> > > > > +#define LSM_HOOK_int(NAME, ...)                        \
-> > > > > +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
-> > > > > +{                                              \
-> > > > > +       return 0;                               \
-> > > > > +}
-> > > > > +
-> > > > > +#define LSM_HOOK_void(NAME, ...) \
-> > > > > +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
-> > > > > +
-> > > >
-> > > > Could unify with:
-> > > >
-> > > > #define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)
-> > > > {
-> > > >     return (RET)0;
-> > > > }
-> > > >
-> > > > then you don't need LSM_HOOK_int and LSM_HOOK_void.
-> > >
-> > > Nice.
-> > >
-> > > But, given that we are adding default values and that
-> > > they are only needed for int hooks, we will need to keep the macros
-> > > separate for int and void. Or, Am I missing a trick here?
-> > >
-> > > - KP
-> >
-> > Actually, was able to get it work. not setting a default for void
-> > hooks makes the macros messier. So i just set it void. For example:
-> >
-> >   LSM_HOOK(void, void, bprm_committing_creds, struct linux_binprm *bprm)
+On Wed, Mar 11, 2020 at 05:55:49PM -0700, Andrew Duggan wrote:
+> The previous patch "c5ccf2ad3d33 (Input: synaptics-rmi4 - switch to
+> reduced reporting mode)" enabled reduced reporting mode unintentionally
+> on some devices, if the firmware was configured with default Delta X/Y
+> threshold values. The result unintentionally degrade the performance of
+> some touchpads.
 > 
-> surprised this works, was going to propose to specify `(void)0` as
-> default value :)
-
-Yeah, you are right that does not work. so I added:
-
-  LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
-
-and as you suggested defined LSM_RET_VOID in lsm_hooks.h:
-
-  /* LSM_RET_VOID is used as the default value in LSM_HOOK definitions for void
-   * for void LSM hooks (in include/linux/lsm_hook_defs.h).
-   */
-  #define LSM_RET_VOID ((void) 0)
-
-I also noticed a few other hooks that were passing an initial return
-value to call_int_hook which were missed in this revision. Have fixed
-these for the next one.
-
-- KP
-
+> This patch checks to see that the driver is modifying the delta X/Y
+> thresholds before modifying the reporting mode.
 > 
-> >
-> > This also allows me to use the cleanup you suggested and not having
-> > to split every usage into int and void.
-> >
+> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+
+Applied, thank you.
+
+> ---
+>  drivers/input/rmi4/rmi_f11.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Nice, one of the reasons for proposing this.
+> diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
+> index 6adea8a3e8fb..ffa39ab153f2 100644
+> --- a/drivers/input/rmi4/rmi_f11.c
+> +++ b/drivers/input/rmi4/rmi_f11.c
+> @@ -1203,8 +1203,8 @@ static int rmi_f11_initialize(struct rmi_function *fn)
+>  	 * If distance threshold values are set, switch to reduced reporting
+>  	 * mode so they actually get used by the controller.
+>  	 */
+> -	if (ctrl->ctrl0_11[RMI_F11_DELTA_X_THRESHOLD] ||
+> -	    ctrl->ctrl0_11[RMI_F11_DELTA_Y_THRESHOLD]) {
+> +	if (sensor->axis_align.delta_x_threshold ||
+> +	    sensor->axis_align.delta_y_threshold) {
+>  		ctrl->ctrl0_11[0] &= ~RMI_F11_REPORT_MODE_MASK;
+>  		ctrl->ctrl0_11[0] |= RMI_F11_REPORT_MODE_REDUCED;
+>  	}
+> -- 
+> 2.20.1
 > 
-> > - KP
-> >
-> > >
-> > > >
-> > > > > +#include <linux/lsm_hook_names.h>
-> > > > > +#undef LSM_HOOK
-> > > > >
-> > > > >  const struct bpf_prog_ops lsm_prog_ops = {
-> > > > >  };
-> > > > > --
-> > > > > 2.20.1
-> > > > >
+
+-- 
+Dmitry
