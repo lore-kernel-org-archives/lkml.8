@@ -2,122 +2,259 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F298C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4503BC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B73E2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 162A72076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GkVZqddg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCXSfU convert rfc822-to-8bit (ORCPT
+        id S1727696AbgCXShX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:35:20 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:42502 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727398AbgCXSfU (ORCPT
+        Tue, 24 Mar 2020 14:37:23 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33918 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbgCXShW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:35:20 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id C8009CECBE;
-        Tue, 24 Mar 2020 19:44:49 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
-Date:   Tue, 24 Mar 2020 19:35:17 +0100
-Cc:     Joe Perches <joe@perches.com>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <643C6020-2FC5-4EEA-8F64-5D4B7F9258A4@holtmann.org>
-References: <20200323072824.254495-1-mcchou@chromium.org>
- <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
- <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
- <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
- <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
- <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
- <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
-To:     Alain Michaud <alainmichaud@google.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Tue, 24 Mar 2020 14:37:22 -0400
+Received: by mail-pg1-f193.google.com with SMTP id t3so9483902pgn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:37:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=z0ZV8O2yjXUBikcZgFDoOVLLQK/RFJNbeFQrUpiBYEg=;
+        b=GkVZqddg08fA8ty57g2tv+L/qo3InSeCKQbbhnqc+oVskw09DOuUPzYSy3m/GGkS4H
+         dZ2Z3mLBnY/ZCS/9VDX881ubt36gDZUqh541xn+TFq7UIZ9Avz3IJ2Pwen11uXAT+O/Y
+         0sbW23Oy5GUxlokCuCv4rWL0XyfjLV/RtiSlU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=z0ZV8O2yjXUBikcZgFDoOVLLQK/RFJNbeFQrUpiBYEg=;
+        b=Iov+ELOvFD/fpXsEPBvQx9HTowGO5/OSMud4xFu5zsrC+boOotaYDBL/NJ2tEcRszE
+         Fry9Jo0hDNUn4XxEemCSTAfxwk33W2xsrlShFL0EKffwqbmUZoodkTKeZL/SBlKgi20O
+         A53r7YmcEed2lFh7xz20cmqxhMpFdCkLi3BoMXi37tv64Mr5kBMfYUPxVQv4gIh9ixkT
+         IEfuG1LfryZ6LKXH5J3Zjf7Gdqe50LdvtiLrPQ00KjdoFvKgyo6mN6YhTGNvqCMer5JP
+         T5Csm510Rl2G/MxcLAz9U+m+TfopXyi0TH+XdSTI2TENC+4BokxzPxY/T2jXlEuvgCQH
+         xvyQ==
+X-Gm-Message-State: ANhLgQ1kVPA2diNOPszUKio0YbBEtuLKmctUzx/pvJsBuEqxarDWclwY
+        aFF3gB3tm+vTd82oaoxfqP0R4g==
+X-Google-Smtp-Source: ADFU+vsP7IfW4325B+s4US6nakyYrGncILXaVDhpAURg+UdVo/u14T1pMPr0aScvdc/d4Q8CJjLniA==
+X-Received: by 2002:a63:48e:: with SMTP id 136mr28192648pge.169.1585075041071;
+        Tue, 24 Mar 2020 11:37:21 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a13sm14840376pgi.77.2020.03.24.11.37.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 11:37:20 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 11:37:19 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        mcgrof@kernel.org, yzaikin@google.com, tglx@linutronix.de,
+        akpm@linux-foundation.org, linux-api@vger.kernel.org,
+        rdunlap@infradead.org, willy@infradead.org, kernel@gpiccoli.net
+Subject: Re: [PATCH V2] panic: Add sysctl/cmdline to dump all CPUs backtraces
+ on oops event
+Message-ID: <202003241137.A90B14A@keescook>
+References: <20200323223035.29891-1-gpiccoli@canonical.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200323223035.29891-1-gpiccoli@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alain,
-
->>>>>> This adds a bit mask of driver_info for Microsoft vendor extension and
->>>>>> indicates the support for Intel 9460/9560 and 9160/9260. See
->>>>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
->>>>>> microsoft-defined-bluetooth-hci-commands-and-events for more information
->>>>>> about the extension. This was verified with Intel ThunderPeak BT controller
->>>>>> where msft_vnd_ext_opcode is 0xFC1E.
->>>> []
->>>>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
->>>> []
->>>>>> @@ -315,6 +315,10 @@ struct hci_dev {
->>>>>>        __u8            ssp_debug_mode;
->>>>>>        __u8            hw_error_code;
->>>>>>        __u32           clock;
->>>>>> +       __u16           msft_vnd_ext_opcode;
->>>>>> +       __u64           msft_vnd_ext_features;
->>>>>> +       __u8            msft_vnd_ext_evt_prefix_len;
->>>>>> +       void            *msft_vnd_ext_evt_prefix;
->>>> 
->>>> msft is just another vendor.
->>>> 
->>>> If there are to be vendor extensions, this should
->>>> likely use a blank line above and below and not
->>>> be prefixed with msft_
->>> 
->>> there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
->> 
->> So struct hci_dev should become a clutter
->> of random vendor extensions?
->> 
->> Perhaps there should instead be something like
->> an array of char at the end of the struct and
->> various vendor specific extensions could be
->> overlaid on that array or just add a void *
->> to whatever info that vendors require.
-> I don't particularly like trailing buffers, but I agree we could
-> possibly organize this a little better by with a struct.  something
-> like:
+On Mon, Mar 23, 2020 at 07:30:35PM -0300, Guilherme G. Piccoli wrote:
+> Usually when kernel reach an oops condition, it's a point of no return;
+> in case not enough debug information is available in the kernel splat,
+> one of the last resorts would be to collect a kernel crash dump and
+> analyze it. The problem with this approach is that in order to collect
+> the dump, a panic is required (to kexec-load the crash kernel). When
+> in an environment of multiple virtual machines, users may prefer to
+> try living with the oops, at least until being able to properly
+> shutdown their VMs / finish their important tasks.
 > 
-> struct msft_vnd_ext {
->    bool              supported; // <-- Clearly calls out if the
-> extension is supported.
->    __u16           msft_vnd_ext_opcode; // <-- Note that this also
-> needs to be provided by the driver.  I don't recommend we have this
-> read from the hardware since we just cause an extra redirection that
-> isn't necessary.  Ideally, this should come from the usb_table const.
-
-Actually supported == false is the same as opcode == 0x0000. And supported == true is opcode != 0x0000.
-
->    __u64           msft_vnd_ext_features;
->    __u8             msft_vnd_ext_evt_prefix_len;
->    void             *msft_vnd_ext_evt_prefix;
-> };
+> This patch implements a way to collect a bit more debug details when an
+> oops event is reached, by printing all the CPUs backtraces through the
+> usage of NMIs (on architectures that support that). The sysctl/kernel
+> parameter added (and documented) here was called "oops_all_cpu_backtrace"
+> and when set will (as the name suggests) dump all CPUs backtraces.
 > 
-> And then simply add the struct msft_vnd_ext (and any others) to hci_dev.
+> Far from ideal, this may be the last option though for users that for
+> some reason cannot panic on oops. Most of times oopses are clear enough
+> to indicate the kernel portion that must be investigated, but in virtual
+> environments it's possible to observe hypervisor/KVM issues that could
+> lead to oopses shown in other guests CPUs (like virtual APIC crashes).
+> This patch hence aims to help debug such complex issues without
+> resorting to kdump.
+> 
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
 
-Anyway, Lets keep these for now as hci_dev->msft_vnd_ext_*. We can fix this up later without any impact.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Regards
+-Kees
 
-Marcel
+> ---
+> 
+> 
+> V2: Implemented grammar suggestions from Randy, Andrew and
+> Matthew. Thanks in advance for the reviews!
+> Cheers,
+> 
+> Guilherme
+> 
+> 
+>  .../admin-guide/kernel-parameters.txt         |  8 +++++++
+>  Documentation/admin-guide/sysctl/kernel.rst   | 17 +++++++++++++++
+>  include/linux/kernel.h                        |  6 ++++++
+>  kernel/panic.c                                | 21 +++++++++++++++++++
+>  kernel/sysctl.c                               | 11 ++++++++++
+>  5 files changed, 63 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7a14caac6c94..7db622028c00 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3333,6 +3333,14 @@
+>  			This will also cause panics on machine check exceptions.
+>  			Useful together with panic=30 to trigger a reboot.
+>  
+> +	oops_all_cpu_backtrace=
+> +			[KNL] Should kernel generate backtraces on all cpus
+> +			when oops occurs - this should be a last measure resort
+> +			in case	a kdump cannot be collected, for example.
+> +			Defaults to 0 and can be controlled by the sysctl
+> +			kernel.oops_all_cpu_backtrace.
+> +			Format: <integer>
+> +
+>  	page_alloc.shuffle=
+>  			[KNL] Boolean flag to control whether the page allocator
+>  			should randomize its free lists. The randomization may
+> diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> index 8b4ff69d2348..8660001d3a3e 100644
+> --- a/Documentation/admin-guide/sysctl/kernel.rst
+> +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> @@ -57,6 +57,7 @@ show up in /proc/sys/kernel:
+>  - msgmnb
+>  - msgmni
+>  - nmi_watchdog
+> +- oops_all_cpu_backtrace
+>  - osrelease
+>  - ostype
+>  - overflowgid
+> @@ -572,6 +573,22 @@ numa_balancing_scan_size_mb is how many megabytes worth of pages are
+>  scanned for a given scan.
+>  
+>  
+> +oops_all_cpu_backtrace:
+> +================
+> +
+> +If this option is set, the kernel will send an NMI to all CPUs to dump
+> +their backtraces when an oops event occurs. It should be used as a last
+> +resort in case a panic cannot be triggered (to protect VMs running, for
+> +example) or kdump can't be collected. This file shows up if CONFIG_SMP
+> +is enabled.
+> +
+> +0: Won't show all CPUs backtraces when an oops is detected.
+> +This is the default behavior.
+> +
+> +1: Will non-maskably interrupt all CPUs and dump their backtraces when
+> +an oops event is detected.
+> +
+> +
+>  osrelease, ostype & version:
+>  ============================
+>  
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 0d9db2a14f44..6cd00257b572 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -513,6 +513,12 @@ static inline u32 int_sqrt64(u64 x)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_SMP
+> +extern unsigned int sysctl_oops_all_cpu_backtrace;
+> +#else
+> +#define sysctl_oops_all_cpu_backtrace 0
+> +#endif /* CONFIG_SMP */
+> +
+>  extern void bust_spinlocks(int yes);
+>  extern int oops_in_progress;		/* If set, an oops, panic(), BUG() or die() is in progress */
+>  extern int panic_timeout;
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index b69ee9e76cb2..73c340418575 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -36,6 +36,24 @@
+>  #define PANIC_TIMER_STEP 100
+>  #define PANIC_BLINK_SPD 18
+>  
+> +#ifdef CONFIG_SMP
+> +/*
+> + * Should we dump all CPUs backtraces in an oops event?
+> + * Defaults to 0, can be changed either via cmdline or sysctl.
+> + */
+> +unsigned int __read_mostly sysctl_oops_all_cpu_backtrace;
+> +
+> +static int __init oops_backtrace_setup(char *str)
+> +{
+> +	int rc = kstrtouint(str, 0, &sysctl_oops_all_cpu_backtrace);
+> +
+> +	if (rc)
+> +		return rc;
+> +	return 1;
+> +}
+> +__setup("oops_all_cpu_backtrace=", oops_backtrace_setup);
+> +#endif /* CONFIG_SMP */
+> +
+>  int panic_on_oops = CONFIG_PANIC_ON_OOPS_VALUE;
+>  static unsigned long tainted_mask =
+>  	IS_ENABLED(CONFIG_GCC_PLUGIN_RANDSTRUCT) ? (1 << TAINT_RANDSTRUCT) : 0;
+> @@ -515,6 +533,9 @@ void oops_enter(void)
+>  	/* can't trust the integrity of the kernel anymore: */
+>  	debug_locks_off();
+>  	do_oops_enter_exit();
+> +
+> +	if (sysctl_oops_all_cpu_backtrace)
+> +		trigger_all_cpu_backtrace();
+>  }
+>  
+>  /*
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 238f268de486..1ac31d9d5b7e 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -813,6 +813,17 @@ static struct ctl_table kern_table[] = {
+>  		.proc_handler	= proc_dointvec,
+>  	},
+>  #endif
+> +#ifdef CONFIG_SMP
+> +	{
+> +		.procname	= "oops_all_cpu_backtrace",
+> +		.data		= &sysctl_oops_all_cpu_backtrace,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ZERO,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +#endif /* CONFIG_SMP */
+>  	{
+>  		.procname	= "pid_max",
+>  		.data		= &pid_max,
+> -- 
+> 2.25.1
+> 
 
+-- 
+Kees Cook
