@@ -2,99 +2,224 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4F9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9F7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B25A42051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="WZFLJia9"
+	by mail.kernel.org (Postfix) with ESMTP id 03BB3206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727257AbgCXCbm (ORCPT
+        id S1727201AbgCXCiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:31:42 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38925 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgCXCbm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:31:42 -0400
-Received: by mail-pj1-f65.google.com with SMTP id ck23so738066pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:31:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=ayvl5ZRVP8urDgR+Ya++oM4Sz7bhwsqPOecJQB4bPLY=;
-        b=WZFLJia9DbEO7xA7AqQeVnc+3cg2qtxpTjJQrdRzYrOUA0wTMQPSxe1LjpF+vmiQf7
-         BA/jR/fxjKXdbrpsp2HkPbmACNodSsq7cwNNlemEW323pUzWlbt0tDsXUNyBYfbTKGzv
-         8ttqstJV5yGLSpd4vZW6FHSKoxFxDdbV1jwLXqZI+YjH0rXg4yzOk3cryorGfHsezcDR
-         ALpzzGZAZ7oE1lIZ6b3E0/fAfnV+9ickiR03+uep97ndFmqK1hVaJ31wGJ7RQIot959O
-         arH8UoY+1AEdsl6i3pNv7aTqz49O7Sg3SBAOO3gFaE5f2RIFd+aIh2Z958o8H1gBUo1m
-         09jg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ayvl5ZRVP8urDgR+Ya++oM4Sz7bhwsqPOecJQB4bPLY=;
-        b=hy1/0DzxdP+e+aIXJMUrM/WFenuVWgDPashFVJWDxXN+P1mPw+RwNbkwNGYA/TEPAs
-         JBhcZx7+BvpxXN922nxMkzRR4Yx4m7GxG7cgR1o1wsPHdm3mEwWvMZqT+Q7KlnV3X1JK
-         j0iRiiPAduWafavw+zYJn99RHpU2r7Q+ClxItUZyVkB9a024pWszShUtrl6mrqhLMsi6
-         8QLqki2Rjpwfc3Rw9ohUWxGreoJ8TfRzIxJPqirkn+0amRlCpT2YNOBq6q63mRPPH0ji
-         dWuozc+eQA1uZaKWv86zDV70khlKtLQKH0aJsA4AEiOqTAwXrNgtZAc+A8FSsYyBycQP
-         0M8g==
-X-Gm-Message-State: ANhLgQ0F6EuBO5xXCXJvfGuJby1UsLdKzzZ1DLYrc1hrEyc/z+1WWtP3
-        FcgyaRthJv1flfRzomN077yykoCJF4OVQQ==
-X-Google-Smtp-Source: ADFU+vsmG/+gEDl7oOYTZcJEuONdHbVNCJN+lDjCboracD8ocAtjTreBwLtreFvTm+Eru1FAbVpkwg==
-X-Received: by 2002:a17:90b:1257:: with SMTP id gx23mr2650574pjb.14.1585017098683;
-        Mon, 23 Mar 2020 19:31:38 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id x75sm14916302pfc.161.2020.03.23.19.31.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 19:31:38 -0700 (PDT)
-Subject: Re: [PATCH v2] io-wq: handle hashed writes in chains
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <c0e464556675bd40ea47d61ce12e2393603ce43c.1584993396.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <637ca8a0-d116-dbea-5949-2462502df4bb@kernel.dk>
-Date:   Mon, 23 Mar 2020 20:31:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 23 Mar 2020 22:38:02 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12180 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726824AbgCXCiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:38:01 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A08EEAD13A6A126C81F7;
+        Tue, 24 Mar 2020 10:37:58 +0800 (CST)
+Received: from [10.173.228.124] (10.173.228.124) by smtp.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 24 Mar
+ 2020 10:37:50 +0800
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+CC:     <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
+        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
+        <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Sean Christopherson" <sean.j.christopherson@intel.com>,
+        <stable@vger.kernel.org>
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <20200323160955.GY20941@ziepe.ca>
+ <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
+ <20200323180706.GC20941@ziepe.ca>
+ <88698dd7-eb87-4b0b-7ba7-44ef6eab6a6c@oracle.com>
+ <20200323225225.GF20941@ziepe.ca>
+From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>
+Message-ID: <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
+Date:   Tue, 24 Mar 2020 10:37:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <c0e464556675bd40ea47d61ce12e2393603ce43c.1584993396.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200323225225.GF20941@ziepe.ca>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.228.124]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 1:57 PM, Pavel Begunkov wrote:
-> We always punt async buffered writes to an io-wq helper, as the core
-> kernel does not have IOCB_NOWAIT support for that. Most buffered async
-> writes complete very quickly, as it's just a copy operation. This means
-> that doing multiple locking roundtrips on the shared wqe lock for each
-> buffered write is wasteful. Additionally, buffered writes are hashed
-> work items, which means that any buffered write to a given file is
-> serialized.
+
+
+On 2020/3/24 6:52, Jason Gunthorpe wrote:
+> On Mon, Mar 23, 2020 at 01:35:07PM -0700, Mike Kravetz wrote:
+>> On 3/23/20 11:07 AM, Jason Gunthorpe wrote:
+>>> On Mon, Mar 23, 2020 at 10:27:48AM -0700, Mike Kravetz wrote:
+>>>
+>>>>>  	pgd = pgd_offset(mm, addr);
+>>>>> -	if (!pgd_present(*pgd))
+>>>>> +	if (!pgd_present(READ_ONCE(*pgd)))
+>>>>>  		return NULL;
+>>>>>  	p4d = p4d_offset(pgd, addr);
+>>>>> -	if (!p4d_present(*p4d))
+>>>>> +	if (!p4d_present(READ_ONCE(*p4d)))
+>>>>>  		return NULL;
+>>>>>  
+>>>>>       pud = pud_offset(p4d, addr);
+>>>>
+>>>> One would argue that pgd and p4d can not change from present to !present
+>>>> during the execution of this code.  To me, that seems like the issue which
+>>>> would cause an issue.  Of course, I could be missing something.
+>>>
+>>> This I am not sure of, I think it must be true under the read side of
+>>> the mmap_sem, but probably not guarenteed under RCU..
+>>>
+>>> In any case, it doesn't matter, the fact that *p4d can change at all
+>>> is problematic. Unwinding the above inlines we get:
+>>>
+>>>   p4d = p4d_offset(pgd, addr)
+>>>   if (!p4d_present(*p4d))
+>>>       return NULL;
+>>>   pud = (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
+>>>
+>>> According to our memory model the compiler/CPU is free to execute this
+>>> as:
+>>>
+>>>   p4d = p4d_offset(pgd, addr)
+>>>   p4d_for_vaddr = *p4d;
+>>>   if (!p4d_present(*p4d))
+>>>       return NULL;
+>>>   pud = (pud_t *)p4d_page_vaddr(p4d_for_vaddr) + pud_index(address);
+>>>
+>>
+>> Wow!  How do you know this?  You don't need to answer :)
 > 
-> Keep identicaly hashed work items contiguously in @wqe->work_list, and
-> track a tail for each hash bucket. On dequeue of a hashed item, splice
-> all of the same hash in one go using the tracked tail. Until the batch
-> is done, the caller doesn't have to synchronize with the wqe or worker
-> locks again.
+> It says explicitly in Documentation/memory-barriers.txt - see
+> section COMPILER BARRIER:
+> 
+>  (*) The compiler is within its rights to reorder loads and stores
+>      to the same variable, and in some cases, the CPU is within its
+>      rights to reorder loads to the same variable.  This means that
+>      the following code:
+> 
+>         a[0] = x;
+>         a[1] = x;
+> 
+>      Might result in an older value of x stored in a[1] than in a[0].
+> 
+> It also says READ_ONCE puts things in program order, but we don't use
+> READ_ONCE inside pud_offset(), so it doesn't help us.
+> 
+> Best answer is to code things so there is exactly one dereference of
+> the pointer protected by READ_ONCE. Very clear to read, very safe.
+> 
+> Maybe Longpeng can rework the patch around these principles?
+> 
+Thanks Jason and Mike, I learn a lot from your analysis.
 
-Looks good to me, and also passes testing. I've applied this for 5.7.
-Next we can start looking into cases where it'd be an improvement
-to kick off another worker. Say if we still have work after grabbing
-a chain, would probably not be a bad idea.
+So... the patch should like this ?
 
--- 
-Jens Axboe
+@@ -4909,29 +4909,33 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
+ 		       unsigned long addr, unsigned long sz)
+ {
+ 	pgd_t *pgd;
+-	p4d_t *p4d;
+-	pud_t *pud;
+-	pmd_t *pmd;
++	p4d_t *p4g, p4d_entry;
++	pud_t *pud, pud_entry;
++	pmd_t *pmd, pmd_entry;
 
+ 	pgd = pgd_offset(mm, addr);
+ 	if (!pgd_present(*pgd))
+ 		return NULL;
+-	p4d = p4d_offset(pgd, addr);
+-	if (!p4d_present(*p4d))
++
++	p4g = p4d_offset(pgd, addr);
++	p4d_entry = READ_ONCE(*p4g);
++	if (!p4d_present(p4d_entry))
+ 		return NULL;
+
+-	pud = pud_offset(p4d, addr);
+-	if (sz != PUD_SIZE && pud_none(*pud))
++	pud = pud_offset(&p4d_entry, addr);
++	pud_entry = READ_ONCE(*pud);
++	if (sz != PUD_SIZE && pud_none(pud_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pud_huge(*pud) || !pud_present(*pud))
++	if (pud_huge(pud_entry) || !pud_present(pud_entry))
+ 		return (pte_t *)pud;
+
+-	pmd = pmd_offset(pud, addr);
+-	if (sz != PMD_SIZE && pmd_none(*pmd))
++	pmd = pmd_offset(&pud_entry, addr);
++	pmd_entry = READ_ONCE(*pmd);
++	if (sz != PMD_SIZE && pmd_none(pmd_entry))
+ 		return NULL;
+ 	/* hugepage or swap? */
+-	if (pmd_huge(*pmd) || !pmd_present(*pmd))
++	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
+ 		return (pte_t *)pmd;
+
+> Also I wonder if the READ_ONCE(*pmdp) is OK. gup_pmd_range() uses it,
+> but I can't explain why it shouldn't be pmd_read_atomic().
+> 
+>>> In the case where p4 goes from !present -> present (ie
+>>> handle_mm_fault()):
+>>>
+>>> p4d_for_vaddr == p4d_none, and p4d_present(*p4d) == true, meaning the
+>>> p4d_page_vaddr() will crash.
+>>>
+>>> Basically the problem here is not just missing READ_ONCE, but that the
+>>> p4d is read multiple times at all. It should be written like gup_fast
+>>> does, to guarantee a single CPU read of the unstable data:
+>>>
+>>>   p4d = READ_ONCE(*p4d_offset(pgdp, addr));
+>>>   if (!p4d_present(p4))
+>>>       return NULL;
+>>>   pud = pud_offset(&p4d, addr);
+>>>
+>>> At least this is what I've been able to figure out :\
+>>
+>> In that case, I believe there are a bunch of similar routines with this issue.
+> 
+> Yes, my look around page walk related users makes me come to a similar
+> worry.
+> 
+> Fortunately, I think this is largely theoretical as most likely the
+> compiler will generate a single store for these coding patterns. 
+> 
+> That said, there have been bugs in the past, see commit 26c191788f18
+> ("mm: pmd_read_atomic: fix 32bit PAE pmd walk vs pmd_populate SMP race
+> condition") which is significantly related to the compiler lifting a
+> load inside pte_offset to before the required 'if (pmd_*)' checks.
+> 
+>> For this patch, I was primarily interested in seeing the obvious
+>> multiple dereferences in C fixed up.  This is above and beyond that!
+>> :)
+> 
+> Well, I think it is worth solving the underlying problem
+> properly. Otherwise we get weird solutions to data races like
+> pmd_trans_unstable()...
+> 
+> Jason
+> .
+> 
+
+---
+Regards,
+Longpeng(Mike)
