@@ -2,176 +2,109 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 303E1C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 296F8C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 070DD20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF6DD20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:03:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="fty1DNcA"
+	dkim=pass (1024-bit key) header.d=itdevltd.onmicrosoft.com header.i=@itdevltd.onmicrosoft.com header.b="phsdt6tn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgCXKDO (ORCPT
+        id S1727257AbgCXKD2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:03:14 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17824 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726994AbgCXKDO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:03:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585044169;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=P/3AmRDBdB5ZEcqlOBRd0g3MWo9ZxGOlPoe5g6NZbRY=;
-        b=fty1DNcAEPm1hhXSsFDLy25zQJZ2jOzoJaU9g8iu1Z2Q357OTkjwnbUxwSUCUEbH
-        iIjHNuKPMbvtSRzuf2DsTfwJtCFH4w5OcCRQLkyJzeHzUilt3PVaiE04KtRm4WeuuJ4
-        aI75HebiOOxTLjKPZpV2Tj4jGbudvvqRXq7cMXSE=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585044166872948.9054916676777; Tue, 24 Mar 2020 18:02:46 +0800 (CST)
-Date:   Tue, 24 Mar 2020 18:02:38 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c8702862-f9a7-4776-68b9-cc17dba5d6f6@loongson.cn>
-References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn> <1584932355-3642-2-git-send-email-yangtiezhu@loongson.cn> <C251FD7C-87F0-454E-83D7-5198A6E060E2@flygoat.com> <c8702862-f9a7-4776-68b9-cc17dba5d6f6@loongson.cn>
+        Tue, 24 Mar 2020 06:03:28 -0400
+Received: from mail-eopbgr140088.outbound.protection.outlook.com ([40.107.14.88]:28673
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726818AbgCXKD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:03:28 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SXL567Yr/keS7/3gQLxdf0Jk8pGFTsyRlTj8ej36Luqz2O4qcynb6TgQKbGIEhPnGlBy/WhnmsShF0Iegz43zUJ3/WQACrZhumhMVYYSweL1a1bY5EHdkjv2KK6GnS7NUB3dHSxU0LqrNnePDGGzV/ERPCxNi5DaR8uh9D3Ge4f25DZ5hL9uMjgnNRLe5obpS1shx3TOmwMWBr2Xo0OCVqLJQmZdX++f1Nd4Zk++UUys62ALyfBLxXaRn3U5r1ldW+R2G17eLM9sU+LzgmjvdDjr4yBFWldQCIuUN9Rn9SZrbJQlx5bf7/5IyRZkOxfGaKhcR+KyvCmphTc2MDFj8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kuO8IivCQlPjR/s0qI+xVFMzQNpMXrnAmCVmzXoLJPw=;
+ b=Rl/CravGpjKkalGg5cDPtl3NEA+oi58qELJzDhArVsl0+0ya+d27pwralfR0k1gLb/Bk0LNiaSl4Va8K7QAUPcMQow1xD/xuTk2pWR4tmWqKJlY2jwIXW1z18jeQHKR6fZQUXH1roR0XfqufOLp3Sdl8BC6u1d4RM7GtqJ7gOAmbsgvzd+SosBgfBj18C7MD2q/SWBM8Xcu2XARiG6GEXBk0J3XkWmTmhoDWKh81NnaicVt3vZo9U+KljPY4lCLqTP+G2RHAcMBAaZxw8LbtWNsdYEqFKrAF34hzQQ0eSdK96EP58ujW5CTRP0dHhWnsfKpGD6pAgr6DBB0HufmvXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=itdev.co.uk; dmarc=pass action=none header.from=itdev.co.uk;
+ dkim=pass header.d=itdev.co.uk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=itdevltd.onmicrosoft.com; s=selector2-itdevltd-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kuO8IivCQlPjR/s0qI+xVFMzQNpMXrnAmCVmzXoLJPw=;
+ b=phsdt6tngVVDJ1+6L2wNvXWnO6cgFFp+q8uc9aXEkYj4CtP3WG4uEUbooDRA36sKIzqBMdmtZHEcQ9UToXgodBk7UNSbxyQfay3uFb+ZndWDTqjBs0v9uuvVK2ARQAcrk3KX59ojhi2d91IRitQuat4BELTiCmd+HxOp/aWtUeg=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=quentin.deslandes@itdev.co.uk; 
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com (20.179.44.144) by
+ DBBPR08MB4903.eurprd08.prod.outlook.com (10.255.78.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Tue, 24 Mar 2020 10:03:25 +0000
+Received: from DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::cce9:f055:f034:3659]) by DBBPR08MB4491.eurprd08.prod.outlook.com
+ ([fe80::cce9:f055:f034:3659%4]) with mapi id 15.20.2835.023; Tue, 24 Mar 2020
+ 10:03:25 +0000
+Date:   Tue, 24 Mar 2020 10:03:23 +0000
+From:   Quentin Deslandes <quentin.deslandes@itdev.co.uk>
+To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Forest Bond <forest@alittletooquiet.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Malcolm Priestley <tvboxspy@gmail.com>,
+        Oscar Carter <oscar.carter@gmx.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] staging: vt6656: remove unneeded variable: ret
+Message-ID: <20200324100323.GB7693@jiffies>
+References: <20200324064545.1832227-1-jbwyatt4@gmail.com>
+ <20200324064545.1832227-2-jbwyatt4@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324064545.1832227-2-jbwyatt4@gmail.com>
+X-ClientProxiedBy: CWLP265CA0278.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:401:5c::26) To DBBPR08MB4491.eurprd08.prod.outlook.com
+ (2603:10a6:10:d2::16)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 1/3] MIPS: Loongson: Get host bridge information
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <BF29AC74-29B6-44F3-9B5A-037FB4FE1778@flygoat.com>
-X-ZohoCNMailClient: External
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from jiffies (54.37.17.75) by CWLP265CA0278.GBRP265.PROD.OUTLOOK.COM (2603:10a6:401:5c::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Tue, 24 Mar 2020 10:03:25 +0000
+X-Originating-IP: [54.37.17.75]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 137de9bf-3e9d-401f-1b0e-08d7cfda97e0
+X-MS-TrafficTypeDiagnostic: DBBPR08MB4903:
+X-Microsoft-Antispam-PRVS: <DBBPR08MB49031A57317C3C953CF05121B3F10@DBBPR08MB4903.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 03524FBD26
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(376002)(346002)(366004)(136003)(396003)(39830400003)(66556008)(66476007)(53546011)(66946007)(33716001)(9576002)(1076003)(33656002)(9686003)(4744005)(5660300002)(55016002)(2906002)(44832011)(956004)(508600001)(26005)(8936002)(186003)(81166006)(81156014)(8676002)(7416002)(6916009)(16526019)(54906003)(316002)(4326008)(86362001)(52116002)(6496006)(55236004);DIR:OUT;SFP:1101;SCL:1;SRVR:DBBPR08MB4903;H:DBBPR08MB4491.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: itdev.co.uk does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: b9/ZtjxGUvbkXl9ykYE2Sq4X92CrpAT4zIv0DYKJz/hf+aR328O7fScGUntfAiXgZCTbizsiUMzBddKJO5qdH+PO3ov//VWikhKupVJYHrm1Q2GECdFwjL4RXMs8zROLeCCCE/5+UYB0Q02mwizlT2v/zHqh0M7+4aPTPevR7Nx/KVWD7V3NfIumIEJlvGCXga9XY3S7kFPI/LROHV1g2Of5NcM9cOeVhoin5L5TbwdQ2uNW6rpMQXXctkWMRLWmb8N/9wItUUBBFqRp8tzeGNjkQW8PeiGJ4XZwegsC0GJ/8SxH6ZECMVD3mB6bUpIOWNIvdXuVth8syZf7RkMEV7t07mNg8YHD1DWBiiODFn/CC7ZZ0l8u8hkrzJst6lGDEkBYRAPPnBrS6cPV0gDyYkS7jPfJdWrPtOP0h4U0YTteKJs+pGmEjdZAlzk6tu+D
+X-MS-Exchange-AntiSpam-MessageData: s7/1nt5+DX/OWO1oUmPTJ2wMwA0uoDX0z7Y2oubNFBcRXyFungZpfDckDViuR8GtH5Tf6k6dWbe9pSUHBbU27cATpFBqZciyRhw8DcFozgNEo9XbrgD6wOAR67ImukK5lVLqs02KdTi/2yuxVfe6wA==
+X-OriginatorOrg: itdev.co.uk
+X-MS-Exchange-CrossTenant-Network-Message-Id: 137de9bf-3e9d-401f-1b0e-08d7cfda97e0
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2020 10:03:25.5450
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2d2930c4-2251-45b4-ad79-3582c5f41740
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +9DR1fMR85MFCQN54oLzAjDXpRE8zn8O64SKQSxzIYuSCDinVkp+rIT25guvKXAFcldHLBZyS37RiXX/TYkPf+WRo0sybK3nTrEM9n0hvsI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4903
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03/23/20 23:45:44, John B. Wyatt IV wrote:
+>  	vnt_mac_reg_bits_off(priv, MAC_REG_GPIOCTL1, GPIO3_INTMD);
 
+This function, and all the functions called in vnt_radio_power_on() returns
+a value, why don't you catch it and act accordingly (forward error code
+for example) instead of silencing it?
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885=
-:58:33, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->On 03/24/2020 03:36 PM, Jiaxun Yang wrote:
->>
->> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=
-=8810:59:13, Tiezhu Yang
-><yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
->>> Read the address of HyperTransport Configuration Space to get the
->>> vendor ID
->>> and device ID of bridge chip, and then we can distinguish various
->types
->>> of
->>> bridge chip such as Loongson 7A1000 or AMD RS780E=2E
->>>
->>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
->>> ---
->>> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  6 ++++++
->>> arch/mips/loongson64/env=2Ec                         | 16
->>> ++++++++++++++++
->>> 2 files changed, 22 insertions(+)
->>>
->>> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->>> b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->>> index 8c286be=2E=2E5e8c70d 100644
->>> --- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->>> +++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
->>> @@ -190,6 +190,11 @@ struct boot_params {
->>> 	struct efi_reset_system_t reset_system;
->>> };
->>>
->>> +enum loongson_bridge_type {
->>> +	RS780E =3D 1,
->>> +	LS7A1000 =3D 2
->>> +};
->>> +
->>> struct loongson_system_configuration {
->>> 	u32 nr_cpus;
->>> 	u32 nr_nodes;
->>> @@ -198,6 +203,7 @@ struct loongson_system_configuration {
->>> 	u16 boot_cpu_id;
->>> 	u16 reserved_cpus_mask;
->>> 	enum loongson_cpu_type cputype;
->>> +	enum loongson_bridge_type bridgetype;
->>> 	u64 ht_control_base;
->>> 	u64 pci_mem_start_addr;
->>> 	u64 pci_mem_end_addr;
->>> diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=
-=2Ec
->>> index 0daeb7b=2E=2E42542c7 100644
->>> --- a/arch/mips/loongson64/env=2Ec
->>> +++ b/arch/mips/loongson64/env=2Ec
->>> @@ -19,6 +19,8 @@
->>> #include <boot_param=2Eh>
->>> #include <workarounds=2Eh>
->>>
->>> +#define HT1_LO_BUS_CONFIG_BASE	0x90000efdfe000000
->>> +
->>> u32 cpu_clock_freq;
->>> EXPORT_SYMBOL(cpu_clock_freq);
->>> struct efi_memory_map_loongson *loongson_memmap;
->>> @@ -42,6 +44,8 @@ void __init prom_init_env(void)
->>> 	struct system_loongson *esys;
->>> 	struct efi_cpuinfo_loongson *ecpu;
->>> 	struct irq_source_routing_table *eirq_source;
->>> +	u32 id;
->>> +	u16 vendor, device;
->>>
->>> 	/* firmware arguments are initialized in head=2ES */
->>> 	boot_p =3D (struct boot_params *)fw_arg2;
->>> @@ -155,4 +159,16 @@ void __init prom_init_env(void)
->>> 		memcpy(loongson_sysconf=2Esensors, esys->sensors,
->>> 			sizeof(struct sensor_device) * loongson_sysconf=2Enr_sensors);
->>> 	pr_info("CpuClock =3D %u\n", cpu_clock_freq);
->>> +
->>> +	id =3D readl((u32 *)HT1_LO_BUS_CONFIG_BASE);
->> Is that pointer cast required?
->
->Yes, otherwise it will compile failed:
->arch/mips/loongson64/env=2Ec:163:13: error: passing argument 1 of =E2=80=
-=98readl=E2=80=99
-
-I don't like it through=2E=2E=2E=2E
-Can we cast it in macro?
-At least it should be void __iomem *=2E
-
-
->
->makes pointer from integer without a cast [-Werror]
->   id =3D readl(HT1_LO_BUS_CONFIG_BASE);
->              ^
->>
->> And you'd better add a comment here like
->> /* Read HT PCI 00:00:00 Host Bridge's ID to detect bridge model */
->> Otherwise it's hard for others to understand what you are doing=2E
->
->OK, I will do it=2E
->
->>
->>> +	vendor =3D id & 0xffff;
->>> +	device =3D (id >> 16) & 0xffff;
->>> +
->>> +	if (vendor =3D=3D 0x0014 && device =3D=3D 0x7a00) {
->> Please confirm with hardware design guys that bridge chip in future
->will have different dev ID=2E
->
->Yes, it maybe have a new device ID for the new bridge chip=2E
->
->>
->> Thanks=2E
->>
->>> +		pr_info("The bridge chip is Loongson 7A1000\n");
->>> +		loongson_sysconf=2Ebridgetype =3D LS7A1000;
->>> +	} else {
->>> +		pr_info("The bridge chip is AMD RS780E or SR5690\n");
->>> +		loongson_sysconf=2Ebridgetype =3D RS780E;
->>> +	}
->>> }
-
---=20
-Jiaxun Yang
+Thanks,
+Quentin
