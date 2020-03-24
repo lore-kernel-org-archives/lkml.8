@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 899D3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31037C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C3D20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07681208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055891;
-	bh=L734DQCsAtgGBQaBPUMxvXOifmfHtf8bfxHJL/1XbNs=;
+	s=default; t=1585055894;
+	bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RqQeZ0qbSMah35CB0mAdChEx1Kpx6C7HoLYcIBPVToGx//mE2q/fT/11Sf+eFP9dp
-	 +qm1UDiDGcsnVCkYlJX+RTnBczapbxPy0de+rOBBB165Eea0HDk+rnq2Qsg+ZVbJOO
-	 rLcl1vpjeSQC2l5PCQEux0msjOVHPpXQbz9YwwR0=
+	b=mzxEpA56jJ7m3ni7QB9NLxuU7lGX2WZjN+6lcXGuR7tcM/VNkNZVGUaL9PUESAyYp
+	 z5Al3pxMl+BzGau4IQC5cDuQeURX0yrYgeIUdCBYMrRrBDTal4kqSrtbVeBZ2tHXXs
+	 H6efBO1HB8EV0s5BuuqLyGHbDvEhSmUpuvEV6Zus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbgCXNSK (ORCPT
+        id S1728693AbgCXNSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:18:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38090 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:18:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728075AbgCXNSG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:18:06 -0400
+        id S1727752AbgCXNSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:18:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75946208D5;
-        Tue, 24 Mar 2020 13:18:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01312208CA;
+        Tue, 24 Mar 2020 13:18:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055886;
-        bh=L734DQCsAtgGBQaBPUMxvXOifmfHtf8bfxHJL/1XbNs=;
+        s=default; t=1585055888;
+        bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZXC/VdUhFSJ7Q/NYLjgcEseGr25kCo0IIzg9J2bKbatX2fDUYpVZGowF9ZtNp579e
-         4MoYobrguc+JtNY3cHwj7XgcaQz2CjdsKlKboKIcEJt/F8KljqHuwIA1JJfALlbyft
-         wKTvoFmix1sAu2tdyAz5iKTpOJ19QV2Sx6s19SMI=
+        b=SP35owyrWYxDx/fsiDWb6BJenKLuCP0/LGeNEBH8sRhPSRRNHX0+SVaDexzuGlJqg
+         5crsQ7giK+bg3/aOhQUr/zbtjcdcVwlnj28ZgOaYVO9u6AOrxuKCC2NANfymHaZaen
+         sG89Q4vl4b15HH2SUCQNg2bmkXi3daj3NSeGZ4Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 5.4 040/102] usb: host: xhci-plat: add a shutdown
-Date:   Tue, 24 Mar 2020 14:10:32 +0100
-Message-Id: <20200324130810.796047109@linuxfoundation.org>
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.4 058/102] iio: trigger: stm32-timer: disable master mode when stopping
+Date:   Tue, 24 Mar 2020 14:10:50 +0100
+Message-Id: <20200324130812.588688285@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,33 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ran Wang <ran.wang_1@nxp.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit b433e340e7565110b0ce9ca4b3e26f4b97a1decf upstream.
+commit 29e8c8253d7d5265f58122c0a7902e26df6c6f61 upstream.
 
-When loading new kernel via kexec, we need to shutdown host controller to
-avoid any un-expected memory accessing during new kernel boot.
+Master mode should be disabled when stopping. This mainly impacts
+possible other use-case after timer has been stopped. Currently,
+master mode remains set (from start routine).
 
-Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/20200306092328.41253-1-ran.wang_1@nxp.com
+Fixes: 6fb34812c2a2 ("iio: stm32 trigger: Add support for TRGO2 triggers")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-plat.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/iio/trigger/stm32-timer-trigger.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -445,6 +445,7 @@ MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_
- static struct platform_driver usb_xhci_driver = {
- 	.probe	= xhci_plat_probe,
- 	.remove	= xhci_plat_remove,
-+	.shutdown = usb_hcd_platform_shutdown,
- 	.driver	= {
- 		.name = "xhci-hcd",
- 		.pm = &xhci_plat_pm_ops,
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -161,7 +161,8 @@ static int stm32_timer_start(struct stm3
+ 	return 0;
+ }
+ 
+-static void stm32_timer_stop(struct stm32_timer_trigger *priv)
++static void stm32_timer_stop(struct stm32_timer_trigger *priv,
++			     struct iio_trigger *trig)
+ {
+ 	u32 ccer, cr1;
+ 
+@@ -179,6 +180,12 @@ static void stm32_timer_stop(struct stm3
+ 	regmap_write(priv->regmap, TIM_PSC, 0);
+ 	regmap_write(priv->regmap, TIM_ARR, 0);
+ 
++	/* Force disable master mode */
++	if (stm32_timer_is_trgo2_name(trig->name))
++		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
++	else
++		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
++
+ 	/* Make sure that registers are updated */
+ 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
+ }
+@@ -197,7 +204,7 @@ static ssize_t stm32_tt_store_frequency(
+ 		return ret;
+ 
+ 	if (freq == 0) {
+-		stm32_timer_stop(priv);
++		stm32_timer_stop(priv, trig);
+ 	} else {
+ 		ret = stm32_timer_start(priv, trig, freq);
+ 		if (ret)
 
 
