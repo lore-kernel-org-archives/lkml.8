@@ -2,113 +2,111 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC90C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1389DC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC8D20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D556820786
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hpmbjgLo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVcaIPLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgCXKrG (ORCPT
+        id S1727179AbgCXKsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:47:06 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:45850 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgCXKrF (ORCPT
+        Tue, 24 Mar 2020 06:48:55 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46426 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727095AbgCXKsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:47:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02OAki5v093112;
-        Tue, 24 Mar 2020 05:46:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585046804;
-        bh=D2ALQtCg+SKfnDlQYR3fcQQukI+ow4R5PvsOSa39z0E=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=hpmbjgLoY8bMHGPi0LXG8dO1pAFHKJNRRZRsF7GbOz9a3z0PC2n89l54fhH5+khmt
-         /1K+exq0Q1+0+RHl71GDR5UEuspxqWF8P60yNonQL1UtXxVZXpbMcQjYI6kO/JeT9A
-         aA5F0oKzFbQKPy6zVZt126tBepHUgU5JDKgynSio=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02OAkiEp100135
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 24 Mar 2020 05:46:44 -0500
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
- Mar 2020 05:46:44 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 24 Mar 2020 05:46:44 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02OAkfLj024660;
-        Tue, 24 Mar 2020 05:46:42 -0500
-Subject: Re: [PATCH] kthread: Mark timer used by delayed kthread works as IRQ
- safe
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Tejun Heo <tj@kernel.org>, Petr Mladek <pmladek@suse.com>
-CC:     <linux-rt-users@vger.kernel.org>, <netdev@vger.kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200217120709.1974-1-pmladek@suse.com>
- <20200219152248.GC698990@mtj.thefacebook.com>
- <6a4c07df-8971-8637-5251-ce177c3a08ce@ti.com>
-Message-ID: <99c75f39-1f27-ad3c-1605-397b69760d07@ti.com>
-Date:   Tue, 24 Mar 2020 12:46:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 24 Mar 2020 06:48:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585046934;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qSOri34BE3PtZf/E2VZCmCknPEbvXiWhBYN0uUrx2Fk=;
+        b=CVcaIPLkVuc+4NUKUdr5HwJWGUqSwXWwT3k6po59A4FU3l9UtFQIwslVgcwcQCSc7CibN1
+        Lh8Zb83zYOxQCh9dpDo4vl+8q7xonWWaL582uvm8+ylHKz0xKKUPFqwCwGkZ8P+r06YEUO
+        eIt+vj651kApaGnlx4fPAmxXsgT0csA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-nMIzL1KCNAKbGY_b8S1UXQ-1; Tue, 24 Mar 2020 06:48:51 -0400
+X-MC-Unique: nMIzL1KCNAKbGY_b8S1UXQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D203D107ACC4;
+        Tue, 24 Mar 2020 10:48:49 +0000 (UTC)
+Received: from krava (unknown [10.40.192.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6672019C6A;
+        Tue, 24 Mar 2020 10:48:48 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 11:48:43 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     acme@kernel.org, linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        mark.rutland@arm.com, naveen.n.rao@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf dso: Fix dso comparison
+Message-ID: <20200324104843.GS1534489@krava>
+References: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <6a4c07df-8971-8637-5251-ce177c3a08ce@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
-
-On 16/03/2020 14:23, Grygorii Strashko wrote:
-> Hi Petr,
+On Tue, Mar 24, 2020 at 09:54:24AM +0530, Ravi Bangoria wrote:
+> Perf gets dso details from two different sources. 1st, from builid
+> headers in perf.data and 2nd from MMAP2 samples. Dso from buildid
+> header does not have dso_id detail. And dso from MMAP2 samples does
+> not have buildid information. If detail of the same dso is present
+> at both the places, filename is common.
 > 
-> On 19/02/2020 17:22, Tejun Heo wrote:
->> On Mon, Feb 17, 2020 at 01:07:09PM +0100, Petr Mladek wrote:
->>> The timer used by delayed kthread works are IRQ safe because the used
->>> kthread_delayed_work_timer_fn() is IRQ safe.
->>>
->>> It is properly marked when initialized by KTHREAD_DELAYED_WORK_INIT().
->>> But TIMER_IRQSAFE flag is missing when initialized by
->>> kthread_init_delayed_work().
->>>
->>> The missing flag might trigger invalid warning from del_timer_sync()
->>> when kthread_mod_delayed_work() is called with interrupts disabled.
->>>
->>> Reported-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>> Signed-off-by: Petr Mladek <pmladek@suse.com>
->>> Tested-by: Grygorii Strashko <grygorii.strashko@ti.com>
->>
->> Acked-by: Tejun Heo <tj@kernel.org>
+> Previously, __dsos__findnew_link_by_longname_id() used to compare only
+> long or short names, but Commit 0e3149f86b99 ("perf dso: Move dso_id
+> from 'struct map' to 'struct dso'") also added a dso_id comparison.
+> Because of that, now perf is creating two different dso objects of the
+> same file, one from buildid header (with dso_id but without buildid)
+> and second from MMAP2 sample (with buildid but without dso_id).
 > 
-> I'm worry shouldn't this patch have "fixes" tag?
+> This is causing issues with archive, buildid-list etc subcommands. Fix
+> this by comparing dso_id only when it's present. And incase dso is
+> present in 'dsos' list without dso_id, inject dso_id detail as well.
 > 
+> Before:
+> 
+>   $ sudo ./perf buildid-list -H
+>   0000000000000000000000000000000000000000 /usr/bin/ls
+>   0000000000000000000000000000000000000000 /usr/lib64/ld-2.30.so
+>   0000000000000000000000000000000000000000 /usr/lib64/libc-2.30.so
+> 
+>   $ ./perf archive
+>   perf archive: no build-ids found
+> 
+> After:
+> 
+>   $ ./perf buildid-list -H
+>   b6b1291d0cead046ed0fa5734037fa87a579adee /usr/bin/ls
+>   641f0c90cfa15779352f12c0ec3c7a2b2b6f41e8 /usr/lib64/ld-2.30.so
+>   675ace3ca07a0b863df01f461a7b0984c65c8b37 /usr/lib64/libc-2.30.so
+> 
+>   $ ./perf archive
+>   Now please run:
+> 
+>   $ tar xvf perf.data.tar.bz2 -C ~/.debug
+> 
+>   wherever you need to run 'perf report' on.
+> 
+> Reported-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-Sorry, the I'm disturbing you, but I have dependency from this path [1].
-I can see it in -next: commit d7c8c7de96de ("kthread: mark timer used by
-delayed kthread works as IRQ safe"), but it does not present in net-next.
+looks good, do we need to add the dso_id check to sort__dso_cmp?
 
-Any way this can be resolved?
+thanks,
+jirka
 
-[1] https://patchwork.ozlabs.org/cover/1259207/
--- 
-Best regards,
-grygorii
