@@ -2,261 +2,118 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9ABC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6937FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7C4205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585080492;
-	bh=qnuFcbci+wCyEzKvFPTbIqb2uSCwvM09/nFf6UX0bm8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LPYyE67otg4lQ+8KT9fmKNX5g6jKUM2mfPikNRwkj3X7IA+KUsGjhlPNH6FFrj1BU
-	 k8eK0oY7v1D3sPs0sqOd+ABCW3HTCmRguAVywwtCc2mc689qk98imKscojv28kEPDq
-	 RTJv2GklsuURuEBiu+alzYPGECBe9QkLgBlOM97Q=
+	by mail.kernel.org (Postfix) with ESMTP id 3F312205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:08:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J9C1i1hA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbgCXUIL (ORCPT
+        id S1727659AbgCXUIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:08:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbgCXUIK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:08:10 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 24 Mar 2020 16:08:55 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:42187 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725866AbgCXUIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:08:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585080534;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=cg1bshNNHRW3ykUec2v3AUO161Bty/S1WfQKMJCHQyI=;
+        b=J9C1i1hARCM2HQhAvU/lVhNKMaY4KPJDLrQ+svoZYP/p2KRoO/S81oskf0+lumLNqoTRIR
+        LbBYD71/d3spV/VFbM5JkcNcsPIVd/4Zo3AN7nDKU7bvfWguuHLN3vjUvImw8KF7g6o3P0
+        6S9B5nOKPDYN4c85pQk1ZLywW/Gm+K8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-n8jB7OycMCCZE-IjZu-niw-1; Tue, 24 Mar 2020 16:08:52 -0400
+X-MC-Unique: n8jB7OycMCCZE-IjZu-niw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 022D5208CA;
-        Tue, 24 Mar 2020 20:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585080490;
-        bh=qnuFcbci+wCyEzKvFPTbIqb2uSCwvM09/nFf6UX0bm8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0p/V+x2Kh6nt2c3zhy7moFyEIF/1GF33jWjPBL6bg/BQ3yYu+nMkIvzxOK5Lr2B6t
-         IasTy5pwc7FKf5aoqT2l0gRUCNYcxTp8q0UZMJyGQlvRSLI/osUO+9RYl5Chefb9JJ
-         N2ZylSIRhLjmPwqSX0KeUqu3f1Ihlfg49H9nIxE0=
-Received: by mail-qt1-f173.google.com with SMTP id m33so138615qtb.3;
-        Tue, 24 Mar 2020 13:08:09 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0LmZ82fKezCMYfWKcjvlTLHOydl3MYTTIyR0QCDlIeDtgCf6UE
-        ojT8dK6HzGu0/29PmQ33JKkoy91sHO1Lw1GzAA==
-X-Google-Smtp-Source: ADFU+vuorr9YWLX6wjXjfstQKIdZ2SXodpVMwDu9uiod9EM+nlGGWBNEBBumZ3f08XCXbGN7cDNf0WNJ3zVCp0VopGw=
-X-Received: by 2002:ac8:59:: with SMTP id i25mr28341022qtg.110.1585080488970;
- Tue, 24 Mar 2020 13:08:08 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DBF9800D53;
+        Tue, 24 Mar 2020 20:08:50 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.27])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 8467390A13;
+        Tue, 24 Mar 2020 20:08:47 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 24 Mar 2020 21:08:50 +0100 (CET)
+Date:   Tue, 24 Mar 2020 21:08:46 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ipc/mqueue.c: change __do_notify() to bypass
+ check_kill_permission()
+Message-ID: <20200324200846.GA24230@redhat.com>
+References: <20200322110901.GA25108@redhat.com>
+ <87lfnsh3tm.fsf@x220.int.ebiederm.org>
+ <20200322202929.GA1614@redhat.com>
+ <87imivc92n.fsf@x220.int.ebiederm.org>
+ <20200323191214.81a60c4ae1a59fdbd5c5d46d@linux-foundation.org>
+ <87bloma29h.fsf@x220.int.ebiederm.org>
+ <20200324115212.GA10095@redhat.com>
 MIME-Version: 1.0
-References: <1584620363-2255-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584620363-2255-6-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200319151035.GC14585@pendragon.ideasonboard.com> <20200320224836.GA27024@bogus>
- <20200320230211.GV5193@pendragon.ideasonboard.com>
-In-Reply-To: <20200320230211.GV5193@pendragon.ideasonboard.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 24 Mar 2020 14:07:57 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Jh=mxsJ7Ye_HhFYUOzTDDUnoTCe9TaQrcCpQer+1=yQ@mail.gmail.com>
-Message-ID: <CAL_Jsq+Jh=mxsJ7Ye_HhFYUOzTDDUnoTCe9TaQrcCpQer+1=yQ@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] media: dt-bindings: media: i2c: convert ov5645
- bindings to json-schema
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Lad Prabhakar <prabhakar.csengg@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324115212.GA10095@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 5:02 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+Meanwhile, let me send V2. I added the comment and updated the changelog.
+
+On 03/24, Oleg Nesterov wrote:
 >
-> Hi Rob,
->
-> On Fri, Mar 20, 2020 at 04:48:36PM -0600, Rob Herring wrote:
-> > On Thu, Mar 19, 2020 at 05:10:35PM +0200, Laurent Pinchart wrote:
-> > > On Thu, Mar 19, 2020 at 12:19:23PM +0000, Lad Prabhakar wrote:
-> > > > Convert ov5645 bindings to json-schema.
-> > >
-> > > \o/
-> > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > ---
-> > > >  .../devicetree/bindings/media/i2c/ov5645.txt  |  54 -------
-> > > >  .../devicetree/bindings/media/i2c/ov5645.yaml | 140 ++++++++++++++++++
-> > > >  2 files changed, 140 insertions(+), 54 deletions(-)
-> > > >  delete mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > deleted file mode 100644
-> > > > index 1c85c78ec58c..000000000000
-> > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > +++ /dev/null
-> > > > @@ -1,54 +0,0 @@
-> > > > -* Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> > > > -
-> > > > -The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> > > > -an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> > > > -interface.
-> > > > -
-> > > > -Required Properties:
-> > > > -- compatible: Value should be "ovti,ov5645".
-> > > > -- clocks: Reference to the xclk clock.
-> > > > -- clock-names: Should be "xclk".
-> > > > -- enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > > > -  to the hardware pin PWDNB which is physically active low.
-> > > > -- reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > > -  the hardware pin RESETB.
-> > > > -- vdddo-supply: Chip digital IO regulator.
-> > > > -- vdda-supply: Chip analog regulator.
-> > > > -- vddd-supply: Chip digital core regulator.
-> > > > -
-> > > > -The device node must contain one 'port' child node for its digital output
-> > > > -video port, in accordance with the video interface bindings defined in
-> > > > -Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > > > -
-> > > > -Example:
-> > > > -
-> > > > - &i2c1 {
-> > > > -         ...
-> > > > -
-> > > > -         ov5645: ov5645@3c {
-> > > > -                 compatible = "ovti,ov5645";
-> > > > -                 reg = <0x3c>;
-> > > > -
-> > > > -                 enable-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-> > > > -                 reset-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
-> > > > -                 pinctrl-names = "default";
-> > > > -                 pinctrl-0 = <&camera_rear_default>;
-> > > > -
-> > > > -                 clocks = <&clks 200>;
-> > > > -                 clock-names = "xclk";
-> > > > -                 assigned-clocks = <&clks 200>;
-> > > > -                 assigned-clock-rates = <24000000>;
-> > > > -
-> > > > -                 vdddo-supply = <&camera_dovdd_1v8>;
-> > > > -                 vdda-supply = <&camera_avdd_2v8>;
-> > > > -                 vddd-supply = <&camera_dvdd_1v2>;
-> > > > -
-> > > > -                 port {
-> > > > -                         ov5645_ep: endpoint {
-> > > > -                                 clock-lanes = <1>;
-> > > > -                                 data-lanes = <0 2>;
-> > > > -                                 remote-endpoint = <&csi0_ep>;
-> > > > -                         };
-> > > > -                 };
-> > > > -         };
-> > > > - };
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.yaml b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..4bf58ad210c5
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.yaml
-> > > > @@ -0,0 +1,140 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/media/i2c/ov5645.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Omnivision 1/4-Inch 5Mp CMOS Digital Image Sensor
-> > >
-> > > s/Mp/MP/ ?
-> > >
-> > > > +
-> > > > +maintainers:
-> > > > +  - Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > +  - Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > +
-> > > > +description: |-
-> > > > + The Omnivision OV5645 is a 1/4-Inch CMOS active pixel digital image sensor with
-> > > > + an active array size of 2592H x 1944V. It is programmable through a serial I2C
-> > > > + interface.
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    const: ovti,ov5645
-> > > > +
-> > > > +  reg:
-> > > > +    description: I2C device address
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  clocks:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  clock-names:
-> > > > +    items:
-> > > > +      - const: xclk
-> > > > +
-> > > > +  assigned-clocks:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  assigned-clock-rates:
-> > > > +     items:
-> > > > +     - description: Must be 24MHz (24000000).
-> > >
-> > > These two properties shouldn't be part of the bindings, they're generic.
+> On 03/23, Eric W. Biederman wrote:
 > >
-> > The fact that they have 1 entry is part of this binding.
+> > So far what we have is a report Oleg has read somewhere that some
+> > program doing something regressed, and his patch to fix that specific
+> > program.  This problem was not noticed for several years.
 >
-> I'm not sure to agree. assigned-clocks and assigned-clock-rates are very
-> losely defined, and could be placed (at least in theory) in any node.
-> Furthermore, in order to cotnrol the rate of xclk, we may need
-> assigned-clocks and assigned-clock-rates entries for parents of the xclk
-> clock too. There's really nothing that's specific to this device.
+> Yes, this was reported on bugzilla.redhat.com, I'll add you to CC list.
 >
-> Anway, I think the driver should just set the clock rate, so we can drop
-> these two properties and skip arguing over them :-)
-
-Works for me. :)
-
+> > Presumably the problem is that a message queue was written to by one
+> > user and was read by another user to cause check_kill_permission to
+> > fail. Can someone tell me if that was the case?
 >
-> > > > +  enable-gpios:
-> > > > +    description: |-
-> > > > +      Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > > > +      to the hardware pin PWDNB which is physically active low.
-> > >
-> > > Specifying that the polarity is GPIO_ACTIVE_HIGH is confusing in my
-> > > opinion. If there's an inverter on the board, you'll need
-> > > GPIO_ACTIVE_LOW. We could possibly drop the sentence, as all GPIOs in DT
-> > > are supposed to be active high, but the fact that the GPIO name
-> > > corresponds to the opposite of the pin probably has to be documented. I
-> > > have no better wording to propose now I'm afraid, but it needs to be
-> > > addressed. Maybe Rob or Maxime could help.
-> >
-> > All GPIOs in DT are active high? What?
+> I do not know. Yoji, did you hit this bug or did you find it by code
+> inspection ?
 >
-> Re-reading my comment, I've expressed myself very badly here. The point
-> is that the GPIO "object" (enable-gpios), conceptually, hides the
-> polarity. What's exposed to the OS is something that can be asserted or
-> deasserted to have an effect indicated by the GPIO name. The polarity
-> then describes what electrical level of the physical GPIO pin
-> corresponds to that action. In this case, asserting the GPIO performs
-> the "enable" action. As this is connected to the PWDNB pin, we have to
-> specify a polarity (active high) that is inverted compared to the PWDNB
-> pin polarity (active low). This should be captured in the bindings, but
-> syaing that "the polarity is GPIO_ACTIVE_HIGH" is wrong. The polarity
-> depends on how the signal is routed on the board. I'm not sure how to
-> express all these neatly in the bindings. We may not want to address it
-> as part of the conversion to YAML, but I think template sentences for
-> GPIO descriptions would be useful as guidelines for binding authors.
+> > So I am looking for something that makes it clear we are not removing
+> > a permission checking and backporting a security hole.
+>
+> Yes, I thought about this too. I can be easily wrong, please correct me,
+> but I came to conclusion the old behaviour (no permission check) is fine
+> security-wise.
+>
+> > Further even if in the common case it is the right thing to do to remove
+> > the permission check, the handling around exec looks bad enough that we
+> > will be backporting a security hole if we don't fix that and backport
+> > that at the same time.
+>
+> could you explain what exactly you do not like wrt mq_notify/exec ?
+> I must have missed something.
+>
+> > p.s. I am grouchy as temporary fixes in this part of the code base
+> >      don't tend to be temporary  and the entire signal/exec/ptrace world
+> >      is bordering on unmaintainble and incomprehensible as a result.
+>
+> Eric, please feel free to make another fix you like more. I know that
+> I can't convince you anyway, I won't argue.
+> Oleg.
 
-Yeah, this has come up a couple of times. I think it's important to
-state what the polarity of the signal on the device is, but it is
-confusing when there's an inverter in the middle.
-
-Rob
