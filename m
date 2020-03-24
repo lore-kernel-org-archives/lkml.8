@@ -2,112 +2,91 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC8DDC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:52:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81329C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA632070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:52:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47DCA2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ymf3ZauZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgCXJv7 (ORCPT
+        id S1727234AbgCXJxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:51:59 -0400
-Received: from mga11.intel.com ([192.55.52.93]:1981 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726563AbgCXJv7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:51:59 -0400
-IronPort-SDR: PR0H8e9xald8MDkyJ1E7BqIuDm4t6VmzoBvlnBqSIEj8eISUrDwNbY4cSieuzOf7YbOmuKG6uB
- bpDz39n69/UQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 02:51:59 -0700
-IronPort-SDR: n3Yll1s+xmpLGmk3bvv18vmmDQd7u9T6HDCsDAHXBgmUhghFJPxI2TmP79aJ+nnEQxRHyCRCCk
- LMMcltJtgc9A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,299,1580803200"; 
-   d="scan'208";a="357372104"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Mar 2020 02:51:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGgDx-00CUfr-8G; Tue, 24 Mar 2020 11:51:53 +0200
-Date:   Tue, 24 Mar 2020 11:51:53 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
-        Markus Laine <markus.laine@fi.rohmeurope.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Changbin Du <changbin.du@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        David Gow <davidgow@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Tal Gilboa <talgi@mellanox.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Vladimir Oltean <olteanv@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
-Message-ID: <20200324095153.GF1922688@smile.fi.intel.com>
-References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
- <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
- <20200324095024.GE1922688@smile.fi.intel.com>
+        Tue, 24 Mar 2020 05:53:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:57674 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727095AbgCXJxJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:53:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585043588;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gq/lKW8WyRYl5edQacpGKYdDQGdtrGN/tjzEhNXWjEE=;
+        b=Ymf3ZauZeKeJI9EYn13x3WJZLgKHbm6rtNLIMwfgM4Hb0byakD51dOGYeFcQVcODhf3bzj
+        /SFfRB/uCiZenykekst5bNfp+mza85szjQupR8WRuoXVuEnzmP1kzysDHIydjUjTusxtA/
+        fD5+gtjDXlMyFoPqpmFq8JueEiQDC9A=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-62-KZrYVp3gNL-ikeQcra1K_w-1; Tue, 24 Mar 2020 05:53:04 -0400
+X-MC-Unique: KZrYVp3gNL-ikeQcra1K_w-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ED4268017CC;
+        Tue, 24 Mar 2020 09:53:02 +0000 (UTC)
+Received: from asgard.redhat.com (unknown [10.36.110.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9ECE91001B3F;
+        Tue, 24 Mar 2020 09:52:59 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 10:53:04 +0100
+From:   Eugene Syromiatnikov <esyr@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Michael Williams <michael.williams@arm.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH] coresight: do not use the BIT() macro in the UAPI header
+Message-ID: <20200324095304.GA2444@asgard.redhat.com>
+References: <20200324042213.GA10452@asgard.redhat.com>
+ <20200324062853.GD1977781@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324095024.GE1922688@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200324062853.GD1977781@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:50:24AM +0200, Andy Shevchenko wrote:
-> On Tue, Mar 24, 2020 at 10:32:19AM +0200, Matti Vaittinen wrote:
-
-> > +static int bd9995x_get_prop_batt_present(struct bd9995x_device *bd)
-> > +{
-> > +	int ret, tmp;
-> > +
-> > +	ret = regmap_field_read(bd->rmap_fields[F_BATTEMP], &tmp);
-> > +	if (ret)
-> > +		return false;
-> > +
+On Tue, Mar 24, 2020 at 07:28:53AM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Mar 24, 2020 at 05:22:13AM +0100, Eugene Syromiatnikov wrote:
+> > The BIT() macro definition is not available for the UAPI headers
+> > (moreover, it can be defined differently in the user space); replace
+> > its usage with the _BITUL() macro that is defined in <linux/const.h>.
 > 
-> > +	return (tmp != BATT_OPEN) ? true : false;
-> 
-> C 101 (I saw somewhere coccinelle script for this):
-> 
-> 	return tmp != BATT_OPEN;
-> 
-> > +}
+> Why is somehow _BITUL() ok to use here instead?
 
-Ah, and even more. Mistype of function and return value.
+It is provided in an UAPI header (include/uapi/linux/const.h)
+and is appropriately prefixed with an underscore to avoid conflicts.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+> Just open-code it, I didn't think we could use any BIT()-like macros in
+> uapi .h files.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
