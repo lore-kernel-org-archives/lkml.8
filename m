@@ -2,190 +2,317 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B51C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD91AC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC0A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:45:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585061120;
-	bh=vZW8ydG76ohXnowf6bsyxr6CjWQRA/3WDQvG85/sN5Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=IsVwLEyqAGavj/6klhZT42sUI8cbFz3Zh55KAhloOT2Q3h2xOd3NN02H078Kf8tAF
-	 WURPwZDskS9zXjbETfu5BEEIR7hChSdN9lIeABGxfXHDj6OwMPkLfp3snox5/iNQR6
-	 H7CP9s/ykEe72SoeF8H50X8hT4Z233Gl7bvcSoVY=
+	by mail.kernel.org (Postfix) with ESMTP id 89F3620774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgCXOpU (ORCPT
+        id S1728147AbgCXOqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:45:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45020 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 10:46:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:34901 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgCXOpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:45:19 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47AD020774;
-        Tue, 24 Mar 2020 14:45:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585061118;
-        bh=vZW8ydG76ohXnowf6bsyxr6CjWQRA/3WDQvG85/sN5Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sEaxv4dRfltXeYQaBsl4NwaL4QgU91FKrq0Uyqxh/WTFzB7NmwUuJ4GizBMHYKMa9
-         Od6Ibj+y0g/bAnkxS8J7ni/cJXuNvQ9T4xy2DBaCMeB5fNlHafXU1030RmOi/xgoZ8
-         9B8encpMWYn+we401leZqiKsskG55TDQb7FyYgjE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jGkns-00FJEX-I6; Tue, 24 Mar 2020 14:45:16 +0000
-Date:   Tue, 24 Mar 2020 14:45:14 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Zhenyu Ye <yezhenyu2@huawei.com>
-Cc:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
-        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-Subject: Re: [RFC PATCH v4 5/6] arm64: tlb: Use translation level hint in
- vm_flags
-Message-ID: <20200324144514.340c78d9@why>
-In-Reply-To: <20200324134534.1570-6-yezhenyu2@huawei.com>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
-        <20200324134534.1570-6-yezhenyu2@huawei.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1727065AbgCXOqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:46:06 -0400
+IronPort-SDR: XM1h9VBw/92jbGt1rHhmt0NN/nFd6yimF4140a2drzzQ7YmIXh3I6tZdlw2/uynBH8tfmHZNUc
+ fUa3e9aj9/Sw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 07:46:05 -0700
+IronPort-SDR: SyjJP62TIAaSX3X3bo1mQeRx6muzL9GyqeaAlk4f+JOheULSZ5pGDgkXPxveo7RHVxKnjWYR94
+ BAjG/SyAZQdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="357444659"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 24 Mar 2020 07:46:01 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 24 Mar 2020 16:46:00 +0200
+Date:   Tue, 24 Mar 2020 16:46:00 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 18/19] platform/x86: intel_pmc_ipc: Convert to MFD
+Message-ID: <20200324144600.GJ2564@lahna.fi.intel.com>
+References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
+ <20200303133649.39819-19-mika.westerberg@linux.intel.com>
+ <20200324115219.GB437932@dell>
+ <20200324122216.GG2564@lahna.fi.intel.com>
+ <20200324142228.GC442973@dell>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org, npiggin@gmail.com, peterz@infradead.org, arnd@arndb.de, rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de, yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com, broonie@kernel.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com, prime.zeng@hisilicon.com, zhangshaokun@hisilicon.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324142228.GC442973@dell>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 21:45:33 +0800
-Zhenyu Ye <yezhenyu2@huawei.com> wrote:
-
-> This patch used the VM_LEVEL flags in vma->vm_flags to set the
-> TTL field in tlbi instruction.
+On Tue, Mar 24, 2020 at 02:22:28PM +0000, Lee Jones wrote:
+> On Tue, 24 Mar 2020, Mika Westerberg wrote:
 > 
-> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
-> ---
->  arch/arm64/include/asm/mmu.h      |  2 ++
->  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
->  arch/arm64/mm/mmu.c               | 14 ++++++++++++++
->  3 files changed, 24 insertions(+), 6 deletions(-)
+> > On Tue, Mar 24, 2020 at 11:52:19AM +0000, Lee Jones wrote:
+> > > On Tue, 03 Mar 2020, Mika Westerberg wrote:
+> > > 
+> > > > This driver only creates a bunch of platform devices sharing resources
+> > > > belonging to the PMC device. This is pretty much what MFD subsystem is
+> > > > for so move the driver there, renaming it to intel_pmc_bxt.c which
+> > > > should be more clear what it is.
+> > > > 
+> > > > MFD subsystem provides nice helper APIs for subdevice creation so
+> > > > convert the driver to use those. Unfortunately the ACPI device includes
+> > > > separate resources for most of the subdevices so we cannot simply call
+> > > > mfd_add_devices() to create all of them but instead we need to call it
+> > > > separately for each device.
+> > > > 
+> > > > The new MFD driver continues to expose two sysfs attributes that allow
+> > > > userspace to send IPC commands to the PMC/SCU to avoid breaking any
+> > > > existing applications that may use these. Generally this is bad idea so
+> > > > document this in the ABI documentation.
+> > > > 
+> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > ---
+> > > >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
+> > > >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
+> > > >  arch/x86/include/asm/intel_telemetry.h        |   1 +
+> > > >  drivers/mfd/Kconfig                           |  16 +-
+> > > >  drivers/mfd/Makefile                          |   1 +
+> > > >  drivers/mfd/intel_pmc_bxt.c                   | 504 ++++++++++++++
+> > > >  drivers/platform/x86/Kconfig                  |  16 +-
+> > > >  drivers/platform/x86/Makefile                 |   1 -
+> > > >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
+> > > >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
+> > > >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
+> > > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
+> > > >  include/linux/mfd/intel_pmc_bxt.h             |  43 ++
+> > > >  13 files changed, 602 insertions(+), 710 deletions(-)
+> > > >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
+> > > >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
+> > > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
+> > > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
+> > > >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
+> > > 
+> > > [...]
+> > > 
+> > > > +/*
+> > > > + * We use the below templates to construct MFD cells. The struct
+> > > > + * intel_pmc_dev instance holds the real MFD cells where we first copy
+> > > > + * these and then fill the dynamic parts based on the extracted resources.
+> > > > + */
+> > > > +
+> > > > +static const struct mfd_cell punit = {
+> > > > +	.name = "intel_punit_ipc",
+> > > > +};
+> > > > +
+> > > > +static int update_no_reboot_bit(void *priv, bool set)
+> > > > +{
+> > > > +	struct intel_pmc_dev *pmc = priv;
+> > > > +	u32 bits = PMC_CFG_NO_REBOOT_EN;
+> > > > +	u32 value = set ? bits : 0;
+> > > > +
+> > > > +	return intel_pmc_gcr_update(pmc, PMC_GCR_PMC_CFG_REG, bits, value);
+> > > > +}
+> > > > +
+> > > > +static const struct itco_wdt_platform_data tco_pdata = {
+> > > > +	.name = "Apollo Lake SoC",
+> > > > +	.version = 5,
+> > > > +	.update_no_reboot_bit = update_no_reboot_bit,
+> > > > +};
+> > > > +
+> > > > +static const struct mfd_cell tco = {
+> > > > +	.name = "iTCO_wdt",
+> > > > +	.ignore_resource_conflicts = true,
+> > > > +};
+> > > > +
+> > > > +static const struct resource telem_res[] = {
+> > > > +	DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> > > > +	DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
+> > > > +};
+> > > > +
+> > > > +static const struct mfd_cell telem = {
+> > > > +	.name = "intel_telemetry",
+> > > > +	.resources = telem_res,
+> > > > +	.num_resources = ARRAY_SIZE(telem_res),
+> > > > +};
+> > > > +
+> > > > +static int intel_pmc_get_tco_resources(struct platform_device *pdev,
+> > > > +				       struct intel_pmc_dev *pmc)
+> > > > +{
+> > > > +	struct itco_wdt_platform_data *pdata;
+> > > > +	struct resource *res, *tco_res;
+> > > > +
+> > > > +	if (acpi_has_watchdog())
+> > > > +		return 0;
+> > > > +
+> > > > +	res = platform_get_resource(pdev, IORESOURCE_IO,
+> > > > +				    PLAT_RESOURCE_ACPI_IO_INDEX);
+> > > > +	if (!res) {
+> > > > +		dev_err(&pdev->dev, "Failed to get IO resource\n");
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	tco_res = devm_kcalloc(&pdev->dev, 2, sizeof(*tco_res), GFP_KERNEL);
+> > > > +	if (!tco_res)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	tco_res[0].flags = IORESOURCE_IO;
+> > > > +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
+> > > > +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
+> > > > +	tco_res[1].flags = IORESOURCE_IO;
+> > > > +	tco_res[1].start = res->start + SMI_EN_OFFSET;
+> > > > +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
+> > > > +
+> > > > +	pmc->cells[PMC_TCO].resources = tco_res;
+> > > > +	pmc->cells[PMC_TCO].num_resources = 2;
+> > > > +
+> > > > +	pdata = devm_kmemdup(&pdev->dev, &tco_pdata, sizeof(*pdata), GFP_KERNEL);
+> > > > +	if (!pdata)
+> > > > +		return -ENOMEM;
+> > > 
+> > > Why do you need to take a copy?
+> > > 
+> > > This can be referenced directly in 'mfd_cell tco', no?
+> > 
+> > No because I'm filling the priv pointer dynamically. I've tried to
+> > explain the same thing in the previous iterations already.
 > 
-> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
-> index d79ce6df9e12..a8b8824a7405 100644
-> --- a/arch/arm64/include/asm/mmu.h
-> +++ b/arch/arm64/include/asm/mmu.h
-> @@ -86,6 +86,8 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
->  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
->  extern void mark_linear_text_alias_ro(void);
->  extern bool kaslr_requires_kpti(void);
-> +extern unsigned int get_vma_level(struct vm_area_struct *vma);
-> +
->  
->  #define INIT_MM_CONTEXT(name)	\
->  	.pgd = init_pg_dir,
-> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
-> index d141c080e494..93bb09fdfafd 100644
-> --- a/arch/arm64/include/asm/tlbflush.h
-> +++ b/arch/arm64/include/asm/tlbflush.h
-> @@ -218,10 +218,11 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
->  					 unsigned long uaddr)
->  {
->  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
-> +	unsigned int level = get_vma_level(vma);
->  
->  	dsb(ishst);
-> -	__tlbi_level(vale1is, addr, 0);
-> -	__tlbi_user_level(vale1is, addr, 0);
-> +	__tlbi_level(vale1is, addr, level);
-> +	__tlbi_user_level(vale1is, addr, level);
->  }
->  
->  static inline void flush_tlb_page(struct vm_area_struct *vma,
-> @@ -242,6 +243,7 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
->  				     unsigned long stride, bool last_level)
->  {
->  	unsigned long asid = ASID(vma->vm_mm);
-> +	unsigned int level = get_vma_level(vma);
->  	unsigned long addr;
->  
->  	start = round_down(start, stride);
-> @@ -261,11 +263,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
->  	dsb(ishst);
->  	for (addr = start; addr < end; addr += stride) {
->  		if (last_level) {
-> -			__tlbi_level(vale1is, addr, 0);
-> -			__tlbi_user_level(vale1is, addr, 0);
-> +			__tlbi_level(vale1is, addr, level);
-> +			__tlbi_user_level(vale1is, addr, level);
->  		} else {
-> -			__tlbi_level(vae1is, addr, 0);
-> -			__tlbi_user_level(vae1is, addr, 0);
-> +			__tlbi_level(vae1is, addr, level);
-> +			__tlbi_user_level(vae1is, addr, level);
->  		}
->  	}
->  	dsb(ish);
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 128f70852bf3..e6a1221cd86b 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -60,6 +60,20 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
->  
->  static DEFINE_SPINLOCK(swapper_pgdir_lock);
->  
-> +inline unsigned int get_vma_level(struct vm_area_struct *vma)
-> +{
-> +	unsigned int level = 0;
-> +	if (vma->vm_flags & VM_LEVEL_PUD)
-> +		level = 1;
-> +	else if (vma->vm_flags & VM_LEVEL_PMD)
-> +		level = 2;
-> +	else if (vma->vm_flags & VM_LEVEL_PTE)
-> +		level = 3;
-> +
-> +	vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PMD | VM_LEVEL_PTE);
-> +	return level;
-> +}
-> +
->  void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
->  {
->  	pgd_t *fixmap_pgdp;
+> You have, and I didn't agree with you then either. ;)
+>
+> You can add this directly to 'mfd_cell tco' and make the dynamic
+> changes after the fact.  You do not need to be duplicating memory all
+> over the place.
 
+Well fine I don't want to argue about this. You are the maintainer.
 
-If feels bizarre a TLBI is now a destructive operation: you've lost the
-flags by having cleared them. Even if that's not really a problem in
-practice (you issue TLBI because you've unmapped the VMA), it remains
-that the act of invalidating TLBs isn't expected to change a kernel
-structure (and I'm not even thinking about potential races here).
+> > > > +	pdata->no_reboot_priv = pmc;
+> > > 
+> > > You're putting device data inside platform data?
+> > > 
+> > > This doesn't sit right with me at all.
+> > >
+> > > You already saved it using platform_set_drvdata(), why do you need it
+> > > twice?  Why can't you export update_no_reboot_bit() and make it take
+> > > 'struct intel_pmc_dev' or better yet 'pdev' as an argument?
+> > 
+> > This is a property of the iTCO_wdt driver, not part of this patch
+> > series. I'm just using the interface it provides.
+> > 
+> > iTCO_wdt interface can of course be made better but I don't think it
+> > should be part of this series.
+> 
+> As far as I'm concerned, this is a new driver.
+> 
+> If there is some ugliness, it should be ironed out before being
+> merged.  People have a tendency to lower the priority of fix-ups once
+> their patches have been merged.  I suggest you fix the interface
+> *first*, rather than as an afterthought.
+> 
+> Since the interface is only between this and the iTCO_wdt driver, this
+> should be trivial.
 
-If anything, I feel this should be based around the mmu_gather
-structure, which already tracks the right level of information and
-additionally knows about the P4D level which is missing in your patches
-(even if arm64 is so far limited to 4 levels).
+OK
 
-Thanks,
+> > > > +	pmc->cells[PMC_TCO].platform_data = pdata;
+> > > > +	pmc->cells[PMC_TCO].pdata_size = sizeof(*pdata);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +
+> > > > +static int intel_pmc_get_resources(struct platform_device *pdev,
+> > > > +				   struct intel_pmc_dev *pmc,
+> > > > +				   struct intel_scu_ipc_data *scu_data)
+> > > > +{
+> > > > +	struct resource *res, *punit_res;
+> > > > +	struct resource gcr_res;
+> > > > +	size_t npunit_res = 0;
+> > > > +	int ret;
+> > > > +
+> > > > +	scu_data->irq = platform_get_irq_optional(pdev, 0);
+> > > > +
+> > > > +	res = platform_get_resource(pdev, IORESOURCE_MEM,
+> > > > +				    PLAT_RESOURCE_IPC_INDEX);
+> > > > +	if (!res) {
+> > > > +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
+> > > > +		return -EINVAL;
+> > > > +	}
+> > > > +
+> > > > +	/* IPC registers */
+> > > > +	scu_data->mem.flags = res->flags;
+> > > > +	scu_data->mem.start = res->start;
+> > > > +	scu_data->mem.end = res->start + PLAT_RESOURCE_IPC_SIZE - 1;
+> > > > +
+> > > > +	/* GCR registers */
+> > > > +	gcr_res.flags = res->flags;
+> > > > +	gcr_res.start = res->start + PLAT_RESOURCE_GCR_OFFSET;
+> > > > +	gcr_res.end = gcr_res.start + PLAT_RESOURCE_GCR_SIZE - 1;
+> > > > +
+> > > > +	pmc->gcr_mem_base = devm_ioremap_resource(&pdev->dev, &gcr_res);
+> > > > +	if (IS_ERR(pmc->gcr_mem_base))
+> > > > +		return PTR_ERR(pmc->gcr_mem_base);
+> > > > +
+> > > > +	pmc->cells[PMC_TCO] = tco;
+> > > > +	pmc->cells[PMC_PUNIT] = punit;
+> > > > +	pmc->cells[PMC_TELEM] = telem;
+> > > 
+> > > Why are you still saving these to device data?
+> > > 
+> > > What's stopping you operating on the structures directly?
+> > 
+> > OK, I've explained this in the previous iterations but here goes. The
+> > problem is that the resources need to be filled dynamically as they are
+> > whatever there is in the ACPI table.
+> 
+> Yep.  No problem there.
+> 
+> > Now, Consider that we have two PMC devices. It is possible that the
+> > driver is bind to both in paraller which means that both are racing to
+> > fill and use these structures leading to a corruption.
+> 
+> I'm not saying it can't, but please explain to me how this can
+> happen.  There are many instances where multiple identical H/W blocks
+> occupy a single platform.  Please explain why this isn't a problem for
+> any other device driver.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Any other device driver either uses per instance data or they don't need
+to fill in the resources dynamically after extracting them from the
+firmware description.
+
+> Besides, if this is a genuine concern, that's the sort of problem
+> locking was designed to solve.
+
+Well that would end up even uglier solution than simply taking a copy.
+
+> > Another issue is that even if we have single device, the driver fills in
+> > the structures and then we unbind it. These structures now are left with
+> > that data which does not feel right.
+> 
+> What difference does it make if the driver is left with static or
+> dynamic data?  If the driver is not to be rebound, then it doesn't
+> matter.  If it is bound again, the data will just be overwritten in
+> .probe().  I'm not sure I understand the problem.
+> 
+> > Therefore I've put all we know in advance as const version of these
+> > structures and then we use those as template to build custom ones based
+> > on resources extracted from ACPI to individual instances.
+> 
+> I can see that, I just don't agree with it. :)
+
+Fair enough. I'll do these changes in v9.
