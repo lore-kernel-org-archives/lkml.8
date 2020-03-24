@@ -2,337 +2,181 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A154C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95556C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E60A820789
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657B620788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bF95E75Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728359AbgCXOYP (ORCPT
+        id S1728289AbgCXOYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:24:15 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45068 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727667AbgCXOYC (ORCPT
+        Tue, 24 Mar 2020 10:24:21 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41241 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbgCXOYU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:24:02 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGkTE-0006zA-OC; Tue, 24 Mar 2020 15:23:56 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 645371C0475;
-        Tue, 24 Mar 2020 15:23:56 +0100 (CET)
-Date:   Tue, 24 Mar 2020 14:23:56 -0000
-From:   "tip-bot2 for Alexey Makhalov" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/vmware] x86/vmware: Add steal time clock support for VMware guests
-Cc:     Alexey Makhalov <amakhalov@vmware.com>,
-        Tomer Zeltzer <tomerr90@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200323195707.31242-4-amakhalov@vmware.com>
-References: <20200323195707.31242-4-amakhalov@vmware.com>
+        Tue, 24 Mar 2020 10:24:20 -0400
+Received: by mail-wr1-f66.google.com with SMTP id h9so21673842wrc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:24:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=W59hMPJ3MBOlOz+nstlg61GCr1II2YZNKGokA96Ka3Y=;
+        b=bF95E75ZbHF4bltt0flEXWimvDmZwYIVOAHOON+rk4yv3rlnqoFZd1mAem6cpnEP2k
+         2C2/+YRPbwzX2em+Ea9ykPo2B5zhRDMmpxS3EWKODWsJQCB42i+x8e2wB1KkrA7WFRz0
+         WJylrNwpLdpU9p/+Quw+KhURey8h/mLKqi0GmTxZ1dQrvALHqagSlkyJyMDAWwjzzd6x
+         z92sIxf/wtiV2iZ5INfAcgQcHRiuwd3TA0H7DLNBmumJ2ao5PkiLHjTbw1MuhAzvSGx0
+         AgEiLSPgrtUJIQE8MzbZ+EiAhmtXr8Ltkf0Fopj61Xoj6ML2q3dlsZPY9jd+AxreJprg
+         1vlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=W59hMPJ3MBOlOz+nstlg61GCr1II2YZNKGokA96Ka3Y=;
+        b=sxJcDqV8ljxlKOK48MDFKF+bdJarahFajINm7Esc0Mb7P3iRmIhitj1jyoftCBtqoj
+         kKVB8fT3bfUoriQZGF5K6997o5PMdXU47KlkXEXPi1WXayNSFRUCPmF8gG6yYedmhmJw
+         aWbOagZ/jifYUOTZoSOF5dCZ8pkEHl6Y65F6TV0mkolNg11mej8z3trXCMA8mFDSid2M
+         FFmGlUGMe9ljjYAjQIWQ/vzMZ3DbcN5En4SAjiJWonoHrMjafbGH1AhDMlemHQPnRY8T
+         ppI+3Jhxib2Fc9hf8OArbYBHrT2uBsh96V7SogCd9zDPR/t9H6pNLQ4ciSvdvM8EJCzJ
+         B/7A==
+X-Gm-Message-State: ANhLgQ2qY96k3LdG1VUdD0Jx0tDo3x8Ntccuto8nlOm2WE3H0oinvbZ3
+        hGoK36EsK7VmS+t/nt4Y/0+fAq/sGTLSCA==
+X-Google-Smtp-Source: ADFU+vvyxr95jCX/2rV/XOcDppnOWCfL+Fvg56S/LxiVdgHdFzGDxvgseHm3o7OhEcX3qFUTmsbrpg==
+X-Received: by 2002:a5d:45c7:: with SMTP id b7mr8857427wrs.44.1585059858483;
+        Tue, 24 Mar 2020 07:24:18 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
+        by smtp.gmail.com with ESMTPSA id u16sm29323057wro.23.2020.03.24.07.24.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 07:24:18 -0700 (PDT)
+Subject: Re: [PATCH v3 6/7] drm/meson: overlay: setup overlay for Amlogic FBC
+ Memory Saving mode
+To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
+Cc:     ppaalanen@gmail.com, mjourdan@baylibre.com, brian.starkey@arm.com,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20200324142016.31824-1-narmstrong@baylibre.com>
+ <20200324142016.31824-7-narmstrong@baylibre.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <1bb8c27c-7dcf-8833-ee13-f7227336179b@baylibre.com>
+Date:   Tue, 24 Mar 2020 15:24:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Message-ID: <158505983605.28353.17805135011922181422.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200324142016.31824-7-narmstrong@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/vmware branch of tip:
+On 24/03/2020 15:20, Neil Armstrong wrote:
+> Setup the Amlogic FBC decoder for the VD1 video overlay plane to use
+> a different superblock size for the Memory Saving mode.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  drivers/gpu/drm/meson/meson_overlay.c | 14 ++++++++++++--
+>  include/uapi/drm/drm_fourcc.h         | 16 +++++++++++++++-
+>  2 files changed, 27 insertions(+), 3 deletions(-)
+> 
 
-Commit-ID:     ab02bb3f55f58e7608a88188000c3353398ebe3b
-Gitweb:        https://git.kernel.org/tip/ab02bb3f55f58e7608a88188000c3353398ebe3b
-Author:        Alexey Makhalov <amakhalov@vmware.com>
-AuthorDate:    Mon, 23 Mar 2020 19:57:05 
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 24 Mar 2020 10:04:51 +01:00
+[...]
 
-x86/vmware: Add steal time clock support for VMware guests
+> --- a/include/uapi/drm/drm_fourcc.h
+> +++ b/include/uapi/drm/drm_fourcc.h
+> @@ -840,6 +840,19 @@ extern "C" {
+>   */
+>  #define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC		(1ULL << 0)
+>  
+> +/*
+> + * Amlogic FBC Scatter Memory layout
+> + *
+> + * Indicates the header contains IOMMU references to the compressed
+> + * frames content to optimize memory access and layout.
+> + *
+> + * In this mode, only the header memory address is needed, thus the
+> + * content memory organization is tied to the current producer
+> + * execution and cannot be saved/dumped neither transferrable between
+> + * Amlogic SoCs supporting this modifier.
+> + */
+> +#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER	(2ULL << 0)
+> +
+>  /*
+>   * Amlogic FBC Layout Options
+>   */
+> @@ -852,7 +865,8 @@ extern "C" {
+>   * memory.
+>   *
+>   * This mode reduces body layout to 3072 bytes per 64x32 superblock with
+> - * the basic layout.
+> + * the basic layout and 3200 bytes per 64x32 superblock combined with
+> + * the scatter layout.
+>   */
+>  #define DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING	(1ULL << 8)
+>  
+> 
 
-Steal time is the amount of CPU time needed by a guest virtual machine
-that is not provided by the host. Steal time occurs when the host
-allocates this CPU time elsewhere, for example, to another guest.
+Oops a commit got lost in the process... this change should be independent.
 
-Steal time can be enabled by adding the VM configuration option
-stealclock.enable = "TRUE". It is supported by VMs that run hardware
-version 13 or newer.
-
-Introduce the VMware steal time infrastructure. The high level code
-(such as enabling, disabling and hot-plug routines) was derived from KVM.
-
- [ Tomer: use READ_ONCE macros and 32bit guests support. ]
- [ bp: Massage. ]
-
-Co-developed-by: Tomer Zeltzer <tomerr90@gmail.com>
-Signed-off-by: Alexey Makhalov <amakhalov@vmware.com>
-Signed-off-by: Tomer Zeltzer <tomerr90@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200323195707.31242-4-amakhalov@vmware.com
----
- arch/x86/kernel/cpu/vmware.c | 197 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 197 insertions(+)
-
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index efb22fa..cc60461 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -25,6 +25,8 @@
- #include <linux/init.h>
- #include <linux/export.h>
- #include <linux/clocksource.h>
-+#include <linux/cpu.h>
-+#include <linux/reboot.h>
- #include <asm/div64.h>
- #include <asm/x86_init.h>
- #include <asm/hypervisor.h>
-@@ -47,6 +49,11 @@
- #define VMWARE_CMD_GETVCPU_INFO  68
- #define VMWARE_CMD_LEGACY_X2APIC  3
- #define VMWARE_CMD_VCPU_RESERVED 31
-+#define VMWARE_CMD_STEALCLOCK    91
-+
-+#define STEALCLOCK_NOT_AVAILABLE (-1)
-+#define STEALCLOCK_DISABLED        0
-+#define STEALCLOCK_ENABLED         1
- 
- #define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
- 	__asm__("inl (%%dx), %%eax" :					\
-@@ -86,6 +93,18 @@
- 	}							\
- 	} while (0)
- 
-+struct vmware_steal_time {
-+	union {
-+		uint64_t clock;	/* stolen time counter in units of vtsc */
-+		struct {
-+			/* only for little-endian */
-+			uint32_t clock_low;
-+			uint32_t clock_high;
-+		};
-+	};
-+	uint64_t reserved[7];
-+};
-+
- static unsigned long vmware_tsc_khz __ro_after_init;
- static u8 vmware_hypercall_mode     __ro_after_init;
- 
-@@ -104,6 +123,8 @@ static unsigned long vmware_get_tsc_khz(void)
- #ifdef CONFIG_PARAVIRT
- static struct cyc2ns_data vmware_cyc2ns __ro_after_init;
- static int vmw_sched_clock __initdata = 1;
-+static DEFINE_PER_CPU_DECRYPTED(struct vmware_steal_time, vmw_steal_time) __aligned(64);
-+static bool has_steal_clock;
- 
- static __init int setup_vmw_sched_clock(char *s)
- {
-@@ -135,6 +156,163 @@ static void __init vmware_cyc2ns_setup(void)
- 	pr_info("using clock offset of %llu ns\n", d->cyc2ns_offset);
- }
- 
-+static int vmware_cmd_stealclock(uint32_t arg1, uint32_t arg2)
-+{
-+	uint32_t result, info;
-+
-+	asm volatile (VMWARE_HYPERCALL :
-+		"=a"(result),
-+		"=c"(info) :
-+		"a"(VMWARE_HYPERVISOR_MAGIC),
-+		"b"(0),
-+		"c"(VMWARE_CMD_STEALCLOCK),
-+		"d"(0),
-+		"S"(arg1),
-+		"D"(arg2) :
-+		"memory");
-+	return result;
-+}
-+
-+static bool stealclock_enable(phys_addr_t pa)
-+{
-+	return vmware_cmd_stealclock(upper_32_bits(pa),
-+				     lower_32_bits(pa)) == STEALCLOCK_ENABLED;
-+}
-+
-+static int __stealclock_disable(void)
-+{
-+	return vmware_cmd_stealclock(0, 1);
-+}
-+
-+static void stealclock_disable(void)
-+{
-+	__stealclock_disable();
-+}
-+
-+static bool vmware_is_stealclock_available(void)
-+{
-+	return __stealclock_disable() != STEALCLOCK_NOT_AVAILABLE;
-+}
-+
-+/**
-+ * vmware_steal_clock() - read the per-cpu steal clock
-+ * @cpu:            the cpu number whose steal clock we want to read
-+ *
-+ * The function reads the steal clock if we are on a 64-bit system, otherwise
-+ * reads it in parts, checking that the high part didn't change in the
-+ * meantime.
-+ *
-+ * Return:
-+ *      The steal clock reading in ns.
-+ */
-+static uint64_t vmware_steal_clock(int cpu)
-+{
-+	struct vmware_steal_time *steal = &per_cpu(vmw_steal_time, cpu);
-+	uint64_t clock;
-+
-+	if (IS_ENABLED(CONFIG_64BIT))
-+		clock = READ_ONCE(steal->clock);
-+	else {
-+		uint32_t initial_high, low, high;
-+
-+		do {
-+			initial_high = READ_ONCE(steal->clock_high);
-+			/* Do not reorder initial_high and high readings */
-+			virt_rmb();
-+			low = READ_ONCE(steal->clock_low);
-+			/* Keep low reading in between */
-+			virt_rmb();
-+			high = READ_ONCE(steal->clock_high);
-+		} while (initial_high != high);
-+
-+		clock = ((uint64_t)high << 32) | low;
-+	}
-+
-+	return mul_u64_u32_shr(clock, vmware_cyc2ns.cyc2ns_mul,
-+			     vmware_cyc2ns.cyc2ns_shift);
-+}
-+
-+static void vmware_register_steal_time(void)
-+{
-+	int cpu = smp_processor_id();
-+	struct vmware_steal_time *st = &per_cpu(vmw_steal_time, cpu);
-+
-+	if (!has_steal_clock)
-+		return;
-+
-+	if (!stealclock_enable(slow_virt_to_phys(st))) {
-+		has_steal_clock = false;
-+		return;
-+	}
-+
-+	pr_info("vmware-stealtime: cpu %d, pa %llx\n",
-+		cpu, (unsigned long long) slow_virt_to_phys(st));
-+}
-+
-+static void vmware_disable_steal_time(void)
-+{
-+	if (!has_steal_clock)
-+		return;
-+
-+	stealclock_disable();
-+}
-+
-+static void vmware_guest_cpu_init(void)
-+{
-+	if (has_steal_clock)
-+		vmware_register_steal_time();
-+}
-+
-+static void vmware_pv_guest_cpu_reboot(void *unused)
-+{
-+	vmware_disable_steal_time();
-+}
-+
-+static int vmware_pv_reboot_notify(struct notifier_block *nb,
-+				unsigned long code, void *unused)
-+{
-+	if (code == SYS_RESTART)
-+		on_each_cpu(vmware_pv_guest_cpu_reboot, NULL, 1);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block vmware_pv_reboot_nb = {
-+	.notifier_call = vmware_pv_reboot_notify,
-+};
-+
-+#ifdef CONFIG_SMP
-+static void __init vmware_smp_prepare_boot_cpu(void)
-+{
-+	vmware_guest_cpu_init();
-+	native_smp_prepare_boot_cpu();
-+}
-+
-+static int vmware_cpu_online(unsigned int cpu)
-+{
-+	local_irq_disable();
-+	vmware_guest_cpu_init();
-+	local_irq_enable();
-+	return 0;
-+}
-+
-+static int vmware_cpu_down_prepare(unsigned int cpu)
-+{
-+	local_irq_disable();
-+	vmware_disable_steal_time();
-+	local_irq_enable();
-+	return 0;
-+}
-+#endif
-+
-+static __init int activate_jump_labels(void)
-+{
-+	if (has_steal_clock)
-+		static_key_slow_inc(&paravirt_steal_enabled);
-+
-+	return 0;
-+}
-+arch_initcall(activate_jump_labels);
-+
- static void __init vmware_paravirt_ops_setup(void)
- {
- 	pv_info.name = "VMware hypervisor";
-@@ -148,6 +326,25 @@ static void __init vmware_paravirt_ops_setup(void)
- 	if (vmw_sched_clock)
- 		pv_ops.time.sched_clock = vmware_sched_clock;
- 
-+	if (vmware_is_stealclock_available()) {
-+		has_steal_clock = true;
-+		pv_ops.time.steal_clock = vmware_steal_clock;
-+
-+		/* We use reboot notifier only to disable steal clock */
-+		register_reboot_notifier(&vmware_pv_reboot_nb);
-+
-+#ifdef CONFIG_SMP
-+		smp_ops.smp_prepare_boot_cpu =
-+			vmware_smp_prepare_boot_cpu;
-+		if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+					      "x86/vmware:online",
-+					      vmware_cpu_online,
-+					      vmware_cpu_down_prepare) < 0)
-+			pr_err("vmware_guest: Failed to install cpu hotplug callbacks\n");
-+#else
-+		vmware_guest_cpu_init();
-+#endif
-+	}
- }
- #else
- #define vmware_paravirt_ops_setup() do {} while (0)
+Neil
