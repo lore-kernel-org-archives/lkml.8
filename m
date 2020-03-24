@@ -2,144 +2,78 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0C1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6AFC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD3C9208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="gYvbvIsh";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="nqv6WQH/"
+	by mail.kernel.org (Postfix) with ESMTP id 9B8A7208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgCXQ1L (ORCPT
+        id S1729002AbgCXQ1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:27:11 -0400
-Received: from new3-smtp.messagingengine.com ([66.111.4.229]:36509 "EHLO
-        new3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728878AbgCXQ04 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:26:56 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailnew.nyi.internal (Postfix) with ESMTP id C7F8D5801E3;
-        Tue, 24 Mar 2020 12:26:54 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Tue, 24 Mar 2020 12:26:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=EpjqqXTd+1Wm5pAE5NoGcCzxGJn
-        bee7TfJZCxnuYzD0=; b=gYvbvIshEDx22jkTpGIMePKB3NCO/GN6qnZKifTgqPq
-        oFirJjhFA7A44jHh68nRCpIb4tbEgC30nb/rml1oa0jT50C88klHj0+NlSO/+6u9
-        5HNLcAYCDlCKTxgVW5oXZn+JWbvv3gXA5EAqHIZt5N9Kd4gO47XK8Zt6Ov7+1Qyn
-        FXlX5A8tAbTXtnwc/0PAwgmQ5b4ybiHFR2X6dNC2KXqagQzTonJZP+zzarq5gMPo
-        0kJZmZKn1rkjZv+rgvMsuOGnKp60WMbMC85npE3eyprkadgIIzZZ3bnAj19xlhN+
-        NrBZQl+0knvDt5MfBZjk1NcYpLP+fqAj34RqdtsKMTQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EpjqqX
-        Td+1Wm5pAE5NoGcCzxGJnbee7TfJZCxnuYzD0=; b=nqv6WQH/3CNd1NSkwjxbFI
-        2TIlVYxUexN25jq2Cu0q0BW3aOgs3a+K0qc273BKDDxd+zVWhWgLYy2W0QkaHPE7
-        DIeUkBYjo1+RcNCPPEhGlViuAc+bUcUQT3mPuFUQlWSGCxfMOa4DM44zBU8dNGH3
-        OhfPeO181JH6lVWrO2IoYZ/In7Sth1rtMD/zogVKd+qiztyAtMStBGFZS1kLXZTQ
-        TDi4ewAkVhp6ZVUGmSLzM/j11L+PcTUwBvs/f+5ql64FCqgGJOtYFvrACewpsD6k
-        n5XT3gxeicX5MP/4lFMTqUkMUjM4vHiJYBpx86A+83PPoZnrB0dfE3Dkxi9grbtw
-        ==
-X-ME-Sender: <xms:zjR6XsLKxKOHmtRuzFjtnT40px7bnOUZPR1IuetYnC0JPXjYG8_wFA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehuddgheejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhr
-    vghgsehkrhhorghhrdgtohhm
-X-ME-Proxy: <xmx:zjR6XslWbsGIq12_Wy0aIpl7m9MmgUY2dak-DR-A8KYpvG2uvW78mw>
-    <xmx:zjR6XtaFRpZ7cb4a44MM96SH0ibR5b0talUZiA3_MLVUi74AbH05LA>
-    <xmx:zjR6Xg8nWcUJ9U5DabvvdSyeHTATHxZLy1BDIkJUCGqz7zZV4E_dDA>
-    <xmx:zjR6Xryl4vNZ-FbjwtUnyYoySDfaCn_nogWHZO52F-oOhqMUVzhymw>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 9FF5C3065177;
-        Tue, 24 Mar 2020 12:26:53 -0400 (EDT)
-Date:   Tue, 24 Mar 2020 17:26:52 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maddie Stone <maddiestone@google.com>,
-        Marco Elver <elver@google.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [RFC PATCH 03/21] list: Annotate lockless list primitives with
- data_race()
-Message-ID: <20200324162652.GA2518046@kroah.com>
-References: <20200324153643.15527-1-will@kernel.org>
- <20200324153643.15527-4-will@kernel.org>
- <CAG48ez1yTbbXn__Kf0csf8=LCFL+0hR0EyHNZsryN8p=SsLp5Q@mail.gmail.com>
+        Tue, 24 Mar 2020 12:27:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:37914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728796AbgCXQ0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:26:53 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 637081FB;
+        Tue, 24 Mar 2020 09:26:48 -0700 (PDT)
+Received: from [192.168.3.111] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BCEC3F52E;
+        Tue, 24 Mar 2020 09:26:47 -0700 (PDT)
+Subject: Re: [PATCH] net: PHY: bcm-unimac: Fix clock handling
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
+References: <20200324161010.81107-1-andre.przywara@arm.com>
+ <20200324161739.GE14512@lunn.ch>
+From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
+Organization: ARM Ltd.
+Message-ID: <5852f0e7-aea8-7af8-3a88-5e4fcdc6e5d4@arm.com>
+Date:   Tue, 24 Mar 2020 16:26:19 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1yTbbXn__Kf0csf8=LCFL+0hR0EyHNZsryN8p=SsLp5Q@mail.gmail.com>
+In-Reply-To: <20200324161739.GE14512@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:20:45PM +0100, Jann Horn wrote:
-> On Tue, Mar 24, 2020 at 4:37 PM Will Deacon <will@kernel.org> wrote:
-> > Some list predicates can be used locklessly even with the non-RCU list
-> > implementations, since they effectively boil down to a test against
-> > NULL. For example, checking whether or not a list is empty is safe even
-> > in the presence of a concurrent, tearing write to the list head pointer.
-> > Similarly, checking whether or not an hlist node has been hashed is safe
-> > as well.
-> >
-> > Annotate these lockless list predicates with data_race() and READ_ONCE()
-> > so that KCSAN and the compiler are aware of what's going on. The writer
-> > side can then avoid having to use WRITE_ONCE() in the non-RCU
-> > implementation.
-> [...]
-> >  static inline int list_empty(const struct list_head *head)
-> >  {
-> > -       return READ_ONCE(head->next) == head;
-> > +       return data_race(READ_ONCE(head->next) == head);
-> >  }
-> [...]
-> >  static inline int hlist_unhashed(const struct hlist_node *h)
-> >  {
-> > -       return !READ_ONCE(h->pprev);
-> > +       return data_race(!READ_ONCE(h->pprev));
-> >  }
+On 24/03/2020 16:17, Andrew Lunn wrote:
+
+Hi,
+
+> On Tue, Mar 24, 2020 at 04:10:10PM +0000, Andre Przywara wrote:
+>> The DT binding for this PHY describes an *optional* clock property.
+>> Due to a bug in the error handling logic, we are actually ignoring this
+>> clock *all* of the time so far.
+>>
+>> Fix this by using devm_clk_get_optional() to handle this clock properly.
+>>
+>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 > 
-> This is probably valid in practice for hlist_unhashed(), which
-> compares with NULL, as long as the most significant byte of all kernel
-> pointers is non-zero; but I think list_empty() could realistically
-> return false positives in the presence of a concurrent tearing store?
-> This could break the following code pattern:
+> Hi Andre
 > 
-> /* optimistic lockless check */
-> if (!list_empty(&some_list)) {
->   /* slowpath */
->   mutex_lock(&some_mutex);
->   list_for_each(tmp, &some_list) {
->     ...
->   }
->   mutex_unlock(&some_mutex);
-> }
-> 
-> (I'm not sure whether patterns like this appear commonly though.)
+> Do you have a fixes: tag for this?
 
+Should be:
+Fixes: b78ac6ecd1b6b ("net: phy: mdio-bcm-unimac: Allow configuring MDIO
+clock divider")
 
-I would hope not as the list could go "empty" before the lock is
-grabbed.  That pattern would be wrong.
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-thanks,
+Thanks for that!
 
-greg k-h
+Cheers,
+Andre
