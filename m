@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78C4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B23C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCB6208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0372E20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055810;
-	bh=OGv4NJMH6egSO3CM+oM4/EP7ikbuiFpvtEs66GSlFxA=;
+	s=default; t=1585055815;
+	bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LnINfbR7UOK5kJShCcAlFqdpHb7cT0Bl55OpUTWtqp16RqKdjWwef25nXkaK7tagQ
-	 WMJXZBdlYinaopEiop2krdDdN65owgM9WBdaqkBbl1xJmo2BGrhoBMjOWh9PngMDiy
-	 8rekRBJ5lBh39ckS6PnUSyEKz2U2ov2YXWuoPmQE=
+	b=famljqiHvEKaJ1OwD9XQIHyaZKCMeUqK6cqufYKBztWf8xtYZnSWX73qnPPferPMy
+	 hFlSiies0Cl5avSKpyByO5gfF3DHC1IqUjf+vLNdkI8VGZ8ZdhePfscWhQGjUJEeZ1
+	 igGy/7uktmPRMqLTLbttbqVtef2WQe2js/DzowYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgCXNQt (ORCPT
+        id S1728511AbgCXNQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbgCXNQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:47 -0400
+        id S1727755AbgCXNQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DCA420775;
-        Tue, 24 Mar 2020 13:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AC4120775;
+        Tue, 24 Mar 2020 13:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055806;
-        bh=OGv4NJMH6egSO3CM+oM4/EP7ikbuiFpvtEs66GSlFxA=;
+        s=default; t=1585055810;
+        bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DrSFie3XAyKWVovOa6ruKIm7D47K1YvwahT3gP/AAZZ0Ykj0eca7bWcDlkKho84Nw
-         ZBYAAbhDuHRzntopNoJ1RWNZMqt6xTvJGNGfBXZnHzJm3xx7LEUE/OEozz3Gn3MqCp
-         ZcaFUn3dvnWPZsdb4wSARYvc4c/cXIFZkQ0pfL34=
+        b=NwaqVWTCg56gIACuptdbwrxa7xW61Z/CzsULsjU0GnXc/XkSfDucgBi8Wlgs6zaAR
+         uG/Sy4yyrAQWVxBiuIiOKJPaqzyjn8AMrDOX/p32Mef5wp5GwpGJVgN5225WE6cN5z
+         fuYC2Ext7VkZAv19KLP33UrmkkVlZv1WlpoB3h6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kwon Je Oh <kwonje.oh2@gmail.com>,
-        Carlo Nonato <carlo.nonato95@gmail.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 033/102] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
-Date:   Tue, 24 Mar 2020 14:10:25 +0100
-Message-Id: <20200324130810.126577787@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 034/102] parse-maintainers: Mark as executable
+Date:   Tue, 24 Mar 2020 14:10:26 +0100
+Message-Id: <20200324130810.331260058@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,60 +61,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Carlo Nonato <carlo.nonato95@gmail.com>
+From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 
-[ Upstream commit 14afc59361976c0ba39e3a9589c3eaa43ebc7e1d ]
+[ Upstream commit 611d61f9ac99dc9e1494473fb90117a960a89dfa ]
 
-The bfq_find_set_group() function takes as input a blkcg (which represents
-a cgroup) and retrieves the corresponding bfq_group, then it updates the
-bfq internal group hierarchy (see comments inside the function for why
-this is needed) and finally it returns the bfq_group.
-In the hierarchy update cycle, the pointer holding the correct bfq_group
-that has to be returned is mistakenly used to traverse the hierarchy
-bottom to top, meaning that in each iteration it gets overwritten with the
-parent of the current group. Since the update cycle stops at root's
-children (depth = 2), the overwrite becomes a problem only if the blkcg
-describes a cgroup at a hierarchy level deeper than that (depth > 2). In
-this case the root's child that happens to be also an ancestor of the
-correct bfq_group is returned. The main consequence is that processes
-contained in a cgroup at depth greater than 2 are wrongly placed in the
-group described above by BFQ.
+This makes the script more convenient to run.
 
-This commits fixes this problem by using a different bfq_group pointer in
-the update cycle in order to avoid the overwrite of the variable holding
-the original group reference.
-
-Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
-Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
-Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bfq-cgroup.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ scripts/parse-maintainers.pl | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 scripts/parse-maintainers.pl
 
-diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
-index d0e36d6522649..86cd718e0380b 100644
---- a/block/bfq-cgroup.c
-+++ b/block/bfq-cgroup.c
-@@ -593,12 +593,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
- 	 */
- 	entity = &bfqg->entity;
- 	for_each_entity(entity) {
--		bfqg = container_of(entity, struct bfq_group, entity);
--		if (bfqg != bfqd->root_group) {
--			parent = bfqg_parent(bfqg);
-+		struct bfq_group *curr_bfqg = container_of(entity,
-+						struct bfq_group, entity);
-+		if (curr_bfqg != bfqd->root_group) {
-+			parent = bfqg_parent(curr_bfqg);
- 			if (!parent)
- 				parent = bfqd->root_group;
--			bfq_group_set_parent(bfqg, parent);
-+			bfq_group_set_parent(curr_bfqg, parent);
- 		}
- 	}
- 
+diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
+old mode 100644
+new mode 100755
 -- 
 2.20.1
 
