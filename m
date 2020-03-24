@@ -2,98 +2,166 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DFDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33AECC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68861208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBB7208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585056264;
+	bh=RoZ8agsEE4KqdyRCkx4QfPMY8pgzmjbSfaHHk1Sl6Gs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=HFNay7oFWHwyouAw0wibROCN0TpH5hr39KvLYsJA8wBsES+nXEWjThLEwmoIvlap2
+	 0827BrS/6Dwfbi+/t31i9qMtq8BzB9GjCebMld/1yvY6o0XB4dfAytHTMDZ21cGIUp
+	 EgzIUF9n9pnedeJQEVpnyuNtEJD4joKSOxgzW628=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbgCXNYT (ORCPT
+        id S1729654AbgCXNYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:24:19 -0400
-Received: from foss.arm.com ([217.140.110.172]:34688 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 09:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbgCXNYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:16 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E206F11B3;
-        Tue, 24 Mar 2020 06:24:15 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 93F153F52E;
-        Tue, 24 Mar 2020 06:24:14 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 14/14] net: axienet: Allow DMA to beyond 4GB
-Date:   Tue, 24 Mar 2020 13:23:47 +0000
-Message-Id: <20200324132347.23709-15-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
-References: <20200324132347.23709-1-andre.przywara@arm.com>
+        id S1729646AbgCXNYU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:20 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EB8208CA;
+        Tue, 24 Mar 2020 13:24:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585056259;
+        bh=RoZ8agsEE4KqdyRCkx4QfPMY8pgzmjbSfaHHk1Sl6Gs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YSuHi5XPQw6uTAJsp2ZZXPPHmvjbpoXbq85i4kp7R8Ctjxu3098THjFaMOVOrWGwZ
+         OmAyoeYbSD4DDvtGTND+b+DtQZpz/LfMuqlkfD3qIWZpVcZ7xWN56SeOYbR//BlBTE
+         zptGw003vKqCcVtsFtlrpiN7mjHJ+7AMgsXlTEsE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.5 071/119] mmc: rtsx_pci: Fix support for speed-modes that relies on tuning
+Date:   Tue, 24 Mar 2020 14:10:56 +0100
+Message-Id: <20200324130815.318529585@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
+References: <20200324130808.041360967@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With all DMA address accesses wrapped, we can actually support 64-bit
-DMA if this option was chosen at IP integration time.
-If the IP has been configured for an address width greater than 32 bits,
-we assume the full 64 bit DMA width is working. In practise this will be
-limited by the actual system address bus width, which will ideally be the
-same as the DMA IP address width.
-If this is not the case, the actual width can still be configured using a
-dma-ranges property in the parent of the MAC node.
+From: Ricky Wu <ricky_wu@realtek.com>
 
-This increases the DMA mask on those systems to let the kernel choose
-buffers from memory at higher addresses.
+commit 4686392c32361c97e8434adf9cc77ad7991bfa81 upstream.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+The TX/RX register should not be treated the same way to allow for better
+support of tuning. Fix this by using a default initial value for TX.
+
+Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200316025232.1167-1-ricky_wu@realtek.com
+[Ulf: Updated changelog]
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/misc/cardreader/rts5227.c |    2 +-
+ drivers/misc/cardreader/rts5249.c |    2 ++
+ drivers/misc/cardreader/rts5260.c |    2 +-
+ drivers/misc/cardreader/rts5261.c |    2 +-
+ drivers/mmc/host/rtsx_pci_sdmmc.c |   13 ++++++++-----
+ 5 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index a54a5c754da0..fa5dc2993520 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1780,6 +1780,7 @@ static int axienet_probe(struct platform_device *pdev)
- 	struct net_device *ndev;
- 	const void *mac_addr;
- 	struct resource *ethres;
-+	int addr_width = 32;
- 	u32 value;
+--- a/drivers/misc/cardreader/rts5227.c
++++ b/drivers/misc/cardreader/rts5227.c
+@@ -394,7 +394,7 @@ static const struct pcr_ops rts522a_pcr_
+ void rts522a_init_params(struct rtsx_pcr *pcr)
+ {
+ 	rts5227_init_params(pcr);
+-
++	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
+ 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
  
- 	ndev = alloc_etherdev(sizeof(*lp));
-@@ -1947,6 +1948,7 @@ static int axienet_probe(struct platform_device *pdev)
- 			iowrite32(0xffffffff, desc);
- 			if (ioread32(desc) > 0) {
- 				lp->features |= XAE_FEATURE_DMA_64BIT;
-+				addr_width = 64;
- 				dev_info(&pdev->dev,
- 					 "autodetected 64-bit DMA range\n");
- 			}
-@@ -1954,6 +1956,12 @@ static int axienet_probe(struct platform_device *pdev)
- 		}
- 	}
+ 	pcr->option.ocp_en = 1;
+--- a/drivers/misc/cardreader/rts5249.c
++++ b/drivers/misc/cardreader/rts5249.c
+@@ -618,6 +618,7 @@ static const struct pcr_ops rts524a_pcr_
+ void rts524a_init_params(struct rtsx_pcr *pcr)
+ {
+ 	rts5249_init_params(pcr);
++	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
+ 	pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
+ 	pcr->option.ltr_l1off_snooze_sspwrgate =
+ 		LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
+@@ -733,6 +734,7 @@ static const struct pcr_ops rts525a_pcr_
+ void rts525a_init_params(struct rtsx_pcr *pcr)
+ {
+ 	rts5249_init_params(pcr);
++	pcr->tx_initial_phase = SET_CLOCK_PHASE(25, 29, 11);
+ 	pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
+ 	pcr->option.ltr_l1off_snooze_sspwrgate =
+ 		LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -662,7 +662,7 @@ void rts5260_init_params(struct rtsx_pcr
+ 	pcr->sd30_drive_sel_1v8 = CFG_DRIVER_TYPE_B;
+ 	pcr->sd30_drive_sel_3v3 = CFG_DRIVER_TYPE_B;
+ 	pcr->aspm_en = ASPM_L1_EN;
+-	pcr->tx_initial_phase = SET_CLOCK_PHASE(1, 29, 16);
++	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
+ 	pcr->rx_initial_phase = SET_CLOCK_PHASE(24, 6, 5);
  
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(addr_width));
-+	if (ret) {
-+		dev_err(&pdev->dev, "No suitable DMA available\n");
-+		goto free_netdev;
+ 	pcr->ic_version = rts5260_get_ic_version(pcr);
+--- a/drivers/misc/cardreader/rts5261.c
++++ b/drivers/misc/cardreader/rts5261.c
+@@ -763,7 +763,7 @@ void rts5261_init_params(struct rtsx_pcr
+ 	pcr->sd30_drive_sel_1v8 = CFG_DRIVER_TYPE_B;
+ 	pcr->sd30_drive_sel_3v3 = CFG_DRIVER_TYPE_B;
+ 	pcr->aspm_en = ASPM_L1_EN;
+-	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 27, 16);
++	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 27, 11);
+ 	pcr->rx_initial_phase = SET_CLOCK_PHASE(24, 6, 5);
+ 
+ 	pcr->ic_version = rts5261_get_ic_version(pcr);
+--- a/drivers/mmc/host/rtsx_pci_sdmmc.c
++++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
+@@ -606,19 +606,22 @@ static int sd_change_phase(struct realte
+ 		u8 sample_point, bool rx)
+ {
+ 	struct rtsx_pcr *pcr = host->pcr;
+-
++	u16 SD_VP_CTL = 0;
+ 	dev_dbg(sdmmc_dev(host), "%s(%s): sample_point = %d\n",
+ 			__func__, rx ? "RX" : "TX", sample_point);
+ 
+ 	rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, CHANGE_CLK);
+-	if (rx)
++	if (rx) {
++		SD_VP_CTL = SD_VPRX_CTL;
+ 		rtsx_pci_write_register(pcr, SD_VPRX_CTL,
+ 			PHASE_SELECT_MASK, sample_point);
+-	else
++	} else {
++		SD_VP_CTL = SD_VPTX_CTL;
+ 		rtsx_pci_write_register(pcr, SD_VPTX_CTL,
+ 			PHASE_SELECT_MASK, sample_point);
+-	rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET, 0);
+-	rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET,
 +	}
-+
- 	/* Check for Ethernet core IRQ (optional) */
- 	if (lp->eth_irq <= 0)
- 		dev_info(&pdev->dev, "Ethernet core IRQ not defined\n");
--- 
-2.17.1
++	rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET, 0);
++	rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET,
+ 				PHASE_NOT_RESET);
+ 	rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, 0);
+ 	rtsx_pci_write_register(pcr, SD_CFG1, SD_ASYNC_FIFO_NOT_RST, 0);
+
 
