@@ -2,105 +2,104 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E19DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C35C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A7A206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:55:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F70D20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:57:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgCXNy6 (ORCPT
+        id S1727872AbgCXN5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:54:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49892 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbgCXNy6 (ORCPT
+        Tue, 24 Mar 2020 09:57:07 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:36950 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727612AbgCXN5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:54:58 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id C87382969BD
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Provide correct output format
- to 'h1_gpio' file
-To:     Daniel Campello <campello@google.com>
-Cc:     Bernardo Perez Priego <bernardo.perez.priego@intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Nick Crews <ncrews@chromium.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-References: <20200313232720.22364-1-bernardo.perez.priego@intel.com>
- <f1635547-2c18-b9d6-0fb2-2f69dcfd124e@collabora.com>
- <CAHcu+Vb37A+b2B6tJDYmJtH2dhUPEDy-3yZxaQYy3P3fLV2nVg@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <334c8fff-db38-1b99-01d9-b251435ddec1@collabora.com>
-Date:   Tue, 24 Mar 2020 14:54:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CAHcu+Vb37A+b2B6tJDYmJtH2dhUPEDy-3yZxaQYy3P3fLV2nVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 24 Mar 2020 09:57:07 -0400
+Received: from ramsan ([84.195.182.253])
+        by laurent.telenet-ops.be with bizsmtp
+        id JDwu2200N5USYZQ01Dwulv; Tue, 24 Mar 2020 14:57:05 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jGk34-0006Ow-PZ; Tue, 24 Mar 2020 14:56:54 +0100
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jGk34-0001kr-Nf; Tue, 24 Mar 2020 14:56:54 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        qemu-devel@nongnu.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v6 8/8] MAINTAINERS: Add GPIO Aggregator section
+Date:   Tue, 24 Mar 2020 14:56:53 +0100
+Message-Id: <20200324135653.6676-8-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324135653.6676-1-geert+renesas@glider.be>
+References: <20200324135328.5796-1-geert+renesas@glider.be>
+ <20200324135653.6676-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Add a maintainership section for the GPIO Aggregator, covering
+documentation and driver source code.
 
-On 23/3/20 21:06, Daniel Campello wrote:
-> Hello,
-> 
-> On Tue, Mar 17, 2020 at 1:09 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
->>
->> Hi,
->>
->> On 14/3/20 0:27, Bernardo Perez Priego wrote:
->>> Function 'h1_gpio_get' is receiving 'val' parameter of type u64,
->>> this is being passed to 'send_ec_cmd' as type u8, thus, result
->>> is stored in least significant byte. Due to output format,
->>> the whole 'val' value was being displayed when any of the most
->>> significant bytes are different than zero.
->>>
->>> This fix will make sure only least significant byte is displayed
->>> regardless of remaining bytes value.
->>>
->>> Signed-off-by: Bernardo Perez Priego <bernardo.perez.priego@intel.com>
->>
->> Daniel, could you give a try and give you Tested-by tag if you're fine with it?
->>
->> Thanks,
->>  Enric
->>
->>> ---
->>>  drivers/platform/chrome/wilco_ec/debugfs.c | 2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platform/chrome/wilco_ec/debugfs.c
->>> index df5a5f6c3ec6..c775b7d58c6d 100644
->>> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
->>> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
->>> @@ -211,7 +211,7 @@ static int h1_gpio_get(void *arg, u64 *val)
->>>       return send_ec_cmd(arg, SUB_CMD_H1_GPIO, (u8 *)val);
->>>  }
->>>
->>> -DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02llx\n");
->>> +DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02hhx\n");
->>>
->>>  /**
->>>   * test_event_set() - Sends command to EC to cause an EC test event.
->>>
-> 
-> Done. I also found the chromium review for this on crrev.com/c/2090128
-> 
-> Tested-by: Daniel Campello <campello@chromium.org>
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Reviewed-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+---
+v6:
+  - No changes,
 
-Queued for 5.7. Thanks.
+v5:
+  - Add Reviewed-by, Tested-by,
 
-~ Enric
+v4:
+  - Drop controversial GPIO repeater,
+
+v3:
+  - New.
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fcd79fc38928fafc..1fad69b956df1162 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7127,6 +7127,13 @@ F:	Documentation/firmware-guide/acpi/gpio-properties.rst
+ F:	drivers/gpio/gpiolib-acpi.c
+ F:	drivers/gpio/gpiolib-acpi.h
+ 
++GPIO AGGREGATOR
++M:	Geert Uytterhoeven <geert+renesas@glider.be>
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++F:	Documentation/admin-guide/gpio/gpio-aggregator.rst
++F:	drivers/gpio/gpio-aggregator.c
++
+ GPIO IR Transmitter
+ M:	Sean Young <sean@mess.org>
+ L:	linux-media@vger.kernel.org
+-- 
+2.17.1
+
