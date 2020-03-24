@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E765C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78D4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30E432078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:55:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7FF2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:55:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgCXUz2 (ORCPT
+        id S1728165AbgCXUza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:55:28 -0400
-Received: from mga04.intel.com ([192.55.52.120]:49362 "EHLO mga04.intel.com"
+        Tue, 24 Mar 2020 16:55:30 -0400
+Received: from mga14.intel.com ([192.55.52.115]:35350 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726984AbgCXUz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727753AbgCXUz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 16:55:27 -0400
-IronPort-SDR: S94iHmWsXsCs18KuYjQ1dm/WGgLpzhf4C+dEmtdjOt0MpkHf310QKIPj+ZhrJzGVbByyP7i3sm
- A7I59zoYIarw==
+IronPort-SDR: rWP3Ttw84T9CW/ubgc1qz4PRITYgFNitxF7HdOG+T0kAoxJA1qCf0Ks88lJMb0iv7vBdBJNuvU
+ E6kc/8MlsyKQ==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 13:55:26 -0700
-IronPort-SDR: UsykaQrZmK6MP/a+gyATwkJnS+hZgLKKR9tdAdhlLFV3Bu/jSKsziz6xECflZrs4B5gVfFFK8l
- xGMlXVWyLYcQ==
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 13:55:26 -0700
+IronPort-SDR: brs+nrRAG3iMBIspSKIF5DtQiVt0gybjQeJiE83656q3z99hAsVJzPoXdxk84DyurXYlkyTQsy
+ PyhUnO80h23w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
-   d="scan'208";a="293165083"
+   d="scan'208";a="235709274"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Mar 2020 13:55:25 -0700
+  by orsmga007.jf.intel.com with ESMTP; 24 Mar 2020 13:55:25 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jGqa4-000Gz1-P7; Wed, 25 Mar 2020 04:55:24 +0800
-Date:   Wed, 25 Mar 2020 04:55:20 +0800
+        id 1jGqa4-000GzO-QD; Wed, 25 Mar 2020 04:55:24 +0800
+Date:   Wed, 25 Mar 2020 04:55:16 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- e6fbd1b8e8c37638d32e64923b1e10f1d292eb65
-Message-ID: <5e7a73b8.fYSbOVDI1Hufkedm%lkp@intel.com>
+Subject: [tip:WIP.x86/asm] BUILD SUCCESS
+ bd5b1283e41c6c66d7420083b6ffb3b2df8eb20b
+Message-ID: <5e7a73b4.94Ei8NEiiiH6DnAt%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,13 +51,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: e6fbd1b8e8c37638d32e64923b1e10f1d292eb65  Merge branch 'WIP.x86/asm'
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  WIP.x86/asm
+branch HEAD: bd5b1283e41c6c66d7420083b6ffb3b2df8eb20b  crypto: Curve25519 - do not pollute dispatcher based on assembler
 
 elapsed time: 484m
 
 configs tested: 163
-configs skipped: 0
+configs skipped: 14
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -77,26 +77,28 @@ arm                        shmobile_defconfig
 arm                           sunxi_defconfig
 arm64                               defconfig
 sparc                            allyesconfig
+um                           x86_64_defconfig
+sh                                allnoconfig
 riscv                            allmodconfig
 riscv                             allnoconfig
 ia64                                defconfig
 powerpc                             defconfig
-i386                             allyesconfig
 i386                             alldefconfig
-i386                                defconfig
 i386                              allnoconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
 ia64                             allmodconfig
 ia64                              allnoconfig
 ia64                             allyesconfig
-ia64                             alldefconfig
-nios2                         3c120_defconfig
-nios2                         10m50_defconfig
-c6x                        evmc6678_defconfig
-xtensa                          iss_defconfig
 c6x                              allyesconfig
-xtensa                       common_defconfig
-openrisc                 simple_smp_defconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
 openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+xtensa                          iss_defconfig
 alpha                               defconfig
 csky                                defconfig
 nds32                             allnoconfig
@@ -108,13 +110,13 @@ m68k                             allmodconfig
 m68k                       m5475evb_defconfig
 m68k                          multi_defconfig
 m68k                           sun3_defconfig
-arc                                 defconfig
 arc                              allyesconfig
-powerpc                          rhel-kconfig
+arc                                 defconfig
 microblaze                      mmu_defconfig
 microblaze                    nommu_defconfig
 powerpc                           allnoconfig
 powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
 mips                           32r2_defconfig
 mips                         64r6el_defconfig
 mips                             allmodconfig
@@ -171,12 +173,12 @@ x86_64               randconfig-e003-20200324
 i386                 randconfig-e001-20200324
 i386                 randconfig-e002-20200324
 i386                 randconfig-e003-20200324
-i386                 randconfig-f001-20200324
-i386                 randconfig-f003-20200324
-i386                 randconfig-f002-20200324
+x86_64               randconfig-f001-20200324
 x86_64               randconfig-f002-20200324
 x86_64               randconfig-f003-20200324
-x86_64               randconfig-f001-20200324
+i386                 randconfig-f001-20200324
+i386                 randconfig-f002-20200324
+i386                 randconfig-f003-20200324
 x86_64               randconfig-g001-20200324
 x86_64               randconfig-g002-20200324
 x86_64               randconfig-g003-20200324
@@ -206,19 +208,17 @@ s390                             allyesconfig
 s390                          debug_defconfig
 s390                                defconfig
 s390                       zfcpdump_defconfig
-sh                          rsk7269_defconfig
 sh                               allmodconfig
-sh                            titan_defconfig
+sh                          rsk7269_defconfig
 sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
+sh                            titan_defconfig
 sparc                               defconfig
 sparc64                          allmodconfig
 sparc64                           allnoconfig
 sparc64                          allyesconfig
 sparc64                             defconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
 um                                  defconfig
+um                             i386_defconfig
 x86_64                              fedora-25
 x86_64                                  kexec
 x86_64                                    lkp
