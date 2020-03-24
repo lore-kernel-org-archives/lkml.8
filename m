@@ -2,119 +2,137 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860E7C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDE8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B802051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942F02051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585070197;
-	bh=sBmIAZrMd5INuP5Ib+0t5c6nERa/j5osdrx/0Fmnc3Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=zvGlwFdGNCkCd2QjTJ1L6R0pKPukC0zCRAq0IM3Z26fciq5sucN4PfY0adaAD0WvT
-	 sxZS/Kt0Ekj2RlpDYsf7qT0fhpVIAJwUxNTC+7BaW4yQ9Ou6lXYjv7KOt1AsLiNbEN
-	 EJoHDz28qSX0UpRerTMR/oDVnUwcGo9ultaFT3tk=
+	s=default; t=1585070214;
+	bh=WnqSTIFDe/Kb9yoYcJ/YYpeFFnG0haBTY6Mckibtcfo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aDK+Fi1Dw+tdi85mLjwoiT0/hOQn8sCRjslZ3bHi+f7YUlGyWLJ6S1N4eJTrthooE
+	 Vw1Ln4vwR7+EIqcwGzAF5ZfxN1BGwHrF7uLVsX3ldNtS+sozVp715G1ERTU7pMqMF6
+	 k+qFfwAPo4o5AlHST5BxOJDagSERcGz2flVjmF18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgCXRQg (ORCPT
+        id S1727841AbgCXRQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:16:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:38544 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 13:16:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727383AbgCXRQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:16:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FFF21045;
-        Tue, 24 Mar 2020 10:16:35 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04EF33F71F;
-        Tue, 24 Mar 2020 10:16:34 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 17:16:33 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
-        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com,
-        perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: wm8974: remove unused variables" to the asoc tree
-In-Reply-To:  <20200324070615.16248-1-yuehaibing@huawei.com>
-Message-Id:  <applied-20200324070615.16248-1-yuehaibing@huawei.com>
-X-Patchwork-Hint: ignore
+        id S1727223AbgCXRQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:16:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EEA32076F;
+        Tue, 24 Mar 2020 17:16:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585070212;
+        bh=WnqSTIFDe/Kb9yoYcJ/YYpeFFnG0haBTY6Mckibtcfo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=g+k4uyt6h3TRjUftFLvqtN8cf7g2rHMl/zIMxhUkxi798QhsRQOEdJ1z8R0hGUeja
+         Ys5aBxwtK9uNtq6qyD/vwcrFCct7wfbGEmlUB0iFpRF5vPP5+Yp1SRjv1ovxLwta/b
+         1x6zrVXONbrZnXMknzQ7AuJ890P4PNGIRgjmebwk=
+Date:   Tue, 24 Mar 2020 18:16:49 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org, vbendeb@chromium.org,
+        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
+        gwendal@chromium.org, andy@infradead.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Ayman Bagabas <ayman.bagabas@gmail.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Jeremy Soller <jeremy@system76.com>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Yauhen Kharuzhy <jekhor@gmail.com>,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
+Message-ID: <20200324171649.GA2522961@kroah.com>
+References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
+ <20200322111022.GA72939@kroah.com>
+ <c480f318-c326-d51c-e757-c65c2526ab4d@collabora.com>
+ <20200324164956.GE2518746@kroah.com>
+ <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, Mar 24, 2020 at 06:08:03PM +0100, Enric Balletbo i Serra wrote:
+> Hi Greg,
+> 
+> On 24/3/20 17:49, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 24, 2020 at 05:31:10PM +0100, Enric Balletbo i Serra wrote:
+> >> Hi Greg,
+> >>
+> >> Many thanks for your quick answer, some comments below.
+> >>
+> >> On 22/3/20 12:10, Greg Kroah-Hartman wrote:
+> >>> On Sun, Mar 22, 2020 at 10:43:34AM +0100, Enric Balletbo i Serra wrote:
+> >>>> This driver attaches to the ChromeOS ACPI device and then exports the values
+> >>>> reported by the ACPI in a sysfs directory. The ACPI values are presented in
+> >>>> the string form (numbers as decimal values) or binary blobs, and can be
+> >>>> accessed as the contents of the appropriate read only files in the sysfs
+> >>>> directory tree originating in /sys/devices/platform/chromeos_acpi.
+> >>>>
+> >>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> >>>
+> >>> What is wrong with the "default" ACPI sysfs access?  Why do you need a
+> >>> special driver just for this specific ACPI firmware?
+> >>>
+> >>
+> >> Please correct me if I am wrong, as I'm not an ACPI expert and I probably have
+> >> some ACPI leaks and misunderstandings.
+> >>
+> >> What is exporting this driver is the attributes for the non-default Chromebook
+> >> specific MLST ACPI method. Hence, I assumed we needed a special driver to expose
+> >> these values that can't be done using "default" ACPI sysfs. Note that these
+> >> attributes are dynamically created and are different between Chromebooks so need
+> >> some parsing.
+> >>
+> >> I didn't find a "standard" way to expose these attributes to userspace, so,
+> >> please kindly point me to one if there is one.
+> > 
+> > Are you sure they aren't already there under /sys/firmware/acpi/?  I
+> > thought all tables and methods were exported there with no need to do
+> > anything special.
+> > 
+> 
+> That's the first I did when I started to forward port this patch from chromeos
+> kernel to mainline.
+> 
+> On my system I get:
+> 
+> /sys/firmware/acpi/tables#
+> APIC  DSDT  FACP  FACS  HPET  MCFG  SSDT  data  dynamic
+> 
+> (data and dynamic are empty directories)
+> 
+> I quickly concluded (maybe wrong) that as there is no a MLST entry it was not
+> exported, but maybe one of those already contains the info? Or, should I expect
+> a MLST entry here?
+> 
+> > What makes these attributes "special" from any other ACPI method?
+> > 
+> 
+> I can't answer this question right now. I need to investigate more I guess ;-)
 
-   ASoC: wm8974: remove unused variables
+You can always ask the acpi developers as well, you need to get their
+review for your driver anyway :)
 
-has been applied to the asoc tree at
+good luck!
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 6b877cf8bc98e6c574a6d763943c4a92592e431c Mon Sep 17 00:00:00 2001
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Tue, 24 Mar 2020 15:06:15 +0800
-Subject: [PATCH] ASoC: wm8974: remove unused variables
-
-sound/soc/codecs/wm8974.c:200:38: warning:
- wm8974_aux_boost_controls defined but not used [-Wunused-const-variable=]
-sound/soc/codecs/wm8974.c:204:38: warning:
- wm8974_mic_boost_controls defined but not used [-Wunused-const-variable=]
-
-commit 8a123ee2a46d ("ASoC: WM8974 DAPM cleanups")
-left behind this, remove them.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Link: https://lore.kernel.org/r/20200324070615.16248-1-yuehaibing@huawei.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/wm8974.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/sound/soc/codecs/wm8974.c b/sound/soc/codecs/wm8974.c
-index dc4fe4f5239d..06ba36595ddd 100644
---- a/sound/soc/codecs/wm8974.c
-+++ b/sound/soc/codecs/wm8974.c
-@@ -196,14 +196,6 @@ SOC_DAPM_SINGLE("MicN Switch", WM8974_INPUT, 1, 1, 0),
- SOC_DAPM_SINGLE("MicP Switch", WM8974_INPUT, 0, 1, 0),
- };
- 
--/* AUX Input boost vol */
--static const struct snd_kcontrol_new wm8974_aux_boost_controls =
--SOC_DAPM_SINGLE("Aux Volume", WM8974_ADCBOOST, 0, 7, 0);
--
--/* Mic Input boost vol */
--static const struct snd_kcontrol_new wm8974_mic_boost_controls =
--SOC_DAPM_SINGLE("Mic Volume", WM8974_ADCBOOST, 4, 7, 0);
--
- static const struct snd_soc_dapm_widget wm8974_dapm_widgets[] = {
- SND_SOC_DAPM_MIXER("Speaker Mixer", WM8974_POWER3, 2, 0,
- 	&wm8974_speaker_mixer_controls[0],
--- 
-2.20.1
-
+greg k-h
