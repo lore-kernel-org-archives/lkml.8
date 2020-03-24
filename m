@@ -2,381 +2,223 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640F2C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF103C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B732073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="T5Whujpi"
+	by mail.kernel.org (Postfix) with ESMTP id C864220B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585064319;
+	bh=ePC0KcHwaeG27HJefCMue14nRgQlh3QPrh4rpDBAm+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lT+KRsY8EMO9vbke2BH0AKzdLy/oZk7g9m+zBBDKXF+6BBzKGffzToGBOPPYaJIsj
+	 NUWxkODhwSdj0hPMPmTWYWyLd1GW5356jMReLM4VYM1NM5mmnlv3BozRoprBtZjvCv
+	 jpOe4aKErQZAaGqjI9oY+Ovv2FlpeXZq9BBNnmjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbgCXPic (ORCPT
+        id S1728667AbgCXPii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:38:32 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17887 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728725AbgCXPib (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:38:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585064211;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=4GS+fzgHRhPzfIm1JsnxfQzRHz6CyvzmhR6kJTWisc4=;
-        b=T5Whujpi28xlX4a4nyuyKjHRnnja5iq/fwuLgCSvhLGibeIsSRO7TEtJf1053dps
-        zLPCsYF08+FJnvYyUaP4LQLuLOZavRA/rAyHkIbT4syDq8zRbzeQgTcoUfbuTe3Br3n
-        qbywFig5wAMtYDydgaBU/9nPQt/4HNIOgylSeDhw=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585064210387234.52774611307268; Tue, 24 Mar 2020 23:36:50 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200324153624.23109-2-jiaxun.yang@flygoat.com>
-Subject: [PATCH v6 01/11] irqchip: Add driver for Loongson I/O Local Interrupt Controller
-Date:   Tue, 24 Mar 2020 23:35:58 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
-References: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
+        Tue, 24 Mar 2020 11:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60356 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728618AbgCXPh2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:28 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E56B6208CA;
+        Tue, 24 Mar 2020 15:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585064247;
+        bh=ePC0KcHwaeG27HJefCMue14nRgQlh3QPrh4rpDBAm+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ySrv9lDoir/ctvuoDCC59S/NRJYM3saGztZut9HosJtQrud9DmO2rEQYmy4m2Y3Uf
+         8/4lOkxE55lxjrkjgXa/MPyc+LGVBrLqSSxuS/aQ1xgM1o6Jpqe5meS7XeiNPV9her
+         ptPCVWPMtE3vx0DYOli+qNSrP71EXJv5Re6PsHZA=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: [RFC PATCH 15/21] list_bl: Use CHECK_DATA_CORRUPTION instead of custom BUG_ON() wrapper
+Date:   Tue, 24 Mar 2020 15:36:37 +0000
+Message-Id: <20200324153643.15527-16-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200324153643.15527-1-will@kernel.org>
+References: <20200324153643.15527-1-will@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This controller appeared on Loongson family of chips as the primary
-package interrupt source.
+CHECK_DATA_CORRUPTION() allows detected data corruption to result
+consistently in either a BUG() or a WARN() depending on
+CONFIG_BUG_ON_DATA_CORRUPTION.
 
-Co-developed-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Use CHECK_DATA_CORRUPTION() to report list_bl integrity checking failures,
+rather than a custom wrapper around BUG_ON().
 
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
-v4-v5:
-=09Resolve suggestions from maz:
-=09=09- Remove DT validation
-=09=09- Simplify unnucessary functions & variables
----
- drivers/irqchip/Kconfig                |   9 +
- drivers/irqchip/Makefile               |   1 +
- drivers/irqchip/irq-loongson-liointc.c | 259 +++++++++++++++++++++++++
- 3 files changed, 269 insertions(+)
- create mode 100644 drivers/irqchip/irq-loongson-liointc.c
+ include/linux/list_bl.h    | 55 +++++++++++++++++++++++++-------------
+ include/linux/rculist_bl.h | 17 ++++--------
+ 2 files changed, 42 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 6d397732138d..c609eaa319d2 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -513,4 +513,13 @@ config EXYNOS_IRQ_COMBINER
- =09  Say yes here to add support for the IRQ combiner devices embedded
- =09  in Samsung Exynos chips.
-=20
-+config LOONGSON_LIOINTC
-+=09bool "Loongson Local I/O Interrupt Controller"
-+=09depends on MACH_LOONGSON64
-+=09default y
-+=09select IRQ_DOMAIN
-+=09select GENERIC_IRQ_CHIP
-+=09help
-+=09  Support for the Loongson Local I/O Interrupt Controller.
+diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
+index 9f8e29142324..f48d8acb15b4 100644
+--- a/include/linux/list_bl.h
++++ b/include/linux/list_bl.h
+@@ -24,13 +24,6 @@
+ #define LIST_BL_LOCKMASK	0UL
+ #endif
+ 
+-#ifdef CONFIG_CHECK_INTEGRITY_LIST
+-#define LIST_BL_BUG_ON(x) BUG_ON(x)
+-#else
+-#define LIST_BL_BUG_ON(x)
+-#endif
+-
+-
+ struct hlist_bl_head {
+ 	struct hlist_bl_node *first;
+ };
+@@ -38,6 +31,37 @@ struct hlist_bl_head {
+ struct hlist_bl_node {
+ 	struct hlist_bl_node *next, **pprev;
+ };
 +
- endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index eae0d78cbf22..5e7678efdfe6 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -105,3 +105,4 @@ obj-$(CONFIG_MADERA_IRQ)=09=09+=3D irq-madera.o
- obj-$(CONFIG_LS1X_IRQ)=09=09=09+=3D irq-ls1x.o
- obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)=09+=3D irq-ti-sci-intr.o
- obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)=09+=3D irq-ti-sci-inta.o
-+obj-$(CONFIG_LOONGSON_LIOINTC)=09=09+=3D irq-loongson-liointc.o
-diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-l=
-oongson-liointc.c
-new file mode 100644
-index 000000000000..8b6d7b8ddaca
---- /dev/null
-+++ b/drivers/irqchip/irq-loongson-liointc.c
-@@ -0,0 +1,259 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  Copyright (C) 2020, Jiaxun Yang <jiaxun.yang@flygoat.com>
-+ *  Loongson Local IO Interrupt Controller support
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/init.h>
-+#include <linux/types.h>
-+#include <linux/interrupt.h>
-+#include <linux/ioport.h>
-+#include <linux/irqchip.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/io.h>
-+#include <linux/smp.h>
-+#include <linux/irqchip/chained_irq.h>
-+
-+#include <boot_param.h>
-+
-+#define LIOINTC_CHIP_IRQ=0932
-+#define LIOINTC_NUM_PARENT 4
-+
-+#define LIOINTC_INTC_CHIP_START=090x20
-+
-+#define LIOINTC_REG_INTC_STATUS=09(LIOINTC_INTC_CHIP_START + 0x20)
-+#define LIOINTC_REG_INTC_EN_STATUS=09(LIOINTC_INTC_CHIP_START + 0x04)
-+#define LIOINTC_REG_INTC_ENABLE=09(LIOINTC_INTC_CHIP_START + 0x08)
-+#define LIOINTC_REG_INTC_DISABLE=09(LIOINTC_INTC_CHIP_START + 0x0c)
-+#define LIOINTC_REG_INTC_POL=09(LIOINTC_INTC_CHIP_START + 0x10)
-+#define LIOINTC_REG_INTC_EDGE=09(LIOINTC_INTC_CHIP_START + 0x14)
-+
-+#define LIOINTC_SHIFT_INTx=094
-+
-+struct liointc_handler_data {
-+=09struct liointc_priv=09*priv;
-+=09u32=09=09=09parent_int_map;
-+};
-+
-+struct liointc_priv {
-+=09struct irq_chip_generic=09=09*gc;
-+=09struct liointc_handler_data=09handler[LIOINTC_NUM_PARENT];
-+=09u8=09=09=09=09map_cache[LIOINTC_CHIP_IRQ];
-+};
-+
-+static void liointc_chained_handle_irq(struct irq_desc *desc)
++#ifdef CONFIG_CHECK_INTEGRITY_LIST
++static inline bool __hlist_bl_add_head_valid(struct hlist_bl_head *h,
++					     struct hlist_bl_node *n)
 +{
-+=09struct liointc_handler_data *handler =3D irq_desc_get_handler_data(desc=
-);
-+=09struct irq_chip *chip =3D irq_desc_get_chip(desc);
-+=09struct irq_chip_generic *gc =3D handler->priv->gc;
-+=09u32 pending;
++	unsigned long hlock = (unsigned long)h->first & LIST_BL_LOCKMASK;
++	unsigned long nlock = (unsigned long)n & LIST_BL_LOCKMASK;
 +
-+=09chained_irq_enter(chip, desc);
-+
-+=09pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
-+
-+=09if (!pending)
-+=09=09spurious_interrupt();
-+
-+=09while (pending) {
-+=09=09int bit =3D __ffs(pending);
-+
-+=09=09generic_handle_irq(irq_find_mapping(gc->domain, bit));
-+=09=09pending &=3D ~BIT(bit);
-+=09}
-+
-+=09chained_irq_exit(chip, desc);
++	return !(CHECK_DATA_CORRUPTION(nlock,
++			"hlist_bl_add_head: node is locked\n") ||
++		 CHECK_DATA_CORRUPTION(hlock != LIST_BL_LOCKMASK,
++			"hlist_bl_add_head: head is unlocked\n"));
 +}
 +
-+static void liointc_set_bit(struct irq_chip_generic *gc,
-+=09=09=09=09unsigned int offset,
-+=09=09=09=09u32 mask, bool set)
++static inline bool __hlist_bl_del_valid(struct hlist_bl_node *n)
 +{
-+=09if (set)
-+=09=09writel(readl(gc->reg_base + offset) | mask,
-+=09=09=09=09gc->reg_base + offset);
-+=09else
-+=09=09writel(readl(gc->reg_base + offset) & ~mask,
-+=09=09=09=09gc->reg_base + offset);
++	unsigned long nlock = (unsigned long)n & LIST_BL_LOCKMASK;
++	return !CHECK_DATA_CORRUPTION(nlock, "hlist_bl_del_valid: node locked");
 +}
-+
-+static int liointc_set_type(struct irq_data *data, unsigned int type)
++#else
++static inline bool __hlist_bl_add_head_valid(struct hlist_bl_head *h,
++					     struct hlist_bl_node *n)
 +{
-+=09struct irq_chip_generic *gc =3D irq_data_get_irq_chip_data(data);
-+=09u32 mask =3D data->mask;
-+=09unsigned long flags;
-+
-+=09irq_gc_lock_irqsave(gc, flags);
-+=09switch (type) {
-+=09case IRQ_TYPE_LEVEL_HIGH:
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
-+=09=09break;
-+=09case IRQ_TYPE_LEVEL_LOW:
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, false);
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
-+=09=09break;
-+=09case IRQ_TYPE_EDGE_RISING:
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, true);
-+=09=09break;
-+=09case IRQ_TYPE_EDGE_FALLING:
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_EDGE, mask, true);
-+=09=09liointc_set_bit(gc, LIOINTC_REG_INTC_POL, mask, false);
-+=09=09break;
-+=09default:
-+=09=09return -EINVAL;
-+=09}
-+=09irq_gc_unlock_irqrestore(gc, flags);
-+
-+=09irqd_set_trigger_type(data, type);
-+=09return 0;
++	return true;
 +}
-+
-+static void liointc_resume(struct irq_chip_generic *gc)
++static inline bool __hlist_bl_del_valid(struct hlist_bl_node *n)
 +{
-+=09struct liointc_priv *priv =3D gc->private;
-+=09unsigned long flags;
-+=09int i;
-+
-+=09irq_gc_lock_irqsave(gc, flags);
-+=09/* Disable all at first */
-+=09writel(0xffffffff, gc->reg_base + LIOINTC_REG_INTC_DISABLE);
-+=09/* Revert map cache */
-+=09for (i =3D 0; i < LIOINTC_CHIP_IRQ; i++)
-+=09=09writeb(priv->map_cache[i], gc->reg_base + i);
-+=09/* Revert mask cache */
-+=09writel(~gc->mask_cache, gc->reg_base + LIOINTC_REG_INTC_ENABLE);
-+=09irq_gc_unlock_irqrestore(gc, flags);
++	return true;
 +}
++#endif
 +
-+static const char const *parent_names[] =3D {"int0", "int1", "int2", "int3=
-"};
+ #define INIT_HLIST_BL_HEAD(ptr) \
+ 	((ptr)->first = NULL)
+ 
+@@ -60,15 +84,6 @@ static inline struct hlist_bl_node *hlist_bl_first(struct hlist_bl_head *h)
+ 		((unsigned long)h->first & ~LIST_BL_LOCKMASK);
+ }
+ 
+-static inline void hlist_bl_set_first(struct hlist_bl_head *h,
+-					struct hlist_bl_node *n)
+-{
+-	LIST_BL_BUG_ON((unsigned long)n & LIST_BL_LOCKMASK);
+-	LIST_BL_BUG_ON(((unsigned long)h->first & LIST_BL_LOCKMASK) !=
+-							LIST_BL_LOCKMASK);
+-	h->first = (struct hlist_bl_node *)((unsigned long)n | LIST_BL_LOCKMASK);
+-}
+-
+ static inline bool hlist_bl_empty(const struct hlist_bl_head *h)
+ {
+ 	unsigned long first = data_race((unsigned long)READ_ONCE(h->first));
+@@ -80,11 +95,14 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
+ {
+ 	struct hlist_bl_node *first = hlist_bl_first(h);
+ 
++	if (!__hlist_bl_add_head_valid(h, n))
++		return;
 +
-+int __init liointc_of_init(struct device_node *node,
-+=09=09=09=09struct device_node *parent)
-+{
-+=09struct irq_chip_generic *gc;
-+=09struct irq_domain *domain;
-+=09struct irq_chip_type *ct;
-+=09struct liointc_priv *priv;
-+=09void __iomem *base;
-+=09u32 of_parent_int_map[LIOINTC_NUM_PARENT];
-+=09int parent_irq[LIOINTC_NUM_PARENT];
-+=09bool have_parent =3D FALSE;
-+=09int sz, i, err =3D 0;
+ 	n->next = first;
+ 	if (first)
+ 		first->pprev = &n->next;
+ 	n->pprev = &h->first;
+-	hlist_bl_set_first(h, n);
++	h->first = (struct hlist_bl_node *)((unsigned long)n | LIST_BL_LOCKMASK);
+ }
+ 
+ static inline void hlist_bl_add_before(struct hlist_bl_node *n,
+@@ -118,7 +136,8 @@ static inline void __hlist_bl_del(struct hlist_bl_node *n)
+ 	struct hlist_bl_node *next = n->next;
+ 	struct hlist_bl_node **pprev = n->pprev;
+ 
+-	LIST_BL_BUG_ON((unsigned long)n & LIST_BL_LOCKMASK);
++	if (!__hlist_bl_del_valid(n))
++		return;
+ 
+ 	/* pprev may be `first`, so be careful not to lose the lock bit */
+ 	WRITE_ONCE(*pprev,
+diff --git a/include/linux/rculist_bl.h b/include/linux/rculist_bl.h
+index 0b952d06eb0b..553ce3cde104 100644
+--- a/include/linux/rculist_bl.h
++++ b/include/linux/rculist_bl.h
+@@ -8,16 +8,6 @@
+ #include <linux/list_bl.h>
+ #include <linux/rcupdate.h>
+ 
+-static inline void hlist_bl_set_first_rcu(struct hlist_bl_head *h,
+-					struct hlist_bl_node *n)
+-{
+-	LIST_BL_BUG_ON((unsigned long)n & LIST_BL_LOCKMASK);
+-	LIST_BL_BUG_ON(((unsigned long)h->first & LIST_BL_LOCKMASK) !=
+-							LIST_BL_LOCKMASK);
+-	rcu_assign_pointer(h->first,
+-		(struct hlist_bl_node *)((unsigned long)n | LIST_BL_LOCKMASK));
+-}
+-
+ static inline struct hlist_bl_node *hlist_bl_first_rcu(struct hlist_bl_head *h)
+ {
+ 	return (struct hlist_bl_node *)
+@@ -73,6 +63,9 @@ static inline void hlist_bl_add_head_rcu(struct hlist_bl_node *n,
+ {
+ 	struct hlist_bl_node *first;
+ 
++	if (!__hlist_bl_add_head_valid(h, n))
++		return;
 +
-+=09priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
-+=09if (!priv)
-+=09=09return -ENOMEM;
-+
-+=09base =3D of_iomap(node, 0);
-+=09if (!base) {
-+=09=09err =3D -ENODEV;
-+=09=09goto out_free_priv;
-+=09}
-+
-+=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
-+=09=09parent_irq[i] =3D of_irq_get_byname(node, parent_names[i]);
-+=09=09if (parent_irq[i] > 0)
-+=09=09=09have_parent =3D TRUE;
-+=09}
-+=09if (!have_parent) {
-+=09=09err =3D -ENODEV;
-+=09=09goto out_iounmap;
-+=09}
-+
-+=09sz =3D of_property_read_variable_u32_array(node, "loongson,parent_int_m=
-ap",
-+=09=09=09=09=09=09&of_parent_int_map[0], LIOINTC_NUM_PARENT,
-+=09=09=09=09=09=09LIOINTC_NUM_PARENT);
-+=09if (sz < 4) {
-+=09=09pr_err("loongson-liointc: No parent_int_map\n");
-+=09=09err =3D -ENODEV;
-+=09=09goto out_iounmap;
-+=09}
-+
-+=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++)
-+=09=09priv->handler[i].parent_int_map =3D of_parent_int_map[i];
-+
-+=09/* Setup IRQ domain */
-+=09domain =3D irq_domain_add_linear(node, 32,
-+=09=09=09=09=09&irq_generic_chip_ops, priv);
-+=09if (!domain) {
-+=09=09pr_err("loongson-liointc: cannot add IRQ domain\n");
-+=09=09err =3D -EINVAL;
-+=09=09goto out_iounmap;
-+=09}
-+
-+=09err =3D irq_alloc_domain_generic_chips(domain, 32, 1,
-+=09=09=09=09=09node->full_name, handle_level_irq,
-+=09=09=09=09=09IRQ_NOPROBE, 0, 0);
-+=09if (err) {
-+=09=09pr_err("loongson-liointc: unable to register IRQ domain\n");
-+=09=09goto out_free_domain;
-+=09}
-+
-+
-+=09/* Disable all IRQs */
-+=09writel(0xffffffff, base + LIOINTC_REG_INTC_DISABLE);
-+=09/* Set to level triggered */
-+=09writel(0x0, base + LIOINTC_REG_INTC_EDGE);
-+
-+=09/* Generate parent INT part of map cache */
-+=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
-+=09=09u32 pending =3D priv->handler[i].parent_int_map;
-+
-+=09=09while (pending) {
-+=09=09=09int bit =3D __ffs(pending);
-+
-+=09=09=09priv->map_cache[bit] =3D BIT(i) << LIOINTC_SHIFT_INTx;
-+=09=09=09pending &=3D ~BIT(bit);
-+=09=09}
-+=09}
-+
-+=09for (i =3D 0; i < LIOINTC_CHIP_IRQ; i++) {
-+=09=09/* Generate core part of map cache */
-+=09=09priv->map_cache[i] |=3D BIT(loongson_sysconf.boot_cpu_id);
-+=09=09writeb(priv->map_cache[i], base + i);
-+=09}
-+
-+=09gc =3D irq_get_domain_generic_chip(domain, 0);
-+=09gc->private =3D priv;
-+=09gc->reg_base =3D base;
-+=09gc->domain =3D domain;
-+=09gc->resume =3D liointc_resume;
-+
-+=09ct =3D gc->chip_types;
-+=09ct->regs.enable =3D LIOINTC_REG_INTC_ENABLE;
-+=09ct->regs.disable =3D LIOINTC_REG_INTC_DISABLE;
-+=09ct->chip.irq_unmask =3D irq_gc_unmask_enable_reg;
-+=09ct->chip.irq_mask =3D irq_gc_mask_disable_reg;
-+=09ct->chip.irq_mask_ack =3D irq_gc_mask_disable_reg;
-+=09ct->chip.irq_set_type =3D liointc_set_type;
-+
-+=09gc->mask_cache =3D 0xffffffff;
-+=09priv->gc =3D gc;
-+
-+=09for (i =3D 0; i < LIOINTC_NUM_PARENT; i++) {
-+=09=09if (parent_irq[i] <=3D 0)
-+=09=09=09continue;
-+
-+=09=09priv->handler[i].priv =3D priv;
-+=09=09irq_set_chained_handler_and_data(parent_irq[i],
-+=09=09=09=09liointc_chained_handle_irq, &priv->handler[i]);
-+=09}
-+
-+=09return 0;
-+
-+out_free_domain:
-+=09irq_domain_remove(domain);
-+out_iounmap:
-+=09iounmap(base);
-+out_free_priv:
-+=09kfree(priv);
-+
-+=09return err;
-+}
-+
-+IRQCHIP_DECLARE(loongson_liointc_1_0, "loongson,liointc-1.0", liointc_of_i=
-nit);
-+IRQCHIP_DECLARE(loongson_liointc_1_0a, "loongson,liointc-1.0a", liointc_of=
-_init);
---=20
-2.26.0.rc2
-
+ 	/* don't need hlist_bl_first_rcu because we're under lock */
+ 	first = hlist_bl_first(h);
+ 
+@@ -81,8 +74,8 @@ static inline void hlist_bl_add_head_rcu(struct hlist_bl_node *n,
+ 		first->pprev = &n->next;
+ 	n->pprev = &h->first;
+ 
+-	/* need _rcu because we can have concurrent lock free readers */
+-	hlist_bl_set_first_rcu(h, n);
++	rcu_assign_pointer(h->first,
++		(struct hlist_bl_node *)((unsigned long)n | LIST_BL_LOCKMASK));
+ }
+ /**
+  * hlist_bl_for_each_entry_rcu - iterate over rcu list of given type
+-- 
+2.20.1
 
