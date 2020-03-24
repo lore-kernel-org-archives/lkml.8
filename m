@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF29CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 593E6C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99EF620836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0E720870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585039911;
-	bh=Iv3Ytq8bh69ZiOc5Glx1Gv7cmvr5X7NaNRuGu5x/ZT4=;
+	s=default; t=1585039918;
+	bh=CapmDDq+DEQ/uX/xUf3VhIOP+7/Tw+B0qe8PUUAMk6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g/kNLK+fPP+wXMcnVwFps9sEuGp0CWkjBfalNh23elNMaOjMJOq9wuwkcFHsOtx5e
-	 ZgeCO5o/E72bqOaZ44PeD3pFsWiDpD0vZTFGLnpKUYKprv6EEJZdPw31o63AQtDi4V
-	 YhAuDDNYdBiRyeJ0XXhCG216m7rK7wOc/omK9V4o=
+	b=uv69dGrGs0qMTrH94C6Do/YOPasm6I2tmcKSvhr2AiucDqeJ6jGqyVq70Bfwrkpt+
+	 jVGpk4aZTfXNczgZTDy5WHEybs3njls+kfd0ytwtPaNhbXUfSKp50c7QpSz95YLcGU
+	 DrxAc5eAcwGuOo0xKojDXOBGe84Y8ajanAVVrRy4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCXIv0 (ORCPT
+        id S1727289AbgCXIvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:51:26 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:17233 "EHLO
+        Tue, 24 Mar 2020 04:51:10 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:17144 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbgCXIvL (ORCPT
+        with ESMTP id S1727239AbgCXIvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:51:11 -0400
+        Tue, 24 Mar 2020 04:51:08 -0400
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 02O8mgsk011219;
-        Tue, 24 Mar 2020 17:49:00 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsk011219
+        by conuserg-09.nifty.com with ESMTP id 02O8mgsf011219;
+        Tue, 24 Mar 2020 17:48:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsf011219
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585039740;
-        bh=+sBpYXedQh2YzVb03jkJMbz9JNuGcrw07RIglD9uxfI=;
+        s=dec2015msa; t=1585039734;
+        bh=0n2SNVTASAHLSUpoQ5+c9e3R+yizJV+PNdqURrTAbRw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n9RusmaBll+27qhYBFIXlTiemgqggu13Qa7n14wuVoCHAhETdtWLrtnjV8ZNRJXDS
-         NNBqD11dc85K2uijg50eldHcFAl4EqN4nul2gJlFo5Y2/88+9A2olIwEGfSUuJPSXQ
-         hfogxDr82ybyTUvuQPKwQBBtvfFTKWBfz2n379+xohHovrNGOQb0NZ7rPH8M8tQwqq
-         33VzRfCB4fI1MB3vhNeg6ngj2bcUFGcvctdVQXH50TFa7rqXox3sErAwLQ7CVpljc6
-         L558GI83D9EEIRVD1667yOhm4SBk0sOuN8uATfebq4SCi5oPL1pCsWZOGxEzn8XAyv
-         OwgbU8g1u+zhw==
+        b=Vdr/w1ERj7s9sh0xtaMeTFMbLkW/1musxOa2cnHwWWSdZP7PvU8KmssioszE69Uv9
+         JJNyLcQi+0FbPRnDgIGtiSH/IciTEtRDm2MVeymDzI1JuaQ7Hgd30TzwIoqNHXj97Y
+         f/wv2FyG2EMdR8gyKleb5He9HNnrXYOM7MLE+hEUg+trWz4Bq/A+YaysfvSc9IE5sv
+         sNdWuKd/PJVwZ0/HT/W9ANcRQbgVwfBA8khb0Lq2aqATsAXHUhluPP+um0k/4OJP6h
+         AfUkvbRlTMJ8gHayVzW0M2EbXaqWHS2TjPNG+AMaSgGCf0Xco0co3H7qR2vw60bwyQ
+         46xbabDUwtKUg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kernel@vger.kernel.org
@@ -56,11 +56,10 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         Peter Zijlstra <peterz@infradead.org>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         linux-kbuild@vger.kernel.org,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 13/16] crypto: curve25519 - do not pollute dispatcher based on assembler
-Date:   Tue, 24 Mar 2020 17:48:18 +0900
-Message-Id: <20200324084821.29944-14-masahiroy@kernel.org>
+Subject: [PATCH 08/16] x86: add comments about the binutils version to support code in as-instr
+Date:   Tue, 24 Mar 2020 17:48:13 +0900
+Message-Id: <20200324084821.29944-9-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200324084821.29944-1-masahiroy@kernel.org>
 References: <20200324084821.29944-1-masahiroy@kernel.org>
@@ -69,47 +68,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+We raise the minimal supported binutils version from time to time.
+The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
+required binutils version to 2.21").
 
-Since we're doing a static inline dispatch here, we normally branch
-based on whether or not there's an arch implementation. That would have
-been fine in general, except the crypto Makefile prior used to turn
-things off -- despite the Kconfig -- resulting in us needing to also
-hard code various assembler things into the dispatcher too. The horror!
-Now that the assembler config options are done by Kconfig, we can get
-rid of the inconsistency.
+We need to keep these as-instr checks because binutils 2.21 does not
+support them.
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+I hope this will be a good hint which one can be dropped when we
+bump the minimal binutils version next time.
+
+As for the Clang/LLVM builds, we require very new LLVM version,
+so the LLVM integrated assembler supports all of them.
+
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
 ---
 
- include/crypto/curve25519.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/include/crypto/curve25519.h b/include/crypto/curve25519.h
-index 9ecb3c1f0f15..4e6dc840b159 100644
---- a/include/crypto/curve25519.h
-+++ b/include/crypto/curve25519.h
-@@ -33,8 +33,7 @@ bool __must_check curve25519(u8 mypublic[CURVE25519_KEY_SIZE],
- 			     const u8 secret[CURVE25519_KEY_SIZE],
- 			     const u8 basepoint[CURVE25519_KEY_SIZE])
- {
--	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519) &&
--	    (!IS_ENABLED(CONFIG_CRYPTO_CURVE25519_X86) || IS_ENABLED(CONFIG_AS_ADX)))
-+	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519))
- 		curve25519_arch(mypublic, secret, basepoint);
- 	else
- 		curve25519_generic(mypublic, secret, basepoint);
-@@ -50,8 +49,7 @@ __must_check curve25519_generate_public(u8 pub[CURVE25519_KEY_SIZE],
- 				    CURVE25519_KEY_SIZE)))
- 		return false;
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index f32ef7b8d5ca..4c57cb3018fb 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -178,10 +178,15 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+ endif
  
--	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519) &&
--	    (!IS_ENABLED(CONFIG_CRYPTO_CURVE25519_X86) || IS_ENABLED(CONFIG_AS_ADX)))
-+	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519))
- 		curve25519_base_arch(pub, secret);
- 	else
- 		curve25519_generic(pub, secret, curve25519_base_point);
+ # does binutils support specific instructions?
++# binutils >= 2.22
+ avx2_instr :=$(call as-instr,vpbroadcastb %xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
++# binutils >= 2.25
+ avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
++# binutils >= 2.24
+ sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=1)
++# binutils >= 2.24
+ sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
++# binutils >= 2.23
+ adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+ 
+ KBUILD_AFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
 -- 
 2.17.1
 
