@@ -2,123 +2,126 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FDDC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66629C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C53D20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 367F420774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:55:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WrlNghcz"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="LnXgAgYw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgCXOzA (ORCPT
+        id S1727842AbgCXOzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:55:00 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36522 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgCXOy7 (ORCPT
+        Tue, 24 Mar 2020 10:55:33 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33960 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727168AbgCXOzc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:54:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g12so18910367ljj.3;
-        Tue, 24 Mar 2020 07:54:58 -0700 (PDT)
+        Tue, 24 Mar 2020 10:55:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id s13so18936452ljm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:55:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=AOSS3eFveilVZn/DBbbwh0izNJbKh2tnXbF729vy+ig=;
-        b=WrlNghczCsey37/MKE3w8tCZ2XzHcdmxxQnDbBLx/KkZdZJaB48QcwugA33f5AYk5I
-         KQ9H4EcdVf5G0OY/4B94T4N2OuEjHl8mCBhcYsRdr385N33Llhupz5oStGeGW2LLTWJa
-         38wNnLTn57+OPZH86ID4htim9sSaWwM0b1bqI+dVKKfyTnSTMyB5RAkzn7thHQVBSF0C
-         tFBXDAKeVrBUOhpRpjOfavyD/bUs8+h4mYs7OtAFVwIhj+C7HeaOYW50htqulzwDICzZ
-         FkomX58TuXFMnrDSSRMlD4mj2BBPYE7UGX2uVIH5O3UKAdFYK0b9S2yY0dsxdOHFwHg3
-         s9nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=AOSS3eFveilVZn/DBbbwh0izNJbKh2tnXbF729vy+ig=;
-        b=ZAPaPo/iNon6cBmt9lVJk4JFM71D7OSNqd0mqHAXfWnVAgJcJ5g2Ww03etWXoy0jS0
-         4VN8QACBtkEAlX12NjxJVp8EKF2r+Sw7zneFDQw6bdk465YeDSw8gnvEIxb1XaTZeiLw
-         Sajx3MR37rKU6LTgDEcS3EKjJ4Au1t/sbysDzjqyMtzdsriri0xpTaLsNTSuBlYL1joQ
-         1afTgzA7KuXv4s+wXJonjJl5MjhH95CefTBU/58uD+o3P+p8bUU7LfYnbkArWXe8v51R
-         YOjUCxCEgGY0BnRkP9PvZ9Bl3eTO+DH9xzMYOAUzMS6sNwMomXw4BJduxCPZw2WRZ3kT
-         Hxug==
-X-Gm-Message-State: ANhLgQ0yXqP7ArcFRwMnaLmtHVnnC/BNOpDH0zJeO1aAQtm54U2zZtfc
-        A7Kr3QL3q00fmAeOLcfLTvI=
-X-Google-Smtp-Source: ADFU+vveJotGWX053MYJksGQ4e55grhJu+aTUF4p1M6m8YJCoBbxN+4WPmArxVjhO/YKIcbaGGSUwQ==
-X-Received: by 2002:a05:651c:201d:: with SMTP id s29mr3721559ljo.214.1585061697401;
-        Tue, 24 Mar 2020 07:54:57 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id y20sm10270084ljd.35.2020.03.24.07.54.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 07:54:56 -0700 (PDT)
-Subject: Re: [PATCH v7 00/48] atmel_mxt_ts misc
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, rydberg@bitmath.org,
-        dmitry.torokhov@gmail.com, nick@shmanahar.org, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200212084218.32344-1-jiada_wang@mentor.com>
- <c583d151-9243-cbde-a04b-bc0389d9be5a@gmail.com>
- <89e4bb0b-b2eb-0b67-4307-fb2af914b1c0@mentor.com>
- <f9b221e7-f189-3e47-adab-1cbc49490d4b@gmail.com>
- <bd3c487b-b065-3e4f-6ab1-f344a4113fcd@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <5d8fdfc1-cc95-59db-b83e-87bb16ea79e8@gmail.com>
-Date:   Tue, 24 Mar 2020 17:54:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        bh=BNd0h3fsVcT6k8d64lGb4UxIfYz4swlJdfLJY5I84Pk=;
+        b=LnXgAgYwJnh4LyNLf6Ei0tES9O4ek/ykjW3ITZ+X43dvYS7Ob00W597ztY5ZO6ftDg
+         LAyQ8TkGy2IMIv1mwYwM3GUW2wGTlOEZtL+pcWQMoan2Xztfv0St5RZkqg5C83J37JkZ
+         HXAqLmlpJBkZ1yPXRbL/b1lbZbU7+4UbmCV0ucehy7Jj2u+AoNpVWpYvu8fffUdGhm55
+         LKsz9OvlTP3PSTVn9lqnGP16ngUvc8PzX1mqq1h6yiO4iPPTMuEmKkoLdbh5mOqPqSCU
+         vhIT5t1FPMsUV3B1NmUfy7F5cLdqk6wDO14j7xTO43eecWD9nIal5MK3PBWXhKoWKkzq
+         Ndrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BNd0h3fsVcT6k8d64lGb4UxIfYz4swlJdfLJY5I84Pk=;
+        b=qk5J8nlJAPlnYCkBo/aLZaFaVGXZ/q/KAaGUSr3Mw9PVXyo2bQIYAq7MhcMwtGXU0J
+         hWyxCMbmQvYHnBwYBa4f+H4h5Ft8wm9ng5hIoE5HTJHr9jn0PvKZiVgWNeZ1Y+PO421v
+         qXcDnB0m250nzxUe+PGgaca6wOylNq9L6rJbFyROKX20KoxmyB7iHPPIhIoxnHpH4k7z
+         93DfBGsmswztUXjqHzZO90vFCrXYg4i07iXo82REjgOx/6y02C1M4NCUg4RA7oI6gDRx
+         uShvLIiLGxxzuHHgp/PEY2PFWeaNbPrzSnATL8/aHkN0x5SjhmaJtW3yruj7o9pH0pSd
+         6q6A==
+X-Gm-Message-State: ANhLgQ3Qb1p2GlTT3WyD4Oj4Owg7jwT7My3hIos4gSQFwlfkyVOr5MVc
+        l6ieJ/4oljhjNxKrWmrKd9YYTSzvWYzuhA==
+X-Google-Smtp-Source: ADFU+vsBL16mOCk78Gq17PBMvQLAA6Qth2JMTHL5EZhA1UfaBW61ACz13l083keat7MBz0Xg2o16kg==
+X-Received: by 2002:a2e:858d:: with SMTP id b13mr9091346lji.227.1585061729549;
+        Tue, 24 Mar 2020 07:55:29 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:42d3:3567:1f77:9f32:8c0:b337])
+        by smtp.gmail.com with ESMTPSA id q8sm3440800ljj.77.2020.03.24.07.55.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 07:55:28 -0700 (PDT)
+Subject: Re: [PATCH v2]usb: gadget: bcm63xx_udc:remove redundant variable
+ assignment
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+To:     Tang Bin <tangbin@cmss.chinamobile.com>, cernekee@gmail.com,
+        balbi@kernel.org, gregkh@linuxfoundation.org
+Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <20200324132029.16296-1-tangbin@cmss.chinamobile.com>
+ <a0afd44f-177d-ad21-02b5-93b15b29399e@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <82d75ffd-0df5-d41c-7b3e-615d97c1838a@cogentembedded.com>
+Date:   Tue, 24 Mar 2020 17:55:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <bd3c487b-b065-3e4f-6ab1-f344a4113fcd@mentor.com>
+In-Reply-To: <a0afd44f-177d-ad21-02b5-93b15b29399e@cogentembedded.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-23.03.2020 05:25, Wang, Jiada пишет:
-> Hello Dmitry
-> 
-> On 2020/03/21 0:53, Dmitry Osipenko wrote:
->> Hello Jiada,
->>
->> 20.03.2020 06:37, Wang, Jiada пишет:
->>> Hello Dmitry
->>>
->>> I have submitted v8 patch-set to address your comments towards v7
->>> patch-set,
->>> most of checkpatch warnings and errors have been addressed,
->>>
->>> But I didn't update for following two types of warnings
->>> since I want to keep consistency with legacy code
->>>
->>> WARNING: DEVICE_ATTR unusual permissions '0600' used
->>> #290: FILE: drivers/input/touchscreen/atmel_mxt_ts.c:3761:
->>> +static DEVICE_ATTR(debug_v2_enable, 0600, NULL,
->>
->> What will happen if you'll use 0644? Will an empty line be returned or
->> driver will crash?
->>
-> debug_v2_enable doesn't have .show callback implemented, so after change
-> permission to 644, read of it results in an I/O error,
-> 
-> for other 0600 permission interfaces (t38_data, t25 and debug_enable)
-> added in this series,
-> change to 644 can return expected information when read.
-> 
-> Do you think it's better to change debug_v2_enable to 0200,
-> and others to 0644?
+On 03/24/2020 05:50 PM, Sergei Shtylyov wrote:
 
-Since the debug_enable has mxt_debug_enable_show(), the same should be
-done for debug_v2_enable, for consistency.
+>> --v1------------------------------------
+>> In this function, the variable 'rc' is assigned after this place,
+>> so the definition is invalid.
+>>
+>> --v2------------------------------------
+>> In this function, the variable 'rc' will be assigned by the function
+>> 'usb_add_gadget_udc()',so the assignment here is redundant,we should
+>> remove it.
+>>
+>> Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+> 
+>    NAK.
+> 
+>> ---
+>>  drivers/usb/gadget/udc/bcm63xx_udc.c | 2 --
+>>  1 file changed, 2 deletions(-)
+>>
+>> diff --git a/drivers/usb/gadget/udc/bcm63xx_udc.c b/drivers/usb/gadget/udc/bcm63xx_udc.c
+>> index 54501814d..a7afa8c35 100644
+>> --- a/drivers/usb/gadget/udc/bcm63xx_udc.c
+>> +++ b/drivers/usb/gadget/udc/bcm63xx_udc.c
+>> @@ -2321,8 +2321,6 @@ static int bcm63xx_udc_probe(struct platform_device *pdev)
+>>  	if (rc)
+>>  		return rc;
+>>  
+>> -	rc = -ENXIO;
+>> -
+>>  	/* IRQ resource #0: control interrupt (VBUS, speed, etc.) */
+>>  	irq = platform_get_irq(pdev, 0);
+>>  	if (irq < 0)
+> 
+>    This *if* branch goes to the 'out_uninit' label which uses 'rc' (and it should
+> be negative).
+>    In principle, if you change 'rc' to 'irq' below, this patch would be sane.
+> It's not as is.
 
-The permissions should be 0644 for everything that is read/write.
+   Still, the other *goto* out_uninit in te loop below shoild be changed as well.
+Otherwise, if the result is overriden to -ENXIO, e.g. deferred probing is borked.
 
-The 0200 should be used for everything that is root-only and write-only.
+MBR, Sergei
