@@ -2,137 +2,84 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDE8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B7FC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942F02051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585070214;
-	bh=WnqSTIFDe/Kb9yoYcJ/YYpeFFnG0haBTY6Mckibtcfo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aDK+Fi1Dw+tdi85mLjwoiT0/hOQn8sCRjslZ3bHi+f7YUlGyWLJ6S1N4eJTrthooE
-	 Vw1Ln4vwR7+EIqcwGzAF5ZfxN1BGwHrF7uLVsX3ldNtS+sozVp715G1ERTU7pMqMF6
-	 k+qFfwAPo4o5AlHST5BxOJDagSERcGz2flVjmF18=
+	by mail.kernel.org (Postfix) with ESMTP id 6990E2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:17:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="0sDFVo8R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727841AbgCXRQx (ORCPT
+        id S1727672AbgCXRRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 13:17:18 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:56245 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbgCXRQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:16:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3EEA32076F;
-        Tue, 24 Mar 2020 17:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585070212;
-        bh=WnqSTIFDe/Kb9yoYcJ/YYpeFFnG0haBTY6Mckibtcfo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g+k4uyt6h3TRjUftFLvqtN8cf7g2rHMl/zIMxhUkxi798QhsRQOEdJ1z8R0hGUeja
-         Ys5aBxwtK9uNtq6qyD/vwcrFCct7wfbGEmlUB0iFpRF5vPP5+Yp1SRjv1ovxLwta/b
-         1x6zrVXONbrZnXMknzQ7AuJ890P4PNGIRgjmebwk=
-Date:   Tue, 24 Mar 2020 18:16:49 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, vbendeb@chromium.org,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, andy@infradead.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
-Message-ID: <20200324171649.GA2522961@kroah.com>
-References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
- <20200322111022.GA72939@kroah.com>
- <c480f318-c326-d51c-e757-c65c2526ab4d@collabora.com>
- <20200324164956.GE2518746@kroah.com>
- <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
+        id S1727223AbgCXRRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:17:18 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 1c5cebc9;
+        Tue, 24 Mar 2020 17:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=DhTaC0p0jO4cL4z/my6GjFo2Zwk=; b=0sDFVo
+        8RX/48dqq7bcu0DjCkiRd8uYMGVIbzVoBXlWvK9w2/3T8dPlf1E9VjNDahJvTyk4
+        HMhEzp13dN6iVASsVL9FVjQ1q1GmadB9/8ZQC7X5wOaOR8iiaxhHuf0s8ztV9c6p
+        CHrISGrikhpVv5wXP/yJsBz8LjXjnyr0hrGztN6T+T0EZKlyv7I3K94JzR3IJVVa
+        e0wPUHkQNtq++UwGPhvDf1F2o9uKHBE+oVWnpbuulMDgQjxpqxb6z/PcLZLpbK1f
+        aDY76FGmChvVX308/NKuSISxwOFlGA1N1pyo07KK7a9GBK/rmMPBRi5d7zOFzU6s
+        7J5M8CVXG/R0NpVw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 63d78b98 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Tue, 24 Mar 2020 17:10:05 +0000 (UTC)
+Received: by mail-il1-f171.google.com with SMTP id m7so13396645ilg.5;
+        Tue, 24 Mar 2020 10:17:14 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0rC39iqkMlvA1q40E+LDC/Mphv6gNR2gBVvwRd+TY31/Eu3l69
+        QSGyS/u46lVBu0Us671f6mZuiuIFY7p0qDWQCYE=
+X-Google-Smtp-Source: ADFU+vvq6QHYBsYQUIfTGwSCF2bT4P+yYt7YDtnQ2NvIIx1389odToJpAzQytqGAvEdM+gxfjq2azQWNorXcO8ZDt9Q=
+X-Received: by 2002:a92:cd4e:: with SMTP id v14mr28304232ilq.231.1585070233190;
+ Tue, 24 Mar 2020 10:17:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
+References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-12-masahiroy@kernel.org>
+ <CAKwvOdkj3dDNcbY4hwyManfviPdFoBooJJmFOAKL2YJCZNuhtA@mail.gmail.com>
+In-Reply-To: <CAKwvOdkj3dDNcbY4hwyManfviPdFoBooJJmFOAKL2YJCZNuhtA@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Tue, 24 Mar 2020 11:17:02 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pV93Zey2=XghxzThTHbZarFrnxwnGatXHyQjevPf7R=g@mail.gmail.com>
+Message-ID: <CAHmME9pV93Zey2=XghxzThTHbZarFrnxwnGatXHyQjevPf7R=g@mail.gmail.com>
+Subject: Re: [PATCH 11/16] x86: probe assembler capabilities via kconfig
+ instead of makefile
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 06:08:03PM +0100, Enric Balletbo i Serra wrote:
-> Hi Greg,
-> 
-> On 24/3/20 17:49, Greg Kroah-Hartman wrote:
-> > On Tue, Mar 24, 2020 at 05:31:10PM +0100, Enric Balletbo i Serra wrote:
-> >> Hi Greg,
-> >>
-> >> Many thanks for your quick answer, some comments below.
-> >>
-> >> On 22/3/20 12:10, Greg Kroah-Hartman wrote:
-> >>> On Sun, Mar 22, 2020 at 10:43:34AM +0100, Enric Balletbo i Serra wrote:
-> >>>> This driver attaches to the ChromeOS ACPI device and then exports the values
-> >>>> reported by the ACPI in a sysfs directory. The ACPI values are presented in
-> >>>> the string form (numbers as decimal values) or binary blobs, and can be
-> >>>> accessed as the contents of the appropriate read only files in the sysfs
-> >>>> directory tree originating in /sys/devices/platform/chromeos_acpi.
-> >>>>
-> >>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >>>
-> >>> What is wrong with the "default" ACPI sysfs access?  Why do you need a
-> >>> special driver just for this specific ACPI firmware?
-> >>>
-> >>
-> >> Please correct me if I am wrong, as I'm not an ACPI expert and I probably have
-> >> some ACPI leaks and misunderstandings.
-> >>
-> >> What is exporting this driver is the attributes for the non-default Chromebook
-> >> specific MLST ACPI method. Hence, I assumed we needed a special driver to expose
-> >> these values that can't be done using "default" ACPI sysfs. Note that these
-> >> attributes are dynamically created and are different between Chromebooks so need
-> >> some parsing.
-> >>
-> >> I didn't find a "standard" way to expose these attributes to userspace, so,
-> >> please kindly point me to one if there is one.
-> > 
-> > Are you sure they aren't already there under /sys/firmware/acpi/?  I
-> > thought all tables and methods were exported there with no need to do
-> > anything special.
-> > 
-> 
-> That's the first I did when I started to forward port this patch from chromeos
-> kernel to mainline.
-> 
-> On my system I get:
-> 
-> /sys/firmware/acpi/tables#
-> APIC  DSDT  FACP  FACS  HPET  MCFG  SSDT  data  dynamic
-> 
-> (data and dynamic are empty directories)
-> 
-> I quickly concluded (maybe wrong) that as there is no a MLST entry it was not
-> exported, but maybe one of those already contains the info? Or, should I expect
-> a MLST entry here?
-> 
-> > What makes these attributes "special" from any other ACPI method?
-> > 
-> 
-> I can't answer this question right now. I need to investigate more I guess ;-)
+On Tue, Mar 24, 2020 at 11:01 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> Can 11 just be rebased with 8 dropped?
 
-You can always ask the acpi developers as well, you need to get their
-review for your driver anyway :)
+8 adds comments to one place. 11 moves them to another place, while
+doing other things.
 
-good luck!
-
-greg k-h
+Your desire is to skip the first step? I guess there's no problem with
+this, but I'm curious to learn why.
