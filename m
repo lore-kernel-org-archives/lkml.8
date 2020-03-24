@@ -2,128 +2,92 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFAFC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BACC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26D2A20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3841120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:43:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="loukMwfT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ruDc8Suv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726764AbgCXTmv (ORCPT
+        id S1727122AbgCXTnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:42:51 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40725 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgCXTmu (ORCPT
+        Tue, 24 Mar 2020 15:43:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36755 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725835AbgCXTnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 15:42:50 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a81so4926767wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 12:42:49 -0700 (PDT)
+        Tue, 24 Mar 2020 15:43:39 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k18so19728652oib.3;
+        Tue, 24 Mar 2020 12:43:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tcB+tq5Rgj7hEjAm6kQlVEkLWTkSJ/gNL53xHmD0Uck=;
-        b=loukMwfTiUhp+6HSA/DQrYEvGm4YpFdj/AZfft93YrG45642/xWkNAz+KiBQ//2Fhu
-         KYi2mcD+sf0TPAbxvqar6SsFqJCdutLLxZCMnFoWmw4vhOABdBN2QakoJsWLuRwXLuYd
-         x/9zJJF1hjNB/yowWZXOGBKrfRefrCM7logsrjjfZ3+rKbV5xXpbFXFPUnoUWDXBpyyy
-         AFBIPqgdpNmuh4mx+3HpDF7idzcXJXlbMFf3U/gBXqDBfGOVY/QnTmvxVQcb9+2GAiEm
-         /LB/GkdLOVCz+2nMe5yn4uqWV5AqN6CTg2mffguLfmarOc2DmX4zZ+v5JlDxxmXYdpSQ
-         YcdA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v0Lb179Xsvu+pLNHsFIahOHyMAoUJr1uLEfB5vqXXMM=;
+        b=ruDc8SuvLVcsBTW3zKpfpxzuqp4x7GDsF50RjqtpN7Z/X0f9q9YstwV4Vgnxf9DP+7
+         MNDp+WAEB2gKLbRcOIbywTwd1zpJgjcLjDfXuI7GJUm6lvPyFQNzwTWy2YAX2XUiSqxi
+         LeuHtet8IQMM9PI1iVsPXyLi/cvsBjBLIMgdSU9RmTs1hnNms0GEJMWFwrXn0RvMkMtc
+         DKk98KD2D2S7ZFwm4NRtUEqidf/qgMVj5QQp3xJ2hMzFB/7H1/8Fwc6IqdDPAGGnjBg+
+         i9D5sK8KOvqTPQZq9ywIlYH43MpqFkMkcqSKjsSPuUHXUYk4WDb1Kggfqj4Qlc+zIca1
+         aPmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tcB+tq5Rgj7hEjAm6kQlVEkLWTkSJ/gNL53xHmD0Uck=;
-        b=VsAyfz+lGCnMyZKxVwEvS7NO0sMtIUyQD4tJCFBgfWOHhnLTwYC0yEKd3tl2/1xUyk
-         yPiORbEaIf0GMrKdZwNvjd3GbKQNw4f3LLL5dZ7XMfpDKBTrRVuF9JYyaB6USw24fX0F
-         I6yTrr/ZyHfgRIkOaXdl5S5h1kM8OkTnzgClwybPtti4jDVuPYjYGmOEHkvo5I6kjjdl
-         PhbHcntMrJtSJc5l+lp/7a9RTbWlRIq1TPh2PhnfUPBGION4px5pcFKW7O2D+ZNoveUr
-         p8C9lI3kr2eLYMAiZS0D9H3FNk/uAmKzUiycxnGSM2YxU9uhgoaLfqeIgJrcLCwfbSqK
-         nKUA==
-X-Gm-Message-State: ANhLgQ2OsTxnP/zji1q14tQAIruodPBx+djI9tsRNV36vQ1+Q1RC1UQ2
-        ffGji2p5TIADvHJiMqF5OwtfE8uYRtO2i5mFHFs=
-X-Google-Smtp-Source: ADFU+vsVLJ3Wj1PXVDBegxztfsXqTfDXiYljZ9KRzUr6EG1nA8pDji3GfkC+UKjBBDi2SC8Erl5pb8UqUJ/LI8O7+zo=
-X-Received: by 2002:a1c:2842:: with SMTP id o63mr7494442wmo.73.1585078968451;
- Tue, 24 Mar 2020 12:42:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200213153928.28407-1-masahiroy@kernel.org> <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
-In-Reply-To: <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 24 Mar 2020 15:42:37 -0400
-Message-ID: <CADnq5_Mieh9G-8hheKRdKe=qMbAQjwTheM2TWWSaZjeGU3635Q@mail.gmail.com>
-Subject: Re: [PATCH 1/4] drm/radeon: remove unneeded header include path
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v0Lb179Xsvu+pLNHsFIahOHyMAoUJr1uLEfB5vqXXMM=;
+        b=qboqbPzmXkBx9bj1JGt/UA0nt84rMPOIwbFcyiG+eM2BGDWF1CbXL6AelC/PkusdTx
+         SAZcmbVG4jYm9eFEFuCAqQXPctyGIN2sXgJZg9KNInpuqSecFHU9bGL7iq3IDBk0dcxX
+         uiJjp0hs1HXnNLsq1Qwuzi4XPIGMJcxkgdHWzteI2TMVvqdvoOYFJGa+3jI7U8MUp+cR
+         iA3i4EBTnDjwW7r2DBy8VlzpC/vCDL3X+LL6XNWISCJmQahcQpFibngdD/L5sPwXqvXC
+         0r6H9LOTPqP5f2PLIITf3yIUpWqiKu+BEKepq4QrpnlwadCUB7Iu0oMAdfcYF3hV2R9K
+         EGfA==
+X-Gm-Message-State: ANhLgQ3G+921WophAVxHq+3uiuEY7BSdnMTS7IbzSIIPZl48TgKcPidd
+        D6//M576/T1mga6sDV6YNeo=
+X-Google-Smtp-Source: ADFU+vtZVcKOXuht2eESgZdnD2MDhbi4oXJHnGGTpgfoHAPYp/e9rYAIxsXcrOu9EgDkSnHGEyRf2Q==
+X-Received: by 2002:aca:b5c3:: with SMTP id e186mr4511758oif.114.1585079018625;
+        Tue, 24 Mar 2020 12:43:38 -0700 (PDT)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id n20sm6360504ota.54.2020.03.24.12.43.37
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Mar 2020 12:43:37 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 12:43:36 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?B?Q2hyaXN0aWFuIEvvv73vv73Dk25pZw==?= 
-        <christian.koenig@amd.com>, David Zhou <David1.Zhou@amd.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     linux-kbuild@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH 3/3] kbuild: remove AS variable
+Message-ID: <20200324194336.GA15310@ubuntu-m2-xlarge-x86>
+References: <20200324161539.7538-1-masahiroy@kernel.org>
+ <20200324161539.7538-3-masahiroy@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324161539.7538-3-masahiroy@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> Hi,
->
-> I think this series is a good clean-up.
->
-> Could you take a look at this please?
+On Wed, Mar 25, 2020 at 01:15:39AM +0900, Masahiro Yamada wrote:
+> As commit 5ef872636ca7 ("kbuild: get rid of misleading $(AS) from
+> documents") noted, we rarely use $(AS) in the kernel build.
+> 
+> Now that the only/last user of $(AS) in drivers/net/wan/Makefile was
+> converted to $(CC), $(AS) is no longer used in the build process.
+> 
+> You can still pass in AS=clang, which is just a switch to turn on
+> the LLVM integrated assembler.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 
-Can you resend?  I don't seem to have gotten it.  Must have ended up
-getting flagged a spam or something.
-
-Alex
-
->
->
->
-> On Fri, Feb 14, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > A header include path without $(srctree)/ is suspicious because it does
-> > not work with O= builds.
-> >
-> > You can build drivers/gpu/drm/radeon/ without this include path.
-> >
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> >  drivers/gpu/drm/radeon/Makefile | 2 --
-> >  1 file changed, 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/radeon/Makefile b/drivers/gpu/drm/radeon/Makefile
-> > index c693b2ca0329..9d5d3dc1011f 100644
-> > --- a/drivers/gpu/drm/radeon/Makefile
-> > +++ b/drivers/gpu/drm/radeon/Makefile
-> > @@ -3,8 +3,6 @@
-> >  # Makefile for the drm device driver.  This driver provides support for the
-> >  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
-> >
-> > -ccflags-y := -Idrivers/gpu/drm/amd/include
-> > -
-> >  hostprogs := mkregtable
-> >  clean-files := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
-> >
-> > --
-> > 2.17.1
-> >
->
->
-> --
-> Best Regards
-> Masahiro Yamada
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
