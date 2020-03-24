@@ -2,199 +2,191 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB8C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F97DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4EE205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Hwmk7YeW"
+	by mail.kernel.org (Postfix) with ESMTP id 02BB82073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585021327;
+	bh=eD/7lez5RjSHbjSw0Y5Fm/cZ09IMXDWA/PZJtTGKvnc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q53jW+OwYVucVsfwupFg+ETUlRFtk0IsmuYgCe/7yqjQ0w3VexONi63Nat/8+9A20
+	 o/FqOkR/XcLvoNu3pvIUKXBzyNT5MKYF2vvmf8G+5/kuvQLqY7WxBn4SBN7gTvb6EQ
+	 VS14SiJtvR3JdmErn8nMdyjJ1UAQAaPa6yPrfXN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbgCXDiL (ORCPT
+        id S1727279AbgCXDmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 23:38:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43434 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbgCXDiK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 23:38:10 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so8323409pgb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 20:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EoHFVfVTHKDj3wA1Pgr7GAuawqBtohTxYrc3sgAwjww=;
-        b=Hwmk7YeWhBR+bPT1gb5RzoUAqlgbKKsPNpeRYQ/mz2LUvzbQr9qBK4j2pJF2V9FcnQ
-         hj9w27FSzgAg2S1NXDkkdYugd4QIdIg5Z2lTtwYpGfz+PGFujG7mexZ7uokW+4X0hVzf
-         aL37xaDDprybYy5jKwSsalWxISoQzvlJMFYU0giGF0q8lsdhLJ5W+Hd+H5uwImLXA7Xi
-         lp5qJN8sc5pwwihOM7AAj+At18+jJA+M9BruQFDT2JrY/HYEIvhIg1XPlIPmHn5KvlhZ
-         LRYvAfITHWJ6eSm0kNT5HMfSisKBPNNORQREtLzc2ZvHXAbsTMz0CohVZbcdgo3p13cq
-         IuZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=EoHFVfVTHKDj3wA1Pgr7GAuawqBtohTxYrc3sgAwjww=;
-        b=atLkg0bIQbr3cVmPnz5Hlr2wealsTbYpIiy4cQOkEIERFeqe6kA2SedeNTxMcpe5Te
-         CZD6vquhTAIc+cBWaZUFqcKzgzHgcZ00m+fURfQX+B6n/fGNdt5LBXIqHfHFkS9Dl3sy
-         mPaX4dPoVS6t2qc/LnPdiMX1AMMbdcm6Z4Sx1MqUpUGiY8IjXz1AUBuyVxgfoZphBX5S
-         OIvkAnwt/Ae0OhHkVa5ollT05BedXkbvBTNCyWgSB6nezE8uNcmbOkx+wtFsQ7vmInA8
-         383wnLgruwE9+Np8E84AYGsHzy8jXN1rFFpaOi8a9DMQq1bu75ZlFdbSxJnpnlUSe3r7
-         MP5A==
-X-Gm-Message-State: ANhLgQ3n7xYZM5i9p+s085JYpKWaUKJeh1lRu8GpsexLUjYDYKVcJRfp
-        7wyXxVq1KU7TAB+GX4Wtlv+B5A==
-X-Google-Smtp-Source: ADFU+vtUqBrBYpWGQT0F6qG4VH8WBvkLR2SPKKB9qgPmtRoXxqJJFq2PsqIAfuhTww49jsdZsgx7TQ==
-X-Received: by 2002:a63:1c4d:: with SMTP id c13mr24608158pgm.4.1585021085960;
-        Mon, 23 Mar 2020 20:38:05 -0700 (PDT)
-Received: from [192.168.10.21] (ppp121-45-221-81.bras1.cbr2.internode.on.net. [121.45.221.81])
-        by smtp.gmail.com with ESMTPSA id a185sm15138421pfa.27.2020.03.23.20.38.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 20:38:05 -0700 (PDT)
-Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
- device
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <20200320141640.366360-1-hch@lst.de>
- <20200320141640.366360-2-hch@lst.de>
- <2f31d0dd-aa7e-8b76-c8a1-5759fda5afc9@ozlabs.ru>
- <20200323083705.GA31245@lst.de>
- <37ce1b7e-264d-292d-32b1-093b24b3525c@ozlabs.ru>
- <20200323172014.GA31269@lst.de>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <d4bf6058-aa77-d0bc-8196-f4c27fb21b74@ozlabs.ru>
-Date:   Tue, 24 Mar 2020 14:37:59 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Mon, 23 Mar 2020 23:42:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgCXDmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 23:42:05 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 066652073E;
+        Tue, 24 Mar 2020 03:42:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585021324;
+        bh=eD/7lez5RjSHbjSw0Y5Fm/cZ09IMXDWA/PZJtTGKvnc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XYbiXo5VhGGG8CzR45gwZ6KNn6ygtZOLlh4YxI+GYWbFIDRYRSBOR+yzUqUHyeNnL
+         M+esO/DlPfVrfNKTcKAQgy7ZchK0fW8V4Wv6D9OvxcrDCIjllj6TZUpZMtXXYHpk6u
+         n/TGP8X/Bg5TQBt2k9yhiOFQ59JDPyN1GRPF10TY=
+Received: by mail-lf1-f46.google.com with SMTP id q5so144398lfb.13;
+        Mon, 23 Mar 2020 20:42:03 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3wwZAc+Nmg1iP187FsiWnmOrT/d7nY0djcngOC2eVApvIXEKkR
+        EHdZgZvmbOoYACw2FDPGywNCJl80sREY/pfibes=
+X-Google-Smtp-Source: ADFU+vvWDrrUv0O+Q0dLmjy3S2LM0kVDmOFhPTHIEcXZlEzWAMg7stKCAQZDaF+oz4yOQjcuPfRqFc4bmbaWQU2qgkA=
+X-Received: by 2002:ac2:4858:: with SMTP id 24mr5708012lfy.135.1585021322056;
+ Mon, 23 Mar 2020 20:42:02 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200323172014.GA31269@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200308094954.13258-1-guoren@kernel.org> <CAHCEehKrzv0TozP7x9Vaq1t+Utpvqfgt=wo7eXXp0HRUKFO=WQ@mail.gmail.com>
+In-Reply-To: <CAHCEehKrzv0TozP7x9Vaq1t+Utpvqfgt=wo7eXXp0HRUKFO=WQ@mail.gmail.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Tue, 24 Mar 2020 11:41:50 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTRspXLhj1-_y6Rye7sbk2hZDEFf_AM3jcAc-=qKPru=VA@mail.gmail.com>
+Message-ID: <CAJF2gTRspXLhj1-_y6Rye7sbk2hZDEFf_AM3jcAc-=qKPru=VA@mail.gmail.com>
+Subject: Re: [RFC PATCH V3 00/11] riscv: Add vector ISA support
+To:     Greentime Hu <greentime.hu@sifive.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Anup Patel <Anup.Patel@wdc.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-csky@vger.kernel.org,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Liu Zhiwei <zhiwei_liu@c-sky.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Greentime,
 
+On Mon, Mar 23, 2020 at 12:00 PM Greentime Hu <greentime.hu@sifive.com> wro=
+te:
+>
+> <guoren@kernel.org> =E6=96=BC 2020=E5=B9=B43=E6=9C=888=E6=97=A5 =E9=80=B1=
+=E6=97=A5 =E4=B8=8B=E5=8D=885:50=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > From: Guo Ren <guoren@linux.alibaba.com>
+> >
+> > The implementation follow the RISC-V "V" Vector Extension draft v0.8 wi=
+th
+> > 128bit-vlen and it's based on linux-5.6-rc3 and tested with qemu [1].
+> >
+> > The patch implement basic context switch, sigcontext save/restore and
+> > ptrace interface with a new regset NT_RISCV_VECTOR. Only fixed 128bit-v=
+len
+> > is implemented. We need to discuss about vlen-size for libc sigcontext =
+and
+> > ptrace (the maximum size of vlen is unlimited in spec).
+> >
+> > Puzzle:
+> > Dave Martin has talked "Growing CPU register state without breaking ABI=
+" [2]
+> > before, and riscv also met vlen size problem. Let's discuss the common =
+issue
+> > for all architectures and we need a better solution for unlimited vlen.
+> >
+> > Any help are welcomed :)
+> >
+> >  1: https://github.com/romanheros/qemu.git branch:vector-upstream-v3
+> >  2: https://blog.linuxplumbersconf.org/2017/ocw/sessions/4671.html
+> >
+>
+> Hi Ren,
+>
+> Thanks for the patch. I have some ideas about the vlen and sigcontext.
+> Since vlen may not be fixed of each RISC-V cores and it could be super
+> big, it means we have to allocate the memory dynamically.
+> In kernel space, we may use a pointer in the context data structure.
+> Something like https://github.com/torvalds/linux/blob/master/arch/arm64/k=
+ernel/fpsimd.c#L498
+> In user space, we need to let user space know the length of vector
+> registers. We may create a special header in sigcontext. Something
+> like https://github.com/torvalds/linux/blob/master/arch/arm64/include/uap=
+i/asm/sigcontext.h#L36
+> https://github.com/torvalds/linux/blob/master/arch/arm64/include/uapi/asm=
+/sigcontext.h#L127
 
-On 24/03/2020 04:20, Christoph Hellwig wrote:
-> On Mon, Mar 23, 2020 at 07:58:01PM +1100, Alexey Kardashevskiy wrote:
->>>> 0x100.0000.0000 .. 0x101.0000.0000
->>>>
->>>> 2x4G, each is 1TB aligned. And we can map directly only the first 4GB
->>>> (because of the maximum IOMMU table size) but not the other. And 1:1 on
->>>> that "pseries" is done with offset=0x0800.0000.0000.0000.
->>>>
->>>> So we want to check every bus address against dev->bus_dma_limit, not
->>>> dev->coherent_dma_mask. In the example above I'd set bus_dma_limit to
->>>> 0x0800.0001.0000.0000 and 1:1 mapping for the second 4GB would not be
->>>> tried. Does this sound reasonable? Thanks,
->>>
->>> bus_dma_limit is just another limiting factor applied on top of
->>> coherent_dma_mask or dma_mask respectively.
->>
->> This is not enough for the task: in my example, I'd set bus limit to
->> 0x0800.0001.0000.0000 but this would disable bypass for all RAM
->> addresses - the first and the second 4GB blocks.
-> 
-> So what about something like the version here:
-> 
-> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-bypass.3
+As you've mentioned codes above, arm64 use a fixed pre-allocate
+sigcontext with a large space:
 
+struct sigcontext {
+        __u64 fault_address;
+        /* AArch64 registers */
+        __u64 regs[31];
+        __u64 sp;
+        __u64 pc;
+        __u64 pstate;
+        /* 4K reserved for FP/SIMD state and future expansion */
+        __u8 __reserved[4096] __attribute__((__aligned__(16)));
+};
 
-dma_alloc_direct() and dma_map_direct() do the same thing now which is
-good, did I miss anything else?
+There are several contexts in the space above: fpsimd, esr, sve, extra
+__reserved[4096]:
+ *      0x210           fpsimd_context
+ *       0x10           esr_context
+ *      0x8a0           sve_context (vl <=3D 64) (optional)
+ *       0x20           extra_context (optional)
+ *       0x10           terminator (null _aarch64_ctx)
+ *      0x510           (reserved for future allocation)
 
-This lets us disable bypass automatically if this weird memory appears
-in the system but does not let us have 1:1 after that even for normal
-RAM. Thanks,
+0x210 + 0x10 + 0x8a0 + 0x20 + 0x10 + 0x510 =3D 4096
 
+The max vl is 64 in arm sve, but for riscv want an unlimited size
+solution and more extensible/flexible solution, such as dynamic
+allocating user-space context with hwinfo. But there is no ref
+solution around all arches.
 
--- 
-Alexey
+There is a choice puzzle for me:
+1) A pre-allocated&limited reserved size of sigcontext, the solution
+has been practiced and we just need to determine the size.
+2) Dynamically allocated/unlimited size of sigcontext, but may deal
+with glibc, libgcc infrastructure on abi view.
+
+Before the next stage of work, we need to choose the direction and
+it's also a common puzzle for all architectures with extending
+vector/simd like co-processor solutions.
+
+ps:
+Have a look on Dave's patch, he just follow the arm64 fixed
+pre-allocate limited sigcontext infrastructure:
+(I don't think it's a proper example for riscv vector design.)
+
+commit d0b8cd3187889476144bd9b13bf36a932c3e7952
+Author: Dave Martin <Dave.Martin@arm.com>
+Date:   Tue Oct 31 15:51:03 2017 +0000
+
+arm64/sve: Signal frame and context structure definition
+
+>
+> For the implementation in makecontext, swapcontext, getcontext,
+> setcontext of glibc, we may not need to port because it seems to be
+> deprecated?
+> https://stackoverflow.com/questions/4298986/is-there-something-to-replace=
+-the-ucontext-h-functions
+Agree, we needn't deal with them at beginning.
+
+>
+> For the unwinding implementation of libgcc since it needs to know the
+> meaning of data structure is  changed. It also need to be port.
+Yes, it'll break the abi and such as the elf with -fexception compiled
+will be broken.
+
+--=20
+Best Regards
+ Guo Ren
+
+ML: https://lore.kernel.org/linux-csky/
