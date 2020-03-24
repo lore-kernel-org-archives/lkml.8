@@ -2,105 +2,136 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C741C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934CCC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99BE208D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055617;
-	bh=6OrOnoiINJv+m8teJLQrQHUPd38IaKQ8DMAFSfTiJIA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAB+rz8Kk2sZpaSTIvWLgDPssA8jXREE5gwrNsGL9v9z2G/kwkC3Lrz0ljJsMFWKP
-	 8YoawGZ50C+RSxPwYP8wApiSJK4OBMLW3qra2t7Um+IBc0b5p2/RhxY0ND6SIRHIDH
-	 TZ3KGLgG9i1f9C23jHNC/8RYuPTTqphLp3pRlR2U=
+	by mail.kernel.org (Postfix) with ESMTP id 734552098B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgCXNNf (ORCPT
+        id S1727913AbgCXNNk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:13:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727891AbgCXNNc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:13:40 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50348 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727887AbgCXNNc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:13:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF58E20775;
-        Tue, 24 Mar 2020 13:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055612;
-        bh=6OrOnoiINJv+m8teJLQrQHUPd38IaKQ8DMAFSfTiJIA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BnHqFhYiXnKbJrdDHsOJTMPqPXTHnmiVLYbkbPolLI3CkYiTWBoR+Ir6Lm0SMWnFN
-         /8QTxfp0qHjm6l1GNXC8Omn/TwFwRQa6HerFoZzSUuJMbJg1Zd0dPfbH+SmUizkUV6
-         zSzX0Zq+tvh+zgp9NwQIBpVaQHXNndTInWJNwRXk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kirk Reiser <kirk@reisers.ca>,
-        Janina Sajka <janina@rednote.net>,
-        Alexandr Epaneshnikov <aarnaarn2@gmail.com>,
-        Gregory Nowak <greg@gregn.net>,
-        deedra waters <deedra@the-brannons.com>,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        Michael Taboada <michael@michaels.world>
-Subject: [PATCH 4.19 39/65] staging/speakup: fix get_word non-space look-ahead
-Date:   Tue, 24 Mar 2020 14:11:00 +0100
-Message-Id: <20200324130802.127328483@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
-References: <20200324130756.679112147@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OD5sRn036681
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:13:31 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywbuvdapf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:13:31 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Tue, 24 Mar 2020 13:13:28 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 24 Mar 2020 13:13:25 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ODDQPd38273506
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 13:13:26 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F32EC52052;
+        Tue, 24 Mar 2020 13:13:25 +0000 (GMT)
+Received: from pomme.local (unknown [9.145.51.233])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4D46752051;
+        Tue, 24 Mar 2020 13:13:25 +0000 (GMT)
+Subject: Re: [PATCH 1/2] KVM: PPC: Book3S HV: check caller of H_SVM_* Hcalls
+To:     Greg Kurz <groug@kaod.org>, Paul Mackerras <paulus@ozlabs.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, Bharata B Rao <bharata@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+References: <20200320102643.15516-1-ldufour@linux.ibm.com>
+ <20200320102643.15516-2-ldufour@linux.ibm.com>
+ <20200320132248.44b81b3b@bahia.lan> <20200323234323.GA5604@blackberry>
+ <20200324130052.373fdf89@bahia.lan>
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+Date:   Tue, 24 Mar 2020 14:13:11 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200324130052.373fdf89@bahia.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20032413-0008-0000-0000-0000036302DC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032413-0009-0000-0000-00004A846EFC
+Message-Id: <4dc4bb94-9ddd-30f7-3b4c-0b8439119349@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ adultscore=0 mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
+ suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Le 24/03/2020 à 13:00, Greg Kurz a écrit :
+> On Tue, 24 Mar 2020 10:43:23 +1100
+> Paul Mackerras <paulus@ozlabs.org> wrote:
+> 
+>> On Fri, Mar 20, 2020 at 01:22:48PM +0100, Greg Kurz wrote:
+>>> On Fri, 20 Mar 2020 11:26:42 +0100
+>>> Laurent Dufour <ldufour@linux.ibm.com> wrote:
+>>>
+>>>> The Hcall named H_SVM_* are reserved to the Ultravisor. However, nothing
+>>>> prevent a malicious VM or SVM to call them. This could lead to weird result
+>>>> and should be filtered out.
+>>>>
+>>>> Checking the Secure bit of the calling MSR ensure that the call is coming
+>>>> from either the Ultravisor or a SVM. But any system call made from a SVM
+>>>> are going through the Ultravisor, and the Ultravisor should filter out
+>>>> these malicious call. This way, only the Ultravisor is able to make such a
+>>>> Hcall.
+>>>
+>>> "Ultravisor should filter" ? And what if it doesn't (eg. because of a bug) ?
+>>>
+>>> Shouldn't we also check the HV bit of the calling MSR as well to
+>>> disambiguate SVM and UV ?
+>>
+>> The trouble with doing that (checking the HV bit) is that KVM does not
+>> expect to see the HV bit set on an interrupt that occurred while we
+>> were in the guest, and if it is set, it indicates a serious problem,
+>> i.e. that an interrupt occurred while we were in the code that
+>> transitions from host context to guest context, or from guest context
+>> to host context.  In those cases we don't know how much of the
+>> transition has been completed and therefore whether we have guest
+>> values or host values in the CPU registers (GPRs, FPRs/VSRs, SPRs).
+>> If we do see HV set then KVM reports a severe error to userspace which
+>> should cause userspace to terminate the guest.
+>>
+>> Therefore the UV should *always* have the HV bit clear in HSRR1/SRR1
+>> when transitioning to KVM.
+>>
+> 
+> Indeed... thanks for the clarification. So I guess we'll just assume
+> that the UV doesn't reflect these SVM specific hcalls if they happened
+> to be issued by the guest then.
 
-commit 9d32c0cde4e2d1343dfb88a67b2ec6397705b32b upstream.
+As mentioned in the series's description:
+"It is assumed that the UV will filtered out such Hcalls made by a malicious
+SVM."
 
-get_char was erroneously given the address of the pointer to the text
-instead of the address of the text, thus leading to random crashes when
-the user requests speaking a word while the current position is on a space
-character and say_word_ctl is not enabled.
-
-Reported-on: https://github.com/bytefire/speakup/issues/1
-Reported-by: Kirk Reiser <kirk@reisers.ca>
-Reported-by: Janina Sajka <janina@rednote.net>
-Reported-by: Alexandr Epaneshnikov <aarnaarn2@gmail.com>
-Reported-by: Gregory Nowak <greg@gregn.net>
-Reported-by: deedra waters <deedra@the-brannons.com>
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-Tested-by: Alexandr Epaneshnikov <aarnaarn2@gmail.com>
-Tested-by: Gregory Nowak <greg@gregn.net>
-Tested-by: Michael Taboada <michael@michaels.world>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200306003047.thijtmqrnayd3dmw@function
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/staging/speakup/main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/staging/speakup/main.c
-+++ b/drivers/staging/speakup/main.c
-@@ -561,7 +561,7 @@ static u_long get_word(struct vc_data *v
- 		return 0;
- 	} else if (tmpx < vc->vc_cols - 2 &&
- 		   (ch == SPACE || ch == 0 || (ch < 0x100 && IS_WDLM(ch))) &&
--		   get_char(vc, (u_short *)&tmp_pos + 1, &temp) > SPACE) {
-+		   get_char(vc, (u_short *)tmp_pos + 1, &temp) > SPACE) {
- 		tmp_pos += 2;
- 		tmpx++;
- 	} else {
-
+> Cheers,
+> 
+> --
+> Greg
+> 
+>> Paul.
+> 
 
