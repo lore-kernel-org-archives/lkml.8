@@ -2,85 +2,138 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 307DDC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DD5C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FDF2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E05F2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XS7FO5qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgCXMUd (ORCPT
+        id S1727543AbgCXMUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:20:33 -0400
-Received: from mga03.intel.com ([134.134.136.65]:4902 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727337AbgCXMU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:20:27 -0400
-IronPort-SDR: 1J91S85GuyxS5YgY+RtGbMTfxETyAllcemjRweYFN8BoAiamCW390/dbcSmsyBKhRE/ze6V/pv
- dviBsTtGLq9A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 05:20:27 -0700
-IronPort-SDR: w2UuZHQPtrOYo+rz0+T7luwq1AAVIMGhLOr4bvz8eNrs2Xvw95XhmtqM9EAaG0mr35bSIFQC6b
- mjCD6BFnRdAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="447859322"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Mar 2020 05:20:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8E01D65; Tue, 24 Mar 2020 14:20:24 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Ferry Toth <fntoth@gmail.com>
-Subject: [PATCH v2 2/3] driver core: Read atomic counter once in driver_probe_done()
-Date:   Tue, 24 Mar 2020 14:20:22 +0200
-Message-Id: <20200324122023.9649-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+        Tue, 24 Mar 2020 08:20:55 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37705 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgCXMUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:20:54 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j11so12978055lfg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 05:20:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xE4MP5AqUCPd9XtoEWD/FK2YPE6NfLNz1ySPK/KUqcg=;
+        b=XS7FO5quXRQMzlcU6oLgb0XC3ZGpFmBkGVb2+urTxc0RoXE+LhQwMcjmE1iMAOa4zj
+         5PDAtVRds458I1ZL9d59wLIw4CZpPrU4m4igICIiVAXvDor0bsq0DssE4nmVlA1PDTlr
+         9Juvmpsk6zwiXtmO5tbpYKysU5GPTSeag89VuFevHBL8HovL4xeC2CptKa/9avBarldI
+         TNKRCuIdtZyWoZlwAcrKcb4Cq5dHK9UKgDmiunIO8+8Ty4coajwPeKXNmvWqU9OBiiIQ
+         YkQFBoINbMMKzAyLh7/C9VyRE7zFm2KikI2U9i1pS66meUqbKQlBhvdRAOHMPTiLB293
+         udYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xE4MP5AqUCPd9XtoEWD/FK2YPE6NfLNz1ySPK/KUqcg=;
+        b=grj27stl3DT+ceT9W8TjI3vM7JJPbxmTopqHICDSkHbEYaBYiat33xTcUxa2HUuJ14
+         3hpn3zncw0LU85bAIAqnVeJxUYJaSCw21q2VppXGOKdMqNphGQXboGwbdiiPADz8YRtY
+         7b8NskihlvkRRpnwUnulWf7l3xuk9zKtileBMhB6Meo7SvH7+2UJeOtKJks0ezlbA8Om
+         4HfaFHzbAkTS8amCm5QvQnTDs1zTjo2Hxdapm+jN66945h3+70eZyi9h8ijuU3IVlyMX
+         t4a/AE9V51XAwfDQJH0Vf7qL2hOEg/obJjuxcXAmpicKEkfD4k3QSzlPLHBBFC9DJmnU
+         e+Xg==
+X-Gm-Message-State: ANhLgQ3u89l5l2wRVBylfMYxwAuFuMb1XdtpREv7in6nb6VPZeoESRcs
+        T4Ex5X7CidCeHxEK+0kcyQ46IBXEv8+9CA5RNo/veA==
+X-Google-Smtp-Source: ADFU+vvOwzEWB/KB6v68gGlAUeCZXrHF76lOWQJ2agZ6yCYIP2gtQNst0yT5ZM3f+idvKa0KVyZTDM7DqQh+3t9vivQ=
+X-Received: by 2002:ac2:5b49:: with SMTP id i9mr2148928lfp.21.1585052452258;
+ Tue, 24 Mar 2020 05:20:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200323234505.226919-1-rajatja@google.com> <20200324115059.GA2333340@kroah.com>
+In-Reply-To: <20200324115059.GA2333340@kroah.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Tue, 24 Mar 2020 05:20:14 -0700
+Message-ID: <CACK8Z6EHAv03XGXT0sY2H3TSjS4-yQtCscbHG_o1qCuG94zb6g@mail.gmail.com>
+Subject: Re: [PATCH RESEND 1/5] input/serio/i8042: Attach fwnode to serio
+ i8042 kbd device
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-input <linux-input@vger.kernel.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Furquan Shaikh <furquan@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@google.com>,
+        Zentaro Kavanagh <zentaro@google.com>,
+        Dominik Behr <dbehr@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Between printing the debug message and actual check atomic counter can be
-altered. For better debugging experience read atomic counter value only once.
+Hello,
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Tested-by: Ferry Toth <fntoth@gmail.com>
----
-v2: picked up tags
- drivers/base/dd.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On Tue, Mar 24, 2020 at 4:51 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Mar 23, 2020 at 04:45:01PM -0700, Rajat Jain wrote:
+> > Attach the firmware node to the serio i8042 kbd device so that device
+> > properties can be passed from the firmware.
+> >
+> > Signed-off-by: Rajat Jain <rajatja@google.com>
+> > Change-Id: I36032f4bdee1dc52f26b57734068fd0ee7a6db0b
+>
+> Didn't you run checkpatch.pl on your patches which told you to remove
+> all of these Change-Id: values?
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 43720beb5300..efd0e4c16ba5 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -669,9 +669,10 @@ static int really_probe_debug(struct device *dev, struct device_driver *drv)
-  */
- int driver_probe_done(void)
- {
--	pr_debug("%s: probe_count = %d\n", __func__,
--		 atomic_read(&probe_count));
--	if (atomic_read(&probe_count))
-+	int local_probe_count = atomic_read(&probe_count);
-+
-+	pr_debug("%s: probe_count = %d\n", __func__, local_probe_count);
-+	if (local_probe_count)
- 		return -EBUSY;
- 	return 0;
- }
--- 
-2.25.1
+My apologies. However I did run checkpatch.pl on my patches before
+sending (also checked just now again) and it did not complain about
+the Change-Id values in the commit log. Not sure if I'm running the
+command incorrectly?
 
+rajatja@rajat2:~/stock_kernel/linux$ ./scripts/checkpatch.pl
+../patches/input_atkbd/v1/000*
+-----------------------------------------------------------------------------------------
+../patches/input_atkbd/v1/0001-input-serio-i8042-Attach-fwnode-to-serio-i8042-kbd-d.patch
+-----------------------------------------------------------------------------------------
+total: 0 errors, 0 warnings, 28 lines checked
+
+../patches/input_atkbd/v1/0001-input-serio-i8042-Attach-fwnode-to-serio-i8042-kbd-d.patch
+has no obvious style problems and is ready for submission.
+-----------------------------------------------------------------------------------------
+../patches/input_atkbd/v1/0002-Input-atkbd-Expose-function-row-physical-map-to-user.patch
+-----------------------------------------------------------------------------------------
+total: 0 errors, 0 warnings, 106 lines checked
+../patches/input_atkbd/v1/0002-Input-atkbd-Expose-function-row-physical-map-to-user.patch
+has no obvious style problems and is ready for submission.
+......
+<snip>
+......
+
+I will now resubmit the patches removing the Change-Id(s).
+
+Thanks & Best Regards,
+
+Rajat
+
+
+
+>
+> Please do so...
+>
+> greg k-h
