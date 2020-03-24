@@ -2,132 +2,141 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644B2C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A99C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9E320775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:03:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A9020775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3p61EaT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="koZzPW8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727976AbgCXPDN (ORCPT
+        id S1727806AbgCXPFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:03:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45532 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727168AbgCXPDM (ORCPT
+        Tue, 24 Mar 2020 11:05:17 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42405 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCXPFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:03:12 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t17so8270234ljc.12;
-        Tue, 24 Mar 2020 08:03:11 -0700 (PDT)
+        Tue, 24 Mar 2020 11:05:17 -0400
+Received: by mail-wr1-f68.google.com with SMTP id h15so9666321wrx.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:05:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I7ST19asnOGG0MvlKCXAazKkdXSFzwFfpgOHQe5IauY=;
-        b=C3p61EaT7Ansyr+VG6Zms58wIAIdlIeXUlQlRWHEzHgosPG4eTbCfxvVKOlyXpuMKJ
-         UMkA1qSBDLqjzZ516QFLp4yt/3qfUxBqxaJvBcj8LZRy5cJV/emrqMeNA2nm29VTd2LB
-         hiEAduSEjAUca7c2TVIcxwNXORz+W2Jp/c7HbXw49iP9KCTBTjVgORNWm9RkbmupOjSv
-         JEVaicWfU4oPm+je2fjhGZATErWWRg61aEQFM2ACPsTnQMSoVrgcqo9qraE09ZGwUs66
-         36Jk6bVFpRsAfcxYVr4XYYsPZgsAxbQbfj2lIAHEjvJvV51/QFoQMSrgcyRDIzF8qS8S
-         XR7g==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z37whwAEqv2UhQ238liZabu95DixugSK+aNM/HESChs=;
+        b=koZzPW8Onon8s5EyCubFp/bBT+4QR2ekY8m1b/Ql5hFd2LxT5rbMicbghIQlwGiuoL
+         6rWV6xUHlKEw6RXlfd3ONn61FJ8XrH9auITAHSbhRLOXQmQ3tOHbp7PliOed5widCviT
+         /aU9XENZq1ULLHxVXOuA8YT0nDuPbmyDozB49Vip/gkmXNam5Npqu3+saE1TRSglsNCk
+         IPwKjPoLX2PcRSbFDMP2O33SLKyILoXPIPZ+Q5TkFKEybEC4sft0RnNNvOqOSM9onIxp
+         ko6XL6k39lR+0IAmhVGd6f4BHCcsTtyCvP/t0dmZmr8wOfPu7CGt74vjP+6RIl7QmIKp
+         0BPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I7ST19asnOGG0MvlKCXAazKkdXSFzwFfpgOHQe5IauY=;
-        b=FZVoQR+j6Nf7EYVtVNvHf3AeXPz6/MQuJYn0Vbv6cokHAkMVdAmLbPwZDjn9v9wUZ8
-         X2nb4OIZOeICSVLWT59j6YN8LPg9D7RlNRD0sMSno6MaasItL/ruHdWXyPukL3huM4uS
-         P6ZmEV7dvdkgYjKaRI5zS6zB61L48JVaKRavg0DUc9Qat7TGgH8fupwWC60hkQ+mAOFU
-         0RbOoZU+G1+UwkoPMBwSe5ddgfLD+yUoGAz5YqyNx6/i0eORf2uWrldjIk0Pl48CIwmJ
-         9blFRgrh+eW3xEfDZP7VQseNxpVowuMIlmtrf7ABa4pUZqGAmkK1dlOl3uHKEJmBv7El
-         9/AA==
-X-Gm-Message-State: ANhLgQ0RarWSR7xuEm+XwzhcS5GA4jRqR/GzcNpUnSaWXYJIH+mS4H6c
-        wodMcWA4aDkeYrwXTfCNSz8=
-X-Google-Smtp-Source: ADFU+vsH+UIsIfX+xigBdx82/+KW5l3a/4mEXGfuKimOIM5aB97Q/HYnQwUG5Nhu8rQhgSr0M287WA==
-X-Received: by 2002:a05:651c:50e:: with SMTP id o14mr17295986ljp.241.1585062190955;
-        Tue, 24 Mar 2020 08:03:10 -0700 (PDT)
-Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id h10sm10347020ljg.38.2020.03.24.08.03.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 08:03:10 -0700 (PDT)
-Subject: Re: [PATCH v7 00/48] atmel_mxt_ts misc
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     "Wang, Jiada" <jiada_wang@mentor.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, rydberg@bitmath.org,
-        dmitry.torokhov@gmail.com, nick@shmanahar.org, bsz@semihalf.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200212084218.32344-1-jiada_wang@mentor.com>
- <c583d151-9243-cbde-a04b-bc0389d9be5a@gmail.com>
- <89e4bb0b-b2eb-0b67-4307-fb2af914b1c0@mentor.com>
- <f9b221e7-f189-3e47-adab-1cbc49490d4b@gmail.com>
- <bd3c487b-b065-3e4f-6ab1-f344a4113fcd@mentor.com>
- <5d8fdfc1-cc95-59db-b83e-87bb16ea79e8@gmail.com>
-Message-ID: <60f89c4e-91e0-e660-58e7-5b152bc3e8e7@gmail.com>
-Date:   Tue, 24 Mar 2020 18:03:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z37whwAEqv2UhQ238liZabu95DixugSK+aNM/HESChs=;
+        b=sVD8rGZbUWrqe2GHycEVcztGXPe/V7pIZHRv0TLEG8Ghy9l66paw8DiRTEJiAUB9zS
+         sGyWNzPHXtug1zhorn3u6bkyVp6ZS7DfdzrtfOEGfNsXxClxIMn5PABKRzpt/4v775ux
+         U7R/rnFmErl3UXEl41S9oqZu1QDnpOOclBsZAgc1+wQEjHHGfPp2FV9a4H5OzMRrvDmG
+         vyk/hz+UaTcLd+UqH3Qlfd0hNiQKLbaBim3H+hgW7Ff/QbbmSwC/O2M2PRKZWuPp0Hv7
+         nSp170pi2etimIPlOT0uLg1ICfKWEjMrS157F46hsipDWzQ9pVgHKodtWdRTXfGHd7Ld
+         HckA==
+X-Gm-Message-State: ANhLgQ18O1k/x4dsNh+SEpJfJBLruxtyw2lOlOA+1e339opqi6981aXN
+        m0KgY096fIF9iEgpBL/7LqWJ7hYBj+IeOFt2ioGSuw==
+X-Google-Smtp-Source: ADFU+vv5uwUvgJQDSn/3Zx+Rn4R0s1EmrXHv+2/PHWkMDb0cor0QQriDfYgKM2IRY62TlO7H+78iIm49lYZ8Lu3YLT8=
+X-Received: by 2002:adf:efc9:: with SMTP id i9mr16611416wrp.23.1585062314941;
+ Tue, 24 Mar 2020 08:05:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5d8fdfc1-cc95-59db-b83e-87bb16ea79e8@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200319164227.87419-1-trishalfonso@google.com>
+ <20200319164227.87419-4-trishalfonso@google.com> <CACT4Y+YHPfP3LP04=Zc4NgyhH8FMJ9m-eU_VPjmk5SmGWo_fTg@mail.gmail.com>
+In-Reply-To: <CACT4Y+YHPfP3LP04=Zc4NgyhH8FMJ9m-eU_VPjmk5SmGWo_fTg@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Tue, 24 Mar 2020 08:05:03 -0700
+Message-ID: <CAKFsvU+N=8=VmKVdNdf6os26z+vVD=vR=TL5GJtLQhR9FxOJUQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 3/3] KASAN: Port KASAN Tests to KUnit
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-24.03.2020 17:54, Dmitry Osipenko пишет:
-> 23.03.2020 05:25, Wang, Jiada пишет:
->> Hello Dmitry
->>
->> On 2020/03/21 0:53, Dmitry Osipenko wrote:
->>> Hello Jiada,
->>>
->>> 20.03.2020 06:37, Wang, Jiada пишет:
->>>> Hello Dmitry
->>>>
->>>> I have submitted v8 patch-set to address your comments towards v7
->>>> patch-set,
->>>> most of checkpatch warnings and errors have been addressed,
->>>>
->>>> But I didn't update for following two types of warnings
->>>> since I want to keep consistency with legacy code
->>>>
->>>> WARNING: DEVICE_ATTR unusual permissions '0600' used
->>>> #290: FILE: drivers/input/touchscreen/atmel_mxt_ts.c:3761:
->>>> +static DEVICE_ATTR(debug_v2_enable, 0600, NULL,
->>>
->>> What will happen if you'll use 0644? Will an empty line be returned or
->>> driver will crash?
->>>
->> debug_v2_enable doesn't have .show callback implemented, so after change
->> permission to 644, read of it results in an I/O error,
->>
->> for other 0600 permission interfaces (t38_data, t25 and debug_enable)
->> added in this series,
->> change to 644 can return expected information when read.
->>
->> Do you think it's better to change debug_v2_enable to 0200,
->> and others to 0644?
-> 
-> Since the debug_enable has mxt_debug_enable_show(), the same should be
-> done for debug_v2_enable, for consistency.
-> 
-> The permissions should be 0644 for everything that is read/write.
-> 
-> The 0200 should be used for everything that is root-only and write-only.
-> 
+On Tue, Mar 24, 2020 at 4:25 AM Dmitry Vyukov <dvyukov@google.com> wrote:
+>
+> On Thu, Mar 19, 2020 at 5:42 PM 'Patricia Alfonso' via kasan-dev
+> <kasan-dev@googlegroups.com> wrote:
+> >
+> > Transfer all previous tests for KASAN to KUnit so they can be run
+> > more easily. Using kunit_tool, developers can run these tests with their
+> > other KUnit tests and see "pass" or "fail" with the appropriate KASAN
+> > report instead of needing to parse each KASAN report to test KASAN
+> > functionalities. All KASAN reports are still printed to dmesg.
+> >
+> > Stack tests do not work in UML so those tests are protected inside an
+> > "#if IS_ENABLED(CONFIG_KASAN_STACK)" so this only runs if stack
+> > instrumentation is enabled.
+> >
+> > copy_user_test cannot be run in KUnit so there is a separate test file
+> > for those tests, which can be run as before as a module.
+>
+> Hi Patricia,
+>
+> FWIW I've got some conflicts applying this patch on latest linux-next
+> next-20200324. There are some changes to the tests in mm tree I think.
+>
+> Which tree will this go through? I would be nice to resolve these
+> conflicts somehow, but I am not sure how. Maybe the kasan tests
+> changes are merged upstream next windows, and then rebase this?
+>
+> Also, how can I apply this for testing? I assume this is based on some
+> kunit branch? which one?
+>
+Hmm... okay, that sounds like a problem. I will have to look into the
+conflicts. I'm not sure which tree this will go through upstream; I
+expect someone will tell me which is best when the time comes. This is
+based on the kunit branch in the kunit documentation here:
+https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git/log/?h=kunit
 
-Also, please take a look at [1], see DEVICE_ATTR_WO() and
-DEVICE_BOOL_ATTR() macros, which should be handy.
+> Why the copy_from_user tests can't be converted?
+> It would be very nice to get rid of the modules entirely, rather than
+> having 2 different test procedures because of 2 tests.
+> Or, alternatively can there be other tests in future that can't be
+> converted? Naming it "KASAN_USER" looks somewhat overspecialized. Say
+> tomorrow we have another test that can't run under Kunit, but is not
+> related to copt_from_user, should we create yet another module for it?
+> I think the crux of that is that's a module, so a better name may be
+> "KASAN_TEST_MODULE". Currently all tests that need to run as module
+> are related to copy_from_user, but that's just an implementation
+> detail.
+>
+When I converted the copy_user_tests into KUnit, I was getting a
+kernel panic with a "Segfault with no mm." According to Brendan, since
+KUnit starts a new kthread and is not invoked via a syscall, things
+like copy_to_user won't work in the KUnit framework.
 
-[1]
-https://elixir.bootlin.com/linux/v5.6-rc7/source/include/linux/device.h#L125
+I agree that the naming is too specific, but is KASAN_TEST_MODULE too
+generic since the current KASAN_TEST can be built as a module? Maybe
+TEST_KASAN can be KUNIT_TEST_KASAN and TEST_KASAN_USER can be
+TEST_KASAN_MODULE...
+
+-- 
+Best,
+Patricia
