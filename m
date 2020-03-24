@@ -4,49 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50040C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DCAC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5B620870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7490F208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055991;
-	bh=Mj4njnD9Bq21s8YvyxPwfN39vipUPGwGVgkRwvddbT4=;
+	s=default; t=1585055993;
+	bh=No4x+/sF8HH0OSbHMeU9yYgyMCMiaiSJMmI6WFonRjY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FYw9V7c6KauJPJw4WxxCDNluxSfh2e1td8g5zQTrB5sp1LdhL+aEwXAmc3e5igWU0
-	 7HJnTa6FD+F76xvgkPD+4VV1ekvOfn/8D0eZ0CGqL1gJpPVkdfahwtVQH5G16aJhH0
-	 pRXPlkmFjCa9dS8e7hd3UnB37q6TDMUDE8koVQ1A=
+	b=zuWcoWPmci1rojHVsw/uWT4TpvxUDOhoKmXHvU52ryKNI9pxqNlMnAg4UIHpjqTvN
+	 SeIMi2mUisVSyvy/ANsLquJIJmwxMbev2GIWQK4Xnj1eCmhTo9uDpBcIAz9FeWcKSh
+	 2kvMswNVEKcbFCi/n7yiSkIkT1HmAbBQW4sNDEG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbgCXNTs (ORCPT
+        id S1728672AbgCXNTw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40632 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgCXNTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:47 -0400
+        id S1728794AbgCXNTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22749206F6;
-        Tue, 24 Mar 2020 13:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B079208D5;
+        Tue, 24 Mar 2020 13:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055986;
-        bh=Mj4njnD9Bq21s8YvyxPwfN39vipUPGwGVgkRwvddbT4=;
+        s=default; t=1585055988;
+        bh=No4x+/sF8HH0OSbHMeU9yYgyMCMiaiSJMmI6WFonRjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHPew+O7tQytrOLtYXNLWz9+CBKcYzm8ltMy6eYngmGaHDHHxUdxjnrSqIleZS08R
-         6seYr2lfjF/RGoNJS1tVw/jG0XA0UlP50bAzRlzkM2RyIMEvYBFLVUyeKhP5pC0XT3
-         e3i+TStPGTJFq+Gu3tZUXZA8zWYXwD8vsFA3+VMM=
+        b=OLle3PQvZECCkY9P4PTvmwtIAnKqRqhOkvC0nI9cf/odR7EEcU61xPE0yLPWQQCKV
+         im89IrSZxFDo/RPp3VZMfICnDUMwNcsgVpGkYAsQOkKSBq2GGMTcEMHgj6TUz4hRNQ
+         x37z4qt4i69qWoaCxRCgVkZCdUlhJVkM15jptS7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        PUVICHAKRAVARTHY RAMACHANDRAN <puvichakravarthy@in.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Bharata B Rao <bharata@linux.ibm.com>,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Nathan Lynch <nathanl@linux.ibm.com>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 090/102] mm: slub: be more careful about the double cmpxchg of freelist
-Date:   Tue, 24 Mar 2020 14:11:22 +0100
-Message-Id: <20200324130816.018538799@linuxfoundation.org>
+Subject: [PATCH 5.4 091/102] mm, slub: prevent kmalloc_node crashes and memory leaks
+Date:   Tue, 24 Mar 2020 14:11:23 +0100
+Message-Id: <20200324130816.097967203@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,52 +74,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit 5076190daded2197f62fe92cf69674488be44175 upstream.
+commit 0715e6c516f106ed553828a671d30ad9a3431536 upstream.
 
-This is just a cleanup addition to Jann's fix to properly update the
-transaction ID for the slub slowpath in commit fd4d9c7d0c71 ("mm: slub:
-add missing TID bump..").
+Sachin reports [1] a crash in SLUB __slab_alloc():
 
-The transaction ID is what protects us against any concurrent accesses,
-but we should really also make sure to make the 'freelist' comparison
-itself always use the same freelist value that we then used as the new
-next free pointer.
+  BUG: Kernel NULL pointer dereference on read at 0x000073b0
+  Faulting instruction address: 0xc0000000003d55f4
+  Oops: Kernel access of bad area, sig: 11 [#1]
+  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+  Modules linked in:
+  CPU: 19 PID: 1 Comm: systemd Not tainted 5.6.0-rc2-next-20200218-autotest #1
+  NIP:  c0000000003d55f4 LR: c0000000003d5b94 CTR: 0000000000000000
+  REGS: c0000008b37836d0 TRAP: 0300   Not tainted  (5.6.0-rc2-next-20200218-autotest)
+  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24004844  XER: 00000000
+  CFAR: c00000000000dec4 DAR: 00000000000073b0 DSISR: 40000000 IRQMASK: 1
+  GPR00: c0000000003d5b94 c0000008b3783960 c00000000155d400 c0000008b301f500
+  GPR04: 0000000000000dc0 0000000000000002 c0000000003443d8 c0000008bb398620
+  GPR08: 00000008ba2f0000 0000000000000001 0000000000000000 0000000000000000
+  GPR12: 0000000024004844 c00000001ec52a00 0000000000000000 0000000000000000
+  GPR16: c0000008a1b20048 c000000001595898 c000000001750c18 0000000000000002
+  GPR20: c000000001750c28 c000000001624470 0000000fffffffe0 5deadbeef0000122
+  GPR24: 0000000000000001 0000000000000dc0 0000000000000002 c0000000003443d8
+  GPR28: c0000008b301f500 c0000008bb398620 0000000000000000 c00c000002287180
+  NIP ___slab_alloc+0x1f4/0x760
+  LR __slab_alloc+0x34/0x60
+  Call Trace:
+    ___slab_alloc+0x334/0x760 (unreliable)
+    __slab_alloc+0x34/0x60
+    __kmalloc_node+0x110/0x490
+    kvmalloc_node+0x58/0x110
+    mem_cgroup_css_online+0x108/0x270
+    online_css+0x48/0xd0
+    cgroup_apply_control_enable+0x2ec/0x4d0
+    cgroup_mkdir+0x228/0x5f0
+    kernfs_iop_mkdir+0x90/0xf0
+    vfs_mkdir+0x110/0x230
+    do_mkdirat+0xb0/0x1a0
+    system_call+0x5c/0x68
 
-Jann points out that if we do all of this carefully, we could skip the
-transaction ID update for all the paths that only remove entries from
-the lists, and only update the TID when adding entries (to avoid the ABA
-issue with cmpxchg and list handling re-adding a previously seen value).
+This is a PowerPC platform with following NUMA topology:
 
-But this patch just does the "make sure to cmpxchg the same value we
-used" rather than then try to be clever.
+  available: 2 nodes (0-1)
+  node 0 cpus:
+  node 0 size: 0 MB
+  node 0 free: 0 MB
+  node 1 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+  node 1 size: 35247 MB
+  node 1 free: 30907 MB
+  node distances:
+  node   0   1
+    0:  10  40
+    1:  40  10
 
-Acked-by: Jann Horn <jannh@google.com>
+  possible numa nodes: 0-31
+
+This only happens with a mmotm patch "mm/memcontrol.c: allocate
+shrinker_map on appropriate NUMA node" [2] which effectively calls
+kmalloc_node for each possible node.  SLUB however only allocates
+kmem_cache_node on online N_NORMAL_MEMORY nodes, and relies on
+node_to_mem_node to return such valid node for other nodes since commit
+a561ce00b09e ("slub: fall back to node_to_mem_node() node if allocating
+on memoryless node").  This is however not true in this configuration
+where the _node_numa_mem_ array is not initialized for nodes 0 and 2-31,
+thus it contains zeroes and get_partial() ends up accessing
+non-allocated kmem_cache_node.
+
+A related issue was reported by Bharata (originally by Ramachandran) [3]
+where a similar PowerPC configuration, but with mainline kernel without
+patch [2] ends up allocating large amounts of pages by kmalloc-1k
+kmalloc-512.  This seems to have the same underlying issue with
+node_to_mem_node() not behaving as expected, and might probably also
+lead to an infinite loop with CONFIG_SLUB_CPU_PARTIAL [4].
+
+This patch should fix both issues by not relying on node_to_mem_node()
+anymore and instead simply falling back to NUMA_NO_NODE, when
+kmalloc_node(node) is attempted for a node that's not online, or has no
+usable memory.  The "usable memory" condition is also changed from
+node_present_pages() to N_NORMAL_MEMORY node state, as that is exactly
+the condition that SLUB uses to allocate kmem_cache_node structures.
+The check in get_partial() is removed completely, as the checks in
+___slab_alloc() are now sufficient to prevent get_partial() being
+reached with an invalid node.
+
+[1] https://lore.kernel.org/linux-next/3381CD91-AB3D-4773-BA04-E7A072A63968@linux.vnet.ibm.com/
+[2] https://lore.kernel.org/linux-mm/fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com/
+[3] https://lore.kernel.org/linux-mm/20200317092624.GB22538@in.ibm.com/
+[4] https://lore.kernel.org/linux-mm/088b5996-faae-8a56-ef9c-5b567125ae54@suse.cz/
+
+Fixes: a561ce00b09e ("slub: fall back to node_to_mem_node() node if allocating on memoryless node")
+Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Reported-by: PUVICHAKRAVARTHY RAMACHANDRAN <puvichakravarthy@in.ibm.com>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Tested-by: Bharata B Rao <bharata@linux.ibm.com>
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Christopher Lameter <cl@linux.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Pekka Enberg <penberg@kernel.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200320115533.9604-1-vbabka@suse.cz
+Debugged-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/slub.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ mm/slub.c |   26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 --- a/mm/slub.c
 +++ b/mm/slub.c
-@@ -2977,11 +2977,13 @@ redo:
- 	barrier();
+@@ -1953,8 +1953,6 @@ static void *get_partial(struct kmem_cac
  
- 	if (likely(page == c->page)) {
--		set_freepointer(s, tail_obj, c->freelist);
-+		void **freelist = READ_ONCE(c->freelist);
-+
-+		set_freepointer(s, tail_obj, freelist);
+ 	if (node == NUMA_NO_NODE)
+ 		searchnode = numa_mem_id();
+-	else if (!node_present_pages(node))
+-		searchnode = node_to_mem_node(node);
  
- 		if (unlikely(!this_cpu_cmpxchg_double(
- 				s->cpu_slab->freelist, s->cpu_slab->tid,
--				c->freelist, tid,
-+				freelist, tid,
- 				head, next_tid(tid)))) {
+ 	object = get_partial_node(s, get_node(s, searchnode), c, flags);
+ 	if (object || node != NUMA_NO_NODE)
+@@ -2543,17 +2541,27 @@ static void *___slab_alloc(struct kmem_c
+ 	struct page *page;
  
- 			note_cmpxchg_failure("slab_free", s, tid);
+ 	page = c->page;
+-	if (!page)
++	if (!page) {
++		/*
++		 * if the node is not online or has no normal memory, just
++		 * ignore the node constraint
++		 */
++		if (unlikely(node != NUMA_NO_NODE &&
++			     !node_state(node, N_NORMAL_MEMORY)))
++			node = NUMA_NO_NODE;
+ 		goto new_slab;
++	}
+ redo:
+ 
+ 	if (unlikely(!node_match(page, node))) {
+-		int searchnode = node;
+-
+-		if (node != NUMA_NO_NODE && !node_present_pages(node))
+-			searchnode = node_to_mem_node(node);
+-
+-		if (unlikely(!node_match(page, searchnode))) {
++		/*
++		 * same as above but node_match() being false already
++		 * implies node != NUMA_NO_NODE
++		 */
++		if (!node_state(node, N_NORMAL_MEMORY)) {
++			node = NUMA_NO_NODE;
++			goto redo;
++		} else {
+ 			stat(s, ALLOC_NODE_MISMATCH);
+ 			deactivate_slab(s, page, c->freelist, c);
+ 			goto new_slab;
 
 
