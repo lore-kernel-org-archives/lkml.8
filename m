@@ -7,39 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8364EC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A4CC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6196620A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1A6F20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgCXJS6 (ORCPT
+        id S1728114AbgCXJTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:18:58 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44004 "EHLO
+        Tue, 24 Mar 2020 05:19:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43976 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbgCXJQy (ORCPT
+        with ESMTP id S1727575AbgCXJQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:16:54 -0400
+        Tue, 24 Mar 2020 05:16:50 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfg3-00083S-AK; Tue, 24 Mar 2020 10:16:51 +0100
+        id 1jGfg0-00082x-EV; Tue, 24 Mar 2020 10:16:48 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5AA5A1C04D3;
-        Tue, 24 Mar 2020 10:16:40 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:40 -0000
-From:   "tip-bot2 for Jules Irenge" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 815231C0451;
+        Tue, 24 Mar 2020 10:16:39 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:39 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Add missing annotation for exit_tasks_rcu_start()
-Cc:     Jules Irenge <jbi.octave@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: core/rcu] srcu: Fix __call_srcu()/process_srcu() datarace
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140001.28353.5179493215017548997.tip-bot2@tip-bot2>
+Message-ID: <158504139916.28353.3509934736900696325.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,41 +53,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     e1e9bdc00ade6651c11bf5628ee9d313ee6089ac
-Gitweb:        https://git.kernel.org/tip/e1e9bdc00ade6651c11bf5628ee9d313ee6089ac
-Author:        Jules Irenge <jbi.octave@gmail.com>
-AuthorDate:    Mon, 20 Jan 2020 22:41:26 
+Commit-ID:     7ff8b4502bc0f576450d4ecbda97fa30e8002ed1
+Gitweb:        https://git.kernel.org/tip/7ff8b4502bc0f576450d4ecbda97fa30e8002ed1
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Sun, 22 Dec 2019 19:32:54 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 16:00:45 -08:00
+CommitterDate: Thu, 20 Feb 2020 16:01:11 -08:00
 
-rcu: Add missing annotation for exit_tasks_rcu_start()
+srcu: Fix __call_srcu()/process_srcu() datarace
 
-Sparse reports a warning at exit_tasks_rcu_start(void)
+The srcu_node structure's ->srcu_gp_seq_needed_exp field is accessed
+locklessly, so updates must use WRITE_ONCE().  This commit therefore
+adds the needed WRITE_ONCE() invocations.
 
-|warning: context imbalance in exit_tasks_rcu_start() - wrong count at exit
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely.
 
-To fix this, this commit adds an __acquires(&tasks_rcu_exit_srcu).
-Given that exit_tasks_rcu_start() does actually call __srcu_read_lock(),
-this not only fixes the warning but also improves on the readability of
-the code.
-
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/update.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/srcutree.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
-index a27df76..a04fe54 100644
---- a/kernel/rcu/update.c
-+++ b/kernel/rcu/update.c
-@@ -801,7 +801,7 @@ static int __init rcu_spawn_tasks_kthread(void)
- core_initcall(rcu_spawn_tasks_kthread);
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index 657e6a7..b1edac9 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -550,7 +550,7 @@ static void srcu_gp_end(struct srcu_struct *ssp)
+ 		snp->srcu_have_cbs[idx] = gpseq;
+ 		rcu_seq_set_state(&snp->srcu_have_cbs[idx], 1);
+ 		if (ULONG_CMP_LT(snp->srcu_gp_seq_needed_exp, gpseq))
+-			snp->srcu_gp_seq_needed_exp = gpseq;
++			WRITE_ONCE(snp->srcu_gp_seq_needed_exp, gpseq);
+ 		mask = snp->srcu_data_have_cbs[idx];
+ 		snp->srcu_data_have_cbs[idx] = 0;
+ 		spin_unlock_irq_rcu_node(snp);
+@@ -660,7 +660,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
+ 		if (snp == sdp->mynode)
+ 			snp->srcu_data_have_cbs[idx] |= sdp->grpmask;
+ 		if (!do_norm && ULONG_CMP_LT(snp->srcu_gp_seq_needed_exp, s))
+-			snp->srcu_gp_seq_needed_exp = s;
++			WRITE_ONCE(snp->srcu_gp_seq_needed_exp, s);
+ 		spin_unlock_irqrestore_rcu_node(snp, flags);
+ 	}
  
- /* Do the srcu_read_lock() for the above synchronize_srcu().  */
--void exit_tasks_rcu_start(void)
-+void exit_tasks_rcu_start(void) __acquires(&tasks_rcu_exit_srcu)
- {
- 	preempt_disable();
- 	current->rcu_tasks_idx = __srcu_read_lock(&tasks_rcu_exit_srcu);
