@@ -2,100 +2,214 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E583C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC13C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4624C20789
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30ADB20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dvJVWQ0O"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3EVV1Pm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgCXOHL (ORCPT
+        id S1727896AbgCXOHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:07:11 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35716 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgCXOHL (ORCPT
+        Tue, 24 Mar 2020 10:07:24 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46749 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727553AbgCXOHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:07:11 -0400
-Received: by mail-ed1-f65.google.com with SMTP id a20so20847637edj.2;
-        Tue, 24 Mar 2020 07:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dcUgHF1GDuuSunaZUU4Ruocj0GZ4ddqSxRhaLtXqkcM=;
-        b=dvJVWQ0O8hlSN/WBTtGXC50vG9ZJsG5B93vJTJkLUCehGXLNA7WiOPqhxSiXPhvxSQ
-         tOj7bM0T5W9KTOferZhZUOyGqo0WT7kVcvYhb76IspBlhdKXyvZmq+EUoZfZwWazY1UW
-         HbYAq1mKiuaFo5UjFpQvGh5IQ9HKyn0ZBjewWugORhupS/tsE3xXNBR5yGU6r03Ve3qg
-         h82gUAI0taleDBc/RB3m/Q6cwpslgv65JWBeiWge9O2p7DlFJJ4W2u4LfLz3QJWoSdyH
-         acqk0DLuJ/Dx8CbymfYh3loG/49JveFdfInVQkuMKAur2NH3+HUGXG+nlEtRaI8mCUJ6
-         YOFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dcUgHF1GDuuSunaZUU4Ruocj0GZ4ddqSxRhaLtXqkcM=;
-        b=j4Q/Bu3bIsgogtzVoDPJOvnYVTcZRpkxVq6/XQF+m7zYQFJ9tZerwPhJcZnXI2w63/
-         qpcnbMT5w1QwEBspM5QrkN174dkhT+a0+U61yR0Hj+InmWuMX8JIs1Nhoy0jy2w+2R/f
-         +Ae6EpkUxgsww17Lg5YLgRNH2Nun0nbd7g4bFHFiYRmHlK3sM3SVLYCzd8IPaDSXxUfj
-         QRItAFjUuges1QUio1ykyk0fipGLx/oNlIiE7VllvCJ5p8ISixf1l0fsWVx8+g7aVomU
-         xXA/KY7e9WxcmD7J/TA+/m2EsVdj6ufvVJtWU5NSei1cmDLb7bW29Vy1LVSIKdFpVtLQ
-         VpFA==
-X-Gm-Message-State: ANhLgQ2rC8jBsC3hXjuPSTxijwkbjEfZY2++wM15eRct0PO7ZI+yvTED
-        Ca9TpCmDvPVjpcEm//73MWwJ6Zmytj+bJLChY2M=
-X-Google-Smtp-Source: ADFU+vuGEjDeb/L8U1c1UJ2A93v1OboeO9Zew62wGydVRx2aXkWZiMP1AE1wliFtVf6Ap3fpngvz6Yw78DvnnxMnQcw=
-X-Received: by 2002:a05:6402:17aa:: with SMTP id j10mr20114633edy.146.1585058828747;
- Tue, 24 Mar 2020 07:07:08 -0700 (PDT)
+        Tue, 24 Mar 2020 10:07:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585058842;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=guf8LTdbi3wmRiN5ykm7zFmobl16wEpjKymIGyI7jz0=;
+        b=E3EVV1Pmzwj8o32QwAK4iz7cpYP+eMfLkyhoCBgB1NegkbbxkaljZY0mals24FzXXrvvbT
+        /qv8be2Y/myHSN4+oD0HUJbgxw1LMGh8coU6yqL9NF2ADDjouZQnICmInlS4xK4eMH/i/e
+        VJha6MV+yS6DY58YU/gZcDwb4pzL7k8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-Y-hw-xkwP0KoK8tU2EARNg-1; Tue, 24 Mar 2020 10:07:20 -0400
+X-MC-Unique: Y-hw-xkwP0KoK8tU2EARNg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2537813FD;
+        Tue, 24 Mar 2020 14:07:19 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 87BF05C241;
+        Tue, 24 Mar 2020 14:07:04 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 22:06:56 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: Re: [PATCH v3 1/3] block/diskstats: more accurate approximation of
+ io_ticks for slow disks
+Message-ID: <20200324140656.GA23550@ming.t460p>
+References: <158503038812.1955.7827988255138056389.stgit@buzz>
+ <158503198072.1955.16227279292140721351.stgit@buzz>
 MIME-Version: 1.0
-References: <20200324102030.31000-1-narmstrong@baylibre.com> <20200324102030.31000-2-narmstrong@baylibre.com>
-In-Reply-To: <20200324102030.31000-2-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 24 Mar 2020 15:06:57 +0100
-Message-ID: <CAFBinCCaMopoza5CFCC7=mStH8Ocni4GjGr+etn=dMKOgr_5fg@mail.gmail.com>
-Subject: Re: [PATCH 01/13] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: add
- the Amlogic GXL and GXM Families USB Glue Bindings
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158503198072.1955.16227279292140721351.stgit@buzz>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
-
-On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> --- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> +++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
-> @@ -25,9 +25,13 @@ description: |
->    The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
->    host-only mode.
->
-> +  The Amlogic GXL & GXM SoCs doesn't embed an USB3 PHY.
+On Tue, Mar 24, 2020 at 09:39:40AM +0300, Konstantin Khlebnikov wrote:
+> Currently io_ticks is approximated by adding one at each start and end of
+> requests if jiffies counter has changed. This works perfectly for requests
+> shorter than a jiffy or if one of requests starts/ends at each jiffy.
+> 
+> If disk executes just one request at a time and they are longer than two
+> jiffies then only first and last jiffies will be accounted.
+> 
+> Fix is simple: at the end of request add up into io_ticks jiffies passed
+> since last update rather than just one jiffy.
+> 
+> Example: common HDD executes random read 4k requests around 12ms.
+> 
+> fio --name=test --filename=/dev/sdb --rw=randread --direct=1 --runtime=30 &
+> iostat -x 10 sdb
+> 
+> Note changes of iostat's "%util" 8,43% -> 99,99% before/after patch:
+> 
+> Before:
+> 
+> Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+> sdb               0,00     0,00   82,60    0,00   330,40     0,00     8,00     0,96   12,09   12,09    0,00   1,02   8,43
+> 
+> After:
+> 
+> Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+> sdb               0,00     0,00   82,50    0,00   330,00     0,00     8,00     1,00   12,10   12,10    0,00  12,12  99,99
+> 
+> For load estimation "%util" is not as useful as average queue length,
+> but it clearly shows how often disk queue is completely empty.
+> 
+> Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+> ---
+>  Documentation/admin-guide/iostats.rst |    5 ++++-
+>  block/bio.c                           |    8 ++++----
+>  block/blk-core.c                      |    4 ++--
+>  include/linux/genhd.h                 |    2 +-
+>  4 files changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
+> index df5b8345c41d..9b14b0c2c9c4 100644
+> --- a/Documentation/admin-guide/iostats.rst
+> +++ b/Documentation/admin-guide/iostats.rst
+> @@ -100,7 +100,7 @@ Field 10 -- # of milliseconds spent doing I/Os (unsigned int)
+>  
+>      Since 5.0 this field counts jiffies when at least one request was
+>      started or completed. If request runs more than 2 jiffies then some
+> -    I/O time will not be accounted unless there are other requests.
+> +    I/O time might be not accounted in case of concurrent requests.
+>  
+>  Field 11 -- weighted # of milliseconds spent doing I/Os (unsigned int)
+>      This field is incremented at each I/O start, I/O completion, I/O
+> @@ -143,6 +143,9 @@ are summed (possibly overflowing the unsigned long variable they are
+>  summed to) and the result given to the user.  There is no convenient
+>  user interface for accessing the per-CPU counters themselves.
+>  
+> +Since 4.19 request times are measured with nanoseconds precision and
+> +truncated to milliseconds before showing in this interface.
 > +
->  properties:
->    compatible:
->      enum:
-> +      - amlogic,meson-gxl-usb-ctrl
-> +      - amlogic,meson-gxm-usb-ctrl
->        - amlogic,meson-g12a-usb-ctrl
->        - amlogic,meson-a1-usb-ctrl
-the phy-names property is described below which you don't update
-please add usb2-phy2 to the list of allowed phy-names so the dt
-binding validation for the .dtsi patche (#9) won't complain
+>  Disks vs Partitions
+>  -------------------
+>  
+> diff --git a/block/bio.c b/block/bio.c
+> index 0985f3422556..b1053eb7af37 100644
+> --- a/block/bio.c
+> +++ b/block/bio.c
+> @@ -1762,14 +1762,14 @@ void bio_check_pages_dirty(struct bio *bio)
+>  	schedule_work(&bio_dirty_work);
+>  }
+>  
+> -void update_io_ticks(struct hd_struct *part, unsigned long now)
+> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
+>  {
+>  	unsigned long stamp;
+>  again:
+>  	stamp = READ_ONCE(part->stamp);
+>  	if (unlikely(stamp != now)) {
+>  		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
+> -			__part_stat_add(part, io_ticks, 1);
+> +			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
+>  		}
+>  	}
+>  	if (part->partno) {
+> @@ -1785,7 +1785,7 @@ void generic_start_io_acct(struct request_queue *q, int op,
+>  
+>  	part_stat_lock();
+>  
+> -	update_io_ticks(part, jiffies);
+> +	update_io_ticks(part, jiffies, false);
+>  	part_stat_inc(part, ios[sgrp]);
+>  	part_stat_add(part, sectors[sgrp], sectors);
+>  	part_inc_in_flight(q, part, op_is_write(op));
+> @@ -1803,7 +1803,7 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
+>  
+>  	part_stat_lock();
+>  
+> -	update_io_ticks(part, now);
+> +	update_io_ticks(part, now, true);
+>  	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
+>  	part_stat_add(part, time_in_queue, duration);
+>  	part_dec_in_flight(q, part, op_is_write(req_op));
+> diff --git a/block/blk-core.c b/block/blk-core.c
+> index abfdcf81a228..4401b30a1751 100644
+> --- a/block/blk-core.c
+> +++ b/block/blk-core.c
+> @@ -1337,7 +1337,7 @@ void blk_account_io_done(struct request *req, u64 now)
+>  		part_stat_lock();
+>  		part = req->part;
+>  
+> -		update_io_ticks(part, jiffies);
+> +		update_io_ticks(part, jiffies, true);
+>  		part_stat_inc(part, ios[sgrp]);
+>  		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
+>  		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
+> @@ -1379,7 +1379,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
+>  		rq->part = part;
+>  	}
+>  
+> -	update_io_ticks(part, jiffies);
+> +	update_io_ticks(part, jiffies, false);
+>  
+>  	part_stat_unlock();
+>  }
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index d5c75df64bba..f1066f10b062 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -467,7 +467,7 @@ static inline void free_part_info(struct hd_struct *part)
+>  	kfree(part->info);
+>  }
+>  
+> -void update_io_ticks(struct hd_struct *part, unsigned long now);
+> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end);
+>  
+>  /* block/genhd.c */
+>  extern void device_add_disk(struct device *parent, struct gendisk *disk,
+> 
 
-With that fixed:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Looks fine:
 
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Martin
+Thanks,
+Ming
+
