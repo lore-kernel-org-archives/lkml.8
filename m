@@ -2,108 +2,88 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A109C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 489F0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 610D3206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12102206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:55:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWo5YyX/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j68qL3vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgCXQyU (ORCPT
+        id S1727663AbgCXQzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:54:20 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38267 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727273AbgCXQyU (ORCPT
+        Tue, 24 Mar 2020 12:55:23 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42708 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbgCXQzW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:54:20 -0400
-Received: by mail-pj1-f67.google.com with SMTP id m15so1715412pje.3;
-        Tue, 24 Mar 2020 09:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=rPZBl+QbGFAFlz2fLf98Z5n8K3I+qd2EtNADkBNRMLw=;
-        b=UWo5YyX/rz4iT22TlUFvMncYW1HL4F8dFNN2Pn6WdGpvsGKs7lRciWnF92mV3MrHXt
-         g9G8ed0fy9z8RVLHDli/tFxC3mdwGVVW2GsLGtBC5d37nzjvaMo+9ZOdpDp96qeNtqrs
-         CsVV5RX+XdgMbCB2HOYg5pK+q2Nyab6kDG8jbCUdlceMncwfXrCuJDlTFiiPfa2PBEkt
-         eKWxH0c0T5nOS+/UvxLM5qEVXPEbvWXIUFX3aVPP1L/BO7ZYnwewjGGZxW79s7XV/y1z
-         Hif8WRbKqmEisX7as5ZgPCdUdDXUY9bUHS9/9w+BegZ6VvoWfR0NiMIeh/K0Tmyxg5y5
-         UCpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rPZBl+QbGFAFlz2fLf98Z5n8K3I+qd2EtNADkBNRMLw=;
-        b=q0dOQgLdBal38HyppEhhlO8qoTULaTS1JwtPGaxxoDRg/018UYRW02WvQVpAIWM/Cc
-         Nprz+JrFhTFhhsS7WUAT3jQAbvI7CKT/4MbfsjUiChNvFao7NGSX7h7oBFgjgvXnVK+N
-         XYkFiQv+YNqadLu5iL0jylGCovjso+7DjX1EVRT27fSvgUYaV7FqP2xcb4kNZL6y7QHx
-         Df6gYcYHAt9CBhOJFGU23GdS2l3vpkWOadZdrM0Ap7u5XpgAQGEHgED7IFDKrI5AcYXZ
-         CKV14kEeTmdzgYBzqwYwXtRYvcLYJVScmAx5kMP6fsNkZHuOEQZ7RB1e+m/SQRUbMAAF
-         yMmA==
-X-Gm-Message-State: ANhLgQ2rfRzXXMbNf8ZjP4L6CNooEJKQMWT4Jwm+Um4fwHcepZu5muqS
-        dk6H8/IwLvkT45cUrIjTbaU=
-X-Google-Smtp-Source: ADFU+vvVT3/hBoL79iWLOhKZfIHg0UIA7zdlV4T9CvIkuEaERJ0ookWRmQeJVoKdWNDIJKR+yO5Owg==
-X-Received: by 2002:a17:90a:bd0c:: with SMTP id y12mr6554330pjr.82.1585068857320;
-        Tue, 24 Mar 2020 09:54:17 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id n30sm8678428pgc.36.2020.03.24.09.54.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 09:54:16 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 09:54:14 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 08/11] net: ethernet: ti: cpts: move rx
- timestamp processing to ptp worker only
-Message-ID: <20200324165414.GA30483@localhost>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
- <20200320194244.4703-9-grygorii.strashko@ti.com>
- <20200324134343.GD18149@localhost>
- <13dd9d58-7417-2f39-aa7d-dceae946482c@ti.com>
+        Tue, 24 Mar 2020 12:55:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=A0ojL14BqOuhudwXrers//6Y4R0jtCChC5fidi/X22w=; b=j68qL3vmM3RwzBBTQ+9Yhd1Wif
+        wVcKyM8VC/1JnZ8JktLxZ7gMe+8u0DF51w6z959S65beMOMmux0PgTtp6Da9UG/nSy2J7iQAPRvAr
+        XMVyadEkWSB3att8VgPXRwB/3lnUavIb4OGSCRQn9mOZz306rdb3y3vprbti4mmCshhw5yECazS9I
+        6BsEOA2MlM/LdDfjHGE6ZRVSHN1KGOzqAfmIdKIJJTyX3lLq5FVigxGXCShY2nGJXDNdpNJCeAuJE
+        lKCbaAZh7dnT2aWbE+6e8LApfvPkMEpMp2hJeimHWSL5PsH0om58yBJzULXR+RY5GT9NToLLimqUt
+        BjZS7vPg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGmpM-0007kH-2r; Tue, 24 Mar 2020 16:54:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 5584E300235;
+        Tue, 24 Mar 2020 17:54:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2D85429942924; Tue, 24 Mar 2020 17:54:54 +0100 (CET)
+Date:   Tue, 24 Mar 2020 17:54:54 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Anvin <hpa@zytor.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
+Message-ID: <20200324165454.GT20696@hirez.programming.kicks-ass.net>
+References: <20200324135603.483964896@infradead.org>
+ <20200324142246.127013582@infradead.org>
+ <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <13dd9d58-7417-2f39-aa7d-dceae946482c@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:34:34PM +0200, Grygorii Strashko wrote:
-> I tested both ways and kept this version as i'v not seen any degradation,
-> but, of course, i'll redo the test (or may be you can advise what test to run).
+On Tue, Mar 24, 2020 at 09:14:03AM -0700, Linus Torvalds wrote:
+> On Tue, Mar 24, 2020 at 7:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > Extend the static_call infrastructure to optimize the following common
+> > pattern:
+> >
+> >         if (func_ptr)
+> >                 func_ptr(args...)
+> 
+> Is there any reason why this shouldn't be the default static call pattern?
+> 
+> IOW, do we need the special "cond" versions at all? Couldn't we just
+> say that this is how static calls fundamentally work - if the function
+> is NULL, they are nops?
 
-Measure the time delay from when the frame arrives in the stack until
-that frame+RxTimestamp arrives in the application.  I expect the round
-about way via kthread takes longer. 
- 
-> My thoughts were - network stack might not immediately deliver packet to the application
-
-The network stack always delivers the packet, but you artificially
-delay that delivery by calling netif_receive_skb() later on from
-cpts_match_rx_ts().
-
-> and PTP worker can be tuned (pri and smp_affinity),
-
-That won't avoid the net softirq.
-
-> resulted code will be more structured,
-
-I am afraid people will copy this pattern in new drivers.  It really
-does not make much sense.
-
-Thanks,
-Richard
+That doesn't work for functions that have a return value ...
