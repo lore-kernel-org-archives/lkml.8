@@ -7,37 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBDBC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D59C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1E020A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9779220A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgCXJRO (ORCPT
+        id S1727833AbgCXJRN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:17:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44078 "EHLO
+        Tue, 24 Mar 2020 05:17:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44064 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727742AbgCXJRG (ORCPT
+        with ESMTP id S1727720AbgCXJRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:17:06 -0400
+        Tue, 24 Mar 2020 05:17:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfgG-0008E8-9L; Tue, 24 Mar 2020 10:17:04 +0100
+        id 1jGfgA-000883-9s; Tue, 24 Mar 2020 10:16:58 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 044361C04E3;
-        Tue, 24 Mar 2020 10:16:50 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:49 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CDDE11C04CD;
+        Tue, 24 Mar 2020 10:16:44 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:44 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Remove dead code from rcu_segcblist_insert_pend_cbs()
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] locktorture: Print ratio of acquisitions, not failures
+Cc:     Will Deacon <will@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140965.28353.17689151375174387331.tip-bot2@tip-bot2>
+Message-ID: <158504140447.28353.5481545814274745771.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,36 +57,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     57721fd15a02f7df9dad1f3cca27f21e03ee118f
-Gitweb:        https://git.kernel.org/tip/57721fd15a02f7df9dad1f3cca27f21e03ee118f
+Commit-ID:     80c503e0e68fbe271680ab48f0fe29bc034b01b7
+Gitweb:        https://git.kernel.org/tip/80c503e0e68fbe271680ab48f0fe29bc034b01b7
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Wed, 15 Jan 2020 19:17:02 -08:00
+AuthorDate:    Thu, 23 Jan 2020 09:19:01 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 15:58:23 -08:00
+CommitterDate: Thu, 20 Feb 2020 15:59:59 -08:00
 
-rcu: Remove dead code from rcu_segcblist_insert_pend_cbs()
+locktorture: Print ratio of acquisitions, not failures
 
-The rcu_segcblist_insert_pend_cbs() function currently (partially)
-initializes the rcu_cblist that it pulls callbacks from.  However, all
-the resulting stores are dead because all callers pass in the address of
-an on-stack cblist that is not used afterwards.  This commit therefore
-removes this pointless initialization.
+The __torture_print_stats() function in locktorture.c carefully
+initializes local variable "min" to statp[0].n_lock_acquired, but
+then compares it to statp[i].n_lock_fail.  Given that the .n_lock_fail
+field should normally be zero, and given the initialization, it seems
+reasonable to display the maximum and minimum number acquisitions
+instead of miscomputing the maximum and minimum number of failures.
+This commit therefore switches from failures to acquisitions.
 
+And this turns out to be not only a day-zero bug, but entirely my
+own fault.  I hate it when that happens!
+
+Fixes: 0af3fe1efa53 ("locktorture: Add a lock-torture kernel module")
+Reported-by: Will Deacon <will@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Will Deacon <will@kernel.org>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Josh Triplett <josh@joshtriplett.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 ---
- kernel/rcu/rcu_segcblist.c | 2 --
- 1 file changed, 2 deletions(-)
+ kernel/locking/locktorture.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/kernel/rcu/rcu_segcblist.c b/kernel/rcu/rcu_segcblist.c
-index 426a472..9a0f661 100644
---- a/kernel/rcu/rcu_segcblist.c
-+++ b/kernel/rcu/rcu_segcblist.c
-@@ -381,8 +381,6 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
- 		return; /* Nothing to do. */
- 	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
- 	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
--	rclp->head = NULL;
--	rclp->tail = &rclp->head;
- }
- 
- /*
+diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+index 99475a6..687c1d8 100644
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -696,10 +696,10 @@ static void __torture_print_stats(char *page,
+ 		if (statp[i].n_lock_fail)
+ 			fail = true;
+ 		sum += statp[i].n_lock_acquired;
+-		if (max < statp[i].n_lock_fail)
+-			max = statp[i].n_lock_fail;
+-		if (min > statp[i].n_lock_fail)
+-			min = statp[i].n_lock_fail;
++		if (max < statp[i].n_lock_acquired)
++			max = statp[i].n_lock_acquired;
++		if (min > statp[i].n_lock_acquired)
++			min = statp[i].n_lock_acquired;
+ 	}
+ 	page += sprintf(page,
+ 			"%s:  Total: %lld  Max/Min: %ld/%ld %s  Fail: %d %s\n",
