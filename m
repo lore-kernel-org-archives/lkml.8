@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15497C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C128DC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A6B2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B3852076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056640;
-	bh=c89utpjyJCM1WC9RrJfhwK+FgjmLnvI7luTATiwF9VM=;
+	s=default; t=1585056643;
+	bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKc/BTLcDc+YSBRQ1JPPRE+vNpyCTocjD8SN+raADJZylIAlx693uj59SkOgR1Iuh
-	 ag0oFXBG5sF1+HZZ5TWYEb5jsOyQHtdUEgWzHhYr2BXTNnbpXL8IEAj/7VBIJxK8tw
-	 RFSvHnJgWvh8p9+KW80olDjCqAHB0zi7jshRVvZM=
+	b=s6wciPb5+wDxjUaBS0jz92avqbxnyZKZ2CeN0m1SN04SRo2R2FeBIfg5Zs/8HRAjb
+	 9JEtpxGMsGOSCpr7gbjhhhA+EDf4QaoEko/QYOejmx2adNZIr9BqvzmbVmivVZcRyT
+	 cOj69+novgvEbDWufTB4yUYjHPdOocRi+HinvPhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgCXNak (ORCPT
+        id S1728794AbgCXNWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:30:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45264 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgCXNWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:22:43 -0400
+        id S1727422AbgCXNWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:22:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FEE7206F6;
-        Tue, 24 Mar 2020 13:22:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8FA3206F6;
+        Tue, 24 Mar 2020 13:22:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056163;
-        bh=c89utpjyJCM1WC9RrJfhwK+FgjmLnvI7luTATiwF9VM=;
+        s=default; t=1585056121;
+        bh=HDWemFmS6sNHHvqLejbRyMAPEs6e+okEDrDeTOhqVWg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QmJXglC2kf5UO714YI7xs9R2YNwvlnA17oKnwd1MdwylQvK9gK58R16mglxg+2XrG
-         5wfktyof977gU2Dgl6PvSlaI3dbctKOkxtbK/DFOimDMUAPR0P2rRTAeHASgnm7r0t
-         DSFVGkq/5dIkl0TLY+oKB/cpE3lezqdjGXi/K9Mc=
+        b=qHpKble/9gCSF5mQMxJXAA4trDni3Ab8IsDtCZ1jklyabhlvvL/z4sMg9C1wlZzTg
+         vyWLtsxUisD8Prhv9xF7IuRDPPjiPh+szlYzUeSaLi4Ngo9iCQ93mNeDCfBEn3pqLl
+         dzKsPFutTTWazAm8GKxaUK9Df9j8u3X5iGS6e57Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
+        stable@vger.kernel.org, Olivier Moysan <olivier.moysan@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 006/119] phy: ti: gmii-sel: fix set of copy-paste errors
-Date:   Tue, 24 Mar 2020 14:09:51 +0100
-Message-Id: <20200324130808.639713876@linuxfoundation.org>
+Subject: [PATCH 5.5 028/119] ASoC: stm32: sai: manage rebind issue
+Date:   Tue, 24 Mar 2020 14:10:13 +0100
+Message-Id: <20200324130811.168634879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -61,56 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
+From: Olivier Moysan <olivier.moysan@st.com>
 
-[ Upstream commit eefed634eb61e4094b9fb8183cb8d43b26838517 ]
+[ Upstream commit 0d6defc7e0e437a9fd53622f7fd85740f38d5693 ]
 
-- under PHY_INTERFACE_MODE_MII the 'mode' func parameter is assigned
-instead of 'gmii_sel_mode' and it's working only because the default value
-'gmii_sel_mode' is set to 0.
+The commit e894efef9ac7 ("ASoC: core: add support to card rebind")
+allows to rebind the sound card after a rebind of one of its component.
+With this commit, the sound card is actually rebound,
+but may be no more functional. The following problems have been seen
+with STM32 SAI driver.
 
-- console outputs use 'rgmii_id' and 'mode' values to print PHY mode
-instead of using 'submode' value which is representing PHY interface mode
-now.
+1) DMA channel is not requested:
 
-This patch fixes above two cases.
+With the sound card rebind the simplified call sequence is:
+stm32_sai_sub_probe
+	snd_soc_register_component
+		snd_soc_try_rebind_card
+			snd_soc_instantiate_card
+	devm_snd_dmaengine_pcm_register
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+The problem occurs because the pcm must be registered,
+before snd_soc_instantiate_card() is called.
+
+Modify SAI driver, to change the call sequence as follows:
+stm32_sai_sub_probe
+	devm_snd_dmaengine_pcm_register
+	snd_soc_register_component
+		snd_soc_try_rebind_card
+
+2) DMA channel is not released:
+
+dma_release_channel() is not called when
+devm_dmaengine_pcm_release() is executed.
+This occurs because SND_DMAENGINE_PCM_DRV_NAME component,
+has already been released through devm_component_release().
+
+devm_dmaengine_pcm_release() should be called before
+devm_component_release() to avoid this problem.
+
+Call snd_dmaengine_pcm_unregister() and snd_soc_unregister_component()
+explicitly from SAI driver, to have the right sequence.
+
+Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
+Message-Id: <20200304102406.8093-1-olivier.moysan@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/phy/ti/phy-gmii-sel.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ sound/soc/stm/stm32_sai_sub.c | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index a28bd15297f53..e998e9cd8d1f8 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -80,20 +80,19 @@ static int phy_gmii_sel_mode(struct phy *phy, enum phy_mode mode, int submode)
- 		break;
- 
- 	case PHY_INTERFACE_MODE_MII:
--		mode = AM33XX_GMII_SEL_MODE_MII;
-+		gmii_sel_mode = AM33XX_GMII_SEL_MODE_MII;
- 		break;
- 
- 	default:
--		dev_warn(dev,
--			 "port%u: unsupported mode: \"%s\". Defaulting to MII.\n",
--			 if_phy->id, phy_modes(rgmii_id));
-+		dev_warn(dev, "port%u: unsupported mode: \"%s\"\n",
-+			 if_phy->id, phy_modes(submode));
- 		return -EINVAL;
+diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
+index 30bcd5d3a32a8..10eb4b8e8e7ee 100644
+--- a/sound/soc/stm/stm32_sai_sub.c
++++ b/sound/soc/stm/stm32_sai_sub.c
+@@ -1543,20 +1543,20 @@ static int stm32_sai_sub_probe(struct platform_device *pdev)
+ 		return ret;
  	}
  
- 	if_phy->phy_if_mode = submode;
+-	ret = devm_snd_soc_register_component(&pdev->dev, &stm32_component,
+-					      &sai->cpu_dai_drv, 1);
++	ret = snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
++	if (ret) {
++		dev_err(&pdev->dev, "Could not register pcm dma\n");
++		return ret;
++	}
++
++	ret = snd_soc_register_component(&pdev->dev, &stm32_component,
++					 &sai->cpu_dai_drv, 1);
+ 	if (ret)
+ 		return ret;
  
- 	dev_dbg(dev, "%s id:%u mode:%u rgmii_id:%d rmii_clk_ext:%d\n",
--		__func__, if_phy->id, mode, rgmii_id,
-+		__func__, if_phy->id, submode, rgmii_id,
- 		if_phy->rmii_clock_external);
+ 	if (STM_SAI_PROTOCOL_IS_SPDIF(sai))
+ 		conf = &stm32_sai_pcm_config_spdif;
  
- 	regfield = if_phy->fields[PHY_GMII_SEL_PORT_MODE];
+-	ret = devm_snd_dmaengine_pcm_register(&pdev->dev, conf, 0);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Could not register pcm dma\n");
+-		return ret;
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -1565,6 +1565,8 @@ static int stm32_sai_sub_remove(struct platform_device *pdev)
+ 	struct stm32_sai_sub_data *sai = dev_get_drvdata(&pdev->dev);
+ 
+ 	clk_unprepare(sai->pdata->pclk);
++	snd_dmaengine_pcm_unregister(&pdev->dev);
++	snd_soc_unregister_component(&pdev->dev);
+ 
+ 	return 0;
+ }
 -- 
 2.20.1
 
