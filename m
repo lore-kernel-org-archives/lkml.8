@@ -7,37 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B173BC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8364EC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F15120A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6196620A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgCXJSz (ORCPT
+        id S1728093AbgCXJS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:18:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44009 "EHLO
+        Tue, 24 Mar 2020 05:18:58 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44004 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727504AbgCXJQy (ORCPT
+        with ESMTP id S1727611AbgCXJQy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 05:16:54 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfg4-000849-Er; Tue, 24 Mar 2020 10:16:52 +0100
+        id 1jGfg3-00083S-AK; Tue, 24 Mar 2020 10:16:51 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4452B1C0475;
-        Tue, 24 Mar 2020 10:16:41 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 5AA5A1C04D3;
+        Tue, 24 Mar 2020 10:16:40 +0100 (CET)
 Date:   Tue, 24 Mar 2020 09:16:40 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+From:   "tip-bot2 for Jules Irenge" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Update __call_rcu() comments
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: core/rcu] rcu: Add missing annotation for exit_tasks_rcu_start()
+Cc:     Jules Irenge <jbi.octave@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140084.28353.10213566122749616532.tip-bot2@tip-bot2>
+Message-ID: <158504140001.28353.5179493215017548997.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,49 +55,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     b692dc4adfcff5430467bec8efed3c07d1772eaf
-Gitweb:        https://git.kernel.org/tip/b692dc4adfcff5430467bec8efed3c07d1772eaf
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Tue, 11 Feb 2020 07:29:02 -08:00
+Commit-ID:     e1e9bdc00ade6651c11bf5628ee9d313ee6089ac
+Gitweb:        https://git.kernel.org/tip/e1e9bdc00ade6651c11bf5628ee9d313ee6089ac
+Author:        Jules Irenge <jbi.octave@gmail.com>
+AuthorDate:    Mon, 20 Jan 2020 22:41:26 
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 16:00:20 -08:00
+CommitterDate: Thu, 20 Feb 2020 16:00:45 -08:00
 
-rcu: Update __call_rcu() comments
+rcu: Add missing annotation for exit_tasks_rcu_start()
 
-The __call_rcu() function's header comment refers to a cpu argument
-that no longer exists, and the comment of the return path from
-rcu_nocb_try_bypass() ignores the non-no-CBs CPU case.  This commit
-therefore update both comments.
+Sparse reports a warning at exit_tasks_rcu_start(void)
 
+|warning: context imbalance in exit_tasks_rcu_start() - wrong count at exit
+
+To fix this, this commit adds an __acquires(&tasks_rcu_exit_srcu).
+Given that exit_tasks_rcu_start() does actually call __srcu_read_lock(),
+this not only fixes the warning but also improves on the readability of
+the code.
+
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- kernel/rcu/tree.c |  9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ kernel/rcu/update.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 48fba22..0a9de9f 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2642,12 +2642,7 @@ static void check_cb_ovld(struct rcu_data *rdp)
- 	raw_spin_unlock_rcu_node(rnp);
- }
+diff --git a/kernel/rcu/update.c b/kernel/rcu/update.c
+index a27df76..a04fe54 100644
+--- a/kernel/rcu/update.c
++++ b/kernel/rcu/update.c
+@@ -801,7 +801,7 @@ static int __init rcu_spawn_tasks_kthread(void)
+ core_initcall(rcu_spawn_tasks_kthread);
  
--/*
-- * Helper function for call_rcu() and friends.  The cpu argument will
-- * normally be -1, indicating "currently running CPU".  It may specify
-- * a CPU only if that CPU is a no-CBs CPU.  Currently, only rcu_barrier()
-- * is expected to specify a CPU.
-- */
-+/* Helper function for call_rcu() and friends.  */
- static void
- __call_rcu(struct rcu_head *head, rcu_callback_t func)
+ /* Do the srcu_read_lock() for the above synchronize_srcu().  */
+-void exit_tasks_rcu_start(void)
++void exit_tasks_rcu_start(void) __acquires(&tasks_rcu_exit_srcu)
  {
-@@ -2688,7 +2683,7 @@ __call_rcu(struct rcu_head *head, rcu_callback_t func)
- 	check_cb_ovld(rdp);
- 	if (rcu_nocb_try_bypass(rdp, head, &was_alldone, flags))
- 		return; // Enqueued onto ->nocb_bypass, so just leave.
--	/* If we get here, rcu_nocb_try_bypass() acquired ->nocb_lock. */
-+	// If no-CBs CPU gets here, rcu_nocb_try_bypass() acquired ->nocb_lock.
- 	rcu_segcblist_enqueue(&rdp->cblist, head);
- 	if (__is_kfree_rcu_offset((unsigned long)func))
- 		trace_rcu_kfree_callback(rcu_state.name, head,
+ 	preempt_disable();
+ 	current->rcu_tasks_idx = __srcu_read_lock(&tasks_rcu_exit_srcu);
