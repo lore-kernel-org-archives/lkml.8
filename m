@@ -2,152 +2,122 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A338DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A608C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1D2205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D832205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:52:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Avy3q3r3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ntboDvPp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgCXUuh (ORCPT
+        id S1727907AbgCXUwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:50:37 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:13852 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726673AbgCXUuh (ORCPT
+        Tue, 24 Mar 2020 16:52:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34492 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727023AbgCXUwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:50:37 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585083036; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ddvd2aTPOKAU2rsf+pwve6VGhBM2CcVIjGKqs4Lcb+4=; b=Avy3q3r3G9f9JlHjc8/ayh4/WqbPVjpRAsXW1C1AiB+E+VzSecHB59Ca0qjcR9U0jH4U+jQX
- 8okEOU4OvqinrmmLjFcYzkL7HGztrGWDFZPwanlckx0VxKsZad27tDvC9Lw/fv2ExGR3Srvx
- QgCgUuL7zn/v3WwYguOKD0r9N6E=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7a728f.7f7a4c39c9d0-smtp-out-n05;
- Tue, 24 Mar 2020 20:50:23 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0C17DC43637; Tue, 24 Mar 2020 20:50:22 +0000 (UTC)
-Received: from [10.110.95.232] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CAF2AC433CB;
-        Tue, 24 Mar 2020 20:50:20 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CAF2AC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
- based SOCs
-To:     Philipp Zabel <pza@pengutronix.de>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
- <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
- <20200324094924.GA22281@pengutronix.de>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <047976bd-709e-d935-38f3-7c8767590e2b@codeaurora.org>
-Date:   Tue, 24 Mar 2020 13:50:19 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 24 Mar 2020 16:52:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id a23so7929262plm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:52:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RUH2GpKiZzcp+HWMY8/0tgoroE59nDoZuKy+VZo5HoQ=;
+        b=ntboDvPpO4mkIqoOhoGXBG65LwzTrCrhDR8XrhgItSkYAvVx0nDaIFCBhgwlE8+b3B
+         y6p8/oHwZoumQYYk3A1AzzxHVkXT6O6foFkaxu4imEmIvRAWv/oMpfPHGgbxrTvRWSJk
+         gIFK1Am2GLRwaAk5axXIPgh23srMlz0n3DanoTyOa9GDaxu/vLb4pd80gJuGfXRZvFfN
+         9yYECe7ugpWAGzj2sy3/0p4O61zScSUI1p0bkfKRlTrUSt8hghGolfUp584p846q7sI+
+         TWvUS7SFV62KctatZgmzNHcZ4+uPfa12URZyyig2GjXYpWMhIgTHXJNzdoKULwuNqvOT
+         xpMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RUH2GpKiZzcp+HWMY8/0tgoroE59nDoZuKy+VZo5HoQ=;
+        b=qugirZcyb47YDu7hcmPd+Bq4p3trwVAiDPMcXhe2x2hn4HWMayG1Y52Y3PojLizV8d
+         BO3NdfHlXKn5pKULs5R0cFVZFiSaQ2bN5lG3i8zPyc4bzhW+Ym4xs9myIDv1+nJ9oDUL
+         dxwNhnzdlI14eO1hDGRkVVcXLUqUij+NjGXqMDnwU2hvucEHxH0CDcPuOkcxMWSfPhC/
+         h5R8lzmNDXiziRn12N36q53FMXnfR0wtagepUtWWgVV5rzfCjEalF76+2r94G5GcWlw1
+         S3N+G02JBejqCKZGvUay+55/AY1PjPDiCV9aY0KbFWqgCAoKiRAFHtfyyd3aCee0i28K
+         F6LQ==
+X-Gm-Message-State: ANhLgQ3f20joclf5UGhLk7gIwhZUaHnqVY+uyPf/Yl89/GZPIGlN5mbt
+        oEkWrDvOCq3Ii6uRvpJ8kBTKFQ==
+X-Google-Smtp-Source: ADFU+vuFTdjBOEELC4vADOx1eo0GZ5R9fhZn/of+Gz8RGRkQBwgXM30Df8fjCPIj52s2Ffu2c1Bidw==
+X-Received: by 2002:a17:902:b281:: with SMTP id u1mr6218733plr.287.1585083133418;
+        Tue, 24 Mar 2020 13:52:13 -0700 (PDT)
+Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z6sm16696078pfn.212.2020.03.24.13.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 13:52:12 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 13:52:10 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        xiang xiao <xiaoxiang781216@gmail.com>
+Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
+Message-ID: <20200324205210.GE119913@minitux>
+References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
+ <20200324170407.16470-3-arnaud.pouliquen@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20200324094924.GA22281@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324170407.16470-3-arnaud.pouliquen@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
+On Tue 24 Mar 10:04 PDT 2020, Arnaud Pouliquen wrote:
+[..]
+> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+> index 020b1cd9294f..c2465e7ebc2a 100644
+> --- a/drivers/tty/Makefile
+> +++ b/drivers/tty/Makefile
+> @@ -34,5 +34,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
+>  obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
+>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
+>  obj-$(CONFIG_VCC)		+= vcc.o
+> +obj-$(CONFIG_RPMSG_TTY)		+= rpmsg_tty.o
+>  
+>  obj-y += ipwireless/
+> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
+[..]
+> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
+> +	{ .name	= TTY_CH_NAME_RAW },
+> +	{ .name	= TTY_CH_NAME_WITH_CTS},
 
-On 3/24/2020 2:49 AM, Philipp Zabel wrote:
-> Hi Wesley,
-> 
-> On Mon, Mar 23, 2020 at 01:17:10PM -0700, Wesley Cheng wrote:
->> This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
->> are potentially multiple instances of this UTMI PHY on the
->> SOC, all which can utilize this driver.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  drivers/phy/qualcomm/Kconfig             |  10 ++
->>  drivers/phy/qualcomm/Makefile            |   1 +
->>  drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
->>  3 files changed, 305 insertions(+)
->>  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
->>
-> [...]
->> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
->> new file mode 100644
->> index 0000000..8d4ba53
->> --- /dev/null
->> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
->> @@ -0,0 +1,294 @@
-> [...]
->> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct qcom_snps_hsphy *hsphy;
->> +	struct phy_provider *phy_provider;
->> +	struct phy *generic_phy;
->> +	struct resource *res;
->> +	int ret, i;
->> +	int num;
->> +
->> +	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
->> +	if (!hsphy)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	hsphy->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(hsphy->base))
->> +		return PTR_ERR(hsphy->base);
->> +
->> +	hsphy->ref_clk = devm_clk_get(dev, "ref");
->> +	if (IS_ERR(hsphy->ref_clk)) {
->> +		ret = PTR_ERR(hsphy->ref_clk);
->> +		if (ret != -EPROBE_DEFER)
->> +			dev_err(dev, "failed to get ref clk, %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
->> +	if (IS_ERR(hsphy->phy_reset)) {
->> +		dev_err(dev, "failed to get phy core reset\n");
->> +		return PTR_ERR(hsphy->phy_reset);
->> +	}
-> 
-> There is only a single reset specified, so there is no need for
-> _by_index. Also please explicitly request exclusive reset control
-> for this driver, I suggest:
-> 
-> 	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
-> 
-> If you do want to prepare for future addition of other resets to the
-> bindings (but if so, why not specify those right now?), you should add
-> a reset-names property and request the reset control by id string
-> instead.
-> 
-> regards
-> Philipp
-> 
+I still don't like the idea that the tty devices are tied to channels by
+fixed names.
 
-Thanks for the feedback.  Sure, I will move to using
-devm_reset_control_get_exclusive, as we won't be having multiple resets
-for this particular PHY.  Will update a new patch series.
+This makes the driver unusable for communicating with any firmware out
+there that provides tty-like data over a channel with a different name -
+such as modems with channels providing an AT command interface (they are
+not named "rpmsg-tty-raw").
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I also fail to see how you would distinguish ttys when the firmware
+provides more than a single tty - e.g. say you have a modem-like device
+that provides an AT command channel and a NMEA stream.
+
+
+These are the reasons why drivers/rpmsg/rpmsg_char registers a "control
+device", from which you can spawn new char devices. As I've said before,
+I really think the same approach should be taken for ttys - perhaps by
+just extending the rpmsg_char to allow it to create tty devices in
+addition to the "packet based" char device?
+
+Regards,
+Bjorn
