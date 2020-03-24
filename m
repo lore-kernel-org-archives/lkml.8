@@ -2,93 +2,68 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3087CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0FFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6252074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BDE206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgCXRrE (ORCPT
+        id S1727783AbgCXRrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:47:04 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46625 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727630AbgCXRrD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:47:03 -0400
-Received: by mail-oi1-f195.google.com with SMTP id q204so11479021oia.13;
-        Tue, 24 Mar 2020 10:47:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nFb0+kjYmZJ+cufuAmTc9QqVTkqcdWAu4mmr9TgT2PI=;
-        b=dWeTlBW7R/Rq2LncUzlfdNWXtEWKi/rDgUyoDyRSkGfasfzNI2Xxa2UVJL8Su8RfgY
-         e5rKWw4oroQKdBP42BI/CVt8qVt0sNcUC+yqu9pCFagtm7AxWenne5GWZin2rrEI2RKG
-         /Ocg8xTmsRS4AtX1fX09srQHC6j9v0l9t4wX/OwcrpzOjz/7auUfH2CosKP2iK7RUQw2
-         VRC2Fyux34blws4IcIanuXdVX+pg+Vo/yfkXnj3Eq9XF59Bw1ny8PogA6K5vKzZxLVAw
-         X76SzAUSjJs1Tkz1XVfuYH/PEEp05U1pML811ik6oThr1s/5EKKvAqm7Hn+T04+OcSde
-         SD4w==
-X-Gm-Message-State: ANhLgQ1VusJwNCkxR3kSLDbB2v9nVF0/jJ3fQY0dKTppYvMQ2nPm+o4A
-        jRDt426d0WVdcoROHJZ1g0w/RTm/ZfXnnmzvDGI=
-X-Google-Smtp-Source: ADFU+vtUEnZc4Z6IuNrutvUwO6xPFEb3WzJnzZevlqI8IM7CDUn/S2FUiqebh+YHN+1v4ew7zhc/+OJM8G9W2DZKno4=
-X-Received: by 2002:aca:ad93:: with SMTP id w141mr4451051oie.54.1585072022658;
- Tue, 24 Mar 2020 10:47:02 -0700 (PDT)
+        Tue, 24 Mar 2020 13:47:36 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51824 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727273AbgCXRrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:47:36 -0400
+IronPort-SDR: EroJeWM1GSU6O0nw+pToeQpaFecXktvrz7bevrCx0XGcYGuoBLqgE2NDX+l1piqiO6rLISYmQQ
+ 10fHSqMl+0Hw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 10:47:35 -0700
+IronPort-SDR: /Dba8g1Ev7Mt3HAEAox+SqruuocqzRX7jLtMhq7XVwvIcFQbFonm31L4t/247hd6XIYy1CqKRg
+ NWEL4XlR62kQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
+   d="scan'208";a="240115983"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Mar 2020 10:47:35 -0700
+Date:   Tue, 24 Mar 2020 10:47:35 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>
+Subject: Re: [PATCH v6 0/8] x86/split_lock: Fix and virtualization of split
+ lock detection
+Message-ID: <20200324174735.GC5998@linux.intel.com>
+References: <20200324151859.31068-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
-References: <20200324161539.7538-1-masahiroy@kernel.org>
-In-Reply-To: <20200324161539.7538-1-masahiroy@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 24 Mar 2020 18:46:51 +0100
-Message-ID: <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
- rebuilding firmware
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324151859.31068-1-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+On Tue, Mar 24, 2020 at 11:18:51PM +0800, Xiaoyao Li wrote:
+> So sorry for the noise that I forgot to CC the maillist.
 
-On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> As far as I understood from the Kconfig help text, this build rule is
-> used to rebuild the driver firmware, which runs on the QUICC, m68k-based
-> Motorola 68360.
->
-> The firmware source, wanxlfw.S, is currently compiled by the combo of
-> $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
-> files. In fact, this is the only user of $(AS) in the kernel build.
->
-> Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
-> PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
-> Instead of combining $(CPP) and (AS) from different tool sets, using
-> single $(CC68K) seems simpler, and saner.
->
-> After this commit, the firmware rebuild will require cc68k instead of
-> as68k. I do not know how many people care about this, though.
->
-> I do not have cc68k/ld68k in hand, but I was able to build it by using
-> the kernel.org m68k toolchain. [1]
+You also forgot to add RESEND :-)  Tagging the patches like so
 
-Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
-provided by Debian/Ubuntu, too?
+  [PATCH RESEND v6 0/8] x86/split_lock: Fix and virtualization of split lock detection
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+lets folks that received the originals identify and respond to the "new"
+thread.
