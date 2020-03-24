@@ -2,140 +2,90 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3866C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5F3C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A46E520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:56:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RVyUZfSt"
+	by mail.kernel.org (Postfix) with ESMTP id E270E20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgCXU4i (ORCPT
+        id S1727969AbgCXU5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:56:38 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34954 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727753AbgCXU4i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:56:38 -0400
-Received: by mail-pf1-f193.google.com with SMTP id u68so9940984pfb.2;
-        Tue, 24 Mar 2020 13:56:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3DEBNdMaNJAXpR3AZDBkUvL0YabvLwnchUK926agYFE=;
-        b=RVyUZfStRmZUieGoDeXNTSQm8W4OtXZum/MDW5tDsgt4qRYs/G8sUW/Pc48wdy2zQu
-         jqtG4j6GM8OrZJFSFD3qTZ7mxveeeP1FzI2a4lpPCi2063IzH0I6VtkuYygyvGHkIUko
-         FTlyV71h4ZegNvrxDxR7KM3ZojKQn/EJkAM7ZwZxIk5SLYA/jp8LW67usforyTcXzL7+
-         twjGwJZyrB/XHX/kxUM6rPnzFfuHIWryJkG2dsNZFFetQtL7LNNgIDFASlF5q5/wkEVu
-         FL/zYfobOiO7CvBZoZoqM1HKkkqMAufnGk9wrxVM8gUvSc6s6Bby1N8zQySJbD0RcqQq
-         n8dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=3DEBNdMaNJAXpR3AZDBkUvL0YabvLwnchUK926agYFE=;
-        b=RQKVFUuoJfSuYDPD9v6NCTt6tu0MQOMvcUS1xBI7x9ywVN5fjHLdtBUxF02fj8qJvo
-         N3NNa7hA0lGPJnhQqWIghbmx2I1DvO9ublLCpM5WhOOEdyuG+osuCvYQYX1c2MwFDhox
-         QQSrL3ZLOpNSr1Oy2oj1s3OjO2lwO0oiZ/WtKKBoYws0sMZtHXgeVow9S1BCLLLGDEDL
-         txCYtHXSDOGqMWJyZREKxWkqe/H2qQR+cndZy4RzW0zOR9523V5SGw9Y3je6ce1DQwqX
-         sJ3Zx6QFjBTVcuOsQRxoGo2N5rHd2UkxN6Yuoy9lZVgoyLxXkOqiMq3ByHfFRpXJYOX+
-         ZYMg==
-X-Gm-Message-State: ANhLgQ0U/m9ENs1S3yUk+JnUtKj1FBqj5OX1LfXD+O7iUX/Ki2FmJe3N
-        h6hXFPrkYRNc91NPPI9W8iuqGl9S
-X-Google-Smtp-Source: ADFU+vs+CN7hzjjXbYWFPZFKzz0g+ZJ5n4DscIMxbWrZ0LUZoKKuo/PDHoS67D8nzjxfkhZyPHB7OA==
-X-Received: by 2002:a63:d143:: with SMTP id c3mr28398624pgj.171.1585083396566;
-        Tue, 24 Mar 2020 13:56:36 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 79sm16877567pfz.23.2020.03.24.13.56.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 13:56:36 -0700 (PDT)
-Subject: Re: [PATCH 5.5 000/119] 5.5.12-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20200324130808.041360967@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <9e8c7d9d-cbed-7738-a6f6-c658b0adb542@roeck-us.net>
-Date:   Tue, 24 Mar 2020 13:56:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 24 Mar 2020 16:57:35 -0400
+Received: from sauhun.de ([88.99.104.3]:54988 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725941AbgCXU5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:57:34 -0400
+Received: from localhost (p54B3339A.dip0.t-ipconnect.de [84.179.51.154])
+        by pokefinder.org (Postfix) with ESMTPSA id 4AF8B2C08EF;
+        Tue, 24 Mar 2020 21:57:32 +0100 (CET)
+Date:   Tue, 24 Mar 2020 21:57:31 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     ajayg@nvidia.com,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "open list:I2C CONTROLLER DRIVER FOR NVIDIA GPU" 
+        <linux-i2c@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] i2c: nvidia-gpu: Handle timeout correctly in
+ gpu_i2c_check_status()
+Message-ID: <20200324205731.GA7641@ninjato>
+References: <20200324152812.20231-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
+Content-Disposition: inline
+In-Reply-To: <20200324152812.20231-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 6:09 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.12 release.
-> There are 119 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Thu, 26 Mar 2020 13:06:42 +0000.
-> Anything received after that time might be too late.
-> 
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 428 pass: 428 fail: 0
+--+QahgC5+KEYLbs62
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Guenter
+On Tue, Mar 24, 2020 at 11:28:11PM +0800, Kai-Heng Feng wrote:
+> Nvidia card may come with a "phantom" UCSI device, and its driver gets
+> stuck in probe routine, prevents any system PM operations like suspend.
+>=20
+> There's an unaccounted case that the target time can equal to jiffies in
+> gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
+> instead of jiffies comparison functions.=20
+>=20
+> Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
+> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+Looks good to me, thanks Andy for the suggestion!
+
+Waiting for the Rev-by from Ajay (driver maintainer).
+
+
+--+QahgC5+KEYLbs62
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl56dDcACgkQFA3kzBSg
+Kbb8uBAAr4Rj+iNo4B83HNFlyS8aXWxRCoZFedr5/tcsGUWZpn/P9QnqEUwZytqA
+Duz4QoJc/qKZh1T9xW2f1LLDNC91v5SUVfDaVSDtvgnoq883ZwywMoX5XSwXBxKR
+zY7kRu9VI69omQS9HpeA0mXMMiaTTdj5FTJQWalhX23YwTevJ7uMyzaQzDb6Th55
+pFYL1uAqAT/5s5qhrr18wZAR0IH2MtxVSQRs+Z3a5ZdmOXMNPpqt9Bdol7Xd9o+P
+3W/nsAyybejOEgFU1ylMCmyIioCpEgrebjKc2szjzx8dmA94V1LBYPMhRJPJS5T+
+DksosmGvkmJySlwZdltCbte3Q0Kj57PQVZ5KSCI6JQUnsGPnpC4+JgvixW2c/UWr
+TZIeF22qxBiHf2y3RQFK1QxHr+y03n0jLFSZ/NIWo4iS0YMK11nft0/8SVzlFWep
+fLjwx6DCR9rrhjV703eyaXxJQVsvhbz7QfpO97V6Mr9nQbTDr5qsnXa192HwCDlj
+JxFbpmeFG3tUXTTFLCv0+29/WIa8fQaAJZfBFpw1Ym//p3hhq/mT9jHvFm6uTVV3
+53dUeJ5CqW/NNk/JPucQZA0nOLtrIflV0/E1BEfce2ew8EWF2v8IHv0menDqRV+O
+Ks0yGLDYcgmdAN0FOrZEp14YRTPS00riZLtkYu5oQZzoiIOi9O4=
+=2692
+-----END PGP SIGNATURE-----
+
+--+QahgC5+KEYLbs62--
