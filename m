@@ -2,162 +2,122 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92E5EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F298C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 628162076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tu1JdwQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 7B73E2076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgCXSfA (ORCPT
+        id S1727928AbgCXSfU convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:35:00 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39763 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgCXSe6 (ORCPT
+        Tue, 24 Mar 2020 14:35:20 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:42502 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727398AbgCXSfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:34:58 -0400
-Received: by mail-oi1-f194.google.com with SMTP id d63so19449850oig.6
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:34:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A+Hf8XQxqxY4UfHSF//33kZkuadjj3xwWyydBPLRU5U=;
-        b=Tu1JdwQ2ug4UNUaYvLMTsqfF50ZqUF2Zq21MBnDvVPiDVLZJxDPWTdZlxQOUSPhoh9
-         6Jw0aHVgkxitN+wWRfKODDessLeaOPzM0DD25QjBUWzD21RjrogHgfJO+JKATvLKXWCd
-         wnXnAnWkSm/mzGj8V/e7sefJdZH0s42WUgG5iYRtr/2Nr1eu3FWJe55K3RYa0Tj+g8pZ
-         jPG4xFi+O4kWv+4DWaSR5fTt80JcniMoXc73MgQwUp03aDhrM34OMeeA+Yolcl8ca2w/
-         Y167PfUD7DM+Nou1MBAfs3W9p1KUtVkExWkaYigxvz3rnvn7ZMEKdFC0B2FD7YMWJqmw
-         +7LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A+Hf8XQxqxY4UfHSF//33kZkuadjj3xwWyydBPLRU5U=;
-        b=p3hM9ivb9awo5mDdelw8U0QJOixj+DC9NHtHWUYB7IiG7FO3RJVWOoV55lyP1uPsM/
-         /PY4cO2wDQg1cW0DVJiXZSRz0O/r/NnPhMVRlc1gmVUjTGynhyaPAidcXerivGYJXDXk
-         1jhkoQg4lHWlsvT+ZUivV936nZXOf0erQ8PciyIJgc1gPC6nuTwVke7uid/9IL8emA0s
-         O1G7PrrRsmM1bauznGE+ikG1Nyhr6FCpfy/0CS7i/SXImVlLiKaTj+32Wpg+tnKijEaw
-         YyjhcVNRaDcT8cko4p/aH1K5me9cQGxCwKHmKIpWVZTGFD/3rWr6JQ7XFOfbWlJI7OHe
-         hSag==
-X-Gm-Message-State: ANhLgQ3e65hTJQnLfRtul/2XpjvFuFRAqfSyF5lLAZcVaXypez4w8bYH
-        3qsuJ+gXNP1Pj/l3/7CyUaWp26CKM5Dtl8tn2ju7/A==
-X-Google-Smtp-Source: ADFU+vt6tmJQI0f/riGMP7yFFDAaiOxqgRHsZVGg2HbVdrRbhCCg32XOxx+h+nAXwGT1IB5KqZ0CXoNIS6alpG1HzgI=
-X-Received: by 2002:aca:682:: with SMTP id 124mr4539925oig.69.1585074896515;
- Tue, 24 Mar 2020 11:34:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
- <20200324175955.GA16972@arm.com>
-In-Reply-To: <20200324175955.GA16972@arm.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 24 Mar 2020 11:34:20 -0700
-Message-ID: <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
-Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
- creating dead devices
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Mar 2020 14:35:20 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id C8009CECBE;
+        Tue, 24 Mar 2020 19:44:49 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
+ extension for Intel 9460/9560 and 9160/9260
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
+Date:   Tue, 24 Mar 2020 19:35:17 +0100
+Cc:     Joe Perches <joe@perches.com>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Alain Michaud <alainm@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <643C6020-2FC5-4EEA-8F64-5D4B7F9258A4@holtmann.org>
+References: <20200323072824.254495-1-mcchou@chromium.org>
+ <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+ <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
+ <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
+ <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
+ <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
+ <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
+To:     Alain Michaud <alainmichaud@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:00 AM Ionela Voinescu
-<ionela.voinescu@arm.com> wrote:
->
-> Hi guys,
->
-> On Thursday 19 Mar 2020 at 08:47:46 (-0000), tip-bot2 for Saravana Kannan wrote:
-> > The following commit has been merged into the timers/core branch of tip:
-> >
-> > Commit-ID:     4f41fe386a94639cd9a1831298d4f85db5662f1e
-> > Gitweb:        https://git.kernel.org/tip/4f41fe386a94639cd9a1831298d4f85db5662f1e
-> > Author:        Saravana Kannan <saravanak@google.com>
-> > AuthorDate:    Fri, 10 Jan 2020 21:21:25 -08:00
-> > Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-> > CommitterDate: Tue, 17 Mar 2020 13:10:07 +01:00
-> >
-> > clocksource/drivers/timer-probe: Avoid creating dead devices
-> >
-> > Timer initialization is done during early boot way before the driver
-> > core starts processing devices and drivers. Timers initialized during
-> > this early boot period don't really need or use a struct device.
-> >
-> > However, for timers represented as device tree nodes, the struct devices
-> > are still created and sit around unused and wasting memory. This change
-> > avoid this by marking the device tree nodes as "populated" if the
-> > corresponding timer is successfully initialized.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Link: https://lore.kernel.org/r/20200111052125.238212-1-saravanak@google.com
-> > ---
-> >  drivers/clocksource/timer-probe.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-> > index ee9574d..a10f28d 100644
-> > --- a/drivers/clocksource/timer-probe.c
-> > +++ b/drivers/clocksource/timer-probe.c
-> > @@ -27,8 +27,10 @@ void __init timer_probe(void)
-> >
-> >               init_func_ret = match->data;
-> >
-> > +             of_node_set_flag(np, OF_POPULATED);
-> >               ret = init_func_ret(np);
-> >               if (ret) {
-> > +                     of_node_clear_flag(np, OF_POPULATED);
-> >                       if (ret != -EPROBE_DEFER)
-> >                               pr_err("Failed to initialize '%pOF': %d\n", np,
-> >                                      ret);
-> >
->
-> This patch is creating problems on some vexpress platforms - ones that
-> are using CLKSRC_VERSATILE (drivers/clocksource/timer-versatile.c).
-> I noticed issues on TC2 and FVPs (fixed virtual platforms) starting with
-> next-20200318 and still reproducible with next-20200323.
->
-> It seems the issue this patch causes on TC2 and FVP is related to the
-> vexpress-sysreg node being used early for sched_clock_init
-> (timer_versatile.c: versatile_sched_clock_init). At this point (at
-> time_init) the node will be marked as OF_POPULATED, which flags that a
-> device is already created for it, but it is not, in this case.
->
-> Later at sysreg_init (vexpress-sysreg.c) a device will fail to be created
-> for it, as one already exists. This will result in a failure to create a
-> bridge and a system controller for a bunch of devices (mostly clocks and
-> regulators).
->
-> I think on the FVP it does not cause many issues as clocks are fixed and
-> regulator settings are probably nops so it boots fine and throws only
-> some warnings. On TC2 on the other hand it fails to boot and it hangs at
-> starting the kernel.
->
-> In my opinion the idea of the patch is not bad, but I'm not an expert on
-> this so the most I can offer for now is the basic understanding of the
-> issue. I've Cc-ed a few folks to potentially suggest alternatives/fixes.
->
-> For now, reverting this patch solves the problems on both platforms.
-> I tested this on next-20200318 which introduced the problem.
+Hi Alain,
 
-I'll reply later today after I take a closer look. But will something
-like what timer-ingenic.c did work for you? You can clear the flag
-inside your early init.
+>>>>>> This adds a bit mask of driver_info for Microsoft vendor extension and
+>>>>>> indicates the support for Intel 9460/9560 and 9160/9260. See
+>>>>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+>>>>>> microsoft-defined-bluetooth-hci-commands-and-events for more information
+>>>>>> about the extension. This was verified with Intel ThunderPeak BT controller
+>>>>>> where msft_vnd_ext_opcode is 0xFC1E.
+>>>> []
+>>>>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+>>>> []
+>>>>>> @@ -315,6 +315,10 @@ struct hci_dev {
+>>>>>>        __u8            ssp_debug_mode;
+>>>>>>        __u8            hw_error_code;
+>>>>>>        __u32           clock;
+>>>>>> +       __u16           msft_vnd_ext_opcode;
+>>>>>> +       __u64           msft_vnd_ext_features;
+>>>>>> +       __u8            msft_vnd_ext_evt_prefix_len;
+>>>>>> +       void            *msft_vnd_ext_evt_prefix;
+>>>> 
+>>>> msft is just another vendor.
+>>>> 
+>>>> If there are to be vendor extensions, this should
+>>>> likely use a blank line above and below and not
+>>>> be prefixed with msft_
+>>> 
+>>> there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
+>> 
+>> So struct hci_dev should become a clutter
+>> of random vendor extensions?
+>> 
+>> Perhaps there should instead be something like
+>> an array of char at the end of the struct and
+>> various vendor specific extensions could be
+>> overlaid on that array or just add a void *
+>> to whatever info that vendors require.
+> I don't particularly like trailing buffers, but I agree we could
+> possibly organize this a little better by with a struct.  something
+> like:
+> 
+> struct msft_vnd_ext {
+>    bool              supported; // <-- Clearly calls out if the
+> extension is supported.
+>    __u16           msft_vnd_ext_opcode; // <-- Note that this also
+> needs to be provided by the driver.  I don't recommend we have this
+> read from the hardware since we just cause an extra redirection that
+> isn't necessary.  Ideally, this should come from the usb_table const.
 
--Saravana
+Actually supported == false is the same as opcode == 0x0000. And supported == true is opcode != 0x0000.
 
+>    __u64           msft_vnd_ext_features;
+>    __u8             msft_vnd_ext_evt_prefix_len;
+>    void             *msft_vnd_ext_evt_prefix;
+> };
+> 
+> And then simply add the struct msft_vnd_ext (and any others) to hci_dev.
 
->
-> Hope it helps,
-> Ionela.
+Anyway, Lets keep these for now as hci_dev->msft_vnd_ext_*. We can fix this up later without any impact.
+
+Regards
+
+Marcel
+
