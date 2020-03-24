@@ -2,74 +2,105 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC21BC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 662B3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4FE620788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C03820788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585063115;
+	bh=0oO4R6Fq55pS68Lzl3lvAUhpi/VkW0U9z/riyIu9OD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FRp7XFSpD6IlSxOXMIsJfrSAwAWYOj6wc1Mr1Fe7FHqI8M7+oZrOff2E712k6yAO7
+	 dDNGKud9hwsuQC9C5yhnoMSLiGH9tAgOfJwnuRLyVSyDQW44LOXwCmS/sJCSm9CUDR
+	 omlX9/+SDjDo2Wnr5yjpNc25Av1YGEN/iLZgU9uE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgCXPRZ (ORCPT
+        id S1727999AbgCXPSe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:17:25 -0400
-Received: from smtprelay0017.hostedemail.com ([216.40.44.17]:55732 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727168AbgCXPRZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:17:25 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 8D6D1182CED2A;
-        Tue, 24 Mar 2020 15:17:24 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: chair87_65693e825c5c
-X-Filterd-Recvd-Size: 1739
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 24 Mar 2020 15:17:23 +0000 (UTC)
-Message-ID: <fb5a17c67f504f5761069ee446cc1b703dd8b54f.camel@perches.com>
-Subject: Re: [PATCH] rearrange the output text, cosmetic changes
-From:   Joe Perches <joe@perches.com>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, linux@leemhuis.info,
-        rdunlap@infradead.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Tue, 24 Mar 2020 08:15:33 -0700
-In-Reply-To: <20200324084513.18237-1-unixbhaskar@gmail.com>
-References: <20200324084513.18237-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 24 Mar 2020 11:18:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54014 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727561AbgCXPSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:18:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01B202076F;
+        Tue, 24 Mar 2020 15:18:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585063113;
+        bh=0oO4R6Fq55pS68Lzl3lvAUhpi/VkW0U9z/riyIu9OD4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QIQUsxffWxV+ZptxFl4tdp0yoU+K2wKOyGp3Wy7pPzEtWprI5ziuSFpGGSvDtKUmz
+         M/FqAgZj3S4JTIHlniRlPfNvIf8ggk8WZ807KjvMzcMDSTTLHlH209rtwBWp+mIjtA
+         9ASVSJcvc4/LLcpgp+pEGEpENRxYf8ISCWExKh4Q=
+Date:   Tue, 24 Mar 2020 16:18:31 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] nvmem: Add support for write-only instances
+Message-ID: <20200324151831.GA2510993@kroah.com>
+References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
+ <20200323150007.7487-6-srinivas.kandagatla@linaro.org>
+ <20200323190505.GB632476@kroah.com>
+ <4820047d-9a99-749c-491d-dbb91a2f5447@linaro.org>
+ <20200324122939.GA2348009@kroah.com>
+ <300e8095-3af4-15a2-069f-87ac7cbb83bb@linaro.org>
+ <PSXP216MB04387C07F1E4C827245DE98380F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB04387C07F1E4C827245DE98380F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-24 at 14:15 +0530, Bhaskar Chowdhury wrote:
-> As the subject like says, purely cosmetic changes to read cleanly.
-> Jumbled up the line.
-
-Subject line should show tools or kernel-chktaint
-
-and:
-
-> diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
-[]
-> @@ -195,8 +195,9 @@ else
->  	echo " * kernel was built with the struct randomization plugin (#17)"
->  fi
+On Tue, Mar 24, 2020 at 02:24:21PM +0000, Nicholas Johnson wrote:
+> On Tue, Mar 24, 2020 at 01:25:46PM +0000, Srinivas Kandagatla wrote:
+> > 
+> > 
+> > On 24/03/2020 12:29, Greg KH wrote:
+> > > > But the Idea here is :
+> > > > We ended up with providing different options like read-only,root-only to
+> > > > nvmem providers combined with read/write callbacks.
+> > > > With that, there are some cases which are totally invalid, existing code
+> > > > does very minimal check to ensure that before populating with correct
+> > > > attributes to sysfs file. One of such case is with thunderbolt provider
+> > > > which supports only write callback.
+> > > > 
+> > > > With this new checks in place these flags and callbacks are correctly
+> > > > validated, would result in correct file attributes.
+> > > Why this crazy set of different groups?  You can set the mode of a sysfs
+> > > file in the callback for when the file is about to be created, that's so
+> > > much simpler and is what it is for.  This feels really hacky and almost
+> > > impossible to follow:(
+> > Thanks for the inputs, That definitely sounds much simpler to deal with.
+> > 
+> > Am guessing you are referring to is_bin_visible callback?
+> > 
+> > I will try to clean this up!
+> I am still onboard and willing do the work, but we may need to discuss
+> to be on the same page with new plans. How do you wish to do this?
 > 
-> -echo "For a more detailed explanation of the various taint flags see"
-> -echo " Documentation/admin-guide/tainted-kernels.rst in the the Linux kernel sources"
-> -echo " or https://kernel.org/doc/html/latest/admin-guide/tainted-kernels.html"
->  echo "Raw taint value as int/string: $taint/'$out'"
-> +echo
-> +echo "For a more detailed explanation of the various taint flags see below pointers:"
-> +echo "1) Documentation/admin-guide/tainted-kernels.rst in  the Linux kernel sources"
+> Does this new approach still allow us to abort if we receive an invalid
+> configuration? Or do we still need to have something in nvmem_register()
+> to abort in invalid case?
+> 
+> The documentation of is_bin_visible says only read/write permissions are 
+> accepted. Does this mean that it will not take read-only or write-only? 
+> That is one way of interpreting it.
 
-One extra space between "in  the"
+That's a funny way of interpreting it :)
 
+Please be sane, you pass back the permissions of the file, look at all
+of the places in the kernel is it used for examples...
 
+thanks,
+
+greg k-h
