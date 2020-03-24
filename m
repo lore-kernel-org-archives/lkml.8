@@ -2,225 +2,246 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C653FC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:28:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D11C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EAF2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:28:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SlL9erqA"
+	by mail.kernel.org (Postfix) with ESMTP id 6D09620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:29:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbgCXK26 (ORCPT
+        id S1727302AbgCXK3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:28:58 -0400
-Received: from mail-eopbgr30048.outbound.protection.outlook.com ([40.107.3.48]:53921
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726697AbgCXK26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:28:58 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Nic/LnCVtvdfJ1cO8Bwx0gY+9wCCndf53vQYV5IaTX3YNRBDW8gYLjp78W3fWuK2WQRWt3HMGQpSk7ruNtRNjfNBEWWBAkiwypedk4vT+AOrt5f7BjoYkq6HAa4M4AQzDVlYS62p0My1OCWtDvtsqPWnugD1mbkmiQWEQYHpNlGYVnGX03qUDkIODgnj43Sya0Zgr+Xzu2wqJ8FlCRW9NB+enIyMj9ruLQIG7KvcHF8415470rJe9m21/EbMkb4cD9tlwGL1C4pRFdeKqObvwajstkdle05wiKoFpVBdvseD8DVERPzzsOKXAheBinPiZxcgeZnZ1OqlFsu1Zbroxw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Hfo2MJi1XSRj8pm35QMxsVsI0gc8K+oxRPZuB/Fmks=;
- b=EoXx8rZ+6JSIfdb+v4ej1DzS2xYI1jjTYJTX7qmUl6iHo8BpckmhAESOSKg8mHP1dk4nPKMShhlrM2DagDbmEAEoBmIDLGfE7ibFwfm7bbIUyPLgVKEoGMUPSNNd9n8rQ7zhuPJjDm4Pn7lANHvJLGUWxJEFqf+rrGNE7w8jkCplYG9UPi4Omvn/Rb32FWixJZu2sQX++IcLjgPlzfkS+9rDbfV+EyYyK4ppsR25zX0kV05FtoELawkGu99AAUIgnEfRjmR8c5SedGtGFiZ9TwuwmnUJ78sit1ZalHDkvL0YHr95hjl4YcgkROH1Zi5dLn91b+FFU2gjx1jUMSsEaA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0Hfo2MJi1XSRj8pm35QMxsVsI0gc8K+oxRPZuB/Fmks=;
- b=SlL9erqApw7n0NwZvQaDmUeyYTvO2gOBcGnJyhetkCFCwFu0jOTx+TlZra1tsmurT9C3prHC0sREF2wQRt8YlNzOGbLyDGBQypGhcU63Xsn9HGu8qu4GW9KpYq6l7JAiuklM1WDN5n65NSyKeU43L4M5fB3CXMeawaM6dvYImW0=
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (20.179.232.221) by
- VE1PR04MB6366.eurprd04.prod.outlook.com (10.255.118.79) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.20; Tue, 24 Mar 2020 10:28:52 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::8cb8:5c41:d843:b66d]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::8cb8:5c41:d843:b66d%5]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
- 10:28:52 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     Jiri Pirko <jiri@resnulli.us>
-CC:     "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "vinicius.gomes@intel.com" <vinicius.gomes@intel.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>,
-        "michael.chan@broadcom.com" <michael.chan@broadcom.com>,
-        "vishal@chelsio.com" <vishal@chelsio.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "idosch@mellanox.com" <idosch@mellanox.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "UNGLinuxDriver@microchip.com" <UNGLinuxDriver@microchip.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "jhs@mojatatu.com" <jhs@mojatatu.com>,
-        "xiyou.wangcong@gmail.com" <xiyou.wangcong@gmail.com>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "moshe@mellanox.com" <moshe@mellanox.com>,
-        "m-karicheri2@ti.com" <m-karicheri2@ti.com>,
-        "andre.guedes@linux.intel.com" <andre.guedes@linux.intel.com>,
-        "stephen@networkplumber.org" <stephen@networkplumber.org>
-Subject: RE: [EXT] Re: [v1,net-next  2/5] net: qos: introduce a gate control
- flow action
-Thread-Topic: [EXT] Re: [v1,net-next  2/5] net: qos: introduce a gate control
- flow action
-Thread-Index: AQHWAZG/EVECQOvwMUSKIro+DDUGHahXiDqAgAABusA=
-Date:   Tue, 24 Mar 2020 10:28:51 +0000
-Message-ID: <VE1PR04MB6496483D01ACD1C10372D47792F10@VE1PR04MB6496.eurprd04.prod.outlook.com>
-References: <20200306125608.11717-11-Po.Liu@nxp.com>
- <20200324034745.30979-1-Po.Liu@nxp.com>
- <20200324034745.30979-3-Po.Liu@nxp.com>
- <20200324101921.GS11304@nanopsycho.orion>
-In-Reply-To: <20200324101921.GS11304@nanopsycho.orion>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is ) smtp.mailfrom=po.liu@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c97bea6d-99d6-4cb5-304f-08d7cfde25d4
-x-ms-traffictypediagnostic: VE1PR04MB6366:|VE1PR04MB6366:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB63660E11CFCCEE848F318AAD92F10@VE1PR04MB6366.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(136003)(39860400002)(396003)(366004)(55016002)(26005)(9686003)(71200400001)(53546011)(4326008)(81166006)(81156014)(8676002)(7696005)(8936002)(186003)(6506007)(54906003)(2906002)(478600001)(33656002)(316002)(6916009)(66476007)(66556008)(64756008)(66446008)(66946007)(44832011)(52536014)(76116006)(86362001)(7416002)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6366;H:VE1PR04MB6496.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 8KgOL7VV47+yLIF763HOuKmhjH2Q1eTjb/RuAdSzinuJgTyUhHsXDTuUxeSQKUMyZp7Javu2+dhS/TGDNJqcaZcBE6KGf1wgb3FPyoMfTiCRgrtb5pJOz7+sxR42L57xIGofhcUdK34brO+VU6PySezQ5jSKv1sUkkeuXL9sJDs1LKR4Kq3MEQm007zhlAWtPDZ6HNPQDj0KivNHkEVCxGfjkzKnZazBN92l2Rfdq81Bksr1wLJFWQdEYnBRDBcw3OpbOlj8mNPIGHc6f4GJ35gE501Zkn0q4ePf+Ies0A2mB0G1smLNEtvK3JY56XPWvll7gYtDwqzntYMnHWZ0L+5Tfx58tqGGI7HvW6Ie2Y1fEhY4rBRMHfHA3K5srEOBWqzL+p8FvTa3JIoiSHQiC73CI1iBRUGPGImocf4oAXaIHiBRqLGyPQRYojPor/EE
-x-ms-exchange-antispam-messagedata: HmQFPoACLKJbHeg1s27bGGMh3yw+NyRDhwt3Wk21+ykx8GwvqHliydIdoaVviW5Hg9QpRNJw02z37SnTFbo1l1rODqgKmQFt62046P6nl51tByx2tWpbEkZiPN61oUZM59YvTL9C3uTjapfQ/J3QCQ==
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 24 Mar 2020 06:29:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44335 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgCXK3f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:29:35 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGgoE-0001ho-Az; Tue, 24 Mar 2020 11:29:22 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 95A0F100292; Tue, 24 Mar 2020 11:29:21 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of split lock detection
+In-Reply-To: <beb9ab5c-a50d-2ec6-1c23-e426508cdf4e@intel.com>
+References: <20200315050517.127446-1-xiaoyao.li@intel.com> <20200315050517.127446-2-xiaoyao.li@intel.com> <87zhc7ovhj.fsf@nanos.tec.linutronix.de> <87lfnqq0oo.fsf@nanos.tec.linutronix.de> <beb9ab5c-a50d-2ec6-1c23-e426508cdf4e@intel.com>
+Date:   Tue, 24 Mar 2020 11:29:21 +0100
+Message-ID: <87tv2edp1a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c97bea6d-99d6-4cb5-304f-08d7cfde25d4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 10:28:51.8727
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oWgv/URVjhwcMBS0Quoi3DGVEvGQ24Kwq9fnT1bLZNcPaYiQRiTRXzwhBvCQT9hx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6366
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgSmlyaSwNCg0KSSB3b3VsZCB1cGRhdGUgZGVzY3JpcHRpb25zIG1vcmUgY2xlYXJseS4NCg0K
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBKaXJpIFBpcmtvIDxqaXJpQHJl
-c251bGxpLnVzPg0KPiBTZW50OiAyMDIwxOoz1MIyNMjVIDE4OjE5DQo+IFRvOiBQbyBMaXUgPHBv
-LmxpdUBueHAuY29tPg0KPiBDYzogZGF2ZW1AZGF2ZW1sb2Z0Lm5ldDsgbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgdmluaWNpdXMuZ29tZXNA
-aW50ZWwuY29tOyBDbGF1ZGl1IE1hbm9pbA0KPiA8Y2xhdWRpdS5tYW5vaWxAbnhwLmNvbT47IFZs
-YWRpbWlyIE9sdGVhbiA8dmxhZGltaXIub2x0ZWFuQG54cC5jb20+Ow0KPiBBbGV4YW5kcnUgTWFy
-Z2luZWFuIDxhbGV4YW5kcnUubWFyZ2luZWFuQG54cC5jb20+OyBYaWFvbGlhbmcgWWFuZw0KPiA8
-eGlhb2xpYW5nLnlhbmdfMUBueHAuY29tPjsgUm95IFphbmcgPHJveS56YW5nQG54cC5jb20+OyBN
-aW5na2FpIEh1DQo+IDxtaW5na2FpLmh1QG54cC5jb20+OyBKZXJyeSBIdWFuZyA8amVycnkuaHVh
-bmdAbnhwLmNvbT47IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29tPjsgbWljaGFlbC5jaGFu
-QGJyb2FkY29tLmNvbTsgdmlzaGFsQGNoZWxzaW8uY29tOw0KPiBzYWVlZG1AbWVsbGFub3guY29t
-OyBsZW9uQGtlcm5lbC5vcmc7IGppcmlAbWVsbGFub3guY29tOw0KPiBpZG9zY2hAbWVsbGFub3gu
-Y29tOyBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbTsNCj4gVU5HTGludXhEcml2ZXJAbWlj
-cm9jaGlwLmNvbTsga3ViYUBrZXJuZWwub3JnOyBqaHNAbW9qYXRhdHUuY29tOw0KPiB4aXlvdS53
-YW5nY29uZ0BnbWFpbC5jb207IHNpbW9uLmhvcm1hbkBuZXRyb25vbWUuY29tOw0KPiBwYWJsb0Bu
-ZXRmaWx0ZXIub3JnOyBtb3NoZUBtZWxsYW5veC5jb207IG0ta2FyaWNoZXJpMkB0aS5jb207DQo+
-IGFuZHJlLmd1ZWRlc0BsaW51eC5pbnRlbC5jb207IHN0ZXBoZW5AbmV0d29ya3BsdW1iZXIub3Jn
-DQo+IFN1YmplY3Q6IFtFWFRdIFJlOiBbdjEsbmV0LW5leHQgMi81XSBuZXQ6IHFvczogaW50cm9k
-dWNlIGEgZ2F0ZSBjb250cm9sIGZsb3cNCj4gYWN0aW9uDQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1h
-aWwNCj4gDQo+IFR1ZSwgTWFyIDI0LCAyMDIwIGF0IDA0OjQ3OjQwQU0gQ0VULCBQby5MaXVAbnhw
-LmNvbSB3cm90ZToNCj4gPkludHJvZHVjZSBhIGluZ3Jlc3MgZnJhbWUgZ2F0ZSBjb250cm9sIGZs
-b3cgYWN0aW9uLiB0YyBjcmVhdGUgYSBnYXRlDQo+ID5hY3Rpb24gd291bGQgcHJvdmlkZSBhIGdh
-dGUgbGlzdCB0byBjb250cm9sIHdoZW4gb3Blbi9jbG9zZSBzdGF0ZS4gd2hlbg0KPiA+dGhlIGdh
-dGUgb3BlbiBzdGF0ZSwgdGhlIGZsb3cgY291bGQgcGFzcyBidXQgbm90IHdoZW4gZ2F0ZSBzdGF0
-ZSBpcw0KPiA+Y2xvc2UuIFRoZSBkcml2ZXIgd291bGQgcmVwZWF0IHRoZSBnYXRlIGxpc3QgY3lj
-bGljYWxseS4gVXNlciBhbHNvDQo+ID5jb3VsZCBhc3NpZ24gYSB0aW1lIHBvaW50IHRvIHN0YXJ0
-IHRoZSBnYXRlIGxpc3QgYnkgdGhlIGJhc2V0aW1lDQo+ID5wYXJhbWV0ZXIuIGlmIHRoZSBiYXNl
-dGltZSBoYXMgcGFzc2VkIGN1cnJlbnQgdGltZSwgc3RhcnQgdGltZSB3b3VsZA0KPiA+Y2FsY3Vs
-YXRlIGJ5IHRoZSBjeWNsZXRpbWUgb2YgdGhlIGdhdGUgbGlzdC4NCj4gDQo+IENhbm5vdCBkZWN5
-cGhlciB0aGlzIGVpdGhlciA6LyBTZXJpb3VzbHksIHBsZWFzZSBtYWtlIHRoZSBwYXRjaA0KPiBk
-ZXNjcmlwdGlvbnMgcmVhZGFibGUuDQo+IA0KDQpPay4NCg0KPiBBbHNvLCBhIHNlbnRlbmNlIHN0
-YXJ0cyB3aXRoIGNhcGl0YWwgbGV0dGVyLg0KPiANCj4gDQo+IA0KPiA+VGhlIGFjdGlvbiBnYXRl
-IGJlaGF2aW9yIHRyeSB0byBrZWVwIGFjY29yZGluZyB0byB0aGUgSUVFRSA4MDIuMVFjaSBzcGVj
-Lg0KPiA+Rm9yIHRoZSBzb2Z0d2FyZSBzaW11bGF0aW9uLCByZXF1aXJlIHRoZSB1c2VyIGlucHV0
-IHRoZSBjbG9jayB0eXBlLg0KPiA+DQo+ID5CZWxvdyBpcyB0aGUgc2V0dGluZyBleGFtcGxlIGlu
-IHVzZXIgc3BhY2UuIFRjIGZpbHRlciBhIHN0cmVhbSBzb3VyY2UNCj4gPmlwIGFkZHJlc3MgaXMg
-MTkyLjE2OC4wLjIwIGFuZCBnYXRlIGFjdGlvbiBvd24gdHdvIHRpbWUgc2xvdHMuIE9uZSBpcw0K
-PiA+bGFzdCAyMDBtcyBnYXRlIG9wZW4gbGV0IGZyYW1lIHBhc3MgYW5vdGhlciBpcyBsYXN0IDEw
-MG1zIGdhdGUgY2xvc2UNCj4gPmxldCBmcmFtZXMgZHJvcHBlZC4gV2hlbiB0aGUgcGFzc2VkIHRv
-dGFsIGZyYW1lcyBvdmVyIDgwMDAwMDAgYnl0ZXMsIGl0DQo+ID53aWxsIGRyb3BwZWQgaW4gb25l
-IDIwMDAwMDAwMG5zIHRpbWUgc2xvdC4NCj4gPg0KPiA+PiB0YyBxZGlzYyBhZGQgZGV2IGV0aDAg
-aW5ncmVzcw0KPiA+DQo+ID4+IHRjIGZpbHRlciBhZGQgZGV2IGV0aDAgcGFyZW50IGZmZmY6IHBy
-b3RvY29sIGlwIFwNCj4gPiAgICAgICAgICBmbG93ZXIgc3JjX2lwIDE5Mi4xNjguMC4yMCBcDQo+
-ID4gICAgICAgICAgYWN0aW9uIGdhdGUgaW5kZXggMiBjbG9ja2lkIENMT0NLX1RBSSBcDQo+ID4g
-ICAgICAgICAgc2NoZWQtZW50cnkgT1BFTiAyMDAwMDAwMDAgLTEgODAwMDAwMCBcDQo+ID4gICAg
-ICAgICAgc2NoZWQtZW50cnkgQ0xPU0UgMTAwMDAwMDAwIC0xIC0xDQo+IA0KPiBUaGUgcmVzdCBv
-ZiB0aGUgY29tbWFuZHMgZG8gbm90IHVzZSBjYXBpdGFscy4gUGxlYXNlIGxvd2VyY2FzZSB0aGVz
-ZS4NCj4gDQoNCk9rLg0KDQo+IA0KPiA+DQo+ID4+IHRjIGNoYWluIGRlbCBkZXYgZXRoMCBpbmdy
-ZXNzIGNoYWluIDANCj4gPg0KPiA+InNjaGVkLWVudHJ5IiBmb2xsb3cgdGhlIG5hbWUgdGFwcmlv
-IHN0eWxlLiBnYXRlIHN0YXRlIGlzDQo+ID4iT1BFTiIvIkNMT1NFIi4gRm9sbG93IHRoZSBwZXJp
-b2QgbmFub3NlY29uZC4gVGhlbiBuZXh0IGl0ZW0gaXMNCj4gPmludGVybmFsIHByaW9yaXR5IHZh
-bHVlIG1lYW5zIHdoaWNoIGluZ3Jlc3MgcXVldWUgc2hvdWxkIHB1dC4gIi0xIg0KPiA+bWVhbnMg
-d2lsZGNhcmQuIFRoZSBsYXN0IHZhbHVlIG9wdGlvbmFsIHNwZWNpZmllcyB0aGUgbWF4aW11bSBu
-dW1iZXINCj4gb2YNCj4gPk1TRFUgb2N0ZXRzIHRoYXQgYXJlIHBlcm1pdHRlZCB0byBwYXNzIHRo
-ZSBnYXRlIGR1cmluZyB0aGUgc3BlY2lmaWVkDQo+ID50aW1lIGludGVydmFsLg0KPiA+QmFzZS10
-aW1lIGlzIG5vdCBzZXQgd2lsbCBiZSBhcyAwIGFzIGRlZmF1bHQsIGFzIHJlc3VsdCBzdGFydCB0
-aW1lDQo+ID53b3VsZCBiZSAoKE4gKyAxKSAqIGN5Y2xldGltZSkgd2hpY2ggaXMgdGhlIG1pbmlt
-YWwgb2YgZnV0dXJlIHRpbWUuDQo+ID4NCj4gPkJlbG93IGV4YW1wbGUgc2hvd3MgZmlsdGVyaW5n
-IGEgc3RyZWFtIHdpdGggZGVzdGluYXRpb24gbWFjIGFkZHJlc3MgaXMNCj4gPjEwOjAwOjgwOjAw
-OjAwOjAwIGFuZCBpcCB0eXBlIGlzIElDTVAsIGZvbGxvdyB0aGUgYWN0aW9uIGdhdGUuIFRoZSBn
-YXRlDQo+ID5hY3Rpb24gd291bGQgcnVuIHdpdGggb25lIGNsb3NlIHRpbWUgc2xvdCB3aGljaCBt
-ZWFucyBhbHdheXMga2VlcCBjbG9zZS4NCj4gPlRoZSB0aW1lIGN5Y2xlIGlzIHRvdGFsIDIwMDAw
-MDAwMG5zLiBUaGUgYmFzZS10aW1lIHdvdWxkIGNhbGN1bGF0ZSBieToNCj4gPg0KPiA+IDEzNTcw
-MDAwMDAwMDAgKyAoTiArIDEpICogY3ljbGV0aW1lDQo+ID4NCj4gPldoZW4gdGhlIHRvdGFsIHZh
-bHVlIGlzIHRoZSBmdXR1cmUgdGltZSwgaXQgd2lsbCBiZSB0aGUgc3RhcnQgdGltZS4NCj4gPlRo
-ZSBjeWNsZXRpbWUgaGVyZSB3b3VsZCBiZSAyMDAwMDAwMDBucyBmb3IgdGhpcyBjYXNlLg0KPiA+
-DQo+ID4+IHRjIGZpbHRlciBhZGQgZGV2IGV0aDAgcGFyZW50IGZmZmY6ICBwcm90b2NvbCBpcCBc
-DQo+ID4gICAgICAgICAgZmxvd2VyIHNraXBfaHcgaXBfcHJvdG8gaWNtcCBkc3RfbWFjIDEwOjAw
-OjgwOjAwOjAwOjAwIFwNCj4gPiAgICAgICAgICBhY3Rpb24gZ2F0ZSBpbmRleCAxMiBiYXNlLXRp
-bWUgMTM1NzAwMDAwMDAwMCBcDQo+ID4gICAgICAgICAgc2NoZWQtZW50cnkgQ0xPU0UgMjAwMDAw
-MDAwIC0xIC0xIFwNCj4gPiAgICAgICAgICBjbG9ja2lkIENMT0NLX1RBSQ0KPiA+DQo+ID5OT1RF
-OiBUaGlzIHNvZnR3YXJlIHNpbXVsYXRvciB2ZXJzaW9uIG5vdCBzZXBhcmF0ZSB0aGUgYWRtaW4v
-b3BlcmF0aW9uDQo+ID5zdGF0ZSBtYWNoaW5lLiBVcGRhdGUgc2V0dGluZyB3b3VsZCBvdmVyd3Jp
-dGUgc3RvcCB0aGUgcHJldmlvcyBzZXR0aW5nDQo+ID5hbmQgd2FpdGluZyBuZXcgY3ljbGUgc3Rh
-cnQuDQo+ID4NCj4gDQo+IFsuLi5dDQo+IA0KPiANCj4gPmRpZmYgLS1naXQgYS9uZXQvc2NoZWQv
-S2NvbmZpZyBiL25ldC9zY2hlZC9LY29uZmlnIGluZGV4DQo+ID5iZmJlZmI3YmZmOWQuLjMyMDQ3
-MWEwYTIxZCAxMDA2NDQNCj4gPi0tLSBhL25ldC9zY2hlZC9LY29uZmlnDQo+ID4rKysgYi9uZXQv
-c2NoZWQvS2NvbmZpZw0KPiA+QEAgLTk4MSw2ICs5ODEsMjEgQEAgY29uZmlnIE5FVF9BQ1RfQ1QN
-Cj4gPiAgICAgICAgIFRvIGNvbXBpbGUgdGhpcyBjb2RlIGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBo
-ZXJlOiB0aGUNCj4gPiAgICAgICAgIG1vZHVsZSB3aWxsIGJlIGNhbGxlZCBhY3RfY3QuDQo+ID4N
-Cj4gPitjb25maWcgTkVUX0FDVF9HQVRFDQo+ID4rICAgICAgdHJpc3RhdGUgIkZyYW1lIGdhdGUg
-bGlzdCBjb250cm9sIHRjIGFjdGlvbiINCj4gPisgICAgICBkZXBlbmRzIG9uIE5FVF9DTFNfQUNU
-DQo+ID4rICAgICAgaGVscA0KPiA+KyAgICAgICAgU2F5IFkgaGVyZSB0byBhbGxvdyB0aGUgY29u
-dHJvbCB0aGUgaW5ncmVzcyBmbG93IGJ5IHRoZSBnYXRlDQo+ID4rbGlzdA0KPiANCj4gInRvIGNv
-bnRyb2wiPw0KDQpPay4NCg0KPiANCj4gDQo+ID4rICAgICAgICBjb250cm9sLiBUaGUgZnJhbWUg
-cG9saWNpbmcgYnkgdGhlIHRpbWUgZ2F0ZSBsaXN0IGNvbnRyb2wNCj4gPisgb3Blbi9jbG9zZQ0K
-PiANCj4gSW5jb21wbGV0ZSBzZW50ZW5jZS4NCj4gDQo+IA0KPiA+KyAgICAgICAgY3ljbGUgdGlt
-ZS4gVGhlIG1hbmlwdWxhdGlvbiB3aWxsIHNpbXVsYXRlIHRoZSBJRUVFIDgwMi4xUWNpIHN0cmVh
-bQ0KPiA+KyAgICAgICAgZ2F0ZSBjb250cm9sIGJlaGF2aW9yLiBUaGUgYWN0aW9uIGNvdWxkIGJl
-IG9mZmxvYWQgYnkgdGhlIHRjIGZsb3dlcg0KPiA+KyAgICAgICAgdG8gaGFyZHdhcmUgZHJpdmVy
-IHdoaWNoIHRoZSBoYXJkd2FyZSBvd24gdGhlIGNhcGFiaWxpdHkgb2YgSUVFRQ0KPiA+KyAgICAg
-ICAgODAyLjFRY2kuDQo+IA0KPiBXZSBkbyBub3QgbWVudGlvbiBvZmZsb2FkIGZvciB0aGUgb3Ro
-ZXIgYWN0aW9ucy4gSSBzdWdnZXN0IHRvIG5vdCB0bw0KPiBtZW50aW9uIGl0IGhlcmUgZWl0aGVy
-Lg0KDQpPay4NCg0KPiANCj4gDQo+ID4rDQo+ID4rICAgICAgICBJZiB1bnN1cmUsIHNheSBOLg0K
-PiA+KyAgICAgICAgVG8gY29tcGlsZSB0aGlzIGNvZGUgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhl
-cmU6IHRoZQ0KPiA+KyAgICAgICAgbW9kdWxlIHdpbGwgYmUgY2FsbGVkIGFjdF9nYXRlLg0KPiA+
-Kw0KPiA+IGNvbmZpZyBORVRfSUZFX1NLQk1BUksNCj4gPiAgICAgICB0cmlzdGF0ZSAiU3VwcG9y
-dCB0byBlbmNvZGluZyBkZWNvZGluZyBza2IgbWFyayBvbiBJRkUgYWN0aW9uIg0KPiA+ICAgICAg
-IGRlcGVuZHMgb24gTkVUX0FDVF9JRkUNCj4gDQo+IFsuLi5dDQoNClRoYW5rcyENCg0KQnIsDQpQ
-byBMaXUNCg==
+Xiaoyao Li <xiaoyao.li@intel.com> writes:
+> On 3/24/2020 4:24 AM, Thomas Gleixner wrote:
+>> --- a/arch/x86/kernel/cpu/intel.c
+>> +++ b/arch/x86/kernel/cpu/intel.c
+>> @@ -45,6 +45,7 @@ enum split_lock_detect_state {
+>>    * split lock detect, unless there is a command line override.
+>>    */
+>>   static enum split_lock_detect_state sld_state = sld_off;
+>> +static DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
+>
+> I used percpu cache in v3, but people prefer Tony's cache for reserved 
+> bits[1].
+>
+> If you prefer percpu cache, I'll use it in next version.
+
+I'm fine with the single variable.
+
+>>   static void __init split_lock_setup(void)
+>>   {
+>>   	char arg[20];
+>>   	int i, ret;
+>>   
+>> +	if (!split_lock_verify_msr(true) || !split_lock_verify_msr(false)) {
+>> +		pr_info("MSR access failed: Disabled\n");
+>> +		return;
+>> +	}
+>> +
+>
+> I did similar thing like this in my v3, however Sean raised concern that 
+> toggling MSR bit before parsing kernel param is bad behavior. [2]
+
+That's trivial enough to fix.
+
+Thanks,
+
+        tglx
+
+8<---------------
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -44,7 +44,8 @@ enum split_lock_detect_state {
+  * split_lock_setup() will switch this to sld_warn on systems that support
+  * split lock detect, unless there is a command line override.
+  */
+-static enum split_lock_detect_state sld_state = sld_off;
++static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
++static u64 msr_test_ctrl_cache __ro_after_init;
+ 
+ /*
+  * Processors which have self-snooping capability can handle conflicting
+@@ -984,78 +985,85 @@ static inline bool match_option(const ch
+ 	return len == arglen && !strncmp(arg, opt, len);
+ }
+ 
++static bool __init split_lock_verify_msr(bool on)
++{
++	u64 ctrl, tmp;
++
++	if (rdmsrl_safe(MSR_TEST_CTRL, &ctrl))
++		return false;
++	if (on)
++		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	else
++		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
++		return false;
++	rdmsrl(MSR_TEST_CTRL, tmp);
++	return ctrl == tmp;
++}
++
+ static void __init split_lock_setup(void)
+ {
++	enum split_lock_detect_state state = sld_warn;
+ 	char arg[20];
+ 	int i, ret;
+ 
+-	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+-	sld_state = sld_warn;
++	if (!split_lock_verify_msr(false)) {
++		pr_info("MSR access failed: Disabled\n");
++		return;
++	}
+ 
+ 	ret = cmdline_find_option(boot_command_line, "split_lock_detect",
+ 				  arg, sizeof(arg));
+ 	if (ret >= 0) {
+ 		for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
+ 			if (match_option(arg, ret, sld_options[i].option)) {
+-				sld_state = sld_options[i].state;
++				state = sld_options[i].state;
+ 				break;
+ 			}
+ 		}
+ 	}
+ 
+-	switch (sld_state) {
++	switch (state) {
+ 	case sld_off:
+ 		pr_info("disabled\n");
+-		break;
+-
++		return;
+ 	case sld_warn:
+ 		pr_info("warning about user-space split_locks\n");
+ 		break;
+-
+ 	case sld_fatal:
+ 		pr_info("sending SIGBUS on user-space split_locks\n");
+ 		break;
+ 	}
++
++	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
++
++	if (!split_lock_verify_msr(true)) {
++		pr_info("MSR access failed: Disabled\n");
++		return;
++	}
++
++	sld_state = state;
++	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+ }
+ 
+ /*
+- * Locking is not required at the moment because only bit 29 of this
+- * MSR is implemented and locking would not prevent that the operation
+- * of one thread is immediately undone by the sibling thread.
+- * Use the "safe" versions of rdmsr/wrmsr here because although code
+- * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+- * exist, there may be glitches in virtualization that leave a guest
+- * with an incorrect view of real h/w capabilities.
++ * MSR_TEST_CTRL is per core, but we treat it like a per CPU MSR. Locking
++ * is not implemented as one thread could undo the setting of the other
++ * thread immediately after dropping the lock anyway.
+  */
+-static bool __sld_msr_set(bool on)
++static void sld_update_msr(bool on)
+ {
+-	u64 test_ctrl_val;
+-
+-	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+-		return false;
++	u64 ctrl = msr_test_ctrl_cache;
+ 
+ 	if (on)
+-		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+-	else
+-		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+-
+-	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
++		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
++	wrmsrl(MSR_TEST_CTRL, ctrl);
+ }
+ 
+ static void split_lock_init(void)
+ {
+-	if (sld_state == sld_off)
+-		return;
+-
+-	if (__sld_msr_set(true))
+-		return;
+-
+-	/*
+-	 * If this is anything other than the boot-cpu, you've done
+-	 * funny things and you get to keep whatever pieces.
+-	 */
+-	pr_warn("MSR fail -- disabled\n");
+-	sld_state = sld_off;
++	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
++		sld_update_msr(sld_state != sld_off);
+ }
+ 
+ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+@@ -1071,7 +1079,7 @@ bool handle_user_split_lock(struct pt_re
+ 	 * progress and set TIF_SLD so the detection is re-enabled via
+ 	 * switch_to_sld() when the task is scheduled out.
+ 	 */
+-	__sld_msr_set(false);
++	sld_update_msr(false);
+ 	set_tsk_thread_flag(current, TIF_SLD);
+ 	return true;
+ }
+@@ -1085,7 +1093,7 @@ bool handle_user_split_lock(struct pt_re
+  */
+ void switch_to_sld(unsigned long tifn)
+ {
+-	__sld_msr_set(!(tifn & _TIF_SLD));
++	sld_update_msr(!(tifn & _TIF_SLD));
+ }
+ 
+ #define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
