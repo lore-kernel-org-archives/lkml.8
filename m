@@ -2,117 +2,131 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7819BC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2DCC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5183120836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585037748;
-	bh=95HDZEYr73gkVtFgHb5F5HQmWSnntZ5l5/JwKg88mxM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JUmblrepkwI0+Ca38kyKTm3/WmqvS32OI99iWvU/d7wSabn4a1EHAbuUFRNf847sf
-	 CMmeElWaSM3dDJnAk5dJ9TApUJLpov97n/XCxgOBbqtEVoED3ddGSZdtl9BWsH7+Z5
-	 v4fPDf4ZcpdxhH34LpabxdQKq9kliG2+cYV8NvKI=
+	by mail.kernel.org (Postfix) with ESMTP id 841E4207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:27:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbgCXIPr (ORCPT
+        id S1727066AbgCXI1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:15:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36458 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 04:27:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45716 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725922AbgCXIPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:15:47 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C8562080C;
-        Tue, 24 Mar 2020 08:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585037746;
-        bh=95HDZEYr73gkVtFgHb5F5HQmWSnntZ5l5/JwKg88mxM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xwfUgmUW53dw91LyETvme5Ib+IkARacfJ/JGnvaqYPF7KvGq9wcyRwgOSVkigeg6u
-         6gNg54OWfTL/gN8MKPjHsVbYCUIxndvuuLvaC/p9N+EC0u8/B9gnt/rPjt7yX+VOVg
-         gYylIFtZ5mAQ2ZpK5nN5CxQyo23RsvgrW3gWI45M=
-Date:   Tue, 24 Mar 2020 08:15:39 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] Documentation: Clarify better about the rwsem non-owner
- release issue
-Message-ID: <20200324081538.GA8696@willie-the-truck>
-References: <20200322021938.175736-1-joel@joelfernandes.org>
- <87a748khlo.fsf@kamboji.qca.qualcomm.com>
- <20200323182349.GA203600@google.com>
+        id S1726231AbgCXI1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 04:27:41 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 62F7BADB5;
+        Tue, 24 Mar 2020 08:27:38 +0000 (UTC)
+Subject: Re: [PATCH V2] kernel/hung_task.c: Introduce sysctl to print all
+ traces when a hung task is detected
+To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Cc:     linux-doc@vger.kernel.org, mcgrof@kernel.org,
+        keescook@chromium.org, yzaikin@google.com, tglx@linutronix.de,
+        penguin-kernel@I-love.SAKURA.ne.jp, akpm@linux-foundation.org,
+        cocci@systeme.lip6.fr, linux-api@vger.kernel.org,
+        kernel@gpiccoli.net
+References: <20200323214618.28429-1-gpiccoli@canonical.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <b73a6519-0529-e36f-fac5-e4b638ceb3cf@suse.cz>
+Date:   Tue, 24 Mar 2020 09:27:37 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323182349.GA203600@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200323214618.28429-1-gpiccoli@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 02:23:49PM -0400, Joel Fernandes wrote:
-> On Sun, Mar 22, 2020 at 08:51:15AM +0200, Kalle Valo wrote:
-> > "Joel Fernandes (Google)" <joel@joelfernandes.org> writes:
-> > 
-> > > Reword and clarify better about the rwsem non-owner release issue.
-> > >
-> > > Link: https://lore.kernel.org/linux-pci/20200321212144.GA6475@google.com/
-> > >
-> > > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > 
-> > There's something wrong with your linux-pci and linux-usb addresses:
-> > 
-> > 	"linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>,
-> > 
-> > 
-> > 	"linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>,
+On 3/23/20 10:46 PM, Guilherme G. Piccoli wrote:
+> Commit 401c636a0eeb ("kernel/hung_task.c: show all hung tasks before panic")
+> introduced a change in that we started to show all CPUs backtraces when a
+> hung task is detected _and_ the sysctl/kernel parameter "hung_task_panic"
+> is set. The idea is good, because usually when observing deadlocks (that
+> may lead to hung tasks), the culprit is another task holding a lock and
+> not necessarily the task detected as hung.
 > 
-> Not sure. It appears fine in the archive.
+> The problem with this approach is that dumping backtraces is a slightly
+> expensive task, specially printing that on console (and specially in many
+> CPU machines, as servers commonly found nowadays). So, users that plan to
+> collect a kdump to investigate the hung tasks and narrow down the deadlock
+> definitely don't need the CPUs backtrace on dmesg/console, which will delay
+> the panic and pollute the log (crash tool would easily grab all CPUs traces
+> with 'bt -a' command).
+> Also, there's the reciprocal scenario: some users may be interested in
+> seeing the CPUs backtraces but not have the system panic when a hung task
+> is detected. The current approach hence is almost as embedding a policy in
+> the kernel, by forcing the CPUs backtraces' dump (only) on hung_task_panic.
+> 
+> This patch decouples the panic event on hung task from the CPUs backtraces
+> dump, by creating (and documenting) a new sysctl/kernel parameter called
+> "hung_task_all_cpu_backtrace", analog to the approach taken on soft/hard
+> lockups, that have both a panic and an "all_cpu_backtrace" sysctl to allow
+> individual control. The new mechanism for dumping the CPUs backtraces on
+> hung task detection respects "hung_task_warnings" by not dumping the
+> traces in case there's no warnings left.
+> 
+> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
+> ---
+> 
+> 
+> V2: Followed suggestions from Kees and Tetsuo (and other grammar
+> improvements). Also, followed Tetsuo suggestion to itereate kernel
+> testing community - but I don't really know a ML for that, so I've
+> CCed Coccinelle community and kernel-api ML.
+> 
+> Also, Tetsuo suggested that this option could be default to 1 - I'm
+> open to it, but given it is only available if hung_task panic is set
+> as of now and the goal of this patch is give users more flexibility,
+> I vote to keep default as 0. I can respin a V3 in case more people
+> want to see it enabled by default. Thanks in advance for the review!
+> Cheers,
+> 
+> Guilherme
+> 
+> 
+>  .../admin-guide/kernel-parameters.txt         |  6 ++++
+>  Documentation/admin-guide/sysctl/kernel.rst   | 15 ++++++++++
+>  include/linux/sched/sysctl.h                  |  7 +++++
+>  kernel/hung_task.c                            | 30 +++++++++++++++++--
+>  kernel/sysctl.c                               | 11 +++++++
+>  5 files changed, 67 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..7a14caac6c94 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1453,6 +1453,12 @@
+>  			x86-64 are 2M (when the CPU supports "pse") and 1G
+>  			(when the CPU supports the "pdpe1gb" cpuinfo flag).
+>  
+> +	hung_task_all_cpu_backtrace=
+> +			[KNL] Should kernel generate backtraces on all cpus
+> +			when a hung task is detected. Defaults to 0 and can
+> +			be controlled by hung_task_all_cpu_backtrace sysctl.
+> +			Format: <integer>
+> +
 
-Hmm, I don't think it does. Here's the copy from LKML:
+Before adding a new thing as both kernel parameter and sysctl, could we perhaps
+not add the kernel parameter, in favor of the generic sysctl parameter solution?
+[1] There were no objections and some support from Kees, so I will try to send a
+new version ASAP that will work properly with all "static" sysctls - we don't
+need to be blocked by a full solution for dynamically registered sysctls yet, I
+guess?
 
-https://lore.kernel.org/lkml/20200322021938.175736-1-joel@joelfernandes.org/
+Thanks,
+Vlastimil
 
-Which works because it's in the To: correctly. But both linux-pci and
-linux-usb were *not* CC'd:
+[1] https://lore.kernel.org/linux-api/20200317132105.24555-1-vbabka@suse.cz/
 
-"linux-usb@vger.kernel.org Kalle Valo" <kvalo@codeaurora.org>
-"linux-pci@vger.kernel.org Felipe Balbi" <balbi@kernel.org>
-
-and searching for the message in the linux-pci archives doesn't find it:
-
-https://lore.kernel.org/linux-pci/?q=Reword+and+clarify+better+about+the+rwsem+non-owner+release+issue
-
-So it looks like there is an issue with your mail setup.
-
-Will
