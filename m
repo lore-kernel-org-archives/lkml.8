@@ -2,97 +2,97 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DAD5C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B838AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560312074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A99D2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="yUFXMjq3";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="U7dVF0wH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rms3BA68"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCXUCy (ORCPT
+        id S1727496AbgCXUDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:02:54 -0400
-Received: from mail.z3ntu.xyz ([128.199.32.197]:43488 "EHLO mail.z3ntu.xyz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725941AbgCXUCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:02:54 -0400
-Received: by mail.z3ntu.xyz (Postfix, from userid 182)
-        id 9E195C4449; Tue, 24 Mar 2020 20:02:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1585080171; bh=/w4Mkqq/p7Yx+FSl2Qi+cWkUVMNC7hXtE79ZR06jgtE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=yUFXMjq3KbuU/x8m4BYGrBhfr5aeQMzvSBDoKKd2tjR9ykVTn+5p0lO9VqS8NmBOw
-         zeTOYHelpDXNSaRK3hEW7nf0nUYa+aT3wHg9dG+DfwZS93BtBPOmXjz6/+Zo/HfG/A
-         Ird5xROf7+guwhrcvVytbT84+8WX2lnCCPGHgup8=
-Received: from g550jk.localnet (80-110-124-168.cgn.dynamic.surfer.at [80.110.124.168])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 0969FC4427;
-        Tue, 24 Mar 2020 20:02:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1585080166; bh=/w4Mkqq/p7Yx+FSl2Qi+cWkUVMNC7hXtE79ZR06jgtE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=U7dVF0wHBqFc8tylF9KkKj21nn41+dcADJY5js4u4lEIgh3iMy5iPwgnwhQFq08nL
-         qJ8BF8Tb7SOSWjfKesNNuOZyVNdLJFi5a235u6h3IEskZLMaHSJlfuoFYZKD1uSf2f
-         4IwrQL9wdPBx4tpnQnCjZNrGymjWB//YZjZZPoMo=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>, Shawn Guo <shawnguo@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht
-Subject: Re: [PATCH 2/3] dt-bindings: leds: Add binding for sgm3140
-Date:   Tue, 24 Mar 2020 21:02:45 +0100
-Message-ID: <4545531.31r3eYUQgx@g550jk>
-In-Reply-To: <20200323205727.GA4038@bogus>
-References: <20200309203558.305725-1-luca@z3ntu.xyz> <20200309203558.305725-3-luca@z3ntu.xyz> <20200323205727.GA4038@bogus>
+        Tue, 24 Mar 2020 16:03:39 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47976 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725927AbgCXUDj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:03:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585080217;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iFnWzCsyUtuGFlv+OdaYqRCE9oNOsfSnbr0kqIOCDpA=;
+        b=Rms3BA680K9bcFnnABptC2/d+m3In3enPBR4/17FT0xzF+VIKg+vuwzkzA7dLisZgQgzhh
+        ZyUYdMfKfGPJs8c8CldGfrmv+RT6KZp56o42OtwZLE4x3MzvSJo+9l3aNHOpcAvm6ogzwI
+        XEAhSKVKOWKhvCSTPYrrO8zfNua+gMM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-187-2r8vi0L4NjeVcxTZF8KFdQ-1; Tue, 24 Mar 2020 16:03:33 -0400
+X-MC-Unique: 2r8vi0L4NjeVcxTZF8KFdQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBCE08017CC;
+        Tue, 24 Mar 2020 20:03:31 +0000 (UTC)
+Received: from new-host-5 (unknown [10.40.194.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DFC795DA7B;
+        Tue, 24 Mar 2020 20:03:29 +0000 (UTC)
+Message-ID: <f22b7cd6fb6256f56e908e021f4fe389f3a6ee07.camel@redhat.com>
+Subject: Re: [PATCH v2 3/3] driver core: Skip unnecessary work when device
+ doesn't have sync_state()
+From:   Davide Caratti <dcaratti@redhat.com>
+To:     Saravana Kannan <saravanak@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Vladimir Benes <vbenes@redhat.com>
+Cc:     kernel-team@android.com, linux-kernel@vger.kernel.org
+In-Reply-To: <20200221080510.197337-4-saravanak@google.com>
+References: <20200221080510.197337-1-saravanak@google.com>
+         <20200221080510.197337-4-saravanak@google.com>
+Organization: red hat
+Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 24 Mar 2020 21:03:28 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+On Fri, 2020-02-21 at 00:05 -0800, Saravana Kannan wrote:
+> A bunch of busy work is done for devices that don't have sync_state()
+> support. Stop doing the busy work.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/base/core.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-On Montag, 23. M=E4rz 2020 21:57:27 CET Rob Herring wrote:
-> On Mon, Mar 09, 2020 at 09:35:57PM +0100, Luca Weiss wrote:
-> > Add YAML devicetree binding for SGMICRO SGM3140 charge pump used for
-> > camera flash LEDs.
-> >=20
-> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> > ---
-> > Changes since RFC:
-> > - new patch
-> >=20
-> > I'm not sure about the completeness of this binding as it doesn't
-> > mention the led subnode at all.
-> > The only existing led yaml binding is leds/leds-max77650.yaml which
-> > mentions the subnode but duplicates properties from documented in
-> > leds/common.txt.
->=20
-> It's common.yaml now. Reference it from a child node defined here.
+hello Greg,
 
-Thanks, that helps a lot!
+this patch and patch 2/3 of the same series proved to fix systematic
+crashes (NULL pointer dereference in device_links_flush_sync_list() while
+loading mac80211_hwsim.ko, see [1]) on Fedora 31, that are triggered by
+NetworkManager-ci [2]. May I ask to queue these two patches for the next
+5.5 stable?
 
->=20
-> >  .../bindings/leds/leds-sgm3140.yaml           | 53 +++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/leds/leds-sgm3140.yaml
+thank you in advance (and thanks to Vladimir for reporting)!
 
-Regards
-Luca
+[1] https://bugzilla.redhat.com/show_bug.cgi?id=1816765
+[2] https://github.com/NetworkManager/NetworkManager-ci
+ 
+-- 
+davide  
 
 
