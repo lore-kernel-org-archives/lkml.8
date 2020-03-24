@@ -2,107 +2,105 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB209C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC20DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E09208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2EFF20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585066465;
+	bh=+QiXEXMAnm3fAQIcpcLK9nKpI9Dl3Rgu1TgTTIDoRVo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Z/9MHkXgnStnstR7Enfgn5qJzULrx+BKXTFflG9sWCJwFLgYexu6l88bS2Eh0lgCO
+	 KQvCOLsDsSQIc1kZKJ/ekxLvlWpOZiMEIrqYCtU6G0xIpYcrb4dACMx/PZeEjnORCp
+	 J2U8aL7PI32qY8PXxpTRArGCO+sPlYCFAzf+Ac0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgCXQNw (ORCPT
+        id S1728484AbgCXQOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:13:52 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58638 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbgCXQNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:13:52 -0400
-IronPort-SDR: GKb0EOgvfEjWC88/8TiHNeaUZSlGp7SN06JnaH7RcCAywxmQjb3RL/MRmlNzthNknsvdtj0GMm
- raX7HMSzG3bA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 09:13:51 -0700
-IronPort-SDR: W8SciJsflDt7I1KWp22n6eTJA7U0Ua/WogD7R+qVo6jLLLwyy64NWdjac5turEh7gfGs2gJwPy
- ixWURD/+G7gA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
-   d="scan'208";a="393330458"
-Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.142.176]) ([10.249.142.176])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 09:13:50 -0700
-Subject: Re: [PATCH][next] pnpbios: pnpbios.h: Replace zero-length array with
- flexible-array member
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-References: <20200320231827.GA21969@embeddedor.com>
-From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
- 173, 80-298 Gdansk
-Message-ID: <bd76497e-7d37-a38b-b12c-d6069714f2f0@intel.com>
-Date:   Tue, 24 Mar 2020 17:13:50 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 24 Mar 2020 12:14:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33456 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbgCXQOY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:14:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id c20so13745944lfb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:14:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cV+EQz2uMh8RqjeKXm8R3NSZPSRV5ZBhvijMbinFHhs=;
+        b=MZ5kH2ikYOBk3B/aSmgJFvz6FiSRFf4X14qLUgTFwMao4frxCdEMyla4j9S/rZoT3X
+         sPALUof1YDQsQTFOL4MFBJK4OPCe5WtfKyvPEQS6PytlXNyT+0aO0v2QeRuvlHL8E1fC
+         CcuWtrDrXFG/2UYIJGOYymrp9nX89kvbCLrUE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cV+EQz2uMh8RqjeKXm8R3NSZPSRV5ZBhvijMbinFHhs=;
+        b=ZYYqSLELVmiPoYED7KMC9pB5JsTyKoHkNC56dab+SB25d2qT0+O+OcVdhSpI9JwQVO
+         fX5maQ/pmGWamylkyeqoDNemMYSxzlqjLN0tLVa4UOhV3alO8zVxzvUwC5yMtc8cMecj
+         FhYIcXt4XVDhlUYj8BjJ/EDoyzUBjBLRFuuKhkjnfrpUsyzrhyVtpu8Wn86zkUaujLmf
+         hGHrW+Q6TPfu6F+TMZq32FuRGmP1w0Jg7ab8UH0iQGau3ZlTJzZm6sEB3FUrclUTeCIu
+         BwifD8koRVkTjQ2h4OEvK3ASDD3cu0Iy6VCufSTMmXPDnM2FVMTXCOEdfOO9ZDEOGRYi
+         k7nA==
+X-Gm-Message-State: ANhLgQ2SDmGH3q9/zHzewMNXZho4gD5I+bfu7BkzFG8IylkxjnbQZooN
+        L7kvkA+nK/p5CS0lgHBoW5XO7D0Nrw8=
+X-Google-Smtp-Source: ADFU+vvwvMXmu/1y5r/5O4tpWtgOuK7v+olhGJXwMlrqQcivg8bmlAx39LgMKoycNGaPuPh6YU5S1w==
+X-Received: by 2002:a19:ad47:: with SMTP id s7mr17224603lfd.165.1585066461174;
+        Tue, 24 Mar 2020 09:14:21 -0700 (PDT)
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
+        by smtp.gmail.com with ESMTPSA id m6sm10143789lfc.1.2020.03.24.09.14.19
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 09:14:19 -0700 (PDT)
+Received: by mail-lj1-f175.google.com with SMTP id w1so19195726ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:14:19 -0700 (PDT)
+X-Received: by 2002:a2e:920c:: with SMTP id k12mr16500640ljg.209.1585066459287;
+ Tue, 24 Mar 2020 09:14:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200320231827.GA21969@embeddedor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20200324135603.483964896@infradead.org> <20200324142246.127013582@infradead.org>
+In-Reply-To: <20200324142246.127013582@infradead.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 24 Mar 2020 09:14:03 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
+Message-ID: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Anvin <hpa@zytor.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/21/2020 12:18 AM, Gustavo A. R. Silva wrote:
-> The current codebase makes use of the zero-length array language
-> extension to the C90 standard, but the preferred mechanism to declare
-> variable-length types such as these ones is a flexible array member[1][2],
-> introduced in C99:
+On Tue, Mar 24, 2020 at 7:25 AM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> struct foo {
->          int stuff;
->          struct boo array[];
-> };
+> Extend the static_call infrastructure to optimize the following common
+> pattern:
 >
-> By making use of the mechanism above, we will get a compiler warning
-> in case the flexible array does not occur last in the structure, which
-> will help us prevent some kind of undefined behavior bugs from being
-> inadvertently introduced[3] to the codebase from now on.
->
-> Also, notice that, dynamic memory allocations won't be affected by
-> this change:
->
-> "Flexible array members have incomplete type, and so the sizeof operator
-> may not be applied. As a quirk of the original implementation of
-> zero-length arrays, sizeof evaluates to zero."[1]
->
-> This issue was found with the help of Coccinelle.
->
-> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-> [2] https://github.com/KSPP/linux/issues/21
-> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->   drivers/pnp/pnpbios/pnpbios.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pnp/pnpbios/pnpbios.h b/drivers/pnp/pnpbios/pnpbios.h
-> index 37acb8378f39..2ce739ff9c1a 100644
-> --- a/drivers/pnp/pnpbios/pnpbios.h
-> +++ b/drivers/pnp/pnpbios/pnpbios.h
-> @@ -107,7 +107,7 @@ struct pnp_bios_node {
->   	__u32 eisa_id;
->   	__u8 type_code[3];
->   	__u16 flags;
-> -	__u8 data[0];
-> +	__u8 data[];
->   };
->   #pragma pack()
->   
+>         if (func_ptr)
+>                 func_ptr(args...)
 
-Please resend this with a CC to linux-acpi, thanks!
+Is there any reason why this shouldn't be the default static call pattern?
 
+IOW, do we need the special "cond" versions at all? Couldn't we just
+say that this is how static calls fundamentally work - if the function
+is NULL, they are nops?
 
+               Linus
