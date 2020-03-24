@@ -2,48 +2,49 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07822C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB0FC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D34BC2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFAC2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:28:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IvqNOeMa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YUrR32FP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgCXK1f (ORCPT
+        id S1727332AbgCXK2D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:27:35 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22490 "EHLO
+        Tue, 24 Mar 2020 06:28:03 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26363 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727213AbgCXK1e (ORCPT
+        by vger.kernel.org with ESMTP id S1727130AbgCXK2C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:27:34 -0400
+        Tue, 24 Mar 2020 06:28:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585045653;
+        s=mimecast20190719; t=1585045682;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=fX9AvyJtx+an2xNdor76lpMhrpg4TBL76cAdmDBBOik=;
-        b=IvqNOeMaSKSSwjAeZldz8jilCaGrP09Dn/3plaKfcZ1/mKEsh1yiySnm0S9hG92SOhwC3P
-        0GX6zm8beP6uRtl+NRXo5HolO5UK9NvYyRD7HnMat8C74W3hJ0yG3mejLBvU/KkfqYuW5z
-        OTyzHWZK5+Z9He+pgNPgyzuz6T0A8XY=
+        bh=Fb+k064Enl6GEK9uiujgF/I3NuLpU7i+xLE00RoVePc=;
+        b=YUrR32FP51qt0WNEv8Exw7pqonfGh+6pMecL9rT+GQonmMHtaZwasJr0jbNho7IaO41AO2
+        cNrAQd14vt85YNt9A7iyeTteIJGcLRZ/SunkP/DImpz2Y2eVTQxGreaUMu4n7rE6ueECbX
+        MIlVvlCNDV0+BVVaFKR6S6Ms/wmrhh8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-327-gelj7AS_NCy0l9A8FALZTw-1; Tue, 24 Mar 2020 06:27:29 -0400
-X-MC-Unique: gelj7AS_NCy0l9A8FALZTw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-183-5b9ot_9dM2OYVVo-MmeC0A-1; Tue, 24 Mar 2020 06:28:00 -0400
+X-MC-Unique: 5b9ot_9dM2OYVVo-MmeC0A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F9BD100550D;
-        Tue, 24 Mar 2020 10:27:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07048149C1;
+        Tue, 24 Mar 2020 10:27:56 +0000 (UTC)
 Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 668918F342;
-        Tue, 24 Mar 2020 10:27:20 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 11:27:17 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE4BD60BF3;
+        Tue, 24 Mar 2020 10:27:36 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 11:27:32 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -73,48 +74,73 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-Message-ID: <20200324102717.GQ1534489@krava>
+Message-ID: <20200324102732.GR1534489@krava>
 References: <20200323235846.104937-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20200323235846.104937-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
+> This patch links perf with the libpfm4 library if it is available and
+> NO_LIBPFM4 isn't passed to the build. The libpfm4 library contains hardware
+> event tables for all processors supported by perf_events. It is a helper
+> library that helps convert from a symbolic event name to the event
+> encoding required by the underlying kernel interface. This
+> library is open-source and available from: http://perfmon2.sf.net.
+> 
+> With this patch, it is possible to specify full hardware events
+> by name. Hardware filters are also supported. Events must be
+> specified via the --pfm-events and not -e option. Both options
+> are active at the same time and it is possible to mix and match:
+> 
+> $ perf stat --pfm-events inst_retired:any_p:c=1:i -e cycles ....
+> 
+> v5 is a rebase.
+> v4 is a rebase on git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git
+>    branch perf/core and re-adds the tools/build/feature/test-libpfm4.c
+>    missed in v3.
+> v3 is against acme/perf/core and removes a diagnostic warning.
+> v2 of this patch makes the --pfm-events man page documentation
+> conditional on libpfm4 behing configured. It tidies some of the
+> documentation and adds the feature test missed in the v1 patch.
+> 
+> Author: Stephane Eranian <eranian@google.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-SNIP
+I still have some conflicts, but I merged it by hand
 
-> +
-> +int parse_libpfm_events_option(const struct option *opt, const char *str,
-> +			int unset __maybe_unused)
-> +{
-> +	struct evlist *evlist = *(struct evlist **)opt->value;
-> +	struct perf_event_attr attr;
-> +	struct perf_pmu *pmu;
-> +	struct evsel *evsel, *grp_leader = NULL;
-> +	char *p, *q, *p_orig;
-> +	const char *sep;
-> +	int grp_evt = -1;
-> +	int ret;
-> +
-> +	p_orig = p = strdup(str);
-> +	if (!p)
-> +		return -1;
-> +	/*
-> +	 * force loading of the PMU list
-> +	 */
-> +	perf_pmu__scan(NULL);
-> +
-> +	for (q = p; strsep(&p, ",{}"); q = p) {
 
-it seems like this code could be really easily testtable,
-could you please write simple test for this?
+	patching file tools/build/Makefile.feature
+	patching file tools/build/feature/Makefile
+	patching file tools/build/feature/test-libpfm4.c
+	patching file tools/perf/Documentation/Makefile
+	patching file tools/perf/Documentation/perf-record.txt
+	patching file tools/perf/Documentation/perf-stat.txt
+	patching file tools/perf/Documentation/perf-top.txt
+	patching file tools/perf/Makefile.config
+	patching file tools/perf/Makefile.perf
+	Hunk #3 FAILED at 834.
+	1 out of 3 hunks FAILED -- saving rejects to file tools/perf/Makefile.perf.rej
+	patching file tools/perf/builtin-list.c
+	patching file tools/perf/builtin-record.c
+	patching file tools/perf/builtin-stat.c
+	patching file tools/perf/builtin-top.c
+	Hunk #2 succeeded at 1549 (offset 2 lines).
+	Hunk #3 succeeded at 1567 (offset 2 lines).
+	patching file tools/perf/util/evsel.c
+	patching file tools/perf/util/evsel.h
+	patching file tools/perf/util/parse-events.c
+	patching file tools/perf/util/parse-events.h
+	patching file tools/perf/util/pmu.c
+	Hunk #1 succeeded at 869 (offset 5 lines).
+	patching file tools/perf/util/pmu.h
+	Hunk #1 succeeded at 65 (offset 1 line).
 
-thanks,
 jirka
 
