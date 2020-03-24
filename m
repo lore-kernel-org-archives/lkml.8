@@ -2,104 +2,201 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF92C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:26:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 183A3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC02520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:26:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585074379;
-	bh=94PgeoB+p2WY6XFVXPILv+rmdwQzZBt2xnAqRW92a4U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n3dbHOZ7f9dfxx+dn0mBZVZabOp1q7mnW4q9y9mEHPy20BXXgsT0oU3+uBngDFgeb
-	 axN+Mpw7m3ySBOEdSPimTXsTsp5a60udPZ2/aBDZZ0PbbNe0GU28EsQouFBUM58hNP
-	 I+j5gx6ufhCCTOOfF7CpDyBa9srZqyFghsEkdSng=
+	by mail.kernel.org (Postfix) with ESMTP id E1B2A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:28:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xa/tyAr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgCXS0T (ORCPT
+        id S1727657AbgCXS2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:26:19 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36645 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbgCXS0S (ORCPT
+        Tue, 24 Mar 2020 14:28:07 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43056 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727468AbgCXS2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:26:18 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d11so20367676qko.3;
-        Tue, 24 Mar 2020 11:26:17 -0700 (PDT)
+        Tue, 24 Mar 2020 14:28:06 -0400
+Received: by mail-wr1-f67.google.com with SMTP id b2so22756513wrj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VKDCXEZ42UY913CTtFDT6Viou96lkFeyc6FJl6g05Vg=;
-        b=AkI4Xkx1tlFJcJ9dNLecf4+W/yiyVYQzQJjxQEP3fsUyxtJlsDPsp2922A08nOHUqt
-         Raz6pWjrCl2Hhym8BGoSwUNuuPSH9d7vYfRnfoGLRBR/CRLOXfi4zD6n1d5fSUpIvQFH
-         G5SdqFXcT/F1KCp2Jmv8aiswNEn5y/cJFvk9n9q+ccGDLGwlnioNCKkDSHsNmzL95JtU
-         pURc9Y4b8prbYmhRvfO+VUUnf+r33J9ni46guh0TYipbbdvAZhJ7v5nxJcAVMvEu04Wz
-         kEBSWZbCndALY8ZvcfA6P1KQIOyEPipSsEPBC1fuESUBy2/Xy1bELlSr4o1v/OGJeB1M
-         HkyQ==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=D3nFxIBa0F0SX5qVW91rkLveu0dFlgh41jMm3Zwi3k0=;
+        b=Xa/tyAr6jGWzt6I2Bb2Q+sC/2sFN0hVz6PEXnAqyS1+K6Kp/ishBg8/NVLLrGCIqii
+         j6TY5w33gEzSYDWyeoozUUBX9wcFiwXqc3AZr9h24tkRYSn7XjxNpwGoJrdSKUl294jf
+         zIzho2IFsTd+d0+/PlcJX1DMHhdptXoWenqFU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=VKDCXEZ42UY913CTtFDT6Viou96lkFeyc6FJl6g05Vg=;
-        b=YK4zi2vsEO8fslwdFCmHmI44nU73DBTi5VB68l9zG+KPb/Bn+HzE8mLoj66fQ4CbKT
-         V5rKgLIe43efmAT6PrI083fz6nAf7OkdQyUuVKlkpzr57ga9pBzHOUi6vfn10Su5+g5S
-         +UO594/OVoJ/fMHgNiH1RPuexbewUlDquIvrHDvtURtW4o5ptByqkoDlHgFv6uDuV8xc
-         0yOaYIoCpGzDkI1v48iwPtA9/zXwy96HKZ0BpTYqrtCCUWZ2B99czqp88AfmBgIUMXLJ
-         vFD4BCpScYARiHhvkgclYj/CoeXgQda4Ykh/63flEkfl3Iv8nziUW9e3G0pYvusoEXtE
-         2t3Q==
-X-Gm-Message-State: ANhLgQ04MVZBMeaWRp2YDl8SmMzX5PYQXt/8mecEQ7St1nL0U/50l8jj
-        dcmkp7HCqUHLF3n4WyY0VM10rYHqGeo=
-X-Google-Smtp-Source: ADFU+vtMSJC8sWVJYJ3arOh+M32uZq0yu5b1h8oEMGbdpbxd7Z3KHLEAw55hEBb1joWKeLW3rp8Z0g==
-X-Received: by 2002:a37:a208:: with SMTP id l8mr26130803qke.302.1585074377272;
-        Tue, 24 Mar 2020 11:26:17 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::19c2])
-        by smtp.gmail.com with ESMTPSA id m65sm13998087qke.109.2020.03.24.11.26.16
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=D3nFxIBa0F0SX5qVW91rkLveu0dFlgh41jMm3Zwi3k0=;
+        b=SVWVlk19w60r2XFIuIVwAP3BQ71pfWY+kPay7AQU+6Om5KrXC5kDcvA0UkN42mury6
+         vvq03Gb7FSpZZQlv4DepxhR2R+VxXH+GBUZn2A4JsTB4WjMxAZlJwuC5tuCLNvQ/aTZe
+         hRsNWMTy+xEVu3NjoRIB+wrp6g5sBtVYaTaiDNHAl7alFBrdUpPupDZ7whh311jssaEH
+         c4/AcFMl/OjBGocJxCutwCYAWNeGjrKgjyQPnQQZnKYuImF4CAV/i1zeBQ3aqf5oW94M
+         hy7awezDo8tU9phXUYiZVX2B5JNKUdYVbCpAmwjsxOH5jtYNfrmGTtXLttW7vOj1a3r1
+         AxSQ==
+X-Gm-Message-State: ANhLgQ30mzIjzKSkfcRsMwQD5F71HskKOy6Q+BIzNiKB+Xxvm6fXwkgD
+        4hBcMoajaE+mK50c4Kr1Q0jaJQ==
+X-Google-Smtp-Source: ADFU+vs+vUVGDl9kzh0LKDtKfc7LbxrqRWC/dqEqtC75PZeNETIdsKvLR1xs8B2/GPevtFWtiqCZ9g==
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr30101022wrm.153.1585074482960;
+        Tue, 24 Mar 2020 11:28:02 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id d21sm29806627wrb.51.2020.03.24.11.28.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 11:26:16 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 14:26:15 -0400
-From:   Tejun Heo <tj@kernel.org>
-To:     Marco Ballesio <balejs@google.com>
-Cc:     Daniel Colascione <dancol@google.com>,
-        Roman Gushchin <guro@fb.com>, cgroups@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>, lizefan@huawei.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Jonathan Corbet <corbet@lwn.net>, rjw@rjwysocki.net,
-        Pavel Machek <pavel@ucw.cz>, len.brown@intel.com,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-pm@vger.kernel.org, Minchan Kim <minchan@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
-Message-ID: <20200324182615.GF162390@mtj.duckdns.org>
-References: <20200219183231.50985-1-balejs@google.com>
- <20200303134855.GA186184@mtj.thefacebook.com>
- <CAKOZuevzE=0Oa8gn--rkVJ8t69S+o2vK--pki65XXg6EVuOhMQ@mail.gmail.com>
- <20200320201038.GB79184@google.com>
+        Tue, 24 Mar 2020 11:28:02 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 19:27:59 +0100
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and
+ execution
+Message-ID: <20200324182759.GA5557@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-5-kpsingh@chromium.org>
+ <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
+ <20200324145003.GA2685@chromium.org>
+ <CAEjxPJ4YnCCeQUTK36Ao550AWProHrkrW1a6K5RKuKYcPcfhyA@mail.gmail.com>
+ <d578d19f-1d3b-f60d-f803-2fcb46721a4a@schaufler-ca.com>
+ <CAEjxPJ59wijpB=wa4ZhPyX_PRXrRAX2+PO6e8+f25wrb9xndRA@mail.gmail.com>
+ <202003241100.279457EF@keescook>
+ <20200324180652.GA11855@chromium.org>
+ <CAEjxPJ7ebh1FHBjfuoWquFLJi0TguipfRq5ozaSepLVt8+qaMQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200320201038.GB79184@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEjxPJ7ebh1FHBjfuoWquFLJi0TguipfRq5ozaSepLVt8+qaMQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Fri, Mar 20, 2020 at 01:10:38PM -0700, Marco Ballesio wrote:
-> It might also be desirable for userland to have a way to modify the behavior of
-> an already mounted v1 freezer.
+On 24-Mär 14:21, Stephen Smalley wrote:
+> On Tue, Mar 24, 2020 at 2:06 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > On 24-Mär 11:01, Kees Cook wrote:
+> > > On Tue, Mar 24, 2020 at 01:49:34PM -0400, Stephen Smalley wrote:
+> > > > On Tue, Mar 24, 2020 at 12:25 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> > > > >
+> > > > > On 3/24/2020 7:58 AM, Stephen Smalley wrote:
+> > > > > > On Tue, Mar 24, 2020 at 10:50 AM KP Singh <kpsingh@chromium.org> wrote:
+> > > > > >> On 24-Mär 10:35, Stephen Smalley wrote:
+> > > > > >>> On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrote:
+> > > > > >>>> From: KP Singh <kpsingh@google.com>
+> > > > > >>>> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> > > > > >>>> index 530d137f7a84..2a8131b640b8 100644
+> > > > > >>>> --- a/kernel/bpf/bpf_lsm.c
+> > > > > >>>> +++ b/kernel/bpf/bpf_lsm.c
+> > > > > >>>> @@ -9,6 +9,9 @@
+> > > > > >>>>  #include <linux/btf.h>
+> > > > > >>>>  #include <linux/lsm_hooks.h>
+> > > > > >>>>  #include <linux/bpf_lsm.h>
+> > > > > >>>> +#include <linux/jump_label.h>
+> > > > > >>>> +#include <linux/kallsyms.h>
+> > > > > >>>> +#include <linux/bpf_verifier.h>
+> > > > > >>>>
+> > > > > >>>>  /* For every LSM hook  that allows attachment of BPF programs, declare a NOP
+> > > > > >>>>   * function where a BPF program can be attached as an fexit trampoline.
+> > > > > >>>> @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
+> > > > > >>>>  #include <linux/lsm_hook_names.h>
+> > > > > >>>>  #undef LSM_HOOK
+> > > > > >>>>
+> > > > > >>>> +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
+> > > > > >>>> +
+> > > > > >>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
+> > > > > >>>> +                       const struct bpf_prog *prog)
+> > > > > >>>> +{
+> > > > > >>>> +       /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
+> > > > > >>>> +        */
+> > > > > >>>> +       if (!capable(CAP_MAC_ADMIN))
+> > > > > >>>> +               return -EPERM;
+> > > > > >>> I had asked before, and will ask again: please provide an explicit LSM
+> > > > > >>> hook for mediating whether one can make changes to the LSM hooks.
+> > > > > >>> Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SELinux.
+> > > > > >> What do you think about:
+> > > > > >>
+> > > > > >>   int security_check_mutable_hooks(void)
+> > > > > >>
+> > > > > >> Do you have any suggestions on the signature of this hook? Does this
+> > > > > >> hook need to be BPF specific?
+> > > > > > I'd do something like int security_bpf_prog_attach_security(const
+> > > > > > struct bpf_prog *prog) or similar.
+> > > > > > Then the security module can do a check based on the current task
+> > > > > > and/or the prog.  We already have some bpf-specific hooks.
+> > > > >
+> > > > > I *strongly* disagree with Stephen on this. KRSI and SELinux are peers.
+> > > > > Just as Yama policy is independent of SELinux policy so KRSI policy should
+> > > > > be independent of SELinux policy. I understand the argument that BDF programs
+> > > > > ought to be constrained by SELinux, but I don't think it's right. Further,
+> > > > > we've got unholy layering when security modules call security_ functions.
+> > > > > I'm not saying there is no case where it would be appropriate, but this is not
+> > > > > one of them.
+> > > >
+> > > > I explained this previously.  The difference is that the BPF programs
+> > > > are loaded from a userspace
+> > > > process, not a kernel-resident module.  They already recognize there
+> > > > is a difference here or
+> > > > they wouldn't have the CAP_MAC_ADMIN check above in their patch.  The
+> > > > problem with that
+> > > > check is just that CAP_MAC_ADMIN doesn't necessarily mean fully
+> > > > privileged with respect to
+> > > > SELinux, which is why I want an explicit hook.  This gets a NAK from
+> > > > me until there is such a hook.
+> > >
+> > > Doesn't the existing int (*bpf_prog)(struct bpf_prog *prog); cover
+> > > SELinux's need here? I.e. it can already examine that a hook is being
+> > > created for the LSM (since it has a distinct type, etc)?
+> >
+> > I was about to say the same, specifically for the BPF use-case, we do
+> > have the "bpf_prog" i.e. :
+> >
+> > "Do a check when the kernel generate and return a file descriptor for
+> > eBPF programs."
+> >
+> > SELinux can implement its policy logic for BPF_PROG_TYPE_LSM by
+> > providing a callback for this hook.
 > 
-> Tejun, would it be acceptable to have a flag but disable it by default, hiding
-> it behind a kernel configuration option?
+> Ok.  In that case do we really need the capable() check here at all?
 
-Given how dead-end this is, I'm not sure this needs to be upstream. Can you give
-me some rationales?
+We do not have a specific capable check for BPF_PROG_TYPE_LSM programs
+now. There is a general check which requires CAP_SYS_ADMIN when
+unprivileged BPF is disabled:
 
-Thanks.
+in kernel/bpf/sycall.c:
 
--- 
-tejun
+        if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
+	        return -EPERM;
+
+AFAIK, Most distros disable unprivileged eBPF.
+
+Now that I look at this, I think we might need a CAP_MAC_ADMIN check
+though as unprivileged BPF being enabled will result in an
+unprivileged user being able to load MAC policies.
+
+- KP
