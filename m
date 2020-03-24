@@ -2,196 +2,135 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DAEC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08418C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E91E208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFD1820788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgCXOYK (ORCPT
+        id S1728009AbgCXOYO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:24:10 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60135 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727681AbgCXOYJ (ORCPT
+        Tue, 24 Mar 2020 10:24:14 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45075 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727670AbgCXOYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:24:09 -0400
-X-Originating-IP: 83.155.44.161
-Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
-        (Authenticated sender: hadess@hadess.net)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id EBFE9FF814;
-        Tue, 24 Mar 2020 14:24:03 +0000 (UTC)
-Message-ID: <8d28db34b3075c524c7e5fec49c3f2e252d24552.camel@hadess.net>
-Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
- connection
-From:   Bastien Nocera <hadess@hadess.net>
-To:     Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <superm1@gmail.com>,
-        Richard Hughes <hughsient@gmail.com>
-Date:   Tue, 24 Mar 2020 15:24:02 +0100
-In-Reply-To: <3c20624ea9d88f13d6f1a768735f08a4a8a59ea6.camel@archlinux.org>
-References: <20200318161906.3340959-1-lains@archlinux.org>
-         <20200318192721.390630-1-lains@archlinux.org>
-         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
-         <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
-         <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
-         <3c20624ea9d88f13d6f1a768735f08a4a8a59ea6.camel@archlinux.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.0 (3.36.0-1.fc32) 
+        Tue, 24 Mar 2020 10:24:02 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jGkTE-0006z7-BF; Tue, 24 Mar 2020 15:23:56 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0085F1C0470;
+        Tue, 24 Mar 2020 15:23:56 +0100 (CET)
+Date:   Tue, 24 Mar 2020 14:23:55 -0000
+From:   "tip-bot2 for Alexey Makhalov" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/vmware] x86/vmware: Enable steal time accounting
+Cc:     Alexey Makhalov <amakhalov@vmware.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200323195707.31242-5-amakhalov@vmware.com>
+References: <20200323195707.31242-5-amakhalov@vmware.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <158505983568.28353.2778877006076369432.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-24 at 14:10 +0000, Filipe Laíns wrote:
-> On Tue, 2020-03-24 at 15:03 +0100, Bastien Nocera wrote:
-> > On Tue, 2020-03-24 at 13:46 +0000, Filipe Laíns wrote:
-> > > On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
-> > > > On Wed, 2020-03-18 at 19:27 +0000, Filipe Laíns wrote:
-> > > > > As discussed in the mailing list:
-> > > > > 
-> > > > > > Right now the hid-logitech-dj driver will export one node
-> > > > > > for
-> > > > > > each
-> > > > > > connected device, even when the device is not connected.
-> > > > > > That
-> > > > > > causes
-> > > > > > some trouble because in userspace we don't have have any
-> > > > > > way to
-> > > > > > know if
-> > > > > > the device is connected or not, so when we try to
-> > > > > > communicate,
-> > > > > > if
-> > > > > > the
-> > > > > > device is disconnected it will fail.
-> > > > 
-> > > > Why is it a problem that user-space communication fails? Note
-> > > > that
-> > > > sending a signal without any way to fetch the state means that
-> > > > it's
-> > > > always going to be racy.
-> > > 
-> > > It failing is not the problem. The problem is knowing when the
-> > > device
-> > > is available again. Right now the only way to do that is to
-> > > listen
-> > > for
-> > > events or periodically ping it.
-> > > 
-> > > We want to only export the HID++ hidraw node when the device is
-> > > available but that will take a while. We will have to test and
-> > > sync
-> > > up
-> > > userspace. I also want to write tests for the driver before, to
-> > > make
-> > > sure there are no regressions. We had a thread discussing this,
-> > > IIRC
-> > > you were in CC.
-> > 
-> > If I need to remember some old thread to know what we're talking
-> > about,
-> > then that means that the commit message is probably not good
-> > enough...
-> 
-> Should I put in the commit message what is planned next?
+The following commit has been merged into the x86/vmware branch of tip:
 
-You should put in everything that explains why this change is needed,
-and how user-space is supposed to use that information. Nobody should
-have to refer back to the mailing-list thread to find this out.
+Commit-ID:     e73a8f38f82dd1c41b70a06556bea7dc250cc384
+Gitweb:        https://git.kernel.org/tip/e73a8f38f82dd1c41b70a06556bea7dc250cc384
+Author:        Alexey Makhalov <amakhalov@vmware.com>
+AuthorDate:    Mon, 23 Mar 2020 19:57:06 
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 24 Mar 2020 10:06:27 +01:00
 
-> > Please add some links to the relevant discussion on bug forums if
-> > there's interesting data there too.
-> 
-> You can find the discussion in [1][2].
-> 
-> [1] https://www.spinics.net/lists/linux-input/thrd2.html#65615
-> [2] https://www.spinics.net/lists/linux-input/msg65615.html
+x86/vmware: Enable steal time accounting
 
-I was in CC: because "might be maintaining one of the affected
-userspace stacks", but I don't know what that stack might be for me. Is
-it for upower (which I only work on seldom and definitely don't
-maintain), or something else?
+Set paravirt_steal_rq_enabled if steal clock present.
+paravirt_steal_rq_enabled is used in sched/core.c to adjust task
+progress by offsetting stolen time. Use 'no-steal-acc' off switch (share
+same name with KVM) to disable steal time accounting.
 
-> > > > > The solution reached to solve this issue is to trigger an
-> > > > > udev
-> > > > > change
-> > > > > event when the device connects, this way userspace can just
-> > > > > wait
-> > > > > on
-> > > > > those connections instead of trying to ping the device.
-> > > > > 
-> > > > > Signed-off-by: Filipe Laíns <lains@archlinux.org>
-> > > > > 
-> > > > > ---
-> > > > > 
-> > > > > v2:
-> > > > >   - Issue udev change event on the connected hid device, not
-> > > > > on
-> > > > > the
-> > > > >   receiver
-> > > > > 
-> > > > > ---
-> > > > >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
-> > > > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
-> > > > > logitech-dj.c
-> > > > > index 48dff5d6b605..282e57dd467d 100644
-> > > > > --- a/drivers/hid/hid-logitech-dj.c
-> > > > > +++ b/drivers/hid/hid-logitech-dj.c
-> > > > > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct
-> > > > > hid_device
-> > > > > *hdev,
-> > > > >  {
-> > > > >  	struct dj_receiver_dev *djrcv_dev =
-> > > > > hid_get_drvdata(hdev);
-> > > > >  	struct dj_report *dj_report = (struct dj_report *)
-> > > > > data;
-> > > > > +	struct dj_device *dj_dev;
-> > > > >  	unsigned long flags;
-> > > > >  
-> > > > >  	/*
-> > > > > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct
-> > > > > hid_device
-> > > > > *hdev,
-> > > > >  
-> > > > >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
-> > > > >  
-> > > > > -	if (!djrcv_dev->paired_dj_devices[dj_report-
-> > > > > >device_index]) {
-> > > > > +	dj_dev = djrcv_dev->paired_dj_devices[dj_report-
-> > > > > >device_index];
-> > > > > +
-> > > > > +	if (!dj_dev) {
-> > > > >  		/* received an event for an unknown device,
-> > > > > bail out */
-> > > > >  		logi_dj_recv_queue_notification(djrcv_dev,
-> > > > > dj_report);
-> > > > >  		goto out;
-> > > > > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct
-> > > > > hid_device
-> > > > > *hdev,
-> > > > >  		if (dj_report-
-> > > > > > report_params[CONNECTION_STATUS_PARAM_STATUS] ==
-> > > > >  		    STATUS_LINKLOSS) {
-> > > > >  			logi_dj_recv_forward_null_report(djrcv_
-> > > > > dev,
-> > > > > dj_report);
-> > > > > +		} else {
-> > > > > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
-> > > > > KOBJ_CHANGE);
-> > > > >  		}
-> > > > >  		break;
-> > > > >  	default:
+Signed-off-by: Alexey Makhalov <amakhalov@vmware.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/20200323195707.31242-5-amakhalov@vmware.com
+---
+ Documentation/admin-guide/kernel-parameters.txt |  2 +-
+ arch/x86/kernel/cpu/vmware.c                    | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 2 deletions(-)
 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d..863b37d 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3174,7 +3174,7 @@
+ 			[X86,PV_OPS] Disable paravirtualized VMware scheduler
+ 			clock and use the default one.
+ 
+-	no-steal-acc	[X86,KVM,ARM64] Disable paravirtualized steal time
++	no-steal-acc	[X86,PV_OPS,ARM64] Disable paravirtualized steal time
+ 			accounting. steal time is computed, but won't
+ 			influence scheduler behaviour
+ 
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index cc60461..e885f73 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -125,6 +125,7 @@ static struct cyc2ns_data vmware_cyc2ns __ro_after_init;
+ static int vmw_sched_clock __initdata = 1;
+ static DEFINE_PER_CPU_DECRYPTED(struct vmware_steal_time, vmw_steal_time) __aligned(64);
+ static bool has_steal_clock;
++static bool steal_acc __initdata = true; /* steal time accounting */
+ 
+ static __init int setup_vmw_sched_clock(char *s)
+ {
+@@ -133,6 +134,13 @@ static __init int setup_vmw_sched_clock(char *s)
+ }
+ early_param("no-vmw-sched-clock", setup_vmw_sched_clock);
+ 
++static __init int parse_no_stealacc(char *arg)
++{
++	steal_acc = false;
++	return 0;
++}
++early_param("no-steal-acc", parse_no_stealacc);
++
+ static unsigned long long notrace vmware_sched_clock(void)
+ {
+ 	unsigned long long ns;
+@@ -306,8 +314,11 @@ static int vmware_cpu_down_prepare(unsigned int cpu)
+ 
+ static __init int activate_jump_labels(void)
+ {
+-	if (has_steal_clock)
++	if (has_steal_clock) {
+ 		static_key_slow_inc(&paravirt_steal_enabled);
++		if (steal_acc)
++			static_key_slow_inc(&paravirt_steal_rq_enabled);
++	}
+ 
+ 	return 0;
+ }
