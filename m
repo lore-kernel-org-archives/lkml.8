@@ -2,157 +2,224 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47958C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17495C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6E620774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585068760;
-	bh=m3Z+53mzM3UV6WJ6Vdwrpv06/Gdrmrk0ZMMTj6vnQw0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=wU4D6uO6pny5ilWNU9iLMHlYYQuv+azYGl+gmFJp9LmlsXLDpQW24WrE75bAuGssg
-	 ykCI3eDj+fc0kq73FGS/tJrRVeDgthANB/qxT+p53YCJY2BAvAbGvb8RhaFxvoblRC
-	 aPAYhjVCIVSHG/ivh1976qzbXp6YB8zLtBwrpB8E=
+	by mail.kernel.org (Postfix) with ESMTP id D9246206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Pvm7RYTC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgCXQwi (ORCPT
+        id S1728001AbgCXQw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:52:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:38244 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbgCXQwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:52:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE2D31FB;
-        Tue, 24 Mar 2020 09:52:37 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A74A3F71F;
-        Tue, 24 Mar 2020 09:52:37 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 16:52:35 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>
-Subject: Applied "regulator: da9063: Fix get_mode() functions to read sleep field" to the regulator tree
-In-Reply-To:  <20200324092516.60B5C3FB8D@swsrvapps-01.diasemi.com>
-Message-Id:  <applied-20200324092516.60B5C3FB8D@swsrvapps-01.diasemi.com>
-X-Patchwork-Hint: ignore
+        Tue, 24 Mar 2020 12:52:58 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42283 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbgCXQw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:52:58 -0400
+Received: by mail-qk1-f193.google.com with SMTP id e11so19949777qkg.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:52:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X70HFJUJ8UBP2puE+4Pj/8Ffpu/zNV0pZe3tHi3ELyo=;
+        b=Pvm7RYTCtHAH9sMzgFZ1SrpEviFMtXMGRtXzAfU0f7w4htIjfwtomnoookRoWLaQzj
+         zdLnqaa9pUW1X+U83Ew7VNozcn8y+vfL+UZHu9VfPzY1w7nQD1ocdFi0SmTg1Ir8Mxxn
+         ABnAEoLDabKZuvfN43/KaaDvmdsjLAJIg4d2c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X70HFJUJ8UBP2puE+4Pj/8Ffpu/zNV0pZe3tHi3ELyo=;
+        b=n1DVXxoddg5NWNyxHuz+xSMbqx7rTISJCjDaeN8NVczze1TstmK5BV6hOtVi2REc+d
+         DpI4Ho/zgDWdnFeNz2UZuC6yl9LhFWMjeI8Jt3emNiQXwEVWFoqqYMyXpeUUrlxADYwU
+         gK5P9Pvjyo1eJGyJKDltd15EYsP0XTRnAYu4BezgSgkwX/WItKycboh5IbJkom40sMGJ
+         ZfUpbaDpx+ciy5Bq2gYyD+wXofx8RR3h+/47QAtLgb4v6MjBGtLO/yYz1aGwAq/RbNzx
+         r/IvNYJEkkUfaZOtPjOu/X+ycIe9B5hQSF1bFEjhUcuxKR3BRd3wMhSg8rpWFvT0KODR
+         l6lw==
+X-Gm-Message-State: ANhLgQ0q1MGaWUAcRRdgZ46Qc1oVxB9PrX1gpweoIj422QlOEcsm/nF6
+        t1ZfWZV0HhMIpG5FcPnMPuWwEQ==
+X-Google-Smtp-Source: ADFU+vuxk2fU8o/h44zPLHBVcdInqjTDwHMcau9NBCsn9rJc0M8OWFuDgHMv71xrgc9BIbPT2rMHDg==
+X-Received: by 2002:a37:7a46:: with SMTP id v67mr26301949qkc.87.1585068776697;
+        Tue, 24 Mar 2020 09:52:56 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id v75sm13831625qkb.22.2020.03.24.09.52.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 09:52:56 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 12:52:55 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        vpillai@digitalocean.com
+Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
+ sample state of locked-down task
+Message-ID: <20200324165255.GA242454@google.com>
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-1-paulmck@kernel.org>
+ <20200319132238.75a034c3@gandalf.local.home>
+ <20200319173525.GI3199@paulmck-ThinkPad-P72>
+ <20200320024943.GA29649@paulmck-ThinkPad-P72>
+ <20200324000639.GA29340@google.com>
+ <20200324154822.GC19865@paulmck-ThinkPad-P72>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324154822.GC19865@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, Mar 24, 2020 at 08:48:22AM -0700, Paul E. McKenney wrote:
+[..] 
+> > 
+> > > diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> > > index 44edd0a..43991a4 100644
+> > > --- a/kernel/rcu/tree.h
+> > > +++ b/kernel/rcu/tree.h
+> > > @@ -455,6 +455,8 @@ static void rcu_bind_gp_kthread(void);
+> > >  static bool rcu_nohz_full_cpu(void);
+> > >  static void rcu_dynticks_task_enter(void);
+> > >  static void rcu_dynticks_task_exit(void);
+> > > +static void rcu_dynticks_task_trace_enter(void);
+> > > +static void rcu_dynticks_task_trace_exit(void);
+> > >  
+> > >  /* Forward declarations for tree_stall.h */
+> > >  static void record_gp_stall_check_time(void);
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 9355536..f4a344e 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -2553,3 +2553,21 @@ static void rcu_dynticks_task_exit(void)
+> > >  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
+> > >  #endif /* #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL) */
+> > >  }
+> > > +
+> > > +/* Turn on heavyweight RCU tasks trace readers on idle/user entry. */
+> > > +static void rcu_dynticks_task_trace_enter(void)
+> > > +{
+> > > +#ifdef CONFIG_TASKS_RCU_TRACE
+> > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> > > +		current->trc_reader_special.b.need_mb = true;
+> > 
+> > If this is every called from middle of a reader section (that is we
+> > transition from IPI-mode to using heavier reader-sections), then is a memory
+> > barrier needed here just to protect the reader section that already started?
+> 
+> That memory barrier is provided by the memory ordering in the callers
+> of rcu_dynticks_task_trace_enter() and rcu_dynticks_task_trace_exit(),
+> namely, those callers' atomic_add_return() invocations.  These barriers
+> pair with the pair of smp_rmb() calls in rcu_dynticks_zero_in_eqs(),
+> which is in turn invoked from the function formerly known as
+> trc_inspect_reader_notrunning(), AKA trc_inspect_reader().
+> 
+> This same pair of smp_rmb() calls also pair with the conditional smp_mb()
+> calls in rcu_read_lock_trace() and rcu_read_unlock_trace().
+> 
+> In your scenario, the calls in rcu_read_lock_trace() and
+> rcu_read_unlock_trace() wouldn't happen, but in that case the ordering
+> from atomic_add_return() would suffice.
+> 
+> Does that work?  Or is there an ordering bug in there somewhere?
 
-   regulator: da9063: Fix get_mode() functions to read sleep field
+Thanks for explaining. Could the following scenario cause a problem?
 
-has been applied to the regulator tree at
+If we consider the litmus test:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+{
+int x = 1;
+int *y = &x;
+int z = 1;
+}
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+P0(int *x, int *z, int **y)
+{
+	int *r0;
+	int r1;
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+	dynticks_eqs_trace_enter();
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+	rcu_read_lock();
+	r0 = rcu_dereference(*y);
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+	dynticks_eqs_trace_exit(); // cut-off reader's mb wings :)
 
-Thanks,
-Mark
+	r1 = READ_ONCE(*r0); // Reordering of this beyond the unlock() is bad.
+	rcu_read_unlock();
+}
 
-From fc69bab1ec382d16210ef6bb2d3f117a37169de2 Mon Sep 17 00:00:00 2001
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Date: Tue, 24 Mar 2020 09:25:16 +0000
-Subject: [PATCH] regulator: da9063: Fix get_mode() functions to read sleep
- field
+P1(int *x, int *z, int **y)
+{
+	rcu_assign_pointer(*y, z);
+	synchronize_rcu();
+	WRITE_ONCE(*x, 0);
+}
 
-get_mode() is used to retrieve the active mode state. Settings-A
-config is used during active state, whilst Settings-B is for
-suspend. This means we only need to check the sleep field of each
-buck and LDO as that field solely relates to Settings-A config.
+exists (0:r0=x /\ 0:r1=0)
 
-This change is a clone of the get_mode() update which was committed
-as part of:
- - regulator: da9062: fix suspend_enable/disable preparation
-   [a72865f057820ea9f57597915da4b651d65eb92f]
+Then the following situation can happen?
 
-Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Link: https://lore.kernel.org/r/20200324092516.60B5C3FB8D@swsrvapps-01.diasemi.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/da9063-regulator.c | 28 ++--------------------------
- 1 file changed, 2 insertions(+), 26 deletions(-)
+	READER					UPDATER
 
-diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
-index 46b7301efcd6..6d07e6864173 100644
---- a/drivers/regulator/da9063-regulator.c
-+++ b/drivers/regulator/da9063-regulator.c
-@@ -226,7 +226,6 @@ static int da9063_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
- static unsigned da9063_buck_get_mode(struct regulator_dev *rdev)
- {
- 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
--	struct regmap_field *field;
- 	unsigned int val;
- 	int ret;
- 
-@@ -247,18 +246,7 @@ static unsigned da9063_buck_get_mode(struct regulator_dev *rdev)
- 		return REGULATOR_MODE_NORMAL;
- 	}
- 
--	/* Detect current regulator state */
--	ret = regmap_field_read(regl->suspend, &val);
--	if (ret < 0)
--		return 0;
--
--	/* Read regulator mode from proper register, depending on state */
--	if (val)
--		field = regl->suspend_sleep;
--	else
--		field = regl->sleep;
--
--	ret = regmap_field_read(field, &val);
-+	ret = regmap_field_read(regl->sleep, &val);
- 	if (ret < 0)
- 		return 0;
- 
-@@ -295,21 +283,9 @@ static int da9063_ldo_set_mode(struct regulator_dev *rdev, unsigned mode)
- static unsigned da9063_ldo_get_mode(struct regulator_dev *rdev)
- {
- 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
--	struct regmap_field *field;
- 	int ret, val;
- 
--	/* Detect current regulator state */
--	ret = regmap_field_read(regl->suspend, &val);
--	if (ret < 0)
--		return 0;
--
--	/* Read regulator mode from proper register, depending on state */
--	if (val)
--		field = regl->suspend_sleep;
--	else
--		field = regl->sleep;
--
--	ret = regmap_field_read(field, &val);
-+	ret = regmap_field_read(regl->sleep, &val);
- 	if (ret < 0)
- 		return 0;
- 
--- 
-2.20.1
+						y = &z;
 
+	eqs_enter(); // full-mb
+
+	rcu_read_lock(); // full-mb
+	// r0 = x;
+						// GP-start
+						// ..zero_in_eqs() notices eqs, no IPI
+	eqs_exit(); // full-mb
+
+	// actual r1 = *x but will reorder
+
+	rcu_read_unlock(); // no-mb
+						// GP-finish as notices nesting = 0
+						x = 0;
+	// reordered r1 = *x = 0;
+
+
+Basically r0=x /\ r1=0 happened because r1=0. Or did I miss something that
+prevents it?
+
+thanks,
+
+ - Joel
+
+
+
+
+> > thanks,
+> > 
+> >  - Joel
+> > 
+> > 
+> > > +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
+> > > +}
+> > > +
+> > > +/* Turn off heavyweight RCU tasks trace readers on idle/user exit. */
+> > > +static void rcu_dynticks_task_trace_exit(void)
+> > > +{
+> > > +#ifdef CONFIG_TASKS_RCU_TRACE
+> > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> > > +		current->trc_reader_special.b.need_mb = false;
+> > > +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
+> > > +}
