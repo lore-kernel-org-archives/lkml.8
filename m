@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 820DEC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9607EC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6070520A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79A4E20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCXJSn (ORCPT
+        id S1727674AbgCXJQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:18:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44028 "EHLO
+        Tue, 24 Mar 2020 05:16:56 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43982 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbgCXJQ7 (ORCPT
+        with ESMTP id S1727590AbgCXJQv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:16:59 -0400
+        Tue, 24 Mar 2020 05:16:51 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfg9-0008AE-AB; Tue, 24 Mar 2020 10:16:57 +0100
+        id 1jGfg1-00081o-8a; Tue, 24 Mar 2020 10:16:49 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2418E1C04D7;
-        Tue, 24 Mar 2020 10:16:47 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:46 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AE64D1C0481;
+        Tue, 24 Mar 2020 10:16:38 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:38 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Optimize and protect atomic_cmpxchg() loop
+Subject: [tip: core/rcu] srcu: Fix process_srcu()/srcu_batches_completed() datarace
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140668.28353.2014121522030682311.tip-bot2@tip-bot2>
+Message-ID: <158504139839.28353.5827172655436222384.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,46 +53,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     faa059c397dec8a452c79e9dba64419113ea64e2
-Gitweb:        https://git.kernel.org/tip/faa059c397dec8a452c79e9dba64419113ea64e2
+Commit-ID:     39f91504a03a7a2abdb52205106942fa4a548d0d
+Gitweb:        https://git.kernel.org/tip/39f91504a03a7a2abdb52205106942fa4a548d0d
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 03 Feb 2020 14:20:00 -08:00
+AuthorDate:    Sun, 22 Dec 2019 19:39:35 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 15:58:23 -08:00
+CommitterDate: Thu, 20 Feb 2020 16:01:11 -08:00
 
-rcu: Optimize and protect atomic_cmpxchg() loop
+srcu: Fix process_srcu()/srcu_batches_completed() datarace
 
-This commit reworks the atomic_cmpxchg() loop in rcu_eqs_special_set()
-to do only the initial read from the current CPU's rcu_data structure's
-->dynticks field explicitly.  On subsequent passes, this value is instead
-retained from the failing atomic_cmpxchg() operation.
+The srcu_struct structure's ->srcu_idx field is accessed locklessly,
+so reads must use READ_ONCE().  This commit therefore adds the needed
+READ_ONCE() invocation where it was missed.
+
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ kernel/rcu/srcutree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 4a4a975..6c62481 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -342,14 +342,17 @@ bool rcu_eqs_special_set(int cpu)
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index 79848f7..119a373 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -1079,7 +1079,7 @@ EXPORT_SYMBOL_GPL(srcu_barrier);
+  */
+ unsigned long srcu_batches_completed(struct srcu_struct *ssp)
  {
- 	int old;
- 	int new;
-+	int new_old;
- 	struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
- 
-+	new_old = atomic_read(&rdp->dynticks);
- 	do {
--		old = atomic_read(&rdp->dynticks);
-+		old = new_old;
- 		if (old & RCU_DYNTICK_CTRL_CTR)
- 			return false;
- 		new = old | RCU_DYNTICK_CTRL_MASK;
--	} while (atomic_cmpxchg(&rdp->dynticks, old, new) != old);
-+		new_old = atomic_cmpxchg(&rdp->dynticks, old, new);
-+	} while (new_old != old);
- 	return true;
+-	return ssp->srcu_idx;
++	return READ_ONCE(ssp->srcu_idx);
  }
+ EXPORT_SYMBOL_GPL(srcu_batches_completed);
  
