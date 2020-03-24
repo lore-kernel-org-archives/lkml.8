@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF54C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7538BC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E6D720A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E1C2145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgCXJRS (ORCPT
+        id S1727348AbgCXJRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:17:18 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44106 "EHLO
+        Tue, 24 Mar 2020 05:17:40 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44147 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727781AbgCXJRK (ORCPT
+        with ESMTP id S1727877AbgCXJRS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:17:10 -0400
+        Tue, 24 Mar 2020 05:17:18 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfgK-0008Fd-BN; Tue, 24 Mar 2020 10:17:08 +0100
+        id 1jGfgR-0008JG-IF; Tue, 24 Mar 2020 10:17:15 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 50BDB1C07A5;
-        Tue, 24 Mar 2020 10:16:51 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:50 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6695C1C04D0;
+        Tue, 24 Mar 2020 10:16:55 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:55 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Add *_ONCE() to rcu_data ->rcu_forced_tick
+Subject: [tip: core/rcu] rcu: Add WRITE_ONCE() to rcu_node ->qsmask update
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504141099.28353.12947003090186967525.tip-bot2@tip-bot2>
+Message-ID: <158504141506.28353.4429655818390185733.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,52 +53,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     2a2ae872ef7aa958f2152b8b24c6e94cf5f1d0df
-Gitweb:        https://git.kernel.org/tip/2a2ae872ef7aa958f2152b8b24c6e94cf5f1d0df
+Commit-ID:     7672d647ddae37d2ea267159950bcc311e962434
+Gitweb:        https://git.kernel.org/tip/7672d647ddae37d2ea267159950bcc311e962434
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Wed, 08 Jan 2020 20:06:25 -08:00
+AuthorDate:    Fri, 03 Jan 2020 11:38:51 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Thu, 20 Feb 2020 15:58:22 -08:00
 
-rcu: Add *_ONCE() to rcu_data ->rcu_forced_tick
+rcu: Add WRITE_ONCE() to rcu_node ->qsmask update
 
-The rcu_data structure's ->rcu_forced_tick field is read locklessly, so
-this commit adds WRITE_ONCE() to all updates and READ_ONCE() to all
-lockless reads.
+The rcu_node structure's ->qsmask field is read locklessly, so this
+commit adds the WRITE_ONCE() to an update in order to provide proper
+documentation and READ_ONCE()/WRITE_ONCE() pairing.
 
 This data race was reported by KCSAN.  Not appropriate for backporting
 due to failure being unlikely.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/rcu/tree.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index e851a12..be59a5d 100644
+index d91c915..bb57c24 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -818,11 +818,12 @@ static __always_inline void rcu_nmi_enter_common(bool irq)
- 		incby = 1;
- 	} else if (tick_nohz_full_cpu(rdp->cpu) &&
- 		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
--		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
-+		   READ_ONCE(rdp->rcu_urgent_qs) &&
-+		   !READ_ONCE(rdp->rcu_forced_tick)) {
- 		raw_spin_lock_rcu_node(rdp->mynode);
- 		// Recheck under lock.
- 		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
--			rdp->rcu_forced_tick = true;
-+			WRITE_ONCE(rdp->rcu_forced_tick, true);
- 			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
- 		}
- 		raw_spin_unlock_rcu_node(rdp->mynode);
-@@ -899,7 +900,7 @@ static void rcu_disable_urgency_upon_qs(struct rcu_data *rdp)
- 	WRITE_ONCE(rdp->rcu_need_heavy_qs, false);
- 	if (tick_nohz_full_cpu(rdp->cpu) && rdp->rcu_forced_tick) {
- 		tick_dep_clear_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
--		rdp->rcu_forced_tick = false;
-+		WRITE_ONCE(rdp->rcu_forced_tick, false);
- 	}
- }
- 
+@@ -1881,7 +1881,7 @@ static void rcu_report_qs_rnp(unsigned long mask, struct rcu_node *rnp,
+ 		WARN_ON_ONCE(oldmask); /* Any child must be all zeroed! */
+ 		WARN_ON_ONCE(!rcu_is_leaf_node(rnp) &&
+ 			     rcu_preempt_blocked_readers_cgp(rnp));
+-		rnp->qsmask &= ~mask;
++		WRITE_ONCE(rnp->qsmask, rnp->qsmask & ~mask);
+ 		trace_rcu_quiescent_state_report(rcu_state.name, rnp->gp_seq,
+ 						 mask, rnp->qsmask, rnp->level,
+ 						 rnp->grplo, rnp->grphi,
