@@ -2,224 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B32C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC68C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 838DF20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9772074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:50:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FC8RSUsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgCXGuD (ORCPT
+        id S1727393AbgCXGuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:50:03 -0400
-Received: from mo-csw1515.securemx.jp ([210.130.202.154]:55642 "EHLO
-        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgCXGuD (ORCPT
+        Tue, 24 Mar 2020 02:50:04 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:41604 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbgCXGuD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 02:50:03 -0400
-Received: by mo-csw.securemx.jp (mx-mo-csw1515) id 02O6nmWl029457; Tue, 24 Mar 2020 15:49:48 +0900
-X-Iguazu-Qid: 34trcFcTRI9OQ3pVZs
-X-Iguazu-QSIG: v=2; s=0; t=1585032588; q=34trcFcTRI9OQ3pVZs; m=EmoQwMXMklS5qfdk+YmVEVG4lj5CgLLx7pina2cL0mQ=
-Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
-        by relay.securemx.jp (mx-mr1510) id 02O6nlgQ014411;
-        Tue, 24 Mar 2020 15:49:47 +0900
-Received: from enc01.localdomain ([106.186.93.100])
-        by imx2.toshiba.co.jp  with ESMTP id 02O765XO026120;
-        Tue, 24 Mar 2020 16:06:05 +0900 (JST)
-Received: from hop001.toshiba.co.jp ([133.199.164.63])
-        by enc01.localdomain  with ESMTP id 02O6nkWB010175;
-        Tue, 24 Mar 2020 15:49:47 +0900
-From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
-To:     miquel.raynal@bootlin.com, vigneshr@ti.com
-Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v5 1/2] mtd: spinand: toshiba: Rename function name to change suffix and prefix (8Gbit)
-Date:   Tue, 24 Mar 2020 15:49:44 +0900
-X-TSB-HOP: ON
-Message-Id: <0dedd9869569a17625822dba87878254d253ba0e.1584949601.git.ytc-mb-yfuruyama7@kioxia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1584949601.git.ytc-mb-yfuruyama7@kioxia.com>
-References: <cover.1584949601.git.ytc-mb-yfuruyama7@kioxia.com>
+Received: by mail-pl1-f193.google.com with SMTP id t16so7014920plr.8;
+        Mon, 23 Mar 2020 23:50:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WaCNXsC3UAwYO4xUT1ocD5hAqCfIFkIpUm3n4JspozY=;
+        b=FC8RSUsQWfVgEN/J5OAPYJqDYUCWq9SbVwhAwPc21LbX5pJl5nQM8vloM0XNbtsSt5
+         zPB2acM5o3sG/JrvYG6Pyvew2Yp2teJ3QSxKQyrLLK+w+VkrAVtEwSvah5QW2pi8Cwj1
+         HqrLlH2GBrMJ4RayVy8/rWszEMjD5w9+gYcJAHx54klw+Ov3j3M6/i8Z4Ybp4DqC7OYT
+         bdB/qAREyZgcDnnA1yMo81481ApmgZWkTwAMe/l746SUjLo+hU00Jy1EQzvPCjKIl+73
+         XdCoIbu2yvXYtFLpG3/+qVdxwVqzdEvA3/hexqR+BCzxY3rjlmBYvu0ERiaHPkJHUWmQ
+         UDbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WaCNXsC3UAwYO4xUT1ocD5hAqCfIFkIpUm3n4JspozY=;
+        b=twlOfj8YKuvDR3dMd484Pz8gksUeXFJNSrpMq46L0sY3duAOHc3pJ16Nv3jLYllnPa
+         C+GMAIk/bQWp/yo33FK9LCfr4m+yT/Q5Pf8to1Nw4P56/zDi8gGs2sWcZowIKsUzzQ5o
+         ry1Yhe9EA3oCJdURih4OAYJS8DSpeY3rht3SQmLiEH6ip+hYzA/aBZYjgld9200+z9AS
+         6QNoc7WMo4euDulC9be/pf+bghc5QP5YvBi8/fg/Wu5Y5rdewA1crbYvLaTbJT9pcXWr
+         YgaTgB3gJs9GrVntxA+S6DgUVemjFruznt3tqubL8A41XViCqXtyyRtm/s6GnRhzBt8t
+         CuWA==
+X-Gm-Message-State: ANhLgQ0Mpp0yu+wn/xv68p/wmMZFsiXrZylLALSiM5iH0dtOK5NQARI2
+        aW+cjIkZxTg+0xN2U+U3Z9Q=
+X-Google-Smtp-Source: ADFU+vu37vNKpUBlGeUMaTZdqjHfQEpIM7AmSsRUZWGk0J3YrM9jL5kKt/K16/BKB1WkXjsfk6W85g==
+X-Received: by 2002:a17:902:b489:: with SMTP id y9mr25883954plr.144.1585032602145;
+        Mon, 23 Mar 2020 23:50:02 -0700 (PDT)
+Received: from ubt.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id t3sm8680103pfl.26.2020.03.23.23.49.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 23:50:01 -0700 (PDT)
+From:   Chunyan Zhang <zhang.lyra@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Chunyan Zhang <chunyan.zhang@unisoc.com>
+Subject: [PATCH] tty: serial: make SERIAL_SPRD depends on ARM or ARM64
+Date:   Tue, 24 Mar 2020 14:49:49 +0800
+Message-Id: <20200324064949.23697-1-zhang.lyra@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The suffix was changed from "G" to "J" to classify between 1st generation
-and 2nd generation serial NAND devices (which now belong to the Kioxia
-brand).
-As reference that's
-1st generation device of 1Gbit product is "TC58CVG0S3HRAIG"
-2nd generation device of 1Gbit product is "TC58CVG0S3HRAIJ".
+From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-The 8Gbit type "TH58CxG3S0HRAIJ" is new to Kioxia's serial NAND lineup and
-the prefix was changed from "TC58" to "TH58".
+kbuild-test reported an error:
 
-Thus the functions were renamed from tc58cxgxsx_*() to tx58cxgxsxraix_*().
+  config: mips-randconfig-a001-20200321 ...
+  >> drivers/tty/serial/sprd_serial.c:1175: undefined reference
+  to `clk_set_parent'
 
-Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
-Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Because some mips Kconfig-s select CONFIG_HAVE_CLK but not CONFIG_COMMON_CLK,
+so it's probably that clk_set_parent is missed for those configs.
+
+To fix this error, this patch adds dependence on ARM || ARM64
+for SERIAL_SPRD.
+
+Fixes: 7ba87cfec71a ("tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD")
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
 ---
-changelog[v5]:Remake on -rc6.
-changelog[v4]:Remake on top of the last -rc.
-changelog[v3]:Fixed commit message to make it easier to understand.
-changelog[v2]:Split 2 patches, and add patch description.
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/mtd/nand/spi/toshiba.c | 60 +++++++++++++++++++++---------------------
- 1 file changed, 30 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/mtd/nand/spi/toshiba.c b/drivers/mtd/nand/spi/toshiba.c
-index d347731..5d217dd 100644
---- a/drivers/mtd/nand/spi/toshiba.c
-+++ b/drivers/mtd/nand/spi/toshiba.c
-@@ -26,8 +26,8 @@ static SPINAND_OP_VARIANTS(write_cache_variants,
- static SPINAND_OP_VARIANTS(update_cache_variants,
- 		SPINAND_PROG_LOAD(false, 0, NULL, 0));
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index b43dce785a58..417f7e45a3f8 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1444,6 +1444,7 @@ config SERIAL_MEN_Z135
+ config SERIAL_SPRD
+ 	tristate "Support for Spreadtrum serial"
+ 	select SERIAL_CORE
++	depends on ARM || ARM64 || COMPILE_TEST
+ 	help
+ 	  This enables the driver for the Spreadtrum's serial.
  
--static int tc58cxgxsx_ooblayout_ecc(struct mtd_info *mtd, int section,
--				     struct mtd_oob_region *region)
-+static int tx58cxgxsxraix_ooblayout_ecc(struct mtd_info *mtd, int section,
-+					struct mtd_oob_region *region)
- {
- 	if (section > 0)
- 		return -ERANGE;
-@@ -38,8 +38,8 @@ static int tc58cxgxsx_ooblayout_ecc(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
--static int tc58cxgxsx_ooblayout_free(struct mtd_info *mtd, int section,
--				      struct mtd_oob_region *region)
-+static int tx58cxgxsxraix_ooblayout_free(struct mtd_info *mtd, int section,
-+					 struct mtd_oob_region *region)
- {
- 	if (section > 0)
- 		return -ERANGE;
-@@ -51,13 +51,13 @@ static int tc58cxgxsx_ooblayout_free(struct mtd_info *mtd, int section,
- 	return 0;
- }
- 
--static const struct mtd_ooblayout_ops tc58cxgxsx_ooblayout = {
--	.ecc = tc58cxgxsx_ooblayout_ecc,
--	.free = tc58cxgxsx_ooblayout_free,
-+static const struct mtd_ooblayout_ops tx58cxgxsxraix_ooblayout = {
-+	.ecc = tx58cxgxsxraix_ooblayout_ecc,
-+	.free = tx58cxgxsxraix_ooblayout_free,
- };
- 
--static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
--				      u8 status)
-+static int tx58cxgxsxraix_ecc_get_status(struct spinand_device *spinand,
-+					 u8 status)
- {
- 	struct nand_device *nand = spinand_to_nand(spinand);
- 	u8 mbf = 0;
-@@ -96,7 +96,7 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 
- static const struct spinand_info toshiba_spinand_table[] = {
- 	/* 3.3V 1Gb */
--	SPINAND_INFO("TC58CVG0S3",
-+	SPINAND_INFO("TC58CVG0S3HRAIG",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xC2),
- 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -104,10 +104,10 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- 	/* 3.3V 2Gb */
--	SPINAND_INFO("TC58CVG1S3",
-+	SPINAND_INFO("TC58CVG1S3HRAIG",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xCB),
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -115,10 +115,10 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- 	/* 3.3V 4Gb */
--	SPINAND_INFO("TC58CVG2S0",
-+	SPINAND_INFO("TC58CVG2S0HRAIG",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xCD),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -126,10 +126,10 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- 	/* 3.3V 4Gb */
--	SPINAND_INFO("TC58CVG2S0",
-+	SPINAND_INFO("TC58CVG2S0HRAIJ",
- 			SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xED),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -137,10 +137,10 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- 	/* 1.8V 1Gb */
--	SPINAND_INFO("TC58CYG0S3",
-+	SPINAND_INFO("TC58CYG0S3HRAIG",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xB2),
- 		     NAND_MEMORG(1, 2048, 128, 64, 1024, 20, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -148,10 +148,10 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- 	/* 1.8V 2Gb */
--	SPINAND_INFO("TC58CYG1S3",
-+	SPINAND_INFO("TC58CYG1S3HRAIG",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xBB),
- 		     NAND_MEMORG(1, 2048, 128, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -159,10 +159,10 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- 	/* 1.8V 4Gb */
--	SPINAND_INFO("TC58CYG2S0",
-+	SPINAND_INFO("TC58CYG2S0HRAIG",
- 		     SPINAND_ID(SPINAND_READID_METHOD_OPCODE_DUMMY, 0xBD),
- 		     NAND_MEMORG(1, 4096, 256, 64, 2048, 40, 1, 1, 1),
- 		     NAND_ECCREQ(8, 512),
-@@ -170,8 +170,8 @@ static int tc58cxgxsx_ecc_get_status(struct spinand_device *spinand,
- 					      &write_cache_variants,
- 					      &update_cache_variants),
- 		     0,
--		     SPINAND_ECCINFO(&tc58cxgxsx_ooblayout,
--				     tc58cxgxsx_ecc_get_status)),
-+		     SPINAND_ECCINFO(&tx58cxgxsxraix_ooblayout,
-+				     tx58cxgxsxraix_ecc_get_status)),
- };
- 
- static const struct spinand_manufacturer_ops toshiba_spinand_manuf_ops = {
 -- 
-1.9.1
+2.20.1
 
