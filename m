@@ -2,115 +2,156 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB425C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA80C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C8F20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:13:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QpuMECOS"
+	by mail.kernel.org (Postfix) with ESMTP id E8C17208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585052001;
+	bh=C4wlqkM3wVp35mo1kxHTuS8DOA3/s4vUyNZ91PUlg0U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OAK/nImLJjwdi7wje79FG9+bsE4GxO4eiaQi9t0c7cLgphazqBTLd9bj7cXSM27P2
+	 R7HwxtYcJd14vQPdvr/cTfnZenUP/5/g2x1T8Hwsrvpr/BZIJavsMD0z34KQkba/BR
+	 ak7G9/vVRt3s2XWNVbC7MeVILGYDeXXCVPL5O9F4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbgCXMNM (ORCPT
+        id S1727551AbgCXMNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:13:12 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:25725 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727391AbgCXMNM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:13:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585051990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=58l/H2MApEOu+ie/Vjhf3T42AhKzIjQCCWFefzgW4/M=;
-        b=QpuMECOSKvYM5JqwmLQAVcwj4+0CVwvRRtUwh+zDy6Qlmtn2XGJ7eYOjOs3t9vLDkcTdnm
-        Gt/QxwcMTDaVEGx5Xgo0RgW3GGGwQN93oB/MGA/L5xlEmmJ9eWf3exHwCKltcgSOoFRCwV
-        JeYYrTXxF4/h3wTuItqsj1YaRo8TDZ8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-433-gjGvKRESNcSsA9rl3IRp-g-1; Tue, 24 Mar 2020 08:13:06 -0400
-X-MC-Unique: gjGvKRESNcSsA9rl3IRp-g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 24 Mar 2020 08:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbgCXMNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:13:19 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C5FB100550D;
-        Tue, 24 Mar 2020 12:13:04 +0000 (UTC)
-Received: from asgard.redhat.com (unknown [10.36.110.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F0BB03A4;
-        Tue, 24 Mar 2020 12:13:00 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 13:13:06 +0100
-From:   Eugene Syromiatnikov <esyr@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Michael Williams <michael.williams@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH] coresight: do not use the BIT() macro in the UAPI header
-Message-ID: <20200324121306.GA5735@asgard.redhat.com>
-References: <20200324042213.GA10452@asgard.redhat.com>
- <20200324062853.GD1977781@kroah.com>
- <20200324095304.GA2444@asgard.redhat.com>
- <20200324101938.GA2220478@kroah.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AF3F420870;
+        Tue, 24 Mar 2020 12:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585051998;
+        bh=C4wlqkM3wVp35mo1kxHTuS8DOA3/s4vUyNZ91PUlg0U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Mi3iMe0prSHQGaRwCcAy9PMzwJjZlo3yYG6ABbg8yvL4l/EEIuwFMMYrASKQyqWG4
+         tUo8AWE//Wao9D0y9sM4LPCntZ5Ygaan//Zdw/PlijaAr1BLLKs25WbGuj0XK/rI4t
+         pqR3TxOyOUzCerPQG4RWHJ9uvmSLHX2bEzJMSUNs=
+Date:   Tue, 24 Mar 2020 13:13:14 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
+        glider@google.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
+        rafael@kernel.org,
+        syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] libfs: fix infoleak in simple_attr_read()
+Message-ID: <20200324121314.GC2333340@kroah.com>
+References: <CAG_fn=WvVp7Nxm5E+1dYs4guMYUV8D1XZEt_AZFF6rAQEbbAeg@mail.gmail.com>
+ <20200308023849.988264-1-ebiggers@kernel.org>
+ <20200313164511.GB907@sol.localdomain>
+ <20200318163940.GB2334@sol.localdomain>
+ <20200322035620.GB111151@sol.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324101938.GA2220478@kroah.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200322035620.GB111151@sol.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:19:38AM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Mar 24, 2020 at 10:53:04AM +0100, Eugene Syromiatnikov wrote:
-> > On Tue, Mar 24, 2020 at 07:28:53AM +0100, Greg Kroah-Hartman wrote:
-> > > On Tue, Mar 24, 2020 at 05:22:13AM +0100, Eugene Syromiatnikov wrote:
-> > > > The BIT() macro definition is not available for the UAPI headers
-> > > > (moreover, it can be defined differently in the user space); replace
-> > > > its usage with the _BITUL() macro that is defined in <linux/const.h>.
+On Sat, Mar 21, 2020 at 08:56:20PM -0700, Eric Biggers wrote:
+> On Wed, Mar 18, 2020 at 09:39:40AM -0700, Eric Biggers wrote:
+> > On Fri, Mar 13, 2020 at 09:45:11AM -0700, Eric Biggers wrote:
+> > > On Sat, Mar 07, 2020 at 06:38:49PM -0800, Eric Biggers wrote:
+> > > > From: Eric Biggers <ebiggers@google.com>
+> > > > 
+> > > > Reading from a debugfs file at a nonzero position, without first reading
+> > > > at position 0, leaks uninitialized memory to userspace.
+> > > > 
+> > > > It's a bit tricky to do this, since lseek() and pread() aren't allowed
+> > > > on these files, and write() doesn't update the position on them.  But
+> > > > writing to them with splice() *does* update the position:
+> > > > 
+> > > > 	#define _GNU_SOURCE 1
+> > > > 	#include <fcntl.h>
+> > > > 	#include <stdio.h>
+> > > > 	#include <unistd.h>
+> > > > 	int main()
+> > > > 	{
+> > > > 		int pipes[2], fd, n, i;
+> > > > 		char buf[32];
+> > > > 
+> > > > 		pipe(pipes);
+> > > > 		write(pipes[1], "0", 1);
+> > > > 		fd = open("/sys/kernel/debug/fault_around_bytes", O_RDWR);
+> > > > 		splice(pipes[0], NULL, fd, NULL, 1, 0);
+> > > > 		n = read(fd, buf, sizeof(buf));
+> > > > 		for (i = 0; i < n; i++)
+> > > > 			printf("%02x", buf[i]);
+> > > > 		printf("\n");
+> > > > 	}
+> > > > 
+> > > > Output:
+> > > > 	5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a30
+> > > > 
+> > > > Fix the infoleak by making simple_attr_read() always fill
+> > > > simple_attr::get_buf if it hasn't been filled yet.
+> > > > 
+> > > > Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
+> > > > Reported-by: Alexander Potapenko <glider@google.com>
+> > > > Fixes: acaefc25d21f ("[PATCH] libfs: add simple attribute files")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > > > ---
+> > > >  fs/libfs.c | 8 +++++---
+> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
+> > > > 
+> > > > diff --git a/fs/libfs.c b/fs/libfs.c
+> > > > index c686bd9caac6..3759fbacf522 100644
+> > > > --- a/fs/libfs.c
+> > > > +++ b/fs/libfs.c
+> > > > @@ -891,7 +891,7 @@ int simple_attr_open(struct inode *inode, struct file *file,
+> > > >  {
+> > > >  	struct simple_attr *attr;
+> > > >  
+> > > > -	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
+> > > > +	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
+> > > >  	if (!attr)
+> > > >  		return -ENOMEM;
+> > > >  
+> > > > @@ -931,9 +931,11 @@ ssize_t simple_attr_read(struct file *file, char __user *buf,
+> > > >  	if (ret)
+> > > >  		return ret;
+> > > >  
+> > > > -	if (*ppos) {		/* continued read */
+> > > > +	if (*ppos && attr->get_buf[0]) {
+> > > > +		/* continued read */
+> > > >  		size = strlen(attr->get_buf);
+> > > > -	} else {		/* first read */
+> > > > +	} else {
+> > > > +		/* first read */
+> > > >  		u64 val;
+> > > >  		ret = attr->get(attr->data, &val);
+> > > >  		if (ret)
+> > > > -- 
+> > > > 2.25.1
 > > > 
-> > > Why is somehow _BITUL() ok to use here instead?
+> > > Any comments on this?  Al, seems this is something you should pick up?
+> > > 
+> > > - Eric
 > > 
-> > It is provided in an UAPI header (include/uapi/linux/const.h)
-> > and is appropriately prefixed with an underscore to avoid conflicts.
+> > Ping.
+> > 
 > 
-> Because no one uses _ in their own macros?  :)
+> Andrew, can you consider taking this patch?  Al has been ignoring it, and this
+> seems like a fairly important fix.  This bug affects many (most?) debugfs files,
+> and it affects years old kernels too not just recent ones.
 
-Well, it is a reserved prefix (ANSI C99, 4.1.2 "Standard headers": "All
-other identifiers that begin with an underscore and either an upper-case
-letter or another underscore are reserved"), so valid C files shouldn't
-use them.
+As it affects debugfs files, I'll grab it now, thanks.
 
-> Anyway, this is fine, but if it's really the way forward, I think a lot
-> of files will end up being changed...
-
-There are 5 cases for using BIT() in UAPI headers so far (rtc.h[1],
-serio.h[2], psci.h[3], pkt_sched.h[4], coresight-stm.h), two of them were
-conversions from the open-coded variant; the usage of _BITUL in pkt_sched.h
-made me think that it is the better approach since people tend to use
-BIT-like macro anyway, so, by increasing a number of cases it may raise
-awareness of the UAPI specifics.
-
-[1] https://lore.kernel.org/lkml/20200324041209.GA30727@asgard.redhat.com/
-[2] https://lore.kernel.org/lkml/20200324041341.GA32335@asgard.redhat.com/
-[3] https://lore.kernel.org/lkml/20200324041526.GA1978@asgard.redhat.com/
-[4] https://lore.kernel.org/lkml/20200324041920.GA7068@asgard.redhat.com/
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
-
+greg k-h
