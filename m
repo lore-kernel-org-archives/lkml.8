@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB4BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C63C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF3F208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C333E208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055913;
-	bh=8mS+FAB8IVF5c9q/iWbsjfm8yNBggi4EvZnRV6LkbJU=;
+	s=default; t=1585055918;
+	bh=a9nhZwx9EI0wQiaVo+A5K9svhSVJKhXAV6X6EYX4Rws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q8l/lSoZ9ABezEO5SVNMYXCIghcQzJ9dupsIFba6OHcuhoNEFYe+Hjq0NjCwo//R7
-	 JxZ7/sV29P1U0ZYORviVAJlJyHi1PU34Qv+Syn+w9cW8xlS0rfDKMrxpRIlqjN0Kaj
-	 l48CToK8XpnB9MhOl6zIP2H6grYkCw5DynS88JGI=
+	b=xn/6cy7dppQ6cPFIw1ByjiURZp1Ux93TxSyHASdkq7SIVZ+BenzziBf/Nn4J+th7G
+	 W0HiJTeJA19ByIrSepJF+tum6LDjOI4VhO+5IJETEf6Th1oq0Q+3AYzj4V/fzS7WAC
+	 AFbSRebivz6EJdgxP3jWiXEqyXYxL6adqrkNhLtg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbgCXNSb (ORCPT
+        id S1728314AbgCXNSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:18:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38662 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:18:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727829AbgCXNS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:18:27 -0400
+        id S1727829AbgCXNSc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:18:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCFCF208E4;
-        Tue, 24 Mar 2020 13:18:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2A68208D6;
+        Tue, 24 Mar 2020 13:18:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055907;
-        bh=8mS+FAB8IVF5c9q/iWbsjfm8yNBggi4EvZnRV6LkbJU=;
+        s=default; t=1585055912;
+        bh=a9nhZwx9EI0wQiaVo+A5K9svhSVJKhXAV6X6EYX4Rws=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aUZtvJoPV7ARIt/iNew4Ii8nc0TwG2BjjU3hsuI3k3FhEsZm6AR2FpUpcTyotOUeA
-         xKXZjyShgbrXtRoun9DYqaS/hb3SOo+RdKxcpCIaAULqSfKhJo0OBhzn1zfkSSQPNh
-         bsUp4aiIsY54JiQxraSeRBZrje18zNlMu4bK9rNM=
+        b=IlpLqZW1QK+tD3I1jIfgn/x8YkOwc20C+swPo3qA3NpJsf4PgV4UIVnftGSXs1Fqd
+         aiou/8iljdxRYClhvxVGjCvDTVxqc+803LhQB91LcbhqAb2BtcA3waa2m3o6EMGsAf
+         gqQP2QsxIkv/KvRpkeriJgBLIVUBfvc8xXltJWs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.4 064/102] iio: light: vcnl4000: update sampling periods for vcnl4040
-Date:   Tue, 24 Mar 2020 14:10:56 +0100
-Message-Id: <20200324130813.127835136@linuxfoundation.org>
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 066/102] mmc: sdhci-of-at91: fix cd-gpios for SAMA5D2
+Date:   Tue, 24 Mar 2020 14:10:58 +0100
+Message-Id: <20200324130813.314010108@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,48 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Novotny <tomas@novotny.cz>
+From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
 
-commit 2ca5a8792d617b4035aacd0a8be527f667fbf912 upstream.
+commit 53dd0a7cd65edc83b0c243d1c08377c8b876b2ee upstream.
 
-Vishay has published a new version of "Designing the VCNL4200 Into an
-Application" application note in October 2019. The new version specifies
-that there is +-20% of part to part tolerance. Although the application
-note is related to vcnl4200, according to support the vcnl4040's "ASIC
-is quite similar to that one for the VCNL4200".
+SAMA5D2x doesn't drive CMD line if GPIO is used as CD line (at least
+SAMA5D27 doesn't). Fix this by forcing card-detect in the module
+if module-controlled CD is not used.
 
-So update the sampling periods (and comment), including the correct
-sampling period for proximity. Both sampling periods are lower. Users
-relying on the blocking behaviour of reading will get proximity
-measurements much earlier.
+Fixed commit addresses the problem only for non-removable cards. This
+amends it to also cover gpio-cd case.
 
-Fixes: 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-Tested-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Tomas Novotny <tomas@novotny.cz>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc: stable@vger.kernel.org
+Fixes: 7a1e3f143176 ("mmc: sdhci-of-at91: force card detect value for non removable devices")
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Link: https://lore.kernel.org/r/8d10950d9940468577daef4772b82a071b204716.1584290561.git.mirq-linux@rere.qmqm.pl
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/light/vcnl4000.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/mmc/host/sdhci-of-at91.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -174,9 +174,10 @@ static int vcnl4200_init(struct vcnl4000
- 		data->al_scale = 24000;
- 		break;
- 	case VCNL4040_PROD_ID:
--		/* Integration time is 80ms, add 10ms. */
--		data->vcnl4200_al.sampling_rate = ktime_set(0, 100000 * 1000);
--		data->vcnl4200_ps.sampling_rate = ktime_set(0, 100000 * 1000);
-+		/* Default wait time is 80ms, add 20% tolerance. */
-+		data->vcnl4200_al.sampling_rate = ktime_set(0, 96000 * 1000);
-+		/* Default wait time is 5ms, add 20% tolerance. */
-+		data->vcnl4200_ps.sampling_rate = ktime_set(0, 6000 * 1000);
- 		data->al_scale = 120000;
- 		break;
- 	}
+--- a/drivers/mmc/host/sdhci-of-at91.c
++++ b/drivers/mmc/host/sdhci-of-at91.c
+@@ -118,7 +118,8 @@ static void sdhci_at91_reset(struct sdhc
+ {
+ 	sdhci_reset(host, mask);
+ 
+-	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
++	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE)
++	    || mmc_gpio_get_cd(host->mmc) >= 0)
+ 		sdhci_at91_set_force_card_detect(host);
+ }
+ 
+@@ -397,8 +398,11 @@ static int sdhci_at91_probe(struct platf
+ 	 * detection procedure using the SDMCC_CD signal is bypassed.
+ 	 * This bit is reset when a software reset for all command is performed
+ 	 * so we need to implement our own reset function to set back this bit.
++	 *
++	 * WA: SAMA5D2 doesn't drive CMD if using CD GPIO line.
+ 	 */
+-	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
++	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE)
++	    || mmc_gpio_get_cd(host->mmc) >= 0)
+ 		sdhci_at91_set_force_card_detect(host);
+ 
+ 	pm_runtime_put_autosuspend(&pdev->dev);
 
 
