@@ -7,37 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBD1C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BB3C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11FC20A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55C8B20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgCXJRM (ORCPT
+        id S1727794AbgCXJRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:17:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44061 "EHLO
+        Tue, 24 Mar 2020 05:17:10 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44059 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727718AbgCXJRD (ORCPT
+        with ESMTP id S1727715AbgCXJRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 05:17:03 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfgD-0008Dw-32; Tue, 24 Mar 2020 10:17:01 +0100
+        id 1jGfgC-0008Bp-5I; Tue, 24 Mar 2020 10:17:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8E4DC1C0481;
-        Tue, 24 Mar 2020 10:16:49 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:49 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AB0C91C0451;
+        Tue, 24 Mar 2020 10:16:48 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:48 -0000
+From:   "tip-bot2 for Amol Grover" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Add WRITE_ONCE() to rcu_state ->gp_start
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rculist: Add brackets around cond argument in
+ __list_check_rcu macro
+Cc:     Amol Grover <frextrite@gmail.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140925.28353.13950952007552002585.tip-bot2@tip-bot2>
+Message-ID: <158504140839.28353.7116236861803686306.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,37 +56,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     59881bcd85a06565c53fd13ce3b0ad7fa55e560c
-Gitweb:        https://git.kernel.org/tip/59881bcd85a06565c53fd13ce3b0ad7fa55e560c
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Mon, 20 Jan 2020 15:29:04 -08:00
+Commit-ID:     4dfd5cd83dc4458049c7f6eb9c4f361acc4239ea
+Gitweb:        https://git.kernel.org/tip/4dfd5cd83dc4458049c7f6eb9c4f361acc4239ea
+Author:        Amol Grover <frextrite@gmail.com>
+AuthorDate:    Sat, 18 Jan 2020 22:24:18 +05:30
 Committer:     Paul E. McKenney <paulmck@kernel.org>
 CommitterDate: Thu, 20 Feb 2020 15:58:23 -08:00
 
-rcu: Add WRITE_ONCE() to rcu_state ->gp_start
+rculist: Add brackets around cond argument in __list_check_rcu macro
 
-The rcu_state structure's ->gp_start field is read locklessly, so this
-commit adds the WRITE_ONCE() to an update in order to provide proper
-documentation and READ_ONCE()/WRITE_ONCE() pairing.
+Passing a complex lockdep condition to __list_check_rcu results
+in false positive lockdep splat due to incorrect expression
+evaluation.
 
-This data race was reported by KCSAN.  Not appropriate for backporting
-due to failure being unlikely.
+For example, a lockdep check condition `cond1 || cond2` is
+evaluated as `!cond1 || cond2 && !rcu_read_lock_any_held()`
+which, according to operator precedence, evaluates to
+`!cond1 || (cond2 && !rcu_read_lock_any_held())`.
+This would result in a lockdep splat when cond1 is false
+and cond2 is true which is logically incorrect.
 
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree_stall.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/rculist.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index bca637b..488b71d 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -102,7 +102,7 @@ static void record_gp_stall_check_time(void)
- 	unsigned long j = jiffies;
- 	unsigned long j1;
- 
--	rcu_state.gp_start = j;
-+	WRITE_ONCE(rcu_state.gp_start, j);
- 	j1 = rcu_jiffies_till_stall_check();
- 	/* Record ->gp_start before ->jiffies_stall. */
- 	smp_store_release(&rcu_state.jiffies_stall, j + j1); /* ^^^ */
+diff --git a/include/linux/rculist.h b/include/linux/rculist.h
+index 9f313e4..8214cdc 100644
+--- a/include/linux/rculist.h
++++ b/include/linux/rculist.h
+@@ -60,9 +60,9 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({								\
+ 	check_arg_count_one(extra);					\
+-	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
++	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
+ 			 "RCU-list traversed in non-reader section!");	\
+-	 })
++	})
+ #else
+ #define __list_check_rcu(dummy, cond, extra...)				\
+ 	({ check_arg_count_one(extra); })
