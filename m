@@ -2,160 +2,87 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09E3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4009C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C834420789
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C28E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:28:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LuLLrr4e"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="f6dU36lr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgCXQ2d (ORCPT
+        id S1728851AbgCXQ2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:28:33 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:39762 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbgCXQ2d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:28:33 -0400
-Received: by mail-lj1-f195.google.com with SMTP id i20so7195954ljn.6;
-        Tue, 24 Mar 2020 09:28:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F4RDqLUZsSxRiEPC5uE5/znG8mVAMvfJqVjLtVuPTYI=;
-        b=LuLLrr4er+BSGhKQjssI8NHtdlFNa4e25P6w8rHTsubuRQi9V8BqJQzt40rl89NpJi
-         TUFxBSyW6blqX9rxpUa8KALUUkOoERwYy5okleCaFKiPS0eQF8mhZD9ELr4U2+vm0XX4
-         zklFKOFjLfGXBjbaY4siIbb7tsK0BeShh2w9R9D2j4oRvUrlLNo5C+7cH4FfYF7qeTuo
-         kWZlk5UGv8ZOZ7Uf+O9C0DnHXMpMwb52fs0BZ91dCysjWGpBPMMSB5X89iAYaUNt09Vd
-         /ORqgTrpH2BznN/YlN+4p0bojHgjD4pZuFa+J9wq1OISsSbwcln0MlvDPICDXdRFXC0R
-         P0bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F4RDqLUZsSxRiEPC5uE5/znG8mVAMvfJqVjLtVuPTYI=;
-        b=Rqdc2w2j1wuV8UklJAjDa2LslBNdS0HeYJNOI6fyCHLa4U7m83ckokXSgKufpl83UL
-         qU6dGxlXjZjT3JVxUuHMYr+e2GDLCBQ+w0J+saKHZhJ0HbKLy8wPTouBcRZRF4n7kp3j
-         KjVHN/DS2AnF28vHScrukt7bHo2/DV9eLojDlPofpmZe7cn9eKUFciuWisTgVNlE/A7b
-         nLB9K3idOIG+zo3khqEV7u1U4n/FexIIrFeeW4fbz2Es1mO3YIJORL01/seaVFU8nhRP
-         f1zUd4mH/a3byPPYm2xP8X8xp+DHHQ7J0QeSQZEDvaxeObvb3osT1XnxXtz0N3Y3rdD1
-         LMWg==
-X-Gm-Message-State: ANhLgQ2wdz185UIvCj5xLr/zhgqIC2qTBnt6iL1dlEf6WrV49gvJIo0w
-        zn3XdC7SHduja0IF7yLZ5FUMYp606quljsGfhaA=
-X-Google-Smtp-Source: ADFU+vv3dG23NpLsI31feEsoXfT8VQ+G9TfKP8XIgS8J/aJehLJHzaIF4s5x+DNyat0Dt1V6dnQNgBL+w6VWcAfNkJM=
-X-Received: by 2002:a2e:9949:: with SMTP id r9mr18249406ljj.135.1585067309896;
- Tue, 24 Mar 2020 09:28:29 -0700 (PDT)
+        Tue, 24 Mar 2020 12:28:51 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55226 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728150AbgCXQ2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:28:51 -0400
+Received: from zn.tnic (p200300EC2F0BC8009042E8B149D34204.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:c800:9042:e8b1:49d3:4204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1B0561EC0C50;
+        Tue, 24 Mar 2020 17:28:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585067330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=J0usAIcUQuByh9u13ia7j74xd5hkNgsjvYQH1lBcdMY=;
+        b=f6dU36lr8wTOzCrnIeW3gHymiN7J4DkFoOqDrq6WbjeoHd5o/tuqFRn1yOlLWeyRcj/9u2
+        V+3RGQfO+7+lV/jip1I9Ckq0J3cNXJNyIwc+AZ2+40kQXOJ8nxj+RwONVL55Vk1vX850vQ
+        zolEWr6NZMuVIh6SoqonPuxGw8xl9eE=
+Date:   Tue, 24 Mar 2020 17:28:43 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        torvalds@linux-foundation.org, Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+Message-ID: <20200324162843.GE22931@zn.tnic>
+References: <202001131750.C1B8468@keescook>
+ <20200114165135.GK31032@zn.tnic>
+ <20200115002131.GA3258770@rani.riverdale.lan>
+ <20200115122458.GB20975@zn.tnic>
+ <20200316160259.GN26126@zn.tnic>
+ <20200323204454.GA2611336@zx2c4.com>
+ <202003231350.7D35351@keescook>
+ <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+ <20200324091437.GB22931@zn.tnic>
+ <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200324141722.21308-1-ap420073@gmail.com> <20200324154449.GC2513347@kroah.com>
-In-Reply-To: <20200324154449.GC2513347@kroah.com>
-From:   Taehee Yoo <ap420073@gmail.com>
-Date:   Wed, 25 Mar 2020 01:28:18 +0900
-Message-ID: <CAMArcTVhqxgZ1X+TgruDSGPEXbZS0M86h6y-4WAB8z8OOSgLzg@mail.gmail.com>
-Subject: Re: [PATCH RESEND net 1/3] class: add class_find_and_get_file_ns()
- helper function
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, rafael@kernel.org,
-        j.vosburgh@gmail.com, vfalico@gmail.com,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, mitch.a.williams@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 at 00:44, Greg KH <gregkh@linuxfoundation.org> wrote:
->
+On Tue, Mar 24, 2020 at 10:22:53AM -0600, Jason A. Donenfeld wrote:
+> Both Kees and I were pretty positive yesterday about getting this done
+> in 5.7, now.
 
-Hi Greg,
-Thank you for the review!
+Are you or Kees going to deal with any fallout from upping the binutils
+version, rushed in in the last week before the merge window?
 
-> On Tue, Mar 24, 2020 at 02:17:22PM +0000, Taehee Yoo wrote:
-> > The new helper function is to find and get a class file.
-> > This function is useful for checking whether the class file is existing
-> > or not. This function will be used by networking stack to
-> > check "/sys/class/net/*" file.
-> >
-> > Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-> > Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
-> > Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-> > ---
-> >  drivers/base/class.c         | 12 ++++++++++++
-> >  include/linux/device/class.h |  4 +++-
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/base/class.c b/drivers/base/class.c
-> > index bcd410e6d70a..dedf41f32f0d 100644
-> > --- a/drivers/base/class.c
-> > +++ b/drivers/base/class.c
-> > @@ -105,6 +105,17 @@ void class_remove_file_ns(struct class *cls, const struct class_attribute *attr,
-> >               sysfs_remove_file_ns(&cls->p->subsys.kobj, &attr->attr, ns);
-> >  }
-> >
-> > +struct kernfs_node *class_find_and_get_file_ns(struct class *cls,
-> > +                                            const char *name,
-> > +                                            const void *ns)
-> > +{
-> > +     struct kernfs_node *kn = NULL;
-> > +
-> > +     if (cls)
-> > +             kn = kernfs_find_and_get_ns(cls->p->subsys.kobj.sd, name, ns);
-> > +     return kn;
-> > +}
-> > +
->
-> You can put the EXPORT_SYMBOL_GPL() under here.
->
+Because I sure as hell am not. *Especially* if there's no big difference
+when it goes in.
 
-Okay, I will change this.
+-- 
+Regards/Gruss,
+    Boris.
 
-> And can you document what this function actually is in some kerneldoc?
->
-
-Thanks, I will add some kernel-doc comment.
-
-> But, returning a kernfs_node from a driver core is _REALLY_ odd.  Why do
-> you need this and who cares about kernfs here?
->
-
-I fully agree with that.
-My previous version of this function was here:
-
-bool class_has_file_ns(struct class *cls, const char *name,
-                       const void *ns)
-{
-        struct kernfs_node *kn = NULL;
-
-        if (cls) {
-                kn = kernfs_find_and_get_ns(cls->p->subsys.kobj.sd, name, ns);
-                if (kn) {
-                        kernfs_put(kn);
-                        return true;
-                }
-        }
-        return false;
-}
-
-I wanted this function could be used in general cases.
-But I thought this function couldn't be used in general cases.
-So, I made class_find_and_get_file_ns() but I couldn't find
-a more appropriate return type.
-I think I'd rather to use class_has_file_ns() instead of
-class_find_and_get_file_ns() because of an awkward return type.
-How do you think about it?
-
-> thanks,
->
-> greg k-h
-
-Thanks a lot,
-Taehee Yoo
+https://people.kernel.org/tglx/notes-about-netiquette
