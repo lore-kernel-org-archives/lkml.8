@@ -2,78 +2,97 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6AFC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5E2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8A7208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECCE2208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:27:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585067241;
+	bh=OvenVnHl0wduNQ7fLdM6lGKydIJWaN8/+ujyCQPdt68=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Aoy6p/CDTSbBTDvbHKWxIR6TCAonja1hH9GIBaK/+akR/BytUg9eftmh7LWwG4ghZ
+	 NWdiUHG9zuEtL1tP17RM+EQlTinzIkfNavU+eTNkFKm8Yq4VFu7FZSEz9t3walcL7R
+	 0zuRbDqJ40LKcxs61TRzHEdPDKXhc/c0meMv5Ma0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbgCXQ1P (ORCPT
+        id S1729019AbgCXQ1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:27:15 -0400
-Received: from foss.arm.com ([217.140.110.172]:37914 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 12:27:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728796AbgCXQ0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:26:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 637081FB;
-        Tue, 24 Mar 2020 09:26:48 -0700 (PDT)
-Received: from [192.168.3.111] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3BCEC3F52E;
-        Tue, 24 Mar 2020 09:26:47 -0700 (PDT)
-Subject: Re: [PATCH] net: PHY: bcm-unimac: Fix clock handling
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-References: <20200324161010.81107-1-andre.przywara@arm.com>
- <20200324161739.GE14512@lunn.ch>
-From:   =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara@arm.com>
-Organization: ARM Ltd.
-Message-ID: <5852f0e7-aea8-7af8-3a88-5e4fcdc6e5d4@arm.com>
-Date:   Tue, 24 Mar 2020 16:26:19 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728796AbgCXQ1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:27:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A90F20788;
+        Tue, 24 Mar 2020 16:27:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585067236;
+        bh=OvenVnHl0wduNQ7fLdM6lGKydIJWaN8/+ujyCQPdt68=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GG3F8Z3DamEsezlqe5uUwSYKhHoSBCsOH1CvReBCyrJbdVmzoBSEaoPv/egxHTmqw
+         u4L57AFmtNusYvewOS2xMoZfz66EPnA9ADi25j1dMOKR7so8/uyDD8dVvPn0VitWNE
+         ItM72v4be6Kah5eRtkAqfyO66ZXiUl5G+bnYHRHM=
+Date:   Tue, 24 Mar 2020 17:27:14 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: Re: [RFC PATCH 01/21] list: Remove hlist_unhashed_lockless()
+Message-ID: <20200324162714.GB2518046@kroah.com>
+References: <20200324153643.15527-1-will@kernel.org>
+ <20200324153643.15527-2-will@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200324161739.GE14512@lunn.ch>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324153643.15527-2-will@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/03/2020 16:17, Andrew Lunn wrote:
-
-Hi,
-
-> On Tue, Mar 24, 2020 at 04:10:10PM +0000, Andre Przywara wrote:
->> The DT binding for this PHY describes an *optional* clock property.
->> Due to a bug in the error handling logic, we are actually ignoring this
->> clock *all* of the time so far.
->>
->> Fix this by using devm_clk_get_optional() to handle this clock properly.
->>
->> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+On Tue, Mar 24, 2020 at 03:36:23PM +0000, Will Deacon wrote:
+> Commit c54a2744497d ("list: Add hlist_unhashed_lockless()") added a
+> "lockless" variant of hlist_unhashed() that uses READ_ONCE() to access
+> the 'pprev' pointer of the 'hlist_node', the intention being that this
+> could be used by 'timer_pending()' to silence a KCSAN warning. As well
+> as forgetting to add the caller, the patch also sprinkles
+> {READ,WRITE}_ONCE() invocations over the standard (i.e. non-RCU) hlist
+> code, which is undesirable for a number of reasons:
 > 
-> Hi Andre
+>   1. It gives the misleading impression that the non-RCU hlist code is
+>      in some way lock-free (despite the notable absence of any memory
+>      barriers!) and silences KCSAN in such cases.
 > 
-> Do you have a fixes: tag for this?
+>   2. It unnecessarily penalises code generation for non-RCU hlist users
+> 
+>   3. It makes it difficult to introduce list integrity checks because
+>      of the possibility of concurrent callers.
+> 
+> Retain the {READ,WRITE}_ONCE() invocations for the RCU hlist code, but
+> remove them from the non-RCU implementation. Remove the unused
+> 'hlist_unhashed_lockless()' function entirely and add the READ_ONCE()
+> to hlist_unhashed(), as we do already for hlist_empty() already.
+> 
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Paul E. McKenney <paulmck@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  include/linux/list.h | 33 ++++++++++-----------------------
+>  1 file changed, 10 insertions(+), 23 deletions(-)
 
-Should be:
-Fixes: b78ac6ecd1b6b ("net: phy: mdio-bcm-unimac: Allow configuring MDIO
-clock divider")
-
-> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-Thanks for that!
-
-Cheers,
-Andre
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
