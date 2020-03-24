@@ -2,99 +2,126 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5037AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B91AC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF3820774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:15:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 358D72073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585066556;
-	bh=fA1JJKMofWJEx5DohIMNQeXpdvtKHYgV6SRUsJoXH6I=;
+	s=default; t=1585066575;
+	bh=dQKgVw4hAX0j2HElfhg/yzz94isJ0lFLLL7X7uiRrIA=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=JwxIsGft0pY4SbicHtlyVqHV4Iqrew60oXJHQsaN61Wa67SIA1iPRRFrnGGHFLbQA
-	 kE548DKw5IHBVMfsRHG0va298gxOOcY7e1S9QriAnsrYUKaKvg9rCMhvUIJ1auB/Jb
-	 H95nnZFiOFytS6d7RT6xMDuLp96fKsHG6Gr9bG/4=
+	b=dgcKIbX5PWOaWzOz9zQ4qSFPaLKoC5g/nlC+Os0F0F36rdjfI+JktHdez3m8rd6r8
+	 dfwzgNc0UrHHJulTJbCvL/CUAMVLZFG/7Enomvg2vXsrFaNjJbSni27xk1dKppiysC
+	 TUhKBC9SKufeXfvMt1Jn4ALDryaksqUNm/L+2//s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgCXQPz (ORCPT
+        id S1728571AbgCXQQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:15:55 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:42697 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgCXQPy (ORCPT
+        Tue, 24 Mar 2020 12:16:14 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:61249 "EHLO
+        conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgCXQQN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:15:54 -0400
+        Tue, 24 Mar 2020 12:16:13 -0400
 Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 02OGFI4f014851;
-        Wed, 25 Mar 2020 01:15:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 02OGFI4f014851
+        by conuserg-11.nifty.com with ESMTP id 02OGFgQZ015903;
+        Wed, 25 Mar 2020 01:15:43 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 02OGFgQZ015903
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585066519;
-        bh=iERwpFIUsMeWrqbzCfka8i/KOvDD+eMi426uZLpMpHs=;
+        s=dec2015msa; t=1585066543;
+        bh=SHxHi5gK5rZIIYUYvBbvkIHDsBapKZs/OlS5DzaqpoA=;
         h=From:To:Cc:Subject:Date:From;
-        b=HXOoZPB4Hwl4LYPMuSbWnvmygN12M5DXYXftprC3eIeSln7gRtCZvphhqcjYmhId/
-         xVAFwaTJkW1Xg536IDeBxSf54E5fj+SGrgnTaQLUvqGIAng52OBY9HYgw1HcSY5aNv
-         jvB3y1Is+Sopc753kBeDlig5tJiY3fvZZjZnKO0mlcbUy5S10OtXwR2H5yX6dzam8i
-         aEg0V8TFeH7F9ylI5yo4UtybZ9lBmF4xcUAXrsULI/Bzqg0m3MICo5pmHcJpMgmjIT
-         SOzgRVBqelRi4jitECkgl/NtCL30nFx/mzWc1TQhBuTqr3Hb7Fjg0eoCPZt0qa1hi+
-         eIpNkGE0PkvPw==
+        b=j1MkgGRCnXStt4YVeJwYA4MBLvZJzYSi6RfmjZOwXGvsag0kl1/UlVDf4d6EJfkw1
+         4teW3iULx4yOqJJdzvXZTwfrpHmDPDt+DYHYqtqVALycfUsXIWf+fNTXapALPdOVCp
+         JdPkcGNtUj0pLJ/WbzYe0NP4B2obIwmFV7wmgJwot60weiwWjMRRQg86zTxECzMGrW
+         TEuyIJT8dvTer+EEPgcvK4nrsBB+t86pPejB24hrkZ+HwJFGkvbJeUcamGe008+iud
+         eBP5v8vWjOnEt+4Rx6/umhTtuQOG6SD2UFU7bqvASOx/x4bE5s/Dqp0ndll+0OzSP3
+         VWZZkPfRT17Lg==
 X-Nifty-SrcIP: [126.93.102.113]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
 Cc:     "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH] kbuild: remove AS variable
-Date:   Wed, 25 Mar 2020 01:15:07 +0900
-Message-Id: <20200324161507.7414-1-masahiroy@kernel.org>
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for rebuilding firmware
+Date:   Wed, 25 Mar 2020 01:15:37 +0900
+Message-Id: <20200324161539.7538-1-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As commit 5ef872636ca7 ("kbuild: get rid of misleading $(AS) from
-documents") noted, we rarely use $(AS) in the kernel build.
+As far as I understood from the Kconfig help text, this build rule is
+used to rebuild the driver firmware, which runs on the QUICC, m68k-based
+Motorola 68360.
 
-Now that the only/last user of $(AS) in drivers/net/wan/Makefile was
-converted to $(CC), $(AS) is no longer used in the build process.
+The firmware source, wanxlfw.S, is currently compiled by the combo of
+$(CPP) and $(AS68K). This is not what we usually do for compiling *.S
+files. In fact, this is the only user of $(AS) in the kernel build.
 
-You can still pass in AS=clang, which is just a switch to turn on
-the LLVM integrated assembler.
+Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
+PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+Instead of combining $(CPP) and (AS) from different tool sets, using
+single $(CC68K) seems simpler, and saner.
+
+After this commit, the firmware rebuild will require cc68k instead of
+as68k. I do not know how many people care about this, though.
+
+I do not have cc68k/ld68k in hand, but I was able to build it by using
+the kernel.org m68k toolchain. [1]
+
+[1] https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/9.2.0/x86_64-gcc-9.2.0-nolibc-m68k-linux.tar.xz
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
 
- Makefile | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/wan/Kconfig  | 2 +-
+ drivers/net/wan/Makefile | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 16d8271192d1..339e8c51a10b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -405,7 +405,6 @@ KBUILD_HOSTLDFLAGS  := $(HOST_LFS_LDFLAGS) $(HOSTLDFLAGS)
- KBUILD_HOSTLDLIBS   := $(HOST_LFS_LIBS) $(HOSTLDLIBS)
+diff --git a/drivers/net/wan/Kconfig b/drivers/net/wan/Kconfig
+index 4530840e15ef..0f35ad097744 100644
+--- a/drivers/net/wan/Kconfig
++++ b/drivers/net/wan/Kconfig
+@@ -200,7 +200,7 @@ config WANXL_BUILD_FIRMWARE
+ 	depends on WANXL && !PREVENT_FIRMWARE_BUILD
+ 	help
+ 	  Allows you to rebuild firmware run by the QUICC processor.
+-	  It requires as68k, ld68k and hexdump programs.
++	  It requires cc68k, ld68k and hexdump programs.
  
- # Make variables (CC, etc...)
--AS		= $(CROSS_COMPILE)as
- LD		= $(CROSS_COMPILE)ld
- CC		= $(CROSS_COMPILE)gcc
- CPP		= $(CC) -E
-@@ -472,7 +471,7 @@ KBUILD_LDFLAGS :=
- GCC_PLUGINS_CFLAGS :=
- CLANG_FLAGS :=
+ 	  You should never need this option, say N.
  
--export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE AS LD CC
-+export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
- export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
- export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
- export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+diff --git a/drivers/net/wan/Makefile b/drivers/net/wan/Makefile
+index 701f5d2fe3b6..d21a99711070 100644
+--- a/drivers/net/wan/Makefile
++++ b/drivers/net/wan/Makefile
+@@ -40,16 +40,16 @@ $(obj)/wanxl.o:	$(obj)/wanxlfw.inc
+ 
+ ifeq ($(CONFIG_WANXL_BUILD_FIRMWARE),y)
+ ifeq ($(ARCH),m68k)
+-  AS68K = $(AS)
++  CC68K = $(CC)
+   LD68K = $(LD)
+ else
+-  AS68K = as68k
++  CC68K = cc68k
+   LD68K = ld68k
+ endif
+ 
+ quiet_cmd_build_wanxlfw = BLD FW  $@
+       cmd_build_wanxlfw = \
+-	$(CPP) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi $< | $(AS68K) -m68360 -o $(obj)/wanxlfw.o; \
++	$(CC68K) -D__ASSEMBLY__ -Wp,-MD,$(depfile) -I$(srctree)/include/uapi -c -o $(obj)/wanxlfw.o $<; \
+ 	$(LD68K) --oformat binary -Ttext 0x1000 $(obj)/wanxlfw.o -o $(obj)/wanxlfw.bin; \
+ 	hexdump -ve '"\n" 16/1 "0x%02X,"' $(obj)/wanxlfw.bin | sed 's/0x  ,//g;1s/^/static const u8 firmware[]={/;$$s/,$$/\n};\n/' >$(obj)/wanxlfw.inc; \
+ 	rm -f $(obj)/wanxlfw.bin $(obj)/wanxlfw.o
 -- 
 2.17.1
 
