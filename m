@@ -6,45 +6,41 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 510D2C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B46C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 321D72073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:47:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 611AD2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:47:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgCXNra (ORCPT
+        id S1728921AbgCXNrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:47:30 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:1138 "EHLO
+        Tue, 24 Mar 2020 09:47:36 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:7538 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728987AbgCXNr2 (ORCPT
+        by vger.kernel.org with ESMTP id S1727323AbgCXNre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:47:28 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ODj8AR027847;
-        Tue, 24 Mar 2020 09:47:27 -0400
+        Tue, 24 Mar 2020 09:47:34 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ODfkPZ013597;
+        Tue, 24 Mar 2020 09:47:32 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs626ak-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu59qtw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 09:47:27 -0400
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02ODlQnM053383
+        Tue, 24 Mar 2020 09:47:32 -0400
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02ODlU1h053407
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 24 Mar 2020 09:47:26 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+        Tue, 24 Mar 2020 09:47:31 -0400
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 24 Mar 2020 09:47:21 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 24 Mar 2020 09:47:20 -0400
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Tue, 24 Mar 2020 09:47:20 -0400
+ 15.1.1779.2; Tue, 24 Mar 2020 06:47:29 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 24 Mar 2020 06:47:29 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02ODlDnk002365;
-        Tue, 24 Mar 2020 09:47:17 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02ODlDno002365;
+        Tue, 24 Mar 2020 09:47:26 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <devicetree@vger.kernel.org>
@@ -53,9 +49,9 @@ CC:     <jic23@kernel.org>, <robh+dt@kernel.org>, <Laszlo.Nagy@analog.com>,
         <Istvan.Csomortani@analog.com>, <Adrian.Costina@analog.com>,
         <Dragos.Bogdan@analog.com>,
         Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v13 2/8] include: fpga: adi-axi-common.h: add version helper macros
-Date:   Tue, 24 Mar 2020 15:46:30 +0200
-Message-ID: <20200324134636.64643-3-alexandru.ardelean@analog.com>
+Subject: [PATCH v13 6/8] dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+Date:   Tue, 24 Mar 2020 15:46:34 +0200
+Message-ID: <20200324134636.64643-7-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200324134636.64643-1-alexandru.ardelean@analog.com>
 References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
@@ -64,40 +60,93 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=961
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240074
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003240074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The format for all ADI AXI IP cores is the same.
-i.e. 'major.minor.patch'.
+This change adds the bindings documentation for the AXI ADC driver.
 
-This patch adds the helper macros to be re-used in ADI AXI drivers.
-
-Acked-by: Moritz Fischer <mdf@kernel.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- include/linux/fpga/adi-axi-common.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/iio/adc/adi,axi-adc.yaml         | 62 +++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 
-diff --git a/include/linux/fpga/adi-axi-common.h b/include/linux/fpga/adi-axi-common.h
-index ebd4e07ae3d8..141ac3f251e6 100644
---- a/include/linux/fpga/adi-axi-common.h
-+++ b/include/linux/fpga/adi-axi-common.h
-@@ -16,4 +16,8 @@
- #define ADI_AXI_PCORE_VER(major, minor, patch)	\
- 	(((major) << 16) | ((minor) << 8) | (patch))
- 
-+#define ADI_AXI_PCORE_VER_MAJOR(version)	(((version) >> 16) & 0xff)
-+#define ADI_AXI_PCORE_VER_MINOR(version)	(((version) >> 8) & 0xff)
-+#define ADI_AXI_PCORE_VER_PATCH(version)	((version) & 0xff)
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+new file mode 100644
+index 000000000000..0924b2b4972b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+@@ -0,0 +1,62 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,axi-adc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- #endif /* ADI_AXI_COMMON_H_ */
++title: Analog Devices AXI ADC IP core
++
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
++
++description: |
++  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
++  with a high speed serial (JESD204B/C) or source synchronous parallel
++  interface (LVDS/CMOS).
++  Usually, some other interface type (i.e SPI) is used as a control
++  interface for the actual ADC, while this IP core will interface
++  to the data-lines of the ADC and handle the streaming of data into
++  memory via DMA.
++
++  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
++
++properties:
++  compatible:
++    enum:
++      - adi,axi-adc-10.0.a
++
++  reg:
++    maxItems: 1
++
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    items:
++      - const: rx
++
++  adi,adc-dev:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      A reference to a the actual ADC to which this FPGA ADC interfaces to.
++
++required:
++  - compatible
++  - dmas
++  - reg
++  - adi,adc-dev
++
++additionalProperties: false
++
++examples:
++  - |
++    axi-adc@44a00000 {
++          compatible = "adi,axi-adc-10.0.a";
++          reg = <0x44a00000 0x10000>;
++          dmas = <&rx_dma 0>;
++          dma-names = "rx";
++
++          adi,adc-dev = <&spi_adc>;
++    };
++...
 -- 
 2.17.1
 
