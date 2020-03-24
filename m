@@ -2,143 +2,107 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C750BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB209C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:13:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98973208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mJi3B5I5"
+	by mail.kernel.org (Postfix) with ESMTP id A0E09208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:13:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgCXQNU (ORCPT
+        id S1728269AbgCXQNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:13:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51008 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728300AbgCXQLg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:11:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=jwgEEOd4ZUX1emQHXqcmhMhJCIdkOarwSHLwmdJ45iw=; b=mJi3B5I5omvfe4n7tRyObhXRDH
-        kqYZsSFXq7L4vyfaVYVeZixhTvnIoCxpykUblWQp/qmjMMhpaIjsFRPmg7Au7MGNSLJOdUjEaKJjD
-        bpBl5nG6/Hl/0Eg+C3Jk2Q0RWAhtDytctE3U+gciteRsIGmkE7fA+FL3TF+PdFahpdObTHzibA2Mh
-        OgTfJ6qU3nMPB/I9Iysb4QuBvGuAkjyWph2u0bmrsMET+Gr4Q7BVynKNI2aULAu1GwQYgHsQiQQtf
-        cSSI7hctEws5dtl38zRor4cQpT58OLlf6Ajw1tXm5ZzILQyQ5jDezzCrLaF3agFEs+5rxukGwuGuf
-        o9l9U2DA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGm9M-0000Bu-0F; Tue, 24 Mar 2020 16:11:32 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 48A073070FF;
-        Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 34B2929A490FA; Tue, 24 Mar 2020 17:11:28 +0100 (CET)
-Message-Id: <20200324160924.440174280@infradead.org>
-User-Agent: quilt/0.65
-Date:   Tue, 24 Mar 2020 16:31:22 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v3 09/26] objtool: Optimize find_section_by_name()
-References: <20200324153113.098167666@infradead.org>
+        Tue, 24 Mar 2020 12:13:52 -0400
+Received: from mga18.intel.com ([134.134.136.126]:58638 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727681AbgCXQNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:13:52 -0400
+IronPort-SDR: GKb0EOgvfEjWC88/8TiHNeaUZSlGp7SN06JnaH7RcCAywxmQjb3RL/MRmlNzthNknsvdtj0GMm
+ raX7HMSzG3bA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 09:13:51 -0700
+IronPort-SDR: W8SciJsflDt7I1KWp22n6eTJA7U0Ua/WogD7R+qVo6jLLLwyy64NWdjac5turEh7gfGs2gJwPy
+ ixWURD/+G7gA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
+   d="scan'208";a="393330458"
+Received: from rjwysock-mobl1.ger.corp.intel.com (HELO [10.249.142.176]) ([10.249.142.176])
+  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 09:13:50 -0700
+Subject: Re: [PATCH][next] pnpbios: pnpbios.h: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+References: <20200320231827.GA21969@embeddedor.com>
+From:   "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Organization: Intel Technology Poland Sp. z o. o., KRS 101882, ul. Slowackiego
+ 173, 80-298 Gdansk
+Message-ID: <bd76497e-7d37-a38b-b12c-d6069714f2f0@intel.com>
+Date:   Tue, 24 Mar 2020 17:13:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20200320231827.GA21969@embeddedor.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to avoid yet another linear search of (20k) sections, add a
-name based hash.
+On 3/21/2020 12:18 AM, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>          int stuff;
+>          struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
+>   drivers/pnp/pnpbios/pnpbios.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/pnp/pnpbios/pnpbios.h b/drivers/pnp/pnpbios/pnpbios.h
+> index 37acb8378f39..2ce739ff9c1a 100644
+> --- a/drivers/pnp/pnpbios/pnpbios.h
+> +++ b/drivers/pnp/pnpbios/pnpbios.h
+> @@ -107,7 +107,7 @@ struct pnp_bios_node {
+>   	__u32 eisa_id;
+>   	__u8 type_code[3];
+>   	__u16 flags;
+> -	__u8 data[0];
+> +	__u8 data[];
+>   };
+>   #pragma pack()
+>   
 
-This reduces objtool runtime on vmlinux.o by some 10s to around 35s.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/elf.c |   10 +++++++++-
- tools/objtool/elf.h |    3 +++
- 2 files changed, 12 insertions(+), 1 deletion(-)
-
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -22,11 +22,16 @@
- 
- #define MAX_NAME_LEN 128
- 
-+static inline u32 str_hash(const char *str)
-+{
-+	return jhash(str, strlen(str), 0);
-+}
-+
- struct section *find_section_by_name(struct elf *elf, const char *name)
- {
- 	struct section *sec;
- 
--	list_for_each_entry(sec, &elf->sections, list)
-+	hash_for_each_possible(elf->section_name_hash, sec, name_hash, str_hash(name))
- 		if (!strcmp(sec->name, name))
- 			return sec;
- 
-@@ -202,6 +207,7 @@ static int read_sections(struct elf *elf
- 
- 		list_add_tail(&sec->list, &elf->sections);
- 		hash_add(elf->section_hash, &sec->hash, sec->idx);
-+		hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
- 	}
- 
- 	if (stats)
-@@ -441,6 +447,7 @@ struct elf *elf_read(const char *name, i
- 
- 	hash_init(elf->symbol_hash);
- 	hash_init(elf->section_hash);
-+	hash_init(elf->section_name_hash);
- 	INIT_LIST_HEAD(&elf->sections);
- 
- 	elf->fd = open(name, flags);
-@@ -581,6 +588,7 @@ struct section *elf_create_section(struc
- 
- 	list_add_tail(&sec->list, &elf->sections);
- 	hash_add(elf->section_hash, &sec->hash, sec->idx);
-+	hash_add(elf->section_name_hash, &sec->name_hash, str_hash(sec->name));
- 
- 	return sec;
- }
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -10,6 +10,7 @@
- #include <gelf.h>
- #include <linux/list.h>
- #include <linux/hashtable.h>
-+#include <linux/jhash.h>
- 
- #ifdef LIBELF_USE_DEPRECATED
- # define elf_getshdrnum    elf_getshnum
-@@ -26,6 +27,7 @@
- struct section {
- 	struct list_head list;
- 	struct hlist_node hash;
-+	struct hlist_node name_hash;
- 	GElf_Shdr sh;
- 	struct list_head symbol_list;
- 	struct list_head rela_list;
-@@ -73,6 +75,7 @@ struct elf {
- 	struct list_head sections;
- 	DECLARE_HASHTABLE(symbol_hash, 20);
- 	DECLARE_HASHTABLE(section_hash, 16);
-+	DECLARE_HASHTABLE(section_name_hash, 16);
- };
- 
- 
+Please resend this with a CC to linux-acpi, thanks!
 
 
