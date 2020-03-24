@@ -2,241 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DCAC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C3FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7490F208D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055993;
-	bh=No4x+/sF8HH0OSbHMeU9yYgyMCMiaiSJMmI6WFonRjY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zuWcoWPmci1rojHVsw/uWT4TpvxUDOhoKmXHvU52ryKNI9pxqNlMnAg4UIHpjqTvN
-	 SeIMi2mUisVSyvy/ANsLquJIJmwxMbev2GIWQK4Xnj1eCmhTo9uDpBcIAz9FeWcKSh
-	 2kvMswNVEKcbFCi/n7yiSkIkT1HmAbBQW4sNDEG0=
+	by mail.kernel.org (Postfix) with ESMTP id 4D4C020870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mI9A5jKv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgCXNTw (ORCPT
+        id S1728881AbgCXNT5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40698 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728794AbgCXNTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B079208D5;
-        Tue, 24 Mar 2020 13:19:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055988;
-        bh=No4x+/sF8HH0OSbHMeU9yYgyMCMiaiSJMmI6WFonRjY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLle3PQvZECCkY9P4PTvmwtIAnKqRqhOkvC0nI9cf/odR7EEcU61xPE0yLPWQQCKV
-         im89IrSZxFDo/RPp3VZMfICnDUMwNcsgVpGkYAsQOkKSBq2GGMTcEMHgj6TUz4hRNQ
-         x37z4qt4i69qWoaCxRCgVkZCdUlhJVkM15jptS7k=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        PUVICHAKRAVARTHY RAMACHANDRAN <puvichakravarthy@in.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Nathan Lynch <nathanl@linux.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 091/102] mm, slub: prevent kmalloc_node crashes and memory leaks
-Date:   Tue, 24 Mar 2020 14:11:23 +0100
-Message-Id: <20200324130816.097967203@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
-References: <20200324130806.544601211@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 24 Mar 2020 09:19:57 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39623 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728371AbgCXNT4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:56 -0400
+Received: by mail-pg1-f196.google.com with SMTP id b22so9007068pgb.6;
+        Tue, 24 Mar 2020 06:19:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ebjznMFl+ZgcgqKdNPHSKXfiEzop411av9HdLnE7IFw=;
+        b=mI9A5jKvJ49z6cnf6rYFl/QiWD6C73VCnla6N1XyjYKihxpdNiMLAAsjzH74Y84JXP
+         Ven9+GZdf2D4CYyd76UJ7zMRSlkZRkO8UbrUGb+7SncEBpsaQm3WqI+zMS90grwOeviH
+         K1ftv2hXar1VdtdykACxyGGmByCJdmOzX1z/CNSj+P80nLIHgb3874SQFe8qATPQPWOJ
+         KXg8H3hcW/UbwEueVYBxeUChfXyJpZaRlCC9cvgTUE9jQPWaWCb+WNjeprPjpmk52E5T
+         CuDlq79874IjwPbKF8cAysJQvU3hUKuK5MRMnbW2PA7Lri8l4mXKxUDDb1EwDlIAhstS
+         omPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ebjznMFl+ZgcgqKdNPHSKXfiEzop411av9HdLnE7IFw=;
+        b=J1DAdQDUnEnx/c/E4n83RiodQj+CArp9aYMXm+dqpuzLYeHmc/26s6F/EURywIFog6
+         OpYji4w2XwSJL5KoQXuJVxSntndYkw3TLNUCyLi8kZpyOG56iBk4V4BtQhwYpNm1lNvq
+         l8YYyuQTHxMA3Wt2CYINUm3YwYGTBYJEsr+URctyeBjSiwDR/hwu7oU3Mm2GUAEObgX2
+         rBoEUSvmvat2U7BYTtneUFPE8vC/3DGc2Y0qCPQBPBdca9Na4d1ch4u/156nLa4XbXx6
+         VmH3naeMY+abovh49viF+RZ3tIsKPrK9qTJUbf+RoQ4PN+Crnhe8FDL5LAwf71KVSYTT
+         PWvg==
+X-Gm-Message-State: ANhLgQ1T4MkHXMtxm3fxEw2oEVnM/xi84eO9xLb3wUqZcX/igrTdghcq
+        VYrhV+YaUjyll0dw6THfMZc=
+X-Google-Smtp-Source: ADFU+vt78KeM+4zSqcuPkFBk5K8J/LDNqnffc5v9LZepi0Dya4W0SUNZ27zStfMdWdXzbBlSAh08ww==
+X-Received: by 2002:a63:450b:: with SMTP id s11mr27130174pga.45.1585055994782;
+        Tue, 24 Mar 2020 06:19:54 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id t11sm2320636pjo.21.2020.03.24.06.19.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 06:19:54 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 06:19:52 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     "Y.b. Lu" <yangbo.lu@nxp.com>
+Cc:     Vladimir Oltean <olteanv@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Message-ID: <20200324131952.GB18149@localhost>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-7-yangbo.lu@nxp.com>
+ <CA+h21hoBwDuWCFbO70u1FAERB8zc5F+H5URBkn=2_bpRRRz1oA@mail.gmail.com>
+ <AM7PR04MB6885A8C98CA60FC435024647F8F10@AM7PR04MB6885.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM7PR04MB6885A8C98CA60FC435024647F8F10@AM7PR04MB6885.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+On Tue, Mar 24, 2020 at 05:21:27AM +0000, Y.b. Lu wrote:
+> In my one previous patch, I was suggested to implement PPS with programmable pin periodic clock function.
+> But I didn’t find how should PPS be implemented with periodic clock function after checking ptp driver.
+> https://patchwork.ozlabs.org/patch/1215464/
 
-commit 0715e6c516f106ed553828a671d30ad9a3431536 upstream.
+Yes, for generating a 1-PPS output waveform, users call ioctl
+PTP_CLK_REQ_PEROUT with ptp_perout_request.period={1,0}.
 
-Sachin reports [1] a crash in SLUB __slab_alloc():
-
-  BUG: Kernel NULL pointer dereference on read at 0x000073b0
-  Faulting instruction address: 0xc0000000003d55f4
-  Oops: Kernel access of bad area, sig: 11 [#1]
-  LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-  Modules linked in:
-  CPU: 19 PID: 1 Comm: systemd Not tainted 5.6.0-rc2-next-20200218-autotest #1
-  NIP:  c0000000003d55f4 LR: c0000000003d5b94 CTR: 0000000000000000
-  REGS: c0000008b37836d0 TRAP: 0300   Not tainted  (5.6.0-rc2-next-20200218-autotest)
-  MSR:  8000000000009033 <SF,EE,ME,IR,DR,RI,LE>  CR: 24004844  XER: 00000000
-  CFAR: c00000000000dec4 DAR: 00000000000073b0 DSISR: 40000000 IRQMASK: 1
-  GPR00: c0000000003d5b94 c0000008b3783960 c00000000155d400 c0000008b301f500
-  GPR04: 0000000000000dc0 0000000000000002 c0000000003443d8 c0000008bb398620
-  GPR08: 00000008ba2f0000 0000000000000001 0000000000000000 0000000000000000
-  GPR12: 0000000024004844 c00000001ec52a00 0000000000000000 0000000000000000
-  GPR16: c0000008a1b20048 c000000001595898 c000000001750c18 0000000000000002
-  GPR20: c000000001750c28 c000000001624470 0000000fffffffe0 5deadbeef0000122
-  GPR24: 0000000000000001 0000000000000dc0 0000000000000002 c0000000003443d8
-  GPR28: c0000008b301f500 c0000008bb398620 0000000000000000 c00c000002287180
-  NIP ___slab_alloc+0x1f4/0x760
-  LR __slab_alloc+0x34/0x60
-  Call Trace:
-    ___slab_alloc+0x334/0x760 (unreliable)
-    __slab_alloc+0x34/0x60
-    __kmalloc_node+0x110/0x490
-    kvmalloc_node+0x58/0x110
-    mem_cgroup_css_online+0x108/0x270
-    online_css+0x48/0xd0
-    cgroup_apply_control_enable+0x2ec/0x4d0
-    cgroup_mkdir+0x228/0x5f0
-    kernfs_iop_mkdir+0x90/0xf0
-    vfs_mkdir+0x110/0x230
-    do_mkdirat+0xb0/0x1a0
-    system_call+0x5c/0x68
-
-This is a PowerPC platform with following NUMA topology:
-
-  available: 2 nodes (0-1)
-  node 0 cpus:
-  node 0 size: 0 MB
-  node 0 free: 0 MB
-  node 1 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
-  node 1 size: 35247 MB
-  node 1 free: 30907 MB
-  node distances:
-  node   0   1
-    0:  10  40
-    1:  40  10
-
-  possible numa nodes: 0-31
-
-This only happens with a mmotm patch "mm/memcontrol.c: allocate
-shrinker_map on appropriate NUMA node" [2] which effectively calls
-kmalloc_node for each possible node.  SLUB however only allocates
-kmem_cache_node on online N_NORMAL_MEMORY nodes, and relies on
-node_to_mem_node to return such valid node for other nodes since commit
-a561ce00b09e ("slub: fall back to node_to_mem_node() node if allocating
-on memoryless node").  This is however not true in this configuration
-where the _node_numa_mem_ array is not initialized for nodes 0 and 2-31,
-thus it contains zeroes and get_partial() ends up accessing
-non-allocated kmem_cache_node.
-
-A related issue was reported by Bharata (originally by Ramachandran) [3]
-where a similar PowerPC configuration, but with mainline kernel without
-patch [2] ends up allocating large amounts of pages by kmalloc-1k
-kmalloc-512.  This seems to have the same underlying issue with
-node_to_mem_node() not behaving as expected, and might probably also
-lead to an infinite loop with CONFIG_SLUB_CPU_PARTIAL [4].
-
-This patch should fix both issues by not relying on node_to_mem_node()
-anymore and instead simply falling back to NUMA_NO_NODE, when
-kmalloc_node(node) is attempted for a node that's not online, or has no
-usable memory.  The "usable memory" condition is also changed from
-node_present_pages() to N_NORMAL_MEMORY node state, as that is exactly
-the condition that SLUB uses to allocate kmem_cache_node structures.
-The check in get_partial() is removed completely, as the checks in
-___slab_alloc() are now sufficient to prevent get_partial() being
-reached with an invalid node.
-
-[1] https://lore.kernel.org/linux-next/3381CD91-AB3D-4773-BA04-E7A072A63968@linux.vnet.ibm.com/
-[2] https://lore.kernel.org/linux-mm/fff0e636-4c36-ed10-281c-8cdb0687c839@virtuozzo.com/
-[3] https://lore.kernel.org/linux-mm/20200317092624.GB22538@in.ibm.com/
-[4] https://lore.kernel.org/linux-mm/088b5996-faae-8a56-ef9c-5b567125ae54@suse.cz/
-
-Fixes: a561ce00b09e ("slub: fall back to node_to_mem_node() node if allocating on memoryless node")
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Reported-by: PUVICHAKRAVARTHY RAMACHANDRAN <puvichakravarthy@in.ibm.com>
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Tested-by: Bharata B Rao <bharata@linux.ibm.com>
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Christopher Lameter <cl@linux.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20200320115533.9604-1-vbabka@suse.cz
-Debugged-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/slub.c |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
-
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1953,8 +1953,6 @@ static void *get_partial(struct kmem_cac
+If your device can't control the start time, then it can accept an
+unspecified time of ptp_perout_request.start={0,0}.
  
- 	if (node == NUMA_NO_NODE)
- 		searchnode = numa_mem_id();
--	else if (!node_present_pages(node))
--		searchnode = node_to_mem_node(node);
- 
- 	object = get_partial_node(s, get_node(s, searchnode), c, flags);
- 	if (object || node != NUMA_NO_NODE)
-@@ -2543,17 +2541,27 @@ static void *___slab_alloc(struct kmem_c
- 	struct page *page;
- 
- 	page = c->page;
--	if (!page)
-+	if (!page) {
-+		/*
-+		 * if the node is not online or has no normal memory, just
-+		 * ignore the node constraint
-+		 */
-+		if (unlikely(node != NUMA_NO_NODE &&
-+			     !node_state(node, N_NORMAL_MEMORY)))
-+			node = NUMA_NO_NODE;
- 		goto new_slab;
-+	}
- redo:
- 
- 	if (unlikely(!node_match(page, node))) {
--		int searchnode = node;
--
--		if (node != NUMA_NO_NODE && !node_present_pages(node))
--			searchnode = node_to_mem_node(node);
--
--		if (unlikely(!node_match(page, searchnode))) {
-+		/*
-+		 * same as above but node_match() being false already
-+		 * implies node != NUMA_NO_NODE
-+		 */
-+		if (!node_state(node, N_NORMAL_MEMORY)) {
-+			node = NUMA_NO_NODE;
-+			goto redo;
-+		} else {
- 			stat(s, ALLOC_NODE_MISMATCH);
- 			deactivate_slab(s, page, c->freelist, c);
- 			goto new_slab;
+> Vladimir talked with me, for the special PPS case, we may consider,
+> if (req.perout.period.sec ==1 && req.perout.period.nsec == 0) and configure WAVEFORM_LOW to be equal to req_perout.start.nsec.
+> 
+> Richard, do you think is it ok?
 
+Sound okay to me (but I don't know about WAVEFORM_LOW).
 
+> And another problem I am facing is, in .enable() callback (PTP_CLK_REQ_PEROUT request) I defined.
+>                 /*
+>                  * TODO: support disabling function
+>                  * When ptp_disable_pinfunc() is to disable function,
+>                  * it has already held pincfg_mux.
+>                  * However ptp_find_pin() in .enable() called also needs
+>                  * to hold pincfg_mux.
+>                  * This causes dead lock. So, just return for function
+>                  * disabling, and this needs fix-up.
+>                  */
+> Hope some suggestions here.
+
+See my reply to the patch.
+
+Thanks,
+Richard
