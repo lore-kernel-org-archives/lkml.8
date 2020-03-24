@@ -7,38 +7,41 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 357AAC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A09EDC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169422070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 859EF2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCXJMc (ORCPT
+        id S1727129AbgCXJLB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:12:32 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43742 "EHLO
+        Tue, 24 Mar 2020 05:11:01 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43736 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726845AbgCXJLC (ORCPT
+        with ESMTP id S1726565AbgCXJLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:11:02 -0400
+        Tue, 24 Mar 2020 05:11:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfaM-0007VV-R5; Tue, 24 Mar 2020 10:10:59 +0100
+        id 1jGfaI-0007TN-Mv; Tue, 24 Mar 2020 10:10:55 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E0B0E1C0481;
-        Tue, 24 Mar 2020 10:10:56 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:10:56 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4B6D61C0451;
+        Tue, 24 Mar 2020 10:10:53 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:10:52 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Introduce ASSERT_EXCLUSIVE_*() macros
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>,
-        Marco Elver <elver@google.com>, Ingo Molnar <mingo@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: locking/kcsan] kcsan, trace: Make KCSAN compatible with tracing
+Cc:     Qian Cai <cai@lca.pw>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504105659.28353.5875053583912976459.tip-bot2@tip-bot2>
+Message-ID: <158504105289.28353.4308896964049852742.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,103 +57,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     f97f713dc25714ac13f3b5abdeffce2da3f6fe70
-Gitweb:        https://git.kernel.org/tip/f97f713dc25714ac13f3b5abdeffce2da3f6fe70
+Commit-ID:     f5d2313bd3c540be405c4977a63840cd6d0167b5
+Gitweb:        https://git.kernel.org/tip/f5d2313bd3c540be405c4977a63840cd6d0167b5
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Thu, 06 Feb 2020 16:46:25 +01:00
+AuthorDate:    Fri, 14 Feb 2020 22:10:35 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 21 Mar 2020 09:42:59 +01:00
+CommitterDate: Sat, 21 Mar 2020 09:44:41 +01:00
 
-kcsan: Introduce ASSERT_EXCLUSIVE_*() macros
+kcsan, trace: Make KCSAN compatible with tracing
 
-Introduces ASSERT_EXCLUSIVE_WRITER() and ASSERT_EXCLUSIVE_ACCESS(), which
-may be used to assert properties of synchronization logic, where
-violation cannot be detected as a normal data race.
+Previously the system would lock up if ftrace was enabled together with
+KCSAN. This is due to recursion on reporting if the tracer code is
+instrumented with KCSAN.
 
-Examples of the reports that may be generated:
+To avoid this for all types of tracing, disable KCSAN instrumentation
+for all of kernel/trace.
 
-    ==================================================================
-    BUG: KCSAN: assert: race in test_thread / test_thread
+Furthermore, since KCSAN relies on udelay() to introduce delay, we have
+to disable ftrace for udelay() (currently done for x86) in case KCSAN is
+used together with lockdep and ftrace. The reason is that it may corrupt
+lockdep IRQ flags tracing state due to a peculiar case of recursion
+(details in Makefile comment).
 
-    write to 0xffffffffab3d1540 of 8 bytes by task 466 on cpu 2:
-     test_thread+0x8d/0x111
-     debugfs_write.cold+0x32/0x44
-     ...
-
-    assert no writes to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
-     test_thread+0xa3/0x111
-     debugfs_write.cold+0x32/0x44
-     ...
-    ==================================================================
-
-    ==================================================================
-    BUG: KCSAN: assert: race in test_thread / test_thread
-
-    assert no accesses to 0xffffffffab3d1540 of 8 bytes by task 465 on cpu 1:
-     test_thread+0xb9/0x111
-     debugfs_write.cold+0x32/0x44
-     ...
-
-    read to 0xffffffffab3d1540 of 8 bytes by task 464 on cpu 0:
-     test_thread+0x77/0x111
-     debugfs_write.cold+0x32/0x44
-     ...
-    ==================================================================
-
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Reported-by: Qian Cai <cai@lca.pw>
+Tested-by: Qian Cai <cai@lca.pw>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/kcsan-checks.h | 40 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+)
+ arch/x86/lib/Makefile | 5 +++++
+ kernel/kcsan/Makefile | 2 ++
+ kernel/trace/Makefile | 3 +++
+ 3 files changed, 10 insertions(+)
 
-diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-index 5dcadc2..cf69617 100644
---- a/include/linux/kcsan-checks.h
-+++ b/include/linux/kcsan-checks.h
-@@ -96,4 +96,44 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_ATOMIC | KCSAN_ACCESS_WRITE)
- #endif
+diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
+index 432a077..6110bce 100644
+--- a/arch/x86/lib/Makefile
++++ b/arch/x86/lib/Makefile
+@@ -8,6 +8,11 @@ KCOV_INSTRUMENT_delay.o	:= n
  
-+/**
-+ * ASSERT_EXCLUSIVE_WRITER - assert no other threads are writing @var
-+ *
-+ * Assert that there are no other threads writing @var; other readers are
-+ * allowed. This assertion can be used to specify properties of concurrent code,
-+ * where violation cannot be detected as a normal data race.
-+ *
-+ * For example, if a per-CPU variable is only meant to be written by a single
-+ * CPU, but may be read from other CPUs; in this case, reads and writes must be
-+ * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
-+ * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
-+ * race condition. Using this macro allows specifying this property in the code
-+ * and catch such bugs.
-+ *
-+ * @var variable to assert on
-+ */
-+#define ASSERT_EXCLUSIVE_WRITER(var)                                           \
-+	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
+ # KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
+ KCSAN_SANITIZE_delay.o := n
++ifdef CONFIG_KCSAN
++# In case KCSAN+lockdep+ftrace are enabled, disable ftrace for delay.o to avoid
++# lockdep -> [other libs] -> KCSAN -> udelay -> ftrace -> lockdep recursion.
++CFLAGS_REMOVE_delay.o = $(CC_FLAGS_FTRACE)
++endif
+ 
+ # Early boot use of cmdline; don't instrument it
+ ifdef CONFIG_AMD_MEM_ENCRYPT
+diff --git a/kernel/kcsan/Makefile b/kernel/kcsan/Makefile
+index df6b779..d4999b3 100644
+--- a/kernel/kcsan/Makefile
++++ b/kernel/kcsan/Makefile
+@@ -4,6 +4,8 @@ KCOV_INSTRUMENT := n
+ UBSAN_SANITIZE := n
+ 
+ CFLAGS_REMOVE_core.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_debugfs.o = $(CC_FLAGS_FTRACE)
++CFLAGS_REMOVE_report.o = $(CC_FLAGS_FTRACE)
+ 
+ CFLAGS_core.o := $(call cc-option,-fno-conserve-stack,) \
+ 	$(call cc-option,-fno-stack-protector,)
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index f9dcd19..6b601d8 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -6,6 +6,9 @@ ifdef CONFIG_FUNCTION_TRACER
+ ORIG_CFLAGS := $(KBUILD_CFLAGS)
+ KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+ 
++# Avoid recursion due to instrumentation.
++KCSAN_SANITIZE := n
 +
-+/**
-+ * ASSERT_EXCLUSIVE_ACCESS - assert no other threads are accessing @var
-+ *
-+ * Assert that no other thread is accessing @var (no readers nor writers). This
-+ * assertion can be used to specify properties of concurrent code, where
-+ * violation cannot be detected as a normal data race.
-+ *
-+ * For example, in a reference-counting algorithm where exclusive access is
-+ * expected after the refcount reaches 0. We can check that this property
-+ * actually holds as follows:
-+ *
-+ *	if (refcount_dec_and_test(&obj->refcnt)) {
-+ *		ASSERT_EXCLUSIVE_ACCESS(*obj);
-+ *		safely_dispose_of(obj);
-+ *	}
-+ *
-+ * @var variable to assert on
-+ */
-+#define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
-+	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
-+
- #endif /* _LINUX_KCSAN_CHECKS_H */
+ ifdef CONFIG_FTRACE_SELFTEST
+ # selftest needs instrumentation
+ CFLAGS_trace_selftest_dynamic.o = $(CC_FLAGS_FTRACE)
