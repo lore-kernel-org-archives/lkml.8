@@ -2,124 +2,127 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C3FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26696C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4C020870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mI9A5jKv"
+	by mail.kernel.org (Postfix) with ESMTP id F35A420870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585056000;
+	bh=cvGcIc2c7FEbl/5gIogoRTLaX9Jd2iA3AwynJj81h5Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dt6mfk1yxg3aqnVsv/FbhJWR7PPvz7H+SKJIz6RWWaz02UOilkZSCmjIBCuV1zbYR
+	 hetJ2l4NngZSRxNwmUKufCmHjZ6mLHXi3tUL8X+h+OkEx6IaLn5CME31KpWc75U8E0
+	 c40CPy4N+Y01h2tMpp1aOCWzodpr5jL383nP8wdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbgCXNT5 (ORCPT
+        id S1727695AbgCXNT6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:57 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39623 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728371AbgCXNT4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id b22so9007068pgb.6;
-        Tue, 24 Mar 2020 06:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ebjznMFl+ZgcgqKdNPHSKXfiEzop411av9HdLnE7IFw=;
-        b=mI9A5jKvJ49z6cnf6rYFl/QiWD6C73VCnla6N1XyjYKihxpdNiMLAAsjzH74Y84JXP
-         Ven9+GZdf2D4CYyd76UJ7zMRSlkZRkO8UbrUGb+7SncEBpsaQm3WqI+zMS90grwOeviH
-         K1ftv2hXar1VdtdykACxyGGmByCJdmOzX1z/CNSj+P80nLIHgb3874SQFe8qATPQPWOJ
-         KXg8H3hcW/UbwEueVYBxeUChfXyJpZaRlCC9cvgTUE9jQPWaWCb+WNjeprPjpmk52E5T
-         CuDlq79874IjwPbKF8cAysJQvU3hUKuK5MRMnbW2PA7Lri8l4mXKxUDDb1EwDlIAhstS
-         omPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ebjznMFl+ZgcgqKdNPHSKXfiEzop411av9HdLnE7IFw=;
-        b=J1DAdQDUnEnx/c/E4n83RiodQj+CArp9aYMXm+dqpuzLYeHmc/26s6F/EURywIFog6
-         OpYji4w2XwSJL5KoQXuJVxSntndYkw3TLNUCyLi8kZpyOG56iBk4V4BtQhwYpNm1lNvq
-         l8YYyuQTHxMA3Wt2CYINUm3YwYGTBYJEsr+URctyeBjSiwDR/hwu7oU3Mm2GUAEObgX2
-         rBoEUSvmvat2U7BYTtneUFPE8vC/3DGc2Y0qCPQBPBdca9Na4d1ch4u/156nLa4XbXx6
-         VmH3naeMY+abovh49viF+RZ3tIsKPrK9qTJUbf+RoQ4PN+Crnhe8FDL5LAwf71KVSYTT
-         PWvg==
-X-Gm-Message-State: ANhLgQ1T4MkHXMtxm3fxEw2oEVnM/xi84eO9xLb3wUqZcX/igrTdghcq
-        VYrhV+YaUjyll0dw6THfMZc=
-X-Google-Smtp-Source: ADFU+vt78KeM+4zSqcuPkFBk5K8J/LDNqnffc5v9LZepi0Dya4W0SUNZ27zStfMdWdXzbBlSAh08ww==
-X-Received: by 2002:a63:450b:: with SMTP id s11mr27130174pga.45.1585055994782;
-        Tue, 24 Mar 2020 06:19:54 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id t11sm2320636pjo.21.2020.03.24.06.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 06:19:54 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 06:19:52 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Y.b. Lu" <yangbo.lu@nxp.com>
-Cc:     Vladimir Oltean <olteanv@gmail.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
-Message-ID: <20200324131952.GB18149@localhost>
-References: <20200320103726.32559-1-yangbo.lu@nxp.com>
- <20200320103726.32559-7-yangbo.lu@nxp.com>
- <CA+h21hoBwDuWCFbO70u1FAERB8zc5F+H5URBkn=2_bpRRRz1oA@mail.gmail.com>
- <AM7PR04MB6885A8C98CA60FC435024647F8F10@AM7PR04MB6885.eurprd04.prod.outlook.com>
+        Tue, 24 Mar 2020 09:19:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728871AbgCXNTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:53 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B58D20870;
+        Tue, 24 Mar 2020 13:19:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585055992;
+        bh=cvGcIc2c7FEbl/5gIogoRTLaX9Jd2iA3AwynJj81h5Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eVDxCchVAExufYKo118WBKAgEBZUY1KeO4UOIEVir+DvQ8lNRwPCZnyqaOI/IQ+TW
+         5WoMeU1D7XHbkRiooGsRCF168QZx7gTReEC5nLi8KjIYJhl1InNpQCa70P/ezs/drS
+         2hyFonaLCvosJlggnn13PCZ0AzYVjvGARwk1Svfo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        Rafael Aquini <aquini@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 092/102] page-flags: fix a crash at SetPageError(THP_SWAP)
+Date:   Tue, 24 Mar 2020 14:11:24 +0100
+Message-Id: <20200324130816.171850987@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
+References: <20200324130806.544601211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM7PR04MB6885A8C98CA60FC435024647F8F10@AM7PR04MB6885.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:21:27AM +0000, Y.b. Lu wrote:
-> In my one previous patch, I was suggested to implement PPS with programmable pin periodic clock function.
-> But I didn’t find how should PPS be implemented with periodic clock function after checking ptp driver.
-> https://patchwork.ozlabs.org/patch/1215464/
+From: Qian Cai <cai@lca.pw>
 
-Yes, for generating a 1-PPS output waveform, users call ioctl
-PTP_CLK_REQ_PEROUT with ptp_perout_request.period={1,0}.
+commit d72520ad004a8ce18a6ba6cde317f0081b27365a upstream.
 
-If your device can't control the start time, then it can accept an
-unspecified time of ptp_perout_request.start={0,0}.
+Commit bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped
+out") supported writing THP to a swap device but forgot to upgrade an
+older commit df8c94d13c7e ("page-flags: define behavior of FS/IO-related
+flags on compound pages") which could trigger a crash during THP
+swapping out with DEBUG_VM_PGFLAGS=y,
+
+  kernel BUG at include/linux/page-flags.h:317!
+
+  page dumped because: VM_BUG_ON_PAGE(1 && PageCompound(page))
+  page:fffff3b2ec3a8000 refcount:512 mapcount:0 mapping:000000009eb0338c index:0x7f6e58200 head:fffff3b2ec3a8000 order:9 compound_mapcount:0 compound_pincount:0
+  anon flags: 0x45fffe0000d8454(uptodate|lru|workingset|owner_priv_1|writeback|head|reclaim|swapbacked)
+
+  end_swap_bio_write()
+    SetPageError(page)
+      VM_BUG_ON_PAGE(1 && PageCompound(page))
+
+  <IRQ>
+  bio_endio+0x297/0x560
+  dec_pending+0x218/0x430 [dm_mod]
+  clone_endio+0xe4/0x2c0 [dm_mod]
+  bio_endio+0x297/0x560
+  blk_update_request+0x201/0x920
+  scsi_end_request+0x6b/0x4b0
+  scsi_io_completion+0x509/0x7e0
+  scsi_finish_command+0x1ed/0x2a0
+  scsi_softirq_done+0x1c9/0x1d0
+  __blk_mqnterrupt+0xf/0x20
+  </IRQ>
+
+Fix by checking PF_NO_TAIL in those places instead.
+
+Fixes: bd4c82c22c36 ("mm, THP, swap: delay splitting THP after swapped out")
+Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Acked-by: "Huang, Ying" <ying.huang@intel.com>
+Acked-by: Rafael Aquini <aquini@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200310235846.1319-1-cai@lca.pw
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/linux/page-flags.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/include/linux/page-flags.h
++++ b/include/linux/page-flags.h
+@@ -311,7 +311,7 @@ static inline int TestClearPage##uname(s
  
-> Vladimir talked with me, for the special PPS case, we may consider,
-> if (req.perout.period.sec ==1 && req.perout.period.nsec == 0) and configure WAVEFORM_LOW to be equal to req_perout.start.nsec.
-> 
-> Richard, do you think is it ok?
+ __PAGEFLAG(Locked, locked, PF_NO_TAIL)
+ PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
+-PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
++PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
+ PAGEFLAG(Referenced, referenced, PF_HEAD)
+ 	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
+ 	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
 
-Sound okay to me (but I don't know about WAVEFORM_LOW).
 
-> And another problem I am facing is, in .enable() callback (PTP_CLK_REQ_PEROUT request) I defined.
->                 /*
->                  * TODO: support disabling function
->                  * When ptp_disable_pinfunc() is to disable function,
->                  * it has already held pincfg_mux.
->                  * However ptp_find_pin() in .enable() called also needs
->                  * to hold pincfg_mux.
->                  * This causes dead lock. So, just return for function
->                  * disabling, and this needs fix-up.
->                  */
-> Hope some suggestions here.
-
-See my reply to the patch.
-
-Thanks,
-Richard
