@@ -2,145 +2,220 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D638C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE64C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2D6F2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E356B2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:32:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585071124;
-	bh=XrbSYSn0v2QhTqwv1gzwq0TtnL+FkC0EuEseXdyHrsI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=m20B24+7E4SMJ+dCE+PmlqmlEnvYrQmvog+C+QoDZoDI1wLV/sboIcfOj/9bCv+pe
-	 2GGJTQflfZxvZzCw17hWydGh2bj0BSXn9fdge4pIbGRYHKBpUZjU36QOl3biix5PPX
-	 8JLXlLH9tX9HNT0kagrh6XgTQ2AN6lbCeD5xbqKY=
+	s=default; t=1585071166;
+	bh=QmVtxwZqmwSlLF+y0d92qHAguQYAoBqg2uqivBe59m4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=aT/t85DBQA2lMv1+L2ALc44pJ7ykgorRCJqXos7hSPdJBA4aija2E0TcVpvAUWb6a
+	 ovDsYH6YakiGdycIFZ1oGtHkBSYnf+77kppC2/4bdeatB0HclNRSP6ctUldp3OQ3AT
+	 xx8Tq+ZykRKcWn6blpfDiJ995leA7KqrjR7qCbik=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgCXRcE (ORCPT
+        id S1727845AbgCXRcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:32:04 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:17456 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRcD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:32:03 -0400
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02OHVt37003399
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 02:31:56 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02OHVt37003399
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585071116;
-        bh=Xv8QceqshOBI8Wr/8hADstw0UzLndq6ibetmQTGIu8I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=rBHjS74fHmi/Vsm1h/jZTJ/r+lq/RoOin2H83K6lnhfLB+EvFunVyhfDRBbXSNmXX
-         MXbrywVuxK115JT2wWQ7iy/U8JOFC636+SeO04NanX7qTIhGv0AOt2IxD3sclyd+Bj
-         79lPEEamP6SZ+o6TaQVIuSofw8L4oGjGu49+MqWXTtjjuLrRY/AyhSagT4TZwvlsji
-         aWLB4iFbJVqESFaI+h1FxEM2FVi0SK2VylGWmhQhBBe8cj2SuzQxnUE+2bSuiDJMI1
-         +LNeCkvlTo7RuDx2Z+qJ18+It0TsbbWlWIblF+u2gKljbq0mraGcyNJLtoAgOMlIwW
-         7RFilgyEO5oAg==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id a63so11676607vsa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:31:55 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1tnvDuGcYySRJzu22Bo62YSFGZL0RTBgOwZ2LuyB3zWJnT7ltK
-        0gb+vF8WEyNaub9lZsnParIf9vocDpFhABPLVqU=
-X-Google-Smtp-Source: ADFU+vvZ4VMG/RJoeev3JBg2YB1M2xw2PQqyKfmIWy/xpuE7SXvDI/xFaoI/Pm2UPP2WO22YHwWuYtwLBDy7b6AZvu0=
-X-Received: by 2002:a67:33cb:: with SMTP id z194mr21777249vsz.155.1585071114650;
- Tue, 24 Mar 2020 10:31:54 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200113195337.604646-1-nivedita@alum.mit.edu>
- <202001131750.C1B8468@keescook> <20200114165135.GK31032@zn.tnic>
- <20200115002131.GA3258770@rani.riverdale.lan> <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic> <20200323204454.GA2611336@zx2c4.com>
- <202003231350.7D35351@keescook> <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
- <CAK7LNARDb4SmQ2Y94CHAzP2qh_Ju7pu-w7kb0XKdP=2P-T+njQ@mail.gmail.com> <20200324153847.GA2870597@rani.riverdale.lan>
-In-Reply-To: <20200324153847.GA2870597@rani.riverdale.lan>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 25 Mar 2020 02:31:17 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQeeUt6L7xkk2UHE3v6b0e+iD1cx6_JSrZKEYxt2bEhHQ@mail.gmail.com>
-Message-ID: <CAK7LNAQeeUt6L7xkk2UHE3v6b0e+iD1cx6_JSrZKEYxt2bEhHQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Mar 2020 13:32:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:38756 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727487AbgCXRco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:32:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0727B1FB;
+        Tue, 24 Mar 2020 10:32:44 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 749413F71F;
+        Tue, 24 Mar 2020 10:32:43 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 17:32:41 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Applied "regulator: qcom_smd: Add pmi8994 regulator support" to the regulator tree
+In-Reply-To:  <20200324041424.518160-1-bjorn.andersson@linaro.org>
+Message-Id:  <applied-20200324041424.518160-1-bjorn.andersson@linaro.org>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:38 AM Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Tue, Mar 24, 2020 at 06:12:01PM +0900, Masahiro Yamada wrote:
-> > On Tue, Mar 24, 2020 at 6:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > Hi.
-> > >
-> > >
-> > >
-> > > On Tue, Mar 24, 2020 at 5:51 AM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > On Mon, Mar 23, 2020 at 02:44:54PM -0600, Jason A. Donenfeld wrote:
-> > > > > On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
-> > > > > > Long overdue patch, see below.
-> > > > > >
-> > > > > > Plan is to queue it after 5.7-rc1.
-> > > > > >
-> > > > > > ---
-> > > > > > From: Borislav Petkov <bp@suse.de>
-> > > > > > Date: Mon, 16 Mar 2020 16:28:36 +0100
-> > > > > > Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
-> > > > > >
-> > > > > > The currently minimum-supported binutils version 2.21 has the problem of
-> > > > > > promoting symbols which are defined outside of a section into absolute.
-> > > > > > According to Arvind:
-> > > > > >
-> > > > > >   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
-> > > > > >           Invalid absolute R_X86_64_32S relocation: _etext
-> > > > > >   and after fixing that one, with
-> > > > > >           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-> > > > > >
-> > > > > > Those two versions of binutils have a bug when it comes to handling
-> > > > > > symbols defined outside of a section and binutils 2.23 has the proper
-> > > > > > fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
-> >
-> >
-> > This seems to be also related to
-> > 7883a14339299773b2ce08dcfd97c63c199a9289
-> >
-> >
-> > I had noticed the symbol "_text"
-> > was absolute on binutils <= 2.22,
-> > but I was not sure whether it was a bug of the tool.
-> >
-> > I applied the fix.
-> > Perhaps, it was unneeded given that
-> > we require the binutils 2.23
-> >
->
-> Which architecture? x86 at least doesn't even build with <= 2.22, but
-> adding workarounds for that shows _text as section-relative (T in nm
-> output).
+The patch
 
+   regulator: qcom_smd: Add pmi8994 regulator support
 
-The reporter found this for PowerPC,
-but I think this could happen on any architecture.
+has been applied to the regulator tree at
 
-https://patchwork.kernel.org/patch/11430243/
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 86332c343491c6d2228a1e0c80b1ea98a2653d20 Mon Sep 17 00:00:00 2001
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Mon, 23 Mar 2020 21:14:24 -0700
+Subject: [PATCH] regulator: qcom_smd: Add pmi8994 regulator support
+
+The pmi8994 is commonly found on MSM8996 based devices, such as the
+Dragonboard 820c, where it supplies power to a number of LDOs on the
+primary PMIC.
+
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200324041424.518160-1-bjorn.andersson@linaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../regulator/qcom,smd-rpm-regulator.txt      | 13 +++++
+ drivers/regulator/qcom_smd-regulator.c        | 47 +++++++++++++++++++
+ include/linux/soc/qcom/smd-rpm.h              |  1 +
+ 3 files changed, 61 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+index d126df043403..dea4384f4c03 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+@@ -26,6 +26,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8994-regulators"
+ 		    "qcom,rpm-pm8998-regulators"
+ 		    "qcom,rpm-pma8084-regulators"
++		    "qcom,rpm-pmi8994-regulators"
+ 		    "qcom,rpm-pmi8998-regulators"
+ 		    "qcom,rpm-pms405-regulators"
+ 
+@@ -143,6 +144,15 @@ Regulator nodes are identified by their compatible:
+ 	Definition: reference to regulator supplying the input pin, as
+ 		    described in the data sheet
+ 
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_bst_byp-supply:
++	Usage: optional (pmi8994 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
+ - vdd_s1-supply:
+ - vdd_s2-supply:
+ - vdd_s3-supply:
+@@ -259,6 +269,9 @@ pma8084:
+ 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+ 	l21, l22, l23, l24, l25, l26, l27, lvs1, lvs2, lvs3, lvs4, 5vs1
+ 
++pmi8994:
++	s1, s2, s3, boost-bypass
++
+ pmi8998:
+ 	bob
+ 
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index fff8d5fdef6a..fdde4195cefb 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -445,6 +445,44 @@ static const struct regulator_desc pm8994_lnldo = {
+ 	.ops = &rpm_smps_ldo_ops_fixed,
+ };
+ 
++static const struct regulator_desc pmi8994_ftsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(350000,  0, 199, 5000),
++		REGULATOR_LINEAR_RANGE(700000, 200, 349, 10000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 350,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pmi8994_hfsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(350000,  0,  80, 12500),
++		REGULATOR_LINEAR_RANGE(700000, 81, 141, 25000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 142,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pmi8994_bby = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(3000000, 0, 44, 50000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 45,
++	.ops = &rpm_bob_ops,
++};
++
++static const struct regulator_desc pmi8994_boost = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(4000000, 0, 30, 50000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 31,
++	.ops = &rpm_smps_ldo_ops,
++};
++
+ static const struct regulator_desc pm8998_ftsmps = {
+ 	.linear_ranges = (struct regulator_linear_range[]) {
+ 		REGULATOR_LINEAR_RANGE(320000, 0, 258, 4000),
+@@ -780,6 +818,14 @@ static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
+ 	{}
+ };
+ 
++static const struct rpm_regulator_data rpm_pmi8994_regulators[] = {
++	{ "s1", QCOM_SMD_RPM_SMPB, 1, &pmi8994_ftsmps, "vdd_s1" },
++	{ "s2", QCOM_SMD_RPM_SMPB, 2, &pmi8994_hfsmps, "vdd_s2" },
++	{ "s2", QCOM_SMD_RPM_SMPB, 3, &pmi8994_hfsmps, "vdd_s3" },
++	{ "boost-bypass", QCOM_SMD_RPM_BBYB, 1, &pmi8994_bby, "vdd_bst_byp" },
++	{}
++};
++
+ static const struct rpm_regulator_data rpm_pm8998_regulators[] = {
+ 	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8998_ftsmps, "vdd_s1" },
+ 	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8998_ftsmps, "vdd_s2" },
+@@ -862,6 +908,7 @@ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
+ 	{ .compatible = "qcom,rpm-pm8998-regulators", .data = &rpm_pm8998_regulators },
+ 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
++	{ .compatible = "qcom,rpm-pmi8994-regulators", .data = &rpm_pmi8994_regulators },
+ 	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
+ 	{ .compatible = "qcom,rpm-pms405-regulators", .data = &rpm_pms405_regulators },
+ 	{}
+diff --git a/include/linux/soc/qcom/smd-rpm.h b/include/linux/soc/qcom/smd-rpm.h
+index 9e4fdd861a51..da304ce8c8f7 100644
+--- a/include/linux/soc/qcom/smd-rpm.h
++++ b/include/linux/soc/qcom/smd-rpm.h
+@@ -10,6 +10,7 @@ struct qcom_smd_rpm;
+ /*
+  * Constants used for addressing resources in the RPM.
+  */
++#define QCOM_SMD_RPM_BBYB	0x62796262
+ #define QCOM_SMD_RPM_BOBB	0x62626f62
+ #define QCOM_SMD_RPM_BOOST	0x61747362
+ #define QCOM_SMD_RPM_BUS_CLK	0x316b6c63
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
