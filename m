@@ -2,150 +2,144 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FCAC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F07E7C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2730A2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3C8F2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:58:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVR2GiwC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgCXL5B (ORCPT
+        id S1727379AbgCXL6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:57:01 -0400
-Received: from mga02.intel.com ([134.134.136.20]:59102 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgCXL5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:57:00 -0400
-IronPort-SDR: wDJAJ0pRgJm+OgyMOSJSBpFmruGNlc1nwaBtRUnJJ55PmIgnQjPFrbY4QrzdTVzg9P/SZArJ2s
- xqYwa/w8cd1A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 04:56:59 -0700
-IronPort-SDR: 2Sj/qNA+FiNvJUfbIkx9MSE/0ag2nn3/HFOZ0kego6vH4CHtnziZyEAegdZW52/ECsXZWJ0tCp
- /rHHc+E6NNtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="293042063"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by FMSMGA003.fm.intel.com with ESMTP; 24 Mar 2020 04:56:52 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGiAv-00CWGR-Do; Tue, 24 Mar 2020 13:56:53 +0200
-Date:   Tue, 24 Mar 2020 13:56:53 +0200
-From:   "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Gary.Hook@amd.com" <Gary.Hook@amd.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "changbin.du@intel.com" <changbin.du@intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
-Message-ID: <20200324115653.GI1922688@smile.fi.intel.com>
-References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
- <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
- <20200324095024.GE1922688@smile.fi.intel.com>
- <03f7053576e60632d7ac3bc074afe5d8d63e3714.camel@fi.rohmeurope.com>
+        Tue, 24 Mar 2020 07:58:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44055 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbgCXL6F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:58:05 -0400
+Received: by mail-wr1-f66.google.com with SMTP id m17so12076208wrw.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:58:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=yGWbv+avZe9DlLrVjdiu2FVkeNMpW1rLtryrfV1bKXI=;
+        b=nVR2GiwCz1Z+pMqdaVElFU10oWASHJmPcAq1126SngVOQyOxlOt3Q90bTfWVyVKcWI
+         m33DWy7cBdLqRrzvGK5c5hOsfASP3uoP3flOvhxp+2DgH92hYafi+VYHW468JLtBJLaV
+         v05LY47aRGGKpKdMgnwvGZmBhWL2TlC7zs2wqe0rGMaRQtnholprn77m4M3pSxQSyXtN
+         MKLysig6Iv7GZ1hUnO34gq0/JKNBjhRXzuploG0XTzp7AowQr4qXf/LAPG3Aa/2kfOc5
+         2N9FJQ+Kbm75nVJp1osYu+M3RvLrTEL+98HtdzgKsGQRzI1/KkHGG1Uu1dWxjYZEqYSc
+         drag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=yGWbv+avZe9DlLrVjdiu2FVkeNMpW1rLtryrfV1bKXI=;
+        b=XPMAQ7s5C0t3bOG/B1oU2wENNMKu3acD2ZxewFEGOV7qqPh1DmgJXKVCmvIzjyjoyI
+         F/5o7eq5QQ27341ttc275zYyPQZzjSq4Ys1o9YW6ntg0o/bThq5aMyrqKJC8SK1NTY0D
+         cClYfnw7eVYkqqvgAcyBArIRWamT1JivH9TqJwn9FvT1CY0brzjV+hva9znEF6FNWOrc
+         hd4LQMHUrNwvg9Kd77I/4GknuhCo0sgXMJvouVv4osS8qkgcU2vXBwXtn+c/tP4OH8Vn
+         2n87mHNdATlu99Y6OPFrDPSYqTVu1BBcCXTnn/FF2jviAxNCk4JhKIZeVr9ajabtwfvm
+         ahpQ==
+X-Gm-Message-State: ANhLgQ2JrxlxBJTrWs1RBcMHeyQqNMJinjUWk5GFck7wgRPQR3rQWfH3
+        0UFI66DL0EHGmvZb12VvGVGpHPUt6bA=
+X-Google-Smtp-Source: ADFU+vsCxnZDe2XY35nTpDg5vCgnBled/yGH5q/Z4dMMZ0fhSq4qXi2GlkK8ckWDNSoCVLjg3sSbbg==
+X-Received: by 2002:adf:ef08:: with SMTP id e8mr24604150wro.66.1585051083726;
+        Tue, 24 Mar 2020 04:58:03 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id w204sm4213338wma.1.2020.03.24.04.58.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 04:58:03 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 11:58:52 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Jiri Slaby <jslaby@suse.cz>, Johan Hovold <johan@kernel.org>,
+        Merlijn Wajer <merlijn@wizzup.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH 3/4] dt-bindings: mfd: motmdm: Add binding for
+ motorola-mdm
+Message-ID: <20200324115852.GB442973@dell>
+References: <20200319173755.65082-1-tony@atomide.com>
+ <20200319173755.65082-4-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <03f7053576e60632d7ac3bc074afe5d8d63e3714.camel@fi.rohmeurope.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200319173755.65082-4-tony@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 10:53:09AM +0000, Vaittinen, Matti wrote:
-> On Tue, 2020-03-24 at 11:50 +0200, Andy Shevchenko wrote:
-> > On Tue, Mar 24, 2020 at 10:32:19AM +0200, Matti Vaittinen wrote:
-
-...
-
-> > > +	for (i = ffs(tmp); i; i = ffs(tmp)) {
-> > 
-> > NIH of for_each_set_bit().
+> Add a binding document for Motorola modems controllable by
+> TS 27.010 UART line discipline using serdev drivers.
 > 
-> What does the NIH stand for?
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> [tony@atomide.com: moved to live under bindings/serdev]
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../serdev/motorola,mapphone-mdm6600.yaml     | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
 
-Not Invented Here syndrome :-)
+Nit: subject line is out of date.
 
-> Anyways, I agree. This is probably better if I use for_each_set_bit()
-
-...
-
-> > > +	if (!dev->platform_data) {
-> > 
-> > dev_get_platdata()
-> > 
-> > > +		ret = bd9995x_fw_probe(bd);
-> > > +		if (ret < 0) {
-> > > +			dev_err(dev, "Cannot read device
-> > > properties.\n");
-> > > +			return ret;
-> > > +		}
-> > > +	} else {
-> > > +		return -ENODEV;
-> > 
-> > So, existing platform data leads to an error?!
-> 
-> Yes. As currently we only use DT. If someone needs platdata they need
-> to improve the driver
-
-I think the idea to avoid platform data in new code as much as possible.
-And it's unusual to have somebody to use this driver with platform_data set.
-Why not simple ignore it?
-
-...
-
-> > > +#ifndef BD99954_CHARGER_H
-> > > +#define BD99954_CHARGER_H
-> > > +
-> > > +#include <linux/regmap.h>
-> > 
-> > It is not the header you have users for.
-> > Proper one should be bits.h.
-> 
-> Huh? struct reg_field is in regmap.h, right?
-
-In that long list of some enums I definitely missed something. Just double
-check the users anyway.
+> diff --git a/Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml b/Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serdev/motorola,mapphone-mdm6600.yaml
+> @@ -0,0 +1,34 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/serdev/motorola,mapphone-mdm6600.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Motorola Mapphone MDM6600 Modem
+> +
+> +maintainers:
+> +  - Tony Lindgren <tony@atomide.com>
+> +
+> +properties:
+> +  compatible:
+> +    items:
+> +      - const: motorola,mapphone-mdm6600-serial
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  phy-names:
+> +    const: usb
+> +
+> +required:
+> +  - compatible
+> +  - phys
+> +  - phy-names
+> +
+> +examples:
+> +  - |
+> +    modem {
+> +        compatible = "motorola,mapphone-mdm6600-serial";
+> +        phys = <&fsusb1_phy>;
+> +        phy-names = "usb";
+> +    };
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
