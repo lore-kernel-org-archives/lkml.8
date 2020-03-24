@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA9FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51E46C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3393F208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2053C208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056004;
-	bh=vEE9Y225QIK4Llp+vuWKYxM49/expVtdDER2Jh9XvDg=;
+	s=default; t=1585056007;
+	bh=pLxKZL+CTYSWhMNvEq95VDOGKE1cpZVeRhp37SaiQL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mKAfAI5Funzlix/CDpGuPftQdNOZ11cXsQh5JIOVyUmD4CTmRDYMLL5KqSZ41Mp8W
-	 9aFT4vkJY9Zps5wWPgwmyhHlZHI3gKYZgIYUhU1Xyav1RUFye+0KbklNiuh7oIz/cK
-	 w8uxnYuOeWFauZ4YmAKIPnEOk4DrxU545mNV3454=
+	b=W9QCOm/EtSCtMImwuB1kPHr0uxdY/8S7pgAmr9LkaefCO0rhJG3KFomc4lhjY0NvM
+	 f+QsEAw8B4DEMbPlapVpS+56BaJX+Cj6NJPqGxmjFr2MUw/coKdVxrkGd11A5sY3rr
+	 +ILkxD0Y3v9lbLxxKnwlD2UlPMgR7JpChY5qZGA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbgCXNUC (ORCPT
+        id S1728896AbgCXNUF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40968 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:20:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728888AbgCXNT6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:58 -0400
+        id S1727323AbgCXNUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27C3320CC7;
-        Tue, 24 Mar 2020 13:19:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A48F620870;
+        Tue, 24 Mar 2020 13:20:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055997;
-        bh=vEE9Y225QIK4Llp+vuWKYxM49/expVtdDER2Jh9XvDg=;
+        s=default; t=1585056003;
+        bh=pLxKZL+CTYSWhMNvEq95VDOGKE1cpZVeRhp37SaiQL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BLsyTZpcLdZs4HYHkv+6QSI0WBy6UbIp/g2KXymzw47otTfXHNbSnEWGyM5o1Fze1
-         U9wFQ2xLhIPgdT0S75xSrv/8GtNRuNTd520Kn9KuZDyxsCDFLaE8bt4a0AORhQ+V5P
-         suO/UqhmfbnKc0+ZfNnoKY65l5sKdfK3JSiOOrIU=
+        b=13COD5FdmvgeiGneq08kSK+sEt/ffv4DwxsS1QdYrjXYI82NEfNiWQL9Vdn+bMDfx
+         oaHhZyiUXuZIEEN21+zzVwuVK9Vnmlc9VDQ7Rs8j1lDIPPAS+uiky2Y9drK1nDw60V
+         JzPNC1rgeVwE/J00adsHVwpGRVdu4kB+q9R6GUus=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.4 094/102] futex: Fix inode life-time issue
-Date:   Tue, 24 Mar 2020 14:11:26 +0100
-Message-Id: <20200324130816.339499753@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 096/102] ALSA: hda/realtek: Fix pop noise on ALC225
+Date:   Tue, 24 Mar 2020 14:11:28 +0100
+Message-Id: <20200324130816.498879269@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,222 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 8019ad13ef7f64be44d4f892af9c840179009254 upstream.
+commit 3b36b13d5e69d6f51ff1c55d1b404a74646c9757 upstream.
 
-As reported by Jann, ihold() does not in fact guarantee inode
-persistence. And instead of making it so, replace the usage of inode
-pointers with a per boot, machine wide, unique inode identifier.
+Commit 317d9313925c ("ALSA: hda/realtek - Set default power save node to
+0") makes the ALC225 have pop noise on S3 resume and cold boot.
 
-This sequence number is global, but shared (file backed) futexes are
-rare enough that this should not become a performance issue.
+So partially revert this commit for ALC225 to fix the regression.
 
-Reported-by: Jann Horn <jannh@google.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Fixes: 317d9313925c ("ALSA: hda/realtek - Set default power save node to 0")
+BugLink: https://bugs.launchpad.net/bugs/1866357
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200311061328.17614-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/inode.c            |    1 
- include/linux/fs.h    |    1 
- include/linux/futex.h |   17 +++++----
- kernel/futex.c        |   89 +++++++++++++++++++++++++++++---------------------
- 4 files changed, 65 insertions(+), 43 deletions(-)
+ sound/pci/hda/patch_realtek.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -137,6 +137,7 @@ int inode_init_always(struct super_block
- 	inode->i_sb = sb;
- 	inode->i_blkbits = sb->s_blocksize_bits;
- 	inode->i_flags = 0;
-+	atomic64_set(&inode->i_sequence, 0);
- 	atomic_set(&inode->i_count, 1);
- 	inode->i_op = &empty_iops;
- 	inode->i_fop = &no_open_fops;
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -698,6 +698,7 @@ struct inode {
- 		struct rcu_head		i_rcu;
- 	};
- 	atomic64_t		i_version;
-+	atomic64_t		i_sequence; /* see futex */
- 	atomic_t		i_count;
- 	atomic_t		i_dio_count;
- 	atomic_t		i_writecount;
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -31,23 +31,26 @@ struct task_struct;
- 
- union futex_key {
- 	struct {
-+		u64 i_seq;
- 		unsigned long pgoff;
--		struct inode *inode;
--		int offset;
-+		unsigned int offset;
- 	} shared;
- 	struct {
-+		union {
-+			struct mm_struct *mm;
-+			u64 __tmp;
-+		};
- 		unsigned long address;
--		struct mm_struct *mm;
--		int offset;
-+		unsigned int offset;
- 	} private;
- 	struct {
-+		u64 ptr;
- 		unsigned long word;
--		void *ptr;
--		int offset;
-+		unsigned int offset;
- 	} both;
- };
- 
--#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
-+#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = 0ULL } }
- 
- #ifdef CONFIG_FUTEX
- enum {
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -429,7 +429,7 @@ static void get_futex_key_refs(union fut
- 
- 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
- 	case FUT_OFF_INODE:
--		ihold(key->shared.inode); /* implies smp_mb(); (B) */
-+		smp_mb();		/* explicit smp_mb(); (B) */
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8080,6 +8080,8 @@ static int patch_alc269(struct hda_codec
+ 		spec->gen.mixer_nid = 0;
  		break;
- 	case FUT_OFF_MMSHARED:
- 		futex_get_mm(key); /* implies smp_mb(); (B) */
-@@ -463,7 +463,6 @@ static void drop_futex_key_refs(union fu
- 
- 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
- 	case FUT_OFF_INODE:
--		iput(key->shared.inode);
- 		break;
- 	case FUT_OFF_MMSHARED:
- 		mmdrop(key->private.mm);
-@@ -505,6 +504,46 @@ futex_setup_timer(ktime_t *time, struct
- 	return timeout;
- }
- 
-+/*
-+ * Generate a machine wide unique identifier for this inode.
-+ *
-+ * This relies on u64 not wrapping in the life-time of the machine; which with
-+ * 1ns resolution means almost 585 years.
-+ *
-+ * This further relies on the fact that a well formed program will not unmap
-+ * the file while it has a (shared) futex waiting on it. This mapping will have
-+ * a file reference which pins the mount and inode.
-+ *
-+ * If for some reason an inode gets evicted and read back in again, it will get
-+ * a new sequence number and will _NOT_ match, even though it is the exact same
-+ * file.
-+ *
-+ * It is important that match_futex() will never have a false-positive, esp.
-+ * for PI futexes that can mess up the state. The above argues that false-negatives
-+ * are only possible for malformed programs.
-+ */
-+static u64 get_inode_sequence_number(struct inode *inode)
-+{
-+	static atomic64_t i_seq;
-+	u64 old;
-+
-+	/* Does the inode already have a sequence number? */
-+	old = atomic64_read(&inode->i_sequence);
-+	if (likely(old))
-+		return old;
-+
-+	for (;;) {
-+		u64 new = atomic64_add_return(1, &i_seq);
-+		if (WARN_ON_ONCE(!new))
-+			continue;
-+
-+		old = atomic64_cmpxchg_relaxed(&inode->i_sequence, 0, new);
-+		if (old)
-+			return old;
-+		return new;
-+	}
-+}
-+
- /**
-  * get_futex_key() - Get parameters which are the keys for a futex
-  * @uaddr:	virtual address of the futex
-@@ -517,9 +556,15 @@ futex_setup_timer(ktime_t *time, struct
-  *
-  * The key words are stored in @key on success.
-  *
-- * For shared mappings, it's (page->index, file_inode(vma->vm_file),
-- * offset_within_page).  For private mappings, it's (uaddr, current->mm).
-- * We can usually work out the index without swapping in the page.
-+ * For shared mappings (when @fshared), the key is:
-+ *   ( inode->i_sequence, page->index, offset_within_page )
-+ * [ also see get_inode_sequence_number() ]
-+ *
-+ * For private mappings (or when !@fshared), the key is:
-+ *   ( current->mm, address, 0 )
-+ *
-+ * This allows (cross process, where applicable) identification of the futex
-+ * without keeping the page pinned for the duration of the FUTEX_WAIT.
-  *
-  * lock_page() might sleep, the caller should not hold a spinlock.
-  */
-@@ -659,8 +704,6 @@ again:
- 		key->private.mm = mm;
- 		key->private.address = address;
- 
--		get_futex_key_refs(key); /* implies smp_mb(); (B) */
--
- 	} else {
- 		struct inode *inode;
- 
-@@ -692,40 +735,14 @@ again:
- 			goto again;
- 		}
- 
--		/*
--		 * Take a reference unless it is about to be freed. Previously
--		 * this reference was taken by ihold under the page lock
--		 * pinning the inode in place so i_lock was unnecessary. The
--		 * only way for this check to fail is if the inode was
--		 * truncated in parallel which is almost certainly an
--		 * application bug. In such a case, just retry.
--		 *
--		 * We are not calling into get_futex_key_refs() in file-backed
--		 * cases, therefore a successful atomic_inc return below will
--		 * guarantee that get_futex_key() will still imply smp_mb(); (B).
--		 */
--		if (!atomic_inc_not_zero(&inode->i_count)) {
--			rcu_read_unlock();
--			put_page(page);
--
--			goto again;
--		}
--
--		/* Should be impossible but lets be paranoid for now */
--		if (WARN_ON_ONCE(inode->i_mapping != mapping)) {
--			err = -EFAULT;
--			rcu_read_unlock();
--			iput(inode);
--
--			goto out;
--		}
--
- 		key->both.offset |= FUT_OFF_INODE; /* inode-based key */
--		key->shared.inode = inode;
-+		key->shared.i_seq = get_inode_sequence_number(inode);
- 		key->shared.pgoff = basepage_index(tail);
- 		rcu_read_unlock();
- 	}
- 
-+	get_futex_key_refs(key); /* implies smp_mb(); (B) */
-+
- out:
- 	put_page(page);
- 	return err;
+ 	case 0x10ec0225:
++		codec->power_save_node = 1;
++		/* fall through */
+ 	case 0x10ec0295:
+ 	case 0x10ec0299:
+ 		spec->codec_variant = ALC269_TYPE_ALC225;
 
 
