@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D36DFC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B87B4C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42BA208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9217C208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056172;
-	bh=GcH41PGTf8WsMwYREVE6JKMp5hkyVBF7ZVhJsXLeEo0=;
+	s=default; t=1585056175;
+	bh=ClFWbM6KRvO0jA0ltmJ0uDe7H7a6wSR5QyRk4Y8M8UY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OSED2+e17ecg9K9UTt2435zKcf3OGcEFaSV/Q1LRoxZ8NNNgsDoqjQ2eB3VAl1kYU
-	 kPb2ihSLhZElfT/sRIoVyD0DsMeQMDn+eARBFOqmBAMWVQnVRkiIngRaqdZoLJq/wt
-	 kkJvKw9V7kKcV+VckqasZExFWT/P0wAFx5AzNOZE=
+	b=y/ZP4LUy2/YSr1d406iAo3oFFAzdl0ktDIbQzs/EWzFQ1vPu4n1PwfgXaB8vco8Bw
+	 ssQloBzDi4Nf8d3mjVL1R5kSiH7widAB6GY1/+v6nCjcMCb9ctD82hfVWdDvf+J9CN
+	 f6OdNGcNyTJv+5zZCG8ADpiGMK1v1gPqDpS0v52c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729413AbgCXNWv (ORCPT
+        id S1728640AbgCXNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45178 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:22:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729398AbgCXNWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:22:45 -0400
+        id S1729074AbgCXNWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:22:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16708208C3;
-        Tue, 24 Mar 2020 13:22:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F11AD206F6;
+        Tue, 24 Mar 2020 13:22:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056160;
-        bh=GcH41PGTf8WsMwYREVE6JKMp5hkyVBF7ZVhJsXLeEo0=;
+        s=default; t=1585056168;
+        bh=ClFWbM6KRvO0jA0ltmJ0uDe7H7a6wSR5QyRk4Y8M8UY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmZvkA1Mr1ZyPpRHpTSVSm4h6JB3N6OmdHX7/E+tOXjPQnehlYlpUiuTbzOQUeD/S
-         YMoeS9e4qV5y8orMbauI1hoscMT5ybBM3NMIt6UWQEo5Oqx9J4hJOfVXKokdhOHlx7
-         at1tDvXF9Cd1sOQlMVTAH5VvXv4UyhbX6yJF65eg=
+        b=BOAbrC1Osa/ZVMUTRcAZ2CXMjOJC+ot2Z6Tq+dMya7ZfM6h3DP1CY3iiSVPaX3yrY
+         8UfwhqWQg7IzUz0e1RRQPLbN1CLL8hMb92UlWLWGm6bRRkt3JQDDfJaMJTSEKtGRgH
+         WMpcEbb9A/mkd81sJObRZI4RDmeNAkGflU5tGY8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
-        CK Hu <ck.hu@mediatek.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 005/119] drm/mediatek: Ensure the cursor plane is on top of other overlays
-Date:   Tue, 24 Mar 2020 14:09:50 +0100
-Message-Id: <20200324130808.529129456@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 008/119] ARM: dts: dra7-l4: mark timer13-16 as pwm capable
+Date:   Tue, 24 Mar 2020 14:09:53 +0100
+Message-Id: <20200324130808.831489303@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -59,51 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Paul <seanpaul@chromium.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-[ Upstream commit 26d696192aa5f4fe9119d6d23f90ed535053abca ]
+[ Upstream commit 00a39c92c8ab94727f021297d1748531af113fcd ]
 
-Currently the cursor is placed on the first overlay plane, which means
-it will be at the bottom of the stack when the hw does the compositing
-with anything other than primary plane. Since mtk doesn't support plane
-zpos, change the cursor location to the top-most plane.
+DMTimers 13 - 16 are PWM capable and also can be used for CPTS input
+signals generation. Hence, mark them as "ti,timer-pwm".
 
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/dra7-l4.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index 7104504babde0..1d46fbe9e07c6 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -606,11 +606,12 @@ static int mtk_drm_crtc_num_comp_planes(struct mtk_drm_crtc *mtk_crtc,
- }
+diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
+index 7e7aa101d8a49..912ee8778830a 100644
+--- a/arch/arm/boot/dts/dra7-l4.dtsi
++++ b/arch/arm/boot/dts/dra7-l4.dtsi
+@@ -3461,6 +3461,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER13_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
  
- static inline
--enum drm_plane_type mtk_drm_crtc_plane_type(unsigned int plane_idx)
-+enum drm_plane_type mtk_drm_crtc_plane_type(unsigned int plane_idx,
-+					    unsigned int num_planes)
- {
- 	if (plane_idx == 0)
- 		return DRM_PLANE_TYPE_PRIMARY;
--	else if (plane_idx == 1)
-+	else if (plane_idx == (num_planes - 1))
- 		return DRM_PLANE_TYPE_CURSOR;
- 	else
- 		return DRM_PLANE_TYPE_OVERLAY;
-@@ -629,7 +630,8 @@ static int mtk_drm_crtc_init_comp_planes(struct drm_device *drm_dev,
- 		ret = mtk_plane_init(drm_dev,
- 				&mtk_crtc->planes[mtk_crtc->layer_nr],
- 				BIT(pipe),
--				mtk_drm_crtc_plane_type(mtk_crtc->layer_nr),
-+				mtk_drm_crtc_plane_type(mtk_crtc->layer_nr,
-+							num_planes),
- 				mtk_ddp_comp_supported_rotations(comp));
- 		if (ret)
- 			return ret;
+@@ -3489,6 +3490,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER14_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
+ 
+@@ -3517,6 +3519,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER15_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
+ 
+@@ -3545,6 +3548,7 @@
+ 				clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER16_CLKCTRL 24>;
+ 				clock-names = "fck";
+ 				interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
++				ti,timer-pwm;
+ 			};
+ 		};
+ 
 -- 
 2.20.1
 
