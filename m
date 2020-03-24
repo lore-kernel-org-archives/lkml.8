@@ -2,123 +2,91 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9EBDC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D84AEC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A362F2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBD82080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WL57huwo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nqQjkBxQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgCXKZE (ORCPT
+        id S1727256AbgCXKZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:25:04 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36962 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgCXKZD (ORCPT
+        Tue, 24 Mar 2020 06:25:17 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55858 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgCXKZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:25:03 -0400
-Received: by mail-pg1-f194.google.com with SMTP id a32so8810157pga.4;
-        Tue, 24 Mar 2020 03:25:02 -0700 (PDT)
+        Tue, 24 Mar 2020 06:25:17 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v25so715616wmh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=niMBZQskqIvvbvSQd3Vs9C4OFVhjiYiDfUEWD3hhgQU=;
-        b=WL57huwoohYOXgJDpFwNTccWhDvbdVj53HP9RTAYqeUArAowfq+8wm7C8xnQS+d7Xg
-         T6ZEXRd83CkutsSV26moPh6SFShAu8y5bgcdaa94+vyt5gv9L7FHOWY/xTwiS3ZXTJoo
-         mYyatVs+4JSkglhV/DZno5DkKWgsDuV6Nq3GIgrszTouv3+HdzH3Ue4zNWg9IJabYRM5
-         Yc/KKpuGqrb71fAUqQdj6kfvkI7Fc5ogXvzI4kRXgF1utZe1N1Trsq00q5ItgQsyJMa1
-         K51p515UguhiI4YjD4zkfxOZoju5Vs4RIc7CzfPQSFesYRhhKwf5f8kTncK3eqxsX1rE
-         yirA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LGUT3817m9dwKpwcgiwDpk5iBVynd8BwaSr3esU1DVk=;
+        b=nqQjkBxQq4SmF2eCBrJZzQSJadKYuiApD6sLS+K5WWogPn0aWVPYOliY7P5ZnqmlqP
+         Qs+X1WJJKib2E770uVyb0mp59LdlV9RJ00WoQqkaOwrSDBTSBtmxVQX7Xv6JTBsev/uF
+         WzMexXe2iqzX4VMmwg3KfGSS7nxLYktDIpikFryUTbUFmjp2JBmkTajGCNAaTLiU6nGH
+         06UG8o53k36hd+F4u0dwG/bqIKO6ITxnKPUY1j5+pyH1zuPM4qgw7P5ypTOJ3p/AiUH+
+         cErRkLv0Hmjc3HkymikCdUfKXK6J0t28LUYI2cZLZraXlDCdpwrZIoCPyZhMduk0HS8C
+         ppcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=niMBZQskqIvvbvSQd3Vs9C4OFVhjiYiDfUEWD3hhgQU=;
-        b=MzFd2Jhj6NnyoTXDhkIDFXZaVVEeeRk7Ymt0c9yhAa02N+aUf3a2bgMGpJVsI0eyeb
-         dOiCM7PPIjQ7Vy9vzvWavWC/dB5HRgGAX84io8H7x8yQwYGe45tzV8kg3FmX5+KuoT5t
-         4deALsSaFDZjh44GUqT0q4JNNoF+98YMHrDsQhiKmkzRmTvZDXMjkjFRs22HbctASBKf
-         fsytqVC2ZwiG3APXDtOU2kuJmfobubjcFW+5LF70sJzJrqTcnH9PkrIyHA/F0/SmkjI4
-         u3ABbxCxzs7gfxoQZu9QRHtG5xcWiv9ikSPZ1eKCmWL/z1c0mU8DJnGlrg+/XBlexkNE
-         vtBQ==
-X-Gm-Message-State: ANhLgQ1JOAWWi5gPBJvE5LVcy14E2W0ND1MVLJbZRfqVsZSxIOEgewVQ
-        l7nJZI/CkU4AdsGKMvy4n0CbhmtUPRNG4ZxZcbc=
-X-Google-Smtp-Source: ADFU+vtRP5kcse4VydJXhIWcSQg5qG4qh1fLLlH+sYOY0YXmbvxSTKNtq7OW900chK9pK0hyoRdDWpT1dROadSow+qU=
-X-Received: by 2002:a05:6a00:2b4:: with SMTP id q20mr17417161pfs.36.1585045502171;
- Tue, 24 Mar 2020 03:25:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LGUT3817m9dwKpwcgiwDpk5iBVynd8BwaSr3esU1DVk=;
+        b=ruINzDviT6vpmrw4RtxMUPqrXc3g9xiCt2ChMX0h+9c28QOLkUZvdzkvLm7nPMKWsM
+         HZ9dXUp+Hg7/MF01sBH+BVFbJbbfop+3/TGcqDOQn3GyvP1zFSx7cWv2ZCGCW5VX5RcH
+         nLWIUhhGA18VbL3zeAP4uL9MNs8o1crUSFSd6sy56xoy4h9Ow97isiptu5gDeG8XApLW
+         lAbZLxg77+xu6QbtssVyGiyuKrCAMuk7FDYiOIiUnd2w3JfYFunYtbaWbKvXn/omQXG+
+         npbqbGmnP0rO7QwaTQFKq77aJJWsyY+ai0qIP2H0vbc8E/pYXqm42AbQj2DO0ls7zJDr
+         HeUA==
+X-Gm-Message-State: ANhLgQ05yXKx+9mwkvakae61m8GhvMLR7dCJP836/NMfFqrkkYolLVp3
+        yZEBdYjhaTgVIlZNkErDj8I=
+X-Google-Smtp-Source: ADFU+vvyCe3wYKRgESX6ZP/xX3EjW7zkB/m7qMqBuI2AgmS3QY9jKMFz4rSHz8KYcVak7Kmna/2mMQ==
+X-Received: by 2002:a7b:cc96:: with SMTP id p22mr4880707wma.118.1585045515798;
+        Tue, 24 Mar 2020 03:25:15 -0700 (PDT)
+Received: from kbp1-lhp-F74019 ([46.189.28.41])
+        by smtp.gmail.com with ESMTPSA id f9sm28268562wrc.71.2020.03.24.03.25.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Mar 2020 03:25:15 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 12:25:05 +0200
+From:   Yan Yankovskyi <yyankovskyi@gmail.com>
+To:     Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc:     Jan Beulich <jbeulich@suse.com>, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Subject: Re: [Xen-devel] [PATCH v4 1/2] xen: Use evtchn_type_t as a type for
+ event channels
+Message-ID: <20200324102505.GA4248@kbp1-lhp-F74019>
+References: <20200323152343.GA28422@kbp1-lhp-F74019>
+ <06458b85-fb66-faac-e75a-1ccefa848cb0@oracle.com>
 MIME-Version: 1.0
-References: <20200320131509.564059710@linutronix.de> <20200324060124.GC11705@shao2-debian>
-In-Reply-To: <20200324060124.GC11705@shao2-debian>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Mar 2020 12:24:54 +0200
-Message-ID: <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com>
-Subject: Re: [cpufreq] 06c4d00466: will-it-scale.per_process_ops -53.4% regression
-To:     kernel test robot <rong.a.chen@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>, lkp@lists.01.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <06458b85-fb66-faac-e75a-1ccefa848cb0@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 8:02 AM kernel test robot <rong.a.chen@intel.com> wrote:
->
-> Greeting,
->
-> FYI, we noticed a -53.4% regression of will-it-scale.per_process_ops due to commit:
+On Mon, Mar 23, 2020 at 05:55:39PM -0400, Boris Ostrovsky wrote:
+> 
+> On 3/23/20 12:15 PM, Yan Yankovskyi wrote:
+> > Make event channel functions pass event channel port using
+> > evtchn_port_t type. It eliminates signed <-> unsigned conversion.
+> >
+> > Signed-off-by: Yan Yankovskyi <yyankovskyi@gmail.com>
+> 
+> 
+> If the difference is only the whitespace fix
 
-> commit: 06c4d00466eb374841bc84c39af19b3161ff6917 ("[patch 09/22] cpufreq: Convert to new X86 CPU match macros")
-> url: https://github.com/0day-ci/linux/commits/Thomas-Gleixner/x86-devicetable-Move-x86-specific-macro-out-of-generic-code/20200321-031729
-> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
->
-> in testcase: will-it-scale
-> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
-> with following parameters:
-
-
-drivers/cpufreq/speedstep-centrino.c change missed the terminator,
-perhaps it's a culprit, because I don't believe removing dups and
-reordering lines may affect this.
-Can you restore terminator there and re-test?
-
--- 
-With Best Regards,
-Andy Shevchenko
+There were two more fixes: missing include in gntdev-common.h and
+a variable initialization in bind_virq_to_irq (eliminates warning).
