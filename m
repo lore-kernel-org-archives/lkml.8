@@ -2,60 +2,54 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DD7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579B4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF7A208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585064254;
-	bh=cYOrYm3TU8Oaswi/PS0pKnS4rYXUoN3KS4S87l1Oy2Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rH676aYPjOpUETqn/kfkyKmU9cfPQ6Tu0IU1/n2fwO+1c/73MZVype8UPResOWbTc
-	 q/7dJSDw/+mFFV1Cdquoxdz7ItZ8zDARlzQK83CELUzcIGoUcbayzMRdWAo2EqT5dQ
-	 GnDyEnS30SMM2mRxU7lvHbcDddoFg86RH3Q/UKyA=
+	by mail.kernel.org (Postfix) with ESMTP id 381B320788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgCXPhc (ORCPT
+        id S1728697AbgCXPhe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:37:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 11:37:34 -0400
+Received: from mga05.intel.com ([192.55.52.43]:40198 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728579AbgCXPh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:37:26 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C7EB20788;
-        Tue, 24 Mar 2020 15:37:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585064245;
-        bh=cYOrYm3TU8Oaswi/PS0pKnS4rYXUoN3KS4S87l1Oy2Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k1XBzan/+CO0dNlXvcPznHNdfatVBYZOF2k+EJWIN6NK17dCPQN8YBP/j2MLYpnw9
-         36DjGr7A4vTTVusW6h+pJZOKRPw+Nri81DI5ucdV4f80MStPpEW1IHqvNk9TR/0+ng
-         JsaIpAaRWrlZQz5WqbDP93q07FZrFb6SFT1a8zmw=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
-        Jann Horn <jannh@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maddie Stone <maddiestone@google.com>,
-        Marco Elver <elver@google.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
+        id S1728608AbgCXPh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:27 -0400
+IronPort-SDR: ZG4pQCHbgfmCrF8/DezJ0ChUisQ1FILqliWZCDt8fG1JBWqEhbaOtm7op5sN6iuLFY0qB0oSpb
+ 8LKeEPk4WzgA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:37:26 -0700
+IronPort-SDR: Icj05jCEMrNmV0/gz7KTNVEHCBHp5zk00/klmMqsmSqXPLcnqIK/EPSSgJBhksLqJlDNY1UsNN
+ AeEYK/RHDxSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="393319737"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
+  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 08:37:22 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
-        kernel-hardening@lists.openwall.com
-Subject: [RFC PATCH 14/21] plist: Use CHECK_DATA_CORRUPTION instead of explicit {BUG,WARN}_ON()
-Date:   Tue, 24 Mar 2020 15:36:36 +0000
-Message-Id: <20200324153643.15527-15-will@kernel.org>
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v6 5/8] kvm: vmx: Extend VMX's #AC interceptor to handle split lock #AC happens in guest
+Date:   Tue, 24 Mar 2020 23:18:56 +0800
+Message-Id: <20200324151859.31068-6-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200324153643.15527-1-will@kernel.org>
-References: <20200324153643.15527-1-will@kernel.org>
+In-Reply-To: <20200324151859.31068-1-xiaoyao.li@intel.com>
+References: <20200324151859.31068-1-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,157 +57,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CHECK_DATA_CORRUPTION() allows detected data corruption to result
-consistently in either a BUG() or a WARN() depending on
-CONFIG_BUG_ON_DATA_CORRUPTION.
+There are two types of #AC can be generated in Intel CPUs:
+ 1. legacy alignment check #AC;
+ 2. split lock #AC;
 
-Use CHECK_DATA_CORRUPTION() to report plist integrity checking failures,
-rather than explicit use of BUG_ON() and WARN_ON().
+Legacy alignment check #AC can be injected to guest if guest has enabled
+alignemnet check.
 
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Paul E. McKenney <paulmck@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+when host enables split lock detectin, i.e., sld_warn or sld_fatal,
+there will be an unexpected #AC in guest and intercepted by KVM because
+KVM doesn't virtualize this feature to guest and hardware value of
+MSR_TEST_CTRL.SLD bit stays unchanged when vcpu is running.
+
+To handle this unexpected #AC, treat guest just like host usermode that
+calling handle_user_split_lock():
+ - If host is sld_warn, it warns and set TIF_SLD so that __switch_to_xtra()
+   does the MSR_TEST_CTRL.SLD bit switching when control transfer to/from
+   this vcpu.
+ - If host is sld_fatal, forward #AC to userspace, the similar as sending
+   SIGBUS.
+
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- lib/plist.c | 63 ++++++++++++++++++++++++++++++++++-------------------
- 1 file changed, 40 insertions(+), 23 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 30 +++++++++++++++++++++++++++---
+ 1 file changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/lib/plist.c b/lib/plist.c
-index c06e98e78259..eb127eaab235 100644
---- a/lib/plist.c
-+++ b/lib/plist.c
-@@ -29,39 +29,46 @@
- 
- static struct plist_head test_head;
- 
--static void plist_check_prev_next(struct list_head *t, struct list_head *p,
--				  struct list_head *n)
-+static bool plist_prev_next_invalid(struct list_head *t, struct list_head *p,
-+				    struct list_head *n)
- {
--	WARN(n->prev != p || p->next != n,
--			"top: %p, n: %p, p: %p\n"
--			"prev: %p, n: %p, p: %p\n"
--			"next: %p, n: %p, p: %p\n",
-+	return CHECK_DATA_CORRUPTION(n->prev != p || p->next != n,
-+			"plist corruption:\n"
-+			"\ttop: %p, n: %p, p: %p\n"
-+			"\tprev: %p, n: %p, p: %p\n"
-+			"\tnext: %p, n: %p, p: %p\n",
- 			 t, t->next, t->prev,
- 			p, p->next, p->prev,
- 			n, n->next, n->prev);
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 094dbe375f01..300e1e149372 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4613,6 +4613,12 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
+ 	return 1;
  }
  
--static void plist_check_list(struct list_head *top)
-+static bool plist_list_invalid(struct list_head *top)
- {
- 	struct list_head *prev = top, *next = top->next;
-+	bool corruption;
- 
--	plist_check_prev_next(top, prev, next);
-+	corruption = plist_prev_next_invalid(top, prev, next);
- 	while (next != top) {
- 		prev = next;
- 		next = prev->next;
--		plist_check_prev_next(top, prev, next);
-+		corruption |= plist_prev_next_invalid(top, prev, next);
- 	}
++static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
++{
++	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
++	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
++}
 +
-+	return corruption;
- }
- 
--static void plist_check_head(struct plist_head *head)
-+static bool plist_head_valid(struct plist_head *head)
+ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
  {
-+	bool corruption = false;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -4678,9 +4684,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+ 		return handle_rmode_exception(vcpu, ex_no, error_code);
+ 
+ 	switch (ex_no) {
+-	case AC_VECTOR:
+-		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
+-		return 1;
+ 	case DB_VECTOR:
+ 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
+ 		if (!(vcpu->guest_debug &
+@@ -4709,6 +4712,27 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+ 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
+ 		kvm_run->debug.arch.exception = ex_no;
+ 		break;
++	case AC_VECTOR:
++		/*
++		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
++		 * legacy alignment check enabled.  Pre-check host split lock
++		 * support to avoid the VMREADs needed to check legacy #AC,
++		 * i.e. reflect the #AC if the only possible source is legacy
++		 * alignment checks.
++		 */
++		if (!split_lock_detect_on() ||
++		    guest_cpu_alignment_check_enabled(vcpu)) {
++			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
++			return 1;
++		}
 +
- 	if (!plist_head_empty(head))
--		plist_check_list(&plist_first(head)->prio_list);
--	plist_check_list(&head->node_list);
-+		corruption |= plist_list_invalid(&plist_first(head)->prio_list);
-+	corruption |= plist_list_invalid(&head->node_list);
-+	return !corruption;
- }
- 
- #else
--# define plist_check_head(h)	do { } while (0)
-+# define plist_head_valid(h)	(true)
- #endif
- 
- /**
-@@ -75,9 +82,12 @@ void plist_add(struct plist_node *node, struct plist_head *head)
- 	struct plist_node *first, *iter, *prev = NULL;
- 	struct list_head *node_next = &head->node_list;
- 
--	plist_check_head(head);
--	WARN_ON(!plist_node_empty(node));
--	WARN_ON(!list_empty(&node->prio_list));
-+	if (!plist_head_valid(head) ||
-+	    CHECK_DATA_CORRUPTION(!plist_node_empty(node),
-+			"plist_add corruption. node list is not empty.\n") ||
-+	    CHECK_DATA_CORRUPTION(!list_empty(&node->prio_list),
-+			"plist_add corruption. node prio list is not empty.\n"))
-+		return;
- 
- 	if (plist_head_empty(head))
- 		goto ins_node;
-@@ -100,7 +110,8 @@ void plist_add(struct plist_node *node, struct plist_head *head)
- ins_node:
- 	list_add_tail(&node->node_list, node_next);
- 
--	plist_check_head(head);
-+	if (!plist_head_valid(head))
-+		return;
- }
- 
- /**
-@@ -111,7 +122,8 @@ void plist_add(struct plist_node *node, struct plist_head *head)
-  */
- void plist_del(struct plist_node *node, struct plist_head *head)
- {
--	plist_check_head(head);
-+	if (!plist_head_valid(head))
-+		return;
- 
- 	if (!list_empty(&node->prio_list)) {
- 		if (node->node_list.next != &head->node_list) {
-@@ -129,7 +141,8 @@ void plist_del(struct plist_node *node, struct plist_head *head)
- 
- 	list_del_init(&node->node_list);
- 
--	plist_check_head(head);
-+	if (!plist_head_valid(head))
-+		return;
- }
- 
- /**
-@@ -147,9 +160,12 @@ void plist_requeue(struct plist_node *node, struct plist_head *head)
- 	struct plist_node *iter;
- 	struct list_head *node_next = &head->node_list;
- 
--	plist_check_head(head);
--	BUG_ON(plist_head_empty(head));
--	BUG_ON(plist_node_empty(node));
-+	if (!plist_head_valid(head) ||
-+	    CHECK_DATA_CORRUPTION(plist_head_empty(head),
-+			"plist_requeue corruption. head list is empty.\n") ||
-+	    CHECK_DATA_CORRUPTION(plist_node_empty(node),
-+			"plist_requeue corruption. node list is empty.\n"))
-+		return;
- 
- 	if (node == plist_last(head))
- 		return;
-@@ -169,7 +185,8 @@ void plist_requeue(struct plist_node *node, struct plist_head *head)
- 	}
- 	list_add_tail(&node->node_list, node_next);
- 
--	plist_check_head(head);
-+	if (!plist_head_valid(head))
-+		return;
- }
- 
- #ifdef CONFIG_CHECK_INTEGRITY_PLIST
++		/*
++		 * Forward the #AC to userspace if kernel policy does not allow
++		 * temporarily disabling split lock detection.
++		 */
++		if (handle_user_split_lock(kvm_rip_read(vcpu)))
++			return 1;
++		fallthrough;
+ 	default:
+ 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
+ 		kvm_run->ex.exception = ex_no;
 -- 
 2.20.1
 
