@@ -2,285 +2,136 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFBBCC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 822FDC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:57:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903942074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7FC206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:57:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A7eeA9ij"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgCXR50 (ORCPT
+        id S1727932AbgCXR5t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:57:26 -0400
-Received: from mga03.intel.com ([134.134.136.65]:33112 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727223AbgCXR5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:57:25 -0400
-IronPort-SDR: HKz9JT8q9GZBFdO+uuadV2usjTU+WGWW7LWM/28F6BzaicLCa37lLsaZ2IFZnwFZX122MFguMj
- OrTYgND2JFAA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 10:57:24 -0700
-IronPort-SDR: /7em/tC57Hlahgo/ij8+RSSSt1kqvBcgt9qUzXV9CN0qThGJAEeZSKDrxrdZaq2xahNKdVPMN/
- 3u11mIBQrIPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
-   d="scan'208";a="270472523"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Mar 2020 10:57:21 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 6A78E11D; Tue, 24 Mar 2020 19:57:20 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Grant Likely <grant.likely@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Ferry Toth <fntoth@gmail.com>
-Subject: [PATCH v3] driver core: Break infinite loop when deferred probe can't be satisfied
-Date:   Tue, 24 Mar 2020 19:57:19 +0200
-Message-Id: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 24 Mar 2020 13:57:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41762 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727257AbgCXR5t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:57:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z65so9672657pfz.8
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:57:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=JOJivn/BftzEZ5IpmOaohAsBUyD+vjO3m8vH92Fp/Bo=;
+        b=A7eeA9ijeTau3nSmfOv/vILZI4/00pn6laDCAOb2Arw/2gf6gTqgjGnsrE+FigWfTx
+         OfmC8WZBDn6Er2e6pPSl5GPWfxWF040jR6ZWhQCaqfOIY4l38DEKzI2ZTFuuFC2ZqlxH
+         C3F1G8U5/B4fUtZn9hTCrn/vYp7NW9LCDRWS4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=JOJivn/BftzEZ5IpmOaohAsBUyD+vjO3m8vH92Fp/Bo=;
+        b=Gt9ICaDCE3OnlQyQrMRj2BgXv7Sx8Bv5rs4Zq+RH3K+kdfNW7qAo0ywhePAyh6mR0c
+         ZJS4PhGYo4eEuXDmeUX+NTSA7p9fnSAwd2VdSdeKi5wOa/v3FnzzLuxL90n/LJjrWALb
+         j6JssebtbkDsDu+xNJ7zQonDAiUH4DLlhbASYRtQNO9ZqABokF6n2v2hAbiYZK/im+Gd
+         7zByf6mQpU1yy63UEZNUXq3W9qf5TSTNrpNDGVsjl38/89G7XlIqIG797n77IyQiVgKO
+         gQaSVjsU2nnUBrGKfZc1mLqkk1OCEa7JcRTvFucHkT15/cujHQ4pdGOrzdtpqdwJLgDl
+         HjUg==
+X-Gm-Message-State: ANhLgQ2ot638N4IrVgDF8jrGrb58XfwOPSxK5s4nirnElW/z+/hk2lsf
+        2fbFdOjSr1a/d8XJ5sBSjty0pA==
+X-Google-Smtp-Source: ADFU+vv9SnIrpa1mjpQR944cfODa3gHYd2HMpjrEMhGZiis9W63g/b1w32nWiR9jV4l4/SOz7G0lkQ==
+X-Received: by 2002:a63:ce42:: with SMTP id r2mr29908453pgi.106.1585072667397;
+        Tue, 24 Mar 2020 10:57:47 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k3sm15204752pgh.34.2020.03.24.10.57.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 10:57:46 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 10:57:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
+Message-ID: <202003241056.C28E520@keescook>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-6-kpsingh@chromium.org>
+ <6d45de0d-c59d-4ca7-fcc5-3965a48b5997@schaufler-ca.com>
+ <20200324015217.GA28487@chromium.org>
+ <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
+ <20200324144214.GA1040@chromium.org>
+ <CAEjxPJ7GDA2PvYkoFhnE7gjr_n=ADCjy3XOwacfELY7evVJtJw@mail.gmail.com>
+ <20200324145155.GB2685@chromium.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324145155.GB2685@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consider the following scenario.
+On Tue, Mar 24, 2020 at 03:51:55PM +0100, KP Singh wrote:
+> On 24-Mär 10:51, Stephen Smalley wrote:
+> > On Tue, Mar 24, 2020 at 10:42 AM KP Singh <kpsingh@chromium.org> wrote:
+> > >
+> > > On 24-Mär 10:37, Stephen Smalley wrote:
+> > > > On Mon, Mar 23, 2020 at 9:52 PM KP Singh <kpsingh@chromium.org> wrote:
+> > > > >
+> > > > > On 23-Mär 18:13, Casey Schaufler wrote:
+> > > > > > Have you given up on the "BPF must be last" requirement?
+> > > > >
+> > > > > Yes, we dropped it for as the BPF programs require CAP_SYS_ADMIN
+> > > > > anwyays so the position ~shouldn't~ matter. (based on some of the
+> > > > > discussions we had on the BPF_MODIFY_RETURN patches).
+> > > > >
+> > > > > However, This can be added later (in a separate patch) if really
+> > > > > deemed necessary.
+> > > >
+> > > > It matters for SELinux, as I previously explained.  A process that has
+> > > > CAP_SYS_ADMIN is not assumed to be able to circumvent MAC policy.
+> > > > And executing prior to SELinux allows the bpf program to access and
+> > > > potentially leak to userspace information that wouldn't be visible to
+> > > > the
+> > > > process itself. However, I thought you were handling the order issue
+> > > > by putting it last in the list of lsms?
+> > >
+> > > We can still do that if it does not work for SELinux.
+> > >
+> > > Would it be okay to add bpf as LSM_ORDER_LAST?
+> > >
+> > > LSMs like Landlock can then add LSM_ORDER_UNPRIVILEGED to even end up
+> > > after bpf?
+> > 
+> > I guess the question is whether we need an explicit LSM_ORDER_LAST or
+> > can just handle it via the default
+> > values for the lsm= parameter, where you are already placing bpf last
+> > IIUC?  If someone can mess with the kernel boot
+> > parameters, they already have options to mess with SELinux, so it is no worse...
+> 
+> Yeah, we do add BPF as the last LSM in the default list. So, I will
+> avoid adding LSM_ORDER_LAST for now.
 
-The main driver of USB OTG controller (dwc3-pci), which has the following
-functional dependencies on certain platform:
-- ULPI (tusb1210)
-- extcon (tested with extcon-intel-mrfld)
+FWIW, this is my preference as well. If there ends up being a stronger
+need, then we can implement LSM_ORDER_LAST at that time.
 
-Note, that first driver, tusb1210, is available at the moment of
-dwc3-pci probing, while extcon-intel-mrfld is built as a module and
-won't appear till user space does something about it.
-
-This is depicted by kernel configuration excerpt:
-
-	CONFIG_PHY_TUSB1210=y
-	CONFIG_USB_DWC3=y
-	CONFIG_USB_DWC3_ULPI=y
-	CONFIG_USB_DWC3_DUAL_ROLE=y
-	CONFIG_USB_DWC3_PCI=y
-	CONFIG_EXTCON_INTEL_MRFLD=m
-
-In the Buildroot environment the modules are probed by alphabetical ordering
-of their modaliases. The latter comes to the case when USB OTG driver will be
-probed first followed by extcon one.
-
-So, if the platform anticipates extcon device to be appeared, in the above case
-we will get deferred probe of USB OTG, because of ordering.
-
-Since current implementation, done by the commit 58b116bce136 ("drivercore:
-deferral race condition fix") counts the amount of triggered deferred probe,
-we never advance the situation -- the change makes it to be an infinite loop.
-
----8<---8<---
-
-[   22.187127] driver_deferred_probe_trigger <<< 1
-
-...here is the late initcall triggers deferred probe...
-
-[   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
-
-...dwc3.0.auto is the only device in the deferred list...
-
-[   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
-
-...the counter before mutex is unlocked is kept the same...
-
-[   22.205663] platform dwc3.0.auto: Retrying from deferred list
-
-...mutes has been unlocked, we try to re-probe the driver...
-
-[   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
-[   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
-[   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
-[   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
-[   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
-[   22.263723] driver_deferred_probe_trigger <<< 2
-
-...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
-
-[   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
-[   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
-
-...but extcon driver is still missing...
-
-[   22.283174] platform dwc3.0.auto: Added to deferred list
-[   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
-
-...and since we had a successful probe, we got counter mismatch...
-
-[   22.297490] driver_deferred_probe_trigger <<< 3
-[   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
-
-...at the end we have a new counter and loop repeats again, see 22.198727...
-
----8<---8<---
-
-Revert of the commit helps, but it is probably not helpful for the initially
-found regression. Artem Bityutskiy suggested to use counter of the successful
-probes instead. This fixes above mentioned case and shouldn't prevent driver
-to reprobe deferred ones.
-
-Under "successful probe" we understand the state when a driver of the certain
-device is being kept bound after deferred probe trigger cycle. For instance,
-in the above mentioned case probing of tusb1210 is not successful because dwc3
-driver unbinds device dwc3.0.auto.ulpi. The atomic_dec() call is used to keep
-track of this. The amount of bindings is always great than or equal to the
-amount of unbindings as guaranteed by design of the driver binding mechanism.
-
-Fixes: 58b116bce136 ("drivercore: deferral race condition fix")
-Suggested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Cc: Grant Likely <grant.likely@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Ferry Toth <fntoth@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v3: added comment about atomic_dec() to the commit message and code (Rafael)
-
- drivers/base/dd.c | 44 ++++++++++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index b25bcab2a26b..c1b445733150 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -53,7 +53,6 @@
- static DEFINE_MUTEX(deferred_probe_mutex);
- static LIST_HEAD(deferred_probe_pending_list);
- static LIST_HEAD(deferred_probe_active_list);
--static atomic_t deferred_trigger_count = ATOMIC_INIT(0);
- static struct dentry *deferred_devices;
- static bool initcalls_done;
- 
-@@ -147,17 +146,6 @@ static bool driver_deferred_probe_enable = false;
-  * This functions moves all devices from the pending list to the active
-  * list and schedules the deferred probe workqueue to process them.  It
-  * should be called anytime a driver is successfully bound to a device.
-- *
-- * Note, there is a race condition in multi-threaded probe. In the case where
-- * more than one device is probing at the same time, it is possible for one
-- * probe to complete successfully while another is about to defer. If the second
-- * depends on the first, then it will get put on the pending list after the
-- * trigger event has already occurred and will be stuck there.
-- *
-- * The atomic 'deferred_trigger_count' is used to determine if a successful
-- * trigger has occurred in the midst of probing a driver. If the trigger count
-- * changes in the midst of a probe, then deferred processing should be triggered
-- * again.
-  */
- static void driver_deferred_probe_trigger(void)
- {
-@@ -170,7 +158,6 @@ static void driver_deferred_probe_trigger(void)
- 	 * into the active list so they can be retried by the workqueue
- 	 */
- 	mutex_lock(&deferred_probe_mutex);
--	atomic_inc(&deferred_trigger_count);
- 	list_splice_tail_init(&deferred_probe_pending_list,
- 			      &deferred_probe_active_list);
- 	mutex_unlock(&deferred_probe_mutex);
-@@ -350,6 +337,19 @@ static void __exit deferred_probe_exit(void)
- }
- __exitcall(deferred_probe_exit);
- 
-+/*
-+ * Note, there is a race condition in multi-threaded probe. In the case where
-+ * more than one device is probing at the same time, it is possible for one
-+ * probe to complete successfully while another is about to defer. If the second
-+ * depends on the first, then it will get put on the pending list after the
-+ * trigger event has already occurred and will be stuck there.
-+ *
-+ * The atomic 'probe_okay' is used to determine if a successful probe has
-+ * occurred in the midst of probing another driver. If the count changes in
-+ * the midst of a probe, then deferred processing should be triggered again.
-+ */
-+static atomic_t probe_okay = ATOMIC_INIT(0);
-+
- /**
-  * device_is_bound() - Check if device is bound to a driver
-  * @dev: device to check
-@@ -375,6 +375,7 @@ static void driver_bound(struct device *dev)
- 	pr_debug("driver: '%s': %s: bound to device '%s'\n", dev->driver->name,
- 		 __func__, dev_name(dev));
- 
-+	atomic_inc(&probe_okay);
- 	klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
- 	device_links_driver_bound(dev);
- 
-@@ -481,18 +482,18 @@ static atomic_t probe_count = ATOMIC_INIT(0);
- static DECLARE_WAIT_QUEUE_HEAD(probe_waitqueue);
- 
- static void driver_deferred_probe_add_trigger(struct device *dev,
--					      int local_trigger_count)
-+					      int local_probe_okay_count)
- {
- 	driver_deferred_probe_add(dev);
- 	/* Did a trigger occur while probing? Need to re-trigger if yes */
--	if (local_trigger_count != atomic_read(&deferred_trigger_count))
-+	if (local_probe_okay_count != atomic_read(&probe_okay))
- 		driver_deferred_probe_trigger();
- }
- 
- static int really_probe(struct device *dev, struct device_driver *drv)
- {
- 	int ret = -EPROBE_DEFER;
--	int local_trigger_count = atomic_read(&deferred_trigger_count);
-+	int local_probe_okay_count = atomic_read(&probe_okay);
- 	bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
- 			   !drv->suppress_bind_attrs;
- 
-@@ -509,7 +510,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 
- 	ret = device_links_check_suppliers(dev);
- 	if (ret == -EPROBE_DEFER)
--		driver_deferred_probe_add_trigger(dev, local_trigger_count);
-+		driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
- 	if (ret)
- 		return ret;
- 
-@@ -619,7 +620,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
- 	case -EPROBE_DEFER:
- 		/* Driver requested deferred probing */
- 		dev_dbg(dev, "Driver %s requests probe deferral\n", drv->name);
--		driver_deferred_probe_add_trigger(dev, local_trigger_count);
-+		driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
- 		break;
- 	case -ENODEV:
- 	case -ENXIO:
-@@ -1148,6 +1149,13 @@ static void __device_release_driver(struct device *dev, struct device *parent)
- 		dev_pm_set_driver_flags(dev, 0);
- 
- 		klist_remove(&dev->p->knode_driver);
-+		/*
-+		 * If a driver has been unbound from the device
-+		 * we won't consider the probe of the device
-+		 * successful.
-+		 */
-+		atomic_dec(&probe_okay);
-+
- 		device_pm_check_callbacks(dev);
- 		if (dev->bus)
- 			blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
 -- 
-2.25.1
-
+Kees Cook
