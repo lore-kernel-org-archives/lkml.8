@@ -2,190 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AB8C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07ABFC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35B62070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A70208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:04:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aYEhOfKL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pgrieuKB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgCXNA5 (ORCPT
+        id S1727323AbgCXNEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:00:57 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34703 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbgCXNA5 (ORCPT
+        Tue, 24 Mar 2020 09:04:16 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36324 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726188AbgCXNEQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:00:57 -0400
-Received: by mail-qk1-f193.google.com with SMTP id i6so9971121qke.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 06:00:56 -0700 (PDT)
+        Tue, 24 Mar 2020 09:04:16 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so15302169wrs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 06:04:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ba16nWV/RV0Cz2u6692GPI7pcBz0klhTBLMRiyR006I=;
-        b=aYEhOfKLN9ZhHQ6qsF9yRQZbJdp5qLE6VG/WiV3IMktT7OZPKVXM4Q7M3pciHMlbSL
-         3JGlbyRaN3t3ec9VtNhmOhV7tCzs9JA6xcIykANFuiBzbMUjFmB/yGtCDkMQoUvqklXc
-         uiHcBoMS9SYRf02XIqS6bfwC4FWM41w2FnuqP5ra6ZFTR9hoHzaktczDd2ZFIqf+mtjt
-         ldsu613xA9ggzR77Me71NwapMzx3YvN1xOWPf/Lfs4cZdV6kXFljQtq+rbQYjBaOSh/8
-         36RrSz77/xdGKBCUyKAqBkQLCCH8DmwS8GH2ZvuXwnZxXgE7rFeG46vkmxhEguIgu2B6
-         A2Dw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=1oa8yxV7xzZ+tD1LcZwM67jLdYW/JjWbnu15B5rKnAc=;
+        b=pgrieuKBguK79BGSzhI7qQoDKjs7oVSsEZFIkfliQlS4z5oJJ8i92cBNzbOc6KuF1k
+         eeh8US59wuikVQM5bbteGvBBxvsZWujEwU6Wt/GOypCDV7QldRZo2bm2Z3Z/oDT3qUxy
+         IyyWUye5I8LOmsJlNfr1zBUhQVPRbiik4yERyYY8ajgeowR6YD9qVW9h8wHNhdTpBj34
+         1nWgV2/0E+YFu3oaFa7h1tC6MO5jeXwowcGsQVjUfVFZi0+WKfIAiVpGy1hfpaOZeze7
+         5SJ81Lzjc5G+49LBl1KyN8/cbBUg/ehWOfDEBzOwCJL3GV09zAwFEDDUuzXEF1FC2GTw
+         Lxsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ba16nWV/RV0Cz2u6692GPI7pcBz0klhTBLMRiyR006I=;
-        b=QmbfdEEGrKBBREwk2G+CEdDsXfYkkXI5fANvWtNdw2D7qwD2CuZMC/ABUNA3fonBFR
-         VoSLT586CCi5gY2GBMWcKDoi6erWa2MjYVMxXwed/Nf6eT+gzxw5bIF+akd1Idvqvrid
-         gOeLdnvd6/s8WHtjQB2SbVVNSGYP2zxEuV54I2Mv8Sj025IXhsZ9YfKCDNAUTrBb8XgV
-         4/la1Uuoaix+u6CcQGCDa3Mo7sIR9mheTShe+UOZhPU7kATlGocI4JZ9qK7FbsjqhbzH
-         brwOgQ1a9DuCDW+TVgKtkQO78y2rvDaudeOwPDncyA/ukrvTsFnWcuWivPcjxZxBxnbe
-         Ki5Q==
-X-Gm-Message-State: ANhLgQ35iV7K013QmaI277CvL2VrzNUOk5W8HOpwlbmxQUJ26aUUwvMJ
-        zyj6uG636zTLIKIwXqtVmGx1n5rd
-X-Google-Smtp-Source: ADFU+vssnynhn++cNNMUV7zMf7W/sRDKPz52gbWnkNK/KGmmnLAFjL1oHpk3EK6r8vhqjLxGnz+5WA==
-X-Received: by 2002:a05:620a:129b:: with SMTP id w27mr935841qki.140.1585054855657;
-        Tue, 24 Mar 2020 06:00:55 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id d9sm13397723qth.34.2020.03.24.06.00.54
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=1oa8yxV7xzZ+tD1LcZwM67jLdYW/JjWbnu15B5rKnAc=;
+        b=nRIVXOlfH8VqdvOoodzib7pNZqeMJ3vzkYfrAieFSiETOwG0ckT71hX/UNxkELI6DI
+         b071ZViWazmYS3/t9Z+Z6GPi4KPTzwOmZnLRHkhBt9z7jNU9ZZIX7vL0SYYJTHqlZUff
+         A4AAxnO5ODzcR+VmynXIJoFTzKCHdq/72c0de9lS6PbtE+XMarrHHIWSvnBVTPI6JXpB
+         VACpvY9RCF5hAE4I/w1N/bsU+/H+3mi61k9h8ADx1RpE2xl/zZI6O/pf2XBAf9GEo1j2
+         S2uKPn7QsclInYE+dDZdZsXQWQCqMzf6wihJgk8BwAB1WLVF2cswltKk9GfE/AA/ZOkw
+         tSFw==
+X-Gm-Message-State: ANhLgQ0d93Lr1kG63EOjJ/sml/ZLjukctjQ2+yrhX8BTEM0pYCI3b2N1
+        8h4X2IwqBoSLHB+ennvbNx+9/g==
+X-Google-Smtp-Source: ADFU+vt/tZsuKl1gh3b+r/lHzGLKErJB8LKeO5CV2x9BnDtJ1QJrNAMaaIoqumVT6rOFGRemUbUOqQ==
+X-Received: by 2002:adf:afdb:: with SMTP id y27mr37198227wrd.208.1585055052854;
+        Tue, 24 Mar 2020 06:04:12 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id v2sm30204625wrt.58.2020.03.24.06.04.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 06:00:54 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 883D840F77; Tue, 24 Mar 2020 10:00:52 -0300 (-03)
-Date:   Tue, 24 Mar 2020 10:00:52 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        mark.rutland@arm.com, naveen.n.rao@linux.vnet.ibm.com
-Subject: Re: [PATCH] perf dso: Fix dso comparison
-Message-ID: <20200324130052.GB21569@kernel.org>
-References: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
- <20200324104843.GS1534489@krava>
+        Tue, 24 Mar 2020 06:04:12 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 13:04:10 +0000
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Guru Das Srinagesh <gurus@codeaurora.org>,
+        linux-pwm@vger.kernel.org,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
+Message-ID: <20200324130410.dwlg767ku6kwequv@holly.lan>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+ <20200320133123.GD5477@dell>
+ <20200324110710.GL5477@dell>
+ <20200324125735.2mjuvbxt5bpon2ft@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200324104843.GS1534489@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324125735.2mjuvbxt5bpon2ft@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 24, 2020 at 11:48:43AM +0100, Jiri Olsa escreveu:
-> On Tue, Mar 24, 2020 at 09:54:24AM +0530, Ravi Bangoria wrote:
-> > Perf gets dso details from two different sources. 1st, from builid
-> > headers in perf.data and 2nd from MMAP2 samples. Dso from buildid
-> > header does not have dso_id detail. And dso from MMAP2 samples does
-> > not have buildid information. If detail of the same dso is present
-> > at both the places, filename is common.
-> > 
-> > Previously, __dsos__findnew_link_by_longname_id() used to compare only
-> > long or short names, but Commit 0e3149f86b99 ("perf dso: Move dso_id
-> > from 'struct map' to 'struct dso'") also added a dso_id comparison.
-> > Because of that, now perf is creating two different dso objects of the
-> > same file, one from buildid header (with dso_id but without buildid)
-> > and second from MMAP2 sample (with buildid but without dso_id).
-> > 
-> > This is causing issues with archive, buildid-list etc subcommands. Fix
-> > this by comparing dso_id only when it's present. And incase dso is
-> > present in 'dsos' list without dso_id, inject dso_id detail as well.
-> > 
-> > Before:
-> > 
-> >   $ sudo ./perf buildid-list -H
-> >   0000000000000000000000000000000000000000 /usr/bin/ls
-> >   0000000000000000000000000000000000000000 /usr/lib64/ld-2.30.so
-> >   0000000000000000000000000000000000000000 /usr/lib64/libc-2.30.so
-> > 
-> >   $ ./perf archive
-> >   perf archive: no build-ids found
-> > 
-> > After:
-> > 
-> >   $ ./perf buildid-list -H
-> >   b6b1291d0cead046ed0fa5734037fa87a579adee /usr/bin/ls
-> >   641f0c90cfa15779352f12c0ec3c7a2b2b6f41e8 /usr/lib64/ld-2.30.so
-> >   675ace3ca07a0b863df01f461a7b0984c65c8b37 /usr/lib64/libc-2.30.so
-> > 
-> >   $ ./perf archive
-> >   Now please run:
-> > 
-> >   $ tar xvf perf.data.tar.bz2 -C ~/.debug
-> > 
-> >   wherever you need to run 'perf report' on.
-> > 
-> > Reported-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+On Tue, Mar 24, 2020 at 01:57:35PM +0100, Uwe Kleine-König wrote:
+> Hello Lee,
 > 
-> looks good, do we need to add the dso_id check to sort__dso_cmp?
+> On Tue, Mar 24, 2020 at 11:07:10AM +0000, Lee Jones wrote:
+> > On Fri, 20 Mar 2020, Lee Jones wrote:
+> > 
+> > > On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
+> > > 
+> > > > Since the PWM framework is switching struct pwm_state.period's datatype
+> > > > to u64, prepare for this transition by using div_u64 to handle a 64-bit
+> > > > dividend instead of a straight division operation.
+> > > > 
+> > > > Cc: Lee Jones <lee.jones@linaro.org>
+> > > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > > > Cc: linux-pwm@vger.kernel.org
+> > > > Cc: dri-devel@lists.freedesktop.org
+> > > > Cc: linux-fbdev@vger.kernel.org
+> > > > 
+> > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > > > ---
+> > > >  drivers/video/backlight/pwm_bl.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > > Can this patch be taken on its own?
+> > 
+> > Hellooooo ...
+> 
+> Conceptually it can. As the last patch depends on this one (and the
+> others) some coordination might be beneficial. But that's up to Thierry
+> to decide how (and if) he want this series to be applied.
 
-Jiri:
+... and on the backlight side we definitely need to know about the "if"
+otherwise there's no point in taking it.
 
-Humm, you mean sort__dso_cmp() -> _sort__dso_cmp() should consider the
-dso_id and not just its name? Humm, when "dso" sort key is used that
-means just the short_name (or long_name, if verbose), if we use the ID
-for "dso" then we need to somehow show the id in the output, otherwise
-we'd have multiple lines with the same DSO name, when multiple versions
-exist... Perhaps we should do a first pass, figure out if there are DSOs
-with the same name/different IDs and mark them for showing the ID to
-differentiate them on the output? But this is something that should be
-dealt with in a separece cset, I think.
 
-With that in mind, can I add your Acked-by for this patch, with my
-changes described below?
-
-Ravi:
-
-I'm applying it with the changes below, to keep namespacing consistency, ok?
-
-- Arnaldo
-
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 5c5bfa2538a9..939471731ea6 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -26,7 +26,7 @@ static int __dso_id__cmp(struct dso_id *a, struct dso_id *b)
- 	return 0;
- }
- 
--static bool is_empty_dso_id(struct dso_id *id)
-+static bool dso_id__empty(struct dso_id *id)
- {
- 	if (!id)
- 		return true;
-@@ -34,7 +34,7 @@ static bool is_empty_dso_id(struct dso_id *id)
- 	return !id->maj && !id->min && !id->ino && !id->ino_generation;
- }
- 
--static void inject_dso_id(struct dso *dso, struct dso_id *id)
-+static void dso__inject_id(struct dso *dso, struct dso_id *id)
- {
- 	dso->id.maj = id->maj;
- 	dso->id.min = id->min;
-@@ -48,7 +48,7 @@ static int dso_id__cmp(struct dso_id *a, struct dso_id *b)
- 	 * The second is always dso->id, so zeroes if not set, assume passing
- 	 * NULL for a means a zeroed id
- 	 */
--	if (is_empty_dso_id(a) || is_empty_dso_id(b))
-+	if (dso_id__empty(a) || dso_id__empty(b))
- 		return 0;
- 
- 	return __dso_id__cmp(a, b);
-@@ -266,8 +266,8 @@ static struct dso *__dsos__findnew_id(struct dsos *dsos, const char *name, struc
- {
- 	struct dso *dso = __dsos__find_id(dsos, name, id, false);
- 
--	if (dso && is_empty_dso_id(&dso->id) && !is_empty_dso_id(id))
--		inject_dso_id(dso, id);
-+	if (dso && dso_id__empty(&dso->id) && !dso_id__empty(id))
-+		dso__inject_id(dso, id);
- 
- 	return dso ? dso : __dsos__addnew_id(dsos, name, id);
- }
+Daniel.
