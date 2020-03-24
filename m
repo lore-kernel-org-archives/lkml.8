@@ -2,184 +2,103 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E70CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6244BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:03:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052D5206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 320D5206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:03:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bN5MWtin"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lgSLFqsR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727665AbgCXRB5 (ORCPT
+        id S1727443AbgCXRDV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:01:57 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:40285 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727314AbgCXRB4 (ORCPT
+        Tue, 24 Mar 2020 13:03:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44590 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbgCXRDU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:01:56 -0400
-Received: by mail-pj1-f68.google.com with SMTP id kx8so1721954pjb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:01:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=i+ozVGPWZ8LGXvVCrBNoRqT1LP5S57LScccMkP4xx1s=;
-        b=bN5MWtinMkkGMgnRAyAqfbx0aTgj4CzDaAyRAb87s0p2LmLygHyloKbCrzH3cvXBh7
-         A6bNm6PHTHxgbSGDCQGnz/1gXeaVdYSZugx560dd8/Bs4TYINhhP/825DM9gUaEHVJn2
-         gEnbgREevzflqEJNXMSc5WfsG62EGZ4JSBlv242eHA2kaSoYQXy4PTglNFxQgMl0AhpX
-         uvyKiHw+unfXdofnfF+eGzoKYzPvmqUl/buHZuTPvrSzL8P9mW5Zi9F4b8SJFJuznbKJ
-         q90+Fd8uVuZ4thRQMtGjiAqIX1KGeOiOBy584/HzwLQmYQAfJTDZ71SHldrJdNRc+HIR
-         i3aQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=i+ozVGPWZ8LGXvVCrBNoRqT1LP5S57LScccMkP4xx1s=;
-        b=ZwgahszLCFlGY7hR4oxDRwaPpxfViUSJpcSTJI9V7eXKnC2vc0tbdh4wUV5uu2x5zo
-         Yz90LnjRdUqx2hgzn24Yl3DMP0vKZLBTjTd1nCTCo7S/gARHP7UWlZalxIw6HPdFE4U7
-         QN5mSLB6p26YHH5G+PYzBfXzmvsEXT8nExLiOawr92zLkSFaJYRSLbPcH/TDG25Irq6r
-         b47tgJ3IqjyVKehs2uovDYM3hUrlHkreFQwwlBtP7IEMx+xPAFXclwHo1/kQ7JYcFsX3
-         Ug34w8hWeeLlDvBT1wulkmCNzV/TZDdKE+LHY7SWB4dLCQmzZqjGswmBuPDx0r8MLARS
-         h9eA==
-X-Gm-Message-State: ANhLgQ2DoGEng207NX0r46qpv+dfUOI8RRNOHw3vToB/M6TIT1vr+p20
-        dbcgRM1ZMogm3LWyLMbU6yF4Nc6u7oCzoa3rC9MnfazT
-X-Google-Smtp-Source: ADFU+vtVV7q9ZYiy6kEgLdGa9dyonp/PW3+YJJ6BjgV5hz2wcA9qnvJRTZc95LMEKfsLb77OdSU/upzGXQR7MTtqRJ4=
-X-Received: by 2002:a17:902:22e:: with SMTP id 43mr26258620plc.119.1585069311796;
- Tue, 24 Mar 2020 10:01:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-12-masahiroy@kernel.org>
-In-Reply-To: <20200324084821.29944-12-masahiroy@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 24 Mar 2020 10:01:40 -0700
-Message-ID: <CAKwvOdkj3dDNcbY4hwyManfviPdFoBooJJmFOAKL2YJCZNuhtA@mail.gmail.com>
-Subject: Re: [PATCH 11/16] x86: probe assembler capabilities via kconfig
- instead of makefile
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Tue, 24 Mar 2020 13:03:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=ybvI/xXoN4Xj7bvZ9uQSzuDEPSFb7l3L7fcwrqWVV2g=; b=lgSLFqsRWZVdBbzsaO30TNcs/0
+        UZaYmu7cYUUgMBX6fqCyPCfHUFjFBpwoWBS7RNR0j9FBvytqWxnUYgtxVWVbtPBC/IfGEb2DwEUo/
+        D4snUAWzPj98lTz7GCKDPE1mUy5PYOtvnUBB0z2I4Eqv1nqS/ttE46sfjJgkXk47IauxQab04ZfVd
+        duAY2hIKcDvtCbs3+AGz+z0vfofJnnTnGYCLcxzwVECMF5N4djGFY0WzyPlSOkzwu+83vhQxrlfI5
+        6bjjqDAv0DprUIn8s6aCeV6N2VEzEqO99nV2jIAIr24qqy+HM4IhftA5rR+B7cU6s3wZDcVxIfs16
+        mhm4x9yA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGmxJ-0004Ig-4d; Tue, 24 Mar 2020 17:03:10 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 918FC300096;
+        Tue, 24 Mar 2020 18:03:06 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 714E120413B7D; Tue, 24 Mar 2020 18:03:06 +0100 (CET)
+Date:   Tue, 24 Mar 2020 18:03:06 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Anvin <hpa@zytor.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
+Message-ID: <20200324170306.GU20696@hirez.programming.kicks-ass.net>
+References: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
+ <86D80EA7-9087-4042-8119-12DD5FCEAA87@amacapital.net>
+ <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can 11 just be rebased with 8 dropped?
+On Tue, Mar 24, 2020 at 09:33:21AM -0700, Linus Torvalds wrote:
+> On Tue, Mar 24, 2020 at 9:22 AM Andy Lutomirski <luto@amacapital.net> wrote:
+> >
+> > I haven’t checked if static calls currently support return values, but
+> > the conditional case only makes sense for functions that return void.
+> >
+> > Aside from that, it might be nice for passing NULL in to warn or bug
+> > when the NULL pointer is stored instead of silently NOPping out the
+> > call in cases where having a real implementation isn’t optional.
+> 
+> Both good points. I take back my question.
+> 
+> And it aside from warning about passing in NULL then it doesn't work,
+> I wonder if we could warn - at build time - when then using the COND
+> version with a function that doesn't return void?
 
-On Tue, Mar 24, 2020 at 1:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> From: "Jason A. Donenfeld" <Jason@zx2c4.com>
->
-> Doing this probing inside of the Makefiles means we have a maze of
-> ifdefs inside the source code and child Makefiles that need to make
-> proper decisions on this too. Instead, we do it at Kconfig time, like
-> many other compiler and assembler options, which allows us to set up the
-> dependencies normally for full compilation units. In the process, the
-> ADX test changes to use %eax instead of %r10 so that it's valid in both
-> 32-bit and 64-bit mode.
->
-> Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  arch/x86/Kconfig           |  2 ++
->  arch/x86/Kconfig.assembler | 22 ++++++++++++++++++++++
->  arch/x86/Makefile          | 15 ---------------
->  3 files changed, 24 insertions(+), 15 deletions(-)
->  create mode 100644 arch/x86/Kconfig.assembler
->
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index beea77046f9b..707673227837 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2935,3 +2935,5 @@ config HAVE_ATOMIC_IOMAP
->  source "drivers/firmware/Kconfig"
->
->  source "arch/x86/kvm/Kconfig"
-> +
-> +source "arch/x86/Kconfig.assembler"
-> diff --git a/arch/x86/Kconfig.assembler b/arch/x86/Kconfig.assembler
-> new file mode 100644
-> index 000000000000..46868ec7b723
-> --- /dev/null
-> +++ b/arch/x86/Kconfig.assembler
-> @@ -0,0 +1,22 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (C) 2020 Jason A. Donenfeld <Jason@zx2c4.com>. All Rights Reserved.
-> +
-> +# binutils >= 2.22
-> +config AS_AVX2
-> +       def_bool $(as-instr,vpbroadcastb %xmm0$(comma)%ymm1)
-> +
-> +# binutils >= 2.25
-> +config AS_AVX512
-> +       def_bool $(as-instr,vpmovm2b %k1$(comma)%zmm5)
-> +
-> +# binutils >= 2.24
-> +config AS_SHA1_NI
-> +       def_bool $(as-instr,sha1msg1 %xmm0$(comma)%xmm1)
-> +
-> +# binutils >= 2.24
-> +config AS_SHA256_NI
-> +       def_bool $(as-instr,sha256msg1 %xmm0$(comma)%xmm1)
-> +
-> +# binutils >= 2.23
-> +config AS_ADX
-> +       def_bool $(as-instr,adox %eax$(comma)%eax)
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 4c57cb3018fb..b65ec63c7db7 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -177,21 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
->         KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
->  endif
->
-> -# does binutils support specific instructions?
-> -# binutils >= 2.22
-> -avx2_instr :=$(call as-instr,vpbroadcastb %xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
-> -# binutils >= 2.25
-> -avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
-> -# binutils >= 2.24
-> -sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=1)
-> -# binutils >= 2.24
-> -sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
-> -# binutils >= 2.23
-> -adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
-> -
-> -KBUILD_AFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
-> -KBUILD_CFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
-> -
->  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
->
->  #
-> --
-> 2.17.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200324084821.29944-12-masahiroy%40kernel.org.
+I actually (abuse) do that in the last patch... the reason being that
+DEFINE_STATIC_COND_CALL() ends up only needing a type expression for the
+second argument, while DEFINE_STATIC_CALL() needs an actual function.
 
+> Of course, one alternative is to just say "instead of using NOP, use
+> 'xorl %eax,%eax'", and then we'd have the rule that a NULL conditional
+> function returns zero (or NULL).
+> 
+> I _think_ a "xorl %eax,%eax ; retq" is just three bytes and would fit
+> in the tailcall slot too.
 
-
--- 
-Thanks,
-~Nick Desaulniers
+Correct. The only problem is that our text patching machinery can't
+replace multiple instructions :/
