@@ -2,139 +2,152 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88953C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35023C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61CA120722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585011842;
-	bh=uGGoqYkk12Dhiif/0LKZN7D/gATzYrywbbLaYZL5UvE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=f8k3dqULLYDIQzbMQ7ImwWBTzUo19R4pL6f96UJfL81q2UeYsHY7qibrkWtmS6QaE
-	 +dfBFGihYCQ+j0aKU2wBALP3/VG/QtLcCg4Kq79ejG7vNCfS4gLV80ZV8VMt3CHB6+
-	 cW/3uNd55P/c2upvMkI4xGp3YT2caNUJzakX0rRw=
+	by mail.kernel.org (Postfix) with ESMTP id 0440020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:05:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PoTbKjia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgCXBEB (ORCPT
+        id S1727119AbgCXBFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 21:04:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbgCXBEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 21:04:01 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E7C820714;
-        Tue, 24 Mar 2020 01:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585011838;
-        bh=uGGoqYkk12Dhiif/0LKZN7D/gATzYrywbbLaYZL5UvE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xmc53TGy1lYg/FgacCVbCE3vN0AYtiGyt42sLMLiBj7UOGuNKqnRYAC005PcKO5pq
-         KZomxlxQuJIATJPd1VGvz4BgtxOCT5gYH7+uuS7w4by1sCZwJ2GDXofQsTSpvk3L24
-         ApPeF3M1eSjO7/1dOWh3UqUBSgZ96Rt+3MsMGTGA=
-Date:   Mon, 23 Mar 2020 18:03:58 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various
- stack implementations
-Message-Id: <20200323180358.7603217aa9955f298255da4e@linux-foundation.org>
-In-Reply-To: <20200324004221.GA36662@carbon.dhcp.thefacebook.com>
-References: <20200303233550.251375-1-guro@fb.com>
-        <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
-        <20200324004221.GA36662@carbon.dhcp.thefacebook.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 23 Mar 2020 21:05:35 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40700 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727036AbgCXBFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 21:05:35 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e19so15525578otj.7;
+        Mon, 23 Mar 2020 18:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ce7ghwbl6moWeoJ7H+elE8g/gTwzTq+V4pdCT2RTKnQ=;
+        b=PoTbKjianUmQfZTfV/iWwL8SiKSJHK9TnjSTX0+r2+Bh9y3woLJ8qFfVe6G2Q/yyIH
+         EY/1T7TUrVGv2iSqlW8YJMX2w0DIOY79A4gzyNnFR8KwsegMypyNJB9u4atRz+DqQAa2
+         RzXHOyfUQRGHSBctY2ZKMP8rW4sMBOI/MWKfyGM4t5BfK7AI9/1fGNkhEaNRNYefFsZc
+         i3X7SlZ7FQ++QBuDmKaZKTTodDbOR3uHulE28qWDWdAWWqY/+xjcVdM7Jso3tGSRA2wv
+         4ZXLy3VvDODzlJZI+hWkt3R+LxO5vYU+JOscCoYGKqgaWxPCtkvmSllh/anmI2nKE4jn
+         c95w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ce7ghwbl6moWeoJ7H+elE8g/gTwzTq+V4pdCT2RTKnQ=;
+        b=dzVqaOzhmPaEGZvWEQQpPxlnHI5qVw5CouugAJdmP7IBMeCZdgX0J21n4+v4QkqZou
+         5CycNLK3VSRopnm+jNOp6u/NNWjB9DP94rJu8BnNkGmCbWFpcBo32vuSzpafkVRiKjQo
+         IgM22Av3Fum8Luby/CJ9JKNZSPQhaW7yt1JsFcq2KbofkJbm/1DFymLUSVM+g9UUnqcK
+         WF5gbf4NP9FvBhLck/nb6DehoXLQvNmYOmvjC87XGiPo/3DSAwSSaNxuAAPuKcb/+ndX
+         WhnzGdx/f4Hfe7GpDjtFoRt1q2/2EEbsJdEZe675C7soT+W4u7nh9afgozEY52hypE6u
+         KiWg==
+X-Gm-Message-State: ANhLgQ0G1O2As8Eb/+Z9nkBVZnPxxAZzgtgDX03eOfub2pNCremapXyh
+        mX5TRBSXFsH9TVAVdNXQN7Mw91VWA29XXN1ScFk=
+X-Google-Smtp-Source: ADFU+vtzRIEAKZOksidg1JXq5o0b5sxHaDLH1Ts0A6brN1RBaTkYpSUrVsWYYXEoGn7n22NAlWAHwMbCfZ//MQk3Jag=
+X-Received: by 2002:a4a:3b50:: with SMTP id s77mr1262094oos.53.1585011934220;
+ Mon, 23 Mar 2020 18:05:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <xmqqa7477u6j.fsf@gitster.c.googlers.com>
+In-Reply-To: <xmqqa7477u6j.fsf@gitster.c.googlers.com>
+From:   Elijah Newren <newren@gmail.com>
+Date:   Mon, 23 Mar 2020 18:05:23 -0700
+Message-ID: <CABPp-BF_sO+bx8HFPFpVeZStft4oZ-wHRAbNFmBEOWnya99Aqg@mail.gmail.com>
+Subject: [ANNOUNCE] git-filter-repo v2.26.0 (Was: Re: [ANNOUNCE] Git v2.26.0)
+To:     Junio C Hamano <gitster@pobox.com>
+Cc:     Git Mailing List <git@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        git-packagers@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 17:42:21 -0700 Roman Gushchin <guro@fb.com> wrote:
+Hi,
 
-> How about this one? I've merged them into one and stripped it a little bit.
-> 
-> Thanks!
-> 
+On Sun, Mar 22, 2020 at 6:12 PM Junio C Hamano <gitster@pobox.com> wrote:
+>
+> The latest feature release Git v2.26.0 is now available at the
+> usual places.  It is comprised of 504 non-merge commits since
+> v2.25.0, contributed by 64 people, 12 of which are new faces.
 
-Yes, that looks good.  Here's the delta from the previously reviewed
-version.  I think it's valid to retain those acks and revewed-by's.
+The latest release of git-filter-repo, v2.26.0, is also now available.  It
+is comprised of 16 non-merge commits since v2.25.0, including a change from
+a new contributor.
 
+The public repo is at
 
-From: Roman Gushchin <guro@fb.com>
-Subject: mm: fork: fix kernel_stack memcg stats for various stack implementations
+    https://github.com/newren/git-filter-repo
 
---- a/include/linux/memcontrol.h~mm-fork-fix-kernel_stack-memcg-stats-for-various-stack-implementations-v2
-+++ a/include/linux/memcontrol.h
-@@ -1432,6 +1432,8 @@ static inline int memcg_cache_id(struct
- 	return memcg ? memcg->kmemcg_id : -1;
- }
- 
-+struct mem_cgroup *mem_cgroup_from_obj(void *p);
-+
- #else
- 
- static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
-@@ -1473,6 +1475,11 @@ static inline void memcg_put_cache_ids(v
- {
- }
- 
-+static inline struct mem_cgroup *mem_cgroup_from_obj(void *p)
-+{
-+       return NULL;
-+}
-+
- #endif /* CONFIG_MEMCG_KMEM */
- 
- #endif /* _LINUX_MEMCONTROL_H */
---- a/mm/memcontrol.c~mm-fork-fix-kernel_stack-memcg-stats-for-various-stack-implementations-v2
-+++ a/mm/memcontrol.c
-@@ -2672,6 +2672,33 @@ static void commit_charge(struct page *p
- }
- 
- #ifdef CONFIG_MEMCG_KMEM
-+/*
-+ * Returns a pointer to the memory cgroup to which the kernel object is charged.
-+ *
-+ * The caller must ensure the memcg lifetime, e.g. by taking rcu_read_lock(),
-+ * cgroup_mutex, etc.
-+ */
-+struct mem_cgroup *mem_cgroup_from_obj(void *p)
-+{
-+	struct page *page;
-+
-+	if (mem_cgroup_disabled())
-+		return NULL;
-+
-+	page = virt_to_head_page(p);
-+
-+	/*
-+	 * Slab pages don't have page->mem_cgroup set because corresponding
-+	 * kmem caches can be reparented during the lifetime. That's why
-+	 * memcg_from_slab_page() should be used instead.
-+	 */
-+	if (PageSlab(page))
-+		return memcg_from_slab_page(page);
-+
-+	/* All other pages use page->mem_cgroup */
-+	return page->mem_cgroup;
-+}
-+
- static int memcg_alloc_cache_id(void)
- {
- 	int id, size;
-_
+The tarballs can be found at:
+
+    https://github.com/newren/git-filter-repo/releases
+
+git-filter-repo can also be installed via pip[1] or a variety of
+package managers across Windows, Mac OS, or Linux (and maybe
+others)[2].
+
+New contributors whose contributions weren't in v2.25.0 are as follows.
+Welcome to the git-filter-repo development community!
+
+  Sirio Balmelli
+
+[1] https://github.com/newren/git-filter-repo/blob/master/INSTALL.md#installation-via-pip
+[2] https://github.com/newren/git-filter-repo/blob/master/INSTALL.md#installation-via-package-manager
+
+----------------------------------------------------------------
+
+git-filter-repo 2.26 Release Notes
+==================================
+
+(Note: Additional information is available for many release notes at
+    https://github.com/newren/git-filter-repo/issues/<NUMBER>)
+
+* Fixes:
+  * fix cache of file renames and myriad problems with subdirectories
+    that had the same filenames as parent directories (#53)
+  * handle typechange modifications when first parent is pruned (#61)
+  * avoid dying when using --analyze with --refs (#65)
+  * permit trailing slash for --[to-]subdirectory-filter argument
+  * use more expensive prunability checks when needed (#64)
+  * relax the definition of freshly packed (#38)
+
+* Performance:
+  * multiple performance improvements for --analyze (#52)
+
+* contrib scripts:
+  * fix lint-history to avoid dying when we get file deletions (#51)
+  * point people to an issue where they can find more linting examples (#45)
+
+* Miscellaneous:
+  * Installation improvement (#55)
+  * Various documentation improvements
 
 
+Changes since v2.25.0 are as follows:
+
+Elijah Newren (15):
+      filter-repo: permit trailing slash for --[to-]subdirectory-filter argument
+      git-filter-repo.txt: fix nested bullets to render correctly
+      Contributing.md: start with git guidelines, then mention exceptions
+      filter-repo (README): link to upstream docs
+      filter-repo (README): streamline prerequisite wording a little bit
+      lint-history: avoid dying when we get file deletions
+      filter-repo: avoid repeatedly translating the same string with --analyze
+      filter-repo: accelerate is_ancestor() for --analyze mode
+      filter-repo: fix cache of file renames
+      lint-history: point people to issue with more linting examples
+      filter-repo: avoid dying with --analyze on commits with unseen parents
+      filter-repo: relax the definition of freshly packed
+      filter-repo: use more expensive prunability checks when needed
+      filter-repo: handle typechange modifications when first parent is pruned
+      t9390: add missing '&&' in command chain
+
+Sirio Balmelli (1):
+      setup.py: test for FileExistsError on symlink
