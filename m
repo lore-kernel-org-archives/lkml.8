@@ -2,185 +2,130 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECCCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB14C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E96A205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hDjq3SVI"
+	by mail.kernel.org (Postfix) with ESMTP id 3B87D20836
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:10:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCXUJj (ORCPT
+        id S1728031AbgCXUJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:09:39 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:31987 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725866AbgCXUJj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:09:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585080578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqAkWy7IXNHN9M1BZ9stUZFEkaMutV+Lz4dKs1zB6M8=;
-        b=hDjq3SVIEQXN39zniQiTWOpm6xtjlq8Tbdnjx00Eqerd5JoLuWFl4GY9TaYkw3VDlNq0sh
-        oD2lehB8wHOTyy4V6mVQ/yZHIVQGofGVck6LnRu+5cAXHBwLmRaIba+DLi9+J3yFuu8EDU
-        JXpxd0aUI/c8LsIVFc1ooFV39glS3vA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-482-__sf59ASPoC-UQUUxMQR7Q-1; Tue, 24 Mar 2020 16:09:36 -0400
-X-MC-Unique: __sf59ASPoC-UQUUxMQR7Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 24 Mar 2020 16:09:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727270AbgCXUJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:09:58 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20091800EB6;
-        Tue, 24 Mar 2020 20:09:35 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.27])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 3F62419C6A;
-        Tue, 24 Mar 2020 20:09:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 24 Mar 2020 21:09:34 +0100 (CET)
-Date:   Tue, 24 Mar 2020 21:09:32 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] ipc/mqueue.c: change __do_notify() to bypass
- check_kill_permission()
-Message-ID: <20200324200932.GB24230@redhat.com>
-References: <20200322110901.GA25108@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id D91162070A;
+        Tue, 24 Mar 2020 20:09:57 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1jGps4-001hQi-Pn; Tue, 24 Mar 2020 16:09:56 -0400
+Message-Id: <20200324200956.663647256@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Tue, 24 Mar 2020 16:08:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        Jaewon Kim <jaewon31.kim@samsung.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH 2/3] tools lib traceevent: Handle __attribute__((user)) in field names
+References: <20200324200845.763565368@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322110901.GA25108@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
-changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify()
-no longer works if the sender doesn't have rights to send a signal.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
-to avoid check_kill_permission().
+Commit c61f13eaa1ee1 ("gcc-plugins: Add structleak for more stack
+initialization") added "__attribute__((user))" to the user when stackleak
+detector is enabled. This now appears in the field format of system call
+trace events for system calls that have user buffers. The
+"__attribute__((user))" breaks the parsing in libtraceevent. That needs to
+be handled.
 
-This needs the additional notify.sigev_signo != 0 check, shouldn't we
-change do_mq_notify() to deny sigev_signo == 0 ?
-
-Test-case:
-
-	#include <signal.h>
-	#include <mqueue.h>
-	#include <unistd.h>
-	#include <sys/wait.h>
-	#include <assert.h>
-
-	static int notified;
-
-	static void sigh(int sig)
-	{
-		notified = 1;
-	}
-
-	int main(void)
-	{
-		signal(SIGIO, sigh);
-
-		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
-		assert(fd >= 0);
-
-		struct sigevent se = {
-			.sigev_notify	= SIGEV_SIGNAL,
-			.sigev_signo	= SIGIO,
-		};
-		assert(mq_notify(fd, &se) == 0);
-
-		if (!fork()) {
-			assert(setuid(1) == 0);
-			mq_send(fd, "",1,0);
-			return 0;
-		}
-
-		wait(NULL);
-		mq_unlink("/mq");
-		assert(notified);
-		return 0;
-	}
-
-Reported-by: Yoji <yoji.fujihar.min@gmail.com>
-Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- ipc/mqueue.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+ tools/lib/traceevent/event-parse.c | 39 +++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 49a05ba3000d..63b164932ffd 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -774,28 +774,40 @@ static void __do_notify(struct mqueue_inode_info *info)
- 	 * synchronously. */
- 	if (info->notify_owner &&
- 	    info->attr.mq_curmsgs == 1) {
--		struct kernel_siginfo sig_i;
- 		switch (info->notify.sigev_notify) {
- 		case SIGEV_NONE:
- 			break;
--		case SIGEV_SIGNAL:
--			/* sends signal */
-+		case SIGEV_SIGNAL: {
-+			struct kernel_siginfo sig_i;
-+			struct task_struct *task;
-+
-+			/* do_mq_notify() accepts sigev_signo == 0, why?? */
-+			if (!info->notify.sigev_signo)
-+				break;
+diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+index eec96c31ea9e..010e60d5a081 100644
+--- a/tools/lib/traceevent/event-parse.c
++++ b/tools/lib/traceevent/event-parse.c
+@@ -1444,6 +1444,7 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 	enum tep_event_type type;
+ 	char *token;
+ 	char *last_token;
++	char *delim = " ";
+ 	int count = 0;
+ 	int ret;
  
- 			clear_siginfo(&sig_i);
- 			sig_i.si_signo = info->notify.sigev_signo;
- 			sig_i.si_errno = 0;
- 			sig_i.si_code = SI_MESGQ;
- 			sig_i.si_value = info->notify.sigev_value;
--			/* map current pid/uid into info->owner's namespaces */
- 			rcu_read_lock();
-+			/* map current pid/uid into info->owner's namespaces */
- 			sig_i.si_pid = task_tgid_nr_ns(current,
- 						ns_of_pid(info->notify_owner));
--			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
-+			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
-+						current_uid());
-+			/*
-+			 * We can't use kill_pid_info(), this signal should
-+			 * bypass check_kill_permission(). It is from kernel
-+			 * but si_fromuser() can't know this.
-+			 */
-+			task = pid_task(info->notify_owner, PIDTYPE_PID);
-+			if (task)
-+				do_send_sig_info(info->notify.sigev_signo,
-+						&sig_i, task, PIDTYPE_TGID);
- 			rcu_read_unlock();
--
--			kill_pid_info(info->notify.sigev_signo,
--				      &sig_i, info->notify_owner);
+@@ -1504,13 +1505,49 @@ static int event_read_fields(struct tep_event *event, struct tep_format_field **
+ 					field->flags |= TEP_FIELD_IS_POINTER;
+ 
+ 				if (field->type) {
+-					ret = append(&field->type, " ", last_token);
++					ret = append(&field->type, delim, last_token);
+ 					free(last_token);
+ 					if (ret < 0)
+ 						goto fail;
+ 				} else
+ 					field->type = last_token;
+ 				last_token = token;
++				delim = " ";
++				continue;
++			}
++
++			/* Handle __attribute__((user)) */
++			if ((type == TEP_EVENT_DELIM) &&
++			    strcmp("__attribute__", last_token) == 0 &&
++			    token[0] == '(') {
++				int depth = 1;
++				int ret;
++
++				ret = append(&field->type, " ", last_token);
++				ret |= append(&field->type, "", "(");
++				if (ret < 0)
++					goto fail;
++
++				delim = " ";
++				while ((type = read_token(&token)) != TEP_EVENT_NONE) {
++					if (type == TEP_EVENT_DELIM) {
++						if (token[0] == '(')
++							depth++;
++						else if (token[0] == ')')
++							depth--;
++						if (!depth)
++							break;
++						ret = append(&field->type, "", token);
++						delim = "";
++					} else {
++						ret = append(&field->type, delim, token);
++						delim = " ";
++					}
++					if (ret < 0)
++						goto fail;
++					free(last_token);
++					last_token = token;
++				}
+ 				continue;
+ 			}
  			break;
-+		}
- 		case SIGEV_THREAD:
- 			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
- 			netlink_sendskb(info->notify_sock, info->notify_cookie);
 -- 
-2.25.1.362.g51ebf55
+2.25.1
 
 
