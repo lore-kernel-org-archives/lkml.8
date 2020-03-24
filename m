@@ -2,75 +2,108 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66E9C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67DFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AEEF2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3C812078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:11:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CmfnpnoQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="knb2OU/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgCXWKx (ORCPT
+        id S1728352AbgCXWLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:10:53 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:60024 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727496AbgCXWKx (ORCPT
+        Tue, 24 Mar 2020 18:11:15 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37142 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727496AbgCXWLP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:10:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585087852;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ccclkoVXQpOw7927Ojoa/iW3BMVEU13+FLfEclrX90Q=;
-        b=CmfnpnoQ0HlAflqrqb5kH3Oad2Ikt9QxwI/piE4i3zZgp08nMspmygzQ7TEMlFyvpU1ajN
-        8yIUyl1TWs70gtM72ryeHKKKPxzdfznicIpCweTAVErWc1hJEAPDo1lf32GDzQb8K0rRBZ
-        MFGXW/de1VD451JQWc5dCjL8Sa2+M8M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-80-Q7VuaSxdNNyTigAsq18s7g-1; Tue, 24 Mar 2020 18:10:48 -0400
-X-MC-Unique: Q7VuaSxdNNyTigAsq18s7g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50B5D477;
-        Tue, 24 Mar 2020 22:10:47 +0000 (UTC)
-Received: from treble (unknown [10.10.119.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EE1565C1B2;
-        Tue, 24 Mar 2020 22:10:45 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 17:10:43 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
+        Tue, 24 Mar 2020 18:11:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fg7lcfYPp/xvJSNTrWbhmzwZRat2kWak0mQQUbMiiP0=; b=knb2OU/H9TS/LRJlLmdm6jeiD9
+        TgHfl6SsT3OOUpR6O7E2Ey/ZxxFi/x7ZpSvJ7yogSXlO7HXZwYDeg8H1r9KCDyPw8TZPoHtiYf2B/
+        zneAl4qNdg2LYeZqC9DJWMzDqD9fTCW9G/uktf/hOshLKjmuos+4UFaDEEMKkvCz9/4RapOyFqQHq
+        YanhGtQlzz2D9wJhIiRrAIcvhfKwPFFSJbUJaTxhGfqJr3vEdXqTNx1zhZsiRBMZk1siFNnbDBUEG
+        hFt+QdTW8ucpF6q3Wjh+B6xzifICa6TdjGRszV0U8N79lkBf+8fXoOTqwmNF4o+KM8Vdv7p9UngSF
+        3UM75bMQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGrlP-0006Oc-BW; Tue, 24 Mar 2020 22:11:11 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9FCCA983502; Tue, 24 Mar 2020 23:11:09 +0100 (CET)
+Date:   Tue, 24 Mar 2020 23:11:09 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
 Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
         mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v3 25/26] objtool: Rearrange validate_section()
-Message-ID: <20200324221043.p4cwvgwlfgixosrv@treble>
+Subject: Re: [PATCH v3 18/26] objtool: Fix !CFI insn_state propagation
+Message-ID: <20200324221109.GU2452@worktop.programming.kicks-ass.net>
 References: <20200324153113.098167666@infradead.org>
- <20200324160925.410651737@infradead.org>
+ <20200324160924.987489248@infradead.org>
+ <20200324214006.tlanaff5q6gkgk2a@treble>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324160925.410651737@infradead.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200324214006.tlanaff5q6gkgk2a@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 04:31:38PM +0100, Peter Zijlstra wrote:
-> In preparation of further changes, once again break out the loop body.
-> No functional changes intended.
+On Tue, Mar 24, 2020 at 04:40:06PM -0500, Josh Poimboeuf wrote:
+> On Tue, Mar 24, 2020 at 04:31:31PM +0100, Peter Zijlstra wrote:
+
+> > +		if (!save_insn->visited) {
+> > +			/*
+> > +			 * Oops, no state to copy yet.
+> > +			 * Hopefully we can reach this
+> > +			 * instruction from another branch
+> > +			 * after the save insn has been
+> > +			 * visited.
+> > +			 */
+> > +			if (insn == first)
+> > +				return 0; // XXX
 > 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Yeah, moving this code out to apply_insn_hint() seems like a nice idea,
+> but it wouldn't be worth it if it breaks this case.  TBH I don't
+> remember if this check was for a real-world case.  Might be worth
+> looking at...  If this case doesn't exist in reality then we could just
+> remove this check altogether.
 
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+I'll go run a bunch of builds with a print on it, that should tell us I
+suppose.
 
--- 
-Josh
+> > +
+> > +			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
+> > +					sec, insn->offset);
+> > +			return 1;
+> > +		}
+> > +
+> > +		insn->state = save_insn->state;
+> > +	}
+> > +
+> > +	*state = insn->state;
+> 
+> This would have been easier to review if apply_insn_hint() were added in
+> a separate patch.
 
+27 it will be!
+
+> > +
+> > +	/* restore !CFI state */
+> > +	state->df = old.df;
+> > +	state->uaccess = old.uaccess;
+> > +	state->uaccess_stack = old.uaccess_stack;
+> 
+> Maybe we should just move the CFI stuff into a state->cfi substruct.
+> That would remove the need for these bits and probably also the comment
+> above the insn_state declaration.
+
+Indeed!
