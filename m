@@ -2,131 +2,217 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9AD8C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:02:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF1EAC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FC220714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB692073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:06:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aO/UHxQd"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ZYeIvFFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgCXACT (ORCPT
+        id S1727385AbgCXAGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:02:19 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37128 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgCXACT (ORCPT
+        Mon, 23 Mar 2020 20:06:43 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46778 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbgCXAGn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:02:19 -0400
-Received: by mail-pl1-f194.google.com with SMTP id x1so2608406plm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:02:19 -0700 (PDT)
+        Mon, 23 Mar 2020 20:06:43 -0400
+Received: by mail-qt1-f193.google.com with SMTP id g7so7581504qtj.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:06:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=joelfernandes.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=FMJ8LYsOHCuxBqPm4WnPrre6tQnfFkDx3c9qEXiQywU=;
-        b=aO/UHxQdGJRQXfe0gajEMy3sGlCxXRCc3f+LSbVWpchMNbVtKZlSBDkpbbwIq1wKKB
-         l5LEj159s+8HKvRrWNsXpJ4o9nzeKqe/Bwt2n2HOwnq6c6ea2JdA304hfC5uwxVTWY3s
-         CvBgDzZy77UyIYQ6nDbajdddwlhO2KtcrgZ9gKvon0KDcq6Rq8l1KDNq1Fak+VeYN7vo
-         rU3ZxVAI4/u+gyyF0rwE+TtBqUlRA4/zknSEDLxE/82GNcxCXf+oUQjbVj3Fj2wsZ5OY
-         mEvRKcuBOyBREANNxCGGIDLP7tR7ggXVT38pM2wvgc6Td4ZMmMXjeIkGmVWRoNuZ9pP7
-         l7fQ==
+         :content-disposition:in-reply-to:user-agent;
+        bh=l6iyFi0DdET9Ro8DJXjL2rBhmAO8aGkXKclfaXq9KNQ=;
+        b=ZYeIvFFSkdWNqbZJG7Njo1YepQZEN3wdUUT5OWgC9L+UTYtD+bpgjSdEq/drXAgpgf
+         i/MNibkdHeYrbj84NVyQrAfAsaJt7qRKZ6joVFR29RTsdqxynn6unX8RKVkW/mQ6hukQ
+         aUNEPJQEyYLDNddhE80Im51+yEwpbFOB/KvZo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=FMJ8LYsOHCuxBqPm4WnPrre6tQnfFkDx3c9qEXiQywU=;
-        b=QF0VM13XNXg60mDOGpvfuFALowEp5ul2iLw/LsHLpXybSDg2JsAOmrTehjRXzznqBJ
-         FpPIk0qq11HuxllhVWhJB7Q3VE8NuyOQoXwrvuTkJK46bCb/GyoGjNOb/DBJ661k6EmE
-         ncsSkVTlwTLGncHhnV6tEdC3gWqoTX8wInflwuJJZWyoI5pTbdFxEZeJsLiNuDaiSzZ0
-         cCrTuURr/SEBkTtImgSmjP9iVjB1Jsc6bvZtfxhSYHatBBQ8GLEhE+OwhzXUQTzsl1k+
-         Cx11DfGcKCmqINsuuYk7EUjtlSLJjrRONo42ugap9dcaWsa2XQDjFmM+fdbdmyTXynyX
-         HLCQ==
-X-Gm-Message-State: ANhLgQ0bT/HKYhKBSDe8r4jr4faVdr58odBUf2OKfYv+JUXWgGc9P4wE
-        FAZF7f2//lqZY8b/dkj6VYg=
-X-Google-Smtp-Source: ADFU+vt4eSDrMXwiJThWBk2KCPEqmaH+a6P8AsrouFAy5qucFrUDbg4uFbP014TWoquAwITfNMAoIg==
-X-Received: by 2002:a17:902:a701:: with SMTP id w1mr21873666plq.165.1585008138501;
-        Mon, 23 Mar 2020 17:02:18 -0700 (PDT)
-Received: from mail.google.com ([149.248.10.52])
-        by smtp.gmail.com with ESMTPSA id z63sm13434476pgd.12.2020.03.23.17.02.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 17:02:17 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 00:02:15 +0000
-From:   Changbin Du <changbin.du@gmail.com>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Changbin Du <changbin.du@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: Two questions about cache coherency on arm platforms
-Message-ID: <20200324000214.xl7aomdboyby3b4g@mail.google.com>
-References: <20200323123524.w67fici6oxzdo665@mail.google.com>
- <20200323131720.GE2597@C02TD0UTHF1T.local>
- <20200323161537.ptjrihqotgmon7tr@mail.google.com>
- <20200323164723.GA8652@lakrids.cambridge.arm.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=l6iyFi0DdET9Ro8DJXjL2rBhmAO8aGkXKclfaXq9KNQ=;
+        b=Ux41T+rRGSAqbbNRfjKlb8GHPtum2trwwvc33HhO+J4hRjYkJNVuVTETaLZrCTbjeq
+         X8q18cEz5pTwVSkzMjiixNo4cEjMbWDTNdChflvTghsCaKV57jwnpXCUNihwmTKnoy5q
+         nHUCsaaSkDDWKOvM2JPRUElNyBBJsrn8fMaaOf3aqIR2eEaxM42sflRTB9oeDS9bI8Tz
+         wXswx5jvvCzdoetJ5dcj0sEpUM9RNCSL0+IEaD/dR2gkZVg9hYJC6B6UkGaWUW7kxVJD
+         IMoErQT0U+z0wA+Vmy6fpOyfP2lrrY1bv9SpX4R8gWlwhoWD72TmwZ12YuNmZlS/X/PH
+         JoNA==
+X-Gm-Message-State: ANhLgQ0PylOTlA/yGLJcQqFwmYMotU1lZTffNFyJby/3pqaA5TuY6QLn
+        aJ+6mtTsTCE0DhfhN5EG8hyyOQ==
+X-Google-Smtp-Source: ADFU+vv3eiOjVDm85hAJbrOzgpuQWu0OCDFCNOOmajIc86zloeMFmkLOfdZhheoieJPO37foxurylQ==
+X-Received: by 2002:ac8:4e94:: with SMTP id 20mr18725347qtp.314.1585008401620;
+        Mon, 23 Mar 2020 17:06:41 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id w4sm11187978qkc.122.2020.03.23.17.06.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 17:06:40 -0700 (PDT)
+Date:   Mon, 23 Mar 2020 20:06:39 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
+ sample state of locked-down task
+Message-ID: <20200324000639.GA29340@google.com>
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-1-paulmck@kernel.org>
+ <20200319132238.75a034c3@gandalf.local.home>
+ <20200319173525.GI3199@paulmck-ThinkPad-P72>
+ <20200320024943.GA29649@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200323164723.GA8652@lakrids.cambridge.arm.com>
-User-Agent: NeoMutt/20180716-508-7c9a6d
+In-Reply-To: <20200320024943.GA29649@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:47:24PM +0000, Mark Rutland wrote:
-> On Mon, Mar 23, 2020 at 04:15:40PM +0000, Changbin Du wrote:
-> > Hi Mark,
-> > Thanks for your answer. I still don't understand the first question.
-> > 
-> > On Mon, Mar 23, 2020 at 01:17:20PM +0000, Mark Rutland wrote:
-> > > On Mon, Mar 23, 2020 at 08:35:26PM +0800, Changbin Du wrote:
-> > > > Hi, All,
-> > > > I am not very familiar with ARM processors. I have two questions about
-> > > > cache coherency. Could anyone help me?
-> > > > 
-> > > > 1. How is cache coherency maintenanced on ARMv8 big.LITTLE system?
-> > > > As far as I know, big cores and little cores are in seperate clusters on
-> > > > big.LITTLE system.
-> > > 
-> > > This is often true, but not always the case. For example, with DSU big
-> > > and little cores can be placed within the same cluster.
-> > 
-> > Yes, it is ture for DynamIQ that bl cores can be placed within the same cluster.
-> > But I don't understand how linux support big.LITTLE before DynamIQ.
+On Thu, Mar 19, 2020 at 07:49:43PM -0700, Paul E. McKenney wrote:
+[...] 
+> 							Thanx, Paul
 > 
-> Multiple clusters can be in the same Inner Shareable domain, and Linux
-> relies on this being the case for systems it supports. It's possible to
-> build a system where clusters are in distinct Inner Shareable domains,
-> but Linux does not support using all cores on such a system.
+> ------------------------------------------------------------------------
 > 
-> Even with CCI, CCN, CMN, etc, Linux requires that all cores (which it is
-> told about) are in the same Inner Shareable domain. That is what is
-> commonly built.
->
-Thank you, I see now. I thought clusters must be in distinct Inner
-Shareable domains. So I was wrong. The mannual is somewhat misleading.
+> commit e26a234c1205bf02b62b62cd7f15f8086fc0b13b
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Thu Mar 19 15:33:12 2020 -0700
+> 
+>     rcu-tasks: Avoid IPIing userspace/idle tasks if kernel is so built
+>     
+>     Systems running CPU-bound real-time task do not want IPIs sent to CPUs
+>     executing nohz_full userspace tasks.  Battery-powered systems don't
+>     want IPIs sent to idle CPUs in low-power mode.  Unfortunately, RCU tasks
+>     trace can and will send such IPIs in some cases.
+>     
+>     Both of these situations occur only when the target CPU is in RCU
+>     dyntick-idle mode, in other words, when RCU is not watching the
+>     target CPU.  This suggests that CPUs in dyntick-idle mode should use
+>     memory barriers in outermost invocations of rcu_read_lock_trace()
+>     and rcu_read_unlock_trace(), which would allow the RCU tasks trace
+>     grace period to directly read out the target CPU's read-side state.
+>     One challenge is that RCU tasks trace is not targeting a specific
+>     CPU, but rather a task.  And that task could switch from one CPU to
+>     another at any time.
+>     
+>     This commit therefore uses try_invoke_on_locked_down_task()
+>     and checks for task_curr() in trc_inspect_reader_notrunning().
+>     When this condition holds, the target task is running and cannot move.
+>     If CONFIG_TASKS_TRACE_RCU_READ_MB=y, the new rcu_dynticks_zero_in_eqs()
+>     function can be used to check if the specified integer (in this case,
+>     t->trc_reader_nesting) is zero while the target CPU remains in that same
+>     dyntick-idle sojourn.  If so, the target task is in a quiescent state.
+>     If not, trc_read_check_handler() must indicate failure so that the
+>     grace-period kthread can take appropriate action or retry after an
+>     appropriate delay, as the case may be.
+>     
+>     With this change, given CONFIG_TASKS_TRACE_RCU_READ_MB=y, if a given
+>     CPU remains idle or a given task continues executing in nohz_full mode,
+>     the RCU tasks trace grace-period kthread will detect this without the
+>     need to send an IPI.
+>     
+>     Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+>     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> index e1089fd..296f926 100644
+> --- a/kernel/rcu/rcu.h
+> +++ b/kernel/rcu/rcu.h
+> @@ -501,6 +501,7 @@ void srcutorture_get_gp_data(enum rcutorture_type test_type,
+>  #endif
+>  
+>  #ifdef CONFIG_TINY_RCU
+> +static inline bool rcu_dynticks_zero_in_eqs(int cpu, int *vp) { return false; }
+>  static inline unsigned long rcu_get_gp_seq(void) { return 0; }
+>  static inline unsigned long rcu_exp_batches_completed(void) { return 0; }
+>  static inline unsigned long
+> @@ -510,6 +511,7 @@ static inline void show_rcu_gp_kthreads(void) { }
+>  static inline int rcu_get_gp_kthreads_prio(void) { return 0; }
+>  static inline void rcu_fwd_progress_check(unsigned long j) { }
+>  #else /* #ifdef CONFIG_TINY_RCU */
+> +bool rcu_dynticks_zero_in_eqs(int cpu, int *vp);
+>  unsigned long rcu_get_gp_seq(void);
+>  unsigned long rcu_exp_batches_completed(void);
+>  unsigned long srcu_batches_completed(struct srcu_struct *sp);
+> diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> index d31ed74..36f03d3 100644
+> --- a/kernel/rcu/tasks.h
+> +++ b/kernel/rcu/tasks.h
+> @@ -802,22 +802,38 @@ static void trc_read_check_handler(void *t_in)
+>  /* Callback function for scheduler to check non-running) task.  */
+>  static bool trc_inspect_reader_notrunning(struct task_struct *t, void *arg)
 
-> > I read below description in ARM Cortex-A Series Programmer’s Guide for
-> > ARMv8-A.
-> >  | big.LITTLE software models require transparent and efficient transfer of data between big and LITTLE clusters.
-> >  | Coherency between clusters is provided by a cache-coherent interconnect such as the ARM CoreLink CCI-400 described in Chapter 14.
-> > 
-> > So I think  big cores and little cores are in different clusters in this
-> > case. Then we are not within the same Inner Shareable domain?
-> 
-> Linux requires that those clusters are in the same Inner Shareable
-> domain, and that's what people (mostly) build today.
-> 
-> Thanks,
-> Mark.
+This function name is a bit confusing. The task could be running when this
+function is called. Below you are detecting that the task is running, by
+calling task_curr().
 
--- 
-Cheers,
-Changbin Du
+Maybe just trc_inspect_reader() is better?
+
+[..]
+
+> diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> index 44edd0a..43991a4 100644
+> --- a/kernel/rcu/tree.h
+> +++ b/kernel/rcu/tree.h
+> @@ -455,6 +455,8 @@ static void rcu_bind_gp_kthread(void);
+>  static bool rcu_nohz_full_cpu(void);
+>  static void rcu_dynticks_task_enter(void);
+>  static void rcu_dynticks_task_exit(void);
+> +static void rcu_dynticks_task_trace_enter(void);
+> +static void rcu_dynticks_task_trace_exit(void);
+>  
+>  /* Forward declarations for tree_stall.h */
+>  static void record_gp_stall_check_time(void);
+> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> index 9355536..f4a344e 100644
+> --- a/kernel/rcu/tree_plugin.h
+> +++ b/kernel/rcu/tree_plugin.h
+> @@ -2553,3 +2553,21 @@ static void rcu_dynticks_task_exit(void)
+>  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
+>  #endif /* #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL) */
+>  }
+> +
+> +/* Turn on heavyweight RCU tasks trace readers on idle/user entry. */
+> +static void rcu_dynticks_task_trace_enter(void)
+> +{
+> +#ifdef CONFIG_TASKS_RCU_TRACE
+> +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> +		current->trc_reader_special.b.need_mb = true;
+
+If this is every called from middle of a reader section (that is we
+transition from IPI-mode to using heavier reader-sections), then is a memory
+barrier needed here just to protect the reader section that already started?
+
+thanks,
+
+ - Joel
+
+
+> +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
+> +}
+> +
+> +/* Turn off heavyweight RCU tasks trace readers on idle/user exit. */
+> +static void rcu_dynticks_task_trace_exit(void)
+> +{
+> +#ifdef CONFIG_TASKS_RCU_TRACE
+> +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> +		current->trc_reader_special.b.need_mb = false;
+> +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
+> +}
