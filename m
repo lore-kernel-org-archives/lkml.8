@@ -7,41 +7,42 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C785EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18FD8C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B594208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAC39208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgCXOYB (ORCPT
+        id S1727443AbgCXOYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:24:01 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:45067 "EHLO
+        Tue, 24 Mar 2020 10:24:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45071 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCXOYB (ORCPT
+        with ESMTP id S1727693AbgCXOYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:24:01 -0400
+        Tue, 24 Mar 2020 10:24:02 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGkTE-0006z6-7e; Tue, 24 Mar 2020 15:23:56 +0100
+        id 1jGkTF-0006zr-IF; Tue, 24 Mar 2020 15:23:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 8D28B1C0451;
-        Tue, 24 Mar 2020 15:23:55 +0100 (CET)
-Date:   Tue, 24 Mar 2020 14:23:55 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 342401C0470;
+        Tue, 24 Mar 2020 15:23:57 +0100 (CET)
+Date:   Tue, 24 Mar 2020 14:23:56 -0000
 From:   "tip-bot2 for Alexey Makhalov" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/vmware] x86/vmware: Use bool type for vmw_sched_clock
+Subject: [tip: x86/vmware] x86/vmware: Make vmware_select_hypercall() __init
 Cc:     Alexey Makhalov <amakhalov@vmware.com>,
         Borislav Petkov <bp@suse.de>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
         Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200323195707.31242-6-amakhalov@vmware.com>
-References: <20200323195707.31242-6-amakhalov@vmware.com>
+In-Reply-To: <20200323195707.31242-2-amakhalov@vmware.com>
+References: <20200323195707.31242-2-amakhalov@vmware.com>
 MIME-Version: 1.0
-Message-ID: <158505983520.28353.190987036145128922.tip-bot2@tip-bot2>
+Message-ID: <158505983688.28353.14563304680981102278.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -57,43 +58,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/vmware branch of tip:
 
-Commit-ID:     8fefe9dacdb0a1347d3dac871bb1bba3cbc32945
-Gitweb:        https://git.kernel.org/tip/8fefe9dacdb0a1347d3dac871bb1bba3cbc32945
+Commit-ID:     14388ae24544c4cc09056773c886839a2c8d256b
+Gitweb:        https://git.kernel.org/tip/14388ae24544c4cc09056773c886839a2c8d256b
 Author:        Alexey Makhalov <amakhalov@vmware.com>
-AuthorDate:    Mon, 23 Mar 2020 19:57:07 
+AuthorDate:    Mon, 23 Mar 2020 19:57:03 
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 24 Mar 2020 10:29:22 +01:00
+CommitterDate: Tue, 24 Mar 2020 09:26:04 +01:00
 
-x86/vmware: Use bool type for vmw_sched_clock
+x86/vmware: Make vmware_select_hypercall() __init
 
-To be aligned with other bool variables.
+vmware_select_hypercall() is used only by the __init
+functions, and should be annotated with __init as well.
 
 Signed-off-by: Alexey Makhalov <amakhalov@vmware.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
 Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200323195707.31242-6-amakhalov@vmware.com
+Link: https://lkml.kernel.org/r/20200323195707.31242-2-amakhalov@vmware.com
 ---
- arch/x86/kernel/cpu/vmware.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/vmware.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index e885f73..9b6fafa 100644
+index 46d7326..d280560 100644
 --- a/arch/x86/kernel/cpu/vmware.c
 +++ b/arch/x86/kernel/cpu/vmware.c
-@@ -122,14 +122,14 @@ static unsigned long vmware_get_tsc_khz(void)
- 
- #ifdef CONFIG_PARAVIRT
- static struct cyc2ns_data vmware_cyc2ns __ro_after_init;
--static int vmw_sched_clock __initdata = 1;
-+static bool vmw_sched_clock __initdata = true;
- static DEFINE_PER_CPU_DECRYPTED(struct vmware_steal_time, vmw_steal_time) __aligned(64);
- static bool has_steal_clock;
- static bool steal_acc __initdata = true; /* steal time accounting */
- 
- static __init int setup_vmw_sched_clock(char *s)
- {
--	vmw_sched_clock = 0;
-+	vmw_sched_clock = false;
- 	return 0;
+@@ -213,7 +213,7 @@ static void __init vmware_platform_setup(void)
+ 	vmware_set_capabilities();
  }
- early_param("no-vmw-sched-clock", setup_vmw_sched_clock);
+ 
+-static u8 vmware_select_hypercall(void)
++static u8 __init vmware_select_hypercall(void)
+ {
+ 	int eax, ebx, ecx, edx;
+ 
