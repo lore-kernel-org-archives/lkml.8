@@ -2,107 +2,88 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4559EC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE981C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F32E20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:44:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nic.cz header.i=@nic.cz header.b="CVM9sfsb"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF1B20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbgCXAoS (ORCPT
+        id S1727095AbgCXAp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:44:18 -0400
-Received: from lists.nic.cz ([217.31.204.67]:41998 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbgCXAoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:44:17 -0400
-Received: from dellmb.labs.office.nic.cz (unknown [IPv6:2001:1488:fffe:6:cac7:3539:7f1f:463])
-        by mail.nic.cz (Postfix) with ESMTP id E8F02143135;
-        Tue, 24 Mar 2020 01:44:14 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nic.cz; s=default;
-        t=1585010655; bh=urXM1C/NpGF4/UVm2X2kN+vx+fSbzt7HMlncBR+atYU=;
-        h=From:To:Date;
-        b=CVM9sfsbZ2iyomoPJQb+U+lhUc9gLpDTK7gsLe1o+aXorP+jub31wV94Oun/oNLRH
-         HVtab5fuTWrFUBmCsKIkhx3w0DtwoVGIQRz5gunkqoLZilnh4asioeQncekGlU1odR
-         K4S0XwI44IOMy/0ais5mRrKfozLkgVt+hcO+xf5M=
-From:   =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>,
-        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx: use use platform api"
-Date:   Tue, 24 Mar 2020 01:44:13 +0100
-Message-Id: <20200324004413.14355-1-marek.behun@nic.cz>
-X-Mailer: git-send-email 2.24.1
+        Mon, 23 Mar 2020 20:45:27 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:33284 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgCXAp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:45:27 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48mXbQ0SMCz1rx8j;
+        Tue, 24 Mar 2020 01:45:21 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48mXbP5Kc0z1qyF7;
+        Tue, 24 Mar 2020 01:45:21 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id gC2vLJWwutXk; Tue, 24 Mar 2020 01:45:20 +0100 (CET)
+X-Auth-Info: ksnt2ePpOv6cIiM3lWTVPmpZXSXFGTDMcknb+ITNjK0=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 24 Mar 2020 01:45:20 +0100 (CET)
+Subject: Re: [00/12] add STM32 FMC2 controller drivers
+To:     Christophe Kerello <christophe.kerello@st.com>,
+        miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        tony@atomide.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com
+References: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <466cf542-7575-d791-da81-da32c0919505@denx.de>
+Date:   Tue, 24 Mar 2020 01:37:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: /
-X-Virus-Scanned: clamav-milter 0.101.4 at mail
-X-Virus-Status: Clean
+In-Reply-To: <1584975532-8038-1-git-send-email-christophe.kerello@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
+On 3/23/20 3:58 PM, Christophe Kerello wrote:
+> The FMC2 functional block makes the interface with: synchronous and
+> asynchronous static devices (such as PSNOR, PSRAM or other memory-mapped
+> peripherals) and NAND flash memories.
+> Its main purposes are:
+>   - to translate AXI transactions into the appropriate external device
+>     protocol
+>   - to meet the access time requirements of the external devices
+> All external devices share the addresses, data and control signals with the
+> controller. Each external device is accessed by means of a unique Chip
+> Select. The FMC2 performs only one access at a time to an external device.
+> 
+> Christophe Kerello (12):
+>   dt-bindings: mfd: stm32-fmc2: add STM32 FMC2 controller documentation
+>   mfd: stm32-fmc2: add STM32 FMC2 controller driver
+>   bus: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+>   mtd: rawnand: stm32_fmc2: manage all errors cases at probe time
+>   mtd: rawnand: stm32_fmc2: remove useless inline comments
+>   mtd: rawnand: stm32_fmc2: use FMC2_TIMEOUT_MS for timeouts
+>   mtd: rawnand: stm32_fmc2: cleanup
+>   mtd: rawnand: stm32_fmc2: use FIELD_PREP/FIELD_GET macros
+>   mtd: rawnand: stm32_fmc2: move all registers
+>   mtd: rawnand: stm32_fmc2: use regmap APIs
+>   mtd: rawnand: stm32_fmc2: use stm32_fmc2 structure in nfc controller
+>   mtd: rawnand: stm32_fmc2: add new MP1 compatible string
 
-This commit caused a regression on Armada 37xx. The pinctrl driver says
-  armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
-  armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
-and afterwards other drivers cannot use GPIOs by this driver as IRQs.
-
-Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Peng Fan <peng.fan@nxp.com>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 32f12a388b3c..5f125bd6279d 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -15,6 +15,7 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_device.h>
-+#include <linux/of_irq.h>
- #include <linux/pinctrl/pinconf-generic.h>
- #include <linux/pinctrl/pinconf.h>
- #include <linux/pinctrl/pinctrl.h>
-@@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 		return ret;
- 	}
- 
--	nr_irq_parent = platform_irq_count(pdev);
--	if (nr_irq_parent < 0) {
--		if (nr_irq_parent != -EPROBE_DEFER)
--			dev_err(dev, "Couldn't determine irq count: %pe\n",
--				ERR_PTR(nr_irq_parent));
--		return nr_irq_parent;
--	}
--
-+	nr_irq_parent = of_irq_count(np);
- 	spin_lock_init(&info->irq_lock);
- 
- 	if (!nr_irq_parent) {
-@@ -785,7 +779,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
- 	if (!girq->parents)
- 		return -ENOMEM;
- 	for (i = 0; i < nr_irq_parent; i++) {
--		int irq = platform_get_irq(pdev, i);
-+		int irq = irq_of_parse_and_map(np, i);
- 
- 		if (irq < 0)
- 			continue;
--- 
-2.24.1
-
+This doesn't apply to either next or 5.6-rc7, do you have a tree
+somewhere with those patches applied ?
