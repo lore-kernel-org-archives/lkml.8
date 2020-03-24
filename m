@@ -2,83 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4928DC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1017C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A6D020775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585070553;
-	bh=bp10Mc3LqwR+gWIk4APSHLbda5xk89sidknnuv0bdm8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=czZVZPuO1WCYLLbUH+SGwasEMb9RwERoI0lJAITDrAOfR34qDoPYor97PWdL5+cOV
-	 2C8r3o1khFWeDWQeSfLqa3vAOU15LfxcZWvjGlcHyr1bBVb+CnRPtGlmt6OkFKe+5a
-	 U9I2NB9LErx4dWevJMSau8/0zAze9AeFlKnOTY0M=
+	by mail.kernel.org (Postfix) with ESMTP id C404520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727590AbgCXRWc (ORCPT
+        id S1727753AbgCXRWk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:22:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54894 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 13:22:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:38646 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbgCXRWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:22:31 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A32A20789
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 17:22:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585070551;
-        bh=bp10Mc3LqwR+gWIk4APSHLbda5xk89sidknnuv0bdm8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=TARocf7sBQj7ls/goJ+3p5ExlEas9ycfg5RJCbV+92DNQHfVlzWvVimDS4HeaBGPs
-         tkl112VjpdagQn/Mu31TWqyw1dbyKL9lgcZC+CLxf7qFevo+LJc9PvtmNy877Lzjsu
-         TPfZuG2o/ZDDLl6uRIlc6SfxZth417m7SwFkCV9I=
-Received: by mail-wm1-f53.google.com with SMTP id 26so3022843wmk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:22:31 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0D8hkH/ns2fLSDSuW4H9MKI3rMpV6wf56WLR8nc8EwbANW7QOr
-        mOb6sVpCL/Kf2quZ8uw3Q9a6tl+/wLnfBmSNnSYpaw==
-X-Google-Smtp-Source: ADFU+vuTP/sjpgu7PiSnr/YVpY1CTTUfMjcZ1larcHyvpiup0Xp2j2NELmfyiILtE6gG1uE+GZo2Co4gWCOVGVBUaQA=
-X-Received: by 2002:a1c:f407:: with SMTP id z7mr6596789wma.36.1585070549715;
- Tue, 24 Mar 2020 10:22:29 -0700 (PDT)
+        id S1727295AbgCXRWk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:22:40 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05CD51FB;
+        Tue, 24 Mar 2020 10:22:40 -0700 (PDT)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3C3133F71F;
+        Tue, 24 Mar 2020 10:22:39 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 17:22:36 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Oliver Neukum <oneukum@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Message-ID: <20200324172235.bsxea6qb3id6bhb3@e107158-lin>
+References: <20200324140609.gqvjgxdbcm5ndhvo@e107158-lin>
+ <Pine.LNX.4.44L0.2003241137440.16735-100000@netrider.rowland.org>
 MIME-Version: 1.0
-References: <20200324145120.42194-1-vincenzo.frascino@arm.com> <20200324145120.42194-3-vincenzo.frascino@arm.com>
-In-Reply-To: <20200324145120.42194-3-vincenzo.frascino@arm.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 24 Mar 2020 10:22:18 -0700
-X-Gmail-Original-Message-ID: <CALCETrUPaJCgY_herAUJAfqUbXS6S9xOaLz9abFEWOjEouNf+A@mail.gmail.com>
-Message-ID: <CALCETrUPaJCgY_herAUJAfqUbXS6S9xOaLz9abFEWOjEouNf+A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kselftest: Extend vDSO selftest
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.2003241137440.16735-100000@netrider.rowland.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 7:51 AM Vincenzo Frascino
-<vincenzo.frascino@arm.com> wrote:
->
-> The current version of the multiarch vDSO selftest verifies only
-> gettimeofday.
->
-> Extend the vDSO selftest to the other library functions:
->  - time
->  - clock_getres
->  - clock_gettime
->
-> The extension has been used to verify the unified vdso library on the
-> supported architectures.
+On 03/24/20 11:56, Alan Stern wrote:
+> On Tue, 24 Mar 2020, Qais Yousef wrote:
+> 
+> > On 03/24/20 09:52, Alan Stern wrote:
+> > > On Tue, 24 Mar 2020, Qais Yousef wrote:
+> > > 
+> > > > On 03/24/20 14:20, Oliver Neukum wrote:
+> > > > > Am Dienstag, den 24.03.2020, 10:46 +0000 schrieb Qais Yousef:
+> > > > > > 
+> > > > > > I should have stuck to what I know then. I misread the documentation. Hopefully
+> > > > > > the attached looks better. I don't see the new debug you added emitted.
+> > > > > 
+> > > > > That is odd. Please try
+> > > > > 
+> > > > > echo "module usbcore +mfp" > /sys/kernel/debug/dynamic_debug/control
+> > > > > 
+> > > > > with the attached improved patch.
+> > > > 
+> > > > Hmm still no luck
+> > > > 
+> > > > 
+> > > > # history
+> > > >    0 echo "module usbcore +mfp" > /sys/kernel/debug/dynamic_debug/control
+> > > >    1 swapoff -a
+> > > >    2 echo suspend > /sys/power/disk
+> > > >    3 echo disk > /sys/power/state
+> > > >    4 dmesg > usb.dmesg
+> > > 
+> > > What happens if you omit step 1 (the swapoff)?
+> > 
+> > It seems to hibernate (suspend) successfully. If I omit that step I must setup
+> > a wakealarm to trigger the wakeup, but that's it.
+> 
+> You don't have any other wakeup sources?  Like a power button?
 
-The code in tools/testing/selftests/x86/test_vdso.c actually checks
-that the times returned by the vDSO are correct.  Perhaps that code
-should be copied or moved here?
+Not sure if it's hooked correctly as a wakeup source. But as UK is now getting
+lockedown, I don't think I'll be seeing the board for a while and serial
+console is my only friend :-)
+
+I can hard reboot remotely reliably though.
+
+> 
+> > I attached the dmesg; I didn't reboot the system in between.
+> > 
+> > 
+> > # history
+> >    0 echo "module usbcore +mfp" > /sys/kernel/debug/dynamic_debug/control
+> >    1 swapoff -a
+> >    2 echo suspend > /sys/power/disk
+> >    3 echo disk > /sys/power/state
+> >    4 dmesg > usb.dmesg
+> >    5 history
+> >    6 grep URB /sys/kernel/debug/dynamic_debug/control
+> >    7 grep "URB allocated" /sys/kernel/debug/dynamic_debug/control
+> >    8 swapon -a
+> >    9 echo +60 > /sys/class/rtc/rtc0/wakealarm
+> >   10 echo disk > /sys/power/state
+> >   11 dmesg > usb.dmesg
+> 
+> This certainly reinforces the initial impression that the cause of the
+> warnings is a bug in the platform code.  You should ask the appropriate
+> maintainer.
+
+The device-tree compatible node returns "generic-ohci".
+drivers/usb/host/ohci-platform.c returns you as the maintainer :-)
+
+> 
+> However, an equally troubling question is why the usb2 bus never got 
+> suspended in the first place.  To solve that, you may need to enable 
+> dynamic debugging in the Power Management core (i.e., "file
+> drivers/base/power/* +p").
+
+Thanks Alan. I'll run with extra debug and send back.
+
+Cheers
+
+--
+Qais Yousef
