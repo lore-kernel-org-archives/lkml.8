@@ -6,54 +6,86 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DD0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F0BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:22:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC22F20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B750320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:22:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgCXXVo (ORCPT
+        id S1727117AbgCXXWQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:21:44 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37806 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgCXXVo (ORCPT
+        Tue, 24 Mar 2020 19:22:16 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46567 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726212AbgCXXWQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:21:44 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 570F8159F4ACF;
-        Tue, 24 Mar 2020 16:21:43 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 16:21:42 -0700 (PDT)
-Message-Id: <20200324.162142.1804299203675616599.davem@davemloft.net>
-To:     zhengdejin5@gmail.com
-Cc:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] net: phy: mdio-mux-bcm-iproc: use
- readl_poll_timeout() to simplify code
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200324112647.27237-1-zhengdejin5@gmail.com>
-References: <20200324112647.27237-1-zhengdejin5@gmail.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 24 Mar 2020 16:21:43 -0700 (PDT)
+        Tue, 24 Mar 2020 19:22:16 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGsra-0007qx-Pt; Wed, 25 Mar 2020 00:21:39 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 367BC100C51; Wed, 25 Mar 2020 00:21:38 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Paul McKenney <paulmck@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Joel Fernandes \(Google\)" <joel@joelfernandes.org>,
+        "Steven Rostedt \(VMware\)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Subject: Re: [RESEND][patch V3 19/23] x86/kvm/vmx: Add hardirq tracing to guest enter/exit
+In-Reply-To: <20200324230320.GX2452@worktop.programming.kicks-ass.net>
+References: <20200320175956.033706968@linutronix.de> <20200320180034.297670977@linutronix.de> <20200324230320.GX2452@worktop.programming.kicks-ass.net>
+Date:   Wed, 25 Mar 2020 00:21:38 +0100
+Message-ID: <87o8slz6d9.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
-Date: Tue, 24 Mar 2020 19:26:47 +0800
+Peter Zijlstra <peterz@infradead.org> writes:
 
-> use readl_poll_timeout() to replace the poll codes for simplify
-> iproc_mdio_wait_for_idle() function
-> 
-> Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
+> On Fri, Mar 20, 2020 at 07:00:15PM +0100, Thomas Gleixner wrote:
+>> The VMX code does not track hard interrupt state correctly. The state in
+>> tracing and lockdep is 'OFF' all the way during guest mode. From the host
+>> point of view this is wrong because the VMENTER reenables interrupts like a
+>> return to user space and VMENTER disables them again like an entry from
+>> user space.
+>> 
+>> Make it do exactly the same thing as enter/exit user mode does.
+>> 
+>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>
+> This patch (and the SVM counterpart) result in:
+>
+> ERROR: "lockdep_hardirqs_on" [arch/x86/kvm/kvm-amd.ko] undefined!
+> ERROR: "lockdep_hardirqs_off" [arch/x86/kvm/kvm-amd.ko] undefined!
+> ERROR: "__trace_hardirqs_off" [arch/x86/kvm/kvm-amd.ko] undefined!
+> ERROR: "lockdep_hardirqs_on_prepare" [arch/x86/kvm/kvm-amd.ko] undefined!
+> ERROR: "__trace_hardirqs_on" [arch/x86/kvm/kvm-amd.ko] undefined!
+> ERROR: "lockdep_hardirqs_on" [arch/x86/kvm/kvm-intel.ko] undefined!
+> ERROR: "lockdep_hardirqs_off" [arch/x86/kvm/kvm-intel.ko] undefined!
+> ERROR: "__trace_hardirqs_off" [arch/x86/kvm/kvm-intel.ko] undefined!
+> ERROR: "lockdep_hardirqs_on_prepare" [arch/x86/kvm/kvm-intel.ko] undefined!
+> ERROR: "__trace_hardirqs_on" [arch/x86/kvm/kvm-intel.ko] undefined!
+>
+> on allmodconfig.
+>
+> I suppose them things need an EXPORT_SYMBOL_GPL() on them.
 
-Applied, thanks.
+Indeed.
