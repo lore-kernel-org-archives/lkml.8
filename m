@@ -2,58 +2,56 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31371C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C26B5C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04E34206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D05B20753
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056673;
-	bh=GF0nQgHSqr93FGkRxyrNN14Mg7LyWH6kxP3Xm7fVJ30=;
+	s=default; t=1585056685;
+	bh=IGSlqq6hTkxv2h9XpSBomhmjn8iXo6CQHK+pMRjfako=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y0JAbdkwfq6Qo4mc+xrra0s03n3jl4bUWXPQ9nhhF9b2E8R11Ms6C/48qKMR3YAyo
-	 HWRPhrJg6gu6zevir4pz+8MhHkaWil1cNBX5o1YsgENW/TMRtZG7qYBmj3UG4clwgN
-	 2rzUplaFCuDh8fq5x9BhaMC8K6eMM/HH8Xx/DRTs=
+	b=XCa4mWRtrPywU4VLyz7pr3a/zkD6jiU7aGpONftiyGA8fMzVXUuwSY7CpRCeAFwnP
+	 2uVgPXvBg0RxWCJAVKXt7cWVr2y3y3t3UOTHT1S+2g5mOorfiGZ78Ih5x1avYBXm5y
+	 V70FaRe71ICTlDVWpQuhifpgSjEmEAxYUU5Im1dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbgCXNbM (ORCPT
+        id S1727875AbgCXNbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42604 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:31:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728235AbgCXNU7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:59 -0400
+        id S1728087AbgCXNUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0901208DB;
-        Tue, 24 Mar 2020 13:20:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A305208CA;
+        Tue, 24 Mar 2020 13:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056059;
-        bh=GF0nQgHSqr93FGkRxyrNN14Mg7LyWH6kxP3Xm7fVJ30=;
+        s=default; t=1585056000;
+        bh=IGSlqq6hTkxv2h9XpSBomhmjn8iXo6CQHK+pMRjfako=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T2jSNL2DTpdfv+/J6TO0lMKDYN2T4KvCnv/Wga3tXZwolpUKinFn66ss0b7hIX5FP
-         ty0XfJAyBK71reFHC10jl5vp+Ch0svwqbqoiXXsZ1DgUEt/RN+ptsDufvgK70dt005
-         unh41jqHQ0ZqV8D3quEA9L9H/ltIdvIHwSnmTpqQ=
+        b=GcjFVPA9+mrWty5aPhx39MKm4AXZFxG7uukC4IR6xrBB1qAZWSh8NloyEs+sKfUC6
+         GRpDTCs8qVoS5k53mrZ/EkCY7ebg1bOXxl+kQb+PCID9CHHoEykkPaIFwe0b2Joka8
+         BKWE6FFBp+HSd8kvu72oH+u0ulnK1s6onj6OOMHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 001/119] locks: fix a potential use-after-free problem when wakeup a waiter
-Date:   Tue, 24 Mar 2020 14:09:46 +0100
-Message-Id: <20200324130808.172555793@linuxfoundation.org>
+        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 095/102] futex: Unbreak futex hashing
+Date:   Tue, 24 Mar 2020 14:11:27 +0100
+Message-Id: <20200324130816.418081988@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
+In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
+References: <20200324130806.544601211@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,78 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da ]
+commit 8d67743653dce5a0e7aa500fcccb237cde7ad88e upstream.
 
-'16306a61d3b7 ("fs/locks: always delete_block after waiting.")' add the
-logic to check waiter->fl_blocker without blocked_lock_lock. And it will
-trigger a UAF when we try to wakeup some waiter：
+The recent futex inode life time fix changed the ordering of the futex key
+union struct members, but forgot to adjust the hash function accordingly,
 
-Thread 1 has create a write flock a on file, and now thread 2 try to
-unlock and delete flock a, thread 3 try to add flock b on the same file.
+As a result the hashing omits the leading 64bit and even hashes beyond the
+futex key causing a bad hash distribution which led to a ~100% performance
+regression.
 
-Thread2                         Thread3
-                                flock syscall(create flock b)
-	                        ...flock_lock_inode_wait
-				    flock_lock_inode(will insert
-				    our fl_blocked_member list
-				    to flock a's fl_blocked_requests)
-				   sleep
-flock syscall(unlock)
-...flock_lock_inode_wait
-    locks_delete_lock_ctx
-    ...__locks_wake_up_blocks
-        __locks_delete_blocks(
-	b->fl_blocker = NULL)
-	...
-                                   break by a signal
-				   locks_delete_block
-				    b->fl_blocker == NULL &&
-				    list_empty(&b->fl_blocked_requests)
-	                            success, return directly
-				 locks_free_lock b
-	wake_up(&b->fl_waiter)
-	trigger UAF
+Hand in the futex key pointer instead of a random struct member and make
+the size calculation based of the struct offset.
 
-Fix it by remove this logic, and this patch may also fix CVE-2019-19769.
+Fixes: 8019ad13ef7f ("futex: Fix inode life-time issue")
+Reported-by: Rong Chen <rong.a.chen@intel.com>
+Decoded-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Rong Chen <rong.a.chen@intel.com>
+Link: https://lkml.kernel.org/r/87h7yy90ve.fsf@nanos.tec.linutronix.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: stable@vger.kernel.org
-Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/locks.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ kernel/futex.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 44b6da0328426..426b55d333d5b 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -753,20 +753,6 @@ int locks_delete_block(struct file_lock *waiter)
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -385,9 +385,9 @@ static inline int hb_waiters_pending(str
+  */
+ static struct futex_hash_bucket *hash_futex(union futex_key *key)
  {
- 	int status = -ENOENT;
+-	u32 hash = jhash2((u32*)&key->both.word,
+-			  (sizeof(key->both.word)+sizeof(key->both.ptr))/4,
++	u32 hash = jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
+ 			  key->both.offset);
++
+ 	return &futex_queues[hash & (futex_hashsize - 1)];
+ }
  
--	/*
--	 * If fl_blocker is NULL, it won't be set again as this thread
--	 * "owns" the lock and is the only one that might try to claim
--	 * the lock.  So it is safe to test fl_blocker locklessly.
--	 * Also if fl_blocker is NULL, this waiter is not listed on
--	 * fl_blocked_requests for some lock, so no other request can
--	 * be added to the list of fl_blocked_requests for this
--	 * request.  So if fl_blocker is NULL, it is safe to
--	 * locklessly check if fl_blocked_requests is empty.  If both
--	 * of these checks succeed, there is no need to take the lock.
--	 */
--	if (waiter->fl_blocker == NULL &&
--	    list_empty(&waiter->fl_blocked_requests))
--		return status;
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status = 0;
--- 
-2.20.1
-
 
 
