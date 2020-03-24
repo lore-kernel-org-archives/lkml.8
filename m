@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4C0C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1636C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209A6208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC62208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055921;
-	bh=1x7vDx1172FE2OYIBcvAkwUtPgmvf7mRCanQDUU3EI0=;
+	s=default; t=1585055923;
+	bh=JMSM1luKAuE5kdgCyq1bEGHhHwVBpP6yWiX8i/xm41Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eMD8QmXRdeDY1nOv9p752TK0tJYu3t2KLgQzd/iVa/WlGueIIclDntNxGLe5Bvw0W
-	 7iZI78Rh2fspyVg+BZn046wnolQ2iwA3TIXP+KHa8+MrTe0NY0PFec7HM8ySuU1WvX
-	 YmtKzVuLCPUnO3fi1B5uoN3/CnyCm9ngKBqqHG6s=
+	b=dpgurgX9Mi+B0m7TiSmkMk0vgRbbYhhyF9U3JLf9tSLRhGJiSvCQlSEf4XDJx3f5L
+	 LcZcjzDw8h8bYt1hVECrNp48Gy7y6viPepiFzKSO5N8RbYdKG4Ay8E5LazqvFyHt4A
+	 56xJ/LOjB6UcVlaf+u+52ubOCEkVKhMoz7gQJmpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbgCXNSk (ORCPT
+        id S1728754AbgCXNSm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:18:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38718 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:18:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbgCXNSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:18:30 -0400
+        id S1728738AbgCXNSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:18:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44C1B208CA;
-        Tue, 24 Mar 2020 13:18:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D49A6208CA;
+        Tue, 24 Mar 2020 13:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055909;
-        bh=1x7vDx1172FE2OYIBcvAkwUtPgmvf7mRCanQDUU3EI0=;
+        s=default; t=1585055915;
+        bh=JMSM1luKAuE5kdgCyq1bEGHhHwVBpP6yWiX8i/xm41Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QRS9TYJW/r4X5XPb/QyFgP7zIH60lupIrPH0ZY5sl/0e/R3ckEW3WaXHiUolp7Mx6
-         TptTfqfL9u2KEwikFEZf5hsHpNV4tTCwKNHRLIICkxP8r//s4PmCoJy+FvJbY3+JMh
-         gJ1Lje6X2/5um3sXICTkB38bVq52yWA38nhvzWbo=
+        b=p28R1RBUvgZmmjn0PX7FhdyG8KPbHHktLCkl43x7dtWagk49cGaH0D79u4SwEVNej
+         2Yqn+CSMp3ePHerLiaNW5/6GohScuW5Td4qQEtc5Jn3tgE5O7EW31q0eHS0bsHhNAk
+         p/jgezX+sTOWqjQIUbN8GjBYOWrTpcz4eZl3rfzg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ricky Wu <ricky_wu@realtek.com>,
+        stable@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 065/102] mmc: rtsx_pci: Fix support for speed-modes that relies on tuning
-Date:   Tue, 24 Mar 2020 14:10:57 +0100
-Message-Id: <20200324130813.218773951@linuxfoundation.org>
+Subject: [PATCH 5.4 067/102] mmc: sdhci-cadence: set SDHCI_QUIRK2_PRESET_VALUE_BROKEN for UniPhier
+Date:   Tue, 24 Mar 2020 14:10:59 +0100
+Message-Id: <20200324130813.399441209@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,97 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricky Wu <ricky_wu@realtek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-commit 4686392c32361c97e8434adf9cc77ad7991bfa81 upstream.
+commit 18b587b45c13bb6a07ed0edac15f06892593d07a upstream.
 
-The TX/RX register should not be treated the same way to allow for better
-support of tuning. Fix this by using a default initial value for TX.
+The SDHCI_PRESET_FOR_* registers are not set for the UniPhier platform
+integration. (They are all read as zeros).
 
-Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
+Set the SDHCI_QUIRK2_PRESET_VALUE_BROKEN quirk flag. Otherwise, the
+High Speed DDR mode on the eMMC controller (MMC_TIMING_MMC_DDR52)
+would not work.
+
+I split the platform data to give no impact to other platforms,
+although the UniPhier platform is currently only the upstream user
+of this IP.
+
+The SDHCI_QUIRK2_PRESET_VALUE_BROKEN flag is set if the compatible
+string matches to "socionext,uniphier-sd4hc".
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200316025232.1167-1-ricky_wu@realtek.com
-[Ulf: Updated changelog]
+Link: https://lore.kernel.org/r/20200312104257.21017-1-yamada.masahiro@socionext.com
 Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/misc/cardreader/rts5227.c |    2 +-
- drivers/misc/cardreader/rts5249.c |    2 ++
- drivers/misc/cardreader/rts5260.c |    2 +-
- drivers/mmc/host/rtsx_pci_sdmmc.c |   13 ++++++++-----
- 4 files changed, 12 insertions(+), 7 deletions(-)
+ drivers/mmc/host/sdhci-cadence.c |   18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -394,7 +394,7 @@ static const struct pcr_ops rts522a_pcr_
- void rts522a_init_params(struct rtsx_pcr *pcr)
- {
- 	rts5227_init_params(pcr);
--
-+	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
- 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
+--- a/drivers/mmc/host/sdhci-cadence.c
++++ b/drivers/mmc/host/sdhci-cadence.c
+@@ -11,6 +11,7 @@
+ #include <linux/mmc/host.h>
+ #include <linux/mmc/mmc.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
  
- 	pcr->option.ocp_en = 1;
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -618,6 +618,7 @@ static const struct pcr_ops rts524a_pcr_
- void rts524a_init_params(struct rtsx_pcr *pcr)
- {
- 	rts5249_init_params(pcr);
-+	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
- 	pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
- 	pcr->option.ltr_l1off_snooze_sspwrgate =
- 		LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
-@@ -733,6 +734,7 @@ static const struct pcr_ops rts525a_pcr_
- void rts525a_init_params(struct rtsx_pcr *pcr)
- {
- 	rts5249_init_params(pcr);
-+	pcr->tx_initial_phase = SET_CLOCK_PHASE(25, 29, 11);
- 	pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
- 	pcr->option.ltr_l1off_snooze_sspwrgate =
- 		LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -663,7 +663,7 @@ void rts5260_init_params(struct rtsx_pcr
- 	pcr->sd30_drive_sel_1v8 = CFG_DRIVER_TYPE_B;
- 	pcr->sd30_drive_sel_3v3 = CFG_DRIVER_TYPE_B;
- 	pcr->aspm_en = ASPM_L1_EN;
--	pcr->tx_initial_phase = SET_CLOCK_PHASE(1, 29, 16);
-+	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
- 	pcr->rx_initial_phase = SET_CLOCK_PHASE(24, 6, 5);
+ #include "sdhci-pltfm.h"
  
- 	pcr->ic_version = rts5260_get_ic_version(pcr);
---- a/drivers/mmc/host/rtsx_pci_sdmmc.c
-+++ b/drivers/mmc/host/rtsx_pci_sdmmc.c
-@@ -606,19 +606,22 @@ static int sd_change_phase(struct realte
- 		u8 sample_point, bool rx)
- {
- 	struct rtsx_pcr *pcr = host->pcr;
--
-+	u16 SD_VP_CTL = 0;
- 	dev_dbg(sdmmc_dev(host), "%s(%s): sample_point = %d\n",
- 			__func__, rx ? "RX" : "TX", sample_point);
+@@ -235,6 +236,11 @@ static const struct sdhci_ops sdhci_cdns
+ 	.set_uhs_signaling = sdhci_cdns_set_uhs_signaling,
+ };
  
- 	rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, CHANGE_CLK);
--	if (rx)
-+	if (rx) {
-+		SD_VP_CTL = SD_VPRX_CTL;
- 		rtsx_pci_write_register(pcr, SD_VPRX_CTL,
- 			PHASE_SELECT_MASK, sample_point);
--	else
-+	} else {
-+		SD_VP_CTL = SD_VPTX_CTL;
- 		rtsx_pci_write_register(pcr, SD_VPTX_CTL,
- 			PHASE_SELECT_MASK, sample_point);
--	rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET, 0);
--	rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET,
-+	}
-+	rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET, 0);
-+	rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET,
- 				PHASE_NOT_RESET);
- 	rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, 0);
- 	rtsx_pci_write_register(pcr, SD_CFG1, SD_ASYNC_FIFO_NOT_RST, 0);
++static const struct sdhci_pltfm_data sdhci_cdns_uniphier_pltfm_data = {
++	.ops = &sdhci_cdns_ops,
++	.quirks2 = SDHCI_QUIRK2_PRESET_VALUE_BROKEN,
++};
++
+ static const struct sdhci_pltfm_data sdhci_cdns_pltfm_data = {
+ 	.ops = &sdhci_cdns_ops,
+ };
+@@ -334,6 +340,7 @@ static void sdhci_cdns_hs400_enhanced_st
+ static int sdhci_cdns_probe(struct platform_device *pdev)
+ {
+ 	struct sdhci_host *host;
++	const struct sdhci_pltfm_data *data;
+ 	struct sdhci_pltfm_host *pltfm_host;
+ 	struct sdhci_cdns_priv *priv;
+ 	struct clk *clk;
+@@ -350,8 +357,12 @@ static int sdhci_cdns_probe(struct platf
+ 	if (ret)
+ 		return ret;
+ 
++	data = of_device_get_match_data(dev);
++	if (!data)
++		data = &sdhci_cdns_pltfm_data;
++
+ 	nr_phy_params = sdhci_cdns_phy_param_count(dev->of_node);
+-	host = sdhci_pltfm_init(pdev, &sdhci_cdns_pltfm_data,
++	host = sdhci_pltfm_init(pdev, data,
+ 				struct_size(priv, phy_params, nr_phy_params));
+ 	if (IS_ERR(host)) {
+ 		ret = PTR_ERR(host);
+@@ -431,7 +442,10 @@ static const struct dev_pm_ops sdhci_cdn
+ };
+ 
+ static const struct of_device_id sdhci_cdns_match[] = {
+-	{ .compatible = "socionext,uniphier-sd4hc" },
++	{
++		.compatible = "socionext,uniphier-sd4hc",
++		.data = &sdhci_cdns_uniphier_pltfm_data,
++	},
+ 	{ .compatible = "cdns,sd4hc" },
+ 	{ /* sentinel */ }
+ };
 
 
