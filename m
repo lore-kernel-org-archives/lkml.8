@@ -2,132 +2,92 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URG_BIZ,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67EF3C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DD2BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:42:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390BA20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:42:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066B32077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J37CbPnI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eW+qNvo0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728301AbgCXVmI (ORCPT
+        id S1728277AbgCXVmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 24 Mar 2020 17:42:08 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33484 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728207AbgCXVmI (ORCPT
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:54136 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727023AbgCXVmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 17:42:08 -0400
-Received: by mail-qk1-f195.google.com with SMTP id v7so284590qkc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 14:42:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cLX18O5zuj5gsRsOAaCKiSE0TdgmSPuMWJpHQFaI6lY=;
-        b=J37CbPnIYJ5h8G4MvA2lsctS++TcxsRtVuXiKxKVHDNhpfvCifvp1lDA/ywOrBl0vo
-         THDrEqNPPwGCGXvTaJxaZydNhiIdARh4lGOYBy0io8tQCXIbv3QbVD9MTLwqvOMIWiY6
-         uDAgwKdaQDvFARUDzeX1mACWrk/5RgltWf+xgpnydp5/UYqF1QZbVW+g4f+5dgov6nzV
-         haBfhecolSUeML9r0vmwzOTfluH3iJpDiE4jAjO4afPn7ML04zKYJ4phvlaGQX1VF9DX
-         mmSHpd0zrjtXa5mcBkyL2kH+a/h59wFCM6lEUUKk5mUjJe2K1XbQsCRenZy/028juXIE
-         ntCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cLX18O5zuj5gsRsOAaCKiSE0TdgmSPuMWJpHQFaI6lY=;
-        b=lLX4u63Qq0qSw2nyd5F7cZVy5PCurF3wslnLjmrBxLGkPr3faSYl9ri4nIyardxoYC
-         SzYatNe4L38Zd6SieaFSnt7qYamydeWdekbpx8eubtVOghnNuPTO+oMFnsX1T/kQTQ+Q
-         Fa6acdTUh497A4nBdV9m/dZBo5bnjG7zTAY39P7mHVzeD6oUDtuTMH4xyNL2vKIySAeU
-         jHDZwF1ptz6hc8jroOOjGQDTy37HB430zpCZMJtJ3lZQwKQ3wFcm+sYf6uTsugATDccA
-         hfDS22+R0Jgktd1KcXHwF0PEjFjeqo5wy9f7B3d2h24AlxTiTgBvGO63/vjTjlA3UX/I
-         lOuA==
-X-Gm-Message-State: ANhLgQ0olDnXfeepFtzJjpXri+VB0uvWEHTZIMSn+9WEBLn6iQQlLOZa
-        igHGuLFIZXOAerS8NWzmCOQ=
-X-Google-Smtp-Source: ADFU+vsS//dwMFSJeYOdPt0MdStWMiJz3a5R7CKmTnhRsl0tq43ejNp91DZNQ8r8pf6UYcIcppIlqg==
-X-Received: by 2002:ae9:ea07:: with SMTP id f7mr15779664qkg.499.1585086127342;
-        Tue, 24 Mar 2020 14:42:07 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id q34sm14438331qtb.41.2020.03.24.14.42.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 14:42:06 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 24 Mar 2020 17:42:05 -0400
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-Message-ID: <20200324214204.GB3220053@rani.riverdale.lan>
-References: <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic>
- <20200323204454.GA2611336@zx2c4.com>
- <202003231350.7D35351@keescook>
- <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
- <20200324091437.GB22931@zn.tnic>
- <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
- <20200324162843.GE22931@zn.tnic>
- <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
- <20200324164812.GG22931@zn.tnic>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585086126;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NT1rJDXEx+JBvZRwjbf6ZyZM9e3SrBa+P0+hMLICRDM=;
+        b=eW+qNvo01Eo6rhr3gkeXRRHZ+fuZsm8c9oBugQBkknj4ilCde8wvRdyWwPyFkOnnHqzMB+
+        ajbxZIkKOAkgrz+INhrULs84MDDoiz+mzgUBykyW2bSTwUCem9rLN8047MjflDDKG8/ogT
+        KdzPOOwQD2ci6vLGRljZNTIO3UdS9VA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-39-MjVXxRrDNECn9w06pfgr_g-1; Tue, 24 Mar 2020 17:42:04 -0400
+X-MC-Unique: MjVXxRrDNECn9w06pfgr_g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 815F9CF9BF;
+        Tue, 24 Mar 2020 21:41:55 +0000 (UTC)
+Received: from treble (unknown [10.10.119.253])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF8B65DA7B;
+        Tue, 24 Mar 2020 21:41:54 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 16:41:52 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
+Subject: Re: [PATCH v3 19/26] objtool: Implement noinstr validation
+Message-ID: <20200324214152.zzd4bvm65x3w3v2h@treble>
+References: <20200324153113.098167666@infradead.org>
+ <20200324160925.047300866@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200324164812.GG22931@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324160925.047300866@infradead.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:48:12PM +0100, Borislav Petkov wrote:
-> On Tue, Mar 24, 2020 at 09:37:13AM -0700, Linus Torvalds wrote:
-> > I think it's ok. It's not going to cause any _subtle_ failures, it's
-> > going to cause very clear "oh, now it doesn't build" errors.
-> > 
-> > No?
-> > 
-> > And binutils 2.23 is what, 7+ years old by now and apparently had
-> > known failure cases too.
-> > 
-> > But if there are silent and subtle failures, that might be a reason to
-> > be careful. Are there?
+On Tue, Mar 24, 2020 at 04:31:32PM +0100, Peter Zijlstra wrote:
+> Validate that any call out of .noinstr.text is in between
+> instr_begin() and instr_end() annotations.
 > 
-> Well, not that I know of and that's why I'm being overly cautious. Maybe
-> too cautious but a lot of hectic testing of last minute fixes in the
-> past have taught me to take my time.
+> This annotation is useful to ensure correct behaviour wrt tracing
+> sensitive code like entry/exit and idle code. When we run code in a
+> sensitive context we want a guarantee no unknown code is ran.
 > 
-> And since it doesn't really matter when the patch goes in - there's
-> always the next merge window - I would prefer to take our time and have
-> it simmer in -next for max period.
+> Since this validation relies on knowing the section of call
+> destination symbols, we must run it on vmlinux.o instead of on
+> individual object files.
 > 
-> So yeah, 2.23 has been tested for a long time now and it is very likely
-> that nothing would happen and if you think it's ok, then sure. Then if
-> you happen to see urgent pull requests with build or some other fixes,
-> at least you'll be prepared. :-)
+> Add two options:
 > 
+>  -d/--duplicate "duplicate validation for vmlinux"
+>  -l/--vmlinux "vmlinux.o validation"
+> 
+> Where the latter auto-detects when objname ends with "vmlinux.o" and
+> the former will force all validations, also those already done on
+> !vmlinux object files.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-This is just a documentation patch right? Nothing actually changes with
-the build. The only possible thing that we would potentially have to
-deal with is
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-(1) people noticing the doc change and complaining that they
-still need to use binutils-2.21 for some reason -- but they can't
-currently build an x86 kernel without patches anyway, so...
+-- 
+Josh
 
-(2) people noticing the doc change and suggesting moving to 2.26 or some
-later version instead of 2.23.
