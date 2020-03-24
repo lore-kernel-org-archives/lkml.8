@@ -2,74 +2,116 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65324C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D3C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 446342073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:11:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 149D82073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:11:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="skTHAeXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgCXGK7 (ORCPT
+        id S1727337AbgCXGLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:10:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12182 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725922AbgCXGK6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 02:10:58 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 44FDDFF01C84AB352606;
-        Tue, 24 Mar 2020 14:10:50 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 24 Mar
- 2020 14:10:46 +0800
-Subject: Re: [PATCH] f2fs: remove redundant compress inode check
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200229104906.12061-1-yuchao0@huawei.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <6aab59b9-6e33-5b01-acf8-ccbacd9318e3@huawei.com>
-Date:   Tue, 24 Mar 2020 14:10:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200229104906.12061-1-yuchao0@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+        Tue, 24 Mar 2020 02:11:03 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46477 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725922AbgCXGLC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 02:11:02 -0400
+Received: by mail-pf1-f193.google.com with SMTP id q3so4236634pff.13
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 23:11:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=DDkHgjRX92xMsDWF1JcBaoBx76iEMkH2nFLPTXKtP7s=;
+        b=skTHAeXIhbUwd2ORJ1F8FBs5Wpu5ah/ctTwjkpQcD+R8XqsF9RRgg0Ejf/bifSI59T
+         d8xz2zrKd7pE7BXNqp9Z06gUCf6LLNsZ7QMMbWkXSgGYN0ojOGDIr6ZMlqH/dHNlVfzW
+         fi11hUvMeu90VjEt/nQNMdqwC/6C9OjBN59QKlAOBvjAlTJ/tNe8570Pb4kLJHXCumS7
+         RFCiNEC8MP/xHeHiWu3OmEOvU0SUhFh5bA2/oTkki/ddVQblK7hOLD3L+wPU5X4I1Suj
+         WqJNhFa24BKVt7cMxviK5SPAizVrom58XDTiXNRKFgFTnXn3I8AlqQipQzMYzyJFer/K
+         zgyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DDkHgjRX92xMsDWF1JcBaoBx76iEMkH2nFLPTXKtP7s=;
+        b=a00UpY3KICOIhqWAcinnZrFnE5xPwl1W2FzvDM2gy5B9DxQdVxEImIENmcW8IlvgiI
+         apmyEoiTk3ueXqbK7NRv50Cf6ixweEtmPrBukLPmeqtZXlol775wIwZaKKbTnMUduSs8
+         +AffWBwnDu0TTIjXUcyVgRR2SSWlL4tZwc87cLCC02+jhb98Xbs8vgfkFjxki9QAG4dW
+         lcspbQPV3C3hxhMeJrFQIdH0Hh7j6AYUk11mVo/GTT+Ko9aYrIkjCeaJe3KPnBPjQQY8
+         7Z2h9d6FSD6Xk+IquSMSUIjKhDih0yYR3hnhFJhOKnwDPljbbEVYAf2yhvZmJaZhyDd/
+         WsLQ==
+X-Gm-Message-State: ANhLgQ1PFj1G+0oD1nB+BblshExlt/GieuMCspMVxkyPK5pAmk33XmWu
+        4eC5vjBG9qMUU9T7GUXIxIBJ
+X-Google-Smtp-Source: ADFU+vtFjU8hCMS0wU/7AfSlBHHkwypFdy8aUWxUycTl6JMb83rMb9R52E24OSd2ncb4timI6+SpgA==
+X-Received: by 2002:a62:a119:: with SMTP id b25mr27727359pff.158.1585030261003;
+        Mon, 23 Mar 2020 23:11:01 -0700 (PDT)
+Received: from localhost.localdomain ([2409:4072:59b:91e:2dd6:dffe:3569:b473])
+        by smtp.gmail.com with ESMTPSA id d3sm1198230pjc.42.2020.03.23.23.10.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 23:10:59 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     gregkh@linuxfoundation.org, davem@davemloft.net
+Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
+        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/7] Improvements to MHI Bus 
+Date:   Tue, 24 Mar 2020 11:40:43 +0530
+Message-Id: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jaegeuk,
+Hi Greg,
 
-Missed to apply this patch?
+Here is the patchset for improving the MHI bus support. One of the patch
+is suggested by you for adding the driver owner field and rest are additional
+improvements and some fixes.
 
-On 2020/2/29 18:49, Chao Yu wrote:
-> due to f2fs_post_read_required() has did that.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/f2fs.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> index f4bcbbd5e9ed..882f9ad3445b 100644
-> --- a/fs/f2fs/f2fs.h
-> +++ b/fs/f2fs/f2fs.h
-> @@ -4006,8 +4006,6 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
->  		return true;
->  	if (f2fs_is_multi_device(sbi))
->  		return true;
-> -	if (f2fs_compressed_file(inode))
-> -		return true;
->  	/*
->  	 * for blkzoned device, fallback direct IO to buffered IO, so
->  	 * all IOs can be serialized by log-structured write.
-> 
+I've also included the remaining networking patches from previous patch series
+which needs review from Dave. Dave could you please look into those 2 patches
+which falls under net subsystem? Greg can take those 2 if an Ack is provided.
+
+Thanks,
+Mani
+
+Changes in v3:
+
+* Added Bjorn's Reviewed-by tag
+* Fixed commit message for QCA6390
+* Added extra comment for MHI revision fields in mhi.h
+
+Changes in v2:
+
+* Fixed some minor comments in mhi.h
+
+Manivannan Sadhasivam (7):
+  bus: mhi: core: Pass module owner during client driver registration
+  bus: mhi: core: Add support for reading MHI info from device
+  bus: mhi: core: Initialize bhie field in mhi_cntrl for RDDM capture
+  bus: mhi: core: Drop the references to mhi_dev in mhi_destroy_device()
+  bus: mhi: core: Add support for MHI suspend and resume
+  net: qrtr: Add MHI transport layer
+  net: qrtr: Do not depend on ARCH_QCOM
+
+ drivers/bus/mhi/core/init.c     |  39 +++++-
+ drivers/bus/mhi/core/internal.h |  10 ++
+ drivers/bus/mhi/core/main.c     |  16 ++-
+ drivers/bus/mhi/core/pm.c       | 143 ++++++++++++++++++++++
+ include/linux/mhi.h             |  57 ++++++++-
+ net/qrtr/Kconfig                |   8 +-
+ net/qrtr/Makefile               |   2 +
+ net/qrtr/mhi.c                  | 208 ++++++++++++++++++++++++++++++++
+ 8 files changed, 474 insertions(+), 9 deletions(-)
+ create mode 100644 net/qrtr/mhi.c
+
+-- 
+2.17.1
+
