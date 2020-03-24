@@ -6,127 +6,166 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2DCC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16B3C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:27:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 841E4207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85AAC207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:27:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgCXI1m (ORCPT
+        id S1727159AbgCXI1w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:27:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45716 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbgCXI1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:27:41 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 62F7BADB5;
-        Tue, 24 Mar 2020 08:27:38 +0000 (UTC)
-Subject: Re: [PATCH V2] kernel/hung_task.c: Introduce sysctl to print all
- traces when a hung task is detected
-To:     "Guilherme G. Piccoli" <gpiccoli@canonical.com>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Cc:     linux-doc@vger.kernel.org, mcgrof@kernel.org,
-        keescook@chromium.org, yzaikin@google.com, tglx@linutronix.de,
-        penguin-kernel@I-love.SAKURA.ne.jp, akpm@linux-foundation.org,
-        cocci@systeme.lip6.fr, linux-api@vger.kernel.org,
-        kernel@gpiccoli.net
-References: <20200323214618.28429-1-gpiccoli@canonical.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <b73a6519-0529-e36f-fac5-e4b638ceb3cf@suse.cz>
-Date:   Tue, 24 Mar 2020 09:27:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 04:27:52 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41313 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726231AbgCXI1w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 04:27:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z23so739441lfh.8;
+        Tue, 24 Mar 2020 01:27:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nh4UhvTKl+29tzL3tROO0vjxlPcLXCH4Rq0vuGpKBTo=;
+        b=HLeOiseNYjPG2lfh0VXxr5lYklmXhLSOLIwiGXvVHTQ3YxdSROLfwyquo9IdclOLMX
+         xCaa5tcUONHQtfyC5rdw2FfTuJX9X0bmh3BEb4/4PFFxKS4iYez9BfO8LsGDXdI1aLQX
+         e/yTO+b+QC3PaiiYka3OksVJP1oGRy2L9sxj1EQpIqYYHj+U9Sm8XHnY5bvPtoSJZ0AV
+         2nMR3N3PxMY/ucU5+2qdymHkHpqVxiCPD5YkXmG2Zfh3Dwf+CWHIRukY3kFuYc4u3fub
+         4z46tCKOjKiIzQ4MeG0i4/s+wpoDljDsOEHBeseJ6VDf3OSaObC/Y9LCCXyjcmGZXfx4
+         dB0Q==
+X-Gm-Message-State: ANhLgQ2pEPxP2sewP/jt5Xz4liuupjPNntqlhX/ndwQFXOvRwy3qvtEa
+        nrzAq5VDbAkhMcgB7RGS4ic=
+X-Google-Smtp-Source: ADFU+vtkwISRZYUD057P5cbGw2XfbCNUGZ9hKV/Bm2rbq/yVznyKoWqXE3G9XB0HXlwOHdE5NVb5tg==
+X-Received: by 2002:ac2:4854:: with SMTP id 20mr7658197lfy.146.1585038468890;
+        Tue, 24 Mar 2020 01:27:48 -0700 (PDT)
+Received: from localhost.localdomain (dc7t7ryyyyyyyyyyyyybt-3.rev.dnainternet.fi. [2001:14ba:16e1:b700::3])
+        by smtp.gmail.com with ESMTPSA id m15sm9584811ljo.8.2020.03.24.01.27.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 01:27:48 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 10:27:39 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: [PATCH v6 01/10] dt-bindings: battery: add new battery parameters
+Message-ID: <ee741f391911a4e7c272ed86955ccd1e81ad236f.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20200323214618.28429-1-gpiccoli@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 10:46 PM, Guilherme G. Piccoli wrote:
-> Commit 401c636a0eeb ("kernel/hung_task.c: show all hung tasks before panic")
-> introduced a change in that we started to show all CPUs backtraces when a
-> hung task is detected _and_ the sysctl/kernel parameter "hung_task_panic"
-> is set. The idea is good, because usually when observing deadlocks (that
-> may lead to hung tasks), the culprit is another task holding a lock and
-> not necessarily the task detected as hung.
-> 
-> The problem with this approach is that dumping backtraces is a slightly
-> expensive task, specially printing that on console (and specially in many
-> CPU machines, as servers commonly found nowadays). So, users that plan to
-> collect a kdump to investigate the hung tasks and narrow down the deadlock
-> definitely don't need the CPUs backtrace on dmesg/console, which will delay
-> the panic and pollute the log (crash tool would easily grab all CPUs traces
-> with 'bt -a' command).
-> Also, there's the reciprocal scenario: some users may be interested in
-> seeing the CPUs backtraces but not have the system panic when a hung task
-> is detected. The current approach hence is almost as embedding a policy in
-> the kernel, by forcing the CPUs backtraces' dump (only) on hung_task_panic.
-> 
-> This patch decouples the panic event on hung task from the CPUs backtraces
-> dump, by creating (and documenting) a new sysctl/kernel parameter called
-> "hung_task_all_cpu_backtrace", analog to the approach taken on soft/hard
-> lockups, that have both a panic and an "all_cpu_backtrace" sysctl to allow
-> individual control. The new mechanism for dumping the CPUs backtraces on
-> hung task detection respects "hung_task_warnings" by not dumping the
-> traces in case there's no warnings left.
-> 
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@canonical.com>
-> ---
-> 
-> 
-> V2: Followed suggestions from Kees and Tetsuo (and other grammar
-> improvements). Also, followed Tetsuo suggestion to itereate kernel
-> testing community - but I don't really know a ML for that, so I've
-> CCed Coccinelle community and kernel-api ML.
-> 
-> Also, Tetsuo suggested that this option could be default to 1 - I'm
-> open to it, but given it is only available if hung_task panic is set
-> as of now and the goal of this patch is give users more flexibility,
-> I vote to keep default as 0. I can respin a V3 in case more people
-> want to see it enabled by default. Thanks in advance for the review!
-> Cheers,
-> 
-> Guilherme
-> 
-> 
->  .../admin-guide/kernel-parameters.txt         |  6 ++++
->  Documentation/admin-guide/sysctl/kernel.rst   | 15 ++++++++++
->  include/linux/sched/sysctl.h                  |  7 +++++
->  kernel/hung_task.c                            | 30 +++++++++++++++++--
->  kernel/sysctl.c                               | 11 +++++++
->  5 files changed, 67 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index c07815d230bc..7a14caac6c94 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1453,6 +1453,12 @@
->  			x86-64 are 2M (when the CPU supports "pse") and 1G
->  			(when the CPU supports the "pdpe1gb" cpuinfo flag).
->  
-> +	hung_task_all_cpu_backtrace=
-> +			[KNL] Should kernel generate backtraces on all cpus
-> +			when a hung task is detected. Defaults to 0 and can
-> +			be controlled by hung_task_all_cpu_backtrace sysctl.
-> +			Format: <integer>
-> +
+Add:
 
-Before adding a new thing as both kernel parameter and sysctl, could we perhaps
-not add the kernel parameter, in favor of the generic sysctl parameter solution?
-[1] There were no objections and some support from Kees, so I will try to send a
-new version ASAP that will work properly with all "static" sysctls - we don't
-need to be blocked by a full solution for dynamically registered sysctls yet, I
-guess?
+ - trickle-charge-current-microamp:
 
-Thanks,
-Vlastimil
+Some chargers have 3 charging stages. First one when battery is almost
+empty is often called as trickle-charge. Last state when battery has been
+"woken up" is usually called as fast-charge. In addition to this some
+chargers have a 'middle state' which ROHM BD99954 data-sheet describes as
+pre-charge. Some batteries can benefit from this 3-phase charging
+[citation needed].
 
-[1] https://lore.kernel.org/linux-api/20200317132105.24555-1-vbabka@suse.cz/
+Introduce trickle-charge-current-microamp so that batteries can give
+charging current limit for all three states.
 
+ - precharge-upper-limit-microvolt:
+
+When battery voltage has reached certain limit we change from
+trickle-charge to next charging state (pre-charge for BD99954). Allow
+battery to specify this limit.
+
+ - re-charge-voltage-microvolt:
+
+Allow giving a battery specific voltage limit for chargers which can
+automatically re-start charging when battery has discharghed down to
+this limit.
+
+- over-voltage-threshold-microvolt
+
+Allow specifying voltage threshold after which the battery is assumed to
+be faulty.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/power/supply/battery.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+index 3049cf88bdcf..5e29595edd74 100644
+--- a/Documentation/devicetree/bindings/power/supply/battery.txt
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -11,15 +11,21 @@ different type. This prevents unpredictable, potentially harmful,
+ behavior should a replacement that changes the battery type occur
+ without a corresponding update to the dtb.
+ 
++Please note that not all charger drivers respect all of the properties.
++
+ Required Properties:
+  - compatible: Must be "simple-battery"
+ 
+ Optional Properties:
++ - over-voltage-threshold-microvolt: battery over-voltage limit
++ - re-charge-voltage-microvolt: limit to automatically start charging again
+  - voltage-min-design-microvolt: drained battery voltage
+  - voltage-max-design-microvolt: fully charged battery voltage
+  - energy-full-design-microwatt-hours: battery design energy
+  - charge-full-design-microamp-hours: battery design capacity
++ - trickle-charge-current-microamp: current for trickle-charge phase
+  - precharge-current-microamp: current for pre-charge phase
++ - precharge-upper-limit-microvolt: limit when to change to constant charging
+  - charge-term-current-microamp: current for charge termination phase
+  - constant-charge-current-max-microamp: maximum constant input current
+  - constant-charge-voltage-max-microvolt: maximum constant input voltage
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
