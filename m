@@ -2,85 +2,122 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E614DC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CFEC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF25C20842
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:19:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585045182;
-	bh=q4q2MlAIz6+C/hLPcO9TRU1z0kw29IK3WElI+UFhXgg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=s6chBI1Zl3WXghvXw5Iro925zVCDQbrgCT+HHFbEnrUQYe25nv+gqBbxvvVoSBamn
-	 cqYuxoKT1LCSh5+Ry0+/feLkYJRABc/H/YC2unN7DGKYfmUwAxOu7cZBlbjketmEww
-	 iGLjZsLiQFrKxPa1iDbXIj2SYZ2PrHD2IOr+9Ark=
+	by mail.kernel.org (Postfix) with ESMTP id 930402080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727318AbgCXKTl (ORCPT
+        id S1727253AbgCXKU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50322 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbgCXKTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:19:41 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D0F82080C;
-        Tue, 24 Mar 2020 10:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585045180;
-        bh=q4q2MlAIz6+C/hLPcO9TRU1z0kw29IK3WElI+UFhXgg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XQ94ZQUDRRdi3qTMyMKloWf8WGl5UrXJKTuuKZYg1OZ2U3a9Osi3YQaw5Ouz8i0f7
-         /20hISeB3SITV1C6h5yiH3eHmg3H0lETiiiCU26eYgVEbZ3doVo+3Qn5C3PsMtviII
-         GxB/SJyxk+IJoh1lqlXqAXs6Xh7HBTjS+rwjSl9I=
-Date:   Tue, 24 Mar 2020 11:19:38 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Michael Williams <michael.williams@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH] coresight: do not use the BIT() macro in the UAPI header
-Message-ID: <20200324101938.GA2220478@kroah.com>
-References: <20200324042213.GA10452@asgard.redhat.com>
- <20200324062853.GD1977781@kroah.com>
- <20200324095304.GA2444@asgard.redhat.com>
+        Tue, 24 Mar 2020 06:20:27 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:35115 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727150AbgCXKU1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:20:27 -0400
+Received: from classic (mon69-7-83-155-44-161.fbx.proxad.net [83.155.44.161])
+        (Authenticated sender: hadess@hadess.net)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id A326D200011;
+        Tue, 24 Mar 2020 10:20:22 +0000 (UTC)
+Message-ID: <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
+Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
+ connection
+From:   Bastien Nocera <hadess@hadess.net>
+To:     Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <superm1@gmail.com>,
+        Richard Hughes <hughsient@gmail.com>
+Date:   Tue, 24 Mar 2020 11:20:21 +0100
+In-Reply-To: <20200318192721.390630-1-lains@archlinux.org>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+         <20200318192721.390630-1-lains@archlinux.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.0 (3.36.0-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324095304.GA2444@asgard.redhat.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 10:53:04AM +0100, Eugene Syromiatnikov wrote:
-> On Tue, Mar 24, 2020 at 07:28:53AM +0100, Greg Kroah-Hartman wrote:
-> > On Tue, Mar 24, 2020 at 05:22:13AM +0100, Eugene Syromiatnikov wrote:
-> > > The BIT() macro definition is not available for the UAPI headers
-> > > (moreover, it can be defined differently in the user space); replace
-> > > its usage with the _BITUL() macro that is defined in <linux/const.h>.
-> > 
-> > Why is somehow _BITUL() ok to use here instead?
+On Wed, 2020-03-18 at 19:27 +0000, Filipe Laíns wrote:
+> As discussed in the mailing list:
 > 
-> It is provided in an UAPI header (include/uapi/linux/const.h)
-> and is appropriately prefixed with an underscore to avoid conflicts.
+> > Right now the hid-logitech-dj driver will export one node for each
+> > connected device, even when the device is not connected. That
+> > causes
+> > some trouble because in userspace we don't have have any way to
+> > know if
+> > the device is connected or not, so when we try to communicate, if
+> > the
+> > device is disconnected it will fail.
 
-Because no one uses _ in their own macros?  :)
+Why is it a problem that user-space communication fails? Note that
+sending a signal without any way to fetch the state means that it's
+always going to be racy.
 
-Anyway, this is fine, but if it's really the way forward, I think a lot
-of files will end up being changed...
+> The solution reached to solve this issue is to trigger an udev change
+> event when the device connects, this way userspace can just wait on
+> those connections instead of trying to ping the device.
+> 
+> Signed-off-by: Filipe Laíns <lains@archlinux.org>
+> 
+> ---
+> 
+> v2:
+>   - Issue udev change event on the connected hid device, not on the
+>   receiver
+> 
+> ---
+>  drivers/hid/hid-logitech-dj.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> logitech-dj.c
+> index 48dff5d6b605..282e57dd467d 100644
+> --- a/drivers/hid/hid-logitech-dj.c
+> +++ b/drivers/hid/hid-logitech-dj.c
+> @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct hid_device
+> *hdev,
+>  {
+>  	struct dj_receiver_dev *djrcv_dev = hid_get_drvdata(hdev);
+>  	struct dj_report *dj_report = (struct dj_report *) data;
+> +	struct dj_device *dj_dev;
+>  	unsigned long flags;
+>  
+>  	/*
+> @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct hid_device
+> *hdev,
+>  
+>  	spin_lock_irqsave(&djrcv_dev->lock, flags);
+>  
+> -	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
+> +	dj_dev = djrcv_dev->paired_dj_devices[dj_report->device_index];
+> +
+> +	if (!dj_dev) {
+>  		/* received an event for an unknown device, bail out */
+>  		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
+>  		goto out;
+> @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct hid_device
+> *hdev,
+>  		if (dj_report-
+> >report_params[CONNECTION_STATUS_PARAM_STATUS] ==
+>  		    STATUS_LINKLOSS) {
+>  			logi_dj_recv_forward_null_report(djrcv_dev,
+> dj_report);
+> +		} else {
+> +			kobject_uevent(&dj_dev->hdev->dev.kobj,
+> KOBJ_CHANGE);
+>  		}
+>  		break;
+>  	default:
 
-thanks,
-
-greg k-h
