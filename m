@@ -2,86 +2,110 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E297DC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA13C54FCF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F7E2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84A562076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uEsJhQYV"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YSCmWxRY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbgCXV2m (ORCPT
+        id S1728262AbgCXV3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:28:42 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45833 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727496AbgCXV2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:28:42 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48n49z72mdz9sQt;
-        Wed, 25 Mar 2020 08:28:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585085320;
-        bh=sQnpTPdxtJrr8r70hWS8fGyIgmHzEUNsiIkrhRaZ2+4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=uEsJhQYVbpOzt8AbhtFAxlSUHmveXa0qOgys7j3lc+Px3LIfCJW7wTyPgPSgO0BTv
-         J6R0OtqwT/rz2t15eXSwWCUSbCb/uv27BlOnSIuB0fqJ92JW4e9q/3vN+APjT0IMhX
-         MGQlAr3Ib2seHgQykIc4byibdZBII5DjE8Z+AP8WigekSoyDCID2FkOQMvhVzyoVmL
-         70cBE9tr0TBGwNMlsiA+Ltz6QuCjx+LO+E5oT6X6EugegaefcvugJrBTrB5weVj9i+
-         EJKmm0Vo6KEQ93/E2F2xoK+IG+hS6wF4JJe3fjFZ9SQ6qFmVuwsTwu08M6L3lfC6XF
-         dFTm8OgiRJDlQ==
-Date:   Wed, 25 Mar 2020 08:28:37 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the i2c tree
-Message-ID: <20200325082837.62555003@canb.auug.org.au>
+        Tue, 24 Mar 2020 17:29:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44042 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727270AbgCXV3F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 17:29:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id p14so245324lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 14:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mt9R6MAwAgMsRiTLzlySm2VmV71YyEXXijbHmE8WTzk=;
+        b=YSCmWxRY40BGiMze1Yvin1YLkJXXl+PFUME/YQdtuWumwzPRmAdvKghADmWKlRrN0K
+         f9xnko63sgT0KH37iYw/9/MXZe1oLeb2jpfOZFVn6TSxlkYn1LgOxa54s9Ewh6bUAMOy
+         BTu90myx9FunEp53IT4emC25nbXXzPJhnl84W6vhgEIa5wtgGP30cMvv/5ZskWvr8+4O
+         Nr3uuT2MSmd1BDUPB1tsmSRiIQExkkO/w1eNM2f0qE61UeZwTTOh9IfxQOOmNTpezIgO
+         mLkwFd5DYS6Gf4stv1h7MySVYHXya5QyIbq/2+4YJQUlIUc7dad9mqPuRzul6/Z7nzr+
+         FAAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mt9R6MAwAgMsRiTLzlySm2VmV71YyEXXijbHmE8WTzk=;
+        b=JSD2COL/yUZny+wx8FbZCxoW0CrUxxZsDzfvOuWfKu+r7TUVMBe8lr5yaqyzzD9sLi
+         aUy0ykQ6WHkMmDgIWUiV0ghUVnrud02hkZN44Vo17XPbwUfM/1YKWRuq7YUvDdV0t7e9
+         DcHguRTExABoa9inG0oIb9Q6I2YnJjwlGl7GYaGAay4AW8xC43XUUsAqf3wp5YpBcRpx
+         Q07wFw+pG57rWj4nKntr0Z/P7UbLtpxLkLW8iNV6HuiWp3wxwWPIS2t2ofNVoqc06B9p
+         +c3oglHyoqXsK1cE/m5/wvdWlb+kNbo6oYG+AybDistSL8557wq7Zqio3pEN2vr34CEZ
+         wNZA==
+X-Gm-Message-State: ANhLgQ0bd9P/JjRKRrXd9QIy+dYa6KEG4+/Ds79CTHVsEMwLx+Y1WEVo
+        GpoDng5piN1GHPSym0G/8acTuly4bOWmsPSQ0uoCag==
+X-Google-Smtp-Source: ADFU+vv8d+tvt43tW6wjpsme/liCuo5+2rssm9plm9lpdQXp8OhLUCZZ8xFwlvpxLM+HptNYxGF5KgkzMO7Hg0NPccQ=
+X-Received: by 2002:a2e:89c1:: with SMTP id c1mr17348550ljk.215.1585085342690;
+ Tue, 24 Mar 2020 14:29:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KeOVOhEjvzxEdJ_RViyk6k7";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200324203231.64324-1-keescook@chromium.org>
+In-Reply-To: <20200324203231.64324-1-keescook@chromium.org>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 24 Mar 2020 22:28:35 +0100
+Message-ID: <CAG48ez3yYkMdxEEW6sJzBC5BZSbzEZKnpWzco32p-TJx7y_srg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] Optionally randomize kernel stack offset each syscall
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/KeOVOhEjvzxEdJ_RViyk6k7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 24, 2020 at 9:32 PM Kees Cook <keescook@chromium.org> wrote:
+> This is a continuation and refactoring of Elena's earlier effort to add
+> kernel stack base offset randomization. In the time since the previous
+> discussions, two attacks[1][2] were made public that depended on stack
+> determinism, so we're no longer in the position of "this is a good idea
+> but we have no examples of attacks". :)
+[...]
+> [1] https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
 
-Hi all,
+This one only starts using the stack's location after having parsed
+it out of dmesg (which in any environment that wants to provide a
+reasonable level of security really ought to be restricted to root),
+right? If you give people read access to dmesg, they can leak all
+sorts of pointers; not just the stack pointer, but also whatever else
+happens to be in the registers at that point - which is likely to give
+the attacker more ways to place controlled data at a known location.
+See e.g. <https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html>,
+which leaks the pointer to a BPF map out of dmesg.
 
-Commit
+Also, are you sure that it isn't possible to make the syscall that
+leaked its stack pointer never return to userspace (via ptrace or
+SIGSTOP or something like that), and therefore never realign its
+stack, while keeping some controlled data present on the syscall's
+stack?
 
-  b0498c43796f ("i2c: drivers: Use generic definitions for bus frequencies")
+> [2] https://repositorio-aberto.up.pt/bitstream/10216/125357/2/374717.pdf
 
-is missing a Signed-off-by from its committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KeOVOhEjvzxEdJ_RViyk6k7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl56e4UACgkQAVBC80lX
-0GwvpQf+MY7hK7/z0tRd0kRWOP/VGcnbKZlEXvUINl8AgB4DQK3Z/dhx119metms
-AU8g9WRRhyMRpqiUQzeyZBkmvobdnT8S9OM2l8gytXd6Gm7MRzbAcQgbso7+e3MB
-oeiQXEsgltrLj4aVS5Zg2bFCsYbrtfli+BkYRUIkcg31AL62PbP5CIu3dNvhjtkr
-Ce7HCEDmLTheQjNcxqHv9UTXlKAMCu0UEvDrR7CdhQg/NVD0K85QogA61p5L+dYX
-7GSY/V+byrTse0KWjMF0MvUblHb78JGpqZ4HgPGmAMFYeU83DEr6UdMfxbcIvT6K
-HVOGapOsKE3L/hUsdxMn+w6FHnyEtQ==
-=gcDE
------END PGP SIGNATURE-----
-
---Sig_/KeOVOhEjvzxEdJ_RViyk6k7--
+That's a moderately large document; which specific part are you referencing?
