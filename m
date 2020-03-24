@@ -2,101 +2,84 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4F0C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B037C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9EB20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:11:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LWqoC+ij"
+	by mail.kernel.org (Postfix) with ESMTP id 3CBDA20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:14:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgCXGLn (ORCPT
+        id S1727318AbgCXGOI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:11:43 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43353 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727431AbgCXGLl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 02:11:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id f206so8771788pfa.10
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 23:11:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=kEUOtzoCcyxMGagaGiuW85PJFCulYHpDp09UxNca9Ic=;
-        b=LWqoC+ijN07fTREV37khZvwLxEKrJVJ8dLjconoL52HWgkoIMQm5u5V6zJr9faWwEu
-         EiA/axtbMM5pm8LWqafW1QlKlEgyLlNkpnn5PzPmvp7OgOUW9zJe6xndMfqJHTNnrIzK
-         AXTT8LKoIkT7rh6tOmvgfjXwOm60cpNWCUyzRRR5uej42sH7YgyQ/NCMOgfVGWy+3KYT
-         eNU8rhn+hJo4VZs3+fpLLjYQ3KVZr1paMqH2EXtgM5bHm1KXAH+ALJXMLGuE9iAYGwaS
-         BrPs4wfnYuLkezc3ZNF/j4sFUFrM2RPfeyWibQ7RhrPjPUvZxUiRirfzkdbZJtIckmY5
-         Z0Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=kEUOtzoCcyxMGagaGiuW85PJFCulYHpDp09UxNca9Ic=;
-        b=j4UiBo6fKQCcLTcV+f2fEniFFtUsPH5tGG7/tGa5D5wexwL3B7QSYVZ9SzC3HMQImS
-         6lW9owz68CPfBdp8eFN9a5M5qyFzle9hK5KjwX7Ja5zl6XIH8+3NwI7m5IhCuMg1zQC+
-         pcrpCymrnwUGgWNOpb1eEvALT+VPil28RnBwDaeEvdjl/yRqDk/c/jifRpcHqZa0qz4Z
-         lgkzioXw9GetKLEr+t9C8fpfhTe1GLeBe5lQRnihkh4O4IjRj95/g0rlEcfP4BsxO/Yg
-         bqNt2F4ixsqIX3PTddreBlKek62exxDZpVDrrA9tNVFVc3JDf2TU6gldiG8PRWMHEzAP
-         IjhA==
-X-Gm-Message-State: ANhLgQ2YDHBK1xsYuXwuLwC3dHUtvfcofxY4q+/s7BpYOIBdZlzu3l7d
-        PB9bzaYfz1AtDNqsjoVcYQRu
-X-Google-Smtp-Source: ADFU+vsE1loIykImw3+EDdk0dvEYpS7hbzKWOjzd6Nt2/voPeuQ9B8H8HvVt9opVTI845JEihChDeg==
-X-Received: by 2002:a63:844a:: with SMTP id k71mr25767936pgd.79.1585030300253;
-        Mon, 23 Mar 2020 23:11:40 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:59b:91e:2dd6:dffe:3569:b473])
-        by smtp.gmail.com with ESMTPSA id d3sm1198230pjc.42.2020.03.23.23.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 23:11:39 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     gregkh@linuxfoundation.org, davem@davemloft.net
-Cc:     smohanad@codeaurora.org, jhugo@codeaurora.org,
-        kvalo@codeaurora.org, bjorn.andersson@linaro.org,
-        hemantk@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        netdev@vger.kernel.org
-Subject: [PATCH v3 7/7] net: qrtr: Do not depend on ARCH_QCOM
-Date:   Tue, 24 Mar 2020 11:40:50 +0530
-Message-Id: <20200324061050.14845-8-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
-References: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
+        Tue, 24 Mar 2020 02:14:08 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56462 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725951AbgCXGOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 02:14:07 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 423F98E17D8711737378;
+        Tue, 24 Mar 2020 14:13:33 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 24 Mar
+ 2020 14:13:29 +0800
+Subject: Re: [PATCH v5] f2fs: fix potential .flags overflow on 32bit
+ architecture
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Joe Perches <joe@perches.com>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200323031807.94473-1-yuchao0@huawei.com>
+ <afa74570dacebb3b93d4b9c27d6c8a87186cef2d.camel@perches.com>
+ <20200323151027.GA123526@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <e811683f-8906-a152-5d76-cd284fca6a2f@huawei.com>
+Date:   Tue, 24 Mar 2020 14:13:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20200323151027.GA123526@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IPC Router protocol is also used by external modems for exchanging the QMI
-messages. Hence, it doesn't always depend on Qualcomm platforms. One such
-instance is the QCA6390 WLAN device connected to x86 machine.
+On 2020/3/23 23:10, Jaegeuk Kim wrote:
+> On 03/23, Joe Perches wrote:
+>> On Mon, 2020-03-23 at 11:18 +0800, Chao Yu wrote:
+>>> f2fs_inode_info.flags is unsigned long variable, it has 32 bits
+>>> in 32bit architecture, since we introduced FI_MMAP_FILE flag
+>>> when we support data compression, we may access memory cross
+>>> the border of .flags field, corrupting .i_sem field, result in
+>>> below deadlock.
+>> []
+>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+>> []
+>>> @@ -362,7 +362,7 @@ static int do_read_inode(struct inode *inode)
+>>>  	fi->i_flags = le32_to_cpu(ri->i_flags);
+>>>  	if (S_ISREG(inode->i_mode))
+>>>  		fi->i_flags &= ~F2FS_PROJINHERIT_FL;
+>>> -	fi->flags = 0;
+>>> +	bitmap_zero(fi->flags, BITS_TO_LONGS(FI_MAX));
+>>
+>> Sorry, I misled you here, this should be
+>>
+>> 	bitmap_zero(fi->flags, FI_MAX);
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- net/qrtr/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+Oh, I missed to check that as well. :(
 
-diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
-index 8eb876471564..f362ca316015 100644
---- a/net/qrtr/Kconfig
-+++ b/net/qrtr/Kconfig
-@@ -4,7 +4,6 @@
- 
- config QRTR
- 	tristate "Qualcomm IPC Router support"
--	depends on ARCH_QCOM || COMPILE_TEST
- 	---help---
- 	  Say Y if you intend to use Qualcomm IPC router protocol.  The
- 	  protocol is used to communicate with services provided by other
--- 
-2.17.1
+> 
+> Thanks, I applied this directly in the f2fs tree.
 
+Thanks for the help.
+
+Thanks,
+
+> .
+> 
