@@ -2,196 +2,86 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A08C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E62EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBC520775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7BDC205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:13:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HG4va0y9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgCXOLC (ORCPT
+        id S1727532AbgCXONa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:11:02 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:39736 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbgCXOLC (ORCPT
+        Tue, 24 Mar 2020 10:13:30 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44501 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgCXON3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:11:02 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id AE3861A6266CCB;
-        Tue, 24 Mar 2020 14:10:58 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Tue, 24 Mar 2020 14:10:57 +0000 (UTC)
-Message-ID: <3c20624ea9d88f13d6f1a768735f08a4a8a59ea6.camel@archlinux.org>
-Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
- connection
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <superm1@gmail.com>,
-        Richard Hughes <hughsient@gmail.com>
-In-Reply-To: <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
-References: <20200318161906.3340959-1-lains@archlinux.org>
-         <20200318192721.390630-1-lains@archlinux.org>
-         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
-         <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
-         <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-pDPwtUufVHNf69huRHRz"
-Date:   Tue, 24 Mar 2020 14:10:57 +0000
+        Tue, 24 Mar 2020 10:13:29 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z3so20786664edq.11;
+        Tue, 24 Mar 2020 07:13:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=izwnIJDLX3PpcKebrw2ejCdxD31bp4HV/owZTH+UT9g=;
+        b=HG4va0y9ptHh02lYhjFJlq3MVsocAX+qz7OV0CNLJ+lcF9w/afL82Fu1gjQM04xwhO
+         CjZTMxfDlrnGjpBdVNmCPkTxrt+IkSia7ehhd4DwTeovr1wTk9Pygcm18lFH5t5h+o4b
+         wRypSA2BKiZACkE8PvNp2FIWfwfSHdfsqqkT5KQODnQhwIYJbeGW4HHn0qbIQFvmp4c2
+         d+EsKD2Lml8P0zyZ8y6MKBLX7vbH7nVcyKYtDQ9IkxLHDJlBrlcrw3TG2Whc6GMGwAzO
+         FVcU73Sa7Ct6bV5RFKeW+A6Qk62ThRLx9N0Sd2pcVBShMno1NMHUKqRSu5oxqQEFe9Wa
+         Sitg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=izwnIJDLX3PpcKebrw2ejCdxD31bp4HV/owZTH+UT9g=;
+        b=QDrar4xOfJC3L1fvVY+iTR7d8WM3vSbyppoXv/uOXF3BCh6OOmqdQw91Zn6YYLSmEg
+         TcUs788rmEC5i+uxgto66/umfBO8OMVuZYx64YjbG8OZ2venY5Frrsz9mJ4uWQPA/g9h
+         MGwDlgmK5QVwqc8FgsdqNHpH7du3/PoMbUNOriInvajE5T3VjUJStRgpK3afsRqafr2g
+         RVwDtpJbHWfUf7gfMjhvzrv6/mzv2iE3fzhO9lMcOVXqo+kQ8ly+/Rz+sXq+LS+zJWci
+         Gc9N23K+aZxXz8Xqt95wE+Pj+kjT/7xS125ORGFwHraul9lPXzAYbMnNJ+YKp5gBivm8
+         3BCw==
+X-Gm-Message-State: ANhLgQ2Vlqr0P51fKrpcB3o2J5hmVYKJLWAqadpZah9NWAVykeMWIJyc
+        oMTChBQBcb+/ximdvnaJWTGp73GktUNQzzFs+A0=
+X-Google-Smtp-Source: ADFU+vt7WPNeMNKBzxAaGY+0/pg49GFYOhCk2fM4aFzPzmKpP7OAgJPKW+5rkQPYjZ8OEAPMTAU0beLSAlgB28Pi17k=
+X-Received: by 2002:aa7:de13:: with SMTP id h19mr27826422edv.52.1585059207305;
+ Tue, 24 Mar 2020 07:13:27 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.0 
+References: <20200324102030.31000-1-narmstrong@baylibre.com> <20200324102030.31000-3-narmstrong@baylibre.com>
+In-Reply-To: <20200324102030.31000-3-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 24 Mar 2020 15:13:16 +0100
+Message-ID: <CAFBinCA9rQKWx47F2-dT4ZrCwSKW+LiwAH2VdzPKr-9ymRxkSw@mail.gmail.com>
+Subject: Re: [PATCH 02/13] usb: dwc3: meson-g12a: specify phy names in soc data
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Hanjie Lin <hanjie.lin@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Neil,
 
---=-pDPwtUufVHNf69huRHRz
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[...]
+> +static const char *meson_a1_phy_names[] = {
+> +       "usb2-phy0", "usb2-phy1"
+> +};
+my understanding is that the A1 SoC only has usb2-phy1.
++Cc Hanjie Lin to confirm this
 
-On Tue, 2020-03-24 at 15:03 +0100, Bastien Nocera wrote:
-> On Tue, 2020-03-24 at 13:46 +0000, Filipe La=C3=ADns wrote:
-> > On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
-> > > On Wed, 2020-03-18 at 19:27 +0000, Filipe La=C3=ADns wrote:
-> > > > As discussed in the mailing list:
-> > > >=20
-> > > > > Right now the hid-logitech-dj driver will export one node for
-> > > > > each
-> > > > > connected device, even when the device is not connected. That
-> > > > > causes
-> > > > > some trouble because in userspace we don't have have any way to
-> > > > > know if
-> > > > > the device is connected or not, so when we try to communicate,
-> > > > > if
-> > > > > the
-> > > > > device is disconnected it will fail.
-> > >=20
-> > > Why is it a problem that user-space communication fails? Note that
-> > > sending a signal without any way to fetch the state means that it's
-> > > always going to be racy.
-> >=20
-> > It failing is not the problem. The problem is knowing when the device
-> > is available again. Right now the only way to do that is to listen
-> > for
-> > events or periodically ping it.
-> >=20
-> > We want to only export the HID++ hidraw node when the device is
-> > available but that will take a while. We will have to test and sync
-> > up
-> > userspace. I also want to write tests for the driver before, to make
-> > sure there are no regressions. We had a thread discussing this, IIRC
-> > you were in CC.
->=20
-> If I need to remember some old thread to know what we're talking about,
-> then that means that the commit message is probably not good enough...
+apart from that:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Should I put in the commit message what is planned next?
 
-> Please add some links to the relevant discussion on bug forums if
-> there's interesting data there too.
-
-You can find the discussion in [1][2].
-
-[1] https://www.spinics.net/lists/linux-input/thrd2.html#65615
-[2] https://www.spinics.net/lists/linux-input/msg65615.html
-
-> > > > The solution reached to solve this issue is to trigger an udev
-> > > > change
-> > > > event when the device connects, this way userspace can just wait
-> > > > on
-> > > > those connections instead of trying to ping the device.
-> > > >=20
-> > > > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> > > >=20
-> > > > ---
-> > > >=20
-> > > > v2:
-> > > >   - Issue udev change event on the connected hid device, not on
-> > > > the
-> > > >   receiver
-> > > >=20
-> > > > ---
-> > > >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
-> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
-> > > > logitech-dj.c
-> > > > index 48dff5d6b605..282e57dd467d 100644
-> > > > --- a/drivers/hid/hid-logitech-dj.c
-> > > > +++ b/drivers/hid/hid-logitech-dj.c
-> > > > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct
-> > > > hid_device
-> > > > *hdev,
-> > > >  {
-> > > >  	struct dj_receiver_dev *djrcv_dev =3D hid_get_drvdata(hdev);
-> > > >  	struct dj_report *dj_report =3D (struct dj_report *) data;
-> > > > +	struct dj_device *dj_dev;
-> > > >  	unsigned long flags;
-> > > > =20
-> > > >  	/*
-> > > > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct
-> > > > hid_device
-> > > > *hdev,
-> > > > =20
-> > > >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
-> > > > =20
-> > > > -	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
-> > > > +	dj_dev =3D djrcv_dev->paired_dj_devices[dj_report->device_index];
-> > > > +
-> > > > +	if (!dj_dev) {
-> > > >  		/* received an event for an unknown device, bail out */
-> > > >  		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
-> > > >  		goto out;
-> > > > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct
-> > > > hid_device
-> > > > *hdev,
-> > > >  		if (dj_report-
-> > > > > report_params[CONNECTION_STATUS_PARAM_STATUS] =3D=3D
-> > > >  		    STATUS_LINKLOSS) {
-> > > >  			logi_dj_recv_forward_null_report(djrcv_dev,
-> > > > dj_report);
-> > > > +		} else {
-> > > > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
-> > > > KOBJ_CHANGE);
-> > > >  		}
-> > > >  		break;
-> > > >  	default:
---=20
-Filipe La=C3=ADns
-
---=-pDPwtUufVHNf69huRHRz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl56FOoACgkQ+JPGdIFq
-qV2TWRAAvWhHKnpVD7+X0n9FKziEPCKb1ACTxUHAO89vPsV6yPpoZhZqt+RvXB1u
-Pms8CsRYKBPmnGl5gMYBWStvSiyBsZdbYGRJC8wyAvheag86zr3Zgm8zakSXIJIa
-3WOJGkp08MZxxKRLeKU/RwkSMqkPe/cq8/ZaP97lTObhx912FH/KAs7wfUAX8m9T
-yRVvq6rUL1W8UeGpA5V8UYCCtKfzsLjU1682HXB+gEvjACBLYR5d6Tf77DwghRm6
-HiW/XTFB6nRRC+Aouj2cJixMkUK/4UCtazxaowr2JWT34Mml9gQRpwNtv/+nfLEs
-T/4Tcf3J9QbEEEpbozJ/rl3je4Sa9PP8p9s0raEdvv2ndZVfuwCu2qJj7p4yhJOi
-z59iFzzbtqBporPW9SoRgyxKnZ2o9Wj86wX4MQFxKK8culderl5inkutXtWo8ujF
-f0NQqpMhBz/7ZAW66Fu7g/3y63QXl9cPydjRHuHzqUYSfr7bzDi9sQNS+MZIRHFy
-pi0vy8Imxsq5sHOCvfNvXzvVJiZlkcX3ZiauNtAFhM+kgYXnurm3QAOVu+TxIV1I
-a5cQDvw/WRu8F2gz/CQiT2JKr85L873jie1lmfORek6EIrTQk/NpB2mmkuXDw5JR
-xJ2qq27aQlKRuu/DeNaMZcdFCQfVkGWsdGEalTSiDM0owjqTVPg=
-=wOd5
------END PGP SIGNATURE-----
-
---=-pDPwtUufVHNf69huRHRz--
+Martin
