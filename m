@@ -2,145 +2,194 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C56BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549F6C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 534FE2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 268DD20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AnRH8geS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728268AbgCXVsi (ORCPT
+        id S1728320AbgCXVsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:48:38 -0400
-Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:10335 "EHLO
-        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727040AbgCXVsh (ORCPT
+        Tue, 24 Mar 2020 17:48:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38423 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbgCXVst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:48:37 -0400
-Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 Mar 2020 14:48:36 -0700
-Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
-  by ironmsg02-sd.qualcomm.com with ESMTP; 24 Mar 2020 14:48:36 -0700
-Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
-        id D85431F79C; Tue, 24 Mar 2020 14:48:35 -0700 (PDT)
-From:   Asutosh Das <asutoshd@codeaurora.org>
-To:     cang@codeaurora.org, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org
-Cc:     Nitin Rawat <nitirawa@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [<PATCH v1> 1/1] scsi: ufs: Resume ufs host before accessing ufs device
-Date:   Tue, 24 Mar 2020 14:48:21 -0700
-Message-Id: <f712a4f7bdb0ae32e0d83634731e7aaa1b3a6cdd.1585009663.git.asutoshd@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
+        Tue, 24 Mar 2020 17:48:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id x7so107189pgh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 14:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DsvR+TcwmI4jVJzuydsxBMDLVq1XTHOSTRk3ilTd2M8=;
+        b=AnRH8geSYlcU2enKayiCXSAWBghoMs55YsWkfBp+R9HE3GPrNP9BFUgaw3qS3gdH+K
+         ZkSGwpXzzU20JbA/DvnYdeqevg9YGr2QofJvky1HTIStAjLmX+Cc7NhUgYoUAooveuG2
+         sgr+DfmyNURrvjjgktbXgASyYM7ekCHEJJxNk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DsvR+TcwmI4jVJzuydsxBMDLVq1XTHOSTRk3ilTd2M8=;
+        b=os4tIDcTGHuJoJrYkPuzCbIWRQbG9lu4sM6copBcEUmpK10LMqpIvGUVL3Kko4lDAs
+         g1YzbvVKSsCgM/p3aioaDYFccyZBovtYIXKtZN7KAa+NlJqQMOffP5hyNkMBHhRjd2r6
+         GvGkYJMjj6+EUt4FGEN03XSAL2KTfgqgHjmxz8tAfuu3TJJQfD6eiiL0fRZlPJgmuMcC
+         IdFuDV8WMy8IEAvvudgMfV5+cLSOVC4DRe1jzysYUxRr0CFEhPUih3z+kvpwJuQpJyt0
+         PTRW9KlMHgCOOWi80KN0a8HnsYuZh7N//7wDtiBMsD7Rv0OviC4agSDH86ivg4Fd63pZ
+         h3Yw==
+X-Gm-Message-State: ANhLgQ2l7a1/oxMjX+lGP5k8QyD2pMh8WUwrsj0TdA0mcYtjxkCzPCjb
+        NHkR6hz2PqYUBGMNKajyc/ngNA==
+X-Google-Smtp-Source: ADFU+vtQ3zmuuk6S7MV6yqPmtIItc12Pcv44PxtKGobUKPTjqQaUljsbCnX/DNGWIEQnxG1Z5CiMWw==
+X-Received: by 2002:aa7:999e:: with SMTP id k30mr30994163pfh.235.1585086526229;
+        Tue, 24 Mar 2020 14:48:46 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id l62sm15578328pgd.82.2020.03.24.14.48.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 14:48:45 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     Salman Qazi <sqazi@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] bdev: Reduce time holding bd_mutex in sync in blkdev_close()
+Date:   Tue, 24 Mar 2020 14:48:27 -0700
+Message-Id: <20200324144754.v2.1.I9df0264e151a740be292ad3ee3825f31b5997776@changeid>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nitin Rawat <nitirawa@codeaurora.org>
+While trying to "dd" to the block device for a USB stick, I
+encountered a hung task warning (blocked for > 120 seconds).  I
+managed to come up with an easy way to reproduce this on my system
+(where /dev/sdb is the block device for my USB stick) with:
 
-As a part of sysfs reading of descriptors/attributes/flags,
-query commands should only be executed when hba's
-power runtime status is active.
-To guarantee this, add pm_runtime_get/put_sync()
-to those paths where query commands are sent.
+  while true; do dd if=/dev/zero of=/dev/sdb bs=4M; done
 
-Signed-off-by: Nitin Rawat <nitirawa@codeaurora.org>
-Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+With my reproduction here are the relevant bits from the hung task
+detector:
+
+ INFO: task udevd:294 blocked for more than 122 seconds.
+ ...
+ udevd           D    0   294      1 0x00400008
+ Call trace:
+  ...
+  mutex_lock_nested+0x40/0x50
+  __blkdev_get+0x7c/0x3d4
+  blkdev_get+0x118/0x138
+  blkdev_open+0x94/0xa8
+  do_dentry_open+0x268/0x3a0
+  vfs_open+0x34/0x40
+  path_openat+0x39c/0xdf4
+  do_filp_open+0x90/0x10c
+  do_sys_open+0x150/0x3c8
+  ...
+
+ ...
+ Showing all locks held in the system:
+ ...
+ 1 lock held by dd/2798:
+  #0: ffffff814ac1a3b8 (&bdev->bd_mutex){+.+.}, at: __blkdev_put+0x50/0x204
+ ...
+ dd              D    0  2798   2764 0x00400208
+ Call trace:
+  ...
+  schedule+0x8c/0xbc
+  io_schedule+0x1c/0x40
+  wait_on_page_bit_common+0x238/0x338
+  __lock_page+0x5c/0x68
+  write_cache_pages+0x194/0x500
+  generic_writepages+0x64/0xa4
+  blkdev_writepages+0x24/0x30
+  do_writepages+0x48/0xa8
+  __filemap_fdatawrite_range+0xac/0xd8
+  filemap_write_and_wait+0x30/0x84
+  __blkdev_put+0x88/0x204
+  blkdev_put+0xc4/0xe4
+  blkdev_close+0x28/0x38
+  __fput+0xe0/0x238
+  ____fput+0x1c/0x28
+  task_work_run+0xb0/0xe4
+  do_notify_resume+0xfc0/0x14bc
+  work_pending+0x8/0x14
+
+The problem appears related to the fact that my USB disk is terribly
+slow and that I have a lot of RAM in my system to cache things.
+Specifically my writes seem to be happening at ~15 MB/s and I've got
+~4 GB of RAM in my system that can be used for buffering.  To write 4
+GB of buffer to disk thus takes ~4000 MB / ~15 MB/s = ~267 seconds.
+
+The 267 second number is a problem because in __blkdev_put() we call
+sync_blockdev() while holding the bd_mutex.  Any other callers who
+want the bd_mutex will be blocked for the whole time.
+
+The problem is made worse because I believe blkdev_put() specifically
+tells other tasks (namely udev) to go try to access the device at right
+around the same time we're going to hold the mutex for a long time.
+
+Putting some traces around this (after disabling the hung task detector),
+I could confirm:
+ dd:    437.608600: __blkdev_put() right before sync_blockdev() for sdb
+ udevd: 437.623901: blkdev_open() right before blkdev_get() for sdb
+ dd:    661.468451: __blkdev_put() right after sync_blockdev() for sdb
+ udevd: 663.820426: blkdev_open() right after blkdev_get() for sdb
+
+A simple fix for this is to realize that sync_blockdev() works fine if
+you're not holding the mutex.  Also, it's not the end of the world if
+you sync a little early (though it can have performance impacts).
+Thus we can make a guess that we're going to need to do the sync and
+then do it without holding the mutex.  We still do one last sync with
+the mutex but it should be much, much faster.
+
+With this, my hung task warnings for my test case are gone.
+
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/scsi/ufs/ufs-sysfs.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
+I didn't put a "Fixes" annotation here because, as far as I can tell,
+this issue has been here "forever" unless someone knows of something
+else that changed that made this possible to hit.  This could probably
+get picked back to any stable tree that anyone is still maintaining.
 
-diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
-index dbdf8b0..92a63ee 100644
---- a/drivers/scsi/ufs/ufs-sysfs.c
-+++ b/drivers/scsi/ufs/ufs-sysfs.c
-@@ -210,8 +210,10 @@ static ssize_t ufs_sysfs_read_desc_param(struct ufs_hba *hba,
- 	if (param_size > 8)
- 		return -EINVAL;
+Changes in v2:
+- Don't bother holding the mutex when checking "bd_openers".
+
+ fs/block_dev.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 9501880dff5e..40c57a9cc91a 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -1892,6 +1892,16 @@ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part)
+ 	struct gendisk *disk = bdev->bd_disk;
+ 	struct block_device *victim = NULL;
  
-+	pm_runtime_get_sync(hba->dev);
- 	ret = ufshcd_read_desc_param(hba, desc_id, desc_index,
- 				param_offset, desc_buf, param_size);
-+	pm_runtime_put_sync(hba->dev);
- 	if (ret)
- 		return -EINVAL;
- 	switch (param_size) {
-@@ -558,6 +560,7 @@ static ssize_t _name##_show(struct device *dev,				\
- 	desc_buf = kzalloc(QUERY_DESC_MAX_SIZE, GFP_ATOMIC);		\
- 	if (!desc_buf)                                                  \
- 		return -ENOMEM;                                         \
-+	pm_runtime_get_sync(hba->dev);					\
- 	ret = ufshcd_query_descriptor_retry(hba,			\
- 		UPIU_QUERY_OPCODE_READ_DESC, QUERY_DESC_IDN_DEVICE,	\
- 		0, 0, desc_buf, &desc_len);				\
-@@ -574,6 +577,7 @@ static ssize_t _name##_show(struct device *dev,				\
- 		goto out;						\
- 	ret = snprintf(buf, PAGE_SIZE, "%s\n", desc_buf);		\
- out:									\
-+	pm_runtime_put_sync(hba->dev);					\
- 	kfree(desc_buf);						\
- 	return ret;							\
- }									\
-@@ -604,9 +608,13 @@ static ssize_t _name##_show(struct device *dev,				\
- 	struct device_attribute *attr, char *buf)			\
- {									\
- 	bool flag;							\
-+	int ret;							\
- 	struct ufs_hba *hba = dev_get_drvdata(dev);			\
--	if (ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,		\
--		QUERY_FLAG_IDN##_uname, &flag))				\
-+	pm_runtime_get_sync(hba->dev);					\
-+	ret = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,	\
-+		QUERY_FLAG_IDN##_uname, &flag);				\
-+	pm_runtime_put_sync(hba->dev);					\
-+	if (ret)							\
- 		return -EINVAL;						\
- 	return sprintf(buf, "%s\n", flag ? "true" : "false");		\
- }									\
-@@ -644,8 +652,12 @@ static ssize_t _name##_show(struct device *dev,				\
- {									\
- 	struct ufs_hba *hba = dev_get_drvdata(dev);			\
- 	u32 value;							\
--	if (ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,		\
--		QUERY_ATTR_IDN##_uname, 0, 0, &value))			\
-+	int ret;							\
-+	pm_runtime_get_sync(hba->dev);					\
-+	ret = ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,	\
-+		QUERY_ATTR_IDN##_uname, 0, 0, &value);			\
-+	pm_runtime_put_sync(hba->dev);					\
-+	if (ret)							\
- 		return -EINVAL;						\
- 	return sprintf(buf, "0x%08X\n", value);				\
- }									\
-@@ -766,9 +778,13 @@ static ssize_t dyn_cap_needed_attribute_show(struct device *dev,
- 	struct scsi_device *sdev = to_scsi_device(dev);
- 	struct ufs_hba *hba = shost_priv(sdev->host);
- 	u8 lun = ufshcd_scsi_to_upiu_lun(sdev->lun);
-+	int ret;
- 
--	if (ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
--		QUERY_ATTR_IDN_DYN_CAP_NEEDED, lun, 0, &value))
-+	pm_runtime_get_sync(hba->dev);
-+	ret = ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+		QUERY_ATTR_IDN_DYN_CAP_NEEDED, lun, 0, &value);
-+	pm_runtime_put_sync(hba->dev);
-+	if (ret)
- 		return -EINVAL;
- 	return sprintf(buf, "0x%08X\n", value);
- }
++	/*
++	 * Sync early if it looks like we're the last one.  If someone else
++	 * opens the block device between now and the decrement of bd_openers
++	 * then we did a sync that we didn't need to, but that's not the end
++	 * of the world and we want to avoid long (could be several minute)
++	 * syncs while holding the mutex.
++	 */
++	if (bdev->bd_openers == 1)
++		sync_blockdev(bdev);
++
+ 	mutex_lock_nested(&bdev->bd_mutex, for_part);
+ 	if (for_part)
+ 		bdev->bd_part_count--;
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.25.1.696.g5e7596f4ac-goog
 
