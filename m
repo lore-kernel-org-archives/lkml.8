@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24802C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBD4C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7AD206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70CA9208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055763;
-	bh=NKkceryTMuai4X1AFLt/xoV5nKReHREJqxrtUSrhY+0=;
+	s=default; t=1585055766;
+	bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ucRmYVjYVt9F7mSJdEioG+JHOvJEZFNZh4XIoLAn7+bnNp+HCb9KYUWoI5fbJWag3
-	 a5NKKF3dltkdVammcitEdyScY71iH1+gNkvFsgfbcYcIDB5SPI/UCAGdq/F3EV9gna
-	 4ovhKYQbSImY3XP++pq4whBWmbIeocygT2WpWTI0=
+	b=woiX1kgNyoqjANEH7M1UUtt49vSZehsDLIdNIsCrIUyg89VNKuQc8S6gJYVX64YUL
+	 UZr6ss+tzr0rxzi+Zypw3UeAMfgVCXdMVyYl2nviigpaHu8Sg5DQCWXHW2zk8IqPsx
+	 4p2z/a+zPjN91b5t/2C+dYyxls3xyy+Zl7p4rA3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbgCXNQB (ORCPT
+        id S1728357AbgCXNQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35168 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:16:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727843AbgCXNP6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:58 -0400
+        id S1727843AbgCXNQC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4660E206F6;
-        Tue, 24 Mar 2020 13:15:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01524208E4;
+        Tue, 24 Mar 2020 13:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055757;
-        bh=NKkceryTMuai4X1AFLt/xoV5nKReHREJqxrtUSrhY+0=;
+        s=default; t=1585055761;
+        bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUyEFEGdtl58MV3xIdzd/dQVz4DQfzDu4w6+6hpC7RLbGOaAir5y7CAQ8+kmyd0IN
-         seDU87GfuvT63OZTGEV5JJk43Kn6Auxz7PeMRCA9Pb5ezdnb+8Zov+kSMvuJAwtlot
-         eyqbSf/pWlDnRtz1i0O0Di2zI/xfQ9Zy/FM/1TJo=
+        b=J0crxA2KUf7FM0CQ5pWOFih0cagy54U2PFX6ZJx/hEv3NmowCiXAxWpfnpGYs3+Pm
+         5zhzMiKLs+s1ACiDV8ChamwUHVklYoJ2c7VVq8QJ/aUOxNR9FEUtFjrtnnfW16vXXZ
+         5uyNRrBpD3KInkFL9zkC6+k2JFGTaRXU5gWMtT1o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, "Igor M. Liplianin" <liplianin@netup.ru>,
+        Daniel Axtens <dja@axtens.net>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/102] locks: reinstate locks_delete_block optimization
-Date:   Tue, 24 Mar 2020 14:09:54 +0100
-Message-Id: <20200324130806.734419667@linuxfoundation.org>
+Subject: [PATCH 5.4 020/102] altera-stapl: altera_get_note: prevent write beyond end of key
+Date:   Tue, 24 Mar 2020 14:10:12 +0100
+Message-Id: <20200324130808.580281959@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,163 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+From: Daniel Axtens <dja@axtens.net>
 
-[ Upstream commit dcf23ac3e846ca0cf626c155a0e3fcbbcf4fae8a ]
+[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
 
-There is measurable performance impact in some synthetic tests due to
-commit 6d390e4b5d48 (locks: fix a potential use-after-free problem when
-wakeup a waiter). Fix the race condition instead by clearing the
-fl_blocker pointer after the wake_up, using explicit acquire/release
-semantics.
+altera_get_note is called from altera_init, where key is kzalloc(33).
 
-This does mean that we can no longer use the clearing of fl_blocker as
-the wait condition, so switch the waiters over to checking whether the
-fl_blocked_member list_head is empty.
+When the allocation functions are annotated to allow the compiler to see
+the sizes of objects, and with FORTIFY_SOURCE, we see:
 
-Reviewed-by: yangerkun <yangerkun@huawei.com>
-Reviewed-by: NeilBrown <neilb@suse.de>
-Fixes: 6d390e4b5d48 (locks: fix a potential use-after-free problem when wakeup a waiter)
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+In file included from drivers/misc/altera-stapl/altera.c:14:0:
+In function ‘strlcpy’,
+    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
+include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
+    __write_overflow();
+    ^~~~~~~~~~~~~~~~~~
+
+That refers to this code in altera_get_note:
+
+    if (key != NULL)
+            strlcpy(key, &p[note_strings +
+                            get_unaligned_be32(
+                            &p[note_table + (8 * i)])],
+                    length);
+
+The error triggers because the length of 'key' is 33, but the copy
+uses length supplied as the 'length' parameter, which is always
+256. Split the size parameter into key_len and val_len, and use the
+appropriate length depending on what is being copied.
+
+Detected by compiler error, only compile-tested.
+
+Cc: "Igor M. Liplianin" <liplianin@netup.ru>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/file.c |  3 ++-
- fs/locks.c     | 54 ++++++++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 50 insertions(+), 7 deletions(-)
+ drivers/misc/altera-stapl/altera.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 0dbe47e897208..35c55cf38a358 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -1173,7 +1173,8 @@ cifs_posix_lock_set(struct file *file, struct file_lock *flock)
- 	rc = posix_lock_file(file, flock, NULL);
- 	up_write(&cinode->lock_sem);
- 	if (rc == FILE_LOCK_DEFERRED) {
--		rc = wait_event_interruptible(flock->fl_wait, !flock->fl_blocker);
-+		rc = wait_event_interruptible(flock->fl_wait,
-+					list_empty(&flock->fl_blocked_member));
- 		if (!rc)
- 			goto try_again;
- 		locks_delete_block(flock);
-diff --git a/fs/locks.c b/fs/locks.c
-index 426b55d333d5b..b8a31c1c4fff3 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -725,7 +725,6 @@ static void __locks_delete_block(struct file_lock *waiter)
- {
- 	locks_delete_global_blocked(waiter);
- 	list_del_init(&waiter->fl_blocked_member);
--	waiter->fl_blocker = NULL;
- }
- 
- static void __locks_wake_up_blocks(struct file_lock *blocker)
-@@ -740,6 +739,13 @@ static void __locks_wake_up_blocks(struct file_lock *blocker)
- 			waiter->fl_lmops->lm_notify(waiter);
- 		else
- 			wake_up(&waiter->fl_wait);
-+
-+		/*
-+		 * The setting of fl_blocker to NULL marks the "done"
-+		 * point in deleting a block. Paired with acquire at the top
-+		 * of locks_delete_block().
-+		 */
-+		smp_store_release(&waiter->fl_blocker, NULL);
- 	}
- }
- 
-@@ -753,11 +759,42 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status = -ENOENT;
- 
-+	/*
-+	 * If fl_blocker is NULL, it won't be set again as this thread "owns"
-+	 * the lock and is the only one that might try to claim the lock.
-+	 *
-+	 * We use acquire/release to manage fl_blocker so that we can
-+	 * optimize away taking the blocked_lock_lock in many cases.
-+	 *
-+	 * The smp_load_acquire guarantees two things:
-+	 *
-+	 * 1/ that fl_blocked_requests can be tested locklessly. If something
-+	 * was recently added to that list it must have been in a locked region
-+	 * *before* the locked region when fl_blocker was set to NULL.
-+	 *
-+	 * 2/ that no other thread is accessing 'waiter', so it is safe to free
-+	 * it.  __locks_wake_up_blocks is careful not to touch waiter after
-+	 * fl_blocker is released.
-+	 *
-+	 * If a lockless check of fl_blocker shows it to be NULL, we know that
-+	 * no new locks can be inserted into its fl_blocked_requests list, and
-+	 * can avoid doing anything further if the list is empty.
-+	 */
-+	if (!smp_load_acquire(&waiter->fl_blocker) &&
-+	    list_empty(&waiter->fl_blocked_requests))
-+		return status;
-+
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status = 0;
- 	__locks_wake_up_blocks(waiter);
- 	__locks_delete_block(waiter);
-+
-+	/*
-+	 * The setting of fl_blocker to NULL marks the "done" point in deleting
-+	 * a block. Paired with acquire at the top of this function.
-+	 */
-+	smp_store_release(&waiter->fl_blocker, NULL);
- 	spin_unlock(&blocked_lock_lock);
+diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
+index 25e5f24b3fecd..5bdf574723144 100644
+--- a/drivers/misc/altera-stapl/altera.c
++++ b/drivers/misc/altera-stapl/altera.c
+@@ -2112,8 +2112,8 @@ static int altera_execute(struct altera_state *astate,
  	return status;
  }
-@@ -1350,7 +1387,8 @@ static int posix_lock_inode_wait(struct inode *inode, struct file_lock *fl)
- 		error = posix_lock_inode(inode, fl, NULL);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-+		error = wait_event_interruptible(fl->fl_wait,
-+					list_empty(&fl->fl_blocked_member));
- 		if (error)
- 			break;
- 	}
-@@ -1435,7 +1473,8 @@ int locks_mandatory_area(struct inode *inode, struct file *filp, loff_t start,
- 		error = posix_lock_inode(inode, &fl, NULL);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl.fl_wait, !fl.fl_blocker);
-+		error = wait_event_interruptible(fl.fl_wait,
-+					list_empty(&fl.fl_blocked_member));
- 		if (!error) {
- 			/*
- 			 * If we've been sleeping someone might have
-@@ -1638,7 +1677,8 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
  
- 	locks_dispose_list(&dispose);
- 	error = wait_event_interruptible_timeout(new_fl->fl_wait,
--						!new_fl->fl_blocker, break_time);
-+					list_empty(&new_fl->fl_blocked_member),
-+					break_time);
+-static int altera_get_note(u8 *p, s32 program_size,
+-			s32 *offset, char *key, char *value, int length)
++static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
++			   char *key, char *value, int keylen, int vallen)
+ /*
+  * Gets key and value of NOTE fields in the JBC file.
+  * Can be called in two modes:  if offset pointer is NULL,
+@@ -2170,7 +2170,7 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 						&p[note_table + (8 * i) + 4])];
  
- 	percpu_down_read(&file_rwsem);
- 	spin_lock(&ctx->flc_lock);
-@@ -2122,7 +2162,8 @@ static int flock_lock_inode_wait(struct inode *inode, struct file_lock *fl)
- 		error = flock_lock_inode(inode, fl);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-+		error = wait_event_interruptible(fl->fl_wait,
-+				list_empty(&fl->fl_blocked_member));
- 		if (error)
- 			break;
- 	}
-@@ -2399,7 +2440,8 @@ static int do_lock_file_wait(struct file *filp, unsigned int cmd,
- 		error = vfs_lock_file(filp, cmd, fl, NULL);
- 		if (error != FILE_LOCK_DEFERRED)
- 			break;
--		error = wait_event_interruptible(fl->fl_wait, !fl->fl_blocker);
-+		error = wait_event_interruptible(fl->fl_wait,
-+					list_empty(&fl->fl_blocked_member));
- 		if (error)
- 			break;
+ 				if (value != NULL)
+-					strlcpy(value, value_ptr, length);
++					strlcpy(value, value_ptr, vallen);
+ 
+ 			}
+ 		}
+@@ -2189,13 +2189,13 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 				strlcpy(key, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i)])],
+-					length);
++					keylen);
+ 
+ 			if (value != NULL)
+ 				strlcpy(value, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i) + 4])],
+-					length);
++					vallen);
+ 
+ 			*offset = i + 1;
+ 		}
+@@ -2449,7 +2449,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
+ 			__func__, (format_version == 2) ? "Jam STAPL" :
+ 						"pre-standardized Jam 1.1");
+ 		while (altera_get_note((u8 *)fw->data, fw->size,
+-					&offset, key, value, 256) == 0)
++					&offset, key, value, 32, 256) == 0)
+ 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
+ 					__func__, key, value);
  	}
 -- 
 2.20.1
