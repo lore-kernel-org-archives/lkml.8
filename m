@@ -2,85 +2,78 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D12AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87630C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0F12074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585016671;
-	bh=DAaK2CbfWck+/J2Me5QXKEU6aJw7PhWMHcWs2jUL4TQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xknoR0Eu8ipZQcu8j6xxHBIZhvRwY5vsYpLr70g51yaYYFWoK9T+bI2mbQNmZSKwh
-	 n3QPaKDBw43SrEuX1QuaVEpn+Ys9Pw11NoB+JiegNmSzO7Cd1OWOkyUZx8QcOLeSs1
-	 vR0LS3YyA8aBt8n50KnQCa8joPQzPDBvMYUP9bPs=
+	by mail.kernel.org (Postfix) with ESMTP id 5865820769
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:27:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbgCXCY3 (ORCPT
+        id S1727211AbgCXC1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727047AbgCXCY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:24:28 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 057B92073E;
-        Tue, 24 Mar 2020 02:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585016668;
-        bh=DAaK2CbfWck+/J2Me5QXKEU6aJw7PhWMHcWs2jUL4TQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AftW/VPtFgDbbyF9CKB1G09fKVvYmMq7RBK2tRVCT3sHD652GBmyno3XpVBwhJ7Jm
-         +On3J62V2oI4oMWCHIeSXkESXq9sKYBdjYhdVxbMoBZ5njp6JkdbqBWPD6Kwu4J5ER
-         IFWItX8FhNOJWb2KdjrO8xjQ3ky7SnHMKeMr2HE0=
-Date:   Mon, 23 Mar 2020 19:24:27 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Hemant Kumar <hemantk@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH -next/-mmotm] bus/mhi: fix printk format for size_t
-Message-Id: <20200323192427.5903a6224ec85a07bd976c13@linux-foundation.org>
-In-Reply-To: <20200322044952.GA17141@Mani-XPS-13-9360>
-References: <c4852a82-cdb9-6318-70a4-96ccb4ba5af2@infradead.org>
-        <20200322044952.GA17141@Mani-XPS-13-9360>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 23 Mar 2020 22:27:34 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12119 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727047AbgCXC1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:27:34 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 561DB2697814C2E51B79;
+        Tue, 24 Mar 2020 10:27:27 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 10:27:19 +0800
+Subject: Re: [PATCH v6 08/23] irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200320182406.23465-1-maz@kernel.org>
+ <20200320182406.23465-9-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <0ac3af1c-5160-a528-f2b4-aac4833ce32c@huawei.com>
+Date:   Tue, 24 Mar 2020 10:27:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <20200320182406.23465-9-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 22 Mar 2020 10:19:52 +0530 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
+On 2020/3/21 2:23, Marc Zyngier wrote:
+> +static int its_sgi_set_affinity(struct irq_data *d,
+> +				const struct cpumask *mask_val,
+> +				bool force)
+> +{
+> +	/*
+> +	 * There is no notion of affinity for virtual SGIs, at least
+> +	 * not on the host (since they can only be targetting a vPE).
+> +	 * Tell the kernel we've done whetever it asked for.
 
-> On Sat, Mar 21, 2020 at 09:17:52PM -0700, Randy Dunlap wrote:
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Fix printk format warning by using %z for size_t modifier:
-> > 
-> > ../drivers/bus/mhi/core/boot.c: In function ‘mhi_rddm_prepare’:
-> > ../drivers/bus/mhi/core/boot.c:55:15: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 5 has type ‘size_t {aka unsigned int}’ [-Wformat=]
-> >   dev_dbg(dev, "Address: %p and len: 0x%lx sequence: %u\n",
-> > 
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> 
-> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+new typo?
+s/whetever/whatever/
 
-Thanks.  I guess we should tell Greg, who presently holds the offending
-patch.  I shall add 
+> +	 */
+> +	return IRQ_SET_MASK_OK;
+> +}
 
-Fixes: 6fdfdd27328ce ("bus: mhi: core: Add support for downloading RDDM image du
-ring panic")
 
-and send it over.
+Thanks,
+Zenghui
+
