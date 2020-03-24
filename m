@@ -2,246 +2,179 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECD7C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D178CC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 160F5206F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wUE2PPjF"
+	by mail.kernel.org (Postfix) with ESMTP id A8013206F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:01:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbgCXIA1 (ORCPT
+        id S1726237AbgCXIBA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:00:27 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:59692 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgCXIA0 (ORCPT
+        Tue, 24 Mar 2020 04:01:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61054 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725908AbgCXIBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:00:26 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02O80NgD037166;
-        Tue, 24 Mar 2020 03:00:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585036823;
-        bh=tStaEol+foMzTzOEWkdx/YQLYwvMF/sZHm9qFFRXitc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=wUE2PPjFJJIzS8NXR7vT3KmY9J/J0KvjfzD3XZ/+NZW/VXjNG+jDujzqt4l1pw+59
-         pI3A005+TJjYpR8CYcPDqrgjlwix8uki7Mk6Xh1twHgLCAoIp+cEmmPJqFfOyAblt2
-         OFUkdZ8ql6VF/0QfXjCJ1tIrARhWLbXGl+aM4Ck0=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02O80NaG120284;
-        Tue, 24 Mar 2020 03:00:23 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
- Mar 2020 03:00:22 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 24 Mar 2020 03:00:22 -0500
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02O80Kfx087754;
-        Tue, 24 Mar 2020 03:00:20 -0500
-Subject: Re: [PATCH v2 2/2] phy: ti: j721e-wiz: Implement DisplayPort mode to
- the wiz driver
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        <linux-kernel@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <praneeth@ti.com>, <yamonkar@cadence.com>,
-        <sjakhade@cadence.com>, <robh+dt@kernel.org>, <rogerq@ti.com>
-References: <cover.1578471433.git.jsarha@ti.com>
- <08f35af7ad6b948bd6ccab9f0807e36b6ddfb1c3.1578471433.git.jsarha@ti.com>
- <7c793ac4-59ae-1fcb-227c-2029240cf009@ti.com>
-From:   Jyri Sarha <jsarha@ti.com>
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <26f98d1b-2f5a-dfbd-c9f8-b034c3c054c3@ti.com>
-Date:   Tue, 24 Mar 2020 10:00:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 24 Mar 2020 04:01:00 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O7Y3XJ095793;
+        Tue, 24 Mar 2020 04:00:54 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywfe85gpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 04:00:54 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02O80Hio013957;
+        Tue, 24 Mar 2020 08:00:51 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ywawjpt99-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 08:00:51 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02O80oqw60555612
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 08:00:50 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72ED7136066;
+        Tue, 24 Mar 2020 08:00:50 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03982136063;
+        Tue, 24 Mar 2020 08:00:46 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.199.58.144])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Mar 2020 08:00:46 +0000 (GMT)
+Subject: [RFC] Issue in final aggregate value, in case of multiple events
+ present in metric expression
+To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
+        "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20200212054102.9259-1-kjain@linux.ibm.com>
+ <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
+ <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
+ <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
+ <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <6f98d281-f3de-b547-70d4-8fc95515b12f@linux.ibm.com>
+Date:   Tue, 24 Mar 2020 13:30:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <7c793ac4-59ae-1fcb-227c-2029240cf009@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
+In-Reply-To: <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_01:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 clxscore=1015
+ bulkscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003240035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01/2020 09:44, Kishon Vijay Abraham I wrote:
-> Hi Jyri,
-> 
-> On 08/01/20 2:00 PM, Jyri Sarha wrote:
->> For DisplayPort use we need to set WIZ_CONFIG_LANECTL register's
->> P_STANDARD_MODE bits to "mode 3". In the DisplayPort use also the
->> P_ENABLE bits of the same register are set to P_ENABLE instead of
->> P_ENABLE_FORCE, so that the DisplayPort driver can enable and disable
->> the lane as needed. The DisplayPort mode is selected according to
->> "cdns,phy-type"-properties found in link subnodes under the managed
->> serdes (see "ti,sierra-phy-t0" and "ti,j721e-serdes-10g" devicetree
->> bindings for details). All other values of "cdns,phy-type"-property
->> but PHY_TYPE_DP will set P_STANDARD_MODE bits to 0 and P_ENABLE bits
->> to force enable.
->>
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->> ---
->>  drivers/phy/ti/phy-j721e-wiz.c | 59 +++++++++++++++++++++++++++++++---
->>  1 file changed, 55 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/phy/ti/phy-j721e-wiz.c b/drivers/phy/ti/phy-j721e-wiz.c
->> index b5f6019e5c7d..22bc04846cdb 100644
->> --- a/drivers/phy/ti/phy-j721e-wiz.c
->> +++ b/drivers/phy/ti/phy-j721e-wiz.c
->> @@ -20,6 +20,7 @@
->>  #include <linux/pm_runtime.h>
->>  #include <linux/regmap.h>
->>  #include <linux/reset-controller.h>
->> +#include <dt-bindings/phy/phy.h>
->>  
->>  #define WIZ_SERDES_CTRL		0x404
->>  #define WIZ_SERDES_TOP_CTRL	0x408
->> @@ -78,6 +79,8 @@ static const struct reg_field p_enable[WIZ_MAX_LANES] = {
->>  	REG_FIELD(WIZ_LANECTL(3), 30, 31),
->>  };
->>  
->> +enum p_enable { P_ENABLE = 2, P_ENABLE_FORCE = 1, P_ENABLE_DISABLE = 0 };
->> +
->>  static const struct reg_field p_align[WIZ_MAX_LANES] = {
->>  	REG_FIELD(WIZ_LANECTL(0), 29, 29),
->>  	REG_FIELD(WIZ_LANECTL(1), 29, 29),
->> @@ -220,6 +223,7 @@ struct wiz {
->>  	struct reset_controller_dev wiz_phy_reset_dev;
->>  	struct gpio_desc	*gpio_typec_dir;
->>  	int			typec_dir_delay;
->> +	u32 lane_phy_type[WIZ_MAX_LANES];
->>  };
->>  
->>  static int wiz_reset(struct wiz *wiz)
->> @@ -242,12 +246,17 @@ static int wiz_reset(struct wiz *wiz)
->>  static int wiz_mode_select(struct wiz *wiz)
->>  {
->>  	u32 num_lanes = wiz->num_lanes;
->> +	enum wiz_lane_standard_mode mode;
->>  	int ret;
->>  	int i;
->>  
->>  	for (i = 0; i < num_lanes; i++) {
->> -		ret = regmap_field_write(wiz->p_standard_mode[i],
->> -					 LANE_MODE_GEN4);
->> +		if (wiz->lane_phy_type[i] == PHY_TYPE_DP)
->> +			mode = LANE_MODE_GEN1;
->> +		else
->> +			mode = LANE_MODE_GEN4;
->> +
->> +		ret = regmap_field_write(wiz->p_standard_mode[i], mode);
->>  		if (ret)
->>  			return ret;
->>  	}
->> @@ -707,7 +716,7 @@ static int wiz_phy_reset_assert(struct reset_controller_dev *rcdev,
->>  		return ret;
->>  	}
->>  
->> -	ret = regmap_field_write(wiz->p_enable[id - 1], false);
->> +	ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE_DISABLE);
->>  	return ret;
->>  }
->>  
->> @@ -734,7 +743,11 @@ static int wiz_phy_reset_deassert(struct reset_controller_dev *rcdev,
->>  		return ret;
->>  	}
->>  
->> -	ret = regmap_field_write(wiz->p_enable[id - 1], true);
->> +	if (wiz->lane_phy_type[id - 1] == PHY_TYPE_DP)
->> +		ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE);
->> +	else
->> +		ret = regmap_field_write(wiz->p_enable[id - 1], P_ENABLE_FORCE);
->> +
->>  	return ret;
->>  }
->>  
->> @@ -761,6 +774,40 @@ static const struct of_device_id wiz_id_table[] = {
->>  };
->>  MODULE_DEVICE_TABLE(of, wiz_id_table);
->>  
->> +static int wiz_get_lane_phy_types(struct device *dev, struct wiz *wiz)
->> +{
->> +	struct device_node *serdes, *subnode;
->> +
->> +	serdes = of_get_child_by_name(dev->of_node, "serdes");
->> +	if (!serdes) {
->> +		dev_err(dev, "%s: Getting \"serdes\"-node failed\n", __func__);
->> +		return -EINVAL;
->> +	}
->> +
->> +	for_each_child_of_node(serdes, subnode) {
->> +		u32 reg, num_lanes = 1, phy_type = PHY_NONE;
->> +		int ret, i;
->> +
->> +		ret = of_property_read_u32(subnode, "reg", &reg);
->> +		if (ret) {
->> +			dev_err(dev,
->> +				"%s: Reading \"reg\" from \"%s\" failed: %d\n",
->> +				__func__, subnode->name, ret);
->> +			return ret;
->> +		}
->> +		of_property_read_u32(subnode, "cdns,num-lanes", &num_lanes);
->> +		of_property_read_u32(subnode, "cdns,phy-type", &phy_type);
-> This would require the Torrent bindings to be Reviewed and Acked.
-> 
+Hello All,
+	I want to discuss one issue raised by Joakim Zhang where he mentioned
+that, we are not getting correct result in-case of multiple events present in metric
+expression.
 
-I think they are now in your next branch. Could you please pick this one
-up too?
+This is one example pointed by him :
 
-BR,
-Jyri
+below is the JSON file and result.
+[
+        {
+             "PublicDescription": "Calculate DDR0 bus actual utilization which vary from DDR0 controller clock frequency",
+             "BriefDescription": "imx8qm: ddr0 bus actual utilization",
+             "MetricName": "imx8qm-ddr0-bus-util",
+             "MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles\\/ )",
+             "MetricGroup": "i.MX8QM_DDR0_BUS_UTIL"
+        }
+]
+./perf stat -I 1000 -M imx8qm-ddr0-bus-util
+#           time             counts unit events
+     1.000104250              16720      imx8_ddr0/read-cycles/    #  22921.0 imx8qm-ddr0-bus-util
+     1.000104250               6201      imx8_ddr0/write-cycles/
+     2.000525625               8316      imx8_ddr0/read-cycles/    #  12785.5 imx8qm-ddr0-bus-util
+     2.000525625               2738      imx8_ddr0/write-cycles/
+     3.000819125               1056      imx8_ddr0/read-cycles/    #   4136.7 imx8qm-ddr0-bus-util
+     3.000819125                303      imx8_ddr0/write-cycles/
+     4.001103750               6260      imx8_ddr0/read-cycles/    #   9149.8 imx8qm-ddr0-bus-util
+     4.001103750               2317      imx8_ddr0/write-cycles/
+     5.001392750               2084      imx8_ddr0/read-cycles/    #   4516.0 imx8qm-ddr0-bus-util
+     5.001392750                601      imx8_ddr0/write-cycles/ 
+
+Based on given metric expression, the sum coming correct for first iteration while for
+rest, we won't see same addition result. But in-case we have single event in metric
+expression, we are getting correct result as expected.
 
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+So, I try to look into this issue and understand the flow. From my understanding, whenever we do
+calculation of metric expression we don't use exact count we are getting.
+Basically we use mean value of each metric event in the calculation of metric expression.
+
+So, I take same example:
+
+Metric Event: imx8qm-ddr0-bus-util
+MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles\\/ )"
+
+command#: ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
+
+#           time             counts unit events
+     1.000104250              16720      imx8_ddr0/read-cycles/    #  22921.0 imx8qm-ddr0-bus-util
+     1.000104250               6201      imx8_ddr0/write-cycles/
+     2.000525625               8316      imx8_ddr0/read-cycles/    #  12785.5 imx8qm-ddr0-bus-util
+     2.000525625               2738      imx8_ddr0/write-cycles/
+     3.000819125               1056      imx8_ddr0/read-cycles/    #   4136.7 imx8qm-ddr0-bus-util
+     3.000819125                303      imx8_ddr0/write-cycles/
+     4.001103750               6260      imx8_ddr0/read-cycles/    #   9149.8 imx8qm-ddr0-bus-util
+     4.001103750               2317      imx8_ddr0/write-cycles/
+     5.001392750               2084      imx8_ddr0/read-cycles/    #   4516.0 imx8qm-ddr0-bus-util
+     5.001392750                601      imx8_ddr0/write-cycles/
+
+So, there is one function called 'update_stats' in file util/stat.c where we do this calculation
+and updating stats->mean value. And this mean value is what we are actually using in our
+metric expression calculation.
+
+We call this function in each iteration where we update stats->mean and stats->n for each event.
+But one weird issue is, for very first event, stat->n is always 1 that is why we are getting 
+mean same as count.
+
+So this the reason why for single event we get exact aggregate of metric expression.
+So doesn't matter how many events you have in your metric expression, every time
+you take exact count for first one and normalized value for rest which is weird.
+
+According to update_stats function:  We are updating mean as:
+
+stats->mean += delta / stats->n where,  delta = val - stats->mean. 
+
+If we take write-cycles here. Initially mean = 0 and n = 1.
+
+1st iteration: n=1, write cycle : 6201 and mean = 6201  (Final agg value: 16720 + 6201 = 22921)
+2nd iteration: n=2, write cycles:  6201 + (2738 - 6201)/2 =  4469.5  (Final aggr value: 8316 + 4469.5 = 12785.5)
+3rd iteration: n=3, write cycles: 4469.5 + (303 - 4469.5)/3 = 3080.6667 (Final aggr value: 1056 + 3080.6667 = 4136.7)
+
+I am not sure if its expected behavior. I mean shouldn't we either take mean value of each event 
+or take n as 1 for each event.
+
+
+I am thinking, Should we add an option to say whether user want exact aggregate or
+this normalize aggregate to remove the confusion? I try to find it out if we already have one but didn't get.
+Please let me know if my understanding is fine. Or something I can add to resolve this issue.
+
+Thanks,
+Kajol
+
