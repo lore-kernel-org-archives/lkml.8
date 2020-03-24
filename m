@@ -2,92 +2,118 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5B9C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:42:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E95C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:42:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5D262080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17B4D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egl2JmPR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCXJm2 (ORCPT
+        id S1727473AbgCXJmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:42:28 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44776 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727230AbgCXJm1 (ORCPT
+        Tue, 24 Mar 2020 05:42:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41561 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgCXJl7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:42:27 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 574CA1C0343; Tue, 24 Mar 2020 10:42:25 +0100 (CET)
-Date:   Tue, 24 Mar 2020 10:42:22 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Nicolas Belin <nbelin@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, dmurphy@ti.com,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io
-Subject: Re: [PATCH v3 3/3] drivers: leds: add support for apa102c leds
-Message-ID: <20200324094222.GA15096@amd>
-References: <1583502010-16210-1-git-send-email-nbelin@baylibre.com>
- <1583502010-16210-4-git-send-email-nbelin@baylibre.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Content-Disposition: inline
-In-Reply-To: <1583502010-16210-4-git-send-email-nbelin@baylibre.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 24 Mar 2020 05:41:59 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h9so20525682wrc.8;
+        Tue, 24 Mar 2020 02:41:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=HNjGIiYj2PpNEKaGwYof99mf+bU/+Ss4GMUxM717vYs=;
+        b=egl2JmPRGAUxRuOSAc1Jl1OqrLWKRg2CePCkrpRwV/8U2wzDPGGB7qXbEBo096GqjC
+         GU1SkgX7ePypv9GkhRSPvEUbUN/QQHc092ELTeQLX4c2vHak9eIK9eboKOA7ZKrFO3lJ
+         0FnuTJgeXdNL5zblpPbjtgWJUPNoPYq9HL5KMttBbjHzMh/mN9piTviAuPdLDuK1X1JJ
+         LzPTeRD14ukONHC3+G+SqAMFrQ4LfX9fVqtSoU4glVxCJdu70Qa1g5T373UicfCdnbPC
+         SjDQ98IZY/dNwrAWLc+amI9ubxYWky2cL46kf655OkghRmEyiFkqnQPqZbX9bRXlf9WR
+         pbdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=HNjGIiYj2PpNEKaGwYof99mf+bU/+Ss4GMUxM717vYs=;
+        b=BivX4CxY3bHggEcIb0pvLk01+/K6v7E/u4Kbg3s/1Abe6jEioNQm7rlCLgjzb0i/Yg
+         7GSbIxGpyWCwv3/SJd7P3mh6BOe/sk0/MVWHTklH5Y5Jho1yIHpGl2o+bCtRUPpjFi57
+         UTOIvoTQm1QRNOTBgYiPUXFEpZK7PQwsRMGHoAcSX08nQ/XqsLqZQkhwSHa63yP09LGD
+         i2S/csVF8jKIVKQiDQo2JE+e3kYk17ts/xUDhIsdNHgq2BRS2+AUnDSvtosVC9NQhsFA
+         /xpxTgd42Y6r3R0lXuMRmr7KMDIlNEc5WAz63aCZh32/Ewme2I7+iLsgEgSK3M5L6C0m
+         6Gog==
+X-Gm-Message-State: ANhLgQ1eytVA/Iu+v0PaBF0VELg4JpLvw0bpuE+bkHyKSVndYXyPDrno
+        y6leMmw2nvRHM/zpzDcJTkc=
+X-Google-Smtp-Source: ADFU+vv8C9cjYZxaDsbHr88EK25zLIa2C+78e0CD6QBdRLrO+K+8pTvsjYRa/RwUpjye0rYJNRrOew==
+X-Received: by 2002:a5d:44d0:: with SMTP id z16mr13006905wrr.28.1585042918365;
+        Tue, 24 Mar 2020 02:41:58 -0700 (PDT)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id r15sm22489916wra.19.2020.03.24.02.41.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 02:41:57 -0700 (PDT)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     lgirdwood@gmail.com
+Cc:     broonie@kernel.org, heiko@sntech.de, robh+dt@kernel.org,
+        alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/3] dt-bindings: sound: rockchip-i2s: add #sound-dai-cells property
+Date:   Tue, 24 Mar 2020 10:41:48 +0100
+Message-Id: <20200324094149.6904-2-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20200324094149.6904-1-jbx6244@gmail.com>
+References: <20200324094149.6904-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+'#sound-dai-cells' is required to properly interpret
+the list of DAI specified in the 'sound-dai' property,
+so add them to 'rockchip-i2s.yaml'
 
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+Changed V2:
+  Add Reviewed-by
+---
+ Documentation/devicetree/bindings/sound/rockchip-i2s.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Fri 2020-03-06 14:40:10, Nicolas Belin wrote:
-> Initilial commit in order to support the apa102c RGB leds. The
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
+index eff06b4b5..7cd0e278e 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.yaml
+@@ -77,6 +77,9 @@ properties:
+       Required property for controllers which support multi channel
+       playback/capture.
+ 
++  "#sound-dai-cells":
++    const: 0
++
+ required:
+   - compatible
+   - reg
+@@ -85,6 +88,7 @@ required:
+   - clock-names
+   - dmas
+   - dma-names
++  - "#sound-dai-cells"
+ 
+ additionalProperties: false
+ 
+@@ -103,4 +107,5 @@ examples:
+       dma-names = "tx", "rx";
+       rockchip,capture-channels = <2>;
+       rockchip,playback-channels = <8>;
++      #sound-dai-cells = <0>;
+     };
+-- 
+2.11.0
 
-Initial
-
-> RGB and global brightness management is done by creating 4 leds
-> from the Led Framework per apa102c led.
->=20
-
-> +
-> +		/* setting a color_id value for each of the 4 components of the
-> +		 * apa102c RGB led. The first component is the global brightness
-> +		 * of the led and thus has no color. The order of the colors
-> +		 * after the global brightness is then blue, green and red
-> +		 * in that order. It corresponds to the order in which the
-> +		 * values are sent using spi
-> +		 */
-> +		rgb_led->component[0].color_id =3D -1; //no color
-
-Please follow codingstyle on comment style and avoid // comments.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl551f4ACgkQMOfwapXb+vKNAACdHyKBsVW3v6cli5ZVCgheH7ky
-D3kAnA22fu4Dv4StJjio2r7Ne6PEyWkM
-=IEwh
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
