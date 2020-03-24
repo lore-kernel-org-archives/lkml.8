@@ -2,68 +2,163 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0FFC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFC6CC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50BDE206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4D2206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qOVK6Fm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgCXRrg (ORCPT
+        id S1727662AbgCXRsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:47:36 -0400
-Received: from mga17.intel.com ([192.55.52.151]:51824 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727273AbgCXRrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:47:36 -0400
-IronPort-SDR: EroJeWM1GSU6O0nw+pToeQpaFecXktvrz7bevrCx0XGcYGuoBLqgE2NDX+l1piqiO6rLISYmQQ
- 10fHSqMl+0Hw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 10:47:35 -0700
-IronPort-SDR: /Dba8g1Ev7Mt3HAEAox+SqruuocqzRX7jLtMhq7XVwvIcFQbFonm31L4t/247hd6XIYy1CqKRg
- NWEL4XlR62kQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
-   d="scan'208";a="240115983"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Mar 2020 10:47:35 -0700
-Date:   Tue, 24 Mar 2020 10:47:35 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v6 0/8] x86/split_lock: Fix and virtualization of split
- lock detection
-Message-ID: <20200324174735.GC5998@linux.intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
+        Tue, 24 Mar 2020 13:48:25 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:38062 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbgCXRsZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:48:25 -0400
+Received: by mail-ot1-f68.google.com with SMTP id t28so17897685ott.5;
+        Tue, 24 Mar 2020 10:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Mbs4aVDmRmC8J/4oqCxwDOIrrZvgADtwZ+k3MwNOOe4=;
+        b=qOVK6Fm/WfSe2eoaOGOghnA2TYwPL/GqS8fesDDQy/usdsJ6vXGscsxOYUQ3t372pa
+         m21MVUH8T6ehMTGaxy9ZwEwreiz3G5lKVn/UvBmnlcMvVG2j47ZflqvTQquplUMTkvaO
+         scCLZHN+uwj1p57pNi2gX+WRX4/fIYwXsys1j81SHxQu++H78vRg6+WcjanHqKweYGxl
+         fYkfStZWRciRAcgcrC89JOL4P9rlopDSrwjOttyKVcgDvaYauZl181ha48+DYQ5SFDSu
+         pHpZL+GIL8+Svli8H2zCBXN6iHHIcMTKpoyDVFQhklqfwZ9z4fcMfunxFeDYXdOk5IHl
+         ZkIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Mbs4aVDmRmC8J/4oqCxwDOIrrZvgADtwZ+k3MwNOOe4=;
+        b=WAjoWzIOLlsKVXnGqNsb33eKMImC3mu3OBUbF/qoTiPK8gsZGx7A7FF1V+1FbtJOnG
+         4fXykRYAgnEmppZG8AiKehbOCdJOV2fDWVSkfgMrRznbvoI/68IrwEZ9j4R3oOZRPJ4X
+         wQrkf4QkLEz+ZaF3ooi9mbtwC3EBkq1wcbwn/ZIoLKLbYvE/SK0S5YWfOcLC5NRmLQ0t
+         ByFV7VI2kK6PT/vruQ+GjATi1nvVLCyahP8SNmbrPnMLKkUX3lwUrvkXByeD2RD0AEM6
+         8sgRNs/9N8DFf0C8li5OWAcw8REUue/oUEExFCbz5rmNp2BAdNxzA8gd4hy4FFHNQxiK
+         OzIw==
+X-Gm-Message-State: ANhLgQ3ov235jwaw7aQ1OUxRqkOuR3e2fn35OnjNNYEQjWYzoltOhAR2
+        6wF96P6BORJgXncE81e8QPlyTeUqO0Zr6WiG/JE=
+X-Google-Smtp-Source: ADFU+vtqWwX4PrG3i0s/E4kJl5NwCDhplDK0CbdgH63HXzbjqGc2T4gLWdm434mcJ+rI/tovsUOo/EKM2Xm3holDqEw=
+X-Received: by 2002:a05:6830:1f39:: with SMTP id e25mr7931301oth.135.1585072104337;
+ Tue, 24 Mar 2020 10:48:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324151859.31068-1-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-5-kpsingh@chromium.org>
+ <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
+ <20200324145003.GA2685@chromium.org> <CAEjxPJ4YnCCeQUTK36Ao550AWProHrkrW1a6K5RKuKYcPcfhyA@mail.gmail.com>
+ <d578d19f-1d3b-f60d-f803-2fcb46721a4a@schaufler-ca.com>
+In-Reply-To: <d578d19f-1d3b-f60d-f803-2fcb46721a4a@schaufler-ca.com>
+From:   Stephen Smalley <stephen.smalley.work@gmail.com>
+Date:   Tue, 24 Mar 2020 13:49:34 -0400
+Message-ID: <CAEjxPJ59wijpB=wa4ZhPyX_PRXrRAX2+PO6e8+f25wrb9xndRA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and execution
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
+        bpf@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Moore <paul@paul-moore.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:18:51PM +0800, Xiaoyao Li wrote:
-> So sorry for the noise that I forgot to CC the maillist.
+On Tue, Mar 24, 2020 at 12:25 PM Casey Schaufler <casey@schaufler-ca.com> w=
+rote:
+>
+> On 3/24/2020 7:58 AM, Stephen Smalley wrote:
+> > On Tue, Mar 24, 2020 at 10:50 AM KP Singh <kpsingh@chromium.org> wrote:
+> >> On 24-M=C3=A4r 10:35, Stephen Smalley wrote:
+> >>> On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrot=
+e:
+> >>>> From: KP Singh <kpsingh@google.com>
+> >>>> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> >>>> index 530d137f7a84..2a8131b640b8 100644
+> >>>> --- a/kernel/bpf/bpf_lsm.c
+> >>>> +++ b/kernel/bpf/bpf_lsm.c
+> >>>> @@ -9,6 +9,9 @@
+> >>>>  #include <linux/btf.h>
+> >>>>  #include <linux/lsm_hooks.h>
+> >>>>  #include <linux/bpf_lsm.h>
+> >>>> +#include <linux/jump_label.h>
+> >>>> +#include <linux/kallsyms.h>
+> >>>> +#include <linux/bpf_verifier.h>
+> >>>>
+> >>>>  /* For every LSM hook  that allows attachment of BPF programs, decl=
+are a NOP
+> >>>>   * function where a BPF program can be attached as an fexit trampol=
+ine.
+> >>>> @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) =
+{}
+> >>>>  #include <linux/lsm_hook_names.h>
+> >>>>  #undef LSM_HOOK
+> >>>>
+> >>>> +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
+> >>>> +
+> >>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
+> >>>> +                       const struct bpf_prog *prog)
+> >>>> +{
+> >>>> +       /* Only CAP_MAC_ADMIN users are allowed to make changes to L=
+SM hooks
+> >>>> +        */
+> >>>> +       if (!capable(CAP_MAC_ADMIN))
+> >>>> +               return -EPERM;
+> >>> I had asked before, and will ask again: please provide an explicit LS=
+M
+> >>> hook for mediating whether one can make changes to the LSM hooks.
+> >>> Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SE=
+Linux.
+> >> What do you think about:
+> >>
+> >>   int security_check_mutable_hooks(void)
+> >>
+> >> Do you have any suggestions on the signature of this hook? Does this
+> >> hook need to be BPF specific?
+> > I'd do something like int security_bpf_prog_attach_security(const
+> > struct bpf_prog *prog) or similar.
+> > Then the security module can do a check based on the current task
+> > and/or the prog.  We already have some bpf-specific hooks.
+>
+> I *strongly* disagree with Stephen on this. KRSI and SELinux are peers.
+> Just as Yama policy is independent of SELinux policy so KRSI policy shoul=
+d
+> be independent of SELinux policy. I understand the argument that BDF prog=
+rams
+> ought to be constrained by SELinux, but I don't think it's right. Further=
+,
+> we've got unholy layering when security modules call security_ functions.
+> I'm not saying there is no case where it would be appropriate, but this i=
+s not
+> one of them.
 
-You also forgot to add RESEND :-)  Tagging the patches like so
-
-  [PATCH RESEND v6 0/8] x86/split_lock: Fix and virtualization of split lock detection
-
-lets folks that received the originals identify and respond to the "new"
-thread.
+I explained this previously.  The difference is that the BPF programs
+are loaded from a userspace
+process, not a kernel-resident module.  They already recognize there
+is a difference here or
+they wouldn't have the CAP_MAC_ADMIN check above in their patch.  The
+problem with that
+check is just that CAP_MAC_ADMIN doesn't necessarily mean fully
+privileged with respect to
+SELinux, which is why I want an explicit hook.  This gets a NAK from
+me until there is such a hook.
