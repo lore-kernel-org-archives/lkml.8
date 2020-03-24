@@ -2,201 +2,134 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A06C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90416C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62D162070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585052984;
-	bh=rLxiOcqOkRsSAHjoD3lA2Lf9MiRMaREGfMhws5KUdow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GevO5vL/mtVlY1ASX756FJ7u2q4tMwuS0cgcgTBMSXv9ZgUTuZdY9eeVFP/WYq5Vd
-	 bPIKMDTH+EAu78e5WXhHafbzP9f+CMAwgrFAmhj60o14dGoPqQAjGR/BOvdQWv7sj0
-	 E+E2DcjljBxRVXg/gE7jMC2VmpHu9zndOgXXu1fw=
+	by mail.kernel.org (Postfix) with ESMTP id 624E0208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:30:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="emWAw3c3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgCXM3n (ORCPT
+        id S1727548AbgCXMav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbgCXM3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:29:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AC2A2070A;
-        Tue, 24 Mar 2020 12:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585052981;
-        bh=rLxiOcqOkRsSAHjoD3lA2Lf9MiRMaREGfMhws5KUdow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XmDh34MPa5SNKf2udh4/NXWRtTSAjQoGI9Hh3b8R2u7vPZtpwUbaLKEdOUpyFGowj
-         BN5yAHZWjj30ZkmOWsLHxJsEE0vdfnF/9UcvzzLvunndm3iFfcvJIs4NSaMaP1Cujq
-         ppvU9fgUs4EGFMmmEKd8TWdJKxDceg0KBfZihKnw=
-Date:   Tue, 24 Mar 2020 13:29:39 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        Tue, 24 Mar 2020 08:30:51 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42083 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727283AbgCXMau (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:30:50 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 22so5607605pfa.9;
+        Tue, 24 Mar 2020 05:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=AomG1PxVMQy2uJ0CQrO8q+2Jd5FtFdpWBMBCz71R9bA=;
+        b=emWAw3c3Z3l+vLxuQEDk2/MhYt7ZXCRCdghq7XVq4rKrz2fhoEpV7e1oqZige7eWU2
+         m1vQBgCk3H7MuCiUC2z+1QeN/X5K1MtWXVnUfxXNp+dA04uibuL7EFeH50XJQKdIrKa5
+         10smy6XCfZ5GudAF8YO9tDFDQMVnbB4embEHcgPxoGlNV4ylLUimYc6Cf22FVVwQZ/2X
+         BXDZHClTEuw9LlSkLtkB3YM8zM9V0BvRU5HJyQD+CbeBIRRQ+1RoAM41PvIZukabpT0S
+         daOahxZJyqdiovsl3Bt6nswiTiA0r4d6DdfAY60UPCDQhunvi3DYsgZ/xeJEh9gT5wRU
+         1Jsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=AomG1PxVMQy2uJ0CQrO8q+2Jd5FtFdpWBMBCz71R9bA=;
+        b=UB6hT/qfNHTlE9SgU+zJy4WnyTC8irwBYZhSGJM2q4b/pgTQ0Z8o1VXwUb6xLmvbIy
+         9ZiZlt5zLg/s3TRTAq93Ua62d4z5iCrS1/TSW62VdP8XX7mpEFeIaD5TOPCNlKTzAQK6
+         mwCPov/cxlh3e6W3GtlzbDcVwnMcJGOkehaJ8tBGG6pxGqFZnO2AmLz/gSJm96coCtP8
+         5b/Pbsi6bSgIsXhGwvWld1eFEbSdHWIDzA3mAgHEj7QoHqwI7IRWCpq/nlQ6U3Cjxw2K
+         XfAzrvQ9WFg//7RfEWumG18DkaihOvYPCuY3Wg4HQpoGum6iDjigkZXP2efLqikcw5br
+         OwNA==
+X-Gm-Message-State: ANhLgQ0FB2+uS/q9f16YfonRLLZkIMVeUwGoRRTeXxCgfYTXSkUBVqI2
+        WxE2+zO3kEZkbAZKuwHFpCg=
+X-Google-Smtp-Source: ADFU+vtisFHlmrRHkVlX2/zo73z2wp/UecvD7A36s81dUTt4r1aYp9VeC1+URs7iahDg2bbvx0dJeA==
+X-Received: by 2002:a63:a65:: with SMTP id z37mr26395712pgk.31.1585053049065;
+        Tue, 24 Mar 2020 05:30:49 -0700 (PDT)
+Received: from localhost.localdomain ([180.70.143.152])
+        by smtp.gmail.com with ESMTPSA id c83sm15759395pfb.44.2020.03.24.05.30.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 05:30:47 -0700 (PDT)
+From:   Taehee Yoo <ap420073@gmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, j.vosburgh@gmail.com, vfalico@gmail.com,
+        andy@greyhouse.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] nvmem: Add support for write-only instances
-Message-ID: <20200324122939.GA2348009@kroah.com>
-References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
- <20200323150007.7487-6-srinivas.kandagatla@linaro.org>
- <20200323190505.GB632476@kroah.com>
- <4820047d-9a99-749c-491d-dbb91a2f5447@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4820047d-9a99-749c-491d-dbb91a2f5447@linaro.org>
+Cc:     ap420073@gmail.com, mitch.a.williams@intel.com
+Subject: [PATCH net 0/3] net: core: avoid unexpected situation in namespace change routine
+Date:   Tue, 24 Mar 2020 12:30:41 +0000
+Message-Id: <20200324123041.18825-1-ap420073@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:24:00PM +0000, Srinivas Kandagatla wrote:
-> 
-> 
-> On 23/03/2020 19:05, Greg KH wrote:
-> > On Mon, Mar 23, 2020 at 03:00:07PM +0000, Srinivas Kandagatla wrote:
-> > > From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > > 
-> > > There is at least one real-world use-case for write-only nvmem
-> > > instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
-> > > non-active NVMem file is read").
-> > > 
-> > > Add support for write-only nvmem instances by adding attrs for 0200.
-> > > 
-> > > Change nvmem_register() to abort if NULL group is returned from
-> > > nvmem_sysfs_get_groups().
-> > > 
-> > > Return NULL from nvmem_sysfs_get_groups() in invalid cases.
-> > > 
-> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   drivers/nvmem/core.c        | 10 +++++--
-> > >   drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
-> > >   2 files changed, 56 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> > > index 77d890d3623d..ddc7be5149d5 100644
-> > > --- a/drivers/nvmem/core.c
-> > > +++ b/drivers/nvmem/core.c
-> > > @@ -381,6 +381,14 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> > >   	nvmem->type = config->type;
-> > >   	nvmem->reg_read = config->reg_read;
-> > >   	nvmem->reg_write = config->reg_write;
-> > > +	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
-> > > +	if (!nvmem->dev.groups) {
-> > > +		ida_simple_remove(&nvmem_ida, nvmem->id);
-> > > +		gpiod_put(nvmem->wp_gpio);
-> > > +		kfree(nvmem);
-> > > +		return ERR_PTR(-EINVAL);
-> > > +	}
-> > > +
-> > >   	if (!config->no_of_node)
-> > >   		nvmem->dev.of_node = config->dev->of_node;
-> > > @@ -395,8 +403,6 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> > >   	nvmem->read_only = device_property_present(config->dev, "read-only") ||
-> > >   			   config->read_only || !nvmem->reg_write;
-> > > -	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
-> > > -
-> > >   	device_initialize(&nvmem->dev);
-> > >   	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
-> > > diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> > > index 8759c4470012..9728da948988 100644
-> > > --- a/drivers/nvmem/nvmem-sysfs.c
-> > > +++ b/drivers/nvmem/nvmem-sysfs.c
-> > > @@ -202,16 +202,49 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> > >   	NULL,
-> > >   };
-> > > +/* write only permission, root only */
-> > > +static struct bin_attribute bin_attr_wo_root_nvmem = {
-> > > +	.attr	= {
-> > > +		.name	= "nvmem",
-> > > +		.mode	= 0200,
-> > > +	},
-> > > +	.write	= bin_attr_nvmem_write,
-> > > +};
-> > 
-> > You are adding a new sysfs file without a Documentation/ABI/ new entry
-> > as well?
-> 
-> This is not a new file, we already have documentation for this file at
-> ./Documentation/ABI/stable/sysfs-bus-nvmem
-> 
-> Thanks for dropping this patch, I did endup finding some issues with this
-> patch.
-> 
-> replied to original patch on the list with CC.
-> 
-> > 
-> > 
-> > > +
-> > > +static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
-> > > +	&bin_attr_wo_root_nvmem,
-> > > +	NULL,
-> > > +};
-> > > +
-> > > +static const struct attribute_group nvmem_bin_wo_root_group = {
-> > > +	.bin_attrs	= nvmem_bin_wo_root_attributes,
-> > > +	.attrs		= nvmem_attrs,
-> > > +};
-> > > +
-> > > +static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
-> > > +	&nvmem_bin_wo_root_group,
-> > > +	NULL,
-> > > +};
-> > > +
-> > >   const struct attribute_group **nvmem_sysfs_get_groups(
-> > >   					struct nvmem_device *nvmem,
-> > >   					const struct nvmem_config *config)
-> > >   {
-> > > -	if (config->root_only)
-> > > -		return nvmem->read_only ?
-> > > -			nvmem_ro_root_dev_groups :
-> > > -			nvmem_rw_root_dev_groups;
-> > > +	/* Read-only */
-> > > +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
-> > > +		return config->root_only ?
-> > > +			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
-> > > +
-> > > +	/* Read-write */
-> > > +	if (nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
-> > > +		return config->root_only ?
-> > > +			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
-> > > +
-> > > +	/* Write-only, do not honour request for global writable entry */
-> > > +	if (!nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
-> > > +		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
-> > 
-> > 
-> > What is this supposed to be doing, I am totally lost.
-> 
-> I agree, its bit confusing to the reader, but it does work.
-> 
-> But the Idea here is :
-> We ended up with providing different options like read-only,root-only to
-> nvmem providers combined with read/write callbacks.
-> With that, there are some cases which are totally invalid, existing code
-> does very minimal check to ensure that before populating with correct
-> attributes to sysfs file. One of such case is with thunderbolt provider
-> which supports only write callback.
-> 
-> With this new checks in place these flags and callbacks are correctly
-> validated, would result in correct file attributes.
+This patchset is to avoid an unexpected situation when an interface's
+namespace is being changed.
 
-Why this crazy set of different groups?  You can set the mode of a sysfs
-file in the callback for when the file is about to be created, that's so
-much simpler and is what it is for.  This feels really hacky and almost
-impossible to follow :(
+When interface's namespace is being changed, dev_change_net_namespace()
+is called. This removes and re-allocates many resources that include
+sysfs files. The "/net/class/net/<interface name>" is one of them.
+If the sysfs creation routine(device_rename()) found duplicate sysfs
+file name, it warns about it and fails. But unfortunately, at that point,
+dev_change_net_namespace() doesn't return fail because rollback cost
+is too high.
+So, the interface can't have a sysfs file.
 
-thanks,
+The approach of this patchset is to find the duplicate sysfs file as
+fast as possible. If it found that, dev_change_net_namespace() returns
+fail immediately with zero rollback cost.
 
-greg k-h
+1. The first patch is to add class_find_and_get_file_ns() helper function.
+That function will be used for checking the existence of duplicate
+sysfs file.
+2. The second patch is to add netdev_class_has_file_ns().
+That function is to check whether duplicate sysfs file in
+the "/sys/class/net*" using class_find_and_get_file_ns().
+3. The last patch is to avoid an unexpected situation.
+a) If duplicate sysfs is existing, it fails as fast as possible in
+the dev_change_net_namespace()
+b) Acquire rtnl_lock() in both bond_create_sysfs() and bond_destroy_sysfs()
+to avoid race condition.
+c) Do not remove "/sys/class/net/bonding_masters" sysfs file by
+bond_destroy_sysfs() if the file wasn't created by bond_create_sysfs().
+
+Test commands#1:
+    ip netns add nst 
+    ip link add bonding_masters type dummy
+    modprobe bonding
+    ip link set bonding_masters netns nst 
+
+Test commands#2:
+    ip link add bonding_masters type dummy
+    ls /sys/class/net
+    modprobe bonding
+    modprobe -rv bonding
+    ls /sys/class/net
+
+After removing the bonding module, we can see the "bonding_masters"
+interface's sysfs will be removed.
+This is an unexpected situation.
+
+Taehee Yoo (3):
+  class: add class_find_and_get_file_ns() helper function
+  net: core: add netdev_class_has_file_ns() helper function
+  net: core: avoid warning in dev_change_net_namespace()
+
+ drivers/base/class.c             | 12 ++++++++++++
+ drivers/net/bonding/bond_sysfs.c | 13 ++++++++++++-
+ include/linux/device/class.h     |  4 +++-
+ include/linux/netdevice.h        |  2 +-
+ include/net/bonding.h            |  1 +
+ net/core/dev.c                   |  4 ++++
+ net/core/net-sysfs.c             | 13 +++++++++++++
+ 7 files changed, 46 insertions(+), 3 deletions(-)
+
+-- 
+2.17.1
+
