@@ -2,206 +2,127 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DF6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15AC20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A88520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uT+26KhJ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KYQKDx8D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgCXQFi (ORCPT
+        id S1728236AbgCXQGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:05:38 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:35102 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgCXQFi (ORCPT
+        Tue, 24 Mar 2020 12:06:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55800 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgCXQGW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:05:38 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k8so19016096oik.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:05:38 -0700 (PDT)
+        Tue, 24 Mar 2020 12:06:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v25so1977310wmh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JwpTKi3gJ8BLkjQrFUw7l6hWz2zTWEixI9aoiPlw/WM=;
-        b=uT+26KhJSGNNjdTx9pC/T5npeV70PL0PGLe+/aEb+5H+SUaaeX6fU4wfCyHA6eLpZs
-         ojYWyx/oM8MwhW4iBGK7nbAO6UBq+q+VUDmnuIhOxPtMABwhCYmcrhLBPz19vOMiQkeR
-         n1SKwoenqQxaopHOox20EOC+X/alIJyxK3rQ2W9zr37BlJ+j34BkEXHkkXdZG7tyP0K6
-         jvR+S0OHxfl1Nw0N+vD4ybcwfk6X1jbljeyIdQiry9qk7Kq1omSOuFUDarP1J8P3PL+9
-         dO4EmidUOl7KZBYwo1DbPR4tw03dkW2DY5t78PDeuj2k4HQ+GKrzbR9c/eBa5N4Cm6n6
-         pyRA==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1N/kkCsXiaUZJR6Cb6g+LjBhvjr5lmjI4mokCR0tVqI=;
+        b=KYQKDx8DyzUAnuq2yoc8TeWYg6u2d9G1EnJpysHS23i/nJtDUTJ1EGMDA+yLtc+3Ne
+         ttb5axfZ4dXbmiVTOnc+IEEDAk9zxj2cXn99YKJpGZc93ZuBmxvzsUq8qH6oTtP5O3Yq
+         fGk1pmxtTvy5X+ioEB3lY2DmwDertoipWkA38=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JwpTKi3gJ8BLkjQrFUw7l6hWz2zTWEixI9aoiPlw/WM=;
-        b=DmmguzyzdNhpHogJaeHfCxdSnBDbIxZcLO6Du/chMB5WtXH7pBg1Tp+4w6Oh7c0433
-         wwE58ZYeOnhFj03iLQYOS9xecj945A3A+WXXbwUGZI8N5+kj4u2KQp9kPCWurYkTJ7nb
-         MVAne/D/eK+HTUL/ePVVNWOdUtbGOpG/THWtcRdG2+3ES7/XFfHvWqaK0D7/q5sAdxYk
-         rqpkBiRornh0K7qgRary8anB2hPbXmZs/smlXBDNk2s3KTNlEBoVmIq3GVBhFcG+uvFW
-         Wk6an53h1igEamfQtIy5bJFBemt4zZk8LDtYTApjmEUt9QKSa7GpDvmcSVVm8OTWf4rd
-         3R0A==
-X-Gm-Message-State: ANhLgQ3WZ4MfmolTLDImb3pJC+iVoa4hh3W+0LNtUsSKU/u4CbH3X6Sz
-        Bsa5k1I4uqCuZSNL3k4u4ua8eG6DnCVbbBZhQUSL4CYKtCU=
-X-Google-Smtp-Source: ADFU+vvS67Pjuew+uES3TAgl+KCsbVZSgUgZUlkhjy1YaDMbIQ+B9+BqXvwqfHucGDmPVKXp1TQY+VGiMeV/4l910bs=
-X-Received: by 2002:aca:1e1a:: with SMTP id m26mr4012187oic.39.1585065937556;
- Tue, 24 Mar 2020 09:05:37 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1N/kkCsXiaUZJR6Cb6g+LjBhvjr5lmjI4mokCR0tVqI=;
+        b=AnyaeRUnuPga5dKVNe1j1Jz02fEHLHKI7CaGBVXt4O1QdSH/ekpMzV77A+IuAJOv2D
+         n9WGb5GPdac1jlGHSu57w8W8fUKwXK0QdXePB1ZuTR1+JW4uu8Dx0z1UJTMJlEVEJ3r+
+         0MybxMxfh5rVBOMF1V9sDvSWb+7oUpaAVTzSo3vNxXgBIkbpB4n8KQUsY/DNJQTPUFcX
+         jjBwL19meCdW2Ci6DQ4DcTIYGItEBC7FLtLdDU1fEd1dNd1FW3jon1J9SV2NfR6nNGy1
+         5czi9669xbO0uZ+wmpExWvs/yuXFDRqwk/sE24GFE1YQQVL7Yfw8/STY0q2gMuI/aop9
+         eH/w==
+X-Gm-Message-State: ANhLgQ1Rus+QFfwCC7Y93Wsb/My6Ak4bPAqymIEJSbhCOQodgc9t10sp
+        ax07FrQvmK+GUDZB4w3bolET5Q==
+X-Google-Smtp-Source: ADFU+vuG4lJMdGuOPi6DXgu5JzM407RSy855bnUG1UuTb5xJvxQ+7aP+XEs6ZftW2sAQYdGUDfywtg==
+X-Received: by 2002:a7b:cf19:: with SMTP id l25mr6240257wmg.131.1585065980936;
+        Tue, 24 Mar 2020 09:06:20 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id u204sm4887603wmg.40.2020.03.24.09.06.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 09:06:18 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 17:06:16 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 2/7] security: Refactor declaration of LSM
+ hooks
+Message-ID: <20200324160616.GA9173@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-3-kpsingh@chromium.org>
+ <CAEf4Bza67kM0KiX464yB+iV83aV96TyD7iLEZJccXyH-Od0QTQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
- <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
- <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
- <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com>
- <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com>
- <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
- <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
-In-Reply-To: <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
-From:   ron minnich <rminnich@gmail.com>
-Date:   Tue, 24 Mar 2020 09:05:26 -0700
-Message-ID: <CAP6exYLCFp8AMFx_d3XJtYiSibF76Fo-km4vB5MwSbqE8D8DNA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Matthew Garrett <mjg59@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bza67kM0KiX464yB+iV83aV96TyD7iLEZJccXyH-Od0QTQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here is the version that I think does what you asked.
+On 23-Mär 12:56, Andrii Nakryiko wrote:
+> On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > The information about the different types of LSM hooks is scattered
+> > in two locations i.e. union security_list_options and
+> > struct security_hook_heads. Rather than duplicating this information
+> > even further for BPF_PROG_TYPE_LSM, define all the hooks with the
+> > LSM_HOOK macro in lsm_hook_names.h which is then used to generate all
+> > the data structures required by the LSM framework.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > Reviewed-by: Florent Revest <revest@google.com>
+> > ---
+> >  include/linux/lsm_hook_names.h | 354 +++++++++++++++++++
+> >  include/linux/lsm_hooks.h      | 622 +--------------------------------
+> >  2 files changed, 360 insertions(+), 616 deletions(-)
+> >  create mode 100644 include/linux/lsm_hook_names.h
+> >
+> > diff --git a/include/linux/lsm_hook_names.h b/include/linux/lsm_hook_names.h
+> > new file mode 100644
+> > index 000000000000..412e4ca24c9b
+> > --- /dev/null
+> > +++ b/include/linux/lsm_hook_names.h
+> 
+> It's not really just hook names, it's full hook definitions, no? So
+> lsm_hook_defs.h seems a bit more appropriate. Just for consideration,
+> not that I care that strongly :)
 
-I'd like to change the patch title but left it on this email thread.
+I like lsm_hook_defs.h better too :) Updated.
 
+- KP
 
-Subject: [PATCH 1/1] initrdmem= option to specify initrd physical address
-
-This patch adds the initrdmem option:
-initrdmem=ss[KMG],nn[KMG]
-which is used to specify the physical address of the initrd,
-almost always an address in FLASH. It also adds code for
-x86 to use the existing phys_init_start and
-phys_init_size variables in the kernel.
-This is useful in cases where we wish to place a kernel
-and initrd in FLASH, but there is no firmware file
-system structure in the FLASH.
-
-One such situation occurs when we have reclaimed unused FLASH
-space on UEFI systems by, e.g., taking it from the Management
-Engine. For example, on many systems, the ME is given half the
-FLASH part; not only is 2.75M of an 8M part unused; but 10.75M
-of a 16M part is unused. We can use this space to contain
-an initrd, but need to tell Linux where it is.
-
-This space is "raw": due to, e.g., UEFI limitations:
-it can not be added to UEFI firmware volumes without rebuilding
-UEFI from source or writing a UEFI device driver. We can reference it
-only as a physical address and size.
-
-At the same time, should we netboot a kernel or load it from
-GRUB or syslinux, we want to have the option of not using
-the physical address specification. Then, should we wish, it
-is easy to boot the kernel and provide an initrd; or boot the
-the kernel and let it use the initrd in FLASH. In practice this
-has proven to be very helpful as we integrate Linux into FLASH
-on x86.
-
-Hence, the most flexible and convenient path is to enable the
-initrdmem command line flag in a way that it is the last choice tried.
-
-For example, on the DigitalLoggers Atomic Pi, we burn an image into
-FLASH with a built-in command line which includes:
-initrdmem=0xff968000,0x200000
-which specifies a location and size.
-
-Signed-off-by: Ronald G. Minnich <rminnich@gmail.com>
----
- Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
- arch/x86/kernel/setup.c                         |  6 ++++++
- init/do_mounts_initrd.c                         | 13 ++++++++++++-
- 3 files changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt
-b/Documentation/admin-guide/kernel-parameters.txt
-index c07815d230bc..9cd356958a7f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -1714,6 +1714,13 @@
-
-     initrd=        [BOOT] Specify the location of the initial ramdisk
-
-+    initrdmem=    [KNL] Specify a physical adddress and size from which
-+            to load the inird. If an initrd is compiled in or
-+            specified in the bootparams, it takes priority
-+            over this setting.
-+            Format: ss[KMG],nn[KMG]
-+            Defaut is 0, 0
-+
-     init_on_alloc=    [MM] Fill newly allocated pages and heap objects with
-             zeroes.
-             Format: 0 | 1
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a74262c71484..1b04ef8ea12d 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
-
-     ramdisk_image |= (u64)boot_params.ext_ramdisk_image << 32;
-
-+    if (ramdisk_image == 0) {
-+        ramdisk_image = phys_initrd_start;
-+    }
-     return ramdisk_image;
- }
- static u64 __init get_ramdisk_size(void)
-@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
-
-     ramdisk_size |= (u64)boot_params.ext_ramdisk_size << 32;
-
-+    if (ramdisk_size == 0) {
-+        ramdisk_size = phys_initrd_size;
-+    }
-     return ramdisk_size;
- }
-
-diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
-index dab8b1151b56..d72beda824aa 100644
---- a/init/do_mounts_initrd.c
-+++ b/init/do_mounts_initrd.c
-@@ -28,7 +28,7 @@ static int __init no_initrd(char *str)
-
- __setup("noinitrd", no_initrd);
-
--static int __init early_initrd(char *p)
-+static int __init early_initrdmem(char *p)
- {
-     phys_addr_t start;
-     unsigned long size;
-@@ -43,6 +43,17 @@ static int __init early_initrd(char *p)
-     }
-     return 0;
- }
-+early_param("initrdmem", early_initrdmem);
-+
-+/*
-+ * This is here as the initrd keyword has been in use since 11/2018
-+ * on ARM, PowerPC, and MIPS.
-+ * It should not be; it is reserved for bootloaders.
-+ */
-+static int __init early_initrd(char *p)
-+{
-+    return early_initrdmem(p);
-+}
- early_param("initrd", early_initrd);
-
- static int init_linuxrc(struct subprocess_info *info, struct cred *new)
--- 
-2.17.1
+> 
+> 
+> [...]
