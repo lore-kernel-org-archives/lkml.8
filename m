@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CF1C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3771AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D60E4208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D66520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056121;
-	bh=uqsP2dN8vW/yN9dmAvxrzeEo6UosA6daNFnTZ48jmfQ=;
+	s=default; t=1585056125;
+	bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O22ZCJkMWJZ3UR1UEjTohoOD0ZVLzE+FG4qIWbFdI/0808rRUxbjxgvjzPliebo+a
-	 RxHiARDXXqP8RbrAalDoU08TQFzV8KE7ExQwDrSoCuxv6K/e+emzt+cD/cJC4MK4Xm
-	 dmZGyUEL/hs9By5cFaEjgVLrZLyi2+xoaYYBbYxE=
+	b=z39W/7E8X3JUuJebkXPXfsoi8gVzKXRkxBVFd2rT5/rYNzESD5RJWuPx97npkovED
+	 U1LNKyIQEunU99LY2B/P3WhpJPnp+/p9z5xh6ROehhpRMg3NRifjuMJAx0wGu7xztp
+	 0jJ1N+zWMSsUL9ef9h3CIBuh9gSqEIWM8wbtNOec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729118AbgCXNWA (ORCPT
+        id S1728723AbgCXNV5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:22:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44072 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgCXNV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:58 -0400
+        id S1729060AbgCXNVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B0F20775;
-        Tue, 24 Mar 2020 13:21:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5807720775;
+        Tue, 24 Mar 2020 13:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056118;
-        bh=uqsP2dN8vW/yN9dmAvxrzeEo6UosA6daNFnTZ48jmfQ=;
+        s=default; t=1585056111;
+        bh=6LKp/oRxKgmott8F39xSSbLgaXXdxdcuUA0dT6lBzm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sK9uytTY6IYyQtkNnDPZmEVt6VMb6SdUFNiSTsEG0K4qNfA+2fCgSJRqAymPdMJlb
-         Cpuiz1tExXS//mLRb3M+9tvgoUFpXyXVypL+sLrBeyR505uCOtZsQZkLCs86B54T7E
-         E1y7N7+C7CfkfpbyPxc6FB+gKd0rD+8RtJjh9Igs=
+        b=gGUWqOWTSsGM78UNvC1caJtRoO0fVhBWimlL8ODbxpj1x0OIcCjOCNVpU0601GdSH
+         JmpWovaI/RskqAPROp7kkEZR1EsnuIqda+vQoKbrcsWhanITBuZrCgIf1yicARYrm2
+         HcpH+Jhp4aAJ+Xro+Bqp4QNx9hBbAom6s08C1Gwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Anup Patel <anup@brainfault.org>,
-        Carlos de Paula <me@carlosedp.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 027/119] riscv: avoid the PIC offset of static percpu data in module beyond 2G limits
-Date:   Tue, 24 Mar 2020 14:10:12 +0100
-Message-Id: <20200324130811.063674302@linuxfoundation.org>
+Subject: [PATCH 5.5 025/119] dm bio record: save/restore bi_end_io and bi_integrity
+Date:   Tue, 24 Mar 2020 14:10:10 +0100
+Message-Id: <20200324130810.883526748@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -63,63 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+From: Mike Snitzer <snitzer@redhat.com>
 
-[ Upstream commit 0cff8bff7af886af0923d5c91776cd51603e531f ]
+[ Upstream commit 1b17159e52bb31f982f82a6278acd7fab1d3f67b ]
 
-The compiler uses the PIC-relative method to access static variables
-instead of GOT when the code model is PIC. Therefore, the limitation of
-the access range from the instruction to the symbol address is +-2GB.
-Under this circumstance, the kernel cannot load a kernel module if this
-module has static per-CPU symbols declared by DEFINE_PER_CPU(). The reason
-is that kernel relocates the .data..percpu section of the kernel module to
-the end of kernel's .data..percpu. Hence, the distance between the per-CPU
-symbols and the instruction will exceed the 2GB limits. To solve this
-problem, the kernel should place the loaded module in the memory area
-[&_end-2G, VMALLOC_END].
+Also, save/restore __bi_remaining in case the bio was used in a
+BIO_CHAIN (e.g. due to blk_queue_split).
 
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Suggested-by: Alexandre Ghiti <alex@ghiti.fr>
-Suggested-by: Anup Patel <anup@brainfault.org>
-Tested-by: Alexandre Ghiti <alex@ghiti.fr>
-Tested-by: Carlos de Paula <me@carlosedp.com>
-Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Suggested-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/module.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/md/dm-bio-record.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/riscv/kernel/module.c b/arch/riscv/kernel/module.c
-index b7401858d872f..8bbe5dbe1341b 100644
---- a/arch/riscv/kernel/module.c
-+++ b/arch/riscv/kernel/module.c
-@@ -8,6 +8,10 @@
- #include <linux/err.h>
- #include <linux/errno.h>
- #include <linux/moduleloader.h>
-+#include <linux/vmalloc.h>
-+#include <linux/sizes.h>
-+#include <asm/pgtable.h>
-+#include <asm/sections.h>
- 
- static int apply_r_riscv_32_rela(struct module *me, u32 *location, Elf_Addr v)
- {
-@@ -386,3 +390,15 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 
- 	return 0;
- }
-+
-+#if defined(CONFIG_MMU) && defined(CONFIG_64BIT)
-+#define VMALLOC_MODULE_START \
-+	 max(PFN_ALIGN((unsigned long)&_end - SZ_2G), VMALLOC_START)
-+void *module_alloc(unsigned long size)
-+{
-+	return __vmalloc_node_range(size, 1, VMALLOC_MODULE_START,
-+				    VMALLOC_END, GFP_KERNEL,
-+				    PAGE_KERNEL_EXEC, 0, NUMA_NO_NODE,
-+				    __builtin_return_address(0));
-+}
+diff --git a/drivers/md/dm-bio-record.h b/drivers/md/dm-bio-record.h
+index c82578af56a5b..2ea0360108e1d 100644
+--- a/drivers/md/dm-bio-record.h
++++ b/drivers/md/dm-bio-record.h
+@@ -20,8 +20,13 @@
+ struct dm_bio_details {
+ 	struct gendisk *bi_disk;
+ 	u8 bi_partno;
++	int __bi_remaining;
+ 	unsigned long bi_flags;
+ 	struct bvec_iter bi_iter;
++	bio_end_io_t *bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	struct bio_integrity_payload *bi_integrity;
 +#endif
+ };
+ 
+ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+@@ -30,6 +35,11 @@ static inline void dm_bio_record(struct dm_bio_details *bd, struct bio *bio)
+ 	bd->bi_partno = bio->bi_partno;
+ 	bd->bi_flags = bio->bi_flags;
+ 	bd->bi_iter = bio->bi_iter;
++	bd->__bi_remaining = atomic_read(&bio->__bi_remaining);
++	bd->bi_end_io = bio->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bd->bi_integrity = bio_integrity(bio);
++#endif
+ }
+ 
+ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+@@ -38,6 +48,11 @@ static inline void dm_bio_restore(struct dm_bio_details *bd, struct bio *bio)
+ 	bio->bi_partno = bd->bi_partno;
+ 	bio->bi_flags = bd->bi_flags;
+ 	bio->bi_iter = bd->bi_iter;
++	atomic_set(&bio->__bi_remaining, bd->__bi_remaining);
++	bio->bi_end_io = bd->bi_end_io;
++#if defined(CONFIG_BLK_DEV_INTEGRITY)
++	bio->bi_integrity = bd->bi_integrity;
++#endif
+ }
+ 
+ #endif
 -- 
 2.20.1
 
