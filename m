@@ -2,137 +2,118 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5BAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2A1C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1362320774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14A220774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:50:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UWyq109a"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="O/2P9cnc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G0py85zP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbgCXPtl (ORCPT
+        id S1728555AbgCXPuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:49:41 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40486 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728555AbgCXPtk (ORCPT
+        Tue, 24 Mar 2020 11:50:32 -0400
+Received: from out1-smtp.messagingengine.com ([66.111.4.25]:55529 "EHLO
+        out1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726915AbgCXPub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:49:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585064979;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gDeYcAUSbBq7ywkS5vACQpnT9b7hAluwSzLUAQ2Mkuo=;
-        b=UWyq109aARiETWzOJF2nSEcrF78b/fpxAMDOEblWVBaKVZRkAvuh9FgICyU5P3OL/PIKGY
-        d2aZaLMp4lkQ5L64NdKbuj0fWXA6ZBciuJaAV+xpFr2fcWLCSghBhfH7GDI19QyqB3ykfW
-        1mu6ajt+nzYY4jbimbsOy67zr+Yg5gg=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-105-4OmS1QYJMHWRFLqq5-9pww-1; Tue, 24 Mar 2020 11:49:35 -0400
-X-MC-Unique: 4OmS1QYJMHWRFLqq5-9pww-1
-Received: by mail-wr1-f71.google.com with SMTP id v14so832991wrq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:49:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=gDeYcAUSbBq7ywkS5vACQpnT9b7hAluwSzLUAQ2Mkuo=;
-        b=G7WvxHCugCULHpN+LIlmvx83GsQe78BnHSkX3FRgOqv4AGGMx9AT6Acef6rdjJD6lu
-         gFD5jwc8cjhRkWjIX2vbaEbNPgxqGR/4+azuuDp1OydL88+722ZOnIcaL0IalUbGVDVl
-         4KiYpouFTtblX8TM7JW33HX77OgBrDmAKCZLRz6+s/eBYwISQbhp154Ugmz+oYBjchCQ
-         9p00o4SLYsY0VPjfgQuCZ/PMgMAuzmBe6souzPcw8kao/07jBUD/C+VIN/pimMVUaVTo
-         6lNh8IdyBMXnHJtiqRaT0j64vPSZYyf7mko4Pe6KyvqESw2Rn2E3YnK78x6U4nadsOeU
-         trnA==
-X-Gm-Message-State: ANhLgQ0dauKL8cmQ78KKa65t0YAZcKdO6/0xnf2lwo5M1ZyHLeEqAPcK
-        PL/1AIz28M/IEruE2c0cA4Arrv+pmd7m7hoMpSmyJkFj4IbP6k6B4LzBBmFs410URTTjrvyK9tS
-        yNxlQP+7THGu+QYAxdXssPH8t
-X-Received: by 2002:adf:ce8d:: with SMTP id r13mr21284978wrn.253.1585064974714;
-        Tue, 24 Mar 2020 08:49:34 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvieeuVU2W0zTxEOUqjpUVow4Ua37PmuvDaQdo6jPYZN+iJoR9w2Z7lCsv/HlVC3WP9EqY7jg==
-X-Received: by 2002:adf:ce8d:: with SMTP id r13mr21284953wrn.253.1585064974406;
-        Tue, 24 Mar 2020 08:49:34 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id y7sm6862882wrq.54.2020.03.24.08.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 08:49:33 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Yubo Xie <ltykernel@gmail.com>
-Cc:     Yubo Xie <yuboxie@microsoft.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong time unit
-In-Reply-To: <20200324151935.15814-1-yuboxie@microsoft.com>
-References: <20200324151935.15814-1-yuboxie@microsoft.com>
-Date:   Tue, 24 Mar 2020 16:49:32 +0100
-Message-ID: <87ftdx7nxv.fsf@vitty.brq.redhat.com>
+        Tue, 24 Mar 2020 11:50:31 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4A0815C01B1;
+        Tue, 24 Mar 2020 11:50:30 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Tue, 24 Mar 2020 11:50:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=0Pu6HeLGr4uD+zkjxE9sHKczNd6
+        ZBYS3wZrKUtICS4c=; b=O/2P9cncGMHR3/iVHph7f5JHAMbpIKmR8PDg0jEKoYO
+        UQXd4cJmeI8oSj2Ax2UE43i+sxLSzCUn/mKlopSMX5B4MNAMOgNyRqDlGV0Mz5+c
+        1rrwW4InKYPjM+U80IYFcmlNriH3iWRCOmCZkZOgxo4hDiMlIENQmjAy8JgcQdFR
+        ccgTis6NUar4stMS+80cuVUtYV59dk8XJg5nFuJAYntLYQiDsSBfljGx2clV8Kkj
+        OArdTSlcD2JlddGLoDRaDH3Mf5Ov7Z7TusggmyiYpc8MiDCLJ2O55jKBpTZGET73
+        VS3fYShFmDeBj9cWBeRnf3N/7XV6Heg0rTIah86Rkew==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=0Pu6He
+        LGr4uD+zkjxE9sHKczNd6ZBYS3wZrKUtICS4c=; b=G0py85zP/R+q7eeXbXLFSB
+        bhA+l/ByNpPYszKXgXcXySnBZPyT2Kwskpp3SmRB7pSojncTvsq1UC0OmeuQp9FD
+        pSTT3cTbGi/JGOTIcfs9aSiBUL25THbFN6YPRQttBRnDyy9ObKfpv1Np6RsQths8
+        8tASQlcQej015l1nKkOAy2vg4kkefEpVpT+16AGlbWhE6/ql8evXICpO5hZkq+BO
+        sP9Sa9u9xjU8BfoZvzigv/aGi5ONAeQqBivKUYSpuCczcxFOtM6bWeONHFPMv7I9
+        I+yJ1Smh99giMMu6j1FHjr7U9uO/ag59r2Ca85asSvVH91f61Mm9JRjkI1RpC85A
+        ==
+X-ME-Sender: <xms:RSx6XtpCEMWc7fF82phOUnsZuBZykBayfx4CRDz2EYX50OZ_DLCSoQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehuddgheduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:RSx6XutNXb9Z4FNRSsdyrOiTh1S89k_MsnhznGympRzMcSLpw6N_Ew>
+    <xmx:RSx6XgYN7IB4g6thHrGs_FirKgMaE4FBNBn_XrStpLWTZqexWnmTZA>
+    <xmx:RSx6XlYNpqIiGEZQ-paGpCME8mOoIJMnkEULbhFq8pYI2gatKMTORg>
+    <xmx:Rix6XlRlRRebrKt8Emc0WxGu755Edrxb11l-5bQT1t_2ZM2TkKikxQ>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3B6843065273;
+        Tue, 24 Mar 2020 11:50:29 -0400 (EDT)
+Date:   Tue, 24 Mar 2020 16:50:28 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Stefan Mavrodiev <stefan@olimex.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 0/2] Add A20-OLinuXino-LIME-eMMC
+Message-ID: <20200324155028.u3shfffoetuqii4x@gilmour.lan>
+References: <20200321075757.15853-1-stefan@olimex.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kqrycw6rh2fpqmts"
+Content-Disposition: inline
+In-Reply-To: <20200321075757.15853-1-stefan@olimex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Yubo Xie <ltykernel@gmail.com> writes:
 
-> sched clock callback should return time with nano second as unit
-> but current hv callback returns time with 100ns. Fix it.
+--kqrycw6rh2fpqmts
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sat, Mar 21, 2020 at 09:57:55AM +0200, Stefan Mavrodiev wrote:
+> The board is the same as A20-OLinuXino-LIME with added eMMC chip. So the
+> dts is almost identical with A20-OLinuXino-LIME2.
 >
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Yubo Xie <yuboxie@microsoft.com>
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> Fixes: adb87ff4f96c ("clocksource/drivers/hyperv: Allocate Hyper-V TSC page statically")
+> This patch series adds a new dts file and appends the bindings
+> documentation.
 
-I don't think this is the right commit to reference, 
+Queued for 5.8, thanks!
+Maxime
 
-commit bd00cd52d5be655a2f217e2ed74b91a71cb2b14f
-Author: Tianyu Lan <Tianyu.Lan@microsoft.com>
-Date:   Wed Aug 14 20:32:16 2019 +0800
+--kqrycw6rh2fpqmts
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    clocksource/drivers/hyperv: Add Hyper-V specific sched clock function
+-----BEGIN PGP SIGNATURE-----
 
-looks like the one.
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnosRAAKCRDj7w1vZxhR
+xZN+AP9ijoVWA3V+WNmKTAKulfQEX3zkDy8h3UZ+xROn8wVLUAEA4IARh9UJTMFG
+Jyj0Lesrd9XoLwHm+hDZK/4dROMZHws=
+=ej6K
+-----END PGP SIGNATURE-----
 
-> ---
->  drivers/clocksource/hyperv_timer.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
-> index 9d808d595ca8..662ed978fa24 100644
-> --- a/drivers/clocksource/hyperv_timer.c
-> +++ b/drivers/clocksource/hyperv_timer.c
-> @@ -343,7 +343,8 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
->  
->  static u64 read_hv_sched_clock_tsc(void)
->  {
-> -	return read_hv_clock_tsc() - hv_sched_clock_offset;
-> +	return (read_hv_clock_tsc() - hv_sched_clock_offset)
-> +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
->  }
->  
->  static void suspend_hv_clock_tsc(struct clocksource *arg)
-> @@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
->  
->  static u64 read_hv_sched_clock_msr(void)
->  {
-> -	return read_hv_clock_msr() - hv_sched_clock_offset;
-> +	return (read_hv_clock_msr() - hv_sched_clock_offset)
-> +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
->  }
-
-kvmclock seems to have the same (pre-patch) code ...
-
->  
->  static struct clocksource hyperv_cs_msr = {
-
--- 
-Vitaly
-
+--kqrycw6rh2fpqmts--
