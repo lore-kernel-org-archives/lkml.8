@@ -2,151 +2,100 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A408BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69898C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E942073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585015506;
-	bh=ts0X52FH1oa59KdqdB95tDAVKxMN7apo6ZkPMxfzJwc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=fpetfrBDYNOjPcoTPLGXTBbjz3INowMlMAFGP70O/EMpBeW2T2ycHgNmZ95twUFdC
-	 H6Opm99yQP3fAfYT5+gvI0/uLWBhupQad63ERo5pgQlqI+VtPyJgwA6CGdPqSZVOs/
-	 U/SFmr8EDQrNimM5kA8YD7DnocOJU3i6lBEsHUX4=
+	by mail.kernel.org (Postfix) with ESMTP id 429592051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgCXCFF (ORCPT
+        id S1727132AbgCXCI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:05:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgCXCFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:05:05 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 545A62051A;
-        Tue, 24 Mar 2020 02:05:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585015504;
-        bh=ts0X52FH1oa59KdqdB95tDAVKxMN7apo6ZkPMxfzJwc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=YMG1YxTBHYmxYMPc5hqXy5baZgL40j1vUEKM6ScoAhOQA9q0iHioB/fjIwyGvL57N
-         bTzqbxT6E3HoT6a4kxtS+mdFfluLeBlpb3fr/0ZeIlOH25SBL9qsA5/xCY3FBnMhER
-         qLuHikr73g8vqt+oCqXsL544aw9O/ZPh0NiPZKZ8=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 2694835226D5; Mon, 23 Mar 2020 19:05:04 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 19:05:04 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-Message-ID: <20200324020504.GR3199@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000742e9e05a10170bc@google.com>
- <87a74arown.fsf@nanos.tec.linutronix.de>
- <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
- <87ftdypyec.fsf@nanos.tec.linutronix.de>
- <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
- <875zeuftwm.fsf@nanos.tec.linutronix.de>
+        Mon, 23 Mar 2020 22:08:56 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:52624 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbgCXCI4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:08:56 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGYzm-001Ii4-9m; Tue, 24 Mar 2020 02:08:46 +0000
+Date:   Tue, 24 Mar 2020 02:08:46 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to
+ user_access_begin/user_access_end()
+Message-ID: <20200324020846.GG23230@ZenIV.linux.org.uk>
+References: <20200323185057.GE23230@ZenIV.linux.org.uk>
+ <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
+ <20200323185127.252501-5-viro@ZenIV.linux.org.uk>
+ <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <875zeuftwm.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 02:01:13AM +0100, Thomas Gleixner wrote:
-> Cong Wang <xiyou.wangcong@gmail.com> writes:
-> > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> > We use an ordered workqueue for tc filters, so these two
-> >> > works are executed in the same order as they are queued.
-> >>
-> >> The workqueue is ordered, but look how the work is queued on the work
-> >> queue:
-> >>
-> >> tcf_queue_work()
-> >>   queue_rcu_work()
-> >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
-> >>
-> >> So after the grace period elapses rcu_work_rcufn() queues it in the
-> >> actual work queue.
-> >>
-> >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
-> >> invoked from preemtible context. Now assume the following:
-> >>
-> >> CPU0
-> >>   tcf_queue_work()
-> >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-> >>
-> >> -> Migration
-> >>
-> >> CPU1
-> >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> >>
-> >> So your RCU callbacks can be placed on different CPUs which obviously
-> >> has no ordering guarantee at all. See also:
+On Mon, Mar 23, 2020 at 12:06:39PM -0700, Linus Torvalds wrote:
+> On Mon, Mar 23, 2020 at 11:53 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
 > >
-> > Good catch!
+> > From: Al Viro <viro@zeniv.linux.org.uk>
 > >
-> > I thought about this when I added this ordered workqueue, but it
-> > seems I misinterpret max_active, so despite we have max_active==1,
-> > more than 1 work could still be queued on different CPU's here.
+> > Lift stac/clac pairs from __futex_atomic_op{1,2} into arch_futex_atomic_op_inuser(),
+> > fold them with access_ok() in there.
 > 
-> The workqueue is not the problem. it works perfectly fine. The way how
-> the work gets queued is the issue.
+> So this is a deep internal macro and already has the double
+> underscore, but I'm inclined to say "add the unsafe here too" for
+> those __futex_atomic_opX() macros that are now called inside that
+> user_access_begin/end region.
 > 
-> > I don't know how to fix this properly, I think essentially RCU work
-> > should be guaranteed the same ordering with regular work. But this
-> > seems impossible unless RCU offers some API to achieve that.
-> 
-> I don't think that's possible w/o putting constraints on the flexibility
-> of RCU (Paul of course might disagree).
+> And wouldn't it be lovely to get rid of the error return thing, and
+> pass in a label instead, the way "usafe_get/put_user()" works too?
+> That might be a separate patch from the "reorg" thing, though.
 
-It is possible, but it does not come for free.
+Umm...
+#define __futex_atomic_op1(insn, ret, oldval, uaddr, oparg)     \
+        asm volatile("1:\t" insn "\n"                           \
+                     "2:\n"                                     \
+                     "\t.section .fixup,\"ax\"\n"               \
+                     "3:\tmov\t%3, %1\n"                        \
+                     "\tjmp\t2b\n"                              \
+                     "\t.previous\n"                            \
+                     _ASM_EXTABLE_UA(1b, 3b)                    \
+                     : "=r" (oldval), "=r" (ret), "+m" (*uaddr) \
+                     : "i" (-EFAULT), "0" (oparg), "1" (0))
 
-From an RCU/workqueues perspective, if I understand the scenario, you
-can do the following:
+OK, ret wouldn't be in the list of outputs that way and
+*uaddr could become an input (we only care about the address,
+same as for put_user), but oldval is a genuine output -
+insn is xchgl or lock xaddl, and we obviously care about the
+old value fetched by it.  The same goes for
+#define __futex_atomic_op2(insn, ret, oldval, uaddr, oparg)     \
+        asm volatile("1:\tmovl  %2, %0\n"                       \
+                     "\tmovl\t%0, %3\n"                         \
+                     "\t" insn "\n"                             \
+                     "2:\t" LOCK_PREFIX "cmpxchgl %3, %2\n"     \
+                     "\tjnz\t1b\n"                              \
+                     "3:\n"                                     \
+                     "\t.section .fixup,\"ax\"\n"               \
+                     "4:\tmov\t%5, %1\n"                        \
+                     "\tjmp\t3b\n"                              \
+                     "\t.previous\n"                            \
+                     _ASM_EXTABLE_UA(1b, 4b)                    \
+                     _ASM_EXTABLE_UA(2b, 4b)                    \
+                     : "=&a" (oldval), "=&r" (ret),             \
+                       "+m" (*uaddr), "=&r" (tem)               \
+                     : "r" (oparg), "i" (-EFAULT), "1" (0))
+- oldval is calculated by that thing and arch_futex_atomic_op_inuser()
+ends up storing it in *oval.  And moving that assignment into
+the inline asm will simply put *oval into the output list,
+won't it?
 
-	tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-
-	rcu_barrier(); // Wait for the RCU callback.
-	flush_work(...); // Wait for the workqueue handler.
-			 // But maybe for quite a few of them...
-
-	// All the earlier handlers have completed.
-	tcf_queue_work(&p->rwork, tcindex_destroy_work);
-
-This of course introduces overhead and latency.  Maybe that is not a
-problem at teardown time, or maybe the final tcf_queue_work() can itself
-be dumped into a workqueue in order to get it off of the critical path.
-
-However, depending on your constraints ...
-
-> I assume that the filters which hang of tcindex_data::perfect and
-> tcindex_data:p must be freed before tcindex_data, right?
-> 
-> Refcounting of tcindex_data should do the trick. I.e. any element which
-> you add to a tcindex_data instance takes a refcount and when that is
-> destroyed then the rcu/work callback drops a reference which once it
-> reaches 0 triggers tcindex_data to be freed.
-
-... reference counts might work much better for you.
-
-							Thanx, Paul
+How would you work around that?
