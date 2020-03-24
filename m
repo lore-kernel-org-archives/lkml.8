@@ -2,145 +2,120 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5B8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A640C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:11:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AABD720775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:11:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mz3AaVGy"
+	by mail.kernel.org (Postfix) with ESMTP id E5E39208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585055516;
+	bh=2r/XNzVFSWap5ZGR8e9lGlA6d7DtrmjBgB/Zzu8NrGo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CSRvtZD5eEiCoEowLzI0I2QHTDe2L4u/xCC5cc/+YukXhtW2SrQ3fKn/28VC7gNMK
+	 5e/BQRMtm+vuxaC54pwrCqYECG9HyN4ojViUaM5FKR68EcuFVSggJ9f8O8xoyHZ61V
+	 BQGou9DIKdzrfJjvvSfoofjuNzzsRyQrYHtAY6jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgCXNLm (ORCPT
+        id S1727341AbgCXNLz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:11:42 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35493 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726915AbgCXNLm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:11:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585055501;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cd6KV/emetvr0s6RZCThEP3Rmoq7QiPbyQdz5ZsuYJo=;
-        b=Mz3AaVGyLr2vyI1pSkVCHL/mz2qblEpDtsAosS0MHzDw0fGWxwwTbbdw7M3ZT6WvPb/wPD
-        8R/ce1e4Wicb4bcQRzFla3FMAk6CoT6lkPs5HyErqYETxx5N3yxcbFIMmwnyefYF90ykvq
-        e79PwC/JWJNujoD8kyWoLk3TCo1h6GY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-K2fQwpdFM1ycnE_NYyjqzQ-1; Tue, 24 Mar 2020 09:11:37 -0400
-X-MC-Unique: K2fQwpdFM1ycnE_NYyjqzQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 24 Mar 2020 09:11:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726190AbgCXNLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:11:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0ADEB801E67;
-        Tue, 24 Mar 2020 13:11:34 +0000 (UTC)
-Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 859B290CF1;
-        Tue, 24 Mar 2020 13:11:21 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 14:11:12 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v6 09/11] perf/tools: Enhance JSON/metric infrastructure
- to handle "?"
-Message-ID: <20200324131112.GU1534489@krava>
-References: <20200320125406.30995-1-kjain@linux.ibm.com>
- <20200320125406.30995-10-kjain@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id BE712208CA;
+        Tue, 24 Mar 2020 13:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585055514;
+        bh=2r/XNzVFSWap5ZGR8e9lGlA6d7DtrmjBgB/Zzu8NrGo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RYHr640FckM5t8tFC+IEy/RI8Q9zAo+HNZFwrK4A0+FRTGMZH65ABkZkk/MaQBy2E
+         KBrQ1bMgA4qDSe0bQH8ZJl3Urb+5QulV33d8zn+M07q/c9qHIOtgKfGluTEQfZP3TI
+         +NVZvdb4BN8bVNdpnwsj3Kv1u6H6tZmpYEfNk9Js=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evan Benn <evanbenn@chromium.org>,
+        Sean Paul <seanpaul@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 01/65] drm/mediatek: Find the cursor plane instead of hard coding it
+Date:   Tue, 24 Mar 2020 14:10:22 +0100
+Message-Id: <20200324130756.930321348@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
+References: <20200324130756.679112147@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320125406.30995-10-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:24:04PM +0530, Kajol Jain wrote:
+From: Evan Benn <evanbenn@chromium.org>
 
-SNIP
+[ Upstream commit 318caac7c81cdf5806df30c3d72385659a5f0f53 ]
 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 52fb119d25c8..b4b91d8ad5be 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -474,8 +474,13 @@ static bool metricgroup__has_constraint(struct pmu_event *pe)
->  	return false;
->  }
->  
-> +int __weak arch_get_runtimeparam(void)
-> +{
-> +	return 1;
-> +}
-> +
->  static int metricgroup__add_metric_param(struct strbuf *events,
-> -			struct list_head *group_list, struct pmu_event *pe)
-> +		struct list_head *group_list, struct pmu_event *pe, int param)
->  {
->  
->  	const char **ids;
-> @@ -483,7 +488,7 @@ static int metricgroup__add_metric_param(struct strbuf *events,
+The cursor and primary planes were hard coded.
+Now search for them for passing to drm_crtc_init_with_planes
 
-could you please call this function __metricgroup__add_metric instead?
+Signed-off-by: Evan Benn <evanbenn@chromium.org>
+Reviewed-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
->  	struct egroup *eg;
->  	int ret = -EINVAL;
->  
-> -	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum) < 0)
-> +	if (expr__find_other(pe->metric_expr, NULL, &ids, &idnum, param) < 0)
->  		return ret;
->  
->  	if (events->len > 0)
-> @@ -502,11 +507,21 @@ static int metricgroup__add_metric_param(struct strbuf *events,
->  
->  	eg->ids = ids;
->  	eg->idnum = idnum;
-> -	eg->metric_name = pe->metric_name;
-> +	if (strstr(pe->metric_expr, "?")) {
-> +		char value[PATH_MAX];
-> +
-> +		sprintf(value, "%s%c%d", pe->metric_name, '_', param);
-> +		eg->metric_name = strdup(value);
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+index b86ee7d25af36..eac9caf322f90 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+@@ -506,10 +506,18 @@ static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
+ 
+ static int mtk_drm_crtc_init(struct drm_device *drm,
+ 			     struct mtk_drm_crtc *mtk_crtc,
+-			     struct drm_plane *primary,
+-			     struct drm_plane *cursor, unsigned int pipe)
++			     unsigned int pipe)
+ {
+-	int ret;
++	struct drm_plane *primary = NULL;
++	struct drm_plane *cursor = NULL;
++	int i, ret;
++
++	for (i = 0; i < mtk_crtc->layer_nr; i++) {
++		if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_PRIMARY)
++			primary = &mtk_crtc->planes[i];
++		else if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_CURSOR)
++			cursor = &mtk_crtc->planes[i];
++	}
+ 
+ 	ret = drm_crtc_init_with_planes(drm, &mtk_crtc->base, primary, cursor,
+ 					&mtk_crtc_funcs, NULL);
+@@ -622,9 +630,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+ 			goto unprepare;
+ 	}
+ 
+-	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
+-				mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
+-				NULL, pipe);
++	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, pipe);
+ 	if (ret < 0)
+ 		goto unprepare;
+ 	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
+-- 
+2.20.1
 
-how is eg->metric_name getting released?
 
-> +		if (!eg->metric_name) {
-> +			ret = -ENOMEM;
-> +			return ret;
-
-		return -ENOMEM; ??
-
-> +		}
-> +	}
-> +	else
-> +		eg->metric_name = pe->metric_name;
->  	eg->metric_expr = pe->metric_expr;
->  	eg->metric_unit = pe->unit;
->  	list_add_tail(&eg->nd, group_list);
-> -
->  	return 0;
->  }
->  
-
-SNIP
-
-thanks,
-jirka
 
