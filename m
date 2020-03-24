@@ -2,115 +2,96 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7694CC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 271DAC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:08:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D34F205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585040794;
-	bh=MbR2LC2Cjq+KKlYVGw23IZaJEiAW55glNu/IL1UtcMM=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=TQZm/xbzGhicGnVEDTAW2ARF1v8qX8IG2w+wkmwQI8KojWW3yqcpFMc78dDa5ayXu
-	 HLROZjiORA5oev6oYYSeO4X8XbGu8BE+JYmDGU2vLdr+fLYpa7ioqdb/buuP6gsF7I
-	 lmW7RZT3NwOdMFH3CGQY1trL8U7+7IQw0vThm0rY=
+	by mail.kernel.org (Postfix) with ESMTP id 007E6205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:08:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kyRO1JZ5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgCXJGd (ORCPT
+        id S1727130AbgCXJI0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:06:33 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50530 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726565AbgCXJGc (ORCPT
+        Tue, 24 Mar 2020 05:08:26 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44118 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgCXJIZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:06:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id d198so2315323wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:06:31 -0700 (PDT)
+        Tue, 24 Mar 2020 05:08:25 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j188so8691683lfj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:08:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=J/FvSiiKqz6Wrld0ZpjDn6jlfslfOdvkSKPWQpTVzPE=;
-        b=TR919/onONIFWdcAm0zDJPM+4QNfayctZ2NyKgs0KriTH+CqaIfg/uevBgdfodXk2U
-         cogChjEZCy2mKWKyTquMz9wAHQzeYjuqU4BspT7ViHE6ysFtgSZqVPPiW9yiiMa0UW9/
-         l6sDrEACf59oHtPdR1jegaBq76lmBWsruL1sRoIot+6E8CKILye2T0gQrEzmkbdW1SjU
-         NWW7Nc6f4wWnzUH31XKDWCWh0l+OuX/YIBArmvqD/wvHsZBf8OhTQwZW56BgmFyIfSce
-         HvDLQmHwz0t9ydwe9ORoDduL+GWoKRPMG+VJ2KpqWu1fi/OPogSOGFPSMa6k6Q6YN0Yz
-         0tZA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kJjJYByf6BtkCJbFvGT1Wd2744n9maPiNNsg/rq8ckk=;
+        b=kyRO1JZ5btzO7Wk7jEHMzvkhaqanVGbfUsMSVXHo1JQkUfXGH0UucI4wvLK+d/OfnP
+         gEg5ikEIToTqf/va0lDUheAVTsNC5FQraX+B0DYs4in0K6/NOnB3jmt/gProtDRvjy7T
+         9IUsvGSTSTu3IM7geOL2xDQJOLMsoYm/XQTMOI+Oar+MM71VSTca5jvPzcO4pKF6zm+S
+         Adbj2kQMYSsTtB305PlY/v6KCNQTmi0n+f8TSM1e1AccluodIT2J+tB4RTYc3hkwiJGu
+         ug4J30VUr2i7a0hdT8L+LdjIVnIwzgQ0rm2cMg3fZHHaZ2GjoNfxYKltpjjONFM+R+it
+         0K9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=J/FvSiiKqz6Wrld0ZpjDn6jlfslfOdvkSKPWQpTVzPE=;
-        b=ZKBKnqcVWyYBVhAARIxXjYJY5GEsKSfQxCwXEweKQ9BHc43wPsWVxQVb+/UtYdxFjS
-         D58KM12NmHVJ6BKF7tgbQoojUpZmrMZPwuw8LvA3XvcuBe2w68wUlSLd/S18QGxf1S2q
-         HmLEEBpVnF5StNZyxA7BtWooD7tU5qDfyTK6hvdY94qpZTP4Bw9UCDNn/vXSjuyJD/zI
-         si1EnpS5SUyEroP8QgXtCeipx1yXjmRkUDPCXHqI8JWOubo6waUhfSwYPdplGF3QhmTa
-         Z3Uw7DglZXVWhojaAjFD3hVcR++3oNaQO3IzX4kB75NVEdmAw/xqxlyLuhoJA03zONjx
-         KKvA==
-X-Gm-Message-State: ANhLgQ0yE26Ymt52FTPN8ltu9W7NZ5NeRzJJ6Qxsg5JslpFXsTTJrAjN
-        T6sJa0uej/gJPEeENnUKeXjkl+DC
-X-Google-Smtp-Source: ADFU+vt8EQLZ1USb9dKKSNQfu8ywnXjS88qFoKviiElMF8tFDUqsj96tZBox4D8XCnjuaZwSaVqFlg==
-X-Received: by 2002:a7b:c764:: with SMTP id x4mr1520015wmk.39.1585040790437;
-        Tue, 24 Mar 2020 02:06:30 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id w81sm3478926wmg.19.2020.03.24.02.06.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 02:06:29 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 10:06:27 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: [GIT PULL] x86 fix
-Message-ID: <20200324090627.GA46739@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kJjJYByf6BtkCJbFvGT1Wd2744n9maPiNNsg/rq8ckk=;
+        b=nwUK7Ybj+zX5wunezA0K6T4CSN/55ncCtaknOVCuqp/IPh7QlXO6UTD8DbpCIQe5QQ
+         oINbvxp+BRwE2KUjK9n1BCFLoIJQtxuDUwHtvkzC576ETEwiyyAEeO4ReYTcz0Yv6ROq
+         Qh+KKzwBaS489mj0Qcw5dbUq/BP5jlpaK9ZqqI1J3rEmEBmGjmeMJRy2/LaERZoFfQH1
+         jfmIon5sIK2YnxeS1HBSNqaDmPbzqcpOO8j4mOgeySutkjZFDuN8yOmPbKxINIXRBCIJ
+         YtPVndrjau9qWTejjkYnxRa344o37M8/TmN0qh38PFnK9mQ9BR7ub/Mn6Q+6KNmcvJZh
+         4vlQ==
+X-Gm-Message-State: ANhLgQ1bbgS2Pkmkpq1hengf0tFPQIeMibfsOiwrX31QrdISaU8pkwcA
+        wz1br6T6K1lviYYn4zkQbUDS3YbJigt6p+eEKJMlxg==
+X-Google-Smtp-Source: ADFU+vuWsj1UB/YxRXzueomlYjoYqG09H4oLCgsWmCT4taWy0O5Fvu6P0MGC77ngiQ9gNR+bMULMKd/vy4uA+YtYTmU=
+X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr2775902lfc.4.1585040903033;
+ Tue, 24 Mar 2020 02:08:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200321162707.5f4b1951@canb.auug.org.au> <2195891d-4f41-a4e9-c067-2f2b556a1517@redhat.com>
+In-Reply-To: <2195891d-4f41-a4e9-c067-2f2b556a1517@redhat.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 24 Mar 2020 10:08:12 +0100
+Message-ID: <CACRpkda7Kv04_JqTHdx=P0rtrQqCHxP15vUEp+NfEbtEwuWtYQ@mail.gmail.com>
+Subject: Re: linux-next: Fixes tag needs some work in the gpio tree
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+On Sat, Mar 21, 2020 at 4:09 PM Hans de Goede <hdegoede@redhat.com> wrote:
+> On 3/21/20 6:27 AM, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > In commit
+> >
+> >    1b26f3ba6117 ("gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT + AXP288 model")
+> >
+> > Fixes tag
+> >
+> >    Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mech
+>
+> I see in my personal tree that I introduced this broken tag, sorry about
+> that. Linus, if you are ok with doing a forced push to fix it up then
+> the correct tag should be:
+>
+> Fixes: aa23ca3d98f7 ("gpiolib: acpi: Add honor_wakeup module-option + quirk mechanism")
+>
+> OTOH if you dislike forced pushes (which I completely understand)
+> then we will just have to live with the broken tag.
 
-Please pull the latest x86-urgent-for-linus git tree from:
+I fixed it up! Actually I don't dislike rebasing patches on the fixes
+branch at all.
+The devel branch (for next) is much more sensitive.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86-urgent-for-linus
-
-   # HEAD: 870b4333a62e45b0b2000d14b301b7b8b8cad9da x86/ioremap: Fix CONFIG_EFI=n build
-
-A build fix with certain Kconfig combinations.
-
- Thanks,
-
-	Ingo
-
------------------->
-Borislav Petkov (1):
-      x86/ioremap: Fix CONFIG_EFI=n build
-
-
- arch/x86/mm/ioremap.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 935a91e1fd77..18c637c0dc6f 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -115,6 +115,9 @@ static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *des
- 	if (!sev_active())
- 		return;
- 
-+	if (!IS_ENABLED(CONFIG_EFI))
-+		return;
-+
- 	if (efi_mem_type(addr) == EFI_RUNTIME_SERVICES_DATA)
- 		desc->flags |= IORES_MAP_ENCRYPTED;
- }
+Yours,
+Linus Walleij
