@@ -2,57 +2,101 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8A2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47999C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC6192080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB882076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585070539;
+	bh=rPZNWgIqDJSdIGBhxAarYEhP+ICwAfgI9o9ldX+Ii+Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Y/N67lXwPU8C/MqNT8ZnX1O5qry2P5M6DsASfWbYlxSTGxnXCLxr4tIxQxn0XFn+d
+	 OD2RtXEn1V4E0PTOTBQCSACJE5nYxFZxlWLZKqJDHsLbboA7sIVHNnyiiFnNhefsBW
+	 BE4jD0ugzGQXzgBj5vMGEOvYc2ee3LGQtYKH5Fo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbgCXRVC (ORCPT
+        id S1727565AbgCXRWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:21:02 -0400
-Received: from foss.arm.com ([217.140.110.172]:38616 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727267AbgCXRVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:21:02 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C77301FB;
-        Tue, 24 Mar 2020 10:21:01 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C651E3F71F;
-        Tue, 24 Mar 2020 10:21:00 -0700 (PDT)
-References: <20200324125533.17447-1-valentin.schneider@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        mgorman@techsingularity.net
-Subject: Re: [PATCH] sched/topology: Fix overlapping sched_group build
-In-reply-to: <20200324125533.17447-1-valentin.schneider@arm.com>
-Date:   Tue, 24 Mar 2020 17:20:52 +0000
-Message-ID: <jhjmu85sm8b.mognet@arm.com>
+        Tue, 24 Mar 2020 13:22:18 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:51052 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgCXRWS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:22:18 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02OHM8hB027872;
+        Wed, 25 Mar 2020 02:22:08 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02OHM8hB027872
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585070529;
+        bh=bPCRwIwldAM4HwybdFdRYHiHqpgNqlDdX4WV8XKCpgQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AAffemBMcj/pRI1GXSqDaRqeVNwXvSgGAJMx5lv0WUkBJKpxHMQEFBTQ0dSb77Th9
+         T/lQ+GowmCoBmXu38B/OVfdN0YCzrB3mzSJM3oGZa8d0WQjoGs70HLz8NIu2WXJZcs
+         E7W81ziHmBmRtUTjyDJ2qQVpf0aR8G3kQGjPxyZpxf7Buqhfkq9xH5p+VVCouwqSW3
+         JcxYssSq/v1DpR8KH3LS+FGPkl6DH+jKdw1xVaiPpLmu6GHcecjAn47x2SGZ3yJmvp
+         LMIpasWLGNKKsw5JHg5NblRyu1gd5qTxrZLTkxmoTX95kayf4As7oMIQ/99DjdU4Mh
+         WPjtDq4IqCNeQ==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id s10so3220589vsi.9;
+        Tue, 24 Mar 2020 10:22:08 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3iI96xpUmSzkHLCOxQaJ1liDtLFrKe2XoX0rTcCieB70Grg8Eb
+        vbxIPgG9glyydn5w3ive4YoH+iE7SARCXmYKYNA=
+X-Google-Smtp-Source: ADFU+vtUc5X8HF0cd25yHwBLsXgCCmhP5dTghG8L4rR7TJM9y01vynxbjz5/o6OhEUXD89jZqGHaOyPYng8JpiRE1WA=
+X-Received: by 2002:a67:8745:: with SMTP id j66mr19305626vsd.181.1585070522434;
+ Tue, 24 Mar 2020 10:22:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-12-masahiroy@kernel.org>
+ <CAKwvOdkj3dDNcbY4hwyManfviPdFoBooJJmFOAKL2YJCZNuhtA@mail.gmail.com> <CAHmME9pV93Zey2=XghxzThTHbZarFrnxwnGatXHyQjevPf7R=g@mail.gmail.com>
+In-Reply-To: <CAHmME9pV93Zey2=XghxzThTHbZarFrnxwnGatXHyQjevPf7R=g@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 02:21:26 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATV4GeDDYwecZWNH7xxikZjY2VFZ3EYgXAbnbbVsVM+MQ@mail.gmail.com>
+Message-ID: <CAK7LNATV4GeDDYwecZWNH7xxikZjY2VFZ3EYgXAbnbbVsVM+MQ@mail.gmail.com>
+Subject: Re: [PATCH 11/16] x86: probe assembler capabilities via kconfig
+ instead of makefile
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Tue, Mar 24 2020, Valentin Schneider wrote:
-> Fix
-> ===
+On Wed, Mar 25, 2020 at 2:17 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 >
-> Sanitize the groups we get out of build_group_from_child_sched_domain()
-> with the span of the domain we're currently building - this ensures the
-> groups we build only contain CPUs that are the right distance away from the
-> base CPU. This also requires modifying build_balance_mask().
+> On Tue, Mar 24, 2020 at 11:01 AM Nick Desaulniers
+> <ndesaulniers@google.com> wrote:
+> >
+> > Can 11 just be rebased with 8 dropped?
 >
+> 8 adds comments to one place. 11 moves them to another place, while
+> doing other things.
+>
+> Your desire is to skip the first step? I guess there's no problem with
+> this, but I'm curious to learn why.
 
-I somehow missed that this triggers the WARN_ON_ONCE() in
-init_overlap_sched_group(). Gotta figure out why.
+If desired, I will swap the order of 8 and 11.
+
+
+-- 
+Best Regards
+Masahiro Yamada
