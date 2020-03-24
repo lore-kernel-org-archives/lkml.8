@@ -2,105 +2,76 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A38F2C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F151CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CA02076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0CE120774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:29:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OFGVUo5v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgCXP2Z (ORCPT
+        id S1728181AbgCXP3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:28:25 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:46420 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbgCXP2Z (ORCPT
+        Tue, 24 Mar 2020 11:29:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60072 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727589AbgCXP3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:28:25 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jGlTX-0000IV-P5; Tue, 24 Mar 2020 15:28:20 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     ajayg@nvidia.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-i2c@vger.kernel.org (open list:I2C CONTROLLER DRIVER FOR NVIDIA
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v3] i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-Date:   Tue, 24 Mar 2020 23:28:11 +0800
-Message-Id: <20200324152812.20231-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Mar 2020 11:29:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GEjRdfenMkp63VsokJpuSg83pLCvxbzC2FSqWHEQYfw=; b=OFGVUo5vk4dxUpApdVZkU8BtaQ
+        SbDb4U6h4H8vwFCpBn0PUrNHWxpN2fsX3UasbiraFLSez4i3h4GGz4JxJA/7MJxTDTECX2ZPeQVoH
+        jz7VnRWd6YKNJ8jHWNKOTJrOw1sgctncU3s5nYKrMNv6uyPvLPJHY24NSXSQxJ0++79MJKkYw5uA0
+        p62F6zJ76k2Gncl+vao/z3heX66E/axz1gEnUkW3WrU0JZb/oTFYevV6WNnUOg5VQ+XekCiY7ORZK
+        Ziq2cBiJ9doK25+WQxYl+tC5jwNh8GcI0Ef4xXBgruJG9aVMzvljAEeJ8uxN3Wk0fUrJdZ2PbPky+
+        H8wRMSTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGlUK-0005MB-BP; Tue, 24 Mar 2020 15:29:09 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id ADD1D300235;
+        Tue, 24 Mar 2020 16:29:05 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9E93029A490F3; Tue, 24 Mar 2020 16:29:05 +0100 (CET)
+Date:   Tue, 24 Mar 2020 16:29:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Jann Horn <jannh@google.com>, Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH v2] lib/refcount: Document interaction with PID_MAX_LIMIT
+Message-ID: <20200324152905.GR20696@hirez.programming.kicks-ass.net>
+References: <20200303105427.260620-1-jannh@google.com>
+ <20200317222717.GF20788@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200317222717.GF20788@willie-the-truck>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nvidia card may come with a "phantom" UCSI device, and its driver gets
-stuck in probe routine, prevents any system PM operations like suspend.
+On Tue, Mar 17, 2020 at 10:27:18PM +0000, Will Deacon wrote:
 
-There's an unaccounted case that the target time can equal to jiffies in
-gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
-instead of jiffies comparison functions. 
+> Acked-by: Will Deacon <will@kernel.org>
+> 
+> Peter -- would you be able to take this through -tip, please?
 
-Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v3:
-- Use readl_poll_timeout to make the retry loop simpler.
+Got it, I'll stick it in locking/core.
 
-v2:
-- Use a boolean to make sure the operation is timeout or not.
-
- drivers/i2c/busses/i2c-nvidia-gpu.c | 20 ++++++++------------
- 1 file changed, 8 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
-index 62e18b4db0ed..f5d25ce00f03 100644
---- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-+++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-@@ -8,6 +8,7 @@
- #include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/interrupt.h>
-+#include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/platform_device.h>
-@@ -75,20 +76,15 @@ static void gpu_enable_i2c_bus(struct gpu_i2c_dev *i2cd)
- 
- static int gpu_i2c_check_status(struct gpu_i2c_dev *i2cd)
- {
--	unsigned long target = jiffies + msecs_to_jiffies(1000);
- 	u32 val;
-+	int ret;
- 
--	do {
--		val = readl(i2cd->regs + I2C_MST_CNTL);
--		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER))
--			break;
--		if ((val & I2C_MST_CNTL_STATUS) !=
--				I2C_MST_CNTL_STATUS_BUS_BUSY)
--			break;
--		usleep_range(500, 600);
--	} while (time_is_after_jiffies(target));
--
--	if (time_is_before_jiffies(target)) {
-+	ret = readl_poll_timeout(i2cd->regs + I2C_MST_CNTL, val,
-+				 !(val & I2C_MST_CNTL_CYCLE_TRIGGER) ||
-+				 (val & I2C_MST_CNTL_STATUS) != I2C_MST_CNTL_STATUS_BUS_BUSY,
-+				 500, 1000 * USEC_PER_MSEC);
-+
-+	if (ret) {
- 		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
- 		return -ETIMEDOUT;
- 	}
--- 
-2.17.1
-
+Thanks!
