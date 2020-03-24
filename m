@@ -2,103 +2,100 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA942C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E583C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EBBB20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:06:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4624C20789
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nyDGk1Qh"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="dvJVWQ0O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgCXOGq (ORCPT
+        id S1727803AbgCXOHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:06:46 -0400
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:52710 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727111AbgCXOGq (ORCPT
+        Tue, 24 Mar 2020 10:07:11 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35716 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgCXOHL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:06:46 -0400
-Received: by mail-wr1-f74.google.com with SMTP id d17so9293499wrw.19
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:06:45 -0700 (PDT)
+        Tue, 24 Mar 2020 10:07:11 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a20so20847637edj.2;
+        Tue, 24 Mar 2020 07:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
-        bh=HBdtxiA4456RzmVM1qUhdnGD6aL9Y+FSjlt2D4+kbQs=;
-        b=nyDGk1QhgGJP6JXVdgaZp480a9DwV4Kskd/e1Sx5LQJYHVpsMYpLrW8zWyfy753to1
-         qWclQhv0rsC3MFp3Jn6CYCcRMo0XhPSjtH+Vsnf+vpqMYWe4pekvq7MSl1kw3jeR0w8W
-         N1yS009CdCui87ZV/h3KmStNu5WCzWIyH82Eu8IDlZNLXxnw1ymubHZLGJfYCGkhotHY
-         GG/xqbTXHHxYl3uM8yl6QGokbFKvxvrUo+AI7rNb9VK0xL+37UYvD70rO6ZiCens/g+1
-         OuNug82g1e6/IzY+oJBEbswAucS5iDGrqos2TBQGUmpZWaLBP+PcC2Zwzqk3xBsp011i
-         31Jg==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dcUgHF1GDuuSunaZUU4Ruocj0GZ4ddqSxRhaLtXqkcM=;
+        b=dvJVWQ0O8hlSN/WBTtGXC50vG9ZJsG5B93vJTJkLUCehGXLNA7WiOPqhxSiXPhvxSQ
+         tOj7bM0T5W9KTOferZhZUOyGqo0WT7kVcvYhb76IspBlhdKXyvZmq+EUoZfZwWazY1UW
+         HbYAq1mKiuaFo5UjFpQvGh5IQ9HKyn0ZBjewWugORhupS/tsE3xXNBR5yGU6r03Ve3qg
+         h82gUAI0taleDBc/RB3m/Q6cwpslgv65JWBeiWge9O2p7DlFJJ4W2u4LfLz3QJWoSdyH
+         acqk0DLuJ/Dx8CbymfYh3loG/49JveFdfInVQkuMKAur2NH3+HUGXG+nlEtRaI8mCUJ6
+         YOFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:cc;
-        bh=HBdtxiA4456RzmVM1qUhdnGD6aL9Y+FSjlt2D4+kbQs=;
-        b=bhUpug6xowCVTlWS1G9UE3AxtJ3ftsIxTYLgVQg5HkgpVbRml2xBXnVLt9bKlLgSBH
-         kGfcyPgD93PwVEEqM5ZCaR0MCExeEtQtMSZWNAcoIiHPZRoLPbFz6aEGpUHbCBg0DaSV
-         4xKVC2hakZEIBY0WfP9aJRITqEeEA11TjUEOfXU5J4cERRM4Ddb5QvFrPvf8Wy5RuaSL
-         g/8Jn0SyUne8cw0pkWaQ3Bc765bC8m1StQltHU2bWVo9MsTuDxeZ0f9IglWtJYQ0JQbL
-         TW5kIhDypYI8/7SnO83KHSxvqgUaR6u7koi6c7jxdZFrQoTrn73viVIzTy8kTXhQ7s2J
-         aeew==
-X-Gm-Message-State: ANhLgQ3W25U8NrCphFewghfue8wYvynce0gZBRNnYjgfDOMtD6L3j+9u
-        9w3S8X7ZYXfwYrMpFnGiJbROwRtCGTnG
-X-Google-Smtp-Source: ADFU+vskI0jexMsS1DvDsEq2T1w3Ggok81GOT3ryS1YifqC7IxK92rpG4H3ZEUBolmiIT8TbfzKCPBDpYA/p
-X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr36558140wrs.272.1585058804297;
- Tue, 24 Mar 2020 07:06:44 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 15:06:38 +0100
-In-Reply-To: <20200323114207.222412-1-courbet@google.com>
-Message-Id: <20200324140639.70079-1-courbet@google.com>
-Mime-Version: 1.0
-References: <20200323114207.222412-1-courbet@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH]     x86: Alias memset to __builtin_memset.
-From:   Clement Courbet <courbet@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Clement Courbet <courbet@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dcUgHF1GDuuSunaZUU4Ruocj0GZ4ddqSxRhaLtXqkcM=;
+        b=j4Q/Bu3bIsgogtzVoDPJOvnYVTcZRpkxVq6/XQF+m7zYQFJ9tZerwPhJcZnXI2w63/
+         qpcnbMT5w1QwEBspM5QrkN174dkhT+a0+U61yR0Hj+InmWuMX8JIs1Nhoy0jy2w+2R/f
+         +Ae6EpkUxgsww17Lg5YLgRNH2Nun0nbd7g4bFHFiYRmHlK3sM3SVLYCzd8IPaDSXxUfj
+         QRItAFjUuges1QUio1ykyk0fipGLx/oNlIiE7VllvCJ5p8ISixf1l0fsWVx8+g7aVomU
+         xXA/KY7e9WxcmD7J/TA+/m2EsVdj6ufvVJtWU5NSei1cmDLb7bW29Vy1LVSIKdFpVtLQ
+         VpFA==
+X-Gm-Message-State: ANhLgQ2rC8jBsC3hXjuPSTxijwkbjEfZY2++wM15eRct0PO7ZI+yvTED
+        Ca9TpCmDvPVjpcEm//73MWwJ6Zmytj+bJLChY2M=
+X-Google-Smtp-Source: ADFU+vuGEjDeb/L8U1c1UJ2A93v1OboeO9Zew62wGydVRx2aXkWZiMP1AE1wliFtVf6Ap3fpngvz6Yw78DvnnxMnQcw=
+X-Received: by 2002:a05:6402:17aa:: with SMTP id j10mr20114633edy.146.1585058828747;
+ Tue, 24 Mar 2020 07:07:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324102030.31000-1-narmstrong@baylibre.com> <20200324102030.31000-2-narmstrong@baylibre.com>
+In-Reply-To: <20200324102030.31000-2-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 24 Mar 2020 15:06:57 +0100
+Message-ID: <CAFBinCCaMopoza5CFCC7=mStH8Ocni4GjGr+etn=dMKOgr_5fg@mail.gmail.com>
+Subject: Re: [PATCH 01/13] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: add
+ the Amlogic GXL and GXM Families USB Glue Bindings
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
+        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the comments. Answers below.
+Hi Neil,
 
-> This ifdef is unnecessary
-> This needs to be within #ifndef CONFIG_FORTIFY_SOURCE
+On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+[...]
+> --- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+> +++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
+> @@ -25,9 +25,13 @@ description: |
+>    The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
+>    host-only mode.
+>
+> +  The Amlogic GXL & GXM SoCs doesn't embed an USB3 PHY.
+> +
+>  properties:
+>    compatible:
+>      enum:
+> +      - amlogic,meson-gxl-usb-ctrl
+> +      - amlogic,meson-gxm-usb-ctrl
+>        - amlogic,meson-g12a-usb-ctrl
+>        - amlogic,meson-a1-usb-ctrl
+the phy-names property is described below which you don't update
+please add usb2-phy2 to the list of allowed phy-names so the dt
+binding validation for the .dtsi patche (#9) won't complain
 
-Thanks, fixed.
-
-> shouldn't this just be done universally ?
-
-It looks like every architecture does its own magic with memory
-functions. I'm not very familiar with how the linux kernel is
-organized, do you have a pointer for where this would go if enabled
-globally ?
-
-> Who's adding it for 64b?
-> Any idea where it's coming from in your
-> build? Maybe a local modification to be removed?
-
-Actually this is from our local build configuration. Apparently this
-is needed to build on some architectures that redefine common
-symbols, but the authors seemed to feel strongly that this should be
-on for all architectures. I've reached out to the authors for an
-extended rationale.
-On the other hand I think that there is no reason to prevent people
-from building with freestanding if we can easily allow them to.
+With that fixed:
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
 
-
+Martin
