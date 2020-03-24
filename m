@@ -2,181 +2,145 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95556C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA4C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657B620788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bF95E75Z"
+	by mail.kernel.org (Postfix) with ESMTP id 49EB32080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgCXOYV (ORCPT
+        id S1728364AbgCXOY2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:24:21 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41241 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbgCXOYU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:24:20 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h9so21673842wrc.8
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:24:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=W59hMPJ3MBOlOz+nstlg61GCr1II2YZNKGokA96Ka3Y=;
-        b=bF95E75ZbHF4bltt0flEXWimvDmZwYIVOAHOON+rk4yv3rlnqoFZd1mAem6cpnEP2k
-         2C2/+YRPbwzX2em+Ea9ykPo2B5zhRDMmpxS3EWKODWsJQCB42i+x8e2wB1KkrA7WFRz0
-         WJylrNwpLdpU9p/+Quw+KhURey8h/mLKqi0GmTxZ1dQrvALHqagSlkyJyMDAWwjzzd6x
-         z92sIxf/wtiV2iZ5INfAcgQcHRiuwd3TA0H7DLNBmumJ2ao5PkiLHjTbw1MuhAzvSGx0
-         AgEiLSPgrtUJIQE8MzbZ+EiAhmtXr8Ltkf0Fopj61Xoj6ML2q3dlsZPY9jd+AxreJprg
-         1vlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=W59hMPJ3MBOlOz+nstlg61GCr1II2YZNKGokA96Ka3Y=;
-        b=sxJcDqV8ljxlKOK48MDFKF+bdJarahFajINm7Esc0Mb7P3iRmIhitj1jyoftCBtqoj
-         kKVB8fT3bfUoriQZGF5K6997o5PMdXU47KlkXEXPi1WXayNSFRUCPmF8gG6yYedmhmJw
-         aWbOagZ/jifYUOTZoSOF5dCZ8pkEHl6Y65F6TV0mkolNg11mej8z3trXCMA8mFDSid2M
-         FFmGlUGMe9ljjYAjQIWQ/vzMZ3DbcN5En4SAjiJWonoHrMjafbGH1AhDMlemHQPnRY8T
-         ppI+3Jhxib2Fc9hf8OArbYBHrT2uBsh96V7SogCd9zDPR/t9H6pNLQ4ciSvdvM8EJCzJ
-         B/7A==
-X-Gm-Message-State: ANhLgQ2qY96k3LdG1VUdD0Jx0tDo3x8Ntccuto8nlOm2WE3H0oinvbZ3
-        hGoK36EsK7VmS+t/nt4Y/0+fAq/sGTLSCA==
-X-Google-Smtp-Source: ADFU+vvyxr95jCX/2rV/XOcDppnOWCfL+Fvg56S/LxiVdgHdFzGDxvgseHm3o7OhEcX3qFUTmsbrpg==
-X-Received: by 2002:a5d:45c7:: with SMTP id b7mr8857427wrs.44.1585059858483;
-        Tue, 24 Mar 2020 07:24:18 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id u16sm29323057wro.23.2020.03.24.07.24.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 07:24:18 -0700 (PDT)
-Subject: Re: [PATCH v3 6/7] drm/meson: overlay: setup overlay for Amlogic FBC
- Memory Saving mode
-To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
-Cc:     ppaalanen@gmail.com, mjourdan@baylibre.com, brian.starkey@arm.com,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200324142016.31824-1-narmstrong@baylibre.com>
- <20200324142016.31824-7-narmstrong@baylibre.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT7CwHsEEwEKACUC
- GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
- RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
- NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
- 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
- ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
- YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIXOwU0EVid/pAEQAND7AFhr
- 5faf/EhDP9FSgYd/zgmb7JOpFPje3uw7jz9wFb28Cf0Y3CcncdElYoBNbRlesKvjQRL8mozV
- 9RN+IUMHdUx1akR/A4BPXNdL7StfzKWOCxZHVS+rIQ/fE3Qz/jRmT6t2ZkpplLxVBpdu95qJ
- YwSZjuwFXdC+A7MHtQXYi3UfCgKiflj4+/ITcKC6EF32KrmIRqamQwiRsDcUUKlAUjkCLcHL
- CQvNsDdm2cxdHxC32AVm3Je8VCsH7/qEPMQ+cEZk47HOR3+Ihfn1LEG5LfwsyWE8/JxsU2a1
- q44LQM2lcK/0AKAL20XDd7ERH/FCBKkNVzi+svYJpyvCZCnWT0TRb72mT+XxLWNwfHTeGALE
- +1As4jIS72IglvbtONxc2OIid3tR5rX3k2V0iud0P7Hnz/JTdfvSpVj55ZurOl2XAXUpGbq5
- XRk5CESFuLQV8oqCxgWAEgFyEapI4GwJsvfl/2Er8kLoucYO1Id4mz6N33+omPhaoXfHyLSy
- dxD+CzNJqN2GdavGtobdvv/2V0wukqj86iKF8toLG2/Fia3DxMaGUxqI7GMOuiGZjXPt/et/
- qeOySghdQ7Sdpu6fWc8CJXV2mOV6DrSzc6ZVB4SmvdoruBHWWOR6YnMz01ShFE49pPucyU1h
- Av4jC62El3pdCrDOnWNFMYbbon3vABEBAAHCwn4EGAECAAkFAlYnf6QCGwICKQkQFpq3saTP
- +K7BXSAEGQECAAYFAlYnf6QACgkQd9zb2sjISdGToxAAkOjSfGxp0ulgHboUAtmxaU3viucV
- e2Hl1BVDtKSKmbIVZmEUvx9D06IijFaEzqtKD34LXD6fjl4HIyDZvwfeaZCbJbO10j3k7FJE
- QrBtpdVqkJxme/nYlGOVzcOiKIepNkwvnHVnuVDVPcXyj2wqtsU7VZDDX41z3X4xTQwY3SO1
- 9nRO+f+i4RmtJcITgregMa2PcB0LvrjJlWroI+KAKCzoTHzSTpCXMJ1U/dEqyc87bFBdc+DI
- k8mWkPxsccdbs4t+hH0NoE3Kal9xtAl56RCtO/KgBLAQ5M8oToJVatxAjO1SnRYVN1EaAwrR
- xkHdd97qw6nbg9BMcAoa2NMc0/9MeiaQfbgW6b0reIz/haHhXZ6oYSCl15Knkr4t1o3I2Bqr
- Mw623gdiTzotgtId8VfLB2Vsatj35OqIn5lVbi2ua6I0gkI6S7xJhqeyrfhDNgzTHdQVHB9/
- 7jnM0ERXNy1Ket6aDWZWCvM59dTyu37g3VvYzGis8XzrX1oLBU/tTXqo1IFqqIAmvh7lI0Se
- gCrXz7UanxCwUbQBFjzGn6pooEHJYRLuVGLdBuoApl/I4dLqCZij2AGa4CFzrn9W0cwm3HCO
- lR43gFyz0dSkMwNUd195FrvfAz7Bjmmi19DnORKnQmlvGe/9xEEfr5zjey1N9+mt3//geDP6
- clwKBkq0JggA+RTEAELzkgPYKJ3NutoStUAKZGiLOFMpHY6KpItbbHjF2ZKIU1whaRYkHpB2
- uLQXOzZ0d7x60PUdhqG3VmFnzXSztA4vsnDKk7x2xw0pMSTKhMafpxaPQJf494/jGnwBHyi3
- h3QGG1RjfhQ/OMTX/HKtAUB2ct3Q8/jBfF0hS5GzT6dYtj0Ci7+8LUsB2VoayhNXMnaBfh+Q
- pAhaFfRZWTjUFIV4MpDdFDame7PB50s73gF/pfQbjw5Wxtes/0FnqydfId95s+eej+17ldGp
- lMv1ok7K0H/WJSdr7UwDAHEYU++p4RRTJP6DHWXcByVlpNQ4SSAiivmWiwOt490+Ac7ATQRN
- WQbPAQgAvIoM384ZRFocFXPCOBir5m2J+96R2tI2XxMgMfyDXGJwFilBNs+fpttJlt2995A8
- 0JwPj8SFdm6FBcxygmxBBCc7i/BVQuY8aC0Z/w9Vzt3Eo561r6pSHr5JGHe8hwBQUcNPd/9l
- 2ynP57YTSE9XaGJK8gIuTXWo7pzIkTXfN40Wh5jeCCspj4jNsWiYhljjIbrEj300g8RUT2U0
- FcEoiV7AjJWWQ5pi8lZJX6nmB0lc69Jw03V6mblgeZ/1oTZmOepkagwy2zLDXxihf0GowUif
- GphBDeP8elWBNK+ajl5rmpAMNRoKxpN/xR4NzBg62AjyIvigdywa1RehSTfccQARAQABwsBf
- BBgBAgAJBQJNWQbPAhsMAAoJEBaat7Gkz/iuteIH+wZuRDqK0ysAh+czshtG6JJlLW6eXJJR
- Vi7dIPpgFic2LcbkSlvB8E25Pcfz/+tW+04Urg4PxxFiTFdFCZO+prfd4Mge7/OvUcwoSub7
- ZIPo8726ZF5/xXzajahoIu9/hZ4iywWPAHRvprXaim5E/vKjcTeBMJIqZtS4u/UK3EpAX59R
- XVxVpM8zJPbk535ELUr6I5HQXnihQm8l6rt9TNuf8p2WEDxc8bPAZHLjNyw9a/CdeB97m2Tr
- zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <1bb8c27c-7dcf-8833-ee13-f7227336179b@baylibre.com>
-Date:   Tue, 24 Mar 2020 15:24:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200324142016.31824-7-narmstrong@baylibre.com>
-Content-Type: text/plain; charset=utf-8
+        Tue, 24 Mar 2020 10:24:28 -0400
+Received: from mail-oln040092253077.outbound.protection.outlook.com ([40.92.253.77]:16787
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727296AbgCXOY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:24:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=S7fKdZ0/I0cJkN7/o0ibSGnTsConnSPf/NF6le/07+fUHs6e+s7IGM20VSTy1o9aALFDzvQGfhLMGHrhrCOEbA4zuz3/VdK2Dh/ZLODf0ts3f3le5QJR0FfYPEnx5CFQFxhrTDwKXy3ruFhe1EEUhTFKJ9qsIMXEjZhpYwYv1yGsFK5LnNUX4QoSuJO4ROPTeuuBnAzz5iKwzlIzOU72WZoj2OR/ks6bDY/Cfff9OHBwR37h79SXf4DWGye8KnJk1W0uyiY0qFzzF3nB4alCfUBw2HexYTBt2VOVbmoO4xWAkhmlOvtRv/QWZLoxANQmBkP/u5pIxwLdb9hL3yFwCw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3jADZf31CgsvlW0Yn9CC6gPLuP8QiBUboyrkrdDrIME=;
+ b=mKCNXPk7g/gfuJkGCqUpWnaogzU3QjRrkYz6pke6INnsl+YgXQ9nJiwRp/hqv1cf1riWQcIIbNg1NDvEfDnINxcXqHv/xzMGE4LeDtUK7wIUqE+kaUsb5KoSENUotfRPoN1OF8kY6DIQ9lyOTGOueiaB6A5ZBb4tCku8a+65hgcMYZaQdoAOF70jHBF1A6yLWQqMmJ9WKfAt4+S2N61OtvUxsqPYBIXZfjSIVYkQVjL7zw3kv/3/wPD7PK5qm70BufHDHnNZmLwNUIo7qfgsMF6evfb8xvf/AHGk7Yb8rhk9qAlNxFFR2HjckExrYiqzNwN82SrpFr+n/CqKQWbILw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from PU1APC01FT062.eop-APC01.prod.protection.outlook.com
+ (2a01:111:e400:7ebe::33) by
+ PU1APC01HT196.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebe::408)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Tue, 24 Mar
+ 2020 14:24:21 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.252.56) by
+ PU1APC01FT062.mail.protection.outlook.com (10.152.253.51) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.13 via Frontend Transport; Tue, 24 Mar 2020 14:24:21 +0000
+Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::1ddc:43b7:a639:8184]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ ([fe80::1ddc:43b7:a639:8184%9]) with mapi id 15.20.2835.023; Tue, 24 Mar 2020
+ 14:24:21 +0000
+Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by SY3PR01CA0137.ausprd01.prod.outlook.com (2603:10c6:0:1b::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Tue, 24 Mar 2020 14:24:18 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 5/5] nvmem: Add support for write-only instances
+Thread-Topic: [PATCH 5/5] nvmem: Add support for write-only instances
+Thread-Index: AQHWASPKeVmn6yF+NkittHqcSfj/BahWiaSAgAEiRgCAAAGUgIAAD60AgAAQVAA=
+Date:   Tue, 24 Mar 2020 14:24:21 +0000
+Message-ID: <PSXP216MB04387C07F1E4C827245DE98380F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
+ <20200323150007.7487-6-srinivas.kandagatla@linaro.org>
+ <20200323190505.GB632476@kroah.com>
+ <4820047d-9a99-749c-491d-dbb91a2f5447@linaro.org>
+ <20200324122939.GA2348009@kroah.com>
+ <300e8095-3af4-15a2-069f-87ac7cbb83bb@linaro.org>
+In-Reply-To: <300e8095-3af4-15a2-069f-87ac7cbb83bb@linaro.org>
+Accept-Language: en-AU, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SY3PR01CA0137.ausprd01.prod.outlook.com
+ (2603:10c6:0:1b::22) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:d::20)
+x-incomingtopheadermarker: OriginalChecksum:36AEC87AFA384AE02622DCBA92A3329C9DC7D23EEBF78E6B475F1C4A69FB9B0E;UpperCasedChecksum:CC2E67C6B54EE22C0746090D39BA456E2456ECC01BA84189C2FE2698610FA31F;SizeAsReceived:8016;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [VrHv3cdpfqyC2U8pI2MJbEQCVib6uQB6KO+DhEOOb/9JEg16lh3u4/0P3wj+K3uf]
+x-microsoft-original-message-id: <20200324142412.GA3564@nicholas-dell-linux>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-office365-filtering-correlation-id: 9bb22140-69c4-43e4-4ab4-08d7cfff0aa2
+x-ms-traffictypediagnostic: PU1APC01HT196:
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: LMmeACotuULUxEfTzbiIzajCIR59c3tjQzu7VMGHxqVUWoM0JDY9kuc3URi62bl193AykDf5G6IY7l+QVU0pG3gAtJnry+oxH0GSQDfYSzv9+Ex8r7YSfNCiNkAjkQu0LnwFsw5JSN8idj8BcATFdePQY/Zny1aFCEjBl6dMgsARC9kL5zmgTCVwqL7OTyJ0
+x-ms-exchange-antispam-messagedata: kD937kK+sPbEoFq9KccnaeAdhA35gNe7eXTcT/bqRZMxj20IkJYc9AavUBWAdb6d+PSSGs/lmt/WaMNHAjU46X8xN+EplAQrJ8WweHYBi8MHWLO3n7m5cnN2Kulj+xcw+lUKlMZOZlpibpHzaktYyYcHLSoijuDPGA8s+z0QAq5iYwF627CYblMfZEDFfFr38zV58bMzvx4sNviRvCblTg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AF4ACAD0E7D1104DA06001D97CD6B181@KORP216.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9bb22140-69c4-43e4-4ab4-08d7cfff0aa2
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 14:24:21.1726
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT196
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/03/2020 15:20, Neil Armstrong wrote:
-> Setup the Amlogic FBC decoder for the VD1 video overlay plane to use
-> a different superblock size for the Memory Saving mode.
+On Tue, Mar 24, 2020 at 01:25:46PM +0000, Srinivas Kandagatla wrote:
 > 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/gpu/drm/meson/meson_overlay.c | 14 ++++++++++++--
->  include/uapi/drm/drm_fourcc.h         | 16 +++++++++++++++-
->  2 files changed, 27 insertions(+), 3 deletions(-)
 > 
-
-[...]
-
-> --- a/include/uapi/drm/drm_fourcc.h
-> +++ b/include/uapi/drm/drm_fourcc.h
-> @@ -840,6 +840,19 @@ extern "C" {
->   */
->  #define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC		(1ULL << 0)
->  
-> +/*
-> + * Amlogic FBC Scatter Memory layout
-> + *
-> + * Indicates the header contains IOMMU references to the compressed
-> + * frames content to optimize memory access and layout.
-> + *
-> + * In this mode, only the header memory address is needed, thus the
-> + * content memory organization is tied to the current producer
-> + * execution and cannot be saved/dumped neither transferrable between
-> + * Amlogic SoCs supporting this modifier.
-> + */
-> +#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER	(2ULL << 0)
-> +
->  /*
->   * Amlogic FBC Layout Options
->   */
-> @@ -852,7 +865,8 @@ extern "C" {
->   * memory.
->   *
->   * This mode reduces body layout to 3072 bytes per 64x32 superblock with
-> - * the basic layout.
-> + * the basic layout and 3200 bytes per 64x32 superblock combined with
-> + * the scatter layout.
->   */
->  #define DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING	(1ULL << 8)
->  
+> On 24/03/2020 12:29, Greg KH wrote:
+> > > But the Idea here is :
+> > > We ended up with providing different options like read-only,root-only to
+> > > nvmem providers combined with read/write callbacks.
+> > > With that, there are some cases which are totally invalid, existing code
+> > > does very minimal check to ensure that before populating with correct
+> > > attributes to sysfs file. One of such case is with thunderbolt provider
+> > > which supports only write callback.
+> > > 
+> > > With this new checks in place these flags and callbacks are correctly
+> > > validated, would result in correct file attributes.
+> > Why this crazy set of different groups?  You can set the mode of a sysfs
+> > file in the callback for when the file is about to be created, that's so
+> > much simpler and is what it is for.  This feels really hacky and almost
+> > impossible to follow:(
+> Thanks for the inputs, That definitely sounds much simpler to deal with.
 > 
+> Am guessing you are referring to is_bin_visible callback?
+> 
+> I will try to clean this up!
+I am still onboard and willing do the work, but we may need to discuss
+to be on the same page with new plans. How do you wish to do this?
 
-Oops a commit got lost in the process... this change should be independent.
+Does this new approach still allow us to abort if we receive an invalid
+configuration? Or do we still need to have something in nvmem_register()
+to abort in invalid case?
 
-Neil
+The documentation of is_bin_visible says only read/write permissions are 
+accepted. Does this mean that it will not take read-only or write-only? 
+That is one way of interpreting it.
+
+I am further studying up on what was said in this email chain.
+
+Regards,
+Nicholas
+
+> 
+> thanks,
+> srini
+> > 
+> > thanks,
+> > 
+> > greg k-h
