@@ -2,161 +2,114 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36CDC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263B7C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5B620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:23:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IvJMcW1E"
+	by mail.kernel.org (Postfix) with ESMTP id 0466D208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:24:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgCXJXy (ORCPT
+        id S1727279AbgCXJYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:23:54 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:33068 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726129AbgCXJXy (ORCPT
+        Tue, 24 Mar 2020 05:24:39 -0400
+Received: from esa5.microchip.iphmx.com ([216.71.150.166]:44566 "EHLO
+        esa5.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbgCXJYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:23:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585041832;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rxSCaZCXJ96hzA7wzkiPyP7I+uQlkEYIo0ZxkJvFYKs=;
-        b=IvJMcW1EmcrY0187zW4YKDEYznHdQOQT/sL5OVrdffgc3quAw+I7+18SQ2c66zqCS60gQQ
-        nKOsqNz1KWxWV3JALP8y25yY+PwsCqX41SwYt1Rcr4/Maoo7vnYovU8ml0Pesy3qC9piPi
-        VuR69R5cEhNtlWohIqwr18FZeqeikvo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-66-lpHPdBoCMjeuvmAaPQvy0g-1; Tue, 24 Mar 2020 05:23:51 -0400
-X-MC-Unique: lpHPdBoCMjeuvmAaPQvy0g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5623D1B2C980;
-        Tue, 24 Mar 2020 09:23:48 +0000 (UTC)
-Received: from work-vm (ovpn-114-253.ams2.redhat.com [10.36.114.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 953BB5DA66;
-        Tue, 24 Mar 2020 09:23:37 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 09:23:31 +0000
-From:   "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-To:     Yan Zhao <yan.y.zhao@intel.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>
-Subject: Re: [PATCH v4 0/2] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200324092331.GA2645@work-vm>
-References: <20190531004438.24528-1-yan.y.zhao@intel.com>
- <20190603132932.1b5dc7fe@x1.home>
- <20190604003422.GA30229@joy-OptiPlex-7040>
- <20200323152959.1c39e9a7@w520.home>
- <20200324035316.GE5456@joy-OptiPlex-7040>
+        Tue, 24 Mar 2020 05:24:38 -0400
+IronPort-SDR: 9rNACHU5GfjfbxS52CSXzX4cpJYA2I123pBps2yVbW5cCG9XrQZadfkYQLVQE5HkzsT7qi2Prc
+ zypdd4Rm+Giodg0ZhLNvpP4lfPWaA0AKUxSbOPTum/ZqpP9tF5hNdyW/ggINTBONSRcj6iPJNR
+ nMdMpnAUGKnTocalTYMixM4ihZSeNlcY612xGuU0r/e1oznQ0Q7XdCjtFwvMz3Hn5Hk63mFjaE
+ qPhMKejNa7wmLV1BCgaMJYba67d7Guq3q454J3MBscuHCleDlb+ibA8iGfwbd9IP1UiVFz1AL1
+ eW0=
+X-IronPort-AV: E=Sophos;i="5.72,299,1580799600"; 
+   d="scan'208";a="70035298"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa5.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 24 Mar 2020 02:24:38 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 24 Mar 2020 02:24:36 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1713.5 via Frontend
+ Transport; Tue, 24 Mar 2020 02:24:37 -0700
+Date:   Tue, 24 Mar 2020 10:24:36 +0100
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Vladimir Oltean <olteanv@gmail.com>
+CC:     Yangbo Lu <yangbo.lu@nxp.com>, lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "Richard Cochran" <richardcochran@gmail.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        "Andrew Lunn" <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Message-ID: <20200324092436.stq25qac2h4rm3il@soft-dev3.microsemi.net>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-7-yangbo.lu@nxp.com>
+ <CA+h21hoBwDuWCFbO70u1FAERB8zc5F+H5URBkn=2_bpRRRz1oA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
 Content-Disposition: inline
-In-Reply-To: <20200324035316.GE5456@joy-OptiPlex-7040>
-User-Agent: Mutt/1.13.3 (2020-01-12)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <CA+h21hoBwDuWCFbO70u1FAERB8zc5F+H5URBkn=2_bpRRRz1oA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Yan Zhao (yan.y.zhao@intel.com) wrote:
-> On Tue, Mar 24, 2020 at 05:29:59AM +0800, Alex Williamson wrote:
-> > On Mon, 3 Jun 2019 20:34:22 -0400
-> > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > 
-> > > On Tue, Jun 04, 2019 at 03:29:32AM +0800, Alex Williamson wrote:
-> > > > On Thu, 30 May 2019 20:44:38 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >   
-> > > > > This patchset introduces a migration_version attribute under sysfs of VFIO
-> > > > > Mediated devices.
-> > > > > 
-> > > > > This migration_version attribute is used to check migration compatibility
-> > > > > between two mdev devices of the same mdev type.
-> > > > > 
-> > > > > Patch 1 defines migration_version attribute in
-> > > > > Documentation/vfio-mediated-device.txt
-> > > > > 
-> > > > > Patch 2 uses GVT as an example to show how to expose migration_version
-> > > > > attribute and check migration compatibility in vendor driver.  
-> > > > 
-> > > > Thanks for iterating through this, it looks like we've settled on
-> > > > something reasonable, but now what?  This is one piece of the puzzle to
-> > > > supporting mdev migration, but I don't think it makes sense to commit
-> > > > this upstream on its own without also defining the remainder of how we
-> > > > actually do migration, preferably with more than one working
-> > > > implementation and at least prototyped, if not final, QEMU support.  I
-> > > > hope that was the intent, and maybe it's now time to look at the next
-> > > > piece of the puzzle.  Thanks,
-> > > > 
-> > > > Alex  
-> > > 
-> > > Got it. 
-> > > Also thank you and all for discussing and guiding all along:)
-> > > We'll move to the next episode now.
-> > 
-> > Hi Yan,
-> > 
-> > As we're hopefully moving towards a migration API, would it make sense
-> > to refresh this series at the same time?  I think we're still expecting
-> > a vendor driver implementing Kirti's migration API to also implement
-> > this sysfs interface for compatibility verification.  Thanks,
+Hi Vladimir,
+
+The 03/20/2020 15:20, Vladimir Oltean wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> Hi Yangbo,
+> 
+> On Fri, 20 Mar 2020 at 12:42, Yangbo Lu <yangbo.lu@nxp.com> wrote:
 > >
-> Hi Alex
-> Got it!
-> Thanks for reminding of this. And as now we have vfio-pci implementing
-> vendor ops to allow live migration of pass-through devices, is it
-> necessary to implement similar sysfs node for those devices?
-> or do you think just PCI IDs of those devices are enough for libvirt to
-> know device compatibility ?
-
-Wasn't the problem that we'd have to know how to check for things like:
-  a) Whether different firmware versions in the device were actually
-compatible
-  b) Whether minor hardware differences were compatible - e.g. some
-hardware might let you migrate to the next version of hardware up.
-
-Dave
-
-> Thanks
-> Yan
+> > Support 4 programmable pins for only one function periodic
+> > signal for now. Since the hardware is not able to support
+> > absolute start time, driver starts periodic signal immediately.
+> >
 > 
-> 
---
-Dr. David Alan Gilbert / dgilbert@redhat.com / Manchester, UK
+> Are you absolutely sure it doesn't support absolute start time?
+> Because that would mean it's pretty useless if the phase of the PTP
+> clock signal is out of control.
 
+It looks like there is no support for absolute start time. But you
+should be able to control the phase using the register
+PIN_WF_LOW_PERIOD.
+
+> 
+> I tested your patch on the LS1028A-RDB board using the following commands:
+> 
+> # Select PEROUT function and assign a channel to each of pins
+> SWITCH_1588_DAT0 and SWITCH_1588_DAT1
+> echo '2 0' > /sys/class/ptp/ptp1/pins/switch_1588_dat0
+> echo '2 1' > /sys/class/ptp/ptp1/pins/switch_1588_dat1
+> # Generate pulses with 1 second period on channel 0
+> echo '0 0 0 1 0' > /sys/class/ptp/ptp1/period
+> # Generate pulses with 1 second period on channel 1
+> echo '1 0 0 1 0' > /sys/class/ptp/ptp1/period
+> 
+> And here is what I get:
+> https://drive.google.com/open?id=1ErWufJL0TWv6hKDQdF1pRL5gn4hn4X-r
+> 
+> So the periodic output really starts 'now' just like the print says,
+> so the output from DAT0 is not even in sync with DAT1.
+> 
+> > Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+> > ---
+> 
+> Thanks,
+> -Vladimir
+
+-- 
+/Horatiu
