@@ -2,90 +2,105 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B11C54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FB2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B00E208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585047181;
-	bh=4AeA8qWdzDTXrdHBQNY6oqVXBpONA5xeP0MnGuOm3ws=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hOoTYTkmMhRBOPxXdpedNNmCxKKQWsymUliG87VL0MUoBg2RxTdxf6m2XO7FC+J5H
-	 4HVBGFMJ5TiPjjUNrWSjoyqSi0APVXFVEa6in9KqogxkC/9W++N/Ow/Kh7yoRjcvlZ
-	 WnZgotOeEtCeIGxI5h6SFoMEDHX0j02qPqU/iHR8=
+	by mail.kernel.org (Postfix) with ESMTP id AAAAA20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:57:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c1xTKH3B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbgCXKxA (ORCPT
+        id S1727186AbgCXK5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:53:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727444AbgCXKw4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:52:56 -0400
-Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CBB1208D6;
-        Tue, 24 Mar 2020 10:52:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585047176;
-        bh=4AeA8qWdzDTXrdHBQNY6oqVXBpONA5xeP0MnGuOm3ws=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9iQT6/H/5Xzq0o5fj8/mJPPykRqVvFDZd+Iu3LD/DFJ2124mZU0uBeaVbbb3zEEr
-         PwjG8wArYlccQ+1WL4hCBdLvOYHbwLSHf05qoj+foYATyS+3w6+GlXPr8S3LFfydPd
-         LiWJRA0Jiku5UnMwGZq5U3lutrGCxpLUHeoWu0vg=
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Will Deacon <will@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        sparclinux@vger.kernel.org
-Subject: [PATCH 4/4] sparc32: mm: Reduce allocation size for PMD and PTE tables
-Date:   Tue, 24 Mar 2020 10:40:05 +0000
-Message-Id: <20200324104005.11279-5-will@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200324104005.11279-1-will@kernel.org>
-References: <20200324104005.11279-1-will@kernel.org>
+        Tue, 24 Mar 2020 06:57:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36340 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727111AbgCXK5M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:57:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so14801652wrs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=rxfBoUcTAjy/KXQNUn7YUvrT2t4HIupwqUhZ33S66ss=;
+        b=c1xTKH3BAJuomeNyz2i+suC7oboh1pmfXLPPnrnJtADS55zxZadAuhFVqWZpQflV4E
+         WACXYT7z9kMKrZBJ9a3O20E2Q8OYBg9NX2uWhKaXIdiqKRUFmzpSQum6gsv5bWN2TLai
+         8Blo1IYYk0myZ+R16jwLesrB2gmLQA3KEsK75uXPhFgGSsg4Xx8WUHm24wbmetV3EGMq
+         kN8UbbcflEF6GQ3GoiZ65hJugQur6GrLDD9bYIljFPFMJrq21t2mFJ50X1EoWwLs8zlx
+         yUtePUy9qDaN70PuJdDARuGl3K04koFAvgEkDaYKmCXUnxmMDyNTZUmkVPPH044AcQgT
+         7sEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=rxfBoUcTAjy/KXQNUn7YUvrT2t4HIupwqUhZ33S66ss=;
+        b=SwkeCdnNwQot2TBRBouuuZ6O7tR0QOtdxCmTJHySxMbQ09d3kG76NPFNTgMM7SXatx
+         y+0E+IlS7xj6JKpFWZbAqlH09eSPcUnpJ8ksXPHyk9My7mdoIZ5xNd8tgRi+iA1sNReN
+         EyzNRQm/e+xPwWJR3cguJCoGvo54EyOCDfSHZCiBWPyKUunM6mm4zcVeQXGVm6mF+7sg
+         s8T4rZiaLtj1bBZ+impeLNBelBMUmStMZzjN+akLzkRhrgH8X8k0o9G0V6LuuJ7og5On
+         k7vRpKsiqVzI11Bao64AlrcQQ00jjZEv0TB5LLRMPVro4RIE/Q1JNau5/ClRgTt7U776
+         vh0g==
+X-Gm-Message-State: ANhLgQ0s7dHDtpTiX8V6rkeqQGS8Xpm/kP1gEo5SdZEREraNL5bnprfc
+        qnDN50EVXTpIlEYnGmqUoocmbg==
+X-Google-Smtp-Source: ADFU+vu/Xqcc5SljHMAFXyLi9BXIlptXWFB94z0f4tJWF2QaBlwACgFlkmLPeyXxq4y2mK7N7ncepA==
+X-Received: by 2002:adf:b6a5:: with SMTP id j37mr35424592wre.412.1585047431070;
+        Tue, 24 Mar 2020 03:57:11 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id h132sm2862295wmf.18.2020.03.24.03.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 03:57:10 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 10:57:59 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        stefan@agner.ch, b.galvani@gmail.com, phh@phh.me,
+        letux-kernel@openphoenux.org, knaack.h@gmx.de, lars@metafoo.de,
+        pmeerw@pmeerw.net, linux-iio@vger.kernel.org, jic23@kernel.org
+Subject: Re: [PATCH v7 4/7] mfd: rn5t618: add more subdevices
+Message-ID: <20200324105759.GI5477@dell>
+References: <20200320081105.12026-1-andreas@kemnade.info>
+ <20200320081105.12026-5-andreas@kemnade.info>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200320081105.12026-5-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now that the page table allocator can free page table allocations
-smaller than PAGE_SIZE, reduce the size of the PMD and PTE allocations
-to avoid needlessly wasting memory.
+On Fri, 20 Mar 2020, Andreas Kemnade wrote:
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Signed-off-by: Will Deacon <will@kernel.org>
----
- arch/sparc/include/asm/pgtsrmmu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Since the RC5T619 has a RTC, use a separate subdevice list for that.
+> The ADC should be the same as in the RN5T618, according to drivers
+> in the wild, but since it is not tested, the ADC is only added for
+> the RC5T619.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v6:
+> - squashed with patch from former ADC patchset
+> 
+> Changes in v3:
+> - alignment cleanup
+>  drivers/mfd/rn5t618.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sparc/include/asm/pgtsrmmu.h b/arch/sparc/include/asm/pgtsrmmu.h
-index 58ea8e8c6ee7..7708d015712b 100644
---- a/arch/sparc/include/asm/pgtsrmmu.h
-+++ b/arch/sparc/include/asm/pgtsrmmu.h
-@@ -17,8 +17,8 @@
- /* Number of contexts is implementation-dependent; 64k is the most we support */
- #define SRMMU_MAX_CONTEXTS	65536
- 
--#define SRMMU_PTE_TABLE_SIZE		(PAGE_SIZE)
--#define SRMMU_PMD_TABLE_SIZE		(PAGE_SIZE)
-+#define SRMMU_PTE_TABLE_SIZE		(PTRS_PER_PTE*4)
-+#define SRMMU_PMD_TABLE_SIZE		(PTRS_PER_PMD*4)
- #define SRMMU_PGD_TABLE_SIZE		(PTRS_PER_PGD*4)
- 
- /* Definition of the values in the ET field of PTD's and PTE's */
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+
 -- 
-2.20.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
