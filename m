@@ -2,322 +2,140 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB42C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4DBC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5234F206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:45:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="omve0INn"
+	by mail.kernel.org (Postfix) with ESMTP id BFEFE206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgCXQpZ (ORCPT
+        id S1727800AbgCXQrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:45:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57694 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCXQpY (ORCPT
+        Tue, 24 Mar 2020 12:47:09 -0400
+Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:53410 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727065AbgCXQrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:45:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OGh2EU102497;
-        Tue, 24 Mar 2020 16:45:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=5b9wb3f2bzObgWbQdpgaIklwxUsss6rC628mYngDBJc=;
- b=omve0INnLixQXjdE9kKGCVur/9jvIAKhCD1DBVY0LurnAR2WwVGVBqF1Obg0hZK7Rl8/
- U/KA3E6H/mcQWy7AN7aU34RMv8L5vrTJ21p0BFKymosP22tBlT/Fs/0jR2HaU94LyU7o
- H3ttcHup9ebE+sYbjUy6bJKyKd3oZPXc0snXIan1GOSvcFdCN/MvWg4qOKldByn/lo3S
- DFCy8cEaGTGZu5t43dfuqxtAVSx4NPAKo5J9LRMyF1IAzfYPMfYtelJkjqppQJJYf29I
- E/ehac9OCHYgkOO+QZnbypZX8IbPwHuoXZx5Soi7qtcUXga+KAKAFWquUlcHMTZk+sxC sw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2ywavm5enc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 16:45:14 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OGgEWr139025;
-        Tue, 24 Mar 2020 16:45:13 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2yxw4pmwqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 16:45:13 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02OGjBBr015605;
-        Tue, 24 Mar 2020 16:45:11 GMT
-Received: from dhcp-10-175-162-99.vpn.oracle.com (/10.175.162.99)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Mar 2020 09:45:11 -0700
-Date:   Tue, 24 Mar 2020 16:45:06 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Patricia Alfonso <trishalfonso@google.com>
-cc:     davidgow@google.com, brendanhiggins@google.com,
-        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
-        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/3] KUnit: KASAN Integration
-In-Reply-To: <20200319164227.87419-3-trishalfonso@google.com>
-Message-ID: <alpine.LRH.2.21.2003241640150.30637@localhost>
-References: <20200319164227.87419-1-trishalfonso@google.com> <20200319164227.87419-3-trishalfonso@google.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 24 Mar 2020 12:47:08 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 3277FA89DE;
+        Tue, 24 Mar 2020 16:47:07 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: seat22_3ddc47581f618
+X-Filterd-Recvd-Size: 5278
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 24 Mar 2020 16:47:04 +0000 (UTC)
+Message-ID: <8c1916c8a0f769f390a53aeba1ffd6043e12611a.camel@perches.com>
+Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
+ extension for Intel 9460/9560 and 9160/9260
+From:   Joe Perches <joe@perches.com>
+To:     Alain Michaud <alainmichaud@google.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Alain Michaud <alainm@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Date:   Tue, 24 Mar 2020 09:45:15 -0700
+In-Reply-To: <CALWDO_U8hruyjvZmN5P3kYz-awhD8t7yNbX9K0uXd5OdDejdMA@mail.gmail.com>
+References: <20200323072824.254495-1-mcchou@chromium.org>
+         <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+         <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
+         <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
+         <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
+         <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
+         <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
+         <b7b6e52eccca921ccea16b7679789eb3e2115871.camel@perches.com>
+         <CALWDO_U8hruyjvZmN5P3kYz-awhD8t7yNbX9K0uXd5OdDejdMA@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=1
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240088
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=1 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003240088
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-03-24 at 11:24 -0400, Alain Michaud wrote:
+> On Tue, Mar 24, 2020 at 11:19 AM Joe Perches <joe@perches.com> wrote:
+> > On Tue, 2020-03-24 at 11:10 -0400, Alain Michaud wrote:
+> > > On Mon, Mar 23, 2020 at 4:11 PM Joe Perches <joe@perches.com> wrote:
+> > > > On Mon, 2020-03-23 at 19:48 +0100, Marcel Holtmann wrote:
+> > > > > Hi Joe,
+> > > > 
+> > > > Hello Marcel.
+> > > > 
+> > > > > > > > This adds a bit mask of driver_info for Microsoft vendor extension and
+> > > > > > > > indicates the support for Intel 9460/9560 and 9160/9260. See
+> > > > > > > > https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+> > > > > > > > microsoft-defined-bluetooth-hci-commands-and-events for more information
+> > > > > > > > about the extension. This was verified with Intel ThunderPeak BT controller
+> > > > > > > > where msft_vnd_ext_opcode is 0xFC1E.
+> > > > > > []
+> > > > > > > > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> > > > > > []
+> > > > > > > > @@ -315,6 +315,10 @@ struct hci_dev {
+> > > > > > > >         __u8            ssp_debug_mode;
+> > > > > > > >         __u8            hw_error_code;
+> > > > > > > >         __u32           clock;
+> > > > > > > > +       __u16           msft_vnd_ext_opcode;
+> > > > > > > > +       __u64           msft_vnd_ext_features;
+> > > > > > > > +       __u8            msft_vnd_ext_evt_prefix_len;
+> > > > > > > > +       void            *msft_vnd_ext_evt_prefix;
+> > > > > > 
+> > > > > > msft is just another vendor.
+> > > > > > 
+> > > > > > If there are to be vendor extensions, this should
+> > > > > > likely use a blank line above and below and not
+> > > > > > be prefixed with msft_
+> > > > > 
+> > > > > there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
+> > > > 
+> > > > So struct hci_dev should become a clutter
+> > > > of random vendor extensions?
+> > > > 
+> > > > Perhaps there should instead be something like
+> > > > an array of char at the end of the struct and
+> > > > various vendor specific extensions could be
+> > > > overlaid on that array or just add a void *
+> > > > to whatever info that vendors require.
+> > > I don't particularly like trailing buffers, but I agree we could
+> > > possibly organize this a little better by with a struct.  something
+> > > like:
+> > > 
+> > > struct msft_vnd_ext {
+> > >     bool       f       supported; // <-- Clearly calls out if the
+> > > extension is supported.
+> > >     __u16           msft_vnd_ext_opcode; // <-- Note that this also
+> > > needs to be provided by the driver.  I don't recommend we have this
+> > > read from the hardware since we just cause an extra redirection that
+> > > isn't necessary.  Ideally, this should come from the usb_table const.
+> > >     __u64           msft_vnd_ext_features;
+> > >     __u8             msft_vnd_ext_evt_prefix_len;
+> > >     void             *msft_vnd_ext_evt_prefix;
+> > > };
+> > > 
+> > > And then simply add the struct msft_vnd_ext (and any others) to hci_dev.
+> > 
+> > Or use an anonymous union
+> That would also work, but would need to be an array of unions, perhaps
+> following your original idea to have them be in a trailing array of
+> unions since a controller may support more than one extension.  This
+> might be going overboard :)
 
-On Thu, 19 Mar 2020, Patricia Alfonso wrote:
+True.
 
-> Integrate KASAN into KUnit testing framework.
-> 	- Fail tests when KASAN reports an error that is not expected
->      	- Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
->      	- Expected KASAN reports pass tests and are still printed when run
->      	without kunit_tool (kunit_tool still bypasses the report due to the
-> 	test passing)
->      	- KUnit struct in current task used to keep track of the current test
->      	from KASAN code
-> 
-> Make use of "[RFC PATCH kunit-next 1/2] kunit: generalize
-> kunit_resource API beyond allocated resources" and "[RFC PATCH
-> kunit-next 2/2] kunit: add support for named resources" from Alan
-> Maguire [1]
-> 	- A named resource is added to a test when a KASAN report is
-> 	 expected
->         - This resource contains a struct for kasan_data containing
->         booleans representing if a KASAN report is expected and if a
->         KASAN report is found
-> 
-> [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
-> 
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> ---
->  include/kunit/test.h | 10 ++++++++++
->  lib/kunit/test.c     | 10 +++++++++-
->  lib/test_kasan.c     | 37 +++++++++++++++++++++++++++++++++++++
->  mm/kasan/report.c    | 33 +++++++++++++++++++++++++++++++++
->  4 files changed, 89 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 70ee581b19cd..2ab265f4f76c 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -19,9 +19,19 @@
->  
->  struct kunit_resource;
->  
-> +#ifdef CONFIG_KASAN
-> +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
-> +struct kunit_kasan_expectation {
-> +	bool report_expected;
-> +	bool report_found;
-> +};
-> +#endif /* CONFIG_KASAN */
-> +
+Especially true if the controller supports multiple
+concurrent extensions.
 
-Above should be moved to mm/kasan/kasan.h I think.
 
->  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
->  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
->  
-> +void kunit_set_failure(struct kunit *test);
-> +
-
-Can you explain a bit more about why we need this exported?
-I see where it's used but I'd just like to make sure I
-understand what you're trying to do. Thanks!
-
->  /**
->   * struct kunit_resource - represents a *test managed resource*
->   * @data: for the user to store arbitrary data.
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 86a4d9ca0a45..3f927ef45827 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -10,11 +10,12 @@
->  #include <linux/kernel.h>
->  #include <linux/kref.h>
->  #include <linux/sched/debug.h>
-> +#include <linux/sched.h>
->  
->  #include "string-stream.h"
->  #include "try-catch-impl.h"
->  
-> -static void kunit_set_failure(struct kunit *test)
-> +void kunit_set_failure(struct kunit *test)
->  {
->  	WRITE_ONCE(test->success, false);
->  }
-> @@ -237,6 +238,10 @@ static void kunit_try_run_case(void *data)
->  	struct kunit_suite *suite = ctx->suite;
->  	struct kunit_case *test_case = ctx->test_case;
->  
-> +#if (IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT))
-> +	current->kunit_test = test;
-> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT) */
-> +
->  	/*
->  	 * kunit_run_case_internal may encounter a fatal error; if it does,
->  	 * abort will be called, this thread will exit, and finally the parent
-> @@ -590,6 +595,9 @@ void kunit_cleanup(struct kunit *test)
->  		spin_unlock(&test->lock);
->  		kunit_remove_resource(test, res);
->  	}
-> +#if (IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT))
-> +	current->kunit_test = NULL;
-
-As per patch 1, I'd suggest changing here and elsewhere to 
-"IS_ENABLED(CONFIG_KUNIT)".
-
-> +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT)*/
->  }
->  EXPORT_SYMBOL_GPL(kunit_cleanup);
->  
-> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> index 3872d250ed2c..cf73c6bee81b 100644
-> --- a/lib/test_kasan.c
-> +++ b/lib/test_kasan.c
-> @@ -23,6 +23,43 @@
->  
->  #include <asm/page.h>
->  
-> +#include <kunit/test.h>
-> +
-> +struct kunit_resource resource;
-> +struct kunit_kasan_expectation fail_data;
-> +
-> +#define KUNIT_SET_KASAN_DATA(test) do { \
-> +	fail_data.report_expected = true; \
-> +	fail_data.report_found = false; \
-> +	kunit_add_named_resource(test, \
-> +				NULL, \
-> +				NULL, \
-> +				&resource, \
-> +				"kasan_data", &fail_data); \
-> +} while (0)
-> +
-> +#define KUNIT_DO_EXPECT_KASAN_FAIL(test, condition) do { \
-> +	struct kunit_resource *resource; \
-> +	struct kunit_kasan_expectation *kasan_data; \
-> +	condition; \
-> +	resource = kunit_find_named_resource(test, "kasan_data"); \
-> +	kasan_data = resource->data; \
-> +	KUNIT_EXPECT_EQ(test, \
-> +			kasan_data->report_expected, \
-> +			kasan_data->report_found); \
-> +	kunit_put_resource(resource); \
-> +} while (0)
-> +
-> +/**
-> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
-> + * not cause a KASAN error.
-> + *
-> + */
-> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
-> +	KUNIT_SET_KASAN_DATA(test); \
-> +	KUNIT_DO_EXPECT_KASAN_FAIL(test, condition); \
-> +} while (0)
-> +
->  /*
->   * Note: test functions are marked noinline so that their names appear in
->   * reports.
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 5ef9f24f566b..ef3d0f54097e 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -32,6 +32,8 @@
->  
->  #include <asm/sections.h>
->  
-> +#include <kunit/test.h>
-> +
->  #include "kasan.h"
->  #include "../slab.h"
->  
-> @@ -455,12 +457,38 @@ static bool report_enabled(void)
->  	return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
->  }
->  
-> +#if IS_BUILTIN(CONFIG_KUNIT)
-
-again we could tweak this to IS_ENABLED(CONFIG_KUNIT); BTW
-the reason we can compile kunit as a module for these tests
-is the KASAN tests are tristate themselves. If they were
-builtin only it wouldn't be possible to build kunit as
-a module.
-
-> +void kasan_update_kunit_status(struct kunit *cur_test)
-> +{
-> +	struct kunit_resource *resource;
-> +	struct kunit_kasan_expectation *kasan_data;
-> +
-> +	if (kunit_find_named_resource(cur_test, "kasan_data")) {
-> +		resource = kunit_find_named_resource(cur_test, "kasan_data");
-> +		kasan_data = resource->data;
-> +		kasan_data->report_found = true;
-> +
-> +		if (!kasan_data->report_expected)
-> +			kunit_set_failure(current->kunit_test);
-> +		else
-> +			return;
-> +	} else
-> +		kunit_set_failure(current->kunit_test);
-> +}
-> +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> +
->  void kasan_report_invalid_free(void *object, unsigned long ip)
->  {
->  	unsigned long flags;
->  	u8 tag = get_tag(object);
->  
->  	object = reset_tag(object);
-> +
-> +#if IS_BUILTIN(CONFIG_KUNIT)
-
-same comment as above.
- 
-> +	if (current->kunit_test)
-> +		kasan_update_kunit_status(current->kunit_test);
-> +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> +
->  	start_report(&flags);
->  	pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
->  	print_tags(tag, object);
-> @@ -481,6 +509,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
->  	if (likely(!report_enabled()))
->  		return;
->  
-> +#if IS_BUILTIN(CONFIG_KUNIT)
-
-here too.
-
-> +	if (current->kunit_test)
-> +		kasan_update_kunit_status(current->kunit_test);
-> +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> +
->  	disable_trace_on_warning();
->  
->  	tagged_addr = (void *)addr;
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
-> 
-> 
