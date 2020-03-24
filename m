@@ -8,174 +8,164 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32ED0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89951C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:59:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C7120719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6081720719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vh8jn8n6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKdoWh5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726026AbgCXF7s (ORCPT
+        id S1726944AbgCXF7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 01:59:48 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:38105 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725853AbgCXF7s (ORCPT
+        Tue, 24 Mar 2020 01:59:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45707 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725853AbgCXF7w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 01:59:48 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z25so4420161pfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 22:59:48 -0700 (PDT)
+        Tue, 24 Mar 2020 01:59:52 -0400
+Received: by mail-pg1-f194.google.com with SMTP id o26so1978443pgc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 22:59:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=cSoIVh8LicHMny30ou4Ib5KY5U4nREhEMxSaKlU4Qjc=;
-        b=vh8jn8n6+sEHafn9tkZ4spqW92Q1JwpZQpLMy+6etGlskWffwj8V6qLEaZyR5vs3C+
-         fPw1NPhfUiQTpj03jxoNsVO95kwUEgHfGT6rPC3iCZfHIU8tEvAV7uSAHb0UoTCLKXVo
-         Mg7CeyopWDQZlZrHgx58uzSqDV+luXhD2lxnuw0nl25ocwsP/bY9VR/bf9RgcG1BIFV0
-         rnHnQh0LCwNrb4RxUaMng5uIJgfUi0ranb9nT9kENTcmq4jFy3b1WeoijGt+DxZixN5/
-         Fo7GhH2tFa+R/U0NLcflEJS6uW6DqVDdHySBFr2EH706SscPihG3RWW/Y+2ZyJi8RiAf
-         s1OA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=NASMMfM1v2BouRLznFM4rDUFSaPPa3sTp6p/VmzLtkE=;
+        b=eKdoWh5GvGQhmu8/Y8ftFUvGGuPKR+uYhe7mWNDAW5HOAb3Q2omC5+3UGUNx7+IxIP
+         sOTYYUFTh9t08xr7rdDDmTdnYjfGZBKzIkagl4GV3Csvo+TeeH6D8caT3DFyVAh5F3w6
+         vr/n/aHIzFkQQLOZH76aVEGpBP+y+DmKxEXOxN0QvM27M33xSzS5AOc6Pc0FHuqlrYLs
+         kZWn+HSWCbzs+0BX8SF+jXQ53pcVuvF1MPO+YF+x/kYKVeF8f1C0WSGvORBIrCeafpJB
+         RshVkIafuxL+viPdG2zZa82llXGaba3tDs982y7tAKhd2oFhY37DuCE8qi8wCoqv4caK
+         5Aqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=cSoIVh8LicHMny30ou4Ib5KY5U4nREhEMxSaKlU4Qjc=;
-        b=uGi/kIflo3D2Vr96AKO4PTjSdSKMtN9JCMoBUDSwLQjYkYnoJ9P6y+tA9Ujxlr20k0
-         2hy53jlgIyZUoyWzpd95Gzn+rO4448vWu3SLXO2Lddah0mLtTfnvTFFPfamYVF+JXz8C
-         NODRC8p3tTNXakkWlrshBECWvoEH8SdYk80sLuTbVtWXKTQsHSHdcdetnxLmvVAIo7xI
-         KePqu0AU5YkT01iZOKuGZJJhxzkaD5k72fQerxxPYhst1Q0GLaNQ+DPb46iQmMdr5Xfl
-         hRO4turoc1k+WKEuGbx475Dopmk1nPAbSHmOo8YGK/J5deYGSD38Kcww0PsDLZppFty9
-         GR0Q==
-X-Gm-Message-State: ANhLgQ0SZtqWyd2Hf7U82e3MPUdV7esgigqj7E3c6V6lN2BBYRR+QyJy
-        Xsb88d1YuKw81cdJ8+PpIdM=
-X-Google-Smtp-Source: ADFU+vuRpap5scyiBHrO6hjTpceoRmuPLlcVy3yyQ+MmjPLnQGd5wduAxBQ2RBlquYfUyln9OvzFJQ==
-X-Received: by 2002:a62:880f:: with SMTP id l15mr27680179pfd.218.1585029587550;
-        Mon, 23 Mar 2020 22:59:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=NASMMfM1v2BouRLznFM4rDUFSaPPa3sTp6p/VmzLtkE=;
+        b=bUuGbu4Ngzq+ODvjNyov31D31h1OIwdQ7XNaOYLysFnLXqBeenNV0OhKSeT2civXSI
+         AIPL2yWmLJU0FRwm/+CLZEVb6WI1oXvGrx9mhVHOCoFE8C89urMljMUpC5YpH8vmaz8H
+         Nb7CQwguFVJ/i9anyd6dYdG+RM0sAZyNzByno1LfTve7LIHvW8/0aucigCDN4q5nxWAq
+         +aa5cT9CVoO+nLQDNmy5HeqZVk/2sXij6Ol23SO5cXRuQU4Izh1xKjxqse5D8KZYH1Wj
+         EmZYUG8wrI9sa8CshjdZ8WSW6+Z5f8oOW8h4T+E0q/S9zCIgYGf5FFojsiBZy07b8+Se
+         GGpw==
+X-Gm-Message-State: ANhLgQ3f/TVV4RCEBvsCXE8EWwlDdFovf8g6UteZB469IuaTAD55n+0p
+        TanINSflMV9K7DdxRkJxSLI=
+X-Google-Smtp-Source: ADFU+vs9k1fziiB+fM2v9aXFbhw7sfli+y+Z09y1iKRYJ2E+0PuBvEaXQetUXyOPbk386L6Drq/8hA==
+X-Received: by 2002:a63:514f:: with SMTP id r15mr24814945pgl.432.1585029590697;
+        Mon, 23 Mar 2020 22:59:50 -0700 (PDT)
 Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id s12sm13921742pgi.38.2020.03.23.22.59.44
+        by smtp.gmail.com with ESMTPSA id s12sm13921742pgi.38.2020.03.23.22.59.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 23 Mar 2020 22:59:46 -0700 (PDT)
+        Mon, 23 Mar 2020 22:59:50 -0700 (PDT)
 From:   Baolin Wang <baolin.wang7@gmail.com>
 To:     daniel.lezcano@linaro.org, tglx@linutronix.de
 Cc:     saravanak@google.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
         baolin.wang7@gmail.com, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] drivers/clocksource/timer-of: Remove __init markings
-Date:   Tue, 24 Mar 2020 13:59:36 +0800
-Message-Id: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
+Subject: [PATCH 2/2] clocksource/drivers/sprd: Add module support to Spreadtrum timer
+Date:   Tue, 24 Mar 2020 13:59:37 +0800
+Message-Id: <182aae1ed5e5d2b124f1a32686e5566c9a27c980.1585021186.git.baolin.wang7@gmail.com>
 X-Mailer: git-send-email 1.9.1
+In-Reply-To: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
+References: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
+In-Reply-To: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
+References: <d2934f74d77c637c41d7cb98710cb5363d09e83b.1585021186.git.baolin.wang7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Saravana Kannan <saravanak@google.com>
-
-This allows timer drivers to be compiled as modules.
+Timers still have devices created for them. So, when compiling a timer
+driver as a module, implement it as a normal platform device driver.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
 ---
- drivers/clocksource/timer-of.c | 17 +++++++++--------
- drivers/clocksource/timer-of.h |  4 ++--
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ drivers/clocksource/Kconfig      |  2 +-
+ drivers/clocksource/timer-sprd.c | 37 +++++++++++++++++++++++++++++++++++--
+ 2 files changed, 36 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index 572da47..fd3b868 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -19,7 +19,7 @@
-  *
-  * Free the irq resource
-  */
--static __init void timer_of_irq_exit(struct of_timer_irq *of_irq)
-+static void timer_of_irq_exit(struct of_timer_irq *of_irq)
- {
- 	struct timer_of *to = container_of(of_irq, struct timer_of, of_irq);
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index cc909e4..404f7dc 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -481,7 +481,7 @@ config MTK_TIMER
+ 	  Support for Mediatek timer driver.
  
-@@ -47,7 +47,7 @@ static __init void timer_of_irq_exit(struct of_timer_irq *of_irq)
-  *
-  * Returns 0 on success, < 0 otherwise
-  */
--static __init int timer_of_irq_init(struct device_node *np,
-+static int timer_of_irq_init(struct device_node *np,
- 				    struct of_timer_irq *of_irq)
+ config SPRD_TIMER
+-	bool "Spreadtrum timer driver" if EXPERT
++	tristate "Spreadtrum timer driver" if EXPERT
+ 	depends on HAS_IOMEM
+ 	depends on (ARCH_SPRD || COMPILE_TEST)
+ 	default ARCH_SPRD
+diff --git a/drivers/clocksource/timer-sprd.c b/drivers/clocksource/timer-sprd.c
+index 430cb99..5461789 100644
+--- a/drivers/clocksource/timer-sprd.c
++++ b/drivers/clocksource/timer-sprd.c
+@@ -5,6 +5,8 @@
+ 
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
+ 
+ #include "timer-of.h"
+ 
+@@ -141,7 +143,7 @@ static irqreturn_t sprd_timer_interrupt(int irq, void *dev_id)
+ 	},
+ };
+ 
+-static int __init sprd_timer_init(struct device_node *np)
++static int sprd_timer_init(struct device_node *np)
  {
  	int ret;
-@@ -91,7 +91,7 @@ static __init int timer_of_irq_init(struct device_node *np,
-  *
-  * Disables and releases the refcount on the clk
-  */
--static __init void timer_of_clk_exit(struct of_timer_clk *of_clk)
-+static void timer_of_clk_exit(struct of_timer_clk *of_clk)
- {
- 	of_clk->rate = 0;
- 	clk_disable_unprepare(of_clk->clk);
-@@ -107,7 +107,7 @@ static __init void timer_of_clk_exit(struct of_timer_clk *of_clk)
-  *
-  * Returns 0 on success, < 0 otherwise
-  */
--static __init int timer_of_clk_init(struct device_node *np,
-+static int timer_of_clk_init(struct device_node *np,
- 				    struct of_timer_clk *of_clk)
+ 
+@@ -190,7 +192,7 @@ static void sprd_suspend_timer_disable(struct clocksource *cs)
+ 	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
+ };
+ 
+-static int __init sprd_suspend_timer_init(struct device_node *np)
++static int sprd_suspend_timer_init(struct device_node *np)
  {
  	int ret;
-@@ -146,12 +146,12 @@ static __init int timer_of_clk_init(struct device_node *np,
- 	goto out;
- }
  
--static __init void timer_of_base_exit(struct of_timer_base *of_base)
-+static void timer_of_base_exit(struct of_timer_base *of_base)
- {
- 	iounmap(of_base->base);
- }
- 
--static __init int timer_of_base_init(struct device_node *np,
-+static int timer_of_base_init(struct device_node *np,
- 				     struct of_timer_base *of_base)
- {
- 	of_base->base = of_base->name ?
-@@ -165,7 +165,7 @@ static __init int timer_of_base_init(struct device_node *np,
+@@ -204,6 +206,37 @@ static int __init sprd_suspend_timer_init(struct device_node *np)
  	return 0;
  }
  
--int __init timer_of_init(struct device_node *np, struct timer_of *to)
-+int timer_of_init(struct device_node *np, struct timer_of *to)
- {
- 	int ret = -EINVAL;
- 	int flags = 0;
-@@ -209,6 +209,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
- 		timer_of_base_exit(&to->of_base);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(timer_of_init);
- 
- /**
-  * timer_of_cleanup - release timer_of ressources
-@@ -217,7 +218,7 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
-  * Release the ressources that has been used in timer_of_init().
-  * This function should be called in init error cases
-  */
--void __init timer_of_cleanup(struct timer_of *to)
-+void timer_of_cleanup(struct timer_of *to)
- {
- 	if (to->flags & TIMER_OF_IRQ)
- 		timer_of_irq_exit(&to->of_irq);
-diff --git a/drivers/clocksource/timer-of.h b/drivers/clocksource/timer-of.h
-index a5478f3..1b8cfac5 100644
---- a/drivers/clocksource/timer-of.h
-+++ b/drivers/clocksource/timer-of.h
-@@ -66,9 +66,9 @@ static inline unsigned long timer_of_period(struct timer_of *to)
- 	return to->of_clk.period;
- }
- 
--extern int __init timer_of_init(struct device_node *np,
-+extern int timer_of_init(struct device_node *np,
- 				struct timer_of *to);
- 
--extern void __init timer_of_cleanup(struct timer_of *to);
-+extern void timer_of_cleanup(struct timer_of *to);
- 
- #endif
++#ifdef MODULE
++static int sprd_timer_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++
++	if (of_property_read_bool(np, "interrupts"))
++		return sprd_timer_init(np);
++
++	return sprd_suspend_timer_init(np);
++}
++
++static const struct of_device_id sprd_timer_match_table[] = {
++	{ .compatible = "sprd,sc9860-suspend-timer" },
++	{ .compatible = "sprd,sc9860-timer" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sprd_timer_match_table);
++
++static struct platform_driver sprd_timer_driver = {
++	.probe		= sprd_timer_probe,
++	.driver		= {
++		.name	= "sprd-timer",
++		.of_match_table = sprd_timer_match_table,
++	},
++};
++module_platform_driver(sprd_timer_driver);
++
++#else
+ TIMER_OF_DECLARE(sc9860_timer, "sprd,sc9860-timer", sprd_timer_init);
+ TIMER_OF_DECLARE(sc9860_persistent_timer, "sprd,sc9860-suspend-timer",
+ 		 sprd_suspend_timer_init);
++#endif
++
++MODULE_LICENSE("GPL v2");
 -- 
 1.9.1
 
