@@ -2,166 +2,93 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EB0C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD00C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:39:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2EF020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:38:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585031910;
-	bh=YHmxPLk7xsrCqMibnpPOp4+KlNmcqIXEP+uJ6dA0dQA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=emjBSGQm0fz1m28W4woPh0s18ScoHiwlYVkXUJZl2YUjOTtLBOqgL+ADtUiadCXa2
-	 Kv5TufqcZftlKScZU6+q/BXDzl/rs3jGl04tprcSyPko0Jj/J+AcAPX0tjfGD6HfRD
-	 R0i62UM7MzkUOZPdSdZRLPp4+13RcKVO5YUMFPo0=
+	by mail.kernel.org (Postfix) with ESMTP id AB31E2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:39:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="JSTt9akt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgCXGi3 (ORCPT
+        id S1727323AbgCXGjm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:38:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgCXGi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 02:38:28 -0400
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+        Tue, 24 Mar 2020 02:39:42 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:45004 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbgCXGjm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 02:39:42 -0400
+Received: from mxbackcorp1j.mail.yandex.net (mxbackcorp1j.mail.yandex.net [IPv6:2a02:6b8:0:1619::162])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 89E032E132A;
+        Tue, 24 Mar 2020 09:39:39 +0300 (MSK)
+Received: from myt5-70c90f7d6d7d.qloud-c.yandex.net (myt5-70c90f7d6d7d.qloud-c.yandex.net [2a02:6b8:c12:3e2c:0:640:70c9:f7d])
+        by mxbackcorp1j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id vElDNcnrnr-ddNSsLOn;
+        Tue, 24 Mar 2020 09:39:39 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1585031979; bh=DOHGkNP9wh1iO1J5OIkX8CL+OdPnCkXwDuHeEIAWHT0=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=JSTt9aktxoPRYRmgSYFdRM5tFN6PKg+ZRu3ARvNyAM97e7Ov0AgQuUcLOSMVBIiwq
+         hzQSIG+dVrhQDphHO6d+jH2NavydF21wKHdQYH/lNe13KhIbFj5EiZPmouxcQm18jE
+         rdJlOqStlp1n+DBUT7ZTwn65PGeEgOU4qhY72GjQ=
+Authentication-Results: mxbackcorp1j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:6410::1:2])
+        by myt5-70c90f7d6d7d.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id LXCZcZNDPq-dcbO1YeB;
+        Tue, 24 Mar 2020 09:39:38 +0300
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0FC72073E
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 06:38:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585031907;
-        bh=YHmxPLk7xsrCqMibnpPOp4+KlNmcqIXEP+uJ6dA0dQA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sKWJNytmD0Hbm46pl2mSUPX5IUNmLW/zyfsiSGwnxI8QKfoKFCzDg4OpgDwriJvYZ
-         gf7fMQub3wDLINiKEal0YRbbqXNCdqyVNn7pkoT5qGqArunLmyLxaNVWdMO5tAZIQz
-         ZHS4iXk6t1GGMGXZJQr1NYLpG6P6ljFvv8pmPfqc=
-Received: by mail-lf1-f52.google.com with SMTP id s1so12235206lfd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 23:38:26 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1qYfc78ml1K0nHtJiEmiGpulnQiM9QNE2V8NecdsnORj3J3Jhq
-        2V80EcsZJdUBJGKlU4PVBJCKlnAWqaF0SyKpy50=
-X-Google-Smtp-Source: ADFU+vuVBnqtUtC8s4liLpWIYdpYefGqMsDSqXF43YebtyO81P2fmLftfJ85/O71bF8FyG2Y4poDJ9zX2AnRJaLWnNc=
-X-Received: by 2002:a19:41c5:: with SMTP id o188mr4668305lfa.52.1585031904839;
- Mon, 23 Mar 2020 23:38:24 -0700 (PDT)
+        (Client certificate not present)
+Subject: [PATCH v3 0/3] block/diskstats: more accurate io_ticks and
+ optimization
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>
+Date:   Tue, 24 Mar 2020 09:39:38 +0300
+Message-ID: <158503038812.1955.7827988255138056389.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-References: <20200324054945.26733-1-nickhu@andestech.com>
-In-Reply-To: <20200324054945.26733-1-nickhu@andestech.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Tue, 24 Mar 2020 14:38:13 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTS-SokSES0fUQxEXJpX3Puk8r-Dyoowhv422T4r-PVO0w@mail.gmail.com>
-Message-ID: <CAJF2gTS-SokSES0fUQxEXJpX3Puk8r-Dyoowhv422T4r-PVO0w@mail.gmail.com>
-Subject: Re: [PATCH] riscv: mm: synchronize MMU after page table update
-To:     Nick Hu <nickhu@andestech.com>
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Mark Rutland <mark.rutland@arm.com>, nylon7@andestech.com,
-        Alan Kao <alankao@andestech.com>, alexios.zavras@intel.com,
-        Thomas Gleixner <tglx@linutronix.de>, npiggin@gmail.com,
-        Anup Patel <anup@brainfault.org>, Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:50 PM Nick Hu <nickhu@andestech.com> wrote:
->
-> Similar to commit bf587caae305 ("riscv: mm: synchronize MMU after pte change")
->
-> For those riscv implementations whose TLB cannot synchronize with dcache,
-> an SFENCE.VMA is necessary after page table update.
-> This patch fixed two functions:
->
-> 1. pgd_alloc
-> During fork, a parent process prepares pgd for its child and updates satp
-> later, but they may not run on the same core. Adding a remote SFENCE.VMA to
-> invalidate TLB in other cores is needed. Thus use flush_tlb_all() instead
-> of local_flush_tlb_all() here.
-> Similar approaches can be found in arm and csky.
->
-> 2. __set_fixmap
-> Add a SFENCE.VMA after fixmap pte update.
-> Similar approaches can be found in arm and sh.
->
-> Signed-off-by: Nick Hu <nickhu@andestech.com>
-> Signed-off-by: Nylon Chen <nylon7@andestech.com>
-> Cc: Alan Kao <alankao@andestech.com>
-> ---
->  arch/riscv/include/asm/pgalloc.h | 1 +
->  arch/riscv/mm/init.c             | 2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/riscv/include/asm/pgalloc.h b/arch/riscv/include/asm/pgalloc.h
-> index 3f601ee8233f..071468fa14b7 100644
-> --- a/arch/riscv/include/asm/pgalloc.h
-> +++ b/arch/riscv/include/asm/pgalloc.h
-> @@ -51,6 +51,7 @@ static inline pgd_t *pgd_alloc(struct mm_struct *mm)
->                 memcpy(pgd + USER_PTRS_PER_PGD,
->                         init_mm.pgd + USER_PTRS_PER_PGD,
->                         (PTRS_PER_PGD - USER_PTRS_PER_PGD) * sizeof(pgd_t));
-> +               flush_tlb_all();
-Are you sure to put a tlb flush operation here ? I think it should be
-a dcache flush ops (but there is no solution for riscv ISA :P)
+Simplified estimation for io_ticks introduced in patch
+https://lore.kernel.org/linux-block/20181206164122.2166-5-snitzer@redhat.com/
+could be very inaccurate for request longer than jiffy (i.e. any HDD)
 
-Ref to csky's implementation, just some old cores need sync dcache
-with tlb by a simple dcache flush range ops and tlb ops should be put
-in another place due to Linux infrastructure.
+There is at least one another report about this:
+https://lore.kernel.org/linux-block/20200324031942.GA3060@ming.t460p/
+See detail in comment for first patch.
 
-static inline pgd_t *pgd_alloc(struct mm_struct *mm)
-{
-        pgd_t *ret;
-        pgd_t *init;
+v1: https://lore.kernel.org/lkml/155413438394.3201.15211440151043943989.stgit@buzz/
+v2: https://lore.kernel.org/lkml/158314549775.1788.6529015932237292177.stgit@buzz/
+v3:
+ * update documentation
+ * rebase to current linux-next
+ * fix compilation for CONFIG_SMP=n
 
-        ret = (pgd_t *) __get_free_pages(GFP_KERNEL, PGD_ORDER);
-        if (ret) {
-                init = pgd_offset(&init_mm, 0UL);
-                pgd_init((unsigned long *)ret);
-                memcpy(ret + USER_PTRS_PER_PGD, init + USER_PTRS_PER_PGD,
-                        (PTRS_PER_PGD - USER_PTRS_PER_PGD) * sizeof(pgd_t));
-                /* prevent out of order excute */
-                smp_mb();
-#ifdef CONFIG_CPU_NEED_TLBSYNC
-                dcache_wb_range((unsigned int)ret,
-                                (unsigned int)(ret + PTRS_PER_PGD));
-#endif
-        }
+---
 
-        return ret;
-}
+Konstantin Khlebnikov (3):
+      block/diskstats: more accurate approximation of io_ticks for slow disks
+      block/diskstats: accumulate all per-cpu counters in one pass
+      block/diskstats: replace time_in_queue with sum of request times
 
 
->         }
->         return pgd;
->  }
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index fab855963c73..a7f329503ed0 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -203,8 +203,8 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
->                 set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
->         } else {
->                 pte_clear(&init_mm, addr, ptep);
-> -               local_flush_tlb_page(addr);
->         }
-> +       local_flush_tlb_page(addr);
->  }
->
->  static pte_t *__init get_pte_virt(phys_addr_t pa)
-> --
-> 2.17.0
->
->
+ Documentation/admin-guide/iostats.rst |    5 ++-
+ block/bio.c                           |    9 ++---
+ block/blk-core.c                      |    5 +--
+ block/genhd.c                         |   64 +++++++++++++++++++++++++--------
+ block/partition-generic.c             |   39 ++++++++++++--------
+ include/linux/genhd.h                 |   14 +++++--
+ 6 files changed, 90 insertions(+), 46 deletions(-)
 
-
--- 
-Best Regards
- Guo Ren
-
-ML: https://lore.kernel.org/linux-csky/
+--
+Signature
