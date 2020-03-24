@@ -1,75 +1,134 @@
 Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=DEAR_SOMETHING,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F17AC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E05C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:06:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D157320870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:06:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585047968;
-	bh=2LvE4EYXx6S7St3XOfLekrr0TlyAbuI62HGedV7PVfQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jBeF4ywFDPb0kJ0iQ5T5ZlC7x2RsPK0jk8POq1N49i2RL9MeaWnyIAIeLxvpcXRFY
-	 307DfiYOkiFVh2vZgH97RMkhdgnuiO1tGuSJHgTjieDxT8+iNFFg3V6ff0vP3X0+sJ
-	 SPsUPgf0R9LJ3CcyED+fqMU0/aFKd2qnAEvQqyls=
+	by mail.kernel.org (Postfix) with ESMTP id BA27A20786
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:06:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VT9q5/jF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727324AbgCXLGH (ORCPT
+        id S1727341AbgCXLGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726524AbgCXLGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:06:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A02F20786;
-        Tue, 24 Mar 2020 11:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585047967;
-        bh=2LvE4EYXx6S7St3XOfLekrr0TlyAbuI62HGedV7PVfQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BMhjKYnTWQPLqClRhwzeajd6cZLTTFORXjkcvfQmEmIVUg7JPlcZsMrANTFof7NHd
-         wlWlxdOGa8LS/D11JaFVyXerSDI6CgWlFZtnDC2IKK2L+gWLquXQla4/5eWmsPKoTQ
-         WgB2JPDT362mDWfTZOs1hyoYL2NDudE1kUbt6Hoo=
-Date:   Tue, 24 Mar 2020 12:06:04 +0100
-From:   gregkh <gregkh@linuxfoundation.org>
-To:     =?utf-8?B?5ZSQ5b2s?= <tangbin@cmss.chinamobile.com>
-Cc:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        cernekee <cernekee@gmail.com>, balbi <balbi@kernel.org>,
-        "f.fainelli" <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-usb <linux-usb@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: Re: [PATCH] usb: gadget: bcm63xx_udc:remove useless variable
- definition
-Message-ID: <20200324110604.GA2225782@kroah.com>
-References: <20200324062932.8364-1-tangbin@cmss.chinamobile.com>
- <5f67315d-18c1-e444-03e7-a79a21d48b02@cogentembedded.com>
- <202003241719218101862@cmss.chinamobile.com>
+        Tue, 24 Mar 2020 07:06:24 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53758 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726524AbgCXLGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:06:24 -0400
+Received: by mail-wm1-f67.google.com with SMTP id b12so2696981wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=85coQpfIuRs+sPyYMKP16shkvF4ULZs9j9T/GaUTXMA=;
+        b=VT9q5/jF2VHIjb1DZzmV5uWK7Uk3Y+xVfuIZA7l+c4XrodjvqMvAkW8PC0kNkLrgYM
+         3iana2G8gyGAfBnuD3tWiwwsYyndM+xe6dTnJx4myohK1jgaOQlQisQ7OTsUcVb4TiHA
+         02CR0L4AmTwZ6TWYAuBgOaGihewpebEYX1AZBguETu6kswW6pM8vMDVrOiQXeCUsunFq
+         kEXdn3pTTM5sKdZAVZryI6XQZDdohQZwEGPxqePgXmdn6YyIfmajV2Z0g6BrJMMfVDSZ
+         3pxXnSFuuNvVcIbxrbVnimLoPa7kg7P2p0ab+jA5qME9NUdm6UCRGEBAySrUTOyPCHYo
+         wC6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=85coQpfIuRs+sPyYMKP16shkvF4ULZs9j9T/GaUTXMA=;
+        b=JCuxO3+fp9cSIiwNrMeUusKrk7nvmUCcOcoFsPSkOxIXLNQnWqiLwTHBh9NH85UtuM
+         EsfBspWiG1xYBtJQlyGmB8VjaC+LBJH+4JkKURstUXADvXSvu3+J9Ddr0EP+tM6CjgTe
+         0g478OprqSko1LvkoGulMrVQA3kd47TjLmZCI9bv7JcE+aQ4kPJLVZVlO4UCaYuFwtbR
+         RSt+NaBs26h6PnsNSnL+m4iVlENr1AA3MqUxQy7ShWVn/EWVfMD3hA4CNxQxed2HkpkY
+         mhYglJDnec6pYhr1K41cfYHBY4hniLuzBOcauCqsW/M/6g9dHrpaPxdr/VHeQ0+q4KLD
+         KV9w==
+X-Gm-Message-State: ANhLgQ2AeAmsjwlfEohFUiYJg2hK9hyg2i85hkHjCun3as7xX/EUDBxL
+        GfYJACaTcmt6LYTKflWVhzR7pA==
+X-Google-Smtp-Source: ADFU+vvewfCSPSJ/JtfjkuAPYyDeLB/atTsI2+R8ZuR0hHyIJno3qS1Oa/lOKqJLRVXNnbIQOwCyQA==
+X-Received: by 2002:a05:600c:20d:: with SMTP id 13mr4980605wmi.74.1585047981072;
+        Tue, 24 Mar 2020 04:06:21 -0700 (PDT)
+Received: from dell ([2.27.35.213])
+        by smtp.gmail.com with ESMTPSA id 98sm28341407wrk.52.2020.03.24.04.06.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 04:06:20 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 11:07:10 +0000
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Guru Das Srinagesh <gurus@codeaurora.org>
+Cc:     linux-pwm@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
+Message-ID: <20200324110710.GL5477@dell>
+References: <cover.1584667964.git.gurus@codeaurora.org>
+ <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
+ <20200320133123.GD5477@dell>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202003241719218101862@cmss.chinamobile.com>
+In-Reply-To: <20200320133123.GD5477@dell>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:19:22PM +0800, 唐彬 wrote:
-> Dear Sir：
->         I'm glad for you replay。Yes。I think the variable assignment here can be deleted。
+On Fri, 20 Mar 2020, Lee Jones wrote:
 
-Great, can you please fix up your patch to say that?
+> On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
+> 
+> > Since the PWM framework is switching struct pwm_state.period's datatype
+> > to u64, prepare for this transition by using div_u64 to handle a 64-bit
+> > dividend instead of a straight division operation.
+> > 
+> > Cc: Lee Jones <lee.jones@linaro.org>
+> > Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> > Cc: Jingoo Han <jingoohan1@gmail.com>
+> > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> > Cc: linux-pwm@vger.kernel.org
+> > Cc: dri-devel@lists.freedesktop.org
+> > Cc: linux-fbdev@vger.kernel.org
+> > 
+> > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
+> > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+> > ---
+> >  drivers/video/backlight/pwm_bl.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> Can this patch be taken on its own?
 
-thanks,
+Hellooooo ...
 
-greg k-h
+> > diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> > index efb4efc..3e5dbcf 100644
+> > --- a/drivers/video/backlight/pwm_bl.c
+> > +++ b/drivers/video/backlight/pwm_bl.c
+> > @@ -625,7 +625,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+> >  		pb->scale = data->max_brightness;
+> >  	}
+> >  
+> > -	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
+> > +	pb->lth_brightness = data->lth_brightness * (div_u64(state.period,
+> > +				pb->scale));
+> >  
+> >  	props.type = BACKLIGHT_RAW;
+> >  	props.max_brightness = data->max_brightness;
+> 
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
