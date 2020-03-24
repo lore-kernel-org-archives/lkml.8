@@ -2,113 +2,106 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9873FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE3EC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CC920409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96A1C20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWEZI2jN"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="R/8QvpMM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgCXGcX (ORCPT
+        id S1726261AbgCXGev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:32:23 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37158 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbgCXGcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 02:32:23 -0400
-Received: by mail-pg1-f195.google.com with SMTP id a32so8528282pga.4;
-        Mon, 23 Mar 2020 23:32:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=RYToHZ+7iNfBZeY3Gu14A1/8MKyc2I2S/2zaDgB0iI4=;
-        b=BWEZI2jNvHEI+JUf+q2P+lK3tp7I3a+94lbqrWJ27HAtiosf4mOvGIOSnCq1t2zdX8
-         0g954KZ5LWp9K8cQmWUCzE+kQosb0Zs9FuRBxfCegYIxFpxZhSGAw93TPS9ybyN4ThQ9
-         qL3OA1haaeFN9HGsJ1eaOZYdcGii2xGhhn4EWzKnSLPD89WKtvphXCMWUlMVqP0LSDb+
-         UjSRh/Gqt/MOi4FKIaNRplHzg1dAnIUj8J562uAZUtrjr2dE7wkarIdLM45QzQi+sdfT
-         9gLAdYZ/HV8Tl92pn+6Hnb9EEG/2wLRn3czZSNLhJIiK0Gx9jo7n6P03K+TkQ+tDfzTK
-         nP5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=RYToHZ+7iNfBZeY3Gu14A1/8MKyc2I2S/2zaDgB0iI4=;
-        b=fh8h6OFAfZax4lT2twGKYl0MQpME6Y2E7b5JuG7gJOHbRinJsSsCsmRGwCQySgl5yH
-         d5TW1OGKsinJA4aKiHVmk776L+a/HAEz1wkzyGXDIWvd3jt5ic33hDgQWS4h6QzUnFTT
-         nqbeHacoi59X7Q9ZAImS/aprIk7npjDviGe82zGznVWoxU2r7Jar2/qo76NRDXsyMRDd
-         SIDL0DYfF25y0MYHRzvm22LUt0ZQ1ylCyr81zPU8roo+uJ+p+z9C9Q6jI5iJJn7jMjCi
-         XiwOxnT4F+jNCy8wEAcQxmcO3GqC0crGsDH2tm8a0kIcqV43hRmfVWk6bS1/L+FpgtfP
-         DFLg==
-X-Gm-Message-State: ANhLgQ3sVYcFQd9xk6E5KuWbpjBNsiWBuewhZuLBtQ5FkZZWK96QUAnL
-        e9KCBhRUokobCK6j3wW3E1RU1tIQ
-X-Google-Smtp-Source: ADFU+vtA2k85dAcZkXdqs1gdZC5f7Y3C2ohwOPAYYZpbATGivbbwvStOrdBdFFfCYZDGQ2Ymr1KizA==
-X-Received: by 2002:a62:8343:: with SMTP id h64mr29451711pfe.166.1585031541385;
-        Mon, 23 Mar 2020 23:32:21 -0700 (PDT)
-Received: from localhost.localdomain ([103.7.29.6])
-        by smtp.googlemail.com with ESMTPSA id a15sm15136975pfg.77.2020.03.23.23.32.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 23 Mar 2020 23:32:20 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH] KVM: LAPIC: Also cancel preemption timer when disarm LAPIC timer
-Date:   Tue, 24 Mar 2020 14:32:10 +0800
-Message-Id: <1585031530-19823-1-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 24 Mar 2020 02:34:51 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:37645 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgCXGev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 02:34:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48mhLc62Rfz9sNg;
+        Tue, 24 Mar 2020 17:34:48 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585031689;
+        bh=5Hd5RUwA/dvRMS4WLUeTFYytdcYhONFN7COAZjGe2ZI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=R/8QvpMMOGOvB2SBheePKyqG/9FNKIhpvV3+NXp9oPbPnr+y+Y9FqYq/qftTI81jX
+         TTJJBApqrx7RsVt31sowNMafRKvD2AdB1McUZOqNkhjOrbUDKQ4uFGYqGY+3NNmW+x
+         k3eTAln+cKrDkMswlglr1RXo3ZPV/4XxBtcWZk29BLubGPvsLjOC2YdR8r3L7kBnU7
+         oEWw0zshCBZBDWXfTfThCWaOdaJEN3hX1YetFcGXhaw2RJaAFWMo9XQUwJUVJbMvNh
+         6m6AF1IIRf+LiR/B/PGMPJmkjY9mKTdM574qdqMbpLSCmHceo+yklU7l2SgL/O7khS
+         m8Yv54tJrC0tg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pratik Rajesh Sampat <psampat@linux.ibm.com>
+Cc:     linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, pratik.r.sampat@gmail.com,
+        ego@linux.vnet.ibm.com, dja@axtens.net
+Subject: Re: [PATCH] cpufreq: powernv: Fix frame-size-overflow in powernv_cpufreq_work_fn
+In-Reply-To: <1921198.IfoiWgUDIW@kreacher>
+References: <20200316135743.57735-1-psampat@linux.ibm.com> <1921198.IfoiWgUDIW@kreacher>
+Date:   Tue, 24 Mar 2020 17:34:56 +1100
+Message-ID: <87h7yexnu7.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+"Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> On Monday, March 16, 2020 2:57:43 PM CET Pratik Rajesh Sampat wrote:
+>> The patch avoids allocating cpufreq_policy on stack hence fixing frame
+>> size overflow in 'powernv_cpufreq_work_fn'
+>> 
+>> Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
+>> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+>
+> Any objections or concerns here?
+>
+> If not, I'll queue it up.
 
-The timer is disarmed when switching between TSC deadline and other modes, 
-we should set everything to disarmed state, however, LAPIC timer can be 
-emulated by preemption timer, it still works if vmx->hv_deadline_timer is 
-not -1. This patch also cancels preemption timer when disarm LAPIC timer.
+I have it in my testing branch, but if you pick it up I can drop it.
 
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+cheers
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 338de38..a38f1a8 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1445,6 +1445,8 @@ static void limit_periodic_timer_frequency(struct kvm_lapic *apic)
- 	}
- }
- 
-+static void cancel_hv_timer(struct kvm_lapic *apic);
-+
- static void apic_update_lvtt(struct kvm_lapic *apic)
- {
- 	u32 timer_mode = kvm_lapic_get_reg(apic, APIC_LVTT) &
-@@ -1454,6 +1456,10 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
- 		if (apic_lvtt_tscdeadline(apic) != (timer_mode ==
- 				APIC_LVT_TIMER_TSCDEADLINE)) {
- 			hrtimer_cancel(&apic->lapic_timer.timer);
-+			preempt_disable();
-+			if (apic->lapic_timer.hv_timer_in_use)
-+				cancel_hv_timer(apic);
-+			preempt_enable();
- 			kvm_lapic_set_reg(apic, APIC_TMICT, 0);
- 			apic->lapic_timer.period = 0;
- 			apic->lapic_timer.tscdeadline = 0;
--- 
-1.8.3.1
-
+>> diff --git a/drivers/cpufreq/powernv-cpufreq.c b/drivers/cpufreq/powernv-cpufreq.c
+>> index 56f4bc0d209e..20ee0661555a 100644
+>> --- a/drivers/cpufreq/powernv-cpufreq.c
+>> +++ b/drivers/cpufreq/powernv-cpufreq.c
+>> @@ -902,6 +902,7 @@ static struct notifier_block powernv_cpufreq_reboot_nb = {
+>>  void powernv_cpufreq_work_fn(struct work_struct *work)
+>>  {
+>>  	struct chip *chip = container_of(work, struct chip, throttle);
+>> +	struct cpufreq_policy *policy;
+>>  	unsigned int cpu;
+>>  	cpumask_t mask;
+>>  
+>> @@ -916,12 +917,14 @@ void powernv_cpufreq_work_fn(struct work_struct *work)
+>>  	chip->restore = false;
+>>  	for_each_cpu(cpu, &mask) {
+>>  		int index;
+>> -		struct cpufreq_policy policy;
+>>  
+>> -		cpufreq_get_policy(&policy, cpu);
+>> -		index = cpufreq_table_find_index_c(&policy, policy.cur);
+>> -		powernv_cpufreq_target_index(&policy, index);
+>> -		cpumask_andnot(&mask, &mask, policy.cpus);
+>> +		policy = cpufreq_cpu_get(cpu);
+>> +		if (!policy)
+>> +			continue;
+>> +		index = cpufreq_table_find_index_c(policy, policy->cur);
+>> +		powernv_cpufreq_target_index(policy, index);
+>> +		cpumask_andnot(&mask, &mask, policy->cpus);
+>> +		cpufreq_cpu_put(policy);
+>>  	}
+>>  out:
+>>  	put_online_cpus();
+>> 
