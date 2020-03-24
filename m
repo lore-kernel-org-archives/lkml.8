@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593E6C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CD40C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C0E720870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F6C208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585039918;
-	bh=CapmDDq+DEQ/uX/xUf3VhIOP+7/Tw+B0qe8PUUAMk6M=;
+	s=default; t=1585039921;
+	bh=XhGrz0KaH3A+sTBk/900ZFWQ6UAw62bQTFo4V+TOyrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uv69dGrGs0qMTrH94C6Do/YOPasm6I2tmcKSvhr2AiucDqeJ6jGqyVq70Bfwrkpt+
-	 jVGpk4aZTfXNczgZTDy5WHEybs3njls+kfd0ytwtPaNhbXUfSKp50c7QpSz95YLcGU
-	 DrxAc5eAcwGuOo0xKojDXOBGe84Y8ajanAVVrRy4=
+	b=ezJuBF+mEjo2K2pjzRb3Zfpj4iFZV8VXYz0u7NSate6jSAk2r9J8UTnfihKVC/+O/
+	 RPGKFSA13nThU6TQlKOQQpLt6Tbd1LyrNLP+ApsRgb4v3OMkSEWivO0kwDhgEJyuog
+	 5FjPMmTVSmAFY+oX6G2LQWKQCf8r4z/ls0txbnB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgCXIvK (ORCPT
+        id S1727514AbgCXIv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:51:10 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:17144 "EHLO
+        Tue, 24 Mar 2020 04:51:59 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:17199 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727239AbgCXIvI (ORCPT
+        with ESMTP id S1727253AbgCXIvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:51:08 -0400
+        Tue, 24 Mar 2020 04:51:10 -0400
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 02O8mgsf011219;
-        Tue, 24 Mar 2020 17:48:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsf011219
+        by conuserg-09.nifty.com with ESMTP id 02O8mgsn011219;
+        Tue, 24 Mar 2020 17:49:03 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsn011219
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585039734;
-        bh=0n2SNVTASAHLSUpoQ5+c9e3R+yizJV+PNdqURrTAbRw=;
+        s=dec2015msa; t=1585039744;
+        bh=wo4v6sLSkF3zJEtLmurbhlkARw0fSZMgaGV3bKygv0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vdr/w1ERj7s9sh0xtaMeTFMbLkW/1musxOa2cnHwWWSdZP7PvU8KmssioszE69Uv9
-         JJNyLcQi+0FbPRnDgIGtiSH/IciTEtRDm2MVeymDzI1JuaQ7Hgd30TzwIoqNHXj97Y
-         f/wv2FyG2EMdR8gyKleb5He9HNnrXYOM7MLE+hEUg+trWz4Bq/A+YaysfvSc9IE5sv
-         sNdWuKd/PJVwZ0/HT/W9ANcRQbgVwfBA8khb0Lq2aqATsAXHUhluPP+um0k/4OJP6h
-         AfUkvbRlTMJ8gHayVzW0M2EbXaqWHS2TjPNG+AMaSgGCf0Xco0co3H7qR2vw60bwyQ
-         46xbabDUwtKUg==
+        b=xUZZ70B8uhAJkLWLusQssl/Vf5mJTcGCO61GcA9/TTu8hRi5i0D70gaZTmiStGjJ/
+         p5m7p3EOP/58XcO1P2/9mGMIpwwDtwtEeMtUbDgeRgWqKJCMEUbFqC6M1VXxBK3zNR
+         yjhA5WT8KXTH+yVkhjdeurlm1dmlTAXG8vptHguUWQXo4GysYZkCuAN8q7Om+M2R2Y
+         eb5M8ayg0Pj17XVwgad/CvVzUZGjohpFOAC5LhvQImZxgZ56f9m6Kt3LIYwvGLfwQS
+         LBqwzcnDZRWaot7GcgAPKezCYuoW4I69MukhJGM2Zm81Hv5kZhF+X9h0teLmLsJfJ2
+         cbI6TtQnac5AA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kernel@vger.kernel.org
@@ -57,9 +57,9 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
         linux-kbuild@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 08/16] x86: add comments about the binutils version to support code in as-instr
-Date:   Tue, 24 Mar 2020 17:48:13 +0900
-Message-Id: <20200324084821.29944-9-masahiroy@kernel.org>
+Subject: [PATCH 16/16] crypto: x86 - clean up poly1305-x86_64-cryptogams.S by 'make clean'
+Date:   Tue, 24 Mar 2020 17:48:21 +0900
+Message-Id: <20200324084821.29944-17-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200324084821.29944-1-masahiroy@kernel.org>
 References: <20200324084821.29944-1-masahiroy@kernel.org>
@@ -68,46 +68,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We raise the minimal supported binutils version from time to time.
-The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
-required binutils version to 2.21").
+poly1305-x86_64-cryptogams.S is a generated file, so it should be
+cleaned up by 'make clean'.
 
-We need to keep these as-instr checks because binutils 2.21 does not
-support them.
+Assigning it to the variable 'targets' teaches Kbuild that it is a
+generated file. However, this line is not evaluated while cleaning
+because scripts/Makefile.clean does not include include/config/auto.conf.
 
-I hope this will be a good hint which one can be dropped when we
-bump the minimal binutils version next time.
-
-As for the Clang/LLVM builds, we require very new LLVM version,
-so the LLVM integrated assembler supports all of them.
+Removing the ifneq-conditional, so this file is correctly cleaned up.
 
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
 ---
 
- arch/x86/Makefile | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/x86/crypto/Makefile | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index f32ef7b8d5ca..4c57cb3018fb 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -178,10 +178,15 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
- endif
+diff --git a/arch/x86/crypto/Makefile b/arch/x86/crypto/Makefile
+index 928aad453c72..a31de0c6ccde 100644
+--- a/arch/x86/crypto/Makefile
++++ b/arch/x86/crypto/Makefile
+@@ -83,9 +83,7 @@ crct10dif-pclmul-y := crct10dif-pcl-asm_64.o crct10dif-pclmul_glue.o
  
- # does binutils support specific instructions?
-+# binutils >= 2.22
- avx2_instr :=$(call as-instr,vpbroadcastb %xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
-+# binutils >= 2.25
- avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
-+# binutils >= 2.24
- sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=1)
-+# binutils >= 2.24
- sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
-+# binutils >= 2.23
- adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+ obj-$(CONFIG_CRYPTO_POLY1305_X86_64) += poly1305-x86_64.o
+ poly1305-x86_64-y := poly1305-x86_64-cryptogams.o poly1305_glue.o
+-ifneq ($(CONFIG_CRYPTO_POLY1305_X86_64),)
+ targets += poly1305-x86_64-cryptogams.S
+-endif
  
- KBUILD_AFLAGS += $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+ obj-$(CONFIG_CRYPTO_NHPOLY1305_SSE2) += nhpoly1305-sse2.o
+ nhpoly1305-sse2-y := nh-sse2-x86_64.o nhpoly1305-sse2-glue.o
 -- 
 2.17.1
 
