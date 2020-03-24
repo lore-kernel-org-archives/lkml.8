@@ -2,134 +2,303 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69512C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E0B8C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A18820BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DBC20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585064232;
+	bh=AGzyqlU8QivOpMvkOZvmKXUXYJoVjljefitPRpoKLEU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=SCsyb142k1EGG8YghwpMYbTAFbg7nf6tW/dcTaDhSiYok+Oz4eiv6oy9AItdb95q7
+	 d2LrOCdxNGkAVbe4w+lYsiDMxes+uSfOln5z/fIAtPnmC93C0Pg9nGykaGEY8C/VP4
+	 Rz/ItWFgednBwTMvaWsFoCxE11sGsJ0wqM3DCPRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgCXPhI (ORCPT
+        id S1728472AbgCXPhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 24 Mar 2020 11:37:11 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34619 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728436AbgCXPhI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 11:37:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40198 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727980AbgCXPhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:37:05 -0400
-IronPort-SDR: LLb5cSzLtWtvLZow8PQek16+ibtPBzmxOii4zVNpooSmTneWwN8ZbvO6xfms3Mb63Gd0Sl/iFA
- oJUuF1fBbo8Q==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:37:04 -0700
-IronPort-SDR: NW2j/PrriTw0QlQ/+lOlMn8Y1tzc6CVzaVQ2I5jYpByXrkvlhmdgGeOmwndNm65ka8Q/KZQbNV
- jugDFZwqC/0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="393319653"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 08:37:00 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v6 0/8] x86/split_lock: Fix and virtualization of split lock detection
-Date:   Tue, 24 Mar 2020 23:18:51 +0800
-Message-Id: <20200324151859.31068-1-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
+Received: by mail-ot1-f68.google.com with SMTP id j16so17442822otl.1;
+        Tue, 24 Mar 2020 08:37:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dpKWcTtYfJkcrBHvFfzJku+MLQY6lxbOZB8F+HOOKXM=;
+        b=tzhX6TT3k/Yv2PMRqpOk5QPunxA0JoWg8jlwrWkLPpdRHjZi04u44lqaEW3EZh+ukg
+         ie6Bh+U+UP7figKNr13rSkzcjubg/bpypvaElHutm5HkIZwcHawAENTLVDvIXp81dN5J
+         L+OH95h+Z7R2FiQl6Fd/4C1/P6J84JNJIEEEwbgtG6VpDeLXAPeqFqK4wnqIzGJWnbt8
+         DBscFB5iTQEzi6hruOXoDR3nWvrYzoiHwMXpboi6saDYi93lakgu0Og8X/JpHykylQvc
+         DY6WVMT2VR3aXW2Ff7dIPQX+Fgr1IQR0b7cgreKNq2rloqso3b6z/d3oZ70k866Cz2f2
+         g4fg==
+X-Gm-Message-State: ANhLgQ3GTMXHsPRyl7r+HiI89V7ZlNo8YDp8LA8LFhJTgmD5tJ6+LO2Q
+        6J5D19Nrdc+Be1wFxeqs45IL39TROBP/5Yz7OgM=
+X-Google-Smtp-Source: ADFU+vtHL5bbU977lKfSMMxKLSbNXcskXcY4u4Fle2EZmT/+x3QED6tTvde4NIJFSIbHUs7GcJo4dvioS7091bfEXqM=
+X-Received: by 2002:a05:6830:14cc:: with SMTP id t12mr21590189otq.118.1585064227461;
+ Tue, 24 Mar 2020 08:37:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
+ <CAJZ5v0hQ2vRE8QAWfxwN1auQd5bQS_ROd6do1bMt8GtLtRypRQ@mail.gmail.com> <20200324133903.GK1922688@smile.fi.intel.com>
+In-Reply-To: <20200324133903.GK1922688@smile.fi.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 24 Mar 2020 16:36:56 +0100
+Message-ID: <CAJZ5v0gcLkymFNktG=46rxRc=KUGyztxYXmSZ51UxkKM6POnow@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] driver core: Break infinite loop when deferred
+ probe can't be satisfied
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Felipe Balbi <balbi@kernel.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Ferry Toth <fntoth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So sorry for the noise that I forgot to CC the maillist.
+ On Tue, Mar 24, 2020 at 2:39 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Mar 24, 2020 at 01:52:00PM +0100, Rafael J. Wysocki wrote:
+> > On Tue, Mar 24, 2020 at 1:20 PM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > Consider the following scenario.
+> > >
+> > > The main driver of USB OTG controller (dwc3-pci), which has the following
+> > > functional dependencies on certain platform:
+> > > - ULPI (tusb1210)
+> > > - extcon (tested with extcon-intel-mrfld)
+> > >
+> > > Note, that first driver, tusb1210, is available at the moment of
+> > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> > > won't appear till user space does something about it.
+> > >
+> > > This is depicted by kernel configuration excerpt:
+> > >
+> > >         CONFIG_PHY_TUSB1210=y
+> > >         CONFIG_USB_DWC3=y
+> > >         CONFIG_USB_DWC3_ULPI=y
+> > >         CONFIG_USB_DWC3_DUAL_ROLE=y
+> > >         CONFIG_USB_DWC3_PCI=y
+> > >         CONFIG_EXTCON_INTEL_MRFLD=m
+> > >
+> > > In the Buildroot environment the modules are probed by alphabetical ordering
+> > > of their modaliases. The latter comes to the case when USB OTG driver will be
+> > > probed first followed by extcon one.
+> > >
+> > > So, if the platform anticipates extcon device to be appeared, in the above case
+> > > we will get deferred probe of USB OTG, because of ordering.
+> > >
+> > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> > > deferral race condition fix") counts the amount of triggered deferred probe,
+> > > we never advance the situation -- the change makes it to be an infinite loop.
+> > >
+> > > ---8<---8<---
+> > >
+> > > [   22.187127] driver_deferred_probe_trigger <<< 1
+> > >
+> > > ...here is the late initcall triggers deferred probe...
+> > >
+> > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> > >
+> > > ...dwc3.0.auto is the only device in the deferred list...
+> > >
+> > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> > >
+> > > ...the counter before mutex is unlocked is kept the same...
+> > >
+> > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> > >
+> > > ...mutes has been unlocked, we try to re-probe the driver...
+> > >
+> > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> > > [   22.263723] driver_deferred_probe_trigger <<< 2
+> > >
+> > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> > >
+> > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+> > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> > >
+> > > ...but extcon driver is still missing...
+> > >
+> > > [   22.283174] platform dwc3.0.auto: Added to deferred list
+> > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> > >
+> > > ...and since we had a successful probe, we got counter mismatch...
+> > >
+> > > [   22.297490] driver_deferred_probe_trigger <<< 3
+> > > [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
+> > >
+> > > ...at the end we have a new counter and loop repeats again, see 22.198727...
+> > >
+> > > ---8<---8<---
+> > >
+> > > Revert of the commit helps, but it is probably not helpful for the initially
+> > > found regression. Artem Bityutskiy suggested to use counter of the successful
+> > > probes instead. This fixes above mentioned case and shouldn't prevent driver
+> > > to reprobe deferred ones.
+> > >
+> > > Fixes: 58b116bce136 ("drivercore: deferral race condition fix")
+> > > Suggested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+> > > Cc: Grant Likely grant.likely@arm.com
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: Mark Brown <broonie@kernel.org>
+> > > Cc: Felipe Balbi <balbi@kernel.org>
+> > > Cc: Andrzej Hajda <a.hajda@samsung.com>
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> > > Tested-by: Ferry Toth <fntoth@gmail.com>
+> > > ---
+> > > v2: picked up tags, update Grant's email (Peter)
+> > >  drivers/base/dd.c | 39 +++++++++++++++++++++------------------
+> > >  1 file changed, 21 insertions(+), 18 deletions(-)
+> > >
+> > > diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> > > index b25bcab2a26b..43720beb5300 100644
+> > > --- a/drivers/base/dd.c
+> > > +++ b/drivers/base/dd.c
+> > > @@ -53,7 +53,6 @@
+> > >  static DEFINE_MUTEX(deferred_probe_mutex);
+> > >  static LIST_HEAD(deferred_probe_pending_list);
+> > >  static LIST_HEAD(deferred_probe_active_list);
+> > > -static atomic_t deferred_trigger_count = ATOMIC_INIT(0);
+> > >  static struct dentry *deferred_devices;
+> > >  static bool initcalls_done;
+> > >
+> > > @@ -147,17 +146,6 @@ static bool driver_deferred_probe_enable = false;
+> > >   * This functions moves all devices from the pending list to the active
+> > >   * list and schedules the deferred probe workqueue to process them.  It
+> > >   * should be called anytime a driver is successfully bound to a device.
+> > > - *
+> > > - * Note, there is a race condition in multi-threaded probe. In the case where
+> > > - * more than one device is probing at the same time, it is possible for one
+> > > - * probe to complete successfully while another is about to defer. If the second
+> > > - * depends on the first, then it will get put on the pending list after the
+> > > - * trigger event has already occurred and will be stuck there.
+> > > - *
+> > > - * The atomic 'deferred_trigger_count' is used to determine if a successful
+> > > - * trigger has occurred in the midst of probing a driver. If the trigger count
+> > > - * changes in the midst of a probe, then deferred processing should be triggered
+> > > - * again.
+> > >   */
+> > >  static void driver_deferred_probe_trigger(void)
+> > >  {
+> > > @@ -170,7 +158,6 @@ static void driver_deferred_probe_trigger(void)
+> > >          * into the active list so they can be retried by the workqueue
+> > >          */
+> > >         mutex_lock(&deferred_probe_mutex);
+> > > -       atomic_inc(&deferred_trigger_count);
+> > >         list_splice_tail_init(&deferred_probe_pending_list,
+> > >                               &deferred_probe_active_list);
+> > >         mutex_unlock(&deferred_probe_mutex);
+> > > @@ -350,6 +337,19 @@ static void __exit deferred_probe_exit(void)
+> > >  }
+> > >  __exitcall(deferred_probe_exit);
+> > >
+> > > +/*
+> > > + * Note, there is a race condition in multi-threaded probe. In the case where
+> > > + * more than one device is probing at the same time, it is possible for one
+> > > + * probe to complete successfully while another is about to defer. If the second
+> > > + * depends on the first, then it will get put on the pending list after the
+> > > + * trigger event has already occurred and will be stuck there.
+> > > + *
+> > > + * The atomic 'probe_okay' is used to determine if a successful probe has
+> > > + * occurred in the midst of probing another driver. If the count changes in
+> > > + * the midst of a probe, then deferred processing should be triggered again.
+> > > + */
+> > > +static atomic_t probe_okay = ATOMIC_INIT(0);
+> > > +
+> > >  /**
+> > >   * device_is_bound() - Check if device is bound to a driver
+> > >   * @dev: device to check
+> > > @@ -375,6 +375,7 @@ static void driver_bound(struct device *dev)
+> > >         pr_debug("driver: '%s': %s: bound to device '%s'\n", dev->driver->name,
+> > >                  __func__, dev_name(dev));
+> > >
+> > > +       atomic_inc(&probe_okay);
+> > >         klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
+> > >         device_links_driver_bound(dev);
+> > >
+> > > @@ -481,18 +482,18 @@ static atomic_t probe_count = ATOMIC_INIT(0);
+> > >  static DECLARE_WAIT_QUEUE_HEAD(probe_waitqueue);
+> > >
+> > >  static void driver_deferred_probe_add_trigger(struct device *dev,
+> > > -                                             int local_trigger_count)
+> > > +                                             int local_probe_okay_count)
+> > >  {
+> > >         driver_deferred_probe_add(dev);
+> > >         /* Did a trigger occur while probing? Need to re-trigger if yes */
+> > > -       if (local_trigger_count != atomic_read(&deferred_trigger_count))
+> > > +       if (local_probe_okay_count != atomic_read(&probe_okay))
+> > >                 driver_deferred_probe_trigger();
+> > >  }
+> > >
+> > >  static int really_probe(struct device *dev, struct device_driver *drv)
+> > >  {
+> > >         int ret = -EPROBE_DEFER;
+> > > -       int local_trigger_count = atomic_read(&deferred_trigger_count);
+> > > +       int local_probe_okay_count = atomic_read(&probe_okay);
+> > >         bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
+> > >                            !drv->suppress_bind_attrs;
+> > >
+> > > @@ -509,7 +510,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+> > >
+> > >         ret = device_links_check_suppliers(dev);
+> > >         if (ret == -EPROBE_DEFER)
+> > > -               driver_deferred_probe_add_trigger(dev, local_trigger_count);
+> > > +               driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
+> > >         if (ret)
+> > >                 return ret;
+> > >
+> > > @@ -619,7 +620,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
+> > >         case -EPROBE_DEFER:
+> > >                 /* Driver requested deferred probing */
+> > >                 dev_dbg(dev, "Driver %s requests probe deferral\n", drv->name);
+> > > -               driver_deferred_probe_add_trigger(dev, local_trigger_count);
+> > > +               driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
+> > >                 break;
+> > >         case -ENODEV:
+> > >         case -ENXIO:
+> > > @@ -1148,6 +1149,8 @@ static void __device_release_driver(struct device *dev, struct device *parent)
+> > >                 dev_pm_set_driver_flags(dev, 0);
+> > >
+> > >                 klist_remove(&dev->p->knode_driver);
+> > > +               atomic_dec(&probe_okay);
+> > > +
+> >
+> > Why is this needed?
+>
+> Under successful probe the following is comprehended. When probe of the driver
+> happens it may be discarded (as in above case) as it was initiated by another
+> driver which got deferred.
+>
+> We also discussed this with Peter [1] during his review.
+>
+> [1]: https://lkml.org/lkml/2020/3/12/347
 
-This series aims to add the virtualization of split lock detection for
-guest, while containing some fixes of native kernel split lock handling. 
+OK, but I would add a comment explaining that to the code.
 
-Note, this series is based on the kernel patch[1]. Patch 1-3 are x86
-kernel patches that based on the linux/master branch. Patch 4-8 are kvm
-patches that based on the kvm/queue branch.
+Also it would be good to explain why probe_okay cannot go below zero
+here in the changelog.
 
-Patch 1 is the fix and enhancement for kernel split lock detction. It
-ensures X86_FEATURE_SPLIT_LOCK_DETECT flag is set only when feature does
-exist and not disabled on kernel params. And it explicitly turn off split
-lock when sld_off instead of assuming BIOS/firmware leaves it cleared.
-
-Patch 2 optimizes the runtime MSR accessing.
-
-Patch 3 are the preparation for enabling split lock detection
-virtualization in KVM.
-
-Patch 4 fixes the issue that malicious guest may exploit kvm emulator to
-attcact host kernel.
-
-Patch 5 handles guest's split lock when host turns split lock detect on.
-
-Patch 6-8 implement the virtualization of split lock detection in kvm.
-
-[1]: https://lore.kernel.org/lkml/158031147976.396.8941798847364718785.tip-bot2@tip-bot2/ 
-
-Changes in v6:
- - Drop the sld_not_exist flag and use X86_FEATURE_SPLIT_LOCK_DETECT to
-   check whether need to init split lock detection. [tglx]
- - Use tglx's method to verify the existence of split lock detectoin.
- - small optimization of sld_update_msr() that the default value of
-   msr_test_ctrl_cache has split_lock_detect bit cleared.
- - Drop the patch3 in v5 that introducing kvm_only option. [tglx]
- - Rebase patch4-8 to kvm/queue.
- - use the new kvm-cpu-cap to expose X86_FEATURE_CORE_CAPABILITIES in
-   Patch 6.
-
-Changes in v5:
- - Use X86_FEATURE_SPLIT_LOCK_DETECT flag in kvm to ensure split lock
-   detection is really supported.
- - Add and export sld related helper functions in their related usecase 
-   kvm patches.
-
-Changes in v4:
- - Add patch 1 to rework the initialization flow of split lock
-   detection.
- - Drop percpu MSR_TEST_CTRL cache, just use a static variable to cache
-   the reserved/unused bit of MSR_TEST_CTRL. [Sean]
- - Add new option for split_lock_detect kernel param.
- - Changlog refinement. [Sean]
- - Add a new patch to enable MSR_TEST_CTRL for intel guest. [Sean]
-
-Xiaoyao Li (8):
-  x86/split_lock: Rework the initialization flow of split lock detection
-  x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
-  x86/split_lock: Export handle_user_split_lock()
-  kvm: x86: Emulate split-lock access as a write in emulator
-  kvm: vmx: Extend VMX's #AC interceptor to handle split lock #AC
-    happens in guest
-  kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
-  kvm: vmx: Enable MSR_TEST_CTRL for intel guest
-  kvm: vmx: virtualize split lock detection
-
- arch/x86/include/asm/cpu.h      |  21 +++++-
- arch/x86/include/asm/kvm_host.h |   1 +
- arch/x86/kernel/cpu/intel.c     | 114 +++++++++++++++++++-------------
- arch/x86/kernel/traps.c         |   2 +-
- arch/x86/kvm/cpuid.c            |   1 +
- arch/x86/kvm/vmx/vmx.c          |  75 ++++++++++++++++++++-
- arch/x86/kvm/vmx/vmx.h          |   1 +
- arch/x86/kvm/x86.c              |  42 +++++++++++-
- 8 files changed, 203 insertions(+), 54 deletions(-)
-
--- 
-2.20.1
-
+Cheers!
