@@ -2,152 +2,91 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71D2C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:02:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6788C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15092070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:02:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585040579;
-	bh=AV8QW3nn8jQRBiIc5doTLtBK64ufkGXmNsE1oozecH4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=y7CFFfwRgjZ3QEObOuNpk3i6SEuAj8lAbhP2zFQoOixFlPQtWnrmugCAQ88p08xjf
-	 ImFI516VwWw+wwiDqVx59F527xUKtWLjwKnGjFX6i+HYTLw3g/htcwaPtJXVBJt7ea
-	 O1KZQKk1J/d5ig7JCRAvpYN63tY2CPd8VM4t1N+4=
+	by mail.kernel.org (Postfix) with ESMTP id BDC56205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:06:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LbrZCbzm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727095AbgCXJC6 (ORCPT
+        id S1727066AbgCXJGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:02:58 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:42291 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbgCXJC6 (ORCPT
+        Tue, 24 Mar 2020 05:06:25 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:42865 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726565AbgCXJGY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:02:58 -0400
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 02O92cga016626
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 18:02:39 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02O92cga016626
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585040559;
-        bh=rPKfr4YNri5mx4ExgQkvbpN9SAEjUcUEL+qitgoFUcM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ER/h59XV0NCJgbtMZfZf38kal9Kv1jeZrtlxjOclcBuU+oj+c9pD84KQeBtEm1LT8
-         i36Mw6/lIMASnqnPr/pghVd0/iIzuOsb+CRw5HdwlqHSywTY7KDmH9iAaL3XaeSoXp
-         Kg5ZWe7Plk2ec+hfQUe9izZDvEb4nT6oIA8ZU1zJ5aa7ME0sANz6FxZs3fgD9RxBEa
-         /PF/hGO6PY+gOuYDkc4Xqh5cPHB4nPGo9X+x0ielI6rnvi4lSnkEPrHSXULuqJiSk8
-         a63L/zQg1kyOumKJuWfLczVsB/6FBxFBhOWSLgUVBY8rqXOE8zqXAyWzFMA/Th5nII
-         y5t2QcsTfzUOA==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id b5so228363vsb.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:02:39 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2HmVyc8KuvB4CLU8nlcTuHWmFk105qZa9YEqyj6aBhoIcZY4Tq
-        H131O4cCDSrObfFkzarr6iD8npPGECxABoagubo=
-X-Google-Smtp-Source: ADFU+vvqs6PBhqXewmwnxlxjj5zsg8ttldEyMw2RD9XfHl65dh4ywaC09wcCdauuSa9M9zpFJfWdwUFSzOJ+4UpFdVw=
-X-Received: by 2002:a67:8745:: with SMTP id j66mr17591587vsd.181.1585040558389;
- Tue, 24 Mar 2020 02:02:38 -0700 (PDT)
+        Tue, 24 Mar 2020 05:06:24 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q19so17673432ljp.9
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uXJW3NYqkzBJPg9G4K5LGYBd3XGQpGvoVNtbcm5Oumc=;
+        b=LbrZCbzmZx+Kfb1Pm57HvFHXuRgH444WCs3KnlNJ9YLTcdWzcACe0XYOMLFNxSnkVH
+         wN88biDhrK+6HtUJj35VD4dFzg9cGhbGQzAhpXmOrRsqZITX0hTej20qj+VRoR4uNBfZ
+         3tUJpYkAFikVpIS6Bp8KePAb0Bq5MOTC1YBDjTrdFWYIi4okAdmrkjf7eH+cDjfvswnY
+         eNJfCdKTpTYuGH9iE99z6qcWe86ldjM8DxZknJTAJcGlNvFpAvX0Pfg/dQO7bRVTt3WB
+         AbQPQpSOS9CCHsoTsEYTkgwyICLIzP9k6ivxee5YATXOa10Axoo/TbZqZvmtGqKAQxpo
+         32Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uXJW3NYqkzBJPg9G4K5LGYBd3XGQpGvoVNtbcm5Oumc=;
+        b=ZHZYMEycSvXlh1SYuEa83numRzWQ4ztkYxWhGgi3YuZvOMCb1a0AkAmYVe6Q3UzLHH
+         o2gacF8tIMMcgoriiVmvxsyVaf8pYmTOgMSj53cnU1Ki7d0ZGAW2bDgXho195uXMtCJo
+         O/ZZCH2j0ZiuaujZvscE8qTeLdsDtFin9Y0IZ2ZWzPV6MCrVxH1x1R0AYOQRQ6u5YZc/
+         JxhrX5nJl8PPKDWR855KFkHarsY7A9YQTP8kU1qvZig4wC7GiEutuHXJ44H/MMhfACKS
+         7spv7cCfAhW+sfdqQbnOdE0MNdzmyre8NS2ieLh64eyuiBhrGgdM0YdYpKHw70vddIY9
+         Mfwg==
+X-Gm-Message-State: ANhLgQ0CYOasTtnTwXfETIpAmKANiD3GOXq29quJQyB6AL/iqMWD6udN
+        a3VvOtCgXZYaOkPTRUABPLbhZVykVyPMe+Wo+OXCxQ==
+X-Google-Smtp-Source: ADFU+vsS0Vgh95i3gLQkXN72OAT1r7M91nH8bLgfI97o39Kb3z7Gj4YEOvUgl0V1KX45mkYxQ/82vB1+XBwxrugyzW4=
+X-Received: by 2002:a2e:8ecf:: with SMTP id e15mr17140251ljl.223.1585040782184;
+ Tue, 24 Mar 2020 02:06:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200113161310.GA191743@rani.riverdale.lan> <20200113195337.604646-1-nivedita@alum.mit.edu>
- <202001131750.C1B8468@keescook> <20200114165135.GK31032@zn.tnic>
- <20200115002131.GA3258770@rani.riverdale.lan> <20200115122458.GB20975@zn.tnic>
- <20200316160259.GN26126@zn.tnic> <20200323204454.GA2611336@zx2c4.com> <202003231350.7D35351@keescook>
-In-Reply-To: <202003231350.7D35351@keescook>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 24 Mar 2020 18:02:02 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
-Message-ID: <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
-Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
- version to 2.23
-To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Mauro Rossi <issor.oruam@gmail.com>,
-        Michael Matz <matz@suse.de>
+References: <20200323184501.5756-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200323184501.5756-1-lukas.bulwahn@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 24 Mar 2020 10:06:10 +0100
+Message-ID: <CACRpkdYUURewhao=uDbKOmn2OnhBN6G6qnjUXgN2OBH_w_u2Qw@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust entry to ICST clocks YAML schema creation
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On Mon, Mar 23, 2020 at 7:45 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 
-
-
-On Tue, Mar 24, 2020 at 5:51 AM Kees Cook <keescook@chromium.org> wrote:
+> Commit 78c7d8f96b6f ("dt-bindings: clock: Create YAML schema for ICST
+> clocks") transformed arm-integrator.txt into arm,syscon-icst.yaml, but did
+> not adjust the reference to that file in the ARM INTEGRATOR, VERSATILE AND
+> REALVIEW SUPPORT entry in MAINTAINERS.
 >
-> On Mon, Mar 23, 2020 at 02:44:54PM -0600, Jason A. Donenfeld wrote:
-> > On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
-> > > Long overdue patch, see below.
-> > >
-> > > Plan is to queue it after 5.7-rc1.
-> > >
-> > > ---
-> > > From: Borislav Petkov <bp@suse.de>
-> > > Date: Mon, 16 Mar 2020 16:28:36 +0100
-> > > Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
-> > >
-> > > The currently minimum-supported binutils version 2.21 has the problem of
-> > > promoting symbols which are defined outside of a section into absolute.
-> > > According to Arvind:
-> > >
-> > >   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
-> > >           Invalid absolute R_X86_64_32S relocation: _etext
-> > >   and after fixing that one, with
-> > >           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
-> > >
-> > > Those two versions of binutils have a bug when it comes to handling
-> > > symbols defined outside of a section and binutils 2.23 has the proper
-> > > fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
-> > >
-> > > Therefore, up to the fixed version directly, skipping the broken ones.
-> > >
-> > > Currently shipping distros already have the fixed binutils version so
-> > > there should be no breakage resulting from this.
-> > >
-> > > For more details about the whole thing, see the thread in Link.
-> >
-> > That sounds very good to me. Then we'll be able to use ADX instructions
-> > without ifdefs.
-> >
-> > Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> Hence, since then, ./scripts/get_maintainer.pl --self-test complains:
 >
-> Can you send these now and we can land in 5.7 with the doc change?
+>   warning: no file matches \
+>   F: Documentation/devicetree/bindings/clock/arm-integrator.txt
 >
-> -Kees
+> Update the file entry in MAINTAINERS to the new transformed yaml file.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
+Thanks!
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Kees,
-
-I folded this patch into the following series (16 patches):
-https://lore.kernel.org/patchwork/project/lkml/list/?series=435391
-
-This patch (14/16) is a prerequisite for 15/16.
-
-
-
-Borislav,
-
-When I forwarded this patch, I fixed up one more line.
-(changes.rst duplicates the same information...)
-
-Please see this. I hope this should be OK.
-https://lore.kernel.org/patchwork/patch/1214519/
-
-
-
-> --
-> Kees Cook
-
-
-
---
-Best Regards
-Masahiro Yamada
+Yours,
+Linus Walleij
