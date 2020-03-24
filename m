@@ -2,142 +2,86 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E30CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E297DC54FCF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:28:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE88E2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7F7E2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:28:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BdZM4QZu"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="uEsJhQYV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgCXV13 (ORCPT
+        id S1728184AbgCXV2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:27:29 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:45120 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbgCXV12 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:27:28 -0400
-Received: by mail-qk1-f195.google.com with SMTP id c145so160962qke.12;
-        Tue, 24 Mar 2020 14:27:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=1QM8CveRQhCE6XJRJPAlMs7ApDPghnQQSQVpjxsUQj0=;
-        b=BdZM4QZuz9C2CEPCw0eLZ9854zPru32+2mw6iCPsknrDFfoR3g6XnBgpmZ4YTvs0vg
-         QtZEd1asA5kIWaZz21+QYV7klCNZPy9x/4GI6fXE/Ty73Zc2jIWi1FdGPxea0oTcUreM
-         cgIhC2Xo6mJrs39PkT8QbLeE2bIfhZNviRS6lyRT0vH0rIIXoXOZYKtMq1Bb73ONiFWO
-         DMiK59/oGV6hpjvcxFq+ySy6J/t4IRfVoYgCGLZ8EW3qgecW+MuYLwVKhHtE/suD75T/
-         LX7o7SSiiNm8l0pidQFckgmfn4Hjh9jx2DEIPT6Am5poErc4OGuZUzKH0nGuWGja8npF
-         sTeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=1QM8CveRQhCE6XJRJPAlMs7ApDPghnQQSQVpjxsUQj0=;
-        b=RqrZrMMl2m0hXway5VFAJna421FXz81NVQuWSEf4D0cp8xc5JoEx3PIAwoxBjJF316
-         OtT/ZIQNBbH4tR1mr0rny3SZOiI+ssFbIiTtut+penspS+nn8NDW7/+7PuvMIvR5l7J5
-         CQCYyMztkKyVXnO6Y+2f8U9sXWQUts/7Wrl+pw2mcZctKt0XGxdUq0IbY/xwRO/qTA+k
-         Rlb4wGF6j3WY93S6Rixfcp2P62OOxLZRtXXPgfvFbDA5lxmfS6BVdYAmY+yeyvckaJof
-         408CSRuLuPRCo9PlFt2QqWz2USKv+GRg2zNnh6aa+econyYdFMozo/jHHf4agwoR0nbo
-         jvSA==
-X-Gm-Message-State: ANhLgQ3EvE3nXqFne4H+ks9W0iqm4i9YAlX38Kgw3cdJEvIarcv/xB8p
-        l3DcD35mCZ/Y/NaEZVaL1W9H0LaZ
-X-Google-Smtp-Source: ADFU+vtXNdvfgJj9BkbhIMMi7iTvUPc4Q4KRrKCGBYbFXoVqvFFRyh8q88hsY2Y767R3U/TL7RiEuw==
-X-Received: by 2002:ae9:eb11:: with SMTP id b17mr27974091qkg.501.1585085247337;
-        Tue, 24 Mar 2020 14:27:27 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id x89sm15080681qtd.43.2020.03.24.14.27.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 14:27:26 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 18:26:29 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
-References: <20200320151355.66302-1-agerstmayr@redhat.com> <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com> <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
+        Tue, 24 Mar 2020 17:28:42 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:45833 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727496AbgCXV2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 17:28:42 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48n49z72mdz9sQt;
+        Wed, 25 Mar 2020 08:28:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585085320;
+        bh=sQnpTPdxtJrr8r70hWS8fGyIgmHzEUNsiIkrhRaZ2+4=;
+        h=Date:From:To:Cc:Subject:From;
+        b=uEsJhQYVbpOzt8AbhtFAxlSUHmveXa0qOgys7j3lc+Px3LIfCJW7wTyPgPSgO0BTv
+         J6R0OtqwT/rz2t15eXSwWCUSbCb/uv27BlOnSIuB0fqJ92JW4e9q/3vN+APjT0IMhX
+         MGQlAr3Ib2seHgQykIc4byibdZBII5DjE8Z+AP8WigekSoyDCID2FkOQMvhVzyoVmL
+         70cBE9tr0TBGwNMlsiA+Ltz6QuCjx+LO+E5oT6X6EugegaefcvugJrBTrB5weVj9i+
+         EJKmm0Vo6KEQ93/E2F2xoK+IG+hS6wF4JJe3fjFZ9SQ6qFmVuwsTwu08M6L3lfC6XF
+         dFTm8OgiRJDlQ==
+Date:   Wed, 25 Mar 2020 08:28:37 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: Signed-off-by missing for commit in the i2c tree
+Message-ID: <20200325082837.62555003@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] perf script: add flamegraph.py script
-To:     Andreas Gerstmayr <agerstmayr@redhat.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        linux-perf-users@vger.kernel.org
-CC:     Martin Spier <mspier@netflix.com>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-From:   Arnaldo Melo <arnaldo.melo@gmail.com>
-Message-ID: <BCB65A54-D7A4-40DC-8862-B98422ED107B@gmail.com>
+Content-Type: multipart/signed; boundary="Sig_/KeOVOhEjvzxEdJ_RViyk6k7";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/KeOVOhEjvzxEdJ_RViyk6k7
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On March 24, 2020 4:05:15 PM GMT-03:00, Andreas Gerstmayr <agerstmayr@redh=
-at=2Ecom> wrote:
->On 24=2E03=2E20 17:16, Kim Phillips wrote:
->> On Ubuntu 19=2E10, where python 2=2E7 is still the default, I get:
->>=20
->> $ perf script report flamegraph
->>    File "/usr/libexec/perf-core/scripts/python/flamegraph=2Epy", line
->46
->>      print(f"Flame Graph template {self=2Eargs=2Etemplate} does not " +
->>                                                                 ^
->> SyntaxError: invalid syntax
->> Error running python script
->/usr/libexec/perf-core/scripts/python/flamegraph=2Epy
->>=20
->> Installing libpython3-dev doesn't help=2E
->
->Hmm, I was hoping that I can drop support for Python 2 in 2020 ;) (it's
->
->officially EOL since Jan 1, 2020)
->
->The Ubuntu 18=2E04 release notes mention that "Python 2 is no longer=20
->installed by default=2E Python 3 has been updated to 3=2E6=2E This is the
->last=20
->LTS release to include Python 2 in main=2E"=20
->(https://wiki=2Eubuntu=2Ecom/BionicBeaver/ReleaseNotes) - so imho it shou=
-ld
->
->be fine to drop Python 2 support=2E
->
->I tested it with a Ubuntu VM, and by default the Python bindings aren't
->
->enabled in perf (see=20
->https://bugs=2Elaunchpad=2Enet/ubuntu/+source/linux/+bug/1707875)=2E
->
->But you can compile perf and select Python 3:
->
->$ make -j2 PYTHON=3Dpython3
->
+Commit
 
-I plan to make this the default soon=2E
+  b0498c43796f ("i2c: drivers: Use generic definitions for bus frequencies")
 
-- Arnaldo
->in the perf source directory (libpython3-dev must be installed)=2E
->
->
->Does this work for you?
->
->
->Cheers,
->Andreas
+is missing a Signed-off-by from its committer.
 
 --=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Cheers,
+Stephen Rothwell
+
+--Sig_/KeOVOhEjvzxEdJ_RViyk6k7
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl56e4UACgkQAVBC80lX
+0GwvpQf+MY7hK7/z0tRd0kRWOP/VGcnbKZlEXvUINl8AgB4DQK3Z/dhx119metms
+AU8g9WRRhyMRpqiUQzeyZBkmvobdnT8S9OM2l8gytXd6Gm7MRzbAcQgbso7+e3MB
+oeiQXEsgltrLj4aVS5Zg2bFCsYbrtfli+BkYRUIkcg31AL62PbP5CIu3dNvhjtkr
+Ce7HCEDmLTheQjNcxqHv9UTXlKAMCu0UEvDrR7CdhQg/NVD0K85QogA61p5L+dYX
+7GSY/V+byrTse0KWjMF0MvUblHb78JGpqZ4HgPGmAMFYeU83DEr6UdMfxbcIvT6K
+HVOGapOsKE3L/hUsdxMn+w6FHnyEtQ==
+=gcDE
+-----END PGP SIGNATURE-----
+
+--Sig_/KeOVOhEjvzxEdJ_RViyk6k7--
