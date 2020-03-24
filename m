@@ -2,79 +2,174 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF96C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38897C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D888208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11E0320775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585056013;
+	bh=sJb6UxOlf44Mw9sNPfqiMuDxFv8eJQufDoCSmQEPOLU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=I1MoD1nrQqP4U2aOJjaqjZiYpXcsd2wvGsVQmcovL/fi+oXbY7vAVSM+qrvz7k7Ox
+	 UnS1HYWbLi0GWQ+vf8Sja4VgEFi02ryi80ZYzBdryYCi85ANSo7BFQ3HQ0X4uqt6PC
+	 CcCO0vZMA176K3bV1olC20kJ5lWfz2TTPD0iWVhI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgCXNUJ (ORCPT
+        id S1728909AbgCXNUL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:09 -0400
-Received: from cmccmta2.chinamobile.com ([221.176.66.80]:7074 "EHLO
-        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728140AbgCXNUE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:04 -0400
-Received: from spf.mail.chinamobile.com (unknown[172.16.121.15]) by rmmx-syy-dmz-app08-12008 (RichMail) with SMTP id 2ee85e7a08d2db9-91b8d; Tue, 24 Mar 2020 21:19:14 +0800 (CST)
-X-RM-TRANSID: 2ee85e7a08d2db9-91b8d
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG: 00000000
-Received: from localhost.localdomain (unknown[112.1.174.174])
-        by rmsmtp-syy-appsvr08-12008 (RichMail) with SMTP id 2ee85e7a08cfa0f-0ed6c;
-        Tue, 24 Mar 2020 21:19:14 +0800 (CST)
-X-RM-TRANSID: 2ee85e7a08cfa0f-0ed6c
-From:   Tang Bin <tangbin@cmss.chinamobile.com>
-To:     cernekee@gmail.com, balbi@kernel.org, gregkh@linuxfoundation.org,
-        sergei.shtylyov@cogentembedded.com
-Cc:     f.fainelli@gmail.com, bcm-kernel-feedback-list@broadcom.com,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Tang Bin <tangbin@cmss.chinamobile.com>
-Subject: [PATCH v2]usb: gadget: bcm63xx_udc:remove redundant variable assignment
-Date:   Tue, 24 Mar 2020 21:20:29 +0800
-Message-Id: <20200324132029.16296-1-tangbin@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.20.1.windows.1
+        Tue, 24 Mar 2020 09:20:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41244 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727323AbgCXNUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1210520870;
+        Tue, 24 Mar 2020 13:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585056007;
+        bh=sJb6UxOlf44Mw9sNPfqiMuDxFv8eJQufDoCSmQEPOLU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=paaBAPsY9d0TB1G0JT0EMAXKcVcq5QfsYes1lc1t4x9MoI+kq3xtTVd17j54EPZqA
+         +RLrZ6OSgdvy5SRNQDMT0jgkWPGEJSIDXZBhaMYacyiHpxYUIVPojB7VJBOSeW6qyq
+         aHdXLOchp/L0XuUVFC/VDfyYZdE1pSIfJaF97EXA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.4 097/102] arm64: smp: fix smp_send_stop() behaviour
+Date:   Tue, 24 Mar 2020 14:11:29 +0100
+Message-Id: <20200324130816.587622667@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
+References: <20200324130806.544601211@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---v1------------------------------------
-In this function, the variable 'rc' is assigned after this place,
-so the definition is invalid.
+From: Cristian Marussi <cristian.marussi@arm.com>
 
---v2------------------------------------
-In this function, the variable 'rc' will be assigned by the function
-'usb_add_gadget_udc()',so the assignment here is redundant,we should
-remove it.
+commit d0bab0c39e32d39a8c5cddca72e5b4a3059fe050 upstream.
 
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+On a system with only one CPU online, when another one CPU panics while
+starting-up, smp_send_stop() will fail to send any STOP message to the
+other already online core, resulting in a system still responsive and
+alive at the end of the panic procedure.
+
+[  186.700083] CPU3: shutdown
+[  187.075462] CPU2: shutdown
+[  187.162869] CPU1: shutdown
+[  188.689998] ------------[ cut here ]------------
+[  188.691645] kernel BUG at arch/arm64/kernel/cpufeature.c:886!
+[  188.692079] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[  188.692444] Modules linked in:
+[  188.693031] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-rc4-00001-g338d25c35a98 #104
+[  188.693175] Hardware name: Foundation-v8A (DT)
+[  188.693492] pstate: 200001c5 (nzCv dAIF -PAN -UAO)
+[  188.694183] pc : has_cpuid_feature+0xf0/0x348
+[  188.694311] lr : verify_local_elf_hwcaps+0x84/0xe8
+[  188.694410] sp : ffff800011b1bf60
+[  188.694536] x29: ffff800011b1bf60 x28: 0000000000000000
+[  188.694707] x27: 0000000000000000 x26: 0000000000000000
+[  188.694801] x25: 0000000000000000 x24: ffff80001189a25c
+[  188.694905] x23: 0000000000000000 x22: 0000000000000000
+[  188.694996] x21: ffff8000114aa018 x20: ffff800011156a38
+[  188.695089] x19: ffff800010c944a0 x18: 0000000000000004
+[  188.695187] x17: 0000000000000000 x16: 0000000000000000
+[  188.695280] x15: 0000249dbde5431e x14: 0262cbe497efa1fa
+[  188.695371] x13: 0000000000000002 x12: 0000000000002592
+[  188.695472] x11: 0000000000000080 x10: 00400032b5503510
+[  188.695572] x9 : 0000000000000000 x8 : ffff800010c80204
+[  188.695659] x7 : 00000000410fd0f0 x6 : 0000000000000001
+[  188.695750] x5 : 00000000410fd0f0 x4 : 0000000000000000
+[  188.695836] x3 : 0000000000000000 x2 : ffff8000100939d8
+[  188.695919] x1 : 0000000000180420 x0 : 0000000000180480
+[  188.696253] Call trace:
+[  188.696410]  has_cpuid_feature+0xf0/0x348
+[  188.696504]  verify_local_elf_hwcaps+0x84/0xe8
+[  188.696591]  check_local_cpu_capabilities+0x44/0x128
+[  188.696666]  secondary_start_kernel+0xf4/0x188
+[  188.697150] Code: 52805001 72a00301 6b01001f 54000ec0 (d4210000)
+[  188.698639] ---[ end trace 3f12ca47652f7b72 ]---
+[  188.699160] Kernel panic - not syncing: Attempted to kill the idle task!
+[  188.699546] Kernel Offset: disabled
+[  188.699828] CPU features: 0x00004,20c02008
+[  188.700012] Memory Limit: none
+[  188.700538] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+[root@arch ~]# echo Helo
+Helo
+[root@arch ~]# cat /proc/cpuinfo | grep proce
+processor	: 0
+
+Make smp_send_stop() account also for the online status of the calling CPU
+while evaluating how many CPUs are effectively online: this way, the right
+number of STOPs is sent, so enforcing a proper freeze of the system at the
+end of panic even under the above conditions.
+
+Fixes: 08e875c16a16c ("arm64: SMP support")
+Reported-by: Dave Martin <Dave.Martin@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/usb/gadget/udc/bcm63xx_udc.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/arm64/kernel/smp.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/bcm63xx_udc.c b/drivers/usb/gadget/udc/bcm63xx_udc.c
-index 54501814d..a7afa8c35 100644
---- a/drivers/usb/gadget/udc/bcm63xx_udc.c
-+++ b/drivers/usb/gadget/udc/bcm63xx_udc.c
-@@ -2321,8 +2321,6 @@ static int bcm63xx_udc_probe(struct platform_device *pdev)
- 	if (rc)
- 		return rc;
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -955,11 +955,22 @@ void tick_broadcast(const struct cpumask
+ }
+ #endif
  
--	rc = -ENXIO;
--
- 	/* IRQ resource #0: control interrupt (VBUS, speed, etc.) */
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
--- 
-2.20.1.windows.1
-
++/*
++ * The number of CPUs online, not counting this CPU (which may not be
++ * fully online and so not counted in num_online_cpus()).
++ */
++static inline unsigned int num_other_online_cpus(void)
++{
++	unsigned int this_cpu_online = cpu_online(smp_processor_id());
++
++	return num_online_cpus() - this_cpu_online;
++}
++
+ void smp_send_stop(void)
+ {
+ 	unsigned long timeout;
+ 
+-	if (num_online_cpus() > 1) {
++	if (num_other_online_cpus()) {
+ 		cpumask_t mask;
+ 
+ 		cpumask_copy(&mask, cpu_online_mask);
+@@ -972,10 +983,10 @@ void smp_send_stop(void)
+ 
+ 	/* Wait up to one second for other CPUs to stop */
+ 	timeout = USEC_PER_SEC;
+-	while (num_online_cpus() > 1 && timeout--)
++	while (num_other_online_cpus() && timeout--)
+ 		udelay(1);
+ 
+-	if (num_online_cpus() > 1)
++	if (num_other_online_cpus())
+ 		pr_warning("SMP: failed to stop secondary CPUs %*pbl\n",
+ 			   cpumask_pr_args(cpu_online_mask));
+ 
 
 
