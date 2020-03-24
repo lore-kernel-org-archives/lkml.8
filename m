@@ -2,392 +2,121 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78683C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDE5C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E33A2073C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:55:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFCB02072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:58:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoJn6fp1"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dE2Mu/As"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbgCXXzM (ORCPT
+        id S1727205AbgCXX6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:55:12 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34258 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgCXXzM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:55:12 -0400
-Received: by mail-qt1-f194.google.com with SMTP id 10so677482qtp.1;
-        Tue, 24 Mar 2020 16:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=x4taz7mXl8pptyKy6vTsxg6OtEjU4FBkuE1nJ/DIKuA=;
-        b=RoJn6fp1RJn8aZlfOCSg3bf8t0mKDJrGg4m+LHhDBZQFbF20gzLqL9NlP5RqwqGpXz
-         evGuJZIK10Jngzmu4bLBPmwZ3Dkj64w0RLl/1nBW31qbA77gaKhyNLsURbDB4cvqcElw
-         ijZ2dWBJMsT6oMsn6SM3dawVros6CKVA4P6vJKavXXqvdDvMrlm8RYmgVJ6RRu1Yr4Zd
-         bzsz2H29+FhNg+B81wCZ24Ktiv0MnP60a1YY0MpSL+aVEwVsNVlvzdNdDkbORqKoX6G1
-         C2bhcN/htFQH6W/2ga0awyd675P1FYrwpGvJczFhWVfbARM8xdaxDjHG2eFCAZljtLoh
-         H6cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x4taz7mXl8pptyKy6vTsxg6OtEjU4FBkuE1nJ/DIKuA=;
-        b=C/6q2o2f2Rh1x+KzmRD1ojYLSz7lRkGUSjWIGVcVMvi0oWt7c4dGwCZ/XmthHVEyz2
-         L/lmrND9YIqErSEhWfQ3otdcsrcQpFaGsaLYPnN/Cw6Wj5IangbQmKz1eqAp9w3fUw4e
-         wGY2dv0FQn1ge2vVCudVYT3+kONOGv7nYbP0MtoLHBP+MF89xXkJEtAhzalMcEZNCsAQ
-         hWVmhvNf+wPUhxoWf/GgvYxkeSyh3RVG0RR+FnvpHZxW7DrQZ2QMNk7GYDkayWduwpMD
-         mQMmzwvbg8UK49KQ6sWHdzVZ9hsZfJwdcAQvtlg0MmTuT1NKxXm06aqN2puYrocPTsPn
-         UsSQ==
-X-Gm-Message-State: ANhLgQ2q9zgvRbFUXrPfNlkOCfCIHc2alV3ocdSH6pQJ+aemNcEz5iAG
-        7c2OXoP2dnsi/ZzZYWBU9lt+qjRWgEKrS9SA97w=
-X-Google-Smtp-Source: ADFU+vvjtuH2GgiZHGdGFZLEpP9ltYzxWBH9++ulCCIuTz1xtjwtmXEQpwGNTPGEc1XYNHIHWCdk5Em7vkw3NQu8ZFM=
-X-Received: by 2002:ac8:6f1b:: with SMTP id g27mr431798qtv.117.1585094109999;
- Tue, 24 Mar 2020 16:55:09 -0700 (PDT)
+        Tue, 24 Mar 2020 19:58:07 -0400
+Received: from ozlabs.org ([203.11.71.1]:45161 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727102AbgCXX6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 19:58:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48n7VM5VrYz9sPR;
+        Wed, 25 Mar 2020 10:58:03 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585094285;
+        bh=iTrfw4pZsF5SHP+vx5dIJNtqfgY/gSyiWePmLr2G+mY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dE2Mu/Aseg5reZ4nL6SuoO2U5kTjzOApduDtpVpZ1W0rW2I3AwAVEgGWYmAud/b+k
+         ZZOEdUmbXsNvORdhZksJrNgC524kwcLh5nEDRzuaUGEwh8qVpfUoYqtV/ttpgDAB1E
+         LebFmlqJASCaOlCIoP56Fwq5euYKExcVYNeSFFmUFsbg5cOLWGswEikgwcFVlt4XG6
+         ty4+X83qHUZqGl7r8hfBOlGN2tHyp/Ci87sYaRDB8I8cIgahD4vKupq8awso51LK7n
+         pHTH5QY9Z6L9f/l9K0BKjIyvgwd5ihpL+oJyL+Rs0TxRKRZcP4FJulGy3XORRO+/wf
+         RTUj+Aczs4Nlg==
+Date:   Wed, 25 Mar 2020 10:58:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: linux-next: manual merge of the pci tree with Linus' tree
+Message-ID: <20200325105800.12716fcf@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-8-kpsingh@chromium.org>
-In-Reply-To: <20200323164415.12943-8-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 24 Mar 2020 16:54:59 -0700
-Message-ID: <CAEf4BzZCVqpUDqGetxa=Nx1ZC7Q+2yX2D9FMwywWkFDoN8JHDA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 7/7] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/cQFlObfw3Gf7xl2wq2+UTuA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> * Load/attach a BPF program to the file_mprotect (int) and
->   bprm_committed_creds (void) LSM hooks.
-> * Perform an action that triggers the hook.
-> * Verify if the audit event was received using a shared global
->   result variable.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
-> Reviewed-by: Thomas Garnier <thgarnie@google.com>
-> ---
->  tools/testing/selftests/bpf/lsm_helpers.h     |  19 +++
->  .../selftests/bpf/prog_tests/lsm_test.c       | 112 ++++++++++++++++++
->  .../selftests/bpf/progs/lsm_int_hook.c        |  54 +++++++++
->  .../selftests/bpf/progs/lsm_void_hook.c       |  41 +++++++
->  4 files changed, 226 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/lsm_helpers.h
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/lsm_test.c
->  create mode 100644 tools/testing/selftests/bpf/progs/lsm_int_hook.c
->  create mode 100644 tools/testing/selftests/bpf/progs/lsm_void_hook.c
->
-> diff --git a/tools/testing/selftests/bpf/lsm_helpers.h b/tools/testing/selftests/bpf/lsm_helpers.h
-> new file mode 100644
-> index 000000000000..3de230df93db
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/lsm_helpers.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +/*
-> + * Copyright (C) 2020 Google LLC.
-> + */
-> +#ifndef _LSM_HELPERS_H
-> +#define _LSM_HELPERS_H
-> +
-> +struct lsm_prog_result {
-> +       /* This ensures that the LSM Hook only monitors the PID requested
-> +        * by the loader
-> +        */
-> +       __u32 monitored_pid;
-> +       /* The number of calls to the prog for the monitored PID.
-> +        */
-> +       __u32 count;
-> +};
-> +
+--Sig_/cQFlObfw3Gf7xl2wq2+UTuA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Having this extra header just for this simple struct... On BPF side
-it's easier and nicer to just use global variables. Can you please
-drop helper and just pass two variables in prog_test part?
+Hi all,
 
-> +#endif /* _LSM_HELPERS_H */
-> diff --git a/tools/testing/selftests/bpf/prog_tests/lsm_test.c b/tools/testing/selftests/bpf/prog_tests/lsm_test.c
-> new file mode 100644
-> index 000000000000..5fd6b8f569f7
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/prog_tests/lsm_test.c
-> @@ -0,0 +1,112 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (C) 2020 Google LLC.
-> + */
-> +
-> +#include <test_progs.h>
-> +#include <sys/mman.h>
-> +#include <sys/wait.h>
-> +#include <unistd.h>
-> +#include <malloc.h>
-> +#include <stdlib.h>
-> +
-> +#include "lsm_helpers.h"
-> +#include "lsm_void_hook.skel.h"
-> +#include "lsm_int_hook.skel.h"
-> +
-> +char *LS_ARGS[] = {"true", NULL};
-> +
-> +int heap_mprotect(void)
-> +{
-> +       void *buf;
-> +       long sz;
-> +
-> +       sz = sysconf(_SC_PAGESIZE);
-> +       if (sz < 0)
-> +               return sz;
-> +
-> +       buf = memalign(sz, 2 * sz);
-> +       if (buf == NULL)
-> +               return -ENOMEM;
-> +
-> +       return mprotect(buf, sz, PROT_READ | PROT_EXEC);
-> +}
-> +
-> +int exec_ls(struct lsm_prog_result *result)
-> +{
-> +       int child_pid;
-> +
-> +       child_pid = fork();
-> +       if (child_pid == 0) {
-> +               result->monitored_pid = getpid();
+Today's linux-next merge of the pci tree got a conflict in:
 
-monitored_pid needed here only
+  MAINTAINERS
 
-> +               execvp(LS_ARGS[0], LS_ARGS);
-> +               return -EINVAL;
-> +       } else if (child_pid > 0)
-> +               return wait(NULL);
-> +
-> +       return -EINVAL;
-> +}
-> +
-> +void test_lsm_void_hook(void)
-> +{
-> +       struct lsm_prog_result *result;
-> +       struct lsm_void_hook *skel = NULL;
-> +       int err, duration = 0;
-> +
-> +       skel = lsm_void_hook__open_and_load();
-> +       if (CHECK(!skel, "skel_load", "lsm_void_hook skeleton failed\n"))
-> +               goto close_prog;
-> +
-> +       err = lsm_void_hook__attach(skel);
-> +       if (CHECK(err, "attach", "lsm_void_hook attach failed: %d\n", err))
-> +               goto close_prog;
-> +
-> +       result = &skel->bss->result;
+between commit:
 
-if you define variables directly, you'll access them easily as
-skel->bss->monitored_pid and skel->bss->count, no problem, right?
+  5901b51f3e5d ("MAINTAINERS: Correct Cadence PCI driver path")
 
-> +
-> +       err = exec_ls(result);
-> +       if (CHECK(err < 0, "exec_ls", "err %d errno %d\n", err, errno))
-> +               goto close_prog;
-> +
-> +       if (CHECK(result->count != 1, "count", "count = %d", result->count))
-> +               goto close_prog;
-> +
-> +       CHECK_FAIL(result->count != 1);
-> +
-> +close_prog:
-> +       lsm_void_hook__destroy(skel);
-> +}
-> +
-> +void test_lsm_int_hook(void)
-> +{
-> +       struct lsm_prog_result *result;
-> +       struct lsm_int_hook *skel = NULL;
-> +       int err, duration = 0;
-> +
-> +       skel = lsm_int_hook__open_and_load();
-> +       if (CHECK(!skel, "skel_load", "lsm_int_hook skeleton failed\n"))
-> +               goto close_prog;
-> +
-> +       err = lsm_int_hook__attach(skel);
-> +       if (CHECK(err, "attach", "lsm_int_hook attach failed: %d\n", err))
-> +               goto close_prog;
-> +
-> +       result = &skel->bss->result;
-> +       result->monitored_pid = getpid();
-> +
-> +       err = heap_mprotect();
-> +       if (CHECK(errno != EPERM, "heap_mprotect", "want errno=EPERM, got %d\n",
-> +                 errno))
-> +               goto close_prog;
-> +
-> +       CHECK_FAIL(result->count != 1);
-> +
-> +close_prog:
-> +       lsm_int_hook__destroy(skel);
-> +}
-> +
-> +void test_lsm_test(void)
-> +{
-> +       test_lsm_void_hook();
-> +       test_lsm_int_hook();
+from Linus' tree and commit:
 
-These should be subtests (see test__start_subtest() usage). Also, I'm
-not sure why you need two separate BPF programs, why not create one
-and use it for two subtests?
+  11be8af70d86 ("dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence pl=
+atform to DT schema")
 
+from the pci tree.
 
-> +}
-> diff --git a/tools/testing/selftests/bpf/progs/lsm_int_hook.c b/tools/testing/selftests/bpf/progs/lsm_int_hook.c
-> new file mode 100644
-> index 000000000000..1c5028ddca61
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/lsm_int_hook.c
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-consider it a nit because not every test follows this, but using
-progs/test_whatever.c for BPF side and prog_test/whatever.c makes my
-life a bit easier.
+--=20
+Cheers,
+Stephen Rothwell
 
+diff --cc MAINTAINERS
+index d8fc7bb5f784,fc2fc22dbc8b..000000000000
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@@ -12754,8 -12739,8 +12754,8 @@@ PCI DRIVER FOR CADENCE PCIE I
+  M:	Tom Joseph <tjoseph@cadence.com>
+  L:	linux-pci@vger.kernel.org
+  S:	Maintained
+- F:	Documentation/devicetree/bindings/pci/cdns,*.txt
++ F:	Documentation/devicetree/bindings/pci/cdns,*
+ -F:	drivers/pci/controller/pcie-cadence*
+ +F:	drivers/pci/controller/cadence/
+ =20
+  PCI DRIVER FOR FREESCALE LAYERSCAPE
+  M:	Minghuan Lian <minghuan.Lian@nxp.com>
 
-> @@ -0,0 +1,54 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright 2020 Google LLC.
-> + */
-> +
-> +#include <linux/bpf.h>
-> +#include <stdbool.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +#include  <errno.h>
-> +#include "lsm_helpers.h"
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +struct lsm_prog_result result = {
-> +       .monitored_pid = 0,
-> +       .count = 0,
-> +};
-> +
-> +/*
-> + * Define some of the structs used in the BPF program.
-> + * Only the field names and their sizes need to be the
-> + * same as the kernel type, the order is irrelevant.
-> + */
-> +struct mm_struct {
-> +       unsigned long start_brk, brk;
-> +} __attribute__((preserve_access_index));
-> +
-> +struct vm_area_struct {
-> +       unsigned long vm_start, vm_end;
-> +       struct mm_struct *vm_mm;
-> +} __attribute__((preserve_access_index));
+--Sig_/cQFlObfw3Gf7xl2wq2+UTuA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Why not just using vmlinux.h instead?
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +SEC("lsm/file_mprotect")
-> +int BPF_PROG(test_int_hook, struct vm_area_struct *vma,
-> +            unsigned long reqprot, unsigned long prot, int ret)
-> +{
-> +       if (ret != 0)
-> +               return ret;
-> +
-> +       __u32 pid = bpf_get_current_pid_tgid();
-> +       int is_heap = 0;
-> +
-> +       is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
-> +                  vma->vm_end <= vma->vm_mm->brk);
-> +
-> +       if (is_heap && result.monitored_pid == pid) {
-> +               result.count++;
-> +               ret = -EPERM;
-> +       }
-> +
-> +       return ret;
-> +}
-> diff --git a/tools/testing/selftests/bpf/progs/lsm_void_hook.c b/tools/testing/selftests/bpf/progs/lsm_void_hook.c
-> new file mode 100644
-> index 000000000000..4d01a8536413
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/lsm_void_hook.c
-> @@ -0,0 +1,41 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (C) 2020 Google LLC.
-> + */
-> +
-> +#include <linux/bpf.h>
-> +#include <stdbool.h>
-> +#include <bpf/bpf_helpers.h>
-> +#include <bpf/bpf_tracing.h>
-> +#include  <errno.h>
-> +#include "lsm_helpers.h"
-> +
-> +char _license[] SEC("license") = "GPL";
-> +
-> +struct lsm_prog_result result = {
-> +       .monitored_pid = 0,
-> +       .count = 0,
-> +};
-> +
-> +/*
-> + * Define some of the structs used in the BPF program.
-> + * Only the field names and their sizes need to be the
-> + * same as the kernel type, the order is irrelevant.
-> + */
-> +struct linux_binprm {
-> +       const char *filename;
-> +} __attribute__((preserve_access_index));
-> +
-> +SEC("lsm/bprm_committed_creds")
-> +int BPF_PROG(test_void_hook, struct linux_binprm *bprm)
-> +{
-> +       __u32 pid = bpf_get_current_pid_tgid();
-> +       char fmt[] = "lsm(bprm_committed_creds): process executed %s\n";
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl56nogACgkQAVBC80lX
+0Gw/OAgAo/nKNkKB+KUEaemL/UG1iRjAFPAFtEKeknMmnLc6Jd+9mSU+jPKbrHhW
+q6H3Hw650VqVKuezPDmTUuCEKwU0TZZF6qbnbyFGDA4SU36qhlt4XW7qkFaf/2fh
+g7xZH7EoD9DsknBNYfMYny0Q4eYRoJJIj2tXUEN0OCRJTEreMUi72WYpX7AtU68K
+r+XQ/LH2LgJ0DJUVLG3kK79textsjNrTLstkkklIvn4v0bDGvRlG9x+0P+IF/dpr
+hB4zSBkf2BgQ4W8Rc2VXmxkHyDSE3PPJbBVBnjWWj08QFwVrXCEUXjLmBMOlBXDc
+UfmkJ7J8TqNlMTeEoTaak0bgUIp9Vg==
+=Nzob
+-----END PGP SIGNATURE-----
 
-Try static char fmt[] = "..." instead and then compare BPF assembly
-before and after, you'll be amazed ;)
-
-> +
-> +       bpf_trace_printk(fmt, sizeof(fmt), bprm->filename);
-
-is this part of test?
-
-> +       if (result.monitored_pid == pid)
-> +               result.count++;
-> +
-> +       return 0;
-> +}
-> --
-> 2.20.1
->
+--Sig_/cQFlObfw3Gf7xl2wq2+UTuA--
