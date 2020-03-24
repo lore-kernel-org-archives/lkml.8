@@ -2,113 +2,104 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URG_BIZ,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645DBC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2A9C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A2C206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585068484;
-	bh=PNu1cBEwyzzfPoT37OV9ratEn1KWxSdUE0FieGmawyY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LpxIeXtxybjrZ7brL621mJYkLqp6U6kYrMF+to7RZmZ9HaX0V0zTUU9wXgjrLwH3s
-	 qd16HM2r3y+eikTQaMAAL/4viwCzWIlROrgITEIH7IrFpThnT8iSyHZgOvP9jBIJwx
-	 IfBZEJQIAsxWbCosWm2xVUNH+Z7Xr50bjLD1nVNc=
+	by mail.kernel.org (Postfix) with ESMTP id 42AF7206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:48:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Mcna9TlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgCXQsD (ORCPT
+        id S1727695AbgCXQsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:48:03 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:45387 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbgCXQsC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:48:02 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02OGljW1002189
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:47:46 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02OGljW1002189
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585068466;
-        bh=4nGjHOPn1Qdp00y4tfz/8sjCtUPREPQ1cB4wp92G+Go=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i+xU4e061XbZEPioDSUPsgzKIthqclxHFXo1j4yUVASbGKS00sS7mN0dbzrlGZuIT
-         Lt0PpDUtLZTV8hf9V6BjXNlOFvFgkhbMet/YSVVWckEHGB0UQufM5duFUonjXRS8ow
-         KBrxmwNE1qLHzzuP5IlOmGGOMl1C5mamEQvoasTI/ymMnvAn6LKbVcuv9RuIrPvjJd
-         vbSIflnmVZQnwvKt4iOar5Fu3KG2odXAsxVtC5HNWvxsybPPmadBqTSsjfGnw0zc6O
-         851IfrugrDZNwwEc/UN4yvqy8IeqPayxY2mscJBiYfCTs1jcJkPx2okN4fgnZyFutL
-         Aa1jHd1z4T+zA==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id a6so1716040uao.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:47:46 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1+M4G0TFdcmPLmIQ44m6OogWZE6Syor4Tywwok9oB3cFSLnIoR
-        DQ6/u5TH45MmD2SOPcr7Nm74H1z/F3z5DIU0Xgg=
-X-Google-Smtp-Source: ADFU+vtGiho80TDqAX96Yus6mxMxFu6xRjT221tw+EdgnOczkcdQo8Ti4tq0HKei8/xRnz73F3jsLDM/saoD+O6lBls=
-X-Received: by 2002:a9f:32da:: with SMTP id f26mr18821086uac.40.1585068464826;
- Tue, 24 Mar 2020 09:47:44 -0700 (PDT)
+        Tue, 24 Mar 2020 12:48:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:59206 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbgCXQsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:48:20 -0400
+Received: from zn.tnic (p200300EC2F0BC8009042E8B149D34204.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:c800:9042:e8b1:49d3:4204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0F3C11EC0C48;
+        Tue, 24 Mar 2020 17:48:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585068498;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=eY6J1c0HfoD0Hr3Wz74OVnqF5PpXSMRKl4LpwZpxxzM=;
+        b=Mcna9TlB4NFpozYUvsTpcbSOWCtO7xSlvVPPZwxhoi/96NHhqTjctSLIARgzq4oZ9dZ9T7
+        o1s52yig0P08bl6amoheZSFELE5fDNoK/uzqWMIVxS3IIYbjv9gHJLPUyv1FJ8FNgtAGuT
+        snsPDxZXUP+dJXAn3z8KZVv3Cb9E9bA=
+Date:   Tue, 24 Mar 2020 17:48:12 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+Message-ID: <20200324164812.GG22931@zn.tnic>
+References: <20200115002131.GA3258770@rani.riverdale.lan>
+ <20200115122458.GB20975@zn.tnic>
+ <20200316160259.GN26126@zn.tnic>
+ <20200323204454.GA2611336@zx2c4.com>
+ <202003231350.7D35351@keescook>
+ <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+ <20200324091437.GB22931@zn.tnic>
+ <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
+ <20200324162843.GE22931@zn.tnic>
+ <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200213153928.28407-1-masahiroy@kernel.org>
-In-Reply-To: <20200213153928.28407-1-masahiroy@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 25 Mar 2020 01:47:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
-Message-ID: <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] drm/radeon: remove unneeded header include path
-To:     Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?B?Q2hyaXN0aWFuIEvvv73vv73Dk25pZw==?= 
-        <christian.koenig@amd.com>, David Zhou <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org
-Cc:     Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 24, 2020 at 09:37:13AM -0700, Linus Torvalds wrote:
+> I think it's ok. It's not going to cause any _subtle_ failures, it's
+> going to cause very clear "oh, now it doesn't build" errors.
+> 
+> No?
+> 
+> And binutils 2.23 is what, 7+ years old by now and apparently had
+> known failure cases too.
+> 
+> But if there are silent and subtle failures, that might be a reason to
+> be careful. Are there?
 
-I think this series is a good clean-up.
+Well, not that I know of and that's why I'm being overly cautious. Maybe
+too cautious but a lot of hectic testing of last minute fixes in the
+past have taught me to take my time.
 
-Could you take a look at this please?
+And since it doesn't really matter when the patch goes in - there's
+always the next merge window - I would prefer to take our time and have
+it simmer in -next for max period.
 
+So yeah, 2.23 has been tested for a long time now and it is very likely
+that nothing would happen and if you think it's ok, then sure. Then if
+you happen to see urgent pull requests with build or some other fixes,
+at least you'll be prepared. :-)
 
+-- 
+Regards/Gruss,
+    Boris.
 
-On Fri, Feb 14, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> A header include path without $(srctree)/ is suspicious because it does
-> not work with O= builds.
->
-> You can build drivers/gpu/drm/radeon/ without this include path.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  drivers/gpu/drm/radeon/Makefile | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/radeon/Makefile b/drivers/gpu/drm/radeon/Makefile
-> index c693b2ca0329..9d5d3dc1011f 100644
-> --- a/drivers/gpu/drm/radeon/Makefile
-> +++ b/drivers/gpu/drm/radeon/Makefile
-> @@ -3,8 +3,6 @@
->  # Makefile for the drm device driver.  This driver provides support for the
->  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
->
-> -ccflags-y := -Idrivers/gpu/drm/amd/include
-> -
->  hostprogs := mkregtable
->  clean-files := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
->
-> --
-> 2.17.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+https://people.kernel.org/tglx/notes-about-netiquette
