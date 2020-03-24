@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F754C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0282C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21A1420870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D4020870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbgCXNYK (ORCPT
+        id S1729837AbgCXN3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:24:10 -0400
-Received: from foss.arm.com ([217.140.110.172]:34560 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 09:29:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:34610 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729529AbgCXNYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:03 -0400
+        id S1729565AbgCXNYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:08 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 856761FB;
-        Tue, 24 Mar 2020 06:24:03 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26B3F1063;
+        Tue, 24 Mar 2020 06:24:08 -0700 (PDT)
 Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35E5C3F52E;
-        Tue, 24 Mar 2020 06:24:02 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBF853F52E;
+        Tue, 24 Mar 2020 06:24:06 -0700 (PDT)
 From:   Andre Przywara <andre.przywara@arm.com>
 To:     "David S . Miller" <davem@davemloft.net>,
         Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
@@ -33,9 +33,9 @@ Cc:     Michal Simek <michal.simek@xilinx.com>,
         Russell King <rmk+kernel@arm.linux.org.uk>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 06/14] net: axienet: Factor out TX descriptor chain cleanup
-Date:   Tue, 24 Mar 2020 13:23:39 +0000
-Message-Id: <20200324132347.23709-7-andre.przywara@arm.com>
+Subject: [PATCH v3 09/14] net: axienet: Drop MDIO interrupt registers from ethtools dump
+Date:   Tue, 24 Mar 2020 13:23:42 +0000
+Message-Id: <20200324132347.23709-10-andre.przywara@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
 References: <20200324132347.23709-1-andre.przywara@arm.com>
@@ -44,129 +44,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factor out the code that cleans up a number of connected TX descriptors,
-as we will need it to properly roll back a failed _xmit() call.
-There are subtle differences between cleaning up a successfully sent
-chain (unknown number of involved descriptors, total data size needed)
-and a chain that was about to set up (number of descriptors known), so
-cater for those variations with some extra parameters.
+Newer revisions of the IP don't have these registers. Since we don't
+really use them, just drop them from the ethtools dump.
 
 Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 ---
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 79 +++++++++++++------
- 1 file changed, 57 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/xilinx/xilinx_axienet.h      | 7 -------
+ drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 4 ----
+ 2 files changed, 11 deletions(-)
 
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index 04e51af32178..fb7450ca5c53 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -165,13 +165,6 @@
+ #define XAE_MDIO_MCR_OFFSET	0x00000504 /* MII Management Control */
+ #define XAE_MDIO_MWD_OFFSET	0x00000508 /* MII Management Write Data */
+ #define XAE_MDIO_MRD_OFFSET	0x0000050C /* MII Management Read Data */
+-#define XAE_MDIO_MIS_OFFSET	0x00000600 /* MII Management Interrupt Status */
+-/* MII Mgmt Interrupt Pending register offset */
+-#define XAE_MDIO_MIP_OFFSET	0x00000620
+-/* MII Management Interrupt Enable register offset */
+-#define XAE_MDIO_MIE_OFFSET	0x00000640
+-/* MII Management Interrupt Clear register offset. */
+-#define XAE_MDIO_MIC_OFFSET	0x00000660
+ #define XAE_UAW0_OFFSET		0x00000700 /* Unicast address word 0 */
+ #define XAE_UAW1_OFFSET		0x00000704 /* Unicast address word 1 */
+ #define XAE_FMI_OFFSET		0x00000708 /* Filter Mask Index */
 diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 82ec7deacdfe..5c1b53944771 100644
+index 60c8cde365f8..217f58bed2c5 100644
 --- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
 +++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -545,32 +545,46 @@ static int axienet_device_reset(struct net_device *ndev)
- }
- 
- /**
-- * axienet_start_xmit_done - Invoked once a transmit is completed by the
-- * Axi DMA Tx channel.
-+ * axienet_free_tx_chain - Clean up a series of linked TX descriptors.
-  * @ndev:	Pointer to the net_device structure
-+ * @first_bd:	Index of first descriptor to clean up
-+ * @nr_bds:	Number of descriptors to clean up, can be -1 if unknown.
-+ * @sizep:	Pointer to a u32 filled with the total sum of all bytes
-+ * 		in all cleaned-up descriptors. Ignored if NULL.
-  *
-- * This function is invoked from the Axi DMA Tx isr to notify the completion
-- * of transmit operation. It clears fields in the corresponding Tx BDs and
-- * unmaps the corresponding buffer so that CPU can regain ownership of the
-- * buffer. It finally invokes "netif_wake_queue" to restart transmission if
-- * required.
-+ * Would either be called after a successful transmit operation, or after
-+ * there was an error when setting up the chain.
-+ * Returns the number of descriptors handled.
-  */
--static void axienet_start_xmit_done(struct net_device *ndev)
-+static int axienet_free_tx_chain(struct net_device *ndev, u32 first_bd,
-+				 int nr_bds, u32 *sizep)
- {
--	u32 size = 0;
--	u32 packets = 0;
- 	struct axienet_local *lp = netdev_priv(ndev);
- 	struct axidma_bd *cur_p;
--	unsigned int status = 0;
-+	int max_bds = nr_bds;
-+	unsigned int status;
-+	int i;
-+
-+	if (max_bds == -1)
-+		max_bds = lp->tx_bd_num;
-+
-+	for (i = 0; i < max_bds; i++) {
-+		cur_p = &lp->tx_bd_v[(first_bd + i) % lp->tx_bd_num];
-+		status = cur_p->status;
-+
-+		/* If no number is given, clean up *all* descriptors that have
-+		 * been completed by the MAC.
-+		 */
-+		if (nr_bds == -1 && !(status & XAXIDMA_BD_STS_COMPLETE_MASK))
-+			break;
- 
--	cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
--	status = cur_p->status;
--	while (status & XAXIDMA_BD_STS_COMPLETE_MASK) {
- 		dma_unmap_single(ndev->dev.parent, cur_p->phys,
- 				(cur_p->cntrl & XAXIDMA_BD_CTRL_LENGTH_MASK),
- 				DMA_TO_DEVICE);
--		if (cur_p->skb)
-+
-+		if (cur_p->skb && (status & XAXIDMA_BD_STS_COMPLETE_MASK))
- 			dev_consume_skb_irq(cur_p->skb);
-+
- 		cur_p->cntrl = 0;
- 		cur_p->app0 = 0;
- 		cur_p->app1 = 0;
-@@ -579,15 +593,36 @@ static void axienet_start_xmit_done(struct net_device *ndev)
- 		cur_p->status = 0;
- 		cur_p->skb = NULL;
- 
--		size += status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
--		packets++;
--
--		if (++lp->tx_bd_ci >= lp->tx_bd_num)
--			lp->tx_bd_ci = 0;
--		cur_p = &lp->tx_bd_v[lp->tx_bd_ci];
--		status = cur_p->status;
-+		if (sizep)
-+			*sizep += status & XAXIDMA_BD_STS_ACTUAL_LEN_MASK;
- 	}
- 
-+	return i;
-+}
-+
-+/**
-+ * axienet_start_xmit_done - Invoked once a transmit is completed by the
-+ * Axi DMA Tx channel.
-+ * @ndev:	Pointer to the net_device structure
-+ *
-+ * This function is invoked from the Axi DMA Tx isr to notify the completion
-+ * of transmit operation. It clears fields in the corresponding Tx BDs and
-+ * unmaps the corresponding buffer so that CPU can regain ownership of the
-+ * buffer. It finally invokes "netif_wake_queue" to restart transmission if
-+ * required.
-+ */
-+static void axienet_start_xmit_done(struct net_device *ndev)
-+{
-+	struct axienet_local *lp = netdev_priv(ndev);
-+	u32 packets = 0;
-+	u32 size = 0;
-+
-+	packets = axienet_free_tx_chain(ndev, lp->tx_bd_ci, -1, &size);
-+
-+	lp->tx_bd_ci += packets;
-+	if (lp->tx_bd_ci >= lp->tx_bd_num)
-+		lp->tx_bd_ci -= lp->tx_bd_num;
-+
- 	ndev->stats.tx_packets += packets;
- 	ndev->stats.tx_bytes += size;
- 
+@@ -1258,10 +1258,6 @@ static void axienet_ethtools_get_regs(struct net_device *ndev,
+ 	data[20] = axienet_ior(lp, XAE_MDIO_MCR_OFFSET);
+ 	data[21] = axienet_ior(lp, XAE_MDIO_MWD_OFFSET);
+ 	data[22] = axienet_ior(lp, XAE_MDIO_MRD_OFFSET);
+-	data[23] = axienet_ior(lp, XAE_MDIO_MIS_OFFSET);
+-	data[24] = axienet_ior(lp, XAE_MDIO_MIP_OFFSET);
+-	data[25] = axienet_ior(lp, XAE_MDIO_MIE_OFFSET);
+-	data[26] = axienet_ior(lp, XAE_MDIO_MIC_OFFSET);
+ 	data[27] = axienet_ior(lp, XAE_UAW0_OFFSET);
+ 	data[28] = axienet_ior(lp, XAE_UAW1_OFFSET);
+ 	data[29] = axienet_ior(lp, XAE_FMI_OFFSET);
 -- 
 2.17.1
 
