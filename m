@@ -2,84 +2,128 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EFAC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB16C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2122070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6D3520719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585046495;
+	bh=MMTf0avgN4p/lEVg/TBkwgikg0grq5LUVu+c9Tt97X8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OdE6GnY5tNLU8c0pF5EebNXNibBOn1ZJiVnlrJQnToFcC8HJB6/HtPrg27fjbuBpU
+	 /VZcsixDDQ20p8Ryp8U0xN7Pxf0LkT3bf4AGvkxEhRi9z1eKPt+T1538wcgam3Zb+T
+	 QQH/Q7J37HT6WcuhYGm7k8+7y3VSMK0mgvYpSU24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCXKk1 (ORCPT
+        id S1727289AbgCXKle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:40:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44365 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727084AbgCXKk1 (ORCPT
+        Tue, 24 Mar 2020 06:41:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55140 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727084AbgCXKle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:40:27 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGgyo-0001rl-RA; Tue, 24 Mar 2020 11:40:19 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 4616C100292; Tue, 24 Mar 2020 11:40:18 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v5 3/9] x86/split_lock: Re-define the kernel param option for split_lock_detect
-In-Reply-To: <e708f6d2-8f96-903c-0bce-2eeecc4a237d@intel.com>
-References: <20200315050517.127446-1-xiaoyao.li@intel.com> <20200315050517.127446-4-xiaoyao.li@intel.com> <87r1xjov3a.fsf@nanos.tec.linutronix.de> <e708f6d2-8f96-903c-0bce-2eeecc4a237d@intel.com>
-Date:   Tue, 24 Mar 2020 11:40:18 +0100
-Message-ID: <87r1xidoj1.fsf@nanos.tec.linutronix.de>
+        Tue, 24 Mar 2020 06:41:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=e0CZTEe4kanzxBdk+tSF+ihJz5QgSysqXeZgg3CivL0=; b=e3UhJNib/6ytu4dX7hOpS/tExu
+        nq9HPlIkH4kJptnotKGtV07D86/z74CrfSN5sfXfMyv7k+h8OMlWF8gShJKmVqEiFMQyNnOf0gkC5
+        VpiXxhIlSxQdJuCycc4rqrEItzapMK9d9OdVc5Iqjg9FZDZ66Prdh3sGDtBWeDV72+z00Y/k/XvKY
+        61/fac8uX+zjMTb4Jj7Dp04cs4Ix1cxQ50apE/EjYAmdD1cefZV2BcF1YWTtvp9dOE+c7JOu2sD+Z
+        BjsmvKQ6JZxoh4ln7VPnJxZ+Yvcc+jP3aRhUK4iYu5Uo4G62GRCKEkLtwoY4ZyfB4EWMJtYW6Vsl2
+        BnEH4R3w==;
+Received: from ip5f5ad4e9.dynamic.kabel-deutschland.de ([95.90.212.233] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGh00-0006rV-Cy; Tue, 24 Mar 2020 10:41:32 +0000
+Date:   Tue, 24 Mar 2020 11:41:23 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Hans Verkuil <hverkuil@xs4all.nl>, Sean Young <sean@mess.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Michael Ira Krufky <mkrufky@gmail.com>,
+        Helen Koike <helen.koike@collabora.com>
+Subject: Re: [PATCH 2/2] media: Remove VIDEO_DEV unneeded dependency
+Message-ID: <20200324114123.121783d7@coco.lan>
+In-Reply-To: <0336a046563a3d0556c988a67be2642194831710.camel@collabora.com>
+References: <20200323211022.28297-1-ezequiel@collabora.com>
+        <20200323211022.28297-3-ezequiel@collabora.com>
+        <20200324104722.1c605792@coco.lan>
+        <0336a046563a3d0556c988a67be2642194831710.camel@collabora.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> On 3/24/2020 1:10 AM, Thomas Gleixner wrote:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->> 
->>> Change sld_off to sld_disable, which means disabling feature split lock
->>> detection and it cannot be used in kernel nor can kvm expose it guest.
->>> Of course, the X86_FEATURE_SPLIT_LOCK_DETECT is not set.
->>>
->>> Add a new optioin sld_kvm_only, which means kernel turns split lock
->>> detection off, but kvm can expose it to guest.
->> 
->> What's the point of this? If the host is not clean, then you better fix
->> the host first before trying to expose it to guests.
->
-> It's not about whether or not host is clean. It's for the cases that 
-> users just don't want it enabled on host, to not break the applications 
-> or drivers that do have split lock issue.
+Em Tue, 24 Mar 2020 07:18:49 -0300
+Ezequiel Garcia <ezequiel@collabora.com> escreveu:
 
-It's very much about whether the host is split lock clean.
+> On Tue, 2020-03-24 at 10:47 +0100, Mauro Carvalho Chehab wrote:
+> > Em Mon, 23 Mar 2020 18:10:22 -0300
+> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
+> >   
+> > > Enable VIDEO_DEV (which compiles Video4Linux core)
+> > > when MEDIA_SUPPORT is selected. This is needed, in order
+> > > to be able to enable devices such as stateless codecs.
+> > > 
+> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > > ---
+> > >  drivers/media/Kconfig | 2 --
+> > >  1 file changed, 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+> > > index b36a41332867..7de472ad07a2 100644
+> > > --- a/drivers/media/Kconfig
+> > > +++ b/drivers/media/Kconfig
+> > > @@ -93,13 +93,11 @@ source "drivers/media/mc/Kconfig"
+> > >  
+> > >  #
+> > >  # Video4Linux support
+> > > -#	Only enables if one of the V4L2 types (ATV, webcam, radio) is selected
+> > >  #
+> > >  
+> > >  config VIDEO_DEV
+> > >  	tristate
+> > >  	depends on MEDIA_SUPPORT
+> > > -	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT
+> > >  	default y
+> > >  
+> > >  config VIDEO_V4L2_SUBDEV_API  
+> > 
+> > The rationale of the above is to exclude Digital TV and remote
+> > controller.
+> > 
+> > Removing the above will make the V4L2 core available every time, even
+> > if all the user wants is remote controller or Digital TV support.
+> >   
+> 
+> Hm, right.
+> 
+> > I'm working on a patchset that should hopefully address the issues
+> > you're concerning.
+> >   
+> 
+> Thanks, I'll appreciate that.
 
-If your host kernel is not, then this wants to be fixed first. If your
-host application is broken, then either fix it or use "warn".
+Sent. Btw, I sent another patch to be applied *after* the series.
 
-Stop proliferating crap.
+It just occurred to me that the best way to make everyone happy is
+to let the filtering option to be optional. That's what the newest
+patch does ;-)
 
 Thanks,
-
-        tglx
+Mauro
