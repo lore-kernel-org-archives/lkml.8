@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB94C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABA0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772EB20936
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FC7208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056304;
-	bh=Wb3XSpW7sXPdIm66GfIkxYb52Eo0vBHkMz/ezQ2dpBI=;
+	s=default; t=1585056310;
+	bh=L734DQCsAtgGBQaBPUMxvXOifmfHtf8bfxHJL/1XbNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmO3hnZgWHFQdLweLPhxXCouZPuk3JS97jVLn+3o91Hnj/v9GsGPczSBncEd11mWk
-	 TwS/DCqJUBfVRBagzFtChMFzrx8t4PCBfN+EO37LnySxuLO9nZRqpCDWHwme5JLvXm
-	 v+rJDW2Ph1oVbpCU4Rof6r+uHoqbpKIT8F35AALs=
+	b=BcHLU7BdjAr3yRj6XsgHq0lUimcK83WucBIXkWFBZOTUGT+h0dAMK7CaVqQSo6bpm
+	 OGnbZYPhpSmJpBwAV1uxPFt7+qMiykxfXVfO5xXtINLJZhp7907OZ5iU367w1LlU31
+	 jIi1TWdEIL6bCZM9QTsGlY/io3aADiSkEZuzo6O0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729331AbgCXNZD (ORCPT
+        id S1727682AbgCXNZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:25:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48224 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:25:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729153AbgCXNYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:33 -0400
+        id S1729153AbgCXNZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:25:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D343C20775;
-        Tue, 24 Mar 2020 13:24:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97C37208CA;
+        Tue, 24 Mar 2020 13:25:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056273;
-        bh=Wb3XSpW7sXPdIm66GfIkxYb52Eo0vBHkMz/ezQ2dpBI=;
+        s=default; t=1585056304;
+        bh=L734DQCsAtgGBQaBPUMxvXOifmfHtf8bfxHJL/1XbNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VZR5jrml/2kyW2oOtUNC1OY3mb2gf4X7jjmqGgnERMtd5hBbXRME58QG6i19W2zvL
-         ODmUnY/ugW/GGyFMuK6QQyRvTedVs48yWZSweQ3Q8vN++H8UHYPgbrZaHLu6NqjL+a
-         gWp9AkWE4/SB+V8A2q32zUP1cydOcv3IKa2CseKU=
+        b=YWtgM2jgajJVC02Xblk7Zkz7rzD4WbfjYsyffdozhABciXPOvSKMuAcczqIASz/Qz
+         BVB9Yo4504xNdDQ7e8YTozDxn0Li//TzpcbCujjyeYiPI7+m/tS44pJYkNzEnh32bv
+         eTp/q+ll59RBRXe1P9mJq7JdYKKOlz5+EqQoVzjc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Murphy Zhou <jencce.kernel@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.5 076/119] CIFS: fiemap: do not return EINVAL if get nothing
-Date:   Tue, 24 Mar 2020 14:11:01 +0100
-Message-Id: <20200324130816.018090229@linuxfoundation.org>
+        stable@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Peter Chen <peter.chen@nxp.com>
+Subject: [PATCH 5.5 046/119] usb: host: xhci-plat: add a shutdown
+Date:   Tue, 24 Mar 2020 14:10:31 +0100
+Message-Id: <20200324130812.926394473@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,39 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murphy Zhou <jencce.kernel@gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
 
-commit 979a2665eb6c603ddce0ab374041ab101827b2e7 upstream.
+commit b433e340e7565110b0ce9ca4b3e26f4b97a1decf upstream.
 
-If we call fiemap on a truncated file with none blocks allocated,
-it makes sense we get nothing from this call. No output means
-no blocks have been counted, but the call succeeded. It's a valid
-response.
+When loading new kernel via kexec, we need to shutdown host controller to
+avoid any un-expected memory accessing during new kernel boot.
 
-Simple example reproducer:
-xfs_io -f 'truncate 2M' -c 'fiemap -v' /cifssch/testfile
-xfs_io: ioctl(FS_IOC_FIEMAP) ["/cifssch/testfile"]: Invalid argument
-
-Signed-off-by: Murphy Zhou <jencce.kernel@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+Cc: stable <stable@vger.kernel.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
+Link: https://lore.kernel.org/r/20200306092328.41253-1-ran.wang_1@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2ops.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-plat.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3315,7 +3315,7 @@ static int smb3_fiemap(struct cifs_tcon
- 	if (rc)
- 		goto out;
- 
--	if (out_data_len < sizeof(struct file_allocated_range_buffer)) {
-+	if (out_data_len && out_data_len < sizeof(struct file_allocated_range_buffer)) {
- 		rc = -EINVAL;
- 		goto out;
- 	}
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -445,6 +445,7 @@ MODULE_DEVICE_TABLE(acpi, usb_xhci_acpi_
+ static struct platform_driver usb_xhci_driver = {
+ 	.probe	= xhci_plat_probe,
+ 	.remove	= xhci_plat_remove,
++	.shutdown = usb_hcd_platform_shutdown,
+ 	.driver	= {
+ 		.name = "xhci-hcd",
+ 		.pm = &xhci_plat_pm_ops,
 
 
