@@ -2,76 +2,157 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0845FC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2F0C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB5FF20714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:08:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585012118;
-	bh=N8ny1ddSH/WDtO8Ur8IBPuVWrQVYsU/hhfFIi/kKH78=;
-	h=Date:From:To:Subject:In-Reply-To:References:List-ID:From;
-	b=dkchYfBY3UuL+aXrJjB5zdCRhzQ7Bhz+HShIcJ5n4eJ/8Wb7Mvui2+mRasCkckPU1
-	 1kbbbuqQ1wVSDRUjjOtZlkZ0nuCmycqqUDoz/KwIgCweDicQvcB6zLa58f+SHYp7qD
-	 rcOWpL28VNHA+hKD03xodgF77JSRA3oZTW5YU/Ws=
+	by mail.kernel.org (Postfix) with ESMTP id 2CF6020714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCXBIh (ORCPT
+        id S1727138AbgCXBLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 21:08:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50010 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 21:11:02 -0400
+Received: from mga09.intel.com ([134.134.136.24]:60333 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727030AbgCXBIh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 21:08:37 -0400
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D072220714;
-        Tue, 24 Mar 2020 01:08:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585012117;
-        bh=N8ny1ddSH/WDtO8Ur8IBPuVWrQVYsU/hhfFIi/kKH78=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=NwnIBNso0VcDySPOFtACQf/IyXu0Mx81CcufV3Yhj8Jn7rhCANQZJz6uoNGQyDOZy
-         5k1pBQ/MUwcPz2GnuBF6J1L2ryc47EjmuCy9nKNzp5AbYhbUmSQc9lLA6uAKVuDYal
-         UXd78+ngt+C8WcQe+0oJMHCjjpl/4SZZ2BwT4tWk=
-Date:   Mon, 23 Mar 2020 18:08:36 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various
- stack implementations
-Message-Id: <20200323180836.2d824f5d45f2f5dce729d5b2@linux-foundation.org>
-In-Reply-To: <20200323180633.5e75654282d076d74766bd88@linux-foundation.org>
-References: <20200303233550.251375-1-guro@fb.com>
-        <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
-        <20200324004221.GA36662@carbon.dhcp.thefacebook.com>
-        <20200323180358.7603217aa9955f298255da4e@linux-foundation.org>
-        <20200323180633.5e75654282d076d74766bd88@linux-foundation.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1727022AbgCXBLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 21:11:01 -0400
+IronPort-SDR: UUQjEMkv2MVRDqv/jbl1FwycOuzR4+Ovaxk/OgJ1BAuDVxgNLcwI+JNrx0PCADUx//ZTTdqIqY
+ 2AQl4GX4Q/ew==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 18:11:00 -0700
+IronPort-SDR: 8tLM9J2Q3IUwdV0gZYXX7kP1ZmmczZjkU7tq2D/ofV+To5kEIHbZFnDZUcUK4F4DQwC+gtblpK
+ 7520VZ8FJltQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
+   d="scan'208";a="270109560"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.120]) ([10.255.31.120])
+  by fmsmga004.fm.intel.com with ESMTP; 23 Mar 2020 18:10:56 -0700
+Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of
+ split lock detection
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200315050517.127446-1-xiaoyao.li@intel.com>
+ <20200315050517.127446-2-xiaoyao.li@intel.com>
+ <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
+ <87lfnqq0oo.fsf@nanos.tec.linutronix.de>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <beb9ab5c-a50d-2ec6-1c23-e426508cdf4e@intel.com>
+Date:   Tue, 24 Mar 2020 09:10:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <87lfnqq0oo.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 18:06:33 -0700 Andrew Morton <akpm@linux-foundation.org> wrote:
-
-> And here's the altered "mm: memcg/slab: introduce
-> mem_cgroup_from_obj()", which I have renamed to "mm: memcg/slab: use
-> mem_cgroup_from_obj()":
+On 3/24/2020 4:24 AM, Thomas Gleixner wrote:
+> Thomas Gleixner <tglx@linutronix.de> writes:
+>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>>
+>>> Current initialization flow of split lock detection has following issues:
+>>> 1. It assumes the initial value of MSR_TEST_CTRL.SPLIT_LOCK_DETECT to be
+>>>     zero. However, it's possible that BIOS/firmware has set it.
+>>
+>> Ok.
+>>
+>>> 2. X86_FEATURE_SPLIT_LOCK_DETECT flag is unconditionally set even if
+>>>     there is a virtualization flaw that FMS indicates the existence while
+>>>     it's actually not supported.
+>>>
+>>> 3. Because of #2, KVM cannot rely on X86_FEATURE_SPLIT_LOCK_DETECT flag
+>>>     to check verify if feature does exist, so cannot expose it to
+>>>     guest.
+>>
+>> Sorry this does not make anny sense. KVM is the hypervisor, so it better
+>> can rely on the detect flag. Unless you talk about nested virt and a
+>> broken L1 hypervisor.
+>>
+>>> To solve these issues, introducing a new sld_state, "sld_not_exist",
+>>> as
+>>
+>> The usual naming convention is sld_not_supported.
 > 
-> The end result is slightly different - mem_cgroup_from_obj() will now
-> end up inside #ifdef CONFIG_MEMCG_KMEM.  Should I undo that?
+> But this extra state is not needed at all, it already exists:
+> 
+>      X86_FEATURE_SPLIT_LOCK_DETECT
+> 
+> You just need to make split_lock_setup() a bit smarter. Soemthing like
+> the below. It just wants to be split into separate patches.
+> 
+> Thanks,
+> 
+>          tglx
+> ---
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -45,6 +45,7 @@ enum split_lock_detect_state {
+>    * split lock detect, unless there is a command line override.
+>    */
+>   static enum split_lock_detect_state sld_state = sld_off;
+> +static DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
 
-err, no, we've just fed forward the build fixes in
-mm-memcg-slab-introduce-mem_cgroup_from_obj-v2.patch so I think we're
-all good.
+I used percpu cache in v3, but people prefer Tony's cache for reserved 
+bits[1].
+
+If you prefer percpu cache, I'll use it in next version.
+
+[1]: https://lore.kernel.org/lkml/20200303192242.GU1439@linux.intel.com/
+
+>   /*
+>    * Processors which have self-snooping capability can handle conflicting
+> @@ -984,11 +985,32 @@ static inline bool match_option(const ch
+>   	return len == arglen && !strncmp(arg, opt, len);
+>   }
+>   
+> +static bool __init split_lock_verify_msr(bool on)
+> +{
+> +	u64 ctrl, tmp;
+> +
+> +	if (rdmsrl_safe(MSR_TEST_CTRL, &ctrl))
+> +		return false;
+> +	if (on)
+> +		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +	else
+> +		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
+> +		return false;
+> +	rdmsrl(MSR_TEST_CTRL, tmp);
+> +	return ctrl == tmp;
+> +}
+> +
+>   static void __init split_lock_setup(void)
+>   {
+>   	char arg[20];
+>   	int i, ret;
+>   
+> +	if (!split_lock_verify_msr(true) || !split_lock_verify_msr(false)) {
+> +		pr_info("MSR access failed: Disabled\n");
+> +		return;
+> +	}
+> +
+
+I did similar thing like this in my v3, however Sean raised concern that 
+toggling MSR bit before parsing kernel param is bad behavior. [2]
+
+[2]: https://lore.kernel.org/kvm/20200305162311.GG11500@linux.intel.com/
+
