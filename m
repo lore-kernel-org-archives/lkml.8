@@ -2,127 +2,101 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B2AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2EEC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A88520775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EC020788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:06:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KYQKDx8D"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="fQEuKNFQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728236AbgCXQGX (ORCPT
+        id S1728312AbgCXQGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:06:23 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55800 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgCXQGW (ORCPT
+        Tue, 24 Mar 2020 12:06:32 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35757 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727730AbgCXQGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:06:22 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v25so1977310wmh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:06:21 -0700 (PDT)
+        Tue, 24 Mar 2020 12:06:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id h8so18664638iob.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:06:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1N/kkCsXiaUZJR6Cb6g+LjBhvjr5lmjI4mokCR0tVqI=;
-        b=KYQKDx8DyzUAnuq2yoc8TeWYg6u2d9G1EnJpysHS23i/nJtDUTJ1EGMDA+yLtc+3Ne
-         ttb5axfZ4dXbmiVTOnc+IEEDAk9zxj2cXn99YKJpGZc93ZuBmxvzsUq8qH6oTtP5O3Yq
-         fGk1pmxtTvy5X+ioEB3lY2DmwDertoipWkA38=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ojwoexmi/yNDp0QrqjuP+tb9z9BxusbHoCk6iHU7shU=;
+        b=fQEuKNFQnAsD07TtSc6hXHFzVHp8dLZVMVM5iWSjjjdGw4f2R/gciWR/viQuDDtOfX
+         7es7jXjtssrvriqGFL5nVHrdtsxIQvYC/VBWTu7PB5BmEH27FnpoqZIsDCbsw97eSlDY
+         Ypij/2VgnN453qPo4pw07Ld9eSes/EugM5d7Zk1sVvuNNZpJjGUisbNxO7GgHret37KC
+         1CfI/hbxhhzJAM+DO6H/4zytEk592jhdyJRt60sxjsWFwAAXXXdz90/LvucNkwXawTqM
+         mF98FzSQfTQqxNOi/Mh0yyw26lXdwssdBTUc9eu4RLefyEvSv7XrpcCxtBeW+okQsfPq
+         UC9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1N/kkCsXiaUZJR6Cb6g+LjBhvjr5lmjI4mokCR0tVqI=;
-        b=AnyaeRUnuPga5dKVNe1j1Jz02fEHLHKI7CaGBVXt4O1QdSH/ekpMzV77A+IuAJOv2D
-         n9WGb5GPdac1jlGHSu57w8W8fUKwXK0QdXePB1ZuTR1+JW4uu8Dx0z1UJTMJlEVEJ3r+
-         0MybxMxfh5rVBOMF1V9sDvSWb+7oUpaAVTzSo3vNxXgBIkbpB4n8KQUsY/DNJQTPUFcX
-         jjBwL19meCdW2Ci6DQ4DcTIYGItEBC7FLtLdDU1fEd1dNd1FW3jon1J9SV2NfR6nNGy1
-         5czi9669xbO0uZ+wmpExWvs/yuXFDRqwk/sE24GFE1YQQVL7Yfw8/STY0q2gMuI/aop9
-         eH/w==
-X-Gm-Message-State: ANhLgQ1Rus+QFfwCC7Y93Wsb/My6Ak4bPAqymIEJSbhCOQodgc9t10sp
-        ax07FrQvmK+GUDZB4w3bolET5Q==
-X-Google-Smtp-Source: ADFU+vuG4lJMdGuOPi6DXgu5JzM407RSy855bnUG1UuTb5xJvxQ+7aP+XEs6ZftW2sAQYdGUDfywtg==
-X-Received: by 2002:a7b:cf19:: with SMTP id l25mr6240257wmg.131.1585065980936;
-        Tue, 24 Mar 2020 09:06:20 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id u204sm4887603wmg.40.2020.03.24.09.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 09:06:18 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Tue, 24 Mar 2020 17:06:16 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v5 2/7] security: Refactor declaration of LSM
- hooks
-Message-ID: <20200324160616.GA9173@chromium.org>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-3-kpsingh@chromium.org>
- <CAEf4Bza67kM0KiX464yB+iV83aV96TyD7iLEZJccXyH-Od0QTQ@mail.gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ojwoexmi/yNDp0QrqjuP+tb9z9BxusbHoCk6iHU7shU=;
+        b=iB1V5lSRDaFO30DY86RQ//5lhtlcFq5Db6U7dVPB3qZc47b8fzSWhNVdJLJUQV4FMX
+         UayO1LUMPXAmPXej5grFDPVKJFdtyqAh5FCL3hPX1BaP83iO8PkhjNYAGa6bgmZ+7k8g
+         4BJ432GnS+9VuEB0cUm3uIHpv9LCJT27gidC/NtL2VVlvR/IRLpHAoB/Zw6a2rAjp2hQ
+         WcMMzOH7U1ar/USC8uH5HaM3mY2grHBVt3+y886r4ZxCcJQQDVs7NI7nzADxHx48irlP
+         Til/KOIhpnlSrD/7qlZ/iX8cpGfo0DRxw7ho0XcnOYeneTqnQw1wSVH7cC6ARbyeNisb
+         9DgQ==
+X-Gm-Message-State: ANhLgQ3rSO6HeWcoAoVB3Hb+udguG4m7X+plc+6NK+fSJXwvorCoxmGd
+        fwSTY+Z76FwVCyfvEODevSeQkg==
+X-Google-Smtp-Source: ADFU+vtSEIy6OU2P3p0F5VYmIIPCNs10wRnCB6nYzCevCk/nSG4XkYeAO/0NiEIbndZmWaAyWKV5KQ==
+X-Received: by 2002:a6b:156:: with SMTP id 83mr24819257iob.187.1585065989365;
+        Tue, 24 Mar 2020 09:06:29 -0700 (PDT)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id n18sm6464554ilq.38.2020.03.24.09.06.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 09:06:28 -0700 (PDT)
+Subject: Re: [PATCH v3 0/3] block/diskstats: more accurate io_ticks and
+ optimization
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>
+References: <158503038812.1955.7827988255138056389.stgit@buzz>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <8aa3e8f7-cd53-b038-d5a7-dca7bf3fa929@kernel.dk>
+Date:   Tue, 24 Mar 2020 10:06:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza67kM0KiX464yB+iV83aV96TyD7iLEZJccXyH-Od0QTQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158503038812.1955.7827988255138056389.stgit@buzz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 23-Mär 12:56, Andrii Nakryiko wrote:
-> On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > The information about the different types of LSM hooks is scattered
-> > in two locations i.e. union security_list_options and
-> > struct security_hook_heads. Rather than duplicating this information
-> > even further for BPF_PROG_TYPE_LSM, define all the hooks with the
-> > LSM_HOOK macro in lsm_hook_names.h which is then used to generate all
-> > the data structures required by the LSM framework.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> > Reviewed-by: Florent Revest <revest@google.com>
-> > ---
-> >  include/linux/lsm_hook_names.h | 354 +++++++++++++++++++
-> >  include/linux/lsm_hooks.h      | 622 +--------------------------------
-> >  2 files changed, 360 insertions(+), 616 deletions(-)
-> >  create mode 100644 include/linux/lsm_hook_names.h
-> >
-> > diff --git a/include/linux/lsm_hook_names.h b/include/linux/lsm_hook_names.h
-> > new file mode 100644
-> > index 000000000000..412e4ca24c9b
-> > --- /dev/null
-> > +++ b/include/linux/lsm_hook_names.h
+On 3/24/20 12:39 AM, Konstantin Khlebnikov wrote:
+> Simplified estimation for io_ticks introduced in patch
+> https://lore.kernel.org/linux-block/20181206164122.2166-5-snitzer@redhat.com/
+> could be very inaccurate for request longer than jiffy (i.e. any HDD)
 > 
-> It's not really just hook names, it's full hook definitions, no? So
-> lsm_hook_defs.h seems a bit more appropriate. Just for consideration,
-> not that I care that strongly :)
-
-I like lsm_hook_defs.h better too :) Updated.
-
-- KP
-
+> There is at least one another report about this:
+> https://lore.kernel.org/linux-block/20200324031942.GA3060@ming.t460p/
+> See detail in comment for first patch.
 > 
-> 
-> [...]
+> v1: https://lore.kernel.org/lkml/155413438394.3201.15211440151043943989.stgit@buzz/
+> v2: https://lore.kernel.org/lkml/158314549775.1788.6529015932237292177.stgit@buzz/
+> v3:
+>  * update documentation
+>  * rebase to current linux-next
+>  * fix compilation for CONFIG_SMP=n
+
+Can you respin this against my for-5.7/block branch?
+
+-- 
+Jens Axboe
+
