@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A657BC54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A90C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8321020BED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB322080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbgCXWcU (ORCPT
+        id S1728649AbgCXWc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:32:20 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46363 "EHLO
+        Tue, 24 Mar 2020 18:32:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46370 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbgCXWcT (ORCPT
+        with ESMTP id S1728289AbgCXWcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:32:19 -0400
+        Tue, 24 Mar 2020 18:32:20 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGs5m-0006rc-U3; Tue, 24 Mar 2020 23:32:15 +0100
+        id 1jGs5n-0006sa-SK; Tue, 24 Mar 2020 23:32:16 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 955F41C0451;
-        Tue, 24 Mar 2020 23:32:14 +0100 (CET)
-Date:   Tue, 24 Mar 2020 22:32:14 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 788C81C0451;
+        Tue, 24 Mar 2020 23:32:15 +0100 (CET)
+Date:   Tue, 24 Mar 2020 22:32:15 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] crypto: Convert to new CPU match macros
+Subject: [tip: x86/cpu] powercap/intel_rapl: Convert to new X86 CPU match macros
 Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200320131510.700250889@linutronix.de>
-References: <20200320131510.700250889@linutronix.de>
+In-Reply-To: <20200320131510.501728797@linutronix.de>
+References: <20200320131510.501728797@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158508913426.28353.15383060459839740948.tip-bot2@tip-bot2>
+Message-ID: <158508913506.28353.9986072676088338857.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,120 +56,125 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     f30cfacad1ee948c821a82e63b28958b92bf8c6c
-Gitweb:        https://git.kernel.org/tip/f30cfacad1ee948c821a82e63b28958b92bf8c6c
+Commit-ID:     f07225128865b30093c9ccf946564673c77d0233
+Gitweb:        https://git.kernel.org/tip/f07225128865b30093c9ccf946564673c77d0233
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 20 Mar 2020 14:14:05 +01:00
+AuthorDate:    Fri, 20 Mar 2020 14:14:03 +01:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 24 Mar 2020 21:36:06 +01:00
+CommitterDate: Tue, 24 Mar 2020 21:35:32 +01:00
 
-crypto: Convert to new CPU match macros
+powercap/intel_rapl: Convert to new X86 CPU match macros
 
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
+Get rid the of the local macro wrappers for consistency.
+
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lkml.kernel.org/r/20200320131510.700250889@linutronix.de
+Link: https://lkml.kernel.org/r/20200320131510.501728797@linutronix.de
 ---
- arch/x86/crypto/aesni-intel_glue.c         | 2 +-
- arch/x86/crypto/crc32-pclmul_glue.c        | 2 +-
- arch/x86/crypto/crc32c-intel_glue.c        | 2 +-
- arch/x86/crypto/crct10dif-pclmul_glue.c    | 2 +-
- arch/x86/crypto/ghash-clmulni-intel_glue.c | 2 +-
- drivers/crypto/padlock-aes.c               | 2 +-
- drivers/crypto/padlock-sha.c               | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/powercap/intel_rapl_common.c | 87 +++++++++++++--------------
+ 1 file changed, 43 insertions(+), 44 deletions(-)
 
-diff --git a/arch/x86/crypto/aesni-intel_glue.c b/arch/x86/crypto/aesni-intel_glue.c
-index bbbebbd..75b6ea2 100644
---- a/arch/x86/crypto/aesni-intel_glue.c
-+++ b/arch/x86/crypto/aesni-intel_glue.c
-@@ -1064,7 +1064,7 @@ static struct aead_alg aesni_aeads[0];
- static struct simd_aead_alg *aesni_simd_aeads[ARRAY_SIZE(aesni_aeads)];
- 
- static const struct x86_cpu_id aesni_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_AES),
-+	X86_MATCH_FEATURE(X86_FEATURE_AES, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, aesni_cpu_id);
-diff --git a/arch/x86/crypto/crc32-pclmul_glue.c b/arch/x86/crypto/crc32-pclmul_glue.c
-index 418bd88..7c4c7b2 100644
---- a/arch/x86/crypto/crc32-pclmul_glue.c
-+++ b/arch/x86/crypto/crc32-pclmul_glue.c
-@@ -170,7 +170,7 @@ static struct shash_alg alg = {
+diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
+index 73257cf..eb32865 100644
+--- a/drivers/powercap/intel_rapl_common.c
++++ b/drivers/powercap/intel_rapl_common.c
+@@ -951,52 +951,51 @@ static const struct rapl_defaults rapl_defaults_cht = {
  };
  
- static const struct x86_cpu_id crc32pclmul_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_PCLMULQDQ),
-+	X86_MATCH_FEATURE(X86_FEATURE_PCLMULQDQ, NULL),
+ static const struct x86_cpu_id rapl_ids[] __initconst = {
+-	INTEL_CPU_FAM6(SANDYBRIDGE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(SANDYBRIDGE_X, rapl_defaults_core),
+-
+-	INTEL_CPU_FAM6(IVYBRIDGE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(IVYBRIDGE_X, rapl_defaults_core),
+-
+-	INTEL_CPU_FAM6(HASWELL, rapl_defaults_core),
+-	INTEL_CPU_FAM6(HASWELL_L, rapl_defaults_core),
+-	INTEL_CPU_FAM6(HASWELL_G, rapl_defaults_core),
+-	INTEL_CPU_FAM6(HASWELL_X, rapl_defaults_hsw_server),
+-
+-	INTEL_CPU_FAM6(BROADWELL, rapl_defaults_core),
+-	INTEL_CPU_FAM6(BROADWELL_G, rapl_defaults_core),
+-	INTEL_CPU_FAM6(BROADWELL_D, rapl_defaults_core),
+-	INTEL_CPU_FAM6(BROADWELL_X, rapl_defaults_hsw_server),
+-
+-	INTEL_CPU_FAM6(SKYLAKE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(SKYLAKE_L, rapl_defaults_core),
+-	INTEL_CPU_FAM6(SKYLAKE_X, rapl_defaults_hsw_server),
+-	INTEL_CPU_FAM6(KABYLAKE_L, rapl_defaults_core),
+-	INTEL_CPU_FAM6(KABYLAKE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(CANNONLAKE_L, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ICELAKE_L, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ICELAKE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ICELAKE_NNPI, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ICELAKE_X, rapl_defaults_hsw_server),
+-	INTEL_CPU_FAM6(ICELAKE_D, rapl_defaults_hsw_server),
+-	INTEL_CPU_FAM6(COMETLAKE_L, rapl_defaults_core),
+-	INTEL_CPU_FAM6(COMETLAKE, rapl_defaults_core),
+-	INTEL_CPU_FAM6(TIGERLAKE_L, rapl_defaults_core),
+-
+-	INTEL_CPU_FAM6(ATOM_SILVERMONT, rapl_defaults_byt),
+-	INTEL_CPU_FAM6(ATOM_AIRMONT, rapl_defaults_cht),
+-	INTEL_CPU_FAM6(ATOM_SILVERMONT_MID, rapl_defaults_tng),
+-	INTEL_CPU_FAM6(ATOM_AIRMONT_MID, rapl_defaults_ann),
+-	INTEL_CPU_FAM6(ATOM_GOLDMONT, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ATOM_GOLDMONT_D, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ATOM_TREMONT_D, rapl_defaults_core),
+-	INTEL_CPU_FAM6(ATOM_TREMONT_L, rapl_defaults_core),
+-
+-	INTEL_CPU_FAM6(XEON_PHI_KNL, rapl_defaults_hsw_server),
+-	INTEL_CPU_FAM6(XEON_PHI_KNM, rapl_defaults_hsw_server),
++	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(SANDYBRIDGE_X,	&rapl_defaults_core),
++
++	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(IVYBRIDGE_X,		&rapl_defaults_core),
++
++	X86_MATCH_INTEL_FAM6_MODEL(HASWELL,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_L,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_G,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(HASWELL_X,		&rapl_defaults_hsw_server),
++
++	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_G,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_D,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(BROADWELL_X,		&rapl_defaults_hsw_server),
++
++	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_X,		&rapl_defaults_hsw_server),
++	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_X,		&rapl_defaults_hsw_server),
++	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_D,		&rapl_defaults_hsw_server),
++	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&rapl_defaults_core),
++
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	&rapl_defaults_byt),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	&rapl_defaults_cht),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID,	&rapl_defaults_tng),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT_MID,	&rapl_defaults_ann),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT,	&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_PLUS,	&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_GOLDMONT_D,	&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_D,	&rapl_defaults_core),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&rapl_defaults_core),
++
++	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNL,	&rapl_defaults_hsw_server),
++	X86_MATCH_INTEL_FAM6_MODEL(XEON_PHI_KNM,	&rapl_defaults_hsw_server),
  	{}
  };
- MODULE_DEVICE_TABLE(x86cpu, crc32pclmul_cpu_id);
-diff --git a/arch/x86/crypto/crc32c-intel_glue.c b/arch/x86/crypto/crc32c-intel_glue.c
-index c20d1b8..d2d069b 100644
---- a/arch/x86/crypto/crc32c-intel_glue.c
-+++ b/arch/x86/crypto/crc32c-intel_glue.c
-@@ -221,7 +221,7 @@ static struct shash_alg alg = {
- };
+-
+ MODULE_DEVICE_TABLE(x86cpu, rapl_ids);
  
- static const struct x86_cpu_id crc32c_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_XMM4_2),
-+	X86_MATCH_FEATURE(X86_FEATURE_XMM4_2, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, crc32c_cpu_id);
-diff --git a/arch/x86/crypto/crct10dif-pclmul_glue.c b/arch/x86/crypto/crct10dif-pclmul_glue.c
-index 3c81e15..71291d5 100644
---- a/arch/x86/crypto/crct10dif-pclmul_glue.c
-+++ b/arch/x86/crypto/crct10dif-pclmul_glue.c
-@@ -114,7 +114,7 @@ static struct shash_alg alg = {
- };
- 
- static const struct x86_cpu_id crct10dif_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_PCLMULQDQ),
-+	X86_MATCH_FEATURE(X86_FEATURE_PCLMULQDQ, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, crct10dif_cpu_id);
-diff --git a/arch/x86/crypto/ghash-clmulni-intel_glue.c b/arch/x86/crypto/ghash-clmulni-intel_glue.c
-index a4b7285..1f1a95f 100644
---- a/arch/x86/crypto/ghash-clmulni-intel_glue.c
-+++ b/arch/x86/crypto/ghash-clmulni-intel_glue.c
-@@ -313,7 +313,7 @@ static struct ahash_alg ghash_async_alg = {
- };
- 
- static const struct x86_cpu_id pcmul_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_PCLMULQDQ), /* Pickle-Mickle-Duck */
-+	X86_MATCH_FEATURE(X86_FEATURE_PCLMULQDQ, NULL), /* Pickle-Mickle-Duck */
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, pcmul_cpu_id);
-diff --git a/drivers/crypto/padlock-aes.c b/drivers/crypto/padlock-aes.c
-index 594d6b1..62c6fe8 100644
---- a/drivers/crypto/padlock-aes.c
-+++ b/drivers/crypto/padlock-aes.c
-@@ -474,7 +474,7 @@ static struct skcipher_alg cbc_aes_alg = {
- };
- 
- static const struct x86_cpu_id padlock_cpu_id[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_XCRYPT),
-+	X86_MATCH_FEATURE(X86_FEATURE_XCRYPT, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, padlock_cpu_id);
-diff --git a/drivers/crypto/padlock-sha.c b/drivers/crypto/padlock-sha.c
-index c826abe..a697a4a 100644
---- a/drivers/crypto/padlock-sha.c
-+++ b/drivers/crypto/padlock-sha.c
-@@ -490,7 +490,7 @@ static struct shash_alg sha256_alg_nano = {
- };
- 
- static const struct x86_cpu_id padlock_sha_ids[] = {
--	X86_FEATURE_MATCH(X86_FEATURE_PHE),
-+	X86_MATCH_FEATURE(X86_FEATURE_PHE, NULL),
- 	{}
- };
- MODULE_DEVICE_TABLE(x86cpu, padlock_sha_ids);
+ /* Read once for all raw primitive data for domains */
