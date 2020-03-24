@@ -2,195 +2,130 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 679E6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:01:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8E0C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47D8520786
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:01:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D51D220842
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="QDAlHA9b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCXKBf (ORCPT
+        id S1727238AbgCXKBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:01:35 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:60768 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgCXKBf (ORCPT
+        Tue, 24 Mar 2020 06:01:50 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46877 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgCXKBu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:01:35 -0400
-X-Greylist: delayed 620 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Mar 2020 06:01:33 EDT
-X-AuditID: c0a8fbf4-489ff70000004419-63-5e79d80f321a
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id AC.8D.17433.F08D97E5; Tue, 24 Mar 2020 10:51:11 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Tue, 24 Mar 2020 10:51:06 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "Gary.Hook@amd.com" <Gary.Hook@amd.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "changbin.du@intel.com" <changbin.du@intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v6 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Topic: [PATCH v6 04/10] lib/test_linear_ranges: add a test for the
- 'linear_ranges'
-Thread-Index: AQHWAbZgp/CDDdyFwEyawpR7J20+yKhXZRsAgAAKMgA=
-Date:   Tue, 24 Mar 2020 09:51:06 +0000
-Message-ID: <97ef912d0f6166d7e881ae9805fa1df82a3bd98d.camel@fi.rohmeurope.com>
-References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
-         <0f5400617480787b415a1955c914c05445c30028.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200324091440.GD1922688@smile.fi.intel.com>
-In-Reply-To: <20200324091440.GD1922688@smile.fi.intel.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <D81B419620B4CA4DABF3B0199D0286CC@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Tue, 24 Mar 2020 06:01:50 -0400
+Received: by mail-wr1-f68.google.com with SMTP id j17so17208211wru.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 03:01:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YXwXXyf4FFoH6g7bKxTH+XMwT8dvCco8fnyGy8BbH0U=;
+        b=QDAlHA9bG8dxJapJMUVdl7SSfzjRwftlM0jT/kCptr/tZzU0kY2soxUAM3ezP1rj/K
+         NLWi5HDGR2pSC0+mTbUvx3FNzvBl6v4EJo03KBnlB1svpO4emsIa8635EHUgU9/1iOGe
+         Po5VJK/wDQ/keZp1zbUujB4U5LdA/uzELiJlako/i0PxNdyYZU7HFbGz/7woBdChgpWh
+         wKHuLwTYxPKxdy76wZie4l6JXj1pfcUCW1iXMfAhrl/kNTsXubyLICwVmXHTouEsreeJ
+         sVYV5p6rX6yW2GfD+w+zg7pwq8J3EqXT2rRKwfkk8HORngkZ8bW6OVP8FXTLoUHE2wLF
+         X8GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YXwXXyf4FFoH6g7bKxTH+XMwT8dvCco8fnyGy8BbH0U=;
+        b=ltVl3LtexHW9aODodAWTJ14H0ztfSqxScmRFCW3QRZL0s7yM3PR3OS3rhTchdYHNRL
+         DJwjmY002aRuD0Lt5YK71UBGBZLI7oeCb23zmJNZRDCKxUW84UklLi3fffFE4VkhiW4q
+         VXec04ZvuhmOT34YvEkDDD2ZzagmCYKH3mwuS6LVr5zmTV6LuISzRg0pUA2DybuZAjty
+         lS6PHKtdy3pkAuVthJqL2agVoig/6nmst7cMPItb5BD5SDle+y0KOxGQLXDI0AwDsdVQ
+         we/Pi8wD3XZjAnWgcaMhqLamVdUwId6w3U8HGVqrkhx1dIakFxFCWIOi5nCaeSvdtdCw
+         WJKA==
+X-Gm-Message-State: ANhLgQ0TqT3pNgYIHz4kNfELU2l/IfJIQalrJ8UvobO9gyV+vzJsRlKZ
+        XbijV/so8kiQe1zJBE03Uk+g6Q==
+X-Google-Smtp-Source: ADFU+vs+oZMrTA+XjIVihEjmm3kkuM0VpBBT6FouF1t7AnwQf9AWhrAkOA5fgdwclkEuWXDSzOly8A==
+X-Received: by 2002:adf:9dc6:: with SMTP id q6mr34986704wre.70.1585044109070;
+        Tue, 24 Mar 2020 03:01:49 -0700 (PDT)
+Received: from localhost (jirka.pirko.cz. [84.16.102.26])
+        by smtp.gmail.com with ESMTPSA id t81sm3607126wmb.15.2020.03.24.03.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 03:01:47 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 11:01:46 +0100
+From:   Jiri Pirko <jiri@resnulli.us>
+To:     Po Liu <Po.Liu@nxp.com>
+Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, vinicius.gomes@intel.com,
+        claudiu.manoil@nxp.com, vladimir.oltean@nxp.com,
+        alexandru.marginean@nxp.com, xiaoliang.yang_1@nxp.com,
+        roy.zang@nxp.com, mingkai.hu@nxp.com, jerry.huang@nxp.com,
+        leoyang.li@nxp.com, michael.chan@broadcom.com, vishal@chelsio.com,
+        saeedm@mellanox.com, leon@kernel.org, jiri@mellanox.com,
+        idosch@mellanox.com, alexandre.belloni@bootlin.com,
+        UNGLinuxDriver@microchip.com, kuba@kernel.org, jhs@mojatatu.com,
+        xiyou.wangcong@gmail.com, simon.horman@netronome.com,
+        pablo@netfilter.org, moshe@mellanox.com, m-karicheri2@ti.com,
+        andre.guedes@linux.intel.com, stephen@networkplumber.org
+Subject: Re: [v1,net-next  1/5] net: qos offload add flow status with dropped
+ count
+Message-ID: <20200324100146.GR11304@nanopsycho.orion>
+References: <20200306125608.11717-11-Po.Liu@nxp.com>
+ <20200324034745.30979-1-Po.Liu@nxp.com>
+ <20200324034745.30979-2-Po.Liu@nxp.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TfUwTZxzOe3e9O5DbzlrpO+Yi1IgTFXSa7c1iFpfF5JbFRbMZE8zAQ24t
-        rh/s2k5YsoxN3KSkEZ0MvYEfIIqECBSd8lHWNA2UsbVjIJSJbkQzB8wap8gQld31pvDXPfd7
-        fs/HH7+XxrUXqSQ6z+oQRCtvNpDxhK9uxrPm+Uhh1tqe31NRZWMDidxfVmBo+v4dgA4dXIn6
-        It/gqHz0Joma+7oxVFH+C0CV4WICBZubCHQiENKgfwcOE2hfTSOJSseXoHC4iUIPBg5g6Mij
-        sxjqb6sk0T13AKDaoT4MVdYGCVRzNhU1tUxh6PZIBYH2ewMU8lac0aDedgf6tspLoRZPOY6G
-        /vkNQ94n0wTyXr8HUNfdabAphdv/62OSazjeALgL54YxrlW6RnHf+5ZzJz1OrqUujavpGMM4
-        T30JyR0+U63hRgY7SC4aClFc8OgMwZVV+wB3vGcb90NVA7VVl7lgYw7v+OS9PKM1441dC0zH
-        uo8S+YMbCv6e/ElTBOrWu0AcDdkN8NSIS+MC8bSWvQJgoKSYUH+CAEZOhHEXoGmS3Qhdw5Qi
-        0LHvwIfRCFB2cLaDgQduBzCFWMRmwoOllzF1aSeUZs+TKn4dTkaHYnOCXQ6DwxMxzLDvwkv+
-        QUwNGwDwD39zLCFOFlzzTcYwYF+CJUXRmABn9dDz55RGrc3C0x1KOQUvhmM3nvw/T4GXps4T
-        SmmcXQkb2zJUuAn+dcuhuqTAI6WjlFphIew5dpMoA4nSvABpTizNiaV5Ymme+CTQ1ANo4fPM
-        Rt4hrEsXBWe6aDNZ5M9um8UD1DO8fxnM+t/2A4wGfvACjRkWM8buwiztczm23EITbzdli06z
-        YPcDSOMGHdMiFGRpmVy+8FNBtD2lXqQJg55ZMXroAy2rZH0kCPmC+JRdQtMGyCwbkk0XioJR
-        KPgwz+yYozE6TjGPT9LZBWuuIPJOhylbOY9su3wfCpUg565S5Iw9n7fIU1X6I1hFl41VVeN0
-        oKq2GtcSVptVSNIzA4PyKqusmpzWZ0HjQE8DwyJmjWKUIL/FZz7jcgQmRxilvUqEg5+jkoqA
-        tHk45+Ute6/m+sz2zq9frW8tSW6d2PPzw1TmKozo1iaWtbkje3aF0nec29fp7voqOrV62UTy
-        +m11vZs77aboo1PjD2buLL214rXi0PWEnR933d36ePrCZzc+X13zPjE5mvlmcu/u7/y+2beu
-        bG/sX9rubq+/WBT+Ik3fSxXvyOjnE1+xGAi7iV+Xhot2/j/0QqhdSAQAAA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324034745.30979-2-Po.Liu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUdWUsIDIwMjAtMDMtMjQgYXQgMTE6MTQgKzAyMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90
-ZToNCj4gPiBPbiBUdWUsIE1hciAyNCwgMjAyMCBhdCAxMDoyOTo0MUFNICswMjAwLCBNYXR0aSBW
-YWl0dGluZW4gd3JvdGU6DQoNCj4gPiArLyogRmlyc3QgdGhpbmdzIGZpcnN0LiBJIGRlZXBseSBk
-aXNsaWtlIHVuaXQtdGVzdHMuIEkgaGF2ZSBzZWVuDQo+ID4gYWxsIHRoZSBoZWxsDQo+ID4gKyAq
-IGJyZWFraW5nIGxvb3NlIHdoZW4gcGVvcGxlIHdobyB0aGluayB0aGUgdW5pdCB0ZXN0cyBhcmUg
-InRoZQ0KPiA+IHNpbHZlciBidWxsZXQiDQo+ID4gKyAqIHRvIGtpbGwgYnVncyBnZXQgdG8gZGVj
-aWRlIGhvdyBhIGNvbXBhbnkgc2hvdWxkIGltcGxlbWVudA0KPiA+IHRlc3Rpbmcgc3RyYXRlZ3ku
-Li4NCj4gPiArICoNCj4gPiArICogQmVsaWV2ZSBtZSwgaXQgbWF5IGdldCBfcmVhbGx5XyByaWRp
-Y3Vsb3VzLiBJdCBpcyB0ZW1wdGluZyB0bw0KPiA+IHRoaW5rIHRoYXQNCj4gPiArICogd2Fsa2lu
-ZyB0aHJvdWdoIGFsbCB0aGUgcG9zc2libGUgZXhlY3V0aW9uIGJyYW5jaGVzIHdpbGwgbmFpbA0K
-PiA+IGRvd24gMTAwJSBvZg0KPiA+ICsgKiBidWdzLiBUaGlzIG1heSBsZWFkIHRvIGlkZWFzIGFi
-b3V0IGRlbWFuZHMgdG8gZ2V0IGNlcnRhaW4gJSBvZg0KPiA+ICJ0ZXN0DQo+ID4gKyAqIGNvdmVy
-YWdlIiAtIG1lYXN1cmVkIGFzIGxpbmUgY292ZXJhZ2UuIEFuZCB0aGF0IGlzIG9uZSBvZiB0aGUN
-Cj4gPiB3b3JzdCB0aGluZ3MNCj4gPiArICogeW91IGNhbiBkby4NCj4gPiArICoNCj4gPiArICog
-QXNrIHBlb3BsZSB0byBwcm92aWRlIGxpbmUgY292ZXJhZ2UgYW5kIHRoZXkgZG8uIEkndmUgc2Vl
-bg0KPiA+IGNsZXZlciB0b29scw0KPiA+ICsgKiB3aGljaCBnZW5lcmF0ZSB0ZXN0IGNhc2VzIHRv
-IHRlc3QgdGhlIGV4aXN0aW5nIGZ1bmN0aW9ucyAtIGFuZA0KPiA+IGJ5IGRlZmF1bHQNCj4gPiAr
-ICogdGhlc2UgdG9vbHMgZXhwZWN0IGNvZGUgdG8gYmUgY29ycmVjdCBhbmQganVzdCBnZW5lcmF0
-ZSBjaGVja3MNCj4gPiB3aGljaCBhcmUNCj4gPiArICogcGFzc2luZyB3aGVuIHJhbiBhZ2FpbnN0
-IGN1cnJlbnQgY29kZS1iYXNlLiBSdW4gdGhpcyBnZW5lcmF0b3INCj4gPiBhbmQgeW91J2xsIGdl
-dA0KPiA+ICsgKiB0ZXN0cyB0aGF0IGRvIG5vdCB0ZXN0IGNvZGUgaXMgY29ycmVjdCBidXQganVz
-dCB2ZXJpZnkgbm90aGluZw0KPiA+IGNoYW5nZXMuDQo+ID4gKyAqIFByb2JsZW0gaXMgdGhhdCB0
-ZXN0aW5nIHdvcmtpbmcgY29kZSBpcyBwb2ludGxlc3MuIEFuZCBpZiBpdCBpcw0KPiA+IG5vdA0K
-PiA+ICsgKiB3b3JraW5nLCB5b3VyIHRlc3QgbXVzdCBub3QgYXNzdW1lIGl0IGlzIHdvcmtpbmcu
-IFlvdSB3b24ndA0KPiA+IGNhdGNoIGFueSBidWdzDQo+ID4gKyAqIGJ5IHN1Y2ggdGVzdHMuIFdo
-YXQgeW91IGNhbiBkbyBpcyB0byBnZW5lcmF0ZSBhIGh1Z2UgYW1vdW50IG9mDQo+ID4gdGVzdHMu
-DQo+ID4gKyAqIEVzcGVjaWFsbHkgaWYgeW91IHdlcmUgYXJlIGFza2VkIHRvIHByb2l2ZGUgMTAw
-JSBsaW5lLWNvdmVyYWdlDQo+ID4geF94LiBTbyB3aGF0DQo+ID4gKyAqIGRvZXMgdGhlc2UgdGVz
-dHMgLSB3aGljaCBhcmUgbm90IGZpbmRpbmcgYW55IGJ1Z3Mgbm93IC0gZG8/DQo+ID4gKyAqDQo+
-ID4gKyAqIFRoZXkgYWRkIGluZXJ0aWEgdG8gZXZlcnkgZnV0dXJlIGRldmVsb3BtZW50LiBJIHRo
-aW5rIGl0IHdhcw0KPiA+IFRlcnJ5IFByYXRjaGV0DQo+ID4gKyAqIHdobyB3cm90ZSBzb21lb25l
-IGhhdmluZyBzYW1lIGltcGFjdCBhcyB0aGljayBzeXJ1cCBoYXMgdG8NCj4gPiBjaHJvbm9tZXRy
-ZS4NCj4gPiArICogRXhjZXNzaXZlIGFtb3VudCBvZiB1bml0LXRlc3RzIGhhdmUgdGhpcyBlZmZl
-Y3QgdG8gZGV2ZWxvcG1lbnQuDQo+ID4gSWYgeW91IGRvDQo+ID4gKyAqIGFjdHVhbGx5IGZpbmQg
-X2FueV8gYnVnIGZyb20gY29kZSBpbiBzdWNoIGVudmlyb25tZW50IGFuZCB0cnkNCj4gPiBmaXhp
-bmcgaXQuLi4NCj4gPiArICogLi4uY2hhbmNlcyBhcmUgeW91IGFsc28gbmVlZCB0byBmaXggdGhl
-IHRlc3QgY2FzZXMuIEluIHN1bm55DQo+ID4gZGF5IHlvdSBmaXggb25lDQo+ID4gKyAqIHRlc3Qu
-IEJ1dCBJJ3ZlIGRvbmUgcmVmYWN0b3Jpbmcgd2hpY2ggcmVzdWx0ZWQgNTAwKyBicm9rZW4NCj4g
-PiB0ZXN0cyAod2hpY2ggaGFkDQo+ID4gKyAqIHJlYWxseSB6ZXJvIHZhbHVlIG90aGVyIHRoYW4g
-cHJvdmluZyB0byBtYW5hZ2VycyB0aGF0IHdlIGRvIGRvDQo+ID4gInF1YWxpdHkiKS4uLg0KPiA+
-ICsgKg0KPiA+ICsgKiBBZnRlciB0aGlzIGJlaW5nIHNhaWQgLSB0aGVyZSBhcmUgc2l0dWF0aW9u
-cyB3aGVyZSBVVHMgY2FuIGJlDQo+ID4gaGFuZHkuIElmIHlvdQ0KPiA+ICsgKiBoYXZlIGFsZ29y
-aXRobXMgd2hpY2ggdGFrZSBzb21lIGlucHV0IGFuZCBzaG91bGQgcHJvZHVjZSBvdXRwdXQNCj4g
-PiAtIHRoZW4geW91DQo+ID4gKyAqIGNhbiBpbXBsZW1lbnQgZmV3LCBjYXJlZnVsbHkgc2VsZWN0
-ZWQgc2ltcGxlIFVULWNhc2VzIHdoaWNoDQo+ID4gdGVzdCB0aGlzLiBJJ3ZlDQo+ID4gKyAqIHBy
-ZXZpb3VzbHkgdXNlZCB0aGlzIGZvciBleGFtcGxlIGZvciBuZXRsaW5rIGFuZCBkZXZpY2UtdHJl
-ZQ0KPiA+IGRhdGEgcGFyc2luZw0KPiA+ICsgKiBmdW5jdGlvbnMuIEZlZWQgc29tZSBkYXRhIGV4
-YW1wbGVzIHRvIGZ1bmN0aW9ucyBhbmQgdmVyaWZ5IHRoZQ0KPiA+IG91dHB1dCBpcyBhcw0KPiA+
-ICsgKiBleHBlY3RlZC4gSSBhbSBub3QgY292ZXJpbmcgYWxsIHRoZSBjYXNlcyBidXQgSSB3aWxs
-IHNlZSB0aGUNCj4gPiBsb2dpYyBzaG91bGQgYmUNCj4gPiArICogd29ya2luZy4NCj4gPiArICoN
-Cj4gPiArICogSGVyZSB3ZSBhbHNvIGRvIHNvbWUgbWlub3IgdGVzdGluZy4gSSBkb24ndCB3YW50
-IHRvIGdvIHRocm91Z2gNCj4gPiBhbGwgYnJhbmNoZXMNCj4gPiArICogb3IgdGVzdCBtb3JlIG9y
-IGxlc3Mgb2J2aW91cyB0aGluZ3MgLSBidXQgSSB3YW50IHRvIHNlZSB0aGUNCj4gPiBtYWluIGxv
-Z2ljIGlzDQo+ID4gKyAqIHdvcmtpbmcuIEFuZCBJIGRlZmluaXRlbHkgZG9uJ3Qgd2FudCB0byBh
-ZGQgNTAwKyB0ZXN0IGNhc2VzDQo+ID4gdGhhdCBicmVhayB3aGVuDQo+ID4gKyAqIHNvbWUgc2lt
-cGxlIGZpeCBpcyBkb25lIHhfeC4gU28gLSBsZXQncyBvbmx5IGFkZCBmZXcsIHdlbGwNCj4gPiBz
-ZWxlY3RlZCB0ZXN0cw0KPiA+ICsgKiB3aGljaCBlbnN1cmUgYXMgbXVjaCBsb2dpYyBpcyBnb29k
-IGFzIHBvc3NpYmxlLg0KPiANCj4gQW5kIHdoeSB5b3Ugbm90IHRvIGRhcmUgdG8gcHV0IHRoaXMg
-ZGlyZWN0bHkgdG8gS1VuaXQgZG9jdW1lbnRhdGlvbj8NCg0KSSB3YXMgZ29pbmcgdG8gYW5zd2Vy
-IHlvdSB0aGF0IGJlY2F1c2UgS1VuaXQgaXMgbm90IG15IGN1cCBvZiB0ZWEuIEJ1dCwNCmFjdHVh
-bGx5IC0geW91IGhhdmUgYSB2YWxpZCBwb2ludCBoZXJlLiBJZiBsb3RzIG9mIGtlcm5lbCBjb2Rl
-IHdhcyB0bw0KYmUgcG9sbHV0ZWQgYnkgVVRzIGl0IHdvdWxkIG1lYW4gdGhhdCBldmVyeSBkZXZl
-bG9wZXIgd2hvIHdhbnQncyB0bw0KY2hhbmdlIGNvZGUgd291bGQgbmVlZCB0byBzdWZmZXIgZnJv
-bSB0aGlzIGluZXJ0aWEuIFNvIGFjdHVhbGx5LCBhcw0KImV2ZXJ5IGRldmVsb3BlciIgaW5jbHVk
-ZXMgYWxzbyBtZSAtIHRoYXQga2luZCBvZiBtYWtlcyBpdCBhbHNvIG15IGN1cA0Kb2YgdGVhLg0K
-DQo+IEkgdGhpbmsgaXQncyBub3QgYSBwbGFjZSAoSSBtZWFuIHRoaXMgZmlsZSkgZm9yIGEgZGlz
-Y3Vzc2lvbnMgbGlrZQ0KPiB0aGF0Lg0KDQpPVE9ILCBJIHRydXN0IG1haW50YWluZXJzIG9mIGVh
-Y2ggYXJlYSB0byBwZXJmb3JtIHNvbWUgc2FuaXR5IGNoZWNrcyB0bw0KdGVzdHMgc3VibWl0dGVk
-IHRvIHZlcmlmeSB0aGVpciBhcmVhIG9mIGNvZGUuIEhlbmNlIEkgZG9uJ3QgZmVlbCB0aGUNCm5l
-ZWQgKGF0IGxlYXN0IGZvciBub3cpIHRvIGRvIGFueSBnZW5lcmFsIHN0YXRlbWVudCBhYm91dCBr
-ZXJuZWwNCnRlc3Rpbmcgc3RyYXRlZ3kuDQoNCkkgaG93ZXZlciBmZWVsIHNvbWV3aGF0IHJlc3Bv
-bnNpYmxlIGZvciBjb2RlIEkgYW0gYXV0aG9yaW5nLiBJIHVzdWFsbHkNCnRyeSB0byBmaXggaXNz
-dWVzIHJlcG9ydGVkIGFnYWluc3QgaXQgLSBhbmQgYnkgbWluaW11bSBwYXJ0aWNpcGF0ZSBpbg0K
-cmV2aWV3aW5nIHN1Y2ggY2hhbmdlcy4gVGhlIGN1cnJlbnQgbGluZWFyIHJhbmdlcyBpcyBhdXRo
-b3JlZCBieSBtZSwgc28NCkkgd2FudCB0byBmaXggcHJvYmxlbXMgZnJvbSBpdCBpZiBzdWNoIGFy
-ZSBmb3VuZC4gVGhpcyBtYWtlcyB0aGUNCmxpbmVhcl9yYW5nZXMgc3BlY2lmaWMgdGVzdHMgc3Bl
-Y2lhbCB0byBtZS4gVGh1cywgY29uY2VybmluZyB0aGUNCmxpbmVhcl9yYW5nZXMgdGVzdHMgLSBJ
-IHdvdWxkIGxpa2UgdG8gZG8gbXkgYmVzdCB0aGF0IHRoZSB0ZXN0cyBoZXJlDQphcmUgbm90IGhp
-bmRlcmluZyBkZXZlbG9wbWVudC4NCg0KPiAgSSBoYXZlDQo+IGluIG15IGxpZmUgY2FzZXMgd2hl
-biB0ZXN0cyBoZWxwIG5vdCB0byBicmVhayB3b3JraW5nIGNvZGUgZHVyaW5nDQo+IGVuZGxlc3MN
-Cj4gKG1pY3JvLSlvcHRpbWl6YXRpb25zLiBXZSBoYXZlIHJlYWwgZXhhbXBsZXMgd2l0aCBiaXRt
-YXAgQVBJIGhlcmUNCj4gd2hlbiB0ZXN0cw0KPiB3ZXJlIChhbmQgSSBiZWxpZXZlIHN0aWxsIGlz
-KSBoZWxwZnVsLg0KDQpJIGFtIG5vdCBzdXJlIGhvdyB5b3UgcmVhZCBteSBjb21tZW50IGhlcmUg
-YnV0IEkgZGlkIHNheSB0aGF0IHRlc3RzIGFyZQ0KZ29vZCBhdCBzb21lIHBsYWNlcyBidXQgd2hl
-cmUgdG8gYWRkIHRlc3RzIG5lZWRzIGNhcmVmdWwgcG9uZGVyaW5nLiBJDQphZnRlciBhbGwgZGlk
-IHRoZXNlIHRlc3RzIC0gSSB3b3VsZG4ndCBoYXZlIGRvbmUgc28gaWYgSSBzYXcgbm8gdmFsdWUN
-CmluIGFkZGluZyB0aGVtLg0KDQoNCg==
+Tue, Mar 24, 2020 at 04:47:39AM CET, Po.Liu@nxp.com wrote:
+>Add the hardware tc flower offloading with dropped frame counter for
+>status update. action ops->stats_update only loaded by the
+>tcf_exts_stats_update() and tcf_exts_stats_update() only loaded by
+>matchall and tc flower hardware filter. But the stats_update only set
+>the dropped count as default false in the ops->stats_update. This
+>patch add the dropped counter to action stats update. Its dropped counter
+>update by the hardware offloading driver.
+>This is changed by replacing the drop flag with dropped frame counter.
+
+I just read this paragraph 3 times, I'm unable to decypher :(
+
+
+
+>
+>Driver side should update how many "packets" it filtered and how many
+>"dropped" in those "packets".
+>
+
+[...]
+
+
+> 	return action;
+> }
+> 
+>-static void tcf_gact_stats_update(struct tc_action *a, u64 bytes, u32 packets,
+>-				  u64 lastuse, bool hw)
+>+static void tcf_gact_stats_update(struct tc_action *a, u64 bytes, u64 packets,
+>+				  u64 lastuse, u64 dropped, bool hw)
+> {
+> 	struct tcf_gact *gact = to_gact(a);
+> 	int action = READ_ONCE(gact->tcf_action);
+> 	struct tcf_t *tm = &gact->tcf_tm;
+> 
+>-	tcf_action_update_stats(a, bytes, packets, action == TC_ACT_SHOT, hw);
+>+	tcf_action_update_stats(a, bytes, packets,
+>+				(action == TC_ACT_SHOT) ? packets : 0, hw);
+
+Avoid ()s here.
+
+
+> 	tm->lastuse = max_t(u64, tm->lastuse, lastuse);
+> }
+> 
