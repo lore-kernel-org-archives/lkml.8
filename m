@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53AB0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA80C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AC77208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF5E20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055633;
-	bh=hA3gBctLWAPyif8p+Euj0bVCjmDtWTU30v68aHGHpKg=;
+	s=default; t=1585055636;
+	bh=FDq4mdadFeIRuQ2rR1zm0FRF7qhn70FJTMxqAXXxdBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hGPnoxFofV+maqxYWq9CEE+zcWq5pZib+S9el+TATk3zokuD7jVmO7LkLJXLqftth
-	 W2nUbWJJvVo8PhwWuxiWiFdqDZ/pNdFcgl+NnhTz88aqXl6F+H/VCBbcpm74NXABob
-	 3rntr1MV4u5Ek6/+OkPOQYZdp4UMv+AV2exzK/pM=
+	b=UMusUca1TOfIZ7xl17ADDLrxt/gWKPGxa7M1o8jMM/4tpaXSHNmw/a9FkWuRRGIoV
+	 QxqYwGeTft0Jw+eRvM1dvqn3HgIm3WPbRlu5u+zkNabk8r9Zvus5WABHvuq1IuygBL
+	 vr2IIOfqI4Cpda58iF+kCatnb9E5a50aLeMXdNlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgCXNNv (ORCPT
+        id S1727956AbgCXNNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:13:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60168 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:13:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbgCXNNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:13:49 -0400
+        id S1727940AbgCXNNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:13:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11985208D6;
-        Tue, 24 Mar 2020 13:13:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DCD3208D5;
+        Tue, 24 Mar 2020 13:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055628;
-        bh=hA3gBctLWAPyif8p+Euj0bVCjmDtWTU30v68aHGHpKg=;
+        s=default; t=1585055631;
+        bh=FDq4mdadFeIRuQ2rR1zm0FRF7qhn70FJTMxqAXXxdBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B/8C+gASY5L5QkOk5BSv7QIaFcjfixZSQsz4AYeKAXR+q89gplPU6siAXDGc0xLBI
-         pbzHF/QJvC7iRO/IRiHGeM9upFa9dC3C/4isThZPZEJqgMFwXmq3ua9f6Z0IA4h2rl
-         TKxR0a9CR3xFNp7vmRqjEZC4lzU8fKsAX3ISBm7k=
+        b=pyeCsoBCDTLhBHto4jS+/QJd43okMw4l0OULN3gIaJ+fmplqS4Pf4Hm58A96GTdH5
+         xAcXGTWLV/yRljlrH6e8nX78T95PIs89AZMqaqV8MxCAVfP/aOqWCjPIVpCnuHN/Cf
+         tbMPTdwO4oCyNL1F1+00q2hylhhMm9VCVEF4/OlA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 43/65] xhci: Do not open code __print_symbolic() in xhci trace events
-Date:   Tue, 24 Mar 2020 14:11:04 +0100
-Message-Id: <20200324130802.513633154@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 44/65] btrfs: fix log context list corruption after rename whiteout error
+Date:   Tue, 24 Mar 2020 14:11:05 +0100
+Message-Id: <20200324130802.605551570@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -60,69 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 045706bff837ee89c13f1ace173db71922c1c40b upstream.
+commit 236ebc20d9afc5e9ff52f3cf3f365a91583aac10 upstream.
 
-libtraceevent (used by perf and trace-cmd) failed to parse the
-xhci_urb_dequeue trace event. This is because the user space trace
-event format parsing is not a full C compiler. It can handle some basic
-logic, but is not meant to be able to handle everything C can do.
+During a rename whiteout, if btrfs_whiteout_for_rename() returns an error
+we can end up returning from btrfs_rename() with the log context object
+still in the root's log context list - this happens if 'sync_log' was
+set to true before we called btrfs_whiteout_for_rename() and it is
+dangerous because we end up with a corrupt linked list (root->log_ctxs)
+as the log context object was allocated on the stack.
 
-In cases where a trace event field needs to be converted from a number
-to a string, there's the __print_symbolic() macro that should be used:
+After btrfs_rename() returns, any task that is running btrfs_sync_log()
+concurrently can end up crashing because that linked list is traversed by
+btrfs_sync_log() (through btrfs_remove_all_log_ctxs()). That results in
+the same issue that commit e6c617102c7e4 ("Btrfs: fix log context list
+corruption after rename exchange operation") fixed.
 
- See samples/trace_events/trace-events-sample.h
-
-Some xhci trace events open coded the __print_symbolic() causing the
-user spaces tools to fail to parse it. This has to be replaced with
-__print_symbolic() instead.
-
-CC: stable@vger.kernel.org
-Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206531
-Fixes: 5abdc2e6e12ff ("usb: host: xhci: add urb_enqueue/dequeue/giveback tracers")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200306150858.21904-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: d4682ba03ef618 ("Btrfs: sync log after logging new name")
+CC: stable@vger.kernel.org # 4.19+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-trace.h |   23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ fs/btrfs/inode.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/host/xhci-trace.h
-+++ b/drivers/usb/host/xhci-trace.h
-@@ -289,23 +289,12 @@ DECLARE_EVENT_CLASS(xhci_log_urb,
- 	),
- 	TP_printk("ep%d%s-%s: urb %p pipe %u slot %d length %d/%d sgs %d/%d stream %d flags %08x",
- 			__entry->epnum, __entry->dir_in ? "in" : "out",
--			({ char *s;
--			switch (__entry->type) {
--			case USB_ENDPOINT_XFER_INT:
--				s = "intr";
--				break;
--			case USB_ENDPOINT_XFER_CONTROL:
--				s = "control";
--				break;
--			case USB_ENDPOINT_XFER_BULK:
--				s = "bulk";
--				break;
--			case USB_ENDPOINT_XFER_ISOC:
--				s = "isoc";
--				break;
--			default:
--				s = "UNKNOWN";
--			} s; }), __entry->urb, __entry->pipe, __entry->slot_id,
-+			__print_symbolic(__entry->type,
-+				   { USB_ENDPOINT_XFER_INT,	"intr" },
-+				   { USB_ENDPOINT_XFER_CONTROL,	"control" },
-+				   { USB_ENDPOINT_XFER_BULK,	"bulk" },
-+				   { USB_ENDPOINT_XFER_ISOC,	"isoc" }),
-+			__entry->urb, __entry->pipe, __entry->slot_id,
- 			__entry->actual, __entry->length, __entry->num_mapped_sgs,
- 			__entry->num_sgs, __entry->stream, __entry->flags
- 		)
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -10015,6 +10015,10 @@ out_fail:
+ 		ret = btrfs_sync_log(trans, BTRFS_I(old_inode)->root, &ctx);
+ 		if (ret)
+ 			commit_transaction = true;
++	} else if (sync_log) {
++		mutex_lock(&root->log_mutex);
++		list_del(&ctx.list);
++		mutex_unlock(&root->log_mutex);
+ 	}
+ 	if (commit_transaction) {
+ 		ret = btrfs_commit_transaction(trans);
 
 
