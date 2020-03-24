@@ -2,55 +2,60 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304FAC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 979CAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDC320788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E8E420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585064305;
+	bh=IuBp/xaFr7ZgC7YM6R2iieq975HLH8RBRdBRFZApg8c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EeXawiW5LjVKymjftmQLBjM+rw/SToafM9FMvnpXYf9ex0Io7YmhMnj3pORXfElqu
+	 jI5vs02ivf6KTesYzkyRebTVMgDQxL/Wd1E1RoNkGXrgCEFJE99nr8z7TCkrj2l8Ff
+	 ZyUoDAzQChWrLVnatmEGJ2S8cVn+49ibTPUhvO/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728857AbgCXPiS (ORCPT
+        id S1728666AbgCXPhb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:38:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40198 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728660AbgCXPhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 11:37:31 -0400
-IronPort-SDR: hu/pJaY8+DLwSy7pcEs0Wd5PCNHg9ayrX0BmE1eDGpisEtCy/5ahZvnnGSWLO5kxw+q2M4pxJ2
- ltgL5LXkDmpw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:37:30 -0700
-IronPort-SDR: ege+R4s2yWDYKvlJDc5AnRzo+hYyE4egePelGEqv/Y+jXhh0CGz+LeJo27Xi7V9G5hHMWuShun
- 3xik4R2/VfCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="393319751"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 08:37:26 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
+Received: from mail.kernel.org ([198.145.29.99]:60226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728582AbgCXPhY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:24 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 144C620714;
+        Tue, 24 Mar 2020 15:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585064243;
+        bh=IuBp/xaFr7ZgC7YM6R2iieq975HLH8RBRdBRFZApg8c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qs5aP9nlEw42QteOwo5uHGgWaCB9jXQ+POKR/d5+1ybu9PSL4TbUOBhTqDTALLGm+
+         zk2IaxLeINs+m4fwCpIxAI0jpcdDX9udzRb/aAr3L3Owlzm2ln11r8qHBGIkMB0RjB
+         HOLvPVeAOIdvDyDcFqSQpVTf7Nxa4Gk2tMAUsXHI=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v6 6/8] kvm: x86: Emulate MSR IA32_CORE_CAPABILITIES
-Date:   Tue, 24 Mar 2020 23:18:57 +0800
-Message-Id: <20200324151859.31068-7-xiaoyao.li@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: [RFC PATCH 13/21] list: Add integrity checking to hlist_nulls implementation
+Date:   Tue, 24 Mar 2020 15:36:35 +0000
+Message-Id: <20200324153643.15527-14-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200324151859.31068-1-xiaoyao.li@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
+In-Reply-To: <20200324153643.15527-1-will@kernel.org>
+References: <20200324153643.15527-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,120 +63,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Emulate MSR_IA32_CORE_CAPABILITIES in software and unconditionally
-advertise its support to userspace. Like MSR_IA32_ARCH_CAPABILITIES, it
-is a feature-enumerating MSR and can be fully emulated regardless of
-hardware support. Existence of CORE_CAPABILITIES is enumerated via
-CPUID.(EAX=7H,ECX=0):EDX[30].
+Extend the 'hlist_nulls' implementation so that it can optionally
+perform integrity checking in a similar fashion to the standard 'list'
+code when CONFIG_CHECK_INTEGRITY_LIST=y.
 
-Note, support for individual features enumerated via CORE_CAPABILITIES,
-e.g., split lock detection, will be added in future patches.
+On architectures without a trap value for ILLEGAL_POINTER_VALUE (i.e.
+all 32-bit architectures), explicit pointer/poison checks can help to
+mitigate UAF vulnerabilities such as the one exploited by "pingpongroot"
+(CVE-2015-3636).
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/cpuid.c            |  1 +
- arch/x86/kvm/x86.c              | 22 ++++++++++++++++++++++
- 3 files changed, 24 insertions(+)
+ include/linux/list_nulls.h | 23 +++++++++++++++++++
+ lib/list_debug.c           | 47 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 70 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9a183e9d4cb1..7e842ccb0608 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -597,6 +597,7 @@ struct kvm_vcpu_arch {
- 	u64 ia32_xss;
- 	u64 microcode_version;
- 	u64 arch_capabilities;
-+	u64 core_capabilities;
- 
- 	/*
- 	 * Paging state of the vcpu
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 435a7da07d5f..1cacc776b329 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -344,6 +344,7 @@ void kvm_set_cpu_caps(void)
- 	/* TSC_ADJUST and ARCH_CAPABILITIES are emulated in software. */
- 	kvm_cpu_cap_set(X86_FEATURE_TSC_ADJUST);
- 	kvm_cpu_cap_set(X86_FEATURE_ARCH_CAPABILITIES);
-+	kvm_cpu_cap_set(X86_FEATURE_CORE_CAPABILITIES);
- 
- 	if (boot_cpu_has(X86_FEATURE_IBPB) && boot_cpu_has(X86_FEATURE_IBRS))
- 		kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL);
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 5ef57e3a315f..fc1a4e9e5659 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1248,6 +1248,7 @@ static const u32 emulated_msrs_all[] = {
- 	MSR_IA32_TSC_ADJUST,
- 	MSR_IA32_TSCDEADLINE,
- 	MSR_IA32_ARCH_CAPABILITIES,
-+	MSR_IA32_CORE_CAPS,
- 	MSR_IA32_MISC_ENABLE,
- 	MSR_IA32_MCG_STATUS,
- 	MSR_IA32_MCG_CTL,
-@@ -1314,6 +1315,7 @@ static const u32 msr_based_features_all[] = {
- 	MSR_F10H_DECFG,
- 	MSR_IA32_UCODE_REV,
- 	MSR_IA32_ARCH_CAPABILITIES,
-+	MSR_IA32_CORE_CAPS,
- };
- 
- static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all)];
-@@ -1367,12 +1369,20 @@ static u64 kvm_get_arch_capabilities(void)
- 	return data;
- }
- 
-+static u64 kvm_get_core_capabilities(void)
-+{
-+	return 0;
-+}
+diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
+index 48f33ae16381..379e097e92b0 100644
+--- a/include/linux/list_nulls.h
++++ b/include/linux/list_nulls.h
+@@ -35,6 +35,23 @@ struct hlist_nulls_node {
+ 	({ typeof(ptr) ____ptr = (ptr); \
+ 	   !is_a_nulls(____ptr) ? hlist_nulls_entry(____ptr, type, member) : NULL; \
+ 	})
 +
- static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
++#ifdef CONFIG_CHECK_INTEGRITY_LIST
++extern bool __hlist_nulls_add_head_valid(struct hlist_nulls_node *new,
++					 struct hlist_nulls_head *head);
++extern bool __hlist_nulls_del_valid(struct hlist_nulls_node *node);
++#else
++static inline bool __hlist_nulls_add_head_valid(struct hlist_nulls_node *new,
++						struct hlist_nulls_head *head)
++{
++	return true;
++}
++static inline bool __hlist_nulls_del_valid(struct hlist_nulls_node *node)
++{
++	return true;
++}
++#endif
++
+ /**
+  * ptr_is_a_nulls - Test if a ptr is a nulls
+  * @ptr: ptr to be tested
+@@ -79,6 +96,9 @@ static inline void hlist_nulls_add_head(struct hlist_nulls_node *n,
  {
- 	switch (msr->index) {
- 	case MSR_IA32_ARCH_CAPABILITIES:
- 		msr->data = kvm_get_arch_capabilities();
- 		break;
-+	case MSR_IA32_CORE_CAPS:
-+		msr->data = kvm_get_core_capabilities();
-+		break;
- 	case MSR_IA32_UCODE_REV:
- 		rdmsrl_safe(msr->index, &msr->data);
- 		break;
-@@ -2745,6 +2755,11 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 		vcpu->arch.arch_capabilities = data;
- 		break;
-+	case MSR_IA32_CORE_CAPS:
-+		if (!msr_info->host_initiated)
-+			return 1;
-+		vcpu->arch.core_capabilities = data;
-+		break;
- 	case MSR_EFER:
- 		return set_efer(vcpu, msr_info);
- 	case MSR_K7_HWCR:
-@@ -3072,6 +3087,12 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 		msr_info->data = vcpu->arch.arch_capabilities;
- 		break;
-+	case MSR_IA32_CORE_CAPS:
-+		if (!msr_info->host_initiated &&
-+		    !guest_cpuid_has(vcpu, X86_FEATURE_CORE_CAPABILITIES))
-+			return 1;
-+		msr_info->data = vcpu->arch.core_capabilities;
-+		break;
- 	case MSR_IA32_POWER_CTL:
- 		msr_info->data = vcpu->arch.msr_ia32_power_ctl;
- 		break;
-@@ -9367,6 +9388,7 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- 		goto free_guest_fpu;
+ 	struct hlist_nulls_node *first = h->first;
  
- 	vcpu->arch.arch_capabilities = kvm_get_arch_capabilities();
-+	vcpu->arch.core_capabilities = kvm_get_core_capabilities();
- 	vcpu->arch.msr_platform_info = MSR_PLATFORM_INFO_CPUID_FAULT;
- 	kvm_vcpu_mtrr_init(vcpu);
- 	vcpu_load(vcpu);
++	if (!__hlist_nulls_add_head_valid(n, h))
++		return;
++
+ 	n->next = first;
+ 	n->pprev = &h->first;
+ 	h->first = n;
+@@ -91,6 +111,9 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
+ 	struct hlist_nulls_node *next = n->next;
+ 	struct hlist_nulls_node **pprev = n->pprev;
+ 
++	if (!__hlist_nulls_del_valid(n))
++		return;
++
+ 	WRITE_ONCE(*pprev, next);
+ 	if (!is_a_nulls(next))
+ 		WRITE_ONCE(next->pprev, pprev);
+diff --git a/lib/list_debug.c b/lib/list_debug.c
+index 03234ebd18c9..b3560de4accc 100644
+--- a/lib/list_debug.c
++++ b/lib/list_debug.c
+@@ -10,6 +10,7 @@
+ #include <linux/bug.h>
+ #include <linux/kernel.h>
+ #include <linux/rculist.h>
++#include <linux/rculist_nulls.h>
+ 
+ /*
+  * Check that the data structures for the list manipulations are reasonably
+@@ -139,3 +140,49 @@ bool __hlist_del_valid(struct hlist_node *node)
+ 	return true;
+ }
+ EXPORT_SYMBOL(__hlist_del_valid);
++
++bool __hlist_nulls_add_head_valid(struct hlist_nulls_node *new,
++				  struct hlist_nulls_head *head)
++{
++	struct hlist_nulls_node *first = head->first;
++
++	if (CHECK_DATA_CORRUPTION(!is_a_nulls(first) &&
++				  first->pprev != &head->first,
++			"hlist_nulls_add_head corruption: first->pprev should be &head->first (%px), but was %px (first=%px)",
++			&head->first, first->pprev, first) ||
++	    CHECK_DATA_CORRUPTION(new == first,
++			"hlist_nulls_add_head double add: new (%px) == first (%px)",
++			new, first))
++		return false;
++
++	return true;
++}
++EXPORT_SYMBOL(__hlist_nulls_add_head_valid);
++
++bool __hlist_nulls_del_valid(struct hlist_nulls_node *node)
++{
++	struct hlist_nulls_node *prev, *next = node->next;
++
++	if (CHECK_DATA_CORRUPTION(next == LIST_POISON1,
++			"hlist_nulls_del corruption: %px->next is LIST_POISON1 (%px)\n",
++			node, LIST_POISON1) ||
++	    CHECK_DATA_CORRUPTION(node->pprev == LIST_POISON2,
++			"hlist_nulls_del corruption: %px->pprev is LIST_POISON2 (%px)\n",
++			node, LIST_POISON2))
++		return false;
++
++	BUILD_BUG_ON(offsetof(struct hlist_nulls_node, next) !=
++		     offsetof(struct hlist_nulls_head, first));
++	prev = container_of(node->pprev, struct hlist_nulls_node, next);
++	if (CHECK_DATA_CORRUPTION(prev->next != node,
++			"hlist_nulls_del corruption: prev->next should be %px, but was %px\n",
++			node, prev->next) ||
++	    CHECK_DATA_CORRUPTION(!is_a_nulls(next) &&
++				  next->pprev != &node->next,
++			"hlist_nulls_del corruption: next->pprev should be %px, but was %px\n",
++			&node->next, next->pprev))
++		return false;
++
++	return true;
++}
++EXPORT_SYMBOL(__hlist_nulls_del_valid);
 -- 
 2.20.1
 
