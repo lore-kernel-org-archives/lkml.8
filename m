@@ -2,199 +2,111 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB37C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C20A2C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47E2A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OCWtSj/B"
+	by mail.kernel.org (Postfix) with ESMTP id A3C3A20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCXKfi (ORCPT
+        id S1727395AbgCXKgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:35:38 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43873 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727150AbgCXKfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:35:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585046137;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dKS/RfVF4eulbBrkNwlmTIp2WZwb03WGz25ab59iW3k=;
-        b=OCWtSj/B6epX5peZ5PkqE2005GFnloTGeObWn5QM8m0TsQwSbNS+Z6ElfVocP441n/yEOs
-        7u9bAJ/ma8NIWabHi/GkJSt2o+9sBMo1PmkbUjYMywJM1XFZ7c+H32MqgKOT0W2am1Q4HS
-        6i8FOpv0IhvU+1yxq9/3g25MHcwmM5E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-fd3bZE4sPrO112SAWPmfgg-1; Tue, 24 Mar 2020 06:35:33 -0400
-X-MC-Unique: fd3bZE4sPrO112SAWPmfgg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C7C3D1005510;
-        Tue, 24 Mar 2020 10:35:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.28])
-        by smtp.corp.redhat.com (Postfix) with SMTP id C00DD5C21B;
-        Tue, 24 Mar 2020 10:35:29 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 24 Mar 2020 11:35:31 +0100 (CET)
-Date:   Tue, 24 Mar 2020 11:35:28 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ipc/mqueue.c: change __do_notify() to bypass
- check_kill_permission()
-Message-ID: <20200324103528.GA9061@redhat.com>
-References: <20200322110901.GA25108@redhat.com>
- <87lfnsh3tm.fsf@x220.int.ebiederm.org>
- <20200322202929.GA1614@redhat.com>
- <87imivc92n.fsf@x220.int.ebiederm.org>
+        Tue, 24 Mar 2020 06:36:06 -0400
+Received: from mga07.intel.com ([134.134.136.100]:62844 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727201AbgCXKgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:36:06 -0400
+IronPort-SDR: dcAOxkDoSZK05LN2jKE2yreu9ci2Af/De+eW6dywMIXZst/rDpaEMLosM6CbL9PxaGPb7PMHZX
+ eXci96JS2C9g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 03:36:05 -0700
+IronPort-SDR: zht+CM67eDL0WyqMDvo8EzEqKBTQrdKyZEvlUHQrDxhdF91Nm+Yg/36Y4EV9R5v02T7UU2XIbV
+ S8ba3qhgWZNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="393240574"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 03:35:56 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jGgub-00CVDz-DA; Tue, 24 Mar 2020 12:35:57 +0200
+Date:   Tue, 24 Mar 2020 12:35:57 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>,
+        Markus Laine <markus.laine@fi.rohmeurope.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Changbin Du <changbin.du@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        David Gow <davidgow@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, Gary Hook <Gary.Hook@amd.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Tal Gilboa <talgi@mellanox.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Message-ID: <20200324103557.GH1922688@smile.fi.intel.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200324095024.GE1922688@smile.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87imivc92n.fsf@x220.int.ebiederm.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200324095024.GE1922688@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/23, Eric W. Biederman wrote:
->
-> Oleg Nesterov <oleg@redhat.com> writes:
->
-> > And this is what we had before cc731525f26a, so this patch tries to fix
-> > the regression.
->
-> I was intending to suggest a new function that took a pid and did not do
-> the permission checks.
+On Tue, Mar 24, 2020 at 11:50:24AM +0200, Andy Shevchenko wrote:
+> On Tue, Mar 24, 2020 at 10:32:19AM +0200, Matti Vaittinen wrote:
 
-Can't we do this on top of this patch? I want a trivially backportable fix
-for -stable.
+> > +#include <linux/acpi.h>
+> 
+> > +#include <linux/of.h>
+> 
+> I didn't find any evidence of use of those two, otherwise, missed property.h
+> and perhaps mod_devicetable.h.
 
-And who else can use this helper? And what exactly it should do? Should it
-be called with rcu lock held? Should it check sig != 0? Name?
+...
 
-> Looking a little further I think there is a reasonbly strong argument
-> that this code should be using send_sigqueue with a preallocated signal,
-> just like timers do.
+> > +MODULE_DEVICE_TABLE(of, bd9995x_of_match);
 
-Hmm. How can mqueue use SIGQUEUE_PREALLOC/send_sigqueue ? The timer can
-pre-allocate sigqueue because it won't be used again until dequeued by
-its single target, otherwise it just increments overrun.
+> > +MODULE_DEVICE_TABLE(acpi, bd9995x_acpi_match);
 
-mqueue can't. Just suppose that the user of mq_notify() blocks this signal,
-then another task does mq_notify() and then __do_notify() is called again.
+I have to add since you are using those macros without ifdeffery, you should
+get warning in !ACPI and/or !OF cases.
 
-> > Oh, can we discuss the possible cleanups separately? On top of this fix,
-> > if possible.
->
-> I was saying that from my perspective your proposed fix appears to make
-> the code more of a mess, and harder to maintain.
+So, drop those of_match_ptr() / ACPI_PTR() and thus above headers.
 
-I don't really agree, but I won't argue.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-> >> Looking at the code I currently see several places where we have this
-> >> kind of semantic (sending a requested signal to a process from the
-> >> context of another process): do_notify_parent, pdeath_signal, f_setown,
-> >> and mq_notify.
-> >
-> > To me they all differ, I am not sure I understand how exactly you want
-> > to unify them...
->
-> The common thread is they all are requested by the receiver of the
-> signal (so don't need permission checks) and thus need to be canceled by
-> appropriate versions of exec.
-
-Yes. Yet I think they all differ, in particular in how they handle the
-exec case. So I still do not understand a) how you are going to unify this
-logic and b) why should we do this _before_ the fix.
-
-> > I can easily misread this code, never looked into ipc/mqueue.c before.
-> > But it seems that it is not possible to send a signal after exec, suid
-> > or not,
-> >
-> > 	- sys_mq_open() uses O_CLOEXEC
-> >
-> > 	- mqueue_flush_file() does
-> >
-> > 		if (task_tgid(current) == info->notify_owner)
-> > 			remove_notification(info);
->
-> That is weird.  It looks like we are attempt to handle file descriptor
-> passing.  The unix98 description of exec says all mq file descriptors
-> shall be closed, but I can't find a word about file descriptor passing
-> with af_unix sockets.
-
-Not sure I understand how this connects to fd-passing...
-
-What I tried to say is that mqueue_fd will be closed on exec. This is not
-not enough, but mqueue_flush_file==mqueue_file_operations->flush called
-by filp_close() will remove the notification to ensure the signal can't
-be sent after that.
-
-> > I know absolutely nothing about ipc/mqueue, and when I read this code
-> > or manpage I find the semantics of mq_notify is very strange.
->
-> Well at least a small comment please that says the code started
-> performing the permission check and userspace code regressed.
-
-Ah, OK, agreed, I'll add a comment.
-
-> Perhaps with the description of the userspace code in the commit log.
-> Perhaps a test case?
-
-OK, how about
-
-	static int notified;
-
-	static void sigh(int sig)
-	{
-		notified = 1;
-	}
-
-	int main(void)
-	{
-		signal(SIGIO, sigh);
-
-		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
-		assert(fd >= 0);
-
-		struct sigevent se = {
-			.sigev_notify	= SIGEV_SIGNAL,
-			.sigev_signo	= SIGIO,
-		};
-		assert(mq_notify(fd, &se) == 0);
-
-		if (!fork()) {
-			setuid(1);
-			mq_send(fd, "",1,0);
-			return 0;
-		}
-
-		wait(NULL);
-		mq_unlink("/mq");
-		assert(notified);
-		return 0;
-	}
-
-? Needs root.
-
-Just in case... it passes on my machine running 4.2.8-300.fc23.x86_64, fails
-with upstream kernel, the patch seems to work and looks very simple.
-
-Oleg.
 
