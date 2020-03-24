@@ -2,163 +2,185 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA31C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C63EBC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5D3206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="MAndgm5y"
+	by mail.kernel.org (Postfix) with ESMTP id ACE55206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:57:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbgCXR4d (ORCPT
+        id S1727585AbgCXR5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:56:33 -0400
-Received: from mail-bn7nam10on2053.outbound.protection.outlook.com ([40.107.92.53]:60899
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727223AbgCXR4d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:56:33 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jDQN77hKbfqaz7Zne3BbIPQ2h2Ewa4y6m0SSPhl2+xJ+MpXEk/jLbP6/mvA+Q4k3qEuAz1NnzvHIyVlV90ofsk9s7ZL7vNE01fXWWdk+4NQ4JD4eGpIZiGU9inCK6FoayWkouEx16sVDcF6SoyaiS3M2u2F11u4/whjWy3ykdcr3e6wE0Pst0h/hMK2LW+mCExuTGFBod5T9WRFJk+Do2wWQGrl8G1bHLmgiRoPkQqrutbQ0S4rm6TXPvR+rV+TmExdH9Jw0AeoE2q/jwjPy3VoBtOJQ8vpLJVkZfIsmi4Mf6vS6jitYxt2bn7ePIGLI68vxd5J+IO/oMxX0EL5R3Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9luINLXe7wXxKC/O0uiTgsyd+GCFmSch3vcrjpFnxY=;
- b=O3rzxhTCn4j/4y5Fi1VcRmompwCqQ4//W3bHgUgRvQoHfbafmDDuPBkPTRYfBpFFXUsSHRaomk2YYiAJOIiBv1v5g/Y9lCoAKYr8vYWDm71oRQOe43hbxN4F7tx3spMdTZ/C7Cbg7vGd6vBD6ijodcGtGrnc92m1GHlnEafrwDrLJgwst3AFaa77GsnGbgOk26f0X4ev1x7oyf3YF0afEWYaaGWGx++rjl1bDA3ASv1SNbCgyz+NYc5iABUmlqfHqxTKt8Y4nei6ZNTbEWFAH6h6UrXgSHe0PT9wtCZ+QR8oftQ354QQKPYRlZnrJLNbGfFYKecUmTBL7WaUGbFq6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=d9luINLXe7wXxKC/O0uiTgsyd+GCFmSch3vcrjpFnxY=;
- b=MAndgm5ykTp1O9GjmeRylEIBFhpWV0NZ5keoZyICjjZAycMp7TpJO3vXtLMoEqkdOveHvmelcpju0zzpMGsQN/ZdnxHyy5fKRVveFYlUfkdyWx9vJoWmbLrl78PLIdaGnC1p7kQphn0dr+wilY7xE7ISEzN44KzvXhDjSPGdnww=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Ashish.Kalra@amd.com; 
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com (2603:10b6:3:77::9) by
- DM5PR12MB1721.namprd12.prod.outlook.com (2603:10b6:3:10d::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.19; Tue, 24 Mar 2020 17:56:29 +0000
-Received: from DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c]) by DM5PR12MB1386.namprd12.prod.outlook.com
- ([fe80::969:3d4e:6f37:c33c%12]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
- 17:56:29 +0000
-Date:   Tue, 24 Mar 2020 17:56:24 +0000
-From:   Ashish Kalra <ashish.kalra@amd.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] KVM: SVM: Move and split up svm.c
-Message-ID: <20200324175624.GA20121@ashkalra_ubuntu_server>
-References: <20200324094154.32352-1-joro@8bytes.org>
- <33af4430-e19d-c414-3e78-bcbc69d5bfb7@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <33af4430-e19d-c414-3e78-bcbc69d5bfb7@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: DM5PR1401CA0016.namprd14.prod.outlook.com
- (2603:10b6:4:4a::26) To DM5PR12MB1386.namprd12.prod.outlook.com
- (2603:10b6:3:77::9)
+        Tue, 24 Mar 2020 13:57:08 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51828 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbgCXR5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:57:08 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jGnnH-0005ms-Ii; Tue, 24 Mar 2020 17:56:51 +0000
+Date:   Tue, 24 Mar 2020 18:56:49 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Andrei Vagin <avagin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: clone3: allow creation of time namespace with offset
+Message-ID: <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
+References: <20200317083043.226593-1-areber@redhat.com>
+ <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+ <20200319081137.GC223854@dcbz.redhat.com>
+ <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+ <20200319102955.i7slokibkkysz6g6@wittgenstein>
+ <20200320183355.GA118769@gmail.com>
+ <20200324160945.orcm75avj2ol3eop@wittgenstein>
+ <20200324162546.GG358599@dcbz.redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ashkalra_ubuntu_server (165.204.77.1) by DM5PR1401CA0016.namprd14.prod.outlook.com (2603:10b6:4:4a::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Tue, 24 Mar 2020 17:56:29 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 278b094d-6ca3-45f1-b80a-08d7d01cae34
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1721:|DM5PR12MB1721:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1721D026E190FF75D3D85D3F8EF10@DM5PR12MB1721.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
-X-Forefront-PRVS: 03524FBD26
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(366004)(39860400002)(376002)(6496006)(6916009)(66946007)(8936002)(1076003)(52116002)(86362001)(66556008)(8676002)(33716001)(33656002)(81156014)(81166006)(53546011)(66476007)(6666004)(956004)(478600001)(54906003)(316002)(9686003)(16526019)(44832011)(2906002)(4326008)(5660300002)(26005)(186003)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1721;H:DM5PR12MB1386.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2sADc62j+FaZ3GYE6FPnWn3beQLLhyCpdaM02lRiQEy2LmQYcVu1Tu49oPckA3lwMnPz1W2kwI/CCXiPP4vP3IZ5jLjamqGDyXEC7eW94GGLBxk+jP3X8UFfVZp1Li0vrc60qbyQYPkwpVm99JAOZhbVLyAtwS0l7VyIMQpc8igDYYP3xLy9ei7WgwRkMhx/bOGpXIRHmWTPR3noRlgO3kBcD260henO1okwqGEHEwahPd7I8djyMeKrYzS0OMsWqZYwL1gNAgs/CqPmJMJ+b6EdW9jKjXsRH6jyMypUx/stJnQc988+4fo79QxziNRjHXk1p/V6VgKPvqPDdCGEGs0RVBCNTjjwpJTnLE2Zdm7jO/xAcmcF6kVqVxqwIBgtpy5zDNqHoCi4cRFtSOns80XFlW9W0MQIFkwy9BiZczkEC9aCj59X2jTtDraZg2/a
-X-MS-Exchange-AntiSpam-MessageData: x1XkVl9qC3zalVVjHFdM3XZY/DQ3yzSXLqZpyKNnD8R6FcE/EDU/+YUOPdLRLYaLYiBYnVaUagrHCekhSYdf2tWc7AUQmQWHaRd2y4S74vrUPNlPpJtNxqN6nxl0l8jneL7Ho5cIDU1FZr2VS/ur1g==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 278b094d-6ca3-45f1-b80a-08d7d01cae34
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2020 17:56:29.8256
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BLgPbCRdIBPjE8P4O9HLvxDA+5CgluQziv1bUnE10tTD8WksgcYg9+aagAuAlmytGhmk/VSXPR8QSav+DLsE7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1721
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200324162546.GG358599@dcbz.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Paolo,
+On Tue, Mar 24, 2020 at 05:25:46PM +0100, Adrian Reber wrote:
+> On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
+> > On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
+> > > On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
+> > > > On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
+> > > > > On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+> > > > > 
+> > > > > > With Arnd's idea of only using nanoseconds, timens_offset would then
+> > > > > > contain something like this:
+> > > > > >
+> > > > > > struct timens_offset {
+> > > > > >         __aligned_s64 monotonic_offset_ns;
+> > > > > >         __aligned_s64 boottime_offset_ns;
+> > > > > > };
+> > > > > >
+> > > > > > I kind of prefer adding boottime and monotonic directly to struct clone_args
+> > > > > >
+> > > > > >         __aligned_u64 tls;
+> > > > > >         __aligned_u64 set_tid;
+> > > > > >         __aligned_u64 set_tid_size;
+> > > > > > +       __aligned_s64 monotonic_offset_ns;
+> > > > > > +       __aligned_s64 boottime_offset_ns;
+> > > > > >  };
+> > > > > 
+> > > > > I would also prefer the second approach using two 64-bit integers
+> > > > > instead of a pointer, as it keeps the interface simpler to implement
+> > > > > and simpler to interpret by other tools.
+> > > > 
+> > > > Why I don't like has two reasons. There's the scenario where we have
+> > > > added new extensions after the new boottime member and then we introduce
+> > > > another offset. Then you'd be looking at:
+> > > > 
+> > > > __aligned_u64 tls;
+> > > > __aligned_u64 set_tid;
+> > > > __aligned_u64 set_tid_size;
+> > > > + __aligned_s64 monotonic_offset_ns;
+> > > > + __aligned_s64 boottime_offset_ns;
+> > > > __aligned_s64 something_1
+> > > > __aligned_s64 anything_2
+> > > > + __aligned_s64 sometime_offset_ns
+> > > > 
+> > > > which bothers me just by looking at it. That's in addition to adding two
+> > > > new members to the struct when most people will never set CLONE_NEWTIME.
+> > > > We'll also likely have more features in the future that will want to
+> > > > pass down more info than we want to directly expose in struct
+> > > > clone_args, e.g. for a long time I have been thinking about adding a
+> > > > struct for CLONE_NEWUSER that allows you to specify the id mappings you
+> > > > want the new user namespace to get. We surely don't want to force all
+> > > > new info into the uppermost struct. So I'm not convinced we should here.
+> > > 
+> > > I think here we can start thinking about a netlink-like interface.
+> > 
+> > I think netlink is just not a great model for an API and I would not
+> > want us to go down that route.
+> > 
+> > I kept thinking about this for a bit and I think that we will end up
+> > growing more namespace-related functionality. So one thing that came to
+> > my mind is the following layout:
+> > 
+> > struct {
+> > 	struct {
+> > 		__s64 monotonic;
+> > 		__s64 boot;
+> > 	} time;
+> > } namespaces;
+> > 
+> > struct _clone_args {
+> > 	__aligned_u64 flags;
+> > 	__aligned_u64 pidfd;
+> > 	__aligned_u64 child_tid;
+> > 	__aligned_u64 parent_tid;
+> > 	__aligned_u64 exit_signal;
+> > 	__aligned_u64 stack;
+> > 	__aligned_u64 stack_size;
+> > 	__aligned_u64 tls;
+> > 	__aligned_u64 set_tid;
+> > 	__aligned_u64 set_tid_size;
+> > 	__aligned_u64 namespaces;
+> > 	__aligned_u64 namespaces_size;
+> > };
+> > 
+> > Then when we end up adding id mapping support for CLONE_NEWUSER we can
+> > extend this with:
+> > 
+> > struct {
+> > 	struct {
+> > 		__aligned_u64 monotonic;
+> > 		__aligned_u64 boot;
 
-I am going to submit v5 of the SEV live migration patch-set in a
-couple of days and my patch-set is based on the single svm.c
-file, so do i need to rebase my patch-set gainst this queued 
-patch ?
+s/__aligned_u64/__s64/g
 
-Thanks,
-Ashish
+Sorry, leftover from my first draft.
 
-On Tue, Mar 24, 2020 at 12:33:17PM +0100, Paolo Bonzini wrote:
-> On 24/03/20 10:41, Joerg Roedel wrote:
-> > Hi,
+> > 	} time;
 > > 
-> > here is a patch-set agains kvm/queue which moves svm.c into its own
-> > subdirectory arch/x86/kvm/svm/ and splits moves parts of it into
-> > separate source files:
+> > 	struct {
+> > 		/* id mapping members */
+> > 	} user;
+> > } namespaces;
 > > 
-> > 	- The parts related to nested SVM to nested.c
-> > 
-> > 	- AVIC implementation to avic.c
-> > 
-> > 	- The SEV parts to sev.c
-> > 
-> > I have tested the changes in a guest with and without SEV.
-> > 
-> > Please review.
-> > 
-> > Thanks,
-> > 
-> > 	Joerg
-> > 
-> > Joerg Roedel (4):
-> >   kVM SVM: Move SVM related files to own sub-directory
-> >   KVM: SVM: Move Nested SVM Implementation to nested.c
-> >   KVM: SVM: Move AVIC code to separate file
-> >   KVM: SVM: Move SEV code to separate file
-> > 
-> >  arch/x86/kvm/Makefile                 |    2 +-
-> >  arch/x86/kvm/svm/avic.c               | 1025 ++++
-> >  arch/x86/kvm/svm/nested.c             |  823 ++++
-> >  arch/x86/kvm/{pmu_amd.c => svm/pmu.c} |    0
-> >  arch/x86/kvm/svm/sev.c                | 1178 +++++
-> >  arch/x86/kvm/{ => svm}/svm.c          | 6546 ++++++-------------------
-> >  arch/x86/kvm/svm/svm.h                |  491 ++
-> >  7 files changed, 5106 insertions(+), 4959 deletions(-)
-> >  create mode 100644 arch/x86/kvm/svm/avic.c
-> >  create mode 100644 arch/x86/kvm/svm/nested.c
-> >  rename arch/x86/kvm/{pmu_amd.c => svm/pmu.c} (100%)
-> >  create mode 100644 arch/x86/kvm/svm/sev.c
-> >  rename arch/x86/kvm/{ => svm}/svm.c (56%)
-> >  create mode 100644 arch/x86/kvm/svm/svm.h
-> > 
+> > Thoughts? Other ideas?
 > 
-> Queued, thanks (only cursorily reviewed for now).
+> Works for me.
 > 
-> Paolo
-> 
+> If we add the user namespace id mappings and then at some point a third
+> element for the time namespace appears it would also start to be mixed.
+> Just as you mentioned that a few mails ago.
+
+I think you misunderstand me or I'm misunderstanding you. That new time
+namespace member would go into struct time {} so
+
+struct {
+	struct {
+		__s64 monotonic;
+		__s64 boot;
+		__s64 someothertime;
+	} time;
+
+	struct {
+		/* id mapping members */
+	} user;
+} namespaces;
+
+Christian
