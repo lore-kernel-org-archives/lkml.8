@@ -2,137 +2,101 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89FF7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:11:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E88F1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6006920663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C072E20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:13:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X0EuWrTy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsY68UyM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgCXTL6 (ORCPT
+        id S1728034AbgCXTN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:11:58 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:37126 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727715AbgCXTL6 (ORCPT
+        Tue, 24 Mar 2020 15:13:29 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42159 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727657AbgCXTN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 15:11:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585077116;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=IWa3hFcJfMHl7V5fCeCQBW+Qo+00+itJrJJVYsrBbg8=;
-        b=X0EuWrTyNhAISlqhNCKke8f62K/ozcNSSX0tAGTvjt8B+hqMMvjO5S4SeJj1Nk83UFadjF
-        udV5NSDFnmi8OftMAj1jQHfbsDKci8vB8Si90+LAs8zPBmCI9vOtRRgYCTeGiXksGtPTzg
-        Cx8gn4VYV2ThL+1+Ccp1I2RZy7WiVag=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-339-cmfqhujuOge-VqRkcub2_w-1; Tue, 24 Mar 2020 15:11:54 -0400
-X-MC-Unique: cmfqhujuOge-VqRkcub2_w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 21A89800D5C;
-        Tue, 24 Mar 2020 19:11:53 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4871660BF3;
-        Tue, 24 Mar 2020 19:11:50 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 15:11:49 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Lukas Straub <lukasstraub2@web.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        dm-devel <dm-devel@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: Re: [PATCH v2] dm-integrity: Prevent RMW for full metadata buffer
- writes
-Message-ID: <20200324191148.GA2921@redhat.com>
-References: <20200227142601.61f3cd54@luklap>
- <20200324171821.GA2444@redhat.com>
- <20200324195912.518dc87c@luklap>
+        Tue, 24 Mar 2020 15:13:29 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q19so19791645ljp.9;
+        Tue, 24 Mar 2020 12:13:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uIAcX2m8QpAWv8TMlh8B6oI/fe2X2DccVFEcYGZNbOk=;
+        b=hsY68UyMWv486CjkFQ9XXWAJnkttldzEOXRVWyB4HW0IaB0FWKpvYrLGJu9q5GY5jg
+         1cOEDDKCayQPZN3XII0yajPYt7sjmCy03V4yDBEQOduR/WMM2rbsZZfWx7/75dibd3q0
+         82cmZEwuXk0PstRFXgmK+z796IHlmYdFK6cUfG45mBpqYH9LEKeBuhObJzl6Q4N4hMT/
+         LakyMoO2nrp9D02bwNWqSLCLJDRlsIrvfsYuOtI5X5n9v3qU0SrDkOFNbTI+QpHmRxgi
+         57B2F8XzqekOoUwhiIniXDeVVQewF6f6nxdDVKaX4DL/DHvqauFGQxZaqtoo85/AqEzs
+         GWQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uIAcX2m8QpAWv8TMlh8B6oI/fe2X2DccVFEcYGZNbOk=;
+        b=R+840oR9XEcL4gixPRNJG58OBW7KnCVS/e6XbUzDahxY+zdzDsq1xxBbibHg/17aQw
+         bKFpX2AfaA6G9usoWSV83lZUa2auAFsmEqxZEFE/0lHlqCLEpx2FCG+wMl2nXyqh74NN
+         VgQYOS0rIxBbXSuwQlGXmgkyfKMiFC1V6ynBUL2tLoyq7oPbGQVZjmj322gkjZfC4scw
+         hk0tADBTe6gFY5gMbQ76cX/QPTVrYtoGCs11fi0zPgHWlsM7Olvb9fiBtmJUmHkFWA9L
+         qxqWDqAs7waFBDveC1XzidBSkpDwB/I069uz7qzXrVK+++/cmzOXrpGHLaXH2Ay0WR61
+         rh2A==
+X-Gm-Message-State: ANhLgQ3qA2GavOcn+jFDvNd9jDca233OPmrNs1oSHMVDW700XFUW2U41
+        5XPAy1NfM2WKdPC+a20tSVU=
+X-Google-Smtp-Source: ADFU+vuC24piMvbglWv/WVI/TWLmal3ArmiApJWvK+KWbm7V9Ezcb26GVi8QzfgpOoA3uvvY/Bl+ZA==
+X-Received: by 2002:a2e:894e:: with SMTP id b14mr8911183ljk.103.1585077206468;
+        Tue, 24 Mar 2020 12:13:26 -0700 (PDT)
+Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.gmail.com with ESMTPSA id z23sm6347723ljz.52.2020.03.24.12.13.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 12:13:25 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] NVIDIA Tegra I2C synchronization correction
+Date:   Tue, 24 Mar 2020 22:12:15 +0300
+Message-Id: <20200324191217.1829-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324195912.518dc87c@luklap>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24 2020 at  2:59pm -0400,
-Lukas Straub <lukasstraub2@web.de> wrote:
+Hello,
 
-> On Tue, 24 Mar 2020 13:18:22 -0400
-> Mike Snitzer <snitzer@redhat.com> wrote:
-> 
-> > On Thu, Feb 27 2020 at  8:26am -0500,
-> > Lukas Straub <lukasstraub2@web.de> wrote:
-> > 
-> > > If a full metadata buffer is being written, don't read it first. This
-> > > prevents a read-modify-write cycle and increases performance on HDDs
-> > > considerably.
-> > > 
-> > > To do this we now calculate the checksums for all sectors in the bio in one
-> > > go in integrity_metadata and then pass the result to dm_integrity_rw_tag,
-> > > which now checks if we overwrite the whole buffer.
-> > > 
-> > > Benchmarking with a 5400RPM HDD with bitmap mode:
-> > > integritysetup format --no-wipe --batch-mode --interleave-sectors $((64*1024)) -t 4 -s 512 -I crc32c -B /dev/sdc
-> > > integritysetup open --buffer-sectors=1 -I crc32c -B /dev/sdc hdda_integ
-> > > dd if=/dev/zero of=/dev/mapper/hdda_integ bs=64K count=$((16*1024*4)) conv=fsync oflag=direct status=progress
-> > > 
-> > > Without patch:
-> > > 4294967296 bytes (4.3 GB, 4.0 GiB) copied, 400.326 s, 10.7 MB/s
-> > > 
-> > > With patch:
-> > > 4294967296 bytes (4.3 GB, 4.0 GiB) copied, 41.2057 s, 104 MB/s
-> > > 
-> > > Signed-off-by: Lukas Straub <lukasstraub2@web.de>
-> > > ---
-> > > Hello Everyone,
-> > > So here is v2, now checking if we overwrite a whole metadata buffer instead
-> > > of the (buggy) check if we overwrite a whole tag area before.
-> > > Performance stayed the same (with --buffer-sectors=1).
-> > > 
-> > > The only quirk now is that it advertises a very big optimal io size in the
-> > > standard configuration (where buffer_sectors=128). Is this a Problem?
-> > > 
-> > > v2:
-> > >  -fix dm_integrity_rw_tag to check if we overwrite a whole metadat buffer
-> > >  -fix optimal io size to check if we overwrite a whole metadata buffer
-> > > 
-> > > Regards,
-> > > Lukas Straub  
-> > 
-> > 
-> > Not sure why you didn't cc Mikulas but I just checked with him and he
-> > thinks:
-> > 
-> > You're only seeing a boost because you're using 512-byte sector and
-> > 512-byte buffer. Patch helps that case but hurts in most other cases
-> > (due to small buffers).
-> 
-> Hmm, buffer-sectors is still user configurable. If the user wants fast
-> write performance on slow HDDs he can set a small buffer-sector and
-> benefit from this patch. With the default buffer-sectors=128 it
-> shouldn't have any impact.
+Recently I found a way to reliably reproduce I2C timeouts that happen due
+to improper synchronizations made by the I2C driver. It's quite easy to
+reproduce the problem when memory is running on a lower freq + there is
+some memory activity + CPU could get busy for a significant time. This
+is the case when KASAN is enabled and CPU is busy while accessing FS via
+NFS. This small series addresses the found problems.
 
-OK, if you'd be willing to conduct tests to prove there is no impact
-with larger buffers that'd certainly help reinforce your position and
-make it easier for me to take your patch.
+Changelog:
 
-But if you're just testing against slow HDD testbeds then the test
-coverage isn't wide enough.
+v2: - The "Better handle case where CPU0 is busy for a long time" patch
+      now preserves the old behavior where completion is checked after
+      disabling the interrupt, preventing potential race-condition of
+      the completion awaiting vs interrupt syncing.
 
-Thanks,
-Mike
+Dmitry Osipenko (2):
+  i2c: tegra: Better handle case where CPU0 is busy for a long time
+  i2c: tegra: Synchronize DMA before termination
+
+ drivers/i2c/busses/i2c-tegra.c | 36 ++++++++++++++++++++++------------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
+
+-- 
+2.25.1
 
