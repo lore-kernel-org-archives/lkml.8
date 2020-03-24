@@ -2,129 +2,211 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B54C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A69CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33A9206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3E89206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:50:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Odq5XzkT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgCXNuJ (ORCPT
+        id S1727771AbgCXNuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:50:09 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45900 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727289AbgCXNuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:50:08 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5368CAA17414541C128E;
-        Tue, 24 Mar 2020 21:46:11 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 24 Mar 2020 21:46:04 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
-        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-Subject: [RFC PATCH v4 4/6] mm: Add page table level flags to vm_flags
-Date:   Tue, 24 Mar 2020 21:45:32 +0800
-Message-ID: <20200324134534.1570-5-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200324134534.1570-1-yezhenyu2@huawei.com>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+        Tue, 24 Mar 2020 09:50:18 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:42574 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727289AbgCXNuR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:50:17 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200324135016euoutp016bd7911bdd6f83d53038952d783d8b75~-Qa_W9j-b0352403524euoutp01a
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:50:16 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200324135016euoutp016bd7911bdd6f83d53038952d783d8b75~-Qa_W9j-b0352403524euoutp01a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585057816;
+        bh=CO6Q5YxaFJM13/GXn2w+f7Ptm3wnmYAz8/fZSrHINXg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Odq5XzkTTForQnaa3WqVNooRbjH7Xnzd0hrf4YwrQdDb2gZfHkbRw86g1Hz9f6Gnw
+         +wFz/nzrMkx6wh50d0FCzHLMj/6IjPExoMpHXvW40dYDwc14uqgj+MnhJXV+p5o8pO
+         G1PrpEx505d02IlXjQVpS/f0ZZjvMh+i21MCfTc0=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200324135016eucas1p2cdc9ccdb5fa434d4773c3bef895e82f7~-Qa_ORT470764107641eucas1p2j;
+        Tue, 24 Mar 2020 13:50:16 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3E.C8.60698.8101A7E5; Tue, 24
+        Mar 2020 13:50:16 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200324135015eucas1p1b1a42eae32e4f3b2358cde82caf29b57~-Qa98Myyl0616006160eucas1p1m;
+        Tue, 24 Mar 2020 13:50:15 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200324135015eusmtrp1866ae5ce1110f83be343eb91a7c4134b~-Qa97orGR2944629446eusmtrp1t;
+        Tue, 24 Mar 2020 13:50:15 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-21-5e7a10183c4c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 02.B7.08375.7101A7E5; Tue, 24
+        Mar 2020 13:50:15 +0000 (GMT)
+Received: from [106.120.51.71] (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200324135015eusmtip20c5deec7609d3b74812af0d1a0e7758e~-Qa9oEsWW0442804428eusmtip2D;
+        Tue, 24 Mar 2020 13:50:15 +0000 (GMT)
+Subject: Re: [PATCH v3] video: fbdev: vesafb: add missed release_region
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Message-ID: <ede1ba08-3fd0-20f1-1641-461e89734316@samsung.com>
+Date:   Tue, 24 Mar 2020 14:50:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CANhBUQ1JV3drHn-HO2urK-Q7yUNtLhk09UuBG7F=qV7Lid=0ww@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEKsWRmVeSWpSXmKPExsWy7djPc7oSAlVxBnufsVpc+fqezWL2oZfM
+        Fif6PrBaXN41h82BxWPnrLvsHve7jzN5fN4kF8AcxWWTkpqTWZZapG+XwJWxY/YNtoL1UhUX
+        991jb2C8L9zFyMkhIWAi0bZjB0sXIxeHkMAKRonVr+awQThfGCWezJnODOF8ZpRYdaoXqIwD
+        rGXPu3KI+HJGiYmrJ0N1vGWUuD9jMzPIXGEBd4lZk0ESnBwiAuoSn3ftZAexmQXSJTbNOggW
+        ZxOwkpjYvooRxOYVsJO4/PoJWJxFQFXiXOcrsHpRgQiJTw8Os0LUCEqcnPmEBcTmFAiUODP7
+        JRvETHGJW0/mM0HY8hLb384Bu1pCoJtdYvWem0wQj7pI/Lr8C8oWlnh1fAs7hC0jcXpyDwtE
+        wzpGib8dL6C6tzNKLJ/8jw2iylrizrlfbCD/MwtoSqzfpQ8RdpTYM+syOyRY+CRuvBWEOIJP
+        YtI2UNCBhHklOtqEIKrVJDYs28AGs7Zr50rmCYxKs5C8NgvJO7OQvDMLYe8CRpZVjOKppcW5
+        6anFxnmp5XrFibnFpXnpesn5uZsYgSnl9L/jX3cw7vuTdIhRgINRiYdX42FlnBBrYllxZe4h
+        RgkOZiUR3s2pFXFCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeY0XvYwVEkhPLEnNTk0tSC2CyTJx
+        cEo1MB5SDN50+bSU7vL05P8qwgt/Z7ad7/6+ZkJl3dHWG/IK705/ZVx0hI33sfqdFr3Ynw+f
+        uT94V7NZefWdVqnkvQGO1lu4f83gTeCq+rZtbfS5yK+vzs15fkJwM6NnrX/uqXWzOJrvRutM
+        ZTG9Gr8x5EP4nCI27h0czMJuyY9NfTuX9iwNXXLjr6USS3FGoqEWc1FxIgCXlc38JQMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEIsWRmVeSWpSXmKPExsVy+t/xe7riAlVxBlN69S2ufH3PZjH70Etm
+        ixN9H1gtLu+aw+bA4rFz1l12j/vdx5k8Pm+SC2CO0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAz
+        MrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0MvYMfsGW8F6qYqL++6xNzDeF+5i5OCQEDCR2POu
+        vIuRk0NIYCmjxKF+G4iwjMTx9WUgYQkBYYk/17rYuhi5gEpeM0p8X36VCSQhLOAuMWvyZDYQ
+        W0RAXeLzrp3sIDazQLrExG1HmSAaOpkk5hw5xQiSYBOwkpjYvgrM5hWwk7j8+glYM4uAqsS5
+        zldgzaICERKHd8yCqhGUODnzCQuIzSkQKHFm9ks2iAXqEn/mXWKGsMUlbj2ZzwRhy0tsfzuH
+        eQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW56bnFhnrFibnFpXnpesn5uZsYgfGz7djPzTsY
+        L20MPsQowMGoxMOr8bAyTog1say4MvcQowQHs5II7+bUijgh3pTEyqrUovz4otKc1OJDjKZA
+        z01klhJNzgfGdl5JvKGpobmFpaG5sbmxmYWSOG+HwMEYIYH0xJLU7NTUgtQimD4mDk6pBsaM
+        M7NYDGzlp3DEHqnuW3mQ4bnq5+CCkOgdDomzjrysKlm5vYtpce0X7aS5ot1LEqt6HewUFzm7
+        WD7+/dholansOv/S3IwojYNu191e2LiYxfxlf/A7i8n34utm1/idOT84nB27k/K3Lby8eGHB
+        mh3hcpukzCbM/ykgUb9If0F7/fw//qba6kosxRmJhlrMRcWJAFLdO4+1AgAA
+X-CMS-MailID: 20200324135015eucas1p1b1a42eae32e4f3b2358cde82caf29b57
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200310023550eucas1p10797f834d7dc16f634cf644011462393
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200310023550eucas1p10797f834d7dc16f634cf644011462393
+References: <CGME20200310023550eucas1p10797f834d7dc16f634cf644011462393@eucas1p1.samsung.com>
+        <20200310023536.13622-1-hslester96@gmail.com>
+        <1f5e6f52-c638-f73e-cf9d-88eb641a010d@samsung.com>
+        <CANhBUQ1JV3drHn-HO2urK-Q7yUNtLhk09UuBG7F=qV7Lid=0ww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add VM_LEVEL_[PUD|PMD|PTE] to vm_flags to indicate which level of
-the page tables the vma is in. Those flags can be used to reduce
-the cost of TLB invalidation.
 
-These should be common flags for all architectures, however, those
-flags are only available in 64-bits system currently, because the
-lower-order flags are fully used.
+On 3/24/20 2:35 PM, Chuhong Yuan wrote:
+> On Fri, Mar 20, 2020 at 8:01 PM Bartlomiej Zolnierkiewicz
+> <b.zolnierkie@samsung.com> wrote:
+>>
+>>
+>> On 3/10/20 3:35 AM, Chuhong Yuan wrote:
+>>> The driver forgets to free the I/O region in remove and probe
+>>> failure.
+>>> Add the missed calls to fix it.
+>>>
+>>> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+>>> ---
+>>> Changes in v3:
+>>>   - Revise the commit message.
+>>>   - Add an error handler to suit the "goto error" before request_region().
+>>>   - Revise the order of operations in remove.
+>>>
+>>>  drivers/video/fbdev/vesafb.c | 9 ++++++---
+>>>  1 file changed, 6 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/drivers/video/fbdev/vesafb.c b/drivers/video/fbdev/vesafb.c
+>>> index a1fe24ea869b..c7bc9ace47d4 100644
+>>> --- a/drivers/video/fbdev/vesafb.c
+>>> +++ b/drivers/video/fbdev/vesafb.c
+>>> @@ -439,7 +439,7 @@ static int vesafb_probe(struct platform_device *dev)
+>>>                      "vesafb: abort, cannot ioremap video memory 0x%x @ 0x%lx\n",
+>>>                       vesafb_fix.smem_len, vesafb_fix.smem_start);
+>>>               err = -EIO;
+>>> -             goto err;
+>>> +             goto err_release_region;
+>>>       }
+>>>
+>>>       printk(KERN_INFO "vesafb: framebuffer at 0x%lx, mapped to 0x%p, "
+>>> @@ -458,15 +458,17 @@ static int vesafb_probe(struct platform_device *dev)
+>>>
+>>>       if (fb_alloc_cmap(&info->cmap, 256, 0) < 0) {
+>>>               err = -ENOMEM;
+>>> -             goto err;
+>>> +             goto err_release_region;
+>>>       }
+>>>       if (register_framebuffer(info)<0) {
+>>>               err = -EINVAL;
+>>>               fb_dealloc_cmap(&info->cmap);
+>>> -             goto err;
+>>> +             goto err_release_region;
+>>>       }
+>>>       fb_info(info, "%s frame buffer device\n", info->fix.id);
+>>>       return 0;
+>>> +err_release_region:
+>>> +     release_region(0x3c0, 32);
+>>
+>> This is incorrect.
+>>
+>> The cleanup order should be the reverse of the probing order.
+>>
+>> Also request_region() return value is not checked by the driver
+>> (there is a comment that it can fail and is optional):
+>>
+>>         /* request failure does not faze us, as vgacon probably has this
+>>          * region already (FIXME) */
+>>         request_region(0x3c0, 32, "vesafb");
+>>
+>> so what would happen in such case? It seems that unconditionally
+>> doing the release will result in freeing the I/O region owned by
+>> the other driver (vgacon)..
+>>
+> 
+> Maybe we can add a field to represent whether the request succeeds?
+> request_region() returns source *, we can store it and check whether
+> it is null when
+> we are going to call release_region().
 
-These flags are only used by ARM64 architecture now. See in next
-patch.
+Yes, this is a preferred approach. 
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- include/linux/mm.h             | 10 ++++++++++
- include/trace/events/mmflags.h | 15 ++++++++++++++-
- 2 files changed, 24 insertions(+), 1 deletion(-)
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index c54fb96cb1e6..3ff16ffa5e83 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -313,6 +313,16 @@ extern unsigned int kobjsize(const void *objp);
- #endif
- #endif /* CONFIG_ARCH_HAS_PKEYS */
- 
-+#ifdef CONFIG_64BIT
-+# define VM_LEVEL_PUD	BIT(37)		/* vma is in pud-level of page table */
-+# define VM_LEVEL_PMD	BIT(38)		/* vma is in pmd-level of page table */
-+# define VM_LEVEL_PTE	BIT(39)		/* vma is in pte-level of page table */
-+#else
-+# define VM_LEVEL_PUD	0
-+# define VM_LEVEL_PMD	0
-+# define VM_LEVEL_PTE	0
-+#endif /* CONFIG_64BIT */
-+
- #if defined(CONFIG_X86)
- # define VM_PAT		VM_ARCH_1	/* PAT reserves whole VMA at once (x86) */
- #elif defined(CONFIG_PPC)
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index a1675d43777e..9f13cfa96f9f 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -130,6 +130,16 @@ IF_HAVE_PG_IDLE(PG_idle,		"idle"		)
- #define IF_HAVE_VM_SOFTDIRTY(flag,name)
- #endif
- 
-+#ifdef CONFIG_64BIT
-+#define IF_HAVE_VM_LEVEL_PUD(flag,name)	{flag, name}
-+#define IF_HAVE_VM_LEVEL_PMD(flag,name)	{flag, name}
-+#define IF_HAVE_VM_LEVEL_PTE(flag,name)	{flag, name}
-+#else
-+#define IF_HAVE_VM_LEVEL_PUD(flag,name)
-+#define IF_HAVE_VM_LEVEL_PMD(flag,name)
-+#define IF_HAVE_VM_LEVEL_PTE(flag,name)
-+#endif
-+
- #define __def_vmaflag_names						\
- 	{VM_READ,			"read"		},		\
- 	{VM_WRITE,			"write"		},		\
-@@ -161,7 +171,10 @@ IF_HAVE_VM_SOFTDIRTY(VM_SOFTDIRTY,	"softdirty"	)		\
- 	{VM_MIXEDMAP,			"mixedmap"	},		\
- 	{VM_HUGEPAGE,			"hugepage"	},		\
- 	{VM_NOHUGEPAGE,			"nohugepage"	},		\
--	{VM_MERGEABLE,			"mergeable"	}		\
-+	{VM_MERGEABLE,			"mergeable"	},		\
-+IF_HAVE_VM_LEVEL_PUD(VM_LEVEL_PUD,	"pud-level"	),		\
-+IF_HAVE_VM_LEVEL_PMD(VM_LEVEL_PMD,	"pmd-level"	),		\
-+IF_HAVE_VM_LEVEL_PTE(VM_LEVEL_PTE,	"pte-level"	)		\
- 
- #define show_vma_flags(flags)						\
- 	(flags) ? __print_flags(flags, "|",				\
--- 
-2.19.1
-
-
+>>>  err:
+>>>       arch_phys_wc_del(par->wc_cookie);
+>>>       if (info->screen_base)
+>>> @@ -481,6 +483,7 @@ static int vesafb_remove(struct platform_device *pdev)
+>>>       struct fb_info *info = platform_get_drvdata(pdev);
+>>>
+>>>       unregister_framebuffer(info);
+>>> +     release_region(0x3c0, 32);
+>>>       framebuffer_release(info);
+>>>
+>>>       return 0;
+>>>
+>>
+>> Best regards,
+>> --
+>> Bartlomiej Zolnierkiewicz
+>> Samsung R&D Institute Poland
+>> Samsung Electronics
