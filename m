@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 443ADC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CE0C54FCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2070620870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 322F62145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCXJLO (ORCPT
+        id S1727417AbgCXJLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:11:14 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43774 "EHLO
+        Tue, 24 Mar 2020 05:11:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43790 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbgCXJLH (ORCPT
+        with ESMTP id S1727347AbgCXJLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:11:07 -0400
+        Tue, 24 Mar 2020 05:11:10 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfaS-0007Vz-3C; Tue, 24 Mar 2020 10:11:04 +0100
+        id 1jGfaT-0007YQ-JH; Tue, 24 Mar 2020 10:11:05 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BDEB51C0451;
-        Tue, 24 Mar 2020 10:10:57 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:10:57 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4B5861C04CC;
+        Tue, 24 Mar 2020 10:11:00 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:10:59 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Fix 0-sized checks
-Cc:     Marco Elver <elver@google.com>,
+Subject: [tip: locking/kcsan] iov_iter: Use generic instrumented.h
+Cc:     Arnd Bergmann <arnd@arndb.de>, Marco Elver <elver@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504105740.28353.3796925960754075309.tip-bot2@tip-bot2>
+Message-ID: <158504105995.28353.8172845313356858693.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,67 +55,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     ed95f95c86cd53621103d865d62b5e1f96e60edb
-Gitweb:        https://git.kernel.org/tip/ed95f95c86cd53621103d865d62b5e1f96e60edb
+Commit-ID:     d0ef4c360f7ea33905539b9b36fa2273915703f0
+Gitweb:        https://git.kernel.org/tip/d0ef4c360f7ea33905539b9b36fa2273915703f0
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Wed, 05 Feb 2020 11:14:19 +01:00
+AuthorDate:    Tue, 21 Jan 2020 17:05:11 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 21 Mar 2020 09:42:42 +01:00
+CommitterDate: Sat, 21 Mar 2020 09:41:55 +01:00
 
-kcsan: Fix 0-sized checks
+iov_iter: Use generic instrumented.h
 
-Instrumentation of arbitrary memory-copy functions, such as user-copies,
-may be called with size of 0, which could lead to false positives.
+This replaces the kasan instrumentation with generic instrumentation,
+implicitly adding KCSAN instrumentation support.
 
-To avoid this, add a comparison in check_access() for size==0, which
-will be optimized out for constant sized instrumentation
-(__tsan_{read,write}N), and therefore not affect the common-case
-fast-path.
+For KASAN no functional change is intended.
 
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/kcsan/core.c |  7 +++++++
- kernel/kcsan/test.c | 10 ++++++++++
- 2 files changed, 17 insertions(+)
+ lib/iov_iter.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index e3c7d8f..82c2bef 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -456,6 +456,13 @@ static __always_inline void check_access(const volatile void *ptr, size_t size,
- 	long encoded_watchpoint;
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index 51595bf..bf538c2 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -8,6 +8,7 @@
+ #include <linux/splice.h>
+ #include <net/checksum.h>
+ #include <linux/scatterlist.h>
++#include <linux/instrumented.h>
  
- 	/*
-+	 * Do nothing for 0 sized check; this comparison will be optimized out
-+	 * for constant sized instrumentation (__tsan_{read,write}N).
-+	 */
-+	if (unlikely(size == 0))
-+		return;
-+
-+	/*
- 	 * Avoid user_access_save in fast-path: find_watchpoint is safe without
- 	 * user_access_save, as the address that ptr points to is only used to
- 	 * check if a watchpoint exists; ptr is never dereferenced.
-diff --git a/kernel/kcsan/test.c b/kernel/kcsan/test.c
-index cc60002..d26a052 100644
---- a/kernel/kcsan/test.c
-+++ b/kernel/kcsan/test.c
-@@ -92,6 +92,16 @@ static bool test_matching_access(void)
- 		return false;
- 	if (WARN_ON(matching_access(9, 1, 10, 1)))
- 		return false;
-+
-+	/*
-+	 * An access of size 0 could match another access, as demonstrated here.
-+	 * Rather than add more comparisons to 'matching_access()', which would
-+	 * end up in the fast-path for *all* checks, check_access() simply
-+	 * returns for all accesses of size 0.
-+	 */
-+	if (WARN_ON(!matching_access(8, 8, 12, 0)))
-+		return false;
-+
- 	return true;
- }
+ #define PIPE_PARANOIA /* for now */
  
+@@ -138,7 +139,7 @@
+ static int copyout(void __user *to, const void *from, size_t n)
+ {
+ 	if (access_ok(to, n)) {
+-		kasan_check_read(from, n);
++		instrument_copy_to_user(to, from, n);
+ 		n = raw_copy_to_user(to, from, n);
+ 	}
+ 	return n;
+@@ -147,7 +148,7 @@ static int copyout(void __user *to, const void *from, size_t n)
+ static int copyin(void *to, const void __user *from, size_t n)
+ {
+ 	if (access_ok(from, n)) {
+-		kasan_check_write(to, n);
++		instrument_copy_from_user(to, from, n);
+ 		n = raw_copy_from_user(to, from, n);
+ 	}
+ 	return n;
+@@ -639,7 +640,7 @@ EXPORT_SYMBOL(_copy_to_iter);
+ static int copyout_mcsafe(void __user *to, const void *from, size_t n)
+ {
+ 	if (access_ok(to, n)) {
+-		kasan_check_read(from, n);
++		instrument_copy_to_user(to, from, n);
+ 		n = copy_to_user_mcsafe((__force void *) to, from, n);
+ 	}
+ 	return n;
