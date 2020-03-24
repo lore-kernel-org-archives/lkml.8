@@ -2,114 +2,157 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6EFAC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47958C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F5EA206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A6E620774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585068734;
-	bh=wv7V6OA+vnQKUw2Y4zY+fl+UxUMw0in7d1nJHJs3HkQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wkTuleS9DHJC0G7tS/eMFS7ja8EBDrcwLDf1Boymq1EB50c8Z9z+zSRKQUwP58Lty
-	 XBcthB7UuWOa+HJ9k633JYz5evL/fSO0Cf/UXAdflPu2qmDsoP9VgQPzksuQOlrDnn
-	 LUbDyJ2ZT2RtgiWhA1gL9z4YPaJw7nJ+AFza5obA=
+	s=default; t=1585068760;
+	bh=m3Z+53mzM3UV6WJ6Vdwrpv06/Gdrmrk0ZMMTj6vnQw0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=wU4D6uO6pny5ilWNU9iLMHlYYQuv+azYGl+gmFJp9LmlsXLDpQW24WrE75bAuGssg
+	 ykCI3eDj+fc0kq73FGS/tJrRVeDgthANB/qxT+p53YCJY2BAvAbGvb8RhaFxvoblRC
+	 aPAYhjVCIVSHG/ivh1976qzbXp6YB8zLtBwrpB8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727650AbgCXQwN (ORCPT
+        id S1727779AbgCXQwi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:52:13 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43453 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgCXQwN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:52:13 -0400
-Received: by mail-lf1-f68.google.com with SMTP id n20so13820044lfl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:52:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WsR634IM9mmhNsoHiRslx4q1ur3OKG9sqLOfW3mTlvE=;
-        b=Z4pJJsNRptNjfG3P3MoBuNrYlnzenPIYlkT2d80DcIZW7UeaJ7NzLHI1ja4yIjcDoc
-         /iKfJJvm1iYP31UYLTqjCrBqL5Uar8necO8dCIgcOuI51Nj7AidT3P8YaYaCV6jUFzMJ
-         fsKqZJnyfGhT7+0lEb4rByJaviH4S/tML+mT4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WsR634IM9mmhNsoHiRslx4q1ur3OKG9sqLOfW3mTlvE=;
-        b=QRid/3txVm81qvO9r5NM/4S414c8tjhtqlC0pnxC41OzPPJOcJLDqKfXEkw12WbqXX
-         BOSILeJbufdxb2G5yxphM+HPchwptq5lC2UO02XJdD54rZFC6k3x/pbS+TlLud8AUVX4
-         SCK/zgJOmgYY0d2iYNBTiZC0GJkFwnQdBt/JEJFmtMToxA43DHe3NtRvr46DcbzwS+YG
-         1sW7N97FjHlk5bM4dKnrV8/KhnfsN/uzhF8JeXeQzkz+3QL+KkDVGc1XoLGSBkZUjhi6
-         skpnb7lupF+/va/t3RR3F24EoSvI1lb2NT4MzjA75hKLPbQkk7GR72ldG8OKTmdKkxQx
-         tUbg==
-X-Gm-Message-State: ANhLgQ1MoOeva4TBWKV2oG5sua+hucXq3BC3ynAP9vWROubb5ATVItpZ
-        2MPpjno2n+r3tKG0yksFl4xJ9KDM5/M=
-X-Google-Smtp-Source: ADFU+vuSuUgn4kN/5nfxD1d6oxkY1oSybWR9vvUzFAW84B6ZfQuGGHLzmz6j7H0lYK/03HXcRrgeSA==
-X-Received: by 2002:ac2:484f:: with SMTP id 15mr16910092lfy.3.1585068730051;
-        Tue, 24 Mar 2020 09:52:10 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id l7sm3722496lfp.65.2020.03.24.09.52.07
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 09:52:08 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id c20so13859269lfb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:52:07 -0700 (PDT)
-X-Received: by 2002:a05:6512:10cf:: with SMTP id k15mr17550349lfg.142.1585068727556;
- Tue, 24 Mar 2020 09:52:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200324084821.29944-1-masahiroy@kernel.org>
-In-Reply-To: <20200324084821.29944-1-masahiroy@kernel.org>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 24 Mar 2020 09:51:51 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjEi4VoT8qkBhrBtdZ27shyrPwo0ETpuOdxk5anHtQqhQ@mail.gmail.com>
-Message-ID: <CAHk-=wjEi4VoT8qkBhrBtdZ27shyrPwo0ETpuOdxk5anHtQqhQ@mail.gmail.com>
-Subject: Re: [PATCH 00/16] x86, crypto: remove always-defined CONFIG_AS_* and
- cosolidate Kconfig/Makefiles
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        intel-gfx@lists.freedesktop.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Mar 2020 12:52:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:38244 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbgCXQwi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:52:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EE2D31FB;
+        Tue, 24 Mar 2020 09:52:37 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A74A3F71F;
+        Tue, 24 Mar 2020 09:52:37 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 16:52:35 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Support Opensource <support.opensource@diasemi.com>
+Subject: Applied "regulator: da9063: Fix get_mode() functions to read sleep field" to the regulator tree
+In-Reply-To:  <20200324092516.60B5C3FB8D@swsrvapps-01.diasemi.com>
+Message-Id:  <applied-20200324092516.60B5C3FB8D@swsrvapps-01.diasemi.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> If it is OK to queue this up to Kbuild tree,
-> I will send a pull request to Linus.
+The patch
 
-Looks fine to me, assuming we didn't now get some confusion due to
-duplicate patches (I think Jason got his tree added to -next already).
+   regulator: da9063: Fix get_mode() functions to read sleep field
 
-And yeah, that end result looks much better.
+has been applied to the regulator tree at
 
-             Linus
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From fc69bab1ec382d16210ef6bb2d3f117a37169de2 Mon Sep 17 00:00:00 2001
+From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Date: Tue, 24 Mar 2020 09:25:16 +0000
+Subject: [PATCH] regulator: da9063: Fix get_mode() functions to read sleep
+ field
+
+get_mode() is used to retrieve the active mode state. Settings-A
+config is used during active state, whilst Settings-B is for
+suspend. This means we only need to check the sleep field of each
+buck and LDO as that field solely relates to Settings-A config.
+
+This change is a clone of the get_mode() update which was committed
+as part of:
+ - regulator: da9062: fix suspend_enable/disable preparation
+   [a72865f057820ea9f57597915da4b651d65eb92f]
+
+Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Link: https://lore.kernel.org/r/20200324092516.60B5C3FB8D@swsrvapps-01.diasemi.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/da9063-regulator.c | 28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/regulator/da9063-regulator.c b/drivers/regulator/da9063-regulator.c
+index 46b7301efcd6..6d07e6864173 100644
+--- a/drivers/regulator/da9063-regulator.c
++++ b/drivers/regulator/da9063-regulator.c
+@@ -226,7 +226,6 @@ static int da9063_buck_set_mode(struct regulator_dev *rdev, unsigned mode)
+ static unsigned da9063_buck_get_mode(struct regulator_dev *rdev)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	struct regmap_field *field;
+ 	unsigned int val;
+ 	int ret;
+ 
+@@ -247,18 +246,7 @@ static unsigned da9063_buck_get_mode(struct regulator_dev *rdev)
+ 		return REGULATOR_MODE_NORMAL;
+ 	}
+ 
+-	/* Detect current regulator state */
+-	ret = regmap_field_read(regl->suspend, &val);
+-	if (ret < 0)
+-		return 0;
+-
+-	/* Read regulator mode from proper register, depending on state */
+-	if (val)
+-		field = regl->suspend_sleep;
+-	else
+-		field = regl->sleep;
+-
+-	ret = regmap_field_read(field, &val);
++	ret = regmap_field_read(regl->sleep, &val);
+ 	if (ret < 0)
+ 		return 0;
+ 
+@@ -295,21 +283,9 @@ static int da9063_ldo_set_mode(struct regulator_dev *rdev, unsigned mode)
+ static unsigned da9063_ldo_get_mode(struct regulator_dev *rdev)
+ {
+ 	struct da9063_regulator *regl = rdev_get_drvdata(rdev);
+-	struct regmap_field *field;
+ 	int ret, val;
+ 
+-	/* Detect current regulator state */
+-	ret = regmap_field_read(regl->suspend, &val);
+-	if (ret < 0)
+-		return 0;
+-
+-	/* Read regulator mode from proper register, depending on state */
+-	if (val)
+-		field = regl->suspend_sleep;
+-	else
+-		field = regl->sleep;
+-
+-	ret = regmap_field_read(field, &val);
++	ret = regmap_field_read(regl->sleep, &val);
+ 	if (ret < 0)
+ 		return 0;
+ 
+-- 
+2.20.1
+
