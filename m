@@ -2,84 +2,114 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D0DFC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF163C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEEEA20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:47:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B72620409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:56:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pygvSvd+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727212AbgCXCrE (ORCPT
+        id S1727186AbgCXC4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:47:04 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:34488 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgCXCrE (ORCPT
+        Mon, 23 Mar 2020 22:56:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36070 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727047AbgCXC4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:47:04 -0400
-Received: by mail-io1-f70.google.com with SMTP id n26so13762004iop.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:47:03 -0700 (PDT)
+        Mon, 23 Mar 2020 22:56:17 -0400
+Received: by mail-wm1-f68.google.com with SMTP id g62so1915876wme.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:56:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/0+7iyULVUw6dbuIVInQO+4nPeWfn4xVz7ibloxImNQ=;
+        b=pygvSvd+eSrvDdmSvX8FjMjj6JJjC9drPpobUWysZJHmY2+uVcZ/CK1j3o67YZSFev
+         7rH2WjQYGKxuNOjOFg+MHVI1bcoY5f0hf6x2eHxK5zhTR4Opqgl4TJ4lHni0I/AE0Yhg
+         t5QlwixxmXc68bdC1BDiwlnLNRKc4fPy/CexA1KMFW/JPN1/EWVb1MD55t6360/gh0Tr
+         WvmGSqyc86YOZeRUPbn5LNVcMXD6H2cZc3+WNrK8It/KS/Fvkhi1g5e6Cs1LVFqrfZEi
+         ce7M60lZ9CwU7UmHn0ok9azJpMCYwYBxhO+KCVpn63hS0jP/NswzeGUTC+OU6wiUAu3l
+         5qOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=LOv2WyxOQNJMMiel1AjLpQJL3nLG4+bZfZZebAkOi9k=;
-        b=M2T59pDtmOc5UydVdnoAMTgaXYW9Q358cNleNGWqJ8PNSG2etBJpaq6b8t9s/cT7I7
-         GwNnuVdhmxAGeSyDAvpQ+Qx41tCD4WFG3olG5x2Wl0ly0dPpjgAw+vap1BUipkg0hVNv
-         I7V9udGhUWwQa6qXYDffos/kO3Me7clAld3GnNdr3Jb59yCRM5fu7x7IChmUDUkqqi/5
-         ZxAvHuCi8cezGjCJQ4cRMwepb8oizMbQE/7IP04ccpROKzpMScSdBpseDX6brG4j+8Tf
-         5qwNWfokgajGHhI038GyOD4m2VDrkncBsWMcFreLhob51xo6roiuwjwgBO/ddhgXTkKI
-         LPWQ==
-X-Gm-Message-State: ANhLgQ3SynH1D5CjuashEzFcG2m19+pqeVdg54M7MBbq30d6IHDm3z6X
-        UUjNiWDk2FyLgYdjn5ELC66LCry/eI2qgSBWtWyJQNZ3fy9G
-X-Google-Smtp-Source: ADFU+vstiI7NkY8P0sLiaAwA1tlgY+DAUVfkvxxrtQc1GUcIriiMD4ZAGZsTUHBhY7pwHk2p3ulODfmE2r7ZpymGWtd3GqW4WeUB
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/0+7iyULVUw6dbuIVInQO+4nPeWfn4xVz7ibloxImNQ=;
+        b=RdRwLm9z3Et+pPBs/9aiBGiq+LIeC8QG2vCnh03I5xgqtdKE/ZX0PPep5RoIloOlPx
+         faHlw0B2eH77Qa48yTlrMS1S92UxOfrSsXgkL13jvxQ+o7XHioqWhBBTHid/WHClJZ6l
+         7mxmHXt4OEMpUrp0AhYDvxVDR5ZwXhh1zVaUhxjYTb9i3HHvm94wdckvzE3gZqElmZtH
+         9rQ7M1UgiZc8QGDFxIpZ+XMvqof6nWERCxVgevx3ltzAY89MGbIQK/1BNBeLQfckRMQW
+         7VekB0rXxIACh6GMlyBlvOuu8WfioCXE+FX6VMscKL6bDLBRtdWTrnBa0Z8tVT8w9iW9
+         ZVLQ==
+X-Gm-Message-State: ANhLgQ3/RLc0W3Q8XEK4n6Iap9xjPRpPdKsWPDV/DBQvzO3eLHGCasPe
+        sZyaEKuXNVzNH5282S0JNL9UBahGRQFZ4Qmrur1BLw==
+X-Google-Smtp-Source: ADFU+vtDDkbuzT5Gw8bD3VQH7XBa3+hEnpPF8q/9mh4Mk8cuXyVL3lDQtyD9qM5xo1O9D4wQLY3hbJhIkJv3u9c9FXE=
+X-Received: by 2002:a1c:2404:: with SMTP id k4mr2634050wmk.87.1585018574854;
+ Mon, 23 Mar 2020 19:56:14 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a02:6cd5:: with SMTP id w204mr22866930jab.43.1585018023533;
- Mon, 23 Mar 2020 19:47:03 -0700 (PDT)
-Date:   Mon, 23 Mar 2020 19:47:03 -0700
-In-Reply-To: <000000000000a6f2030598bbe38c@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004162e805a190c456@google.com>
-Subject: Re: WARNING in wp_page_copy
-From:   syzbot <syzbot+9301f2f33873407d5b33@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, andriin@fb.com, ast@kernel.org,
-        bjorn.topel@intel.com, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, daniel@iogearbox.net, davem@davemloft.net,
-        hawk@kernel.org, jakub.kicinski@netronome.com, jmoyer@redhat.com,
-        john.fastabend@gmail.com, jonathan.lemon@gmail.com,
-        justin.he@arm.com, kafai@fb.com, kirill.shutemov@linux.intel.com,
-        kirill@shutemov.name, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, magnus.karlsson@gmail.com,
-        magnus.karlsson@intel.com, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        torvalds@linux-foundation.org, yhs@fb.com
+References: <20200323192236.70152-1-brendanhiggins@google.com>
+In-Reply-To: <20200323192236.70152-1-brendanhiggins@google.com>
+From:   David Gow <davidgow@google.com>
+Date:   Mon, 23 Mar 2020 19:56:03 -0700
+Message-ID: <CABVgOSkf58zMRhpqoZY3cZuAfujnTwVe14xOMcS6VBC4S2+vEw@mail.gmail.com>
+Subject: Re: [PATCH v2] kunit: tool: add missing test data file content
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     Shuah Khan <shuah@kernel.org>, Heidi Fahim <heidifahim@google.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot suspects this bug was fixed by commit:
+On Mon, Mar 23, 2020 at 12:22 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
+>
+> Add a missing raw dmesg test log to test the kunit_tool's dmesg parser.
+> test_prefix_poundsign and test_output_with_prefix_isolated_correctly
+> fail without this test log.
+>
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 
-commit c3e5ea6ee574ae5e845a40ac8198de1fb63bb3ab
-Author: Kirill A. Shutemov <kirill@shutemov.name>
-Date:   Fri Mar 6 06:28:32 2020 +0000
+Tested-by: David Gow <davidgow@google.com>
 
-    mm: avoid data corruption on CoW fault into PFN-mapped VMA
+This patch does indeed fix the kunit_tool's unit tests (run with
+./tools/testing/kunit/kunit_tool_test.py).
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1170c813e00000
-start commit:   e31736d9 Merge tag 'nios2-v5.5-rc2' of git://git.kernel.or..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79f79de2a27d3e3d
-dashboard link: https://syzkaller.appspot.com/bug?extid=9301f2f33873407d5b33
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10fd9fb1e00000
+Beforehand, it failed with the errors below:
+======================================================================
+ERROR: test_prefix_poundsign (__main__.KUnitParserTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+ File "./tools/testing/kunit/kunit_tool_test.py", line 208, in
+test_prefix_poundsign
+   self.assertEqual('kunit-resource-test', result.suites[0].name)
+IndexError: list index out of range
 
-If the result looks correct, please mark the bug fixed by replying with:
+======================================================================
+FAIL: test_output_with_prefix_isolated_correctly
+(__main__.KUnitParserTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+ File "./tools/testing/kunit/kunit_tool_test.py", line 116, in
+test_output_with_prefix_isolated_correctly
+   self.assertContains('TAP version 14\n', result)
+ File "./tools/testing/kunit/kunit_tool_test.py", line 96, in
+assertContains
+   str(needle) + '" not found in "' + str(haystack) + '"!')
+AssertionError: "TAP version 14
+" not found in "<generator object isolate_kunit_output at 0x7f4e88d85ed0>"!
 
-#syz fix: mm: avoid data corruption on CoW fault into PFN-mapped VMA
+----------------------------------------------------------------------
+Ran 20 tests in 0.022s
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+FAILED (failures=1, errors=1)
