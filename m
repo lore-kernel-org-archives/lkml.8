@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C33AC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1E5C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDDB208FE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23276208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056392;
-	bh=vEE9Y225QIK4Llp+vuWKYxM49/expVtdDER2Jh9XvDg=;
+	s=default; t=1585056394;
+	bh=IGSlqq6hTkxv2h9XpSBomhmjn8iXo6CQHK+pMRjfako=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRaBUnC6ACQ6HfAiD/hOOCzgbGvNRQvni+eWq5XvlRmUudoYmWkAcp8ccyxhUhr7P
-	 Ti+jIxVzM932HhRCNO5cruMcExddNYB0ZXKkB7DkunHFNY4Bm5TV3d76GO+bktiwBK
-	 j77fImjly+aojZ6+QTeyfFQ+CR9EOBVwuk8RI6GE=
+	b=jHCFKoLS7jsEvzIrkqv6dyXCdw+kutRqAOECe9+2WVVpg95IJDCofg9whWYlDnxBP
+	 +GvrQbLtFiK1cNwQSJfF26rDVv4ujhSEkxDGaK9N5a1viJbbntLl/Mr9iMVDhdw+Jc
+	 2ZorveWcBoLmy4ZZj1XDqjeI/AL0s1RUzfKA1uTw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgCXN0a (ORCPT
+        id S1729726AbgCXN0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:26:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51272 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:26:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729500AbgCXN01 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:26:27 -0400
+        id S1729442AbgCXN03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:26:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AAC920775;
-        Tue, 24 Mar 2020 13:26:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2CAD20870;
+        Tue, 24 Mar 2020 13:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056386;
-        bh=vEE9Y225QIK4Llp+vuWKYxM49/expVtdDER2Jh9XvDg=;
+        s=default; t=1585056389;
+        bh=IGSlqq6hTkxv2h9XpSBomhmjn8iXo6CQHK+pMRjfako=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aq/DYTjVQJpbvlw4A0xgwcWosmpMREIYLJJgupeWB1JpV1yFc7MkDDZZvBHzViIbQ
-         tu0f6e+snmAcxizBWsj5riJF1qs9kBEo4T2jh+6Kuqe56WGDOlWVvTbvmLktLa/+kC
-         0h7M0YFcBkX9RVAhGSTdUaIUjWryfqZbK+FLUVHM=
+        b=vavbrztVzYHerg03myf7lzx71BroION4CXa3UGVRdz9X/iOSrCPy2bYsCWEbFgX+N
+         FxK7hza+R2nbdc2O+1zwXV/ejv9hKZ8Z1ancPvfcvBkv05JYf49BnznThrQx3kPnRp
+         Q6Cfxk31sYkQCQ7X31UqRfOys4mJAegkpAS4bQlY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Subject: [PATCH 5.5 103/119] futex: Fix inode life-time issue
-Date:   Tue, 24 Mar 2020 14:11:28 +0100
-Message-Id: <20200324130818.294989995@linuxfoundation.org>
+        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 104/119] futex: Unbreak futex hashing
+Date:   Tue, 24 Mar 2020 14:11:29 +0100
+Message-Id: <20200324130818.364602352@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,222 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 8019ad13ef7f64be44d4f892af9c840179009254 upstream.
+commit 8d67743653dce5a0e7aa500fcccb237cde7ad88e upstream.
 
-As reported by Jann, ihold() does not in fact guarantee inode
-persistence. And instead of making it so, replace the usage of inode
-pointers with a per boot, machine wide, unique inode identifier.
+The recent futex inode life time fix changed the ordering of the futex key
+union struct members, but forgot to adjust the hash function accordingly,
 
-This sequence number is global, but shared (file backed) futexes are
-rare enough that this should not become a performance issue.
+As a result the hashing omits the leading 64bit and even hashes beyond the
+futex key causing a bad hash distribution which led to a ~100% performance
+regression.
 
-Reported-by: Jann Horn <jannh@google.com>
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hand in the futex key pointer instead of a random struct member and make
+the size calculation based of the struct offset.
+
+Fixes: 8019ad13ef7f ("futex: Fix inode life-time issue")
+Reported-by: Rong Chen <rong.a.chen@intel.com>
+Decoded-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Rong Chen <rong.a.chen@intel.com>
+Link: https://lkml.kernel.org/r/87h7yy90ve.fsf@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/inode.c            |    1 
- include/linux/fs.h    |    1 
- include/linux/futex.h |   17 +++++----
- kernel/futex.c        |   89 +++++++++++++++++++++++++++++---------------------
- 4 files changed, 65 insertions(+), 43 deletions(-)
+ kernel/futex.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -137,6 +137,7 @@ int inode_init_always(struct super_block
- 	inode->i_sb = sb;
- 	inode->i_blkbits = sb->s_blocksize_bits;
- 	inode->i_flags = 0;
-+	atomic64_set(&inode->i_sequence, 0);
- 	atomic_set(&inode->i_count, 1);
- 	inode->i_op = &empty_iops;
- 	inode->i_fop = &no_open_fops;
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -698,6 +698,7 @@ struct inode {
- 		struct rcu_head		i_rcu;
- 	};
- 	atomic64_t		i_version;
-+	atomic64_t		i_sequence; /* see futex */
- 	atomic_t		i_count;
- 	atomic_t		i_dio_count;
- 	atomic_t		i_writecount;
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -31,23 +31,26 @@ struct task_struct;
- 
- union futex_key {
- 	struct {
-+		u64 i_seq;
- 		unsigned long pgoff;
--		struct inode *inode;
--		int offset;
-+		unsigned int offset;
- 	} shared;
- 	struct {
-+		union {
-+			struct mm_struct *mm;
-+			u64 __tmp;
-+		};
- 		unsigned long address;
--		struct mm_struct *mm;
--		int offset;
-+		unsigned int offset;
- 	} private;
- 	struct {
-+		u64 ptr;
- 		unsigned long word;
--		void *ptr;
--		int offset;
-+		unsigned int offset;
- 	} both;
- };
- 
--#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
-+#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = 0ULL } }
- 
- #ifdef CONFIG_FUTEX
- enum {
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -429,7 +429,7 @@ static void get_futex_key_refs(union fut
- 
- 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
- 	case FUT_OFF_INODE:
--		ihold(key->shared.inode); /* implies smp_mb(); (B) */
-+		smp_mb();		/* explicit smp_mb(); (B) */
- 		break;
- 	case FUT_OFF_MMSHARED:
- 		futex_get_mm(key); /* implies smp_mb(); (B) */
-@@ -463,7 +463,6 @@ static void drop_futex_key_refs(union fu
- 
- 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
- 	case FUT_OFF_INODE:
--		iput(key->shared.inode);
- 		break;
- 	case FUT_OFF_MMSHARED:
- 		mmdrop(key->private.mm);
-@@ -505,6 +504,46 @@ futex_setup_timer(ktime_t *time, struct
- 	return timeout;
+@@ -385,9 +385,9 @@ static inline int hb_waiters_pending(str
+  */
+ static struct futex_hash_bucket *hash_futex(union futex_key *key)
+ {
+-	u32 hash = jhash2((u32*)&key->both.word,
+-			  (sizeof(key->both.word)+sizeof(key->both.ptr))/4,
++	u32 hash = jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
+ 			  key->both.offset);
++
+ 	return &futex_queues[hash & (futex_hashsize - 1)];
  }
  
-+/*
-+ * Generate a machine wide unique identifier for this inode.
-+ *
-+ * This relies on u64 not wrapping in the life-time of the machine; which with
-+ * 1ns resolution means almost 585 years.
-+ *
-+ * This further relies on the fact that a well formed program will not unmap
-+ * the file while it has a (shared) futex waiting on it. This mapping will have
-+ * a file reference which pins the mount and inode.
-+ *
-+ * If for some reason an inode gets evicted and read back in again, it will get
-+ * a new sequence number and will _NOT_ match, even though it is the exact same
-+ * file.
-+ *
-+ * It is important that match_futex() will never have a false-positive, esp.
-+ * for PI futexes that can mess up the state. The above argues that false-negatives
-+ * are only possible for malformed programs.
-+ */
-+static u64 get_inode_sequence_number(struct inode *inode)
-+{
-+	static atomic64_t i_seq;
-+	u64 old;
-+
-+	/* Does the inode already have a sequence number? */
-+	old = atomic64_read(&inode->i_sequence);
-+	if (likely(old))
-+		return old;
-+
-+	for (;;) {
-+		u64 new = atomic64_add_return(1, &i_seq);
-+		if (WARN_ON_ONCE(!new))
-+			continue;
-+
-+		old = atomic64_cmpxchg_relaxed(&inode->i_sequence, 0, new);
-+		if (old)
-+			return old;
-+		return new;
-+	}
-+}
-+
- /**
-  * get_futex_key() - Get parameters which are the keys for a futex
-  * @uaddr:	virtual address of the futex
-@@ -517,9 +556,15 @@ futex_setup_timer(ktime_t *time, struct
-  *
-  * The key words are stored in @key on success.
-  *
-- * For shared mappings, it's (page->index, file_inode(vma->vm_file),
-- * offset_within_page).  For private mappings, it's (uaddr, current->mm).
-- * We can usually work out the index without swapping in the page.
-+ * For shared mappings (when @fshared), the key is:
-+ *   ( inode->i_sequence, page->index, offset_within_page )
-+ * [ also see get_inode_sequence_number() ]
-+ *
-+ * For private mappings (or when !@fshared), the key is:
-+ *   ( current->mm, address, 0 )
-+ *
-+ * This allows (cross process, where applicable) identification of the futex
-+ * without keeping the page pinned for the duration of the FUTEX_WAIT.
-  *
-  * lock_page() might sleep, the caller should not hold a spinlock.
-  */
-@@ -659,8 +704,6 @@ again:
- 		key->private.mm = mm;
- 		key->private.address = address;
- 
--		get_futex_key_refs(key); /* implies smp_mb(); (B) */
--
- 	} else {
- 		struct inode *inode;
- 
-@@ -692,40 +735,14 @@ again:
- 			goto again;
- 		}
- 
--		/*
--		 * Take a reference unless it is about to be freed. Previously
--		 * this reference was taken by ihold under the page lock
--		 * pinning the inode in place so i_lock was unnecessary. The
--		 * only way for this check to fail is if the inode was
--		 * truncated in parallel which is almost certainly an
--		 * application bug. In such a case, just retry.
--		 *
--		 * We are not calling into get_futex_key_refs() in file-backed
--		 * cases, therefore a successful atomic_inc return below will
--		 * guarantee that get_futex_key() will still imply smp_mb(); (B).
--		 */
--		if (!atomic_inc_not_zero(&inode->i_count)) {
--			rcu_read_unlock();
--			put_page(page);
--
--			goto again;
--		}
--
--		/* Should be impossible but lets be paranoid for now */
--		if (WARN_ON_ONCE(inode->i_mapping != mapping)) {
--			err = -EFAULT;
--			rcu_read_unlock();
--			iput(inode);
--
--			goto out;
--		}
--
- 		key->both.offset |= FUT_OFF_INODE; /* inode-based key */
--		key->shared.inode = inode;
-+		key->shared.i_seq = get_inode_sequence_number(inode);
- 		key->shared.pgoff = basepage_index(tail);
- 		rcu_read_unlock();
- 	}
- 
-+	get_futex_key_refs(key); /* implies smp_mb(); (B) */
-+
- out:
- 	put_page(page);
- 	return err;
 
 
