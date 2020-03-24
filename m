@@ -2,122 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05530C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED5EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15B32072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:52:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KrsQC9UU"
+	by mail.kernel.org (Postfix) with ESMTP id 66B3220722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:52:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585011179;
+	bh=P2oNbCx5t1xyZdNzp1UD6mwTvprw3BqkCsk+lW4PZQw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Yr+WfmcgaA02DhnmKpbYECGcE1RTl0ap637uSl2SA/Z3IoeeOtFH4MIgOInO887Yc
+	 tXN5R4H4gH36ai8jOTcSoBYe1zwLxK211T2mFYIggw36c6mx06XYiR2rR0Pro7b+GR
+	 swSDcQPEIc6gSmP5+cwPIHFjXp2BRTbgC0QcPnxI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgCXAwH (ORCPT
+        id S1727111AbgCXAw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:52:07 -0400
-Received: from mail-eopbgr20055.outbound.protection.outlook.com ([40.107.2.55]:62793
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726986AbgCXAwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:52:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JGN3N/Jy/SjCVX6efEp6aNFaJrlgsZ3zR4m7yMANnO/7E0xhup6PBmK18k5XGd0XngUJQ8DymJ7P24hyBOpsNiAlxvLeV0SfNxIA6gsjeddRnnHZaUNySAu5bpw/Gqb6TFN3YloOurQJN6PcU1vkWKDx+Uyt8wDpYUFRCB6iBSY2QSUZRjx3BH8+xluzTLcRftGYMPLt1Fye9twlrRns5ojF1zjqP3/0ITboUjLadqac/1t4yNdFhI6E8jr2gmYUB/p+LTBCnB3XOkw3X88ajb5RIhxHGwcSOwtBlx2jX0VBb/ttR3YFCW1zSetjKbgOHgSEJgWUIWUqswXPcWXLkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ekRiOP5+uDcT0buFROQWK90bLw7SVOf4P1GWSugBm+4=;
- b=n/8a34RjSWlUGMff0yukK6sn7UDRoEQDptxfdxlcBrxQCnF10N1IKo3dOYxOFzx3w2bESzIvqLpWYSpZ+xGRkjWIoTv5V0Ny6XDVAB9HDjyhOOmVZ3Lacp4eJoj2CLIOI20ltNw4F8IgNuoQxDXzSw+6M+CU1O93kmq31SX7O38wo9s/60GE3EyfHWQFOcCal+X0WHckmSeQuX72qFzVbS7ivJaaOLp+l7O4Kx5foUICpsDlChCE+WvQEGPXFn6AkTNcCM1Ms23/jick0IjympElgeU1/BXx2qnOdFDdMpsYzHVZGJyhYZTNRyAalhcntyj7YOK+KVX+7c7jhOtmIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ekRiOP5+uDcT0buFROQWK90bLw7SVOf4P1GWSugBm+4=;
- b=KrsQC9UUX4q9YsRNHbxMdGh8FUZx01wXln4EWJRnlJfAZ6Nqd3R1gEagWUr/iF/ha5wboFy7ysivtHpvYv7M23RSukj1cGzvVBCg+InkYIFe2CpZk/TF94cjpAhzv1NhwZegxBkSyiUvuDhRC3xvbXklV2tJ8g5fC5BKsjYumGw=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3914.eurprd04.prod.outlook.com (52.134.71.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.18; Tue, 24 Mar 2020 00:52:01 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
- 00:52:01 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
-Thread-Topic: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
-Thread-Index: AQHWAQ+PMwlXAHkCzkSegBP0Of4mRKhWN38AgACy3VA=
-Date:   Tue, 24 Mar 2020 00:52:01 +0000
-Message-ID: <DB3PR0402MB39163E02D851A95D843B1465F5F10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
- <1584966504-21719-2-git-send-email-Anson.Huang@nxp.com>
- <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
-In-Reply-To: <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fd79f8e9-185c-49dd-751c-08d7cf8d9079
-x-ms-traffictypediagnostic: DB3PR0402MB3914:|DB3PR0402MB3914:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3914928FD8763E2295637C26F5F10@DB3PR0402MB3914.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 03524FBD26
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(366004)(33656002)(110136005)(7696005)(4326008)(52536014)(55016002)(9686003)(478600001)(5660300002)(44832011)(186003)(316002)(26005)(71200400001)(4744005)(76116006)(6506007)(53546011)(64756008)(7416002)(66946007)(66476007)(66556008)(66446008)(81166006)(81156014)(2906002)(86362001)(8676002)(8936002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3914;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: MA8ua5c76kn4Wqcb4M+HBlHHxn342mRLpN9bh4SXLT7TP5GNl56yUeXpPu3ytbcxEzYsTJupHLr/yVyJYeD6KM1of48vzcN3BN+UvcRFg+95m9zLYEgzGkefb5k37Fh6hYYFNNaiGleQZGh14REOSDunVjWBWn5uZszv5mvKdpgG2KGQcgWrWb2a0sbRXtpjcwHZUi+iIZjqabXU8+SI5+sZ/RgoQ6gVGswA90a6D8I/rcHt5fijO3EOqXhXtPCUwjqsw4d6ySWR8q2pZD/DdUVuBjKazGBoQ9zZmiKfKHEM7x32N50n8mFiKLPiUC6AJQn8WJDryC7n5E0t8RyviJ+jj6quTgG3rv0xk+LiY5+ZsY0iWUOXtB+V60c/uOBpYd+2sSYG8hIDKFK+pSx/ioOHHkaVx7zjWabRDo3Adw+zF5E2cBPqW7/FJQqjX8QwUGK5aw75qMjzz99N3UJcYuaiv01ptMXb03oc6Ex5IGxoeAMY9wvI5fhqip4goAJ1vGPJLYhAZm4hfg73jvJvqQ==
-x-ms-exchange-antispam-messagedata: mE0ScmSpE9xJOOLhxPecFFjbtHnow+ffC6Thh5zThMxA0DJ5UHD2Q1emK0TNjlinYzaEH368E2hyCeIZSBJSlhpDH+hlJtBlggyMQFOoDanxPYHA8NPiZXsQQCiA4S8fR6Bd8Ql4O/orhSMZjsry5Q==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 23 Mar 2020 20:52:58 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:56151 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbgCXAw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:52:58 -0400
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02O0qspu005826;
+        Tue, 24 Mar 2020 09:52:54 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02O0qspu005826
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585011174;
+        bh=P2oNbCx5t1xyZdNzp1UD6mwTvprw3BqkCsk+lW4PZQw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c9jILnI8FrdGLPp0pGPJcRtLjQHvX7eFFN3+IDW6FPEQ3Oeaxt0rjoT0YwU4h7/TM
+         fNJjXmEinnE3k1p7YdrbIABva1LtHFhIhRD2Bc+4GHE9KdaRbTMzVexV4dEBBHSk46
+         KodvW7nOuVYPjFy96P70UMRa7G5RMvFOaVjrKcwOczThx3fq5TZfrc1jzWPC18EIO/
+         Yiep+svzoYyRVxR3NlOL1Qch/Btnw46FZ0jiBJacGUGUQ2blI5IAgkd+5Gd9iP70qf
+         g8mhthc1XFwNyff02rv9A8gopNQZish7Wb6qbTrE3HsWvPYpzeIUZA2CT2I39RXI0w
+         PgedNKSbLGXEg==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id u11so168618vsg.2;
+        Mon, 23 Mar 2020 17:52:54 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0ciHSIo0gehdjsz5Rg2d69VIAeQyj0l4ebfejqy+8Qcnyk0a4i
+        PVOiHnjcSsBklyJTcmKd7vylFoNKDQqJU77/fkk=
+X-Google-Smtp-Source: ADFU+vvCqvboIcw4CBVM2i5u1rShQTwzICVwT7haDdL6BKrZF/0unDcF9eXZ2vWPJuONpYCzDIZaElvtm+vGoY9t7KQ=
+X-Received: by 2002:a67:2d55:: with SMTP id t82mr17504165vst.215.1585011173169;
+ Mon, 23 Mar 2020 17:52:53 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fd79f8e9-185c-49dd-751c-08d7cf8d9079
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 00:52:01.6622
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aNoKTDtxd5jq91qG48Y7RgpjRydbU/GaFu4ejAm74+Y8YaYNRvU5T5J3Lf0kQWqpO8g0e3rTo8nVro+et6LppQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3914
+References: <20200324001358.4520-1-masahiroy@kernel.org> <CAHmME9rdoo2Q3n4YA59GrVEh8uaCY_0-q+QVghjgG3WwcHkmug@mail.gmail.com>
+In-Reply-To: <CAHmME9rdoo2Q3n4YA59GrVEh8uaCY_0-q+QVghjgG3WwcHkmug@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 24 Mar 2020 09:52:17 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATQG4ABWxkShbgTpW78M4FYY_9Fmg2GSxXDTE51yWF=MQ@mail.gmail.com>
+Message-ID: <CAK7LNATQG4ABWxkShbgTpW78M4FYY_9Fmg2GSxXDTE51yWF=MQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] x86: remove always-defined CONFIG_AS_* options
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        NeilBrown <neilb@suse.de>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAyLzNdIHRoZXJtYWw6IGlteDht
-bTogQWRkIGkuTVg4TVAgc3VwcG9ydA0KPiANCj4gT24gMjMvMDMvMjAyMCAxMzoyOCwgQW5zb24g
-SHVhbmcgd3JvdGU6DQo+ID4gaS5NWDhNUCBzaGFyZXMgc2FtZSBUTVUgd2l0aCBpLk1YOE1NLCB0
-aGUgb25seSBkaWZmZXJlbmNlIGlzIGkuTVg4TVANCj4gPiBoYXMgdHdvIHRoZXJtYWwgc2Vuc29y
-cyB3aGlsZSBpLk1YOE1NIE9OTFkgaGFzIG9uZSwgYWRkIG11bHRpcGxlDQo+ID4gc2Vuc29ycyBz
-dXBwb3J0IGZvciBpLk1YOE1NIFRNVSBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNp
-bmNlIFYyOg0KPiA+IAktIEZpeCBidWlsZCB3YXJuaW5nIGFib3V0IHRlc3RfYml0IHNlY29uZCBh
-cmd1bWVudCB0eXBlLg0KPiA+IC0tLQ0KPiANCj4gUGxlYXNlLCBqdXN0IHNlbmQgYSBmaXggb24g
-dG9wIG9mIHRoaXMgcGF0Y2ggYmVjYXVzZSB0aGUgc2VyaWVzIGlzIGFscmVhZHkNCj4gbWVyZ2Vk
-Lg0KDQpUaGUgcGF0Y2ggMS8zLCAyLzMgYXJlIG1lcmdlZCwgd2lsbCB5b3UgcGljayB1cCB0aGUg
-My8zPw0KDQpUaGFua3MsDQpBbnNvbg0K
+On Tue, Mar 24, 2020 at 9:29 AM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> On Mon, Mar 23, 2020 at 6:15 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> >
+> > arch/x86/Makefile tests instruction code by $(call as-instr, ...)
+> >
+> > Some of them are very old.
+> > For example, the check for CONFIG_AS_CFI dates back to 2006.
+> >
+> > We raise GCC versions from time to time, and we clean old code away.
+> > The same policy applied to binutils.
+> >
+> > The current minimal supported version of binutils is 2.21
+> >
+> > This is new enough to recognize the instruction in most of
+> > as-instr calls.
+> >
+> > If this series looks good, how to merge it?
+> > Via x86 tree or maybe crypto ?
+>
+> This series looks fine, but why is it still incomplete? That is, it's
+> missing your drm commit plus the 4 I layered on top for moving to a
+> Kconfig-based approach and accounting for the bump to binutils 2.23.
+> Everything is now rebased here:
+> https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
+>
+> Would you be up for resubmitting those all together so we can handle
+> this in one go?
+
+
+The drm one was independent of the others,
+so I just sent it to drm ML separately.
+
+As for your 4, I just thought you would
+send a fixed version.
+
+But, folding everything in a series will clarify
+the patch dependency.
+OK, I will do it.
+Who/which ML should I send it to?
+
+
+--
+Best Regards
+Masahiro Yamada
