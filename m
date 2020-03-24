@@ -2,113 +2,130 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F194EC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5ACC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0E52208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056543;
-	bh=p+doGnRzaKO0ei7HENSP5rHdtLQfvDeepgfpWPTJ9Ow=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDE1vbZFxdvhT1JQuukVIE5sqSOUnIZLg8X+PlbdrjJ4MwLDG4WUIWqrHUvg7fg7r
-	 W//I2D9JUd9pyJw8X9nbwzKDWnwnFTLUGPbBecd+sPfDW49WCdqzE6gkr89u8zBrfV
-	 jOFgggKvRnxfz/3HEG4w/pVUrlcBE276Z3Huis/o=
+	by mail.kernel.org (Postfix) with ESMTP id 56D3E2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbgCXN26 (ORCPT
+        id S1729642AbgCXN3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:28:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:29:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:34574 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729562AbgCXNYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:08 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 972A8208CA;
-        Tue, 24 Mar 2020 13:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056248;
-        bh=p+doGnRzaKO0ei7HENSP5rHdtLQfvDeepgfpWPTJ9Ow=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qSXyph+WQvLtFVfMkAfm7Abn7bmiErbBNiQVvrvkJqXWjw6rsnN7qVZZF5kqQmpxV
-         nYgcmQSIjiJf8idaitFNw0LOG5Ge1HdS7dXF3rLwh9XRWMqt97r9T/9uEV7tG3f7Z0
-         DH3as4Yh5gXRkx9oJogBgy6bHA+4v7hW/xwq1sko=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Eugen Hristev <eugen.hristev@microchip.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.5 068/119] iio: adc: at91-sama5d2_adc: fix differential channels in triggered mode
-Date:   Tue, 24 Mar 2020 14:10:53 +0100
-Message-Id: <20200324130815.011096322@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729543AbgCXNYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 15825FEC;
+        Tue, 24 Mar 2020 06:24:05 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B8AF23F52E;
+        Tue, 24 Mar 2020 06:24:03 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v3 07/14] net: axienet: Check for DMA mapping errors
+Date:   Tue, 24 Mar 2020 13:23:40 +0000
+Message-Id: <20200324132347.23709-8-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
+References: <20200324132347.23709-1-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugen Hristev <eugen.hristev@microchip.com>
+Especially with the default 32-bit DMA mask, DMA buffers are a limited
+resource, so their allocation can fail.
+So as the DMA API documentation requires, add error checking code after
+dma_map_single() calls to catch the case where we run out of "low" memory.
 
-commit a500f3bd787f8224341e44b238f318c407b10897 upstream.
-
-The differential channels require writing the channel offset register (COR).
-Otherwise they do not work in differential mode.
-The configuration of COR is missing in triggered mode.
-
-Fixes: 5e1a1da0f8c9 ("iio: adc: at91-sama5d2_adc: add hw trigger and buffer support")
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- drivers/iio/adc/at91-sama5d2_adc.c |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 31 ++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -723,6 +723,7 @@ static int at91_adc_configure_trigger(st
- 
- 	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
- 		struct iio_chan_spec const *chan = at91_adc_chan_get(indio, bit);
-+		u32 cor;
- 
- 		if (!chan)
- 			continue;
-@@ -732,6 +733,20 @@ static int at91_adc_configure_trigger(st
- 			continue;
- 
- 		if (state) {
-+			cor = at91_adc_readl(st, AT91_SAMA5D2_COR);
-+
-+			if (chan->differential)
-+				cor |= (BIT(chan->channel) |
-+					BIT(chan->channel2)) <<
-+					AT91_SAMA5D2_COR_DIFF_OFFSET;
-+			else
-+				cor &= ~(BIT(chan->channel) <<
-+				       AT91_SAMA5D2_COR_DIFF_OFFSET);
-+
-+			at91_adc_writel(st, AT91_SAMA5D2_COR, cor);
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 5c1b53944771..736ac1b7a052 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -248,6 +248,11 @@ static int axienet_dma_bd_init(struct net_device *ndev)
+ 						     skb->data,
+ 						     lp->max_frm_size,
+ 						     DMA_FROM_DEVICE);
++		if (dma_mapping_error(ndev->dev.parent, lp->rx_bd_v[i].phys)) {
++			netdev_err(ndev, "DMA mapping error\n");
++			goto out;
 +		}
 +
-+		if (state) {
- 			at91_adc_writel(st, AT91_SAMA5D2_CHER,
- 					BIT(chan->channel));
- 			/* enable irq only if not using DMA */
-
+ 		lp->rx_bd_v[i].cntrl = lp->max_frm_size;
+ 	}
+ 
+@@ -679,6 +684,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 	dma_addr_t tail_p;
+ 	struct axienet_local *lp = netdev_priv(ndev);
+ 	struct axidma_bd *cur_p;
++	u32 orig_tail_ptr = lp->tx_bd_tail;
+ 
+ 	num_frag = skb_shinfo(skb)->nr_frags;
+ 	cur_p = &lp->tx_bd_v[lp->tx_bd_tail];
+@@ -714,9 +720,15 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 		cur_p->app0 |= 2; /* Tx Full Checksum Offload Enabled */
+ 	}
+ 
+-	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
+ 	cur_p->phys = dma_map_single(ndev->dev.parent, skb->data,
+ 				     skb_headlen(skb), DMA_TO_DEVICE);
++	if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
++		if (net_ratelimit())
++			netdev_err(ndev, "TX DMA mapping error\n");
++		ndev->stats.tx_dropped++;
++		return NETDEV_TX_OK;
++	}
++	cur_p->cntrl = skb_headlen(skb) | XAXIDMA_BD_CTRL_TXSOF_MASK;
+ 
+ 	for (ii = 0; ii < num_frag; ii++) {
+ 		if (++lp->tx_bd_tail >= lp->tx_bd_num)
+@@ -727,6 +739,16 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+ 					     skb_frag_address(frag),
+ 					     skb_frag_size(frag),
+ 					     DMA_TO_DEVICE);
++		if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
++			if (net_ratelimit())
++				netdev_err(ndev, "TX DMA mapping error\n");
++			ndev->stats.tx_dropped++;
++			axienet_free_tx_chain(ndev, orig_tail_ptr, ii + 1,
++					      NULL);
++			lp->tx_bd_tail = orig_tail_ptr;
++
++			return NETDEV_TX_OK;
++		}
+ 		cur_p->cntrl = skb_frag_size(frag);
+ 	}
+ 
+@@ -807,6 +829,13 @@ static void axienet_recv(struct net_device *ndev)
+ 		cur_p->phys = dma_map_single(ndev->dev.parent, new_skb->data,
+ 					     lp->max_frm_size,
+ 					     DMA_FROM_DEVICE);
++		if (unlikely(dma_mapping_error(ndev->dev.parent, cur_p->phys))) {
++			if (net_ratelimit())
++				netdev_err(ndev, "RX DMA mapping error\n");
++			dev_kfree_skb(new_skb);
++			return;
++		}
++
+ 		cur_p->cntrl = lp->max_frm_size;
+ 		cur_p->status = 0;
+ 		cur_p->skb = new_skb;
+-- 
+2.17.1
 
