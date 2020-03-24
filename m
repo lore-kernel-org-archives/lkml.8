@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FDBC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:32:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACC3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432BE2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED82A206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:32:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056730;
-	bh=/yUkgZdWto5X5Jvg8caTaNLBPOv3Z7TfKUnt0YercZw=;
+	s=default; t=1585056741;
+	bh=+gXEn3kd3xuBUu2n+C9PRT5L3swFsgZIEmR7Fu5NEAE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPQxxTgF4pXqEAL/69t1ofakuK4kB8Y/6CayBE9EAMs6eIP/9rk8EpuCbUEP2YGtV
-	 bxyWojzeK3sck0ftDxAuhZLX5FCIzn19hs8/nBbqRd0w6GPa6k1UMXCTMqZUAKNN53
-	 gsp0945R1MqLfOnLYu4OWvYsannxHE1wrgMkGLcI=
+	b=lBf5oRhq/ULaOOCy73UMpD2LcLUTtWHBALC55c1lnfHmVjQvhYoyKomhV04MMzcOy
+	 0cKqXHT2cJVG7dm0j/IbeO2DmJNteTaFjkEAptTUG2CllnvYw5N4Udu5FaSmmIfrFu
+	 fyd/jnrTcCfwaHTkooFGbHN9wjJ8ItCTODXAA554=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgCXNcI (ORCPT
+        id S1728330AbgCXNR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38900 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:17:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728712AbgCXNSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:18:38 -0400
+        id S1727540AbgCXNRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:17:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79C4E208CA;
-        Tue, 24 Mar 2020 13:18:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C303206F6;
+        Tue, 24 Mar 2020 13:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055917;
-        bh=/yUkgZdWto5X5Jvg8caTaNLBPOv3Z7TfKUnt0YercZw=;
+        s=default; t=1585055873;
+        bh=+gXEn3kd3xuBUu2n+C9PRT5L3swFsgZIEmR7Fu5NEAE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSwXuNxyNTPaEw5gZk0lsbSPTzqQvATE6c+Qhuw2naJdrqHFHqMl091z4p6KJ6RDJ
-         EYSnQenN55QRLrP9v5h3DwA8jb4AAqa6/qu6jDnVfTD2Gtan76cW0f6+xAjPgdFMLz
-         GrmCyyJzXL2Y2ikBCdJ4a1PRSiViwuBfbjK/ccFA=
+        b=gAX48wzFsfrmr8IILT1HrYQYduMmHCSTX7YdbHJBkoOzE56SLJZMoeAqfmLB8Cr0g
+         TT8RZqF4xuhvT8P6Et2+qMRiFt8BwdSE3WYght9Ycdno+NgO5Zp9aOAlHlZIljKMpZ
+         LWJagCbfGDFF4fQBts2yovag9aiQFv+lQSnmrUvY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Chen <scott@labau.com.tw>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 041/102] USB: serial: pl2303: add device-id for HP LD381
-Date:   Tue, 24 Mar 2020 14:10:33 +0100
-Message-Id: <20200324130810.893677411@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 5.4 054/102] tty: fix compat TIOCGSERIAL leaking uninitialized memory
+Date:   Tue, 24 Mar 2020 14:10:46 +0100
+Message-Id: <20200324130812.216364343@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,42 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Chen <scott@labau.com.tw>
+From: Eric Biggers <ebiggers@google.com>
 
-commit cecc113c1af0dd41ccf265c1fdb84dbd05e63423 upstream.
+commit 17329563a97df3ba474eca5037c1336e46e14ff8 upstream.
 
-Add a device id for HP LD381 Display
-LD381:   03f0:0f7f
+Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
+tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
+copying a whole 'serial_struct32' to userspace rather than individual
+fields, but failed to initialize all padding and fields -- namely the
+hole after the 'iomem_reg_shift' field, and the 'reserved' field.
 
-Signed-off-by: Scott Chen <scott@labau.com.tw>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Fix this by initializing the struct to zero.
+
+[v2: use sizeof, and convert the adjacent line for consistency.]
+
+Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
+Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
+Cc: <stable@vger.kernel.org> # v4.20+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/pl2303.c |    1 +
- drivers/usb/serial/pl2303.h |    1 +
- 2 files changed, 2 insertions(+)
+ drivers/tty/tty_io.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/serial/pl2303.c
-+++ b/drivers/usb/serial/pl2303.c
-@@ -93,6 +93,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(SUPERIAL_VENDOR_ID, SUPERIAL_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220TA_PRODUCT_ID) },
-+	{ USB_DEVICE(HP_VENDOR_ID, HP_LD381_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960TA_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LCM220_PRODUCT_ID) },
---- a/drivers/usb/serial/pl2303.h
-+++ b/drivers/usb/serial/pl2303.h
-@@ -124,6 +124,7 @@
- #define HP_LM920_PRODUCT_ID	0x026b
- #define HP_TD620_PRODUCT_ID	0x0956
- #define HP_LD960_PRODUCT_ID	0x0b39
-+#define HP_LD381_PRODUCT_ID	0x0f7f
- #define HP_LCM220_PRODUCT_ID	0x3139
- #define HP_LCM960_PRODUCT_ID	0x3239
- #define HP_LD220_PRODUCT_ID	0x3524
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -2731,7 +2731,9 @@ static int compat_tty_tiocgserial(struct
+ 	struct serial_struct32 v32;
+ 	struct serial_struct v;
+ 	int err;
+-	memset(&v, 0, sizeof(struct serial_struct));
++
++	memset(&v, 0, sizeof(v));
++	memset(&v32, 0, sizeof(v32));
+ 
+ 	if (!tty->ops->set_serial)
+ 		return -ENOTTY;
 
 
