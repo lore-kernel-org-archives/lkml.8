@@ -2,122 +2,111 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A608C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B888BC54FCF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:52:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D832205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBEF20735
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:52:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ntboDvPp"
+	dkim=pass (2048-bit key) header.d=rere.qmqm.pl header.i=@rere.qmqm.pl header.b="HlMK8G4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbgCXUwP (ORCPT
+        id S1728057AbgCXUw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:52:15 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34492 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727023AbgCXUwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:52:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id a23so7929262plm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:52:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=RUH2GpKiZzcp+HWMY8/0tgoroE59nDoZuKy+VZo5HoQ=;
-        b=ntboDvPpO4mkIqoOhoGXBG65LwzTrCrhDR8XrhgItSkYAvVx0nDaIFCBhgwlE8+b3B
-         y6p8/oHwZoumQYYk3A1AzzxHVkXT6O6foFkaxu4imEmIvRAWv/oMpfPHGgbxrTvRWSJk
-         gIFK1Am2GLRwaAk5axXIPgh23srMlz0n3DanoTyOa9GDaxu/vLb4pd80gJuGfXRZvFfN
-         9yYECe7ugpWAGzj2sy3/0p4O61zScSUI1p0bkfKRlTrUSt8hghGolfUp584p846q7sI+
-         TWvUS7SFV62KctatZgmzNHcZ4+uPfa12URZyyig2GjXYpWMhIgTHXJNzdoKULwuNqvOT
-         xpMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=RUH2GpKiZzcp+HWMY8/0tgoroE59nDoZuKy+VZo5HoQ=;
-        b=qugirZcyb47YDu7hcmPd+Bq4p3trwVAiDPMcXhe2x2hn4HWMayG1Y52Y3PojLizV8d
-         BO3NdfHlXKn5pKULs5R0cFVZFiSaQ2bN5lG3i8zPyc4bzhW+Ym4xs9myIDv1+nJ9oDUL
-         dxwNhnzdlI14eO1hDGRkVVcXLUqUij+NjGXqMDnwU2hvucEHxH0CDcPuOkcxMWSfPhC/
-         h5R8lzmNDXiziRn12N36q53FMXnfR0wtagepUtWWgVV5rzfCjEalF76+2r94G5GcWlw1
-         S3N+G02JBejqCKZGvUay+55/AY1PjPDiCV9aY0KbFWqgCAoKiRAFHtfyyd3aCee0i28K
-         F6LQ==
-X-Gm-Message-State: ANhLgQ3f20joclf5UGhLk7gIwhZUaHnqVY+uyPf/Yl89/GZPIGlN5mbt
-        oEkWrDvOCq3Ii6uRvpJ8kBTKFQ==
-X-Google-Smtp-Source: ADFU+vuFTdjBOEELC4vADOx1eo0GZ5R9fhZn/of+Gz8RGRkQBwgXM30Df8fjCPIj52s2Ffu2c1Bidw==
-X-Received: by 2002:a17:902:b281:: with SMTP id u1mr6218733plr.287.1585083133418;
-        Tue, 24 Mar 2020 13:52:13 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id z6sm16696078pfn.212.2020.03.24.13.52.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 13:52:12 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 13:52:10 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        xiang xiao <xiaoxiang781216@gmail.com>
-Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
-Message-ID: <20200324205210.GE119913@minitux>
-References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
- <20200324170407.16470-3-arnaud.pouliquen@st.com>
+        Tue, 24 Mar 2020 16:52:28 -0400
+Received: from rere.qmqm.pl ([91.227.64.183]:42151 "EHLO rere.qmqm.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728060AbgCXUw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:52:28 -0400
+Received: from remote.user (localhost [127.0.0.1])
+        by rere.qmqm.pl (Postfix) with ESMTPSA id 48n3N83mvQz9v;
+        Tue, 24 Mar 2020 21:52:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rere.qmqm.pl; s=1;
+        t=1585083145; bh=OCoxojzJM6Pabr/wFUBTBOMM8dOe6TGTqrew7ilAA98=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HlMK8G4ka8B/sZc9aZaXPNLBXCApFZYP5phSWJWo4Gc+H8KVYd/tiLVvmZMKxer4x
+         ZHJYv7jXToB219Y5sve5yURsqGSOWobp+AH8ABz7NRQkeByhypQrkFK4bKC9WwM3q3
+         K1rh3ZyQM7fb1EtLertGje8Ecv1LhVfrAeoGQ6Lar8lW0as7yn2oDrgCxrafZIszVh
+         c06ZQeWIR5E1q668Z/Mz9quu2kNY+F2eZaUnPGS16A0Z+V4nAuEr5/i/AfQ0jbVjK+
+         XeHHE9kYQcP50hd2H8dQahMfgEprsOIvSUJfiQPhBQHbwKOwng//ADWeQ2kahsmhVy
+         GKJO98WSDpqFQ==
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.102.2 at mail
+Date:   Tue, 24 Mar 2020 21:52:21 +0100
+From:   =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
+        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 03/10] partitions: Introduce NVIDIA Tegra Partition
+ Table
+Message-ID: <20200324205221.GA22063@qmqm.qmqm.pl>
+References: <20200323163431.7678-1-digetx@gmail.com>
+ <20200323163431.7678-4-digetx@gmail.com>
+ <20200323191748.GB30585@qmqm.qmqm.pl>
+ <67140755-c829-5c58-3fbf-efd496e225df@gmail.com>
+ <20200323213520.GA16587@qmqm.qmqm.pl>
+ <c31a0335-a174-0f45-af03-3267710a8205@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200324170407.16470-3-arnaud.pouliquen@st.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c31a0335-a174-0f45-af03-3267710a8205@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 24 Mar 10:04 PDT 2020, Arnaud Pouliquen wrote:
-[..]
-> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
-> index 020b1cd9294f..c2465e7ebc2a 100644
-> --- a/drivers/tty/Makefile
-> +++ b/drivers/tty/Makefile
-> @@ -34,5 +34,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
->  obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
->  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
->  obj-$(CONFIG_VCC)		+= vcc.o
-> +obj-$(CONFIG_RPMSG_TTY)		+= rpmsg_tty.o
->  
->  obj-y += ipwireless/
-> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
-[..]
-> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
-> +	{ .name	= TTY_CH_NAME_RAW },
-> +	{ .name	= TTY_CH_NAME_WITH_CTS},
+On Tue, Mar 24, 2020 at 02:22:34AM +0300, Dmitry Osipenko wrote:
+> 24.03.2020 00:35, Michał Mirosław пишет:
+> > On Mon, Mar 23, 2020 at 10:59:52PM +0300, Dmitry Osipenko wrote:
+> >> 23.03.2020 22:17, Michał Mirosław пишет:
+> >>> On Mon, Mar 23, 2020 at 07:34:24PM +0300, Dmitry Osipenko wrote:
+> >>>> All NVIDIA Tegra devices use a special partition table format for the
+> >>>> internal storage partitioning. Most of Tegra devices have GPT partition
+> >>>> in addition to TegraPT, but some older Android consumer-grade devices do
+> >>>> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
+> >>>> in order to support these devices properly in the upstream kernel. This
+> >>>> patch adds support for NVIDIA Tegra Partition Table format that is used
+> >>>> at least by all NVIDIA Tegra20 and Tegra30 devices.
+> >>>>
+> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>>> ---
+> >>>>  arch/arm/mach-tegra/tegra.c   |  54 ++++
+> >>> [...]
+> >>>
+> >>> Please split off this part and make the information available to
+> >>> userspace (pt_addr + pt_size) if found. This would make it easier
+> >>> to support use the partition table later in initrd instead.
+> >>
+> >> Please clarify what do you mean by "use the partition table later in
+> >> initrd instead".
+> > 
+> > Configure device-mapper to span eMMC boot+data partitions and then ask
+> > (modified) kpartx to partition the resulting device. All before rootfs
+> > is mounted and switched to in initrd.
+> 
+> The whole point of this series is to make partition handling generic in
+> the kernel, avoiding the need to customize anything.
 
-I still don't like the idea that the tty devices are tied to channels by
-fixed names.
+Yes, but at least for diagnostic purposes, it would be nice to have the
+values from BCT exposed somewhere in /sys.
 
-This makes the driver unusable for communicating with any firmware out
-there that provides tty-like data over a channel with a different name -
-such as modems with channels providing an AT command interface (they are
-not named "rpmsg-tty-raw").
-
-I also fail to see how you would distinguish ttys when the firmware
-provides more than a single tty - e.g. say you have a modem-like device
-that provides an AT command channel and a NMEA stream.
-
-
-These are the reasons why drivers/rpmsg/rpmsg_char registers a "control
-device", from which you can spawn new char devices. As I've said before,
-I really think the same approach should be taken for ttys - perhaps by
-just extending the rpmsg_char to allow it to create tty devices in
-addition to the "packet based" char device?
-
-Regards,
-Bjorn
+Best Regards,
+Michał Mirosław
