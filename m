@@ -5,122 +5,132 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0905C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE6BC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9B8620714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DE620714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GJksm+dI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KrRtb/WC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgCXRmG (ORCPT
+        id S1727502AbgCXRnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:42:06 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33730 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727383AbgCXRmG (ORCPT
+        Tue, 24 Mar 2020 13:43:06 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43159 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbgCXRnG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:42:06 -0400
-Received: by mail-pf1-f194.google.com with SMTP id j1so6965184pfe.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:42:05 -0700 (PDT)
+        Tue, 24 Mar 2020 13:43:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id b2so22582099wrj.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HQvsNwxzxnaojuxdbx2mdkelhql3N9f429mWyfD3kfk=;
-        b=GJksm+dIOqXM5eXFzqz3cV/vl2mEZfHIiK/PqwWIEYgsP9oFl7+BKZd3q69fGEco8i
-         KXzcnsZOnj53hwEZ4CVDkeKeNdr11Bvyrf2ruZ3ghfxb1lkbF34Te8+uoYF/iKARVSZk
-         53Hyb16KVJqpQFrkXOEmNl80TA3u8+eKT/tnYstthmmVSDMxlu8iWnztXCzcFXLpynvo
-         Y1vZba79yaPrukpv6R7eC4pQPz/ukm/MwXxrawIKgZ8F28Rd/jhSsj+eSm76goQVtSGR
-         xWABVQfCyvYHfZgJB//dA19rdshcf89CEu5cSJzREj810H6B8VToJZXNBUmjpvRCJhpx
-         0PNw==
+        bh=LbJGyxS21FEV88+GhI3Kztu2LQlp+tbZk/mv+EeL9vg=;
+        b=KrRtb/WCwVOE3Yofiqo25n2GrqCh9MYlYF+pH7YKrj6IqWq9dYdz6dXwjih4odd78a
+         03Mp+nNPPKHkjraIZLyxvYmulBEiCkfqFBo/ySBKTnxpoKWZx5mojmPJYUg1BPl+upOK
+         XpS43pmp5U8ZBf6hNQBfTpPm4+Ads9Qo7RkUz/vs0GHdau/oF8LkV3MaDvhBZrJiAzHK
+         PM48JjJL1kEeBbcJkBe5uz6v+PrkxiSso1YxTD7aDlq9rSb50qbx7v0AZNYbHykeBNld
+         SDSdXFgIddm6rL48/Nmn/u0riy9RzfJ0RJUZ0sbMnm2o2dnkXswDiFePoF91JbsBaTn5
+         VnaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HQvsNwxzxnaojuxdbx2mdkelhql3N9f429mWyfD3kfk=;
-        b=Dc7za1zxqKHe1oZuntCn7GWUYIyEjTumNmXnUFeLxjWoS98X8mhdNE2zHq6lBrQLzn
-         pJi3BK1jLmlLya0ztU8sj25h19t34++IOP+AEXYC9pzFzmm4awta4jPUHPJJmBkVgEI8
-         AobkQpVPVsVWLOb/cGOcrzfgSSPZQWqc1FG9wZ4pVdQRAPrgnW3JZ3p2IMWrPPR2DHNI
-         HdTGk5Rzc42ZrKR2NQCiGnWTFTxo8ZA7vS7i5XCTywV+NKI590e3Jd6IED4At9J834Rb
-         mdkefvf+WEt6ldzu/oOKdRUFyP43nSmUCuMG7PEr4DMpo8JVZyn3IhBfiFHBJpkFT5Ra
-         FlQQ==
-X-Gm-Message-State: ANhLgQ1MzNXqoGk2Vnaq+uEntA3OFzBiAx/pm+nE5cQgAuzi7h6VV0qH
-        1VnHUFXQJlcHtwFXTeQPd2UEhdsXtrbsVPXWolCjcw==
-X-Google-Smtp-Source: ADFU+vuI9Q2NMgKPwV+54NfG9A4c5DDLK/vxfhGRUrBZNWUwML032OwOdrGfJUtd7SxTuglgUf50kwg7PJF4bCs3HaI=
-X-Received: by 2002:a63:a34d:: with SMTP id v13mr7252015pgn.10.1585071724656;
- Tue, 24 Mar 2020 10:42:04 -0700 (PDT)
+        bh=LbJGyxS21FEV88+GhI3Kztu2LQlp+tbZk/mv+EeL9vg=;
+        b=MZb9jkHvxMmoHDrunWhQt1Tn3lF1EGNTExqDE17w6Ymup4ubJlxWLZ8krMjJfttp9g
+         3bSxZWobf+083U6nBEvoStctvqzzB5C1v8OZVGv99oU6TUBVj8b5V/U6Rliw6hZmtbqN
+         Nc0LnVp2Ke6my6TMTLOHH9aTVzeBjrmZ0S2oM+yBp741iyFpMgQTMBRORi699W54g7k4
+         vV4UxaSoENorYD1tXiSL5xgr6Rif7jpkZWGpPoyOZvH45ZIED3m2OpliRdF5PQcHKd63
+         LyJzTqyyf6CCGkmqhXsdGm0HRnmcqwnnsX3qNabspW8gvWNgkKc1KyABvWkqCe5aN3U2
+         eKGg==
+X-Gm-Message-State: ANhLgQ3vRpIi/UFO6QO1Q5FJ/rSdc4VEabCrv8yAIBuN+A/mrD8p5Z18
+        Zp1zbRkGv8HxvBoZwYNIS+OrPwvthK8mphwlVqdzig==
+X-Google-Smtp-Source: ADFU+vuY55b1i550qyCWvAJDdha/jsXGT7t7S/WR85g/XPJgq8NUulwDyx/KYGRHxtYprPYUQKbl+GKumofr6+Scims=
+X-Received: by 2002:a5d:4ac8:: with SMTP id y8mr37687404wrs.272.1585071783098;
+ Tue, 24 Mar 2020 10:43:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200324104005.11279-1-will@kernel.org> <20200324104005.11279-2-will@kernel.org>
-In-Reply-To: <20200324104005.11279-2-will@kernel.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 24 Mar 2020 10:41:52 -0700
-Message-ID: <CAKwvOd=_v__=b6ijFYkxgDsmxakmkxwDWFG48601Gh9cyhj3PA@mail.gmail.com>
-Subject: Re: [PATCH 1/4] sparc32: mm: Fix argument checking in __srmmu_get_nocache()
-To:     Will Deacon <will@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@android.com>,
-        "David S. Miller" <davem@davemloft.net>,
+References: <20200319164227.87419-1-trishalfonso@google.com>
+ <20200319164227.87419-2-trishalfonso@google.com> <alpine.LRH.2.21.2003241635230.30637@localhost>
+In-Reply-To: <alpine.LRH.2.21.2003241635230.30637@localhost>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Tue, 24 Mar 2020 10:42:51 -0700
+Message-ID: <CAKFsvULUx3qi_kMGJx69ndzCgq=m2xf4XWrYRYBCViud0P7qqA@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] Add KUnit Struct to Current Task
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        sparclinux@vger.kernel.org
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 3:52 AM Will Deacon <will@kernel.org> wrote:
+On Tue, Mar 24, 2020 at 9:40 AM Alan Maguire <alan.maguire@oracle.com> wrote:
 >
-> The 'size' argument to __srmmu_get_nocache() is a number of bytes not
-> a shift value, so fix up the sanity checking to treat it properly.
 >
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  arch/sparc/mm/srmmu.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> On Thu, 19 Mar 2020, Patricia Alfonso wrote:
 >
-> diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-> index f56c3c9a9793..a19863cac0c4 100644
-> --- a/arch/sparc/mm/srmmu.c
-> +++ b/arch/sparc/mm/srmmu.c
-> @@ -175,18 +175,18 @@ pte_t *pte_offset_kernel(pmd_t *dir, unsigned long address)
->   */
->  static void *__srmmu_get_nocache(int size, int align)
->  {
-> -       int offset;
-> +       int offset, minsz = 1 << SRMMU_NOCACHE_BITMAP_SHIFT;
->         unsigned long addr;
+> > In order to integrate debugging tools like KASAN into the KUnit
+> > framework, add KUnit struct to the current task to keep track of the
+> > current KUnit test.
+> >
+> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > ---
+> >  include/linux/sched.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 04278493bf15..1fbfa0634776 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1180,6 +1180,10 @@ struct task_struct {
+> >       unsigned int                    kasan_depth;
+> >  #endif
+> >
+> > +#if IS_BUILTIN(CONFIG_KUNIT)
 >
-> -       if (size < SRMMU_NOCACHE_BITMAP_SHIFT) {
-> +       if (size < minsz) {
->                 printk(KERN_ERR "Size 0x%x too small for nocache request\n",
->                        size);
-> -               size = SRMMU_NOCACHE_BITMAP_SHIFT;
-> +               size = minsz;
->         }
-> -       if (size & (SRMMU_NOCACHE_BITMAP_SHIFT - 1)) {
-> -               printk(KERN_ERR "Size 0x%x unaligned int nocache request\n",
-> +       if (size & (minsz - 1)) {
-> +               printk(KERN_ERR "Size 0x%x unaligned in nocache request\n",
+> This patch set looks great! You might have noticed I
+> refreshed the kunit resources stuff to incorporate
+> feedback from Brendan, but I don't think any API changes
+> were made that should have consequences for your code
+> (I'm building with your patches on top to make sure).
+> I'd suggest promoting from RFC to v3 on the next round
+> unless anyone objects.
+>
+> As Dmitry suggested, the above could likely be changed to be
+> "#ifdef CONFIG_KUNIT" as kunit can be built as a
+> module also. More on this in patch 2..
+>
+I suppose this could be changed so that this can be used in possible
+future scenarios, but for now, since built-in things can't rely on
+modules, the KASAN integration relies on KUnit being built-in.
 
-Was modifying the printk intentional? int vs in ?
-
->                        size);
-> -               size += SRMMU_NOCACHE_BITMAP_SHIFT - 1;
-> +               size += minsz - 1;
->         }
->         BUG_ON(align > SRMMU_NOCACHE_ALIGN_MAX);
->
-> --
-> 2.20.1
->
-
+> > +     struct kunit                    *kunit_test;
+> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
+> > +
+> >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> >       /* Index of current stored address in ret_stack: */
+> >       int                             curr_ret_stack;
+> > --
+> > 2.25.1.696.g5e7596f4ac-goog
+> >
+> >
 
 -- 
-Thanks,
-~Nick Desaulniers
+Best,
+Patricia
