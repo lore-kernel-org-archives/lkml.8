@@ -2,132 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C3AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A0EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511B920714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCF920714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g+lJZjp+"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="ij6KPnT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgCXTFb (ORCPT
+        id S1727996AbgCXTGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:05:31 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:44620 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727672AbgCXTFa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 15:05:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585076729;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=mQXiLSPViiwhkM4wrjCnhSuUkI66tAeCX4Yqeo47LM0=;
-        b=g+lJZjp+LyJLeuuvP6wBHqmKThWuy7im4rfdRES8k8roCcHmOykCqnJulNQoohHg4V0j40
-        4vB8WtAF4ZxqmCZdLI8Ar+x9TKc6JHJ0HujppHz4L5APR1LXtCecS8Hr22uIPpU4k4zFnf
-        0TxpbRWYYMLAC0uR/cX83zPA6Y0ioQM=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-Q97Z_sLmMk2KUfEAlBwzig-1; Tue, 24 Mar 2020 15:05:20 -0400
-X-MC-Unique: Q97Z_sLmMk2KUfEAlBwzig-1
-Received: by mail-wr1-f72.google.com with SMTP id v6so9581590wrg.22
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 12:05:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=mQXiLSPViiwhkM4wrjCnhSuUkI66tAeCX4Yqeo47LM0=;
-        b=imIMF8TXbrGbpxMLZleZpKt6tad2i2G0tbJu+qH0MvKvYeUtgIgkcYFNjnrCAmBaUu
-         mxIBM7dPCdmWfMInpiUPpaI88NUaCOqsX4Oa+nqWXlOyUiBj3iNFO5XOIRAmmdcB2BKw
-         AEU64wiXfYAjo3VFUJOsdiXLVvrsi902CsJ29O4onEOYvh79RHGDPwuUs/WQ2/sPyW/q
-         03HTDtbT1maRhpjUATYir55RyZxPpZL19jCM9G02YKAfgC9ER7kddD49SRgzJOiVHSL6
-         LStTn3ztUE2JgkFw9VULHO89HbfA6lB3CzIJhNufowMXIq5+OZf21WKAphyxoP/2bu9W
-         3NJg==
-X-Gm-Message-State: ANhLgQ1inGS8+bbgiB/oVZHPF9Fpc8NJ1D9cSVtjog2Ky8IUWN157ce7
-        2dQ34lYSZghxlijeEUmmN7fOVArvdd0Qxi7mB10NvY6BlUrI6+1wp+DPvpvGSf3ykOAH+cLujAM
-        y50zj2hq3RAwedDT1IFm0c5Wf
-X-Received: by 2002:a5d:5512:: with SMTP id b18mr37873109wrv.215.1585076718694;
-        Tue, 24 Mar 2020 12:05:18 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvCwZF8umZimKZ0fX4KBKd6SkdPPDeMQceX7ZFtFqLDzwaX6Tb7PBxq6cohUgvQyzxBRw1sQw==
-X-Received: by 2002:a5d:5512:: with SMTP id b18mr37873075wrv.215.1585076718459;
-        Tue, 24 Mar 2020 12:05:18 -0700 (PDT)
-Received: from ?IPv6:2a02:8388:7c1:1280:a281:9dab:554b:2fdc? (2a02-8388-07c1-1280-a281-9dab-554b-2fdc.cable.dynamic.v6.surfer.at. [2a02:8388:7c1:1280:a281:9dab:554b:2fdc])
-        by smtp.gmail.com with ESMTPSA id m7sm7785372wro.41.2020.03.24.12.05.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 12:05:16 -0700 (PDT)
-Subject: Re: [PATCH] perf script: add flamegraph.py script
-To:     Kim Phillips <kim.phillips@amd.com>,
-        linux-perf-users@vger.kernel.org
-Cc:     Martin Spier <mspier@netflix.com>,
-        Brendan Gregg <bgregg@netflix.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
+        Tue, 24 Mar 2020 15:06:41 -0400
+Received: from mail-eopbgr130111.outbound.protection.outlook.com ([40.107.13.111]:48520
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727672AbgCXTGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 15:06:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i9eigv6p5AWwTsoS2f1cFhHQEV4mLIxSHFmfrPp606+VUwJxp5Dzv7hUpB6r5SC//5mwireL3szT/yEEVMt6lrQRGWEIVmkYl1GDtSCeiYH4eSWc3tIl2PuI4cSSzLhDyEpMJOlkn0KbgVBWIT4rukS+8wLxbT0SkRT3/kOBRJU0XqsmW1dk80BEaXS91p7Gj9CkfJb+FcwmVfFCT5DthOSZ8bA5+uFFUruvbOj49rRnLxoyxfSSSknnfwFwxvu1q+DuvPKRvyNHpJYoyYn9GUZp1xPKtKj9WYeMf1kciy0U2DARNObdFwxnrMrmxjxt66QQWSPCAPVrOQTDx1756Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y6wmtJ1RgXtHmKF5qH2SmcOIAZp0uHHY0KxsxfHrzEQ=;
+ b=jvOodJj+FrSDOpZc/8hES8bwV6oi7MHRXuze+AAxX8sXdidfi02qXx8UTR+FDdhjIZsjpGDOWTTat3fvaoTa0SGH+stwdtokYkbiBnfpJxcZ0+ZRwM4zL4nmCQuTdaj1y0qFdkmOUdrzjWJvSOM4H2y0xNfub6JIJRkuBCq8QQWS0QSZdzZImk7AQ16sXQoxy18jUp43kcCkXIeH3cVnRpTdW38/iEZmoCGwI61kYbtUFxCJi8fw0ruwDMwxhpWsrc5V3FAu3BqLcbIG0H55UUvyvTLfg9zCV2xWL9i/A2MUFdlxrvM/UDKThaPQqJOHdhUXTRoZ327/VMH4SJIUyA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y6wmtJ1RgXtHmKF5qH2SmcOIAZp0uHHY0KxsxfHrzEQ=;
+ b=ij6KPnT7X/EB+NSZ9gPyU0VtYRADRVfZ2Bs/g5Ixwrg0Sy/3/PRhYCilf1uMnJX7315ndptmj+KF8FN9GCCKTefQ+nhDDkpfP1EBHNUGobtM+SFWymy3ZYLLUbiHO9m7dsHzRjBitPQ9mz6IsYYHAsTtw5EXwDPlNDKkwJTTV3Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=vadym.kochan@plvision.eu; 
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM (10.165.195.138) by
+ VI1P190MB0768.EURP190.PROD.OUTLOOK.COM (10.186.157.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Tue, 24 Mar 2020 19:06:37 +0000
+Received: from VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::f983:c9a8:573a:751c]) by VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ ([fe80::f983:c9a8:573a:751c%7]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
+ 19:06:36 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Gregory CLEMENT <gregory.clement@free-electrons.com>,
         linux-kernel@vger.kernel.org
-References: <20200320151355.66302-1-agerstmayr@redhat.com>
- <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
-From:   Andreas Gerstmayr <agerstmayr@redhat.com>
-Message-ID: <21c81775-876a-4dd2-f52f-42645963350f@redhat.com>
-Date:   Tue, 24 Mar 2020 20:05:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+Cc:     Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [PATCH] bus: mbus: export mvebu_mbus_{add,del}_window for modules
+Date:   Tue, 24 Mar 2020 21:06:23 +0200
+Message-Id: <20200324190623.26482-1-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: AM6PR08CA0047.eurprd08.prod.outlook.com
+ (2603:10a6:20b:c0::35) To VI1P190MB0399.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:802:35::10)
 MIME-Version: 1.0
-In-Reply-To: <7176b535-f95b-bf6d-c181-6ccb91425f96@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM6PR08CA0047.eurprd08.prod.outlook.com (2603:10a6:20b:c0::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend Transport; Tue, 24 Mar 2020 19:06:36 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: f21e2a64-9477-4ebf-83bc-08d7d02679c6
+X-MS-TrafficTypeDiagnostic: VI1P190MB0768:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1P190MB0768D7A72CE4B22D840726B795F10@VI1P190MB0768.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:565;
+X-Forefront-PRVS: 03524FBD26
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(136003)(366004)(39830400003)(316002)(81156014)(81166006)(508600001)(6486002)(66476007)(66556008)(52116002)(86362001)(6506007)(26005)(186003)(8936002)(16526019)(8676002)(1076003)(36756003)(66946007)(4326008)(2906002)(107886003)(956004)(5660300002)(44832011)(2616005)(6666004)(4744005)(6512007)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1P190MB0768;H:VI1P190MB0399.EURP190.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: plvision.eu does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: umcWtqVDj6HhDqFVeyO8Y0bhfti7Aq8ETPvbNrnj0N7LuOLDfJlMCr2jcRqw8/h73cvXOzRhVVPYqfUUQGUF3zKoqErfcN7726k3V/3x96Cawejo7ubenxcGrWO1DPocwu+IwcEbwaTDSr7+4ityzHfv5K0FQsqNvDmS/lG0+Uzahe3o4bKRNCuMb6UFozIZCU1p+atmC0EEdc6tohYETy3X7eptbvfw3Ar9lfeKHIbGYdprai+cr/UQoDQ2gvnBER9UBUmrJDEu562IFH5GOHVE4EMcGLgViG2WJtZ69iJRs+7kFvGoadj6BNZ68uMVblzCpIrJO83WUbZHrURF3ynsRGbgbFkZZk1+AWB0JyVg8lAP1EmiAAydn21MxWtcunWrU+s0kaU3yFmK1uri5gKsNMWTD3wQPjJAEXKuBWQRjpufzjw35ihLasl5UMh7qa6qcav891xzSM8xRduy7RCYQw6YT+XdDco9GeMVwOoW1qLte5qIrHn24lCdh+uq
+X-MS-Exchange-AntiSpam-MessageData: qrsy31AgYJLLaV3JJfmtZmzg+43lRL09Ch0dQIVgo2LEU80DroOHP+mJpBQ2e243uQx/OHIYjrYHXARqcqYGfB4zJGbhFQBdEQsR8T5A3VvSQXaLqD9slN6lFyKc3vNdlJpsiQR1OZffe5Twuj108g==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: f21e2a64-9477-4ebf-83bc-08d7d02679c6
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2020 19:06:36.8141
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: edpZqNHqozn5UrxlQfkqdlATVWTGvvvPz15kc9oDTDilf9p0AplJtLCO+EbPOcQKMtl0uvUHej8HuZ0M449NhZVl1THk/M4wqKQsfw0hIQc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1P190MB0768
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.03.20 17:16, Kim Phillips wrote:
-> On Ubuntu 19.10, where python 2.7 is still the default, I get:
-> 
-> $ perf script report flamegraph
->    File "/usr/libexec/perf-core/scripts/python/flamegraph.py", line 46
->      print(f"Flame Graph template {self.args.template} does not " +
->                                                                 ^
-> SyntaxError: invalid syntax
-> Error running python script /usr/libexec/perf-core/scripts/python/flamegraph.py
-> 
-> Installing libpython3-dev doesn't help.
+Allow to add/del remap window by external modules at runtime.
 
-Hmm, I was hoping that I can drop support for Python 2 in 2020 ;) (it's 
-officially EOL since Jan 1, 2020)
+Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+---
+ drivers/bus/mvebu-mbus.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The Ubuntu 18.04 release notes mention that "Python 2 is no longer 
-installed by default. Python 3 has been updated to 3.6. This is the last 
-LTS release to include Python 2 in main." 
-(https://wiki.ubuntu.com/BionicBeaver/ReleaseNotes) - so imho it should 
-be fine to drop Python 2 support.
-
-I tested it with a Ubuntu VM, and by default the Python bindings aren't 
-enabled in perf (see 
-https://bugs.launchpad.net/ubuntu/+source/linux/+bug/1707875).
-
-But you can compile perf and select Python 3:
-
-$ make -j2 PYTHON=python3
-
-in the perf source directory (libpython3-dev must be installed).
-
-
-Does this work for you?
-
-
-Cheers,
-Andreas
+diff --git a/drivers/bus/mvebu-mbus.c b/drivers/bus/mvebu-mbus.c
+index 5b2a11a88951..3b443748a469 100644
+--- a/drivers/bus/mvebu-mbus.c
++++ b/drivers/bus/mvebu-mbus.c
+@@ -914,6 +914,7 @@ int mvebu_mbus_add_window_remap_by_id(unsigned int target,
+ 
+ 	return mvebu_mbus_alloc_window(s, base, size, remap, target, attribute);
+ }
++EXPORT_SYMBOL_GPL(mvebu_mbus_add_window_remap_by_id);
+ 
+ int mvebu_mbus_add_window_by_id(unsigned int target, unsigned int attribute,
+ 				phys_addr_t base, size_t size)
+@@ -933,6 +934,7 @@ int mvebu_mbus_del_window(phys_addr_t base, size_t size)
+ 	mvebu_mbus_disable_window(&mbus_state, win);
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(mvebu_mbus_del_window);
+ 
+ void mvebu_mbus_get_pcie_mem_aperture(struct resource *res)
+ {
+-- 
+2.17.1
 
