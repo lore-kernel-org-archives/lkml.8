@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2D4C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9230C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8551E208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA9B20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055757;
-	bh=kj8Aiz461xZA+wkG7vkjclbH830EtJcUQuSZSLkNXdc=;
+	s=default; t=1585055760;
+	bh=jM7Fews3e1MESegyezgjrz7anoNSo3IuYP4oG7HKigc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1hWQhMwMdPLdEC6MIWqIahRhvRhARp2rX64QAI4GYRf/YJ/W+16FEhSltjBgeXTv+
-	 aN7lwitk77R+DgVxzpwHdlBU0ErNVtbTrdf0rIt5v9rkf4FRJ2TzRxe/CvpP4Bq6Fe
-	 lCtBd7229vCBC491zoDfM9qaHqGp/I+Iilsaa4UI=
+	b=pP8CWLiFaj/8ero3RaOZEXupYp7W5eSiiRmCkHbaQIyn0YSVh3VqV385CcGU/8sHo
+	 WIFQUPi2xe7f1acbYiXurw95Zxnic11mgDCDiSD62NCqffEWDAo0+x3DhV+oT1COX2
+	 +8JIjeeLjUF3bn/x0PcdReSK91vEkLQqetBG46mA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbgCXNPx (ORCPT
+        id S1728338AbgCXNP7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:15:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34964 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:15:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728311AbgCXNPu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:50 -0400
+        id S1727935AbgCXNPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:15:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 172CF20775;
-        Tue, 24 Mar 2020 13:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2C1A20775;
+        Tue, 24 Mar 2020 13:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055749;
-        bh=kj8Aiz461xZA+wkG7vkjclbH830EtJcUQuSZSLkNXdc=;
+        s=default; t=1585055755;
+        bh=jM7Fews3e1MESegyezgjrz7anoNSo3IuYP4oG7HKigc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UGB54KwenkNEeqj6UpQqNcowiQQeDJZTwaOAvYa+j82Z4wzaiXArxpENlUikoOvi2
-         9H4ReZidaHBvMYaAFYps9sVpeRQjXRr5pCcMtizmLJwL6/6NhszdzWgADOPPnkR6Mh
-         J9zFuVqyML114o7v/1Oxwnv4LTSNgAmd3WLFLWLo=
+        b=M/NE2upK2j/DUAw77QvVMG5Uq/FCz2bfbwrnwTvBdNllPm3gv8eXayM8Bzonlhox4
+         IN+5HSyycjd0hBkzvM2RgOe5xiaJxfx/KVDgW7ycSSB/buexYNbdPRDrG+Tr8dRpYg
+         7qTKlLJ6uOHu/IvZQ7sGR2T3r7pRMv1oUbHuPB+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 017/102] drm/exynos: hdmi: dont leak enable HDMI_EN regulator if probe fails
-Date:   Tue, 24 Mar 2020 14:10:09 +0100
-Message-Id: <20200324130808.294391975@linuxfoundation.org>
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 019/102] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
+Date:   Tue, 24 Mar 2020 14:10:11 +0100
+Message-Id: <20200324130808.480470228@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -62,104 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: luanshi <zhangliguang@linux.alibaba.com>
 
-[ Upstream commit 3b6a9b19ab652efac7ad4c392add6f1235019568 ]
+[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
 
-Move enabling and disabling HDMI_EN optional regulator to probe() function
-to keep track on the regulator status. This fixes following warning if
-probe() fails (for example when I2C DDC adapter cannot be yet gathered
-due to the missing driver). This fixes following warning observed on
-Arndale5250 board with multi_v7_defconfig:
+Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
+by checking for a 0 'gicc->performance_interrupt' value instead.
 
-[drm] Failed to get ddc i2c adapter by node
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 214 at drivers/regulator/core.c:2051 _regulator_put+0x16c/0x184
-Modules linked in: ...
-CPU: 0 PID: 214 Comm: systemd-udevd Not tainted 5.6.0-rc2-next-20200219-00040-g38af1dfafdbb #7570
-Hardware name: Samsung Exynos (Flattened Device Tree)
-[<c0312258>] (unwind_backtrace) from [<c030cc10>] (show_stack+0x10/0x14)
-[<c030cc10>] (show_stack) from [<c0f0d3a0>] (dump_stack+0xcc/0xe0)
-[<c0f0d3a0>] (dump_stack) from [<c0346a58>] (__warn+0xe0/0xf8)
-[<c0346a58>] (__warn) from [<c0346b20>] (warn_slowpath_fmt+0xb0/0xb8)
-[<c0346b20>] (warn_slowpath_fmt) from [<c0893f58>] (_regulator_put+0x16c/0x184)
-[<c0893f58>] (_regulator_put) from [<c0893f8c>] (regulator_put+0x1c/0x2c)
-[<c0893f8c>] (regulator_put) from [<c09b2664>] (release_nodes+0x17c/0x200)
-[<c09b2664>] (release_nodes) from [<c09aebe8>] (really_probe+0x10c/0x350)
-[<c09aebe8>] (really_probe) from [<c09aefa8>] (driver_probe_device+0x60/0x1a0)
-[<c09aefa8>] (driver_probe_device) from [<c09af288>] (device_driver_attach+0x58/0x60)
-[<c09af288>] (device_driver_attach) from [<c09af310>] (__driver_attach+0x80/0xbc)
-[<c09af310>] (__driver_attach) from [<c09ace34>] (bus_for_each_dev+0x68/0xb4)
-[<c09ace34>] (bus_for_each_dev) from [<c09ae00c>] (bus_add_driver+0x130/0x1e8)
-[<c09ae00c>] (bus_add_driver) from [<c09afd98>] (driver_register+0x78/0x110)
-[<c09afd98>] (driver_register) from [<bf139558>] (exynos_drm_init+0xe8/0x11c [exynosdrm])
-[<bf139558>] (exynos_drm_init [exynosdrm]) from [<c0302fa8>] (do_one_initcall+0x50/0x220)
-[<c0302fa8>] (do_one_initcall) from [<c03dc02c>] (do_init_module+0x60/0x210)
-[<c03dc02c>] (do_init_module) from [<c03daf44>] (load_module+0x1c0c/0x2310)
-[<c03daf44>] (load_module) from [<c03db85c>] (sys_finit_module+0xac/0xbc)
-[<c03db85c>] (sys_finit_module) from [<c0301000>] (ret_fast_syscall+0x0/0x54)
-Exception stack(0xecca3fa8 to 0xecca3ff0)
-...
----[ end trace 276c91214635905c ]---
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/exynos/exynos_hdmi.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ drivers/perf/arm_pmu_acpi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
-index 09aa73c0f2add..0073a2b3b80a2 100644
---- a/drivers/gpu/drm/exynos/exynos_hdmi.c
-+++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
-@@ -1802,18 +1802,10 @@ static int hdmi_resources_init(struct hdmi_context *hdata)
+diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+index acce8781c456c..f5c7a845cd7bf 100644
+--- a/drivers/perf/arm_pmu_acpi.c
++++ b/drivers/perf/arm_pmu_acpi.c
+@@ -24,8 +24,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
+ 	int gsi, trigger;
  
- 	hdata->reg_hdmi_en = devm_regulator_get_optional(dev, "hdmi-en");
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (WARN_ON(!gicc))
+-		return -EINVAL;
  
--	if (PTR_ERR(hdata->reg_hdmi_en) != -ENODEV) {
-+	if (PTR_ERR(hdata->reg_hdmi_en) != -ENODEV)
- 		if (IS_ERR(hdata->reg_hdmi_en))
- 			return PTR_ERR(hdata->reg_hdmi_en);
+ 	gsi = gicc->performance_interrupt;
  
--		ret = regulator_enable(hdata->reg_hdmi_en);
--		if (ret) {
--			DRM_DEV_ERROR(dev,
--				      "failed to enable hdmi-en regulator\n");
--			return ret;
--		}
--	}
--
- 	return hdmi_bridge_init(hdata);
+@@ -64,11 +62,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+ 	int gsi;
+ 
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (!gicc)
+-		return;
+ 
+ 	gsi = gicc->performance_interrupt;
+-	acpi_unregister_gsi(gsi);
++	if (gsi)
++		acpi_unregister_gsi(gsi);
  }
  
-@@ -2020,6 +2012,15 @@ static int hdmi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (!IS_ERR(hdata->reg_hdmi_en)) {
-+		ret = regulator_enable(hdata->reg_hdmi_en);
-+		if (ret) {
-+			DRM_DEV_ERROR(dev,
-+			      "failed to enable hdmi-en regulator\n");
-+			goto err_hdmiphy;
-+		}
-+	}
-+
- 	pm_runtime_enable(dev);
- 
- 	audio_infoframe = &hdata->audio.infoframe;
-@@ -2044,7 +2045,8 @@ static int hdmi_probe(struct platform_device *pdev)
- 
- err_rpm_disable:
- 	pm_runtime_disable(dev);
--
-+	if (!IS_ERR(hdata->reg_hdmi_en))
-+		regulator_disable(hdata->reg_hdmi_en);
- err_hdmiphy:
- 	if (hdata->hdmiphy_port)
- 		put_device(&hdata->hdmiphy_port->dev);
+ #if IS_ENABLED(CONFIG_ARM_SPE_PMU)
 -- 
 2.20.1
 
