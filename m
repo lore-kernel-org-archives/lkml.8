@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29526C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D1920836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC4A208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728713AbgCXWdj (ORCPT
+        id S1728928AbgCXWdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:33:39 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46405 "EHLO
+        Tue, 24 Mar 2020 18:33:42 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46394 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbgCXWcZ (ORCPT
+        with ESMTP id S1728227AbgCXWcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:32:25 -0400
+        Tue, 24 Mar 2020 18:32:23 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGs5t-0006w7-SJ; Tue, 24 Mar 2020 23:32:22 +0100
+        id 1jGs5s-0006vp-93; Tue, 24 Mar 2020 23:32:20 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 454C71C048C;
-        Tue, 24 Mar 2020 23:32:20 +0100 (CET)
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C96001C0451;
+        Tue, 24 Mar 2020 23:32:19 +0100 (CET)
 Date:   Tue, 24 Mar 2020 22:32:19 -0000
 From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/platform: Convert to new CPU match macros
+Subject: [tip: x86/cpu] ACPI: Convert to new X86 CPU match macros
 Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200320131509.359448901@linutronix.de>
-References: <20200320131509.359448901@linutronix.de>
+In-Reply-To: <20200320131509.467730627@linutronix.de>
+References: <20200320131509.467730627@linutronix.de>
 MIME-Version: 1.0
-Message-ID: <158508913993.28353.3261043578325562399.tip-bot2@tip-bot2>
+Message-ID: <158508913943.28353.15124523012453063581.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,119 +56,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     9595198f8dc4111f8cab39de2c0c4432787bc690
-Gitweb:        https://git.kernel.org/tip/9595198f8dc4111f8cab39de2c0c4432787bc690
+Commit-ID:     e36cf2f768467cff824e7da87aedc4e99e4c8396
+Gitweb:        https://git.kernel.org/tip/e36cf2f768467cff824e7da87aedc4e99e4c8396
 Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 20 Mar 2020 14:13:52 +01:00
+AuthorDate:    Fri, 20 Mar 2020 14:13:53 +01:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 24 Mar 2020 21:29:38 +01:00
+CommitterDate: Tue, 24 Mar 2020 21:30:50 +01:00
 
-x86/platform: Convert to new CPU match macros
+ACPI: Convert to new X86 CPU match macros
 
 The new macro set has a consistent namespace and uses C99 initializers
 instead of the grufty C89 ones.
 
-Get rid the of the local macro wrappers for consistency.
+Rename the local macro wrapper to X86_MATCH for consistency. It stays for
+readability sake.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lkml.kernel.org/r/20200320131509.359448901@linutronix.de
+Link: https://lkml.kernel.org/r/20200320131509.467730627@linutronix.de
 ---
- arch/x86/platform/atom/punit_atom_debug.c             | 13 ++++------
- arch/x86/platform/efi/quirks.c                        |  7 +----
- arch/x86/platform/intel-mid/device_libs/platform_bt.c |  5 +----
- arch/x86/platform/intel-quark/imr.c                   |  2 +-
- arch/x86/platform/intel-quark/imr_selftest.c          |  2 +-
- 5 files changed, 11 insertions(+), 18 deletions(-)
+ drivers/acpi/acpi_lpss.c |  6 ++----
+ drivers/acpi/x86/utils.c | 20 ++++++++++----------
+ 2 files changed, 12 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/platform/atom/punit_atom_debug.c b/arch/x86/platform/atom/punit_atom_debug.c
-index ee6b078..f8ed5f6 100644
---- a/arch/x86/platform/atom/punit_atom_debug.c
-+++ b/arch/x86/platform/atom/punit_atom_debug.c
-@@ -117,17 +117,16 @@ static void punit_dbgfs_unregister(void)
- 	debugfs_remove_recursive(punit_dbg_file);
- }
- 
--#define ICPU(model, drv_data) \
--	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_MWAIT,\
--	  (kernel_ulong_t)&drv_data }
-+#define X86_MATCH(model, data)						 \
-+	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
-+					   X86_FEATURE_MWAIT, data)
- 
- static const struct x86_cpu_id intel_punit_cpu_ids[] = {
--	ICPU(INTEL_FAM6_ATOM_SILVERMONT, punit_device_byt),
--	ICPU(INTEL_FAM6_ATOM_SILVERMONT_MID,  punit_device_tng),
--	ICPU(INTEL_FAM6_ATOM_AIRMONT,	  punit_device_cht),
-+	X86_MATCH(ATOM_SILVERMONT,		&punit_device_byt),
-+	X86_MATCH(ATOM_SILVERMONT_MID,		&punit_device_tng),
-+	X86_MATCH(ATOM_AIRMONT,			&punit_device_cht),
- 	{}
+diff --git a/drivers/acpi/acpi_lpss.c b/drivers/acpi/acpi_lpss.c
+index db18df6..dee9999 100644
+--- a/drivers/acpi/acpi_lpss.c
++++ b/drivers/acpi/acpi_lpss.c
+@@ -306,11 +306,9 @@ static const struct lpss_device_desc bsw_spi_dev_desc = {
+ 	.setup = lpss_deassert_reset,
  };
+ 
+-#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
 -
- MODULE_DEVICE_TABLE(x86cpu, intel_punit_cpu_ids);
- 
- static int __init punit_atom_debug_init(void)
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 88d32c0..c000e03 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -659,12 +659,9 @@ static int qrk_capsule_setup_info(struct capsule_info *cap_info, void **pkbuff,
- 	return 1;
- }
- 
--#define ICPU(family, model, quirk_handler) \
--	{ X86_VENDOR_INTEL, family, model, X86_FEATURE_ANY, \
--	  (unsigned long)&quirk_handler }
--
- static const struct x86_cpu_id efi_capsule_quirk_ids[] = {
--	ICPU(5, 9, qrk_capsule_setup_info),	/* Intel Quark X1000 */
-+	X86_MATCH_VENDOR_FAM_MODEL(INTEL, 5, INTEL_FAM5_QUARK_X1000,
-+				   &qrk_capsule_setup_info),
- 	{ }
- };
- 
-diff --git a/arch/x86/platform/intel-mid/device_libs/platform_bt.c b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-index e3f4bfc..31dda18 100644
---- a/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-+++ b/arch/x86/platform/intel-mid/device_libs/platform_bt.c
-@@ -60,11 +60,8 @@ static struct bt_sfi_data tng_bt_sfi_data __initdata = {
- 	.setup	= tng_bt_sfi_setup,
- };
- 
--#define ICPU(model, ddata)	\
--	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (kernel_ulong_t)&ddata }
--
- static const struct x86_cpu_id bt_sfi_cpu_ids[] = {
--	ICPU(INTEL_FAM6_ATOM_SILVERMONT_MID, tng_bt_sfi_data),
-+	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT_MID,	&tng_bt_sfi_data),
+ static const struct x86_cpu_id lpss_cpu_ids[] = {
+-	ICPU(INTEL_FAM6_ATOM_SILVERMONT),	/* Valleyview, Bay Trail */
+-	ICPU(INTEL_FAM6_ATOM_AIRMONT),	/* Braswell, Cherry Trail */
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_SILVERMONT,	NULL),
++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,	NULL),
  	{}
  };
  
-diff --git a/arch/x86/platform/intel-quark/imr.c b/arch/x86/platform/intel-quark/imr.c
-index e9d97d5..0286fe1 100644
---- a/arch/x86/platform/intel-quark/imr.c
-+++ b/arch/x86/platform/intel-quark/imr.c
-@@ -569,7 +569,7 @@ static void __init imr_fixup_memmap(struct imr_device *idev)
- }
- 
- static const struct x86_cpu_id imr_ids[] __initconst = {
--	{ X86_VENDOR_INTEL, 5, 9 },	/* Intel Quark SoC X1000. */
-+	X86_MATCH_VENDOR_FAM_MODEL(INTEL, 5, INTEL_FAM5_QUARK_X1000, NULL),
- 	{}
+diff --git a/drivers/acpi/x86/utils.c b/drivers/acpi/x86/utils.c
+index 697a6b1..bdc1ba0 100644
+--- a/drivers/acpi/x86/utils.c
++++ b/drivers/acpi/x86/utils.c
+@@ -37,7 +37,7 @@ struct always_present_id {
+ 	const char *uid;
  };
  
-diff --git a/arch/x86/platform/intel-quark/imr_selftest.c b/arch/x86/platform/intel-quark/imr_selftest.c
-index 4307830..570e306 100644
---- a/arch/x86/platform/intel-quark/imr_selftest.c
-+++ b/arch/x86/platform/intel-quark/imr_selftest.c
-@@ -105,7 +105,7 @@ static void __init imr_self_test(void)
- }
+-#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
++#define X86_MATCH(model)	X86_MATCH_INTEL_FAM6_MODEL(model, NULL)
  
- static const struct x86_cpu_id imr_ids[] __initconst = {
--	{ X86_VENDOR_INTEL, 5, 9 },	/* Intel Quark SoC X1000. */
-+	X86_MATCH_VENDOR_FAM_MODEL(INTEL, 5, INTEL_FAM5_QUARK_X1000, NULL),
- 	{}
- };
+ #define ENTRY(hid, uid, cpu_models, dmi...) {				\
+ 	{ { hid, }, {} },						\
+@@ -51,29 +51,29 @@ static const struct always_present_id always_present_ids[] = {
+ 	 * Bay / Cherry Trail PWM directly poked by GPU driver in win10,
+ 	 * but Linux uses a separate PWM driver, harmless if not used.
+ 	 */
+-	ENTRY("80860F09", "1", ICPU(INTEL_FAM6_ATOM_SILVERMONT), {}),
+-	ENTRY("80862288", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {}),
++	ENTRY("80860F09", "1", X86_MATCH(ATOM_SILVERMONT), {}),
++	ENTRY("80862288", "1", X86_MATCH(ATOM_AIRMONT), {}),
  
+ 	/* Lenovo Yoga Book uses PWM2 for keyboard backlight control */
+-	ENTRY("80862289", "2", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("80862289", "2", X86_MATCH(ATOM_AIRMONT), {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "Lenovo YB1-X9"),
+ 		}),
+ 	/*
+ 	 * The INT0002 device is necessary to clear wakeup interrupt sources
+ 	 * on Cherry Trail devices, without it we get nobody cared IRQ msgs.
+ 	 */
+-	ENTRY("INT0002", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {}),
++	ENTRY("INT0002", "1", X86_MATCH(ATOM_AIRMONT), {}),
+ 	/*
+ 	 * On the Dell Venue 11 Pro 7130 and 7139, the DSDT hides
+ 	 * the touchscreen ACPI device until a certain time
+ 	 * after _SB.PCI0.GFX0.LCD.LCD1._ON gets called has passed
+ 	 * *and* _STA has been called at least 3 times since.
+ 	 */
+-	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
++	ENTRY("SYNA7500", "1", X86_MATCH(HASWELL_L), {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7130"),
+ 	      }),
+-	ENTRY("SYNA7500", "1", ICPU(INTEL_FAM6_HASWELL_L), {
++	ENTRY("SYNA7500", "1", X86_MATCH(HASWELL_L), {
+ 		DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Venue 11 Pro 7139"),
+ 	      }),
+@@ -89,19 +89,19 @@ static const struct always_present_id always_present_ids[] = {
+ 	 * was copy-pasted from the GPD win, so it has a disabled KIOX000A
+ 	 * node which we should not enable, thus we also check the BIOS date.
+ 	 */
+-	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
+ 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
+ 		DMI_MATCH(DMI_BIOS_DATE, "02/21/2017")
+ 	      }),
+-	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
+ 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
+ 		DMI_MATCH(DMI_BIOS_DATE, "03/20/2017")
+ 	      }),
+-	ENTRY("KIOX000A", "1", ICPU(INTEL_FAM6_ATOM_AIRMONT), {
++	ENTRY("KIOX000A", "1", X86_MATCH(ATOM_AIRMONT), {
+ 		DMI_MATCH(DMI_BOARD_VENDOR, "AMI Corporation"),
+ 		DMI_MATCH(DMI_BOARD_NAME, "Default string"),
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Default string"),
