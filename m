@@ -2,140 +2,365 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064A3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE940C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD62A208D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VqpLNIzW"
+	by mail.kernel.org (Postfix) with ESMTP id B71DC20B80
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585055533;
+	bh=b8sF1DJoj4+NblVqbuuh1qjtIfhscqNcyDJmdizSDa4=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vacx/BhKTVGoYNCgmiUcwKGwk4H5MHd/38tGjxRZ3nOMFL4JpFZXLWqiU6cxZpicZ
+	 GrkuRj/ZWSXA6x4RFj34aEXkULMhGWgiQvWoe68FW0D81hAtaTRdk2i6YxSv0kgr8H
+	 VM1D/+iQvgsM+k9koIXVZkPTQUzekgYHXnfPwClU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCXNMK (ORCPT
+        id S1727529AbgCXNMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:12:10 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:58385 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727448AbgCXNME (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:12:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585055523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bAV0a5EbyjxKEoAhknEvXpmwJ3mEJrJzUIE/or3dQRE=;
-        b=VqpLNIzWk6ZKcxWY3uQrizNVICSQD4lYB/JIxAGU73WKaCz3X5SOv8mfzvC6hLdlXKXTAb
-        1kRcZtjOWtOMJnod9f+18VgXazDFgZWt8OaAEkUhRZvoilMR87LzHXJqhkkyU6z+tbRNM0
-        2zusiNtKpMYANlQOyT705jTICoj/qsg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-xLFoOtpINUi2luA0yLmjIw-1; Tue, 24 Mar 2020 09:11:59 -0400
-X-MC-Unique: xLFoOtpINUi2luA0yLmjIw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 24 Mar 2020 09:12:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727453AbgCXNMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D841C1926DA3;
-        Tue, 24 Mar 2020 13:11:55 +0000 (UTC)
-Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A015760BE0;
-        Tue, 24 Mar 2020 13:11:43 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 14:11:41 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Kajol Jain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, linuxppc-dev@lists.ozlabs.org, mpe@ellerman.id.au,
-        sukadev@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, anju@linux.vnet.ibm.com,
-        maddy@linux.vnet.ibm.com, ravi.bangoria@linux.ibm.com,
-        peterz@infradead.org, yao.jin@linux.intel.com, ak@linux.intel.com,
-        jolsa@kernel.org, kan.liang@linux.intel.com, jmario@redhat.com,
-        alexander.shishkin@linux.intel.com, mingo@kernel.org,
-        paulus@ozlabs.org, namhyung@kernel.org, mpetlan@redhat.com,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        mamatha4@linux.vnet.ibm.com, mark.rutland@arm.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v6 09/11] perf/tools: Enhance JSON/metric infrastructure
- to handle "?"
-Message-ID: <20200324131141.GV1534489@krava>
-References: <20200320125406.30995-1-kjain@linux.ibm.com>
- <20200320125406.30995-10-kjain@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 35C05208CA;
+        Tue, 24 Mar 2020 13:12:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585055526;
+        bh=b8sF1DJoj4+NblVqbuuh1qjtIfhscqNcyDJmdizSDa4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ptDXWWyVPW+3nYuulzeGmqZ7/I2hAeOHqKHP5ZRktnkl3oyJhnxETM/BUYF2bxlIH
+         62xJfHAswZEIkBT+7Ju86N0ccVMcAO2s1NvYlyOpW+APhE3uUf3O04WpzEy2dvsrTu
+         T4GKr4VgSdbq2xHqMi4yPIo3dcHzbZOEwvUnQ3io=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.19 00/65] 4.19.113-rc1 review
+Date:   Tue, 24 Mar 2020 14:10:21 +0100
+Message-Id: <20200324130756.679112147@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320125406.30995-10-kjain@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.113-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.113-rc1
+X-KernelTest-Deadline: 2020-03-26T13:08+00:00
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:24:04PM +0530, Kajol Jain wrote:
-> Patch enhances current metric infrastructure to handle "?" in the metric
-> expression. The "?" can be use for parameters whose value not known while
-> creating metric events and which can be replace later at runtime to
-> the proper value. It also add flexibility to create multiple events out
-> of single metric event added in json file.
-> 
-> Patch adds function 'arch_get_runtimeparam' which is a arch specific
-> function, returns the count of metric events need to be created.
-> By default it return 1.
-> 
-> This infrastructure needed for hv_24x7 socket/chip level events.
-> "hv_24x7" chip level events needs specific chip-id to which the
-> data is requested. Function 'arch_get_runtimeparam' implemented
-> in header.c which extract number of sockets from sysfs file
-> "sockets" under "/sys/devices/hv_24x7/interface/".
-> 
-> 
-> With this patch basically we are trying to create as many metric events
-> as define by runtime_param.
-> 
-> For that one loop is added in function 'metricgroup__add_metric',
-> which create multiple events at run time depend on return value of
-> 'arch_get_runtimeparam' and merge that event in 'group_list'.
-> 
-> To achieve that we are actually passing this parameter value as part of
-> `expr__find_other` function and changing "?" present in metric expression
-> with this value.
-> 
-> As in our json file, there gonna be single metric event, and out of
-> which we are creating multiple events, I am also merging this value
-> to the original metric name to specify parameter value.
-> 
-> For example,
-> command:# ./perf stat  -M PowerBUS_Frequency -C 0 -I 1000
-> #           time             counts unit events
->      1.000101867          9,356,933      hv_24x7/pm_pb_cyc,chip=0/ #      2.3 GHz  PowerBUS_Frequency_0
->      1.000101867          9,366,134      hv_24x7/pm_pb_cyc,chip=1/ #      2.3 GHz  PowerBUS_Frequency_1
->      2.000314878          9,365,868      hv_24x7/pm_pb_cyc,chip=0/ #      2.3 GHz  PowerBUS_Frequency_0
->      2.000314878          9,366,092      hv_24x7/pm_pb_cyc,chip=1/ #      2.3 GHz  PowerBUS_Frequency_1
-> 
-> So, here _0 and _1 after PowerBUS_Frequency specify parameter value.
-> 
-> As after adding this to group_list, again we call expr__parse
-> in 'generic_metric' function present in util/stat-display.c.
-> By this time again we need to pass this parameter value. So, now to get this value
-> actually I am trying to extract it from metric name itself. Because
-> otherwise it gonna point to last updated value present in runtime_param.
-> And gonna match for that value only.
+This is the start of the stable review cycle for the 4.19.113 release.
+There are 65 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-so why can't we pass that param as integer value through the metric objects?
+Responses should be made by Thu, 26 Mar 2020 13:06:42 +0000.
+Anything received after that time might be too late.
 
-it get's created in metricgroup__add_metric_param:
-  - as struct egroup *eg
-  - we can add egroup::param and store the param value there
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.113-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+and the diffstat can be found below.
 
-then in metricgroup__setup_events it moves to:
-  - struct metric_expr *expr
-  - we can add metric_expr::param to keep the param
+thanks,
 
-then in perf_stat__print_shadow_stats there's:
-  - struct metric_expr *mexp loop
-  - calling generic_metric metric - we could call it with mexp::param
-  - and pass the param to expr__parse
+greg k-h
 
-jirka
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.19.113-rc1
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: loopback_test: fix potential path truncations
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: loopback_test: fix potential path truncation
+
+Jernej Skrabec <jernej.skrabec@siol.net>
+    drm/bridge: dw-hdmi: fix AVI frame colorimetry
+
+Cristian Marussi <cristian.marussi@arm.com>
+    arm64: smp: fix crash_smp_send_stop() behaviour
+
+Cristian Marussi <cristian.marussi@arm.com>
+    arm64: smp: fix smp_send_stop() behaviour
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    ALSA: hda/realtek: Fix pop noise on ALC225
+
+Sasha Levin <sashal@kernel.org>
+    Revert "ipv6: Fix handling of LLA with VRF and sockets bound to VRF"
+
+Sasha Levin <sashal@kernel.org>
+    Revert "vrf: mark skb for multicast or link-local as enslaved to VRF"
+
+Thomas Gleixner <tglx@linutronix.de>
+    futex: Unbreak futex hashing
+
+Peter Zijlstra <peterz@infradead.org>
+    futex: Fix inode life-time issue
+
+Nathan Chancellor <natechancellor@gmail.com>
+    kbuild: Disable -Wpointer-to-enum-cast
+
+Tomas Novotny <tomas@novotny.cz>
+    iio: light: vcnl4000: update sampling periods for vcnl4200
+
+Anthony Mallet <anthony.mallet@laas.fr>
+    USB: cdc-acm: fix rounding error in TIOCSSERIAL
+
+Anthony Mallet <anthony.mallet@laas.fr>
+    USB: cdc-acm: fix close_delay and closing_wait units in TIOCSSERIAL
+
+Joerg Roedel <jroedel@suse.de>
+    x86/mm: split vmalloc_sync_all()
+
+Qian Cai <cai@lca.pw>
+    page-flags: fix a crash at SetPageError(THP_SWAP)
+
+Vlastimil Babka <vbabka@suse.cz>
+    mm, slub: prevent kmalloc_node crashes and memory leaks
+
+Linus Torvalds <torvalds@linux-foundation.org>
+    mm: slub: be more careful about the double cmpxchg of freelist
+
+Chunguang Xu <brookxu@tencent.com>
+    memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
+
+Qiujun Huang <hqjagain@gmail.com>
+    drm/lease: fix WARNING in idr_destroy
+
+Tom St Denis <tom.stdenis@amd.com>
+    drm/amd/amdgpu: Fix GPR read from debugfs (v2)
+
+Filipe Manana <fdmanana@suse.com>
+    btrfs: fix log context list corruption after rename whiteout error
+
+Steven Rostedt (VMware) <rostedt@goodmis.org>
+    xhci: Do not open code __print_symbolic() in xhci trace events
+
+Corentin Labbe <clabbe@baylibre.com>
+    rtc: max8907: add missing select REGMAP_IRQ
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: pci: Add Elkhart Lake CPU support
+
+Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    intel_th: Fix user-visible error codes
+
+Samuel Thibault <samuel.thibault@ens-lyon.org>
+    staging/speakup: fix get_word non-space look-ahead
+
+Johan Hovold <johan@kernel.org>
+    staging: greybus: loopback_test: fix poll-mask build breakage
+
+Michael Straube <straube.linux@gmail.com>
+    staging: rtl8188eu: Add device id for MERCUSYS MW150US v2
+
+Michał Mirosław <mirq-linux@rere.qmqm.pl>
+    mmc: sdhci-of-at91: fix cd-gpios for SAMA5D2
+
+Ricky Wu <ricky_wu@realtek.com>
+    mmc: rtsx_pci: Fix support for speed-modes that relies on tuning
+
+Eugen Hristev <eugen.hristev@microchip.com>
+    iio: adc: at91-sama5d2_adc: fix differential channels in triggered mode
+
+Stephan Gerhold <stephan@gerhold.net>
+    iio: magnetometer: ak8974: Fix negative raw values in sysfs
+
+Fabrice Gasnier <fabrice.gasnier@st.com>
+    iio: trigger: stm32-timer: disable master mode when stopping
+
+Wen-chien Jesse Sung <jesse.sung@canonical.com>
+    iio: st_sensors: remap SMO8840 to LIS2DH12
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: pcm: oss: Avoid plugin buffer overflow
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: seq: oss: Fix running status after receiving sysex
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: seq: virmidi: Fix running status after receiving sysex
+
+Takashi Iwai <tiwai@suse.de>
+    ALSA: line6: Fix endless MIDI read loop
+
+Alberto Mattea <alberto@mattea.info>
+    usb: xhci: apply XHCI_SUSPEND_DELAY to AMD XHCI controller 1022:145c
+
+Scott Chen <scott@labau.com.tw>
+    USB: serial: pl2303: add device-id for HP LD381
+
+Ran Wang <ran.wang_1@nxp.com>
+    usb: host: xhci-plat: add a shutdown
+
+Daniele Palmas <dnlplm@gmail.com>
+    USB: serial: option: add ME910G1 ECM composition 0x110b
+
+Hans de Goede <hdegoede@redhat.com>
+    usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    USB: Disable LPM on WD19's Realtek Hub
+
+Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+    parse-maintainers: Mark as executable
+
+Carlo Nonato <carlo.nonato95@gmail.com>
+    block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    xenbus: req->err should be updated before req->state
+
+Dongli Zhang <dongli.zhang@oracle.com>
+    xenbus: req->body should be updated before req->state
+
+Josip Pavic <Josip.Pavic@amd.com>
+    drm/amd/display: fix dcc swath size calculations on dcn1
+
+Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+    drm/amd/display: Clear link settings on MST disable connector
+
+Vincent Chen <vincent.chen@sifive.com>
+    riscv: avoid the PIC offset of static percpu data in module beyond 2G limits
+
+Mike Snitzer <snitzer@redhat.com>
+    dm integrity: use dm_bio_record and dm_bio_restore
+
+Mike Snitzer <snitzer@redhat.com>
+    dm bio record: save/restore bi_end_io and bi_integrity
+
+Daniel Axtens <dja@axtens.net>
+    altera-stapl: altera_get_note: prevent write beyond end of 'key'
+
+luanshi <zhangliguang@linux.alibaba.com>
+    drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    drm/exynos: dsi: fix workaround for the legacy clock name
+
+Marek Szyprowski <m.szyprowski@samsung.com>
+    drm/exynos: dsi: propagate error value and silence meaningless warning
+
+Thommy Jakobsson <thommyj@gmail.com>
+    spi/zynqmp: remove entry that causes a cs glitch
+
+Evan Green <evgreen@chromium.org>
+    spi: pxa2xx: Add CS control clock quirk
+
+Kishon Vijay Abraham I <kishon@ti.com>
+    ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
+
+Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+    powerpc: Include .BTF section
+
+Yuji Sasaki <sasakiy@chromium.org>
+    spi: qup: call spi_qup_pm_resume_runtime before suspending
+
+Evan Benn <evanbenn@chromium.org>
+    drm/mediatek: Find the cursor plane instead of hard coding it
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm/boot/dts/dra7.dtsi                        |  2 +
+ arch/arm64/kernel/smp.c                            | 25 ++++--
+ arch/powerpc/kernel/vmlinux.lds.S                  |  6 ++
+ arch/riscv/kernel/module.c                         | 16 ++++
+ arch/x86/mm/fault.c                                | 26 +++++-
+ block/bfq-cgroup.c                                 |  9 ++-
+ drivers/acpi/apei/ghes.c                           |  2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c        |  6 +-
+ .../amd/display/amdgpu_dm/amdgpu_dm_mst_types.c    |  1 +
+ .../gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c    |  4 +-
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          | 46 ++++++-----
+ drivers/gpu/drm/drm_lease.c                        |  3 +-
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 12 +--
+ drivers/gpu/drm/mediatek/mtk_drm_crtc.c            | 18 +++--
+ drivers/hwtracing/intel_th/msu.c                   |  6 +-
+ drivers/hwtracing/intel_th/pci.c                   |  5 ++
+ drivers/iio/accel/st_accel_i2c.c                   |  2 +-
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 15 ++++
+ drivers/iio/light/vcnl4000.c                       |  7 +-
+ drivers/iio/magnetometer/ak8974.c                  |  2 +-
+ drivers/iio/trigger/stm32-timer-trigger.c          | 11 ++-
+ drivers/md/dm-bio-record.h                         | 15 ++++
+ drivers/md/dm-integrity.c                          | 32 +++-----
+ drivers/misc/altera-stapl/altera.c                 | 12 +--
+ drivers/misc/cardreader/rts5227.c                  |  2 +-
+ drivers/misc/cardreader/rts5249.c                  |  2 +
+ drivers/misc/cardreader/rts5260.c                  |  2 +-
+ drivers/mmc/host/rtsx_pci_sdmmc.c                  | 13 +--
+ drivers/mmc/host/sdhci-of-at91.c                   |  8 +-
+ drivers/net/vrf.c                                  | 19 ++---
+ drivers/perf/arm_pmu_acpi.c                        |  7 +-
+ drivers/rtc/Kconfig                                |  1 +
+ drivers/spi/spi-pxa2xx.c                           | 23 ++++++
+ drivers/spi/spi-qup.c                              | 11 ++-
+ drivers/spi/spi-zynqmp-gqspi.c                     |  3 -
+ drivers/staging/greybus/tools/loopback_test.c      | 21 ++---
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c        |  1 +
+ drivers/staging/speakup/main.c                     |  2 +-
+ drivers/usb/class/cdc-acm.c                        | 34 +++++---
+ drivers/usb/core/quirks.c                          |  6 ++
+ drivers/usb/host/xhci-pci.c                        |  3 +-
+ drivers/usb/host/xhci-plat.c                       |  1 +
+ drivers/usb/host/xhci-trace.h                      | 23 ++----
+ drivers/usb/serial/option.c                        |  2 +
+ drivers/usb/serial/pl2303.c                        |  1 +
+ drivers/usb/serial/pl2303.h                        |  1 +
+ drivers/xen/xenbus/xenbus_comms.c                  |  4 +
+ drivers/xen/xenbus/xenbus_xs.c                     |  9 ++-
+ fs/btrfs/inode.c                                   |  4 +
+ fs/inode.c                                         |  1 +
+ include/linux/fs.h                                 |  1 +
+ include/linux/futex.h                              | 17 ++--
+ include/linux/page-flags.h                         |  2 +-
+ include/linux/vmalloc.h                            |  5 +-
+ kernel/futex.c                                     | 93 +++++++++++++---------
+ kernel/notifier.c                                  |  2 +-
+ mm/memcontrol.c                                    | 10 ++-
+ mm/nommu.c                                         | 10 ++-
+ mm/slub.c                                          | 32 +++++---
+ mm/vmalloc.c                                       | 11 ++-
+ net/ipv6/tcp_ipv6.c                                |  3 +-
+ scripts/Makefile.extrawarn                         |  1 +
+ scripts/parse-maintainers.pl                       |  0
+ sound/core/oss/pcm_plugin.c                        | 12 ++-
+ sound/core/seq/oss/seq_oss_midi.c                  |  1 +
+ sound/core/seq/seq_virmidi.c                       |  1 +
+ sound/pci/hda/patch_realtek.c                      |  2 +
+ sound/usb/line6/driver.c                           |  2 +-
+ sound/usb/line6/midibuf.c                          |  2 +-
+ 70 files changed, 458 insertions(+), 240 deletions(-)
+
 
