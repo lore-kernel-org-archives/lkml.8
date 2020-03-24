@@ -2,200 +2,144 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8DBC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7288AC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1123720663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44BBA20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585028424;
+	bh=ogg9uEIrDneD7d+0XGXZHzAa2bCpqbGF8ExOM9/BgYA=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=INmpGEVN8JdMNlFiPfl9ogpnd5Wcrb7h68SPmIvBNl+OA2ITnn4i30QnEATxaZLCt
+	 FuwQqxdsqKcknRZ76rhMWJH7O8lTF2/uS/u9pbAz6gAr0GKsv0DQARJwpmZaTmfKCj
+	 ud6LY7AiBVGxxcRBiUPXxwy10AgypKM8empWs1b0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgCXFgo (ORCPT
+        id S1726124AbgCXFkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 01:36:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:31214 "EHLO mga02.intel.com"
+        Tue, 24 Mar 2020 01:40:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725905AbgCXFgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 01:36:43 -0400
-IronPort-SDR: E/Mz5h8w/ky82UdtwOjd/9UX41y/zJKeZLr5wNmi52p8K2uwiH5b4c6vmmJN7uXvpHRVaiEzVU
- Vrg0M7Fim+ZQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 22:36:43 -0700
-IronPort-SDR: Kr/in4Y0OymO0sf7C3/A8J6YQvl5I3HY/g4r1q8jcy0rd6Dg787PfHWofoXq2LqfNhIixxJGNH
- 7170z5At3cBw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,299,1580803200"; 
-   d="scan'208";a="325806109"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 23 Mar 2020 22:36:41 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jGcEz-0005s2-7k; Tue, 24 Mar 2020 13:36:41 +0800
-Date:   Tue, 24 Mar 2020 13:36:09 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:rcu/next] BUILD SUCCESS
- 59bc8fd15ce6955bb9882deecff877177f2b519b
-Message-ID: <5e799c49.Dv8NJ5dzS8Le6DYZ%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725869AbgCXFkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 01:40:23 -0400
+Received: from localhost (unknown [122.167.122.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D62F20663;
+        Tue, 24 Mar 2020 05:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585028422;
+        bh=ogg9uEIrDneD7d+0XGXZHzAa2bCpqbGF8ExOM9/BgYA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=PGlZeuMbdjr4did3lfuNkd+IvJcUXQz4PlYvHKrcK4UFMpRyFbveKwkY3WKp69VeB
+         xTzbzPR1wmcn6ZP7SLtT02uSGbdw8WuoWf1HbY7Q4kE7OkOlJgSmo5ZZuNOFSXK/EZ
+         Posx3K+ivmErsNZUxWalkFRiBEc6FFlLyN4PD/+U=
+Date:   Tue, 24 Mar 2020 11:10:17 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dma <dmaengine@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL]: dmaengine fixes for v5.6
+Message-ID: <20200324054017.GU72691@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
-branch HEAD: 59bc8fd15ce6955bb9882deecff877177f2b519b  rcu-tasks: Add count for idle tasks on offline CPUs
 
-elapsed time: 481m
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 133
-configs skipped: 0
+Hi Linus,
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Couple of fixes came in and would be good to have in v5.6. Please
+pull to get:
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-alpha                               defconfig
-um                           x86_64_defconfig
-xtensa                          iss_defconfig
-ia64                                defconfig
-powerpc                             defconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-i386                              allnoconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-alpha                randconfig-a001-20200324
-m68k                 randconfig-a001-20200324
-mips                 randconfig-a001-20200324
-nds32                randconfig-a001-20200324
-parisc               randconfig-a001-20200324
-riscv                randconfig-a001-20200324
-c6x                  randconfig-a001-20200324
-h8300                randconfig-a001-20200324
-microblaze           randconfig-a001-20200324
-nios2                randconfig-a001-20200324
-sparc64              randconfig-a001-20200324
-h8300                randconfig-a001-20200323
-microblaze           randconfig-a001-20200323
-nios2                randconfig-a001-20200323
-c6x                  randconfig-a001-20200323
-sparc64              randconfig-a001-20200323
-csky                 randconfig-a001-20200324
-openrisc             randconfig-a001-20200324
-s390                 randconfig-a001-20200324
-sh                   randconfig-a001-20200324
-xtensa               randconfig-a001-20200324
-x86_64               randconfig-f001-20200324
-x86_64               randconfig-f002-20200324
-x86_64               randconfig-f003-20200324
-i386                 randconfig-f001-20200324
-i386                 randconfig-f002-20200324
-i386                 randconfig-f003-20200324
-arm                  randconfig-a001-20200323
-powerpc              randconfig-a001-20200323
-arm64                randconfig-a001-20200323
-ia64                 randconfig-a001-20200323
-sparc                randconfig-a001-20200323
-arc                  randconfig-a001-20200323
-arc                  randconfig-a001-20200324
-arm                  randconfig-a001-20200324
-arm64                randconfig-a001-20200324
-ia64                 randconfig-a001-20200324
-powerpc              randconfig-a001-20200324
-sparc                randconfig-a001-20200324
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                            allyesconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                             i386_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+The following changes since commit 25962e1a7f1d522f1b57ead2f266fab570042a70:
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+  dmaengine: imx-sdma: Fix the event id check to include RX event for UART6=
+ (2020-02-25 14:15:26 +0530)
+
+are available in the Git repository at:
+
+  git://git.infradead.org/users/vkoul/slave-dma.git tags/dmaengine-fix-5.6
+
+for you to fetch changes up to 018af9be3dd54e6f24f828966bdd873f4d63ad9b:
+
+  dmaengine: ti: k3-udma-glue: Fix an error handling path in 'k3_udma_glue_=
+cfg_rx_flow()' (2020-03-23 11:48:34 +0530)
+
+----------------------------------------------------------------
+dmaengine-fix-5.6
+
+Late fixes in dmaengine for v5.6:
+  - move .device_release missing log warning to debug
+  - couple of maintainer entries for HiSilicon and IADX drivers
+  - one off fix for idxd driver
+  - documentation warn fixes
+  - TI k3 dma error handling fix
+
+----------------------------------------------------------------
+Christophe JAILLET (1):
+      dmaengine: ti: k3-udma-glue: Fix an error handling path in 'k3_udma_g=
+lue_cfg_rx_flow()'
+
+Dave Jiang (1):
+      dmaengine: idxd: fix off by one on cdev dwq refcount
+
+Lukas Bulwahn (1):
+      MAINTAINERS: rectify the INTEL IADX DRIVER entry
+
+Mauro Carvalho Chehab (1):
+      docs: dmaengine: provider.rst: get rid of some warnings
+
+Vinod Koul (1):
+      dmaengine: move .device_release missing log warning to debug level
+
+Zhou Wang (1):
+      MAINTAINERS: Add maintainer for HiSilicon DMA engine driver
+
+ Documentation/driver-api/dmaengine/provider.rst | 12 ++++++++--
+ MAINTAINERS                                     |  7 +++++-
+ drivers/dma/dmaengine.c                         |  2 +-
+ drivers/dma/idxd/cdev.c                         |  4 ++--
+ drivers/dma/ti/k3-udma-glue.c                   | 29 ++++++++++++++++-----=
+----
+ 5 files changed, 38 insertions(+), 16 deletions(-)
+
+Thanks
+--=20
+~Vinod
+
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+vs47OPLdNbVcHzyfBQHDyUjg0cFAl55nTwACgkQfBQHDyUj
+g0dXORAAsWMFkBCbrjTB/SS8SgeXJ872M7LiIsysp90aDpREUIZKLi0QXcuQAcW5
+As0fKb/WHgt1F/x86Xqj750wjA0/yzqXK2CcV1G2mqA5eCLNinN0QdrhYgSmBTFf
+PDT3GNGBJubsC2sZjkiJyYS0MmYs1abXuorO9TeicJq+uyKQHYVknnyCDzkKml20
+TE1dvpE1lwJgK7kpPJx5bb6ra28i6Dd/mn5n/vJBKzs17wFCYt2ogvWguDV+me2Z
+DiG5GPzAXAVzjjgEdzDOGY9qWtLc2l1NzECaZBGNLYThdJI8RAznDl80yzSpm8zV
+ESrsajI4eTEraQRRpdn7qtdk4qkFUTa2Rday0Awk+nuJB9qFMsqRsM+5e6S+F4jD
+IVeAtwllWYxZqE5SZmzMvNFwAKLmh+PbChSu9X9RzGZTZ3gSstf2qCMXwUjk8Yrl
+JpexrhpIwOUHEyKRYkwWHGMyeIKTn9246+uywQXHQfG+bDeTeylK9Qj4n/UcYMgU
+pQE7lIXtrXR95jXIJjhO5T/Tw24zth+BOMeIKoQ8pybDYkHE3Z101diXeyrWT282
+OHcC48u1W7AX17doYuWs3RI1BH00W8fO+Bk4VKSA8B+RiVYcohzKre43eNmkAJ2N
+7srxXPOMj87GBJXUYxem+6nqLuSPbdkvXttAbccJtQoxfBR/zEI=
+=W6bl
+-----END PGP SIGNATURE-----
+
+--TRYliJ5NKNqkz5bu--
