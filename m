@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11753C43331
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FC3C2BAEE
 	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCC1208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10076208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056453;
-	bh=TJSgWLjZqZ062BhG1QYysmN7zPRFVUmoSPFqx57+PJs=;
+	s=default; t=1585056454;
+	bh=ehMOaz+Z5BY8hRWTVYWD5dhPNfhkATZ3WAZTvvc31TE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q26aMFD8LbHlktZXNDKuxkQnd0eD+BC0DLbExELPrAKVRDK7oTXGXViEECH5VseHf
-	 IIwQQsLqbO61hI8Oey+Hsuxje3w3R9V/PjxIkWdLAI3EIu7EvETMChoMrs0AbXXztU
-	 zYrlKwEXMclc4zBFQmryuBMDsqKBGuDjTIQC+IU8=
+	b=cVKqAvHfkBE8/aR+QT3J/YB7vI3fnnC1Al0Gpp23SFoSJywgjoJ5vdzxr79jDwp02
+	 HKyJ5Ph1+eHOoclyPT9JZWMhbBnULcJfUhJOuJ6ItAym7u5hymvJYOhX4coaZasjeG
+	 OPmA57Qb7osa1fLIkMOCL1BYZCxTqSvSORDIMQYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgCXN11 (ORCPT
+        id S1729806AbgCXN1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:27:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727738AbgCXN1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:27:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729798AbgCXN1T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:27:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06294208D6;
-        Tue, 24 Mar 2020 13:27:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B43D208D6;
+        Tue, 24 Mar 2020 13:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056445;
-        bh=TJSgWLjZqZ062BhG1QYysmN7zPRFVUmoSPFqx57+PJs=;
+        s=default; t=1585056438;
+        bh=ehMOaz+Z5BY8hRWTVYWD5dhPNfhkATZ3WAZTvvc31TE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xcBmoupzQioQVudl0w/xeAgwFjLEWmh8lzc2FKvy8moAwCWBaBZQRvuGr5KzINnSW
-         5Th/cVIQi5dQZMb7qP5XPZLVzeh8qZwYPIcWpKbI957je2DjgSMGpzPM5KYPXuRM2R
-         pgrPBkV5Eg8x7fS3qWLAbcGwTyQ7JmA/UQ9YJMfg=
+        b=UWHBdOkAXRoFcxFhfu0aFcKzyhY/zqLn1pr2SKsOBBT1RMImYSdOP+ssgs1TMAqSK
+         g7OYNKJ4ZaK7h2iU3lEYZTwZhz0VvdSDxVcwZjXrfETvRWkmokN7qAsK+1+/64AeOF
+         rhseBhKWc/YsnfEgB8941MgIaD1Y2t9f6hvncsl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Spelvin <lkml@sdf.org>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 5.5 119/119] int128: fix __uint128_t compiler test in Kconfig
-Date:   Tue, 24 Mar 2020 14:11:44 +0100
-Message-Id: <20200324130819.391456542@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.5 117/119] staging: greybus: loopback_test: fix potential path truncations
+Date:   Tue, 24 Mar 2020 14:11:42 +0100
+Message-Id: <20200324130819.239561003@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -59,49 +58,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 3a7c733165a4799fa1beb262fe244bfbcdd1c163 upstream.
+commit ae62cf5eb2792d9a818c2d93728ed92119357017 upstream.
 
-The support for __uint128_t is dependent on the target bit size.
+Newer GCC warns about possible truncations of two generated path names as
+we're concatenating the configurable sysfs and debugfs path prefixes
+with a filename and placing the results in buffers of the same size as
+the maximum length of the prefixes.
 
-GCC that defaults to the 32-bit can still build the 64-bit kernel
-with -m64 flag passed.
+	snprintf(d->name, MAX_STR_LEN, "gb_loopback%u", dev_id);
 
-However, $(cc-option,-D__SIZEOF_INT128__=0) is evaluated against the
-default machine bit, which may not match to the kernel it is building.
+	snprintf(d->sysfs_entry, MAX_SYSFS_PATH, "%s%s/",
+		 t->sysfs_prefix, d->name);
 
-Theoretically, this could be evaluated separately for 64BIT/32BIT.
+	snprintf(d->debugfs_entry, MAX_SYSFS_PATH, "%sraw_latency_%s",
+		 t->debugfs_prefix, d->name);
 
-  config CC_HAS_INT128
-          bool
-          default !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) if 64BIT
-          default !$(cc-option,$(m32-flag) -D__SIZEOF_INT128__=0)
+Fix this by separating the maximum path length from the maximum prefix
+length and reducing the latter enough to fit the generated strings.
 
-I simplified it more because the 32-bit compiler is unlikely to support
-__uint128_t.
+Note that we also need to reduce the device-name buffer size as GCC
+isn't smart enough to figure out that we ever only used MAX_STR_LEN
+bytes of it.
 
-Fixes: c12d3362a74b ("int128: move __uint128_t compiler test to Kconfig")
-Reported-by: George Spelvin <lkml@sdf.org>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Tested-by: George Spelvin <lkml@sdf.org>
+Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200312110151.22028-4-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- init/Kconfig |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/staging/greybus/tools/loopback_test.c |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -767,8 +767,7 @@ config ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
- 	bool
+--- a/drivers/staging/greybus/tools/loopback_test.c
++++ b/drivers/staging/greybus/tools/loopback_test.c
+@@ -19,6 +19,7 @@
+ #include <signal.h>
  
- config CC_HAS_INT128
--	def_bool y
--	depends on !$(cc-option,-D__SIZEOF_INT128__=0)
-+	def_bool !$(cc-option,$(m64-flag) -D__SIZEOF_INT128__=0) && 64BIT
+ #define MAX_NUM_DEVICES 10
++#define MAX_SYSFS_PREFIX 0x80
+ #define MAX_SYSFS_PATH	0x200
+ #define CSV_MAX_LINE	0x1000
+ #define SYSFS_MAX_INT	0x20
+@@ -67,7 +68,7 @@ struct loopback_results {
+ };
  
- #
- # For architectures that know their GCC __int128 support is sound
+ struct loopback_device {
+-	char name[MAX_SYSFS_PATH];
++	char name[MAX_STR_LEN];
+ 	char sysfs_entry[MAX_SYSFS_PATH];
+ 	char debugfs_entry[MAX_SYSFS_PATH];
+ 	struct loopback_results results;
+@@ -93,8 +94,8 @@ struct loopback_test {
+ 	int stop_all;
+ 	int poll_count;
+ 	char test_name[MAX_STR_LEN];
+-	char sysfs_prefix[MAX_SYSFS_PATH];
+-	char debugfs_prefix[MAX_SYSFS_PATH];
++	char sysfs_prefix[MAX_SYSFS_PREFIX];
++	char debugfs_prefix[MAX_SYSFS_PREFIX];
+ 	struct timespec poll_timeout;
+ 	struct loopback_device devices[MAX_NUM_DEVICES];
+ 	struct loopback_results aggregate_results;
+@@ -907,10 +908,10 @@ int main(int argc, char *argv[])
+ 			t.iteration_max = atoi(optarg);
+ 			break;
+ 		case 'S':
+-			snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
++			snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
+ 			break;
+ 		case 'D':
+-			snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
++			snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
+ 			break;
+ 		case 'm':
+ 			t.mask = atol(optarg);
+@@ -961,10 +962,10 @@ int main(int argc, char *argv[])
+ 	}
+ 
+ 	if (!strcmp(t.sysfs_prefix, ""))
+-		snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", sysfs_prefix);
++		snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", sysfs_prefix);
+ 
+ 	if (!strcmp(t.debugfs_prefix, ""))
+-		snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", debugfs_prefix);
++		snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", debugfs_prefix);
+ 
+ 	ret = find_loopback_devices(&t);
+ 	if (ret)
 
 
