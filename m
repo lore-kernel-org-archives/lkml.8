@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 917E4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6563C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B0C20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5EF220775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055963;
-	bh=hA3gBctLWAPyif8p+Euj0bVCjmDtWTU30v68aHGHpKg=;
+	s=default; t=1585055967;
+	bh=vJrG/HTDAoQhWIIOQI6UiUU70aPd5X2uwA4CofUHJ2o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=btRSFHsbp+y1JHEQRr7VPylzcW9m5kp1M8bKuVUJfiD/RTQ6QykjXOWBnxpprSoRo
-	 Mk25bj3Fouzi/qs3TSfJfVH6hrbRWgaiXSHwpH25diY2SNiHM/NafhN3L+5XBzN615
-	 foORsasLmn9Aq7zxy8Lr84Gab0hu6kB/ML7mAbFg=
+	b=rYkmTCvORQNCD0+SxHcp61E8bACZY50QxF/H/+BoC5HvMZVLwh5Hs/h28I7lGlnvZ
+	 rJp7Y0NKHuL6RXFmwK4FBw/zkdDQ6fO9Rrw8V9WfOlgpgSWnSPM2RY2t9k+rp5N5cr
+	 vELBxqK0UMUB4eovLxQ79aljKvRCngBlh7RUlxRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgCXNTW (ORCPT
+        id S1728341AbgCXNT0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgCXNTT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:19 -0400
+        id S1728828AbgCXNTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6E24F20870;
-        Tue, 24 Mar 2020 13:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F281F208C3;
+        Tue, 24 Mar 2020 13:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055958;
-        bh=hA3gBctLWAPyif8p+Euj0bVCjmDtWTU30v68aHGHpKg=;
+        s=default; t=1585055961;
+        bh=vJrG/HTDAoQhWIIOQI6UiUU70aPd5X2uwA4CofUHJ2o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RIVffYpR8rBJrPcTQYpSVGT9Hdf31Wf5IeWyNJ0/XGbrPSD+NLgt3/lNRzSh9f0M5
-         X47n56k7ZKTxYDEpUS8ykU0Rq4x7Cgso9/x86nMa5CmESy06YyEHgqL0yX1ZWiwN21
-         tTu9O7mbDp6kGRYqwzIx8RtIVvmMv6J1YOHQEm14=
+        b=jdWZhaVm/6sB5nQbFy77eJU9LTqNRmyjdKxcMDq7iPQ/XSV/hZM+15JLXVs6nC6J3
+         +a9qV9UaFGSjUvwG/7ATQfJFABFacqY3D4AFnuu8xE7Lc+3xUNZTshaDmGi1HfbqAb
+         ktoUR6F6LJHAEGBkvJzfUDxeM+XUFuECYFS/QdXs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 079/102] xhci: Do not open code __print_symbolic() in xhci trace events
-Date:   Tue, 24 Mar 2020 14:11:11 +0100
-Message-Id: <20200324130814.556880613@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Andrea Gagliardi La Gala <andrea.lagala@gmail.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: [PATCH 5.4 043/102] usb: typec: ucsi: displayport: Fix NULL pointer dereference
+Date:   Tue, 24 Mar 2020 14:10:35 +0100
+Message-Id: <20200324130811.093330367@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,69 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 045706bff837ee89c13f1ace173db71922c1c40b upstream.
+commit d16e7b62c5adcd13832c6b0ba364c3468d21b856 upstream.
 
-libtraceevent (used by perf and trace-cmd) failed to parse the
-xhci_urb_dequeue trace event. This is because the user space trace
-event format parsing is not a full C compiler. It can handle some basic
-logic, but is not meant to be able to handle everything C can do.
+If the registration of the DisplayPort was not successful,
+or if the port does not support DisplayPort alt mode in the
+first place, the function ucsi_displayport_remove_partner()
+will fail with NULL pointer dereference when it attempts to
+access the driver data.
 
-In cases where a trace event field needs to be converted from a number
-to a string, there's the __print_symbolic() macro that should be used:
+Adding a check to the function to make sure there really is
+driver data for the device before modifying it.
 
- See samples/trace_events/trace-events-sample.h
-
-Some xhci trace events open coded the __print_symbolic() causing the
-user spaces tools to fail to parse it. This has to be replaced with
-__print_symbolic() instead.
-
-CC: stable@vger.kernel.org
-Reported-by: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=206531
-Fixes: 5abdc2e6e12ff ("usb: host: xhci: add urb_enqueue/dequeue/giveback tracers")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200306150858.21904-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: af8622f6a585 ("usb: typec: ucsi: Support for DisplayPort alt mode")
+Reported-by: Andrea Gagliardi La Gala <andrea.lagala@gmail.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=206365
+Cc: stable@vger.kernel.org
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Link: https://lore.kernel.org/r/20200311130006.41288-2-heikki.krogerus@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-trace.h |   23 ++++++-----------------
- 1 file changed, 6 insertions(+), 17 deletions(-)
+ drivers/usb/typec/ucsi/displayport.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/host/xhci-trace.h
-+++ b/drivers/usb/host/xhci-trace.h
-@@ -289,23 +289,12 @@ DECLARE_EVENT_CLASS(xhci_log_urb,
- 	),
- 	TP_printk("ep%d%s-%s: urb %p pipe %u slot %d length %d/%d sgs %d/%d stream %d flags %08x",
- 			__entry->epnum, __entry->dir_in ? "in" : "out",
--			({ char *s;
--			switch (__entry->type) {
--			case USB_ENDPOINT_XFER_INT:
--				s = "intr";
--				break;
--			case USB_ENDPOINT_XFER_CONTROL:
--				s = "control";
--				break;
--			case USB_ENDPOINT_XFER_BULK:
--				s = "bulk";
--				break;
--			case USB_ENDPOINT_XFER_ISOC:
--				s = "isoc";
--				break;
--			default:
--				s = "UNKNOWN";
--			} s; }), __entry->urb, __entry->pipe, __entry->slot_id,
-+			__print_symbolic(__entry->type,
-+				   { USB_ENDPOINT_XFER_INT,	"intr" },
-+				   { USB_ENDPOINT_XFER_CONTROL,	"control" },
-+				   { USB_ENDPOINT_XFER_BULK,	"bulk" },
-+				   { USB_ENDPOINT_XFER_ISOC,	"isoc" }),
-+			__entry->urb, __entry->pipe, __entry->slot_id,
- 			__entry->actual, __entry->length, __entry->num_mapped_sgs,
- 			__entry->num_sgs, __entry->stream, __entry->flags
- 		)
+--- a/drivers/usb/typec/ucsi/displayport.c
++++ b/drivers/usb/typec/ucsi/displayport.c
+@@ -273,6 +273,9 @@ void ucsi_displayport_remove_partner(str
+ 		return;
+ 
+ 	dp = typec_altmode_get_drvdata(alt);
++	if (!dp)
++		return;
++
+ 	dp->data.conf = 0;
+ 	dp->data.status = 0;
+ 	dp->initialized = false;
 
 
