@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCD5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40B5FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B04D208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16F6C206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056077;
-	bh=8r9H4rfR2MbERS/6jidvQxK29URrmHh+Oxg5FXPgUxc=;
+	s=default; t=1585056081;
+	bh=Kp7cGM0B3OtQxFLtBbwdZXKte8DH6Gpfo+yfsvS2ha0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aAy/dOmNY60lW+SJZxlLSMS9Sx9pyiSBn/tBMFe10kcJS/YTihdxG1+8xfwlZahH3
-	 D7SdTFX199f/aQMbLp1UN/2aVp+0Exe34VCHvweTZnMziLMQ0tCYzbKGBuLmP4Rlse
-	 SyqM7osaim58dSvVorSFtcfQ5kBbpv0jBzD8JyOY=
+	b=dtHu4nyXLmHIFQoRJgYiPGk5VukzFFRHO7i/1lWBqShEWl87J/SRHBbNFqsMmhGf0
+	 enArfp+QfTf15z6mOitfDyofrJCsa1UKEi+6q72SDDjWZxcHJVsJ1lOdgXKxb+Y13T
+	 O5nW0Ko0ucTds1lFFbT9Ly0nVe8xNVN9spwec+xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgCXNVQ (ORCPT
+        id S1729028AbgCXNVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42942 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbgCXNVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:13 -0400
+        id S1727935AbgCXNVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E0F20775;
-        Tue, 24 Mar 2020 13:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6076320775;
+        Tue, 24 Mar 2020 13:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056073;
-        bh=8r9H4rfR2MbERS/6jidvQxK29URrmHh+Oxg5FXPgUxc=;
+        s=default; t=1585056076;
+        bh=Kp7cGM0B3OtQxFLtBbwdZXKte8DH6Gpfo+yfsvS2ha0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jdoBgl1samervrmN2YbqhvEs77oXle1zQ3lqsM4bxnlqqXimSiogjBDJtTzvfLE0M
-         OMCZhEimLp0xN3Nu3g+atiOsSMdBmLZ7lps5q91nMmGbIDhbagE1Ruqi6vtkHHZN6k
-         xxlYIJ9bzjvQqsIUmDfnXeAUeVI+XhfPQn4iDmLc=
+        b=SLqrqxhpfDTFQdlAyNyn8HAnb85v+5Og8QzMaGMpgS2UbGgMHVvvAHJAFWiKwzWjX
+         T6NYB+tFhgpVfwJdNuTcbv/Jw4erHcW+pfPWG80Nf7PvyO/Gp5fcwt1OuL72oEXiG4
+         hmatWUu3c9ofqSGbcajNPh8RDx83q/FQ2QC/2zZ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
+        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
+        Evan Green <evgreen@chromium.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 013/119] ARM: dts: dra7: Add "dma-ranges" property to PCIe RC DT nodes
-Date:   Tue, 24 Mar 2020 14:09:58 +0100
-Message-Id: <20200324130809.264928282@linuxfoundation.org>
+Subject: [PATCH 5.5 014/119] spi: pxa2xx: Add CS control clock quirk
+Date:   Tue, 24 Mar 2020 14:09:59 +0100
+Message-Id: <20200324130809.356215662@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,44 +61,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+From: Evan Green <evgreen@chromium.org>
 
-[ Upstream commit 27f13774654ea6bd0b6fc9b97cce8d19e5735661 ]
+[ Upstream commit 683f65ded66a9a7ff01ed7280804d2132ebfdf7e ]
 
-'dma-ranges' in a PCI bridge node does correctly set dma masks for PCI
-devices not described in the DT. Certain DRA7 platforms (e.g., DRA76)
-has RAM above 32-bit boundary (accessible with LPAE config) though the
-PCIe bridge will be able to access only 32-bits. Add 'dma-ranges'
-property in PCIe RC DT nodes to indicate the host bridge can access
-only 32 bits.
+In some circumstances on Intel LPSS controllers, toggling the LPSS
+CS control register doesn't actually cause the CS line to toggle.
+This seems to be failure of dynamic clock gating that occurs after
+going through a suspend/resume transition, where the controller
+is sent through a reset transition. This ruins SPI transactions
+that either rely on delay_usecs, or toggle the CS line without
+sending data.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Whenever CS is toggled, momentarily set the clock gating register
+to "Force On" to poke the controller into acting on CS.
+
+Signed-off-by: Rajat Jain <rajatja@google.com>
+Signed-off-by: Evan Green <evgreen@chromium.org>
+Link: https://lore.kernel.org/r/20200211223700.110252-1-rajatja@google.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/spi/spi-pxa2xx.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 73e5011f531ab..c5af7530be7c8 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -184,6 +184,7 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
-@@ -238,6 +239,7 @@
- 				device_type = "pci";
- 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
- 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
-+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
- 				bus-range = <0x00 0xff>;
- 				#interrupt-cells = <1>;
- 				num-lanes = <1>;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index 9071333ebdd86..cabd1a85d71e3 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -70,6 +70,10 @@ MODULE_ALIAS("platform:pxa2xx-spi");
+ #define LPSS_CAPS_CS_EN_SHIFT			9
+ #define LPSS_CAPS_CS_EN_MASK			(0xf << LPSS_CAPS_CS_EN_SHIFT)
+ 
++#define LPSS_PRIV_CLOCK_GATE 0x38
++#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK 0x3
++#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON 0x3
++
+ struct lpss_config {
+ 	/* LPSS offset from drv_data->ioaddr */
+ 	unsigned offset;
+@@ -86,6 +90,8 @@ struct lpss_config {
+ 	unsigned cs_sel_shift;
+ 	unsigned cs_sel_mask;
+ 	unsigned cs_num;
++	/* Quirks */
++	unsigned cs_clk_stays_gated : 1;
+ };
+ 
+ /* Keep these sorted with enum pxa_ssp_type */
+@@ -156,6 +162,7 @@ static const struct lpss_config lpss_platforms[] = {
+ 		.tx_threshold_hi = 56,
+ 		.cs_sel_shift = 8,
+ 		.cs_sel_mask = 3 << 8,
++		.cs_clk_stays_gated = true,
+ 	},
+ };
+ 
+@@ -383,6 +390,22 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
+ 	else
+ 		value |= LPSS_CS_CONTROL_CS_HIGH;
+ 	__lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
++	if (config->cs_clk_stays_gated) {
++		u32 clkgate;
++
++		/*
++		 * Changing CS alone when dynamic clock gating is on won't
++		 * actually flip CS at that time. This ruins SPI transfers
++		 * that specify delays, or have no data. Toggle the clock mode
++		 * to force on briefly to poke the CS pin to move.
++		 */
++		clkgate = __lpss_ssp_read_priv(drv_data, LPSS_PRIV_CLOCK_GATE);
++		value = (clkgate & ~LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK) |
++			LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON;
++
++		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, value);
++		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, clkgate);
++	}
+ }
+ 
+ static void cs_assert(struct spi_device *spi)
 -- 
 2.20.1
 
