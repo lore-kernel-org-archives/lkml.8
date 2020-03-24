@@ -2,54 +2,52 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1265BC54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE73C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFCB3208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E72A208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055716;
-	bh=wHZu1jd3Wc8fDcAHKp70c9SBOgeeKpFhQOSeNlrEjiU=;
+	s=default; t=1585055721;
+	bh=869pW+EqC0/fWqv21G+SMACD84uJWRWHsrwN8vnIIf8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1zEPMG7NENfPygfh1hwTj5TtMBpmhMyypUTE+j+EWAMZh4pU6oAtkVgGYFtMowVqZ
-	 7YN0nCTbJRw5qlVHAh1+5r9wNaHIGvQlKmDkdDxkm1f1y5gg7mbL2ooLjfs3yKV2nL
-	 OegS+EVErnM+ia1mNRI194w7wPusoAjkLiWrRwMc=
+	b=HMsseO1jk/FjxblLJUAy9opAQzjFOeNzUob7iF6IskLPmxyPwpPxPoYdfSN80GOQ6
+	 prv6FN+JpQ5v2sIbcoDDyjlui7HDmb2MTzKn8z3GjZQDZlVT0u36Tto6yBH9vIFj6r
+	 jVLl8aZ0XHh9PUrmqWH1a1ohaQJZGvAK28AwAFI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgCXNPP (ORCPT
+        id S1727111AbgCXNPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34004 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgCXNPN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:13 -0400
+        id S1728232AbgCXNPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:15:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8180420936;
-        Tue, 24 Mar 2020 13:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03B57208CA;
+        Tue, 24 Mar 2020 13:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055713;
-        bh=wHZu1jd3Wc8fDcAHKp70c9SBOgeeKpFhQOSeNlrEjiU=;
+        s=default; t=1585055718;
+        bh=869pW+EqC0/fWqv21G+SMACD84uJWRWHsrwN8vnIIf8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ibBXHN8u6wEfcO7FOPGeLfMEavX9U9iaGgtcWW2Xko6fcHlPoLQx5J/gechG/N4cO
-         mfQe/0Is0jwtWVK4HKVs2dmwhW6zvPdT4bHAdGktgxirJyXFpflR3pOglf7aNsveB4
-         FeHlhu/4PTbsWgu0EWePpQyyogZX7fCGItrlkHVw=
+        b=kbPz/IMmnpFNtDPFa0q6lq7ojGFgMcUHofvcMz05FUHv57gJDeizf8ELdE/JehH5n
+         K+DerHgf1MGrsfQmguwDipnAfMsnvrcCGo9YzwaL5nnbYEbjxA3V5aKOLMeq/JgwtL
+         fU8NH0hYdCJAN/tV/MfRkgJ1KabhbuZtjA7bEpLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/65] iio: light: vcnl4000: update sampling periods for vcnl4200
-Date:   Tue, 24 Mar 2020 14:11:15 +0100
-Message-Id: <20200324130803.658678979@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: [PATCH 4.19 56/65] futex: Fix inode life-time issue
+Date:   Tue, 24 Mar 2020 14:11:17 +0100
+Message-Id: <20200324130803.865203591@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -62,50 +60,222 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Novotny <tomas@novotny.cz>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit b42aa97ed5f1169cfd37175ef388ea62ff2dcf43 ]
+commit 8019ad13ef7f64be44d4f892af9c840179009254 upstream.
 
-Vishay has published a new version of "Designing the VCNL4200 Into an
-Application" application note in October 2019. The new version specifies
-that there is +-20% of part to part tolerance. This explains the drift
-seen during experiments. The proximity pulse width is also changed from
-32us to 30us. According to the support, the tolerance also applies to
-ambient light.
+As reported by Jann, ihold() does not in fact guarantee inode
+persistence. And instead of making it so, replace the usage of inode
+pointers with a per boot, machine wide, unique inode identifier.
 
-So update the sampling periods. As the reading is blocking, current
-users may notice slightly longer response time.
+This sequence number is global, but shared (file backed) futexes are
+rare enough that this should not become a performance issue.
 
-Fixes: be38866fbb97 ("iio: vcnl4000: add support for VCNL4200")
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Tomas Novotny <tomas@novotny.cz>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Jann Horn <jannh@google.com>
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/iio/light/vcnl4000.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ fs/inode.c            |    1 
+ include/linux/fs.h    |    1 
+ include/linux/futex.h |   17 +++++----
+ kernel/futex.c        |   89 +++++++++++++++++++++++++++++---------------------
+ 4 files changed, 65 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index 04fd0d4b6f198..d3d65ecb30a5b 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -150,9 +150,10 @@ static int vcnl4200_init(struct vcnl4000_data *data)
- 	data->al_scale = 24000;
- 	data->vcnl4200_al.reg = VCNL4200_AL_DATA;
- 	data->vcnl4200_ps.reg = VCNL4200_PS_DATA;
--	/* Integration time is 50ms, but the experiments show 54ms in total. */
--	data->vcnl4200_al.sampling_rate = ktime_set(0, 54000 * 1000);
--	data->vcnl4200_ps.sampling_rate = ktime_set(0, 4200 * 1000);
-+	/* Default wait time is 50ms, add 20% tolerance. */
-+	data->vcnl4200_al.sampling_rate = ktime_set(0, 60000 * 1000);
-+	/* Default wait time is 4.8ms, add 20% tolerance. */
-+	data->vcnl4200_ps.sampling_rate = ktime_set(0, 5760 * 1000);
- 	data->vcnl4200_al.last_measurement = ktime_set(0, 0);
- 	data->vcnl4200_ps.last_measurement = ktime_set(0, 0);
- 	mutex_init(&data->vcnl4200_al.lock);
--- 
-2.20.1
-
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -136,6 +136,7 @@ int inode_init_always(struct super_block
+ 	inode->i_sb = sb;
+ 	inode->i_blkbits = sb->s_blocksize_bits;
+ 	inode->i_flags = 0;
++	atomic64_set(&inode->i_sequence, 0);
+ 	atomic_set(&inode->i_count, 1);
+ 	inode->i_op = &empty_iops;
+ 	inode->i_fop = &no_open_fops;
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -663,6 +663,7 @@ struct inode {
+ 		struct rcu_head		i_rcu;
+ 	};
+ 	atomic64_t		i_version;
++	atomic64_t		i_sequence; /* see futex */
+ 	atomic_t		i_count;
+ 	atomic_t		i_dio_count;
+ 	atomic_t		i_writecount;
+--- a/include/linux/futex.h
++++ b/include/linux/futex.h
+@@ -29,23 +29,26 @@ struct task_struct;
+ 
+ union futex_key {
+ 	struct {
++		u64 i_seq;
+ 		unsigned long pgoff;
+-		struct inode *inode;
+-		int offset;
++		unsigned int offset;
+ 	} shared;
+ 	struct {
++		union {
++			struct mm_struct *mm;
++			u64 __tmp;
++		};
+ 		unsigned long address;
+-		struct mm_struct *mm;
+-		int offset;
++		unsigned int offset;
+ 	} private;
+ 	struct {
++		u64 ptr;
+ 		unsigned long word;
+-		void *ptr;
+-		int offset;
++		unsigned int offset;
+ 	} both;
+ };
+ 
+-#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = NULL } }
++#define FUTEX_KEY_INIT (union futex_key) { .both = { .ptr = 0ULL } }
+ 
+ #ifdef CONFIG_FUTEX
+ extern void exit_robust_list(struct task_struct *curr);
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -439,7 +439,7 @@ static void get_futex_key_refs(union fut
+ 
+ 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
+ 	case FUT_OFF_INODE:
+-		ihold(key->shared.inode); /* implies smp_mb(); (B) */
++		smp_mb();		/* explicit smp_mb(); (B) */
+ 		break;
+ 	case FUT_OFF_MMSHARED:
+ 		futex_get_mm(key); /* implies smp_mb(); (B) */
+@@ -473,7 +473,6 @@ static void drop_futex_key_refs(union fu
+ 
+ 	switch (key->both.offset & (FUT_OFF_INODE|FUT_OFF_MMSHARED)) {
+ 	case FUT_OFF_INODE:
+-		iput(key->shared.inode);
+ 		break;
+ 	case FUT_OFF_MMSHARED:
+ 		mmdrop(key->private.mm);
+@@ -481,6 +480,46 @@ static void drop_futex_key_refs(union fu
+ 	}
+ }
+ 
++/*
++ * Generate a machine wide unique identifier for this inode.
++ *
++ * This relies on u64 not wrapping in the life-time of the machine; which with
++ * 1ns resolution means almost 585 years.
++ *
++ * This further relies on the fact that a well formed program will not unmap
++ * the file while it has a (shared) futex waiting on it. This mapping will have
++ * a file reference which pins the mount and inode.
++ *
++ * If for some reason an inode gets evicted and read back in again, it will get
++ * a new sequence number and will _NOT_ match, even though it is the exact same
++ * file.
++ *
++ * It is important that match_futex() will never have a false-positive, esp.
++ * for PI futexes that can mess up the state. The above argues that false-negatives
++ * are only possible for malformed programs.
++ */
++static u64 get_inode_sequence_number(struct inode *inode)
++{
++	static atomic64_t i_seq;
++	u64 old;
++
++	/* Does the inode already have a sequence number? */
++	old = atomic64_read(&inode->i_sequence);
++	if (likely(old))
++		return old;
++
++	for (;;) {
++		u64 new = atomic64_add_return(1, &i_seq);
++		if (WARN_ON_ONCE(!new))
++			continue;
++
++		old = atomic64_cmpxchg_relaxed(&inode->i_sequence, 0, new);
++		if (old)
++			return old;
++		return new;
++	}
++}
++
+ /**
+  * get_futex_key() - Get parameters which are the keys for a futex
+  * @uaddr:	virtual address of the futex
+@@ -493,9 +532,15 @@ static void drop_futex_key_refs(union fu
+  *
+  * The key words are stored in @key on success.
+  *
+- * For shared mappings, it's (page->index, file_inode(vma->vm_file),
+- * offset_within_page).  For private mappings, it's (uaddr, current->mm).
+- * We can usually work out the index without swapping in the page.
++ * For shared mappings (when @fshared), the key is:
++ *   ( inode->i_sequence, page->index, offset_within_page )
++ * [ also see get_inode_sequence_number() ]
++ *
++ * For private mappings (or when !@fshared), the key is:
++ *   ( current->mm, address, 0 )
++ *
++ * This allows (cross process, where applicable) identification of the futex
++ * without keeping the page pinned for the duration of the FUTEX_WAIT.
+  *
+  * lock_page() might sleep, the caller should not hold a spinlock.
+  */
+@@ -635,8 +680,6 @@ again:
+ 		key->private.mm = mm;
+ 		key->private.address = address;
+ 
+-		get_futex_key_refs(key); /* implies smp_mb(); (B) */
+-
+ 	} else {
+ 		struct inode *inode;
+ 
+@@ -668,40 +711,14 @@ again:
+ 			goto again;
+ 		}
+ 
+-		/*
+-		 * Take a reference unless it is about to be freed. Previously
+-		 * this reference was taken by ihold under the page lock
+-		 * pinning the inode in place so i_lock was unnecessary. The
+-		 * only way for this check to fail is if the inode was
+-		 * truncated in parallel which is almost certainly an
+-		 * application bug. In such a case, just retry.
+-		 *
+-		 * We are not calling into get_futex_key_refs() in file-backed
+-		 * cases, therefore a successful atomic_inc return below will
+-		 * guarantee that get_futex_key() will still imply smp_mb(); (B).
+-		 */
+-		if (!atomic_inc_not_zero(&inode->i_count)) {
+-			rcu_read_unlock();
+-			put_page(page);
+-
+-			goto again;
+-		}
+-
+-		/* Should be impossible but lets be paranoid for now */
+-		if (WARN_ON_ONCE(inode->i_mapping != mapping)) {
+-			err = -EFAULT;
+-			rcu_read_unlock();
+-			iput(inode);
+-
+-			goto out;
+-		}
+-
+ 		key->both.offset |= FUT_OFF_INODE; /* inode-based key */
+-		key->shared.inode = inode;
++		key->shared.i_seq = get_inode_sequence_number(inode);
+ 		key->shared.pgoff = basepage_index(tail);
+ 		rcu_read_unlock();
+ 	}
+ 
++	get_futex_key_refs(key); /* implies smp_mb(); (B) */
++
+ out:
+ 	put_page(page);
+ 	return err;
 
 
