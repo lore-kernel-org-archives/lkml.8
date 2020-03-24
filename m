@@ -2,158 +2,150 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B0AC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F857C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC51220774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4EA20788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:55:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="OQxAY7ij"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="MrGUEZ9I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgCXPyJ (ORCPT
+        id S1728106AbgCXPzy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:54:09 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17826 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727426AbgCXPyJ (ORCPT
+        Tue, 24 Mar 2020 11:55:54 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:34611 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgCXPzy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:54:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585065094;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=BaEVCVn7EuihrC0WZ985tTxPvg8aH8svi5ddVX2lo88=;
-        b=OQxAY7ij7bXQ9IynEq4NoRTd8DJDYjA/Eteh+hbdkV6Rkv+TtWa5y1sQHD7t3Be+
-        f4Iu3ClJnqwJtSg2vNzUyCAJZjYEWxQVv+dbpkaGZjs8G1RTLZGkiqbqZNK+4VOJPgr
-        ue4vALAg2oUHAsw8yshR9e2J5btJdPnE71W/GjC0=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585065093493192.6854956797098; Tue, 24 Mar 2020 23:51:33 +0800 (CST)
-Date:   Tue, 24 Mar 2020 23:51:18 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200324154747.18e8ccd5@why>
-References: <20190827085302.5197-1-jiaxun.yang@flygoat.com> <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324154747.18e8ccd5@why>
+        Tue, 24 Mar 2020 11:55:54 -0400
+Received: by mail-qk1-f196.google.com with SMTP id i6so10656744qke.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 08:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WKfNG8umMlwkpQpy66f4+p/cJ7axBraMaD/gLOw+hwA=;
+        b=MrGUEZ9IiQLdHGz08a8ugYDa8Kh9rXV8aSLNAnHozoNnLeKHJVRGMe9+8m1GlUnstf
+         5tQpZMpOzCfVJxw86gZz4WggoXB0Lk1BX8/uFnmjM+uCn92w4dRor82thwtliC5iP6y4
+         /VJADA5NAPnbZwi11s0UvCWYud5WVJaWD2G41vqNRnnaMZFarV6c/scEaRy4/utVW5io
+         HuiW5m2mDE6YyHm6pmCHQqtyi6ePkAMcQR77qCpuFosHVAiGz+OrsD3/7tJilvvyxdrX
+         +quF2ez8iVba7Sx8HThDueT1e16xa52eSqf8BciD/j7h9YlZibh9+FT85mFcIKgSVAjO
+         +Ahw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WKfNG8umMlwkpQpy66f4+p/cJ7axBraMaD/gLOw+hwA=;
+        b=PBtB1WyimPK6p+1GWoCL6swpOjsszCVUSopuyjQbVyhDKN9VxjuqRZrZUF912T2N8N
+         PQjjK9uzXP+Fh/knAKrDFqT5wWWbnhpqaT9bBUwpAsfEH+i8ozVIjnOSD52ELjT6zQKM
+         ASJyPU6lMKR0GCVkRTtNXonXbDwECaqnuUDSWW9GihNSNN//iKIqzkPGnPx5ZZcufqSh
+         W+wk5PQzlXzK7ck6zRLCkNBeOk+ypwYCOgj54+gjxs/KfuwmE130p0ZaOHhTTFjKjkNJ
+         kejm5R3699rPXBcITtC11zxy8jUCXVpbdRX6dkwCglUSTEdQnpWrBuxpNrkPEp2leqXT
+         tUFw==
+X-Gm-Message-State: ANhLgQ1uGgYxy2vNavpXBuiY2xI1WW5V0+uTLG43c71oy31XiqILeTfX
+        SL2dwDrxtCOTjuvUEVG8tgkBwg==
+X-Google-Smtp-Source: ADFU+vuLBR4sW0l9XYEmX4X3U9KJJIggAbGvaXnj0Zmnvl3IhX2Vdun2/yaOWCfr3BoRN1vAtQoZlA==
+X-Received: by 2002:a37:a70e:: with SMTP id q14mr23857810qke.41.1585065353693;
+        Tue, 24 Mar 2020 08:55:53 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id v20sm12871207qth.10.2020.03.24.08.55.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 24 Mar 2020 08:55:53 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1jGluC-0004gw-I1; Tue, 24 Mar 2020 12:55:52 -0300
+Date:   Tue, 24 Mar 2020 12:55:52 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>, akpm@linux-foundation.org,
+        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+        arei.gonglei@huawei.com, weidong.huang@huawei.com,
+        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
+        Matthew Wilcox <willy@infradead.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
+ huge_pte_offset()
+Message-ID: <20200324155552.GK20941@ziepe.ca>
+References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
+ <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
+ <20200323160955.GY20941@ziepe.ca>
+ <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
+ <20200323180706.GC20941@ziepe.ca>
+ <88698dd7-eb87-4b0b-7ba7-44ef6eab6a6c@oracle.com>
+ <20200323225225.GF20941@ziepe.ca>
+ <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
+ <20200324115541.GH20941@ziepe.ca>
+ <98d35563-8af0-2693-7e76-e6435da0bbee@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 00/11] Modernize Loongson64 Machine v6
-To:     Marc Zyngier <maz@kernel.org>
-CC:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <8C3E32B2-11DB-40A6-A19E-162B8E42330C@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <98d35563-8af0-2693-7e76-e6435da0bbee@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 08:25:09AM -0700, Mike Kravetz wrote:
+> On 3/24/20 4:55 AM, Jason Gunthorpe wrote:
+> > Also, since CH moved all the get_user_pages_fast code out of the
+> > arch's many/all archs can drop their arch specific version of this
+> > routine. This is really just a specialized version of gup_fast's
+> > algorithm..
+> > 
+> > (also the arch versions seem different, why do some return actual
+> >  ptes, not null?)
+> 
+> Not sure I understand that last question.  The return value should be
+> a *pte or null.
 
+I mean the common code ends like this:
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8824=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-1:47:47, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
->Jiaxun,
->
->On Tue, 24 Mar 2020 23:35:57 +0800
->Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom> wrote:
->
->> Loongson have a long history of contributing their code to mainline
->kernel=2E
->> However, it seems like recent years, they are focusing on maintain a
->kernel by themselves
->> rather than contribute there code to the community=2E
->>=20
->> Kernel is progress rapidly too=2E Their code slept in mainline for a
->long peroid without proper
->> maintainance and became outdated=2E
->>=20
->> This patchset brings modern DeviceTree and irqchip support to the
->Loongson64 machine, and leaves
->> Loongson 2e/f alone since they are too legacy to touch=2E
->>=20
->> PCI and some legacy I/O device will be converted later, together with
->LS7A PCH support=2E
->>=20
->> v1:
->> - dt-bindings fixup according to Rob's comments
->> - irqchip fixup according to Marc's comments
->> - ls3-iointc: Make Core&IP map per-IRQ
->> - Regenerate kconfigs
->> - Typo & style improvements
->>=20
->> v2:
->> - dt-bindings: Fix IOINTC, collect Rob's review tag
->> - dtbs: Drop CPU Node, merge different ways according to Huacai and
->Paul's comments
->>=20
->> v3:
->> - Split code have been merged
->> - Fix IOINTC binding to allow map any child IRQ to and parent
->> - Convert "HTINTC" into "HTPIC", which mixed HT vectors processing
->and i8259
->> - Naming style fix according to Huacai's suggestions
->>=20
->> v4:
->> - More naming related fixes
->>=20
->> v5:
->> - irqchip fixes thanks to maz (see per file changelog)
->> - Remove unnecessary details in dt-bindings
->> - Credit Huacai with Co-developed-by
->>=20
->> v6:
->> - HTPIC minor fix
->> - device binding naming fix=20
->>=20
->> ---
->> Jiaxun Yang (11):
->>   irqchip: Add driver for Loongson I/O Local Interrupt Controller
->>   irqchip: loongson-liointc: Workaround LPC IRQ Errata
->>   dt-bindings: interrupt-controller: Add Loongson LIOINTC
->>   irqchip: Add driver for Loongson-3 HyperTransport PIC controller
->>   dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
->>   irqchip: mips-cpu: Convert to simple domain
->>   MIPS: Loongson64: Drop legacy IRQ code
->>   dt-bindings: mips: Add loongson boards
->>   MIPS: Loongson64: Add generic dts
->>   MIPS: Loongson64: Load built-in dtbs
->>   MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
->
->[=2E=2E=2E]
->
->How do you want to get these merged? I can take the first 6 patches
->through the irqchip tree, and leave the rest to go via the MIPS tree=2E
->
->Otherwise, if you plan to have the whole thing go via the MIPS tree,
->please add my:
->
->Reviewed-by: Marc Zyngier <maz@kernel=2Eorg>
->
->to patches 1, 2, 4 and 6=2E
->
->Please let me know quickly, as I'd like to close the irqchip tree
->tomorrow=2E
+	pmd = pmd_offset(pud, addr);
+	if (sz != PMD_SIZE && pmd_none(*pmd))
+		return NULL;
+	/* hugepage or swap? */
+	if (pmd_huge(*pmd) || !pmd_present(*pmd))
+		return (pte_t *)pmd;
 
-I'd prefer all go through MIPS tree=2E
+	return NULL;
 
-Thomas, could you please help with that?
+So it always returns a pointer into a PUD or PMD, while say, ppc
+in __find_linux_pte() ends like:
 
-Thanks=2E
+	return pte_offset_kernel(&pmd, ea);
 
->
->Thanks,
->
->	M=2E
+Which is pointing to a PTE
 
---=20
-Jiaxun Yang
+So does sparc:
+
+        pmd = pmd_offset(pud, addr);
+        if (pmd_none(*pmd))
+                return NULL;
+        if (is_hugetlb_pmd(*pmd))
+                return (pte_t *)pmd;
+        return pte_offset_map(pmd, addr);
+
+Which is even worse because it is leaking a kmap..
+
+etc
+
+> /*
+>  * huge_pte_offset() - Walk the page table to resolve the hugepage
+>  * entry at address @addr
+>  *
+>  * Return: Pointer to page table or swap entry (PUD or PMD) for
+                                              ^^^^^^^^^^^^^^^^^^^
+
+Ie the above is not followed by the archs
+
+I'm also scratching my head that a function that returns a pte_t *
+always returns a PUD or PMD. Strange bit of type casting..
+
+Jason
