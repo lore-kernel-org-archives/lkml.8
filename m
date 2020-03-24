@@ -2,111 +2,138 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1389DC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB222C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D556820786
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F7F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:50:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CVcaIPLk"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="gXvyvwbP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727179AbgCXKsz (ORCPT
+        id S1727217AbgCXKua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:48:55 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46426 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727095AbgCXKsz (ORCPT
+        Tue, 24 Mar 2020 06:50:30 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37522 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727095AbgCXKua (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:48:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585046934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=qSOri34BE3PtZf/E2VZCmCknPEbvXiWhBYN0uUrx2Fk=;
-        b=CVcaIPLkVuc+4NUKUdr5HwJWGUqSwXWwT3k6po59A4FU3l9UtFQIwslVgcwcQCSc7CibN1
-        Lh8Zb83zYOxQCh9dpDo4vl+8q7xonWWaL582uvm8+ylHKz0xKKUPFqwCwGkZ8P+r06YEUO
-        eIt+vj651kApaGnlx4fPAmxXsgT0csA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-nMIzL1KCNAKbGY_b8S1UXQ-1; Tue, 24 Mar 2020 06:48:51 -0400
-X-MC-Unique: nMIzL1KCNAKbGY_b8S1UXQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D203D107ACC4;
-        Tue, 24 Mar 2020 10:48:49 +0000 (UTC)
-Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6672019C6A;
-        Tue, 24 Mar 2020 10:48:48 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 11:48:43 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        mark.rutland@arm.com, naveen.n.rao@linux.vnet.ibm.com
-Subject: Re: [PATCH] perf dso: Fix dso comparison
-Message-ID: <20200324104843.GS1534489@krava>
-References: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
+        Tue, 24 Mar 2020 06:50:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1585047029; x=1616583029;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=TxlBi3ra4HMx8zuqspMqJ3ApAbYybIFOtoUMzIZQnpE=;
+  b=gXvyvwbPIeS6MHA1/BKc6tLxq9xrsyguFOsvqk8TzEDPiYd5p+iaMoVp
+   WVR71wKf2VkP3C+YVmZQy6032RJqsBVm9NjnjD0jc7CjlkgH+WxqfNDgA
+   cVYHPRtJsYFH9+e5Xn+EpmuPB+9qIrFHTwuRcDi7bYvHge9p9QyGRvAAQ
+   A=;
+IronPort-SDR: bCo4jtv7LFaaBuNw2kk0Cv7swc6NiVbyPBkdlU1QBKrMC8FohCy5dsrclfPt1QZQBiyT+3uQzN
+ d2F/l/rARt9w==
+X-IronPort-AV: E=Sophos;i="5.72,300,1580774400"; 
+   d="scan'208";a="34501424"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 24 Mar 2020 10:50:27 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 2E6EFA18E6;
+        Tue, 24 Mar 2020 10:50:26 +0000 (UTC)
+Received: from EX13D19EUB003.ant.amazon.com (10.43.166.69) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1236.3; Tue, 24 Mar 2020 10:50:25 +0000
+Received: from u8a88181e7b2355.ant.amazon.com (10.43.162.241) by
+ EX13D19EUB003.ant.amazon.com (10.43.166.69) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 24 Mar 2020 10:50:15 +0000
+From:   Hanna Hawa <hhhawa@amazon.com>
+To:     <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <tsahee@annapurnalabs.com>, <antoine.tenart@bootlin.com>,
+        <hhhawa@amazon.com>, <mchehab+samsung@kernel.org>,
+        <davem@davemloft.net>, <gregkh@linuxfoundation.org>,
+        <Jonathan.Cameron@huawei.com>, <andriy.shevchenko@linux.intel.com>,
+        <tglx@linutronix.de>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <dwmw@amazon.co.uk>,
+        <benh@amazon.com>, <ronenk@amazon.com>, <talel@amazon.com>,
+        <jonnyc@amazon.com>, <hanochu@amazon.com>
+Subject: [PATCH v5 0/6] Amazon's Annapurna Labs Alpine v3 device-tree
+Date:   Tue, 24 Mar 2020 12:49:12 +0200
+Message-ID: <20200324104918.29578-1-hhhawa@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain
+X-Originating-IP: [10.43.162.241]
+X-ClientProxiedBy: EX13D36UWA001.ant.amazon.com (10.43.160.71) To
+ EX13D19EUB003.ant.amazon.com (10.43.166.69)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:54:24AM +0530, Ravi Bangoria wrote:
-> Perf gets dso details from two different sources. 1st, from builid
-> headers in perf.data and 2nd from MMAP2 samples. Dso from buildid
-> header does not have dso_id detail. And dso from MMAP2 samples does
-> not have buildid information. If detail of the same dso is present
-> at both the places, filename is common.
-> 
-> Previously, __dsos__findnew_link_by_longname_id() used to compare only
-> long or short names, but Commit 0e3149f86b99 ("perf dso: Move dso_id
-> from 'struct map' to 'struct dso'") also added a dso_id comparison.
-> Because of that, now perf is creating two different dso objects of the
-> same file, one from buildid header (with dso_id but without buildid)
-> and second from MMAP2 sample (with buildid but without dso_id).
-> 
-> This is causing issues with archive, buildid-list etc subcommands. Fix
-> this by comparing dso_id only when it's present. And incase dso is
-> present in 'dsos' list without dso_id, inject dso_id detail as well.
-> 
-> Before:
-> 
->   $ sudo ./perf buildid-list -H
->   0000000000000000000000000000000000000000 /usr/bin/ls
->   0000000000000000000000000000000000000000 /usr/lib64/ld-2.30.so
->   0000000000000000000000000000000000000000 /usr/lib64/libc-2.30.so
-> 
->   $ ./perf archive
->   perf archive: no build-ids found
-> 
-> After:
-> 
->   $ ./perf buildid-list -H
->   b6b1291d0cead046ed0fa5734037fa87a579adee /usr/bin/ls
->   641f0c90cfa15779352f12c0ec3c7a2b2b6f41e8 /usr/lib64/ld-2.30.so
->   675ace3ca07a0b863df01f461a7b0984c65c8b37 /usr/lib64/libc-2.30.so
-> 
->   $ ./perf archive
->   Now please run:
-> 
->   $ tar xvf perf.data.tar.bz2 -C ~/.debug
-> 
->   wherever you need to run 'perf report' on.
-> 
-> Reported-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+This series organize the Amazon's Annapurna Labs Alpine device tree
+bindings, device tree folder and adds new device tree for Alpine v3.
 
-looks good, do we need to add the dso_id check to sort__dso_cmp?
+Changes since v4:
+-----------------
+- Re-order nodes in increasing order.
+- Add disable to UART nodes.
+- Add missing UART nodes (1,2,3)
+- Add comments for GIC/UART
+- Add io-fabric bus, and move uart nodes into it.
+- Fix MSIx range according Alpine function spec
 
-thanks,
-jirka
+Changes since v3:
+-----------------
+- rebased and retested for tag Linux 5.6-rc2
+
+Changes since v2:
+-----------------
+- Move up a level for DT node without mmio regs.
+- Drop device_type from serial@fd883000 node.
+- Minor change name of PCIe node to: pcie@fbd00000
+
+Changes since v1:
+-----------------
+- Rename al,alpine DT binding to amazon,alpine
+- Rename al folder to be amazon
+- Update maintainers of amazon,alpine DT
+- Add missing alpine-v2 DT binding
+- Fix yaml schemas for alpine-v3-evp.dts:
+	- #size-cells:0:0: 0 is not one of [1, 2]
+	- arch-timer: interrupts: [[1, 13, 8, 1, 14, 8, 1, 11, 8, 1, 10,
+	8]] is too short
+- Change compatible string of alpine-v3-evp to amazon,al
+
+Hanna Hawa (5):
+  dt-bindings: arm: amazon: rename al,alpine DT binding to amazon,al
+  arm64: dts: amazon: rename al folder to be amazon
+  dt-bindings: arm: amazon: update maintainers of amazon,al DT bindings
+  dt-bindings: arm: amazon: add missing alpine-v2 DT binding
+  dt-bindings: arm: amazon: add Amazon Annapurna Labs Alpine V3
+
+Ronen Krupnik (1):
+  arm64: dts: amazon: add Amazon's Annapurna Labs Alpine v3 support
+
+ .../devicetree/bindings/arm/al,alpine.yaml    |  21 -
+ .../devicetree/bindings/arm/amazon,al.yaml    |  33 ++
+ MAINTAINERS                                   |   2 +-
+ arch/arm64/boot/dts/Makefile                  |   2 +-
+ arch/arm64/boot/dts/{al => amazon}/Makefile   |   1 +
+ .../boot/dts/{al => amazon}/alpine-v2-evp.dts |   0
+ .../boot/dts/{al => amazon}/alpine-v2.dtsi    |   0
+ arch/arm64/boot/dts/amazon/alpine-v3-evp.dts  |  24 ++
+ arch/arm64/boot/dts/amazon/alpine-v3.dtsi     | 408 ++++++++++++++++++
+ 9 files changed, 468 insertions(+), 23 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
+ create mode 100644 Documentation/devicetree/bindings/arm/amazon,al.yaml
+ rename arch/arm64/boot/dts/{al => amazon}/Makefile (64%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2-evp.dts (100%)
+ rename arch/arm64/boot/dts/{al => amazon}/alpine-v2.dtsi (100%)
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3-evp.dts
+ create mode 100644 arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+
+-- 
+2.17.1
 
