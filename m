@@ -2,47 +2,47 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA15AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D37C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CDB20836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F5D20788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mTGvM8hC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DFwVmlyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgCXQ0o (ORCPT
+        id S1728768AbgCXQ0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:26:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59550 "EHLO
+        Tue, 24 Mar 2020 12:26:46 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59558 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728520AbgCXQ0l (ORCPT
+        with ESMTP id S1728637AbgCXQ0o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:26:41 -0400
+        Tue, 24 Mar 2020 12:26:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=tNTshsqUMDvShy2poJR/dA/f+Op0Ioq8L8ZpxTGQOL4=; b=mTGvM8hCGMLtDP8hFus8HXx84O
-        CjTZH5PTrpwJm8EMKLbUhQuuHTKv79XnIIgyWOgrKU8oJbrdtHJcNfgL9GfycJqOn8xXLCbQEvgGf
-        M3SIWccIlRrzfW1WaUfKCxqETjuIMukYRDFU0WIpy6yrNOoXSGx1KPJ2p2gkabEe+j4XUwJQM6DVU
-        5XmDrJTLN8d/SJPdStHS4C+1Td8tpowmn5+fvCmru+PwQJy0Sb+1LQ3RekACffKpco7MipX5/bXGw
-        +v2qExcIl29p+vyucTuUg6v8NhEwV/M5Zy17yQdPCZshZwU0K9PfR4vWS51ifSYtxlbSN5kYoBWm4
-        v3EcaViQ==;
+        bh=fTzmx+3y0abwCmtc5yMkI3NKOSqJHJ1zF1HY0E+MrKQ=; b=DFwVmlyNxFqu46pre485nI1Uno
+        HU04h/zblFYZWlqFX7olTaXYe2IGA8QOMcT22YuEqBBPFCra1Dv8k0PGKITVoN/JTbTgNqfr5/pyY
+        0EuwlOdKO0VxBbsfg8p5CmRvdMLUn/J269EURETmU4iLDYnUWBzz9v5tFOOfNwdQPQpPFRO3lvDji
+        x879EI+q2BnIfifYGVeBO5B/K9vwc9Fu3NjXLA7io/m+10djLjzmhGsN7pj5fOwzxJLatVN8ACMQp
+        mhOdY8fWtjv+uFOSyoWxozYE6aV3lr+i3ZmVPftNp/Vymt2GHXjs9Uwq7w3ExrrKFUxSlfsJRqV+k
+        fd/rkQWA==;
 Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGmNx-0007c1-9i; Tue, 24 Mar 2020 16:26:37 +0000
+        id 1jGmNz-0007cA-Mb; Tue, 24 Mar 2020 16:26:40 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Yoshinori Sato <ysato@users.sourceforge.jp>,
         Rich Felker <dalias@libc.org>
 Cc:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/10] sh: remove -Werror from Makefiles
-Date:   Tue, 24 Mar 2020 17:26:24 +0100
-Message-Id: <20200324162633.754714-2-hch@lst.de>
+Subject: [PATCH 02/10] sh: sort the selects for SUPERH alphabetically
+Date:   Tue, 24 Mar 2020 17:26:25 +0100
+Message-Id: <20200324162633.754714-3-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200324162633.754714-1-hch@lst.de>
 References: <20200324162633.754714-1-hch@lst.de>
@@ -54,46 +54,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sh build is full of warnings when building with gcc 9.2.1.  While
-fixing those would be great, at least avoid failing the build.
+Ensure there is an order for the selects of the main SUPERH symbol,
+as well as the SUPERH32 and SUPER64 ones.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- arch/sh/kernel/Makefile | 2 --
- arch/sh/lib/Makefile    | 2 --
- arch/sh/mm/Makefile     | 2 --
- 3 files changed, 6 deletions(-)
+ arch/sh/Kconfig | 87 ++++++++++++++++++++++++-------------------------
+ 1 file changed, 43 insertions(+), 44 deletions(-)
 
-diff --git a/arch/sh/kernel/Makefile b/arch/sh/kernel/Makefile
-index 59673f8a3379..ef65f0625c6c 100644
---- a/arch/sh/kernel/Makefile
-+++ b/arch/sh/kernel/Makefile
-@@ -47,5 +47,3 @@ obj-$(CONFIG_DWARF_UNWINDER)	+= dwarf.o
- obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o perf_callchain.o
- obj-$(CONFIG_DMA_NONCOHERENT)	+= dma-coherent.o
- obj-$(CONFIG_HAVE_HW_BREAKPOINT)		+= hw_breakpoint.o
+diff --git a/arch/sh/Kconfig b/arch/sh/Kconfig
+index 9ece111b0254..808b638b11f3 100644
+--- a/arch/sh/Kconfig
++++ b/arch/sh/Kconfig
+@@ -2,59 +2,58 @@
+ config SUPERH
+ 	def_bool y
+ 	select ARCH_HAS_BINFMT_FLAT if !MMU
++	select ARCH_HAS_GCOV_PROFILE_ALL
++	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_HAS_PTE_SPECIAL
+ 	select ARCH_HAS_TICK_BROADCAST if GENERIC_CLOCKEVENTS_BROADCAST
++	select ARCH_HAVE_CUSTOM_GPIO_H
++	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+-	select HAVE_PATA_PLATFORM
++	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select CLKDEV_LOOKUP
++	select CPU_NO_EFFICIENT_FFS
+ 	select DMA_DECLARE_COHERENT
+-	select HAVE_IDE if HAS_IOPORT_MAP
+-	select HAVE_MEMBLOCK_NODE_MAP
+-	select HAVE_OPROFILE
++	select GENERIC_ATOMIC64
++	select GENERIC_CLOCKEVENTS
++	select GENERIC_CMOS_UPDATE if SH_SH03 || SH_DREAMCAST
++	select GENERIC_IDLE_POLL_SETUP
++	select GENERIC_IRQ_SHOW
++	select GENERIC_PCI_IOMAP if PCI
++	select GENERIC_SCHED_CLOCK
++	select GENERIC_SMP_IDLE_THREAD
++	select GENERIC_STRNCPY_FROM_USER
++	select GENERIC_STRNLEN_USER
++	select HAVE_ARCH_AUDITSYSCALL
+ 	select HAVE_ARCH_TRACEHOOK
+-	select HAVE_PERF_EVENTS
+ 	select HAVE_DEBUG_BUGVERBOSE
+-	select HAVE_FAST_GUP if MMU
+-	select ARCH_HAVE_CUSTOM_GPIO_H
+-	select ARCH_HAVE_NMI_SAFE_CMPXCHG if (GUSA_RB || CPU_SH4A)
+-	select ARCH_HAS_GCOV_PROFILE_ALL
+-	select PERF_USE_VMALLOC
+ 	select HAVE_DEBUG_KMEMLEAK
+-	select HAVE_KERNEL_GZIP
+-	select CPU_NO_EFFICIENT_FFS
++	select HAVE_FAST_GUP if MMU
++	select HAVE_FUTEX_CMPXCHG if FUTEX
++	select HAVE_IDE if HAS_IOPORT_MAP
+ 	select HAVE_KERNEL_BZIP2
++	select HAVE_KERNEL_GZIP
+ 	select HAVE_KERNEL_LZMA
+-	select HAVE_KERNEL_XZ
+ 	select HAVE_KERNEL_LZO
++	select HAVE_KERNEL_XZ
++	select HAVE_MEMBLOCK_NODE_MAP
++	select HAVE_MOD_ARCH_SPECIFIC if DWARF_UNWINDER
++	select HAVE_NMI
++	select HAVE_OPROFILE
++	select HAVE_PATA_PLATFORM
++	select HAVE_PERF_EVENTS
++	select HAVE_REGS_AND_STACK_ACCESS_API
+ 	select HAVE_UID16
+-	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select HAVE_SYSCALL_TRACEPOINTS
+-	select HAVE_REGS_AND_STACK_ACCESS_API
+-	select MAY_HAVE_SPARSE_IRQ
+ 	select IRQ_FORCED_THREADING
+-	select RTC_LIB
+-	select GENERIC_ATOMIC64
+-	select GENERIC_IRQ_SHOW
+-	select GENERIC_SMP_IDLE_THREAD
+-	select GENERIC_IDLE_POLL_SETUP
+-	select GENERIC_CLOCKEVENTS
+-	select GENERIC_CMOS_UPDATE if SH_SH03 || SH_DREAMCAST
+-	select GENERIC_PCI_IOMAP if PCI
+-	select GENERIC_SCHED_CLOCK
+-	select GENERIC_STRNCPY_FROM_USER
+-	select GENERIC_STRNLEN_USER
+-	select HAVE_MOD_ARCH_SPECIFIC if DWARF_UNWINDER
++	select MAY_HAVE_SPARSE_IRQ
+ 	select MODULES_USE_ELF_RELA
++	select NEED_SG_DMA_LENGTH
+ 	select NO_GENERIC_PCI_IOPORT_MAP if PCI
+-	select OLD_SIGSUSPEND
+ 	select OLD_SIGACTION
++	select OLD_SIGSUSPEND
+ 	select PCI_DOMAINS if PCI
+-	select HAVE_ARCH_AUDITSYSCALL
+-	select HAVE_FUTEX_CMPXCHG if FUTEX
+-	select HAVE_NMI
+-	select NEED_SG_DMA_LENGTH
+-	select ARCH_HAS_GIGANTIC_PAGE
 -
--ccflags-y := -Werror
-diff --git a/arch/sh/lib/Makefile b/arch/sh/lib/Makefile
-index d0abbe5e38b0..eb473d373ca4 100644
---- a/arch/sh/lib/Makefile
-+++ b/arch/sh/lib/Makefile
-@@ -30,5 +30,3 @@ memset-$(CONFIG_CPU_SH4)	:= memset-sh4.o
- lib-$(CONFIG_MMU)		+= copy_page.o __clear_user.o
- lib-$(CONFIG_MCOUNT)		+= mcount.o
- lib-y				+= $(memcpy-y) $(memset-y) $(udivsi3-y)
--
--ccflags-y := -Werror
-diff --git a/arch/sh/mm/Makefile b/arch/sh/mm/Makefile
-index 5051b38fd5b6..b461310965b8 100644
---- a/arch/sh/mm/Makefile
-+++ b/arch/sh/mm/Makefile
-@@ -70,5 +70,3 @@ CFLAGS_tlbex_64.o += -ffixed-r7 \
- 	-ffixed-r41 -ffixed-r42 -ffixed-r43  \
- 	-ffixed-r60 -ffixed-r61 -ffixed-r62 \
- 	-fomit-frame-pointer
--
--ccflags-y := -Werror
++	select PERF_USE_VMALLOC
++	select RTC_LIB
+ 	help
+ 	  The SuperH is a RISC processor targeted for use in embedded systems
+ 	  and consumer electronics; it was also used in the Sega Dreamcast
+@@ -64,23 +63,23 @@ config SUPERH
+ config SUPERH32
+ 	def_bool "$(ARCH)" = "sh"
+ 	select ARCH_32BIT_OFF_T
++	select ARCH_HIBERNATION_POSSIBLE if MMU
++	select ARCH_WANT_IPC_PARSE_VERSION
+ 	select GUP_GET_PTE_LOW_HIGH if X2TLB
+-	select HAVE_KPROBES
+-	select HAVE_KRETPROBES
+-	select HAVE_IOREMAP_PROT if MMU && !X2TLB
++	select HAVE_ARCH_KGDB
++	select HAVE_DYNAMIC_FTRACE
+ 	select HAVE_FUNCTION_TRACER
++	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+-	select HAVE_DYNAMIC_FTRACE
+ 	select HAVE_FTRACE_NMI_ENTER if DYNAMIC_FTRACE
+-	select ARCH_WANT_IPC_PARSE_VERSION
+-	select HAVE_FUNCTION_GRAPH_TRACER
+-	select HAVE_ARCH_KGDB
+ 	select HAVE_HW_BREAKPOINT
++	select HAVE_IOREMAP_PROT if MMU && !X2TLB
++	select HAVE_KPROBES
++	select HAVE_KRETPROBES
+ 	select HAVE_MIXED_BREAKPOINTS_REGS
++	select HAVE_STACKPROTECTOR
+ 	select PERF_EVENTS
+-	select ARCH_HIBERNATION_POSSIBLE if MMU
+ 	select SPARSE_IRQ
+-	select HAVE_STACKPROTECTOR
+ 
+ config SUPERH64
+ 	def_bool "$(ARCH)" = "sh64"
 -- 
 2.25.1
 
