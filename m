@@ -2,119 +2,112 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3D9C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C93FFC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4C4F2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC3020722
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:45:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VT4HeMXe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewxanhcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgCXWpi (ORCPT
+        id S1728477AbgCXWpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:45:38 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52317 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727554AbgCXWph (ORCPT
+        Tue, 24 Mar 2020 18:45:41 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39394 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727554AbgCXWpl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:45:37 -0400
-Received: by mail-pj1-f67.google.com with SMTP id ng8so184144pjb.2;
-        Tue, 24 Mar 2020 15:45:36 -0700 (PDT)
+        Tue, 24 Mar 2020 18:45:41 -0400
+Received: by mail-lj1-f196.google.com with SMTP id i20so450632ljn.6;
+        Tue, 24 Mar 2020 15:45:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PKMeyRQ3YhSpQkcTyPShJRWuaaPt570DhD0K201i24Y=;
-        b=VT4HeMXe1pYBCyO/8Jj2xQWubBmwbFGeXo5JKCqPHd5xsx2F+XgRd8MnWhxf2IswLL
-         PDRWkHUnGh7q4MRz3XYE4vUHSYo8iBArgYFXR3Uhz68F7vTTmSlGRa5lyU9yFT0qQrGa
-         5j5OtxLnMQ6Y/0/YIFr2Wqoq+nKccPSP9eC7XBdQTvbY6euDPwNw7lReUsh1I88mmPco
-         o5OO9pyyJDOODvk7BaXjfRs6QpXgz3DRYdse2sNJgLHvY//oHir1Nbtk0GLIuF5Zbz/0
-         1+kLIe+cEP7aUdUQSZaq9U2bGVY+RFC7LHAZv9eQmDosh3neklP1+FbqMhHM63nmNZq9
-         GcOw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1HxGR4IMpW8Yf3poFYJ0yW6+xXLZYxn2YNkddFlKXd8=;
+        b=ewxanhcY0YBuUPV3qNKUCNj/4v2hzLIcwwi86EkrozrqhCpg5IJYoahWTJnGZAIXF6
+         ttTSKp7gjG75aZqgGbe5LBfwrrd8fzZrwkBULjH1/ZPPRxSWTYGXhqPzeYxv2Nqvo0EX
+         kRmgThP9MKUL2TcM8wO+fUQcEcpUTszXjGTgz8tBhHy0ceTxlXCafpYAqJpGpb9w4VgM
+         3kB6J9mcwCRWPkCaS9abJ6jaARgTyMTpPa64bltRlAYwgd+2TPnSErWsPw9VlkWwRe7U
+         j/8U/sPfbueWtv9dM6hqkTFmgCQWt+5hh90bexsrCx0iE5TfmMRogdFM6nnhdLhCrgTF
+         bkKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PKMeyRQ3YhSpQkcTyPShJRWuaaPt570DhD0K201i24Y=;
-        b=EIL6SYTBlBcW3VtwDjKOFv+kIa5PERQqXdPeX9YIsbtIoPsTk42dSKh92Bl99OqyRw
-         gfP3N0A2KRyVPNf6HJzZLtEkIwE72GhW0H9H39B6e9OvdwvQHK4XrYM9NkpXYmlcqXCc
-         ZQi0V4qkXUyh0dLQYfiePHUKqtXOoezT/u7/gHLqy4NtDyx69fCpAJp59PZecHp10s2d
-         tbjSdpY4fjqIvfu8nSKXnUia7VwQNnnMbYr1ovwCJv4L62apSKYojuyTu5arZWgPCyrZ
-         Y7xIug7LH8gFzvfGDPoR1DIVvhbO7968GFO5BuHA3qzgtU+9ofzA0kWlDemQFh59O4Tt
-         gV9g==
-X-Gm-Message-State: ANhLgQ0LVKtf0F0Vvnkj7i+MV9XtInHw1yMA051I6lgEUEUHnFhRERf/
-        ltcNnXdagL+SVpYeRKBBRxhaKSom
-X-Google-Smtp-Source: ADFU+vunt3Lf+DyFnjTw2mxQvuShMhU0fET7IsfLN9BexNWtrvdwbkM6MrM9WUkCTrOT9kDJpeHZfw==
-X-Received: by 2002:a17:90a:1f07:: with SMTP id u7mr247434pja.24.1585089935907;
-        Tue, 24 Mar 2020 15:45:35 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id u18sm17162622pfl.40.2020.03.24.15.45.35
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1HxGR4IMpW8Yf3poFYJ0yW6+xXLZYxn2YNkddFlKXd8=;
+        b=oO/8s7aGB52Eg1VPrsK1srGv9nDM7VdGsS8RHkRRGNPBgED4HWOMzJrJYXuJqGxoKt
+         /j9tu2ca8iPp5xSi1g7a+VTHZeUrsz+Z+NeLUOF4uslRnTOrGEztz33TKuPM5OjzMg53
+         II9p4/0AzG1pEL8KCuwN7KoO08Ca+kZmFBreIPsfJogu809jtCJXrMYq5yPoDEPFin6g
+         qxfmldaBmcJNn/gBocCL4EVYV+QAi4RlZS0B10c7Bdc26/T1XbWOw/IfuoOumrjU2bs/
+         SiNKRJFUd5kbwRIphTcS+OLK1DWVC1AhL+k9yGv+8YS7odTtxRh18Iek2K8S0rsQfxWs
+         sc1Q==
+X-Gm-Message-State: ANhLgQ2gZPZ+Dkp9vOKfsFfmQb46REy+jhttJ9Qa6SLbdbYSWjyOJGvy
+        58VGPYuOcvS6eKb/LcuCBMbWaLbs
+X-Google-Smtp-Source: APiQypKK9aJ/vteGvqg2enrRQJOAVimwi3mKjNazUA694NM7Fj2SOo9y8bnfprMAWPe4Y0SRWaljDQ==
+X-Received: by 2002:a05:651c:1061:: with SMTP id y1mr4506ljm.285.1585089938878;
+        Tue, 24 Mar 2020 15:45:38 -0700 (PDT)
+Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.gmail.com with ESMTPSA id d4sm10534279lfa.75.2020.03.24.15.45.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 15:45:35 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 15:45:33 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Andrew Duggan <aduggan@synaptics.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Hollinsky <phollinsky@holtechnik.com>,
-        Christopher Heiny <Cheiny@synaptics.com>,
-        Lucas Stach <l.stach@pengutronix.de>, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-Subject: Re: [PATCH] Input: synaptics-rmi4 - Do not set reduced reporting
- mode thresholds are not set by the driver
-Message-ID: <20200324224533.GF75430@dtor-ws>
-References: <20200312005549.29922-1-aduggan@synaptics.com>
+        Tue, 24 Mar 2020 15:45:38 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Jasper Korten <jja2000@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 0/3] Enable LP2 CPUIDLE state on NVIDIA Tegra30
+Date:   Wed, 25 Mar 2020 01:43:32 +0300
+Message-Id: <20200324224335.5825-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200312005549.29922-1-aduggan@synaptics.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 05:55:49PM -0700, Andrew Duggan wrote:
-> The previous patch "c5ccf2ad3d33 (Input: synaptics-rmi4 - switch to
-> reduced reporting mode)" enabled reduced reporting mode unintentionally
-> on some devices, if the firmware was configured with default Delta X/Y
-> threshold values. The result unintentionally degrade the performance of
-> some touchpads.
-> 
-> This patch checks to see that the driver is modifying the delta X/Y
-> thresholds before modifying the reporting mode.
-> 
-> Signed-off-by: Andrew Duggan <aduggan@synaptics.com>
+Hello,
 
-Applied, thank you.
+This series enables LP2 CPU idling state on Tegra30. Previously,
+Michał Mirosław reported that this wasn't working on ASUS Transformer
+device and we found that replicating the Transformer's downstream kernel
+behavior (in regards to the firmware) helps. Later on Michał told that
+LP2 works without the firmware changes using a different kernel version /
+config, we don't know for sure what was the cause of the original problem.
 
-> ---
->  drivers/input/rmi4/rmi_f11.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/input/rmi4/rmi_f11.c b/drivers/input/rmi4/rmi_f11.c
-> index 6adea8a3e8fb..ffa39ab153f2 100644
-> --- a/drivers/input/rmi4/rmi_f11.c
-> +++ b/drivers/input/rmi4/rmi_f11.c
-> @@ -1203,8 +1203,8 @@ static int rmi_f11_initialize(struct rmi_function *fn)
->  	 * If distance threshold values are set, switch to reduced reporting
->  	 * mode so they actually get used by the controller.
->  	 */
-> -	if (ctrl->ctrl0_11[RMI_F11_DELTA_X_THRESHOLD] ||
-> -	    ctrl->ctrl0_11[RMI_F11_DELTA_Y_THRESHOLD]) {
-> +	if (sensor->axis_align.delta_x_threshold ||
-> +	    sensor->axis_align.delta_y_threshold) {
->  		ctrl->ctrl0_11[0] &= ~RMI_F11_REPORT_MODE_MASK;
->  		ctrl->ctrl0_11[0] |= RMI_F11_REPORT_MODE_REDUCED;
->  	}
-> -- 
-> 2.20.1
-> 
+This series makes the TF firmware changes that are known to work well
+in regards to LP2 idling on all devices and then the LP2 idling state
+is enabled.
+
+Please review and apply, thanks in advance.
+
+Dmitry Osipenko (3):
+  ARM: tegra: Initialize r0 register for firmware wake-up
+  firmware: trusted_foundations: Different way of L2 cache enabling
+    after LP2 suspend
+  cpuidle: tegra: Support CPU cluster power-down state on Tegra30
+
+ arch/arm/mach-tegra/pm.c                     |  4 ++++
+ arch/arm/mach-tegra/reset-handler.S          |  7 ++++++-
+ drivers/cpuidle/cpuidle-tegra.c              |  1 -
+ drivers/firmware/trusted_foundations.c       | 21 ++++++++++++++++++--
+ include/linux/firmware/trusted_foundations.h |  1 +
+ 5 files changed, 30 insertions(+), 4 deletions(-)
 
 -- 
-Dmitry
+2.25.1
+
