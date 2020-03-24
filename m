@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7D0C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DFE3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1FD92080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A28EB208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585044939;
-	bh=Ng776RDVUtwc7KQiVz21I8I2Wgral1f/GNSOxXixasQ=;
+	s=default; t=1585044941;
+	bh=Wn32YEXlsFeyH0U1lHQAPIpXDBsqxsEtcqAGcnsGtIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sZ/DW/8yQ01LmVwasezBp4g+caLpYGLoueBJMOn2zPZCqUQv24/2l/7svtYNrQyF2
-	 he4Yhkws0/Uz+kOpq5PYsUqdWjRmEnnV5JLXtD/t3s3qkGmfK8zMhMDkXdhYc2tMyG
-	 RL89BkTw/JkSlgB1jRTdbQmwxY9QlyshhzOeeohY=
+	b=womQbwwQJoPOXcRy3Gw1XoCXlrkXfoP81kZ/RGv89NLshF9UmkuNE7xFVeLvJ6S4S
+	 k5Hr6+DjmYupLGrFdrG/1IuoqLfVP8zk7imPUfn7BztLJEnEaCGv7hBont3mOs8phw
+	 Syv+e4x776G32EnWdVPIOUSPztSkUvjqQd2WM4yE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727267AbgCXKPZ (ORCPT
+        id S1727416AbgCXKPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:15:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49250 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 06:15:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726994AbgCXKPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:15:24 -0400
+        id S1727238AbgCXKPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 06:15:25 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9C92080C;
-        Tue, 24 Mar 2020 10:15:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CE27208D5;
+        Tue, 24 Mar 2020 10:15:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1585044924;
-        bh=Ng776RDVUtwc7KQiVz21I8I2Wgral1f/GNSOxXixasQ=;
+        bh=Wn32YEXlsFeyH0U1lHQAPIpXDBsqxsEtcqAGcnsGtIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SrI1EStL6N2czPIvrLO/O+OPW/W3qsBSsCz4X8Ohr+eKhLangk0n+/HG47GtTyl6Z
-         NKZ6KOMGNkxerLO+IS/pQvSM5FCWjhbJINtTwZRDWcM8kpijSD3WBycHC2Dk1SkpFS
-         4Jlemtlv3MeOVM7t4cCRCOdDJtN6+JtuRvY+42Fc=
+        b=DYPQRWsdemnzRxor+vpdN3kHgdH0o+EIb4rfEdsX6fCNAyhOZUvJCwWb0adJW46S9
+         2N7Le/JQLxppZ6eVSCQAwuN+IFJXVDWtt4Rtb8rIFtYEIB9JQeHtfCBc495eYZY7J5
+         brclO4Z/trTf8g5AqRIQaqHk+pgRZWukGEez9JbA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jGgag-001pjR-8z; Tue, 24 Mar 2020 11:15:22 +0100
+        id 1jGgag-001pjn-F2; Tue, 24 Mar 2020 11:15:22 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 3/8] media: pci: move VIDEO_PCI_SKELETON to a different Kconfig
-Date:   Tue, 24 Mar 2020 11:15:16 +0100
-Message-Id: <8a09c8d2144c36f8d370f6ab069ff1c6e6d6fb00.1585044374.git.mchehab+huawei@kernel.org>
+Subject: [PATCH 7/8] media: Kconfig: add an option to filter in/out the embedded drivers
+Date:   Tue, 24 Mar 2020 11:15:20 +0100
+Message-Id: <c1c6fa7878baf71b025898bb0e18398a47089561.1585044374.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1585044374.git.mchehab+huawei@kernel.org>
 References: <cover.1585044374.git.mchehab+huawei@kernel.org>
@@ -59,58 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The V4L2 PCI skeleton is not part of the V4L2 core. Move it
-to appear together with the other PCI drivers, at the end,
-as this is something that normal users don't even need to
-bother.
+Most systems don't need support for those, while others only
+need those, instead of the others.
+
+So, add an option to filter in/out the SoC specific drivers.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/pci/Kconfig       | 10 ++++++++++
- drivers/media/v4l2-core/Kconfig | 10 ----------
- 2 files changed, 10 insertions(+), 10 deletions(-)
+ drivers/media/Kconfig | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/media/pci/Kconfig b/drivers/media/pci/Kconfig
-index dcb3719f440e..9336f8446cf0 100644
---- a/drivers/media/pci/Kconfig
-+++ b/drivers/media/pci/Kconfig
-@@ -56,5 +56,15 @@ endif
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index e266d1afa912..a57e2198b2db 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -88,6 +88,14 @@ config MEDIA_CEC_SUPPORT
+ 	  Say Y when you have an HDMI receiver, transmitter or a USB CEC
+ 	  adapter that supports HDMI CEC.
  
- source "drivers/media/pci/intel/ipu3/Kconfig"
- 
-+config VIDEO_PCI_SKELETON
-+	tristate "Skeleton PCI V4L2 driver"
-+	depends on PCI
-+	depends on SAMPLES
-+	depends on VIDEO_V4L2 && VIDEOBUF2_CORE
-+	depends on VIDEOBUF2_MEMOPS && VIDEOBUF2_DMA_CONTIG
++config MEDIA_EMBEDDED_SUPPORT
++	bool "Embedded devices (SoC)"
 +	help
-+	  Enable build of the skeleton PCI driver, used as a reference
-+	  when developing new drivers.
++	  Enable support for complex cameras, codecs, and other hardware
++	  found on Embedded hardware (SoC).
 +
- endif #MEDIA_PCI_SUPPORT
- endif #PCI
-diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-core/Kconfig
-index 39e3fb30ba0b..26276b257eae 100644
---- a/drivers/media/v4l2-core/Kconfig
-+++ b/drivers/media/v4l2-core/Kconfig
-@@ -31,16 +31,6 @@ config VIDEO_FIXED_MINOR_RANGES
++	  Say Y when you have a software defined radio device.
++
+ endmenu # media support types
  
- 	  When in doubt, say N.
+ if MEDIA_SUPPORT
+@@ -177,9 +185,13 @@ source "drivers/media/radio/Kconfig"
  
--config VIDEO_PCI_SKELETON
--	tristate "Skeleton PCI V4L2 driver"
--	depends on PCI
--	depends on SAMPLES
--	depends on VIDEO_V4L2 && VIDEOBUF2_CORE
--	depends on VIDEOBUF2_MEMOPS && VIDEOBUF2_DMA_CONTIG
--	help
--	  Enable build of the skeleton PCI driver, used as a reference
--	  when developing new drivers.
--
- # Used by drivers that need tuner.ko
- config VIDEO_TUNER
- 	tristate
+ # Common driver options
+ source "drivers/media/common/Kconfig"
++
++if MEDIA_EMBEDDED_SUPPORT
++
+ source "drivers/media/platform/Kconfig"
+ source "drivers/media/mmc/Kconfig"
+ 
++endif # MEDIA_EMBEDDED_SUPPORT
+ 
+ comment "FireWire (IEEE 1394) Adapters"
+ 	depends on DVB_CORE && FIREWIRE
 -- 
 2.24.1
 
