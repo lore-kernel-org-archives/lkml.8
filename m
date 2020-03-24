@@ -2,172 +2,332 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28078C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D454C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0106E2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585072115;
-	bh=uz6dZ8KjquQEnzTFgFMOWuGSPMl35b+hJQ9PsfmtP1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=sG6Kw/dvdzN9UIC/nhv2Yp4CRWgNhBQUkmxz+0olTBuGNVP11RhFG4hH4X5aJSWLk
-	 dbk3R9HcmuR0RIpRk3ZOjHLSbqJoJo+5EZKJLOj2/e5DdwYeIXwRvNeHWv4gnn95v2
-	 CKIzelx/SoaMbPGMemV2vodznXNk9Aap+N/R4C+0=
+	by mail.kernel.org (Postfix) with ESMTP id CC65C206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:48:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UzoH2I2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgCXRse (ORCPT
+        id S1727926AbgCXRs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:48:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727697AbgCXRsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:48:33 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53D66206F6;
-        Tue, 24 Mar 2020 17:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585072112;
-        bh=uz6dZ8KjquQEnzTFgFMOWuGSPMl35b+hJQ9PsfmtP1o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=HDmUvDwhN0NNi3buz6ULiO3RwIqxewBzxYY5RXqBT+AlYyb9a6dh3zMpZ54g+YEWo
-         wVE3sFLhij7SVsj5j9WgrwhF2erYI0jtBibNlyz8n+UbXRhAMu+TwgiohNfMhCTU53
-         22lDOD7W+pKCZ6Xx4zD1JhefC6+T+wSLDeWCmNZg=
-Date:   Tue, 24 Mar 2020 12:48:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Karol Herbst <kherbst@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@intel.com>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
- states on certain intel bridges
-Message-ID: <20200324174830.GA32194@google.com>
+        Tue, 24 Mar 2020 13:48:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38457 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727663AbgCXRs4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:48:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id s1so22635653wrv.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:48:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TzOHB9g3KOGeLI2ijxAL8EBdgHfC4lrNr/2ltbuc77Y=;
+        b=UzoH2I2FTY/43x5y/+X27TaBy4MSRZk6YoxxSda9ZgsFSJJOavyd0PVOCwCFvLH2kf
+         1lwZOyArtktkS38izq82lULyNjOEUb5pCzaGZi9jYz6Dkh/tWBdF/g6qTtUI2XxnuTyf
+         iUe6lrpgdTpXcKKtWcpg+9BG5GV/WWpLAdCnCQWBKr75baAN+LE+kRIbYidhfHK8WeCJ
+         41lcg4rSKPXSVU4OP2wXo/+jKQr098kKuTCdYlR/oZt3norpZYS0TtMex4ykrJt8cVGc
+         hylCWZctBTRhgtBuZR8AJDE/EeEtlpAJeTNML1DH+USLxqkQUKu04gazc2WwrWHWkxl8
+         Uzrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TzOHB9g3KOGeLI2ijxAL8EBdgHfC4lrNr/2ltbuc77Y=;
+        b=uVXmmA4Jpn4KwOjyit+ZhtqYMlSBeEui4m9ibZIv9BVUtySaZJhIBR/bFBLKKcaAwn
+         ierDyoSeImDCcvleLbzXQmC1USqD05gWgsdFxd6f+KTQ5llBPJGEIlSna/QhTMn4GteQ
+         xd/t4TpbgoRhyaIEvnIhainWAc/9cxfPlTURKJ+0kp8DhajudP7D0wkhhfCEV/6HKC+b
+         P0hGPZ0MpIVxj4XYkxpFS4scMn4iXRVq1tS7EVCy4K1igdKamz58XK4Zt7ByO0JPs+s0
+         fbdtzvkSBlzscnx98hAa890o4ELdt9yBn+hlT5BqENKxHZ3ZXIN//MhbSGWhOyB6+x+Q
+         eA5Q==
+X-Gm-Message-State: ANhLgQ0GtF7OZ9tm400prMxTB//MmDufVgVbEd55FJlD5GBxILPFDeyW
+        XrY62BzJtZ4qlgWTgSmDATTaB386Ld98wU3feekz8Q==
+X-Google-Smtp-Source: ADFU+vv3p6YM06Db/TDNBgWIMF4qoiVsL3C4E4QOO5ns7h/8ij0/+G9aheTpeLDxHlakVbqiaj3sy5cV+cT1D6s5h/s=
+X-Received: by 2002:adf:efc9:: with SMTP id i9mr17429674wrp.23.1585072133363;
+ Tue, 24 Mar 2020 10:48:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200319164227.87419-1-trishalfonso@google.com>
+ <20200319164227.87419-3-trishalfonso@google.com> <alpine.LRH.2.21.2003241640150.30637@localhost>
+In-Reply-To: <alpine.LRH.2.21.2003241640150.30637@localhost>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Tue, 24 Mar 2020 10:48:42 -0700
+Message-ID: <CAKFsvUKog1m77u+Jx58OHCXuxNNmw=joDZ-0VZ93FT4H7s0zSQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 2/3] KUnit: KASAN Integration
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 02:02:22AM +0100, Karol Herbst wrote:
-> On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Mar 24, 2020 at 9:45 AM Alan Maguire <alan.maguire@oracle.com> wrote:
+>
+>
+> On Thu, 19 Mar 2020, Patricia Alfonso wrote:
+>
+> > Integrate KASAN into KUnit testing framework.
+> >       - Fail tests when KASAN reports an error that is not expected
+> >       - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+> >       - Expected KASAN reports pass tests and are still printed when run
+> >       without kunit_tool (kunit_tool still bypasses the report due to the
+> >       test passing)
+> >       - KUnit struct in current task used to keep track of the current test
+> >       from KASAN code
 > >
-> > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
-> > > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
-> > > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
-> > >
-> > > Depending on the used kernel there might be messages like those in demsg:
-> > >
-> > > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
-> > > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
-> > > space inaccessible)"
-> > > followed by backtraces of kernel crashes or timeouts within nouveau.
-> > >
-> > > It's still unkown why this issue exists, but this is a reliable workaround
-> > > and solves a very annoying issue for user having to choose between a
-> > > crashing kernel or higher power consumption of their Laptops.
+> > Make use of "[RFC PATCH kunit-next 1/2] kunit: generalize
+> > kunit_resource API beyond allocated resources" and "[RFC PATCH
+> > kunit-next 2/2] kunit: add support for named resources" from Alan
+> > Maguire [1]
+> >       - A named resource is added to a test when a KASAN report is
+> >        expected
+> >         - This resource contains a struct for kasan_data containing
+> >         booleans representing if a KASAN report is expected and if a
+> >         KASAN report is found
 > >
-> > Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
-> > list discussion.  Can you include links to some of that?
+> > [1] (https://lore.kernel.org/linux-kselftest/1583251361-12748-1-git-send-email-alan.maguire@oracle.com/T/#t)
 > >
-> > IIUC this basically just turns off PCI power management for the GPU.
-> > Can you do that with something like the following?  I don't know
-> > anything about DRM, so I don't know where you could save the pm_cap,
-> > but I'm sure the driver could keep it somewhere.
-> 
-> Sure this would work? From a quick look over the pci code, it looks
-> like a of code would be skipped we really need, like the platform
-> code to turn off the GPU via ACPI. But I could also remember
-> incorrectly on how all of that worked again. I can of course try and
-> see what the effect of this patch would be. 
+> > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> > ---
+> >  include/kunit/test.h | 10 ++++++++++
+> >  lib/kunit/test.c     | 10 +++++++++-
+> >  lib/test_kasan.c     | 37 +++++++++++++++++++++++++++++++++++++
+> >  mm/kasan/report.c    | 33 +++++++++++++++++++++++++++++++++
+> >  4 files changed, 89 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index 70ee581b19cd..2ab265f4f76c 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -19,9 +19,19 @@
+> >
+> >  struct kunit_resource;
+> >
+> > +#ifdef CONFIG_KASAN
+> > +/* kasan_data struct is used in KUnit tests for KASAN expected failures */
+> > +struct kunit_kasan_expectation {
+> > +     bool report_expected;
+> > +     bool report_found;
+> > +};
+> > +#endif /* CONFIG_KASAN */
+> > +
+>
+> Above should be moved to mm/kasan/kasan.h I think.
+>
+> >  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
+> >  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+> >
+> > +void kunit_set_failure(struct kunit *test);
+> > +
+>
+> Can you explain a bit more about why we need this exported?
+> I see where it's used but I'd just like to make sure I
+> understand what you're trying to do. Thanks!
+>
+I need the ability to set a KUnit test failure from outside the KUnit
+code so that a test that does not expect a KASAN failure, but reaches
+the point in the KASAN code where a report is printed will properly
+fail due to this found KASAN failure.
 
-I'm not in a position to test this myself.  I would expect that if a
-device lacks a PCI power management capability, we could still use
-ACPI power management.  My idea with this patch was to simulate that
-situation by clearing pdev->pm_cap so we treat the GPU as though it
-had no PCI PM capability.
+> >  /**
+> >   * struct kunit_resource - represents a *test managed resource*
+> >   * @data: for the user to store arbitrary data.
+> > diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> > index 86a4d9ca0a45..3f927ef45827 100644
+> > --- a/lib/kunit/test.c
+> > +++ b/lib/kunit/test.c
+> > @@ -10,11 +10,12 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/kref.h>
+> >  #include <linux/sched/debug.h>
+> > +#include <linux/sched.h>
+> >
+> >  #include "string-stream.h"
+> >  #include "try-catch-impl.h"
+> >
+> > -static void kunit_set_failure(struct kunit *test)
+> > +void kunit_set_failure(struct kunit *test)
+> >  {
+> >       WRITE_ONCE(test->success, false);
+> >  }
+> > @@ -237,6 +238,10 @@ static void kunit_try_run_case(void *data)
+> >       struct kunit_suite *suite = ctx->suite;
+> >       struct kunit_case *test_case = ctx->test_case;
+> >
+> > +#if (IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT))
+> > +     current->kunit_test = test;
+> > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT) */
+> > +
+> >       /*
+> >        * kunit_run_case_internal may encounter a fatal error; if it does,
+> >        * abort will be called, this thread will exit, and finally the parent
+> > @@ -590,6 +595,9 @@ void kunit_cleanup(struct kunit *test)
+> >               spin_unlock(&test->lock);
+> >               kunit_remove_resource(test, res);
+> >       }
+> > +#if (IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT))
+> > +     current->kunit_test = NULL;
+>
+> As per patch 1, I'd suggest changing here and elsewhere to
+> "IS_ENABLED(CONFIG_KUNIT)".
+>
+"IS_ENABLED(CONFIG_KUNIT)" does not work because KASAN is built-in so
+it can't rely on modules so this patchset relies on KUnit being
+built-in.
 
-> And would the parent bus even go into D3hot if it knows one of its
-> children is still at D0? Because that's what the result of that
-> would be as well, no? And I know that if the bus stays in D0, that
-> it has a negative impact on power consumption.
-
-I don't understand this part.  Are you saying you want the GPU in D0
-and the upstream component (root port or switch) in D3hot?
-
-I think the rule for the upstream component (the root port or switch
-leading to the GPU) is in PCIe spec 5.0, sec 5.3.2.  Basically it says
-the upstream component cannot be in a lower power state than the GPU,
-i.e.,
-
-  - if the GPU is in D0, the upstream component must be in D0;
-  - if the GPU is in D2, the upstream component can be in D0-D2;
-  - if the GPU is in D3hot, the upstream component can be in D0-D3hot
-
-So I don't understand how we *could* have the GPU in D0 and the
-upstream component in D3hot.
-
-> Anyway, I will try that out, I am just not seeing how that would help.
-> 
-> > diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> > index b65ae817eabf..2ad825e8891c 100644
-> > --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-> > +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-> > @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
-> >         kfree(drm);
+> > +#endif /* IS_ENABLED(CONFIG_KASAN) && IS_BUILTIN(CONFIG_KUNIT)*/
+> >  }
+> >  EXPORT_SYMBOL_GPL(kunit_cleanup);
+> >
+> > diff --git a/lib/test_kasan.c b/lib/test_kasan.c
+> > index 3872d250ed2c..cf73c6bee81b 100644
+> > --- a/lib/test_kasan.c
+> > +++ b/lib/test_kasan.c
+> > @@ -23,6 +23,43 @@
+> >
+> >  #include <asm/page.h>
+> >
+> > +#include <kunit/test.h>
+> > +
+> > +struct kunit_resource resource;
+> > +struct kunit_kasan_expectation fail_data;
+> > +
+> > +#define KUNIT_SET_KASAN_DATA(test) do { \
+> > +     fail_data.report_expected = true; \
+> > +     fail_data.report_found = false; \
+> > +     kunit_add_named_resource(test, \
+> > +                             NULL, \
+> > +                             NULL, \
+> > +                             &resource, \
+> > +                             "kasan_data", &fail_data); \
+> > +} while (0)
+> > +
+> > +#define KUNIT_DO_EXPECT_KASAN_FAIL(test, condition) do { \
+> > +     struct kunit_resource *resource; \
+> > +     struct kunit_kasan_expectation *kasan_data; \
+> > +     condition; \
+> > +     resource = kunit_find_named_resource(test, "kasan_data"); \
+> > +     kasan_data = resource->data; \
+> > +     KUNIT_EXPECT_EQ(test, \
+> > +                     kasan_data->report_expected, \
+> > +                     kasan_data->report_found); \
+> > +     kunit_put_resource(resource); \
+> > +} while (0)
+> > +
+> > +/**
+> > + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
+> > + * not cause a KASAN error.
+> > + *
+> > + */
+> > +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do { \
+> > +     KUNIT_SET_KASAN_DATA(test); \
+> > +     KUNIT_DO_EXPECT_KASAN_FAIL(test, condition); \
+> > +} while (0)
+> > +
+> >  /*
+> >   * Note: test functions are marked noinline so that their names appear in
+> >   * reports.
+> > diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> > index 5ef9f24f566b..ef3d0f54097e 100644
+> > --- a/mm/kasan/report.c
+> > +++ b/mm/kasan/report.c
+> > @@ -32,6 +32,8 @@
+> >
+> >  #include <asm/sections.h>
+> >
+> > +#include <kunit/test.h>
+> > +
+> >  #include "kasan.h"
+> >  #include "../slab.h"
+> >
+> > @@ -455,12 +457,38 @@ static bool report_enabled(void)
+> >       return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
 > >  }
 > >
-> > +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
+> > +#if IS_BUILTIN(CONFIG_KUNIT)
+>
+> again we could tweak this to IS_ENABLED(CONFIG_KUNIT); BTW
+> the reason we can compile kunit as a module for these tests
+> is the KASAN tests are tristate themselves. If they were
+> builtin only it wouldn't be possible to build kunit as
+> a module.
+>
+> > +void kasan_update_kunit_status(struct kunit *cur_test)
 > > +{
-> > +       struct pci_dev *pdev = drm_dev->pdev;
-> > +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
+> > +     struct kunit_resource *resource;
+> > +     struct kunit_kasan_expectation *kasan_data;
 > > +
-> > +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
-> > +               return;
+> > +     if (kunit_find_named_resource(cur_test, "kasan_data")) {
+> > +             resource = kunit_find_named_resource(cur_test, "kasan_data");
+> > +             kasan_data = resource->data;
+> > +             kasan_data->report_found = true;
 > > +
-> > +       switch (bridge->device) {
-> > +       case 0x1901:
-> > +               STASH->pm_cap = pdev->pm_cap;
-> > +               pdev->pm_cap = 0;
-> > +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
-> > +               break;
-> > +       }
+> > +             if (!kasan_data->report_expected)
+> > +                     kunit_set_failure(current->kunit_test);
+> > +             else
+> > +                     return;
+> > +     } else
+> > +             kunit_set_failure(current->kunit_test);
 > > +}
+> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
 > > +
-> >  static int nouveau_drm_probe(struct pci_dev *pdev,
-> >                              const struct pci_device_id *pent)
+> >  void kasan_report_invalid_free(void *object, unsigned long ip)
 > >  {
-> > @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
-> >         if (ret)
-> >                 goto fail_drm_dev_init;
+> >       unsigned long flags;
+> >       u8 tag = get_tag(object);
 > >
-> > +       quirk_broken_nv_runpm(drm_dev);
-> >         return 0;
+> >       object = reset_tag(object);
+> > +
+> > +#if IS_BUILTIN(CONFIG_KUNIT)
+>
+> same comment as above.
+>
+> > +     if (current->kunit_test)
+> > +             kasan_update_kunit_status(current->kunit_test);
+> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
+> > +
+> >       start_report(&flags);
+> >       pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
+> >       print_tags(tag, object);
+> > @@ -481,6 +509,11 @@ void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned lon
+> >       if (likely(!report_enabled()))
+> >               return;
 > >
-> >  fail_drm_dev_init:
-> > @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
-> >  {
-> >         struct drm_device *dev = pci_get_drvdata(pdev);
+> > +#if IS_BUILTIN(CONFIG_KUNIT)
+>
+> here too.
+>
+> > +     if (current->kunit_test)
+> > +             kasan_update_kunit_status(current->kunit_test);
+> > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
+> > +
+> >       disable_trace_on_warning();
 > >
-> > +       /* If we disabled PCI power management, restore it */
-> > +       if (STASH->pm_cap)
-> > +               pdev->pm_cap = STASH->pm_cap;
-> >         nouveau_drm_device_remove(dev);
-> >         pci_disable_device(pdev);
-> >  }
+> >       tagged_addr = (void *)addr;
+> > --
+> > 2.25.1.696.g5e7596f4ac-goog
 > >
-> 
+> >
+
+-- 
+Best,
+Patricia
