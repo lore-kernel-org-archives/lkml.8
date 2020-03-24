@@ -2,95 +2,175 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A00C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DC5C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBEFE2076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9A842076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:31:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="c5Q4svt2"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AKITq8tQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbgCXRbZ (ORCPT
+        id S1727681AbgCXRb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:31:25 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:44158 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRbZ (ORCPT
+        Tue, 24 Mar 2020 13:31:57 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:52342 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727223AbgCXRb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:31:25 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OHEvCk005056;
-        Tue, 24 Mar 2020 17:31:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=wIeRi4ao8R5b/EkoPra/HUsoNLDCY4TwY0SR/Vhrc+0=;
- b=c5Q4svt25cC7qi2Iw+EfmWqN5wZPEMEtLNnFz28V0tf5c4+wbt4wMrflyu/zY4vMTQyl
- 5t86WanbVUQe/wg8moPrvNrmj5amiVxmKvB7a7QsvwT5tijnnJoS1PJAoStyqNQYwl0v
- 3u6oVIbp3jc/z5VZjopTnV1giOnD0Oy+Y+aRS8mqZO4TyympOCKfjFCXeoIu5AJh4pfk
- HvkjqMISeQyP1PPtv/tfANcypyjxyU7P8cc4jAJ7Yb6+YIBVQm+J7KegZBPaO0pfJGfo
- 89riBNdBo/PkJ69auZQ1sxSJsMULa4kzTOI/VKherv5Xo6eS561PMns8DZK2bZdETUBg uw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2yx8ac2ng1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 17:31:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OHJsXd076303;
-        Tue, 24 Mar 2020 17:29:05 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2yxw931bkw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 17:29:05 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02OHT2qd012403;
-        Tue, 24 Mar 2020 17:29:02 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Mar 2020 10:29:01 -0700
-Date:   Tue, 24 Mar 2020 20:28:50 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     "John B. Wyatt IV" <jbwyatt4@gmail.com>
-Cc:     outreachy-kernel@googlegroups.com,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Forest Bond <forest@alittletooquiet.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Quentin Deslandes <quentin.deslandes@itdev.co.uk>,
-        Colin Ian King <colin.king@canonical.com>,
-        Malcolm Priestley <tvboxspy@gmail.com>,
-        Oscar Carter <oscar.carter@gmx.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] staging: vt6656: change function from always
- returning 0 to void
-Message-ID: <20200324172850.GG26299@kadam>
-References: <20200324064545.1832227-1-jbwyatt4@gmail.com>
+        Tue, 24 Mar 2020 13:31:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585071115;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
+        b=AKITq8tQjo03kFRbQIXetmVvduN8mg9sjNRQQBSqGsDYlHSXmTmmNEZ4F5+2Eb9RaDQT1p
+        iDcb4KZZedekvdUaKY7Y5iGpLmz+/7Y7UR97MXogyK2n+yXOk1btE/gf3j1KuWT1Wuou4f
+        +Lyxez2D6Xeconu4Q2ZI7rKXaA4dd14=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-Wdxi6ELqO4mr7BmbCNtlgw-1; Tue, 24 Mar 2020 13:31:53 -0400
+X-MC-Unique: Wdxi6ELqO4mr7BmbCNtlgw-1
+Received: by mail-qv1-f72.google.com with SMTP id ee5so16371756qvb.23
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PJHNzYzu8vMBhLyQungT7C1b2BGUh9KVFCtBdVqVQ8A=;
+        b=ZIycLN34ijF/cqlN0QG3kQseeY2pOxU3DWkz4q04e9TemCxP1wT8OXw4aZbENrnndG
+         hbtQFeAQ284+PfTrS+FHEvBFSvlA7w1U5YRcfvQJOXBMAAwpdM2fJ+60GBLt83tLTjjK
+         J5kgNVZ6OSfk4G1MXWYsrjSD75qcEXjs7IXU3yBx8H59injEJ9r2wLfyV8utV7SbHfld
+         ghWQIuPtsika/lk6wWEgif/tpT5gb/eQ2eAgmIgtK3Yjz9mYH48IA7atOPHF3RRi/kSL
+         8Tm2sj7u8T8CzjVBfhL1QXXMUcAQ1+vhFY80iu0U0fwjrubYt3MZ9WBmOgx08XZmcA7N
+         jUrQ==
+X-Gm-Message-State: ANhLgQ2MTE/8dOx6ft7zjEsBEu7BOCsovhNVRU2kXAIPzPUOqbn9PvkL
+        3v9MM2KJJhuBtKh2IHNkV8/y9ZmImzF9+6Z69Zmfd29TPwBN9dLK5DeXRBrnCcRkIqAuayPO1aB
+        jC8UFsaS302O6QyxpbktH0SbzBQKvmYlc0ewL/kVX
+X-Received: by 2002:a37:a151:: with SMTP id k78mr15810451qke.62.1585071113023;
+        Tue, 24 Mar 2020 10:31:53 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsT3+/NsUg5fFEiC7sl/xL5+Je1Wup8Qo3qgB+ijo3E137wcTx+VJFpMve9UNQQtDpuEDBDe/wRAdiHFGyqiS4=
+X-Received: by 2002:a37:a151:: with SMTP id k78mr15810420qke.62.1585071112699;
+ Tue, 24 Mar 2020 10:31:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324064545.1832227-1-jbwyatt4@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=937 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003240089
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240089
+References: <20200310192627.437947-1-kherbst@redhat.com> <20200320221931.GA23783@google.com>
+ <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+In-Reply-To: <CACO55tsamLG5WE16U=psJpRWfz=7Fy5K8haGKHnhic1h0WAmqA@mail.gmail.com>
+From:   Karol Herbst <kherbst@redhat.com>
+Date:   Tue, 24 Mar 2020 18:31:08 +0100
+Message-ID: <CACO55ttvb5uC37ORiLuVBidhfSn-+WSReJ+aCfWR3k-fLtPBnA@mail.gmail.com>
+Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fold these two patches together so its just one patch.
+On Sat, Mar 21, 2020 at 2:02 AM Karol Herbst <kherbst@redhat.com> wrote:
+>
+> On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >
+> > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
+> > > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+> > > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+> > >
+> > > Depending on the used kernel there might be messages like those in demsg:
+> > >
+> > > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+> > > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+> > > space inaccessible)"
+> > > followed by backtraces of kernel crashes or timeouts within nouveau.
+> > >
+> > > It's still unkown why this issue exists, but this is a reliable workaround
+> > > and solves a very annoying issue for user having to choose between a
+> > > crashing kernel or higher power consumption of their Laptops.
+> >
+> > Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
+> > list discussion.  Can you include links to some of that?
+> >
+> > IIUC this basically just turns off PCI power management for the GPU.
+> > Can you do that with something like the following?  I don't know
+> > anything about DRM, so I don't know where you could save the pm_cap,
+> > but I'm sure the driver could keep it somewhere.
+> >
+>
+> Sure this would work? From a quick look over the pci code, it looks
+> like a of code would be skipped we really need, like the platform code
+> to turn off the GPU via ACPI. But I could also remember incorrectly on
+> how all of that worked again. I can of course try and see what the
+> effect of this patch would be. And would the parent bus even go into
+> D3hot if it knows one of its children is still at D0? Because that's
+> what the result of that would be as well, no? And I know that if the
+> bus stays in D0, that it has a negative impact on power consumption.
+>
+> Anyway, I will try that out, I am just not seeing how that would help.
+>
 
-regards,
-dan carpenter
+so it seems like that has worked unless I screwed up locally. Will do
+some proper testing and then I think we won't need to go through the
+pci tree anymore as no changes are required there with that.
+
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > index b65ae817eabf..2ad825e8891c 100644
+> > --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> > @@ -618,6 +618,23 @@ nouveau_drm_device_fini(struct drm_device *dev)
+> >         kfree(drm);
+> >  }
+> >
+> > +static void quirk_broken_nv_runpm(struct drm_device *drm_dev)
+> > +{
+> > +       struct pci_dev *pdev = drm_dev->pdev;
+> > +       struct pci_dev *bridge = pci_upstream_bridge(pdev);
+> > +
+> > +       if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
+> > +               return;
+> > +
+> > +       switch (bridge->device) {
+> > +       case 0x1901:
+> > +               STASH->pm_cap = pdev->pm_cap;
+> > +               pdev->pm_cap = 0;
+> > +               NV_INFO(drm_dev, "Disabling PCI power management to avoid bug\n");
+> > +               break;
+> > +       }
+> > +}
+> > +
+> >  static int nouveau_drm_probe(struct pci_dev *pdev,
+> >                              const struct pci_device_id *pent)
+> >  {
+> > @@ -699,6 +716,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+> >         if (ret)
+> >                 goto fail_drm_dev_init;
+> >
+> > +       quirk_broken_nv_runpm(drm_dev);
+> >         return 0;
+> >
+> >  fail_drm_dev_init:
+> > @@ -735,6 +753,9 @@ nouveau_drm_remove(struct pci_dev *pdev)
+> >  {
+> >         struct drm_device *dev = pci_get_drvdata(pdev);
+> >
+> > +       /* If we disabled PCI power management, restore it */
+> > +       if (STASH->pm_cap)
+> > +               pdev->pm_cap = STASH->pm_cap;
+> >         nouveau_drm_device_remove(dev);
+> >         pci_disable_device(pdev);
+> >  }
+> >
 
