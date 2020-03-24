@@ -2,99 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4187C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C838C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBCD2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 424252070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Me4q8UB5"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="C3Fefy49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgCXA3x (ORCPT
+        id S1727084AbgCXAmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:29:53 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:41623 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726955AbgCXA3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:29:53 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 67f2f08d;
-        Tue, 24 Mar 2020 00:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=U3g+Qd4kxYtXwogFayZzRbGY6bY=; b=Me4q8U
-        B5878gSo1i//NnY9TZKfxlVsiz4h7gGHs+Vyphm5oOsVm2Jsrd4OFre4I+dJXm+P
-        4pIczEroj/c1eaqtqIid2P4upMoi5yrhq+PFlQ9gLZkhAZbHenimxgmu8Wd2r6sE
-        avpePBIofAUfQDQiG6VsZDIhVW4Qd5z+0DSIjtxPK75FGDXKNzR4+CX6K1tijvdO
-        axpAPD6WniGnW816r1GAz4scQ0bU1L5SZttbM2mmttuXnESNLsY4L5THoaCHcK6Y
-        E9L33eRRJEMyGw/RqG0hYJSNqi6v45CsVpEhOhdC6JOSK2xk/vl6EK4OBejYJzu3
-        MywHS/OYEplBUdww==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 79ea222a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Tue, 24 Mar 2020 00:22:46 +0000 (UTC)
-Received: by mail-io1-f49.google.com with SMTP id h8so16404623iob.2;
-        Mon, 23 Mar 2020 17:29:49 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ21ruVrMQuF+xir2Y2w8zrTMXA2B/PZzN0XMkpct8F9YMjyuGuf
-        nAxKP2Kb0mppkkpba9DmrSWMcCxQA07BfTz2Bq8=
-X-Google-Smtp-Source: ADFU+vuIgqp3qi0NeoXrARe9XukRA7tgPq6DDZ/UWyvNDJcS924QH/wQYr2KPbvV0MaMeG8Mb5QDbAfOYGItqG57vlc=
-X-Received: by 2002:a02:6241:: with SMTP id d62mr4216457jac.86.1585009788671;
- Mon, 23 Mar 2020 17:29:48 -0700 (PDT)
+        Mon, 23 Mar 2020 20:42:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36101 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727005AbgCXAmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:42:08 -0400
+Received: from hanvin-mobl2.amr.corp.intel.com (jfdmzpr05-ext.jf.intel.com [134.134.139.74])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02O0flDr2861616
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Mon, 23 Mar 2020 17:41:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02O0flDr2861616
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020022001; t=1585010513;
+        bh=ke1kAyziepiePyP+htvTDh7NGoJIOKiP+G7v0bUp81s=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=C3Fefy49DZFK8vi6XqobK//wbTNg4mYvo1F8yH98i/BrhEpo2+7yCaIDcRTYSyh42
+         vTnwAFRC4n4nxdu7mH9SeVCTmCakIf23XHmec5OAtdwoDihtjSq1z/0fuX0NupFccN
+         /tipUCpRX5bevv9TmnkNdlnaaDZzO+2umCTe7L9AvXjAWKVtJRY4vi85B0ol1fuZhb
+         OUA0o+W493WOyyA7fHEEUaXRn3pl8iOu/PYekYF1p33KZC3uNPP5j7mo3CXhyYo3wt
+         +4UmqmGx9XKc5y7FMAxt742IH86FncIyvHf3dsYwj9AgtpIEhEYDhh/lA31UXOq7TG
+         9rErR7oxqlMiQ==
+Subject: Re: [PATCH] Documentation: x86: exception-tables: document
+ CONFIG_BUILDTIME_TABLE_SORT
+To:     Nick Desaulniers <ndesaulniers@google.com>, corbet@lwn.net
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200323232214.24939-1-ndesaulniers@google.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <6e26c798-1439-2bbd-6801-8fd21c4e6926@zytor.com>
+Date:   Mon, 23 Mar 2020 17:41:46 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200324001358.4520-1-masahiroy@kernel.org>
-In-Reply-To: <20200324001358.4520-1-masahiroy@kernel.org>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Mon, 23 Mar 2020 18:29:37 -0600
-X-Gmail-Original-Message-ID: <CAHmME9rdoo2Q3n4YA59GrVEh8uaCY_0-q+QVghjgG3WwcHkmug@mail.gmail.com>
-Message-ID: <CAHmME9rdoo2Q3n4YA59GrVEh8uaCY_0-q+QVghjgG3WwcHkmug@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] x86: remove always-defined CONFIG_AS_* options
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Ingo Molnar <mingo@redhat.com>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        NeilBrown <neilb@suse.de>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200323232214.24939-1-ndesaulniers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 6:15 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
->
-> arch/x86/Makefile tests instruction code by $(call as-instr, ...)
->
-> Some of them are very old.
-> For example, the check for CONFIG_AS_CFI dates back to 2006.
->
-> We raise GCC versions from time to time, and we clean old code away.
-> The same policy applied to binutils.
->
-> The current minimal supported version of binutils is 2.21
->
-> This is new enough to recognize the instruction in most of
-> as-instr calls.
->
-> If this series looks good, how to merge it?
-> Via x86 tree or maybe crypto ?
+On 2020-03-23 16:22, Nick Desaulniers wrote:
+> Provide more information about __ex_table sorting post link.
+> 
+> The exception tables and fixup tables use a commonly recurring pattern
+> in the kernel of storing the address of labels as date in custom ELF
+> sections, then finding these sections, iterating elements within them,
+> and possibly revisiting them or modifying the data at these addresses.
+> 
+> Sorting readonly arrays to minimize runtime penalties is quite clever.
+> 
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+> ---
+>  Documentation/x86/exception-tables.rst | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/x86/exception-tables.rst b/Documentation/x86/exception-tables.rst
+> index ed6d4b0cf62c..15455b2f7ba8 100644
+> --- a/Documentation/x86/exception-tables.rst
+> +++ b/Documentation/x86/exception-tables.rst
+> @@ -257,6 +257,9 @@ the fault, in our case the actual value is c0199ff5:
+>  the original assembly code: > 3:      movl $-14,%eax
+>  and linked in vmlinux     : > c0199ff5 <.fixup+10b5> movl   $0xfffffff2,%eax
+>  
+> +If the fixup was able to handle the exception, control flow may be returned
+> +to the instruction after the one that triggered the fault, ie. local label 2b.
+> +
+>  The assembly code::
+>  
+>   > .section __ex_table,"a"
+> @@ -344,3 +347,9 @@ pointer which points to one of:
+>       it as special.
+>  
+>  More functions can easily be added.
+> +
+> +CONFIG_BUILDTIME_TABLE_SORT allows the __ex_table section to be sorted post
+> +link of the kernel image, via a host utility scripts/sorttable. It will set the
+> +symbol main_extable_sort_needed to 0, avoiding sorting the __ex_table section
+> +at boot time. With the exception table sorted, at runtime when an exception
+> +occurs we can quickly lookup the __ex_table entry via binary search.
+> 
 
-This series looks fine, but why is it still incomplete? That is, it's
-missing your drm commit plus the 4 I layered on top for moving to a
-Kconfig-based approach and accounting for the bump to binutils 2.23.
-Everything is now rebased here:
-https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
+It is more than that. It not only saves the boot execution time needed
+to sort the table, but it is required for early exception handling to
+work -- and in the x86 code, we use the exception handling *extremely*
+early (on i386 before paging is even turned on!), long before the kernel
+would have had any opportunity to sort it.
 
-Would you be up for resubmitting those all together so we can handle
-this in one go?
+So it is not just performance; it is also a correctness issue.
 
-Jason
+	-hpa
+
