@@ -2,180 +2,122 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F1EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05530C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CF120722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:47:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15B32072E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:52:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KD8IVJgr"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KrsQC9UU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgCXAr6 (ORCPT
+        id S1727092AbgCXAwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:47:58 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:28448 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727022AbgCXAr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:47:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585010876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rl+mfoH6kKdfgtm7U9jABfG0W/KFJbp5iUypKMc+8BA=;
-        b=KD8IVJgrKezx2xPzOoD8LzLkgDnQTK9HfVJJeTq7e9VsDuKuGcS5bCpw6qXOf/9GrdIM0N
-        of1vwmDAUQ3owgnbIzT05mRiGuhGc04j4KofjFSs2tasH1T4uMpbxundPDJp2nPrN8hyUS
-        IjPiSmFDFIEvrq7J3UuPHPaYOrXwezU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-460-4bokuVKUPWStEWBXjW_wQg-1; Mon, 23 Mar 2020 20:47:55 -0400
-X-MC-Unique: 4bokuVKUPWStEWBXjW_wQg-1
-Received: by mail-wr1-f70.google.com with SMTP id j12so4497434wrr.18
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:47:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rl+mfoH6kKdfgtm7U9jABfG0W/KFJbp5iUypKMc+8BA=;
-        b=KDkyOiMGrvNpN7S5ZCMr7npMYN83PEEJy7QJ6ChZUSePthbZldm1aSZd79HID/Ug/d
-         PGIUfLOQn1NWkDetvpy+V+bGevwBuG8wzg9931rcGKut1FLzDBIUbWgIJyX04TEPFhsW
-         N5fkuLHkpjCxcEGhscH0n7J3LNzyqOoRyj5o4I/2A5SJl/8wMYpxURlPL3aZPjWQ9bqi
-         qG6A/bJM5uv1bVweyv7O9CrJ1CuW4y7hyOzul1/kSBGBdxxshjl2ndO3D3zu57w6E+Ko
-         A/f+SU+xtWmSm700+XX/mz3GsF7vyEA+0D76Aye7F0y1KUepoolaD+9xioCEn+FrolwG
-         nyEA==
-X-Gm-Message-State: ANhLgQ3n9sdfj2DnNbxrP/Q89LGFhMrgInLvpI90sEUR+QMGiTh6AJZn
-        Ha5MOE0ixUDx1iqqyzIiJjp+0VwvgYlLrLNySyLDtGioloSBVirIRZaoXGRYKyJK7FeTYO8e5Tx
-        HvV5Au15AnrzrTGfSBmOk3hq2
-X-Received: by 2002:a1c:648b:: with SMTP id y133mr2123673wmb.173.1585010873978;
-        Mon, 23 Mar 2020 17:47:53 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvX2iebmj1yEz+8fw55gpX59C/DxKKYCVUHxVRdmbbxEtTsRf+QwDxmDZ7QlKxFkIPN89pjvw==
-X-Received: by 2002:a1c:648b:: with SMTP id y133mr2123643wmb.173.1585010873527;
-        Mon, 23 Mar 2020 17:47:53 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7848:99b4:482a:e888? ([2001:b07:6468:f312:7848:99b4:482a:e888])
-        by smtp.gmail.com with ESMTPSA id z6sm24638859wrp.95.2020.03.23.17.47.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Mar 2020 17:47:52 -0700 (PDT)
-Subject: Re: [PATCH v3 06/37] KVM: x86: Consolidate logic for injecting page
- faults to L1
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com>
- <20200320212833.3507-7-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <5225c99c-8231-ae7a-62d3-f461749da7d0@redhat.com>
-Date:   Tue, 24 Mar 2020 01:47:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200320212833.3507-7-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
+        Mon, 23 Mar 2020 20:52:07 -0400
+Received: from mail-eopbgr20055.outbound.protection.outlook.com ([40.107.2.55]:62793
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726986AbgCXAwG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:52:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JGN3N/Jy/SjCVX6efEp6aNFaJrlgsZ3zR4m7yMANnO/7E0xhup6PBmK18k5XGd0XngUJQ8DymJ7P24hyBOpsNiAlxvLeV0SfNxIA6gsjeddRnnHZaUNySAu5bpw/Gqb6TFN3YloOurQJN6PcU1vkWKDx+Uyt8wDpYUFRCB6iBSY2QSUZRjx3BH8+xluzTLcRftGYMPLt1Fye9twlrRns5ojF1zjqP3/0ITboUjLadqac/1t4yNdFhI6E8jr2gmYUB/p+LTBCnB3XOkw3X88ajb5RIhxHGwcSOwtBlx2jX0VBb/ttR3YFCW1zSetjKbgOHgSEJgWUIWUqswXPcWXLkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ekRiOP5+uDcT0buFROQWK90bLw7SVOf4P1GWSugBm+4=;
+ b=n/8a34RjSWlUGMff0yukK6sn7UDRoEQDptxfdxlcBrxQCnF10N1IKo3dOYxOFzx3w2bESzIvqLpWYSpZ+xGRkjWIoTv5V0Ny6XDVAB9HDjyhOOmVZ3Lacp4eJoj2CLIOI20ltNw4F8IgNuoQxDXzSw+6M+CU1O93kmq31SX7O38wo9s/60GE3EyfHWQFOcCal+X0WHckmSeQuX72qFzVbS7ivJaaOLp+l7O4Kx5foUICpsDlChCE+WvQEGPXFn6AkTNcCM1Ms23/jick0IjympElgeU1/BXx2qnOdFDdMpsYzHVZGJyhYZTNRyAalhcntyj7YOK+KVX+7c7jhOtmIQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ekRiOP5+uDcT0buFROQWK90bLw7SVOf4P1GWSugBm+4=;
+ b=KrsQC9UUX4q9YsRNHbxMdGh8FUZx01wXln4EWJRnlJfAZ6Nqd3R1gEagWUr/iF/ha5wboFy7ysivtHpvYv7M23RSukj1cGzvVBCg+InkYIFe2CpZk/TF94cjpAhzv1NhwZegxBkSyiUvuDhRC3xvbXklV2tJ8g5fC5BKsjYumGw=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3914.eurprd04.prod.outlook.com (52.134.71.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Tue, 24 Mar 2020 00:52:01 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
+ 00:52:01 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Horia Geanta <horia.geanta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
+Thread-Topic: [PATCH V3 2/3] thermal: imx8mm: Add i.MX8MP support
+Thread-Index: AQHWAQ+PMwlXAHkCzkSegBP0Of4mRKhWN38AgACy3VA=
+Date:   Tue, 24 Mar 2020 00:52:01 +0000
+Message-ID: <DB3PR0402MB39163E02D851A95D843B1465F5F10@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1584966504-21719-1-git-send-email-Anson.Huang@nxp.com>
+ <1584966504-21719-2-git-send-email-Anson.Huang@nxp.com>
+ <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
+In-Reply-To: <644b108e-596c-64d6-9693-80ac7f706dc7@linaro.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fd79f8e9-185c-49dd-751c-08d7cf8d9079
+x-ms-traffictypediagnostic: DB3PR0402MB3914:|DB3PR0402MB3914:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3914928FD8763E2295637C26F5F10@DB3PR0402MB3914.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 03524FBD26
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(346002)(39860400002)(366004)(33656002)(110136005)(7696005)(4326008)(52536014)(55016002)(9686003)(478600001)(5660300002)(44832011)(186003)(316002)(26005)(71200400001)(4744005)(76116006)(6506007)(53546011)(64756008)(7416002)(66946007)(66476007)(66556008)(66446008)(81166006)(81156014)(2906002)(86362001)(8676002)(8936002)(921003)(32563001)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3914;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: MA8ua5c76kn4Wqcb4M+HBlHHxn342mRLpN9bh4SXLT7TP5GNl56yUeXpPu3ytbcxEzYsTJupHLr/yVyJYeD6KM1of48vzcN3BN+UvcRFg+95m9zLYEgzGkefb5k37Fh6hYYFNNaiGleQZGh14REOSDunVjWBWn5uZszv5mvKdpgG2KGQcgWrWb2a0sbRXtpjcwHZUi+iIZjqabXU8+SI5+sZ/RgoQ6gVGswA90a6D8I/rcHt5fijO3EOqXhXtPCUwjqsw4d6ySWR8q2pZD/DdUVuBjKazGBoQ9zZmiKfKHEM7x32N50n8mFiKLPiUC6AJQn8WJDryC7n5E0t8RyviJ+jj6quTgG3rv0xk+LiY5+ZsY0iWUOXtB+V60c/uOBpYd+2sSYG8hIDKFK+pSx/ioOHHkaVx7zjWabRDo3Adw+zF5E2cBPqW7/FJQqjX8QwUGK5aw75qMjzz99N3UJcYuaiv01ptMXb03oc6Ex5IGxoeAMY9wvI5fhqip4goAJ1vGPJLYhAZm4hfg73jvJvqQ==
+x-ms-exchange-antispam-messagedata: mE0ScmSpE9xJOOLhxPecFFjbtHnow+ffC6Thh5zThMxA0DJ5UHD2Q1emK0TNjlinYzaEH368E2hyCeIZSBJSlhpDH+hlJtBlggyMQFOoDanxPYHA8NPiZXsQQCiA4S8fR6Bd8Ql4O/orhSMZjsry5Q==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fd79f8e9-185c-49dd-751c-08d7cf8d9079
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 00:52:01.6622
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aNoKTDtxd5jq91qG48Y7RgpjRydbU/GaFu4ejAm74+Y8YaYNRvU5T5J3Lf0kQWqpO8g0e3rTo8nVro+et6LppQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3914
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/03/20 22:28, Sean Christopherson wrote:
-> +void kvm_inject_l1_page_fault(struct kvm_vcpu *vcpu,
-> +			      struct x86_exception *fault)
-> +{
-> +	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
-> +}
-> +
->  bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
->  				    struct x86_exception *fault)
->  {
-> @@ -619,7 +625,7 @@ bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
->  	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
->  		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
->  	else
-> -		vcpu->arch.mmu->inject_page_fault(vcpu, fault);
-> +		kvm_inject_l1_page_fault(vcpu, fault);
->  
->  	return fault->nested_page_fault;
-
-This all started with "I don't like the name of the function" but
-thinking more about it, we can also write this as
-
-	if (mmu_is_nested(vcpu) && !fault->nested_page_fault)
-		vcpu->arch.walk_mmu->inject_page_fault(vcpu, fault);
-	else
-		vcpu->arch.mmu->inject_page_fault(vcpu, fault);
-
-Now, if !mmu_is_nested(vcpu) then walk_mmu == mmu, so it's much simpler
-up until this patch:
-
-	fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu : vcpu->arch.walk_mmu;
-	fault_mmu->inject_page_fault(vcpu, fault);
-
-(which also matches how fault->nested_page_fault is assigned to).
-In patch 7 we add the invalidation in kvm_inject_l1_page_fault, but
-is it necessary to do it only in the else?
-
-+	if (!vcpu->arch.mmu->direct_map &&
-+	    (fault->error_code & PFERR_PRESENT_MASK))
-+		vcpu->arch.mmu->invlpg(vcpu, fault->address,
-+				       vcpu->arch.mmu->root_hpa);
-+
- 	vcpu->arch.mmu->inject_page_fault(vcpu, fault);
- }
- 
-The direct_map check is really just an optimization to avoid a
-retpoline if ->invlpg is nonpaging_invlpg.  We can change it to
-!vcpu->arch.mmu->invlpg if nonpaging_invlpg is replaced with NULL,
-and then the same "if" condition can also be used for the nested_mmu
-i.e. what patch 7 writes as
-
-+		/*
-+		 * No need to sync SPTEs, the fault is being injected into L2,
-+		 * whose page tables are not being shadowed.
-+		 */
- 		vcpu->arch.nested_mmu.inject_page_fault(vcpu, fault);
-
-
-Finally, patch 7 also adds a tlb_flush_gva call which is already present
-in kvm_mmu_invlpg, and this brings the final form to look like this:
-
-bool kvm_inject_emulated_page_fault(struct kvm_vcpu *vcpu,
-                                    struct x86_exception *fault)
-{
-        struct kvm_mmu *fault_mmu;
-        WARN_ON_ONCE(fault->vector != PF_VECTOR);
-
-        fault_mmu = fault->nested_page_fault ? vcpu->arch.mmu : vcpu->arch.walk_mmu;
-
-        /*
-         * Invalidate the TLB entry for the faulting address, if it exists,
-         * else the access will fault indefinitely (and to emulate hardware).
-         */
-        if (fault->error_code & PFERR_PRESENT_MASK)
-                __kvm_mmu_invlpg(vcpu, fault_mmu, fault->address);
-
-        fault_mmu->inject_page_fault(vcpu, fault);
-        return fault->nested_page_fault;
-}
-
-This will become a formal mini-series replacing patches 6 and 7
-after I test it, so no need to do anything on your part.
-
-Paolo
-
+SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWMyAyLzNdIHRoZXJtYWw6IGlteDht
+bTogQWRkIGkuTVg4TVAgc3VwcG9ydA0KPiANCj4gT24gMjMvMDMvMjAyMCAxMzoyOCwgQW5zb24g
+SHVhbmcgd3JvdGU6DQo+ID4gaS5NWDhNUCBzaGFyZXMgc2FtZSBUTVUgd2l0aCBpLk1YOE1NLCB0
+aGUgb25seSBkaWZmZXJlbmNlIGlzIGkuTVg4TVANCj4gPiBoYXMgdHdvIHRoZXJtYWwgc2Vuc29y
+cyB3aGlsZSBpLk1YOE1NIE9OTFkgaGFzIG9uZSwgYWRkIG11bHRpcGxlDQo+ID4gc2Vuc29ycyBz
+dXBwb3J0IGZvciBpLk1YOE1NIFRNVSBkcml2ZXIuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
+bnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNp
+bmNlIFYyOg0KPiA+IAktIEZpeCBidWlsZCB3YXJuaW5nIGFib3V0IHRlc3RfYml0IHNlY29uZCBh
+cmd1bWVudCB0eXBlLg0KPiA+IC0tLQ0KPiANCj4gUGxlYXNlLCBqdXN0IHNlbmQgYSBmaXggb24g
+dG9wIG9mIHRoaXMgcGF0Y2ggYmVjYXVzZSB0aGUgc2VyaWVzIGlzIGFscmVhZHkNCj4gbWVyZ2Vk
+Lg0KDQpUaGUgcGF0Y2ggMS8zLCAyLzMgYXJlIG1lcmdlZCwgd2lsbCB5b3UgcGljayB1cCB0aGUg
+My8zPw0KDQpUaGFua3MsDQpBbnNvbg0K
