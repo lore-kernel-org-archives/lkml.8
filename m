@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98225C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6573C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB20206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 880E8208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055985;
-	bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
+	s=default; t=1585055988;
+	bh=7nN6GI7/68woCdwk5Vi3mTAd6ov6wAQsoBiRvtFyc1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHPOv8Ef/726tQkjGTOfYaXWzppXaAHQaHM4VkbPP8OQDFkc4bZUt8TBUBHZjUktU
-	 vJv+NqXQmmSiUzqwS3w8XcTjIfIg8CXFgVdA6Jk7hfHovxbSS2lpPGrZlWtlJEpMkj
-	 LRprhlkj3noGETKhobb7zKbcGQCd/mONjhPJ3FSU=
+	b=t1btDSXE1M/sakpdFZh0dXm7HSXiCX1nt0C46fRfOm73TfUZ/lSqiKdLQR7qrGfkE
+	 8oErGwJHre4KXonWM1J6/yh3tYEGYYr9jzTuIJzd0YtL5TcP58A8edD7grJB0nojqY
+	 a6yWutyH5RTJDDlcJ0YcbFtcNIPNounbu8T8l3MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbgCXNTn (ORCPT
+        id S1728056AbgCXNTr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40482 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgCXNTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:40 -0400
+        id S1728857AbgCXNTn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5202E208E0;
-        Tue, 24 Mar 2020 13:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC4AA208FE;
+        Tue, 24 Mar 2020 13:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055979;
-        bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
+        s=default; t=1585055982;
+        bh=7nN6GI7/68woCdwk5Vi3mTAd6ov6wAQsoBiRvtFyc1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PNkbOZmEVJKmqVnEiXZNwG+/u/wEo2TjBIU28JWsR5iKW0iqzbtCqBnGviOnPkoAr
-         4ybkORJzrGBUFkp9aAeYGJyeUIsYb5twpKjUM4XRM7A+wVTrQ/R1jD86BexF8apQJs
-         aPs1clkPSRg4H04KaXRDRl+JavuCbUwa3x7rt2AQ=
+        b=0qvplBYZ4s4AUtDCjOPM/Rm91QL5cdyMqpeRvYLJ0vlY67rwF8D46LaYkpBCDiOdT
+         gzdzv/aC+7gt2jGOZ9JiHZWJSLeaykQSYg1x1aA2BI3NkkHua0a7TpF6YpI74aHdnE
+         Gs1TNgim1XyvCefN15IhYuLMM5fpZu/pj+Hlp3FE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, russianneuromancer@ya.ru,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 5.4 038/102] usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
-Date:   Tue, 24 Mar 2020 14:10:30 +0100
-Message-Id: <20200324130810.637352654@linuxfoundation.org>
+        stable@vger.kernel.org, Tom St Denis <tom.stdenis@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 081/102] drm/amd/amdgpu: Fix GPR read from debugfs (v2)
+Date:   Tue, 24 Mar 2020 14:11:13 +0100
+Message-Id: <20200324130814.746983505@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,52 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Tom St Denis <tom.stdenis@amd.com>
 
-commit 75d7676ead19b1fbb5e0ee934c9ccddcb666b68c upstream.
+commit 5bbc6604a62814511c32f2e39bc9ffb2c1b92cbe upstream.
 
-We have been receiving bug reports that ethernet connections over
-RTL8153 based ethernet adapters stops working after a while with
-errors like these showing up in dmesg when the ethernet stops working:
+The offset into the array was specified in bytes but should
+be in terms of 32-bit words.  Also prevent large reads that
+would also cause a buffer overread.
 
-[12696.189484] r8152 6-1:1.0 enp10s0u1: Tx timeout
-[12702.333456] r8152 6-1:1.0 enp10s0u1: Tx timeout
-[12707.965422] r8152 6-1:1.0 enp10s0u1: Tx timeout
+v2:  Read from correct offset from internal storage buffer.
 
-This has been reported on Dell WD15 docks, Belkin USB-C Express Dock 3.1
-docks and with generic USB to ethernet dongles using the RTL8153
-chipsets. Some users have tried adding usbcore.quirks=0bda:8153:k to
-the kernel commandline and all users who have tried this report that
-this fixes this.
-
-Also note that we already have an existing NO_LPM quirk for the RTL8153
-used in the Microsoft Surface Dock (where it uses a different usb-id).
-
-This commit adds a NO_LPM quirk for the generic Realtek RTL8153
-0bda:8153 usb-id, fixing the Tx timeout errors on these devices.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=198931
+Signed-off-by: Tom St Denis <tom.stdenis@amd.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Cc: russianneuromancer@ya.ru
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200313120708.100339-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -381,6 +381,9 @@ static const struct usb_device_id usb_qu
- 	/* Realtek hub in Dell WD19 (Type-C) */
- 	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_debugfs.c
+@@ -694,11 +694,11 @@ static ssize_t amdgpu_debugfs_gpr_read(s
+ 	ssize_t result = 0;
+ 	uint32_t offset, se, sh, cu, wave, simd, thread, bank, *data;
  
-+	/* Generic RTL8153 based ethernet adapters */
-+	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
-+
- 	/* Action Semiconductor flash disk */
- 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
- 			USB_QUIRK_STRING_FETCH_255 },
+-	if (size & 3 || *pos & 3)
++	if (size > 4096 || size & 3 || *pos & 3)
+ 		return -EINVAL;
+ 
+ 	/* decode offset */
+-	offset = *pos & GENMASK_ULL(11, 0);
++	offset = (*pos & GENMASK_ULL(11, 0)) >> 2;
+ 	se = (*pos & GENMASK_ULL(19, 12)) >> 12;
+ 	sh = (*pos & GENMASK_ULL(27, 20)) >> 20;
+ 	cu = (*pos & GENMASK_ULL(35, 28)) >> 28;
+@@ -729,7 +729,7 @@ static ssize_t amdgpu_debugfs_gpr_read(s
+ 	while (size) {
+ 		uint32_t value;
+ 
+-		value = data[offset++];
++		value = data[result >> 2];
+ 		r = put_user(value, (uint32_t *)buf);
+ 		if (r) {
+ 			result = r;
 
 
