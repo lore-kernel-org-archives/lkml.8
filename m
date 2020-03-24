@@ -2,167 +2,137 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 416B9C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE3B5C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13C8B207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:50:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kcGNII9z"
+	by mail.kernel.org (Postfix) with ESMTP id A2A04207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:52:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727448AbgCXMuH (ORCPT
+        id S1727432AbgCXMv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:50:07 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34337 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbgCXMuG (ORCPT
+        Tue, 24 Mar 2020 08:51:59 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:2396 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727267AbgCXMv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:50:06 -0400
-Received: by mail-qk1-f194.google.com with SMTP id i6so9934693qke.1;
-        Tue, 24 Mar 2020 05:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Oxd53iX68NFjfCWz3pd0ZHCEAkaKEJ/HIu3Y9e6Inm4=;
-        b=kcGNII9z7piGjh7QUBOQC3g0oys4C+eYw+F6jyfoMSV7vkMoDOUo7c4P95goHN5Kn7
-         CXb+GOoKou0at2uw0qyLCcPrtLFP1tM5iwH142oG3MxRlLzzWkYcI/HCsfq7R8tSVLtS
-         3ym4jsvd5DpyPehremRfWqwfSXVKB9y+HGKoyKT0hpScrdbdDYFj7M5hc55IZ+MGEZq0
-         5JAzDH0AHdQKuzXaV7dPyHjZbTlnI2ln/Fjqcqxyf5vHpF3xhJskUAhTCCcrSZJNv08m
-         /TqzCshXeXJZZFMYrLNBTVhrc7DThN5+TqXhL4THNoc4dSFeoa46UY1MfpK4+W7KjZku
-         9WXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Oxd53iX68NFjfCWz3pd0ZHCEAkaKEJ/HIu3Y9e6Inm4=;
-        b=bTAS4y0zbfHRTemSbvPJFZMmetYzK7OlEnuNumFCPyypQISMX9ECdxdNuktNnJ1Vql
-         ew/Zh5TTR3ISZ1DHU1buLf2ojzV4olkSX0PR+zsvKAaBKR0WYwVkCqzx0Rg1IjgkL5KL
-         7Lu/i0QEo5EHickfzuq3DsUkTRsuYf8MYGqX1bu79S4p2qtDEAQcn+yeI/nVTVj9j7Sa
-         yFz1p3H2X9CPvSWMPjGLisN2yw2MGPTL8pWzzMSSjjabEJntOIYawup4gTrWObqobqgn
-         i4yKlBsjczTDnldIt2V+l+2gPZZqzoYaWmsn6tI8yzpGvJRE7Ec7oQlpUu2p7jOvl0tm
-         1pHA==
-X-Gm-Message-State: ANhLgQ0nGvSm+L0KjcLPIEi0K4WxIqRf+WiWXsgKVZObROHjfuQabD8Q
-        InzwXDdWNlyFum03ncCPKYA=
-X-Google-Smtp-Source: ADFU+vuxD35OxoRSnXUiwdzHhbyHkB9UQdLE2jLgUBAARHP3BSnQQkF7bbd/93MKr59e9qwZA6KtEA==
-X-Received: by 2002:a37:f511:: with SMTP id l17mr25463353qkk.479.1585054205330;
-        Tue, 24 Mar 2020 05:50:05 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id z6sm12559020qka.34.2020.03.24.05.50.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 05:50:04 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C5BAE40F77; Tue, 24 Mar 2020 09:50:01 -0300 (-03)
-Date:   Tue, 24 Mar 2020 09:50:01 -0300
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, kan.liang@linux.intel.com,
-        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com,
-        David Laight <David.Laight@aculab.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH V2] perf cpumap: Fix snprintf overflow check
-Message-ID: <20200324125001.GA21569@kernel.org>
-References: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
+        Tue, 24 Mar 2020 08:51:59 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OClqDa021701;
+        Tue, 24 Mar 2020 08:51:31 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu59j86-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 24 Mar 2020 08:51:31 -0400
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02OCpTkD051094
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Tue, 24 Mar 2020 08:51:29 -0400
+Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
+ ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 24 Mar 2020 08:51:28 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 24 Mar 2020 08:51:28 -0400
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 24 Mar 2020 08:51:28 -0400
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02OCpHbE031090;
+        Tue, 24 Mar 2020 08:51:18 -0400
+From:   Bogdan Togorean <bogdan.togorea@analog.com>
+To:     <dri-devel@lists.freedesktop.org>
+CC:     Bogdan Togorean <bogdan.togorean@analog.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        "Laurent Pinchart" <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Steve Winslow" <swinslow@gmail.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/2] drm: bridge: adv7511: Enable SPDIF DAI
+Date:   Tue, 24 Mar 2020 14:49:34 +0200
+Message-ID: <20200324124937.62658-1-bogdan.togorea@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ clxscore=1011 impostorscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 suspectscore=1 phishscore=0
+ lowpriorityscore=0 mlxlogscore=898 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003240068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 24, 2020 at 08:03:19AM +0100, Christophe JAILLET escreveu:
-> 'snprintf' returns the number of characters which would be generated for
-> the given input.
-> 
-> If the returned value is *greater than* or equal to the buffer size, it
-> means that the output has been truncated.
-> 
-> Fix the overflow test accordingling.
-                                  y
+From: Bogdan Togorean <bogdan.togorean@analog.com>
 
-You forgot to CC David and add this to your patch, which I did:
+ADV7511 support I2S or SPDIF as audio input interfaces. This commit
+enable support for SPDIF.
 
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Bogdan Togorean <bogdan.togorean@analog.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+---
+ drivers/gpu/drm/bridge/adv7511/adv7511_audio.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Ok?
-
-- Arnaldo
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+index a428185be2c1..1e9b128d229b 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_audio.c
+@@ -119,6 +119,9 @@ int adv7511_hdmi_hw_params(struct device *dev, void *data,
+ 		audio_source = ADV7511_AUDIO_SOURCE_I2S;
+ 		i2s_format = ADV7511_I2S_FORMAT_LEFT_J;
+ 		break;
++	case HDMI_SPDIF:
++		audio_source = ADV7511_AUDIO_SOURCE_SPDIF;
++		break;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -175,11 +178,21 @@ static int audio_startup(struct device *dev, void *data)
+ 	/* use Audio infoframe updated info */
+ 	regmap_update_bits(adv7511->regmap, ADV7511_REG_GC(1),
+ 				BIT(5), 0);
++	/* enable SPDIF receiver */
++	if (adv7511->audio_source == ADV7511_AUDIO_SOURCE_SPDIF)
++		regmap_update_bits(adv7511->regmap, ADV7511_REG_AUDIO_CONFIG,
++				   BIT(7), BIT(7));
++
+ 	return 0;
+ }
  
-> Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
-> Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> V2: keep snprintf
->     modifiy the tests for truncated output
->     Update subject and description
-> ---
->  tools/perf/util/cpumap.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
-> index 983b7388f22b..dc5c5e6fc502 100644
-> --- a/tools/perf/util/cpumap.c
-> +++ b/tools/perf/util/cpumap.c
-> @@ -317,7 +317,7 @@ static void set_max_cpu_num(void)
->  
->  	/* get the highest possible cpu number for a sparse allocation */
->  	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
-> -	if (ret == PATH_MAX) {
-> +	if (ret >= PATH_MAX) {
->  		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->  		goto out;
->  	}
-> @@ -328,7 +328,7 @@ static void set_max_cpu_num(void)
->  
->  	/* get the highest present cpu number for a sparse allocation */
->  	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
-> -	if (ret == PATH_MAX) {
-> +	if (ret >= PATH_MAX) {
->  		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->  		goto out;
->  	}
-> @@ -356,7 +356,7 @@ static void set_max_node_num(void)
->  
->  	/* get the highest possible cpu number for a sparse allocation */
->  	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
-> -	if (ret == PATH_MAX) {
-> +	if (ret >= PATH_MAX) {
->  		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->  		goto out;
->  	}
-> @@ -441,7 +441,7 @@ int cpu__setup_cpunode_map(void)
->  		return 0;
->  
->  	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
-> -	if (n == PATH_MAX) {
-> +	if (n >= PATH_MAX) {
->  		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->  		return -1;
->  	}
-> @@ -456,7 +456,7 @@ int cpu__setup_cpunode_map(void)
->  			continue;
->  
->  		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
-> -		if (n == PATH_MAX) {
-> +		if (n >= PATH_MAX) {
->  			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->  			continue;
->  		}
-> -- 
-> 2.20.1
-> 
-
+ static void audio_shutdown(struct device *dev, void *data)
+ {
++	struct adv7511 *adv7511 = dev_get_drvdata(dev);
++
++	if (adv7511->audio_source == ADV7511_AUDIO_SOURCE_SPDIF)
++		regmap_update_bits(adv7511->regmap, ADV7511_REG_AUDIO_CONFIG,
++				   BIT(7), 0);
+ }
+ 
+ static int adv7511_hdmi_i2s_get_dai_id(struct snd_soc_component *component,
+@@ -213,6 +226,7 @@ static const struct hdmi_codec_pdata codec_data = {
+ 	.ops = &adv7511_codec_ops,
+ 	.max_i2s_channels = 2,
+ 	.i2s = 1,
++	.spdif = 1,
+ };
+ 
+ int adv7511_audio_init(struct device *dev, struct adv7511 *adv7511)
 -- 
+2.17.1
 
-- Arnaldo
