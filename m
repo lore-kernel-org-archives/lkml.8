@@ -2,317 +2,157 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD91AC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB20C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F3620774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6DE920774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:50:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A9CiRgGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728147AbgCXOqG (ORCPT
+        id S1727972AbgCXOuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:46:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:34901 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgCXOqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:46:06 -0400
-IronPort-SDR: XM1h9VBw/92jbGt1rHhmt0NN/nFd6yimF4140a2drzzQ7YmIXh3I6tZdlw2/uynBH8tfmHZNUc
- fUa3e9aj9/Sw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 07:46:05 -0700
-IronPort-SDR: SyjJP62TIAaSX3X3bo1mQeRx6muzL9GyqeaAlk4f+JOheULSZ5pGDgkXPxveo7RHVxKnjWYR94
- BAjG/SyAZQdA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="357444659"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 24 Mar 2020 07:46:01 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 24 Mar 2020 16:46:00 +0200
-Date:   Tue, 24 Mar 2020 16:46:00 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
+        Tue, 24 Mar 2020 10:50:12 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:36251 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727837AbgCXOuM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:50:12 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 31so15776124wrs.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:50:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=oGbi1kK4rZ5Jg0cdOf4BlknnOlqmymkgqgzxdZFk9xc=;
+        b=A9CiRgGuc0FzDG8Jea7fRV9it5TL0VjdcTyRfjSQ7U6FCuWl+0j9LmRVYnApg12iUa
+         2FrYHGgTGEObTGVfsbzvatv/yw//8Y8xyP7ubTh8hHoCVdlpsnSjckPtRjenc1x0QOhd
+         n3PsTLkaVT6G+ohUiS6sU/8kAAkOTJj4oFtkk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=oGbi1kK4rZ5Jg0cdOf4BlknnOlqmymkgqgzxdZFk9xc=;
+        b=pxFwC7KsbjMoVlVNPW9qM2wWcJpsTP4Cp+bV8PpvlQeKbO3VwRI/gOupnrOtuI+sFY
+         WIarfteQ6KBneHh7xcap6FHicEbEsjSK7rX9Qks1+PA0DdNp8mqwCz2qw8ooz+wWMZru
+         BnXe2IOcJQjqzL64bS6rsxLy+Bqw7sgWGFz17JukjxlIFTJu1lyxE1LoS470m3dIxI/e
+         /VjMiIHHGCiMrIgQo4AYnlPBVPAhZWLjQPp3O8vs7WEm03EHcPDTrwhyVydMcL4UGlYR
+         ndyyqQ+1fUBxgL4F8MqdurSpIHtJUq03BZpssqQU6P3TGSna159QV4Qg5ndtVntSaZxf
+         QY9w==
+X-Gm-Message-State: ANhLgQ251ylpn9bOA3kmqlFt/74tulu7YOUueyuKxr2BhiX07Gx4YJlO
+        AZlIZhkcM8ebAkkprwF0Q0sAcg==
+X-Google-Smtp-Source: ADFU+vtsBplmFb4Y6HIsHkRuws6sb8YO/62KkZdxsazEbdRgj7TzX90VeMndzuqAH2a1dHAS+iNnog==
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr10031231wro.415.1585061410761;
+        Tue, 24 Mar 2020 07:50:10 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id y7sm6619108wrq.54.2020.03.24.07.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 07:50:10 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 15:50:03 +0100
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 18/19] platform/x86: intel_pmc_ipc: Convert to MFD
-Message-ID: <20200324144600.GJ2564@lahna.fi.intel.com>
-References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
- <20200303133649.39819-19-mika.westerberg@linux.intel.com>
- <20200324115219.GB437932@dell>
- <20200324122216.GG2564@lahna.fi.intel.com>
- <20200324142228.GC442973@dell>
+        Paul Moore <paul@paul-moore.com>
+Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and
+ execution
+Message-ID: <20200324145003.GA2685@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-5-kpsingh@chromium.org>
+ <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200324142228.GC442973@dell>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 02:22:28PM +0000, Lee Jones wrote:
-> On Tue, 24 Mar 2020, Mika Westerberg wrote:
+On 24-Mär 10:35, Stephen Smalley wrote:
+> On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > JITed BPF programs are dynamically attached to the LSM hooks
+> > using BPF trampolines. The trampoline prologue generates code to handle
+> > conversion of the signature of the hook to the appropriate BPF context.
+> >
+> > The allocated trampoline programs are attached to the nop functions
+> > initialized as LSM hooks.
+> >
+> > BPF_PROG_TYPE_LSM programs must have a GPL compatible license and
+> > and need CAP_SYS_ADMIN (required for loading eBPF programs).
+> >
+> > Upon attachment:
+> >
+> > * A BPF fexit trampoline is used for LSM hooks with a void return type.
+> > * A BPF fmod_ret trampoline is used for LSM hooks which return an
+> >   int. The attached programs can override the return value of the
+> >   bpf LSM hook to indicate a MAC Policy decision.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > Reviewed-by: Florent Revest <revest@google.com>
+> > ---
 > 
-> > On Tue, Mar 24, 2020 at 11:52:19AM +0000, Lee Jones wrote:
-> > > On Tue, 03 Mar 2020, Mika Westerberg wrote:
-> > > 
-> > > > This driver only creates a bunch of platform devices sharing resources
-> > > > belonging to the PMC device. This is pretty much what MFD subsystem is
-> > > > for so move the driver there, renaming it to intel_pmc_bxt.c which
-> > > > should be more clear what it is.
-> > > > 
-> > > > MFD subsystem provides nice helper APIs for subdevice creation so
-> > > > convert the driver to use those. Unfortunately the ACPI device includes
-> > > > separate resources for most of the subdevices so we cannot simply call
-> > > > mfd_add_devices() to create all of them but instead we need to call it
-> > > > separately for each device.
-> > > > 
-> > > > The new MFD driver continues to expose two sysfs attributes that allow
-> > > > userspace to send IPC commands to the PMC/SCU to avoid breaking any
-> > > > existing applications that may use these. Generally this is bad idea so
-> > > > document this in the ABI documentation.
-> > > > 
-> > > > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > > ---
-> > > >  .../ABI/obsolete/sysfs-driver-intel_pmc_bxt   |  22 +
-> > > >  arch/x86/include/asm/intel_pmc_ipc.h          |  47 --
-> > > >  arch/x86/include/asm/intel_telemetry.h        |   1 +
-> > > >  drivers/mfd/Kconfig                           |  16 +-
-> > > >  drivers/mfd/Makefile                          |   1 +
-> > > >  drivers/mfd/intel_pmc_bxt.c                   | 504 ++++++++++++++
-> > > >  drivers/platform/x86/Kconfig                  |  16 +-
-> > > >  drivers/platform/x86/Makefile                 |   1 -
-> > > >  drivers/platform/x86/intel_pmc_ipc.c          | 645 ------------------
-> > > >  .../platform/x86/intel_telemetry_debugfs.c    |  12 +-
-> > > >  drivers/platform/x86/intel_telemetry_pltdrv.c |   2 +
-> > > >  drivers/usb/typec/tcpm/Kconfig                |   2 +-
-> > > >  include/linux/mfd/intel_pmc_bxt.h             |  43 ++
-> > > >  13 files changed, 602 insertions(+), 710 deletions(-)
-> > > >  create mode 100644 Documentation/ABI/obsolete/sysfs-driver-intel_pmc_bxt
-> > > >  delete mode 100644 arch/x86/include/asm/intel_pmc_ipc.h
-> > > >  create mode 100644 drivers/mfd/intel_pmc_bxt.c
-> > > >  delete mode 100644 drivers/platform/x86/intel_pmc_ipc.c
-> > > >  create mode 100644 include/linux/mfd/intel_pmc_bxt.h
-> > > 
-> > > [...]
-> > > 
-> > > > +/*
-> > > > + * We use the below templates to construct MFD cells. The struct
-> > > > + * intel_pmc_dev instance holds the real MFD cells where we first copy
-> > > > + * these and then fill the dynamic parts based on the extracted resources.
-> > > > + */
-> > > > +
-> > > > +static const struct mfd_cell punit = {
-> > > > +	.name = "intel_punit_ipc",
-> > > > +};
-> > > > +
-> > > > +static int update_no_reboot_bit(void *priv, bool set)
-> > > > +{
-> > > > +	struct intel_pmc_dev *pmc = priv;
-> > > > +	u32 bits = PMC_CFG_NO_REBOOT_EN;
-> > > > +	u32 value = set ? bits : 0;
-> > > > +
-> > > > +	return intel_pmc_gcr_update(pmc, PMC_GCR_PMC_CFG_REG, bits, value);
-> > > > +}
-> > > > +
-> > > > +static const struct itco_wdt_platform_data tco_pdata = {
-> > > > +	.name = "Apollo Lake SoC",
-> > > > +	.version = 5,
-> > > > +	.update_no_reboot_bit = update_no_reboot_bit,
-> > > > +};
-> > > > +
-> > > > +static const struct mfd_cell tco = {
-> > > > +	.name = "iTCO_wdt",
-> > > > +	.ignore_resource_conflicts = true,
-> > > > +};
-> > > > +
-> > > > +static const struct resource telem_res[] = {
-> > > > +	DEFINE_RES_MEM(TELEM_PUNIT_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
-> > > > +	DEFINE_RES_MEM(TELEM_PMC_SSRAM_OFFSET, TELEM_SSRAM_SIZE),
-> > > > +};
-> > > > +
-> > > > +static const struct mfd_cell telem = {
-> > > > +	.name = "intel_telemetry",
-> > > > +	.resources = telem_res,
-> > > > +	.num_resources = ARRAY_SIZE(telem_res),
-> > > > +};
-> > > > +
-> > > > +static int intel_pmc_get_tco_resources(struct platform_device *pdev,
-> > > > +				       struct intel_pmc_dev *pmc)
-> > > > +{
-> > > > +	struct itco_wdt_platform_data *pdata;
-> > > > +	struct resource *res, *tco_res;
-> > > > +
-> > > > +	if (acpi_has_watchdog())
-> > > > +		return 0;
-> > > > +
-> > > > +	res = platform_get_resource(pdev, IORESOURCE_IO,
-> > > > +				    PLAT_RESOURCE_ACPI_IO_INDEX);
-> > > > +	if (!res) {
-> > > > +		dev_err(&pdev->dev, "Failed to get IO resource\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	tco_res = devm_kcalloc(&pdev->dev, 2, sizeof(*tco_res), GFP_KERNEL);
-> > > > +	if (!tco_res)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	tco_res[0].flags = IORESOURCE_IO;
-> > > > +	tco_res[0].start = res->start + TCO_BASE_OFFSET;
-> > > > +	tco_res[0].end = tco_res[0].start + TCO_REGS_SIZE - 1;
-> > > > +	tco_res[1].flags = IORESOURCE_IO;
-> > > > +	tco_res[1].start = res->start + SMI_EN_OFFSET;
-> > > > +	tco_res[1].end = tco_res[1].start + SMI_EN_SIZE - 1;
-> > > > +
-> > > > +	pmc->cells[PMC_TCO].resources = tco_res;
-> > > > +	pmc->cells[PMC_TCO].num_resources = 2;
-> > > > +
-> > > > +	pdata = devm_kmemdup(&pdev->dev, &tco_pdata, sizeof(*pdata), GFP_KERNEL);
-> > > > +	if (!pdata)
-> > > > +		return -ENOMEM;
-> > > 
-> > > Why do you need to take a copy?
-> > > 
-> > > This can be referenced directly in 'mfd_cell tco', no?
-> > 
-> > No because I'm filling the priv pointer dynamically. I've tried to
-> > explain the same thing in the previous iterations already.
+> > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> > index 530d137f7a84..2a8131b640b8 100644
+> > --- a/kernel/bpf/bpf_lsm.c
+> > +++ b/kernel/bpf/bpf_lsm.c
+> > @@ -9,6 +9,9 @@
+> >  #include <linux/btf.h>
+> >  #include <linux/lsm_hooks.h>
+> >  #include <linux/bpf_lsm.h>
+> > +#include <linux/jump_label.h>
+> > +#include <linux/kallsyms.h>
+> > +#include <linux/bpf_verifier.h>
+> >
+> >  /* For every LSM hook  that allows attachment of BPF programs, declare a NOP
+> >   * function where a BPF program can be attached as an fexit trampoline.
+> > @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
+> >  #include <linux/lsm_hook_names.h>
+> >  #undef LSM_HOOK
+> >
+> > +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
+> > +
+> > +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
+> > +                       const struct bpf_prog *prog)
+> > +{
+> > +       /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
+> > +        */
+> > +       if (!capable(CAP_MAC_ADMIN))
+> > +               return -EPERM;
 > 
-> You have, and I didn't agree with you then either. ;)
->
-> You can add this directly to 'mfd_cell tco' and make the dynamic
-> changes after the fact.  You do not need to be duplicating memory all
-> over the place.
+> I had asked before, and will ask again: please provide an explicit LSM
+> hook for mediating whether one can make changes to the LSM hooks.
+> Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SELinux.
 
-Well fine I don't want to argue about this. You are the maintainer.
+What do you think about:
 
-> > > > +	pdata->no_reboot_priv = pmc;
-> > > 
-> > > You're putting device data inside platform data?
-> > > 
-> > > This doesn't sit right with me at all.
-> > >
-> > > You already saved it using platform_set_drvdata(), why do you need it
-> > > twice?  Why can't you export update_no_reboot_bit() and make it take
-> > > 'struct intel_pmc_dev' or better yet 'pdev' as an argument?
-> > 
-> > This is a property of the iTCO_wdt driver, not part of this patch
-> > series. I'm just using the interface it provides.
-> > 
-> > iTCO_wdt interface can of course be made better but I don't think it
-> > should be part of this series.
-> 
-> As far as I'm concerned, this is a new driver.
-> 
-> If there is some ugliness, it should be ironed out before being
-> merged.  People have a tendency to lower the priority of fix-ups once
-> their patches have been merged.  I suggest you fix the interface
-> *first*, rather than as an afterthought.
-> 
-> Since the interface is only between this and the iTCO_wdt driver, this
-> should be trivial.
+  int security_check_mutable_hooks(void)
 
-OK
+Do you have any suggestions on the signature of this hook? Does this
+hook need to be BPF specific?
 
-> > > > +	pmc->cells[PMC_TCO].platform_data = pdata;
-> > > > +	pmc->cells[PMC_TCO].pdata_size = sizeof(*pdata);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int intel_pmc_get_resources(struct platform_device *pdev,
-> > > > +				   struct intel_pmc_dev *pmc,
-> > > > +				   struct intel_scu_ipc_data *scu_data)
-> > > > +{
-> > > > +	struct resource *res, *punit_res;
-> > > > +	struct resource gcr_res;
-> > > > +	size_t npunit_res = 0;
-> > > > +	int ret;
-> > > > +
-> > > > +	scu_data->irq = platform_get_irq_optional(pdev, 0);
-> > > > +
-> > > > +	res = platform_get_resource(pdev, IORESOURCE_MEM,
-> > > > +				    PLAT_RESOURCE_IPC_INDEX);
-> > > > +	if (!res) {
-> > > > +		dev_err(&pdev->dev, "Failed to get IPC resource\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +
-> > > > +	/* IPC registers */
-> > > > +	scu_data->mem.flags = res->flags;
-> > > > +	scu_data->mem.start = res->start;
-> > > > +	scu_data->mem.end = res->start + PLAT_RESOURCE_IPC_SIZE - 1;
-> > > > +
-> > > > +	/* GCR registers */
-> > > > +	gcr_res.flags = res->flags;
-> > > > +	gcr_res.start = res->start + PLAT_RESOURCE_GCR_OFFSET;
-> > > > +	gcr_res.end = gcr_res.start + PLAT_RESOURCE_GCR_SIZE - 1;
-> > > > +
-> > > > +	pmc->gcr_mem_base = devm_ioremap_resource(&pdev->dev, &gcr_res);
-> > > > +	if (IS_ERR(pmc->gcr_mem_base))
-> > > > +		return PTR_ERR(pmc->gcr_mem_base);
-> > > > +
-> > > > +	pmc->cells[PMC_TCO] = tco;
-> > > > +	pmc->cells[PMC_PUNIT] = punit;
-> > > > +	pmc->cells[PMC_TELEM] = telem;
-> > > 
-> > > Why are you still saving these to device data?
-> > > 
-> > > What's stopping you operating on the structures directly?
-> > 
-> > OK, I've explained this in the previous iterations but here goes. The
-> > problem is that the resources need to be filled dynamically as they are
-> > whatever there is in the ACPI table.
-> 
-> Yep.  No problem there.
-> 
-> > Now, Consider that we have two PMC devices. It is possible that the
-> > driver is bind to both in paraller which means that both are racing to
-> > fill and use these structures leading to a corruption.
-> 
-> I'm not saying it can't, but please explain to me how this can
-> happen.  There are many instances where multiple identical H/W blocks
-> occupy a single platform.  Please explain why this isn't a problem for
-> any other device driver.
-
-Any other device driver either uses per instance data or they don't need
-to fill in the resources dynamically after extracting them from the
-firmware description.
-
-> Besides, if this is a genuine concern, that's the sort of problem
-> locking was designed to solve.
-
-Well that would end up even uglier solution than simply taking a copy.
-
-> > Another issue is that even if we have single device, the driver fills in
-> > the structures and then we unbind it. These structures now are left with
-> > that data which does not feel right.
-> 
-> What difference does it make if the driver is left with static or
-> dynamic data?  If the driver is not to be rebound, then it doesn't
-> matter.  If it is bound again, the data will just be overwritten in
-> .probe().  I'm not sure I understand the problem.
-> 
-> > Therefore I've put all we know in advance as const version of these
-> > structures and then we use those as template to build custom ones based
-> > on resources extracted from ACPI to individual instances.
-> 
-> I can see that, I just don't agree with it. :)
-
-Fair enough. I'll do these changes in v9.
+- KP
