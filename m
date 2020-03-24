@@ -2,123 +2,325 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6DDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96152C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:07:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E31D0206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5333A206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:07:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TFbdkIj/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g5cCE+a9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727382AbgCXRHP (ORCPT
+        id S1727393AbgCXRH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:07:15 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:20784 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726962AbgCXRHP (ORCPT
+        Tue, 24 Mar 2020 13:07:28 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:40442 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727133AbgCXRH1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:07:15 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OH3jR9026290;
-        Tue, 24 Mar 2020 18:04:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=AMCtPG8q5sasMVUMMcu5hxbwZnpMXqy+87NMHQ6HtMc=;
- b=TFbdkIj/oir8wIc3oJ4N0mKD4OLm15n0J+VIEdPEpBP492raYFUzY+o7hV3wHD4p7uGG
- MRX1QNBsGgBk1QoPSSIp+0GCrREPMJxKnxrOwe5mlXrRsmPqWKAvqe56946hxvObo1r0
- yJRXnmm/leXXkIvF+G9q3QKfluC/t1i3wLn+KQ/7LvE9Ctj1xctS80A8GFu78OhEk2nd
- 2/wKTngb9oDvk6kEn8dzkxHGWcLSVKXgW/RKtLIrwADiAM2fgnnRAzr4pesZLpFbU9Zy
- e3bymWj6K8F0bPFivdBS1vIN6nw40BeiVtHi3dJw9h5FYGIP4HLGBXfkQyHS3PDg8+4T hw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yw995gsvq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 18:04:59 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 214A610002A;
-        Tue, 24 Mar 2020 18:04:57 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0B43F2BE24B;
-        Tue, 24 Mar 2020 18:04:57 +0100 (CET)
-Received: from localhost (10.75.127.46) by SFHDAG3NODE1.st.com (10.75.127.7)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 24 Mar 2020 18:04:55
- +0100
-From:   Arnaud Pouliquen <arnaud.pouliquen@st.com>
-To:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Tue, 24 Mar 2020 13:07:27 -0400
+Received: by mail-pg1-f196.google.com with SMTP id t24so9328022pgj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:07:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=z5FlNvobQwsE4JjWwpB9xpnt659VvIIkODecw7v6xFU=;
+        b=g5cCE+a9rK7Ol3/MxK290vxkbvYcslScmw4Nr9qn3XZwu0ijTMP1z+PmlO2i4DUDuh
+         odbIuC0CQyRRX7C5AXGljZt1f+6k0bOrmGL9+BeEH/y85DaCvC5iPR+d4fFkjOYlrAip
+         6l7sYzFlH0UWA+QzlWXS29QFzJq98TXQ3GR0U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=z5FlNvobQwsE4JjWwpB9xpnt659VvIIkODecw7v6xFU=;
+        b=XEI7cCmstjtsrSdwh9xDiSy2iD+Ex2tAFFr5Ikb5ivy5sAhv+W9ktAMnrZkReqbtU3
+         +HYyWb0V+HR/fVhXtmW1O7eiGMEQZyUXj3bCz9tXg+Bbv9SPOvqPBUjfqkTu6pAwklq4
+         7kBKvyvwg8MWhVCJ2GtdADNGu6OlhNRddK+gaX/Ejljvaswjx9dhepIhFOZhcsDVREh1
+         VYAEbA09TlSvHGvbTs+PGHVclLcGurNwp/tlvPoDFuGvSl1RibG6Q/Fl/7vP20huzThy
+         6p6JASKKiuGP4brqBw++Rez6LKY7hnF15VYboolKAruUlIpNtVjB1E0Ir+iAqJBzS5YG
+         TrMw==
+X-Gm-Message-State: ANhLgQ2ru11DhF7fRLtMCBsyK1JHXBeKuDVzK0D+MOQtj4k8Gi2snhaw
+        t9tjb92fdkLmo2ob3pCsCYqm8Q==
+X-Google-Smtp-Source: ADFU+vtvr3BmpQ0r7UliDraOCB+NrvbJdWBUhpXYn1ZRKokM7FeOB5RH8ZUN3z/vSykcaXGb+X2LTQ==
+X-Received: by 2002:a62:3786:: with SMTP id e128mr31547438pfa.124.1585069645419;
+        Tue, 24 Mar 2020 10:07:25 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:4fff:7a6b:a335:8fde])
+        by smtp.gmail.com with ESMTPSA id x15sm16047493pfq.107.2020.03.24.10.07.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 10:07:24 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 10:07:22 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     "Sandeep Maheswaram (Temp)" <sanm@codeaurora.org>
+Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, <linux-kernel@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <arnaud.pouliquen@st.com>, Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
-        xiang xiao <xiaoxiang781216@gmail.com>
-Subject: [PATCH v7 0/2] Add rpmsg tty driver
-Date:   Tue, 24 Mar 2020 18:04:05 +0100
-Message-ID: <20200324170407.16470-1-arnaud.pouliquen@st.com>
-X-Mailer: git-send-email 2.17.1
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+Subject: Re: [PATCH v5 2/3] usb: dwc3: qcom: Add interconnect support in dwc3
+ driver
+Message-ID: <20200324170722.GD204494@google.com>
+References: <1581668684-4182-1-git-send-email-sanm@codeaurora.org>
+ <1581668684-4182-3-git-send-email-sanm@codeaurora.org>
+ <20200214201154.GB15781@google.com>
+ <d381164d-b749-4c93-de6d-72eca3e51341@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.46]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE1.st.com
- (10.75.127.7)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d381164d-b749-4c93-de6d-72eca3e51341@codeaurora.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set introduces a TTY console on top of the RPMsg framework which
-enables the following use cases:
-- Provide a console to communicate easily with the remote processor application.
-- Provide an interface to get the remote processor log traces without ring
-  buffer limitation.
-- Ease the migration from MPU + MCU processors to multi core processors
-  (MPU and MCU integrated in one processor) by offering a virtual serial link.
+On Mon, Mar 16, 2020 at 03:11:32PM +0530, Sandeep Maheswaram (Temp) wrote:
+> Hi Matthias
+> 
+> On 2/15/2020 1:41 AM, Matthias Kaehlcke wrote:
+> > Hi Sandeep,
+> > 
+> > On Fri, Feb 14, 2020 at 01:54:43PM +0530, Sandeep Maheswaram wrote:
+> > > Add interconnect support in dwc3-qcom driver to vote for bus
+> > > bandwidth.
+> > > 
+> > > This requires for two different paths - from USB master to
+> > > DDR slave. The other is from APPS master to USB slave.
+> > > 
+> > > Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+> > > Signed-off-by: Chandana Kishori Chiluveru <cchiluve@codeaurora.org>
+> > > ---
+> > >   drivers/usb/dwc3/dwc3-qcom.c | 135 ++++++++++++++++++++++++++++++++++++++++++-
+> > >   1 file changed, 133 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> > > index 261af9e..2ed6c20 100644
+> > > --- a/drivers/usb/dwc3/dwc3-qcom.c
+> > > +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> > > @@ -13,6 +13,7 @@
+> > >   #include <linux/module.h>
+> > >   #include <linux/kernel.h>
+> > >   #include <linux/extcon.h>
+> > > +#include <linux/interconnect.h>
+> > >   #include <linux/of_platform.h>
+> > >   #include <linux/platform_device.h>
+> > >   #include <linux/phy/phy.h>
+> > > @@ -43,6 +44,14 @@
+> > >   #define SDM845_QSCRATCH_SIZE			0x400
+> > >   #define SDM845_DWC3_CORE_SIZE			0xcd00
+> > > +/* Interconnect path bandwidths in MBps */
+> > > +#define USB_MEMORY_AVG_HS_BW MBps_to_icc(240)
+> > > +#define USB_MEMORY_PEAK_HS_BW MBps_to_icc(700)
+> > > +#define USB_MEMORY_AVG_SS_BW  MBps_to_icc(1000)
+> > > +#define USB_MEMORY_PEAK_SS_BW MBps_to_icc(2500)
+> > > +#define APPS_USB_AVG_BW 0
+> > > +#define APPS_USB_PEAK_BW MBps_to_icc(40)
+> > > +
+> > >   struct dwc3_acpi_pdata {
+> > >   	u32			qscratch_base_offset;
+> > >   	u32			qscratch_base_size;
+> > > @@ -76,8 +85,13 @@ struct dwc3_qcom {
+> > >   	enum usb_dr_mode	mode;
+> > >   	bool			is_suspended;
+> > >   	bool			pm_suspended;
+> > > +	struct icc_path		*usb_ddr_icc_path;
+> > > +	struct icc_path		*apps_usb_icc_path;
+> > >   };
+> > > +static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom);
+> > > +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom);
+> > > +
+> > >   static inline void dwc3_qcom_setbits(void __iomem *base, u32 offset, u32 val)
+> > >   {
+> > >   	u32 reg;
+> > > @@ -239,7 +253,7 @@ static void dwc3_qcom_enable_interrupts(struct dwc3_qcom *qcom)
+> > >   static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+> > >   {
+> > >   	u32 val;
+> > > -	int i;
+> > > +	int i, ret;
+> > >   	if (qcom->is_suspended)
+> > >   		return 0;
+> > > @@ -251,6 +265,10 @@ static int dwc3_qcom_suspend(struct dwc3_qcom *qcom)
+> > >   	for (i = qcom->num_clocks - 1; i >= 0; i--)
+> > >   		clk_disable_unprepare(qcom->clks[i]);
+> > > +	ret = dwc3_qcom_interconnect_disable(qcom);
+> > > +	if (ret)
+> > > +		dev_warn(qcom->dev, "failed to disable interconnect %d\n", ret);
+> > > +
+> > This assumes that all QCA systems with a DWC3 have an interconnect
+> > configuration, however after applying this series SDM845 is the only
+> > platform. You need to track somewhere if the controller in question has
+> > an ICC config for not.
+> 
+> This is handled in drivers <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/>/interconnect <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/interconnect/>/core.c <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/interconnect/core.c> 
+> icc_set_bw function.
 
-An alternative of this proposed solution would consist in using the virtio
-console:
-The drawback with that solution is that it requires a specific virtio buffer
-(in addition to the one already used for RPMsg) which does not fit with remote
-processors with little memory. The proposed solution allows to multiplex the
-console with the other rpmsg services, optimizing the memory.
+Thanks for the clarification!
 
-The first patch adds an API to the rpmsg framework ('get max transmission unit')
-and the second one is the rpmsg tty driver itself.
+> > 
+> > >   	qcom->is_suspended = true;
+> > >   	dwc3_qcom_enable_interrupts(qcom);
+> > > @@ -276,6 +294,10 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+> > >   		}
+> > >   	}
+> > > +	ret = dwc3_qcom_interconnect_enable(qcom);
+> > > +	if (ret)
+> > > +		dev_warn(qcom->dev, "failed to enable interconnect %d\n", ret);
+> > > +
+> > same as above
+> This is handled in drivers <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/>/interconnect <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/interconnect/>/core.c <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/interconnect/core.c> 
+> icc_set_bw function
 
-Previous revision:
-- the patch 1/2 ("rpmsg: core: add API to get MTU) has been discussed in a
-  separate thread on remoteproc mailing list:
-    https://patchwork.kernel.org/patch/11333509/
-- Previous version of the patch 2/2 (tty: add rpmsg driver) available here:
-    https://patchwork.kernel.org/cover/11130213/
+ok
 
-Main delta vs v6:
- - Pack the rpmsg_tty_ctrl struct.
- - MTU API acked by Suman Anna from Texas Intruments company. 
+> > >   	/* Clear existing events from PHY related to L2 in/out */
+> > >   	dwc3_qcom_setbits(qcom->qscratch_base, PWR_EVNT_IRQ_STAT_REG,
+> > >   			  PWR_EVNT_LPM_IN_L2_MASK | PWR_EVNT_LPM_OUT_L2_MASK);
+> > > @@ -285,6 +307,108 @@ static int dwc3_qcom_resume(struct dwc3_qcom *qcom)
+> > >   	return 0;
+> > >   }
+> > > +
+> > > +/**
+> > > + * dwc3_qcom_interconnect_init() - Get interconnect path handles
+> > > + * @qcom:			Pointer to the concerned usb core.
+> > > + *
+> > > + */
+> > > +static int dwc3_qcom_interconnect_init(struct dwc3_qcom *qcom)
+> > > +{
+> > > +	struct device *dev = qcom->dev;
+> > > +	int ret;
+> > > +
+> > > +	if (!device_is_bound(&qcom->dwc3->dev))
+> > > +		return -EPROBE_DEFER;
+> > > +
+> > > +	qcom->usb_ddr_icc_path = of_icc_get(dev, "usb-ddr");
+> > > +	if (IS_ERR(qcom->usb_ddr_icc_path)) {
+> > > +		dev_err(dev, "Error: (%ld) failed getting usb-ddr path\n",
+> > > +			PTR_ERR(qcom->usb_ddr_icc_path));
+> > > +		return PTR_ERR(qcom->usb_ddr_icc_path);
+> > > +	}
+> > This will break all QCA platforms with DWC3, except SDM845. Instead of
+> > failing you could interpret the basence of the 'usb-ddr' patch in the DT
+> > as signal that the controller has no ICC configuration, and continue without
+> > it (i.e. return 0 from here, don't print an error, at most a dev_info() log),
+> > and track somewhere that the controller has no ICC config.
+> > 
+> > Alternatively you could check above with of_find_property() whether the
+> > controller has an 'interconnects' property at all. If it doesn't exist
+> > return zero, otherwise return an error if any of the paths doesn't exist,
+> > as you do now.
+> This is handled in drivers <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/>/interconnect <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/interconnect/>/core.c <https://opengrok.qualcomm.com/source/xref/LC.UM.3.0/src/third_party/kernel/v5.4/drivers/interconnect/core.c> 
+> of_icc_get function.
 
-Arnaud Pouliquen (2):
-  rpmsg: core: add API to get MTU
-  tty: add rpmsg driver
+You are right, of_icc_get() returns NULL if the property doesn't exist, and this
+is handled gracefully by the other ICC functions.
 
- Documentation/serial/tty_rpmsg.rst |  45 ++++
- drivers/rpmsg/rpmsg_core.c         |  21 ++
- drivers/rpmsg/rpmsg_internal.h     |   2 +
- drivers/rpmsg/virtio_rpmsg_bus.c   |  10 +
- drivers/tty/Kconfig                |   9 +
- drivers/tty/Makefile               |   1 +
- drivers/tty/rpmsg_tty.c            | 417 +++++++++++++++++++++++++++++
- include/linux/rpmsg.h              |  10 +
- 8 files changed, 515 insertions(+)
- create mode 100644 Documentation/serial/tty_rpmsg.rst
- create mode 100644 drivers/tty/rpmsg_tty.c
+> > > +
+> > > +	qcom->apps_usb_icc_path = of_icc_get(dev, "apps-usb");
+> > > +	if (IS_ERR(qcom->apps_usb_icc_path)) {
+> > > +		dev_err(dev, "Error: (%ld) failed getting apps-usb path\n",
+> > > +				PTR_ERR(qcom->apps_usb_icc_path));
+> > > +		return PTR_ERR(qcom->apps_usb_icc_path);
+> > > +	}
+> > Failing here is ok, if 'usb-ddr' exists, we expect the rest of the config
+> > to be in place.
+> This may be required for error handling
 
--- 
-2.17.1
+Agreed, my comment meant to say the above handling seems correct.
 
+> > > +
+> > > +	ret = dwc3_qcom_interconnect_enable(qcom);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "failed to enable interconnect %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * dwc3_qcom_interconnect_exit() - Release interconnect path handles
+> > > + * @qcom:			Pointer to the concerned usb core.
+> > > + *
+> > > + * This function is used to release interconnect path handle.
+> > > + */
+> > > +static void dwc3_qcom_interconnect_exit(struct dwc3_qcom *qcom)
+> > > +{
+> > > +	icc_put(qcom->usb_ddr_icc_path);
+> > > +	icc_put(qcom->apps_usb_icc_path);
+> > > +}
+> > > +
+> > > +/* Currently we only use bandwidth level, so just "enable" interconnects */
+> > > +static int dwc3_qcom_interconnect_enable(struct dwc3_qcom *qcom)
+> > > +{
+> > > +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
+> > > +	int ret;
+> > > +
+> > > +	if (dwc->maximum_speed == USB_SPEED_SUPER) {
+> > > +		ret = icc_set_bw(qcom->usb_ddr_icc_path,
+> > > +			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
+> > > +	} else {
+> > > +		ret = icc_set_bw(qcom->usb_ddr_icc_path,
+> > > +			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
+> > > +	}
+> > nit: curly braces are not needed here
+> Will remove in next version.
+> > 
+> > > +
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = icc_set_bw(qcom->apps_usb_icc_path,
+> > > +		APPS_USB_AVG_BW, APPS_USB_PEAK_BW);
+> > > +	if (ret)
+> > > +		icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +/* To disable an interconnect, we just set its bandwidth to 0 */
+> > > +static int dwc3_qcom_interconnect_disable(struct dwc3_qcom *qcom)
+> > > +{
+> > > +	struct dwc3 *dwc = platform_get_drvdata(qcom->dwc3);
+> > > +	int ret;
+> > > +
+> > > +	ret = icc_set_bw(qcom->usb_ddr_icc_path, 0, 0);
+> > > +	if (ret)
+> > > +		return ret;
+> > > +
+> > > +	ret = icc_set_bw(qcom->apps_usb_icc_path, 0, 0);
+> > > +	if (ret)
+> > > +		goto err_reenable_memory_path;
+> > > +
+> > > +	return 0;
+> > > +
+> > > +	/* Re-enable things in the event of an error */
+> > > +err_reenable_memory_path:
+> > > +	if (dwc->maximum_speed == USB_SPEED_SUPER)
+> > > +		icc_set_bw(qcom->usb_ddr_icc_path,
+> > > +			USB_MEMORY_AVG_SS_BW, USB_MEMORY_PEAK_SS_BW);
+> > > +	else
+> > > +		icc_set_bw(qcom->usb_ddr_icc_path,
+> > > +			USB_MEMORY_AVG_HS_BW, USB_MEMORY_PEAK_HS_BW);
+> > instead of the above:
+> > 
+> > 	dwc3_qcom_interconnect_enable(qcom);
+> Will change in next version.
+
+With that changed:
+
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
