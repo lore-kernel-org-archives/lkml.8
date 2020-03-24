@@ -2,169 +2,196 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21789C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79A08C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8916205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:10:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Jwu/0YuQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4BBC520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:11:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727611AbgCXOKw (ORCPT
+        id S1727828AbgCXOLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:10:52 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:55815 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727256AbgCXOKv (ORCPT
+        Tue, 24 Mar 2020 10:11:02 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:39736 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727289AbgCXOLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:10:51 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v25so1506541wmh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BAk/h67q+knKkARaoMQuqwgp//HAIyl57Kt4oyQ57u0=;
-        b=Jwu/0YuQJGf10JQCWJhypbziXjujXy4a53JuSIzUuoWuatAvdWtqDZDlo29cu9kjRe
-         YRnWGQQcXL4IOukIbtxQV3+nXauXeZbnyf8Ef8LqqlAXt0Gn4m8RwxqBf+TAB3Kkmn5J
-         fjwisLuymROgMQeeeEdI4IXn5MfSj6d11KhtM+r1TjxaapDMQxE8DMDozt3U3hb42Mv5
-         gJgwiHyxQyd/KXs7WUdckvgNPS/X+cOLc6qiVzAWaYj8pUQb93O31Qki2E9VHRXH1tN5
-         N64NocdXdHfDKsPvSbxfFRwawlpNnogX9T0UvPdYXIRD/KNkwNBad1fRtWHcuq5BX0j4
-         rdKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=BAk/h67q+knKkARaoMQuqwgp//HAIyl57Kt4oyQ57u0=;
-        b=IUYBOqURudY/2t8uxmIEg7DiYp7R2SDltgT8WCvSD6S4PLA9M161E4sl3IAf49Ukdy
-         edI58AnGd8W7Z8+muE2twGNDL4qwwouyj5icG8gTuCyCP8U0CJYpi1YF6QD/8RjCJ2ea
-         5mSCDaVPQckdEX5QMeC3kDz3Y3Vuptat8d5iNNJ3ZSdifvGmiz8ogGN0WCz5wsmHRsLn
-         J18uEObbzdK7YL2HzvqnUq454PtP8HZj76WhGmHMh6wxjpgnPfIYVEsb8z3YiuWiYnsr
-         ynXBmCUEQgfdbGn/SwfJv4ZRGbbyYlE5KKBaRmDxDs2frk4iZVawV9/9qPEpNQ6WDtDS
-         OfhQ==
-X-Gm-Message-State: ANhLgQ0D3+Jf/q14yMtlQ1n58rdwIfc3M52fsKDIIUA4bXnABIjaDlZ+
-        ChKC/tpfLLkpaT/ZbioYHZwWTQ12dKLQgw==
-X-Google-Smtp-Source: ADFU+vtjZstR121PtSAo6sKm0c1N0A5H/ZQJoNJPsMDiapfh+2E6vuFk7e0c2hKQkFEjhKzRZC+lUA==
-X-Received: by 2002:a1c:147:: with SMTP id 68mr5988075wmb.28.1585059046766;
-        Tue, 24 Mar 2020 07:10:46 -0700 (PDT)
-Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id p13sm16672607wru.3.2020.03.24.07.10.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 07:10:46 -0700 (PDT)
-Subject: Re: [PATCH 01/13] dt-bindings: usb: amlogic,meson-g12a-usb-ctrl: add
- the Amlogic GXL and GXM Families USB Glue Bindings
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20200324102030.31000-1-narmstrong@baylibre.com>
- <20200324102030.31000-2-narmstrong@baylibre.com>
- <CAFBinCCaMopoza5CFCC7=mStH8Ocni4GjGr+etn=dMKOgr_5fg@mail.gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT7CwHsEEwEKACUC
- GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
- RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
- NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
- 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
- ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
- YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIXOwU0EVid/pAEQAND7AFhr
- 5faf/EhDP9FSgYd/zgmb7JOpFPje3uw7jz9wFb28Cf0Y3CcncdElYoBNbRlesKvjQRL8mozV
- 9RN+IUMHdUx1akR/A4BPXNdL7StfzKWOCxZHVS+rIQ/fE3Qz/jRmT6t2ZkpplLxVBpdu95qJ
- YwSZjuwFXdC+A7MHtQXYi3UfCgKiflj4+/ITcKC6EF32KrmIRqamQwiRsDcUUKlAUjkCLcHL
- CQvNsDdm2cxdHxC32AVm3Je8VCsH7/qEPMQ+cEZk47HOR3+Ihfn1LEG5LfwsyWE8/JxsU2a1
- q44LQM2lcK/0AKAL20XDd7ERH/FCBKkNVzi+svYJpyvCZCnWT0TRb72mT+XxLWNwfHTeGALE
- +1As4jIS72IglvbtONxc2OIid3tR5rX3k2V0iud0P7Hnz/JTdfvSpVj55ZurOl2XAXUpGbq5
- XRk5CESFuLQV8oqCxgWAEgFyEapI4GwJsvfl/2Er8kLoucYO1Id4mz6N33+omPhaoXfHyLSy
- dxD+CzNJqN2GdavGtobdvv/2V0wukqj86iKF8toLG2/Fia3DxMaGUxqI7GMOuiGZjXPt/et/
- qeOySghdQ7Sdpu6fWc8CJXV2mOV6DrSzc6ZVB4SmvdoruBHWWOR6YnMz01ShFE49pPucyU1h
- Av4jC62El3pdCrDOnWNFMYbbon3vABEBAAHCwn4EGAECAAkFAlYnf6QCGwICKQkQFpq3saTP
- +K7BXSAEGQECAAYFAlYnf6QACgkQd9zb2sjISdGToxAAkOjSfGxp0ulgHboUAtmxaU3viucV
- e2Hl1BVDtKSKmbIVZmEUvx9D06IijFaEzqtKD34LXD6fjl4HIyDZvwfeaZCbJbO10j3k7FJE
- QrBtpdVqkJxme/nYlGOVzcOiKIepNkwvnHVnuVDVPcXyj2wqtsU7VZDDX41z3X4xTQwY3SO1
- 9nRO+f+i4RmtJcITgregMa2PcB0LvrjJlWroI+KAKCzoTHzSTpCXMJ1U/dEqyc87bFBdc+DI
- k8mWkPxsccdbs4t+hH0NoE3Kal9xtAl56RCtO/KgBLAQ5M8oToJVatxAjO1SnRYVN1EaAwrR
- xkHdd97qw6nbg9BMcAoa2NMc0/9MeiaQfbgW6b0reIz/haHhXZ6oYSCl15Knkr4t1o3I2Bqr
- Mw623gdiTzotgtId8VfLB2Vsatj35OqIn5lVbi2ua6I0gkI6S7xJhqeyrfhDNgzTHdQVHB9/
- 7jnM0ERXNy1Ket6aDWZWCvM59dTyu37g3VvYzGis8XzrX1oLBU/tTXqo1IFqqIAmvh7lI0Se
- gCrXz7UanxCwUbQBFjzGn6pooEHJYRLuVGLdBuoApl/I4dLqCZij2AGa4CFzrn9W0cwm3HCO
- lR43gFyz0dSkMwNUd195FrvfAz7Bjmmi19DnORKnQmlvGe/9xEEfr5zjey1N9+mt3//geDP6
- clwKBkq0JggA+RTEAELzkgPYKJ3NutoStUAKZGiLOFMpHY6KpItbbHjF2ZKIU1whaRYkHpB2
- uLQXOzZ0d7x60PUdhqG3VmFnzXSztA4vsnDKk7x2xw0pMSTKhMafpxaPQJf494/jGnwBHyi3
- h3QGG1RjfhQ/OMTX/HKtAUB2ct3Q8/jBfF0hS5GzT6dYtj0Ci7+8LUsB2VoayhNXMnaBfh+Q
- pAhaFfRZWTjUFIV4MpDdFDame7PB50s73gF/pfQbjw5Wxtes/0FnqydfId95s+eej+17ldGp
- lMv1ok7K0H/WJSdr7UwDAHEYU++p4RRTJP6DHWXcByVlpNQ4SSAiivmWiwOt490+Ac7ATQRN
- WQbPAQgAvIoM384ZRFocFXPCOBir5m2J+96R2tI2XxMgMfyDXGJwFilBNs+fpttJlt2995A8
- 0JwPj8SFdm6FBcxygmxBBCc7i/BVQuY8aC0Z/w9Vzt3Eo561r6pSHr5JGHe8hwBQUcNPd/9l
- 2ynP57YTSE9XaGJK8gIuTXWo7pzIkTXfN40Wh5jeCCspj4jNsWiYhljjIbrEj300g8RUT2U0
- FcEoiV7AjJWWQ5pi8lZJX6nmB0lc69Jw03V6mblgeZ/1oTZmOepkagwy2zLDXxihf0GowUif
- GphBDeP8elWBNK+ajl5rmpAMNRoKxpN/xR4NzBg62AjyIvigdywa1RehSTfccQARAQABwsBf
- BBgBAgAJBQJNWQbPAhsMAAoJEBaat7Gkz/iuteIH+wZuRDqK0ysAh+czshtG6JJlLW6eXJJR
- Vi7dIPpgFic2LcbkSlvB8E25Pcfz/+tW+04Urg4PxxFiTFdFCZO+prfd4Mge7/OvUcwoSub7
- ZIPo8726ZF5/xXzajahoIu9/hZ4iywWPAHRvprXaim5E/vKjcTeBMJIqZtS4u/UK3EpAX59R
- XVxVpM8zJPbk535ELUr6I5HQXnihQm8l6rt9TNuf8p2WEDxc8bPAZHLjNyw9a/CdeB97m2Tr
- zR8QplXA5kogS4kLe/7/JmlDMO8Zgm9vKLHSUeesLOrjdZ59EcjldNNBszRZQgEhwaarfz46
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <625d02c0-fe91-ad91-4337-fd406f6412ba@baylibre.com>
-Date:   Tue, 24 Mar 2020 15:10:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 24 Mar 2020 10:11:02 -0400
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id AE3861A6266CCB;
+        Tue, 24 Mar 2020 14:10:58 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits))
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Tue, 24 Mar 2020 14:10:57 +0000 (UTC)
+Message-ID: <3c20624ea9d88f13d6f1a768735f08a4a8a59ea6.camel@archlinux.org>
+Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
+ connection
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <superm1@gmail.com>,
+        Richard Hughes <hughsient@gmail.com>
+In-Reply-To: <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+         <20200318192721.390630-1-lains@archlinux.org>
+         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
+         <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
+         <220e8421f8ee0cf80375bfc4635e3eaa2bb8daf1.camel@hadess.net>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-pDPwtUufVHNf69huRHRz"
+Date:   Tue, 24 Mar 2020 14:10:57 +0000
 MIME-Version: 1.0
-In-Reply-To: <CAFBinCCaMopoza5CFCC7=mStH8Ocni4GjGr+etn=dMKOgr_5fg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: Evolution 3.36.0 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/03/2020 15:06, Martin Blumenstingl wrote:
-> Hi Neil,
-> 
-> On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-> [...]
->> --- a/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
->> +++ b/Documentation/devicetree/bindings/usb/amlogic,meson-g12a-usb-ctrl.yaml
->> @@ -25,9 +25,13 @@ description: |
->>    The Amlogic A1 embeds a DWC3 USB IP Core configured for USB2 in
->>    host-only mode.
->>
->> +  The Amlogic GXL & GXM SoCs doesn't embed an USB3 PHY.
->> +
->>  properties:
->>    compatible:
->>      enum:
->> +      - amlogic,meson-gxl-usb-ctrl
->> +      - amlogic,meson-gxm-usb-ctrl
->>        - amlogic,meson-g12a-usb-ctrl
->>        - amlogic,meson-a1-usb-ctrl
-> the phy-names property is described below which you don't update
-> please add usb2-phy2 to the list of allowed phy-names so the dt
-> binding validation for the .dtsi patche (#9) won't complain
 
-Missed this one, thanks !
+--=-pDPwtUufVHNf69huRHRz
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Neil
+On Tue, 2020-03-24 at 15:03 +0100, Bastien Nocera wrote:
+> On Tue, 2020-03-24 at 13:46 +0000, Filipe La=C3=ADns wrote:
+> > On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
+> > > On Wed, 2020-03-18 at 19:27 +0000, Filipe La=C3=ADns wrote:
+> > > > As discussed in the mailing list:
+> > > >=20
+> > > > > Right now the hid-logitech-dj driver will export one node for
+> > > > > each
+> > > > > connected device, even when the device is not connected. That
+> > > > > causes
+> > > > > some trouble because in userspace we don't have have any way to
+> > > > > know if
+> > > > > the device is connected or not, so when we try to communicate,
+> > > > > if
+> > > > > the
+> > > > > device is disconnected it will fail.
+> > >=20
+> > > Why is it a problem that user-space communication fails? Note that
+> > > sending a signal without any way to fetch the state means that it's
+> > > always going to be racy.
+> >=20
+> > It failing is not the problem. The problem is knowing when the device
+> > is available again. Right now the only way to do that is to listen
+> > for
+> > events or periodically ping it.
+> >=20
+> > We want to only export the HID++ hidraw node when the device is
+> > available but that will take a while. We will have to test and sync
+> > up
+> > userspace. I also want to write tests for the driver before, to make
+> > sure there are no regressions. We had a thread discussing this, IIRC
+> > you were in CC.
+>=20
+> If I need to remember some old thread to know what we're talking about,
+> then that means that the commit message is probably not good enough...
 
-> 
-> With that fixed:
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> 
-> 
-> Martin
-> 
+Should I put in the commit message what is planned next?
 
+> Please add some links to the relevant discussion on bug forums if
+> there's interesting data there too.
+
+You can find the discussion in [1][2].
+
+[1] https://www.spinics.net/lists/linux-input/thrd2.html#65615
+[2] https://www.spinics.net/lists/linux-input/msg65615.html
+
+> > > > The solution reached to solve this issue is to trigger an udev
+> > > > change
+> > > > event when the device connects, this way userspace can just wait
+> > > > on
+> > > > those connections instead of trying to ping the device.
+> > > >=20
+> > > > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> > > >=20
+> > > > ---
+> > > >=20
+> > > > v2:
+> > > >   - Issue udev change event on the connected hid device, not on
+> > > > the
+> > > >   receiver
+> > > >=20
+> > > > ---
+> > > >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
+> > > >  1 file changed, 6 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> > > > logitech-dj.c
+> > > > index 48dff5d6b605..282e57dd467d 100644
+> > > > --- a/drivers/hid/hid-logitech-dj.c
+> > > > +++ b/drivers/hid/hid-logitech-dj.c
+> > > > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct
+> > > > hid_device
+> > > > *hdev,
+> > > >  {
+> > > >  	struct dj_receiver_dev *djrcv_dev =3D hid_get_drvdata(hdev);
+> > > >  	struct dj_report *dj_report =3D (struct dj_report *) data;
+> > > > +	struct dj_device *dj_dev;
+> > > >  	unsigned long flags;
+> > > > =20
+> > > >  	/*
+> > > > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct
+> > > > hid_device
+> > > > *hdev,
+> > > > =20
+> > > >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
+> > > > =20
+> > > > -	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
+> > > > +	dj_dev =3D djrcv_dev->paired_dj_devices[dj_report->device_index];
+> > > > +
+> > > > +	if (!dj_dev) {
+> > > >  		/* received an event for an unknown device, bail out */
+> > > >  		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
+> > > >  		goto out;
+> > > > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct
+> > > > hid_device
+> > > > *hdev,
+> > > >  		if (dj_report-
+> > > > > report_params[CONNECTION_STATUS_PARAM_STATUS] =3D=3D
+> > > >  		    STATUS_LINKLOSS) {
+> > > >  			logi_dj_recv_forward_null_report(djrcv_dev,
+> > > > dj_report);
+> > > > +		} else {
+> > > > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
+> > > > KOBJ_CHANGE);
+> > > >  		}
+> > > >  		break;
+> > > >  	default:
+--=20
+Filipe La=C3=ADns
+
+--=-pDPwtUufVHNf69huRHRz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl56FOoACgkQ+JPGdIFq
+qV2TWRAAvWhHKnpVD7+X0n9FKziEPCKb1ACTxUHAO89vPsV6yPpoZhZqt+RvXB1u
+Pms8CsRYKBPmnGl5gMYBWStvSiyBsZdbYGRJC8wyAvheag86zr3Zgm8zakSXIJIa
+3WOJGkp08MZxxKRLeKU/RwkSMqkPe/cq8/ZaP97lTObhx912FH/KAs7wfUAX8m9T
+yRVvq6rUL1W8UeGpA5V8UYCCtKfzsLjU1682HXB+gEvjACBLYR5d6Tf77DwghRm6
+HiW/XTFB6nRRC+Aouj2cJixMkUK/4UCtazxaowr2JWT34Mml9gQRpwNtv/+nfLEs
+T/4Tcf3J9QbEEEpbozJ/rl3je4Sa9PP8p9s0raEdvv2ndZVfuwCu2qJj7p4yhJOi
+z59iFzzbtqBporPW9SoRgyxKnZ2o9Wj86wX4MQFxKK8culderl5inkutXtWo8ujF
+f0NQqpMhBz/7ZAW66Fu7g/3y63QXl9cPydjRHuHzqUYSfr7bzDi9sQNS+MZIRHFy
+pi0vy8Imxsq5sHOCvfNvXzvVJiZlkcX3ZiauNtAFhM+kgYXnurm3QAOVu+TxIV1I
+a5cQDvw/WRu8F2gz/CQiT2JKr85L873jie1lmfORek6EIrTQk/NpB2mmkuXDw5JR
+xJ2qq27aQlKRuu/DeNaMZcdFCQfVkGWsdGEalTSiDM0owjqTVPg=
+=wOd5
+-----END PGP SIGNATURE-----
+
+--=-pDPwtUufVHNf69huRHRz--
