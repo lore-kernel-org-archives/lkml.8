@@ -2,126 +2,242 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D03EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB104C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C4BA20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6053F206F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgCXBma (ORCPT
+        id S1727159AbgCXBrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 21:42:30 -0400
-Received: from mga06.intel.com ([134.134.136.31]:34433 "EHLO mga06.intel.com"
+        Mon, 23 Mar 2020 21:47:22 -0400
+Received: from mga17.intel.com ([192.55.52.151]:36045 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgCXBm3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 21:42:29 -0400
-IronPort-SDR: JBgzrgoK7kffK/l+cwFL+d7SaUOn82L3nfteoI5LxGg2pl+/bHN9EyQ4Z+mGy2iOCAnnhPJVE9
- XTl5HhWqlFmw==
+        id S1727053AbgCXBrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 21:47:21 -0400
+IronPort-SDR: nzG48UJ5cs2mi9lOYNq729bFSSp1i9MZkFhJY2yFITJ/Q0w+tyd2TWoqPfZlyfm+hpygEbL2aw
+ +NfjR7sNYU4g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 18:42:28 -0700
-IronPort-SDR: LefSmsp92s2IYF/PXnr6Ipuk/XOB1mRv7a3IU3qijkzj/XlZb1QGzvYjNjxIF9jCqaFVGqPRmz
- mqkp44TBM4QA==
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 18:47:16 -0700
+IronPort-SDR: OPkFMSMmxGdF0jiILzjnWfiWkdD4bXFaeL4yN0oegTJvgPnJt4wQJg0Ny4hTSYXV0PQEs8TOgE
+ xYYJn6kdqtkg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="264976626"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.254.208.83]) ([10.254.208.83])
-  by orsmga002.jf.intel.com with ESMTP; 23 Mar 2020 18:42:22 -0700
-Cc:     baolu.lu@linux.intel.com,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Yi Liu <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Lu, Baolu" <baolu.lu@intel.com>
-Subject: Re: [PATCH 2/2] iommu/vt-d: Replace intel SVM APIs with generic SVA
- APIs
-To:     "Raj, Ashok" <ashok.raj@intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-References: <1582586797-61697-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1582586797-61697-4-git-send-email-jacob.jun.pan@linux.intel.com>
- <20200320092955.GA1702630@myrica> <20200323230113.GA84386@otc-nc-03>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <6cc2f1ea-5a7d-eeab-b50c-5b464098de6b@linux.intel.com>
-Date:   Tue, 24 Mar 2020 09:42:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+   d="scan'208";a="325759425"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 23 Mar 2020 18:47:14 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jGYev-000Gja-QB; Tue, 24 Mar 2020 09:47:13 +0800
+Date:   Tue, 24 Mar 2020 09:46:52 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:locking/core] BUILD SUCCESS
+ 8bf6c677ddb9c922423ea3bf494fe7c508bfbb8c
+Message-ID: <5e79668c.vQWiWAhrubQeIrqU%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <20200323230113.GA84386@otc-nc-03>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/24 7:01, Raj, Ashok wrote:
-> Hi Jean
-> 
-> On Fri, Mar 20, 2020 at 10:29:55AM +0100, Jean-Philippe Brucker wrote:
->>> +#define to_intel_svm_dev(handle) container_of(handle, struct intel_svm_dev, sva)
->>> +struct iommu_sva *
->>> +intel_svm_bind(struct device *dev, struct mm_struct *mm, void *drvdata)
->>> +{
->>> +	struct iommu_sva *sva = ERR_PTR(-EINVAL);
->>> +	struct intel_svm_dev *sdev = NULL;
->>> +	int flags = 0;
->>> +	int ret;
->>> +
->>> +	/*
->>> +	 * TODO: Consolidate with generic iommu-sva bind after it is merged.
->>> +	 * It will require shared SVM data structures, i.e. combine io_mm
->>> +	 * and intel_svm etc.
->>> +	 */
->>> +	if (drvdata)
->>> +		flags = *(int *)drvdata;
->>
->> drvdata is more for storing device driver contexts that can be passed to
->> iommu_sva_ops, but I get that this is temporary.
->>
->> As usual I'm dreading supervisor mode making it into the common API. What
->> are your plans regarding SUPERVISOR_MODE and PRIVATE_PASID flags?  The
->> previous discussion on the subject [1] had me hoping that you could
->> replace supervisor mode with normal mappings (auxiliary domains?)
->> I'm less worried about PRIVATE_PASID, it would just add complexity into
-> 
-> We don't seem to have an immediate need for PRIVATE_PASID. There are some talks
-> about potential usages, but nothing concrete. I think it might be good to
-> get rid of it now and add when we really need.
-> 
-> For SUPERVISOR_MODE, the idea is to have aux domain. Baolu is working on
-> something to replace. Certainly the entire kernel address is opening up
-> the whole kimono.. so we are looking at dynamically creating mappings on demand.
-> It might take some of the benefits of SVA in general with no need to create
-> mappings, but for security somebody has to pay the price :-)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/peterz/queue.git  locking/core
+branch HEAD: 8bf6c677ddb9c922423ea3bf494fe7c508bfbb8c  completion: Use lockdep_assert_RT_in_threaded_ctx() in complete_all()
 
-My thought is to reuse below aux-domain API.
+elapsed time: 483m
 
-int iommu_aux_attach_device(struct iommu_domain *domain,
-			    struct device *dev)
+configs tested: 175
+configs skipped: 0
 
-Currently, it asks the vendor iommu driver to allocate a PASID and bind
-the domain with it. We can change it to allow the caller to pass in an
-existing supervisor PASID.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-int iommu_aux_attach_device(struct iommu_domain *domain,
-			    struct device *dev,
-			    int *pasid)
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+sparc                            allyesconfig
+sparc64                             defconfig
+riscv                          rv32_defconfig
+xtensa                       common_defconfig
+i386                              allnoconfig
+m68k                          multi_defconfig
+parisc                           allyesconfig
+ia64                             allyesconfig
+alpha                               defconfig
+i386                             allyesconfig
+i386                             alldefconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                          iss_defconfig
+nds32                               defconfig
+nds32                             allnoconfig
+csky                                defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200323
+x86_64               randconfig-a002-20200323
+x86_64               randconfig-a003-20200323
+i386                 randconfig-a001-20200323
+i386                 randconfig-a002-20200323
+i386                 randconfig-a003-20200323
+x86_64               randconfig-a001-20200322
+x86_64               randconfig-a002-20200322
+x86_64               randconfig-a003-20200322
+i386                 randconfig-a001-20200322
+i386                 randconfig-a002-20200322
+i386                 randconfig-a003-20200322
+alpha                randconfig-a001-20200323
+m68k                 randconfig-a001-20200323
+mips                 randconfig-a001-20200323
+nds32                randconfig-a001-20200323
+parisc               randconfig-a001-20200323
+riscv                randconfig-a001-20200323
+c6x                  randconfig-a001-20200323
+h8300                randconfig-a001-20200323
+microblaze           randconfig-a001-20200323
+nios2                randconfig-a001-20200323
+sparc64              randconfig-a001-20200323
+c6x                  randconfig-a001-20200322
+h8300                randconfig-a001-20200322
+microblaze           randconfig-a001-20200322
+nios2                randconfig-a001-20200322
+sparc64              randconfig-a001-20200322
+csky                 randconfig-a001-20200323
+openrisc             randconfig-a001-20200323
+s390                 randconfig-a001-20200323
+sh                   randconfig-a001-20200323
+xtensa               randconfig-a001-20200323
+x86_64               randconfig-b001-20200323
+x86_64               randconfig-b002-20200323
+x86_64               randconfig-b003-20200323
+i386                 randconfig-b001-20200323
+i386                 randconfig-b002-20200323
+i386                 randconfig-b003-20200323
+x86_64               randconfig-c001-20200323
+x86_64               randconfig-c002-20200323
+x86_64               randconfig-c003-20200323
+i386                 randconfig-c001-20200323
+i386                 randconfig-c002-20200323
+i386                 randconfig-c003-20200323
+x86_64               randconfig-d001-20200323
+x86_64               randconfig-d002-20200323
+x86_64               randconfig-d003-20200323
+i386                 randconfig-d001-20200323
+i386                 randconfig-d002-20200323
+i386                 randconfig-d003-20200323
+x86_64               randconfig-e001-20200323
+x86_64               randconfig-e002-20200323
+x86_64               randconfig-e003-20200323
+i386                 randconfig-e001-20200323
+i386                 randconfig-e002-20200323
+i386                 randconfig-e003-20200323
+x86_64               randconfig-f001-20200323
+x86_64               randconfig-f002-20200323
+x86_64               randconfig-f003-20200323
+i386                 randconfig-f001-20200323
+i386                 randconfig-f002-20200323
+i386                 randconfig-f003-20200323
+x86_64               randconfig-g001-20200323
+x86_64               randconfig-g002-20200323
+x86_64               randconfig-g003-20200323
+i386                 randconfig-g001-20200323
+i386                 randconfig-g002-20200323
+i386                 randconfig-g003-20200323
+x86_64               randconfig-h001-20200323
+x86_64               randconfig-h002-20200323
+x86_64               randconfig-h003-20200323
+i386                 randconfig-h001-20200323
+i386                 randconfig-h002-20200323
+i386                 randconfig-h003-20200323
+arc                  randconfig-a001-20200323
+arm                  randconfig-a001-20200323
+arm64                randconfig-a001-20200323
+ia64                 randconfig-a001-20200323
+powerpc              randconfig-a001-20200323
+sparc                randconfig-a001-20200323
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                            allmodconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                          rsk7269_defconfig
+sh                               allmodconfig
+sh                            titan_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                                allnoconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
 
-In the vendor iommu driver, if (*pasid == INVALID_IOASID), it will
-allocate a pasid (the same as current behavior); otherwise, attach
-the domain with the pass-in pasid.
-
-Best regards,
-baolu
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
