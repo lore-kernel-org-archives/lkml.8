@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7BAAC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5AEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72EB720B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B60D20788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s71UXnum"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ljG6X1PC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728755AbgCXOZW (ORCPT
+        id S1727545AbgCXOZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:25:22 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53674 "EHLO
+        Tue, 24 Mar 2020 10:25:21 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53672 "EHLO
         merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728483AbgCXOYy (ORCPT
+        with ESMTP id S1728479AbgCXOYy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 10:24:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=XZVv8XkxM9QWcVmY7RFKry2CjWqW6p5/DUZX7TjB8Q8=; b=s71UXnumciQtCwBjd4Cqftfxo1
-        b+vHKdI11zcro7o6ARfaSIbmJwUi0GW8x58rpmK2oKhV5AcGiL/jlgKA1xPn8oCM5RJMhavvlj8l6
-        4W7k1NqAMaRUGtZTR3ZCIt3vj9qaIFOiQcSMssT7G48FUti4/Pp1MgxWFhtcp3Y1Lpco5QDsAKRQO
-        xFVaT9oq1AUde0lkGuKHOi7SqNnmWflSBpv4LIMQ+MPkYhtwH2bBFWDRXPlzfNUUfEnMDU53eLCoD
-        +npER9j53VDUn3Mm3DJH3+IC+L43VfKaomOsfKk3wMmW07K+6RKHn7ZAUJA5XGCB6JSfzAMSwpIgP
-        JdfcJM7w==;
+        bh=UsTFjCU2bXXrytUp1tOqPNrzm1u5Z2wNiF1ZPyQ5Xf4=; b=ljG6X1PCjRVc8YLSWSxutQbAV0
+        prxZpHN+QqXGoJD0XfmgrXrQQJUTJyaTC+ujvHJ/HPMqLJjLYaowdSAosxsO0fZgk/i4wAZ9u9zb2
+        Mtg/nLpUhDb6O+M4JSLwpujiqlwV1MSBnmIxUTjqdX/vsX8B9FjYgeQNTEpmH2pLzc3LzXl0kOcBo
+        TUcaivAC5/kZaoytU2C8WsvY2gOHhQi2fiIrdSinwq6N6HdnY8/cOjOM4MS+6OUlwFU0pwisfr1mU
+        0v4DtFwtD0WIiPSItnEWtVt3FPGDQn6guNvfrRgTTlX+Q10JrsB/wg8dZ5n9KFxHqbt+ux03vG8lA
+        yJYgodSg==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
         by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGkTw-0003p4-HZ; Tue, 24 Mar 2020 14:24:40 +0000
+        id 1jGkTv-0003ol-3Z; Tue, 24 Mar 2020 14:24:39 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 89EE4307970;
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6D97230782A;
         Tue, 24 Mar 2020 15:24:35 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 3C10D286C13BE; Tue, 24 Mar 2020 15:24:35 +0100 (CET)
-Message-Id: <20200324142246.308204077@infradead.org>
+        id 07F2F286C13B3; Tue, 24 Mar 2020 15:24:35 +0100 (CET)
+Message-Id: <20200324142245.632535759@infradead.org>
 User-Agent: quilt/0.65
-Date:   Tue, 24 Mar 2020 14:56:20 +0100
+Date:   Tue, 24 Mar 2020 14:56:09 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     x86@kernel.org
 Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
@@ -53,7 +53,7 @@ Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
         tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
         hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
         jpoimboe@redhat.com
-Subject: [RESEND][PATCH v3 17/17] x86/perf, static_call: Optimize x86_pmu methods
+Subject: [RESEND][PATCH v3 06/17] static_call: Add basic static call infrastructure
 References: <20200324135603.483964896@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,297 +62,206 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace many of the indirect calls with static_call().
+Static calls are a replacement for global function pointers.  They use
+code patching to allow direct calls to be used instead of indirect
+calls.  They give the flexibility of function pointers, but with
+improved performance.  This is especially important for cases where
+retpolines would otherwise be used, as retpolines can significantly
+impact performance.
 
-XXX run performance numbers
+The concept and code are an extension of previous work done by Ard
+Biesheuvel and Steven Rostedt:
 
+  https://lkml.kernel.org/r/20181005081333.15018-1-ard.biesheuvel@linaro.org
+  https://lkml.kernel.org/r/20181006015110.653946300@goodmis.org
+
+There are two implementations, depending on arch support:
+
+ 1) out-of-line: patched trampolines (CONFIG_HAVE_STATIC_CALL)
+ 2) basic function pointers
+
+For more details, see the comments in include/linux/static_call.h.
+
+[peterz: simplified interface]
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/events/core.c |  130 +++++++++++++++++++++++++++++++++----------------
- 1 file changed, 90 insertions(+), 40 deletions(-)
+ arch/Kconfig                      |    3 
+ include/linux/static_call.h       |  137 ++++++++++++++++++++++++++++++++++++++
+ include/linux/static_call_types.h |   15 ++++
+ 3 files changed, 155 insertions(+)
+ create mode 100644 include/linux/static_call.h
+ create mode 100644 include/linux/static_call_types.h
 
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -28,6 +28,7 @@
- #include <linux/bitops.h>
- #include <linux/device.h>
- #include <linux/nospec.h>
-+#include <linux/static_call.h>
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -941,6 +941,9 @@ config HAVE_SPARSE_SYSCALL_NR
+ 	  entries at 4000, 5000 and 6000 locations. This option turns on syscall
+ 	  related optimizations for a given architecture.
  
- #include <asm/apic.h>
- #include <asm/stacktrace.h>
-@@ -52,6 +53,30 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu
- DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
- DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
- 
-+DEFINE_STATIC_COND_CALL(x86_pmu_handle_irq,  *x86_pmu.handle_irq);
-+DEFINE_STATIC_COND_CALL(x86_pmu_disable_all, *x86_pmu.disable_all);
-+DEFINE_STATIC_COND_CALL(x86_pmu_enable_all,  *x86_pmu.enable_all);
-+DEFINE_STATIC_COND_CALL(x86_pmu_enable,	     *x86_pmu.enable);
-+DEFINE_STATIC_COND_CALL(x86_pmu_disable,     *x86_pmu.disable);
++config HAVE_STATIC_CALL
++	bool
 +
-+DEFINE_STATIC_COND_CALL(x86_pmu_add,  *x86_pmu.add);
-+DEFINE_STATIC_COND_CALL(x86_pmu_del,  *x86_pmu.del);
-+DEFINE_STATIC_COND_CALL(x86_pmu_read, *x86_pmu.read);
+ source "kernel/gcov/Kconfig"
+ 
+ source "scripts/gcc-plugins/Kconfig"
+--- /dev/null
++++ b/include/linux/static_call.h
+@@ -0,0 +1,137 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_STATIC_CALL_H
++#define _LINUX_STATIC_CALL_H
 +
-+DEFINE_STATIC_COND_CALL(x86_pmu_schedule_events,       *x86_pmu.schedule_events);
-+DEFINE_STATIC_COND_CALL(x86_pmu_get_event_constraints, *x86_pmu.get_event_constraints);
-+DEFINE_STATIC_COND_CALL(x86_pmu_put_event_constraints, *x86_pmu.put_event_constraints);
++/*
++ * Static call support
++ *
++ * Static calls use code patching to hard-code function pointers into direct
++ * branch instructions.  They give the flexibility of function pointers, but
++ * with improved performance.  This is especially important for cases where
++ * retpolines would otherwise be used, as retpolines can significantly impact
++ * performance.
++ *
++ *
++ * API overview:
++ *
++ *   DECLARE_STATIC_CALL(name, func);
++ *   DEFINE_STATIC_CALL(name, func);
++ *   static_call(name)(args...);
++ *   static_call_update(name, func);
++ *
++ * Usage example:
++ *
++ *   # Start with the following functions (with identical prototypes):
++ *   int func_a(int arg1, int arg2);
++ *   int func_b(int arg1, int arg2);
++ *
++ *   # Define a 'my_name' reference, associated with func_a() by default
++ *   DEFINE_STATIC_CALL(my_name, func_a);
++ *
++ *   # Call func_a()
++ *   static_call(my_name)(arg1, arg2);
++ *
++ *   # Update 'my_name' to point to func_b()
++ *   static_call_update(my_name, &func_b);
++ *
++ *   # Call func_b()
++ *   static_call(my_name)(arg1, arg2);
++ *
++ *
++ * Implementation details:
++ *
++ *    This requires some arch-specific code (CONFIG_HAVE_STATIC_CALL).
++ *    Otherwise basic indirect calls are used (with function pointers).
++ *
++ *    Each static_call() site calls into a trampoline associated with the name.
++ *    The trampoline has a direct branch to the default function.  Updates to a
++ *    name will modify the trampoline's branch destination.
++ *
++ *    If the arch has CONFIG_HAVE_STATIC_CALL_INLINE, then the call sites
++ *    themselves will be patched at runtime to call the functions directly,
++ *    rather than calling through the trampoline.  This requires objtool or a
++ *    compiler plugin to detect all the static_call() sites and annotate them
++ *    in the .static_call_sites section.
++ */
 +
-+DEFINE_STATIC_COND_CALL(x86_pmu_start_scheduling,  *x86_pmu.start_scheduling);
-+DEFINE_STATIC_COND_CALL(x86_pmu_commit_scheduling, *x86_pmu.commit_scheduling);
-+DEFINE_STATIC_COND_CALL(x86_pmu_stop_scheduling,   *x86_pmu.stop_scheduling);
++#include <linux/types.h>
++#include <linux/cpu.h>
++#include <linux/static_call_types.h>
 +
-+DEFINE_STATIC_COND_CALL(x86_pmu_sched_task,    *x86_pmu.sched_task);
-+DEFINE_STATIC_COND_CALL(x86_pmu_swap_task_ctx, *x86_pmu.swap_task_ctx);
++#ifdef CONFIG_HAVE_STATIC_CALL
++#include <asm/static_call.h>
++/*
++ * Either @site or @tramp can be NULL.
++ */
++extern void arch_static_call_transform(void *site, void *tramp, void *func);
++#define STATIC_CALL_TRAMP_ADDR(name) &STATIC_CALL_TRAMP(name)
++#else
++#define STATIC_CALL_TRAMP_ADDR(name) NULL
++#endif
 +
-+DEFINE_STATIC_COND_CALL(x86_pmu_drain_pebs,   *x86_pmu.drain_pebs);
-+DEFINE_STATIC_COND_CALL(x86_pmu_pebs_aliases, *x86_pmu.pebs_aliases);
 +
- u64 __read_mostly hw_cache_event_ids
- 				[PERF_COUNT_HW_CACHE_MAX]
- 				[PERF_COUNT_HW_CACHE_OP_MAX]
-@@ -660,7 +685,7 @@ static void x86_pmu_disable(struct pmu *
- 	cpuc->enabled = 0;
- 	barrier();
- 
--	x86_pmu.disable_all();
-+	static_call(x86_pmu_disable_all)();
- }
- 
- void x86_pmu_enable_all(int added)
-@@ -907,8 +932,7 @@ int x86_schedule_events(struct cpu_hw_ev
- 	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
- 		n0 -= cpuc->n_txn;
- 
--	if (x86_pmu.start_scheduling)
--		x86_pmu.start_scheduling(cpuc);
-+	static_cond_call(x86_pmu_start_scheduling)(cpuc);
- 
- 	for (i = 0, wmin = X86_PMC_IDX_MAX, wmax = 0; i < n; i++) {
- 		c = cpuc->event_constraint[i];
-@@ -925,7 +949,7 @@ int x86_schedule_events(struct cpu_hw_ev
- 		 * change due to external factors (sibling state, allow_tfa).
- 		 */
- 		if (!c || (c->flags & PERF_X86_EVENT_DYNAMIC)) {
--			c = x86_pmu.get_event_constraints(cpuc, i, cpuc->event_list[i]);
-+			c = static_call(x86_pmu_get_event_constraints)(cpuc, i, cpuc->event_list[i]);
- 			cpuc->event_constraint[i] = c;
- 		}
- 
-@@ -1008,8 +1032,7 @@ int x86_schedule_events(struct cpu_hw_ev
- 	if (!unsched && assign) {
- 		for (i = 0; i < n; i++) {
- 			e = cpuc->event_list[i];
--			if (x86_pmu.commit_scheduling)
--				x86_pmu.commit_scheduling(cpuc, i, assign[i]);
-+			static_cond_call(x86_pmu_commit_scheduling)(cpuc, i, assign[i]);
- 		}
- 	} else {
- 		for (i = n0; i < n; i++) {
-@@ -1018,15 +1041,13 @@ int x86_schedule_events(struct cpu_hw_ev
- 			/*
- 			 * release events that failed scheduling
- 			 */
--			if (x86_pmu.put_event_constraints)
--				x86_pmu.put_event_constraints(cpuc, e);
-+			static_cond_call(x86_pmu_put_event_constraints)(cpuc, e);
- 
- 			cpuc->event_constraint[i] = NULL;
- 		}
- 	}
- 
--	if (x86_pmu.stop_scheduling)
--		x86_pmu.stop_scheduling(cpuc);
-+	static_cond_call(x86_pmu_stop_scheduling)(cpuc);
- 
- 	return unsched ? -EINVAL : 0;
- }
-@@ -1217,7 +1238,7 @@ static void x86_pmu_enable(struct pmu *p
- 	cpuc->enabled = 1;
- 	barrier();
- 
--	x86_pmu.enable_all(added);
-+	static_call(x86_pmu_enable_all)(added);
- }
- 
- static DEFINE_PER_CPU(u64 [X86_PMC_IDX_MAX], pmc_prev_left);
-@@ -1338,7 +1359,7 @@ static int x86_pmu_add(struct perf_event
- 	if (cpuc->txn_flags & PERF_PMU_TXN_ADD)
- 		goto done_collect;
- 
--	ret = x86_pmu.schedule_events(cpuc, n, assign);
-+	ret = static_call(x86_pmu_schedule_events)(cpuc, n, assign);
- 	if (ret)
- 		goto out;
- 	/*
-@@ -1356,13 +1377,11 @@ static int x86_pmu_add(struct perf_event
- 	cpuc->n_added += n - n0;
- 	cpuc->n_txn += n - n0;
- 
--	if (x86_pmu.add) {
--		/*
--		 * This is before x86_pmu_enable() will call x86_pmu_start(),
--		 * so we enable LBRs before an event needs them etc..
--		 */
--		x86_pmu.add(event);
--	}
-+	/*
-+	 * This is before x86_pmu_enable() will call x86_pmu_start(),
-+	 * so we enable LBRs before an event needs them etc..
-+	 */
-+	static_cond_call(x86_pmu_add)(event);
- 
- 	ret = 0;
- out:
-@@ -1390,7 +1409,7 @@ static void x86_pmu_start(struct perf_ev
- 	cpuc->events[idx] = event;
- 	__set_bit(idx, cpuc->active_mask);
- 	__set_bit(idx, cpuc->running);
--	x86_pmu.enable(event);
-+	static_call(x86_pmu_enable)(event);
- 	perf_event_update_userpage(event);
- }
- 
-@@ -1460,7 +1479,7 @@ void x86_pmu_stop(struct perf_event *eve
- 	struct hw_perf_event *hwc = &event->hw;
- 
- 	if (test_bit(hwc->idx, cpuc->active_mask)) {
--		x86_pmu.disable(event);
-+		static_call(x86_pmu_disable)(event);
- 		__clear_bit(hwc->idx, cpuc->active_mask);
- 		cpuc->events[hwc->idx] = NULL;
- 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
-@@ -1510,8 +1529,7 @@ static void x86_pmu_del(struct perf_even
- 	if (i >= cpuc->n_events - cpuc->n_added)
- 		--cpuc->n_added;
- 
--	if (x86_pmu.put_event_constraints)
--		x86_pmu.put_event_constraints(cpuc, event);
-+	static_cond_call(x86_pmu_put_event_constraints)(cpuc, event);
- 
- 	/* Delete the array entry. */
- 	while (++i < cpuc->n_events) {
-@@ -1524,13 +1542,12 @@ static void x86_pmu_del(struct perf_even
- 	perf_event_update_userpage(event);
- 
- do_del:
--	if (x86_pmu.del) {
--		/*
--		 * This is after x86_pmu_stop(); so we disable LBRs after any
--		 * event can need them etc..
--		 */
--		x86_pmu.del(event);
--	}
++#define DECLARE_STATIC_CALL(name, func)					\
++	extern struct static_call_key STATIC_CALL_NAME(name);		\
++	extern typeof(func) STATIC_CALL_TRAMP(name)
 +
-+	/*
-+	 * This is after x86_pmu_stop(); so we disable LBRs after any
-+	 * event can need them etc..
-+	 */
-+	static_cond_call(x86_pmu_del)(event);
- }
- 
- int x86_pmu_handle_irq(struct pt_regs *regs)
-@@ -1608,7 +1625,7 @@ perf_event_nmi_handler(unsigned int cmd,
- 		return NMI_DONE;
- 
- 	start_clock = sched_clock();
--	ret = x86_pmu.handle_irq(regs);
-+	ret = static_call(x86_pmu_handle_irq)(regs);
- 	finish_clock = sched_clock();
- 
- 	perf_sample_event_took(finish_clock - start_clock);
-@@ -1821,6 +1838,38 @@ ssize_t x86_event_sysfs_show(char *page,
- static struct attribute_group x86_pmu_attr_group;
- static struct attribute_group x86_pmu_caps_group;
- 
-+static void x86_pmu_static_call_update(void)
++#define static_call_update(name, func)					\
++({									\
++	BUILD_BUG_ON(!__same_type(*(func), STATIC_CALL_TRAMP(name)));	\
++	__static_call_update(&STATIC_CALL_NAME(name),			\
++			     STATIC_CALL_TRAMP_ADDR(name), func);	\
++})
++
++#if defined(CONFIG_HAVE_STATIC_CALL)
++
++struct static_call_key {
++	void *func;
++};
++
++#define DEFINE_STATIC_CALL(name, _func)					\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_NAME(name) = {		\
++		.func = _func,						\
++	};								\
++	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
++
++#define static_call(name)	STATIC_CALL_TRAMP(name)
++
++static inline
++void __static_call_update(struct static_call_key *key, void *tramp, void *func)
 +{
-+	static_call_update(x86_pmu_handle_irq, x86_pmu.handle_irq);
-+	static_call_update(x86_pmu_disable_all, x86_pmu.disable_all);
-+	static_call_update(x86_pmu_enable_all, x86_pmu.enable_all);
-+	static_call_update(x86_pmu_enable, x86_pmu.enable);
-+	static_call_update(x86_pmu_disable, x86_pmu.disable);
-+
-+	static_call_update(x86_pmu_add, x86_pmu.add);
-+	static_call_update(x86_pmu_del, x86_pmu.del);
-+	static_call_update(x86_pmu_read, x86_pmu.read);
-+
-+	static_call_update(x86_pmu_schedule_events, x86_pmu.schedule_events);
-+	static_call_update(x86_pmu_get_event_constraints, x86_pmu.get_event_constraints);
-+	static_call_update(x86_pmu_put_event_constraints, x86_pmu.put_event_constraints);
-+
-+	static_call_update(x86_pmu_start_scheduling, x86_pmu.start_scheduling);
-+	static_call_update(x86_pmu_commit_scheduling, x86_pmu.commit_scheduling);
-+	static_call_update(x86_pmu_stop_scheduling, x86_pmu.stop_scheduling);
-+
-+	static_call_update(x86_pmu_sched_task, x86_pmu.sched_task);
-+	static_call_update(x86_pmu_swap_task_ctx, x86_pmu.swap_task_ctx);
-+
-+	static_call_update(x86_pmu_drain_pebs, x86_pmu.drain_pebs);
-+	static_call_update(x86_pmu_pebs_aliases, x86_pmu.pebs_aliases);
++	cpus_read_lock();
++	WRITE_ONCE(key->func, func);
++	arch_static_call_transform(NULL, tramp, func);
++	cpus_read_unlock();
 +}
 +
-+static void _x86_pmu_read(struct perf_event *event)
++#define EXPORT_STATIC_CALL(name)	EXPORT_SYMBOL(STATIC_CALL_TRAMP(name))
++#define EXPORT_STATIC_CALL_GPL(name)	EXPORT_SYMBOL_GPL(STATIC_CALL_TRAMP(name))
++
++#else /* Generic implementation */
++
++struct static_call_key {
++	void *func;
++};
++
++#define DEFINE_STATIC_CALL(name, _func)					\
++	DECLARE_STATIC_CALL(name, _func);				\
++	struct static_call_key STATIC_CALL_NAME(name) = {		\
++		.func = _func,						\
++	}
++
++#define static_call(name)						\
++	((typeof(STATIC_CALL_TRAMP(name))*)(STATIC_CALL_NAME(name).func))
++
++static inline
++void __static_call_update(struct static_call_key *key, void *tramp, void *func)
 +{
-+	x86_perf_event_update(event);
++	WRITE_ONCE(key->func, func);
 +}
 +
- static int __init init_hw_perf_events(void)
- {
- 	struct x86_pmu_quirk *quirk;
-@@ -1885,6 +1934,11 @@ static int __init init_hw_perf_events(vo
- 	pr_info("... fixed-purpose events:   %d\n",     x86_pmu.num_counters_fixed);
- 	pr_info("... event mask:             %016Lx\n", x86_pmu.intel_ctrl);
- 
-+	if (!x86_pmu.read)
-+		x86_pmu.read = _x86_pmu_read;
++#define EXPORT_STATIC_CALL(name)	EXPORT_SYMBOL(STATIC_CALL_NAME(name))
++#define EXPORT_STATIC_CALL_GPL(name)	EXPORT_SYMBOL_GPL(STATIC_CALL_NAME(name))
 +
-+	x86_pmu_static_call_update();
++#endif /* CONFIG_HAVE_STATIC_CALL */
 +
- 	/*
- 	 * Install callbacks. Core will call them for each online
- 	 * cpu.
-@@ -1921,11 +1975,9 @@ static int __init init_hw_perf_events(vo
- }
- early_initcall(init_hw_perf_events);
- 
--static inline void x86_pmu_read(struct perf_event *event)
-+static void x86_pmu_read(struct perf_event *event)
- {
--	if (x86_pmu.read)
--		return x86_pmu.read(event);
--	x86_perf_event_update(event);
-+	static_call(x86_pmu_read)(event);
- }
- 
- /*
-@@ -2002,7 +2054,7 @@ static int x86_pmu_commit_txn(struct pmu
- 	if (!x86_pmu_initialized())
- 		return -EAGAIN;
- 
--	ret = x86_pmu.schedule_events(cpuc, n, assign);
-+	ret = static_call(x86_pmu_schedule_events)(cpuc, n, assign);
- 	if (ret)
- 		return ret;
- 
-@@ -2300,15 +2352,13 @@ static const struct attribute_group *x86
- 
- static void x86_pmu_sched_task(struct perf_event_context *ctx, bool sched_in)
- {
--	if (x86_pmu.sched_task)
--		x86_pmu.sched_task(ctx, sched_in);
-+	static_cond_call(x86_pmu_sched_task)(ctx, sched_in);
- }
- 
- static void x86_pmu_swap_task_ctx(struct perf_event_context *prev,
- 				  struct perf_event_context *next)
- {
--	if (x86_pmu.swap_task_ctx)
--		x86_pmu.swap_task_ctx(prev, next);
-+	static_cond_call(x86_pmu_swap_task_ctx)(prev, next);
- }
- 
- void perf_check_microcode(void)
++#endif /* _LINUX_STATIC_CALL_H */
+--- /dev/null
++++ b/include/linux/static_call_types.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _STATIC_CALL_TYPES_H
++#define _STATIC_CALL_TYPES_H
++
++#include <linux/stringify.h>
++
++#define STATIC_CALL_PREFIX	__SC__
++#define STATIC_CALL_PREFIX_STR	__stringify(STATIC_CALL_PREFIX)
++
++#define STATIC_CALL_NAME(name)	__PASTE(STATIC_CALL_PREFIX, name)
++
++#define STATIC_CALL_TRAMP(name)	    STATIC_CALL_NAME(name##_tramp)
++#define STATIC_CALL_TRAMP_STR(name) __stringify(STATIC_CALL_TRAMP(name))
++
++#endif /* _STATIC_CALL_TYPES_H */
 
 
