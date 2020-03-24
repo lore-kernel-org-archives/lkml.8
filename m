@@ -2,125 +2,221 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FA76C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E17C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1740B20786
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:46:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6426220786
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iB9wbzaX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vA3p3t11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgCXIqn (ORCPT
+        id S1727112AbgCXIs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:46:43 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51766 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgCXIqm (ORCPT
+        Tue, 24 Mar 2020 04:48:28 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38762 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726462AbgCXIs2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:46:42 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c187so2251533wme.1;
-        Tue, 24 Mar 2020 01:46:41 -0700 (PDT)
+        Tue, 24 Mar 2020 04:48:28 -0400
+Received: by mail-pj1-f67.google.com with SMTP id m15so1136077pje.3;
+        Tue, 24 Mar 2020 01:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=vqE7J9avKRSB75CS08tA1XMoBisXuxlVqJUICDm2RMc=;
-        b=iB9wbzaXPETI8Jb4Po7UfmfNXF6g7zdHRjpkGrdg+WTzOJRbBAx2+GP7gcOQS/Vzs5
-         +C+Pi9XP8VtWYdqYg/gHoDei+hXFTHyCSbL6eII5G6A0LIpmETLm/pG87ekJ+EINYE/E
-         zrA73dd/jf7HTdinDv4q3tlxozFIwRNicWm0FXioCDqu3YW3mMjfJWvdJex1KIZR6qMI
-         kI3MToyfz87GWNGZh4U8kB2iw5xIcV/A+UJBA2c0mCbvQvW0krQqvMwjkdSDvNaoQZF7
-         UtBwA1IiMoQOjNUx3EA1ajUgOr6Pnnzk0A0Fic8eL2OYmtc7y0mFCxEkRbvvr78mYnyq
-         m8lA==
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=bt3cOsdr0C8cVmPItgi4WdtrPk2V3/FsORYh/CBY/lI=;
+        b=vA3p3t11FbBNkJKydmTaNNK3N5QW4gtpYzmlrgSF1JIT3wXicBoyZQ6X2qPv4Qvl27
+         atW1VCrGbGDlTg1jxwlWdC53pfi5pO12GqKqWwzjPJCi8yZkG6OkVtvJw1OLGhqdMKWJ
+         YVITCgHIF79H5pfiZs2gYUgZSyX4kEOcNHQAOMwGVYaxcpUJsAqTXPerqQZwYHyBEzGP
+         +AvKs5zDXWGhMNjVuH2KjgkSnFMBn/CbVRXP9QCpCiofOD2/GVjOn735K6I/pb/gBuj3
+         IWQbe9lei2ON6VbPeMLYajngQQ1HgV/7UZkMxmMQH9Ng01J1kjTH9anTeMvW0mB2L1lX
+         KhRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=vqE7J9avKRSB75CS08tA1XMoBisXuxlVqJUICDm2RMc=;
-        b=PO4Rp3vDhsPNw2QoujVgXZc63iRF/2LPh4ENh9nERtiqAahtuK1O1LHAg+K3lpIQud
-         tBNJDMabDCTooRq6wEzFzu6BSUX3RMrIO6keXpYr4QxDRnIp59jYf+ggAbWDkc5Y+TBp
-         7jZl5sMx12RuIo72PlwXNxYvOK7Idoj0XrN6ppHrslA/PaSHBzO8kNuyB2204Bf0886x
-         f/B3BIYA1wvmKf5cZ13y77p8VYs3vLpe2/oLe6q+Jk7e64O9dxvmWOtNJV+2DCIQd0Xc
-         xQL9TRWpYCF4KrS7oqN5T8PrATj48I36wFDe8dPMv0cBR45LIrHHg6qxO1te+kO6tbJt
-         +w/g==
-X-Gm-Message-State: ANhLgQ02cnskAVs7lWCMOslMEf7r1sJH3fkeSC/aMLfZHTKg6IFRgv6K
-        MUt0Ifry0fkZf9Uf1pzSUgt64wsMqidBhP5fuWKo8CVWgHI=
-X-Google-Smtp-Source: ADFU+vu3SGbdVgIeiQ031Be5sYxOpTkuy1gw7+8uJLrstgU/URuYpZnDw+A4NvU7i0GqhuMsIPrA0BEnrww0jHe9CBY=
-X-Received: by 2002:a1c:41d6:: with SMTP id o205mr4183235wma.122.1585039600829;
- Tue, 24 Mar 2020 01:46:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200323020844.17064-1-masahiroy@kernel.org> <CAHmME9p=ECJ15uyPH79bF0tuzEksdxoUsjGQSyz74FfdEJxTpQ@mail.gmail.com>
- <CAHmME9q4egN7_KeYB-ZHCFPfXs-virgTv4iz9jW2SVOM7dTnLw@mail.gmail.com>
- <CAK7LNAR07vZFzh1Bbpq4CoJ4zmsc+p5rxpkO1Zv8QVfqhfvr2w@mail.gmail.com>
- <CAHmME9qCjo4kOQM3Dw6PDjEebmb6rvXajqhK-m-=vKcHWqNhAw@mail.gmail.com>
- <CA+icZUUjP7e2zgrVCFenO_YJfpcOQWV++kuU5UWGKN_5udZXSw@mail.gmail.com> <CAHmME9quSMLwLacntdhvLKVDVtg6QVGhOQxADzz_4kVZYOJxNA@mail.gmail.com>
-In-Reply-To: <CAHmME9quSMLwLacntdhvLKVDVtg6QVGhOQxADzz_4kVZYOJxNA@mail.gmail.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 24 Mar 2020 09:46:29 +0100
-Message-ID: <CA+icZUVCftYBYzxe+YJkN1WRGX+nQkHVaFxvW-S64k6WtdB64g@mail.gmail.com>
-Subject: Re: [PATCH 0/7] x86: remove always-defined CONFIG_AS_* options
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, X86 ML <x86@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=bt3cOsdr0C8cVmPItgi4WdtrPk2V3/FsORYh/CBY/lI=;
+        b=BuT+swMKDciqMfV1Rt6b9L2ej13W46AaJH+nVcnlpLSEvMRgWhqVvEMlbPx0O1YQC9
+         Yts21G3x83lNM0WDFqrTtd6Vvoeh8v7hRSlzqdiaNgp+P+Yk1S0Scm9C2QYzvAQBni35
+         j1OjkBuMgmaMQ5IMAXvZp5p3rykDi7l3j92hy8ogMbDhRkHUodak1UmkyyaRL9Dz5Zjo
+         pwKyyaqClj4WRk7Or93WOs0ytCCwzD8r2QlTmeoKtPnAOvxYiH54ZySEDgCM2R1yt0Ql
+         b/aovxDs72u2Cpv+rwsja1I9yHm2IndN+msDJSle5b7pGg/ST/jVuMZsHl5FtOBgfmwY
+         0P5w==
+X-Gm-Message-State: ANhLgQ1kIirLbHksAVKFZvd36dbcWNzsFfXdJKR2uY1WiK//NFUwKKs4
+        DmmHF9mz15q0B5qvRnc6q5w=
+X-Google-Smtp-Source: ADFU+vvkxp5PNoeenVejrf8tpB2gV5C4JXUjlzG5rk+czBLRFZq2ATdOuyQvst6hI/VEssCwU4vvrg==
+X-Received: by 2002:a17:90a:37c4:: with SMTP id v62mr4006668pjb.151.1585039706935;
+        Tue, 24 Mar 2020 01:48:26 -0700 (PDT)
+Received: from localhost (14-202-190-183.tpgi.com.au. [14.202.190.183])
+        by smtp.gmail.com with ESMTPSA id f22sm10687021pgl.20.2020.03.24.01.48.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 01:48:26 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 18:48:20 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
+To:     linuxppc-dev@lists.ozlabs.org, Michal Suchanek <msuchanek@suse.de>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Allison Randal <allison@lohutok.net>,
-        Armijn Hemel <armijn@tjaldur.nl>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
         "David S. Miller" <davem@davemloft.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Eric Richter <erichte@linux.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jordan Niethe <jniethe5@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Michael Neuling <mikey@neuling.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Song Liu <songliubraving@fb.com>,
-        Zhengyuan Liu <liuzhengyuan@kylinos.cn>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Rob Herring <robh@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200225173541.1549955-1-npiggin@gmail.com>
+        <cover.1584620202.git.msuchanek@suse.de>
+        <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
+In-Reply-To: <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
+MIME-Version: 1.0
+User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1585039473.da4762n2s0.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 8:50 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+Michal Suchanek's on March 19, 2020 10:19 pm:
+> There are two almost identical copies for 32bit and 64bit.
+>=20
+> The function is used only in 32bit code which will be split out in next
+> patch so consolidate to one function.
+>=20
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+> v6:  new patch
+> v8:  move the consolidated function out of the ifdef block.
+> v11: rebase on top of def0bfdbd603
+> ---
+>  arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
+>  1 file changed, 24 insertions(+), 24 deletions(-)
+>=20
+> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.=
+c
+> index cbc251981209..c9a78c6e4361 100644
+> --- a/arch/powerpc/perf/callchain.c
+> +++ b/arch/powerpc/perf/callchain.c
+> @@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *=
+ptr, unsigned long *ret)
+>  	return read_user_stack_slow(ptr, ret, 8);
+>  }
+> =20
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *re=
+t)
+> -{
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+> -
+> -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
+> -		return 0;
+> -
+> -	return read_user_stack_slow(ptr, ret, 4);
+> -}
+> -
+>  static inline int valid_user_sp(unsigned long sp, int is_64)
+>  {
+>  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
+> @@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callc=
+hain_entry_ctx *entry,
+>  }
+> =20
+>  #else  /* CONFIG_PPC64 */
+> -/*
+> - * On 32-bit we just access the address and let hash_page create a
+> - * HPTE if necessary, so there is no need to fall back to reading
+> - * the page tables.  Since this is called at interrupt level,
+> - * do_page_fault() won't treat a DSI as a page fault.
+> - */
+> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *re=
+t)
+> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
+>  {
+> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> -	    ((unsigned long)ptr & 3))
+> -		return -EFAULT;
+> -
+> -	return probe_user_read(ret, ptr, sizeof(*ret));
+> +	return 0;
+>  }
+> =20
+>  static inline void perf_callchain_user_64(struct perf_callchain_entry_ct=
+x *entry,
+> @@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, in=
+t is_64)
+> =20
+>  #endif /* CONFIG_PPC64 */
+> =20
+> +/*
+> + * On 32-bit we just access the address and let hash_page create a
+> + * HPTE if necessary, so there is no need to fall back to reading
+> + * the page tables.  Since this is called at interrupt level,
+> + * do_page_fault() won't treat a DSI as a page fault.
+> + */
 
-> > I would have expected your arch/x86/Kconfig.assembler file as
-> > arch/x86/crypto/Kconfig (source include needs to be adapted in
-> > arch/x86/Kconfig).
->
-> CONFIG_AS_* is required for more than just the crypto.
->
+The comment is actually probably better to stay in the 32-bit
+read_user_stack_slow implementation. Is that function defined
+on 32-bit purely so that you can use IS_ENABLED()? In that case
+I would prefer to put a BUG() there which makes it self documenting.
 
-OK. I was not aware of this.
+Thanks,
+Nick
 
-> > What about a commit subject like "x86: crypto: Probe assembler options
-> > via Kconfig instead of makefile"?
->
-> Thanks. Will fix silly verbiage and update branch.
->
-
-Just looked to what I see new in [0].
-
-Would you mind to add the patch
-
-   "Documentation/changes: Raise minimum supported binutils version to 2.23"
-
-from [1] to your series, please?
-
-For the meantime and clarification - you can drop it later (with
-adding Link-tag to [1]) when it landed in tip Git [2] where I am not
-seeing it.
-
-Thanks for taking care to you an Masah*e*ro :-).
-
-- Sedat -
-
-[0] https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
-[1] https://lore.kernel.org/lkml/20200316160259.GN26126@zn.tnic/
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/
+> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *re=
+t)
+> +{
+> +	int rc;
+> +
+> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
+> +	    ((unsigned long)ptr & 3))
+> +		return -EFAULT;
+> +
+> +	rc =3D probe_user_read(ret, ptr, sizeof(*ret));
+> +
+> +	if (IS_ENABLED(CONFIG_PPC64) && rc)
+> +		return read_user_stack_slow(ptr, ret, 4);
+> +
+> +	return rc;
+> +}
+> +
+>  /*
+>   * Layout for non-RT signal frames
+>   */
+> --=20
+> 2.23.0
+>=20
+>=20
+=
