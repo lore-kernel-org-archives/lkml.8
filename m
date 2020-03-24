@@ -2,49 +2,48 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D09A7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:26:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9899C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:26:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30DA2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:26:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BF6B20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 10:26:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OQhxlRRj"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WqRb7UfT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbgCXK0A (ORCPT
+        id S1727383AbgCXK0O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 06:26:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:51924 "EHLO
+        Tue, 24 Mar 2020 06:26:14 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:30852 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727330AbgCXKZ7 (ORCPT
+        by vger.kernel.org with ESMTP id S1727186AbgCXK0O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:25:59 -0400
+        Tue, 24 Mar 2020 06:26:14 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585045557;
+        s=mimecast20190719; t=1585045573;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=YRjdfdefaqhNj49BdQQDHV2kO4Tm7PbH4nOc30QhTz4=;
-        b=OQhxlRRj+6+N8WE7mjZnHqjivlydWBj7UcRJ+PG/fsph/OwL3OIQ31s4TUXI3hEhsldXqe
-        gA0AvYY2UcnGfgAoWyGNfiPav/ZrHxpRIJCWN+VSqJn+p6bMV5cy+m7gHYAfMHf1s6iquJ
-        AZCKwiTJK3I46g6NeWNCPnfvvWiOE1A=
+        bh=TI9J12sTDb0Vpr1mpuy5hfvmrFn3PMyYGmmiVFdQMGA=;
+        b=WqRb7UfTMW+TJGzAQC+DhGQa/0E+1YwDUhP5hVoIlL0AeST+uWJZ3zyrklHJf7iNM5hm6q
+        Pfz2r3jUMgDIyaMHNu8qVQHie4l64b0FUaa46UqMd7ioQkHBtzD05K+9lDh3KMFF9LKHVs
+        hOfRmtfHUSYjCJ2VCIdAzJjR166/5fk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-259-TG1H4V6LM1KBS-ysRkT1Bw-1; Tue, 24 Mar 2020 06:25:54 -0400
-X-MC-Unique: TG1H4V6LM1KBS-ysRkT1Bw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-215-gMheyZxdMLWKB16HPk3-Lw-1; Tue, 24 Mar 2020 06:26:09 -0400
+X-MC-Unique: gMheyZxdMLWKB16HPk3-Lw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62E51800D5A;
-        Tue, 24 Mar 2020 10:25:50 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6A016107ACC7;
+        Tue, 24 Mar 2020 10:26:05 +0000 (UTC)
 Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7C3F6BBBC2;
-        Tue, 24 Mar 2020 10:25:34 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 11:25:28 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 97B6A60BE0;
+        Tue, 24 Mar 2020 10:25:59 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 11:25:57 +0100
 From:   Jiri Olsa <jolsa@redhat.com>
 To:     Ian Rogers <irogers@google.com>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -74,13 +73,13 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Stephane Eranian <eranian@google.com>
 Subject: Re: [PATCH v5] perf tools: add support for libpfm4
-Message-ID: <20200324102528.GM1534489@krava>
+Message-ID: <20200324102557.GN1534489@krava>
 References: <20200323235846.104937-1-irogers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20200323235846.104937-1-irogers@google.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -90,47 +89,37 @@ On Mon, Mar 23, 2020 at 04:58:46PM -0700, Ian Rogers wrote:
 
 SNIP
 
-> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 616fbda7c3fc..11421f5dc9cb 100644
-> --- a/tools/perf/util/pmu.c
-> +++ b/tools/perf/util/pmu.c
-> @@ -869,6 +869,17 @@ static struct perf_pmu *pmu_find(const char *name)
->  	return NULL;
->  }
->  
-> +struct perf_pmu *perf_pmu__find_by_type(unsigned int type)
-> +{
-> +	struct perf_pmu *pmu;
+> +		/* no event */
+> +		if (*q == '\0')
+> +			continue;
 > +
-> +	list_for_each_entry(pmu, &pmus, list)
-> +		if (pmu->type == type)
-> +			return pmu;
+> +		memset(&attr, 0, sizeof(attr));
+> +		event_attr_init(&attr);
 > +
-> +	return NULL;
-> +}
+> +		ret = parse_libpfm_event(q, &attr);
+> +		if (ret != PFM_SUCCESS) {
+> +			fprintf(stderr, "failed to parse event %s : %s\n", str, pfm_strerror(ret));
+> +			goto error;
+> +		}
+> +
+> +		evsel = perf_evsel__new_idx(&attr, evlist->core.nr_entries);
+> +		if (evsel == NULL)
+> +			goto error;
+> +
+> +		evsel->name = strdup(q);
+> +		if (!evsel->name) {
+> +			evsel__delete(evsel);
+> +			goto error;
+> +		}
+> +		evsel->is_libpfm_event = true;
+> +
+> +		pmu = perf_pmu__find_by_type((unsigned)attr.type);
+> +		if (pmu)
+> +			evsel->core.own_cpus = perf_cpu_map__get(pmu->cpus);
 
-please move this to separate patch
+I think you need to do more setup in here, like in __add_event function
+would be great to factor those bits from __add_event function and call
+it from here, so it's all in one place
 
-thanks,
 jirka
-
-> +
->  struct perf_pmu *perf_pmu__scan(struct perf_pmu *pmu)
->  {
->  	/*
-> diff --git a/tools/perf/util/pmu.h b/tools/perf/util/pmu.h
-> index 5fb3f16828df..de3b868d912c 100644
-> --- a/tools/perf/util/pmu.h
-> +++ b/tools/perf/util/pmu.h
-> @@ -65,6 +65,7 @@ struct perf_pmu_alias {
->  };
->  
->  struct perf_pmu *perf_pmu__find(const char *name);
-> +struct perf_pmu *perf_pmu__find_by_type(unsigned int type);
->  int perf_pmu__config(struct perf_pmu *pmu, struct perf_event_attr *attr,
->  		     struct list_head *head_terms,
->  		     struct parse_events_error *error);
-> -- 
-> 2.25.1.696.g5e7596f4ac-goog
-> 
 
