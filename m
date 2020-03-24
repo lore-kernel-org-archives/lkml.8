@@ -2,435 +2,134 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 490FFC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 631F7C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E7DE2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B3220774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:52:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ACG7Xe7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbgCXOvq (ORCPT
+        id S1728239AbgCXOwB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:51:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:36598 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728024AbgCXOvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:51:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC2941045;
-        Tue, 24 Mar 2020 07:51:38 -0700 (PDT)
-Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A860B3F52E;
-        Tue, 24 Mar 2020 07:51:37 -0700 (PDT)
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 2/3] kselftest: Extend vDSO selftest
-Date:   Tue, 24 Mar 2020 14:51:19 +0000
-Message-Id: <20200324145120.42194-3-vincenzo.frascino@arm.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324145120.42194-1-vincenzo.frascino@arm.com>
-References: <20200324145120.42194-1-vincenzo.frascino@arm.com>
+        Tue, 24 Mar 2020 10:52:01 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37191 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728093AbgCXOwA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:52:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id d1so3816978wmb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:51:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7e4KDLTmWgu/QQJEIVFCVN/w7UIWM4C7k1L+cgO3etw=;
+        b=ACG7Xe7QJOeqLq9nxQgo/2Hmd7TANG6OyUfm9KlhXXEDFRJCJA5UGjhkxMgV5E3HlJ
+         lcKpAHAeeWRt9+4yASeJo8ob176WIaXSIzV0Hv0Ni0SNxelTVnxKe57ObyCHBbqq5Pmr
+         Kofe0bXI1xmqL8NJfeXLDIyJrJ40lD8Aicbd4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7e4KDLTmWgu/QQJEIVFCVN/w7UIWM4C7k1L+cgO3etw=;
+        b=Uu2sVGLS7UwMJl64Vg1y7fjM/fwWP4pZYvRKLCxuD0Fi3pc4VtkxwZsOtWnj9kt+zn
+         F12o0oL98H+HJb8Co+6ektX7iZGyJ/OEfU9/462cq6VSsPLMdUh++CcV54IVTZT4AeSN
+         /tcVhhNdaI0j6yyETx1t7PmMQk/XEHRS4hAMgSmALSX5hcQZopQuUVVFGEzwcsF0k8Yt
+         T25yu2n6DyZmjIm8kS0KUnpqIR/B/0hwssmLEzG0QTaeFUXF8x5NP2+JkB54m++SyQmz
+         btkSPKIrgYmrYe8YkgW/UlWH3SYQqHAXVl36jgQtmbR7oGJd9Hb7QSkTkFJfVQ9L8iDG
+         R0lg==
+X-Gm-Message-State: ANhLgQ04pR4wUB7fXt4Gbk0rAWLNe0lz297WZGvEdS6bFF8nM0HQ5f+G
+        ZLFfukfrvMHifJIz4j1qUDyrwg==
+X-Google-Smtp-Source: ADFU+vum9D07o2DYTLiqEmlmU481OTm0K/ZD8B4oN/2zUqHNg6zKveeWlRzSLOOalwgn2Y/BsRssRA==
+X-Received: by 2002:a1c:26c4:: with SMTP id m187mr5927248wmm.43.1585061518182;
+        Tue, 24 Mar 2020 07:51:58 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id t5sm22977367wrr.93.2020.03.24.07.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 07:51:57 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 15:51:55 +0100
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
+Message-ID: <20200324145155.GB2685@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-6-kpsingh@chromium.org>
+ <6d45de0d-c59d-4ca7-fcc5-3965a48b5997@schaufler-ca.com>
+ <20200324015217.GA28487@chromium.org>
+ <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
+ <20200324144214.GA1040@chromium.org>
+ <CAEjxPJ7GDA2PvYkoFhnE7gjr_n=ADCjy3XOwacfELY7evVJtJw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEjxPJ7GDA2PvYkoFhnE7gjr_n=ADCjy3XOwacfELY7evVJtJw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current version of the multiarch vDSO selftest verifies only
-gettimeofday.
+On 24-Mär 10:51, Stephen Smalley wrote:
+> On Tue, Mar 24, 2020 at 10:42 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > On 24-Mär 10:37, Stephen Smalley wrote:
+> > > On Mon, Mar 23, 2020 at 9:52 PM KP Singh <kpsingh@chromium.org> wrote:
+> > > >
+> > > > On 23-Mär 18:13, Casey Schaufler wrote:
+> > > > > Have you given up on the "BPF must be last" requirement?
+> > > >
+> > > > Yes, we dropped it for as the BPF programs require CAP_SYS_ADMIN
+> > > > anwyays so the position ~shouldn't~ matter. (based on some of the
+> > > > discussions we had on the BPF_MODIFY_RETURN patches).
+> > > >
+> > > > However, This can be added later (in a separate patch) if really
+> > > > deemed necessary.
+> > >
+> > > It matters for SELinux, as I previously explained.  A process that has
+> > > CAP_SYS_ADMIN is not assumed to be able to circumvent MAC policy.
+> > > And executing prior to SELinux allows the bpf program to access and
+> > > potentially leak to userspace information that wouldn't be visible to
+> > > the
+> > > process itself. However, I thought you were handling the order issue
+> > > by putting it last in the list of lsms?
+> >
+> > We can still do that if it does not work for SELinux.
+> >
+> > Would it be okay to add bpf as LSM_ORDER_LAST?
+> >
+> > LSMs like Landlock can then add LSM_ORDER_UNPRIVILEGED to even end up
+> > after bpf?
+> 
+> I guess the question is whether we need an explicit LSM_ORDER_LAST or
+> can just handle it via the default
+> values for the lsm= parameter, where you are already placing bpf last
+> IIUC?  If someone can mess with the kernel boot
+> parameters, they already have options to mess with SELinux, so it is no worse...
 
-Extend the vDSO selftest to the other library functions:
- - time
- - clock_getres
- - clock_gettime
+Yeah, we do add BPF as the last LSM in the default list. So, I will
+avoid adding LSM_ORDER_LAST for now.
 
-The extension has been used to verify the unified vdso library on the
-supported architectures.
-
-Cc: Shuah Khan <shuah@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
----
- tools/testing/selftests/vDSO/Makefile         |   2 +
- tools/testing/selftests/vDSO/vdso_config.h    |  90 +++++++
- tools/testing/selftests/vDSO/vdso_full_test.c | 244 ++++++++++++++++++
- 3 files changed, 336 insertions(+)
- create mode 100644 tools/testing/selftests/vDSO/vdso_config.h
- create mode 100644 tools/testing/selftests/vDSO/vdso_full_test.c
-
-diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
-index 2989e4d5a730..46aab4eaccbd 100644
---- a/tools/testing/selftests/vDSO/Makefile
-+++ b/tools/testing/selftests/vDSO/Makefile
-@@ -5,6 +5,7 @@ uname_M := $(shell uname -m 2>/dev/null || echo not)
- ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
- 
- TEST_GEN_PROGS := $(OUTPUT)/vdso_test
-+TEST_GEN_PROGS += $(OUTPUT)/vdso_full_test
- ifeq ($(ARCH),x86)
- TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
- endif
-@@ -17,6 +18,7 @@ endif
- 
- all: $(TEST_GEN_PROGS)
- $(OUTPUT)/vdso_test: parse_vdso.c vdso_test.c
-+$(OUTPUT)/vdso_full_test: parse_vdso.c vdso_full_test.c
- $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
- 	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
- 		vdso_standalone_test_x86.c parse_vdso.c \
-diff --git a/tools/testing/selftests/vDSO/vdso_config.h b/tools/testing/selftests/vDSO/vdso_config.h
-new file mode 100644
-index 000000000000..eeb725df6045
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_config.h
-@@ -0,0 +1,90 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * vdso_config.h: Configuration options for vDSO tests.
-+ * Copyright (c) 2019 Arm Ltd.
-+ */
-+#ifndef __VDSO_CONFIG_H__
-+#define __VDSO_CONFIG_H__
-+
-+/*
-+ * Each architecture exports its vDSO implementation with different names
-+ * and a different version from the others, so we need to handle it as a
-+ * special case.
-+ */
-+#if defined(__arm__)
-+#define VDSO_VERSION		0
-+#define VDSO_NAMES		1
-+#define VDSO_32BIT		1
-+#elif defined(__aarch64__)
-+#define VDSO_VERSION		3
-+#define VDSO_NAMES		0
-+#elif defined(__powerpc__)
-+#define VDSO_VERSION		1
-+#define VDSO_NAMES		0
-+#define VDSO_32BIT		1
-+#elif defined(__powerpc64__)
-+#define VDSO_VERSION		1
-+#define VDSO_NAMES		0
-+#elif defined (__s390__)
-+#define VDSO_VERSION		2
-+#define VDSO_NAMES		0
-+#define VDSO_32BIT		1
-+#elif defined (__s390X__)
-+#define VDSO_VERSION		2
-+#define VDSO_NAMES		0
-+#elif defined(__mips__)
-+#define VDSO_VERSION		0
-+#define VDSO_NAMES		1
-+#define VDSO_32BIT		1
-+#elif defined(__sparc__)
-+#define VDSO_VERSION		0
-+#define VDSO_NAMES		1
-+#define VDSO_32BIT		1
-+#elif defined(__i386__)
-+#define VDSO_VERSION		0
-+#define VDSO_NAMES		1
-+#define VDSO_32BIT		1
-+#elif defined(__x86_64__)
-+#define VDSO_VERSION		0
-+#define VDSO_NAMES		1
-+#elif defined(__riscv__)
-+#define VDSO_VERSION		5
-+#define VDSO_NAMES		1
-+#define VDSO_32BIT		1
-+#else /* nds32 */
-+#define VDSO_VERSION		4
-+#define VDSO_NAMES		1
-+#define VDSO_32BIT		1
-+#endif
-+
-+static const char *versions[6] = {
-+	"LINUX_2.6",
-+	"LINUX_2.6.15",
-+	"LINUX_2.6.29",
-+	"LINUX_2.6.39",
-+	"LINUX_4",
-+	"LINUX_4.15",
-+};
-+
-+static const char *names[2][5] = {
-+	{
-+		"__kernel_gettimeofday",
-+		"__kernel_clock_gettime",
-+		"__kernel_time",
-+		"__kernel_clock_getres",
-+#if defined(VDSO_32BIT)
-+		"__kernel_clock_gettime64",
-+#endif
-+	},
-+	{
-+		"__vdso_gettimeofday",
-+		"__vdso_clock_gettime",
-+		"__vdso_time",
-+		"__vdso_clock_getres",
-+#if defined(VDSO_32BIT)
-+		"__vdso_clock_gettime64",
-+#endif
-+	},
-+};
-+
-+#endif /* __VDSO_CONFIG_H__ */
-diff --git a/tools/testing/selftests/vDSO/vdso_full_test.c b/tools/testing/selftests/vDSO/vdso_full_test.c
-new file mode 100644
-index 000000000000..3d603f1394af
---- /dev/null
-+++ b/tools/testing/selftests/vDSO/vdso_full_test.c
-@@ -0,0 +1,244 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * vdso_full_test.c: Sample code to test all the timers.
-+ * Copyright (c) 2019 Arm Ltd.
-+ *
-+ * Compile with:
-+ * gcc -std=gnu99 vdso_full_test.c parse_vdso.c
-+ *
-+ */
-+
-+#include <stdint.h>
-+#include <elf.h>
-+#include <stdio.h>
-+#include <time.h>
-+#include <sys/auxv.h>
-+#include <sys/time.h>
-+#define _GNU_SOURCE
-+#include <unistd.h>
-+#include <sys/syscall.h>
-+
-+#include "../kselftest.h"
-+#include "vdso_config.h"
-+
-+extern void *vdso_sym(const char *version, const char *name);
-+extern void vdso_init_from_sysinfo_ehdr(uintptr_t base);
-+extern void vdso_init_from_auxv(void *auxv);
-+
-+static const char *version;
-+static const char **name;
-+
-+typedef long (*vdso_gettimeofday_t)(struct timeval *tv, struct timezone *tz);
-+typedef long (*vdso_clock_gettime_t)(clockid_t clk_id, struct timespec *ts);
-+typedef long (*vdso_clock_getres_t)(clockid_t clk_id, struct timespec *ts);
-+typedef time_t (*vdso_time_t)(time_t *t);
-+
-+static int vdso_test_gettimeofday(void)
-+{
-+	/* Find gettimeofday. */
-+	vdso_gettimeofday_t vdso_gettimeofday =
-+		(vdso_gettimeofday_t)vdso_sym(version, name[0]);
-+
-+	if (!vdso_gettimeofday) {
-+		printf("Could not find %s\n", name[0]);
-+		return KSFT_SKIP;
-+	}
-+
-+	struct timeval tv;
-+	long ret = vdso_gettimeofday(&tv, 0);
-+
-+	if (ret == 0) {
-+		printf("The time is %lld.%06lld\n",
-+		       (long long)tv.tv_sec, (long long)tv.tv_usec);
-+	} else {
-+		printf("%s failed\n", name[0]);
-+		return KSFT_FAIL;
-+	}
-+
-+	return KSFT_PASS;
-+}
-+
-+static int vdso_test_clock_gettime(clockid_t clk_id)
-+{
-+	/* Find clock_gettime. */
-+	vdso_clock_gettime_t vdso_clock_gettime =
-+		(vdso_clock_gettime_t)vdso_sym(version, name[1]);
-+
-+	if (!vdso_clock_gettime) {
-+		printf("Could not find %s\n", name[1]);
-+		return KSFT_SKIP;
-+	}
-+
-+	struct timespec ts;
-+	long ret = vdso_clock_gettime(clk_id, &ts);
-+
-+	if (ret == 0) {
-+		printf("The time is %lld.%06lld\n",
-+		       (long long)ts.tv_sec, (long long)ts.tv_nsec);
-+	} else {
-+		printf("%s failed\n", name[1]);
-+		return KSFT_FAIL;
-+	}
-+
-+	return KSFT_PASS;
-+}
-+
-+static int vdso_test_time(void)
-+{
-+	/* Find time. */
-+	vdso_time_t vdso_time =
-+		(vdso_time_t)vdso_sym(version, name[2]);
-+
-+	if (!vdso_time) {
-+		printf("Could not find %s\n", name[2]);
-+		return KSFT_SKIP;
-+	}
-+
-+	long ret = vdso_time(NULL);
-+
-+	if (ret > 0) {
-+		printf("The time in hours since January 1, 1970 is %lld\n",
-+				(long long)(ret / 3600));
-+	} else {
-+		printf("%s failed\n", name[2]);
-+		return KSFT_FAIL;
-+	}
-+
-+	return KSFT_PASS;
-+}
-+
-+static int vdso_test_clock_getres(clockid_t clk_id)
-+{
-+	/* Find clock_getres. */
-+	vdso_clock_getres_t vdso_clock_getres =
-+		(vdso_clock_getres_t)vdso_sym(version, name[3]);
-+
-+	if (!vdso_clock_getres) {
-+		printf("Could not find %s\n", name[3]);
-+		return KSFT_SKIP;
-+	}
-+
-+	struct timespec ts, sys_ts;
-+	long ret = vdso_clock_getres(clk_id, &ts);
-+
-+	if (ret == 0) {
-+		printf("The resolution is %lld %lld\n",
-+		       (long long)ts.tv_sec, (long long)ts.tv_nsec);
-+	} else {
-+		printf("%s failed\n", name[3]);
-+		return KSFT_FAIL;
-+	}
-+
-+	ret = syscall(SYS_clock_getres, clk_id, &sys_ts);
-+
-+	if ((sys_ts.tv_sec != ts.tv_sec) || (sys_ts.tv_nsec != ts.tv_nsec)) {
-+		printf("%s failed\n", name[3]);
-+		return KSFT_FAIL;
-+	}
-+
-+	return KSFT_PASS;
-+}
-+
-+const char *vdso_clock_name[12] = {
-+	"CLOCK_REALTIME",
-+	"CLOCK_MONOTONIC",
-+	"CLOCK_PROCESS_CPUTIME_ID",
-+	"CLOCK_THREAD_CPUTIME_ID",
-+	"CLOCK_MONOTONIC_RAW",
-+	"CLOCK_REALTIME_COARSE",
-+	"CLOCK_MONOTONIC_COARSE",
-+	"CLOCK_BOOTTIME",
-+	"CLOCK_REALTIME_ALARM",
-+	"CLOCK_BOOTTIME_ALARM",
-+	"CLOCK_SGI_CYCLE",
-+	"CLOCK_TAI",
-+};
-+
-+/*
-+ * This function calls vdso_test_clock_gettime and vdso_test_clock_getres
-+ * with different values for clock_id.
-+ */
-+static inline int vdso_test_clock(clockid_t clock_id)
-+{
-+	int ret0, ret1;
-+
-+	ret0 = vdso_test_clock_gettime(clock_id);
-+	/* A skipped test is considered passed */
-+	if (ret0 == KSFT_SKIP)
-+		ret0 = KSFT_PASS;
-+
-+	ret1 = vdso_test_clock_getres(clock_id);
-+	/* A skipped test is considered passed */
-+	if (ret1 == KSFT_SKIP)
-+		ret1 = KSFT_PASS;
-+
-+	ret0 += ret1;
-+
-+	printf("clock_id: %s", vdso_clock_name[clock_id]);
-+
-+	if (ret0 > 0)
-+		printf(" [FAIL]\n");
-+	else
-+		printf(" [PASS]\n");
-+
-+	return ret0;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	unsigned long sysinfo_ehdr = getauxval(AT_SYSINFO_EHDR);
-+	int ret;
-+
-+	if (!sysinfo_ehdr) {
-+		printf("AT_SYSINFO_EHDR is not present!\n");
-+		return KSFT_SKIP;
-+	}
-+
-+	version = versions[VDSO_VERSION];
-+	name = (const char **)&names[VDSO_NAMES];
-+
-+	printf("[vDSO kselftest] VDSO_VERSION: %s\n", version);
-+
-+	vdso_init_from_sysinfo_ehdr(getauxval(AT_SYSINFO_EHDR));
-+
-+	ret = vdso_test_gettimeofday();
-+
-+#if _POSIX_TIMERS > 0
-+
-+#ifdef CLOCK_REALTIME
-+	ret += vdso_test_clock(CLOCK_REALTIME);
-+#endif
-+
-+#ifdef CLOCK_BOOTTIME
-+	ret += vdso_test_clock(CLOCK_BOOTTIME);
-+#endif
-+
-+#ifdef CLOCK_TAI
-+	ret += vdso_test_clock(CLOCK_TAI);
-+#endif
-+
-+#ifdef CLOCK_REALTIME_COARSE
-+	ret += vdso_test_clock(CLOCK_REALTIME_COARSE);
-+#endif
-+
-+#ifdef CLOCK_MONOTONIC
-+	ret += vdso_test_clock(CLOCK_MONOTONIC);
-+#endif
-+
-+#ifdef CLOCK_MONOTONIC_RAW
-+	ret += vdso_test_clock(CLOCK_MONOTONIC_RAW);
-+#endif
-+
-+#ifdef CLOCK_MONOTONIC_COARSE
-+	ret += vdso_test_clock(CLOCK_MONOTONIC_COARSE);
-+#endif
-+
-+#endif
-+
-+	ret += vdso_test_time();
-+
-+	if (ret > 0)
-+		return KSFT_FAIL;
-+
-+	return KSFT_PASS;
-+}
--- 
-2.25.2
-
+- KP
