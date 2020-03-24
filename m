@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C04C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE40C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F3D20A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0FC20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgCXJSV (ORCPT
+        id S1728047AbgCXJSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:18:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44075 "EHLO
+        Tue, 24 Mar 2020 05:18:22 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44069 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727736AbgCXJRF (ORCPT
+        with ESMTP id S1727571AbgCXJRE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:17:05 -0400
+        Tue, 24 Mar 2020 05:17:04 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfgC-00089L-8o; Tue, 24 Mar 2020 10:17:00 +0100
+        id 1jGfgE-0008F1-Ol; Tue, 24 Mar 2020 10:17:02 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 258D51C04D1;
-        Tue, 24 Mar 2020 10:16:46 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:45 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E32471C070D;
+        Tue, 24 Mar 2020 10:16:50 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:50 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcu: Make nocb_gp_wait() double-check
- unexpected-callback warning
+Subject: [tip: core/rcu] rcu: Add *_ONCE() to rcu_node ->boost_kthread_status
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140582.28353.1542065767349968391.tip-bot2@tip-bot2>
+Message-ID: <158504141057.28353.4752019178570064910.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,56 +53,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     3d05031ae6de6ad084aa41263aed1343065233d5
-Gitweb:        https://git.kernel.org/tip/3d05031ae6de6ad084aa41263aed1343065233d5
+Commit-ID:     3ca3b0e2cbe0050d1777a22b7fc13cad620eb2ba
+Gitweb:        https://git.kernel.org/tip/3ca3b0e2cbe0050d1777a22b7fc13cad620eb2ba
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Tue, 04 Feb 2020 14:55:29 -08:00
+AuthorDate:    Wed, 08 Jan 2020 20:12:59 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 15:58:23 -08:00
+CommitterDate: Thu, 20 Feb 2020 15:58:22 -08:00
 
-rcu: Make nocb_gp_wait() double-check unexpected-callback warning
+rcu: Add *_ONCE() to rcu_node ->boost_kthread_status
 
-Currently, nocb_gp_wait() unconditionally complains if there is a
-callback not already associated with a grace period.  This assumes that
-either there was no such callback initially on the one hand, or that
-the rcu_advance_cbs() function assigned all such callbacks to a grace
-period on the other.  However, in theory there are some situations that
-would prevent rcu_advance_cbs() from assigning all of the callbacks.
+The rcu_node structure's ->boost_kthread_status field is accessed
+locklessly, so this commit causes all updates to use WRITE_ONCE() and
+all reads to use READ_ONCE().
 
-This commit therefore checks for unassociated callbacks immediately after
-rcu_advance_cbs() returns, while the corresponding rcu_node structure's
-->lock is still held.  If there are unassociated callbacks at that point,
-the subsequent WARN_ON_ONCE() is disabled.
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree_plugin.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ kernel/rcu/tree_plugin.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 70b3c0f..36e71c9 100644
+index b5ba148..0f8b714 100644
 --- a/kernel/rcu/tree_plugin.h
 +++ b/kernel/rcu/tree_plugin.h
-@@ -1931,6 +1931,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
- 	struct rcu_data *rdp;
- 	struct rcu_node *rnp;
- 	unsigned long wait_gp_seq = 0; // Suppress "use uninitialized" warning.
-+	bool wasempty = false;
+@@ -1032,18 +1032,18 @@ static int rcu_boost_kthread(void *arg)
  
- 	/*
- 	 * Each pass through the following loop checks for CBs and for the
-@@ -1970,10 +1971,13 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
- 		     rcu_seq_done(&rnp->gp_seq, cur_gp_seq))) {
- 			raw_spin_lock_rcu_node(rnp); /* irqs disabled. */
- 			needwake_gp = rcu_advance_cbs(rnp, rdp);
-+			wasempty = rcu_segcblist_restempty(&rdp->cblist,
-+							   RCU_NEXT_READY_TAIL);
- 			raw_spin_unlock_rcu_node(rnp); /* irqs disabled. */
- 		}
- 		// Need to wait on some grace period?
--		WARN_ON_ONCE(!rcu_segcblist_restempty(&rdp->cblist,
-+		WARN_ON_ONCE(wasempty &&
-+			     !rcu_segcblist_restempty(&rdp->cblist,
- 						      RCU_NEXT_READY_TAIL));
- 		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq)) {
- 			if (!needwait_gp ||
+ 	trace_rcu_utilization(TPS("Start boost kthread@init"));
+ 	for (;;) {
+-		rnp->boost_kthread_status = RCU_KTHREAD_WAITING;
++		WRITE_ONCE(rnp->boost_kthread_status, RCU_KTHREAD_WAITING);
+ 		trace_rcu_utilization(TPS("End boost kthread@rcu_wait"));
+ 		rcu_wait(rnp->boost_tasks || rnp->exp_tasks);
+ 		trace_rcu_utilization(TPS("Start boost kthread@rcu_wait"));
+-		rnp->boost_kthread_status = RCU_KTHREAD_RUNNING;
++		WRITE_ONCE(rnp->boost_kthread_status, RCU_KTHREAD_RUNNING);
+ 		more2boost = rcu_boost(rnp);
+ 		if (more2boost)
+ 			spincnt++;
+ 		else
+ 			spincnt = 0;
+ 		if (spincnt > 10) {
+-			rnp->boost_kthread_status = RCU_KTHREAD_YIELDING;
++			WRITE_ONCE(rnp->boost_kthread_status, RCU_KTHREAD_YIELDING);
+ 			trace_rcu_utilization(TPS("End boost kthread@rcu_yield"));
+ 			schedule_timeout_interruptible(2);
+ 			trace_rcu_utilization(TPS("Start boost kthread@rcu_yield"));
+@@ -1082,7 +1082,7 @@ static void rcu_initiate_boost(struct rcu_node *rnp, unsigned long flags)
+ 			rnp->boost_tasks = rnp->gp_tasks;
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 		rcu_wake_cond(rnp->boost_kthread_task,
+-			      rnp->boost_kthread_status);
++			      READ_ONCE(rnp->boost_kthread_status));
+ 	} else {
+ 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	}
