@@ -2,140 +2,95 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC4DBC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B547EC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFEFE206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D64C20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SspgN/eS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgCXQrJ (ORCPT
+        id S1727926AbgCXQrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:47:09 -0400
-Received: from smtprelay0192.hostedemail.com ([216.40.44.192]:53410 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727065AbgCXQrI (ORCPT
+        Tue, 24 Mar 2020 12:47:20 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54917 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727065AbgCXQrU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:47:08 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 3277FA89DE;
-        Tue, 24 Mar 2020 16:47:07 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: seat22_3ddc47581f618
-X-Filterd-Recvd-Size: 5278
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf05.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 24 Mar 2020 16:47:04 +0000 (UTC)
-Message-ID: <8c1916c8a0f769f390a53aeba1ffd6043e12611a.camel@perches.com>
-Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Joe Perches <joe@perches.com>
-To:     Alain Michaud <alainmichaud@google.com>
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Miao-chen Chou <mcchou@chromium.org>,
-        Bluetooth Kernel Mailing List 
-        <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Date:   Tue, 24 Mar 2020 09:45:15 -0700
-In-Reply-To: <CALWDO_U8hruyjvZmN5P3kYz-awhD8t7yNbX9K0uXd5OdDejdMA@mail.gmail.com>
-References: <20200323072824.254495-1-mcchou@chromium.org>
-         <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-         <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
-         <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
-         <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
-         <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
-         <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
-         <b7b6e52eccca921ccea16b7679789eb3e2115871.camel@perches.com>
-         <CALWDO_U8hruyjvZmN5P3kYz-awhD8t7yNbX9K0uXd5OdDejdMA@mail.gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Tue, 24 Mar 2020 12:47:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585068439;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mam0WR1HiPsEyv0fa7dCXxsiI1zo2JaAd8tLMKwZM84=;
+        b=SspgN/eSL5wcfmuZVBpLnTm/h5GXNF2tS1CJagrZtpPTDk34YOHfNXqEIE2fcUBCk9wFe2
+        D46Th64M8FCuT5UKEClM1CDlAxNWz1xbsidnIo2GPDkM7cCustEd6sZ9JsGWdqlJUFwDVd
+        fILR7E8ezA0Aga7Y3NHbKsd25k/NKyA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-60-6o_Gt0a5ObepHe7A6CD7Fg-1; Tue, 24 Mar 2020 12:47:13 -0400
+X-MC-Unique: 6o_Gt0a5ObepHe7A6CD7Fg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC9B38017CC;
+        Tue, 24 Mar 2020 16:47:12 +0000 (UTC)
+Received: from treble (unknown [10.10.119.253])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C16C619C6A;
+        Tue, 24 Mar 2020 16:47:11 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 11:47:09 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: linux-next: Tree for Mar 20 (objtool warnings)
+Message-ID: <20200324164709.ux4riz7v7uy32nlj@treble>
+References: <20200320201539.3a3a8640@canb.auug.org.au>
+ <ca0078e2-89b5-09a7-f61e-7f2906900622@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ca0078e2-89b5-09a7-f61e-7f2906900622@infradead.org>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-24 at 11:24 -0400, Alain Michaud wrote:
-> On Tue, Mar 24, 2020 at 11:19 AM Joe Perches <joe@perches.com> wrote:
-> > On Tue, 2020-03-24 at 11:10 -0400, Alain Michaud wrote:
-> > > On Mon, Mar 23, 2020 at 4:11 PM Joe Perches <joe@perches.com> wrote:
-> > > > On Mon, 2020-03-23 at 19:48 +0100, Marcel Holtmann wrote:
-> > > > > Hi Joe,
-> > > > 
-> > > > Hello Marcel.
-> > > > 
-> > > > > > > > This adds a bit mask of driver_info for Microsoft vendor extension and
-> > > > > > > > indicates the support for Intel 9460/9560 and 9160/9260. See
-> > > > > > > > https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> > > > > > > > microsoft-defined-bluetooth-hci-commands-and-events for more information
-> > > > > > > > about the extension. This was verified with Intel ThunderPeak BT controller
-> > > > > > > > where msft_vnd_ext_opcode is 0xFC1E.
-> > > > > > []
-> > > > > > > > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> > > > > > []
-> > > > > > > > @@ -315,6 +315,10 @@ struct hci_dev {
-> > > > > > > >         __u8            ssp_debug_mode;
-> > > > > > > >         __u8            hw_error_code;
-> > > > > > > >         __u32           clock;
-> > > > > > > > +       __u16           msft_vnd_ext_opcode;
-> > > > > > > > +       __u64           msft_vnd_ext_features;
-> > > > > > > > +       __u8            msft_vnd_ext_evt_prefix_len;
-> > > > > > > > +       void            *msft_vnd_ext_evt_prefix;
-> > > > > > 
-> > > > > > msft is just another vendor.
-> > > > > > 
-> > > > > > If there are to be vendor extensions, this should
-> > > > > > likely use a blank line above and below and not
-> > > > > > be prefixed with msft_
-> > > > > 
-> > > > > there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
-> > > > 
-> > > > So struct hci_dev should become a clutter
-> > > > of random vendor extensions?
-> > > > 
-> > > > Perhaps there should instead be something like
-> > > > an array of char at the end of the struct and
-> > > > various vendor specific extensions could be
-> > > > overlaid on that array or just add a void *
-> > > > to whatever info that vendors require.
-> > > I don't particularly like trailing buffers, but I agree we could
-> > > possibly organize this a little better by with a struct.  something
-> > > like:
-> > > 
-> > > struct msft_vnd_ext {
-> > >     bool       f       supported; // <-- Clearly calls out if the
-> > > extension is supported.
-> > >     __u16           msft_vnd_ext_opcode; // <-- Note that this also
-> > > needs to be provided by the driver.  I don't recommend we have this
-> > > read from the hardware since we just cause an extra redirection that
-> > > isn't necessary.  Ideally, this should come from the usb_table const.
-> > >     __u64           msft_vnd_ext_features;
-> > >     __u8             msft_vnd_ext_evt_prefix_len;
-> > >     void             *msft_vnd_ext_evt_prefix;
-> > > };
-> > > 
-> > > And then simply add the struct msft_vnd_ext (and any others) to hci_dev.
+On Fri, Mar 20, 2020 at 10:43:05AM -0700, Randy Dunlap wrote:
+> On 3/20/20 2:15 AM, Stephen Rothwell wrote:
+> > Hi all,
 > > 
-> > Or use an anonymous union
-> That would also work, but would need to be an array of unions, perhaps
-> following your original idea to have them be in a trailing array of
-> unions since a controller may support more than one extension.  This
-> might be going overboard :)
+> > Changes since 20200319:
+> > 
+> 
+> 
+> Today's linux-next gives these objtool warnings:
+> 
+> arch/x86/entry/vdso/vma.o: warning: objtool: vdso_fault()+0x201: unreachable instruction
+> 
+> drivers/ide/ide-tape.o: warning: objtool: idetape_chrdev_release()+0x109: unreachable instruction
+> 
+> drivers/media/i2c/ir-kbd-i2c.o: warning: objtool: ir_probe()+0xdaa: unreachable instruction
+> 
+> kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0x89: call to __ubsan_handle_load_invalid_value() with UACCESS enabled
+> 
+> 
+> all in (4) separate builds (.configs).
+> Do you want all 4 randconfig files?
 
-True.
+For the "unreachable instruction" warnings, if the configs have
+CONFIG_UBSAN_TRAP, that's a known issue.
 
-Especially true if the controller supports multiple
-concurrent extensions.
+Otherwise, yeah, configs (and .o files if possible) would be good.
 
+-- 
+Josh
 
