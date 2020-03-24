@@ -2,88 +2,145 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43702C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C56BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EE620735
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534FE2077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:48:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgCXVrh (ORCPT
+        id S1728268AbgCXVsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:47:37 -0400
-Received: from sauhun.de ([88.99.104.3]:55502 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727023AbgCXVrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:47:36 -0400
-Received: from localhost (p54B3339A.dip0.t-ipconnect.de [84.179.51.154])
-        by pokefinder.org (Postfix) with ESMTPSA id AA43C2C08EF;
-        Tue, 24 Mar 2020 22:47:34 +0100 (CET)
-Date:   Tue, 24 Mar 2020 22:47:34 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     ajayg@nvidia.com,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "open list:I2C CONTROLLER DRIVER FOR NVIDIA GPU" 
-        <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] i2c: nvidia-gpu: Handle timeout correctly in
- gpu_i2c_check_status()
-Message-ID: <20200324214734.GI7641@ninjato>
-References: <20200324152812.20231-1-kai.heng.feng@canonical.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="K1SnTjlYS/YgcDEx"
-Content-Disposition: inline
-In-Reply-To: <20200324152812.20231-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 24 Mar 2020 17:48:38 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:10335 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727040AbgCXVsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 17:48:37 -0400
+Received: from unknown (HELO ironmsg02-sd.qualcomm.com) ([10.53.140.142])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 24 Mar 2020 14:48:36 -0700
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg02-sd.qualcomm.com with ESMTP; 24 Mar 2020 14:48:36 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id D85431F79C; Tue, 24 Mar 2020 14:48:35 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     cang@codeaurora.org, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc:     Nitin Rawat <nitirawa@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [<PATCH v1> 1/1] scsi: ufs: Resume ufs host before accessing ufs device
+Date:   Tue, 24 Mar 2020 14:48:21 -0700
+Message-Id: <f712a4f7bdb0ae32e0d83634731e7aaa1b3a6cdd.1585009663.git.asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nitin Rawat <nitirawa@codeaurora.org>
 
---K1SnTjlYS/YgcDEx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As a part of sysfs reading of descriptors/attributes/flags,
+query commands should only be executed when hba's
+power runtime status is active.
+To guarantee this, add pm_runtime_get/put_sync()
+to those paths where query commands are sent.
 
-On Tue, Mar 24, 2020 at 11:28:11PM +0800, Kai-Heng Feng wrote:
-> Nvidia card may come with a "phantom" UCSI device, and its driver gets
-> stuck in probe routine, prevents any system PM operations like suspend.
->=20
-> There's an unaccounted case that the target time can equal to jiffies in
-> gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
-> instead of jiffies comparison functions.=20
->=20
-> Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Nitin Rawat <nitirawa@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ drivers/scsi/ufs/ufs-sysfs.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
 
-Applied to for-current, thanks!
+diff --git a/drivers/scsi/ufs/ufs-sysfs.c b/drivers/scsi/ufs/ufs-sysfs.c
+index dbdf8b0..92a63ee 100644
+--- a/drivers/scsi/ufs/ufs-sysfs.c
++++ b/drivers/scsi/ufs/ufs-sysfs.c
+@@ -210,8 +210,10 @@ static ssize_t ufs_sysfs_read_desc_param(struct ufs_hba *hba,
+ 	if (param_size > 8)
+ 		return -EINVAL;
+ 
++	pm_runtime_get_sync(hba->dev);
+ 	ret = ufshcd_read_desc_param(hba, desc_id, desc_index,
+ 				param_offset, desc_buf, param_size);
++	pm_runtime_put_sync(hba->dev);
+ 	if (ret)
+ 		return -EINVAL;
+ 	switch (param_size) {
+@@ -558,6 +560,7 @@ static ssize_t _name##_show(struct device *dev,				\
+ 	desc_buf = kzalloc(QUERY_DESC_MAX_SIZE, GFP_ATOMIC);		\
+ 	if (!desc_buf)                                                  \
+ 		return -ENOMEM;                                         \
++	pm_runtime_get_sync(hba->dev);					\
+ 	ret = ufshcd_query_descriptor_retry(hba,			\
+ 		UPIU_QUERY_OPCODE_READ_DESC, QUERY_DESC_IDN_DEVICE,	\
+ 		0, 0, desc_buf, &desc_len);				\
+@@ -574,6 +577,7 @@ static ssize_t _name##_show(struct device *dev,				\
+ 		goto out;						\
+ 	ret = snprintf(buf, PAGE_SIZE, "%s\n", desc_buf);		\
+ out:									\
++	pm_runtime_put_sync(hba->dev);					\
+ 	kfree(desc_buf);						\
+ 	return ret;							\
+ }									\
+@@ -604,9 +608,13 @@ static ssize_t _name##_show(struct device *dev,				\
+ 	struct device_attribute *attr, char *buf)			\
+ {									\
+ 	bool flag;							\
++	int ret;							\
+ 	struct ufs_hba *hba = dev_get_drvdata(dev);			\
+-	if (ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,		\
+-		QUERY_FLAG_IDN##_uname, &flag))				\
++	pm_runtime_get_sync(hba->dev);					\
++	ret = ufshcd_query_flag(hba, UPIU_QUERY_OPCODE_READ_FLAG,	\
++		QUERY_FLAG_IDN##_uname, &flag);				\
++	pm_runtime_put_sync(hba->dev);					\
++	if (ret)							\
+ 		return -EINVAL;						\
+ 	return sprintf(buf, "%s\n", flag ? "true" : "false");		\
+ }									\
+@@ -644,8 +652,12 @@ static ssize_t _name##_show(struct device *dev,				\
+ {									\
+ 	struct ufs_hba *hba = dev_get_drvdata(dev);			\
+ 	u32 value;							\
+-	if (ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,		\
+-		QUERY_ATTR_IDN##_uname, 0, 0, &value))			\
++	int ret;							\
++	pm_runtime_get_sync(hba->dev);					\
++	ret = ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,	\
++		QUERY_ATTR_IDN##_uname, 0, 0, &value);			\
++	pm_runtime_put_sync(hba->dev);					\
++	if (ret)							\
+ 		return -EINVAL;						\
+ 	return sprintf(buf, "0x%08X\n", value);				\
+ }									\
+@@ -766,9 +778,13 @@ static ssize_t dyn_cap_needed_attribute_show(struct device *dev,
+ 	struct scsi_device *sdev = to_scsi_device(dev);
+ 	struct ufs_hba *hba = shost_priv(sdev->host);
+ 	u8 lun = ufshcd_scsi_to_upiu_lun(sdev->lun);
++	int ret;
+ 
+-	if (ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
+-		QUERY_ATTR_IDN_DYN_CAP_NEEDED, lun, 0, &value))
++	pm_runtime_get_sync(hba->dev);
++	ret = ufshcd_query_attr(hba, UPIU_QUERY_OPCODE_READ_ATTR,
++		QUERY_ATTR_IDN_DYN_CAP_NEEDED, lun, 0, &value);
++	pm_runtime_put_sync(hba->dev);
++	if (ret)
+ 		return -EINVAL;
+ 	return sprintf(buf, "0x%08X\n", value);
+ }
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
-
---K1SnTjlYS/YgcDEx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl56f/YACgkQFA3kzBSg
-KbZ5Xw//cOoQa5Y+68tFpZVVLo4CYZCEFIq6rdbNvDMTfJ1zoRXnGBVVO+E/og2s
-Rw3H1V2XIPWhBMlHc/2muuYoP+tNC/O0OV5XWqwPxfCpxhgpoJ4G0MB+MwCTYYH/
-80JeHyvzFNJ/2yJ2vBZRABwnuPdytS8JFADcfMTj2zaK0PDjk49b0Bl6jsAPwK97
-VDDvK8pfF0Qlr97uuU3W1v3OqPqd08B4iOneHGmSdAYS7igDXyKa0+9xmZcT+u1m
-r45F94Co72onsdEmHd5YrzX+KBLztJiERIxgFU89WoUdRDtOkAn0YjgBgan76pPy
-31qtlnJ8x+iRx8R25SnSHVKKfAWPY6Y1pEDJAQWFNpXszjkIa8vSBtnmHe1y7Fbl
-YPFI2I0GHYThxo6B55ivOqHcbotei6/VCTrH05GzcL4qtD4LT6Q6EoSDzghEnh2a
-yrLnnnyQ4Qp2H1ZVx4odW8xrmOLTnnC893jr84tihhDHcYCC6AhxQfmxNq/xiy95
-nVyxm4+804cpSill84Za4lquz2DVQaj80KZJkrUiAKFG/yagvWdiHXPL41bfcElG
-5+Koioad3cw4dc6Bczdb6WrKIcwjZ4dqKtDOpHtEVaY3AvZFXFi3iQfPXc/YvEC+
-AwLMCii1mhUHwSrZ+xK9A0HLsciLjKcYe/jH1XO0MemHKaP/xJo=
-=gmtZ
------END PGP SIGNATURE-----
-
---K1SnTjlYS/YgcDEx--
