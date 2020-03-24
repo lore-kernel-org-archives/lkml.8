@@ -2,107 +2,104 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC3EC54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D2FDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43865206F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:39:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WgaGQhfC"
+	by mail.kernel.org (Postfix) with ESMTP id 73BF120637
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCXCjO (ORCPT
+        id S1727217AbgCXCnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:39:14 -0400
-Received: from mail-pf1-f179.google.com ([209.85.210.179]:38492 "EHLO
-        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgCXCjO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:39:14 -0400
-Received: by mail-pf1-f179.google.com with SMTP id z25so4194199pfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:39:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bTaRA5htpsqxmsFBZbxgA8lCpOcv0k2H5w1W5iPSjBI=;
-        b=WgaGQhfC8mZ6nlYEovTrbyZwdm3ttCaLC09dPRGyDUnQboi38YlSRsxovnliYrwPSw
-         m/3qUx95F43aIhy+vXuJUcyJNeqBpgKMcNiAvXPlCbDeie8bYOp/trq8luWfpHt3/x8S
-         o3LNeeoeRYJRm5L1pJ4dubQtxwWe9UFM7K/9k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bTaRA5htpsqxmsFBZbxgA8lCpOcv0k2H5w1W5iPSjBI=;
-        b=BHXxvfgNsruQWLSRhpUoltCaqobj+Z1b40JxCftVpiljjt0DjaEx0eo0XrgHaLYX/s
-         pJ/TPCDSjj0QSYnzmogmoYirP/xZTcblrcx15jxevW/ZOtjLk4/NVLV+rQrdqxSMaaWk
-         Hy0+jIlpl5OX8S1SnVec5njmQo8j6fMxpfTgxP9wKfOKpo25domCIahaW8Z9NUwFcwUP
-         Cx5YJ10NitcMWYnD57YQwtYhr4NhrM7Qb16UlZz2AsS7FzFykXP4IzIlYTTzI88tBEFR
-         XlQWHOMRkMQQ/8GEwiLfi6MCXTRQQc4iklJJoBt34eraQbQj/84iysT3FpqBXDZBxSdK
-         NyVQ==
-X-Gm-Message-State: ANhLgQ2jTHMrnQ2BnafWkw4HLvafw30vEjahcUKgLY6VmH96CBnsSXUY
-        rFDnZ2tur3YojZp8yXdZcPBYzA==
-X-Google-Smtp-Source: ADFU+vvgjyn//CUHKXeLMz1tY2HElpEHCGd+yhmgojhq7G/KZugPso67+RvAzwJhxHHVOrdODgok7A==
-X-Received: by 2002:a62:62c3:: with SMTP id w186mr26402375pfb.238.1585017552663;
-        Mon, 23 Mar 2020 19:39:12 -0700 (PDT)
-Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
-        by smtp.gmail.com with ESMTPSA id y18sm14072169pfe.19.2020.03.23.19.39.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Mar 2020 19:39:11 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 11:39:09 +0900
-From:   Sergey Senozhatsky <senozhatsky@chromium.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Helen Koike <helen.koike@collabora.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        nicolas.dufresne@collabora.co.uk
-Subject: Re: [PATCHv4 04/11] videobuf2: add queue memory consistency parameter
-Message-ID: <20200324023909.GA201720@google.com>
-References: <20200302041213.27662-1-senozhatsky@chromium.org>
- <20200302041213.27662-5-senozhatsky@chromium.org>
- <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
+        Mon, 23 Mar 2020 22:43:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46740 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727047AbgCXCnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:43:32 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 89E47BFAA9A5134BBF4F;
+        Tue, 24 Mar 2020 10:43:20 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.27) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 10:43:10 +0800
+Subject: Re: [PATCH v6 14/23] irqchip/gic-v4.1: Add VSGI allocation/teardown
+To:     Marc Zyngier <maz@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20200320182406.23465-1-maz@kernel.org>
+ <20200320182406.23465-15-maz@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <f778d757-0312-5412-668c-db9aee889cf0@huawei.com>
+Date:   Tue, 24 Mar 2020 10:43:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
+In-Reply-To: <20200320182406.23465-15-maz@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.222.27]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/20 14:46), Dafna Hirschfeld wrote:
-[..]
-> > +static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
-> > +{
-> > +	if (!vb2_queue_allows_cache_hints(q))
-> > +		return;
-> > +
-> > +	if (consistent_mem)
-> > +		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
-> > +	else
-> > +		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
-> > +}
-> > +
-> >   int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
-> > -		unsigned int *count)
-> > +		bool consistent_mem, unsigned int *count)
-> You extended the vb2_core_reqbufs accepting a new boolean that
-> is decided according to the setting of the V4L2_FLAG_MEMORY_NON_CONSISTENT
-> but in the future some other flags might be added, and so I think it
-> is better to replace the boolean with a u32 consisting of all the flags.
+Hi Marc,
 
-Don't have any objections. Can change the `bool' to `u32'.
+On 2020/3/21 2:23, Marc Zyngier wrote:
+> Allocate per-VPE SGIs when initializing the GIC-specific part of the
+> VPE data structure.
+> 
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
+> Link: https://lore.kernel.org/r/20200304203330.4967-15-maz@kernel.org
+> ---
+>   drivers/irqchip/irq-gic-v3-its.c   |  2 +-
+>   drivers/irqchip/irq-gic-v4.c       | 68 +++++++++++++++++++++++++++++-
+>   include/linux/irqchip/arm-gic-v4.h |  4 +-
+>   3 files changed, 71 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index 15250faa9ef7..7ad46ff5f0b9 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -4053,7 +4053,7 @@ static int its_sgi_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+>   	struct its_cmd_info *info = vcpu_info;
+>   
+>   	switch (info->cmd_type) {
+> -	case PROP_UPDATE_SGI:
+> +	case PROP_UPDATE_VSGI:
+>   		vpe->sgi_config[d->hwirq].priority = info->priority;
+>   		vpe->sgi_config[d->hwirq].group = info->group;
+>   		its_configure_sgi(d, false);
 
-	-ss
+[...]
+
+> @@ -103,7 +105,7 @@ enum its_vcpu_info_cmd_type {
+>   	SCHEDULE_VPE,
+>   	DESCHEDULE_VPE,
+>   	INVALL_VPE,
+> -	PROP_UPDATE_SGI,
+> +	PROP_UPDATE_VSGI,
+>   };
+>   
+>   struct its_cmd_info {
+
+As Eric pointed out, this belongs to patch #12.
+
+
+Thanks,
+Zenghui
+
