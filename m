@@ -2,106 +2,88 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D381C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0A90C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA7912076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:45:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QsZKNsAI"
+	by mail.kernel.org (Postfix) with ESMTP id AE6D12076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:45:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585079119;
+	bh=QXe2BDonVd4A5y1YVgANV1HUjWeMBpY4X8beEd0nj3M=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=h60UTe/87RYOPEY+L7gVMj/nRIOuCzPJWhFdvAjQeDRxoa2ShoMUjny+9YM1vx8cA
+	 pC+SkYGWGHBcfoai56nqGYYgYxt8nX6NwqH3i0/48/+d1k08iiaS5bXc6RnyTLoyOg
+	 KgvDNhY/2Et0BGdwAdCxomoh91jOwtEIzILHa/Aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbgCXTpA (ORCPT
+        id S1727425AbgCXTpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:45:00 -0400
-Received: from mail.efficios.com ([167.114.26.124]:35206 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgCXTo7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 15:44:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A178426CC74;
-        Tue, 24 Mar 2020 15:44:58 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KlUo0PFuqzlt; Tue, 24 Mar 2020 15:44:58 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 3AB3D26CF80;
-        Tue, 24 Mar 2020 15:44:58 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3AB3D26CF80
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1585079098;
-        bh=EOvwRt//tfRS27woHCwYV1oIOJw5868xS1N0BbJF0Ps=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=QsZKNsAIov7+AFWzhh+erOXHeondRgv6BlcGVXFsb/ihUEf5Ao7z5VFLLKMOfpVCu
-         VSmNCBYuzCk+v7bPx8we/D2baRC401klafVcIRgj0M+275YKB0niqWVsTR0+iP3fgD
-         Q4tAM8rg9G8k9qab5jvICjxzydJFaJCojV6oMb+/QjdvwuCutbwu1C1Sd3/bJSKM7Q
-         S5UUQ2b38w5l3F8EtM9CPSFZORRKDZ5fkkU1ww1e5vpPIEMTw1RhMaNrajZUj7+iOo
-         /lIL19Vi2+sgIQZqtdZ/WV9yxE8olNwdMSPjw9/jDCO1ZAxAkaM8LCnZTuzdY8PdTD
-         wTvymo56FB9Qg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id nMPC8AM_o8PR; Tue, 24 Mar 2020 15:44:58 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 27BBA26CE27;
-        Tue, 24 Mar 2020 15:44:58 -0400 (EDT)
-Date:   Tue, 24 Mar 2020 15:44:58 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Joseph Myers <joseph@codesourcery.com>
-Cc:     Rich Felker <dalias@libc.org>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-api <linux-api@vger.kernel.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>
-Message-ID: <1094187167.10225.1585079098074.JavaMail.zimbra@efficios.com>
-In-Reply-To: <alpine.DEB.2.21.2003241857350.8310@digraph.polyomino.org.uk>
-References: <20200323131607.15185-1-mathieu.desnoyers@efficios.com> <20200323131607.15185-5-mathieu.desnoyers@efficios.com> <alpine.DEB.2.21.2003232159310.13609@digraph.polyomino.org.uk> <1873939476.8349.1585055299958.JavaMail.zimbra@efficios.com> <alpine.DEB.2.21.2003241857350.8310@digraph.polyomino.org.uk>
-Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
- startup and thread creation (v16)
+        Tue, 24 Mar 2020 15:45:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54172 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgCXTpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 15:45:18 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0999206F6;
+        Tue, 24 Mar 2020 19:45:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585079118;
+        bh=QXe2BDonVd4A5y1YVgANV1HUjWeMBpY4X8beEd0nj3M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=DTWTEvWdVIpKECx/Pn/aY+VOG6RB8UPUOMahkv0F0AQp1PiZYwmV8TklDY8uN+WHT
+         o0hw54itihCJ3Bdko63bw8QpThr8SCEJxpsBhC1oAscFwuFU2J8mt5sjPvaVokfZy2
+         fG8PLzwb58OMPHWuVy1hxKo+G2U/UtI6NslXQMkM=
+Subject: Re: [PATCH 5.5 000/119] 5.5.12-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200324130808.041360967@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ec5380ae-add2-09af-1690-4edf509dd908@kernel.org>
+Date:   Tue, 24 Mar 2020 13:45:06 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF74 (Linux)/8.8.15_GA_3895)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v16)
-Thread-Index: JDnp6/Oado3vQ4/sidiioZ9DbRGBfQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Mar 24, 2020, at 2:58 PM, Joseph Myers joseph@codesourcery.com wrote:
-
-> On Tue, 24 Mar 2020, Mathieu Desnoyers via Libc-alpha wrote:
+On 3/24/20 7:09 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.12 release.
+> There are 119 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
->> ----- On Mar 23, 2020, at 6:01 PM, Joseph Myers joseph@codesourcery.com wrote:
->> 
->> > Note that we no longer use manually-written ChangeLog-format logs.
->> 
->> Do you mean the part at the end of the commit message ?
+> Responses should be made by Thu, 26 Mar 2020 13:06:42 +0000.
+> Anything received after that time might be too late.
 > 
-> I mean the
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.12-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
 > 
->	* filename: Changes to this file.
->	* other/file: Likewise.
+> thanks,
 > 
-> part.
+> greg k-h
+> 
 
-Thanks for the clarification! Now done in preparation for next round.
+Compiled and booted on my test system. No dmesg regressions.
 
-Mathieu
+thanks,
+-- Shuah
 
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
