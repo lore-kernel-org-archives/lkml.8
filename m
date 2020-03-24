@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CC1C54FD9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E7B8C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D533208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:12:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F5E8208FE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:12:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Kl8o1BtF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="fmxUs5f0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbgCXUMF (ORCPT
+        id S1728195AbgCXUL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:12:05 -0400
-Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:41972 "EHLO
-        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbgCXUMB (ORCPT
+        Tue, 24 Mar 2020 16:11:56 -0400
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:50816 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725941AbgCXULy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:12:01 -0400
+        Tue, 24 Mar 2020 16:11:54 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 739123F622;
-        Tue, 24 Mar 2020 21:11:59 +0100 (CET)
-Authentication-Results: ste-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=Kl8o1BtF;
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id E9BBF3FC04;
+        Tue, 24 Mar 2020 21:11:51 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=fmxUs5f0;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id H1yL9sC9zG1m; Tue, 24 Mar 2020 21:11:58 +0100 (CET)
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id p6PXfQimYTyb; Tue, 24 Mar 2020 21:11:51 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 50ADC3F2C1;
-        Tue, 24 Mar 2020 21:11:58 +0100 (CET)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 0CF163F5ED;
+        Tue, 24 Mar 2020 21:11:51 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id A42093602F7;
-        Tue, 24 Mar 2020 21:11:56 +0100 (CET)
+        by mail1.shipmail.org (Postfix) with ESMTPSA id B1E1D360153;
+        Tue, 24 Mar 2020 21:11:48 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1585080718; bh=dge3pNJVvGiKNp3sQJQFaMfk+pmcdaLcKhPFLMuRR/s=;
+        t=1585080710; bh=m7CS9R7eZggq2b1BwFhxJZjXLvSJNnagJ5JrMFFlA0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kl8o1BtFZy8oqt7W50ge8DqKF/0i+NxXwf3Gt+O1+JBQgqu5ii1uE59nwHIM1tYku
-         AqVqqRYQ7K1bZpASYeqwa9r7iy8wVt1YT0dMaO98pH0D6YIfg6d3ytCsGuWkdhts7l
-         CB0Ww5omotebFfKJM3ARhwymLYwOkZ1Y+Ql32tyY=
+        b=fmxUs5f099V6Xqq4WbjaQaRzCbLUpv7qs4yQbyL2OAxxr19fRN7yP/YGa0TAJhm/D
+         wNjtXciBLFGUf27Iv4fe8eCpCZb9HfqFECpvGfWvFloZ4nM+B1R2x7Et0BZO91o64U
+         jKVyiHKVB61ogYP4+qa7dJWMMQrP4v4ZbhbofRiw=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
@@ -61,9 +63,9 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Roland Scheidegger <sroland@vmware.com>
-Subject: [PATCH v7 9/9] drm/vmwgfx: Hook up the helpers to align buffer objects
-Date:   Tue, 24 Mar 2020 21:11:23 +0100
-Message-Id: <20200324201123.3118-10-thomas_os@shipmail.org>
+Subject: [PATCH v7 6/9] drm/vmwgfx: Support huge page faults
+Date:   Tue, 24 Mar 2020 21:11:20 +0100
+Message-Id: <20200324201123.3118-7-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200324201123.3118-1-thomas_os@shipmail.org>
 References: <20200324201123.3118-1-thomas_os@shipmail.org>
@@ -77,9 +79,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Thomas Hellstrom (VMware)" <thomas_os@shipmail.org>
 
-Start using the helpers that align buffer object user-space addresses and
-buffer object vram addresses to huge page boundaries.
-This is to improve the chances of allowing huge page-table entries.
+With vmwgfx dirty-tracking we need a specialized huge_fault
+callback. Implement and hook it up.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -93,78 +94,131 @@ Signed-off-by: Thomas Hellstrom (VMware) <thomas_os@shipmail.org>
 Reviewed-by: Roland Scheidegger <sroland@vmware.com>
 Acked-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/drm_file.c                 |  1 +
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        | 13 +++++++++++++
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h        |  1 +
- drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c |  2 +-
- 4 files changed, 16 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.h        |  4 ++
+ drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c | 74 +++++++++++++++++++++-
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_glue.c   |  5 +-
+ 3 files changed, 81 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
-index d1fcb0c61622..eb009d3ab48f 100644
---- a/drivers/gpu/drm/drm_file.c
-+++ b/drivers/gpu/drm/drm_file.c
-@@ -1011,4 +1011,5 @@ unsigned long drm_get_unmapped_area(struct file *file,
- 	return current->mm->get_unmapped_area(file, uaddr, len, pgoff, flags);
- }
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
-+EXPORT_SYMBOL_GPL(drm_get_unmapped_area);
- #endif /* CONFIG_MMU */
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index 4f58364421ce..f0b7a891cbad 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -1230,6 +1230,18 @@ static void vmw_remove(struct pci_dev *pdev)
- 	pci_disable_device(pdev);
- }
- 
-+static unsigned long
-+vmw_get_unmapped_area(struct file *file, unsigned long uaddr,
-+		      unsigned long len, unsigned long pgoff,
-+		      unsigned long flags)
-+{
-+	struct drm_file *file_priv = file->private_data;
-+	struct vmw_private *dev_priv = vmw_priv(file_priv->minor->dev);
-+
-+	return drm_get_unmapped_area(file, uaddr, len, pgoff, flags,
-+				     &dev_priv->vma_manager);
-+}
-+
- static int vmwgfx_pm_notifier(struct notifier_block *nb, unsigned long val,
- 			      void *ptr)
- {
-@@ -1401,6 +1413,7 @@ static const struct file_operations vmwgfx_driver_fops = {
- 	.compat_ioctl = vmw_compat_ioctl,
- #endif
- 	.llseek = noop_llseek,
-+	.get_unmapped_area = vmw_get_unmapped_area,
- };
- 
- static struct drm_driver driver = {
 diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index d19d28c13671..fc98622caf87 100644
+index b70d73225707..6fc8d5c171c6 100644
 --- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
 +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -915,6 +915,7 @@ extern int vmw_mmap(struct file *filp, struct vm_area_struct *vma);
+@@ -1402,6 +1402,10 @@ void vmw_bo_dirty_unmap(struct vmw_buffer_object *vbo,
+ 			pgoff_t start, pgoff_t end);
+ vm_fault_t vmw_bo_vm_fault(struct vm_fault *vmf);
+ vm_fault_t vmw_bo_vm_mkwrite(struct vm_fault *vmf);
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++vm_fault_t vmw_bo_vm_huge_fault(struct vm_fault *vmf,
++				enum page_entry_size pe_size);
++#endif
  
- extern void vmw_validation_mem_init_ttm(struct vmw_private *dev_priv,
- 					size_t gran);
-+
  /**
-  * TTM buffer object driver - vmwgfx_ttm_buffer.c
-  */
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-index 3f3b2c7a208a..bf0bc4697959 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
-@@ -749,7 +749,7 @@ static int vmw_init_mem_type(struct ttm_bo_device *bdev, uint32_t type,
- 		break;
- 	case TTM_PL_VRAM:
- 		/* "On-card" video ram */
--		man->func = &ttm_bo_manager_func;
-+		man->func = &vmw_thp_func;
- 		man->gpu_offset = 0;
- 		man->flags = TTM_MEMTYPE_FLAG_FIXED | TTM_MEMTYPE_FLAG_MAPPABLE;
- 		man->available_caching = TTM_PL_FLAG_CACHED;
+  * VMW_DEBUG_KMS - Debug output for kernel mode-setting
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c b/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c
+index 8cf7a77c9b2f..d4d66532f9c9 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_page_dirty.c
+@@ -473,7 +473,7 @@ vm_fault_t vmw_bo_vm_fault(struct vm_fault *vmf)
+ 	 * a lot of unnecessary write faults.
+ 	 */
+ 	if (vbo->dirty && vbo->dirty->method == VMW_BO_DIRTY_MKWRITE)
+-		prot = vma->vm_page_prot;
++		prot = vm_get_page_prot(vma->vm_flags & ~VM_SHARED);
+ 	else
+ 		prot = vm_get_page_prot(vma->vm_flags);
+ 
+@@ -486,3 +486,75 @@ vm_fault_t vmw_bo_vm_fault(struct vm_fault *vmf)
+ 
+ 	return ret;
+ }
++
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++vm_fault_t vmw_bo_vm_huge_fault(struct vm_fault *vmf,
++				enum page_entry_size pe_size)
++{
++	struct vm_area_struct *vma = vmf->vma;
++	struct ttm_buffer_object *bo = (struct ttm_buffer_object *)
++	    vma->vm_private_data;
++	struct vmw_buffer_object *vbo =
++		container_of(bo, struct vmw_buffer_object, base);
++	pgprot_t prot;
++	vm_fault_t ret;
++	pgoff_t fault_page_size;
++	bool write = vmf->flags & FAULT_FLAG_WRITE;
++	bool is_cow_mapping =
++		(vma->vm_flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
++
++	switch (pe_size) {
++	case PE_SIZE_PMD:
++		fault_page_size = HPAGE_PMD_SIZE >> PAGE_SHIFT;
++		break;
++#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
++	case PE_SIZE_PUD:
++		fault_page_size = HPAGE_PUD_SIZE >> PAGE_SHIFT;
++		break;
++#endif
++	default:
++		WARN_ON_ONCE(1);
++		return VM_FAULT_FALLBACK;
++	}
++
++	/* Always do write dirty-tracking and COW on PTE level. */
++	if (write && (READ_ONCE(vbo->dirty) || is_cow_mapping))
++		return VM_FAULT_FALLBACK;
++
++	ret = ttm_bo_vm_reserve(bo, vmf);
++	if (ret)
++		return ret;
++
++	if (vbo->dirty) {
++		pgoff_t allowed_prefault;
++		unsigned long page_offset;
++
++		page_offset = vmf->pgoff -
++			drm_vma_node_start(&bo->base.vma_node);
++		if (page_offset >= bo->num_pages ||
++		    vmw_resources_clean(vbo, page_offset,
++					page_offset + PAGE_SIZE,
++					&allowed_prefault)) {
++			ret = VM_FAULT_SIGBUS;
++			goto out_unlock;
++		}
++
++		/*
++		 * Write protect, so we get a new fault on write, and can
++		 * split.
++		 */
++		prot = vm_get_page_prot(vma->vm_flags & ~VM_SHARED);
++	} else {
++		prot = vm_get_page_prot(vma->vm_flags);
++	}
++
++	ret = ttm_bo_vm_fault_reserved(vmf, prot, 1, fault_page_size);
++	if (ret == VM_FAULT_RETRY && !(vmf->flags & FAULT_FLAG_RETRY_NOWAIT))
++		return ret;
++
++out_unlock:
++	dma_resv_unlock(bo->base.resv);
++
++	return ret;
++}
++#endif
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_glue.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_glue.c
+index aa7e50f63b94..3c03b1746661 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_glue.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_glue.c
+@@ -34,7 +34,10 @@ int vmw_mmap(struct file *filp, struct vm_area_struct *vma)
+ 		.page_mkwrite = vmw_bo_vm_mkwrite,
+ 		.fault = vmw_bo_vm_fault,
+ 		.open = ttm_bo_vm_open,
+-		.close = ttm_bo_vm_close
++		.close = ttm_bo_vm_close,
++#ifdef CONFIG_TRANSPARENT_HUGEPAGE
++		.huge_fault = vmw_bo_vm_huge_fault,
++#endif
+ 	};
+ 	struct drm_file *file_priv = filp->private_data;
+ 	struct vmw_private *dev_priv = vmw_priv(file_priv->minor->dev);
 -- 
 2.21.1
 
