@@ -4,46 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07223C54FD2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C133DC2BAEE
 	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFA95206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A607E206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:45:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgCXRpK (ORCPT
+        id S1727996AbgCXRpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 24 Mar 2020 13:45:10 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:43042 "EHLO
+Received: from mail.baikalelectronics.com ([87.245.175.226]:42992 "EHLO
         mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbgCXRpI (ORCPT
+        with ESMTP id S1727791AbgCXRpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:45:08 -0400
+        Tue, 24 Mar 2020 13:45:03 -0400
 Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 5F3A78030791;
-        Tue, 24 Mar 2020 17:45:06 +0000 (UTC)
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 23F4B803078E;
+        Tue, 24 Mar 2020 17:45:01 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at baikalelectronics.ru
 Received: from mail.baikalelectronics.ru ([127.0.0.1])
         by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id wyv3-3hxBCBg; Tue, 24 Mar 2020 20:45:02 +0300 (MSK)
+        with ESMTP id Lh46Dl5x4otu; Tue, 24 Mar 2020 20:45:00 +0300 (MSK)
 From:   <Sergey.Semin@baikalelectronics.ru>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dinh Nguyen <dinguyen@altera.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Jamie Iles <jamie@jamieiles.com>,
+        Rob Herring <rob.herring@calxeda.com>
 CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Serge Semin <fancer.lancer@gmail.com>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Paul Burton <paulburton@kernel.org>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Arnd Bergmann <arnd@arndb.de>,
         Andy Shevchenko <andy.shevchenko@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 6/6] clocksource: mips-gic-timer: Set limitations on clocksource/sched-clocks usage
-Date:   Tue, 24 Mar 2020 20:43:25 +0300
-Message-ID: <20200324174325.14213-7-Sergey.Semin@baikalelectronics.ru>
+        <devicetree@vger.kernel.org>, Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 4/6] clocksource: dw_apb_timer_of: Fix missing clockevent timers
+Date:   Tue, 24 Mar 2020 20:43:23 +0300
+Message-ID: <20200324174325.14213-5-Sergey.Semin@baikalelectronics.ru>
 In-Reply-To: <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
 References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
  <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
@@ -58,22 +65,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-Currently neither clocksource nor scheduler clock kernel framework
-support the clocks with variable frequency. Needless to say how many
-problems may cause the sudden base clocks frequency change. In a
-simplest case the system time will either slow down or speed up.
-Since on CM2.5 and earlier MIPS GIC timer is synchronously clocked
-with CPU we must set some limitations on using it for these frameworks
-if CPU frequency may change. First of all it's not safe to have the
-MIPS GIC used for scheduler timings. So we shouldn't proceed with
-the clocks registration in the sched-subsystem. Secondly we must
-significantly decrease the MIPS GIC clocksource rating. This will let
-the system to use it only as a last resort.
+Commit 100214889973 ("clocksource: dw_apb_timer_of: use
+clocksource_of_init") replaced a publicly available driver
+initialization method with one called by the timer_probe() method
+available after CLKSRC_OF. In current implementation it traverses
+all the timers available in the system and calls their initialization
+methods if corresponding devices were either in dtb or in acpi. But
+if before the commit any number of available timers would be installed
+as clockevent and clocksource devices, after that there would be at most
+two. The rest are just ignored since default case branch doesn't do
+anything. I don't see a reason of such behaviour, neither the commit
+message explains it. Moreover this might be wrong if on some platforms
+these timers might be used for different purpose, as virtually CPU-local
+clockevent timers and as an independent broadcast timer. So in order
+to keep the compatibility with the platforms where the order of the
+timers detection has some meaning, lets add the secondly discovered
+timer to be of clocksource/sched_clock type, while the very first and
+the others would provide the clockevents service.
 
-Note CM3.x-based systems may also experience the problems with MIPS GIC
-if the CPU-frequency change is activated for the whole CPU cluster
-instead of using the individual CPC core clocks divider.
-
+Fixes: 100214889973 ("clocksource: dw_apb_timer_of: use clocksource_of_init")
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
@@ -86,40 +96,33 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org
 ---
- drivers/clocksource/mips-gic-timer.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/clocksource/dw_apb_timer_of.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
-index 8239ff99cfe4..5eb241b8b28d 100644
---- a/drivers/clocksource/mips-gic-timer.c
-+++ b/drivers/clocksource/mips-gic-timer.c
-@@ -185,7 +185,10 @@ static int __init __gic_clocksource_init(void)
- 	gic_clocksource.mask = CLOCKSOURCE_MASK(count_width);
+diff --git a/drivers/clocksource/dw_apb_timer_of.c b/drivers/clocksource/dw_apb_timer_of.c
+index 0a2505b323d7..0b61b90a525e 100644
+--- a/drivers/clocksource/dw_apb_timer_of.c
++++ b/drivers/clocksource/dw_apb_timer_of.c
+@@ -146,10 +146,6 @@ static int num_called;
+ static int __init dw_apb_timer_init(struct device_node *timer)
+ {
+ 	switch (num_called) {
+-	case 0:
+-		pr_debug("%s: found clockevent timer\n", __func__);
+-		add_clockevent(timer);
+-		break;
+ 	case 1:
+ 		pr_debug("%s: found clocksource timer\n", __func__);
+ 		add_clocksource(timer);
+@@ -160,6 +156,8 @@ static int __init dw_apb_timer_init(struct device_node *timer)
+ #endif
+ 		break;
+ 	default:
++		pr_debug("%s: found clockevent timer\n", __func__);
++		add_clockevent(timer);
+ 		break;
+ 	}
  
- 	/* Calculate a somewhat reasonable rating value. */
--	gic_clocksource.rating = 200 + gic_frequency / 10000000;
-+	if (mips_cm_revision() >= CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ))
-+		gic_clocksource.rating = 200 + gic_frequency / 10000000;
-+	else
-+		gic_clocksource.rating = 99;
- 
- 	ret = clocksource_register_hz(&gic_clocksource, gic_frequency);
- 	if (ret < 0)
-@@ -239,9 +242,11 @@ static int __init gic_clocksource_of_init(struct device_node *node)
- 	/* And finally start the counter */
- 	clear_gic_config(GIC_CONFIG_COUNTSTOP);
- 
--	sched_clock_register(mips_cm_is64 ?
--			     gic_read_count_64 : gic_read_count_2x32,
--			     64, gic_frequency);
-+	if (mips_cm_revision() >= CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ)) {
-+		sched_clock_register(mips_cm_is64 ?
-+				     gic_read_count_64 : gic_read_count_2x32,
-+				     64, gic_frequency);
-+	}
- 
- 	return 0;
- }
 -- 
 2.25.1
 
