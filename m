@@ -2,60 +2,155 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CA6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DDBC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F82220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53271206F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:06:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="eyGsIHIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727233AbgCXDBc (ORCPT
+        id S1727196AbgCXDGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 23:01:32 -0400
-Received: from mga03.intel.com ([134.134.136.65]:29293 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726874AbgCXDBc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 23:01:32 -0400
-IronPort-SDR: 3pof18D67SLKFPhv4enRlEMhMBCLhd6mnED7GNg24aAwEKo2LGHW8FFCyFEDHf5yOJo97JRoot
- 618mj6dBZaDA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 20:01:31 -0700
-IronPort-SDR: 3ZHWJJDdK2iADXbBU88hlNLtqHpcCrwsbu88M3z835dbwTBbJmyE90mG9EqWvCfUktWd4Sd5OE
- Lm+7+1K2be1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="357288459"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 23 Mar 2020 20:01:28 -0700
-Subject: Re: [PATCH] sched: Use RCU-sched in core-scheduling balancing logic
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        vpillai <vpillai@digitalocean.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, peterz@infradead.org,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <20200313232918.62303-1-joel@joelfernandes.org>
- <20200314003004.GI3199@paulmck-ThinkPad-P72>
- <f77b9432-933c-a9fe-5541-437cf0094a65@linux.intel.com>
- <20200323152126.GA141027@google.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <6d933ce2-75e3-6469-4bb0-08ce9df29139@linux.intel.com>
-Date:   Tue, 24 Mar 2020 11:01:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 23 Mar 2020 23:06:03 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42727 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgCXDGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 23:06:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 22so4965803pfa.9
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 20:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=7xRsbk0Ns3jbOJJnb3PI9ra/dkVlbVxHKw00bKYDb10=;
+        b=eyGsIHIy4GGp5KwJgKYeah8GIyssvtv4M7Y7lqmJ5G1in9eRdF7tHEELPe3oprax8i
+         VnrHyEAVF9rRsayc9VtIg4OIcsURYWxKOfuR+zmBtsdhKrarPiEtORNG1LY4oI3wgp30
+         GgQxepyN1YR9oQ/UvtZ6MQTBb9E0M/ZTqGAVCMiUpKI8m67Nk2fu6m4cwz2dimyZkSdO
+         8PvEEh2HetRrgV/uaGIvBiYSJWI0vshxP0+qdg5STZcR+2TTePcckk419op/F7D/8hIT
+         1ac6P3+KoLCjU5KQI7pSVSEzPrtdtaCHgTM/7R7jOBZDBx+3PeF4dOfc7ij4kx3Gr8/l
+         0rUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=7xRsbk0Ns3jbOJJnb3PI9ra/dkVlbVxHKw00bKYDb10=;
+        b=kpY6XPTplMfFIkhZsWjvJ0qmR8pk4dW5xvyPmZlqxhVOplj5sQXzNaHwPILOnUfHo2
+         aEny/Jh2VeGTr9MRlAQdHjNwLkRZId7qFNDorSmGbLzPTWbVDikl1bVbuysQIhldKh2F
+         jZahbwEz13LoeIm26iDMj1hGUrcEdwDE6VTdIx1N/NodRF4cIM+7ymY9SKq+/JAT6/Od
+         NsUIZNGaeIE9P9YeK7ptnXS1UDzxc+gCvH/aOuTCynsYbZxt/qI1vF357T4uUyp05mJQ
+         ax8NagUCQuyTAIoAGk6ONmzw8nhkHEscL3a+hjH+jEElr5O2RmrdvLHJYmKyPxngMmYB
+         Wj2A==
+X-Gm-Message-State: ANhLgQ2a5IJBUO5QTAVBI9flDLJ46qIuLjMcafaLSoXllFPGDTY4Nc3i
+        bIelmb4kRXfEuCKNJx3NvQGymZsx68k=
+X-Google-Smtp-Source: ADFU+vufHd9Y24F7GYgDaDFgdHOFFSo2RiLlvNF+lw/HyiOqlUpTdCXE39t/Q5SshDDpSBD57EGXvA==
+X-Received: by 2002:a63:1952:: with SMTP id 18mr9617199pgz.394.1585019160587;
+        Mon, 23 Mar 2020 20:06:00 -0700 (PDT)
+Received: from [192.168.10.21] (ppp121-45-221-81.bras1.cbr2.internode.on.net. [121.45.221.81])
+        by smtp.gmail.com with ESMTPSA id mq6sm906908pjb.38.2020.03.23.20.05.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 20:05:59 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+To:     Christoph Hellwig <hch@lst.de>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <20200320141640.366360-1-hch@lst.de>
+ <20200320141640.366360-2-hch@lst.de>
+ <2f31d0dd-aa7e-8b76-c8a1-5759fda5afc9@ozlabs.ru>
+ <20200323083705.GA31245@lst.de> <20200323085059.GA32528@lst.de>
+ <87sghz2ibh.fsf@linux.ibm.com> <20200323172256.GB31269@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <ffce1af6-a215-dee8-7b5c-2111f43accfd@ozlabs.ru>
+Date:   Tue, 24 Mar 2020 14:05:54 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200323152126.GA141027@google.com>
+In-Reply-To: <20200323172256.GB31269@lst.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -64,71 +159,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/23 23:21, Joel Fernandes wrote:
-> On Mon, Mar 23, 2020 at 02:58:18PM +0800, Li, Aubrey wrote:
->> On 2020/3/14 8:30, Paul E. McKenney wrote:
->>> On Fri, Mar 13, 2020 at 07:29:18PM -0400, Joel Fernandes (Google) wrote:
->>>> rcu_read_unlock() can incur an infrequent deadlock in
->>>> sched_core_balance(). Fix this by using the RCU-sched flavor instead.
->>>>
->>>> This fixes the following spinlock recursion observed when testing the
->>>> core scheduling patches on PREEMPT=y kernel on ChromeOS:
->>>>
->>>> [   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
->>>>
->>>
->>> The original could indeed deadlock, and this would avoid that deadlock.
->>> (The commit to solve this deadlock is sadly not yet in mainline.)
->>>
->>> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+
+
+On 24/03/2020 04:22, Christoph Hellwig wrote:
+> On Mon, Mar 23, 2020 at 09:07:38PM +0530, Aneesh Kumar K.V wrote:
 >>
->> I saw this in dmesg with this patch, is it expected?
->>
->> [  117.000905] =============================
->> [  117.000907] WARNING: suspicious RCU usage
->> [  117.000911] 5.5.7+ #160 Not tainted
->> [  117.000913] -----------------------------
->> [  117.000916] kernel/sched/core.c:4747 suspicious rcu_dereference_check() usage!
->> [  117.000918] 
->>                other info that might help us debug this:
+>> This is what I was trying, but considering I am new to DMA subsystem, I
+>> am not sure I got all the details correct. The idea is to look at the
+>> cpu addr and see if that can be used in direct map fashion(is
+>> bus_dma_limit the right restriction here?) if not fallback to dynamic
+>> IOMMU mapping.
 > 
-> Sigh, this is because for_each_domain() expects rcu_read_lock(). From an RCU
-> PoV, the code is correct (warning doesn't cause any issue).
-> 
-> To silence warning, we could replace the rcu_read_lock_sched() in my patch with:
-> preempt_disable();
-> rcu_read_lock();
-> 
-> and replace the unlock with:
-> 
-> rcu_read_unlock();
-> preempt_enable();
-> 
-> That should both take care of both the warning and the scheduler-related
-> deadlock. Thoughts?
-> 
+> I don't think we can throw all these complications into the dma
+> mapping code.  At some point I also wonder what the point is,
+> especially for scatterlist mappings, where the iommu can coalesce.
 
-How about this?
+This is for persistent memory which you can DMA to/from but yet it does
+not appear in the system as a normal memory and therefore requires
+special handling anyway (O_DIRECT or DAX, I do not know the exact
+mechanics). All other devices in the system should just run as usual,
+i.e. use 1:1 mapping if possible.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a01df3e..7ff694e 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4743,7 +4743,6 @@ static void sched_core_balance(struct rq *rq)
- 	int cpu = cpu_of(rq);
- 
- 	rcu_read_lock();
--	raw_spin_unlock_irq(rq_lockp(rq));
- 	for_each_domain(cpu, sd) {
- 		if (!(sd->flags & SD_LOAD_BALANCE))
- 			break;
-@@ -4754,7 +4753,6 @@ static void sched_core_balance(struct rq *rq)
- 		if (steal_cookie_task(cpu, sd))
- 			break;
- 	}
--	raw_spin_lock_irq(rq_lockp(rq));
- 	rcu_read_unlock();
- }
 
-Thanks,
--Aubrey
+-- 
+Alexey
