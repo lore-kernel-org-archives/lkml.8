@@ -2,60 +2,61 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E88F1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435D7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C072E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1695720714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hsY68UyM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ByzkfVsg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgCXTN3 (ORCPT
+        id S1728090AbgCXTNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:13:29 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42159 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727657AbgCXTN3 (ORCPT
+        Tue, 24 Mar 2020 15:13:32 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38859 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727747AbgCXTN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 15:13:29 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q19so19791645ljp.9;
-        Tue, 24 Mar 2020 12:13:27 -0700 (PDT)
+Received: by mail-lj1-f196.google.com with SMTP id w1so19829658ljh.5;
+        Tue, 24 Mar 2020 12:13:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uIAcX2m8QpAWv8TMlh8B6oI/fe2X2DccVFEcYGZNbOk=;
-        b=hsY68UyMWv486CjkFQ9XXWAJnkttldzEOXRVWyB4HW0IaB0FWKpvYrLGJu9q5GY5jg
-         1cOEDDKCayQPZN3XII0yajPYt7sjmCy03V4yDBEQOduR/WMM2rbsZZfWx7/75dibd3q0
-         82cmZEwuXk0PstRFXgmK+z796IHlmYdFK6cUfG45mBpqYH9LEKeBuhObJzl6Q4N4hMT/
-         LakyMoO2nrp9D02bwNWqSLCLJDRlsIrvfsYuOtI5X5n9v3qU0SrDkOFNbTI+QpHmRxgi
-         57B2F8XzqekOoUwhiIniXDeVVQewF6f6nxdDVKaX4DL/DHvqauFGQxZaqtoo85/AqEzs
-         GWQg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=8e7+L+UHZHa2zA2O9LK9VZBpvO0sNomc3WT2/0CqCjU=;
+        b=ByzkfVsgRm5bJi+U8RCJHRQt9tjP2J474FwUvPZZtITq5rx5+eU82yk90R3S+6x81T
+         ZXMiflZ4qDlC3MA0hUkYLhnhVtjVKmMdo8EYgH3JAH0Sq28mQUYQXD9q9Xrh9w0pvvtt
+         g2o/uj5Ke6DudG4zTgun1YXTssK+frT6CBzPN9hWnaK64YX18YLZm/gYOH1nU/d2FVBN
+         bYbe9U+kY/Zl6i2wDxO73uIEZXAJIdS9RuXf5bxPpqpwRJjCIRFiWTntWt7MGaAQVSC2
+         iFMnewIylkBTehqrn56LrXk0RBrI+vKxGWjhh7PBNlrtmfhEVYAIovTEAKyo4tq4oN+9
+         qKrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uIAcX2m8QpAWv8TMlh8B6oI/fe2X2DccVFEcYGZNbOk=;
-        b=R+840oR9XEcL4gixPRNJG58OBW7KnCVS/e6XbUzDahxY+zdzDsq1xxBbibHg/17aQw
-         bKFpX2AfaA6G9usoWSV83lZUa2auAFsmEqxZEFE/0lHlqCLEpx2FCG+wMl2nXyqh74NN
-         VgQYOS0rIxBbXSuwQlGXmgkyfKMiFC1V6ynBUL2tLoyq7oPbGQVZjmj322gkjZfC4scw
-         hk0tADBTe6gFY5gMbQ76cX/QPTVrYtoGCs11fi0zPgHWlsM7Olvb9fiBtmJUmHkFWA9L
-         qxqWDqAs7waFBDveC1XzidBSkpDwB/I069uz7qzXrVK+++/cmzOXrpGHLaXH2Ay0WR61
-         rh2A==
-X-Gm-Message-State: ANhLgQ3qA2GavOcn+jFDvNd9jDca233OPmrNs1oSHMVDW700XFUW2U41
-        5XPAy1NfM2WKdPC+a20tSVU=
-X-Google-Smtp-Source: ADFU+vuC24piMvbglWv/WVI/TWLmal3ArmiApJWvK+KWbm7V9Ezcb26GVi8QzfgpOoA3uvvY/Bl+ZA==
-X-Received: by 2002:a2e:894e:: with SMTP id b14mr8911183ljk.103.1585077206468;
-        Tue, 24 Mar 2020 12:13:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=8e7+L+UHZHa2zA2O9LK9VZBpvO0sNomc3WT2/0CqCjU=;
+        b=iadn6XWpmDv8b5i9r+m0f3J4lSmY+KVzbLtYVtR2xiE9/aVsX4i528aXtmFMbZdR4c
+         g9jUdMm8/KJebtTy19+B9L+zkLrvCR/F6hfLa9nQ1BkSLnJLiqEA5NPRspmRP1uKDCQs
+         AFzO/GyYdh8E1yTEulI1tOM7GV18hzXEf/ShFT6wQdJoJtd44aAOFq81tjjYjX8IBu+p
+         NwY8DmNZNRmXFQSGITSWLmB73hC7CzyCToIOT1eoKA8EveoEa998TCJeTjPH3IE+yfk0
+         TepTMwY4JEIaiXY4pyu/b+9i/BsB5dvLi4tEXak0XfHisYJXtRqharOpDEPm++O2vXwk
+         yVcQ==
+X-Gm-Message-State: ANhLgQ2ZMbY660+IQ2YCN2DCZofmu3AgVZEZwLWXvniJZxn0dUSDrWv8
+        N01J2+hE2w+pfDeYj4K/uew=
+X-Google-Smtp-Source: ADFU+vuiAlL6Nfj0JpdKx9a6iHCBFnG2bGLQweFpi5dg/eF6KCPlw0Vh1GVnHbPzEfXKdAhKoyBNeg==
+X-Received: by 2002:a2e:6809:: with SMTP id c9mr10101355lja.251.1585077207778;
+        Tue, 24 Mar 2020 12:13:27 -0700 (PDT)
 Received: from localhost.localdomain (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.gmail.com with ESMTPSA id z23sm6347723ljz.52.2020.03.24.12.13.24
+        by smtp.gmail.com with ESMTPSA id z23sm6347723ljz.52.2020.03.24.12.13.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 12:13:25 -0700 (PDT)
+        Tue, 24 Mar 2020 12:13:27 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -63,10 +64,12 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Wolfram Sang <wsa@the-dreams.de>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] NVIDIA Tegra I2C synchronization correction
-Date:   Tue, 24 Mar 2020 22:12:15 +0300
-Message-Id: <20200324191217.1829-1-digetx@gmail.com>
+Subject: [PATCH v2 1/2] i2c: tegra: Better handle case where CPU0 is busy for a long time
+Date:   Tue, 24 Mar 2020 22:12:16 +0300
+Message-Id: <20200324191217.1829-2-digetx@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200324191217.1829-1-digetx@gmail.com>
+References: <20200324191217.1829-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,29 +77,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Boot CPU0 always handle I2C interrupt and under some rare circumstances
+(like running KASAN + NFS root) it may stuck in uninterruptible state for
+a significant time. In this case we will get timeout if I2C transfer is
+running on a sibling CPU, despite of IRQ being raised. In order to handle
+this rare condition, the IRQ status needs to be checked after completion
+timeout.
 
-Recently I found a way to reliably reproduce I2C timeouts that happen due
-to improper synchronizations made by the I2C driver. It's quite easy to
-reproduce the problem when memory is running on a lower freq + there is
-some memory activity + CPU could get busy for a significant time. This
-is the case when KASAN is enabled and CPU is busy while accessing FS via
-NFS. This small series addresses the found problems.
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-Changelog:
-
-v2: - The "Better handle case where CPU0 is busy for a long time" patch
-      now preserves the old behavior where completion is checked after
-      disabling the interrupt, preventing potential race-condition of
-      the completion awaiting vs interrupt syncing.
-
-Dmitry Osipenko (2):
-  i2c: tegra: Better handle case where CPU0 is busy for a long time
-  i2c: tegra: Synchronize DMA before termination
-
- drivers/i2c/busses/i2c-tegra.c | 36 ++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
-
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index cbc2ad49043e..0daa863fb26f 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -1000,14 +1000,13 @@ tegra_i2c_poll_completion_timeout(struct tegra_i2c_dev *i2c_dev,
+ 	do {
+ 		u32 status = i2c_readl(i2c_dev, I2C_INT_STATUS);
+ 
+-		if (status) {
++		if (status)
+ 			tegra_i2c_isr(i2c_dev->irq, i2c_dev);
+ 
+-			if (completion_done(complete)) {
+-				s64 delta = ktime_ms_delta(ktimeout, ktime);
++		if (completion_done(complete)) {
++			s64 delta = ktime_ms_delta(ktimeout, ktime);
+ 
+-				return msecs_to_jiffies(delta) ?: 1;
+-			}
++			return msecs_to_jiffies(delta) ?: 1;
+ 		}
+ 
+ 		ktime = ktime_get();
+@@ -1034,14 +1033,18 @@ tegra_i2c_wait_completion_timeout(struct tegra_i2c_dev *i2c_dev,
+ 		disable_irq(i2c_dev->irq);
+ 
+ 		/*
+-		 * There is a chance that completion may happen after IRQ
+-		 * synchronization, which is done by disable_irq().
++		 * Under some rare circumstances (like running KASAN +
++		 * NFS root) CPU, which handles interrupt, may stuck in
++		 * uninterruptible state for a significant time.  In this
++		 * case we will get timeout if I2C transfer is running on
++		 * a sibling CPU, despite of IRQ being raised.
++		 *
++		 * In order to handle this rare condition, the IRQ status
++		 * needs to be checked after timeout.
+ 		 */
+-		if (ret == 0 && completion_done(complete)) {
+-			dev_warn(i2c_dev->dev,
+-				 "completion done after timeout\n");
+-			ret = 1;
+-		}
++		if (ret == 0)
++			ret = tegra_i2c_poll_completion_timeout(i2c_dev,
++								complete, 0);
+ 	}
+ 
+ 	return ret;
 -- 
 2.25.1
 
