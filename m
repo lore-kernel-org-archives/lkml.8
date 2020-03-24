@@ -2,137 +2,248 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC00BC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39CCC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85A5F206F8
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75173206F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QyOmm5ah"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="IWZIHhyk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCXHW6 (ORCPT
+        id S1727414AbgCXH3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 03:22:58 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:46608 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727304AbgCXHW6 (ORCPT
+        Tue, 24 Mar 2020 03:29:06 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17861 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgCXH3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 03:22:58 -0400
-Received: by mail-ed1-f68.google.com with SMTP id cf14so10381409edb.13;
-        Tue, 24 Mar 2020 00:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xbAGFRUEc8WSi1m7tXd4QfoMkZSNw03YADtsowLEzJc=;
-        b=QyOmm5ahPvMwOgaXbRvjRYuAGztnFHABZ1ay5NdVP4sQfwveT2bJtwcHD/pdhafXym
-         U3nmrRDDkm5CH57XGUjkFfhcFTqtJ75wBKA3D/xK7YIDkeLMc+peRX1DdELLta4aIJYW
-         PFvq29PXNTvktpqhI6OftKvvikVNkcVqeCnHmKBAmUndElIMXBm0eo+GM/ZOdieYzlY6
-         25Bz8T61jhZNAQv0c3H5ISif/2X9CWiVJKD38SFMLDkdG+a0Zw7ZjFJf9y7h1xWkdq6C
-         oJbZGXWj7p7T3mP82mNa9QxOQMm4/t33FJyobBTT2RRm+liOgYAGhAMxZ3DlNvxHm0Rm
-         MntA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xbAGFRUEc8WSi1m7tXd4QfoMkZSNw03YADtsowLEzJc=;
-        b=giSg/4H0Rp8ieq2yvdC558N9SSIXkeI8LZVDf77iP5YbeYQhFiK45//aAH6kbLdcIA
-         SNhpKf63DONfi99DwPaktb6ctIgJ9M3OwVvirm0GrEY2HG2tGPzftIZxrh9sysyzKKOx
-         /uEYe6vNjLypDnDAqUImBju05c5zpbxQTw3qZR8ig81cXrm/fJfHwyQrQV0jXXa/RA60
-         vlDAqFkNhJNaJKD1Lfp29kAZN3jAg9vI8yy1Tuhj1VBOye2QEYTiobiX5WIaVwvJYcjF
-         7i5NoTFJbVeR5L7xbkVtvHV8BH7BwA8OVVSrufTaaxuJMDaGY4jkCq6kcndsmNzUz9jr
-         yW8g==
-X-Gm-Message-State: ANhLgQ26HIFIEtH1tRKcgivVNOeaNFSDPJsLo24FUnlUIVjdvY9vbgZo
-        u2tD+TadmdYrHvaBax0NKMg=
-X-Google-Smtp-Source: ADFU+vvv3nq9kXL78yrg4zvv6t3eZQV3/PwSXUQ6OlTRVy235ugMyeReRt5WE1ttXU1U9XZsmbHKeA==
-X-Received: by 2002:a17:906:5c43:: with SMTP id c3mr21253612ejr.3.1585034576216;
-        Tue, 24 Mar 2020 00:22:56 -0700 (PDT)
-Received: from localhost.localdomain (45.239.197.178.dynamic.wless.lssmb00p-cgnat.res.cust.swisscom.ch. [178.197.239.45])
-        by smtp.googlemail.com with ESMTPSA id bc11sm12420edb.34.2020.03.24.00.22.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 00:22:55 -0700 (PDT)
-From:   Jean-Philippe Menil <jpmenil@gmail.com>
-To:     yhs@fb.com
-Cc:     kernel-janitors@vger.kernel.org, jpmenil@gmail.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] bpf: fix build warning - missing prototype
-Date:   Tue, 24 Mar 2020 08:22:31 +0100
-Message-Id: <20200324072231.5780-1-jpmenil@gmail.com>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <7c27e51f-6a64-7374-b705-450cad42146c@fb.com>
-References: <7c27e51f-6a64-7374-b705-450cad42146c@fb.com>
+        Tue, 24 Mar 2020 03:29:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585034917;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=YPD6yt9xo/Nwly3IRwv1NZqu6qfrT1ijo7UwAXpjSNQ=;
+        b=IWZIHhykikweBGGqnDrymmBs9mCVENFjFYZqNLMoiOqfEryLE20nkmMMGy3cVdhw
+        mw3l/8sfSsVH+TDdWtBp3K3k+y/CzEJGP9cgOE1JJL3IS+WX4zeXsDasZnXFf/l2/oO
+        5n8d3RtR0YMW3Daou0WfFk95Fb/lg1b6Nn0ojeko=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 158503491607548.52417154082593; Tue, 24 Mar 2020 15:28:36 +0800 (CST)
+Date:   Tue, 24 Mar 2020 15:28:27 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1584932355-3642-4-git-send-email-yangtiezhu@loongson.cn>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn> <1584932355-3642-4-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/3] MIPS: Loongson: Add PCI support for 7A1000
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <2518452B-57E0-4327-8154-0FBD9D2EC27A@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build warnings when building net/bpf/test_run.o with W=1 due
-to missing prototype for bpf_fentry_test{1..6}.
 
-Declare prototypes in order to silence warnings.
 
-Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
----
- net/bpf/test_run.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+0:59:15, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>Add PCI support for 7A1000 to detect PCI device=2E
+>
+>Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
 
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index d555c0d8657d..cdf87fb0b6eb 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -113,31 +113,37 @@ static int bpf_test_finish(const union bpf_attr *kattr,
-  * architecture dependent calling conventions. 7+ can be supported in the
-  * future.
-  */
-+int noinline bpf_fentry_test1(int a);
- int noinline bpf_fentry_test1(int a)
- {
- 	return a + 1;
- }
- 
-+int noinline bpf_fentry_test2(int a, u64 b);
- int noinline bpf_fentry_test2(int a, u64 b)
- {
- 	return a + b;
- }
- 
-+int noinline bpf_fentry_test3(char a, int b, u64 c);
- int noinline bpf_fentry_test3(char a, int b, u64 c)
- {
- 	return a + b + c;
- }
- 
-+int noinline bpf_fentry_test4(void *a, char b, int c, u64 d);
- int noinline bpf_fentry_test4(void *a, char b, int c, u64 d)
- {
- 	return (long)a + b + c + d;
- }
- 
-+int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e);
- int noinline bpf_fentry_test5(u64 a, void *b, short c, int d, u64 e)
- {
- 	return a + (long)b + c + d + e;
- }
- 
-+int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f);
- int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
- {
- 	return a + (long)b + c + d + (long)e + f;
--- 
-2.25.2
+Hi Tiezhu,
 
+See my comments below=2E
+
+>---
+> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  9 +++
+> arch/mips/loongson64/env=2Ec                         |  2 +
+>arch/mips/pci/ops-loongson3=2Ec                      | 72
+>++++++++++++++++++++--
+> 3 files changed, 79 insertions(+), 4 deletions(-)
+>
+>diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>index c759b7c=2E=2Ed766a36 100644
+>--- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>+++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>@@ -195,6 +195,7 @@ enum loongson_bridge_type {
+> 	LS7A1000 =3D 2
+> };
+>=20
+>+struct pci_bus;
+> struct loongson_system_configuration {
+> 	u32 nr_cpus;
+> 	u32 nr_nodes;
+>@@ -220,6 +221,8 @@ struct loongson_system_configuration {
+> 	struct sensor_device sensors[MAX_SENSORS];
+> 	u64 workarounds;
+> 	void (*early_config)(void);
+>+	int (*pci_config_access)(unsigned char access_type, struct pci_bus
+>*bus,
+>+				 unsigned int devfn, int where, u32 *data);
+> };
+>=20
+> extern struct efi_memory_map_loongson *loongson_memmap;
+>@@ -228,5 +231,11 @@ extern struct loongson_system_configuration
+>loongson_sysconf;
+> extern u32 node_id_offset;
+> extern void rs780e_early_config(void);
+> extern void ls7a1000_early_config(void);
+>+extern int rs780e_pci_config_access(unsigned char access_type,
+>+		struct pci_bus *bus, unsigned int devfn,
+>+		int where, u32 *data);
+>+extern int ls7a1000_pci_config_access(unsigned char access_type,
+>+		struct pci_bus *bus, unsigned int devfn,
+>+		int where, u32 *data);
+>=20
+> #endif
+>diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=2Ec
+>index 32a3822=2E=2E1c27f46 100644
+>--- a/arch/mips/loongson64/env=2Ec
+>+++ b/arch/mips/loongson64/env=2Ec
+>@@ -168,9 +168,11 @@ void __init prom_init_env(void)
+> 		pr_info("The bridge chip is Loongson 7A1000\n");
+> 		loongson_sysconf=2Ebridgetype =3D LS7A1000;
+> 		loongson_sysconf=2Eearly_config =3D ls7a1000_early_config;
+>+		loongson_sysconf=2Epci_config_access =3D ls7a1000_pci_config_access;
+> 	} else {
+> 		pr_info("The bridge chip is AMD RS780E or SR5690\n");
+> 		loongson_sysconf=2Ebridgetype =3D RS780E;
+> 		loongson_sysconf=2Eearly_config =3D rs780e_early_config;
+>+		loongson_sysconf=2Epci_config_access =3D rs780e_pci_config_access;
+> 	}
+> }
+>diff --git a/arch/mips/pci/ops-loongson3=2Ec
+>b/arch/mips/pci/ops-loongson3=2Ec
+>index 2f6ad36=2E=2E0b8fc5e 100644
+>--- a/arch/mips/pci/ops-loongson3=2Ec
+>+++ b/arch/mips/pci/ops-loongson3=2Ec
+>@@ -13,7 +13,10 @@
+> #define HT1LO_PCICFG_BASE      0x1a000000
+> #define HT1LO_PCICFG_BASE_TP1  0x1b000000
+>=20
+>-static int loongson3_pci_config_access(unsigned char access_type,
+>+#define HT1LO_PCICFG_BASE_EXT 0xefe00000000
+>+#define HT1LO_PCICFG_BASE_TP1_EXT 0xefe10000000
+>+
+>+int rs780e_pci_config_access(unsigned char access_type,
+> 		struct pci_bus *bus, unsigned int devfn,
+> 		int where, u32 *data)
+> {
+>@@ -62,11 +65,72 @@ static int loongson3_pci_config_access(unsigned
+>char access_type,
+> 	return PCIBIOS_SUCCESSFUL;
+> }
+>=20
+>+
+>+int ls7a1000_pci_config_access(unsigned char access_type,
+>+		struct pci_bus *bus, unsigned int devfn,
+>+		int where, u32 *data)
+>+{
+>+	u_int64_t addr;
+>+	void *addrp;
+>+	unsigned char busnum =3D bus->number;
+>+	int device =3D PCI_SLOT(devfn);
+>+	int function =3D PCI_FUNC(devfn);
+>+	int reg =3D where & ~3;
+>+
+>+	if (where >=3D PCI_CFG_SPACE_EXP_SIZE)
+>+		return PCIBIOS_DEVICE_NOT_FOUND;
+>+
+>+	if (busnum =3D=3D 0 && device > 23)
+>+		return PCIBIOS_DEVICE_NOT_FOUND;
+>+
+>+	if (where < PCI_CFG_SPACE_SIZE) { /* standard config */
+>+		addr =3D (busnum << 16) | (device << 11) | (function << 8) | reg;
+>+		if (busnum =3D=3D 0) {
+>+			addr =3D HT1LO_PCICFG_BASE | addr;
+>+			addrp =3D (void *)TO_UNCAC(addr);
+>+		} else {
+>+			addr =3D HT1LO_PCICFG_BASE_TP1 | addr;
+>+			addrp =3D (void *)TO_UNCAC(addr);
+>+		}
+>+	} else { /* extended config */
+>+		reg =3D (reg & 0xff) | ((reg & 0xf00) << 16);
+>+		addr =3D (busnum << 16) | (device << 11) | (function << 8) | reg;
+>+		if (busnum =3D=3D 0) {
+>+			addr =3D HT1LO_PCICFG_BASE_EXT | addr;
+>+			addrp =3D (void *)TO_UNCAC(addr);
+>+		} else {
+>+			addr =3D HT1LO_PCICFG_BASE_TP1_EXT | addr;
+>+			addrp =3D (void *)TO_UNCAC(addr);
+>+		}
+>+	}
+>+
+>+	if (access_type =3D=3D PCI_ACCESS_WRITE)
+>+		*(unsigned int *)addrp =3D cpu_to_le32(*data);
+>+	else {
+>+		*data =3D le32_to_cpu(*(unsigned int *)addrp);
+>+		if (*data =3D=3D 0xffffffff) {
+>+			*data =3D -1;
+>+			return PCIBIOS_DEVICE_NOT_FOUND;
+>+		}
+>+	}
+>+
+>+	return PCIBIOS_SUCCESSFUL;
+>+}
+>+
+>+static void ls7a1000_pci_class_quirk(struct pci_dev *dev)
+>+{
+>+	dev->class =3D PCI_CLASS_BRIDGE_PCI << 8;
+>+}
+>+
+>+DECLARE_PCI_FIXUP_EARLY(0x0014, 0x7a09, ls7a1000_pci_class_quirk);
+>+DECLARE_PCI_FIXUP_EARLY(0x0014, 0x7a19, ls7a1000_pci_class_quirk);
+>+DECLARE_PCI_FIXUP_EARLY(0x0014, 0x7a29, ls7a1000_pci_class_quirk);
+
+Please place them to fixup-loongson3=2Ec,
+don't mess up with operations=2E
+
+And you've already added vendor ID to pci_ids=2Eh=2E
+You can use it and tell us "it depends on pci-next tree's commit"=2E
+
+>+
+>static int loongson3_pci_pcibios_read(struct pci_bus *bus, unsigned int
+>devfn,
+> 				 int where, int size, u32 *val)
+> {
+> 	u32 data =3D 0;
+>-	int ret =3D loongson3_pci_config_access(PCI_ACCESS_READ,
+>+	int ret =3D loongson_sysconf=2Epci_config_access(PCI_ACCESS_READ,
+> 			bus, devfn, where, &data);
+>=20
+> 	if (ret !=3D PCIBIOS_SUCCESSFUL)
+>@@ -91,7 +155,7 @@ static int loongson3_pci_pcibios_write(struct
+>pci_bus *bus, unsigned int devfn,
+> 	if (size =3D=3D 4)
+> 		data =3D val;
+> 	else {
+>-		ret =3D loongson3_pci_config_access(PCI_ACCESS_READ,
+>+		ret =3D loongson_sysconf=2Epci_config_access(PCI_ACCESS_READ,
+> 				bus, devfn, where, &data);
+> 		if (ret !=3D PCIBIOS_SUCCESSFUL)
+> 			return ret;
+>@@ -104,7 +168,7 @@ static int loongson3_pci_pcibios_write(struct
+>pci_bus *bus, unsigned int devfn,
+> 			    (val << ((where & 3) << 3));
+> 	}
+>=20
+>-	ret =3D loongson3_pci_config_access(PCI_ACCESS_WRITE,
+>+	ret =3D loongson_sysconf=2Epci_config_access(PCI_ACCESS_WRITE,
+> 			bus, devfn, where, &data);
+>=20
+> 	return ret;
+
+--=20
+Jiaxun Yang
