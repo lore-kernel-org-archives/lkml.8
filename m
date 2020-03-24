@@ -2,86 +2,160 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E62EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D9BC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7BDC205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:13:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6768420B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:14:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="HG4va0y9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ffif3vYm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgCXONa (ORCPT
+        id S1727877AbgCXOO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:13:30 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44501 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgCXON3 (ORCPT
+        Tue, 24 Mar 2020 10:14:26 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:58153 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726988AbgCXOOZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:13:29 -0400
-Received: by mail-ed1-f67.google.com with SMTP id z3so20786664edq.11;
-        Tue, 24 Mar 2020 07:13:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=izwnIJDLX3PpcKebrw2ejCdxD31bp4HV/owZTH+UT9g=;
-        b=HG4va0y9ptHh02lYhjFJlq3MVsocAX+qz7OV0CNLJ+lcF9w/afL82Fu1gjQM04xwhO
-         CjZTMxfDlrnGjpBdVNmCPkTxrt+IkSia7ehhd4DwTeovr1wTk9Pygcm18lFH5t5h+o4b
-         wRypSA2BKiZACkE8PvNp2FIWfwfSHdfsqqkT5KQODnQhwIYJbeGW4HHn0qbIQFvmp4c2
-         d+EsKD2Lml8P0zyZ8y6MKBLX7vbH7nVcyKYtDQ9IkxLHDJlBrlcrw3TG2Whc6GMGwAzO
-         FVcU73Sa7Ct6bV5RFKeW+A6Qk62ThRLx9N0Sd2pcVBShMno1NMHUKqRSu5oxqQEFe9Wa
-         Sitg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=izwnIJDLX3PpcKebrw2ejCdxD31bp4HV/owZTH+UT9g=;
-        b=QDrar4xOfJC3L1fvVY+iTR7d8WM3vSbyppoXv/uOXF3BCh6OOmqdQw91Zn6YYLSmEg
-         TcUs788rmEC5i+uxgto66/umfBO8OMVuZYx64YjbG8OZ2venY5Frrsz9mJ4uWQPA/g9h
-         MGwDlgmK5QVwqc8FgsdqNHpH7du3/PoMbUNOriInvajE5T3VjUJStRgpK3afsRqafr2g
-         RVwDtpJbHWfUf7gfMjhvzrv6/mzv2iE3fzhO9lMcOVXqo+kQ8ly+/Rz+sXq+LS+zJWci
-         Gc9N23K+aZxXz8Xqt95wE+Pj+kjT/7xS125ORGFwHraul9lPXzAYbMnNJ+YKp5gBivm8
-         3BCw==
-X-Gm-Message-State: ANhLgQ2Vlqr0P51fKrpcB3o2J5hmVYKJLWAqadpZah9NWAVykeMWIJyc
-        oMTChBQBcb+/ximdvnaJWTGp73GktUNQzzFs+A0=
-X-Google-Smtp-Source: ADFU+vt7WPNeMNKBzxAaGY+0/pg49GFYOhCk2fM4aFzPzmKpP7OAgJPKW+5rkQPYjZ8OEAPMTAU0beLSAlgB28Pi17k=
-X-Received: by 2002:aa7:de13:: with SMTP id h19mr27826422edv.52.1585059207305;
- Tue, 24 Mar 2020 07:13:27 -0700 (PDT)
+        Tue, 24 Mar 2020 10:14:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585059264; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=D0tDkkn7yvngL5blqt4Sx3OwfBCinbjELusDX5Nb7E0=;
+ b=ffif3vYm/Qd7PrDuJWKO93gxsGlNxJZroeApJljFOI0ATRX7WGi4O/0fAYvUwiD/o3i0Xz2O
+ J9Z05ih9PHoMNsfjb6uSDOzAJAJiOf8c7FYX0nAZELunWFHzPkkv808qpTLll1eLTHwE/5SA
+ rNYk+3py1xfAy1Bd7CgDewHCkao=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7a15ad.7f3a66449b58-smtp-out-n03;
+ Tue, 24 Mar 2020 14:14:05 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 84AE6C433CB; Tue, 24 Mar 2020 14:14:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 928C0C433D2;
+        Tue, 24 Mar 2020 14:14:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 928C0C433D2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200324102030.31000-1-narmstrong@baylibre.com> <20200324102030.31000-3-narmstrong@baylibre.com>
-In-Reply-To: <20200324102030.31000-3-narmstrong@baylibre.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Tue, 24 Mar 2020 15:13:16 +0100
-Message-ID: <CAFBinCA9rQKWx47F2-dT4ZrCwSKW+LiwAH2VdzPKr-9ymRxkSw@mail.gmail.com>
-Subject: Re: [PATCH 02/13] usb: dwc3: meson-g12a: specify phy names in soc data
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
-        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Hanjie Lin <hanjie.lin@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH 1/3] dt-bindings: ath10k: Add wifi-firmware subnode for
+ wifi node
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1585054044-18667-2-git-send-email-pillair@codeaurora.org>
+References: <1585054044-18667-2-git-send-email-pillair@codeaurora.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200324141404.84AE6C433CB@smtp.codeaurora.org>
+Date:   Tue, 24 Mar 2020 14:14:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Neil,
+Rakesh Pillai <pillair@codeaurora.org> wrote:
 
-On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
-[...]
-> +static const char *meson_a1_phy_names[] = {
-> +       "usb2-phy0", "usb2-phy1"
-> +};
-my understanding is that the A1 SoC only has usb2-phy1.
-+Cc Hanjie Lin to confirm this
+> Add a wifi-firmware subnode for the wifi node.
+> This wifi-firmware subnode is needed for the
+> targets which do not support TrustZone.
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
 
-apart from that:
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Fails to build and has warnings. How did you test this?
 
+drivers/net/wireless/ath/ath10k/qmi.c: In function 'ath10k_qmi_msa_mem_info_send_sync_msg':
+drivers/net/wireless/ath/ath10k/qmi.c:160:23: error: 'struct ath10k_qmi' has no member named 'msa_pa'
+  max_mapped_addr = qmi->msa_pa + qmi->msa_mem_size;
+                       ^~
+drivers/net/wireless/ath/ath10k/qmi.c:160:37: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
+  max_mapped_addr = qmi->msa_pa + qmi->msa_mem_size;
+                                     ^~
+drivers/net/wireless/ath/ath10k/qmi.c:163:41: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
+   if (resp.mem_region_info[i].size > qmi->msa_mem_size ||
+                                         ^~
+drivers/net/wireless/ath/ath10k/qmi.c:165:48: error: 'struct ath10k_qmi' has no member named 'msa_pa'
+       resp.mem_region_info[i].region_addr < qmi->msa_pa ||
+                                                ^~
+make[5]: *** [drivers/net/wireless/ath/ath10k/qmi.o] Error 1
+make[5]: *** Waiting for unfinished jobs....
+In file included from ./include/linux/byteorder/little_endian.h:5,
+                 from ./arch/x86/include/uapi/asm/byteorder.h:5,
+                 from ./include/asm-generic/bitops/le.h:6,
+                 from ./arch/x86/include/asm/bitops.h:395,
+                 from ./include/linux/bitops.h:29,
+                 from ./include/linux/kernel.h:12,
+                 from ./include/linux/clk.h:13,
+                 from drivers/net/wireless/ath/ath10k/snoc.c:6:
+drivers/net/wireless/ath/ath10k/snoc.c: In function 'ath10k_msa_dump_memory':
+drivers/net/wireless/ath/ath10k/snoc.c:1424:54: error: 'struct ath10k_qmi' has no member named 'msa_va'
+  hdr->start = cpu_to_le32((unsigned long)ar_snoc->qmi->msa_va);
+                                                      ^~
+./include/uapi/linux/byteorder/little_endian.h:33:51: note: in definition of macro '__cpu_to_le32'
+ #define __cpu_to_le32(x) ((__force __le32)(__u32)(x))
+                                                   ^
+drivers/net/wireless/ath/ath10k/snoc.c:1424:15: note: in expansion of macro 'cpu_to_le32'
+  hdr->start = cpu_to_le32((unsigned long)ar_snoc->qmi->msa_va);
+               ^~~~~~~~~~~
+drivers/net/wireless/ath/ath10k/snoc.c:1425:40: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
+  hdr->length = cpu_to_le32(ar_snoc->qmi->msa_mem_size);
+                                        ^~
+./include/uapi/linux/byteorder/little_endian.h:33:51: note: in definition of macro '__cpu_to_le32'
+ #define __cpu_to_le32(x) ((__force __le32)(__u32)(x))
+                                                   ^
+drivers/net/wireless/ath/ath10k/snoc.c:1425:16: note: in expansion of macro 'cpu_to_le32'
+  hdr->length = cpu_to_le32(ar_snoc->qmi->msa_mem_size);
+                ^~~~~~~~~~~
+drivers/net/wireless/ath/ath10k/snoc.c:1427:40: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
+  if (current_region->len < ar_snoc->qmi->msa_mem_size) {
+                                        ^~
+drivers/net/wireless/ath/ath10k/snoc.c:1428:27: error: 'struct ath10k_qmi' has no member named 'msa_va'
+   memcpy(buf, ar_snoc->qmi->msa_va, current_region->len);
+                           ^~
+drivers/net/wireless/ath/ath10k/snoc.c:1430:41: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
+        current_region->len, ar_snoc->qmi->msa_mem_size);
+                                         ^~
+drivers/net/wireless/ath/ath10k/snoc.c:1432:27: error: 'struct ath10k_qmi' has no member named 'msa_va'
+   memcpy(buf, ar_snoc->qmi->msa_va, ar_snoc->qmi->msa_mem_size);
+                           ^~
+drivers/net/wireless/ath/ath10k/snoc.c:1432:49: error: 'struct ath10k_qmi' has no member named 'msa_mem_size'
+   memcpy(buf, ar_snoc->qmi->msa_va, ar_snoc->qmi->msa_mem_size);
+                                                 ^~
+drivers/net/wireless/ath/ath10k/snoc.c: In function 'ath10k_fw_deinit':
+drivers/net/wireless/ath/ath10k/snoc.c:1593:14: error: assignment of read-only variable 'mapped_size'
+  mapped_size = ar_snoc->fw.mapped_mem_size;
+              ^
+drivers/net/wireless/ath/ath10k/snoc.c:1599:46: warning: format '%d' expects argument of type 'int', but argument 3 has type 'size_t' {aka 'long unsigned int'} [-Wformat=]
+   ath10k_err(ar, "failed to unmap firmware: %d\n",
+                                             ~^
+                                             %ld
+       unmapped_size);
+       ~~~~~~~~~~~~~                           
+make[5]: *** [drivers/net/wireless/ath/ath10k/snoc.o] Error 1
+make[4]: *** [drivers/net/wireless/ath/ath10k] Error 2
+make[3]: *** [drivers/net/wireless/ath] Error 2
+make[2]: *** [drivers/net/wireless] Error 2
+make[1]: *** [drivers/net] Error 2
+make: *** [drivers] Error 2
 
-Martin
+3 patches set to Changes Requested.
+
+11455345 [1/3] dt-bindings: ath10k: Add wifi-firmware subnode for wifi node
+11455351 [2/3] ath10k: Setup the msa resources before qmi init
+11455353 [3/3] ath10k: Add support for targets without trustzone
+
+-- 
+https://patchwork.kernel.org/patch/11455345/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
