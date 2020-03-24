@@ -4,50 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26B5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F04C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D05B20753
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170D5206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056685;
-	bh=IGSlqq6hTkxv2h9XpSBomhmjn8iXo6CQHK+pMRjfako=;
+	s=default; t=1585056694;
+	bh=8D71hQD/03lTr+XgQno0BDGmgGfxR9qJXHJh2/1h4KI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XCa4mWRtrPywU4VLyz7pr3a/zkD6jiU7aGpONftiyGA8fMzVXUuwSY7CpRCeAFwnP
-	 2uVgPXvBg0RxWCJAVKXt7cWVr2y3y3t3UOTHT1S+2g5mOorfiGZ78Ih5x1avYBXm5y
-	 V70FaRe71ICTlDVWpQuhifpgSjEmEAxYUU5Im1dQ=
+	b=v5XczTMJZ0pVo5DwsIJvgcA5BeBIiDcbONU5Mvf2lFj4uiKHcZWXnnpwQzHMgoTJY
+	 tFOuTnl/GRYyfxLbZJP/snX7Z9KO3T2uDHbd2hNi6E5mRh39lDMe0I00XDWzewVBSu
+	 DECHd7T8HaBfDbhOLIZYSJ6fMPFgs5n/TF1mZwcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgCXNbY (ORCPT
+        id S1728200AbgCXNbc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:31:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41078 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:31:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgCXNUB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:01 -0400
+        id S1728701AbgCXNT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:56 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A305208CA;
-        Tue, 24 Mar 2020 13:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A217F208FE;
+        Tue, 24 Mar 2020 13:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056000;
-        bh=IGSlqq6hTkxv2h9XpSBomhmjn8iXo6CQHK+pMRjfako=;
+        s=default; t=1585055995;
+        bh=8D71hQD/03lTr+XgQno0BDGmgGfxR9qJXHJh2/1h4KI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GcjFVPA9+mrWty5aPhx39MKm4AXZFxG7uukC4IR6xrBB1qAZWSh8NloyEs+sKfUC6
-         GRpDTCs8qVoS5k53mrZ/EkCY7ebg1bOXxl+kQb+PCID9CHHoEykkPaIFwe0b2Joka8
-         BKWE6FFBp+HSd8kvu72oH+u0ulnK1s6onj6OOMHA=
+        b=SIXP3n8g5UCGg3TgqNEcCSJcpNeyLEAQeumleAYsyLPpDE4e6Teu8F9HyjwhNlQa8
+         D7Nwqyu7vaaewLbmLMvjjov5jh3wKfyqld0Fs8Ll+Alksb2A9DW6D6T+H/bqsMxgeh
+         vE2GNIGyo0a5AqJa0y7AHEtiTTQ76zMaY3CEpU64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rong Chen <rong.a.chen@intel.com>,
+        stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
+        Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@suse.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 095/102] futex: Unbreak futex hashing
-Date:   Tue, 24 Mar 2020 14:11:27 +0100
-Message-Id: <20200324130816.418081988@linuxfoundation.org>
+        Ingo Molnar <mingo@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 093/102] x86/mm: split vmalloc_sync_all()
+Date:   Tue, 24 Mar 2020 14:11:25 +0100
+Message-Id: <20200324130816.253021445@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,45 +69,205 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Joerg Roedel <jroedel@suse.de>
 
-commit 8d67743653dce5a0e7aa500fcccb237cde7ad88e upstream.
+commit 763802b53a427ed3cbd419dbba255c414fdd9e7c upstream.
 
-The recent futex inode life time fix changed the ordering of the futex key
-union struct members, but forgot to adjust the hash function accordingly,
+Commit 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in
+__purge_vmap_area_lazy()") introduced a call to vmalloc_sync_all() in
+the vunmap() code-path.  While this change was necessary to maintain
+correctness on x86-32-pae kernels, it also adds additional cycles for
+architectures that don't need it.
 
-As a result the hashing omits the leading 64bit and even hashes beyond the
-futex key causing a bad hash distribution which led to a ~100% performance
-regression.
+Specifically on x86-64 with CONFIG_VMAP_STACK=y some people reported
+severe performance regressions in micro-benchmarks because it now also
+calls the x86-64 implementation of vmalloc_sync_all() on vunmap().  But
+the vmalloc_sync_all() implementation on x86-64 is only needed for newly
+created mappings.
 
-Hand in the futex key pointer instead of a random struct member and make
-the size calculation based of the struct offset.
+To avoid the unnecessary work on x86-64 and to gain the performance
+back, split up vmalloc_sync_all() into two functions:
 
-Fixes: 8019ad13ef7f ("futex: Fix inode life-time issue")
-Reported-by: Rong Chen <rong.a.chen@intel.com>
-Decoded-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Rong Chen <rong.a.chen@intel.com>
-Link: https://lkml.kernel.org/r/87h7yy90ve.fsf@nanos.tec.linutronix.de
+	* vmalloc_sync_mappings(), and
+	* vmalloc_sync_unmappings()
+
+Most call-sites to vmalloc_sync_all() only care about new mappings being
+synchronized.  The only exception is the new call-site added in the
+above mentioned commit.
+
+Shile Zhang directed us to a report of an 80% regression in reaim
+throughput.
+
+Fixes: 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Borislav Petkov <bp@suse.de>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>	[GHES]
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20191009124418.8286-1-joro@8bytes.org
+Link: https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/4D3JPPHBNOSPFK2KEPC6KGKS6J25AIDB/
+Link: http://lkml.kernel.org/r/20191113095530.228959-1-shile.zhang@linux.alibaba.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/futex.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/mm/fault.c      |   26 ++++++++++++++++++++++++--
+ drivers/acpi/apei/ghes.c |    2 +-
+ include/linux/vmalloc.h  |    5 +++--
+ kernel/notifier.c        |    2 +-
+ mm/nommu.c               |   10 +++++++---
+ mm/vmalloc.c             |   11 +++++++----
+ 6 files changed, 43 insertions(+), 13 deletions(-)
 
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -385,9 +385,9 @@ static inline int hb_waiters_pending(str
-  */
- static struct futex_hash_bucket *hash_futex(union futex_key *key)
- {
--	u32 hash = jhash2((u32*)&key->both.word,
--			  (sizeof(key->both.word)+sizeof(key->both.ptr))/4,
-+	u32 hash = jhash2((u32 *)key, offsetof(typeof(*key), both.offset) / 4,
- 			  key->both.offset);
-+
- 	return &futex_queues[hash & (futex_hashsize - 1)];
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -189,7 +189,7 @@ static inline pmd_t *vmalloc_sync_one(pg
+ 	return pmd_k;
  }
  
+-void vmalloc_sync_all(void)
++static void vmalloc_sync(void)
+ {
+ 	unsigned long address;
+ 
+@@ -216,6 +216,16 @@ void vmalloc_sync_all(void)
+ 	}
+ }
+ 
++void vmalloc_sync_mappings(void)
++{
++	vmalloc_sync();
++}
++
++void vmalloc_sync_unmappings(void)
++{
++	vmalloc_sync();
++}
++
+ /*
+  * 32-bit:
+  *
+@@ -318,11 +328,23 @@ out:
+ 
+ #else /* CONFIG_X86_64: */
+ 
+-void vmalloc_sync_all(void)
++void vmalloc_sync_mappings(void)
+ {
++	/*
++	 * 64-bit mappings might allocate new p4d/pud pages
++	 * that need to be propagated to all tasks' PGDs.
++	 */
+ 	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
+ }
+ 
++void vmalloc_sync_unmappings(void)
++{
++	/*
++	 * Unmappings never allocate or free p4d/pud pages.
++	 * No work is required here.
++	 */
++}
++
+ /*
+  * 64-bit:
+  *
+--- a/drivers/acpi/apei/ghes.c
++++ b/drivers/acpi/apei/ghes.c
+@@ -171,7 +171,7 @@ int ghes_estatus_pool_init(int num_ghes)
+ 	 * New allocation must be visible in all pgd before it can be found by
+ 	 * an NMI allocating from the pool.
+ 	 */
+-	vmalloc_sync_all();
++	vmalloc_sync_mappings();
+ 
+ 	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
+ 	if (rc)
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -126,8 +126,9 @@ extern int remap_vmalloc_range_partial(s
+ 
+ extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
+ 							unsigned long pgoff);
+-void vmalloc_sync_all(void);
+- 
++void vmalloc_sync_mappings(void);
++void vmalloc_sync_unmappings(void);
++
+ /*
+  *	Lowlevel-APIs (not for driver use!)
+  */
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -554,7 +554,7 @@ NOKPROBE_SYMBOL(notify_die);
+ 
+ int register_die_notifier(struct notifier_block *nb)
+ {
+-	vmalloc_sync_all();
++	vmalloc_sync_mappings();
+ 	return atomic_notifier_chain_register(&die_chain, nb);
+ }
+ EXPORT_SYMBOL_GPL(register_die_notifier);
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -359,10 +359,14 @@ void vm_unmap_aliases(void)
+ EXPORT_SYMBOL_GPL(vm_unmap_aliases);
+ 
+ /*
+- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+- * have one.
++ * Implement a stub for vmalloc_sync_[un]mapping() if the architecture
++ * chose not to have one.
+  */
+-void __weak vmalloc_sync_all(void)
++void __weak vmalloc_sync_mappings(void)
++{
++}
++
++void __weak vmalloc_sync_unmappings(void)
+ {
+ }
+ 
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -1259,7 +1259,7 @@ static bool __purge_vmap_area_lazy(unsig
+ 	 * First make sure the mappings are removed from all page-tables
+ 	 * before they are freed.
+ 	 */
+-	vmalloc_sync_all();
++	vmalloc_sync_unmappings();
+ 
+ 	/*
+ 	 * TODO: to calculate a flush range without looping.
+@@ -3050,16 +3050,19 @@ int remap_vmalloc_range(struct vm_area_s
+ EXPORT_SYMBOL(remap_vmalloc_range);
+ 
+ /*
+- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
+- * have one.
++ * Implement stubs for vmalloc_sync_[un]mappings () if the architecture chose
++ * not to have one.
+  *
+  * The purpose of this function is to make sure the vmalloc area
+  * mappings are identical in all page-tables in the system.
+  */
+-void __weak vmalloc_sync_all(void)
++void __weak vmalloc_sync_mappings(void)
+ {
+ }
+ 
++void __weak vmalloc_sync_unmappings(void)
++{
++}
+ 
+ static int f(pte_t *pte, unsigned long addr, void *data)
+ {
 
 
