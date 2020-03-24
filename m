@@ -2,177 +2,498 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DBD9C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:39:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D199C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7CD02070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:39:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28DD42070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCXMjC (ORCPT
+        id S1727417AbgCXMmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:39:02 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:39064 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727443AbgCXMjC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:39:02 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxr2hW_3leCH8fAA--.1S3;
-        Tue, 24 Mar 2020 20:38:48 +0800 (CST)
-Subject: Re: [PATCH v2 1/3] MIPS: Loongson: Get host bridge information
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
- <1584932355-3642-2-git-send-email-yangtiezhu@loongson.cn>
- <C251FD7C-87F0-454E-83D7-5198A6E060E2@flygoat.com>
- <c8702862-f9a7-4776-68b9-cc17dba5d6f6@loongson.cn>
- <BF29AC74-29B6-44F3-9B5A-037FB4FE1778@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <1c5b830e-ac2d-f35b-ec7f-1a4eb20a9984@loongson.cn>
-Date:   Tue, 24 Mar 2020 20:38:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 24 Mar 2020 08:42:04 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:58835 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbgCXMmD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:42:03 -0400
+Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 8C370200018;
+        Tue, 24 Mar 2020 12:42:00 +0000 (UTC)
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH] ARM: dts: at91: rm9200: switch to new clock bindings
+Date:   Tue, 24 Mar 2020 13:41:54 +0100
+Message-Id: <20200324124154.368335-1-alexandre.belloni@bootlin.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <BF29AC74-29B6-44F3-9B5A-037FB4FE1778@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9Dxr2hW_3leCH8fAA--.1S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw1fWr43KrWrtw47Aw18Krg_yoWrXw4kp3
-        y7Aa1UGr48Wr17CrsIv3y5Xr9ayFZ8tFZ3WF47t3Wjgryqv3W3Xr4DGF1UCr4xZF1rGa40
-        qFyvgr4xWF13G3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8
-        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU5sjjDU
-        UUU
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/24/2020 06:02 PM, Jiaxun Yang wrote:
->
-> 于 2020年3月24日 GMT+08:00 下午5:58:33, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
->> On 03/24/2020 03:36 PM, Jiaxun Yang wrote:
->>> 于 2020年3月23日 GMT+08:00 上午10:59:13, Tiezhu Yang
->> <yangtiezhu@loongson.cn> 写到:
->>>> Read the address of HyperTransport Configuration Space to get the
->>>> vendor ID
->>>> and device ID of bridge chip, and then we can distinguish various
->> types
->>>> of
->>>> bridge chip such as Loongson 7A1000 or AMD RS780E.
->>>>
->>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->>>> ---
->>>> arch/mips/include/asm/mach-loongson64/boot_param.h |  6 ++++++
->>>> arch/mips/loongson64/env.c                         | 16
->>>> ++++++++++++++++
->>>> 2 files changed, 22 insertions(+)
->>>>
->>>> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h
->>>> b/arch/mips/include/asm/mach-loongson64/boot_param.h
->>>> index 8c286be..5e8c70d 100644
->>>> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
->>>> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
->>>> @@ -190,6 +190,11 @@ struct boot_params {
->>>> 	struct efi_reset_system_t reset_system;
->>>> };
->>>>
->>>> +enum loongson_bridge_type {
->>>> +	RS780E = 1,
->>>> +	LS7A1000 = 2
->>>> +};
->>>> +
->>>> struct loongson_system_configuration {
->>>> 	u32 nr_cpus;
->>>> 	u32 nr_nodes;
->>>> @@ -198,6 +203,7 @@ struct loongson_system_configuration {
->>>> 	u16 boot_cpu_id;
->>>> 	u16 reserved_cpus_mask;
->>>> 	enum loongson_cpu_type cputype;
->>>> +	enum loongson_bridge_type bridgetype;
->>>> 	u64 ht_control_base;
->>>> 	u64 pci_mem_start_addr;
->>>> 	u64 pci_mem_end_addr;
->>>> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
->>>> index 0daeb7b..42542c7 100644
->>>> --- a/arch/mips/loongson64/env.c
->>>> +++ b/arch/mips/loongson64/env.c
->>>> @@ -19,6 +19,8 @@
->>>> #include <boot_param.h>
->>>> #include <workarounds.h>
->>>>
->>>> +#define HT1_LO_BUS_CONFIG_BASE	0x90000efdfe000000
->>>> +
->>>> u32 cpu_clock_freq;
->>>> EXPORT_SYMBOL(cpu_clock_freq);
->>>> struct efi_memory_map_loongson *loongson_memmap;
->>>> @@ -42,6 +44,8 @@ void __init prom_init_env(void)
->>>> 	struct system_loongson *esys;
->>>> 	struct efi_cpuinfo_loongson *ecpu;
->>>> 	struct irq_source_routing_table *eirq_source;
->>>> +	u32 id;
->>>> +	u16 vendor, device;
->>>>
->>>> 	/* firmware arguments are initialized in head.S */
->>>> 	boot_p = (struct boot_params *)fw_arg2;
->>>> @@ -155,4 +159,16 @@ void __init prom_init_env(void)
->>>> 		memcpy(loongson_sysconf.sensors, esys->sensors,
->>>> 			sizeof(struct sensor_device) * loongson_sysconf.nr_sensors);
->>>> 	pr_info("CpuClock = %u\n", cpu_clock_freq);
->>>> +
->>>> +	id = readl((u32 *)HT1_LO_BUS_CONFIG_BASE);
->>> Is that pointer cast required?
->> Yes, otherwise it will compile failed:
->> arch/mips/loongson64/env.c:163:13: error: passing argument 1 of ‘readl’
-> I don't like it through....
-> Can we cast it in macro?
-> At least it should be void __iomem *.
+Switch sama5d3 boards to the new PMC clock bindings.
 
-OK, I will modify the code to make it easy to read.
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+---
+ arch/arm/boot/dts/at91rm9200.dtsi | 296 +++---------------------------
+ 1 file changed, 23 insertions(+), 273 deletions(-)
 
->
->
->> makes pointer from integer without a cast [-Werror]
->>    id = readl(HT1_LO_BUS_CONFIG_BASE);
->>               ^
->>> And you'd better add a comment here like
->>> /* Read HT PCI 00:00:00 Host Bridge's ID to detect bridge model */
->>> Otherwise it's hard for others to understand what you are doing.
->> OK, I will do it.
->>
->>>> +	vendor = id & 0xffff;
->>>> +	device = (id >> 16) & 0xffff;
->>>> +
->>>> +	if (vendor == 0x0014 && device == 0x7a00) {
->>> Please confirm with hardware design guys that bridge chip in future
->> will have different dev ID.
->>
->> Yes, it maybe have a new device ID for the new bridge chip.
->>
->>> Thanks.
->>>
->>>> +		pr_info("The bridge chip is Loongson 7A1000\n");
->>>> +		loongson_sysconf.bridgetype = LS7A1000;
->>>> +	} else {
->>>> +		pr_info("The bridge chip is AMD RS780E or SR5690\n");
->>>> +		loongson_sysconf.bridgetype = RS780E;
->>>> +	}
->>>> }
+diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
+index 44385718d9d4..a5040f5ea641 100644
+--- a/arch/arm/boot/dts/at91rm9200.dtsi
++++ b/arch/arm/boot/dts/at91rm9200.dtsi
+@@ -101,259 +101,9 @@ pmc: pmc@fffffc00 {
+ 				compatible = "atmel,at91rm9200-pmc", "syscon";
+ 				reg = <0xfffffc00 0x100>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+-				interrupt-controller;
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-				#interrupt-cells = <1>;
+-
+-				main_osc: main_osc {
+-					compatible = "atmel,at91rm9200-clk-main-osc";
+-					#clock-cells = <0>;
+-					interrupts-extended = <&pmc AT91_PMC_MOSCS>;
+-					clocks = <&main_xtal>;
+-				};
+-
+-				main: mainck {
+-					compatible = "atmel,at91rm9200-clk-main";
+-					#clock-cells = <0>;
+-					clocks = <&main_osc>;
+-				};
+-
+-				plla: pllack {
+-					compatible = "atmel,at91rm9200-clk-pll";
+-					#clock-cells = <0>;
+-					interrupts-extended = <&pmc AT91_PMC_LOCKA>;
+-					clocks = <&main>;
+-					reg = <0>;
+-					atmel,clk-input-range = <1000000 32000000>;
+-					#atmel,pll-clk-output-range-cells = <3>;
+-					atmel,pll-clk-output-ranges = <80000000 160000000 0>,
+-								<150000000 180000000 2>;
+-				};
+-
+-				pllb: pllbck {
+-					compatible = "atmel,at91rm9200-clk-pll";
+-					#clock-cells = <0>;
+-					interrupts-extended = <&pmc AT91_PMC_LOCKB>;
+-					clocks = <&main>;
+-					reg = <1>;
+-					atmel,clk-input-range = <1000000 32000000>;
+-					#atmel,pll-clk-output-range-cells = <3>;
+-					atmel,pll-clk-output-ranges = <80000000 160000000 0>,
+-								<150000000 180000000 2>;
+-				};
+-
+-				mck: masterck {
+-					compatible = "atmel,at91rm9200-clk-master";
+-					#clock-cells = <0>;
+-					interrupts-extended = <&pmc AT91_PMC_MCKRDY>;
+-					clocks = <&slow_xtal>, <&main>, <&plla>, <&pllb>;
+-					atmel,clk-output-range = <0 80000000>;
+-					atmel,clk-divisors = <1 2 3 4>;
+-				};
+-
+-				usb: usbck {
+-					compatible = "atmel,at91rm9200-clk-usb";
+-					#clock-cells = <0>;
+-					atmel,clk-divisors = <1 2 0 0>;
+-					clocks = <&pllb>;
+-				};
+-
+-				prog: progck {
+-					compatible = "atmel,at91rm9200-clk-programmable";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-					interrupt-parent = <&pmc>;
+-					clocks = <&slow_xtal>, <&main>, <&plla>, <&pllb>;
+-
+-					prog0: prog0 {
+-						#clock-cells = <0>;
+-						reg = <0>;
+-						interrupts = <AT91_PMC_PCKRDY(0)>;
+-					};
+-
+-					prog1: prog1 {
+-						#clock-cells = <0>;
+-						reg = <1>;
+-						interrupts = <AT91_PMC_PCKRDY(1)>;
+-					};
+-
+-					prog2: prog2 {
+-						#clock-cells = <0>;
+-						reg = <2>;
+-						interrupts = <AT91_PMC_PCKRDY(2)>;
+-					};
+-
+-					prog3: prog3 {
+-						#clock-cells = <0>;
+-						reg = <3>;
+-						interrupts = <AT91_PMC_PCKRDY(3)>;
+-					};
+-				};
+-
+-				systemck {
+-					compatible = "atmel,at91rm9200-clk-system";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-
+-					udpck: udpck {
+-						#clock-cells = <0>;
+-						reg = <2>;
+-						clocks = <&usb>;
+-					};
+-
+-					uhpck: uhpck {
+-						#clock-cells = <0>;
+-						reg = <4>;
+-						clocks = <&usb>;
+-					};
+-
+-					pck0: pck0 {
+-						#clock-cells = <0>;
+-						reg = <8>;
+-						clocks = <&prog0>;
+-					};
+-
+-					pck1: pck1 {
+-						#clock-cells = <0>;
+-						reg = <9>;
+-						clocks = <&prog1>;
+-					};
+-
+-					pck2: pck2 {
+-						#clock-cells = <0>;
+-						reg = <10>;
+-						clocks = <&prog2>;
+-					};
+-
+-					pck3: pck3 {
+-						#clock-cells = <0>;
+-						reg = <11>;
+-						clocks = <&prog3>;
+-					};
+-				};
+-
+-				periphck {
+-					compatible = "atmel,at91rm9200-clk-peripheral";
+-					#address-cells = <1>;
+-					#size-cells = <0>;
+-					clocks = <&mck>;
+-
+-					pioA_clk: pioA_clk {
+-						#clock-cells = <0>;
+-						reg = <2>;
+-					};
+-
+-					pioB_clk: pioB_clk {
+-						#clock-cells = <0>;
+-						reg = <3>;
+-					};
+-
+-					pioC_clk: pioC_clk {
+-						#clock-cells = <0>;
+-						reg = <4>;
+-					};
+-
+-					pioD_clk: pioD_clk {
+-						#clock-cells = <0>;
+-						reg = <5>;
+-					};
+-
+-					usart0_clk: usart0_clk {
+-						#clock-cells = <0>;
+-						reg = <6>;
+-					};
+-
+-					usart1_clk: usart1_clk {
+-						#clock-cells = <0>;
+-						reg = <7>;
+-					};
+-
+-					usart2_clk: usart2_clk {
+-						#clock-cells = <0>;
+-						reg = <8>;
+-					};
+-
+-					usart3_clk: usart3_clk {
+-						#clock-cells = <0>;
+-						reg = <9>;
+-					};
+-
+-					mci0_clk: mci0_clk {
+-						#clock-cells = <0>;
+-						reg = <10>;
+-					};
+-
+-					udc_clk: udc_clk {
+-						#clock-cells = <0>;
+-						reg = <11>;
+-					};
+-
+-					twi0_clk: twi0_clk {
+-						reg = <12>;
+-						#clock-cells = <0>;
+-					};
+-
+-					spi0_clk: spi0_clk {
+-						#clock-cells = <0>;
+-						reg = <13>;
+-					};
+-
+-					ssc0_clk: ssc0_clk {
+-						#clock-cells = <0>;
+-						reg = <14>;
+-					};
+-
+-					ssc1_clk: ssc1_clk {
+-						#clock-cells = <0>;
+-						reg = <15>;
+-					};
+-
+-					ssc2_clk: ssc2_clk {
+-						#clock-cells = <0>;
+-						reg = <16>;
+-					};
+-
+-					tc0_clk: tc0_clk {
+-						#clock-cells = <0>;
+-						reg = <17>;
+-					};
+-
+-					tc1_clk: tc1_clk {
+-						#clock-cells = <0>;
+-						reg = <18>;
+-					};
+-
+-					tc2_clk: tc2_clk {
+-						#clock-cells = <0>;
+-						reg = <19>;
+-					};
+-
+-					tc3_clk: tc3_clk {
+-						#clock-cells = <0>;
+-						reg = <20>;
+-					};
+-
+-					tc4_clk: tc4_clk {
+-						#clock-cells = <0>;
+-						reg = <21>;
+-					};
+-
+-					tc5_clk: tc5_clk {
+-						#clock-cells = <0>;
+-						reg = <22>;
+-					};
+-
+-					ohci_clk: ohci_clk {
+-						#clock-cells = <0>;
+-						reg = <23>;
+-					};
+-
+-					macb0_clk: macb0_clk {
+-						#clock-cells = <0>;
+-						reg = <24>;
+-					};
+-				};
++				#clock-cells = <2>;
++				clocks = <&slow_xtal>, <&main_xtal>;
++				clock-names = "slow_xtal", "main_xtal";
+ 			};
+ 
+ 			st: timer@fffffd00 {
+@@ -383,7 +133,7 @@ tcb0: timer@fffa0000 {
+ 				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 0
+ 					      18 IRQ_TYPE_LEVEL_HIGH 0
+ 					      19 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&tc0_clk>, <&tc1_clk>, <&tc2_clk>, <&slow_xtal>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 17>, <&pmc PMC_TYPE_PERIPHERAL 18>, <&pmc PMC_TYPE_PERIPHERAL 19>, <&slow_xtal>;
+ 				clock-names = "t0_clk", "t1_clk", "t2_clk", "slow_clk";
+ 			};
+ 
+@@ -395,7 +145,7 @@ tcb1: timer@fffa4000 {
+ 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH 0
+ 					      21 IRQ_TYPE_LEVEL_HIGH 0
+ 					      22 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&tc3_clk>, <&tc4_clk>, <&tc5_clk>, <&slow_xtal>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 20>, <&pmc PMC_TYPE_PERIPHERAL 21>, <&pmc PMC_TYPE_PERIPHERAL 22>, <&slow_xtal>;
+ 				clock-names = "t0_clk", "t1_clk", "t2_clk", "slow_clk";
+ 			};
+ 
+@@ -405,7 +155,7 @@ i2c0: i2c@fffb8000 {
+ 				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 6>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_twi>;
+-				clocks = <&twi0_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 12>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				status = "disabled";
+@@ -415,7 +165,7 @@ mmc0: mmc@fffb4000 {
+ 				compatible = "atmel,hsmci";
+ 				reg = <0xfffb4000 0x4000>;
+ 				interrupts = <10 IRQ_TYPE_LEVEL_HIGH 0>;
+-				clocks = <&mci0_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 10>;
+ 				clock-names = "mci_clk";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -429,7 +179,7 @@ ssc0: ssc@fffd0000 {
+ 				interrupts = <14 IRQ_TYPE_LEVEL_HIGH 5>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+-				clocks = <&ssc0_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 14>;
+ 				clock-names = "pclk";
+ 				status = "disabled";
+ 			};
+@@ -440,7 +190,7 @@ ssc1: ssc@fffd4000 {
+ 				interrupts = <15 IRQ_TYPE_LEVEL_HIGH 5>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_ssc1_tx &pinctrl_ssc1_rx>;
+-				clocks = <&ssc1_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 15>;
+ 				clock-names = "pclk";
+ 				status = "disabled";
+ 			};
+@@ -451,7 +201,7 @@ ssc2: ssc@fffd8000 {
+ 				interrupts = <16 IRQ_TYPE_LEVEL_HIGH 5>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_ssc2_tx &pinctrl_ssc2_rx>;
+-				clocks = <&ssc2_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 16>;
+ 				clock-names = "pclk";
+ 				status = "disabled";
+ 			};
+@@ -463,7 +213,7 @@ macb0: ethernet@fffbc000 {
+ 				phy-mode = "rmii";
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_macb_rmii>;
+-				clocks = <&macb0_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 24>;
+ 				clock-names = "ether_clk";
+ 				status = "disabled";
+ 			};
+@@ -803,7 +553,7 @@ pioA: gpio@fffff400 {
+ 					gpio-controller;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+-					clocks = <&pioA_clk>;
++					clocks = <&pmc PMC_TYPE_PERIPHERAL 2>;
+ 				};
+ 
+ 				pioB: gpio@fffff600 {
+@@ -814,7 +564,7 @@ pioB: gpio@fffff600 {
+ 					gpio-controller;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+-					clocks = <&pioB_clk>;
++					clocks = <&pmc PMC_TYPE_PERIPHERAL 3>;
+ 				};
+ 
+ 				pioC: gpio@fffff800 {
+@@ -825,7 +575,7 @@ pioC: gpio@fffff800 {
+ 					gpio-controller;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+-					clocks = <&pioC_clk>;
++					clocks = <&pmc PMC_TYPE_PERIPHERAL 4>;
+ 				};
+ 
+ 				pioD: gpio@fffffa00 {
+@@ -836,7 +586,7 @@ pioD: gpio@fffffa00 {
+ 					gpio-controller;
+ 					interrupt-controller;
+ 					#interrupt-cells = <2>;
+-					clocks = <&pioD_clk>;
++					clocks = <&pmc PMC_TYPE_PERIPHERAL 5>;
+ 				};
+ 			};
+ 
+@@ -846,7 +596,7 @@ dbgu: serial@fffff200 {
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_dbgu>;
+-				clocks = <&mck>;
++				clocks = <&pmc PMC_TYPE_CORE PMC_MCK>;
+ 				clock-names = "usart";
+ 				status = "disabled";
+ 			};
+@@ -859,7 +609,7 @@ usart0: serial@fffc0000 {
+ 				atmel,use-dma-tx;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_uart0>;
+-				clocks = <&usart0_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 6>;
+ 				clock-names = "usart";
+ 				status = "disabled";
+ 			};
+@@ -872,7 +622,7 @@ usart1: serial@fffc4000 {
+ 				atmel,use-dma-tx;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_uart1>;
+-				clocks = <&usart1_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 7>;
+ 				clock-names = "usart";
+ 				status = "disabled";
+ 			};
+@@ -885,7 +635,7 @@ usart2: serial@fffc8000 {
+ 				atmel,use-dma-tx;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_uart2>;
+-				clocks = <&usart2_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 8>;
+ 				clock-names = "usart";
+ 				status = "disabled";
+ 			};
+@@ -898,7 +648,7 @@ usart3: serial@fffcc000 {
+ 				atmel,use-dma-tx;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_uart3>;
+-				clocks = <&usart3_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 9>;
+ 				clock-names = "usart";
+ 				status = "disabled";
+ 			};
+@@ -907,7 +657,7 @@ usb1: gadget@fffb0000 {
+ 				compatible = "atmel,at91rm9200-udc";
+ 				reg = <0xfffb0000 0x4000>;
+ 				interrupts = <11 IRQ_TYPE_LEVEL_HIGH 2>;
+-				clocks = <&udc_clk>, <&udpck>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 11>, <&pmc PMC_TYPE_SYSTEM 2>;
+ 				clock-names = "pclk", "hclk";
+ 				status = "disabled";
+ 			};
+@@ -920,7 +670,7 @@ spi0: spi@fffe0000 {
+ 				interrupts = <13 IRQ_TYPE_LEVEL_HIGH 3>;
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_spi0>;
+-				clocks = <&spi0_clk>;
++				clocks = <&pmc PMC_TYPE_PERIPHERAL 13>;
+ 				clock-names = "spi_clk";
+ 				status = "disabled";
+ 			};
+@@ -947,7 +697,7 @@ usb0: ohci@300000 {
+ 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+ 			reg = <0x00300000 0x100000>;
+ 			interrupts = <23 IRQ_TYPE_LEVEL_HIGH 2>;
+-			clocks = <&ohci_clk>, <&ohci_clk>, <&uhpck>;
++			clocks = <&pmc PMC_TYPE_PERIPHERAL 23>, <&pmc PMC_TYPE_PERIPHERAL 23>, <&pmc PMC_TYPE_SYSTEM 4>;
+ 			clock-names = "ohci_clk", "hclk", "uhpck";
+ 			status = "disabled";
+ 		};
+-- 
+2.25.1
 
