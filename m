@@ -2,51 +2,53 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BE3C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B90EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E452076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E792D20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056819;
-	bh=/yUkgZdWto5X5Jvg8caTaNLBPOv3Z7TfKUnt0YercZw=;
+	s=default; t=1585056828;
+	bh=grzFEwu1pZms+HonqHguieLlr2VOdQryXghCZyo2U7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ow96ZpAberGufumvdHOdMzEb5dowfd50ThfmXSQdEXQzYLSvLtwwMJ9NZhs/q1rlu
-	 +KFudya0iTysZfUbGtIHnNaHpIcrUbE54HUtDyv3Pa5C8okoL8MrlS7j6UC19186qa
-	 8VCEZPqgfqAPYu+ov0cjKPHuFxxHoVHE5zikS9VQ=
+	b=QND1NqkKe7ZK8AqT319fmmtmm3BrSBC+tYCNFbFEJx1VK8s21k5hh1ZOsYZjF/ruX
+	 jFIBtp29uKpYUOImnQht2ccK8EbD3odBe4tp691pgU+ry2IPKgF7UjitOwDKS/L0r5
+	 Cq79FbWOaiHBuy1I7qaQIB3vICkD9PlR0vzsb6PY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgCXNMo (ORCPT
+        id S1728371AbgCXNdq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:12:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58576 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:33:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbgCXNMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:12:39 -0400
+        id S1727492AbgCXNMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3045208CA;
-        Tue, 24 Mar 2020 13:12:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C407C208D6;
+        Tue, 24 Mar 2020 13:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055559;
-        bh=/yUkgZdWto5X5Jvg8caTaNLBPOv3Z7TfKUnt0YercZw=;
+        s=default; t=1585055529;
+        bh=grzFEwu1pZms+HonqHguieLlr2VOdQryXghCZyo2U7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJirrFxCqNN0XOrxwZ109EIEGpw/yDwMl7VC19ze6QEi+y/rLjb7QWWCV9SgcnY/5
-         o6DCz+gren7pH6i5QfyX3MYrtbqUaOspJKadTNLl+PUD3dMiUnoTXRra3SuAbeLYuy
-         se8Af29hhpNpPaE7nGI+TPChPT/bExomlClEtnTM=
+        b=LgRGoRD72MM1+CNyq0/g55o5LdMjyTPLspnb21jm18zw+R6DwAXNNfBdVht4tRrpM
+         MAxNjLGlVCqX+AZaF9E0C3O1W5mWVAvNmf4PeBhOHNUxXsDLtDHnoSSz/PXVRinYTi
+         uGdh7+t7HOuSWGSIux7qy9+t4vIjBAhRwRNd7ng8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Scott Chen <scott@labau.com.tw>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 24/65] USB: serial: pl2303: add device-id for HP LD381
-Date:   Tue, 24 Mar 2020 14:10:45 +0100
-Message-Id: <20200324130800.217686671@linuxfoundation.org>
+        stable@vger.kernel.org, Thommy Jakobsson <thommyj@gmail.com>,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 06/65] spi/zynqmp: remove entry that causes a cs glitch
+Date:   Tue, 24 Mar 2020 14:10:27 +0100
+Message-Id: <20200324130757.505297161@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -59,42 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Chen <scott@labau.com.tw>
+From: Thommy Jakobsson <thommyj@gmail.com>
 
-commit cecc113c1af0dd41ccf265c1fdb84dbd05e63423 upstream.
+[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
 
-Add a device id for HP LD381 Display
-LD381:   03f0:0f7f
+In the public interface for chipselect, there is always an entry
+commented as "Dummy generic FIFO entry" pushed down to the fifo right
+after the activate/deactivate command. The dummy entry is 0x0,
+irregardless if the intention was to activate or deactive the cs. This
+causes the cs line to glitch rather than beeing activated in the case
+when there was an activate command.
 
-Signed-off-by: Scott Chen <scott@labau.com.tw>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This has been observed on oscilloscope, and have caused problems for at
+least one specific flash device type connected to the qspi port. After
+the change the glitch is gone and cs goes active when intended.
 
+The reason why this worked before (except for the glitch) was because
+when sending the actual data, the CS bits are once again set. Since
+most flashes uses mode 0, there is always a half clk period anyway for
+cs to clk active setup time. If someone would rely on timing from a
+chip_select call to a transfer_one, it would fail though.
+
+It is unknown why the dummy entry was there in the first place, git log
+seems to be of no help in this case. The reference manual gives no
+indication of the necessity of this. In fact the lower 8 bits are a
+setup (or hold in case of deactivate) time expressed in cycles. So this
+should not be needed to fulfill any setup/hold timings.
+
+Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
+Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/pl2303.c |    1 +
- drivers/usb/serial/pl2303.h |    1 +
- 2 files changed, 2 insertions(+)
+ drivers/spi/spi-zynqmp-gqspi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/usb/serial/pl2303.c
-+++ b/drivers/usb/serial/pl2303.c
-@@ -93,6 +93,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(SUPERIAL_VENDOR_ID, SUPERIAL_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD220TA_PRODUCT_ID) },
-+	{ USB_DEVICE(HP_VENDOR_ID, HP_LD381_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LD960TA_PRODUCT_ID) },
- 	{ USB_DEVICE(HP_VENDOR_ID, HP_LCM220_PRODUCT_ID) },
---- a/drivers/usb/serial/pl2303.h
-+++ b/drivers/usb/serial/pl2303.h
-@@ -124,6 +124,7 @@
- #define HP_LM920_PRODUCT_ID	0x026b
- #define HP_TD620_PRODUCT_ID	0x0956
- #define HP_LD960_PRODUCT_ID	0x0b39
-+#define HP_LD381_PRODUCT_ID	0x0f7f
- #define HP_LCM220_PRODUCT_ID	0x3139
- #define HP_LCM960_PRODUCT_ID	0x3239
- #define HP_LD220_PRODUCT_ID	0x3524
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index cc4d310334943..f2848c59b0b8e 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -403,9 +403,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
+ 
+ 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
+ 
+-	/* Dummy generic FIFO entry */
+-	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
+-
+ 	/* Manually start the generic FIFO command */
+ 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+ 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+-- 
+2.20.1
+
 
 
