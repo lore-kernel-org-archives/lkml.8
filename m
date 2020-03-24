@@ -2,230 +2,144 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25B1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F212CC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36DB206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056527;
-	bh=Do/q2I9PYs7qYwGjPxeQeS5iqniDuaprnn5AUfkpS9I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lan74vAMy7H5I0A0RYLOuhLWm8jn9+NCRqgaNWTL1/ooGDyLmcPifPt930V/kLkDe
-	 pV7ZGvvatzufoNl9px4zzKHpI+4GWAQSNrUoeSyPNM9Eiv72EhqlHzAVu+tLTh5tHa
-	 ZCoK28ii58OZZHGO9gko4HLFOSTdz+UT7IlH5oyI=
+	by mail.kernel.org (Postfix) with ESMTP id D4E7020870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729592AbgCXNYL (ORCPT
+        id S1729811AbgCXN2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:24:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:28:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:34642 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729547AbgCXNYG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1067D208CA;
-        Tue, 24 Mar 2020 13:24:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056245;
-        bh=Do/q2I9PYs7qYwGjPxeQeS5iqniDuaprnn5AUfkpS9I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qhtBLf5qxfdY2iHSgDGN0kf0aTWghuyBJ1LjRRMI9VG1z0yYuxVCAshCtRVd3BdVm
-         ZJx0d4RLAEFP04lzUKcWzOTqFvNbpWKr7SzCiorlYa67JSfgTDbEKb89xLMa+BgzQk
-         mRUtrOCaH+tr7oOu3Dn7cIKlpSrk4Yn8qpXAEn54=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>, Dave Airlie <airlied@redhat.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Uma Shankar <uma.shankar@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 041/119] Revert "drm/fbdev: Fallback to non tiled mode if all tiles not present"
-Date:   Tue, 24 Mar 2020 14:10:26 +0100
-Message-Id: <20200324130812.465138274@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729593AbgCXNYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3611E1045;
+        Tue, 24 Mar 2020 06:24:11 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC1FF3F52E;
+        Tue, 24 Mar 2020 06:24:09 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v3 11/14] net: axienet: Wrap DMA pointer writes to prepare for 64 bit
+Date:   Tue, 24 Mar 2020 13:23:44 +0000
+Message-Id: <20200324132347.23709-12-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
+References: <20200324132347.23709-1-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f053c83ad5c88427644e06746bfddcefa409c27d ]
+Newer versions of the Xilink DMA IP support busses with more than 32
+address bits, by introducing an MSB word for the registers holding DMA
+pointers (tail/current, RX/TX descriptor addresses).
+On IP configured for more than 32 bits, it is also *required* to write
+both words, to let the IP recognise this as a start condition for an
+MM2S request, for instance.
 
-This reverts commit f25c7a006cd1 ("drm/fbdev: Fallback to non tiled mode
-if all tiles not present"). The commit causes flip done timeouts in CI.
+Wrap the DMA pointer writes with a separate function, to add this
+functionality later. For now we stick to the lower 32 bits.
 
-Below are the sample errors thrown in logs:
-
-[IGT] core_getversion: executing
-[IGT] core_getversion: exiting, ret=0
-Setting dangerous option reset - tainting kernel
-drm:drm_atomic_helper_wait_for_dependencies] ERROR [CRTC:152:pipe B] flip_done timed out
-drm:drm_atomic_helper_wait_for_dependencies] ERROR [CONNECTOR:299:DP-2] flip_done timed out
-drm:drm_atomic_helper_wait_for_dependencies] ERROR [PLANE:92:plane 1B] flip_done timed out
-[drm:drm_atomic_helper_wait_for_flip_done] ERROR [CRTC:152:pipe B] flip_done timed out
-[drm:drm_atomic_helper_wait_for_dependencies] ERROR [CRTC:152:pipe B] flip_done timed out
-[drm:drm_atomic_helper_wait_for_dependencies] ERROR [CONNECTOR:299:DP-2] flip_done timed out
-[drm:drm_atomic_helper_wait_for_dependencies] ERROR [PLANE:92:plane 1B] flip_done timed out
-[drm:drm_atomic_helper_wait_for_flip_done] ERROR [CRTC:152:pipe B] flip_done timed out
-Console: switching to colour frame buffer device 480x135
-[drm:drm_atomic_helper_wait_for_dependencies] ERROR [CRTC:152:pipe B] flip_done timed out
-[drm:drm_atomic_helper_wait_for_dependencies] ERROR [CONNECTOR:299:DP-2] flip_done timed out
-
-Reverting the change for now to unblock CI execution.
-
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Dave Airlie <airlied@redhat.com>
-Cc: Jani Nikula <jani.nikula@intel.com>
-Cc: Manasi Navare <manasi.d.navare@intel.com>
-Signed-off-by: Uma Shankar <uma.shankar@intel.com>
-Fixes: f25c7a006cd1 ("drm/fbdev: Fallback to non tiled mode if all tiles not present")
-Closes: https://gitlab.freedesktop.org/drm/intel/issues/6
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191123091840.32382-1-uma.shankar@intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- drivers/gpu/drm/drm_client_modeset.c | 72 ----------------------------
- 1 file changed, 72 deletions(-)
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 26 ++++++++++++-------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-index 3035584f6dc72..29367b6506a8f 100644
---- a/drivers/gpu/drm/drm_client_modeset.c
-+++ b/drivers/gpu/drm/drm_client_modeset.c
-@@ -114,33 +114,6 @@ drm_client_find_modeset(struct drm_client_dev *client, struct drm_crtc *crtc)
- 	return NULL;
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index dc533d7a090c..e7469eb241ad 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -147,6 +147,12 @@ static inline void axienet_dma_out32(struct axienet_local *lp,
+ 	iowrite32(value, lp->dma_regs + reg);
  }
  
--static struct drm_display_mode *
--drm_connector_get_tiled_mode(struct drm_connector *connector)
--{
--	struct drm_display_mode *mode;
--
--	list_for_each_entry(mode, &connector->modes, head) {
--		if (mode->hdisplay == connector->tile_h_size &&
--		    mode->vdisplay == connector->tile_v_size)
--			return mode;
--	}
--	return NULL;
--}
--
--static struct drm_display_mode *
--drm_connector_fallback_non_tiled_mode(struct drm_connector *connector)
--{
--	struct drm_display_mode *mode;
--
--	list_for_each_entry(mode, &connector->modes, head) {
--		if (mode->hdisplay == connector->tile_h_size &&
--		    mode->vdisplay == connector->tile_v_size)
--			continue;
--		return mode;
--	}
--	return NULL;
--}
--
- static struct drm_display_mode *
- drm_connector_has_preferred_mode(struct drm_connector *connector, int width, int height)
- {
-@@ -375,15 +348,8 @@ static bool drm_client_target_preferred(struct drm_connector **connectors,
- 	struct drm_connector *connector;
- 	u64 conn_configured = 0;
- 	int tile_pass = 0;
--	int num_tiled_conns = 0;
- 	int i;
++static void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
++				 dma_addr_t addr)
++{
++	axienet_dma_out32(lp, reg, lower_32_bits(addr));
++}
++
+ /**
+  * axienet_dma_bd_release - Release buffer descriptor rings
+  * @ndev:	Pointer to the net_device structure
+@@ -285,18 +291,18 @@ static int axienet_dma_bd_init(struct net_device *ndev)
+ 	/* Populate the tail pointer and bring the Rx Axi DMA engine out of
+ 	 * halted state. This will make the Rx side ready for reception.
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_RX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+-	axienet_dma_out32(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
+-			  (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
++	axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
++			     (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
  
--	for (i = 0; i < connector_count; i++) {
--		if (connectors[i]->has_tile &&
--		    connectors[i]->status == connector_status_connected)
--			num_tiled_conns++;
--	}
--
- retry:
- 	for (i = 0; i < connector_count; i++) {
- 		connector = connectors[i];
-@@ -433,28 +399,6 @@ static bool drm_client_target_preferred(struct drm_connector **connectors,
- 			list_for_each_entry(modes[i], &connector->modes, head)
- 				break;
- 		}
--		/*
--		 * In case of tiled mode if all tiles not present fallback to
--		 * first available non tiled mode.
--		 * After all tiles are present, try to find the tiled mode
--		 * for all and if tiled mode not present due to fbcon size
--		 * limitations, use first non tiled mode only for
--		 * tile 0,0 and set to no mode for all other tiles.
--		 */
--		if (connector->has_tile) {
--			if (num_tiled_conns <
--			    connector->num_h_tile * connector->num_v_tile ||
--			    (connector->tile_h_loc == 0 &&
--			     connector->tile_v_loc == 0 &&
--			     !drm_connector_get_tiled_mode(connector))) {
--				DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
--					      connector->base.id);
--				modes[i] = drm_connector_fallback_non_tiled_mode(connector);
--			} else {
--				modes[i] = drm_connector_get_tiled_mode(connector);
--			}
--		}
--
- 		DRM_DEBUG_KMS("found mode %s\n", modes[i] ? modes[i]->name :
- 			  "none");
- 		conn_configured |= BIT_ULL(i);
-@@ -571,7 +515,6 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	bool fallback = true, ret = true;
- 	int num_connectors_enabled = 0;
- 	int num_connectors_detected = 0;
--	int num_tiled_conns = 0;
- 	struct drm_modeset_acquire_ctx ctx;
+ 	/* Write to the RS (Run-stop) bit in the Tx channel control register.
+ 	 * Tx channel is now ready to run. But only after we write to the
+ 	 * tail pointer register that the Tx channel will start transmitting.
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+@@ -757,7 +763,7 @@ axienet_start_xmit(struct sk_buff *skb, struct net_device *ndev)
  
- 	if (!drm_drv_uses_atomic_modeset(dev))
-@@ -589,11 +532,6 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 	memcpy(save_enabled, enabled, count);
- 	mask = GENMASK(count - 1, 0);
- 	conn_configured = 0;
--	for (i = 0; i < count; i++) {
--		if (connectors[i]->has_tile &&
--		    connectors[i]->status == connector_status_connected)
--			num_tiled_conns++;
--	}
- retry:
- 	conn_seq = conn_configured;
- 	for (i = 0; i < count; i++) {
-@@ -693,16 +631,6 @@ static bool drm_client_firmware_config(struct drm_client_dev *client,
- 				      connector->name);
- 			modes[i] = &connector->state->crtc->mode;
- 		}
--		/*
--		 * In case of tiled modes, if all tiles are not present
--		 * then fallback to a non tiled mode.
--		 */
--		if (connector->has_tile &&
--		    num_tiled_conns < connector->num_h_tile * connector->num_v_tile) {
--			DRM_DEBUG_KMS("Falling back to non tiled mode on Connector %d\n",
--				      connector->base.id);
--			modes[i] = drm_connector_fallback_non_tiled_mode(connector);
--		}
- 		crtcs[i] = new_crtc;
+ 	tail_p = lp->tx_bd_p + sizeof(*lp->tx_bd_v) * lp->tx_bd_tail;
+ 	/* Start the transfer */
+-	axienet_dma_out32(lp, XAXIDMA_TX_TDESC_OFFSET, tail_p);
++	axienet_dma_out_addr(lp, XAXIDMA_TX_TDESC_OFFSET, tail_p);
+ 	if (++lp->tx_bd_tail >= lp->tx_bd_num)
+ 		lp->tx_bd_tail = 0;
  
- 		DRM_DEBUG_KMS("connector %s on [CRTC:%d:%s]: %dx%d%s\n",
+@@ -849,7 +855,7 @@ static void axienet_recv(struct net_device *ndev)
+ 	ndev->stats.rx_bytes += size;
+ 
+ 	if (tail_p)
+-		axienet_dma_out32(lp, XAXIDMA_RX_TDESC_OFFSET, tail_p);
++		axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, tail_p);
+ }
+ 
+ /**
+@@ -1671,18 +1677,18 @@ static void axienet_dma_err_handler(struct work_struct *work)
+ 	/* Populate the tail pointer and bring the Rx Axi DMA engine out of
+ 	 * halted state. This will make the Rx side ready for reception.
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_RX_CDESC_OFFSET, lp->rx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_RX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
+-	axienet_dma_out32(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
+-			  (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
++	axienet_dma_out_addr(lp, XAXIDMA_RX_TDESC_OFFSET, lp->rx_bd_p +
++			     (sizeof(*lp->rx_bd_v) * (lp->rx_bd_num - 1)));
+ 
+ 	/* Write to the RS (Run-stop) bit in the Tx channel control register.
+ 	 * Tx channel is now ready to run. But only after we write to the
+ 	 * tail pointer register that the Tx channel will start transmitting
+ 	 */
+-	axienet_dma_out32(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
++	axienet_dma_out_addr(lp, XAXIDMA_TX_CDESC_OFFSET, lp->tx_bd_p);
+ 	cr = axienet_dma_in32(lp, XAXIDMA_TX_CR_OFFSET);
+ 	axienet_dma_out32(lp, XAXIDMA_TX_CR_OFFSET,
+ 			  cr | XAXIDMA_CR_RUNSTOP_MASK);
 -- 
-2.20.1
-
-
+2.17.1
 
