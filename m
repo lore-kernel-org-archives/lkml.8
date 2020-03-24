@@ -2,137 +2,105 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E03C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 471EAC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903FD208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F2BA208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wb7Zbg7U"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="n9FS7HIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgCXNHh (ORCPT
+        id S1727420AbgCXNIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:07:37 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36079 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgCXNHh (ORCPT
+        Tue, 24 Mar 2020 09:08:22 -0400
+Received: from mail.efficios.com ([167.114.26.124]:40698 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727333AbgCXNIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:07:37 -0400
-Received: by mail-pg1-f193.google.com with SMTP id j29so2117052pgl.3;
-        Tue, 24 Mar 2020 06:07:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sTwltg2N6YMOLJ87lW3KLzzpZfAMS4VGR4PUGWKJtjs=;
-        b=Wb7Zbg7UGrRrgZFPdlYC1ch4BgkPYpVGF/M0Xt87ToqiueJqMJ69TOFRvg+bOpv870
-         dCauePH0HhQTW0u0DGu9c5cOL2o3NF9EiyHn/oBzkIoM1lS5EXAVp4dMPtyrCHHeIu/9
-         nIH6z2w74Td39D+aDrCF2oNk6P3O2U9FuV3fUqhx0lgcCMw7RUyjOtdUntbJLGR3xK/a
-         7M3W3ihhnJ9/ZbiPb/Zj9p2fqAhLjATgwGuXtyX7vsaX4NH/xNkeJv+eg58O6Pwh2NG0
-         W+Gz91NTdDOoBgMc0IPOzJtsnyPlpAs3Kd5bx44xK3EvvfnuvdLauYmX8yx8oIarO0d8
-         TRoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sTwltg2N6YMOLJ87lW3KLzzpZfAMS4VGR4PUGWKJtjs=;
-        b=XJWQNFnoeoyns3G3wkVlNeOtCVpHLzMzvBIPNl2D5yUg5xyZ8cVN1a0W734b1oo4Dj
-         nA0WruJpdtRyqwpkCoj1plynHLAvj3You9+/qfI6xc99v7YN/I+CWFiqZPozwsipQHy4
-         UlhbRibLoG8+IrwN+q+c4Z5PZMUaTs6Qz2mx9yMbEcYoi2fV6JN2RIkmkvXLehmijYjH
-         GK0vaZ6Yk4+ly/kldD5QqRfaDjyQDUG9ho+c1ah3NLQ/wyzfi8D9Jrtv+kbchRDjmGhv
-         DUQ0HtgDoWlnN//s8prbFdVkGScVeY9/dH1BIGeJEGiK83ilubmDZKGQS22/DBy42BCa
-         vPwQ==
-X-Gm-Message-State: ANhLgQ10VupJQIShjwPuAos6wFiaavzDIH5E+mNDp/UsS1pbNTk2eosj
-        UlfIy7q9JYRBjFENy2q7XYE=
-X-Google-Smtp-Source: ADFU+vv91w7BtZdoyOUeLQX9gDkdPoNU/CR9SW0F1k3K0pOU9dp3ovg/gTTmoxkf3QB5u7b+1o+H2A==
-X-Received: by 2002:a63:9043:: with SMTP id a64mr27708163pge.308.1585055256115;
-        Tue, 24 Mar 2020 06:07:36 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id x3sm15570734pfp.167.2020.03.24.06.07.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 06:07:35 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 06:07:33 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Yangbo Lu <yangbo.lu@nxp.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
-Message-ID: <20200324130733.GA18149@localhost>
-References: <20200320103726.32559-1-yangbo.lu@nxp.com>
- <20200320103726.32559-7-yangbo.lu@nxp.com>
+        Tue, 24 Mar 2020 09:08:21 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CB557269265;
+        Tue, 24 Mar 2020 09:08:20 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id eYeRHn1BTYTZ; Tue, 24 Mar 2020 09:08:20 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2282B269263;
+        Tue, 24 Mar 2020 09:08:20 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2282B269263
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1585055300;
+        bh=vscCV2I2QJ7zn4zjqEONQUHahXaHD27qodsz+qj+N5c=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=n9FS7HIrUzB4LosjtAlGhk6MuBSh6RhKTudRkKI5onkBs/OtpKFmvhLcWLJFYrfRv
+         YO37i8rWKRzBiHU4D3y8/+ijmZnCJSOwkO50ld0XXOg0A5zqsQ3F1O4ezquG6NpVIj
+         KGwjGSgk2oD7UzA5rmWyCQ+XWrKnofg6Xpbi63TmOEyffjB+1dQ+tNMIPlsiFWMmLm
+         9AOyiYrbuG1rPc5qiUfWonjImOy9u7kGAjy6f9A3Y0WimclMvDTEjzr1efkYpJY23A
+         S9UTSjz9OkBibxrqCnpistHY26OP/tLuly8ap+JRVTOWvdtTkGYY5DTWOr/kwqNv8+
+         xXLMnu8Z3dqDw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id yQg008lDyvJ8; Tue, 24 Mar 2020 09:08:20 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 11A15269262;
+        Tue, 24 Mar 2020 09:08:20 -0400 (EDT)
+Date:   Tue, 24 Mar 2020 09:08:19 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Joseph Myers <joseph@codesourcery.com>
+Cc:     carlos <carlos@redhat.com>, Rich Felker <dalias@libc.org>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-api <linux-api@vger.kernel.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ben Maurer <bmaurer@fb.com>, Dave Watson <davejwatson@fb.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul <paulmck@linux.vnet.ibm.com>, Paul Turner <pjt@google.com>
+Message-ID: <1873939476.8349.1585055299958.JavaMail.zimbra@efficios.com>
+In-Reply-To: <alpine.DEB.2.21.2003232159310.13609@digraph.polyomino.org.uk>
+References: <20200323131607.15185-1-mathieu.desnoyers@efficios.com> <20200323131607.15185-5-mathieu.desnoyers@efficios.com> <alpine.DEB.2.21.2003232159310.13609@digraph.polyomino.org.uk>
+Subject: Re: [RFC PATCH glibc 4/8] glibc: Perform rseq(2) registration at C
+ startup and thread creation (v16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320103726.32559-7-yangbo.lu@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3918 (ZimbraWebClient - FF74 (Linux)/8.8.15_GA_3895)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v16)
+Thread-Index: futQMa06N9Z0mgyJtVY1HcOJz1ndIA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:37:26PM +0800, Yangbo Lu wrote:
-> +static int ocelot_ptp_enable(struct ptp_clock_info *ptp,
-> +			     struct ptp_clock_request *rq, int on)
-> +{
-> +	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
-> +	enum ocelot_ptp_pins ptp_pin;
-> +	struct timespec64 ts;
-> +	unsigned long flags;
-> +	int pin = -1;
-> +	u32 val;
-> +	s64 ns;
-> +
-> +	switch (rq->type) {
-> +	case PTP_CLK_REQ_PEROUT:
-> +		/* Reject requests with unsupported flags */
-> +		if (rq->perout.flags)
-> +			return -EOPNOTSUPP;
-> +
-> +		/*
-> +		 * TODO: support disabling function
-> +		 * When ptp_disable_pinfunc() is to disable function,
-> +		 * it has already held pincfg_mux.
-> +		 * However ptp_find_pin() in .enable() called also needs
-> +		 * to hold pincfg_mux.
-> +		 * This causes dead lock. So, just return for function
-> +		 * disabling, and this needs fix-up.
+----- On Mar 23, 2020, at 6:01 PM, Joseph Myers joseph@codesourcery.com wrote:
 
-What dead lock?
+> Note that we no longer use manually-written ChangeLog-format logs.
 
-When enable(PTP_CLK_REQ_PEROUT, on=0) is called, you don't need to
-call ptp_disable_pinfunc().  Just stop the periodic waveform
-generator.  The assignment of function to pin remains unchanged.
+Do you mean the part at the end of the commit message ?
 
-> +		 */
-> +		if (!on)
-> +			break;
-> +
-> +		pin = ptp_find_pin(ocelot->ptp_clock, PTP_PF_PEROUT,
-> +				   rq->perout.index);
-> +		if (pin == 0)
-> +			ptp_pin = PTP_PIN_0;
-> +		else if (pin == 1)
-> +			ptp_pin = PTP_PIN_1;
-> +		else if (pin == 2)
-> +			ptp_pin = PTP_PIN_2;
-> +		else if (pin == 3)
-> +			ptp_pin = PTP_PIN_3;
-> +		else
-> +			return -EINVAL;
+"   ---
+    Changes since v1:" [...]
 
-Return -EBUSY here instead.
+> The NEWS entry needs to move under the 2.32 header.
 
-Thanks,
-Richard
+Done
+
+> The new symbol needs to move to GLIBC_2.32 symbol version.
+
+Done
+
+Thanks for the review !
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
