@@ -2,53 +2,50 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFD0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448E7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6B8520936
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C98420775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055607;
-	bh=mscAE38OIZwHCpEJWrvZ05bmulZBqJDCegjaGUMKJVM=;
+	s=default; t=1585055611;
+	bh=cWF3WUe2wPdnGgifyfwwVAofNRCsrR9G7UqKaQgj4Gw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nw3+8snC8Cohcl3dr4GWIFev7BzHl29CIOvdxp0Z5m9WScOsk5cM1nlEC9aoQYTES
-	 FmkI9K9YcAYG+bg/lS/s0rYn5KcBmnAMfYCqS8CkYeh+/0J4hD1E/TellcJf0AcSf4
-	 x5zAthOqVk2n53mvcTbPo6lIsfsTB98vptaLulNg=
+	b=tcx9bX/SsPqJzqY4jAvAlpQrlargU3K4AFYiCJZSKppgIMchjpg7m3TyDkHyVMwyc
+	 7ZdZvzag8/CHhjV6YlD/c0odUlANJ+wDA3/wu9GOOv1mQoyw2NuNQjOgZlFDUuF9I8
+	 vXli38xihYQFnFnikL1hBJ01QsEUd2YhCLvci3ow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbgCXNN0 (ORCPT
+        id S1727880AbgCXNNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:13:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59588 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:13:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727657AbgCXNNX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:13:23 -0400
+        id S1727752AbgCXNNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:13:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76A97208CA;
-        Tue, 24 Mar 2020 13:13:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E69FE20B80;
+        Tue, 24 Mar 2020 13:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055602;
-        bh=mscAE38OIZwHCpEJWrvZ05bmulZBqJDCegjaGUMKJVM=;
+        s=default; t=1585055605;
+        bh=cWF3WUe2wPdnGgifyfwwVAofNRCsrR9G7UqKaQgj4Gw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6WqPnyR1HoWWPquAHEDw/tInSHVHAlV3qqavxUR2CLDMPh3RpweK0W/9RqV3lzJF
-         6cwLP/WZmlcILpqcdcpZT/uN8ZBzg++25hPVVmS/Ih35zudkonM9NIl3vScd27h0Ol
-         UE2e2jjwNffbiuV+IAmA7xSBN4KT4o3Lnsy5XhgQ=
+        b=d+t6PUq/vxPxYQ41TZnScuyhKYG63inwPDa4jGWmZ9e+ZH163tGaFSnxj4rVv0GyQ
+         7pC4T07UytQV7F3qZu8swMBracxIHd+svbv5Cv+MgFl0qu4POZM3dXZ01A+Qc3CCJ7
+         nU+baa4cF+wRm/kd6noiXsMgk42fbtRxCSXH4RiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 36/65] mmc: sdhci-of-at91: fix cd-gpios for SAMA5D2
-Date:   Tue, 24 Mar 2020 14:10:57 +0100
-Message-Id: <20200324130801.768764151@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 4.19 37/65] staging: rtl8188eu: Add device id for MERCUSYS MW150US v2
+Date:   Tue, 24 Mar 2020 14:10:58 +0100
+Message-Id: <20200324130801.912227286@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -61,53 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Michael Straube <straube.linux@gmail.com>
 
-commit 53dd0a7cd65edc83b0c243d1c08377c8b876b2ee upstream.
+commit bb5786b9286c253557a0115bc8d21879e61b7b94 upstream.
 
-SAMA5D2x doesn't drive CMD line if GPIO is used as CD line (at least
-SAMA5D27 doesn't). Fix this by forcing card-detect in the module
-if module-controlled CD is not used.
+This device was added to the stand-alone driver on github.
+Add it to the staging driver as well.
 
-Fixed commit addresses the problem only for non-removable cards. This
-amends it to also cover gpio-cd case.
-
-Cc: stable@vger.kernel.org
-Fixes: 7a1e3f143176 ("mmc: sdhci-of-at91: force card detect value for non removable devices")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Link: https://lore.kernel.org/r/8d10950d9940468577daef4772b82a071b204716.1584290561.git.mirq-linux@rere.qmqm.pl
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://github.com/lwfinger/rtl8188eu/commit/2141f244c3e7
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200312093652.13918-1-straube.linux@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/sdhci-of-at91.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/usb_intf.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mmc/host/sdhci-of-at91.c
-+++ b/drivers/mmc/host/sdhci-of-at91.c
-@@ -126,7 +126,8 @@ static void sdhci_at91_reset(struct sdhc
- {
- 	sdhci_reset(host, mask);
- 
--	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
-+	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE)
-+	    || mmc_gpio_get_cd(host->mmc) >= 0)
- 		sdhci_at91_set_force_card_detect(host);
- }
- 
-@@ -405,8 +406,11 @@ static int sdhci_at91_probe(struct platf
- 	 * detection procedure using the SDMCC_CD signal is bypassed.
- 	 * This bit is reset when a software reset for all command is performed
- 	 * so we need to implement our own reset function to set back this bit.
-+	 *
-+	 * WA: SAMA5D2 doesn't drive CMD if using CD GPIO line.
- 	 */
--	if (host->mmc->caps & MMC_CAP_NONREMOVABLE)
-+	if ((host->mmc->caps & MMC_CAP_NONREMOVABLE)
-+	    || mmc_gpio_get_cd(host->mmc) >= 0)
- 		sdhci_at91_set_force_card_detect(host);
- 
- 	pm_runtime_put_autosuspend(&pdev->dev);
+--- a/drivers/staging/rtl8188eu/os_dep/usb_intf.c
++++ b/drivers/staging/rtl8188eu/os_dep/usb_intf.c
+@@ -38,6 +38,7 @@ static const struct usb_device_id rtw_us
+ 	{USB_DEVICE(0x2001, 0x331B)}, /* D-Link DWA-121 rev B1 */
+ 	{USB_DEVICE(0x2357, 0x010c)}, /* TP-Link TL-WN722N v2 */
+ 	{USB_DEVICE(0x2357, 0x0111)}, /* TP-Link TL-WN727N v5.21 */
++	{USB_DEVICE(0x2C4E, 0x0102)}, /* MERCUSYS MW150US v2 */
+ 	{USB_DEVICE(0x0df6, 0x0076)}, /* Sitecom N150 v2 */
+ 	{USB_DEVICE(USB_VENDER_ID_REALTEK, 0xffef)}, /* Rosewill RNX-N150NUB */
+ 	{}	/* Terminating entry */
 
 
