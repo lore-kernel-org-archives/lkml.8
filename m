@@ -2,114 +2,90 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF163C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE5FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B72620409
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:56:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1175120409
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:56:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pygvSvd+"
+	dkim=pass (2048-bit key) header.d=ozlabs.org header.i=@ozlabs.org header.b="b1S6P/UZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgCXC4R (ORCPT
+        id S1727256AbgCXC43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:56:17 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36070 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727047AbgCXC4R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:56:17 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g62so1915876wme.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/0+7iyULVUw6dbuIVInQO+4nPeWfn4xVz7ibloxImNQ=;
-        b=pygvSvd+eSrvDdmSvX8FjMjj6JJjC9drPpobUWysZJHmY2+uVcZ/CK1j3o67YZSFev
-         7rH2WjQYGKxuNOjOFg+MHVI1bcoY5f0hf6x2eHxK5zhTR4Opqgl4TJ4lHni0I/AE0Yhg
-         t5QlwixxmXc68bdC1BDiwlnLNRKc4fPy/CexA1KMFW/JPN1/EWVb1MD55t6360/gh0Tr
-         WvmGSqyc86YOZeRUPbn5LNVcMXD6H2cZc3+WNrK8It/KS/Fvkhi1g5e6Cs1LVFqrfZEi
-         ce7M60lZ9CwU7UmHn0ok9azJpMCYwYBxhO+KCVpn63hS0jP/NswzeGUTC+OU6wiUAu3l
-         5qOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/0+7iyULVUw6dbuIVInQO+4nPeWfn4xVz7ibloxImNQ=;
-        b=RdRwLm9z3Et+pPBs/9aiBGiq+LIeC8QG2vCnh03I5xgqtdKE/ZX0PPep5RoIloOlPx
-         faHlw0B2eH77Qa48yTlrMS1S92UxOfrSsXgkL13jvxQ+o7XHioqWhBBTHid/WHClJZ6l
-         7mxmHXt4OEMpUrp0AhYDvxVDR5ZwXhh1zVaUhxjYTb9i3HHvm94wdckvzE3gZqElmZtH
-         9rQ7M1UgiZc8QGDFxIpZ+XMvqof6nWERCxVgevx3ltzAY89MGbIQK/1BNBeLQfckRMQW
-         7VekB0rXxIACh6GMlyBlvOuu8WfioCXE+FX6VMscKL6bDLBRtdWTrnBa0Z8tVT8w9iW9
-         ZVLQ==
-X-Gm-Message-State: ANhLgQ3/RLc0W3Q8XEK4n6Iap9xjPRpPdKsWPDV/DBQvzO3eLHGCasPe
-        sZyaEKuXNVzNH5282S0JNL9UBahGRQFZ4Qmrur1BLw==
-X-Google-Smtp-Source: ADFU+vtDDkbuzT5Gw8bD3VQH7XBa3+hEnpPF8q/9mh4Mk8cuXyVL3lDQtyD9qM5xo1O9D4wQLY3hbJhIkJv3u9c9FXE=
-X-Received: by 2002:a1c:2404:: with SMTP id k4mr2634050wmk.87.1585018574854;
- Mon, 23 Mar 2020 19:56:14 -0700 (PDT)
+        Mon, 23 Mar 2020 22:56:29 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34297 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727060AbgCXC43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:56:29 -0400
+Received: by ozlabs.org (Postfix, from userid 1003)
+        id 48mbVg1D2nz9sSH; Tue, 24 Mar 2020 13:56:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ozlabs.org; s=201707;
+        t=1585018587; bh=qcqkAGfatCcdaSF4JecPaLJRR36leDyxRC3RwY8oO3U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b1S6P/UZ1s9Q7htiPyHTtAlm1CEfR6MJvQadZpArIv5YrDEMKNc+Zkd73fIwGD3IX
+         HS+zH7c5SS13rccwa7v0NYBzLVY/7uELpZMD5FFPUcmUbeTsU+AnsKET43qGKnS2S/
+         CKm3NjDvUrwZEG3zvZpY2VIEGBri+iCC2PPkeVctiVSUBdpdbI6EiOkwquLkXzLd7u
+         4V9/iAr9M6Z+E5X8kPkYCQrOBNg9Ri6Eszroac4IZGcxoTZ+VKnCj+Ooc3YZtt/MmY
+         4COXK9PBfN7EgldeacQ4ySFbgWaarKd2CSEL6OS5ZTSPJ1lISoAv4LO/qbkmEr46ty
+         bPHlD35Z1l10g==
+Date:   Tue, 24 Mar 2020 13:54:29 +1100
+From:   Paul Mackerras <paulus@ozlabs.org>
+To:     Laurent Dufour <ldufour@linux.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Subject: Re: [PATCH 0/2] Fix SVM hang at startup
+Message-ID: <20200324025429.GD5604@blackberry>
+References: <20200320102643.15516-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200323192236.70152-1-brendanhiggins@google.com>
-In-Reply-To: <20200323192236.70152-1-brendanhiggins@google.com>
-From:   David Gow <davidgow@google.com>
-Date:   Mon, 23 Mar 2020 19:56:03 -0700
-Message-ID: <CABVgOSkf58zMRhpqoZY3cZuAfujnTwVe14xOMcS6VBC4S2+vEw@mail.gmail.com>
-Subject: Re: [PATCH v2] kunit: tool: add missing test data file content
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Shuah Khan <shuah@kernel.org>, Heidi Fahim <heidifahim@google.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320102643.15516-1-ldufour@linux.ibm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:22 PM Brendan Higgins
-<brendanhiggins@google.com> wrote:
->
-> Add a missing raw dmesg test log to test the kunit_tool's dmesg parser.
-> test_prefix_poundsign and test_output_with_prefix_isolated_correctly
-> fail without this test log.
->
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+On Fri, Mar 20, 2020 at 11:26:41AM +0100, Laurent Dufour wrote:
+> This series is fixing a SVM hang occurring when starting a SVM requiring
+> more secure memory than available. The hang happens in the SVM when calling
+> UV_ESM.
+> 
+> The following is happening:
+> 
+> 1. SVM calls UV_ESM
+> 2. Ultravisor (UV) calls H_SVM_INIT_START
+> 3. Hypervisor (HV) calls UV_REGISTER_MEM_SLOT
+> 4. UV returns error because there is not enough free secure memory
+> 5. HV enter the error path in kvmppc_h_svm_init_start()
+> 6. In the return path, since kvm->arch.secure_guest is not yet set hrfid is
+>    called
+> 7. As the HV doesn't know the SVM calling context hrfid is jumping to
+>    unknown address in the SVM leading to various expections.
+> 
+> This series fixes the setting of kvm->arch.secure_guest in
+> kvmppc_h_svm_init_start() to ensure that UV_RETURN is called on the return
+> path to get back to the UV.
+> 
+> In addition to ensure that a malicious VM will not call UV reserved Hcall,
+> a check of the Secure bit in the calling MSR is addded to reject such a
+> call.
+> 
+> It is assumed that the UV will filtered out such Hcalls made by a malicious
+> SVM.
+> 
+> Laurent Dufour (2):
+>   KVM: PPC: Book3S HV: check caller of H_SVM_* Hcalls
+>   KVM: PPC: Book3S HV: H_SVM_INIT_START must call UV_RETURN
+> 
+>  arch/powerpc/kvm/book3s_hv.c       | 32 ++++++++++++++++++++----------
+>  arch/powerpc/kvm/book3s_hv_uvmem.c |  3 ++-
+>  2 files changed, 23 insertions(+), 12 deletions(-)
 
-Tested-by: David Gow <davidgow@google.com>
+Thanks, series applied to my kvm-ppc-next branch.
 
-This patch does indeed fix the kunit_tool's unit tests (run with
-./tools/testing/kunit/kunit_tool_test.py).
-
-Beforehand, it failed with the errors below:
-======================================================================
-ERROR: test_prefix_poundsign (__main__.KUnitParserTest)
-----------------------------------------------------------------------
-Traceback (most recent call last):
- File "./tools/testing/kunit/kunit_tool_test.py", line 208, in
-test_prefix_poundsign
-   self.assertEqual('kunit-resource-test', result.suites[0].name)
-IndexError: list index out of range
-
-======================================================================
-FAIL: test_output_with_prefix_isolated_correctly
-(__main__.KUnitParserTest)
-----------------------------------------------------------------------
-Traceback (most recent call last):
- File "./tools/testing/kunit/kunit_tool_test.py", line 116, in
-test_output_with_prefix_isolated_correctly
-   self.assertContains('TAP version 14\n', result)
- File "./tools/testing/kunit/kunit_tool_test.py", line 96, in
-assertContains
-   str(needle) + '" not found in "' + str(haystack) + '"!')
-AssertionError: "TAP version 14
-" not found in "<generator object isolate_kunit_output at 0x7f4e88d85ed0>"!
-
-----------------------------------------------------------------------
-Ran 20 tests in 0.022s
-
-FAILED (failures=1, errors=1)
+Paul.
