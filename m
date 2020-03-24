@@ -7,37 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C28FC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C04C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10EC920A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F3D20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728004AbgCXJSQ (ORCPT
+        id S1728034AbgCXJSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:18:16 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44073 "EHLO
+        Tue, 24 Mar 2020 05:18:21 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44075 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727732AbgCXJRG (ORCPT
+        with ESMTP id S1727736AbgCXJRF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:17:06 -0400
+        Tue, 24 Mar 2020 05:17:05 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfg9-00087B-E7; Tue, 24 Mar 2020 10:16:57 +0100
+        id 1jGfgC-00089L-8o; Tue, 24 Mar 2020 10:17:00 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E81571C0493;
-        Tue, 24 Mar 2020 10:16:43 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:43 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 258D51C04D1;
+        Tue, 24 Mar 2020 10:16:46 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:45 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] locktorture: Use private random-number generators
+Subject: [tip: core/rcu] rcu: Make nocb_gp_wait() double-check
+ unexpected-callback warning
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140357.28353.10447478189057385832.tip-bot2@tip-bot2>
+Message-ID: <158504140582.28353.1542065767349968391.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,47 +54,56 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     c0e1472d80784206ead1dd803dd4bc10e282b17f
-Gitweb:        https://git.kernel.org/tip/c0e1472d80784206ead1dd803dd4bc10e282b17f
+Commit-ID:     3d05031ae6de6ad084aa41263aed1343065233d5
+Gitweb:        https://git.kernel.org/tip/3d05031ae6de6ad084aa41263aed1343065233d5
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Fri, 24 Jan 2020 12:58:15 -08:00
+AuthorDate:    Tue, 04 Feb 2020 14:55:29 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 15:59:59 -08:00
+CommitterDate: Thu, 20 Feb 2020 15:58:23 -08:00
 
-locktorture: Use private random-number generators
+rcu: Make nocb_gp_wait() double-check unexpected-callback warning
 
-Both lock_torture_writer() and lock_torture_reader() use the "static"
-keyword on their DEFINE_TORTURE_RANDOM(rand) declarations, which means
-that a single instance of a random-number generator are shared among all
-the writers and another is shared among all the readers.  Unfortunately,
-this random-number generator was not designed for concurrent access.
-This commit therefore removes both "static" keywords so that each reader
-and each writer gets its own random-number generator.
+Currently, nocb_gp_wait() unconditionally complains if there is a
+callback not already associated with a grace period.  This assumes that
+either there was no such callback initially on the one hand, or that
+the rcu_advance_cbs() function assigned all such callbacks to a grace
+period on the other.  However, in theory there are some situations that
+would prevent rcu_advance_cbs() from assigning all of the callbacks.
+
+This commit therefore checks for unassociated callbacks immediately after
+rcu_advance_cbs() returns, while the corresponding rcu_node structure's
+->lock is still held.  If there are unassociated callbacks at that point,
+the subsequent WARN_ON_ONCE() is disabled.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/locking/locktorture.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/rcu/tree_plugin.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-index 687c1d8..5baf904 100644
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -618,7 +618,7 @@ static struct lock_torture_ops percpu_rwsem_lock_ops = {
- static int lock_torture_writer(void *arg)
- {
- 	struct lock_stress_stats *lwsp = arg;
--	static DEFINE_TORTURE_RANDOM(rand);
-+	DEFINE_TORTURE_RANDOM(rand);
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 70b3c0f..36e71c9 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -1931,6 +1931,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 	struct rcu_data *rdp;
+ 	struct rcu_node *rnp;
+ 	unsigned long wait_gp_seq = 0; // Suppress "use uninitialized" warning.
++	bool wasempty = false;
  
- 	VERBOSE_TOROUT_STRING("lock_torture_writer task started");
- 	set_user_nice(current, MAX_NICE);
-@@ -655,7 +655,7 @@ static int lock_torture_writer(void *arg)
- static int lock_torture_reader(void *arg)
- {
- 	struct lock_stress_stats *lrsp = arg;
--	static DEFINE_TORTURE_RANDOM(rand);
-+	DEFINE_TORTURE_RANDOM(rand);
- 
- 	VERBOSE_TOROUT_STRING("lock_torture_reader task started");
- 	set_user_nice(current, MAX_NICE);
+ 	/*
+ 	 * Each pass through the following loop checks for CBs and for the
+@@ -1970,10 +1971,13 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 		     rcu_seq_done(&rnp->gp_seq, cur_gp_seq))) {
+ 			raw_spin_lock_rcu_node(rnp); /* irqs disabled. */
+ 			needwake_gp = rcu_advance_cbs(rnp, rdp);
++			wasempty = rcu_segcblist_restempty(&rdp->cblist,
++							   RCU_NEXT_READY_TAIL);
+ 			raw_spin_unlock_rcu_node(rnp); /* irqs disabled. */
+ 		}
+ 		// Need to wait on some grace period?
+-		WARN_ON_ONCE(!rcu_segcblist_restempty(&rdp->cblist,
++		WARN_ON_ONCE(wasempty &&
++			     !rcu_segcblist_restempty(&rdp->cblist,
+ 						      RCU_NEXT_READY_TAIL));
+ 		if (rcu_segcblist_nextgp(&rdp->cblist, &cur_gp_seq)) {
+ 			if (!needwait_gp ||
