@@ -2,93 +2,86 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F00C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29404C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31F57217D8
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E719320836
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585064281;
-	bh=0orXiZqfiTQ0nzIx4WpHUD4WiuEZt0G9H0JZyzsPBKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h4OOYJxVzOE6opzlX0LNllpSXIXFNZ1Oj4SmChD7G/w9xzcdBSTqwDbOZi7CH4nqF
-	 V2ls5N83nw+PSu1mZr2vUUcsnJQ4I+wepCIi1mRWTu64E2SHDP6195UtJPOLSdbP8X
-	 4tizvZF8vUf9xT9yoYff2jp3a7W81FjHeWhsWCTM=
+	s=default; t=1585064284;
+	bh=s8x98rN3JIFXforeIZi6fVqHqm3rsPtMjmu01QfsNfc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=t03j2wD9BnRtBDd4hw7aRZlMy5rlTXAeuTQIIjTWCZ06eW0RrDUIytPbmVwWFTHx6
+	 n7Z1UlmfFob3nIaP94RgtoySxEs1+nqDz2JR6OROtZVD4bEffixjehi1VR50ohrfiQ
+	 E/3VcxmknOG1F0r6JbBvv1zR/x9a/75G2aaMIHvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728703AbgCXPh7 (ORCPT
+        id S1728724AbgCXPhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32884 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 11:37:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727771AbgCXPh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:37:58 -0400
-Received: from localhost (lfbn-ncy-1-985-231.w90-101.abo.wanadoo.fr [90.101.63.231])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728685AbgCXPhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:33 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 264E220714;
-        Tue, 24 Mar 2020 15:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6E9220789;
+        Tue, 24 Mar 2020 15:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585064277;
-        bh=0orXiZqfiTQ0nzIx4WpHUD4WiuEZt0G9H0JZyzsPBKc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ruMaTUcF2yzwekmY93CJzG2BGG4W8nKTZXqNyJRXTUwe42rb0yX/c1nOjMxLUb+Aa
-         vVKctHlID/TWSjuD6M/03AeHT9OPiwqTYR6yMoAetUoU1ADuDdxUjN34zTT2FgZ620
-         b44giTe0V8GYIUm82txE/NT3ztoS/bnjTP0y7rCw=
-Date:   Tue, 24 Mar 2020 16:37:55 +0100
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Paul McKenney <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        s=default; t=1585064252;
+        bh=s8x98rN3JIFXforeIZi6fVqHqm3rsPtMjmu01QfsNfc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oBzUO2WGI5lj7iwjFs8aSh+KQqoMKFYHe90bplIwTE4gioxy+X25SSJLiJoCNjbka
+         JDsmyp6svbZTccZH2vARyX1NXmdry8evOEje8IzAtXp1X7NQ2rh/Huu9fvSkxKBSGu
+         YhnooLqeg6ja2dhQBNpJp/ipNv7JCu9VGBjLhF5M=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [patch V3 01/23] rcu: Dont acquire lock in NMI handler in
- rcu_nmi_enter_common()
-Message-ID: <20200324153754.GA20223@lenoir>
-References: <20200320175956.033706968@linutronix.de>
- <20200320180032.523372590@linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: [RFC PATCH 17/21] linux/bit_spinlock.h: Include linux/processor.h
+Date:   Tue, 24 Mar 2020 15:36:39 +0000
+Message-Id: <20200324153643.15527-18-will@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200324153643.15527-1-will@kernel.org>
+References: <20200324153643.15527-1-will@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320180032.523372590@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 06:59:57PM +0100, Thomas Gleixner wrote:
-> From: "Paul E. McKenney" <paulmck@kernel.org>
-> 
-> The rcu_nmi_enter_common() function can be invoked both in interrupt
-> and NMI handlers.  If it is invoked from process context (as opposed
-> to userspace or idle context) on a nohz_full CPU, it might acquire the
-> CPU's leaf rcu_node structure's ->lock.  Because this lock is held only
-> with interrupts disabled, this is safe from an interrupt handler, but
-> doing so from an NMI handler can result in self-deadlock.
-> 
-> This commit therefore adds "irq" to the "if" condition so as to only
-> acquire the ->lock from irq handlers or process context, never from
-> an NMI handler.
-> 
-> Fixes: 5b14557b073c ("rcu: Avoid tick_dep_set_cpu() misordering")
-> Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Link: https://lkml.kernel.org/r/20200313024046.27622-1-paulmck@kernel.org
+Needed for cpu_relax().
 
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
+---
+ include/linux/bit_spinlock.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/bit_spinlock.h b/include/linux/bit_spinlock.h
+index bbc4730a6505..505daa942527 100644
+--- a/include/linux/bit_spinlock.h
++++ b/include/linux/bit_spinlock.h
+@@ -6,6 +6,7 @@
+ #include <linux/preempt.h>
+ #include <linux/atomic.h>
+ #include <linux/bug.h>
++#include <linux/processor.h>
+ 
+ /*
+  *  bit-based spin_lock()
+-- 
+2.20.1
+
