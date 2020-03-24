@@ -2,119 +2,87 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB3C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9C7C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57CE420774
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B311C20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585061022;
+	bh=YGLNP/IXNHSdlNivc3mGScmLK2wHsHCBGrFUSV8D1/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aKKEsbaTGyjq+6ju95CyZAK24jqibm4xECsquyKNSFbc20St9WyJfSk9txLA6HkDs
+	 e0VRhLi7HfTk84jBibqCFQVVAzlceex3E16mwKUbjHcDEYhrZj5/egDcEiOcrLW/Fp
+	 O8Sq9ZOglx1AkXhNLfQ2I5uDYtnjDCy2CbpKx73Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgCXOnR (ORCPT
+        id S1727880AbgCXOnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:43:17 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:53849 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgCXOnR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:43:17 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGklo-0001vv-Na; Tue, 24 Mar 2020 15:43:08 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jGkln-0000tK-B5; Tue, 24 Mar 2020 15:43:07 +0100
-Date:   Tue, 24 Mar 2020 15:43:07 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Guru Das Srinagesh <gurus@codeaurora.org>,
-        linux-pwm@vger.kernel.org,
-        Subbaraman Narayanamurthy <subbaram@codeaurora.org>,
-        linux-kernel@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: Re: [PATCH v11 10/12] backlight: pwm_bl: Use 64-bit division function
-Message-ID: <20200324144307.kxhqzyjj4evrouqa@pengutronix.de>
-References: <cover.1584667964.git.gurus@codeaurora.org>
- <17fc1dcf8b9b392d1e37dc7e3e67409e3c502840.1584667964.git.gurus@codeaurora.org>
- <20200320133123.GD5477@dell>
- <20200324110710.GL5477@dell>
- <20200324125735.2mjuvbxt5bpon2ft@pengutronix.de>
- <20200324130410.dwlg767ku6kwequv@holly.lan>
- <20200324142441.GD442973@dell>
+        Tue, 24 Mar 2020 10:43:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42868 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727464AbgCXOnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:43:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0F0C2074D;
+        Tue, 24 Mar 2020 14:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585061021;
+        bh=YGLNP/IXNHSdlNivc3mGScmLK2wHsHCBGrFUSV8D1/8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gc+D7SdE/ud/v+FUvrfzIHLDg8P0l+lMONFjhoG9pzIjxogZ/4nwiVstBhi4nzXAs
+         dSgVLcFjPgl9j44S0ghS907EjBOcbbsTltVjKaUpphLgAXbbqQZThMelpSga4K7hTN
+         2OcoTeOA2GPzhoWR20lv8p26kC1o/3cXn24UyYRY=
+Date:   Tue, 24 Mar 2020 15:43:38 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     stable <stable@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: locks use-after-free stable request
+Message-ID: <20200324144338.GA2507446@kroah.com>
+References: <52be02d3-3a6a-c8b8-4177-5cc1d67aedd4@android.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324142441.GD442973@dell>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <52be02d3-3a6a-c8b8-4177-5cc1d67aedd4@android.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 02:24:41PM +0000, Lee Jones wrote:
-> On Tue, 24 Mar 2020, Daniel Thompson wrote:
+On Tue, Mar 24, 2020 at 07:24:49AM -0700, Mark Salyzyn wrote:
+> Referencing upstream fixes commit dcf23ac3e846ca0cf626c155a0e3fcbbcf4fae8a
+> ("locks: reinstate locks_delete_block optimization") and commit
+> 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da ("locks: fix a potential
+> use-after-free problem when wakeup a waiter") and possibly address
+> CVE-2019-19769.
 > 
-> > On Tue, Mar 24, 2020 at 01:57:35PM +0100, Uwe Kleine-König wrote:
-> > > Hello Lee,
-> > > 
-> > > On Tue, Mar 24, 2020 at 11:07:10AM +0000, Lee Jones wrote:
-> > > > On Fri, 20 Mar 2020, Lee Jones wrote:
-> > > > 
-> > > > > On Thu, 19 Mar 2020, Guru Das Srinagesh wrote:
-> > > > > 
-> > > > > > Since the PWM framework is switching struct pwm_state.period's datatype
-> > > > > > to u64, prepare for this transition by using div_u64 to handle a 64-bit
-> > > > > > dividend instead of a straight division operation.
-> > > > > > 
-> > > > > > Cc: Lee Jones <lee.jones@linaro.org>
-> > > > > > Cc: Daniel Thompson <daniel.thompson@linaro.org>
-> > > > > > Cc: Jingoo Han <jingoohan1@gmail.com>
-> > > > > > Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> > > > > > Cc: linux-pwm@vger.kernel.org
-> > > > > > Cc: dri-devel@lists.freedesktop.org
-> > > > > > Cc: linux-fbdev@vger.kernel.org
-> > > > > > 
-> > > > > > Signed-off-by: Guru Das Srinagesh <gurus@codeaurora.org>
-> > > > > > Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> > > > > > ---
-> > > > > >  drivers/video/backlight/pwm_bl.c | 3 ++-
-> > > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > > 
-> > > > > Can this patch be taken on its own?
-> > > > 
-> > > > Hellooooo ...
-> > > 
-> > > Conceptually it can. As the last patch depends on this one (and the
-> > > others) some coordination might be beneficial. But that's up to Thierry
-> > > to decide how (and if) he want this series to be applied.
-> > 
-> > ... and on the backlight side we definitely need to know about the "if"
-> > otherwise there's no point in taking it.
+> Please apply to all relevant stable trees including 5.4, 4.19 and below.
+> Confirmed they apply cleanly to 5.4 and 4.19.
 > 
-> Right.
 > 
-> I'm happy to wait for Thierry.  Although this isn't the only set he's
-> currently blocking.  Is he okay?  On holiday perhaps?
+> Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+> 
+> Cc: stable@vger.kernel.org
+> 
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Cc: kernel-team@android.com
+> 
 
-The newest commit by him in next is from last week. My guess is he
-just didn't come around yet to care for the PWM duties.
+These are all queued up for the next round of 5.4 and 5.5 stable
+releases,but they do not seem to apply to 4.19.
 
-Best regards
-Uwe
+And why do you think they apply to 4.19, that's not what 6d390e4b5d48
+("locks: fix a potential use-after-free problem when wakeup a waiter")
+says.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+confused,
+
+greg k-h
