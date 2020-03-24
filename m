@@ -2,86 +2,102 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB2DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8579EC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC762074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:13:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6005A2076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:14:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xi2+9VO8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCXPNu (ORCPT
+        id S1727986AbgCXPOY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:13:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49428 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727705AbgCXPNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:13:50 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1820EAB6D;
-        Tue, 24 Mar 2020 15:13:49 +0000 (UTC)
-Subject: Re: [PATCH 1/2] xen: expand BALLOON_MEMORY_HOTPLUG description
-To:     Roger Pau Monne <roger.pau@citrix.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        xen-devel@lists.xenproject.org
-References: <20200324150015.50496-1-roger.pau@citrix.com>
-From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Message-ID: <42a7b408-1ea1-04fa-e70b-cbdaba54c558@suse.com>
-Date:   Tue, 24 Mar 2020 16:13:48 +0100
+        Tue, 24 Mar 2020 11:14:24 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54632 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727555AbgCXPOY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:14:24 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02OFELjc055861;
+        Tue, 24 Mar 2020 10:14:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585062861;
+        bh=l7ghfWCYstg4OWQmwbil6bEMOSOomOvQuKwzXl0urrs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xi2+9VO8c3ngMb6vQYu9llOVBDCazzgFvrzKYmmt8XgAIoCTbODzcy+OxdsTy7Q4X
+         H2oxJlPSfYpWyW5JvNqINkYhxYoTk8SPWFGsGi4CPoIKJfTithz8HwduXZYJ1xugYt
+         MjnOh8o331QR4X4xfM84yjdPg6tUlrpNBIBFH/gA=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02OFELBd096857
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 24 Mar 2020 10:14:21 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 24
+ Mar 2020 10:14:21 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 24 Mar 2020 10:14:21 -0500
+Received: from [10.250.43.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02OFEKMv045692;
+        Tue, 24 Mar 2020 10:14:21 -0500
+Subject: Re: [RESEND PATCH v5 0/3] BQ25150/155 Charger
+To:     <sre@kernel.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dmurphy@ti.com>
+References: <20200304174025.31655-1-r-rivera-matos@ti.com>
+From:   Ricardo Rivera-Matos <r-rivera-matos@ti.com>
+Message-ID: <eb5f0818-21c7-1b84-b0c9-904bce9721be@ti.com>
+Date:   Tue, 24 Mar 2020 10:14:20 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200324150015.50496-1-roger.pau@citrix.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200304174025.31655-1-r-rivera-matos@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24.03.20 16:00, Roger Pau Monne wrote:
-> To mention it's also useful for PVH or HVM domains that require
-> mapping foreign memory or grants.
-> 
-> Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
-> ---
-> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-> Cc: Juergen Gross <jgross@suse.com>
-> Cc: Stefano Stabellini <sstabellini@kernel.org>
-> Cc: xen-devel@lists.xenproject.org
-> ---
->   drivers/xen/Kconfig | 4 ++++
->   1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/xen/Kconfig b/drivers/xen/Kconfig
-> index 61212fc7f0c7..57ddd6f4b729 100644
-> --- a/drivers/xen/Kconfig
-> +++ b/drivers/xen/Kconfig
-> @@ -19,6 +19,10 @@ config XEN_BALLOON_MEMORY_HOTPLUG
->   	  It is very useful on critical systems which require long
->   	  run without rebooting.
->   
-> +	  It's also very useful for translated domains (PVH or HVM) to obtain
+bump
 
-I'd rather say "(non PV)" or "(PVH, HVM or Arm)".
-
-> +	  unpopulated physical memory ranges to use in order to map foreign
-> +	  memory or grants.
-> +
->   	  Memory could be hotplugged in following steps:
->   
->   	    1) target domain: ensure that memory auto online policy is in
-> 
-
-With that:
-
-Reviewed-by: Juergen Gross <jgross@suse.com>
-
-
-Juergen
+On 3/4/20 11:40 AM, Ricardo Rivera-Matos wrote:
+> Hello,
+>
+> This v5 series picks up on the development that Dan Murphy <dmurphy@ti.com> began with the power_supply framework and bq2515x_charger driver. This series incorporates the changes suggested by Sebastien Reichel <sre@kernel.org> in v4.
+>
+> Datasheets for these devices can be found at:
+> http://www.ti.com/lit/ds/symlink/bq25150.pdf
+> http://www.ti.com/lit/ds/symlink/bq25155.pdf
+>
+> Thanks, Ricardo
+>
+> Dan Murphy (1):
+>    power_supply: Add additional health properties to the header
+>
+> Ricardo Rivera-Matos (2):
+>    Add the bindings for the bq25150 and bq25155 500mA charging ICs from
+>      Texas Instruments.
+>    power: supply: bq25150 introduce the bq25150
+>
+>   Documentation/ABI/testing/sysfs-class-power   |    2 +-
+>   .../bindings/power/supply/bq2515x.yaml        |   99 ++
+>   drivers/power/supply/Kconfig                  |    8 +
+>   drivers/power/supply/Makefile                 |    1 +
+>   drivers/power/supply/bq2515x_charger.c        | 1170 +++++++++++++++++
+>   drivers/power/supply/power_supply_sysfs.c     |    2 +-
+>   include/linux/power_supply.h                  |    3 +
+>   7 files changed, 1283 insertions(+), 2 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
+>   create mode 100644 drivers/power/supply/bq2515x_charger.c
+>
