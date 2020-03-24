@@ -2,52 +2,53 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D396C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4018C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2B98208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE2BE20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055797;
-	bh=qCYjcy87AHTdBtX6thdiLbV/Uf2jTV1RI/V3ReuSw6Q=;
+	s=default; t=1585055799;
+	bh=8utJ4PbiBkJFqLWavO/QYmjVPSaB2McN1fDCS3CNWwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vXOIkfmyyJRdLplMRr4Y3ymYvTumrxJajubm9fUBvignzBujfWBWU2WF3O4sPLx7t
-	 1vXUQ+VzxdrD3r+yAmMqLxT2kHh2BF5O6AIBsXdLx8Ugq520m5pqEGyiwZzv3w9LtW
-	 eaSkSFvtUnKuqQgFE5juPYDkczb9nG9CNdd3mtDw=
+	b=f02qdKzS00V3JKGtxeU+buYtTAUg9rlv44MbNveNqZpTXg4OORGzD5h6cwkJehZ8A
+	 M6bnJO7XtwIFKF7ZtrMq+Hg5AH0yWblzyF7NSD/pfy/YUq416LH3j1sJ5jL+ZyUrjW
+	 Opfnb3BvWMveK3TcQvvbna/ANPQjHE3RsiLfFFig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgCXNQd (ORCPT
+        id S1728490AbgCXNQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35998 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:16:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727898AbgCXNQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:31 -0400
+        id S1727833AbgCXNQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7EEE9206F6;
-        Tue, 24 Mar 2020 13:16:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ECF3B20775;
+        Tue, 24 Mar 2020 13:16:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055790;
-        bh=qCYjcy87AHTdBtX6thdiLbV/Uf2jTV1RI/V3ReuSw6Q=;
+        s=default; t=1585055796;
+        bh=8utJ4PbiBkJFqLWavO/QYmjVPSaB2McN1fDCS3CNWwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fc71FPol5/qkUWOYS68FIj3ozWYfevhihy92SwsAsKs0jFrqW9aUCGGmGdMp2oBlC
-         yMFhERd8Q1u1OlLzBnuIKClQB5BUjCUXi5Caf8GhVl+Ff7TfEQaHwlUcSwcf0WzSUa
-         9y2rmqttTo8zLth8mCf5VyO2HN0kR2Irb2N6hS70=
+        b=IgpjH/Q93Ot0OfOipy8zBj3xr0Vkvmsa2CP8CSURg4CfIe8UUDfpEIFMtXkw916oV
+         Y1fWy8aGEWSKkHrRIxdVbO9SFb63WuiFGtioJcgG/WO7/IseXstJRUSPUZKewGN4zt
+         GsC9c+Czn8ycwWUr5dNkSHDbl6o2vFhYm9JB30aI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 003/102] spi: spi-omap2-mcspi: Support probe deferral for DMA channels
-Date:   Tue, 24 Mar 2020 14:09:55 +0100
-Message-Id: <20200324130806.836811477@linuxfoundation.org>
+Subject: [PATCH 5.4 031/102] xenbus: req->body should be updated before req->state
+Date:   Tue, 24 Mar 2020 14:10:23 +0100
+Message-Id: <20200324130809.662179319@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,187 +61,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit 32f2fc5dc3992b4b60cc6b1a6a31be605cc9c3a2 ]
+[ Upstream commit 1b6a51e86cce38cf4d48ce9c242120283ae2f603 ]
 
-dma_request_channel() can return -EPROBE_DEFER, if DMA driver is not
-ready. Currently driver just falls back to PIO mode on probe deferral.
-Fix this by requesting all required channels during probe and
-propagating EPROBE_DEFER error code.
+The req->body should be updated before req->state is updated and the
+order should be guaranteed by a barrier.
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Link: https://lore.kernel.org/r/20200204124816.16735-3-vigneshr@ti.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Otherwise, read_reply() might return req->body = NULL.
+
+Below is sample callstack when the issue is reproduced on purpose by
+reordering the updates of req->body and req->state and adding delay in
+code between updates of req->state and req->body.
+
+[   22.356105] general protection fault: 0000 [#1] SMP PTI
+[   22.361185] CPU: 2 PID: 52 Comm: xenwatch Not tainted 5.5.0xen+ #6
+[   22.366727] Hardware name: Xen HVM domU, BIOS ...
+[   22.372245] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+... ...
+[   22.392163] RSP: 0018:ffffb2d64023fdf0 EFLAGS: 00010246
+[   22.395933] RAX: 0000000000000000 RBX: 75746e7562755f6d RCX: 0000000000000000
+[   22.400871] RDX: 0000000000000000 RSI: ffffb2d64023fdfc RDI: 75746e7562755f6d
+[   22.405874] RBP: 0000000000000000 R08: 00000000000001e8 R09: 0000000000cdcdcd
+[   22.410945] R10: ffffb2d6402ffe00 R11: ffff9d95395eaeb0 R12: ffff9d9535935000
+[   22.417613] R13: ffff9d9526d4a000 R14: ffff9d9526f4f340 R15: ffff9d9537654000
+[   22.423726] FS:  0000000000000000(0000) GS:ffff9d953bc80000(0000) knlGS:0000000000000000
+[   22.429898] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   22.434342] CR2: 000000c4206a9000 CR3: 00000001ea3fc002 CR4: 00000000001606e0
+[   22.439645] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   22.444941] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   22.450342] Call Trace:
+[   22.452509]  simple_strtoull+0x27/0x70
+[   22.455572]  xenbus_transaction_start+0x31/0x50
+[   22.459104]  netback_changed+0x76c/0xcc1 [xen_netfront]
+[   22.463279]  ? find_watch+0x40/0x40
+[   22.466156]  xenwatch_thread+0xb4/0x150
+[   22.469309]  ? wait_woken+0x80/0x80
+[   22.472198]  kthread+0x10e/0x130
+[   22.474925]  ? kthread_park+0x80/0x80
+[   22.477946]  ret_from_fork+0x35/0x40
+[   22.480968] Modules linked in: xen_kbdfront xen_fbfront(+) xen_netfront xen_blkfront
+[   22.486783] ---[ end trace a9222030a747c3f7 ]---
+[   22.490424] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+
+The virt_rmb() is added in the 'true' path of test_reply(). The "while"
+is changed to "do while" so that test_reply() is used as a read memory
+barrier.
+
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Link: https://lore.kernel.org/r/20200303221423.21962-1-dongli.zhang@oracle.com
+Reviewed-by: Julien Grall <jgrall@amazon.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-omap2-mcspi.c |   77 ++++++++++++++++++++----------------------
- 1 file changed, 38 insertions(+), 39 deletions(-)
+ drivers/xen/xenbus/xenbus_comms.c | 2 ++
+ drivers/xen/xenbus/xenbus_xs.c    | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/spi/spi-omap2-mcspi.c
-+++ b/drivers/spi/spi-omap2-mcspi.c
-@@ -985,20 +985,12 @@ static int omap2_mcspi_setup_transfer(st
-  * Note that we currently allow DMA only if we get a channel
-  * for both rx and tx. Otherwise we'll do PIO for both rx and tx.
-  */
--static int omap2_mcspi_request_dma(struct spi_device *spi)
-+static int omap2_mcspi_request_dma(struct omap2_mcspi *mcspi,
-+				   struct omap2_mcspi_dma *mcspi_dma)
+diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
+index d239fc3c5e3de..852ed161fc2a7 100644
+--- a/drivers/xen/xenbus/xenbus_comms.c
++++ b/drivers/xen/xenbus/xenbus_comms.c
+@@ -313,6 +313,8 @@ static int process_msg(void)
+ 			req->msg.type = state.msg.type;
+ 			req->msg.len = state.msg.len;
+ 			req->body = state.body;
++			/* write body, then update state */
++			virt_wmb();
+ 			req->state = xb_req_state_got_reply;
+ 			req->cb(req);
+ 		} else
+diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
+index ddc18da61834e..3a06eb699f333 100644
+--- a/drivers/xen/xenbus/xenbus_xs.c
++++ b/drivers/xen/xenbus/xenbus_xs.c
+@@ -191,8 +191,11 @@ static bool xenbus_ok(void)
+ 
+ static bool test_reply(struct xb_req_data *req)
  {
--	struct spi_master	*master = spi->master;
--	struct omap2_mcspi	*mcspi;
--	struct omap2_mcspi_dma	*mcspi_dma;
- 	int ret = 0;
- 
--	mcspi = spi_master_get_devdata(master);
--	mcspi_dma = mcspi->dma_channels + spi->chip_select;
--
--	init_completion(&mcspi_dma->dma_rx_completion);
--	init_completion(&mcspi_dma->dma_tx_completion);
--
--	mcspi_dma->dma_rx = dma_request_chan(&master->dev,
-+	mcspi_dma->dma_rx = dma_request_chan(mcspi->dev,
- 					     mcspi_dma->dma_rx_ch_name);
- 	if (IS_ERR(mcspi_dma->dma_rx)) {
- 		ret = PTR_ERR(mcspi_dma->dma_rx);
-@@ -1006,7 +998,7 @@ static int omap2_mcspi_request_dma(struc
- 		goto no_dma;
- 	}
- 
--	mcspi_dma->dma_tx = dma_request_chan(&master->dev,
-+	mcspi_dma->dma_tx = dma_request_chan(mcspi->dev,
- 					     mcspi_dma->dma_tx_ch_name);
- 	if (IS_ERR(mcspi_dma->dma_tx)) {
- 		ret = PTR_ERR(mcspi_dma->dma_tx);
-@@ -1015,20 +1007,40 @@ static int omap2_mcspi_request_dma(struc
- 		mcspi_dma->dma_rx = NULL;
- 	}
- 
-+	init_completion(&mcspi_dma->dma_rx_completion);
-+	init_completion(&mcspi_dma->dma_tx_completion);
-+
- no_dma:
- 	return ret;
- }
- 
-+static void omap2_mcspi_release_dma(struct spi_master *master)
-+{
-+	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
-+	struct omap2_mcspi_dma	*mcspi_dma;
-+	int i;
-+
-+	for (i = 0; i < master->num_chipselect; i++) {
-+		mcspi_dma = &mcspi->dma_channels[i];
-+
-+		if (mcspi_dma->dma_rx) {
-+			dma_release_channel(mcspi_dma->dma_rx);
-+			mcspi_dma->dma_rx = NULL;
-+		}
-+		if (mcspi_dma->dma_tx) {
-+			dma_release_channel(mcspi_dma->dma_tx);
-+			mcspi_dma->dma_tx = NULL;
-+		}
-+	}
-+}
-+
- static int omap2_mcspi_setup(struct spi_device *spi)
- {
- 	int			ret;
- 	struct omap2_mcspi	*mcspi = spi_master_get_devdata(spi->master);
- 	struct omap2_mcspi_regs	*ctx = &mcspi->ctx;
--	struct omap2_mcspi_dma	*mcspi_dma;
- 	struct omap2_mcspi_cs	*cs = spi->controller_state;
- 
--	mcspi_dma = &mcspi->dma_channels[spi->chip_select];
--
- 	if (!cs) {
- 		cs = kzalloc(sizeof *cs, GFP_KERNEL);
- 		if (!cs)
-@@ -1053,13 +1065,6 @@ static int omap2_mcspi_setup(struct spi_
- 		}
- 	}
- 
--	if (!mcspi_dma->dma_rx || !mcspi_dma->dma_tx) {
--		ret = omap2_mcspi_request_dma(spi);
--		if (ret)
--			dev_warn(&spi->dev, "not using DMA for McSPI (%d)\n",
--				 ret);
--	}
--
- 	ret = pm_runtime_get_sync(mcspi->dev);
- 	if (ret < 0) {
- 		pm_runtime_put_noidle(mcspi->dev);
-@@ -1076,12 +1081,8 @@ static int omap2_mcspi_setup(struct spi_
- 
- static void omap2_mcspi_cleanup(struct spi_device *spi)
- {
--	struct omap2_mcspi	*mcspi;
--	struct omap2_mcspi_dma	*mcspi_dma;
- 	struct omap2_mcspi_cs	*cs;
- 
--	mcspi = spi_master_get_devdata(spi->master);
--
- 	if (spi->controller_state) {
- 		/* Unlink controller state from context save list */
- 		cs = spi->controller_state;
-@@ -1090,19 +1091,6 @@ static void omap2_mcspi_cleanup(struct s
- 		kfree(cs);
- 	}
- 
--	if (spi->chip_select < spi->master->num_chipselect) {
--		mcspi_dma = &mcspi->dma_channels[spi->chip_select];
--
--		if (mcspi_dma->dma_rx) {
--			dma_release_channel(mcspi_dma->dma_rx);
--			mcspi_dma->dma_rx = NULL;
--		}
--		if (mcspi_dma->dma_tx) {
--			dma_release_channel(mcspi_dma->dma_tx);
--			mcspi_dma->dma_tx = NULL;
--		}
--	}
--
- 	if (gpio_is_valid(spi->cs_gpio))
- 		gpio_free(spi->cs_gpio);
- }
-@@ -1313,6 +1301,9 @@ static bool omap2_mcspi_can_dma(struct s
- 	if (spi_controller_is_slave(master))
+-	if (req->state == xb_req_state_got_reply || !xenbus_ok())
++	if (req->state == xb_req_state_got_reply || !xenbus_ok()) {
++		/* read req->state before all other fields */
++		virt_rmb();
  		return true;
++	}
  
-+	master->dma_rx = mcspi_dma->dma_rx;
-+	master->dma_tx = mcspi_dma->dma_tx;
-+
- 	return (xfer->len >= DMA_MIN_BYTES);
+ 	/* Make sure to reread req->state each time. */
+ 	barrier();
+@@ -202,7 +205,7 @@ static bool test_reply(struct xb_req_data *req)
+ 
+ static void *read_reply(struct xb_req_data *req)
+ {
+-	while (req->state != xb_req_state_got_reply) {
++	do {
+ 		wait_event(req->wq, test_reply(req));
+ 
+ 		if (!xenbus_ok())
+@@ -216,7 +219,7 @@ static void *read_reply(struct xb_req_data *req)
+ 		if (req->err)
+ 			return ERR_PTR(req->err);
+ 
+-	}
++	} while (req->state != xb_req_state_got_reply);
+ 
+ 	return req->body;
  }
- 
-@@ -1475,6 +1466,11 @@ static int omap2_mcspi_probe(struct plat
- 	for (i = 0; i < master->num_chipselect; i++) {
- 		sprintf(mcspi->dma_channels[i].dma_rx_ch_name, "rx%d", i);
- 		sprintf(mcspi->dma_channels[i].dma_tx_ch_name, "tx%d", i);
-+
-+		status = omap2_mcspi_request_dma(mcspi,
-+						 &mcspi->dma_channels[i]);
-+		if (status == -EPROBE_DEFER)
-+			goto free_master;
- 	}
- 
- 	status = platform_get_irq(pdev, 0);
-@@ -1512,6 +1508,7 @@ disable_pm:
- 	pm_runtime_put_sync(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
- free_master:
-+	omap2_mcspi_release_dma(master);
- 	spi_master_put(master);
- 	return status;
- }
-@@ -1521,6 +1518,8 @@ static int omap2_mcspi_remove(struct pla
- 	struct spi_master *master = platform_get_drvdata(pdev);
- 	struct omap2_mcspi *mcspi = spi_master_get_devdata(master);
- 
-+	omap2_mcspi_release_dma(master);
-+
- 	pm_runtime_dont_use_autosuspend(mcspi->dev);
- 	pm_runtime_put_sync(mcspi->dev);
- 	pm_runtime_disable(&pdev->dev);
+-- 
+2.20.1
+
 
 
