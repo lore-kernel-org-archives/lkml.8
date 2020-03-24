@@ -7,46 +7,53 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7404C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E93AC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 780F320870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5779F208D6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056061;
-	bh=Z5FxSyPJC7kfqSb+SR+NLLQKQ4hXFbtl1+58+r7ITPg=;
+	s=default; t=1585056063;
+	bh=9SZ6H8OtV/t5OwamSNzqhZZxFhLVRQt2dlOqOJNBvZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQxiHOndhTOl70sPZgFOcmrl6rltZojXDPpg8qNXBxLBsChTt1yPKDJGsKNxLA8yn
-	 yGOTBo5gNLVwMCG21irOKkxEkgh5suYAsbyWLIqrdckgEwEmSwtn4i1EU7ojdhAD+x
-	 KJsgv3MdW2TSZrK0fVc4oYYKmNJrQrkDICwvTTQo=
+	b=wjTLCaX6PFn3PtLVS7skyPnjUlXzbKhpL5uGZolK1k7foYHlTlXtWEKCpnYNWG8VB
+	 KWTuXLhTSsxRmsUwEfN/xin92QvXfumLOzuyc62y9n8YIzy3kI6PslzcVmaSFaF1NV
+	 syY04kLCfPsNzhVTrzDhPQXcptx2dqq2ehSnEHYQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbgCXNU7 (ORCPT
+        id S1728110AbgCXNVB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42518 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728216AbgCXNU5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:57 -0400
+        id S1728975AbgCXNUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AC9A206F6;
-        Tue, 24 Mar 2020 13:20:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE1220870;
+        Tue, 24 Mar 2020 13:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056056;
-        bh=Z5FxSyPJC7kfqSb+SR+NLLQKQ4hXFbtl1+58+r7ITPg=;
+        s=default; t=1585056054;
+        bh=9SZ6H8OtV/t5OwamSNzqhZZxFhLVRQt2dlOqOJNBvZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FMylzH208cAeeI0yLKTeukgN5u7lphjYYQHMuOVvH7bcp6t8h8fo70CMOqCGd1+lF
-         M+MqJ22e7UinKrq9OTaIsLscEfy1mIErq5Fh9j7M5CD9IV+AShmti0nNHSw88u/ZqX
-         AaxWgjIoJA4pwYqxn3vvkyZkmk5lqXU4OBTfVyD4=
+        b=oLYdJ2L7rhIRl5JVCItv3cvwoG9DIDEnNP4MPlt0fOnTRwx5wIZ9Dq63r94IEGjoW
+         4YEZGbj0pQTLk8pUEFVEg2aUSf093wrJlNVumWEHLbLpA3eMkVbo9LOjEU3ikP6qLw
+         H0Y/8XfO9F06MbS7i04vW3xUr8LBsrp2daSt8PUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 080/102] btrfs: fix log context list corruption after rename whiteout error
-Date:   Tue, 24 Mar 2020 14:11:12 +0100
-Message-Id: <20200324130814.650267244@linuxfoundation.org>
+        stable@vger.kernel.org, Max Neunhoeffer <max@arangodb.com>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christopher Kohlhoff <chris.kohlhoff@clearpool.io>,
+        Davidlohr Bueso <dbueso@suse.de>,
+        Jason Baron <jbaron@akamai.com>,
+        Jes Sorensen <jes.sorensen@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 089/102] epoll: fix possible lost wakeup on epoll_ctl() path
+Date:   Tue, 24 Mar 2020 14:11:21 +0100
+Message-Id: <20200324130815.919902714@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,45 +66,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Roman Penyaev <rpenyaev@suse.de>
 
-commit 236ebc20d9afc5e9ff52f3cf3f365a91583aac10 upstream.
+commit 1b53734bd0b2feed8e7761771b2e76fc9126ea0c upstream.
 
-During a rename whiteout, if btrfs_whiteout_for_rename() returns an error
-we can end up returning from btrfs_rename() with the log context object
-still in the root's log context list - this happens if 'sync_log' was
-set to true before we called btrfs_whiteout_for_rename() and it is
-dangerous because we end up with a corrupt linked list (root->log_ctxs)
-as the log context object was allocated on the stack.
+This fixes possible lost wakeup introduced by commit a218cc491420.
+Originally modifications to ep->wq were serialized by ep->wq.lock, but
+in commit a218cc491420 ("epoll: use rwlock in order to reduce
+ep_poll_callback() contention") a new rw lock was introduced in order to
+relax fd event path, i.e. callers of ep_poll_callback() function.
 
-After btrfs_rename() returns, any task that is running btrfs_sync_log()
-concurrently can end up crashing because that linked list is traversed by
-btrfs_sync_log() (through btrfs_remove_all_log_ctxs()). That results in
-the same issue that commit e6c617102c7e4 ("Btrfs: fix log context list
-corruption after rename exchange operation") fixed.
+After the change ep_modify and ep_insert (both are called on epoll_ctl()
+path) were switched to ep->lock, but ep_poll (epoll_wait) was using
+ep->wq.lock on wqueue list modification.
 
-Fixes: d4682ba03ef618 ("Btrfs: sync log after logging new name")
-CC: stable@vger.kernel.org # 4.19+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+The bug doesn't lead to any wqueue list corruptions, because wake up
+path and list modifications were serialized by ep->wq.lock internally,
+but actual waitqueue_active() check prior wake_up() call can be
+reordered with modifications of ep ready list, thus wake up can be lost.
+
+And yes, can be healed by explicit smp_mb():
+
+  list_add_tail(&epi->rdlink, &ep->rdllist);
+  smp_mb();
+  if (waitqueue_active(&ep->wq))
+	wake_up(&ep->wp);
+
+But let's make it simple, thus current patch replaces ep->wq.lock with
+the ep->lock for wqueue modifications, thus wake up path always observes
+activeness of the wqueue correcty.
+
+Fixes: a218cc491420 ("epoll: use rwlock in order to reduce ep_poll_callback() contention")
+Reported-by: Max Neunhoeffer <max@arangodb.com>
+Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Tested-by: Max Neunhoeffer <max@arangodb.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Christopher Kohlhoff <chris.kohlhoff@clearpool.io>
+Cc: Davidlohr Bueso <dbueso@suse.de>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Jes Sorensen <jes.sorensen@gmail.com>
+Cc: <stable@vger.kernel.org>	[5.1+]
+Link: http://lkml.kernel.org/r/20200214170211.561524-1-rpenyaev@suse.de
+Bisected-by: Max Neunhoeffer <max@arangodb.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ fs/eventpoll.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -10142,6 +10142,10 @@ out_fail:
- 		ret = btrfs_sync_log(trans, BTRFS_I(old_inode)->root, &ctx);
- 		if (ret)
- 			commit_transaction = true;
-+	} else if (sync_log) {
-+		mutex_lock(&root->log_mutex);
-+		list_del(&ctx.list);
-+		mutex_unlock(&root->log_mutex);
+--- a/fs/eventpoll.c
++++ b/fs/eventpoll.c
+@@ -1881,9 +1881,9 @@ fetch_events:
+ 		waiter = true;
+ 		init_waitqueue_entry(&wait, current);
+ 
+-		spin_lock_irq(&ep->wq.lock);
++		write_lock_irq(&ep->lock);
+ 		__add_wait_queue_exclusive(&ep->wq, &wait);
+-		spin_unlock_irq(&ep->wq.lock);
++		write_unlock_irq(&ep->lock);
  	}
- 	if (commit_transaction) {
- 		ret = btrfs_commit_transaction(trans);
+ 
+ 	for (;;) {
+@@ -1931,9 +1931,9 @@ send_events:
+ 		goto fetch_events;
+ 
+ 	if (waiter) {
+-		spin_lock_irq(&ep->wq.lock);
++		write_lock_irq(&ep->lock);
+ 		__remove_wait_queue(&ep->wq, &wait);
+-		spin_unlock_irq(&ep->wq.lock);
++		write_unlock_irq(&ep->lock);
+ 	}
+ 
+ 	return res;
 
 
