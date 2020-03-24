@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F79C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27264C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DEA208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90CF208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056223;
-	bh=wyLKa9e4fnj7moQyCDcCfUz9jCeCcmM9gRIIhMtIa1U=;
+	s=default; t=1585056228;
+	bh=pTH9yEph1oAl7vro76MHXW5rx/KAtcTCCURejAD29Tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E8E4yPkAB3Mieef5M6wrpp4Q+w0xZQt4aJgH2Ibt1rGcs0rRf93n41B4Y3chTgxME
-	 kWKfIiY18VYTkNx0UIkl9cXz8XV8zCAWfKJumq6/7SqaBkBdClEY+R390q2wXf1yCW
-	 41gjnIsk7gdYLkjjUTUaI4/qP7aqJvFXbPui8yIc=
+	b=nIEAP+b5GYotrM4g0xhhMddUCdvqUTP/XWUbnxwic+AY1Unaii8G38aOJQegyT+yx
+	 7kCU1hwZ6KVyHNYrC1bDwQ5zGz5xSjSlzwMG+oH5lbLwgnA214XBG39bLTSFoN1aJq
+	 77sakZv158ZMOzNp2yflhIeNqWPXsrw/s36J1bhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729446AbgCXNXm (ORCPT
+        id S1729385AbgCXNXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:23:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46746 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgCXNXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:23:37 -0400
+        id S1729050AbgCXNXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:23:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6040D21556;
-        Tue, 24 Mar 2020 13:23:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBCFE208CA;
+        Tue, 24 Mar 2020 13:23:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056216;
-        bh=wyLKa9e4fnj7moQyCDcCfUz9jCeCcmM9gRIIhMtIa1U=;
+        s=default; t=1585056219;
+        bh=pTH9yEph1oAl7vro76MHXW5rx/KAtcTCCURejAD29Tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vVRnd5do1ezlth09tFhgMy24EPomWLY34lwIMHceBO/XxVtZMkl/DtO9a6gpgnCmD
-         bekY3axst8g406+3Lmechn3g/6HUpv1ydpUp0NuyNUsXx9oq4ZuisegIjUXUYIAHCX
-         ZAvpcTM3c77arqS5YLXAcFPo1VSk8QVVcvA9sSYs=
+        b=m6iOYc5JKdaRtfBzYA6eNaACrRwONSmAQd3m1YZ9D9bag//xCdghjQ2JNFJsB3Use
+         594j3S3Sl7D/fCzH25bsJt0J3iAWz0MfNpqgAJg2/a01R4FcjBLkZLhqNDeGe9gxiK
+         rczA3Q2d/ZrJ/J3k//utFglBfD6jl5hAl10NQGCE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 059/119] ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
-Date:   Tue, 24 Mar 2020 14:10:44 +0100
-Message-Id: <20200324130814.113683867@linuxfoundation.org>
+        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>, Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 5.5 060/119] tty: fix compat TIOCGSERIAL leaking uninitialized memory
+Date:   Tue, 24 Mar 2020 14:10:45 +0100
+Message-Id: <20200324130814.194659425@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,46 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 5461e0530c222129dfc941058be114b5cbc00837 upstream.
+commit 17329563a97df3ba474eca5037c1336e46e14ff8 upstream.
 
-The return value checks in snd_pcm_plug_alloc() are covered with
-snd_BUG_ON() macro that may trigger a kernel WARNING depending on the
-kconfig.  But since the error condition can be triggered by a weird
-user space parameter passed to OSS layer, we shouldn't give the kernel
-stack trace just for that.  As it's a normal error condition, let's
-remove snd_BUG_ON() macro usage there.
+Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
+tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
+copying a whole 'serial_struct32' to userspace rather than individual
+fields, but failed to initialize all padding and fields -- namely the
+hole after the 'iomem_reg_shift' field, and the 'reserved' field.
 
-Reported-by: syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200312155730.7520-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fix this by initializing the struct to zero.
+
+[v2: use sizeof, and convert the adjacent line for consistency.]
+
+Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
+Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
+Cc: <stable@vger.kernel.org> # v4.20+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/oss/pcm_plugin.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/tty/tty_io.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_su
- 		while (plugin->next) {
- 			if (plugin->dst_frames)
- 				frames = plugin->dst_frames(plugin, frames);
--			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
-+			if ((snd_pcm_sframes_t)frames <= 0)
- 				return -ENXIO;
- 			plugin = plugin->next;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
-@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_su
- 		while (plugin->prev) {
- 			if (plugin->src_frames)
- 				frames = plugin->src_frames(plugin, frames);
--			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
-+			if ((snd_pcm_sframes_t)frames <= 0)
- 				return -ENXIO;
- 			plugin = plugin->prev;
- 			err = snd_pcm_plugin_alloc(plugin, frames);
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -2734,7 +2734,9 @@ static int compat_tty_tiocgserial(struct
+ 	struct serial_struct32 v32;
+ 	struct serial_struct v;
+ 	int err;
+-	memset(&v, 0, sizeof(struct serial_struct));
++
++	memset(&v, 0, sizeof(v));
++	memset(&v32, 0, sizeof(v32));
+ 
+ 	if (!tty->ops->set_serial)
+ 		return -ENOTTY;
 
 
