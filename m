@@ -2,98 +2,150 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E60AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E59FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 186AC20788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 667A52076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:20:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qb4Qiodo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9/9A+Oy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgCXSUu (ORCPT
+        id S1728107AbgCXSUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:20:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37123 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgCXSUs (ORCPT
+        Tue, 24 Mar 2020 14:20:54 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:46613 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbgCXSUw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:20:48 -0400
-Received: by mail-pl1-f196.google.com with SMTP id x1so3718923plm.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:20:47 -0700 (PDT)
+        Tue, 24 Mar 2020 14:20:52 -0400
+Received: by mail-lf1-f65.google.com with SMTP id q5so2203146lfb.13;
+        Tue, 24 Mar 2020 11:20:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G7TBBxwNpvZEgu2P5vS45mLuMGm5bXW06PLHgtTqssI=;
-        b=Qb4QiodoFRSeAhTNws1BGKTLfVwQURZEB+9ru/JmLHBeA0pAhKtqd+VUnu0E5SKyYM
-         bye4qLMhUFG7j3MF06tObcrsefap0AIr5lC7zL6obQTERItM2rUrFXUDCNPZuWvJ5lTS
-         NLTjApMbAd1h2cBovb8yg5bfaXrtOgZ9vj5Etnf2C0RRzntwrf+GgnFPX6NAD1RhEDev
-         +/IhzhE7Rcs0KP4O6eM7rGdn/Vi7OY6BHgKtrg3sTtzY3hBPCJaFQvoUXJK4oJu8SXHh
-         JaI2neNR+Qb+0HvUi0IkQP1ATE4E1g0IH9SberwTGLWZM3HS4lzNm6jPxRI7zegNPtdF
-         oL5w==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=vZ2grX9EdtsDCTdMZUk+KGs8dumK5Lsw3WmRUPsPmLQ=;
+        b=g9/9A+OyX8xJITb28HO9MKB6+cdg+n52KnynJT9xR6eCDDU3Xgg0ucNRZ6fgDnzsSf
+         LjC5k/hBDKSg6GWsUm+VdneNJMaVgFNOaGB/xKBKIVcQAmEB/xjZ/3M8YEkJeCUjmB9M
+         GzHm4Ctk5/9bkQt7bpe1K3Qdtn/ut2kVeTk48xb7qKCqo27MV7thqXYBmvDkm4KKHvcO
+         gC5L4Uq2D3dyC59Moj++lKKAHRqfj6o3WliVPfJ+jSG16H+L0SWaIqzGKlaBYeKcAI80
+         y8BGym5dGtclGStfcNoFa39gvxtFXj/Bks7ZG8EhJEZphRbld5Mf07Dy7Vz9+I35cMNF
+         nysw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G7TBBxwNpvZEgu2P5vS45mLuMGm5bXW06PLHgtTqssI=;
-        b=dmU1IOa7qLSs2CIg4oArQM4x4aK+DNs1cOkkO4ORPyPNrnUcUyb/e23tIwXh86+eIE
-         F6gRVkvmQgUeTxKNtkFN5bazmFIfSYEmaAKMjp9Mw5h9qA5vdg4RFRumVKFjA9qmaI2A
-         eaJbZndUIuXWwdiPznCRBkWcdO4aiHrenlEj2K70fMNhWOJPUujbVf8Fa2rNPujug9y+
-         67ehWnAipdRJuCsKWnRKSJIZv7fejskAKiRii7GzWwmrLlEye1Fehs6tF7I6eAWuqXJM
-         1I+n4JZ3/8Yo6d9rcRusRDQNHnH+RfJMCtX2u2oEQGjJLSaBEtm7lqRR7VEwf/uK7wCC
-         IJCg==
-X-Gm-Message-State: ANhLgQ2ReYacwEj/xImtUPrK1r1R+/kFMphRsDfsp8q+F+cfH3B31/z8
-        9FIotCKZUsUUe0QQiw4kAQKUzZzYW8qa5z5vcnuHPA==
-X-Google-Smtp-Source: ADFU+vvU/DEpKK++hcYvv//uiYg/cZGTM7oLYwReML+Okiq04rSe9KXRONxXVeIa2d4G4pW2RqbBJqIOHuZpjNMauVo=
-X-Received: by 2002:a17:90a:30c3:: with SMTP id h61mr6876474pjb.18.1585074047136;
- Tue, 24 Mar 2020 11:20:47 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=vZ2grX9EdtsDCTdMZUk+KGs8dumK5Lsw3WmRUPsPmLQ=;
+        b=pehOLrjkfV53m51U+DQOZoYNoMeKeReKgJEjaB3t9jGoNxW3qZ8XP1Drm5VbhEXlhZ
+         rl7htfsT5RFtb4mrcCWWKoY6opCk5OEDW4Z1TSuV8fOqBG0ZAbTrwHPkQOOdyW+vz0ay
+         OcP6wg66DtzNbKDPjL4hpd+qtp19iWVWishhOOY7YyN/GAp02TTmwpeCjwmLfwJR33+g
+         rQ5gP4QvGdNbq9IpBiYEKgFVNMknlkZ+3YXHV3FkM4/6l7vqGpFk0e6BYHb8k2Ok/LUH
+         JN3cgaPjy9mvYlGN4Db91iFvH4Ci6Z5BOBKoCQbLIy/nossX/IyS1i63avvaLwLnM4xi
+         dPzg==
+X-Gm-Message-State: ANhLgQ0gHruR62C9u5uXnrbixVMW5HOAEKQ6jMI6CMBMbi+sof3M/wu3
+        DQIYwQ1i7hu9gn7VQyllpls=
+X-Google-Smtp-Source: ADFU+vtFvpq0POhOnkLU430bk6n5oSPRbp8Bisgt5nf1Ld/HAQp/Rad6pPPa6Xb4zIivCVN1cWWmVg==
+X-Received: by 2002:a19:6f07:: with SMTP id k7mr13886435lfc.79.1585074050889;
+        Tue, 24 Mar 2020 11:20:50 -0700 (PDT)
+Received: from mobilestation ([95.79.136.110])
+        by smtp.gmail.com with ESMTPSA id h10sm10603614ljg.38.2020.03.24.11.20.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 11:20:50 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 21:20:47 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Sergey.Semin@baikalelectronics.ru,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/6] dt-bindings: rtc: Convert snps,dw-apb-timer to DT
+ schema
+Message-ID: <20200324182047.iziujb7n7slqtzck@mobilestation>
+References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
+ <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
+ <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
+ <20200324180709.GO5504@piout.net>
 MIME-Version: 1.0
-References: <20200319164227.87419-1-trishalfonso@google.com> <20200319164227.87419-4-trishalfonso@google.com>
-In-Reply-To: <20200319164227.87419-4-trishalfonso@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Tue, 24 Mar 2020 11:20:36 -0700
-Message-ID: <CAFd5g47jJ0f+NFDBXK5gTqbx4-UiyJ9xfZaRW1qzZ_6AcGKC+Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] KASAN: Port KASAN Tests to KUnit
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     David Gow <davidgow@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324180709.GO5504@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 9:42 AM Patricia Alfonso
-<trishalfonso@google.com> wrote:
->
-> Transfer all previous tests for KASAN to KUnit so they can be run
-> more easily. Using kunit_tool, developers can run these tests with their
-> other KUnit tests and see "pass" or "fail" with the appropriate KASAN
-> report instead of needing to parse each KASAN report to test KASAN
-> functionalities. All KASAN reports are still printed to dmesg.
->
-> Stack tests do not work in UML so those tests are protected inside an
-> "#if IS_ENABLED(CONFIG_KASAN_STACK)" so this only runs if stack
-> instrumentation is enabled.
->
-> copy_user_test cannot be run in KUnit so there is a separate test file
-> for those tests, which can be run as before as a module.
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+Hello Alexandre
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+On Tue, Mar 24, 2020 at 07:07:09PM +0100, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 24/03/2020 20:43:20+0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Modern device tree bindings are supposed to be created as YAML-files
+> > in accordance with DT schema. This commit replaces Synopsys DW Timer
+> > legacy bare text binding with YAML file. As before the binding file
+> > states that the corresponding dts node is supposed to be compatible
+> > with generic DW APB Timer indicated by the "snps,dw-apb-timer"
+> > compatible string and to provide a mandatory registers memory range,
+> > one timer interrupt, either reference clock source or a fixed clock
+> > rate value. It may also have an optional APB bus reference clock
+> > phandle specified.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Alessandro Zummo <a.zummo@towertech.it>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-rtc@vger.kernel.org
+> > 
+> > ---
+> > 
+> > I have doubts that this binding file belongs to the bindings/rtc
+> > directory seeing it's a pure timer with no rtc facilities like
+> > days/months/years counting and alarms. What about moving it to the
+> > "Documentation/devicetree/bindings/timer/" directory?
+> > 
+> 
+> Exactly my reaction when seeing the patch, please move it out of
+> bindings/rtc/
+> 
+
+Agreed. I am pretty sure Rob find something to be fixed and the main part
+of the patchset still hasn't been reviewed. So v3 will be necessary for sure.
+I'll move this binding out of rtc in a dedicated patch then.
+
+-Sergey
+
+P.S. For some reason your email still hasn't been delivered to my corporate
+email, so responding from the private one.
+
+> 
+> -- 
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
