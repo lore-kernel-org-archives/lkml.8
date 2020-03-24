@@ -2,104 +2,99 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F34CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4187C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F592076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBCD2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:29:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Me4q8UB5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgCXA0u (ORCPT
+        id S1727054AbgCXA3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:26:50 -0400
-Received: from mga14.intel.com ([192.55.52.115]:60458 "EHLO mga14.intel.com"
+        Mon, 23 Mar 2020 20:29:53 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:41623 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727394AbgCXA0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:26:22 -0400
-IronPort-SDR: 9/J+Vw41vUhMScZgIGWFh4JeBt99QHjcQqNNWQaSsAyUcUlDPAF9QkLlq+1TNBrCY4BJa1v3oR
- tvBY/9NjUhEA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 17:26:21 -0700
-IronPort-SDR: ljk1IodYw9smEo4oNfaBB72RR7098dIoxhT8+w4AGSUM71k7dtR8du8sYcuWIpsf0lbQDAMgap
- Gl4m0wNgJaPQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="419692225"
-Received: from bhaveshm-mobl.amr.corp.intel.com (HELO localhost.localdomain) ([10.134.88.197])
-  by orsmga005.jf.intel.com with ESMTP; 23 Mar 2020 17:26:20 -0700
-From:   sathyanarayanan.kuppuswamy@linux.intel.com
-To:     bhelgaas@google.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v18 01/11] PCI/ERR: Update error status after reset_link()
-Date:   Mon, 23 Mar 2020 17:25:58 -0700
-Message-Id: <a255fcb3a3fdebcd90f84e08b555f1786eb8eba2.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <cover.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+        id S1726955AbgCXA3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:29:53 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 67f2f08d;
+        Tue, 24 Mar 2020 00:22:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=U3g+Qd4kxYtXwogFayZzRbGY6bY=; b=Me4q8U
+        B5878gSo1i//NnY9TZKfxlVsiz4h7gGHs+Vyphm5oOsVm2Jsrd4OFre4I+dJXm+P
+        4pIczEroj/c1eaqtqIid2P4upMoi5yrhq+PFlQ9gLZkhAZbHenimxgmu8Wd2r6sE
+        avpePBIofAUfQDQiG6VsZDIhVW4Qd5z+0DSIjtxPK75FGDXKNzR4+CX6K1tijvdO
+        axpAPD6WniGnW816r1GAz4scQ0bU1L5SZttbM2mmttuXnESNLsY4L5THoaCHcK6Y
+        E9L33eRRJEMyGw/RqG0hYJSNqi6v45CsVpEhOhdC6JOSK2xk/vl6EK4OBejYJzu3
+        MywHS/OYEplBUdww==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 79ea222a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Tue, 24 Mar 2020 00:22:46 +0000 (UTC)
+Received: by mail-io1-f49.google.com with SMTP id h8so16404623iob.2;
+        Mon, 23 Mar 2020 17:29:49 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ21ruVrMQuF+xir2Y2w8zrTMXA2B/PZzN0XMkpct8F9YMjyuGuf
+        nAxKP2Kb0mppkkpba9DmrSWMcCxQA07BfTz2Bq8=
+X-Google-Smtp-Source: ADFU+vuIgqp3qi0NeoXrARe9XukRA7tgPq6DDZ/UWyvNDJcS924QH/wQYr2KPbvV0MaMeG8Mb5QDbAfOYGItqG57vlc=
+X-Received: by 2002:a02:6241:: with SMTP id d62mr4216457jac.86.1585009788671;
+ Mon, 23 Mar 2020 17:29:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324001358.4520-1-masahiroy@kernel.org>
+In-Reply-To: <20200324001358.4520-1-masahiroy@kernel.org>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 23 Mar 2020 18:29:37 -0600
+X-Gmail-Original-Message-ID: <CAHmME9rdoo2Q3n4YA59GrVEh8uaCY_0-q+QVghjgG3WwcHkmug@mail.gmail.com>
+Message-ID: <CAHmME9rdoo2Q3n4YA59GrVEh8uaCY_0-q+QVghjgG3WwcHkmug@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] x86: remove always-defined CONFIG_AS_* options
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     X86 ML <x86@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        NeilBrown <neilb@suse.de>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+On Mon, Mar 23, 2020 at 6:15 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+>
+> arch/x86/Makefile tests instruction code by $(call as-instr, ...)
+>
+> Some of them are very old.
+> For example, the check for CONFIG_AS_CFI dates back to 2006.
+>
+> We raise GCC versions from time to time, and we clean old code away.
+> The same policy applied to binutils.
+>
+> The current minimal supported version of binutils is 2.21
+>
+> This is new enough to recognize the instruction in most of
+> as-instr calls.
+>
+> If this series looks good, how to merge it?
+> Via x86 tree or maybe crypto ?
 
-Commit bdb5ac85777d ("PCI/ERR: Handle fatal error recovery") uses
-reset_link() to recover from fatal errors. But during fatal error recovery,
-if the initial value of error status is PCI_ERS_RESULT_DISCONNECT or
-PCI_ERS_RESULT_NO_AER_DRIVER then even after successful recovery (using
-reset_link()) pcie_do_recovery() will report the recovery result as
-failure. So update the status of error after reset_link().
+This series looks fine, but why is it still incomplete? That is, it's
+missing your drm commit plus the 4 I layered on top for moving to a
+Kconfig-based approach and accounting for the bump to binutils 2.23.
+Everything is now rebased here:
+https://git.zx2c4.com/linux-dev/log/?h=jd/kconfig-assembler-support
 
-You can reproduce this issue by triggering a SW DPC using "DPC
-Software Trigger" bit in "DPC Control Register". You should see recovery
-failed dmesg log as below.
+Would you be up for resubmitting those all together so we can handle
+this in one go?
 
-  pcieport 0000:00:16.0: DPC: containment event, status:0x1f27 source:0x0000
-  pcieport 0000:00:16.0: DPC: software trigger detected
-  pci 0000:04:00.0: AER: can't recover (no error_detected callback)
-  pcieport 0000:00:16.0: AER: device recovery failed
-
-Fixes: bdb5ac85777d ("PCI/ERR: Handle fatal error recovery")
-Link: https://lore.kernel.org/r/15e702a33cc27314f9d43a06ccb408086a229cef.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Keith Busch <keith.busch@intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
----
- drivers/pci/pcie/err.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 01dfc8bb7ca0..1ac57e9e1e71 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -203,14 +203,14 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
- 	bus = dev->subordinate;
- 
- 	pci_dbg(dev, "broadcast error_detected message\n");
--	if (state == pci_channel_io_frozen)
-+	if (state == pci_channel_io_frozen) {
- 		pci_walk_bus(bus, report_frozen_detected, &status);
--	else
-+		status = reset_link(dev, service);
-+		if (status != PCI_ERS_RESULT_RECOVERED)
-+			goto failed;
-+	} else {
- 		pci_walk_bus(bus, report_normal_detected, &status);
--
--	if (state == pci_channel_io_frozen &&
--	    reset_link(dev, service) != PCI_ERS_RESULT_RECOVERED)
--		goto failed;
-+	}
- 
- 	if (status == PCI_ERS_RESULT_CAN_RECOVER) {
- 		status = PCI_ERS_RESULT_RECOVERED;
--- 
-2.17.1
-
+Jason
