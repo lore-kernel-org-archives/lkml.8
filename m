@@ -2,349 +2,336 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9BCC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA9FC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:43:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9B32070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3C32070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:43:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="B3YXgpMH";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="O+nispp8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i0k4De3b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCXAmg (ORCPT
+        id S1727129AbgCXAnR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:42:36 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:8254 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726986AbgCXAmg (ORCPT
+        Mon, 23 Mar 2020 20:43:17 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45192 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgCXAnQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:42:36 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O0UaS8020026;
-        Mon, 23 Mar 2020 17:42:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=Nn+/9jI7fodF5HypccNRhRBClO1bGj638wu+Kbo8ZoU=;
- b=B3YXgpMHrUujsuqBoj/hJWSuPGwxsWRlgvUoOi3vNEbqkEyVeuciQk1UixEPFyphyKFH
- 1OTcHpUkUpX0bjYtnq97Gl8p0UBfcpafrbgnH07DbcyG/rDuECjrUlO1iwqRj+QnNx6i
- am83yPm3dmUG0wkEzyQIpie/j4fPrDhsqpo= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2ywgeku19c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 23 Mar 2020 17:42:28 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1847.3; Mon, 23 Mar 2020 17:42:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cGX7+iS66/ha2j3AwJN4S/Qbtg3zLwtdHZiV+y6XiN73Uo0YbFXkcys5RLmkc4HzRQrpt2iDr0Hib6HjWMxDaviYGVzNFB+eOiZhiuwlnmo5pvAseD0gBEb5OMI6nwWSrR6qlEEKLMcEGfKQFJfdnwWuvYsfrO1tTLemKCDBjMNTT5JVjML96TOvn2v4XBiLGWiX1R27lyCJGUi1qZA2NqVgWQ7bPtlSmU/YzvtP8XCqs2Y8E+9YMHvs/GBdDLIHIIIJlWn+oPYgsoAAShDvWmPuRmcn5ZI3gDpsWm6votblVG/q4gYBd0mehHhWqkzCfuIhYgNywdEr5i9bp5fR+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nn+/9jI7fodF5HypccNRhRBClO1bGj638wu+Kbo8ZoU=;
- b=GH2xdM3hMuoKEKkP2EEAvnz7XmczTrwy62R9EE132ALNZ6XRaFM2MkN8UmKGgbUdw/ftvxj8AHTS6fOnIlzv2iHxEeBzCGiuXKqlVH9vWjnpWe3jgk6QkwWubSBkv1k8QTYgOG4RSTezZwgwVFtSlteFzrZ3HMk7y/SzjveQgr8X2t5lBJh4a1TKYKtH808wGlZbqs2sCS3mjqDOjOT8kDDdt65J0dFxAWQ8T4CMhL2ygIXyamHguSHCg7UYQCo3EEt5Q7z/thVTDrp0SgnYTeE2XPj07Ju9qEu+FDo26ZefzYObEICvhlg9r0421It9BH68/H9WMhOyjUt86Tdflw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Nn+/9jI7fodF5HypccNRhRBClO1bGj638wu+Kbo8ZoU=;
- b=O+nispp8IIyOVaFvHLoEHfZcRo7ma/Qz6HVhe87UQVrlHYf4zIuRN9FWTueJzsplMhL6ToDE/ZPeTJ34cC5Dao8kYaP6xBA6MTLsZif2npBP0WHOc5tL+p31+7dhBAdbc7GQHWdP5r81H1VZarkLhWmpwCL92AenfWkpVKeccHY=
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com (2603:10b6:a03:96::24)
- by BYAPR15MB2647.namprd15.prod.outlook.com (2603:10b6:a03:153::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.21; Tue, 24 Mar
- 2020 00:42:26 +0000
-Received: from BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275]) by BYAPR15MB4136.namprd15.prod.outlook.com
- ([fe80::bdf9:6577:1d2a:a275%7]) with mapi id 15.20.2835.021; Tue, 24 Mar 2020
- 00:42:26 +0000
-Date:   Mon, 23 Mar 2020 17:42:21 -0700
-From:   Roman Gushchin <guro@fb.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, <linux-mm@kvack.org>,
-        <kernel-team@fb.com>, <linux-kernel@vger.kernel.org>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        <stable@vger.kernel.org>
-Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various stack
- implementations
-Message-ID: <20200324004221.GA36662@carbon.dhcp.thefacebook.com>
-References: <20200303233550.251375-1-guro@fb.com>
- <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321164856.be68344b7fac84b759e23727@linux-foundation.org>
-X-ClientProxiedBy: MWHPR03CA0014.namprd03.prod.outlook.com
- (2603:10b6:300:117::24) To BYAPR15MB4136.namprd15.prod.outlook.com
- (2603:10b6:a03:96::24)
+        Mon, 23 Mar 2020 20:43:16 -0400
+Received: by mail-oi1-f196.google.com with SMTP id l22so6046439oii.12
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5XccjSmzQSYluJiyPzbiNHYe0YLLyvddDurt0q9/XDU=;
+        b=i0k4De3b34CqM8gnM5JGiwY0ry7/ZrLpmzktSW0KiYPpha1vXvZ6wse2JF4KOZxVnD
+         EvQKDMJyxbQBAohPuAtor1+p5fdwNmCCleq9CZv5MH/K0Typsq6VX/h+HiBxyMSITLFI
+         1zE9FFUnbH8lRcKH3LGjUdaDuM7j39TaZnPdg+9Irg+53LlaHdNuQO8FXCXwTEJNtQWf
+         Hx25W6E5EVV7YjtXB8bV9UsFQXdrV3gzCscw1XOQnO5vKf2wtgnduAlQ6d/npzVosWTQ
+         wsFC0bSpKMWWzljnO8WmBULkYUJ3j2VxltB1tjkDBKGyMg3Di8aGhK8E+knTKXDDf4ds
+         2eRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5XccjSmzQSYluJiyPzbiNHYe0YLLyvddDurt0q9/XDU=;
+        b=k4h6MptmBBiwe3sut+8P2oRT5MfLK6VlojId6IuXDJ/UM4330Gg770cAnXqCguIskU
+         oVZEF9jDfbukELwDljhbNzyKJVBCkXMzXRxHzWnWPXkIQcrhdbJglKo1vrcqTxvvaqb4
+         +eLv8PL/qkyU95HYUY3dP+1OTlCtDQSzfPS3J0j7+LaM59g7T1/CTMk9PVUhUqc0JRiC
+         bp3fetk0AmTuZ41bcGvAMIXjZ1UJIo8UeiKrT9Z8jVrP5LMh11Q24prSlRG4gKpWdpw+
+         xjehw6SJNr1ewX5Wb2y5ou+YTeyJVTq7EPg5rqmYPWY8Y+/pZGpLBksq72BXm1nHlCWU
+         ch9w==
+X-Gm-Message-State: ANhLgQ3wD/I3x/1pv4x2ZvxAgeQSbLlZ0Ba/KLr4K+48IoN9hkXcHXsr
+        5J8FixJDBMvHWN6KwI9WJh4wPBgu2UMjOC0E99Rksg==
+X-Google-Smtp-Source: ADFU+vtYBVk3tWWGsOMAMHUFEJFhvxQroU9ZV5f98ByE8nUcZKV6aGcbbi70XDgVtV9LxWY6a+Fz0IqYMsBbQbFZO5E=
+X-Received: by 2002:aca:a857:: with SMTP id r84mr1597815oie.65.1585010593973;
+ Mon, 23 Mar 2020 17:43:13 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:400::5:2f3f) by MWHPR03CA0014.namprd03.prod.outlook.com (2603:10b6:300:117::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Tue, 24 Mar 2020 00:42:25 +0000
-X-Originating-IP: [2620:10d:c090:400::5:2f3f]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c500e351-65df-466d-39d5-08d7cf8c3962
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2647:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB264750BAD65F05563D8D1D13BEF10@BYAPR15MB2647.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 03524FBD26
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(366004)(396003)(376002)(346002)(39860400002)(136003)(5660300002)(186003)(6666004)(6506007)(54906003)(966005)(316002)(8676002)(81166006)(16526019)(7696005)(478600001)(86362001)(53546011)(6916009)(8936002)(33656002)(1076003)(4326008)(81156014)(2906002)(52116002)(9686003)(55016002)(66476007)(66946007)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2647;H:BYAPR15MB4136.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QjdHHrCkMqUkxTgAQrKZf7COu1BHDJfds63EtJO/G8Mhn15PsopB6zX8jF4yFeRKzumnmCs+5biUkWmQjWawQAgno2agZxCU/nvR26aHsRqVxQWayNeWBjKe9tJgJk+HWPDW2imImuHn3Y+ejjlelJkzC1xIpQOKvOyLm5Wo3IFePVjeIAXBLn5YGKRbVg1zR3R7RpI3iX88Ed3QKNAPxlH0uX2X+H1NilGl5Fs0gOgFkAgYXEL43fd7YRUyVZVgr3voR+06GnWhIrZ57Ge683Y6jRGtO2D2Xu6Tk+EQ23uCG4VtooMoZ12uSiEutwdy9PzBbbFf4KTVfBVZP8+pdIvGh+NQsc7Iywr41rLtgQOTIf0ZAdnsYX7YmfRrFZzOo4pE4DcA2FHUaRVeiMuWtSlePFTPpJWbe4DfUbzuqTNXRuZ66MZ/Jsx+q3bdFxDVIAHzAU5stwxDIDgjiTr5AkU5N65NXfdb9xJWdXsLsnB8R6mQl24Yc2JEY1TUm0WmQ/mEHovYRioxQsbszJwwaA==
-X-MS-Exchange-AntiSpam-MessageData: 2Ovhd4Z8EA4p296YeVOPTeATyh7UD1uFAjZA7paweF3fWkMjKmRW4xRdyMQ4tDp8P1EuhndPxqHrQMAQIK8FT3HHuazcMbBQBLMCMZ0j2EWIEdt5fTsaDvUVWYF8XsSHQRWdjQyilEMq77cd5vnNiJOU+RSXfFxG+pk2USgDEIrRwmEvhLtI/N5GZxcUEu+R
-X-MS-Exchange-CrossTenant-Network-Message-Id: c500e351-65df-466d-39d5-08d7cf8c3962
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2020 00:42:26.3213
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jSHgYVv6xam/AhZ4iwiSxhvNJRkRhIcY4T3xkZiA4ad55ermh4j+0eT45xjVBdMv
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2647
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_10:2020-03-23,2020-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- bulkscore=0 lowpriorityscore=0 suspectscore=2 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003240000
-X-FB-Internal: deliver
+References: <20200318220634.32100-1-mike.kravetz@oracle.com> <20200318220634.32100-5-mike.kravetz@oracle.com>
+In-Reply-To: <20200318220634.32100-5-mike.kravetz@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 23 Mar 2020 17:43:03 -0700
+Message-ID: <CAHS8izOhjvNVDXsx_SqP_oUQhCw-i_xcG9hxbvV86fFDeY_SAw@mail.gmail.com>
+Subject: Re: [PATCH 4/4] hugetlbfs: clean up command line processing
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 04:48:56PM -0700, Andrew Morton wrote:
-> On Tue, 3 Mar 2020 15:35:50 -0800 Roman Gushchin <guro@fb.com> wrote:
-> 
-> > Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio
-> > the space for task stacks can be allocated using __vmalloc_node_range(),
-> > alloc_pages_node() and kmem_cache_alloc_node(). In the first and the
-> > second cases page->mem_cgroup pointer is set, but in the third it's
-> > not: memcg membership of a slab page should be determined using the
-> > memcg_from_slab_page() function, which looks at
-> > page->slab_cache->memcg_params.memcg . In this case, using
-> > mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
-> > page->mem_cgroup pointer is NULL even for pages charged to a non-root
-> > memory cgroup.
-> > 
-> > It can lead to kernel_stack per-memcg counters permanently showing 0
-> > on some architectures (depending on the configuration).
-> > 
-> > In order to fix it, let's introduce a mod_memcg_obj_state() helper,
-> > which takes a pointer to a kernel object as a first argument, uses
-> > mem_cgroup_from_obj() to get a RCU-protected memcg pointer and
-> > calls mod_memcg_state(). It allows to handle all possible
-> > configurations (CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE
-> > values) without spilling any memcg/kmem specifics into fork.c .
-> > 
-> > Note: this patch has been first posted as a part of the new slab
-> > controller patchset. This is a slightly updated version: the fixes
-> > tag has been added and the commit log was extended by the advice
-> > of Johannes Weiner. Because it's a fix that makes sense by itself,
-> > I'm re-posting it as a standalone patch.
-> 
-> Actually, it isn't a standalone patch.
-> 
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -776,6 +776,17 @@ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
-> >  	rcu_read_unlock();
-> >  }
-> >  
-> > +void mod_memcg_obj_state(void *p, int idx, int val)
-> > +{
-> > +	struct mem_cgroup *memcg;
-> > +
-> > +	rcu_read_lock();
-> > +	memcg = mem_cgroup_from_obj(p);
-> > +	if (memcg)
-> > +		mod_memcg_state(memcg, idx, val);
-> > +	rcu_read_unlock();
-> > +}
-> 
-> mem_cgroup_from_obj() is later added by
-> http://lkml.kernel.org/r/20200117203609.3146239-1-guro@fb.com
-> 
-> We could merge both mm-memcg-slab-introduce-mem_cgroup_from_obj.patch
-> and this patch, but that's a whole lot of stuff to backport into
-> -stable.
-> 
-> Are you able to come up with a simpler suitable-for-stable fix?
+On Wed, Mar 18, 2020 at 3:07 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> With all hugetlb page processing done in a single file clean up code.
 
-How about this one? I've merged them into one and stripped it a little bit.
+Now that all hugepage page processing is done in a single file, clean
+up the code.
 
-Thanks!
+> - Make code match desired semantics
+>   - Update documentation with semantics
+> - Make all warnings and errors messages start with 'HugeTLB:'.
+> - Consistently name command line parsing routines.
+> - Add comments to code
+>   - Describe some of the subtle interactions
+>   - Describe semantics of command line arguments
+>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  Documentation/admin-guide/mm/hugetlbpage.rst | 26 +++++++
+>  mm/hugetlb.c                                 | 78 +++++++++++++++-----
+>  2 files changed, 87 insertions(+), 17 deletions(-)
+>
+> diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
+> index 1cc0bc78d10e..afc8888f33c3 100644
+> --- a/Documentation/admin-guide/mm/hugetlbpage.rst
+> +++ b/Documentation/admin-guide/mm/hugetlbpage.rst
+> @@ -100,6 +100,32 @@ with a huge page size selection parameter "hugepagesz=<size>".  <size> must
+>  be specified in bytes with optional scale suffix [kKmMgG].  The default huge
+>  page size may be selected with the "default_hugepagesz=<size>" boot parameter.
+>
+> +Hugetlb boot command line parameter semantics
+> +hugepagesz - Specify a huge page size.  Used in conjunction with hugepages
+> +       parameter to preallocate a number of huge pages of the specified
+> +       size.  Hence, hugepagesz and hugepages are typically specified in
+> +       pairs such as:
+> +               hugepagesz=2M hugepages=512
+> +       hugepagesz can only be specified once on the command line for a
+> +       specific huge page size.  Valid huge page sizes are architecture
+> +       dependent.
+> +hugepages - Specify the number of huge pages to preallocate.  This typically
+> +       follows a valid hugepagesz parameter.  However, if hugepages is the
+> +       first or only hugetlb command line parameter it specifies the number
+> +       of huge pages of default size to allocate.  The number of huge pages
+> +       of default size specified in this manner can be overwritten by a
+> +       hugepagesz,hugepages parameter pair for the default size.
+> +       For example, on an architecture with 2M default huge page size:
+> +               hugepages=256 hugepagesz=2M hugepages=512
+> +       will result in 512 2M huge pages being allocated.  If a hugepages
+> +       parameter is preceded by an invalid hugepagesz parameter, it will
+> +       be ignored.
+> +default_hugepagesz - Specify the default huge page size.  This parameter can
+> +       only be specified on the command line.  No other hugetlb command line
+> +       parameter is associated with default_hugepagesz.  Therefore, it can
+> +       appear anywhere on the command line.  Valid default huge page size is
+> +       architecture dependent.
 
---
+Maybe specify what happens/should happen in a case like:
 
-From 1b8b039b05d49945aaf34a0600b04ea616fe0ba2 Mon Sep 17 00:00:00 2001
-From: Roman Gushchin <guro@fb.com>
-Date: Sat, 21 Mar 2020 23:05:42 +0000
-Subject: [PATCH] mm: fork: fix kernel_stack memcg stats for various stack
- implementations
+hugepages=100 default_hugepagesz=1G
 
-Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio the
-space for task stacks can be allocated using __vmalloc_node_range(),
-alloc_pages_node() and kmem_cache_alloc_node().  In the first and the
-second cases page->mem_cgroup pointer is set, but in the third it's not:
-memcg membership of a slab page should be determined using the
-memcg_from_slab_page() function, which looks at
-page->slab_cache->memcg_params.memcg .  In this case, using
-mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
-page->mem_cgroup pointer is NULL even for pages charged to a non-root
-memory cgroup.
+Does that allocate 100 2MB pages or 100 1G pages? Assuming the default
+size is 2MB.
 
-It can lead to kernel_stack per-memcg counters permanently showing 0 on
-some architectures (depending on the configuration).
+Also, regarding Randy's comment. It may be nice to keep these docs in
+one place only, so we don't have to maintain 2 docs in sync.
 
-In order to fix it, let's introduce a mod_memcg_obj_state() helper, which
-takes a pointer to a kernel object as a first argument, uses
-mem_cgroup_from_obj() to get a RCU-protected memcg pointer and calls
-mod_memcg_state().  It allows to handle all possible configurations
-(CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE values) without
-spilling any memcg/kmem specifics into fork.c .
 
-Note: This is a special version of the patch created for stable
-backports. It contains code from the following two patches:
-  - mm: memcg/slab: introduce mem_cgroup_from_obj()
-  - mm: fork: fix kernel_stack memcg stats for various stack implementations
+> +
+>  When multiple huge page sizes are supported, ``/proc/sys/vm/nr_hugepages``
+>  indicates the current number of pre-allocated huge pages of the default size.
+>  Thus, one can use the following command to dynamically allocate/deallocate
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index cc85b4f156ca..2b9bf01db2b6 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2954,7 +2954,7 @@ static void __init hugetlb_sysfs_init(void)
+>                 err = hugetlb_sysfs_add_hstate(h, hugepages_kobj,
+>                                          hstate_kobjs, &hstate_attr_group);
+>                 if (err)
+> -                       pr_err("Hugetlb: Unable to add hstate %s", h->name);
+> +                       pr_err("HugeTLB: Unable to add hstate %s", h->name);
+>         }
+>  }
+>
+> @@ -3058,7 +3058,7 @@ static void hugetlb_register_node(struct node *node)
+>                                                 nhs->hstate_kobjs,
+>                                                 &per_node_hstate_attr_group);
+>                 if (err) {
+> -                       pr_err("Hugetlb: Unable to add hstate %s for node %d\n",
+> +                       pr_err("HugeTLB: Unable to add hstate %s for node %d\n",
+>                                 h->name, node->dev.id);
+>                         hugetlb_unregister_node(node);
+>                         break;
+> @@ -3109,19 +3109,35 @@ static int __init hugetlb_init(void)
+>         if (!hugepages_supported())
+>                 return 0;
+>
+> -       if (!size_to_hstate(default_hstate_size)) {
+> -               if (default_hstate_size != 0) {
+> -                       pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
+> -                              default_hstate_size, HPAGE_SIZE);
+> -               }
+> -
+> +       /*
+> +        * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
+> +        * architectures depend on setup being done here.
+> +        *
+> +        * If a valid default huge page size was specified on the command line,
+> +        * add associated hstate if necessary.  If not, set default_hstate_size
+> +        * to default size.  default_hstate_idx is used at runtime to identify
+> +        * the default huge page size/hstate.
+> +        */
+> +       hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+> +       if (default_hstate_size)
+> +               hugetlb_add_hstate(ilog2(default_hstate_size) - PAGE_SHIFT);
+> +       else
+>                 default_hstate_size = HPAGE_SIZE;
+> -               hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
+> -       }
+>         default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
+> +
+> +       /*
+> +        * default_hstate_max_huge_pages != 0 indicates a count (hugepages=)
+> +        * specified before a size (hugepagesz=).  Use this count for the
+> +        * default huge page size, unless a specific value was specified for
+> +        * this size in a hugepagesz/hugepages pair.
+> +        */
+>         if (default_hstate_max_huge_pages) {
+>                 if (!default_hstate.max_huge_pages)
+> -                       default_hstate.max_huge_pages = default_hstate_max_huge_pages;
+> +                       default_hstate.max_huge_pages =
+> +                               default_hstate_max_huge_pages;
+> +               else
+> +                       pr_warn("HugeTLB: First hugepages=%lu kB ignored\n",
+> +                               default_hstate_max_huge_pages);
+>         }
+>
+>         hugetlb_init_hstates();
+> @@ -3174,20 +3190,27 @@ void __init hugetlb_add_hstate(unsigned int order)
+>         parsed_hstate = h;
+>  }
+>
+> -static int __init hugetlb_nrpages_setup(char *s)
+> +/*
+> + * hugepages command line processing
+> + * hugepages must normally follows a valid hugepagsz specification.  If not,
 
-Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: stable@vger.kernel.org
----
- include/linux/memcontrol.h | 12 ++++++++++++
- kernel/fork.c              |  4 ++--
- mm/memcontrol.c            | 38 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 52 insertions(+), 2 deletions(-)
+'hugepages must' or 'hugepages normally follows'
+> + * ignore the hugepages value.  hugepages can also be the first huge page
+> + * command line option in which case it specifies the number of huge pages
+> + * for the default size.
+> + */
+> +static int __init hugepages_setup(char *s)
+>  {
+>         unsigned long *mhp;
+>         static unsigned long *last_mhp;
+>
+>         if (!parsed_valid_hugepagesz) {
+> -               pr_warn("hugepages = %s preceded by "
+> +               pr_warn("HugeTLB: hugepages = %s preceded by "
+>                         "an unsupported hugepagesz, ignoring\n", s);
+>                 parsed_valid_hugepagesz = true;
+>                 return 1;
+>         }
+>         /*
+> -        * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter yet,
+> -        * so this hugepages= parameter goes to the "default hstate".
+> +        * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter
+> +        * yet, so this hugepages= parameter goes to the "default hstate".
+>          */
+>         else if (!hugetlb_max_hstate)
+>                 mhp = &default_hstate_max_huge_pages;
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index a7a0a1a5c8d5..e9ba01336d4e 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -695,6 +695,7 @@ static inline unsigned long lruvec_page_state_local(struct lruvec *lruvec,
- void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 			int val);
- void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
-+void mod_memcg_obj_state(void *p, int idx, int val);
- 
- static inline void mod_lruvec_state(struct lruvec *lruvec,
- 				    enum node_stat_item idx, int val)
-@@ -1123,6 +1124,10 @@ static inline void __mod_lruvec_slab_state(void *p, enum node_stat_item idx,
- 	__mod_node_page_state(page_pgdat(page), idx, val);
- }
- 
-+static inline void mod_memcg_obj_state(void *p, int idx, int val)
-+{
-+}
-+
- static inline
- unsigned long mem_cgroup_soft_limit_reclaim(pg_data_t *pgdat, int order,
- 					    gfp_t gfp_mask,
-@@ -1427,6 +1432,8 @@ static inline int memcg_cache_id(struct mem_cgroup *memcg)
- 	return memcg ? memcg->kmemcg_id : -1;
- }
- 
-+struct mem_cgroup *mem_cgroup_from_obj(void *p);
-+
- #else
- 
- static inline int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
-@@ -1468,6 +1475,11 @@ static inline void memcg_put_cache_ids(void)
- {
- }
- 
-+static inline struct mem_cgroup *mem_cgroup_from_obj(void *p)
-+{
-+       return NULL;
-+}
-+
- #endif /* CONFIG_MEMCG_KMEM */
- 
- #endif /* _LINUX_MEMCONTROL_H */
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 080809560072..183a6722dfe2 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -397,8 +397,8 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
- 		mod_zone_page_state(page_zone(first_page), NR_KERNEL_STACK_KB,
- 				    THREAD_SIZE / 1024 * account);
- 
--		mod_memcg_page_state(first_page, MEMCG_KERNEL_STACK_KB,
--				     account * (THREAD_SIZE / 1024));
-+		mod_memcg_obj_state(stack, MEMCG_KERNEL_STACK_KB,
-+				    account * (THREAD_SIZE / 1024));
- 	}
- }
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 6c83cf4ed970..a0aa1c213231 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -775,6 +775,17 @@ void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val)
- 	rcu_read_unlock();
- }
- 
-+void mod_memcg_obj_state(void *p, int idx, int val)
-+{
-+	struct mem_cgroup *memcg;
-+
-+	rcu_read_lock();
-+	memcg = mem_cgroup_from_obj(p);
-+	if (memcg)
-+		mod_memcg_state(memcg, idx, val);
-+	rcu_read_unlock();
-+}
-+
- /**
-  * __count_memcg_events - account VM events in a cgroup
-  * @memcg: the memory cgroup
-@@ -2636,6 +2647,33 @@ static void commit_charge(struct page *page, struct mem_cgroup *memcg,
- }
- 
- #ifdef CONFIG_MEMCG_KMEM
-+/*
-+ * Returns a pointer to the memory cgroup to which the kernel object is charged.
-+ *
-+ * The caller must ensure the memcg lifetime, e.g. by taking rcu_read_lock(),
-+ * cgroup_mutex, etc.
-+ */
-+struct mem_cgroup *mem_cgroup_from_obj(void *p)
-+{
-+	struct page *page;
-+
-+	if (mem_cgroup_disabled())
-+		return NULL;
-+
-+	page = virt_to_head_page(p);
-+
-+	/*
-+	 * Slab pages don't have page->mem_cgroup set because corresponding
-+	 * kmem caches can be reparented during the lifetime. That's why
-+	 * memcg_from_slab_page() should be used instead.
-+	 */
-+	if (PageSlab(page))
-+		return memcg_from_slab_page(page);
-+
-+	/* All other pages use page->mem_cgroup */
-+	return page->mem_cgroup;
-+}
-+
- static int memcg_alloc_cache_id(void)
- {
- 	int id, size;
--- 
-2.25.1
+We don't set parsed_valid_hugepagesz to false at the end of this
+function, shouldn't we? Parsing a hugepages= value should 'consume' a
+previously defined hugepagesz= value, so that this is invalid IIUC:
 
+hugepagesz=x hugepages=z hugepages=y
+
+> @@ -3195,7 +3218,8 @@ static int __init hugetlb_nrpages_setup(char *s)
+>                 mhp = &parsed_hstate->max_huge_pages;
+>
+>         if (mhp == last_mhp) {
+> -               pr_warn("hugepages= specified twice without interleaving hugepagesz=, ignoring\n");
+> +               pr_warn("HugeTLB: hugepages= specified twice without interleaving hugepagesz=, ignoring hugepages=%s\n",
+> +                       s);
+>                 return 1;
+>         }
+>
+> @@ -3214,8 +3238,15 @@ static int __init hugetlb_nrpages_setup(char *s)
+>
+>         return 1;
+>  }
+> -__setup("hugepages=", hugetlb_nrpages_setup);
+> +__setup("hugepages=", hugepages_setup);
+>
+> +/*
+> + * hugepagesz command line processing
+> + * A specific huge page size can only be specified once with hugepagesz.
+> + * hugepagesz is followed by hugepages on the commnad line.  The global
+> + * variable 'parsed_valid_hugepagesz' is used to determine if prior
+> + * hugepagesz argument was valid.
+> + */
+>  static int __init hugepagesz_setup(char *s)
+>  {
+>         unsigned long long size;
+> @@ -3230,16 +3261,23 @@ static int __init hugepagesz_setup(char *s)
+>         }
+>
+>         if (size_to_hstate(size)) {
+> +               parsed_valid_hugepagesz = false;
+>                 pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n",
+>                         saved_s);
+>                 return 0;
+>         }
+>
+> +       parsed_valid_hugepagesz = true;
+>         hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
+>         return 1;
+>  }
+>  __setup("hugepagesz=", hugepagesz_setup);
+>
+> +/*
+> + * default_hugepagesz command line input
+> + * Only one instance of default_hugepagesz allowed on command line.  Do not
+> + * add hstate here as that will confuse hugepagesz/hugepages processing.
+> + */
+>  static int __init default_hugepagesz_setup(char *s)
+>  {
+>         unsigned long long size;
+> @@ -3252,6 +3290,12 @@ static int __init default_hugepagesz_setup(char *s)
+>                 return 0;
+>         }
+>
+> +       if (default_hstate_size) {
+> +               pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n",
+> +                       saved_s);
+> +               return 0;
+> +       }
+> +
+>         default_hstate_size = size;
+>         return 1;
+>  }
+> --
+> 2.24.1
+>
+>
