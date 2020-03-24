@@ -2,185 +2,230 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD23C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2FFC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52C6D2078E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3B420735
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:30:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D7pF3nPH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728335AbgCXU2m (ORCPT
+        id S1727496AbgCXUaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:28:42 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38276 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbgCXU2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:28:41 -0400
-IronPort-SDR: jUkO/aiB4XFg5I8KFzD4JbWN+9472nkSTAEyH5FI1i4gavV/38OtZV/s+2PscFAWYBAaLP1FSb
- 5HhRuEAxVZAw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 13:28:36 -0700
-IronPort-SDR: RX1YExsZbu7vv6thxTlS6nm6CXxfaNx9lcGZMBwl7zWY9fWGhYLiMIZOy7gprETyEQ3qYZ6G3S
- rEaaTuW76+XQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
-   d="scan'208";a="357540319"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Mar 2020 13:28:35 -0700
-Received: from [10.125.248.60] (rsudarik-mobl.ccr.corp.intel.com [10.125.248.60])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 201CE580569;
-        Tue, 24 Mar 2020 13:28:31 -0700 (PDT)
-Subject: Re: [PATCH v8 1/3] perf x86: Infrastructure for exposing an Uncore
- unit to PMON mapping
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-References: <20200320073110.4761-1-roman.sudarikov@linux.intel.com>
- <20200320073110.4761-2-roman.sudarikov@linux.intel.com>
-From:   "Sudarikov, Roman" <roman.sudarikov@linux.intel.com>
-Message-ID: <9e26689c-3d50-6bac-909f-041745a44a22@linux.intel.com>
-Date:   Tue, 24 Mar 2020 23:28:28 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 24 Mar 2020 16:30:10 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:40268 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726673AbgCXUaJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:30:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585081807;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=oqlWAFHesN/RHI+MMNc8I7K/onEOpyLu9QGbne4wi5Y=;
+        b=D7pF3nPHO1IpZK3Oh2APCNzVHanIS2F+C+JMzE67l09luJOVtwiLCnQ5xfx3NNCbCRSI2n
+        ZEVtJmhxmEAOfUR4ZsZpvbjSj9Aem3ASI3484d3q2FI9hJ9gkmwL/W+T3STnO5NZPflfJM
+        2Acnjv2S3GP6be2wpCR03/tJloK5qFc=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-395-RTK3FzcFPOehVju9Cj7ReA-1; Tue, 24 Mar 2020 16:30:02 -0400
+X-MC-Unique: RTK3FzcFPOehVju9Cj7ReA-1
+Received: by mail-wr1-f71.google.com with SMTP id d17so9786113wrw.19
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:30:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oqlWAFHesN/RHI+MMNc8I7K/onEOpyLu9QGbne4wi5Y=;
+        b=de45LyLyOfT8HaPKXK5WjITkCzaaj/UCEDaKHCTmAXlMxPuTovBMJzkSneOtiUsCLM
+         1Ku3WBFLp2QLgd64nAPrnuJ/jlAmnuKnMYVyucVUfn4fPBdFPQ6ARVkfimtxIDYdVq7g
+         HkuII1HEWskicgENymiOcCsXM1R5ruf3rEp1lhVJ+CAd2UTC5COzRY6fK5diQ8fbhRtM
+         42sZ98ic/2a6eV+477gmGe42okBJcKzeBRqb4VHofF+XyiOm9HSCENIadRJRmVX02GZY
+         R8nksWp7d4/JYLlvesgGcNI2Flx5q4jxBM2dhDITmmpylc6Ozr1Oh4LTakVNoGkcg8oV
+         QVrQ==
+X-Gm-Message-State: ANhLgQ1rjpl3DONki+tWPTFGXbkwQ/kUEVjVrxb0mMbrywXQxGk4hP0R
+        3wgmnFRdjIhNaf2glEmN/GCbHGDjOP3sdWN9HGQKTb+m+7yrJM9mZjtE4EvbWQO4OLb9o/VY96O
+        fwnrTxKahShfgIyqjbCjZKdV8
+X-Received: by 2002:a1c:6885:: with SMTP id d127mr7753880wmc.33.1585081800469;
+        Tue, 24 Mar 2020 13:30:00 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vvIY5CA/8Fe50Ih+Aod7V43o1+7JOiD1nO06uMbkDwbr1OCRti+bQ3gJPU5pQHHiCISFfOB/g==
+X-Received: by 2002:a1c:6885:: with SMTP id d127mr7753841wmc.33.1585081800140;
+        Tue, 24 Mar 2020 13:30:00 -0700 (PDT)
+Received: from kherbst.pingu.com ([2a02:8308:b0be:6900:482c:9537:40:83ba])
+        by smtp.gmail.com with ESMTPSA id k204sm5982051wma.17.2020.03.24.13.29.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 13:29:59 -0700 (PDT)
+From:   Karol Herbst <kherbst@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Karol Herbst <kherbst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: [PATCH v8] pci: prevent putting nvidia GPUs into lower device states on certain intel bridges
+Date:   Tue, 24 Mar 2020 21:29:23 +0100
+Message-Id: <20200324202923.64625-1-kherbst@redhat.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200320073110.4761-2-roman.sudarikov@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.03.2020 10:31, roman.sudarikov@linux.intel.com wrote:
-> From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
->
-> Intel® Xeon® Scalable processor family (code name Skylake-SP) makes
-> significant changes in the integrated I/O (IIO) architecture. The new
-> solution introduces IIO stacks which are responsible for managing traffic
-> between the PCIe domain and the Mesh domain. Each IIO stack has its own
-> PMON block and can handle either DMI port, x16 PCIe root port, MCP-Link
-> or various built-in accelerators. IIO PMON blocks allow concurrent
-> monitoring of I/O flows up to 4 x4 bifurcation within each IIO stack.
->
-> Software is supposed to program required perf counters within each IIO
-> stack and gather performance data. The tricky thing here is that IIO PMON
-> reports data per IIO stack but users have no idea what IIO stacks are -
-> they only know devices which are connected to the platform.
->
-> Understanding IIO stack concept to find which IIO stack that particular
-> IO device is connected to, or to identify an IIO PMON block to program
-> for monitoring specific IIO stack assumes a lot of implicit knowledge
-> about given Intel server platform architecture.
->
-> Usage example:
->      ls /sys/devices/uncore_<type>_<pmu_idx>/die*
->
-> Each Uncore unit type, by its nature, can be mapped to its own context,
-> for example:
-> 1. CHA - each uncore_cha_<pmu_idx> is assigned to manage a distinct slice
->     of LLC capacity;
-> 2. UPI - each uncore_upi_<pmu_idx> is assigned to manage one link of Intel
->     UPI Subsystem;
-> 3. IIO - each uncore_iio_<pmu_idx> is assigned to manage one stack of the
->     IIO module;
-> 4. IMC - each uncore_imc_<pmu_idx> is assigned to manage one channel of
->     Memory Controller.
->
-> Implementation details:
-> Optional callbacks added to struct intel_uncore_type to discover and map
-> Uncore units to PMONs:
->      int (*set_mapping)(struct intel_uncore_type *type)
->      void (*cleanup_mapping)(struct intel_uncore_type *type)
->
-> Details of IIO Uncore unit mapping to IIO PMON:
-> Each IIO stack is either DMI port, x16 PCIe root port, MCP-Link or various
-> built-in accelerators. For Uncore IIO Unit type, the mapping file
-> holds bus numbers of devices, which can be monitored by that IIO PMON block
-> on each die.
->
-> Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-> Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-> Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->   arch/x86/events/intel/uncore.c | 8 ++++++++
->   arch/x86/events/intel/uncore.h | 6 ++++++
->   2 files changed, 14 insertions(+)
->
-> diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-> index 86467f85c383..fb693608c223 100644
-> --- a/arch/x86/events/intel/uncore.c
-> +++ b/arch/x86/events/intel/uncore.c
-> @@ -843,10 +843,12 @@ static int uncore_pmu_register(struct intel_uncore_pmu *pmu)
->   			.read		= uncore_pmu_event_read,
->   			.module		= THIS_MODULE,
->   			.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
-> +			.attr_update	= pmu->type->attr_update,
->   		};
->   	} else {
->   		pmu->pmu = *pmu->type->pmu;
->   		pmu->pmu.attr_groups = pmu->type->attr_groups;
-> +		pmu->pmu.attr_update = pmu->type->attr_update;
->   	}
->   
->   	if (pmu->type->num_boxes == 1) {
-> @@ -887,6 +889,9 @@ static void uncore_type_exit(struct intel_uncore_type *type)
->   	struct intel_uncore_pmu *pmu = type->pmus;
->   	int i;
->   
-> +	if (type->cleanup_mapping)
-> +		type->cleanup_mapping(type);
-> +
->   	if (pmu) {
->   		for (i = 0; i < type->num_boxes; i++, pmu++) {
->   			uncore_pmu_unregister(pmu);
-> @@ -954,6 +959,9 @@ static int __init uncore_type_init(struct intel_uncore_type *type, bool setid)
->   
->   	type->pmu_group = &uncore_pmu_attr_group;
->   
-> +	if (type->set_mapping)
-> +		type->set_mapping(type);
-> +
->   	return 0;
->   
->   err:
-> diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-> index bbfdaa720b45..d41f8874adc5 100644
-> --- a/arch/x86/events/intel/uncore.h
-> +++ b/arch/x86/events/intel/uncore.h
-> @@ -72,7 +72,13 @@ struct intel_uncore_type {
->   	struct uncore_event_desc *event_descs;
->   	struct freerunning_counters *freerunning;
->   	const struct attribute_group *attr_groups[4];
-> +	const struct attribute_group **attr_update;
->   	struct pmu *pmu; /* for custom pmu ops */
-> +	/* PMON's topologies */
-> +	u64 *topology;
-> +	/* mapping Uncore units to PMON ranges */
-> +	int (*set_mapping)(struct intel_uncore_type *type);
-> +	void (*cleanup_mapping)(struct intel_uncore_type *type);
->   };
->   
->   #define pmu_group attr_groups[0]
-Hello Peter,
-are you waiting for some further review/ack on this, or is it just in your
-pending review queue?
+Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
 
-Sorry for bothering you several times, but the feature will add value to 
-users.
+Depending on the used kernel there might be messages like those in demsg:
 
-Thanks,
-Roman
+"nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+"nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+space inaccessible)"
+followed by backtraces of kernel crashes or timeouts within nouveau.
 
+It's still unkown why this issue exists, but this is a reliable workaround
+and solves a very annoying issue for user having to choose between a
+crashing kernel or higher power consumption of their Laptops.
+
+Signed-off-by: Karol Herbst <kherbst@redhat.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Lyude Paul <lyude@redhat.com>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+Cc: Mika Westerberg <mika.westerberg@intel.com>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-pm@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: nouveau@lists.freedesktop.org
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
+---
+v2: convert to pci_dev quirk
+    put a proper technical explanation of the issue as a in-code comment
+v3: disable it only for certain combinations of intel and nvidia hardware
+v4: simplify quirk by setting flag on the GPU itself
+v5: restructure quirk to make it easier to add new IDs
+    fix whitespace issues
+    fix potential NULL pointer access
+    update the quirk documentation
+v6: move quirk into nouveau
+v7: fix typos and commit message
+v8: reset the pm_cap field to get rid of changes in pci core (thanks to
+    Bjorn for this idea)
+
+ drivers/gpu/drm/nouveau/nouveau_drm.c | 63 +++++++++++++++++++++++++++
+ drivers/gpu/drm/nouveau/nouveau_drv.h |  2 +
+ 2 files changed, 65 insertions(+)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+index 2cd83849600f..b1beed40e746 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+@@ -618,6 +618,64 @@ nouveau_drm_device_fini(struct drm_device *dev)
+ 	kfree(drm);
+ }
+ 
++/*
++ * On some Intel PCIe bridge controllers doing a
++ * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
++ * Skipping the intermediate D3hot step seems to make it work again. This is
++ * probably caused by not meeting the expectation the involved AML code has
++ * when the GPU is put into D3hot state before invoking it.
++ *
++ * This leads to various manifestations of this issue:
++ *  - AML code execution to power on the GPU hits an infinite loop (as the
++ *    code waits on device memory to change).
++ *  - kernel crashes, as all PCI reads return -1, which most code isn't able
++ *    to handle well enough.
++ *
++ * In all cases dmesg will contain at least one line like this:
++ * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
++ * followed by a lot of nouveau timeouts.
++ *
++ * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
++ * documented PCI config space register 0x248 of the Intel PCIe bridge
++ * controller (0x1901) in order to change the state of the PCIe link between
++ * the PCIe port and the GPU. There are alternative code paths using other
++ * registers, which seem to work fine (executed pre Windows 8):
++ *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
++ *  - 0xb0 bit 0x10 (link disable)
++ * Changing the conditions inside the firmware by poking into the relevant
++ * addresses does resolve the issue, but it seemed to be ACPI private memory
++ * and not any device accessible memory at all, so there is no portable way of
++ * changing the conditions.
++ * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
++ *
++ * The only systems where this behavior can be seen are hybrid graphics laptops
++ * with a secondary Nvidia Maxwell, Pascal or Turing GPU. It's unclear whether
++ * this issue only occurs in combination with listed Intel PCIe bridge
++ * controllers and the mentioned GPUs or other devices as well.
++ *
++ * documentation on the PCIe bridge controller can be found in the
++ * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
++ * Section "12 PCI Express* Controller (x16) Registers"
++ */
++
++static void quirk_broken_nv_runpm(struct pci_dev *pdev)
++{
++	struct drm_device *dev = pci_get_drvdata(pdev);
++	struct nouveau_drm *drm = nouveau_drm(dev);
++	struct pci_dev *bridge = pci_upstream_bridge(pdev);
++
++	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
++		return;
++
++	switch (bridge->device) {
++	case 0x1901:
++		drm->old_pm_cap = pdev->pm_cap;
++		pdev->pm_cap = 0;
++		NV_INFO(drm, "Disabling PCI power management to avoid bug\n");
++		break;
++	}
++}
++
+ static int nouveau_drm_probe(struct pci_dev *pdev,
+ 			     const struct pci_device_id *pent)
+ {
+@@ -699,6 +757,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+ 	if (ret)
+ 		goto fail_drm_dev_init;
+ 
++	quirk_broken_nv_runpm(pdev);
+ 	return 0;
+ 
+ fail_drm_dev_init:
+@@ -736,7 +795,11 @@ static void
+ nouveau_drm_remove(struct pci_dev *pdev)
+ {
+ 	struct drm_device *dev = pci_get_drvdata(pdev);
++	struct nouveau_drm *drm = nouveau_drm(dev);
+ 
++	/* revert our workaround */
++	if (drm->old_pm_cap)
++		pdev->pm_cap = drm->old_pm_cap;
+ 	nouveau_drm_device_remove(dev);
+ }
+ 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_drv.h b/drivers/gpu/drm/nouveau/nouveau_drv.h
+index 70f34cacc552..8104e3806499 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_drv.h
++++ b/drivers/gpu/drm/nouveau/nouveau_drv.h
+@@ -138,6 +138,8 @@ struct nouveau_drm {
+ 
+ 	struct list_head clients;
+ 
++	u8 old_pm_cap;
++
+ 	struct {
+ 		struct agp_bridge_data *bridge;
+ 		u32 base;
+-- 
+2.25.1
 
