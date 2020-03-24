@@ -2,120 +2,159 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487A3C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DB22C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18EAD2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C47F2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:38:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7Sl4XsL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K5lmbSol"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgCXOgo (ORCPT
+        id S1727681AbgCXOi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:36:44 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38313 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727507AbgCXOgn (ORCPT
+        Tue, 24 Mar 2020 10:38:56 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43458 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727464AbgCXOi4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:36:43 -0400
-Received: by mail-ot1-f68.google.com with SMTP id t28so17204252ott.5;
-        Tue, 24 Mar 2020 07:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+6SMs9HN8ojrvC2ckrrp6QggN8jhqny5rSNhL6g0zy0=;
-        b=A7Sl4XsLguqmsw36gXsfa1E9F7sla5Tdk4vBaonLFEyk/m4f2iD20AgIq7UBBA0Ry6
-         0BQymON2HkI6geWK93zhHtCTfG5xCHkPl+1XFVgsp4Z7M6xfHfcT0SnlUuMvzibLXujd
-         pJFP4BGpsvC60cohMobtQChzlcMwwpTv1MFMmBkVEBYE6jinpXH4OQPhZJTk3iEALDHX
-         xscregkJDHTd1uvQLyBGYtLgRJ6H89TyV6rbJvxzH0Nj1TNtzRMaSUtk5jGx5POVpqs1
-         +BLX0F+cvVyyKibTP4K0UxVABhzagBfVsshvsyjff16VOM39jOuZe1KabiJzle0MCzyn
-         KrlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+6SMs9HN8ojrvC2ckrrp6QggN8jhqny5rSNhL6g0zy0=;
-        b=Tl9/+iBw9EezC+8rZRtSkyGfLGO4ZPhqoXr5nFX6TPr/oSvaKxqTM5rWAPsIZFoF9o
-         tSSUvhtLiiaAd83acF1iD1bR89WuHre4Qjv6ycwj04TMkzAxreXnFko0IDs+dHcmmyjH
-         iVATsZ8ZwCWE26DxPcX17m4IPksWKpqJVevXNnXmrPLrtRaSMF331Yp3JbbeW5dVVmmf
-         PR0PzivBJruCw0d3ubkLKrwpj4oltWbpBvhjQ2FDDM1TGb0Tq3cnU+QFaX4mT+4osLVa
-         bNqWruD2NGUV/CBl2aoFIgtJVm9NmCogCmUeHDQECPbvqkodvAxZShuLtSURPqwvqZTT
-         8HYg==
-X-Gm-Message-State: ANhLgQ1OfK65wBjIOUWZlTXMjmEhW3454UgB6YWOWHHW8bV+SDEZwVQJ
-        2u913V3cE4GxWH2Bop9q2pPeLNsYmr6qAhLeQd0=
-X-Google-Smtp-Source: ADFU+vs6YOUeLgySzfbSk2Kmu7sfJbTsbskcXO/nR6vSLSbcJkpnvDFqtqM8N8JT83mJm/bKbecG49OJwWrlhlYP6SI=
-X-Received: by 2002:a4a:6841:: with SMTP id a1mr2067234oof.18.1585060602808;
- Tue, 24 Mar 2020 07:36:42 -0700 (PDT)
+        Tue, 24 Mar 2020 10:38:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585060735; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=FDugQEzqT/2M8/NQELJOUiw4x17bkM4rtTJc2+a/+ps=; b=K5lmbSolNySGQIKbaBadL1iZDNqCi7B4OFr3XKG8/LeOz57yylRHpHGmdsXQDcS55jZCnp0u
+ MsgAeDylypo1tM3FJAgdj4RQQOw427ZUWlV+ZI2KvU+ScMOtbEakAhPL/qd/iZ7KSA1bFxY7
+ 6XoxlbPApD86l8WB34e+r3kXTgU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7a1b74.7f5cf3ec85a8-smtp-out-n02;
+ Tue, 24 Mar 2020 14:38:44 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5B9AFC433BA; Tue, 24 Mar 2020 14:38:43 +0000 (UTC)
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jhugo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D45D8C433CB;
+        Tue, 24 Mar 2020 14:38:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D45D8C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v3 2/7] bus: mhi: core: Add support for reading MHI info
+ from device
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        gregkh@linuxfoundation.org, davem@davemloft.net
+Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
+        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
+ <20200324061050.14845-3-manivannan.sadhasivam@linaro.org>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <edc9fb15-67f3-9cd1-275a-d850d80e2b65@codeaurora.org>
+Date:   Tue, 24 Mar 2020 08:38:40 -0600
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-6-kpsingh@chromium.org>
- <6d45de0d-c59d-4ca7-fcc5-3965a48b5997@schaufler-ca.com> <20200324015217.GA28487@chromium.org>
-In-Reply-To: <20200324015217.GA28487@chromium.org>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Tue, 24 Mar 2020 10:37:51 -0400
-Message-ID: <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200324061050.14845-3-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 9:52 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> On 23-M=C3=A4r 18:13, Casey Schaufler wrote:
-> > On 3/23/2020 9:44 AM, KP Singh wrote:
-> > > From: KP Singh <kpsingh@google.com>
-> > >
-> > > The bpf_lsm_ nops are initialized into the LSM framework like any oth=
-er
-> > > LSM.  Some LSM hooks do not have 0 as their default return value. The
-> > > __weak symbol for these hooks is overridden by a corresponding
-> > > definition in security/bpf/hooks.c
-> > >
-> > > +   return 0;
->
-> [...]
->
-> > > +}
-> > > +
-> > > +DEFINE_LSM(bpf) =3D {
-> > > +   .name =3D "bpf",
-> > > +   .init =3D bpf_lsm_init,
-> >
-> > Have you given up on the "BPF must be last" requirement?
->
-> Yes, we dropped it for as the BPF programs require CAP_SYS_ADMIN
-> anwyays so the position ~shouldn't~ matter. (based on some of the
-> discussions we had on the BPF_MODIFY_RETURN patches).
->
-> However, This can be added later (in a separate patch) if really
-> deemed necessary.
+On 3/24/2020 12:10 AM, Manivannan Sadhasivam wrote:
+> The MHI register base has several registers used for getting the MHI
+> specific information such as version, family, major, and minor numbers
+> from the device. This information can be used by the controller drivers
+> for usecases such as applying quirks for a specific revision etc...
+> 
+> While at it, let's also rearrange the local variables
+> in mhi_register_controller().
+> 
+> Suggested-by: Hemant Kumar <hemantk@codeaurora.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   drivers/bus/mhi/core/init.c     | 19 +++++++++++++++++--
+>   drivers/bus/mhi/core/internal.h | 10 ++++++++++
+>   include/linux/mhi.h             | 17 +++++++++++++++++
+>   3 files changed, 44 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+> index eb7f556a8531..d136f6c6ca78 100644
+> --- a/drivers/bus/mhi/core/init.c
+> +++ b/drivers/bus/mhi/core/init.c
+> @@ -802,12 +802,12 @@ static int parse_config(struct mhi_controller *mhi_cntrl,
+>   int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+>   			    struct mhi_controller_config *config)
+>   {
+> -	int ret;
+> -	int i;
+>   	struct mhi_event *mhi_event;
+>   	struct mhi_chan *mhi_chan;
+>   	struct mhi_cmd *mhi_cmd;
+>   	struct mhi_device *mhi_dev;
+> +	u32 soc_info;
+> +	int ret, i;
+>   
+>   	if (!mhi_cntrl)
+>   		return -EINVAL;
+> @@ -874,6 +874,21 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+>   		mhi_cntrl->unmap_single = mhi_unmap_single_no_bb;
+>   	}
+>   
+> +	/* Read the MHI device info */
+> +	ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->regs,
+> +			   SOC_HW_VERSION_OFFS, &soc_info);
+> +	if (ret)
+> +		goto error_alloc_dev;
+> +
+> +	mhi_cntrl->family_number = (soc_info & SOC_HW_VERSION_FAM_NUM_BMSK) >>
+> +					SOC_HW_VERSION_FAM_NUM_SHFT;
+> +	mhi_cntrl->device_number = (soc_info & SOC_HW_VERSION_DEV_NUM_BMSK) >>
+> +					SOC_HW_VERSION_DEV_NUM_SHFT;
+> +	mhi_cntrl->major_version = (soc_info & SOC_HW_VERSION_MAJOR_VER_BMSK) >>
+> +					SOC_HW_VERSION_MAJOR_VER_SHFT;
+> +	mhi_cntrl->minor_version = (soc_info & SOC_HW_VERSION_MINOR_VER_BMSK) >>
+> +					SOC_HW_VERSION_MINOR_VER_SHFT;
+> +
+>   	/* Register controller with MHI bus */
+>   	mhi_dev = mhi_alloc_device(mhi_cntrl);
+>   	if (IS_ERR(mhi_dev)) {
+> diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
+> index 18066302e6e2..5deadfaa053a 100644
+> --- a/drivers/bus/mhi/core/internal.h
+> +++ b/drivers/bus/mhi/core/internal.h
+> @@ -196,6 +196,16 @@ extern struct bus_type mhi_bus_type;
+>   #define BHIE_RXVECSTATUS_STATUS_XFER_COMPL (0x02)
+>   #define BHIE_RXVECSTATUS_STATUS_ERROR (0x03)
+>   
+> +#define SOC_HW_VERSION_OFFS (0x224)
+> +#define SOC_HW_VERSION_FAM_NUM_BMSK (0xF0000000)
+> +#define SOC_HW_VERSION_FAM_NUM_SHFT (28)
+> +#define SOC_HW_VERSION_DEV_NUM_BMSK (0x0FFF0000)
+> +#define SOC_HW_VERSION_DEV_NUM_SHFT (16)
+> +#define SOC_HW_VERSION_MAJOR_VER_BMSK (0x0000FF00)
+> +#define SOC_HW_VERSION_MAJOR_VER_SHFT (8)
+> +#define SOC_HW_VERSION_MINOR_VER_BMSK (0x000000FF)
+> +#define SOC_HW_VERSION_MINOR_VER_SHFT (0)
 
-It matters for SELinux, as I previously explained.  A process that has
-CAP_SYS_ADMIN is not assumed to be able to circumvent MAC policy.
-And executing prior to SELinux allows the bpf program to access and
-potentially leak to userspace information that wouldn't be visible to
-the
-process itself. However, I thought you were handling the order issue
-by putting it last in the list of lsms?
+I'm tempted to give reviewed-by, however it occurs to me that I don't 
+see this in the MHI spec.  I'm looking at Rev E, which as far as I am 
+aware is the latest.
+
+Hemant, is this in the spec, and if so, what Rev?
+
+I'm concerned that if its not in the spec, we may have an issue with 
+some device not implementing this as expected.
+
+-- 
+Jeffrey Hugo
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
