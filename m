@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22ED1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78C4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E72D0206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCB6208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055804;
-	bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+	s=default; t=1585055810;
+	bh=OGv4NJMH6egSO3CM+oM4/EP7ikbuiFpvtEs66GSlFxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zSKtl7wGXar3fx+q0oQsbEG0r8qI6GC4N2NHF02cxKQJ7RvnT69BaMhgO3gOkBbhL
-	 DcIbj+vFYsDMdoo6/S7f7s/XROckyzzGfspRhHC0X58gi/+RUqNjdC0wOzsyLEz2WK
-	 YUs0n2XeXuoKTi/UVi+8sIn47id93G6z2N3MaPBo=
+	b=LnINfbR7UOK5kJShCcAlFqdpHb7cT0Bl55OpUTWtqp16RqKdjWwef25nXkaK7tagQ
+	 WMJXZBdlYinaopEiop2krdDdN65owgM9WBdaqkBbl1xJmo2BGrhoBMjOWh9PngMDiy
+	 8rekRBJ5lBh39ckS6PnUSyEKz2U2ov2YXWuoPmQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgCXNQm (ORCPT
+        id S1728071AbgCXNQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36232 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbgCXNQj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:39 -0400
+        id S1727755AbgCXNQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74B1E206F6;
-        Tue, 24 Mar 2020 13:16:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0DCA420775;
+        Tue, 24 Mar 2020 13:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055798;
-        bh=hcTIdJiCXvD/krcQTIT1ht5ObWgrP9GQXXZnj8Jlw7w=;
+        s=default; t=1585055806;
+        bh=OGv4NJMH6egSO3CM+oM4/EP7ikbuiFpvtEs66GSlFxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s6c1CbAMFpFEMIWQWSceNbypgkpL6/EHr9eFeDlQOD4iPDAkSuoJTzXj3gpdFL4yK
-         0MG8VjZh8tm0GoWt6Gpl8XGDVDB1S2GODF3HZ85Vcfe4jJa97rq2wJxLgM5SSabeV+
-         bJmg2h8kefyezjVeHRWrfuBXEYQvudXbdq91f50o=
+        b=DrSFie3XAyKWVovOa6ruKIm7D47K1YvwahT3gP/AAZZ0Ykj0eca7bWcDlkKho84Nw
+         ZBYAAbhDuHRzntopNoJ1RWNZMqt6xTvJGNGfBXZnHzJm3xx7LEUE/OEozz3Gn3MqCp
+         ZcaFUn3dvnWPZsdb4wSARYvc4c/cXIFZkQ0pfL34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
-        Julien Grall <jgrall@amazon.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 032/102] xenbus: req->err should be updated before req->state
-Date:   Tue, 24 Mar 2020 14:10:24 +0100
-Message-Id: <20200324130809.899629569@linuxfoundation.org>
+        stable@vger.kernel.org, Kwon Je Oh <kwonje.oh2@gmail.com>,
+        Carlo Nonato <carlo.nonato95@gmail.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 033/102] block, bfq: fix overwrite of bfq_group pointer in bfq_find_set_group()
+Date:   Tue, 24 Mar 2020 14:10:25 +0100
+Message-Id: <20200324130810.126577787@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,38 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dongli Zhang <dongli.zhang@oracle.com>
+From: Carlo Nonato <carlo.nonato95@gmail.com>
 
-[ Upstream commit 8130b9d5b5abf26f9927b487c15319a187775f34 ]
+[ Upstream commit 14afc59361976c0ba39e3a9589c3eaa43ebc7e1d ]
 
-This patch adds the barrier to guarantee that req->err is always updated
-before req->state.
+The bfq_find_set_group() function takes as input a blkcg (which represents
+a cgroup) and retrieves the corresponding bfq_group, then it updates the
+bfq internal group hierarchy (see comments inside the function for why
+this is needed) and finally it returns the bfq_group.
+In the hierarchy update cycle, the pointer holding the correct bfq_group
+that has to be returned is mistakenly used to traverse the hierarchy
+bottom to top, meaning that in each iteration it gets overwritten with the
+parent of the current group. Since the update cycle stops at root's
+children (depth = 2), the overwrite becomes a problem only if the blkcg
+describes a cgroup at a hierarchy level deeper than that (depth > 2). In
+this case the root's child that happens to be also an ancestor of the
+correct bfq_group is returned. The main consequence is that processes
+contained in a cgroup at depth greater than 2 are wrongly placed in the
+group described above by BFQ.
 
-Otherwise, read_reply() would not return ERR_PTR(req->err) but
-req->body, when process_writes()->xb_write() is failed.
+This commits fixes this problem by using a different bfq_group pointer in
+the update cycle in order to avoid the overwrite of the variable holding
+the original group reference.
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-Link: https://lore.kernel.org/r/20200303221423.21962-2-dongli.zhang@oracle.com
-Reviewed-by: Julien Grall <jgrall@amazon.com>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reported-by: Kwon Je Oh <kwonje.oh2@gmail.com>
+Signed-off-by: Carlo Nonato <carlo.nonato95@gmail.com>
+Signed-off-by: Paolo Valente <paolo.valente@linaro.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- 1 file changed, 2 insertions(+)
+ block/bfq-cgroup.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index 852ed161fc2a7..eb5151fc8efab 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -397,6 +397,8 @@ static int process_writes(void)
- 	if (state.req->state == xb_req_state_aborted)
- 		kfree(state.req);
- 	else {
-+		/* write err, then update state */
-+		virt_wmb();
- 		state.req->state = xb_req_state_got_reply;
- 		wake_up(&state.req->wq);
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index d0e36d6522649..86cd718e0380b 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -593,12 +593,13 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ 	 */
+ 	entity = &bfqg->entity;
+ 	for_each_entity(entity) {
+-		bfqg = container_of(entity, struct bfq_group, entity);
+-		if (bfqg != bfqd->root_group) {
+-			parent = bfqg_parent(bfqg);
++		struct bfq_group *curr_bfqg = container_of(entity,
++						struct bfq_group, entity);
++		if (curr_bfqg != bfqd->root_group) {
++			parent = bfqg_parent(curr_bfqg);
+ 			if (!parent)
+ 				parent = bfqd->root_group;
+-			bfq_group_set_parent(bfqg, parent);
++			bfq_group_set_parent(curr_bfqg, parent);
+ 		}
  	}
+ 
 -- 
 2.20.1
 
