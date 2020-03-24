@@ -2,128 +2,114 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F20C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5D1C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:30:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACA72076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 081752076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:30:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m46TPzI0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTM1fZIU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727354AbgCXRaB (ORCPT
+        id S1727571AbgCXRam (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:30:01 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38632 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727223AbgCXRaB (ORCPT
+        Tue, 24 Mar 2020 13:30:42 -0400
+Received: from mail-wr1-f47.google.com ([209.85.221.47]:35730 "EHLO
+        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgCXRal (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:30:01 -0400
-Received: by mail-pf1-f193.google.com with SMTP id z25so5298195pfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:30:00 -0700 (PDT)
+        Tue, 24 Mar 2020 13:30:41 -0400
+Received: by mail-wr1-f47.google.com with SMTP id d5so10225634wrn.2;
+        Tue, 24 Mar 2020 10:30:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kq+FYdniWIla4pk5nZSbH7cg3uuV8JkCybEVH1HaxnI=;
-        b=m46TPzI0nrj30YVTG7qLQejHAv7snUYYtbN2Pdjv2gzb4sBZajt9MO/hkb9Y9uEqWh
-         qa4JiXYKikVNjVFlogSQb4lcN4+OycFM6og456ZiK4VuXHyVK6vqVD2IKbLZp8L+8udE
-         g9nOq7xk0uimdDmZPVa1XV3YcU9UW6FUrEcffLo6Hs8fuCImxoDAP7YN+xrZanoeKywK
-         BwlDpHyNkycj77W9BZUyAl3PfnbNNyz+lMse/iogu/pe8JseEPhAovXxnHBUXZuRRgsT
-         rvPZQbC1wQiPwpphWmzKrmz4CdeUHnHGry/FMvkA+OdWCdXpFVwCnM2O20JyX1CiODsb
-         Juqw==
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=waYMRqT7UwmXphz4d1wXt3KJaI3s/lKvsz6/LN//g4o=;
+        b=KTM1fZIUREMzyWUUwwZOrfUsfuqM6I02SSnfl/hY5iC7Q52xTqXDqpwSAEHKivD3SB
+         QrxjpjXtkiCkOv8eptRLI9bk7cib6r1GCQqk7oGNAJJzQ1NM8HyhkmyQugza1d2jFAWc
+         YvV1Kz3yglRC4cKQ6zPp3LJBn1nzOPiCI9/CWRJGSeikGOd7H39txG6Goza/dpzaO/uR
+         zotIqSulMqlSmhksih9WkI1ybrZ3WPJ4ZgFTDQcB2MqZ3pjAB7niM/nzf6GZXWGmaMqV
+         OnBGhCOSgbRSSipqxOlWdniWKPNWuRIwiM7jfZThWkTa3Hsw4NriHAEjeBmOwDd4OlAs
+         B6cQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kq+FYdniWIla4pk5nZSbH7cg3uuV8JkCybEVH1HaxnI=;
-        b=fepIUG9yE4gIT7MWkF0DRFOZyPD74yhabYM8mPvfharAHA/nsUQRDe//Sd+LVR0q4i
-         peD9YmLbWujun9q4TdCGs3fVczbu9ubho3JtZ39CnG+/rd6qKvBAGvjGWvKMyzH6dUbc
-         FXtVXVV2IhzdrgsYlLM0uHyAWfeh19obeGHRzPmT/la+9c2QRMO3g/bkHvq6kbNqbQof
-         mwiFhbs9kgbL8hZuAP28tFKjXudOgf7G1Kxk+A8zRPElaWKVYQx4SuILTl2jIHyarLo8
-         mxiTPEYORwQT00nuQEmCX3DG+WMmJd/+dxL6juxrPxplOUI1DZmkR/Duf7WefH3gx3xa
-         J+jA==
-X-Gm-Message-State: ANhLgQ0jFFxNgJSJByFJ9tp5sjflcbS2ksB0vcIdnjh/7fHQO8Cd1NB5
-        VhOWzfprgVQlzV2GCRoHOBik+J3mXuXclzG99L2k3g==
-X-Google-Smtp-Source: ADFU+vsKpVcyMN7SHaU5E8bZ8b6YqqyPsLUiZ2gvHBO0FlZ4uEXUmmLB4IgRNlvnII9SZxMoTSrz6TwW9egAt+ohX00=
-X-Received: by 2002:a63:4e22:: with SMTP id c34mr29126500pgb.263.1585070999349;
- Tue, 24 Mar 2020 10:29:59 -0700 (PDT)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=waYMRqT7UwmXphz4d1wXt3KJaI3s/lKvsz6/LN//g4o=;
+        b=ReE5HI+yDci308E7uBJKbAHxW9937VB0AUTeNoE2rcib+2rVZ74TWa/ojiZeyTBclm
+         LYdWrdr84uRzf2NAbniFCNUbIb6E+nMsCl4KyINb4nyzEcocLcJezZaX7KvLYv2SpWKq
+         MjyxspYGpaF38WFjxzeuUC95cSGkVp4tmP5g8x7blJTfHUq0sOKAv/BGuYumhMBZU5wL
+         6w8n13nc9jE4k5+IRM8scRTOPRknENSIL8enFawdg3NKgv6dQpfDsdmK8+pzJkfa4N6/
+         BKz2yzlCflx3oOe+UpRiZG6gJ8+koxiGf5bONJgJYJtEm/9/8ZX3PFLHstEJ5T4U+png
+         Ftcw==
+X-Gm-Message-State: ANhLgQ23pj8b0ZyTidII7q7i23ww7LOE2foJceI5Fg14M76XH3u7hTh/
+        VN1owFXlYTAW2wPuaJBQ8G1nrwDB
+X-Google-Smtp-Source: ADFU+vst5PxEIUoVZSVGlAPPV2/4JWatchld2xrKpRKxU9ytzO/pyHOr3+j9/ptNROkG10jQy3u9nQ==
+X-Received: by 2002:a5d:4687:: with SMTP id u7mr31371172wrq.62.1585071038744;
+        Tue, 24 Mar 2020 10:30:38 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-35-8.net.upcbroadband.cz. [86.49.35.8])
+        by smtp.gmail.com with ESMTPSA id g2sm31042015wrs.42.2020.03.24.10.30.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 10:30:36 -0700 (PDT)
+Subject: Re: Versaclock usage and improvement question
+To:     Adam Ford <aford173@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAHCN7xLbV5BxD9PYfxNC7M64WK1nf3Y=zfeg=PqF+XgwvyZBjw@mail.gmail.com>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Message-ID: <1352fbee-c768-315e-4042-d666db3d9456@gmail.com>
+Date:   Tue, 24 Mar 2020 18:30:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200323114207.222412-1-courbet@google.com> <20200324140639.70079-1-courbet@google.com>
-In-Reply-To: <20200324140639.70079-1-courbet@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 24 Mar 2020 10:29:47 -0700
-Message-ID: <CAKwvOdm6GH4nqMkK99g5y5q0VfE9J70AdBP4C-xkxQbgJf_tzw@mail.gmail.com>
-Subject: Re: [PATCH] x86: Alias memset to __builtin_memset.
-To:     Clement Courbet <courbet@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHCN7xLbV5BxD9PYfxNC7M64WK1nf3Y=zfeg=PqF+XgwvyZBjw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 7:06 AM Clement Courbet <courbet@google.com> wrote:
->
-> Thanks for the comments. Answers below.
->
-> > This ifdef is unnecessary
-> > This needs to be within #ifndef CONFIG_FORTIFY_SOURCE
->
-> Thanks, fixed.
->
-> > shouldn't this just be done universally ?
->
-> It looks like every architecture does its own magic with memory
-> functions. I'm not very familiar with how the linux kernel is
-> organized, do you have a pointer for where this would go if enabled
-> globally ?
->
-> > Who's adding it for 64b?
-> > Any idea where it's coming from in your
-> > build? Maybe a local modification to be removed?
->
-> Actually this is from our local build configuration. Apparently this
+On 3/24/20 6:15 PM, Adam Ford wrote:
+> Marek,
 
-Not sure we should modify this for someone's downstream tree to work
-around an issue they introduced.  If you want to file a bug
-internally, I'd be happy to comment on it.
+Hi,
 
-Does __builtin_memset detect support for `rep stosb`, then patch the
-kernel to always use it or not?  The kernel is limited in that we use
--mno-sse and friends to avoid saving/restoring vector registers on
-context switch unless kernel_fpu_{begin|end}() is called, which the
-compiler doesn't insert for memcpy's.
+> I am working on a board that uses two versaclock chips using different
+> i2c buses, but it appears to the driver is hard-coding the names of
+> the clocks.  This appears to be a problem when the second instance is
+> loaded, it fails, because the clock names already exist.  I am
+> inquiring to you as how you'd prefer to see the clock names generated
+> so we can do multiple instances. I am planning on using kasprintf and
+> following a pattern similar to drivers/clk/keystone/sci-clk.c.
 
-Did you verify what this change does for other compilers?
+I never had a board with two of them indeed, sorry.
 
-> is needed to build on some architectures that redefine common
-> symbols, but the authors seemed to feel strongly that this should be
+> Secondly, our Versaclock chips are un-programmed, so we need to both
+> enable the clock signal and set the output type which means adding a
+> few device tree options.  I am curious to know if you have an opinion
+> on how the new flags should be named.
 
-Sounds like a linkage error or issue with symbol visibility; I don't
-see how -ffreestanding should have any bearing on that.
+I'd say, send an RFC patch and let's move on from there ?
+The chips I use are factory pre-programmed btw.
 
-> on for all architectures. I've reached out to the authors for an
-> extended rationale.
-> On the other hand I think that there is no reason to prevent people
-> from building with freestanding if we can easily allow them to.
+> Lastly, we're going to use the versaclock to drive multiple devices,
+> and some of them do not call the function to enable the clocks, so we
+> need some method to force the clocks on.  Is there a method to forcing
+> the clock outputs on similar to a gpio-hog holding a GPIO line in a
+> known state?
 
-I disagree.  The codegen in the kernel is very tricky to get right;
-it's somewhat an embedded system, yet provides many symbols that would
-have been provided by libc, yet it doesn't use vector operations for
-the general case.  Adding -ffreestanding to optimize one hot memset in
-one function is using a really big hammer to solve the wrong problem.
+I think something around assigned-clock DT props might help here ?
+
 -- 
-Thanks,
-~Nick Desaulniers
+Best regards,
+Marek Vasut
