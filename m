@@ -2,133 +2,247 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1813BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 175EFC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E109820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:03:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5/TSnOH"
+	by mail.kernel.org (Postfix) with ESMTP id D54E120714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:03:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgCXMDO (ORCPT
+        id S1727521AbgCXMDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:03:14 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45548 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727238AbgCXMDN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:03:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b9so7304348pls.12;
-        Tue, 24 Mar 2020 05:03:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=J2EXDFgxva5oF0426JjSTRbKqwLaE46RW/hlFLUbrrA=;
-        b=G5/TSnOHqp5DlvZeCBAifsCPJVcPcwb9Bepaavt3fg4yKA34r6/pNilltLQNEnhbcn
-         5BQ7/UWFVlePUAVM277SAwkeJJ9BO1PAPl3xa+nYtYBQziiAvJvgFyOkA9rDVvLeVwtI
-         IEfWnkwFz0fsZ3X9HCnYHGx+CLiyk+X61kZ0noAhYFHRG6vtYolDzMGP6jOT59IBvhi8
-         XSraOhsyArognYXGKQFqpzlZyburAUHq23mcrd9M4sntUkuTX4Sayx17qlk1zGauNvE5
-         0M81TYnmG0eOMpyAzCrPf9HBIgFn1+//GjuEjCYq2Eh54wQvZ5isrPm86ujp/BGNNvtS
-         eT5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=J2EXDFgxva5oF0426JjSTRbKqwLaE46RW/hlFLUbrrA=;
-        b=RJndM1W2jrtOLiV2M34Wj7iGFuhoOrT7lg7t8aqAsoZCDsyw+HE3d1fvpzmjbrvFsD
-         i37td2XlJ8KbJpr5g3sSSU8N9ColG4ZfCZK66dxwZaJsxh8kJj8+yyhaFUSfJi+UQHi0
-         7mh79fJEWUd53Kt6mheqZR9I9mj/lNwy1+Rqqni2UBPyv18xgxB2dPMEQkdjJFUHZ90j
-         wXikZ3N9inQFkwmPUay/RGNGexEI79KLJnZOQYd3oGtV6yqJAWH6x0hrcisV4W0GgqmM
-         PibOnplzRxHdGkgJS1Fn5e48srAm/2qcf1GvP6ehAki8PH30MkXMj+niHPNjQvG+TEjR
-         k69g==
-X-Gm-Message-State: ANhLgQ28QENBpWreo6o3Yu4xUBEJxy1TiwtFBcwyNnxh5A5ynJnUqndE
-        yUxKK/54t14QMb87HGZ4W8u1rPUDogLsB6mdUy9rCy+YE2I=
-X-Google-Smtp-Source: ADFU+vt4rHgVamUtya4h3lHE3q6Yop3GkBHyB2s5gDiR0Em1mTuxwPzZuqQ5a6G8Mr9p+7OsPvhIrBUPP5Fwdd0Xj68=
-X-Received: by 2002:a17:902:54f:: with SMTP id 73mr26037755plf.255.1585051391994;
- Tue, 24 Mar 2020 05:03:11 -0700 (PDT)
+        Tue, 24 Mar 2020 08:03:36 -0400
+Received: from foss.arm.com ([217.140.110.172]:33214 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727066AbgCXMDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:03:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E6CE1FB;
+        Tue, 24 Mar 2020 05:03:35 -0700 (PDT)
+Received: from [10.163.1.71] (unknown [10.163.1.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27AAE3F792;
+        Tue, 24 Mar 2020 05:03:30 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V2 2/2] arm64/mm: Enable vmem_altmap support for vmemmap
+ mappings
+To:     Robin Murphy <robin.murphy@arm.com>, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>, Yu Zhao <yuzhao@google.com>,
+        David Hildenbrand <david@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-kernel@vger.kernel.org, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org
+References: <1583331030-7335-1-git-send-email-anshuman.khandual@arm.com>
+ <1583331030-7335-3-git-send-email-anshuman.khandual@arm.com>
+ <d428e636-0f48-6738-2296-91dba8fc6404@arm.com>
+Message-ID: <57af8e0a-5e47-cf3f-19dc-ce047793cd1f@arm.com>
+Date:   Tue, 24 Mar 2020 17:33:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200323103926.21271-1-i.mikhaylov@yadro.com> <20200323103926.21271-3-i.mikhaylov@yadro.com>
- <CAHp75Ve4rejBKjG+mioRL3S7i3meyy=_4TtW1fr2aGvnVn2tBA@mail.gmail.com> <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
-In-Reply-To: <321453af40ca49839bc7b9d1c65b828841492f72.camel@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 24 Mar 2020 14:03:04 +0200
-Message-ID: <CAHp75VeHRxgKFfiqO3V+=jMB-Pqe9-1YM+0oFuuo=cjJfJa+bA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d428e636-0f48-6738-2296-91dba8fc6404@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:52 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
-> On Mon, 2020-03-23 at 14:10 +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 23, 2020 at 12:41 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
 
-...
+On 03/21/2020 01:05 AM, Robin Murphy wrote:
+> On 2020-03-04 2:10 pm, Anshuman Khandual wrote:
+>> Device memory ranges when getting hot added into ZONE_DEVICE, might require
+>> their vmemmap mapping's backing memory to be allocated from their own range
+>> instead of consuming system memory. This prevents large system memory usage
+>> for potentially large device memory ranges. Device driver communicates this
+>> request via vmem_altmap structure. Architecture needs to take this request
+>> into account while creating and tearing down vemmmap mappings.
+>>
+>> This enables vmem_altmap support in vmemmap_populate() and vmemmap_free()
+>> which includes vmemmap_populate_basepages() used for ARM64_16K_PAGES and
+>> ARM64_64K_PAGES configs.
+>>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Steve Capper <steve.capper@arm.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Yu Zhao <yuzhao@google.com>
+>> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linux-kernel@vger.kernel.org
+>>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   arch/arm64/mm/mmu.c | 71 ++++++++++++++++++++++++++++++++-------------
+>>   1 file changed, 51 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 27cb95c471eb..0e0a0ecc812e 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -727,15 +727,30 @@ int kern_addr_valid(unsigned long addr)
+>>   }
+>>     #ifdef CONFIG_MEMORY_HOTPLUG
+>> -static void free_hotplug_page_range(struct page *page, size_t size)
+>> +static void free_hotplug_page_range(struct page *page, size_t size,
+>> +                    struct vmem_altmap *altmap)
+>>   {
+>> -    WARN_ON(PageReserved(page));
+>> -    free_pages((unsigned long)page_address(page), get_order(size));
+>> +    if (altmap) {
+>> +        /*
+>> +         * Though unmap_hotplug_range() will tear down altmap based
+>> +         * vmemmap mappings at all page table levels, these mappings
+>> +         * should only have been created either at PTE or PMD level
+>> +         * with vmemmap_populate_basepages() or vmemmap_populate()
+>> +         * respectively. Unmapping requests at any other level will
+>> +         * be problematic. Drop these warnings when vmemmap mapping
+>> +         * is supported at PUD (even perhaps P4D) level.
+>> +         */
+>> +        WARN_ON((size != PAGE_SIZE) && (size != PMD_SIZE));
+> 
+> Isn't that comment equally true of the regular case? AFAICS we don't call vmemmap_alloc_block_buf() with larger than PMD_SIZE either. If the warnings are useful, shouldn't they cover both cases equally? However, given that we never warned before, and the code here appears that it would work fine anyway, *are* they really useful?
 
-> > > +static int32_t vcnl3020_init(struct vcnl3020_data *data)
-> >
-> > int32_t...
-> >
-> > > +{
-> > > +       s32 rc;
-> >
-> > ...s32?!
-> >
-> > Applies to entire code.
->
-> checkpatch.pl --strict doesn't show anything bad in it but I can change from
-> int32_t/s32 into int easily, it's not a problem for me.
+Sure, this is not something exclusively applicable for altmap based
+vmemmap mappings alone. Will drop it from here.
 
-The problem is consistency. You code should be self-consistent.
-And yes, s32 is quite unusual for (generic) returning variables.
+> 
+>> +        vmem_altmap_free(altmap, size >> PAGE_SHIFT);
+>> +    } else {
+>> +        WARN_ON(PageReserved(page));
+>> +        free_pages((unsigned long)page_address(page), get_order(size));
+>> +    }
+>>   }
+>>     static void free_hotplug_pgtable_page(struct page *page)
+>>   {
+>> -    free_hotplug_page_range(page, PAGE_SIZE);
+>> +    free_hotplug_page_range(page, PAGE_SIZE, NULL);
+>>   }
+>>     static bool pgtable_range_aligned(unsigned long start, unsigned long end,
+>> @@ -758,7 +773,8 @@ static bool pgtable_range_aligned(unsigned long start, unsigned long end,
+>>   }
+>>     static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+>> -                    unsigned long end, bool free_mapped)
+>> +                    unsigned long end, bool free_mapped,
+>> +                    struct vmem_altmap *altmap)
+>>   {
+>>       pte_t *ptep, pte;
+>>   @@ -772,12 +788,14 @@ static void unmap_hotplug_pte_range(pmd_t *pmdp, unsigned long addr,
+>>           pte_clear(&init_mm, addr, ptep);
+>>           flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>>           if (free_mapped)
+>> -            free_hotplug_page_range(pte_page(pte), PAGE_SIZE);
+>> +            free_hotplug_page_range(pte_page(pte),
+>> +                        PAGE_SIZE, altmap);
+>>       } while (addr += PAGE_SIZE, addr < end);
+>>   }
+>>     static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+>> -                    unsigned long end, bool free_mapped)
+>> +                    unsigned long end, bool free_mapped,
+>> +                    struct vmem_altmap *altmap)
+>>   {
+>>       unsigned long next;
+>>       pmd_t *pmdp, pmd;
+>> @@ -800,16 +818,17 @@ static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+>>               flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>>               if (free_mapped)
+>>                   free_hotplug_page_range(pmd_page(pmd),
+>> -                            PMD_SIZE);
+>> +                            PMD_SIZE, altmap);
+>>               continue;
+>>           }
+>>           WARN_ON(!pmd_table(pmd));
+>> -        unmap_hotplug_pte_range(pmdp, addr, next, free_mapped);
+>> +        unmap_hotplug_pte_range(pmdp, addr, next, free_mapped, altmap);
+>>       } while (addr = next, addr < end);
+>>   }
+>>     static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
+>> -                    unsigned long end, bool free_mapped)
+>> +                    unsigned long end, bool free_mapped,
+>> +                    struct vmem_altmap *altmap)
+>>   {
+>>       unsigned long next;
+>>       pud_t *pudp, pud;
+>> @@ -832,16 +851,17 @@ static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
+>>               flush_tlb_kernel_range(addr, addr + PAGE_SIZE);
+>>               if (free_mapped)
+>>                   free_hotplug_page_range(pud_page(pud),
+>> -                            PUD_SIZE);
+>> +                            PUD_SIZE, altmap);
+>>               continue;
+>>           }
+>>           WARN_ON(!pud_table(pud));
+>> -        unmap_hotplug_pmd_range(pudp, addr, next, free_mapped);
+>> +        unmap_hotplug_pmd_range(pudp, addr, next, free_mapped, altmap);
+>>       } while (addr = next, addr < end);
+>>   }
+>>     static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
+>> -                    unsigned long end, bool free_mapped)
+>> +                    unsigned long end, bool free_mapped,
+>> +                    struct vmem_altmap *altmap)
+>>   {
+>>       unsigned long next;
+>>       p4d_t *p4dp, p4d;
+>> @@ -854,16 +874,24 @@ static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
+>>               continue;
+>>             WARN_ON(!p4d_present(p4d));
+>> -        unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
+>> +        unmap_hotplug_pud_range(p4dp, addr, next, free_mapped, altmap);
+>>       } while (addr = next, addr < end);
+>>   }
+>>     static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>> -                bool free_mapped)
+>> +                bool free_mapped, struct vmem_altmap *altmap)
+>>   {
+>>       unsigned long next;
+>>       pgd_t *pgdp, pgd;
+>>   +    /*
+>> +     * vmem_altmap can only be used as backing memory in a given
+>> +     * page table mapping. In case backing memory itself is not
+>> +     * being freed, then altmap is irrelevant. Warn about this
+>> +     * inconsistency when encountered.
+>> +     */
+>> +    WARN_ON(!free_mapped && altmap);
+> 
+> Personally I find that comment a bit unclear (particularly the first sentence which just seems like a confusing tautology). Is the overall point that the altmap only matters when we're unmapping and freeing vmemmap pages (such that we free them to the right allocator)? At face value it doesn't seem to warrant a warning - it's not necessary to know which allocator owns pages that we aren't freeing, but it isn't harmful either.
 
-...
+Probably will change the comment to something like this instead.
 
-> > > +       dev_info(&client->dev, "Proximity sensor, Rev: %02x\n",
-> > > +                data->rev);
-> >
-> > Noise.
->
-> Doesn't it help to determine the presence of driver to a common user?
+        /*
+         * altmap can only be used as vmemmap mapping backing memory.
+         * In case the backing memory itself is not being freed, then
+         * altmap is just irrelevant. Warn about this inconsistency
+	 * when encountered.
+         */
 
-You have a lot of knobs to detect this. Starting from sysfs to 'initcall_debug'.
+altmap does decide which allocator, the backing pages will get freed
+into. The primary purpose here is to just warn about this invalid
+combination i.e (!free_mapped && altmap) which the function should
+never be called with.
 
-...
+> 
+> That said, however, after puzzling through the code I get the distinct feeling it would be more useful if all those "free_mapped" arguments were actually named "is_vmemmap" instead. A that point, the conceptual inconsistency would be a little more obvious (and arguably might not even need commenting).
 
-> > > +               goto out;
-> > > +
-> > > +       return rc;
-> > > +out:
-> > > +       devm_iio_device_free(&client->dev, indio_dev);
-> > > +       return rc;
-> >
-> > Managed resources are exactly for this not to be appeared in the code.
->
-> I can do something like this:
-> return devm_iio_device_register(&client->dev, indio_dev);
->
-> Would it suffice?
+'free_mapped' was a conscious decision [1] that got added during hot
+remove series V9. It avoided the name to be just vmemmap specific as
+the unmapping and freeing functions are very generic in nature.
 
-I think so, but you may double check with documentation.
+[1] https://lkml.org/lkml/2019/10/8/310
 
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> All the altmap plumbing itself looks pretty mechanical and hard to disagree with :)
+
+Okay.
+
+> 
+> Robin.
