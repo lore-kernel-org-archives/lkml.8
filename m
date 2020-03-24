@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B23C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76CEAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0372E20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ED23208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055815;
-	bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
+	s=default; t=1585055818;
+	bh=oEOJMqvdsCj6GYOHbmui3Nl1PCCd6blChJqMhhQrgQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=famljqiHvEKaJ1OwD9XQIHyaZKCMeUqK6cqufYKBztWf8xtYZnSWX73qnPPferPMy
-	 hFlSiies0Cl5avSKpyByO5gfF3DHC1IqUjf+vLNdkI8VGZ8ZdhePfscWhQGjUJEeZ1
-	 igGy/7uktmPRMqLTLbttbqVtef2WQe2js/DzowYw=
+	b=rA2i8Rbocc4p7UBC2n0yUA4LXF23J45t693mKtUyRTN96jLrqxWYgu6nmeV+nEr7J
+	 FRY2ssrlpcioPBlK8O7wiB4mt5flSQ8O5G0ke4KSSea3elxv9lUXDiQzpElWNC2VBS
+	 keU/wMApKrVB9FDRQWWXZrtIczNg4k04OM0H61cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728511AbgCXNQx (ORCPT
+        id S1727826AbgCXNQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36434 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727755AbgCXNQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:50 -0400
+        id S1728506AbgCXNQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AC4120775;
-        Tue, 24 Mar 2020 13:16:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F453208D6;
+        Tue, 24 Mar 2020 13:16:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055810;
-        bh=SrkKK2cHQEUZID7PZ8xTPnqkOQtsZ2PQBLGVpEUQFQ0=;
+        s=default; t=1585055812;
+        bh=oEOJMqvdsCj6GYOHbmui3Nl1PCCd6blChJqMhhQrgQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NwaqVWTCg56gIACuptdbwrxa7xW61Z/CzsULsjU0GnXc/XkSfDucgBi8Wlgs6zaAR
-         uG/Sy4yyrAQWVxBiuIiOKJPaqzyjn8AMrDOX/p32Mef5wp5GwpGJVgN5225WE6cN5z
-         fuYC2Ext7VkZAv19KLP33UrmkkVlZv1WlpoB3h6s=
+        b=hrRsUCIrNsKWkWSLG+p/+GnS48qOPfhsNf3gu90Ez+I/TSrJP21qfoFWRclS4pMDN
+         USUsZ+4KYi7b2k9jYY5xshawrJa7nSS37QvTfGl76XQ7vgmBGQKfZia7Yw/ENSVRws
+         YS0mVf4G7NQIyd7LYkZfRjwp6jX6hsLfedKn8WNU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/102] parse-maintainers: Mark as executable
-Date:   Tue, 24 Mar 2020 14:10:26 +0100
-Message-Id: <20200324130810.331260058@linuxfoundation.org>
+        stable@vger.kernel.org, Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Todd Kjos <tkjos@google.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 035/102] binderfs: use refcount for binder control devices too
+Date:   Tue, 24 Mar 2020 14:10:27 +0100
+Message-Id: <20200324130810.412840965@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,23 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+From: Christian Brauner <christian.brauner@ubuntu.com>
 
-[ Upstream commit 611d61f9ac99dc9e1494473fb90117a960a89dfa ]
+[ Upstream commit 211b64e4b5b6bd5fdc19cd525c2cc9a90e6b0ec9 ]
 
-This makes the script more convenient to run.
+Binderfs binder-control devices are cleaned up via binderfs_evict_inode
+too() which will use refcount_dec_and_test(). However, we missed to set
+the refcount for binderfs binder-control devices and so we underflowed
+when the binderfs instance got unmounted. Pretty obvious oversight and
+should have been part of the more general UAF fix. The good news is that
+having test cases (suprisingly) helps.
 
-Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Technically, we could detect that we're about to cleanup the
+binder-control dentry in binderfs_evict_inode() and then simply clean it
+up. But that makes the assumption that the binder driver itself will
+never make use of a binderfs binder-control device after the binderfs
+instance it belongs to has been unmounted and the superblock for it been
+destroyed. While it is unlikely to ever come to this let's be on the
+safe side. Performance-wise this also really doesn't matter since the
+binder-control device is only every really when creating the binderfs
+filesystem or creating additional binder devices. Both operations are
+pretty rare.
+
+Fixes: f0fe2c0f050d ("binder: prevent UAF for binderfs devices II")
+Link: https://lore.kernel.org/r/CA+G9fYusdfg7PMfC9Xce-xLT7NiyKSbgojpK35GOm=Pf9jXXrA@mail.gmail.com
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Todd Kjos <tkjos@google.com>
+Link: https://lore.kernel.org/r/20200311105309.1742827-1-christian.brauner@ubuntu.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/parse-maintainers.pl | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- mode change 100644 => 100755 scripts/parse-maintainers.pl
+ drivers/android/binderfs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/scripts/parse-maintainers.pl b/scripts/parse-maintainers.pl
-old mode 100644
-new mode 100755
+diff --git a/drivers/android/binderfs.c b/drivers/android/binderfs.c
+index 110e41f920c27..f303106b3362b 100644
+--- a/drivers/android/binderfs.c
++++ b/drivers/android/binderfs.c
+@@ -448,6 +448,7 @@ static int binderfs_binder_ctl_create(struct super_block *sb)
+ 	inode->i_uid = info->root_uid;
+ 	inode->i_gid = info->root_gid;
+ 
++	refcount_set(&device->ref, 1);
+ 	device->binderfs_inode = inode;
+ 	device->miscdev.minor = minor;
+ 
 -- 
 2.20.1
 
