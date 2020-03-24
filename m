@@ -2,173 +2,169 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BD9AC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581CC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFF220775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06A302076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbgCXNqd (ORCPT
+        id S1728753AbgCXNqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 24 Mar 2020 09:46:34 -0400
+Received: from orion.archlinux.org ([88.198.91.70]:36236 "EHLO
+        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727905AbgCXNqd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:46:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12187 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727498AbgCXNqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:46:21 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7822A9255E05E2122FC4;
-        Tue, 24 Mar 2020 21:46:16 +0800 (CST)
-Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
- DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 24 Mar 2020 21:46:07 +0800
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-To:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
-        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>
-CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-Subject: [RFC PATCH v4 6/6] mm: Set VM_LEVEL flags in some tlb_flush functions
-Date:   Tue, 24 Mar 2020 21:45:34 +0800
-Message-ID: <20200324134534.1570-7-yezhenyu2@huawei.com>
-X-Mailer: git-send-email 2.22.0.windows.1
-In-Reply-To: <20200324134534.1570-1-yezhenyu2@huawei.com>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+Received: from orion.archlinux.org (localhost [127.0.0.1])
+        by orion.archlinux.org (Postfix) with ESMTP id D8F0A1A620D18C;
+        Tue, 24 Mar 2020 13:46:29 +0000 (UTC)
+Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: ffy00)
+        by orion.archlinux.org (Postfix) with ESMTPSA;
+        Tue, 24 Mar 2020 13:46:29 +0000 (UTC)
+Message-ID: <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
+Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
+ connection
+From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
+To:     Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Hutterer <peter.hutterer@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Mario Limonciello <superm1@gmail.com>,
+        Richard Hughes <hughsient@gmail.com>
+In-Reply-To: <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
+References: <20200318161906.3340959-1-lains@archlinux.org>
+         <20200318192721.390630-1-lains@archlinux.org>
+         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
+Organization: Archlinux
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-A/3A7+H0RlrhmhZ/oncV"
+Date:   Tue, 24 Mar 2020 13:46:27 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+User-Agent: Evolution 3.36.0 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set VM_LEVEL flags in some tlb_flush functions.
-The relevant functions are:
 
-	tlb_flush in asm/tlb.h
-	get_clear_flush and clear_flush in mm/hugetlbpage.c
-	flush_pmd|pud_tlb_range in asm-generic/patable.h
-	do_huge_pmd_numa_page and move_huge_pmd in mm/huge_memory.c
+--=-A/3A7+H0RlrhmhZ/oncV
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
----
- arch/arm64/include/asm/tlb.h  | 12 ++++++++++++
- arch/arm64/mm/hugetlbpage.c   |  4 ++--
- include/asm-generic/pgtable.h | 16 ++++++++++++++--
- mm/huge_memory.c              |  8 +++++++-
- 4 files changed, 35 insertions(+), 5 deletions(-)
+On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
+> On Wed, 2020-03-18 at 19:27 +0000, Filipe La=C3=ADns wrote:
+> > As discussed in the mailing list:
+> >=20
+> > > Right now the hid-logitech-dj driver will export one node for each
+> > > connected device, even when the device is not connected. That
+> > > causes
+> > > some trouble because in userspace we don't have have any way to
+> > > know if
+> > > the device is connected or not, so when we try to communicate, if
+> > > the
+> > > device is disconnected it will fail.
+>=20
+> Why is it a problem that user-space communication fails? Note that
+> sending a signal without any way to fetch the state means that it's
+> always going to be racy.
 
-diff --git a/arch/arm64/include/asm/tlb.h b/arch/arm64/include/asm/tlb.h
-index b76df828e6b7..77fe942b30b6 100644
---- a/arch/arm64/include/asm/tlb.h
-+++ b/arch/arm64/include/asm/tlb.h
-@@ -27,6 +27,18 @@ static inline void tlb_flush(struct mmu_gather *tlb)
- 	bool last_level = !tlb->freed_tables;
- 	unsigned long stride = tlb_get_unmap_size(tlb);
- 
-+	/*
-+	 * mm_gather tracked which levels of the page tables
-+	 * have been cleared, we can use this info to set
-+	 * vm->vm_flags.
-+	 */
-+	if (tlb->cleared_ptes)
-+		vma.vm_flags |= VM_LEVEL_PTE;
-+	else if (tlb->cleared_pmds)
-+		vma.vm_flags |= VM_LEVEL_PMD;
-+	else if (tlb->cleared_puds)
-+		vma.vm_flags |= VM_LEVEL_PUD;
-+
- 	/*
- 	 * If we're tearing down the address space then we only care about
- 	 * invalidating the walk-cache, since the ASID allocator won't
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index bbeb6a5a6ba6..c35a1bd06bd0 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -140,7 +140,7 @@ static pte_t get_clear_flush(struct mm_struct *mm,
- 	}
- 
- 	if (valid) {
--		struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
-+		struct vm_area_struct vma = TLB_FLUSH_VMA(mm, VM_LEVEL_PTE);
- 		flush_tlb_range(&vma, saddr, addr);
- 	}
- 	return orig_pte;
-@@ -161,7 +161,7 @@ static void clear_flush(struct mm_struct *mm,
- 			     unsigned long pgsize,
- 			     unsigned long ncontig)
- {
--	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
-+	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, VM_LEVEL_PTE);
- 	unsigned long i, saddr = addr;
- 
- 	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
-index e2e2bef07dd2..391e704faf7a 100644
---- a/include/asm-generic/pgtable.h
-+++ b/include/asm-generic/pgtable.h
-@@ -1160,8 +1160,20 @@ static inline int pmd_free_pte_page(pmd_t *pmd, unsigned long addr)
-  * invalidate the entire TLB which is not desitable.
-  * e.g. see arch/arc: flush_pmd_tlb_range
-  */
--#define flush_pmd_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
--#define flush_pud_tlb_range(vma, addr, end)	flush_tlb_range(vma, addr, end)
-+#define flush_pmd_tlb_range(vma, addr, end)				\
-+	do {								\
-+		vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PTE);	\
-+		vma->vm_flags |= VM_LEVEL_PMD;				\
-+		flush_tlb_range(vma, addr, end);			\
-+	} while (0)
-+
-+#define flush_pud_tlb_range(vma, addr, end)				\
-+	do {								\
-+		vma->vm_flags &= ~(VM_LEVEL_PMD | VM_LEVEL_PTE);	\
-+		vma->vm_flags |= VM_LEVEL_PUD;				\
-+		flush_tlb_range(vma, addr, end);			\
-+	} while (0)
-+
- #else
- #define flush_pmd_tlb_range(vma, addr, end)	BUILD_BUG()
- #define flush_pud_tlb_range(vma, addr, end)	BUILD_BUG()
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 24ad53b4dfc0..9a78b8d865f0 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1646,6 +1646,8 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
- 	 * mapping or not. Hence use the tlb range variant
- 	 */
- 	if (mm_tlb_flush_pending(vma->vm_mm)) {
-+		vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PTE);
-+		vma->vm_flags |= VM_LEVEL_PMD;
- 		flush_tlb_range(vma, haddr, haddr + HPAGE_PMD_SIZE);
- 		/*
- 		 * change_huge_pmd() released the pmd lock before
-@@ -1917,8 +1919,12 @@ bool move_huge_pmd(struct vm_area_struct *vma, unsigned long old_addr,
- 		}
- 		pmd = move_soft_dirty_pmd(pmd);
- 		set_pmd_at(mm, new_addr, new_pmd, pmd);
--		if (force_flush)
-+		if (force_flush) {
-+			vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PTE);
-+			vma->vm_flags |= VM_LEVEL_PMD;
- 			flush_tlb_range(vma, old_addr, old_addr + PMD_SIZE);
-+		}
-+
- 		if (new_ptl != old_ptl)
- 			spin_unlock(new_ptl);
- 		spin_unlock(old_ptl);
--- 
-2.19.1
+It failing is not the problem. The problem is knowing when the device
+is available again. Right now the only way to do that is to listen for
+events or periodically ping it.
 
+We want to only export the HID++ hidraw node when the device is
+available but that will take a while. We will have to test and sync up
+userspace. I also want to write tests for the driver before, to make
+sure there are no regressions. We had a thread discussing this, IIRC
+you were in CC.
 
+> > The solution reached to solve this issue is to trigger an udev change
+> > event when the device connects, this way userspace can just wait on
+> > those connections instead of trying to ping the device.
+> >=20
+> > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
+> >=20
+> > ---
+> >=20
+> > v2:
+> >   - Issue udev change event on the connected hid device, not on the
+> >   receiver
+> >=20
+> > ---
+> >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
+> >  1 file changed, 6 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
+> > logitech-dj.c
+> > index 48dff5d6b605..282e57dd467d 100644
+> > --- a/drivers/hid/hid-logitech-dj.c
+> > +++ b/drivers/hid/hid-logitech-dj.c
+> > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct hid_device
+> > *hdev,
+> >  {
+> >  	struct dj_receiver_dev *djrcv_dev =3D hid_get_drvdata(hdev);
+> >  	struct dj_report *dj_report =3D (struct dj_report *) data;
+> > +	struct dj_device *dj_dev;
+> >  	unsigned long flags;
+> > =20
+> >  	/*
+> > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct hid_device
+> > *hdev,
+> > =20
+> >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
+> > =20
+> > -	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
+> > +	dj_dev =3D djrcv_dev->paired_dj_devices[dj_report->device_index];
+> > +
+> > +	if (!dj_dev) {
+> >  		/* received an event for an unknown device, bail out */
+> >  		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
+> >  		goto out;
+> > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct hid_device
+> > *hdev,
+> >  		if (dj_report-
+> > > report_params[CONNECTION_STATUS_PARAM_STATUS] =3D=3D
+> >  		    STATUS_LINKLOSS) {
+> >  			logi_dj_recv_forward_null_report(djrcv_dev,
+> > dj_report);
+> > +		} else {
+> > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
+> > KOBJ_CHANGE);
+> >  		}
+> >  		break;
+> >  	default:
+--=20
+Filipe La=C3=ADns
+
+--=-A/3A7+H0RlrhmhZ/oncV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl56Dy4ACgkQ+JPGdIFq
+qV28lQ/+NSEiN2ak+c4eI2g75OWoNEyUuXEzbh8FdlmGfAehqpKaVqNdHTyDb3rH
+S5MxkU57wrXG5rDUx//lXRAcnzHN1gw++0CNaIPyhH3tJl1+MvuKv9jWsNRYWxfu
+SQhxRmtcbsGO8eMNqSoLdK9IgsH0KWL2Fd7jK2I9dWCeGrqgyu56CL/VwjJHTSFK
+1drDDBxlLuotL5+/O9ch+2M1bsVAxXcowjZv2yUcldipq3pyLPucTSmisCMdgqrj
+VyfQuyvHUB0WeHjlx5g6cQG8iONuqsPqWMbR1EO8XWmFLDSoxI4X0j97q4Py46TM
+YSHn8FxB2C64o0QkMeC89UCqhIybUvzDMM6oQC1d2/5A9w8Elro07cBq4R5UZk/V
+Q2gino2Jl55/M/vZAAnwtoMx3BDYTaf0KLuz4ZF2pLV8V8BWqvvf78nWX1GMaiHZ
+pTTsy4KF0lvW5EJOLK3/GV0OWd+IaM7veT1iENklCk38XVYOivm3cjWtekBsh6cj
+EvK+37HihciTK6J/77JOkNu1AHrhVfPnLKPHRNjGkw7OqSCYRrtXJPnPKXvI6YVC
+bnGJpW8n7RyDfMPm8R3vuQP/z7FtJ2646x6TktfLjsV88VFOeJI3mshV6BeAJS6b
+lm4Bfda3gwWxkKAxVg4Mu+2PJ/Unz1hh8yKvv8KztPJfZT+ea/c=
+=CVnb
+-----END PGP SIGNATURE-----
+
+--=-A/3A7+H0RlrhmhZ/oncV--
