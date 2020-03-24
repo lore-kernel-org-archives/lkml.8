@@ -2,111 +2,185 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A981C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37D13C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2AED20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="qrweyHTw"
+	by mail.kernel.org (Postfix) with ESMTP id 112D52073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:24:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585031067;
+	bh=JWBbZp/FZwETgxZHD80t5s+4NDrNkBwhJtrwKMbbg3s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=czEVbf9p8F7kEf56tmhLr5/jjhp6sTxeutpjTiV/jqv5S2QmRlob2jfVZOn7lNSJK
+	 p5UhD5GoYvVioaYQ1EcyLluzBBzLl8X2uHDK30tbXYR5/0WdwzzqrQaXm/oWetOVJh
+	 YtQp8Xx5nw8uelU6FDWUJGrBpaMur5HUCdDdRB0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCXGX3 (ORCPT
+        id S1727325AbgCXGY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:23:29 -0400
-Received: from ozlabs.org ([203.11.71.1]:39887 "EHLO ozlabs.org"
+        Tue, 24 Mar 2020 02:24:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725867AbgCXGX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 02:23:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725867AbgCXGYZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 02:24:25 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48mh5T3XFyz9sNg;
-        Tue, 24 Mar 2020 17:23:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585031005;
-        bh=pyXXTSOM4rJiyzQjZhPpy8qmKgXBedErkVyMHCYOl80=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=qrweyHTwsbAvl7ERrTWZk38mrgANw/NQhKqMufsiiCAth3EoXC5Ob9kEwnV5jOedS
-         iNxbRgJ35iK0SrppQiB7CzsHb9YS/VmMB0LP27lVQMpBKe32Ohzfuj5AA+88nOksyq
-         J9Xq//SDVLs6wMYJP3Qb5i/cOPCV2OuZoJc0XIqlOIIHMuLx6bqI3UGdMXvT78cxa7
-         8VmstvqGa6jL29bJ+QHhSArN7ATzJcXc3gCHSlLY9GTWU1TjddRJfLy2GfR2ZT6bqK
-         hEi7jRWFO68/gqFSH32r1dnWgAxU1ozpsad4171Sd6ut2q7772RSPXC1paQoPNUM9b
-         6ff411U9oiBPw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, mikey@neuling.org
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v5 10/13] powerpc/ptrace: split out ADV_DEBUG_REGS related functions.
-In-Reply-To: <25a7f050-f241-6035-e778-16b1ca9928f3@c-s.fr>
-References: <cover.1582848567.git.christophe.leroy@c-s.fr> <e2bd7d275bd5933d848aad4fee3ca652a14d039b.1582848567.git.christophe.leroy@c-s.fr> <87imizdbaz.fsf@mpe.ellerman.id.au> <25a7f050-f241-6035-e778-16b1ca9928f3@c-s.fr>
-Date:   Tue, 24 Mar 2020 17:23:29 +1100
-Message-ID: <87k13axoda.fsf@mpe.ellerman.id.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id D6B9D20663;
+        Tue, 24 Mar 2020 06:24:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585031064;
+        bh=JWBbZp/FZwETgxZHD80t5s+4NDrNkBwhJtrwKMbbg3s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eK2jNhJ6cQ944Zk0r8aRAj6KRP/foNFXYue74cZLZx4Pv3PZib0FakK/jHS0q+T/d
+         BRKmtMetxRDLl6Luhg/jDu+UilJYjd0R0loy3VzxgNhljfLyglKz64W8ZGK318sML8
+         d38xT2SSaQ+tY5Nxb1sM5F2D8u5TnFNV+taC3Usk=
+Date:   Tue, 24 Mar 2020 07:24:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kelsey <skunberg.kelsey@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Bodong Wang <bodong@mellanox.com>,
+        Don Dutile <ddutile@redhat.com>, rbilovol@cisco.com
+Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with
+ DEVICE_ATTR*
+Message-ID: <20200324062422.GA1977781@kroah.com>
+References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
+ <20190815153352.86143-2-skunberg.kelsey@gmail.com>
+ <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
+ <20200314112022.GA53794@kroah.com>
+ <CAFVqi1T1Fipajca8exrzs6uQAorSZeke80LYy43aCBpT45nFdA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFVqi1T1Fipajca8exrzs6uQAorSZeke80LYy43aCBpT45nFdA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe Leroy <christophe.leroy@c-s.fr> writes:
-> On 03/20/2020 02:12 AM, Michael Ellerman wrote:
->> Christophe Leroy <christophe.leroy@c-s.fr> writes:
->>> Move ADV_DEBUG_REGS functions out of ptrace.c, into
->>> ptrace-adv.c and ptrace-noadv.c
->>>
->>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>> ---
->>> v4: Leave hw_breakpoint.h for ptrace.c
->>> ---
->>>   arch/powerpc/kernel/ptrace/Makefile       |   4 +
->>>   arch/powerpc/kernel/ptrace/ptrace-adv.c   | 468 ++++++++++++++++
->>>   arch/powerpc/kernel/ptrace/ptrace-decl.h  |   5 +
->>>   arch/powerpc/kernel/ptrace/ptrace-noadv.c | 236 ++++++++
->>>   arch/powerpc/kernel/ptrace/ptrace.c       | 650 ----------------------
->>>   5 files changed, 713 insertions(+), 650 deletions(-)
->>>   create mode 100644 arch/powerpc/kernel/ptrace/ptrace-adv.c
->>>   create mode 100644 arch/powerpc/kernel/ptrace/ptrace-noadv.c
->> 
->> This is somehow breaking the ptrace-hwbreak selftest on Power8:
->> 
->>    test: ptrace-hwbreak
->>    tags: git_version:v5.6-rc6-892-g7a285a6067d6
->>    PTRACE_SET_DEBUGREG, WO, len: 1: Ok
->>    PTRACE_SET_DEBUGREG, WO, len: 2: Ok
->>    PTRACE_SET_DEBUGREG, WO, len: 4: Ok
->>    PTRACE_SET_DEBUGREG, WO, len: 8: Ok
->>    PTRACE_SET_DEBUGREG, RO, len: 1: Ok
->>    PTRACE_SET_DEBUGREG, RO, len: 2: Ok
->>    PTRACE_SET_DEBUGREG, RO, len: 4: Ok
->>    PTRACE_SET_DEBUGREG, RO, len: 8: Ok
->>    PTRACE_SET_DEBUGREG, RW, len: 1: Ok
->>    PTRACE_SET_DEBUGREG, RW, len: 2: Ok
->>    PTRACE_SET_DEBUGREG, RW, len: 4: Ok
->>    PTRACE_SET_DEBUGREG, RW, len: 8: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RW, len: 6: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, WO, len: 6: Ok
->>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, RO, len: 6: Fail
->>    failure: ptrace-hwbreak
->> 
->> I haven't had time to work out why yet.
->> 
->
-> A (big) part of commit c3f68b0478e7 ("powerpc/watchpoint: Fix ptrace 
-> code that muck around with address/len") was lost during rebase.
->
-> I'll send a fix, up to you to squash it in or commit it as is.
+On Tue, Mar 24, 2020 at 12:10:33AM -0600, Kelsey wrote:
+> On Sat, Mar 14, 2020 at 5:20 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
+> > > On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
+> > > <skunberg.kelsey@gmail.com> wrote:
+> > > >
+> > > > Defining device attributes should be done through the helper
+> > > > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
+> > > > __ATTR* to now use its equivalent DEVICE_ATTR*.
+> > > >
+> > > > Example of old:
+> > > >
+> > > > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
+> > > >
+> > > > Example of new:
+> > > >
+> > > > static DEVICE_ATTR_RO(_name);
+> > > >
+> > > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
+> > > > ---
+> > > >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
+> > > >  1 file changed, 27 insertions(+), 32 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > > > index 965c72104150..8af7944fdccb 100644
+> > > > --- a/drivers/pci/pci-sysfs.c
+> > > > +++ b/drivers/pci/pci-sysfs.c
+> > > > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
+> > > >         }
+> > > >         return count;
+> > > >  }
+> > > > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> > > > -                                                       (S_IWUSR|S_IWGRP),
+> > > > -                                                       NULL, dev_rescan_store);
+> > > > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
+> > > >
+> > > >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> > > >                             const char *buf, size_t count)
+> > > > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+> > > >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
+> > > >         return count;
+> > > >  }
+> > > > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
+> > > > -                                                       (S_IWUSR|S_IWGRP),
+> > > > -                                                       NULL, remove_store);
+> > > > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
+> > > > +                                 remove_store);
+> > > >
+> > > >  static ssize_t dev_bus_rescan_store(struct device *dev,
+> > > >                                     struct device_attribute *attr,
+> > > > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
+> > > >         }
+> > > >         return count;
+> > > >  }
+> > > > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
+> > > > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
+> > >
+> > > This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
+> > > There is also mismatch now between real functionality and documentation
+> > > Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
+> > > descriptions.
+> > >
+> > > Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
+> > >
+> > > Here is a comparison between two stable kernels (with and without this
+> > > patch series):
+> > >
+> > > v5.4
+> > > # find /sys -name '*rescan'
+> > > /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
+> > > /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
+> > > /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
+> > > /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
+> > > /sys/bus/pci/rescan
+> > >
+> > > v4.19
+> > > # find /sys -name '*rescan'
+> > > /sys/devices/pci0000:00/0000:00:01.2/rescan
+> > > /sys/devices/pci0000:00/0000:00:01.0/rescan
+> > > /sys/devices/pci0000:00/0000:00:04.0/rescan
+> > > /sys/devices/pci0000:00/0000:00:00.0/rescan
+> > > /sys/devices/pci0000:00/pci_bus/0000:00/rescan
+> > > /sys/devices/pci0000:00/0000:00:01.3/rescan
+> > > /sys/devices/pci0000:00/0000:00:03.0/rescan
+> > > /sys/devices/pci0000:00/0000:00:01.1/rescan
+> > > /sys/devices/pci0000:00/0000:00:02.0/rescan
+> > > /sys/devices/pci0000:00/0000:00:05.0/rescan
+> > > /sys/bus/pci/rescan
+> > >
+> > > Do we maintain this kind of API as non-changeable?
+> >
+> > Yeah, that's a bug and should be fixed, sorry for missing that on
+> > review.
+> >
+> > Kelsey, can you fix this up?
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> I'd be happy to help get this fixed up.
+> 
+> Would it be proper to go back to using DEVICE_ATTR() for 'bus_rescan'
+> and 'dev_rescan' in order to change their names back to 'rescan'?
 
-Thanks.
+Yes.
 
-cheers
+thanks,
+
+greg k-h
