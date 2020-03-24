@@ -2,156 +2,132 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7EAC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 809F7C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74279208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:05:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAB320870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BD55ubdc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgCXXFP convert rfc822-to-8bit (ORCPT
+        id S1727448AbgCXXH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:05:15 -0400
-Received: from mail-oln040092253093.outbound.protection.outlook.com ([40.92.253.93]:32448
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727325AbgCXXFP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:05:15 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PhqZUqf9+ViUpamxqPqPZroUzKclyR31XC4LFLH2I/z9/Dt2OxY2mHbzJ3qvWeumQuojafQLM5b5ekXfkbgUC64UOUEu+61YcCHnaazvnza+f7kPC9HnbJnFNSintmh5Wat3x46pFHc1RAy2JPa+zRV6nOrm4SqwTuVldNAwGGdLWXI8sZdEihFI4G4CGPAP3v9mSa12c+Ybc2REQ7c5X7EZcitgphOYm/uIMAWaE1F13tN83jd9s5xNI5YEiFxstd0+13XauOrgxKHq3BlHQUuaevNBYKKYPDziAun308WmoEWwkQ9JLyMLDLOmpEYRU1rbyKnuIXkFMRC+alL59w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xg38HIpnr0+pqwe77pS9TbisE45hNcmn2LcbZmRzg1k=;
- b=HKPg5koSxKTXE1NfOvG9csRw+e+UbntMk6FJK2UW44LEeniHxWbhu8gmvwYlLlfSu0V+aXMPqeaY7IJ4w9hTwlN7n4xyR9r57zRYJJNbToB4iDXjMXIzBHSbC6Pzp2LRJ3Xu+xsTM/kjGQ6bqZRE9w93EX1TPsffL8DNPb2U/ZtUOiF6Ie1CItbp9AHlMUfg2PQ5bZv1go7NHJHZuwHpkqMqzzU9FASTbIa/I+hwqRm2f4RiLwc4NdneI+N4PURV6OKTAEiODy//PxjUBZ75q4LtQDvJcQk9wF248lCdUUbxpVOoMQ9Cnwaxgy/omIAyJl6Pvzpvu0dWNFVCUC8XMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT052.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebc::33) by
- HK2APC01HT138.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::466)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.17; Tue, 24 Mar
- 2020 23:05:08 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.53) by
- HK2APC01FT052.mail.protection.outlook.com (10.152.248.244) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Tue, 24 Mar 2020 23:05:08 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::1ddc:43b7:a639:8184]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::1ddc:43b7:a639:8184%9]) with mapi id 15.20.2835.023; Tue, 24 Mar 2020
- 23:05:08 +0000
-Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by SYBPR01CA0125.ausprd01.prod.outlook.com (2603:10c6:10:5::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.17 via Frontend Transport; Tue, 24 Mar 2020 23:05:05 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] nvmem: core: use is_bin_visible for permissions
-Thread-Topic: [PATCH 3/3] nvmem: core: use is_bin_visible for permissions
-Thread-Index: AQHWAf/vktu3KaBaqESPDuw2qu8YI6hYXUiA
-Date:   Tue, 24 Mar 2020 23:05:07 +0000
-Message-ID: <PSXP216MB04380BBC9B7488DEC47ACB6A80F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <20200324171600.15606-1-srinivas.kandagatla@linaro.org>
- <20200324171600.15606-4-srinivas.kandagatla@linaro.org>
-In-Reply-To: <20200324171600.15606-4-srinivas.kandagatla@linaro.org>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0125.ausprd01.prod.outlook.com
- (2603:10c6:10:5::17) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:6D93BEE9EF95FDD75F1AAE980FBC42F91DA2DF375118E2842B804CC9D483F8D5;UpperCasedChecksum:9FFDE8ED225BCF8A9DE0A9A0C2E79CB141D839E70EA6D5F473FC9E358022B600;SizeAsReceived:7857;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [bsQOyyMCmwJRRSICar1jsaAigu5GB39yeea4vnN6y522H3gx7oRm4cvYxyC9CQYq]
-x-microsoft-original-message-id: <20200324230459.GA2372@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 10ef63d0-f433-4f44-2bd0-08d7d047cb6a
-x-ms-traffictypediagnostic: HK2APC01HT138:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0NhCOWAcPlYcJjtCRpLlILKmVmfePvfjep5OQCuFZLx40+NbH3IU/av7IQ1lArSfOLR5GNALogwX3ul57N+KZMVSomJnhGwL0PhRWJ8YJr1oty9jHyB884AxUgEKvxY1Kl4yn01CgcxyLKSPqylDbhCDJ4LIEfUsfEMBhsz44fxrNGT7KuzVPH8QXAJywh08
-x-ms-exchange-antispam-messagedata: PXy851lvXXJkh1bcFI0adP2X5sIEy426EQWh+I1jBO/HsPGJBwmdmPFNyADp+O3/brbu0AgnHR0mNlMbnUcYr7d/Tqfp+aQmk0015O8XfylZAZiSnvXxfI+kGtOXcTPJV2CR4MxjbaGqM/W7bwpHASWzsEqCD+eee4SqMD7lX5/yGXxXS/bgF8V8fsHdod/z7lX4SEdiicWg1JsjunA1kA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4858EECB40EBC4428222026CFE25EAD5@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Tue, 24 Mar 2020 19:07:57 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43758 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727070AbgCXXH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 19:07:57 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so190260pgb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 16:07:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hZYGrrYHl0NkyIgc2uGWToFLNVXOPMpm5ALW355x8l8=;
+        b=BD55ubdcQFGlrkHGIItP7aQDYlQQqN7BWHznAV/BjGLMmkbrJluW3YXOG3HL/kyDw3
+         42/9FZDOe8ljg+1CRL8AXZrMCy3hHzGKeh/6wZnm1iCU/d6Aup3GFDglcGpiGZQja3QM
+         Urwx0W7yYX5sK3oS2wzmYSIY/u5xoQbapUf/A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=hZYGrrYHl0NkyIgc2uGWToFLNVXOPMpm5ALW355x8l8=;
+        b=deMXV7kJb47gQnHv3r22en6InlxzGwpe9d7M2shui3o2fJMK+UwO553PZIMPzZBvx6
+         zo+lIdjIo9SMVdVOQZk3Rvq/UicCPyTu2pNUhoztz9hhnYuj3AbFJ2iF81LINHNYcSdD
+         VW5wSq7mLwXaBcH9f0TpC8PrtQsgN00i9eEgFCa+eoqFtYZOaed7nwm5qOavMh9zmITe
+         zYimsk629TT6iKrPVa9dSG+7DHAUEioO8xf0wT+KSaoFaWjjWKa4XAoNeEBZItEeKAur
+         Cp9nz4tDXB6OQTKgN7FANdNcviZlIPSuCJqExoeFdb9eopah2TFCqNbdn3QOhECnojN5
+         1imw==
+X-Gm-Message-State: ANhLgQ2TvylJyzHxXIWBCflJRTCJXyy89zD1gFOfrE6VJzRVu9cU4EJQ
+        4MUIf7wmvMBEiMsoe2WXKEQkZg==
+X-Google-Smtp-Source: ADFU+vticqY9doh2mTEaDYaNe3t5j0AxJERCJeuUe+VbDwiLI2y3AIoOf4ls11Z+6Qtp0zkgNcLtEg==
+X-Received: by 2002:a62:1894:: with SMTP id 142mr151739pfy.27.1585091275699;
+        Tue, 24 Mar 2020 16:07:55 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 11sm16908017pfz.91.2020.03.24.16.07.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 16:07:54 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 16:07:53 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/5] Optionally randomize kernel stack offset each
+ syscall
+Message-ID: <202003241604.7269C810B@keescook>
+References: <20200324203231.64324-1-keescook@chromium.org>
+ <CAG48ez3yYkMdxEEW6sJzBC5BZSbzEZKnpWzco32p-TJx7y_srg@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10ef63d0-f433-4f44-2bd0-08d7d047cb6a
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 23:05:08.0018
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT138
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez3yYkMdxEEW6sJzBC5BZSbzEZKnpWzco32p-TJx7y_srg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:16:00PM +0000, Srinivas Kandagatla wrote:
-> By using is_bin_visible callback to set permissions will remove a large list
-> of attribute groups. These group permissions can be dynamically derived in
-> the callback.
-> 
-> Suggested-by: Greg KH <gregkh@linuxfoundation.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/nvmem/nvmem-sysfs.c | 74 +++++++++----------------------------
->  1 file changed, 18 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> index 8759c4470012..1ff1801048f6 100644
-> --- a/drivers/nvmem/nvmem-sysfs.c
-> +++ b/drivers/nvmem/nvmem-sysfs.c
-> @@ -103,6 +103,17 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
->  
->  	return count;
->  }
-> +static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
-> +					 struct bin_attribute *attr, int i)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> +
-> +	if (nvmem->root_only)
-> +		return nvmem->read_only ? 0400 : 0600;
-> +
-> +	return nvmem->read_only ? 0444 : 0644;
-> +}
-Looks like I did a pretty good job as I arrived at a similar result 
-independently. Even added root_only to nvmem_device. You beat me to it. 
-:)
+[-enrico, who is bouncing]
 
->  const struct attribute_group **nvmem_sysfs_get_groups(
->  					struct nvmem_device *nvmem,
->  					const struct nvmem_config *config)
->  {
-> -	if (config->root_only)
-> -		return nvmem->read_only ?
-> -			nvmem_ro_root_dev_groups :
-> -			nvmem_rw_root_dev_groups;
-> -
-> -	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
-> +	return nvmem_dev_groups;
->  }
-I was wondering if we can export nvmem_dev_group instead of this 
-nvmem_sysfs_get_groups() to fetch it.
-
-Also, we need some logic in nvmem_register() to abort if bad combination 
-is given (i.e. root_only set but no reg_read), as returning 0 in 
-is_bin_visible callback does not abort. I can do that in my patch if you 
-want.
-
-Regards,
-Nicholas
->  
->  /*
-> -- 
-> 2.21.0
+On Tue, Mar 24, 2020 at 10:28:35PM +0100, Jann Horn wrote:
+> On Tue, Mar 24, 2020 at 9:32 PM Kees Cook <keescook@chromium.org> wrote:
+> > This is a continuation and refactoring of Elena's earlier effort to add
+> > kernel stack base offset randomization. In the time since the previous
+> > discussions, two attacks[1][2] were made public that depended on stack
+> > determinism, so we're no longer in the position of "this is a good idea
+> > but we have no examples of attacks". :)
+> [...]
+> > [1] https://a13xp0p0v.github.io/2020/02/15/CVE-2019-18683.html
 > 
+> This one only starts using the stack's location after having parsed
+> it out of dmesg (which in any environment that wants to provide a
+> reasonable level of security really ought to be restricted to root),
+> right? If you give people read access to dmesg, they can leak all
+> sorts of pointers; not just the stack pointer, but also whatever else
+> happens to be in the registers at that point - which is likely to give
+> the attacker more ways to place controlled data at a known location.
+> See e.g. <https://googleprojectzero.blogspot.com/2018/09/a-cache-invalidation-bug-in-linux.html>,
+> which leaks the pointer to a BPF map out of dmesg.
+
+It was mentioned that it would re-use the base across syscalls, so this
+defense would have frustrated it.
+
+More to my point was that there still are attacks using a deterministic
+stack as part of the exploit chain. We have a low-cost way to make that
+go away.
+
+> Also, are you sure that it isn't possible to make the syscall that
+> leaked its stack pointer never return to userspace (via ptrace or
+> SIGSTOP or something like that), and therefore never realign its
+> stack, while keeping some controlled data present on the syscall's
+> stack?
+> 
+> > [2] https://repositorio-aberto.up.pt/bitstream/10216/125357/2/374717.pdf
+> 
+> That's a moderately large document; which specific part are you referencing?
+
+IIRC, section 3.3 discusses using the stack for CFI bypass, though
+thinking about it again, it may have been targeting pt_regs. I'll
+double check and remove this reference if that's the case.
+
+But, as I mention, this is proactive and I'd like to stop yet more
+things from being able to depend on the stack location.
+
+-- 
+Kees Cook
