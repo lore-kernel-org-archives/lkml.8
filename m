@@ -2,288 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D435C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477E2C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EE8C207FF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:52:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585054334;
-	bh=yiJiCplyetImMUpA/4dn6rnwR1n9+aLiTW02u+iDiaM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B8kK2mNR1jhM4Omyi5znLPmTlNCovu1X63RSy9IMPY9yU+MnhqmTUVqn2RY6WQNTs
-	 Xnd15b9OOdfpD1eIjfVvMjBI6djpiB0aSZOhZGFlnvJ4n4hlYcmfdexVWhWXKqtDaH
-	 o2pM6L1jOEQwOCNHugv9q/q7cvyI31pRYqYMh6Yw=
+	by mail.kernel.org (Postfix) with ESMTP id 1FEA7207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:52:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JYE86fRG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgCXMwN (ORCPT
+        id S1727570AbgCXMwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:52:13 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:33876 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727225AbgCXMwM (ORCPT
+        Tue, 24 Mar 2020 08:52:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51008 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727171AbgCXMwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:52:12 -0400
-Received: by mail-ot1-f68.google.com with SMTP id j16so16877792otl.1;
-        Tue, 24 Mar 2020 05:52:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1y7q29ccSBq8K446tAqeOEfuaRdM468XCRlcAOC6f8Y=;
-        b=bME7GtCR/fVKvtFQaSl6gjJpQrIRbGmh5t6oGeVA4kFxXqLQqr46uD1sONBg2xaVVQ
-         6c95wXsXFZviv0Z5pQNH7Y4n4/5sblkbYjVMSUFx+4Sco0KRa0P50SaO8b80yO3W6zJm
-         HaWNQg5Kjqtj7dtO2gOMcyLQ0Y46LCMgkJTpUsP7/B6E6xYrM0lZEiRdFnzecyw7tnGu
-         8VkR4j8/BNYsva2le+TQf6PoNnVFfTQkRLa/RA2/uW+6ySgTm4qhAszwltm25+/+lcgj
-         rhi8MaAKLhoRxWMWGbu67lojNfi9Uc4YyOTeWLFNI/w8LO4BobOt2AHF9/Oe12gigRm8
-         9YzQ==
-X-Gm-Message-State: ANhLgQ2g8jY5AKRcSPbxqT4+kc0abdGmqHuQx9t+dcS3G4ktDqDmNHbe
-        Y8gJGtu9Q3XP7rJQuW13m+yOtECL1ta+hHOkZMQ=
-X-Google-Smtp-Source: ADFU+vvTYb56pkOHejgFGwL15FFbXIlho+pXCfLh9iNwjPXmWdXUyZjIq1MNiCZ7ErxeufaVq24f7/P6CX2ZFBOt5yY=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr20698264otm.167.1585054331459;
- Tue, 24 Mar 2020 05:52:11 -0700 (PDT)
+        Tue, 24 Mar 2020 08:52:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qXAOLPt6QGHGhV5Hqcq/R5T4WdGX89hi6VL4VBFKtIY=; b=JYE86fRGIIRdzgudSJPdWXJB8Z
+        FGDb720oq6FVEmYZqrkDUCGECxfXvnx0FdSJ/BTcbFFh5wwOCohkvCw2aKl+PfIxQGd9KA8WC/31n
+        esyYbjIj7AnpQHow/MuDpnpseXPaHK4gGHzTJn/QeHR5QqLFuurbaeSWj8sPMxDno1nEQzsVAQjCB
+        Adoxs6VgEKKNJoaigrIFxBRo2Vtwg8yNpP+BZq43lRCHnNLHmiFpZmQqjEjR2TTqVzw31m2XSnR+b
+        U3NR/3RJimW0TD6XYe0TiK5pgNgitc31JialV+LoIeGm5aVNMNHRFvSBbGN/P0KbC3hihHCwvitZq
+        QTV17nlQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGj2p-0004Hn-Cy; Tue, 24 Mar 2020 12:52:35 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3B82C300235;
+        Tue, 24 Mar 2020 13:52:33 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 017F429B1EAD8; Tue, 24 Mar 2020 13:52:32 +0100 (CET)
+Date:   Tue, 24 Mar 2020 13:52:32 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     jpoimboe@redhat.com,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Raphael Gault <raphael.gault@arm.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] objtool: Documentation: document UACCESS warnings
+Message-ID: <20200324125232.GP20696@hirez.programming.kicks-ass.net>
+References: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
+ <20200324001321.39562-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 24 Mar 2020 13:52:00 +0100
-Message-ID: <CAJZ5v0hQ2vRE8QAWfxwN1auQd5bQS_ROd6do1bMt8GtLtRypRQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] driver core: Break infinite loop when deferred
- probe can't be satisfied
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Ferry Toth <fntoth@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324001321.39562-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:20 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> Consider the following scenario.
->
-> The main driver of USB OTG controller (dwc3-pci), which has the following
-> functional dependencies on certain platform:
-> - ULPI (tusb1210)
-> - extcon (tested with extcon-intel-mrfld)
->
-> Note, that first driver, tusb1210, is available at the moment of
-> dwc3-pci probing, while extcon-intel-mrfld is built as a module and
-> won't appear till user space does something about it.
->
-> This is depicted by kernel configuration excerpt:
->
->         CONFIG_PHY_TUSB1210=y
->         CONFIG_USB_DWC3=y
->         CONFIG_USB_DWC3_ULPI=y
->         CONFIG_USB_DWC3_DUAL_ROLE=y
->         CONFIG_USB_DWC3_PCI=y
->         CONFIG_EXTCON_INTEL_MRFLD=m
->
-> In the Buildroot environment the modules are probed by alphabetical ordering
-> of their modaliases. The latter comes to the case when USB OTG driver will be
-> probed first followed by extcon one.
->
-> So, if the platform anticipates extcon device to be appeared, in the above case
-> we will get deferred probe of USB OTG, because of ordering.
->
-> Since current implementation, done by the commit 58b116bce136 ("drivercore:
-> deferral race condition fix") counts the amount of triggered deferred probe,
-> we never advance the situation -- the change makes it to be an infinite loop.
->
-> ---8<---8<---
->
-> [   22.187127] driver_deferred_probe_trigger <<< 1
->
-> ...here is the late initcall triggers deferred probe...
->
-> [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
->
-> ...dwc3.0.auto is the only device in the deferred list...
->
-> [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
->
-> ...the counter before mutex is unlocked is kept the same...
->
-> [   22.205663] platform dwc3.0.auto: Retrying from deferred list
->
-> ...mutes has been unlocked, we try to re-probe the driver...
->
-> [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
-> [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
-> [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
-> [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
-> [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
-> [   22.263723] driver_deferred_probe_trigger <<< 2
->
-> ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
->
-> [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
-> [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
->
-> ...but extcon driver is still missing...
->
-> [   22.283174] platform dwc3.0.auto: Added to deferred list
-> [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
->
-> ...and since we had a successful probe, we got counter mismatch...
->
-> [   22.297490] driver_deferred_probe_trigger <<< 3
-> [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
->
-> ...at the end we have a new counter and loop repeats again, see 22.198727...
->
-> ---8<---8<---
->
-> Revert of the commit helps, but it is probably not helpful for the initially
-> found regression. Artem Bityutskiy suggested to use counter of the successful
-> probes instead. This fixes above mentioned case and shouldn't prevent driver
-> to reprobe deferred ones.
->
-> Fixes: 58b116bce136 ("drivercore: deferral race condition fix")
-> Suggested-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-> Cc: Grant Likely grant.likely@arm.com
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Cc: Felipe Balbi <balbi@kernel.org>
-> Cc: Andrzej Hajda <a.hajda@samsung.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Tested-by: Ferry Toth <fntoth@gmail.com>
+On Mon, Mar 23, 2020 at 05:13:20PM -0700, Nick Desaulniers wrote:
+> Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
+>   call to memset() with UACCESS enabled
+> 
+> Document how to fix these for future travelers.
+> 
+> Link: https://github.com/ClangBuiltLinux/linux/issues/876
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
-> v2: picked up tags, update Grant's email (Peter)
->  drivers/base/dd.c | 39 +++++++++++++++++++++------------------
->  1 file changed, 21 insertions(+), 18 deletions(-)
->
-> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-> index b25bcab2a26b..43720beb5300 100644
-> --- a/drivers/base/dd.c
-> +++ b/drivers/base/dd.c
-> @@ -53,7 +53,6 @@
->  static DEFINE_MUTEX(deferred_probe_mutex);
->  static LIST_HEAD(deferred_probe_pending_list);
->  static LIST_HEAD(deferred_probe_active_list);
-> -static atomic_t deferred_trigger_count = ATOMIC_INIT(0);
->  static struct dentry *deferred_devices;
->  static bool initcalls_done;
->
-> @@ -147,17 +146,6 @@ static bool driver_deferred_probe_enable = false;
->   * This functions moves all devices from the pending list to the active
->   * list and schedules the deferred probe workqueue to process them.  It
->   * should be called anytime a driver is successfully bound to a device.
-> - *
-> - * Note, there is a race condition in multi-threaded probe. In the case where
-> - * more than one device is probing at the same time, it is possible for one
-> - * probe to complete successfully while another is about to defer. If the second
-> - * depends on the first, then it will get put on the pending list after the
-> - * trigger event has already occurred and will be stuck there.
-> - *
-> - * The atomic 'deferred_trigger_count' is used to determine if a successful
-> - * trigger has occurred in the midst of probing a driver. If the trigger count
-> - * changes in the midst of a probe, then deferred processing should be triggered
-> - * again.
->   */
->  static void driver_deferred_probe_trigger(void)
->  {
-> @@ -170,7 +158,6 @@ static void driver_deferred_probe_trigger(void)
->          * into the active list so they can be retried by the workqueue
->          */
->         mutex_lock(&deferred_probe_mutex);
-> -       atomic_inc(&deferred_trigger_count);
->         list_splice_tail_init(&deferred_probe_pending_list,
->                               &deferred_probe_active_list);
->         mutex_unlock(&deferred_probe_mutex);
-> @@ -350,6 +337,19 @@ static void __exit deferred_probe_exit(void)
->  }
->  __exitcall(deferred_probe_exit);
->
-> +/*
-> + * Note, there is a race condition in multi-threaded probe. In the case where
-> + * more than one device is probing at the same time, it is possible for one
-> + * probe to complete successfully while another is about to defer. If the second
-> + * depends on the first, then it will get put on the pending list after the
-> + * trigger event has already occurred and will be stuck there.
-> + *
-> + * The atomic 'probe_okay' is used to determine if a successful probe has
-> + * occurred in the midst of probing another driver. If the count changes in
-> + * the midst of a probe, then deferred processing should be triggered again.
-> + */
-> +static atomic_t probe_okay = ATOMIC_INIT(0);
+>  .../Documentation/stack-validation.txt        | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
+> index de094670050b..156fee13ba02 100644
+> --- a/tools/objtool/Documentation/stack-validation.txt
+> +++ b/tools/objtool/Documentation/stack-validation.txt
+> @@ -289,6 +289,26 @@ they mean, and suggestions for how to fix them.
+>        might be corrupt due to a gcc bug.  For more details, see:
+>        https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
+>  
+> +9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
 > +
->  /**
->   * device_is_bound() - Check if device is bound to a driver
->   * @dev: device to check
-> @@ -375,6 +375,7 @@ static void driver_bound(struct device *dev)
->         pr_debug("driver: '%s': %s: bound to device '%s'\n", dev->driver->name,
->                  __func__, dev_name(dev));
->
-> +       atomic_inc(&probe_okay);
->         klist_add_tail(&dev->p->knode_driver, &dev->driver->p->klist_devices);
->         device_links_driver_bound(dev);
->
-> @@ -481,18 +482,18 @@ static atomic_t probe_count = ATOMIC_INIT(0);
->  static DECLARE_WAIT_QUEUE_HEAD(probe_waitqueue);
->
->  static void driver_deferred_probe_add_trigger(struct device *dev,
-> -                                             int local_trigger_count)
-> +                                             int local_probe_okay_count)
->  {
->         driver_deferred_probe_add(dev);
->         /* Did a trigger occur while probing? Need to re-trigger if yes */
-> -       if (local_trigger_count != atomic_read(&deferred_trigger_count))
-> +       if (local_probe_okay_count != atomic_read(&probe_okay))
->                 driver_deferred_probe_trigger();
->  }
->
->  static int really_probe(struct device *dev, struct device_driver *drv)
->  {
->         int ret = -EPROBE_DEFER;
-> -       int local_trigger_count = atomic_read(&deferred_trigger_count);
-> +       int local_probe_okay_count = atomic_read(&probe_okay);
->         bool test_remove = IS_ENABLED(CONFIG_DEBUG_TEST_DRIVER_REMOVE) &&
->                            !drv->suppress_bind_attrs;
->
-> @@ -509,7 +510,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->
->         ret = device_links_check_suppliers(dev);
->         if (ret == -EPROBE_DEFER)
-> -               driver_deferred_probe_add_trigger(dev, local_trigger_count);
-> +               driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
->         if (ret)
->                 return ret;
->
-> @@ -619,7 +620,7 @@ static int really_probe(struct device *dev, struct device_driver *drv)
->         case -EPROBE_DEFER:
->                 /* Driver requested deferred probing */
->                 dev_dbg(dev, "Driver %s requests probe deferral\n", drv->name);
-> -               driver_deferred_probe_add_trigger(dev, local_trigger_count);
-> +               driver_deferred_probe_add_trigger(dev, local_probe_okay_count);
->                 break;
->         case -ENODEV:
->         case -ENXIO:
-> @@ -1148,6 +1149,8 @@ static void __device_release_driver(struct device *dev, struct device *parent)
->                 dev_pm_set_driver_flags(dev, 0);
->
->                 klist_remove(&dev->p->knode_driver);
-> +               atomic_dec(&probe_okay);
+> +   This means that an unexpected call to a non-whitelisted function exists
+> +   outside of arch-specific guards.
+> +   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
+> +   ARM: PAN: uaccess_enable()/uaccess_enable()
 > +
+> +   These functions should called to denote a minimal critical section around
+> +   access to __user variables. See also: https://lwn.net/Articles/517475/
+> +
+> +   The intention of the warning is to prevent calls to funcB() from eventually
+> +   calling schedule(), potentially leaking the AC flags state, and not
+> +   restoring them correctly.
+> +
+> +   To fix, either:
+> +   1) add the correct guards before and after calls to low level functions like
+> +      __get_user_size()/__put_user_size().
+> +   2) add funcB to uaccess_safe_builtin whitelist in tools/objtool/check.c, if
+> +      funcB obviously does not call schedule().
 
-Why is this needed?
+There's sadly nothing obvious about 2); __fentry__ is enough to end up
+in schedule() through preempt_enable().
 
->                 device_pm_check_callbacks(dev);
->                 if (dev->bus)
->                         blocking_notifier_call_chain(&dev->bus->p->bus_notifier,
-> --
+So any function that has function tracing on (mostly everything) is
+already disqualified.
