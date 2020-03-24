@@ -2,89 +2,101 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61A68C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D0BC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3843820658
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB5D120658
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="tilrUvK9"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="6XdVZySd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCXMSB (ORCPT
+        id S1727324AbgCXMUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:18:01 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:38083 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727241AbgCXMSB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:18:01 -0400
-Received: by mail-lj1-f193.google.com with SMTP id w1so18296585ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 05:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1SPUCMMR/pnomJcGWLTMgKFX0vHSGUAZoz9GUYMTj4o=;
-        b=tilrUvK9V7AIYx6emcjcWpLXFQEyHa+05bdQDIoIywZX2y3SMoEqBFiAybQqeaoQmH
-         qCW38SL4fJ5VBAOb8iFlk///0sNWC25UhpYQQWKRgBijygrHu0xvBAtqsphh+EUTl/O2
-         G/N7sSiUT0spzki5rmzIRfzFDkF3rhztgtSZFIbBY7oBrWXTwy66j+A3LVnCQDsi7qDk
-         /Mt7MYFlctk0gdfk6O3vSL+Tj6CY4O0eXlyiZi2ju9Ktl4TK6O0hsWQBgPzPB8PW2grU
-         HFeLO7sow8tEfwRFWJ+cSErDCMq4U85TpHZyFV3YvgQJyUfiAMty/XMOrODGeLxAgSoU
-         xXgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1SPUCMMR/pnomJcGWLTMgKFX0vHSGUAZoz9GUYMTj4o=;
-        b=KWEh1UGKz2dR4WeS/GufxAn35kxb3bGUpxy7AXnvwtecOTZrWiM8ZGbU1keiqBEgzv
-         2tR0iPMopzVV7LdksphCIGtgdgFSiKSacTuBoz84/fVVuJ1s06YINm2wv1vvf2uB48R8
-         8dI8Y/QBkV0xKAUM7kW2a/XWw6og9dOEjPoUqF57TjyrTWmWc2wFTQRqpTTO9CciyhL3
-         pO/csgJgqwwEaP8+m+9RSG58RwNZJnKfTMCtWAiGC7XTyTUK5Ih1K1oUI0cQ6DB19cJC
-         VUEhXFr5Yh0f8U71C13eLW1Gb2a13nkXhJOZT7wF6NpJfFnaBFWiJmx1Z6e0GJnf+m2K
-         +pWA==
-X-Gm-Message-State: ANhLgQ1S/nEgtiHNcJMzuEucRMk8G/sdzmGYU1RQgnHsAoZwL15ePgle
-        mBsGitJ536X+vpRbwCm2z7Z7kw==
-X-Google-Smtp-Source: ADFU+vv7lKNVww4QN95L6mxFqLdHghRsIBPHCaknhAn/jJAnLJ98SKxvbprs0oZ3hACQ1WILAjzmhw==
-X-Received: by 2002:a2e:9e16:: with SMTP id e22mr17842543ljk.220.1585052278511;
-        Tue, 24 Mar 2020 05:17:58 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id f28sm2195911lfh.10.2020.03.24.05.17.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 05:17:57 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id A56051012C3; Tue, 24 Mar 2020 15:17:58 +0300 (+03)
-Date:   Tue, 24 Mar 2020 15:17:58 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Hui Zhu <teawater@gmail.com>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        akpm@linux-foundation.org, hughd@google.com,
-        yang.shi@linux.alibaba.com, dan.j.williams@intel.com,
-        aneesh.kumar@linux.ibm.com, sean.j.christopherson@intel.com,
-        thellstrom@vmware.com, guro@fb.com, shakeelb@google.com,
-        chris@chrisdown.name, tj@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, Hui Zhu <teawaterz@linux.alibaba.com>
-Subject: Re: [PATCH] mm, memcg: Add memory.transparent_hugepage_disabled
-Message-ID: <20200324121758.paxxthsi2f4hngfa@box>
-References: <1585045916-27339-1-git-send-email-teawater@gmail.com>
+        Tue, 24 Mar 2020 08:20:23 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54156 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727161AbgCXMUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:20:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=pXWFCcdJO8akl4rGuYz9ZIQj1bJiMdcrPKoInwmnqv0=; b=6XdVZySdOeqUJwBUZiP1uu6hSJ
+        RNqKrZKoX1H5ErMOy/+4NEuUpXD3WEHZgxinaQR0j0mBwW8WqzyYKSP1FDFYhSmT6ocWBEc7vLvJe
+        XOhUsnq1Qbx92j8YMcbi5OH556mcZ2mwtYRZ2q1LgrFhWh3IN5yY14foEMd/m2J6lDkg=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jGiXZ-0001TW-SD; Tue, 24 Mar 2020 13:20:17 +0100
+Date:   Tue, 24 Mar 2020 13:20:17 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH pinctrl REGRESSION] Revert "pinctrl: mvebu: armada-37xx:
+ use use platform api"
+Message-ID: <20200324122017.GR3819@lunn.ch>
+References: <20200324004413.14355-1-marek.behun@nic.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1585045916-27339-1-git-send-email-teawater@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200324004413.14355-1-marek.behun@nic.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 06:31:56PM +0800, Hui Zhu wrote:
-> /sys/kernel/mm/transparent_hugepage/enabled is the only interface to
-> control if the application can use THP in system level.
+On Tue, Mar 24, 2020 at 01:44:13AM +0100, Marek Behún wrote:
+> This reverts commit 06e26b75f5e613b400116fdb7ff6206a681ab271.
+> 
+> This commit caused a regression on Armada 37xx. The pinctrl driver says
+>   armada-37xx-pinctrl d0013800.pinctrl: invalid or no IRQ
+>   armada-37xx-pinctrl d0018800.pinctrl: invalid or no IRQ
+> and afterwards other drivers cannot use GPIOs by this driver as IRQs.
+> 
+> Fixes: 06e26b75f5e6 ("pinctrl: mvebu: armada-37xx: use use platform...")
+> Signed-off-by: Marek Behún <marek.behun@nic.cz>
+> Cc: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> index 32f12a388b3c..5f125bd6279d 100644
+> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/pinctrl/pinconf-generic.h>
+>  #include <linux/pinctrl/pinconf.h>
+>  #include <linux/pinctrl/pinctrl.h>
+> @@ -741,14 +742,7 @@ static int armada_37xx_irqchip_register(struct platform_device *pdev,
+>  		return ret;
+>  	}
+>  
+> -	nr_irq_parent = platform_irq_count(pdev);
 
-No. We have prctl(PR_SET_THP_DISABLE) too.
+Hi Marek
 
--- 
- Kirill A. Shutemov
+Could you determine the value of nr_irq_parent(). Is it -EPROBE_DEFER?
+This patch has removed the handling of that.
+
+> -	if (nr_irq_parent < 0) {
+> -		if (nr_irq_parent != -EPROBE_DEFER)
+> -			dev_err(dev, "Couldn't determine irq count: %pe\n",
+> -				ERR_PTR(nr_irq_parent));
+> -		return nr_irq_parent;
+> -	}
+
+Thanks
+	Andrew
