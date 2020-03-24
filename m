@@ -7,40 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BB3C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47FBC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55C8B20A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B3120A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgCXJRK (ORCPT
+        id S1727810AbgCXJSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:17:10 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44059 "EHLO
+        Tue, 24 Mar 2020 05:18:04 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44104 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727715AbgCXJRD (ORCPT
+        with ESMTP id S1727780AbgCXJRK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:17:03 -0400
+        Tue, 24 Mar 2020 05:17:10 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfgC-0008Bp-5I; Tue, 24 Mar 2020 10:17:00 +0100
+        id 1jGfgJ-0008IF-Qb; Tue, 24 Mar 2020 10:17:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id AB0C91C0451;
-        Tue, 24 Mar 2020 10:16:48 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:48 -0000
-From:   "tip-bot2 for Amol Grover" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C0DD71C04CC;
+        Tue, 24 Mar 2020 10:16:53 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:53 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rculist: Add brackets around cond argument in
- __list_check_rcu macro
-Cc:     Amol Grover <frextrite@gmail.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu: Add WRITE_ONCE() to rcu_node ->qsmaskinitnext
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504140839.28353.7116236861803686306.tip-bot2@tip-bot2>
+Message-ID: <158504141345.28353.14339563259231069682.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,46 +53,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     4dfd5cd83dc4458049c7f6eb9c4f361acc4239ea
-Gitweb:        https://git.kernel.org/tip/4dfd5cd83dc4458049c7f6eb9c4f361acc4239ea
-Author:        Amol Grover <frextrite@gmail.com>
-AuthorDate:    Sat, 18 Jan 2020 22:24:18 +05:30
+Commit-ID:     105abf82b0a62664edabcd4c5b4d9414c74ef399
+Gitweb:        https://git.kernel.org/tip/105abf82b0a62664edabcd4c5b4d9414c74ef399
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Fri, 03 Jan 2020 15:44:23 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 15:58:23 -08:00
+CommitterDate: Thu, 20 Feb 2020 15:58:22 -08:00
 
-rculist: Add brackets around cond argument in __list_check_rcu macro
+rcu: Add WRITE_ONCE() to rcu_node ->qsmaskinitnext
 
-Passing a complex lockdep condition to __list_check_rcu results
-in false positive lockdep splat due to incorrect expression
-evaluation.
+The rcu_state structure's ->qsmaskinitnext field is read locklessly,
+so this commit adds the WRITE_ONCE() to an update in order to provide
+proper documentation and READ_ONCE()/WRITE_ONCE() pairing.
 
-For example, a lockdep check condition `cond1 || cond2` is
-evaluated as `!cond1 || cond2 && !rcu_read_lock_any_held()`
-which, according to operator precedence, evaluates to
-`!cond1 || (cond2 && !rcu_read_lock_any_held())`.
-This would result in a lockdep splat when cond1 is false
-and cond2 is true which is logically incorrect.
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely for systems not doing incessant CPU-hotplug
+operations.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- include/linux/rculist.h | 4 ++--
+ kernel/rcu/tree.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/rculist.h b/include/linux/rculist.h
-index 9f313e4..8214cdc 100644
---- a/include/linux/rculist.h
-+++ b/include/linux/rculist.h
-@@ -60,9 +60,9 @@ static inline void INIT_LIST_HEAD_RCU(struct list_head *list)
- #define __list_check_rcu(dummy, cond, extra...)				\
- 	({								\
- 	check_arg_count_one(extra);					\
--	RCU_LOCKDEP_WARN(!cond && !rcu_read_lock_any_held(),		\
-+	RCU_LOCKDEP_WARN(!(cond) && !rcu_read_lock_any_held(),		\
- 			 "RCU-list traversed in non-reader section!");	\
--	 })
-+	})
- #else
- #define __list_check_rcu(dummy, cond, extra...)				\
- 	({ check_arg_count_one(extra); })
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 9443909..346321a 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3379,7 +3379,7 @@ void rcu_cpu_starting(unsigned int cpu)
+ 	rnp = rdp->mynode;
+ 	mask = rdp->grpmask;
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
+-	rnp->qsmaskinitnext |= mask;
++	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext | mask);
+ 	oldmask = rnp->expmaskinitnext;
+ 	rnp->expmaskinitnext |= mask;
+ 	oldmask ^= rnp->expmaskinitnext;
+@@ -3432,7 +3432,7 @@ void rcu_report_dead(unsigned int cpu)
+ 		rcu_report_qs_rnp(mask, rnp, rnp->gp_seq, flags);
+ 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+ 	}
+-	rnp->qsmaskinitnext &= ~mask;
++	WRITE_ONCE(rnp->qsmaskinitnext, rnp->qsmaskinitnext & ~mask);
+ 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+ 	raw_spin_unlock(&rcu_state.ofl_lock);
+ 
