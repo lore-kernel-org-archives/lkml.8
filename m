@@ -2,54 +2,60 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF44C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 977D1C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0D32080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716E42145D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585064242;
+	bh=kCyXQDXBIacIOUUlvhRJP7/5AucaMFFeuDD1X4ZYGzU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Q4aeVbuIictN4fVRQ89A0pb7Grd5bEoJZFgbbAprtv2e44nFerdN0JHXlu/Po3VBQ
+	 DqkTIEbXDkPkzwZBbQmigDr5jhOVrwrZXBgVYAp1tA5ccmSb/MOOTkqrmofVxvY5Sq
+	 25PVquHbCs3jJnNrp7WeorRHrgkbCCt5sbdZI/oo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgCXPhR (ORCPT
+        id S1728559AbgCXPhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:37:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40198 "EHLO mga05.intel.com"
+        Tue, 24 Mar 2020 11:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728502AbgCXPhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:37:14 -0400
-IronPort-SDR: WPyC0Du9Hnh7fNXWF29CLNN7SHTTXeR7Vcyo+TwlQF2OjxU9J1GNRR9kzdbDjqpJ/RkFiKX0Lv
- hTpyNNYWz10A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:37:14 -0700
-IronPort-SDR: Z3bZaKdqfunIyJk74jB0FrpvptjSnU2+HOWLUfYCXXFuh1UV3+2PEqolDTZCLHfRvYRvF7YMfh
- XQsjcPNts3Kw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="393319690"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 08:37:10 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
+        id S1728461AbgCXPhL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:11 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABAE920788;
+        Tue, 24 Mar 2020 15:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585064230;
+        bh=kCyXQDXBIacIOUUlvhRJP7/5AucaMFFeuDD1X4ZYGzU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GrgxtSjO4ZBVgDGYO3uktGvMiyQriu3pRSakNzRBQWUfKNtpnF7oU0G8scgd12GVg
+         A3FpQschv588Hn7cxGwCHRRLAkzViGpNxQzO0scK0UflIVu19AJaokpPr3RpHjk5aH
+         ArP86APbCECHDZzC7+xj2K9YPxpHKirHDN8CeVkc=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v6 2/8] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
-Date:   Tue, 24 Mar 2020 23:18:53 +0800
-Message-Id: <20200324151859.31068-3-xiaoyao.li@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: [RFC PATCH 08/21] Revert "list: Use WRITE_ONCE() when initializing list_head structures"
+Date:   Tue, 24 Mar 2020 15:36:30 +0000
+Message-Id: <20200324153643.15527-9-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200324151859.31068-1-xiaoyao.li@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
+In-Reply-To: <20200324153643.15527-1-will@kernel.org>
+References: <20200324153643.15527-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,62 +63,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a context switch from a task that is detecting split locks
-to one that is not (or vice versa) we need to update the TEST_CTRL
-MSR. Currently this is done with the common sequence:
-	read the MSR
-	flip the bit
-	write the MSR
-in order to avoid changing the value of any reserved bits in the MSR.
+This reverts commit 2f073848c3cc8aff2655ab7c46d8c0de90cf4e50.
 
-Cache unused and reserved bits of TEST_CTRL MSR with SPLIT_LOCK_DETECT
-bit cleared during initialization, so we can avoid an expensive RDMSR
-instruction during context switch.
+There is no need to use WRITE_ONCE() to initialise a non-RCU 'list_head'.
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Originally-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Paul E. McKenney <paulmck@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/x86/kernel/cpu/intel.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ include/linux/list.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index a0a7d0ec170a..553b5855c32b 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -45,6 +45,7 @@ enum split_lock_detect_state {
-  * split lock detect, unless there is a command line override.
+diff --git a/include/linux/list.h b/include/linux/list.h
+index c7331c259792..b86a3f9465d4 100644
+--- a/include/linux/list.h
++++ b/include/linux/list.h
+@@ -32,7 +32,7 @@
   */
- static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
-+static u64 msr_test_ctrl_cache __ro_after_init;
- 
- /*
-  * Processors which have self-snooping capability can handle conflicting
-@@ -1037,6 +1038,8 @@ static void __init split_lock_setup(void)
- 		break;
- 	}
- 
-+	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
-+
- 	if (!split_lock_verify_msr(true)) {
- 		pr_info("MSR access failed: Disabled\n");
- 		return;
-@@ -1053,14 +1056,10 @@ static void __init split_lock_setup(void)
-  */
- static void sld_update_msr(bool on)
+ static inline void INIT_LIST_HEAD(struct list_head *list)
  {
--	u64 test_ctrl_val;
--
--	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
-+	u64 test_ctrl_val = msr_test_ctrl_cache;
- 
- 	if (on)
- 		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
--	else
--		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
- 
- 	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+-	WRITE_ONCE(list->next, list);
++	list->next = list;
+ 	list->prev = list;
  }
+ 
 -- 
 2.20.1
 
