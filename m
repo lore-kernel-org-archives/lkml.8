@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 003E4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7EAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AF220775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B08208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:20:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056035;
-	bh=gFYnGMRQ2z2WDGa1Ce7kJVmXByTCRC8DYYrHILf9p74=;
+	s=default; t=1585056039;
+	bh=0TNe39U/n3LLxJ2voepxX+iI1yVqAXFhRSuLS/oi794=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jQ/HLIYhtjaw9/ckQNkMbhDF2Asaq+hMBMRGVMSgH6PPysMUccmm4e9YRA2eDusK4
-	 AQdKPvAIFKNlKBwVK7V0MLh1V5SpSme/lPGtusK6QfNtaMPupNvcgUqF8T7SpEqHaL
-	 XVG/+hMJ5/qGWUgfi1/LV8kcIt19UDOUPYWjod2U=
+	b=arA50k0y4Lk4w7G8LTDntMr1jITrMHXXXHepekqJntPkeGpajPhtWFlHlyRo7LSop
+	 AzziEknLsRdD+poPrTWQiMftqDqMDGfRbXFycXf84wL29omM0TfPMGGYd8HOSeC+iY
+	 BTojd3zir2MGuG8cVdv5QajgcEhZ3ZmLSeqnShlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728732AbgCXNUe (ORCPT
+        id S1728948AbgCXNUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:20:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41886 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:20:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727931AbgCXNUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:20:32 -0400
+        id S1727931AbgCXNUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:20:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 698F820870;
-        Tue, 24 Mar 2020 13:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8639206F6;
+        Tue, 24 Mar 2020 13:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056031;
-        bh=gFYnGMRQ2z2WDGa1Ce7kJVmXByTCRC8DYYrHILf9p74=;
+        s=default; t=1585056035;
+        bh=0TNe39U/n3LLxJ2voepxX+iI1yVqAXFhRSuLS/oi794=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=psVW2tbbIx3zAG5iPARopgWhqEtu0tlJnWgn52/PNVSLk5v/g6s54bE970F3Cgfg/
-         9EXdDemGVJnjqW7M6ekjYdyY7L7nFIRB88zHS+PV1waWgrwS0Dwem+NivKxjhcoFL/
-         HpuM2TQIkxdVlm9KwziC49dONnZrWuQESMjjGViI=
+        b=zOQjYC5lZS7bVzVJbhQdDvPgHjoBKtYV9HZnsBoGeYHG0BKvQwNNYFQceLXmEoAi6
+         Ess/ghMWrP77f4ccnwZRRM7E1hVo9yaBBSWtIRQ5tf0pMkTlVBi8etpCYDo6o6XRcZ
+         cZM5Pd2xAykYxuFaZsO0ulChdTJ9TvfnHQ/XXBMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.4 083/102] stm class: sys-t: Fix the use of time_after()
-Date:   Tue, 24 Mar 2020 14:11:15 +0100
-Message-Id: <20200324130814.961676824@linuxfoundation.org>
+        stable@vger.kernel.org, Chunguang Xu <brookxu@tencent.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 084/102] memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
+Date:   Tue, 24 Mar 2020 14:11:16 +0100
+Message-Id: <20200324130815.057687859@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -60,46 +64,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Chunguang Xu <brookxu@tencent.com>
 
-commit 283f87c0d5d32b4a5c22636adc559bca82196ed3 upstream.
+commit 7d36665a5886c27ca4c4d0afd3ecc50b400f3587 upstream.
 
-The operands of time_after() are in a wrong order in both instances in
-the sys-t driver. Fix that.
+An eventfd monitors multiple memory thresholds of the cgroup, closes them,
+the kernel deletes all events related to this eventfd.  Before all events
+are deleted, another eventfd monitors the memory threshold of this cgroup,
+leading to a crash:
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: 39f10239df75 ("stm class: p_sys-t: Add support for CLOCKSYNC packets")
-Fixes: d69d5e83110f ("stm class: Add MIPI SyS-T protocol support")
-Cc: stable@vger.kernel.org # v4.20+
-Link: https://lore.kernel.org/r/20200317062215.15598-3-alexander.shishkin@linux.intel.com
+  BUG: kernel NULL pointer dereference, address: 0000000000000004
+  #PF: supervisor write access in kernel mode
+  #PF: error_code(0x0002) - not-present page
+  PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
+  Oops: 0002 [#1] SMP PTI
+  CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
+  Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
+  Workqueue: events memcg_event_remove
+  RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
+  RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
+  RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
+  RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
+  RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
+  R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
+  R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
+  FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
+  Call Trace:
+    memcg_event_remove+0x32/0x90
+    process_one_work+0x172/0x380
+    worker_thread+0x49/0x3f0
+    kthread+0xf8/0x130
+    ret_from_fork+0x35/0x40
+  CR2: 0000000000000004
+
+We can reproduce this problem in the following ways:
+
+1. We create a new cgroup subdirectory and a new eventfd, and then we
+   monitor multiple memory thresholds of the cgroup through this eventfd.
+
+2.  closing this eventfd, and __mem_cgroup_usage_unregister_event ()
+   will be called multiple times to delete all events related to this
+   eventfd.
+
+The first time __mem_cgroup_usage_unregister_event() is called, the
+kernel will clear all items related to this eventfd in thresholds->
+primary.
+
+Since there is currently only one eventfd, thresholds-> primary becomes
+empty, so the kernel will set thresholds-> primary and hresholds-> spare
+to NULL.  If at this time, the user creates a new eventfd and monitor
+the memory threshold of this cgroup, kernel will re-initialize
+thresholds-> primary.
+
+Then when __mem_cgroup_usage_unregister_event () is called for the
+second time, because thresholds-> primary is not empty, the system will
+access thresholds-> spare, but thresholds-> spare is NULL, which will
+trigger a crash.
+
+In general, the longer it takes to delete all events related to this
+eventfd, the easier it is to trigger this problem.
+
+The solution is to check whether the thresholds associated with the
+eventfd has been cleared when deleting the event.  If so, we do nothing.
+
+[akpm@linux-foundation.org: fix comment, per Kirill]
+Fixes: 907860ed381a ("cgroups: make cftype.unregister_event() void-returning")
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/stm/p_sys-t.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/memcontrol.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/hwtracing/stm/p_sys-t.c
-+++ b/drivers/hwtracing/stm/p_sys-t.c
-@@ -238,7 +238,7 @@ static struct configfs_attribute *sys_t_
- static inline bool sys_t_need_ts(struct sys_t_output *op)
- {
- 	if (op->node.ts_interval &&
--	    time_after(op->ts_jiffies + op->node.ts_interval, jiffies)) {
-+	    time_after(jiffies, op->ts_jiffies + op->node.ts_interval)) {
- 		op->ts_jiffies = jiffies;
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4151,7 +4151,7 @@ static void __mem_cgroup_usage_unregiste
+ 	struct mem_cgroup_thresholds *thresholds;
+ 	struct mem_cgroup_threshold_ary *new;
+ 	unsigned long usage;
+-	int i, j, size;
++	int i, j, size, entries;
  
- 		return true;
-@@ -250,8 +250,8 @@ static inline bool sys_t_need_ts(struct
- static bool sys_t_need_clock_sync(struct sys_t_output *op)
- {
- 	if (op->node.clocksync_interval &&
--	    time_after(op->clocksync_jiffies + op->node.clocksync_interval,
--		       jiffies)) {
-+	    time_after(jiffies,
-+		       op->clocksync_jiffies + op->node.clocksync_interval)) {
- 		op->clocksync_jiffies = jiffies;
+ 	mutex_lock(&memcg->thresholds_lock);
  
- 		return true;
+@@ -4171,14 +4171,20 @@ static void __mem_cgroup_usage_unregiste
+ 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
+ 
+ 	/* Calculate new number of threshold */
+-	size = 0;
++	size = entries = 0;
+ 	for (i = 0; i < thresholds->primary->size; i++) {
+ 		if (thresholds->primary->entries[i].eventfd != eventfd)
+ 			size++;
++		else
++			entries++;
+ 	}
+ 
+ 	new = thresholds->spare;
+ 
++	/* If no items related to eventfd have been cleared, nothing to do */
++	if (!entries)
++		goto unlock;
++
+ 	/* Set thresholds array to NULL if we don't have thresholds */
+ 	if (!size) {
+ 		kfree(new);
 
 
