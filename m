@@ -2,91 +2,137 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9664C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E03C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 774DE208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 903FD208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:07:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wb7Zbg7U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727216AbgCXNHc (ORCPT
+        id S1727383AbgCXNHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:07:32 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39125 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbgCXNHc (ORCPT
+        Tue, 24 Mar 2020 09:07:37 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:36079 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726190AbgCXNHh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:07:32 -0400
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jGjHB-0004Ch-2C; Tue, 24 Mar 2020 13:07:25 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     ajayg@nvidia.com
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-i2c@vger.kernel.org (open list:I2C CONTROLLER DRIVER FOR NVIDIA
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] i2c: nvidia-gpu: Handle timeout correctly in gpu_i2c_check_status()
-Date:   Tue, 24 Mar 2020 21:07:12 +0800
-Message-Id: <20200324130712.12289-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 24 Mar 2020 09:07:37 -0400
+Received: by mail-pg1-f193.google.com with SMTP id j29so2117052pgl.3;
+        Tue, 24 Mar 2020 06:07:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sTwltg2N6YMOLJ87lW3KLzzpZfAMS4VGR4PUGWKJtjs=;
+        b=Wb7Zbg7UGrRrgZFPdlYC1ch4BgkPYpVGF/M0Xt87ToqiueJqMJ69TOFRvg+bOpv870
+         dCauePH0HhQTW0u0DGu9c5cOL2o3NF9EiyHn/oBzkIoM1lS5EXAVp4dMPtyrCHHeIu/9
+         nIH6z2w74Td39D+aDrCF2oNk6P3O2U9FuV3fUqhx0lgcCMw7RUyjOtdUntbJLGR3xK/a
+         7M3W3ihhnJ9/ZbiPb/Zj9p2fqAhLjATgwGuXtyX7vsaX4NH/xNkeJv+eg58O6Pwh2NG0
+         W+Gz91NTdDOoBgMc0IPOzJtsnyPlpAs3Kd5bx44xK3EvvfnuvdLauYmX8yx8oIarO0d8
+         TRoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sTwltg2N6YMOLJ87lW3KLzzpZfAMS4VGR4PUGWKJtjs=;
+        b=XJWQNFnoeoyns3G3wkVlNeOtCVpHLzMzvBIPNl2D5yUg5xyZ8cVN1a0W734b1oo4Dj
+         nA0WruJpdtRyqwpkCoj1plynHLAvj3You9+/qfI6xc99v7YN/I+CWFiqZPozwsipQHy4
+         UlhbRibLoG8+IrwN+q+c4Z5PZMUaTs6Qz2mx9yMbEcYoi2fV6JN2RIkmkvXLehmijYjH
+         GK0vaZ6Yk4+ly/kldD5QqRfaDjyQDUG9ho+c1ah3NLQ/wyzfi8D9Jrtv+kbchRDjmGhv
+         DUQ0HtgDoWlnN//s8prbFdVkGScVeY9/dH1BIGeJEGiK83ilubmDZKGQS22/DBy42BCa
+         vPwQ==
+X-Gm-Message-State: ANhLgQ10VupJQIShjwPuAos6wFiaavzDIH5E+mNDp/UsS1pbNTk2eosj
+        UlfIy7q9JYRBjFENy2q7XYE=
+X-Google-Smtp-Source: ADFU+vv91w7BtZdoyOUeLQX9gDkdPoNU/CR9SW0F1k3K0pOU9dp3ovg/gTTmoxkf3QB5u7b+1o+H2A==
+X-Received: by 2002:a63:9043:: with SMTP id a64mr27708163pge.308.1585055256115;
+        Tue, 24 Mar 2020 06:07:36 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id x3sm15570734pfp.167.2020.03.24.06.07.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 06:07:35 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 06:07:33 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Yangbo Lu <yangbo.lu@nxp.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Message-ID: <20200324130733.GA18149@localhost>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-7-yangbo.lu@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320103726.32559-7-yangbo.lu@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nvidia card may come with a "phantom" UCSI device, and its driver gets
-stuck in probe routine, prevents any system PM operations like suspend.
+On Fri, Mar 20, 2020 at 06:37:26PM +0800, Yangbo Lu wrote:
+> +static int ocelot_ptp_enable(struct ptp_clock_info *ptp,
+> +			     struct ptp_clock_request *rq, int on)
+> +{
+> +	struct ocelot *ocelot = container_of(ptp, struct ocelot, ptp_info);
+> +	enum ocelot_ptp_pins ptp_pin;
+> +	struct timespec64 ts;
+> +	unsigned long flags;
+> +	int pin = -1;
+> +	u32 val;
+> +	s64 ns;
+> +
+> +	switch (rq->type) {
+> +	case PTP_CLK_REQ_PEROUT:
+> +		/* Reject requests with unsupported flags */
+> +		if (rq->perout.flags)
+> +			return -EOPNOTSUPP;
+> +
+> +		/*
+> +		 * TODO: support disabling function
+> +		 * When ptp_disable_pinfunc() is to disable function,
+> +		 * it has already held pincfg_mux.
+> +		 * However ptp_find_pin() in .enable() called also needs
+> +		 * to hold pincfg_mux.
+> +		 * This causes dead lock. So, just return for function
+> +		 * disabling, and this needs fix-up.
 
-When the target time equals to jiffies, it's not included by
-time_is_before_jiffies(). So let's use a boolean to make sure the
-operation is done or timeout.
+What dead lock?
 
-Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
-- Use a boolean to make sure the operation is timeout or not.
+When enable(PTP_CLK_REQ_PEROUT, on=0) is called, you don't need to
+call ptp_disable_pinfunc().  Just stop the periodic waveform
+generator.  The assignment of function to pin remains unchanged.
 
- drivers/i2c/busses/i2c-nvidia-gpu.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+> +		 */
+> +		if (!on)
+> +			break;
+> +
+> +		pin = ptp_find_pin(ocelot->ptp_clock, PTP_PF_PEROUT,
+> +				   rq->perout.index);
+> +		if (pin == 0)
+> +			ptp_pin = PTP_PIN_0;
+> +		else if (pin == 1)
+> +			ptp_pin = PTP_PIN_1;
+> +		else if (pin == 2)
+> +			ptp_pin = PTP_PIN_2;
+> +		else if (pin == 3)
+> +			ptp_pin = PTP_PIN_3;
+> +		else
+> +			return -EINVAL;
 
-diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
-index 62e18b4db0ed..bdb48600af0e 100644
---- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-+++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-@@ -77,18 +77,20 @@ static int gpu_i2c_check_status(struct gpu_i2c_dev *i2cd)
- {
- 	unsigned long target = jiffies + msecs_to_jiffies(1000);
- 	u32 val;
-+	bool done = false;
- 
- 	do {
- 		val = readl(i2cd->regs + I2C_MST_CNTL);
--		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER))
--			break;
--		if ((val & I2C_MST_CNTL_STATUS) !=
--				I2C_MST_CNTL_STATUS_BUS_BUSY)
-+		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER)
-+		    || (val & I2C_MST_CNTL_STATUS) !=
-+				I2C_MST_CNTL_STATUS_BUS_BUSY) {
-+			done = true;
- 			break;
-+		}
- 		usleep_range(500, 600);
- 	} while (time_is_after_jiffies(target));
- 
--	if (time_is_before_jiffies(target)) {
-+	if (!done) {
- 		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
- 		return -ETIMEDOUT;
- 	}
--- 
-2.17.1
+Return -EBUSY here instead.
 
+Thanks,
+Richard
