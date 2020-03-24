@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AC3C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 172C1C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21EEC20A8B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF61A20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgCXJRn (ORCPT
+        id S1727879AbgCXJRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:17:43 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44145 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgCXJRR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 05:17:17 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:44100 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgCXJRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:17:09 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfgR-0008KE-9r; Tue, 24 Mar 2020 10:17:15 +0100
+        id 1jGfgJ-0008Fz-7n; Tue, 24 Mar 2020 10:17:07 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 34C691C0805;
-        Tue, 24 Mar 2020 10:16:57 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:56 -0000
-From:   "tip-bot2 for Madhuparna Bhowmik" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BB61D1C07EC;
+        Tue, 24 Mar 2020 10:16:51 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:51 -0000
+From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] nfs: Fix nfs_access_get_cached_rcu() sparse error
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] rcu: Add READ_ONCE() to rcu_data ->gpwrap
+Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504141683.28353.10903354125274508416.tip-bot2@tip-bot2>
+Message-ID: <158504141140.28353.18318011019911714645.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,36 +53,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     9f01eb5d4936f12d57da84cdfbc2a3623e23a7eb
-Gitweb:        https://git.kernel.org/tip/9f01eb5d4936f12d57da84cdfbc2a3623e23a7eb
-Author:        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-AuthorDate:    Tue, 10 Dec 2019 11:16:39 +05:30
+Commit-ID:     a5b8950180f8e5acb802d1672e0b4d0ceee6126e
+Gitweb:        https://git.kernel.org/tip/a5b8950180f8e5acb802d1672e0b4d0ceee6126e
+Author:        Paul E. McKenney <paulmck@kernel.org>
+AuthorDate:    Tue, 07 Jan 2020 15:48:39 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 15:58:21 -08:00
+CommitterDate: Thu, 20 Feb 2020 15:58:22 -08:00
 
-nfs: Fix nfs_access_get_cached_rcu() sparse error
+rcu: Add READ_ONCE() to rcu_data ->gpwrap
 
-This patch fixes the following sparse error:
-fs/nfs/dir.c:2353:14: error: incompatible types in comparison expression (different address spaces):
-fs/nfs/dir.c:2353:14:    struct list_head [noderef] <asn:4> *
-fs/nfs/dir.c:2353:14:    struct list_head *
+The rcu_data structure's ->gpwrap field is read locklessly, and so
+this commit adds the required READ_ONCE() to a pair of laods in order
+to avoid destructive compiler optimizations.
 
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+This data race was reported by KCSAN.
+
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- fs/nfs/dir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/tree.c       | 2 +-
+ kernel/rcu/tree_stall.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 1320288..55a29b0 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -2383,7 +2383,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
- 	rcu_read_lock();
- 	if (nfsi->cache_validity & NFS_INO_INVALID_ACCESS)
- 		goto out;
--	lh = rcu_dereference(nfsi->access_cache_entry_lru.prev);
-+	lh = rcu_dereference(list_tail_rcu(&nfsi->access_cache_entry_lru));
- 	cache = list_entry(lh, struct nfs_access_entry, lru);
- 	if (lh == &nfsi->access_cache_entry_lru ||
- 	    cred_fscmp(cred, cache->cred) != 0)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index a70f56b..e851a12 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -1322,7 +1322,7 @@ static void rcu_accelerate_cbs_unlocked(struct rcu_node *rnp,
+ 
+ 	rcu_lockdep_assert_cblist_protected(rdp);
+ 	c = rcu_seq_snap(&rcu_state.gp_seq);
+-	if (!rdp->gpwrap && ULONG_CMP_GE(rdp->gp_seq_needed, c)) {
++	if (!READ_ONCE(rdp->gpwrap) && ULONG_CMP_GE(rdp->gp_seq_needed, c)) {
+ 		/* Old request still live, so mark recent callbacks. */
+ 		(void)rcu_segcblist_accelerate(&rdp->cblist, c);
+ 		return;
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index 43dc688..bca637b 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -602,7 +602,7 @@ void show_rcu_gp_kthreads(void)
+ 			continue;
+ 		for_each_leaf_node_possible_cpu(rnp, cpu) {
+ 			rdp = per_cpu_ptr(&rcu_data, cpu);
+-			if (rdp->gpwrap ||
++			if (READ_ONCE(rdp->gpwrap) ||
+ 			    ULONG_CMP_GE(READ_ONCE(rcu_state.gp_seq),
+ 					 READ_ONCE(rdp->gp_seq_needed)))
+ 				continue;
