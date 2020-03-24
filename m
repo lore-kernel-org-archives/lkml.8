@@ -2,138 +2,125 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA66DC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B5FEC54FCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A472820775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056510;
-	bh=WWOBCiJt+0H4q24Uk5xkRQFtv504xdoqjRy5vYjWMV4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bv8eF/r/HtbnV1Vswr7o5oBALr8kk7PH4s7KDN6Itcm5e9/33NSpNRx5jq63aFCLh
-	 2a/7Q9ztBNdYtGLXp34tpoLwklcBF5sYkzqjPfP8V9NjVCkDxfo9pM+Z1EodvB7EfZ
-	 NZMI2F0P7Gbxc5Zf26xVIOEoVYSVba8CmwCaBD+4=
+	by mail.kernel.org (Postfix) with ESMTP id 0B9C220775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgCXN23 (ORCPT
+        id S1729758AbgCXN2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:28:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:28:33 -0400
+Received: from foss.arm.com ([217.140.110.172]:34670 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbgCXN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:27:23 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70171206F6;
-        Tue, 24 Mar 2020 13:27:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056443;
-        bh=WWOBCiJt+0H4q24Uk5xkRQFtv504xdoqjRy5vYjWMV4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uc7oqw43YIUHu2lC7U7sQqOmniq4cz7wOnRjYNJMGcdddhUC+gCw/y3uYp6RtMEDc
-         PHvmGhKfdhes7qseR3B/fWC0Lx0rA4dJH+SnIJNvyuwKHpj5Rgvr6nQUz4m/HY0LgE
-         6MNdhewgm6Vz92y5bDOkjGpo/HxQxPEeOVa9oj/o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-        George Spelvin <lkml@sdf.org>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 5.5 118/119] kconfig: introduce m32-flag and m64-flag
-Date:   Tue, 24 Mar 2020 14:11:43 +0100
-Message-Id: <20200324130819.320806799@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1729622AbgCXNYO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60701FEC;
+        Tue, 24 Mar 2020 06:24:14 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 121633F52E;
+        Tue, 24 Mar 2020 06:24:12 -0700 (PDT)
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+Cc:     Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v3 13/14] net: axienet: Autodetect 64-bit DMA capability
+Date:   Tue, 24 Mar 2020 13:23:46 +0000
+Message-Id: <20200324132347.23709-14-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
+References: <20200324132347.23709-1-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+When newer revisions of the Axienet IP are configured for a 64-bit bus,
+we *need* to write to the MSB part of the an address registers,
+otherwise the IP won't recognise this as a DMA start condition.
+This is even true when the actual DMA address comes from the lower 4 GB.
 
-commit 8cc4fd73501d9f1370c3eebb70cfe8cc9e24062b upstream.
+To autodetect this configuration, at probe time we write all 1's to such
+an MSB register, and see if any bits stick. If this is configured for a
+32-bit bus, those MSB registers are RES0, so reading back 0 indicates
+that no MSB writes are necessary.
+On the other hands reading anything other than 0 indicated the need to
+write the MSB registers, so we set the respective flag.
 
-When a compiler supports multiple architectures, some compiler features
-can be dependent on the target architecture.
+The actual DMA mask stays at 32-bit for now. To help bisecting, a
+separate patch will enable allocations from higher addresses.
 
-This is typical for Clang, which supports multiple LLVM backends.
-Even for GCC, we need to take care of biarch compiler cases.
-
-It is not a problem when we evaluate cc-option in Makefiles because
-cc-option is tested against the flag in question + $(KBUILD_CFLAGS).
-
-The cc-option in Kconfig, on the other hand, does not accumulate
-tested flags. Due to this simplification, it could potentially test
-cc-option against a different target.
-
-At first, Kconfig always evaluated cc-option against the host
-architecture.
-
-Since commit e8de12fb7cde ("kbuild: Check for unknown options with
-cc-option usage in Kconfig and clang"), in case of cross-compiling
-with Clang, the target triple is correctly passed to Kconfig.
-
-The case with biarch GCC (and native build with Clang) is still not
-handled properly. We need to pass some flags to specify the target
-machine bit.
-
-Due to the design, all the macros in Kconfig are expanded in the
-parse stage, where we do not know the target bit size yet.
-
-For example, arch/x86/Kconfig allows a user to toggle CONFIG_64BIT.
-If a compiler flag -foo depends on the machine bit, it must be tested
-twice, one with -m32 and the other with -m64.
-
-However, -m32/-m64 are not always recognized. So, this commits adds
-m64-flag and m32-flag macros. They expand to -m32, -m64, respectively
-if supported. Or, they expand to an empty string if unsupported.
-
-The typical usage is like this:
-
-  config FOO
-          bool
-          default $(cc-option,$(m64-flag) -foo) if 64BIT
-          default $(cc-option,$(m32-flag) -foo)
-
-This is clumsy, but there is no elegant way to handle this in the
-current static macro expansion.
-
-There was discussion for static functions vs dynamic functions.
-The consensus was to go as far as possible with the static functions.
-(https://lkml.org/lkml/2018/3/2/22)
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Tested-by: George Spelvin <lkml@sdf.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
- scripts/Kconfig.include |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/net/ethernet/xilinx/xilinx_axienet.h  |  1 +
+ .../net/ethernet/xilinx/xilinx_axienet_main.c | 26 +++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
---- a/scripts/Kconfig.include
-+++ b/scripts/Kconfig.include
-@@ -40,3 +40,10 @@ $(error-if,$(success, $(LD) -v | grep -q
- 
- # gcc version including patch level
- gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+index 84c4c3655516..fbaf3c987d9c 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
+@@ -161,6 +161,7 @@
+ #define XAE_FCC_OFFSET		0x0000040C /* Flow Control Configuration */
+ #define XAE_EMMC_OFFSET		0x00000410 /* EMAC mode configuration */
+ #define XAE_PHYC_OFFSET		0x00000414 /* RGMII/SGMII configuration */
++#define XAE_ID_OFFSET		0x000004F8 /* Identification register */
+ #define XAE_MDIO_MC_OFFSET	0x00000500 /* MII Management Config */
+ #define XAE_MDIO_MCR_OFFSET	0x00000504 /* MII Management Control */
+ #define XAE_MDIO_MWD_OFFSET	0x00000508 /* MII Management Write Data */
+diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+index 6ecd1bb5f81d..a54a5c754da0 100644
+--- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
++++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
+@@ -151,6 +151,9 @@ static void axienet_dma_out_addr(struct axienet_local *lp, off_t reg,
+ 				 dma_addr_t addr)
+ {
+ 	axienet_dma_out32(lp, reg, lower_32_bits(addr));
 +
-+# machine bit flags
-+#  $(m32-flag): -m32 if the compiler supports it, or an empty string otherwise.
-+#  $(m64-flag): -m64 if the compiler supports it, or an empty string otherwise.
-+cc-option-bit = $(if-success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null,$(1))
-+m32-flag := $(cc-option-bit,-m32)
-+m64-flag := $(cc-option-bit,-m64)
-
++	if (lp->features & XAE_FEATURE_DMA_64BIT)
++		axienet_dma_out32(lp, reg + 4, upper_32_bits(addr));
+ }
+ 
+ static void desc_set_phys_addr(struct axienet_local *lp, dma_addr_t addr,
+@@ -1928,6 +1931,29 @@ static int axienet_probe(struct platform_device *pdev)
+ 		goto free_netdev;
+ 	}
+ 
++	/* Autodetect the need for 64-bit DMA pointers.
++	 * When the IP is configured for a bus width bigger than 32 bits,
++	 * writing the MSB registers is mandatory, even if they are all 0.
++	 * We can detect this case by writing all 1's to one such register
++	 * and see if that sticks: when the IP is configured for 32 bits
++	 * only, those registers are RES0.
++	 * Those MSB registers were introduced in IP v7.1, which we check first.
++	 */
++	if ((axienet_ior(lp, XAE_ID_OFFSET) >> 24) >= 0x9) {
++		void __iomem *desc = lp->dma_regs + XAXIDMA_TX_CDESC_OFFSET + 4;
++
++		iowrite32(0x0, desc);
++		if (ioread32(desc) == 0) {	/* sanity check */
++			iowrite32(0xffffffff, desc);
++			if (ioread32(desc) > 0) {
++				lp->features |= XAE_FEATURE_DMA_64BIT;
++				dev_info(&pdev->dev,
++					 "autodetected 64-bit DMA range\n");
++			}
++			iowrite32(0x0, desc);
++		}
++	}
++
+ 	/* Check for Ethernet core IRQ (optional) */
+ 	if (lp->eth_irq <= 0)
+ 		dev_info(&pdev->dev, "Ethernet core IRQ not defined\n");
+-- 
+2.17.1
 
