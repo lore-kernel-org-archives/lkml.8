@@ -7,38 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781DEC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B97C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBF420870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2306E20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbgCXJU3 (ORCPT
+        id S1727948AbgCXJUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:20:29 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43887 "EHLO
+        Tue, 24 Mar 2020 05:20:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43883 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbgCXJQe (ORCPT
+        with ESMTP id S1727286AbgCXJQd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:16:34 -0400
+        Tue, 24 Mar 2020 05:16:33 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGffj-0007wr-TX; Tue, 24 Mar 2020 10:16:32 +0100
+        id 1jGffh-0007vU-Eg; Tue, 24 Mar 2020 10:16:29 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 857B01C0481;
-        Tue, 24 Mar 2020 10:16:31 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:31 -0000
-From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 08BA91C0451;
+        Tue, 24 Mar 2020 10:16:29 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:28 -0000
+From:   "tip-bot2 for SeongJae Park" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] rcutorture: Make rcu_torture_barrier_cbs() post from
- corresponding CPU
-Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
+Subject: [tip: core/rcu] doc/RCU/listRCU: Update example function name
+Cc:     Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504139123.28353.17748031342974553550.tip-bot2@tip-bot2>
+Message-ID: <158504138870.28353.2904604308995759452.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,61 +55,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     50d4b62970e21e9573daf0e3c1138b4d1ebcca47
-Gitweb:        https://git.kernel.org/tip/50d4b62970e21e9573daf0e3c1138b4d1ebcca47
-Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Tue, 04 Feb 2020 15:00:56 -08:00
+Commit-ID:     3282b0469248ab25b3f40b95e9a3d357c9d946d5
+Gitweb:        https://git.kernel.org/tip/3282b0469248ab25b3f40b95e9a3d357c9d946d5
+Author:        SeongJae Park <sjpark@amazon.de>
+AuthorDate:    Mon, 06 Jan 2020 21:07:58 +01:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 16:03:31 -08:00
+CommitterDate: Thu, 27 Feb 2020 07:03:13 -08:00
 
-rcutorture: Make rcu_torture_barrier_cbs() post from corresponding CPU
+doc/RCU/listRCU: Update example function name
 
-Currently, rcu_torture_barrier_cbs() posts callbacks from whatever CPU
-it is running on, which means that all these kthreads might well be
-posting from the same CPU, which would drastically reduce the effectiveness
-of this test.  This commit therefore uses IPIs to make the callbacks be
-posted from the corresponding CPU (given by local variable myid).
+listRCU.rst document gives an example with 'ipc_lock()', but the
+function has dropped off by commit 82061c57ce93 ("ipc: drop
+ipc_lock()").  Because the main logic of 'ipc_lock()' has melded in
+'shm_lock()' by the commit, this commit updates the document to use
+'shm_lock()' instead.
 
-If the IPI fails (which can happen if the target CPU is offline or does
-not exist at all), the callback is posted on whatever CPU is currently
-running.
-
+Reviewed-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ Documentation/RCU/listRCU.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 7e01e9a..f82515c 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -2053,6 +2053,14 @@ static void rcu_torture_barrier_cbf(struct rcu_head *rcu)
- 	atomic_inc(&barrier_cbs_invoked);
- }
+diff --git a/Documentation/RCU/listRCU.rst b/Documentation/RCU/listRCU.rst
+index e768f56..2a643e2 100644
+--- a/Documentation/RCU/listRCU.rst
++++ b/Documentation/RCU/listRCU.rst
+@@ -286,11 +286,11 @@ time the external state changes before Linux becomes aware of the change,
+ additional RCU-induced staleness is generally not a problem.
  
-+/* IPI handler to get callback posted on desired CPU, if online. */
-+static void rcu_torture_barrier1cb(void *rcu_void)
-+{
-+	struct rcu_head *rhp = rcu_void;
-+
-+	cur_ops->call(rhp, rcu_torture_barrier_cbf);
-+}
-+
- /* kthread function to register callbacks used to test RCU barriers. */
- static int rcu_torture_barrier_cbs(void *arg)
- {
-@@ -2076,9 +2084,11 @@ static int rcu_torture_barrier_cbs(void *arg)
- 		 * The above smp_load_acquire() ensures barrier_phase load
- 		 * is ordered before the following ->call().
- 		 */
--		local_irq_disable(); /* Just to test no-irq call_rcu(). */
--		cur_ops->call(&rcu, rcu_torture_barrier_cbf);
--		local_irq_enable();
-+		if (smp_call_function_single(myid, rcu_torture_barrier1cb,
-+					     &rcu, 1)) {
-+			// IPI failed, so use direct call from current CPU.
-+			cur_ops->call(&rcu, rcu_torture_barrier_cbf);
-+		}
- 		if (atomic_dec_and_test(&barrier_cbs_count))
- 			wake_up(&barrier_wq);
- 	} while (!torture_must_stop());
+ However, there are many examples where stale data cannot be tolerated.
+-One example in the Linux kernel is the System V IPC (see the ipc_lock()
+-function in ipc/util.c).  This code checks a *deleted* flag under a
++One example in the Linux kernel is the System V IPC (see the shm_lock()
++function in ipc/shm.c).  This code checks a *deleted* flag under a
+ per-entry spinlock, and, if the *deleted* flag is set, pretends that the
+ entry does not exist.  For this to be helpful, the search function must
+-return holding the per-entry lock, as ipc_lock() does in fact do.
++return holding the per-entry spinlock, as shm_lock() does in fact do.
+ 
+ .. _quick_quiz:
+ 
