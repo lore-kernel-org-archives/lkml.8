@@ -2,134 +2,200 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B30FC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8DBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53FF020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="STc15kvL"
+	by mail.kernel.org (Postfix) with ESMTP id 1123720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbgCXFfH (ORCPT
+        id S1726317AbgCXFgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 01:35:07 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:38858 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbgCXFfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 01:35:07 -0400
-Received: by mail-pg1-f194.google.com with SMTP id x7so8469220pgh.5
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 22:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+8ny+Tb6gUwQow8aJnk/hTr5U34XF9Z/h6UuVXBqzKw=;
-        b=STc15kvLch1+nPQQpq0oMqpfUVpJQP3ccKwQ9QMVbDUOBegBUwBRn8H8WfGFihQCkf
-         Tl2yI3NV5tky/QtwL3yEh304JBH8YBOvMnHas8lUaaonXQa2lKyNDsMN70LpDf20SeE2
-         idjUjuuWzIcssIlK8B05qOuxM4uNu6lg3ZSSnXCv8yiuYeEYMNOH5Z3/Jbx3tA8D3LgY
-         s+U389x5dnUlBCgwKUMqSjmKl1/GFMCeH6G1VQRAoCN7j0g3Bpsb7ye+djmcAaKG8lXG
-         xpfhGr7jFRdS5u59M+nxv9Z0exE+ZBuLeufVH1ZJ/5Igh0s/5q1hRKlheXjQTFDDqr18
-         NNfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+8ny+Tb6gUwQow8aJnk/hTr5U34XF9Z/h6UuVXBqzKw=;
-        b=bBEflpA+yKP7R68dfAY59X9ICabGUlHQxcCWlfZzM+Ou0UZ3CWVFGQg/WM1qSYYV06
-         eRWAJyGFJOzuNnCNnxNu1L+ZbGul+VEOAhdr5X4Bf5f6EtldCoGt1/Dn6HVZT0f6cjIs
-         6Q/Kw9ZAMKwwVAyoaGabhjI1ulcX4VosygAln0Txk5VbrF5NMVZSxVNJrVy/GZv6lstW
-         j0qzDkayevm/I/yPq82+EYl9lTTc1uJF8i1Bx7NmX/52QpVndQwryuuzcrsQ9HacRlae
-         KtJlsBHpEhCtTvT8RoFxRXe7uEYtMg5GCN/24KFS43W9RTDoMxR71r6Rw9JTZo2FitwU
-         O3/w==
-X-Gm-Message-State: ANhLgQ3rutBMCcLIqjdLHaWeVY47sQhNQnUAwzLhV0FNJPxAHgBlBR9l
-        3uSHS11TeVvj8Fkfg6Lm78ko
-X-Google-Smtp-Source: ADFU+vvxwYiZucov/b+uqplpddazOvlxd5syVdPfhedXkZA+XcRnVjOSjDjSkBS+a3vNp7EerJn3LA==
-X-Received: by 2002:a62:be02:: with SMTP id l2mr24422132pff.106.1585028105850;
-        Mon, 23 Mar 2020 22:35:05 -0700 (PDT)
-Received: from Mani-XPS-13-9360 ([2409:4072:59b:91e:2dd6:dffe:3569:b473])
-        by smtp.gmail.com with ESMTPSA id z20sm13638264pge.62.2020.03.23.22.35.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 23 Mar 2020 22:35:05 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 11:04:58 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Jeffrey Hugo <jhugo@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
-        smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/7] bus: mhi: core: Add support for reading MHI info
- from device
-Message-ID: <20200324053458.GB11834@Mani-XPS-13-9360>
-References: <20200323123102.13992-1-manivannan.sadhasivam@linaro.org>
- <20200323123102.13992-3-manivannan.sadhasivam@linaro.org>
- <c6b696ed-b9cf-98ed-7402-9fb82bcab1c6@codeaurora.org>
+        Tue, 24 Mar 2020 01:36:44 -0400
+Received: from mga02.intel.com ([134.134.136.20]:31214 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbgCXFgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 01:36:43 -0400
+IronPort-SDR: E/Mz5h8w/ky82UdtwOjd/9UX41y/zJKeZLr5wNmi52p8K2uwiH5b4c6vmmJN7uXvpHRVaiEzVU
+ Vrg0M7Fim+ZQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 22:36:43 -0700
+IronPort-SDR: Kr/in4Y0OymO0sf7C3/A8J6YQvl5I3HY/g4r1q8jcy0rd6Dg787PfHWofoXq2LqfNhIixxJGNH
+ 7170z5At3cBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,299,1580803200"; 
+   d="scan'208";a="325806109"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 23 Mar 2020 22:36:41 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jGcEz-0005s2-7k; Tue, 24 Mar 2020 13:36:41 +0800
+Date:   Tue, 24 Mar 2020 13:36:09 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [rcu:rcu/next] BUILD SUCCESS
+ 59bc8fd15ce6955bb9882deecff877177f2b519b
+Message-ID: <5e799c49.Dv8NJ5dzS8Le6DYZ%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c6b696ed-b9cf-98ed-7402-9fb82bcab1c6@codeaurora.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 08:14:07AM -0600, Jeffrey Hugo wrote:
-> On 3/23/2020 6:30 AM, Manivannan Sadhasivam wrote:
-> > The MHI register base has several registers used for getting the MHI
-> > specific information such as version, family, major, and minor numbers
-> > from the device. This information can be used by the controller drivers
-> > for usecases such as applying quirks for a specific revision etc...
-> > 
-> > While at it, let's also rearrange the local variables
-> > in mhi_register_controller().
-> > 
-> > Suggested-by: Hemant Kumar <hemantk@codeaurora.org>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> > --- a/include/linux/mhi.h
-> > +++ b/include/linux/mhi.h
-> > @@ -310,6 +310,10 @@ struct mhi_controller_config {
-> >    * @sw_ev_rings: Number of software event rings
-> >    * @nr_irqs_req: Number of IRQs required to operate (optional)
-> >    * @nr_irqs: Number of IRQ allocated by bus master (required)
-> > + * @family_number: MHI controller family number
-> > + * @device_number: MHI controller device number
-> > + * @major_version: MHI controller major revision number
-> > + * @minor_version: MHI controller minor revision number
-> 
-> Maybe expand the comment to indicate there are valid after register() to
-> give controller implementations an idea of when they can use these for
-> quirks, etc?
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  rcu/next
+branch HEAD: 59bc8fd15ce6955bb9882deecff877177f2b519b  rcu-tasks: Add count for idle tasks on offline CPUs
 
-Hmm, Okay. Will add a note in next revision.
+elapsed time: 481m
 
-Thanks,
-Mani
+configs tested: 133
+configs skipped: 0
 
-> >    * @mhi_event: MHI event ring configurations table
-> >    * @mhi_cmd: MHI command ring configurations table
-> >    * @mhi_ctxt: MHI device context, shared memory between host and device
-> > @@ -375,6 +379,10 @@ struct mhi_controller {
-> >   	u32 sw_ev_rings;
-> >   	u32 nr_irqs_req;
-> >   	u32 nr_irqs;
-> > +	u32 family_number;
-> > +	u32 device_number;
-> > +	u32 major_version;
-> > +	u32 minor_version;
-> >   	struct mhi_event *mhi_event;
-> >   	struct mhi_cmd *mhi_cmd;
-> > 
-> 
-> 
-> -- 
-> Jeffrey Hugo
-> Qualcomm Technologies, Inc. is a member of the
-> Code Aurora Forum, a Linux Foundation Collaborative Project.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                         at91_dt_defconfig
+arm                           efm32_defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
+alpha                               defconfig
+um                           x86_64_defconfig
+xtensa                          iss_defconfig
+ia64                                defconfig
+powerpc                             defconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                              allnoconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                       common_defconfig
+csky                                defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+h8300                       h8s-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+m68k                           sun3_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+microblaze                    nommu_defconfig
+powerpc                           allnoconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                             allmodconfig
+mips                              allnoconfig
+mips                             allyesconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+alpha                randconfig-a001-20200324
+m68k                 randconfig-a001-20200324
+mips                 randconfig-a001-20200324
+nds32                randconfig-a001-20200324
+parisc               randconfig-a001-20200324
+riscv                randconfig-a001-20200324
+c6x                  randconfig-a001-20200324
+h8300                randconfig-a001-20200324
+microblaze           randconfig-a001-20200324
+nios2                randconfig-a001-20200324
+sparc64              randconfig-a001-20200324
+h8300                randconfig-a001-20200323
+microblaze           randconfig-a001-20200323
+nios2                randconfig-a001-20200323
+c6x                  randconfig-a001-20200323
+sparc64              randconfig-a001-20200323
+csky                 randconfig-a001-20200324
+openrisc             randconfig-a001-20200324
+s390                 randconfig-a001-20200324
+sh                   randconfig-a001-20200324
+xtensa               randconfig-a001-20200324
+x86_64               randconfig-f001-20200324
+x86_64               randconfig-f002-20200324
+x86_64               randconfig-f003-20200324
+i386                 randconfig-f001-20200324
+i386                 randconfig-f002-20200324
+i386                 randconfig-f003-20200324
+arm                  randconfig-a001-20200323
+powerpc              randconfig-a001-20200323
+arm64                randconfig-a001-20200323
+ia64                 randconfig-a001-20200323
+sparc                randconfig-a001-20200323
+arc                  randconfig-a001-20200323
+arc                  randconfig-a001-20200324
+arm                  randconfig-a001-20200324
+arm64                randconfig-a001-20200324
+ia64                 randconfig-a001-20200324
+powerpc              randconfig-a001-20200324
+sparc                randconfig-a001-20200324
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                            allyesconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+s390                             alldefconfig
+s390                             allmodconfig
+s390                              allnoconfig
+s390                             allyesconfig
+s390                          debug_defconfig
+s390                                defconfig
+s390                       zfcpdump_defconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sh                            titan_defconfig
+sparc                            allyesconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                           allnoconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                             i386_defconfig
+um                                  defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
