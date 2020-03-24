@@ -2,224 +2,107 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B9F7C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC3EC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03BB3206F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:38:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43865206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:39:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WgaGQhfC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbgCXCiC (ORCPT
+        id S1727239AbgCXCjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:38:02 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12180 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726824AbgCXCiB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:38:01 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A08EEAD13A6A126C81F7;
-        Tue, 24 Mar 2020 10:37:58 +0800 (CST)
-Received: from [10.173.228.124] (10.173.228.124) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 24 Mar
- 2020 10:37:50 +0800
-Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset()
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-CC:     <akpm@linux-foundation.org>, <kirill.shutemov@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <weidong.huang@huawei.com>, <weifuqiang@huawei.com>,
-        <kvm@vger.kernel.org>, <linux-mm@kvack.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Sean Christopherson" <sean.j.christopherson@intel.com>,
-        <stable@vger.kernel.org>
-References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
- <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
- <20200323160955.GY20941@ziepe.ca>
- <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
- <20200323180706.GC20941@ziepe.ca>
- <88698dd7-eb87-4b0b-7ba7-44ef6eab6a6c@oracle.com>
- <20200323225225.GF20941@ziepe.ca>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
-Date:   Tue, 24 Mar 2020 10:37:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 23 Mar 2020 22:39:14 -0400
+Received: from mail-pf1-f179.google.com ([209.85.210.179]:38492 "EHLO
+        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgCXCjO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:39:14 -0400
+Received: by mail-pf1-f179.google.com with SMTP id z25so4194199pfa.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bTaRA5htpsqxmsFBZbxgA8lCpOcv0k2H5w1W5iPSjBI=;
+        b=WgaGQhfC8mZ6nlYEovTrbyZwdm3ttCaLC09dPRGyDUnQboi38YlSRsxovnliYrwPSw
+         m/3qUx95F43aIhy+vXuJUcyJNeqBpgKMcNiAvXPlCbDeie8bYOp/trq8luWfpHt3/x8S
+         o3LNeeoeRYJRm5L1pJ4dubQtxwWe9UFM7K/9k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bTaRA5htpsqxmsFBZbxgA8lCpOcv0k2H5w1W5iPSjBI=;
+        b=BHXxvfgNsruQWLSRhpUoltCaqobj+Z1b40JxCftVpiljjt0DjaEx0eo0XrgHaLYX/s
+         pJ/TPCDSjj0QSYnzmogmoYirP/xZTcblrcx15jxevW/ZOtjLk4/NVLV+rQrdqxSMaaWk
+         Hy0+jIlpl5OX8S1SnVec5njmQo8j6fMxpfTgxP9wKfOKpo25domCIahaW8Z9NUwFcwUP
+         Cx5YJ10NitcMWYnD57YQwtYhr4NhrM7Qb16UlZz2AsS7FzFykXP4IzIlYTTzI88tBEFR
+         XlQWHOMRkMQQ/8GEwiLfi6MCXTRQQc4iklJJoBt34eraQbQj/84iysT3FpqBXDZBxSdK
+         NyVQ==
+X-Gm-Message-State: ANhLgQ2jTHMrnQ2BnafWkw4HLvafw30vEjahcUKgLY6VmH96CBnsSXUY
+        rFDnZ2tur3YojZp8yXdZcPBYzA==
+X-Google-Smtp-Source: ADFU+vvgjyn//CUHKXeLMz1tY2HElpEHCGd+yhmgojhq7G/KZugPso67+RvAzwJhxHHVOrdODgok7A==
+X-Received: by 2002:a62:62c3:: with SMTP id w186mr26402375pfb.238.1585017552663;
+        Mon, 23 Mar 2020 19:39:12 -0700 (PDT)
+Received: from localhost ([2401:fa00:8f:203:5bbb:c872:f2b1:f53b])
+        by smtp.gmail.com with ESMTPSA id y18sm14072169pfe.19.2020.03.23.19.39.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Mar 2020 19:39:11 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 11:39:09 +0900
+From:   Sergey Senozhatsky <senozhatsky@chromium.org>
+To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+Cc:     Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Pawel Osciak <posciak@chromium.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Helen Koike <helen.koike@collabora.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        nicolas.dufresne@collabora.co.uk
+Subject: Re: [PATCHv4 04/11] videobuf2: add queue memory consistency parameter
+Message-ID: <20200324023909.GA201720@google.com>
+References: <20200302041213.27662-1-senozhatsky@chromium.org>
+ <20200302041213.27662-5-senozhatsky@chromium.org>
+ <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <20200323225225.GF20941@ziepe.ca>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.228.124]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6e4fc7f9-0068-92ff-77d7-9c77c047f3db@collabora.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (20/03/20 14:46), Dafna Hirschfeld wrote:
+[..]
+> > +static void set_queue_consistency(struct vb2_queue *q, bool consistent_mem)
+> > +{
+> > +	if (!vb2_queue_allows_cache_hints(q))
+> > +		return;
+> > +
+> > +	if (consistent_mem)
+> > +		q->dma_attrs &= ~DMA_ATTR_NON_CONSISTENT;
+> > +	else
+> > +		q->dma_attrs |= DMA_ATTR_NON_CONSISTENT;
+> > +}
+> > +
+> >   int vb2_core_reqbufs(struct vb2_queue *q, enum vb2_memory memory,
+> > -		unsigned int *count)
+> > +		bool consistent_mem, unsigned int *count)
+> You extended the vb2_core_reqbufs accepting a new boolean that
+> is decided according to the setting of the V4L2_FLAG_MEMORY_NON_CONSISTENT
+> but in the future some other flags might be added, and so I think it
+> is better to replace the boolean with a u32 consisting of all the flags.
 
+Don't have any objections. Can change the `bool' to `u32'.
 
-On 2020/3/24 6:52, Jason Gunthorpe wrote:
-> On Mon, Mar 23, 2020 at 01:35:07PM -0700, Mike Kravetz wrote:
->> On 3/23/20 11:07 AM, Jason Gunthorpe wrote:
->>> On Mon, Mar 23, 2020 at 10:27:48AM -0700, Mike Kravetz wrote:
->>>
->>>>>  	pgd = pgd_offset(mm, addr);
->>>>> -	if (!pgd_present(*pgd))
->>>>> +	if (!pgd_present(READ_ONCE(*pgd)))
->>>>>  		return NULL;
->>>>>  	p4d = p4d_offset(pgd, addr);
->>>>> -	if (!p4d_present(*p4d))
->>>>> +	if (!p4d_present(READ_ONCE(*p4d)))
->>>>>  		return NULL;
->>>>>  
->>>>>       pud = pud_offset(p4d, addr);
->>>>
->>>> One would argue that pgd and p4d can not change from present to !present
->>>> during the execution of this code.  To me, that seems like the issue which
->>>> would cause an issue.  Of course, I could be missing something.
->>>
->>> This I am not sure of, I think it must be true under the read side of
->>> the mmap_sem, but probably not guarenteed under RCU..
->>>
->>> In any case, it doesn't matter, the fact that *p4d can change at all
->>> is problematic. Unwinding the above inlines we get:
->>>
->>>   p4d = p4d_offset(pgd, addr)
->>>   if (!p4d_present(*p4d))
->>>       return NULL;
->>>   pud = (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
->>>
->>> According to our memory model the compiler/CPU is free to execute this
->>> as:
->>>
->>>   p4d = p4d_offset(pgd, addr)
->>>   p4d_for_vaddr = *p4d;
->>>   if (!p4d_present(*p4d))
->>>       return NULL;
->>>   pud = (pud_t *)p4d_page_vaddr(p4d_for_vaddr) + pud_index(address);
->>>
->>
->> Wow!  How do you know this?  You don't need to answer :)
-> 
-> It says explicitly in Documentation/memory-barriers.txt - see
-> section COMPILER BARRIER:
-> 
->  (*) The compiler is within its rights to reorder loads and stores
->      to the same variable, and in some cases, the CPU is within its
->      rights to reorder loads to the same variable.  This means that
->      the following code:
-> 
->         a[0] = x;
->         a[1] = x;
-> 
->      Might result in an older value of x stored in a[1] than in a[0].
-> 
-> It also says READ_ONCE puts things in program order, but we don't use
-> READ_ONCE inside pud_offset(), so it doesn't help us.
-> 
-> Best answer is to code things so there is exactly one dereference of
-> the pointer protected by READ_ONCE. Very clear to read, very safe.
-> 
-> Maybe Longpeng can rework the patch around these principles?
-> 
-Thanks Jason and Mike, I learn a lot from your analysis.
-
-So... the patch should like this ?
-
-@@ -4909,29 +4909,33 @@ pte_t *huge_pte_offset(struct mm_struct *mm,
- 		       unsigned long addr, unsigned long sz)
- {
- 	pgd_t *pgd;
--	p4d_t *p4d;
--	pud_t *pud;
--	pmd_t *pmd;
-+	p4d_t *p4g, p4d_entry;
-+	pud_t *pud, pud_entry;
-+	pmd_t *pmd, pmd_entry;
-
- 	pgd = pgd_offset(mm, addr);
- 	if (!pgd_present(*pgd))
- 		return NULL;
--	p4d = p4d_offset(pgd, addr);
--	if (!p4d_present(*p4d))
-+
-+	p4g = p4d_offset(pgd, addr);
-+	p4d_entry = READ_ONCE(*p4g);
-+	if (!p4d_present(p4d_entry))
- 		return NULL;
-
--	pud = pud_offset(p4d, addr);
--	if (sz != PUD_SIZE && pud_none(*pud))
-+	pud = pud_offset(&p4d_entry, addr);
-+	pud_entry = READ_ONCE(*pud);
-+	if (sz != PUD_SIZE && pud_none(pud_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pud_huge(*pud) || !pud_present(*pud))
-+	if (pud_huge(pud_entry) || !pud_present(pud_entry))
- 		return (pte_t *)pud;
-
--	pmd = pmd_offset(pud, addr);
--	if (sz != PMD_SIZE && pmd_none(*pmd))
-+	pmd = pmd_offset(&pud_entry, addr);
-+	pmd_entry = READ_ONCE(*pmd);
-+	if (sz != PMD_SIZE && pmd_none(pmd_entry))
- 		return NULL;
- 	/* hugepage or swap? */
--	if (pmd_huge(*pmd) || !pmd_present(*pmd))
-+	if (pmd_huge(pmd_entry) || !pmd_present(pmd_entry))
- 		return (pte_t *)pmd;
-
-> Also I wonder if the READ_ONCE(*pmdp) is OK. gup_pmd_range() uses it,
-> but I can't explain why it shouldn't be pmd_read_atomic().
-> 
->>> In the case where p4 goes from !present -> present (ie
->>> handle_mm_fault()):
->>>
->>> p4d_for_vaddr == p4d_none, and p4d_present(*p4d) == true, meaning the
->>> p4d_page_vaddr() will crash.
->>>
->>> Basically the problem here is not just missing READ_ONCE, but that the
->>> p4d is read multiple times at all. It should be written like gup_fast
->>> does, to guarantee a single CPU read of the unstable data:
->>>
->>>   p4d = READ_ONCE(*p4d_offset(pgdp, addr));
->>>   if (!p4d_present(p4))
->>>       return NULL;
->>>   pud = pud_offset(&p4d, addr);
->>>
->>> At least this is what I've been able to figure out :\
->>
->> In that case, I believe there are a bunch of similar routines with this issue.
-> 
-> Yes, my look around page walk related users makes me come to a similar
-> worry.
-> 
-> Fortunately, I think this is largely theoretical as most likely the
-> compiler will generate a single store for these coding patterns. 
-> 
-> That said, there have been bugs in the past, see commit 26c191788f18
-> ("mm: pmd_read_atomic: fix 32bit PAE pmd walk vs pmd_populate SMP race
-> condition") which is significantly related to the compiler lifting a
-> load inside pte_offset to before the required 'if (pmd_*)' checks.
-> 
->> For this patch, I was primarily interested in seeing the obvious
->> multiple dereferences in C fixed up.  This is above and beyond that!
->> :)
-> 
-> Well, I think it is worth solving the underlying problem
-> properly. Otherwise we get weird solutions to data races like
-> pmd_trans_unstable()...
-> 
-> Jason
-> .
-> 
-
----
-Regards,
-Longpeng(Mike)
+	-ss
