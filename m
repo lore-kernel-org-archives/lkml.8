@@ -2,85 +2,107 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B323DC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3197FC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E9A3206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056837;
-	bh=/+bX9sUSuviQfDod9nEL4+0Dlkf7WVqWQHv9g42s2A8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iZ+3J3ZsmPvjdK0kJqULZRdVbzZ4nQO8bAGffyCpN8BiZYoIkT+5k1YCLHX9nfnKz
-	 zlR1PGRrpeU24LIVlnGJ22JHAebeFWdYlvmjU+XO6SkP49UQvz64J9FgAlb6L044I8
-	 IhVTtUWPlNccxeO7szGqF9vzxwo2SRW+Ub+Xc8CY=
+	by mail.kernel.org (Postfix) with ESMTP id 05D7E206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:34:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgCXNd4 (ORCPT
+        id S1727662AbgCXNew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:33:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgCXNdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:33:55 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A81620775;
-        Tue, 24 Mar 2020 13:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056834;
-        bh=/+bX9sUSuviQfDod9nEL4+0Dlkf7WVqWQHv9g42s2A8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vEAReR4wr7IhLnUm9SUF5+gLVTzns5yVBIbD5yCs/7qrSJIdH/sPUNdmlmlyxq+OF
-         D+1Dz09M06satQQP6ybfku16IoKhCovu34kbyaKtz+NQDGOaoaHZFVfQDX7AO9AL6f
-         oBeJtfMvTV4M0erPhKz0a+snRUgUfAKr9sXexijw=
-Date:   Tue, 24 Mar 2020 14:33:52 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] nvmem: Add support for write-only instances
-Message-ID: <20200324133352.GA2503959@kroah.com>
-References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
- <20200323150007.7487-6-srinivas.kandagatla@linaro.org>
- <20200323190505.GB632476@kroah.com>
- <4820047d-9a99-749c-491d-dbb91a2f5447@linaro.org>
- <20200324122939.GA2348009@kroah.com>
- <300e8095-3af4-15a2-069f-87ac7cbb83bb@linaro.org>
+        Tue, 24 Mar 2020 09:34:52 -0400
+Received: from ec2-3-21-30-127.us-east-2.compute.amazonaws.com ([3.21.30.127]:43266
+        "EHLO www.teo-en-ming.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727338AbgCXNev (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:34:51 -0400
+Received: from localhost (localhost [IPv6:::1])
+        by www.teo-en-ming.com (Postfix) with ESMTPA id 33D4A426B9A;
+        Tue, 24 Mar 2020 21:34:51 +0800 (+08)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <300e8095-3af4-15a2-069f-87ac7cbb83bb@linaro.org>
+Date:   Tue, 24 Mar 2020 21:34:51 +0800
+From:   Turritopsis Dohrnii Teo En Ming <ceo@teo-en-ming.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     ceo@teo-en-ming.com
+Subject: Teo En Ming's Computer Rescue CD/DVD 20200319 is available for
+ download
+Message-ID: <f465f27b690da1b2a02cef9e8883bd4f@teo-en-ming.com>
+X-Sender: ceo@teo-en-ming.com
+User-Agent: Roundcube Webmail/1.2.3
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:25:46PM +0000, Srinivas Kandagatla wrote:
-> 
-> 
-> On 24/03/2020 12:29, Greg KH wrote:
-> > > But the Idea here is :
-> > > We ended up with providing different options like read-only,root-only to
-> > > nvmem providers combined with read/write callbacks.
-> > > With that, there are some cases which are totally invalid, existing code
-> > > does very minimal check to ensure that before populating with correct
-> > > attributes to sysfs file. One of such case is with thunderbolt provider
-> > > which supports only write callback.
-> > > 
-> > > With this new checks in place these flags and callbacks are correctly
-> > > validated, would result in correct file attributes.
-> > Why this crazy set of different groups?  You can set the mode of a sysfs
-> > file in the callback for when the file is about to be created, that's so
-> > much simpler and is what it is for.  This feels really hacky and almost
-> > impossible to follow:(
-> Thanks for the inputs, That definitely sounds much simpler to deal with.
-> 
-> Am guessing you are referring to is_bin_visible callback?
+Subject: Teo En Ming's Computer Rescue CD/DVD 20200319 is available for 
+download
 
-Yes.
+Teo En Ming's Computer Rescue CD/DVD 20200319 is available for download. 
+It is based on Martin L. Purschke's work and Linux kernel 4.10.1.
 
+I used Martin L. Purschke's template, and with a little knowledge of 
+Linux shell scripting, I modified his template to create
+Teo En Ming's Computer Rescue CD/DVD 20200319. Teo En Ming's Computer 
+Rescue CD/DVD 20200319 aims to be similar to the project SystemRescueCd.
+
+You can visit Martin L. Purschke's official website at the Brookhaven 
+National Laboratory, U.S.A.
+
+URL: https://www.phenix.bnl.gov/~purschke/RescueCD/
+
+Redundant Google Drive download links for Teo En Ming's Computer Rescue 
+CD/DVD 20200319:
+
+[1] https://drive.google.com/open?id=1DnVKmo0VeUHUnJ9ehC2KK0YjLVbw7e5d
+
+[2] https://drive.google.com/open?id=1mQ9jK9sbS5lTv1DNLOTwMW9JKLV8QUHF
+
+[3] https://drive.google.com/open?id=1_RgcT8JhtRDq90dicjMI4KsT18C22YGL
+
+[4] https://drive.google.com/open?id=1opK-CxGK2BJXSBDHBW3XjKxmERBNITte
+
+[5] https://drive.google.com/open?id=1g3rOEVvSgy-tyvEiIO_tktD718SabsxN
+
+My next project:
+
+Teo En Ming's Debian 10.3.0 Live CD/DVD/USB.
+
+Stay tuned!
+
+
+
+
+
+
+-- 
+-----BEGIN EMAIL SIGNATURE-----
+
+The Gospel for all Targeted Individuals (TIs):
+
+[The New York Times] Microwave Weapons Are Prime Suspect in Ills of
+U.S. Embassy Workers
+
+Link: 
+https://www.nytimes.com/2018/09/01/science/sonic-attack-cuba-microwave.html
+
+********************************************************************************************
+
+Singaporean Mr. Turritopsis Dohrnii Teo En Ming's Academic
+Qualifications as at 14 Feb 2019 and refugee seeking attempts at the 
+United Nations Refugee Agency Bangkok (21 Mar 2017), in Taiwan (5 Aug 
+2019) and Australia (25 Dec 2019 to 9 Jan 2020):
+
+[1] https://tdtemcerts.wordpress.com/
+
+[2] https://tdtemcerts.blogspot.sg/
+
+[3] https://www.scribd.com/user/270125049/Teo-En-Ming
+
+-----END EMAIL SIGNATURE-----
