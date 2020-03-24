@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB977C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C5CC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 897A720870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B196620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056235;
-	bh=0Tl/uLt/DtI6IenNCwj6LwcQMUVo0+qBxc/JUlB4s4E=;
+	s=default; t=1585056238;
+	bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gxfHHtSdvbd/eu3q7DOY2S86PGEjxBQ9+qmixmWkJIbOLxY5FYG37Oq2SSWc4ZrOe
-	 xpw0hbpE8T4GZOT6u7CJhGgmgECwm40SyTcrqNr9BU4MmkqX4jnnsO8aojgEcT9RMD
-	 OTABwGnyULIy5eaUV96sryHH9Zt2ila7fuMxusWM=
+	b=jnPOknuS7Rs7NgVsDxtdzR4fG+x6O/LkrXSQH3PJXoOjWRm2d/jS3VOY06GMioBaq
+	 ywkXY77hKOWmYz8VBzGHuQyJNe4zCVK/RP1dxULzUXMW/kVzB1gVJr1OfGNKAyJzvz
+	 563zpLzPAZvIbTo/9zCn6ynhBgjtzJHbEPYn/njM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgCXNXx (ORCPT
+        id S1729490AbgCXNX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47100 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbgCXNXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:23:51 -0400
+        id S1729476AbgCXNXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:23:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0766E208CA;
-        Tue, 24 Mar 2020 13:23:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B04B2208DB;
+        Tue, 24 Mar 2020 13:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056230;
-        bh=0Tl/uLt/DtI6IenNCwj6LwcQMUVo0+qBxc/JUlB4s4E=;
+        s=default; t=1585056233;
+        bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uoQKtaoJ356EYx6u/4LH6TAp9+G4McavNVwHpjGO8g+fIJar264tgvkKW1GF4E0xn
-         wtXsXuAGcBbSpHH7ZKtKdvTRzFw7Ojs+XVd7sFD8nFa8QX9XRGvzRlHesWK/jdWTMK
-         CbX3aWte/1zDVwpySWmUgKbpeWYIHahuEHjMUz7w=
+        b=EKnMKt7W5DfW44YtqKot9dv5Udmk8x8T9OH1r56B1bq8iZa53czN9SmsNYxOM6ERW
+         mivijZrl3zdW8HdJgs22QHVeVAOJZ3QoAmT4fLWqkxYaYgZvD9Pm6/2foQdvLSDWRq
+         X0tzZZppC72lJW+U153odjYwi7bgGQC1cjgaVQ+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wen-chien Jesse Sung <jesse.sung@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>, Stable@vger.kernel.org,
+        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Stable@vger.kernel.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.5 063/119] iio: st_sensors: remap SMO8840 to LIS2DH12
-Date:   Tue, 24 Mar 2020 14:10:48 +0100
-Message-Id: <20200324130814.510451677@linuxfoundation.org>
+Subject: [PATCH 5.5 064/119] iio: trigger: stm32-timer: disable master mode when stopping
+Date:   Tue, 24 Mar 2020 14:10:49 +0100
+Message-Id: <20200324130814.601492005@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -61,34 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wen-chien Jesse Sung <jesse.sung@canonical.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-commit e43d110cdc206b6df4dd438cd10c81d1da910aad upstream.
+commit 29e8c8253d7d5265f58122c0a7902e26df6c6f61 upstream.
 
-According to ST, the HID is for LIS2DH12.
+Master mode should be disabled when stopping. This mainly impacts
+possible other use-case after timer has been stopped. Currently,
+master mode remains set (from start routine).
 
-Fixes: 3d56e19815b3 ("iio: accel: st_accel: Add support for the SMO8840 ACPI id")
-Signed-off-by: Wen-chien Jesse Sung <jesse.sung@canonical.com>
-Tested-by: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Fixes: 6fb34812c2a2 ("iio: stm32 trigger: Add support for TRGO2 triggers")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 Cc: <Stable@vger.kernel.org>
 Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/accel/st_accel_i2c.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iio/trigger/stm32-timer-trigger.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/drivers/iio/accel/st_accel_i2c.c
-+++ b/drivers/iio/accel/st_accel_i2c.c
-@@ -114,7 +114,7 @@ MODULE_DEVICE_TABLE(of, st_accel_of_matc
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -161,7 +161,8 @@ static int stm32_timer_start(struct stm3
+ 	return 0;
+ }
  
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id st_accel_acpi_match[] = {
--	{"SMO8840", (kernel_ulong_t)LNG2DM_ACCEL_DEV_NAME},
-+	{"SMO8840", (kernel_ulong_t)LIS2DH12_ACCEL_DEV_NAME},
- 	{"SMO8A90", (kernel_ulong_t)LNG2DM_ACCEL_DEV_NAME},
- 	{ },
- };
+-static void stm32_timer_stop(struct stm32_timer_trigger *priv)
++static void stm32_timer_stop(struct stm32_timer_trigger *priv,
++			     struct iio_trigger *trig)
+ {
+ 	u32 ccer, cr1;
+ 
+@@ -179,6 +180,12 @@ static void stm32_timer_stop(struct stm3
+ 	regmap_write(priv->regmap, TIM_PSC, 0);
+ 	regmap_write(priv->regmap, TIM_ARR, 0);
+ 
++	/* Force disable master mode */
++	if (stm32_timer_is_trgo2_name(trig->name))
++		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
++	else
++		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
++
+ 	/* Make sure that registers are updated */
+ 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
+ }
+@@ -197,7 +204,7 @@ static ssize_t stm32_tt_store_frequency(
+ 		return ret;
+ 
+ 	if (freq == 0) {
+-		stm32_timer_stop(priv);
++		stm32_timer_stop(priv, trig);
+ 	} else {
+ 		ret = stm32_timer_start(priv, trig, freq);
+ 		if (ret)
 
 
