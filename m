@@ -2,166 +2,111 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C85E8C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FEDC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A297A2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q9VMbXjn"
+	by mail.kernel.org (Postfix) with ESMTP id 1EC7A20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585072904;
+	bh=swH4nZA0Czli9NUSpI0jGThfYfqw2E5rp6BxWp267Tk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u3HjRfh3owAM7jLw4qmKhFdWsl5+0IBkDU3Th8rsYybM2WlA8hDtGErdR9sFg1Thg
+	 tel35KoUkDO2ki9VBg8ZJJdEFkzPbqOMEcTtGT2YAU9ypZy55TYbY/anZqdYI9HJW/
+	 mTtipnBGEgZRLLelLHiah43GOt1JCoDz8KdmefYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbgCXSBS (ORCPT
+        id S1727715AbgCXSBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:01:18 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34808 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727318AbgCXSBS (ORCPT
+        Tue, 24 Mar 2020 14:01:43 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]:35960 "EHLO
+        mail-qt1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727223AbgCXSBm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:01:18 -0400
-Received: by mail-pj1-f66.google.com with SMTP id q16so1416335pje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:01:17 -0700 (PDT)
+        Tue, 24 Mar 2020 14:01:42 -0400
+Received: by mail-qt1-f176.google.com with SMTP id m33so15757032qtb.3;
+        Tue, 24 Mar 2020 11:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=p/25+VohAOX3oBgJFFKkPBRMfW/ssz0RSjZO0iulozc=;
-        b=Q9VMbXjnSM/D/DUHkyvF+6SqZf1W+Duhih6q1dsNV3HaC4RlaR0DWVaf7YsYP9/mOv
-         2cL4SU+7oFPyDM04T0cTFfZ7eIw9mjJPnOCHS2N2FWE5/dbxzIQQUlSBRlbXkn+yxl4x
-         EU39xlrlA3DrdPy7fmHBdhXNlbglNI47yR4ok=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=WTcUW0G2da/p6PXHgnEzI2FtMutVR8dAOTnWSKNo/+8=;
+        b=fVKbJ0LHDno6UVMja5OyHYNwO6yCqhK1y3EJW23eRpqc3oLwkZVCCHkDqeP7sKA+QB
+         ODf5aQrksDN+cOXyxvOmleitLuwhhjOcSmmOPRq+sIxi7IPWAxkAtnfM9pr1O7dG8fWc
+         fvVPXU9zFB5XG8M+QtnplZPCqJiQrEy4ILlta4NAGap3zegdIxwUwOOYc3/NRmsIUsMw
+         SH0lejDsepTjd9xxpMTjPsXy/MOuCQQx8SP/fiDqNPD5Vt2DrkKQkqWmR3U/1F0eYeoU
+         Wl+Y11QpqpR7GbWrfdwyu1zHn1YLiX5j697r1x9qCTyKa6s1KGptQW9O2TCjdN7KsvGf
+         G9sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=p/25+VohAOX3oBgJFFKkPBRMfW/ssz0RSjZO0iulozc=;
-        b=sEAF4JAvUt74K1T47iLDrjdosgE+Z8Xujfxw/Cw9R7Y9f+NX2ky4g31PTTkPTzw5ys
-         ayrTd07saI2m9qWjWYyo6OGBREsBPby/oBMcggPSiiiwRWaReRgz//JAe10eEPkubcir
-         BTcHLZQyFtqXoxCzaJzDtYfXmbrkrjjKowCsuVfhRIP+SPHWf8wA8gjFueYbMoEjTWni
-         2DHfgt14CuaxryCW/oFJgwZsVATT5nOwX+QJuSHcLZLIzwO+1newxuY4rx7fcWJCRskc
-         x3+C/+u4f4Q+lU2DGxQsEGwM67Hl340c+RFtEqJ5KgTi9JNuImDMt4pRL67e51ea/gY2
-         qZww==
-X-Gm-Message-State: ANhLgQ2BlzRUnEtx3R99OXtKmc77eT+Zf3lt4ayKjF+nBZgAld4IYWsb
-        cQdZJYtdlJ9QEu7gxkpy+U0Kaw==
-X-Google-Smtp-Source: ADFU+vsTVSpx5CLwY0bxhvEYPObBTSclhii5ia2w8eYqh/j/yFvNBo23Tqj4NUvTguO7wnpuUTIkTw==
-X-Received: by 2002:a17:902:7c0c:: with SMTP id x12mr24983110pll.196.1585072876326;
-        Tue, 24 Mar 2020 11:01:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f127sm16731008pfa.9.2020.03.24.11.01.15
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=WTcUW0G2da/p6PXHgnEzI2FtMutVR8dAOTnWSKNo/+8=;
+        b=QbEHVpVdIRhlPenj196kbVyd9ZlpZJbZeLrWXL9xEFbioIaJxCcww+T9fKDDFvw9Pv
+         /1Ekgd/LT335fryyT8NRE/LJys4NRGgKi6kN1J3Jbu9RpPO9vhaYPDb60dlAjHnISC07
+         kM6IQOMHCgk7EQLVWythkv9nbWvMDPr+iqMgMapM6oWKfWwZJr/EPjk0NnwW7A+vfb9c
+         hpinzHPoDmAANa4Yt+AblyYrVbAt08z8wQyRBLYWL2avz1dBquQe1DlVeWLnEoqaoXeg
+         m7xqckEPEEuMvrPIsDTUmNeWFGm8vEoZnUDiygEG7DdT9YDv8PObjJCyYX9H78OIKMVY
+         Zy9Q==
+X-Gm-Message-State: ANhLgQ3gDIlEPPKE7bQsrw2tGVRNwX7JqXofZe1E2Cc2NATnSN5Zl3ik
+        UgLPqBgja0zr4NfM04qAT9U=
+X-Google-Smtp-Source: ADFU+vvNWDEUA7vOK1G2JGNgFpG35jd7R3WvWS0yKKB1JnYYZXp9Nf6+nvRKb+yPmtkuiCnbcDsHrA==
+X-Received: by 2002:aed:2a05:: with SMTP id c5mr19935107qtd.248.1585072901426;
+        Tue, 24 Mar 2020 11:01:41 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::19c2])
+        by smtp.gmail.com with ESMTPSA id n142sm13149843qkn.11.2020.03.24.11.01.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 11:01:15 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 11:01:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Stephen Smalley <stephen.smalley.work@gmail.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        KP Singh <kpsingh@chromium.org>, linux-kernel@vger.kernel.org,
-        bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and
- execution
-Message-ID: <202003241100.279457EF@keescook>
-References: <20200323164415.12943-1-kpsingh@chromium.org>
- <20200323164415.12943-5-kpsingh@chromium.org>
- <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
- <20200324145003.GA2685@chromium.org>
- <CAEjxPJ4YnCCeQUTK36Ao550AWProHrkrW1a6K5RKuKYcPcfhyA@mail.gmail.com>
- <d578d19f-1d3b-f60d-f803-2fcb46721a4a@schaufler-ca.com>
- <CAEjxPJ59wijpB=wa4ZhPyX_PRXrRAX2+PO6e8+f25wrb9xndRA@mail.gmail.com>
+        Tue, 24 Mar 2020 11:01:40 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 14:01:39 -0400
+From:   Tejun Heo <tj@kernel.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Li Zefan <lizefan@huawei.com>, cgroups <cgroups@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [regression] cpuset: offlined CPUs removed from affinity masks
+Message-ID: <20200324180139.GB162390@mtj.duckdns.org>
+References: <1251528473.590671.1579196495905.JavaMail.zimbra@efficios.com>
+ <20200219154740.GD698990@mtj.thefacebook.com>
+ <59426509.702.1582127435733.JavaMail.zimbra@efficios.com>
+ <20200219155202.GE698990@mtj.thefacebook.com>
+ <1358308409.804.1582128519523.JavaMail.zimbra@efficios.com>
+ <20200219161222.GF698990@mtj.thefacebook.com>
+ <316507033.21078.1583597207356.JavaMail.zimbra@efficios.com>
+ <20200312182618.GE79873@mtj.duckdns.org>
+ <1289608777.27165.1584042470528.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEjxPJ59wijpB=wa4ZhPyX_PRXrRAX2+PO6e8+f25wrb9xndRA@mail.gmail.com>
+In-Reply-To: <1289608777.27165.1584042470528.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:49:34PM -0400, Stephen Smalley wrote:
-> On Tue, Mar 24, 2020 at 12:25 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >
-> > On 3/24/2020 7:58 AM, Stephen Smalley wrote:
-> > > On Tue, Mar 24, 2020 at 10:50 AM KP Singh <kpsingh@chromium.org> wrote:
-> > >> On 24-Mär 10:35, Stephen Smalley wrote:
-> > >>> On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrote:
-> > >>>> From: KP Singh <kpsingh@google.com>
-> > >>>> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> > >>>> index 530d137f7a84..2a8131b640b8 100644
-> > >>>> --- a/kernel/bpf/bpf_lsm.c
-> > >>>> +++ b/kernel/bpf/bpf_lsm.c
-> > >>>> @@ -9,6 +9,9 @@
-> > >>>>  #include <linux/btf.h>
-> > >>>>  #include <linux/lsm_hooks.h>
-> > >>>>  #include <linux/bpf_lsm.h>
-> > >>>> +#include <linux/jump_label.h>
-> > >>>> +#include <linux/kallsyms.h>
-> > >>>> +#include <linux/bpf_verifier.h>
-> > >>>>
-> > >>>>  /* For every LSM hook  that allows attachment of BPF programs, declare a NOP
-> > >>>>   * function where a BPF program can be attached as an fexit trampoline.
-> > >>>> @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
-> > >>>>  #include <linux/lsm_hook_names.h>
-> > >>>>  #undef LSM_HOOK
-> > >>>>
-> > >>>> +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
-> > >>>> +
-> > >>>> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
-> > >>>> +                       const struct bpf_prog *prog)
-> > >>>> +{
-> > >>>> +       /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
-> > >>>> +        */
-> > >>>> +       if (!capable(CAP_MAC_ADMIN))
-> > >>>> +               return -EPERM;
-> > >>> I had asked before, and will ask again: please provide an explicit LSM
-> > >>> hook for mediating whether one can make changes to the LSM hooks.
-> > >>> Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SELinux.
-> > >> What do you think about:
-> > >>
-> > >>   int security_check_mutable_hooks(void)
-> > >>
-> > >> Do you have any suggestions on the signature of this hook? Does this
-> > >> hook need to be BPF specific?
-> > > I'd do something like int security_bpf_prog_attach_security(const
-> > > struct bpf_prog *prog) or similar.
-> > > Then the security module can do a check based on the current task
-> > > and/or the prog.  We already have some bpf-specific hooks.
-> >
-> > I *strongly* disagree with Stephen on this. KRSI and SELinux are peers.
-> > Just as Yama policy is independent of SELinux policy so KRSI policy should
-> > be independent of SELinux policy. I understand the argument that BDF programs
-> > ought to be constrained by SELinux, but I don't think it's right. Further,
-> > we've got unholy layering when security modules call security_ functions.
-> > I'm not saying there is no case where it would be appropriate, but this is not
-> > one of them.
-> 
-> I explained this previously.  The difference is that the BPF programs
-> are loaded from a userspace
-> process, not a kernel-resident module.  They already recognize there
-> is a difference here or
-> they wouldn't have the CAP_MAC_ADMIN check above in their patch.  The
-> problem with that
-> check is just that CAP_MAC_ADMIN doesn't necessarily mean fully
-> privileged with respect to
-> SELinux, which is why I want an explicit hook.  This gets a NAK from
-> me until there is such a hook.
+Sorry about long delay.
 
-Doesn't the existing int (*bpf_prog)(struct bpf_prog *prog); cover
-SELinux's need here? I.e. it can already examine that a hook is being
-created for the LSM (since it has a distinct type, etc)?
+On Thu, Mar 12, 2020 at 03:47:50PM -0400, Mathieu Desnoyers wrote:
+> The basic idea is to allow applications to pin to every possible cpu, but
+> not allow them to use this to consume a lot of cpu time on CPUs they
+> are not allowed to run.
+> 
+> Thoughts ?
+
+One thing that we learned is that priority alone isn't enough in isolating cpu
+consumptions no matter how low the priority may be if the workload is latency
+sensitive. The actual computation capacity of cpus gets saturated way before cpu
+time is saturated and latency impact from lowered mips becomes noticeable. So,
+depending on workloads, allowing threads to run at the lowest priority on
+disallowed cpus might not lead to behaviors that users expect but I have no idea
+what kind of usage models you have on mind for the new system call.
+
+Thanks.
 
 -- 
-Kees Cook
+tejun
