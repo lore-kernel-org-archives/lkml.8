@@ -2,115 +2,90 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44011C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:33:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1EBC54FCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 219BC2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:33:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE682078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:35:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R2nEuWTd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgCXWdu (ORCPT
+        id S1728684AbgCXWfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:33:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46366 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728282AbgCXWcU (ORCPT
+        Tue, 24 Mar 2020 18:35:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:57444 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728539AbgCXWfC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:32:20 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGs5n-0006ru-BH; Tue, 24 Mar 2020 23:32:15 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F2C291C0470;
-        Tue, 24 Mar 2020 23:32:14 +0100 (CET)
-Date:   Tue, 24 Mar 2020 22:32:14 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] ASoC: Intel: Convert to new X86 CPU match macros
-Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200320131510.594671507@linutronix.de>
-References: <20200320131510.594671507@linutronix.de>
+        Tue, 24 Mar 2020 18:35:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=1/eBpTZIO0KNns23jwEV+7XSPYVYlHUsVSdS97C3eio=; b=R2nEuWTdhFQzF8AWJwHG9AnAWi
+        nzeNRtFShsZTEl9S5ozMAj90XXir8ElrOLeY3IopGQ0L6JzDdtZCF50M+KNOEcDMViIIP1fFKxfld
+        UKkxLCc+GncqzMs4PAIZ1fMigb8EXW1xh4F4FlrSczaDgaQKHZlHT6z0ke42AFMYzptqdmV3McAAz
+        FRxJTCEzC3pFqEex4Nxgh3KWjBYzSYJ6jk5/Mz/CnDBwe5xEMHhFo1VBPXAQVX2kl7+pfD+ZXPzkx
+        kSQsI6yOXk69CZYrae4PW6wmHNiTDi6S6mLD0H4fzjZc0NeAcIbCSfyLK26DF5M6IShrTv35OhKN1
+        gW11u+sA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGs8P-0008MX-Tr; Tue, 24 Mar 2020 22:34:58 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A9A01983502; Tue, 24 Mar 2020 23:34:55 +0100 (CET)
+Date:   Tue, 24 Mar 2020 23:34:55 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
+        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
+Subject: Re: [PATCH v3 26/26] objtool: Add STT_NOTYPE noinstr validation
+Message-ID: <20200324223455.GV2452@worktop.programming.kicks-ass.net>
+References: <20200324153113.098167666@infradead.org>
+ <20200324160925.470421121@infradead.org>
+ <20200324221616.2tdljgyay37aiw2t@treble>
 MIME-Version: 1.0
-Message-ID: <158508913467.28353.3796403748809636437.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324221616.2tdljgyay37aiw2t@treble>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Tue, Mar 24, 2020 at 05:16:16PM -0500, Josh Poimboeuf wrote:
+> On Tue, Mar 24, 2020 at 04:31:39PM +0100, Peter Zijlstra wrote:
 
-Commit-ID:     d51ba9c6663d7171681be357f672503f4e2ccdc1
-Gitweb:        https://git.kernel.org/tip/d51ba9c6663d7171681be357f672503f4e2ccdc1
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Fri, 20 Mar 2020 14:14:04 +01:00
-Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Tue, 24 Mar 2020 21:35:53 +01:00
+> > +	if (state.noinstr) {
+> > +		/*
+> > +		 * In vmlinux mode we will not run validate_unwind_hints() by
+> > +		 * default which means we'll not otherwise visit STT_NOTYPE
+> > +		 * symbols.
+> > +		 *
+> > +		 * In case of --duplicate mode, insn->visited will avoid actual
+> > +		 * duplicate work being done.
+> > +		 */
+> > +		list_for_each_entry(func, &sec->symbol_list, list) {
+> > +			if (func->type != STT_NOTYPE)
+> > +				continue;
+> > +
+> > +			warnings += validate_symbol(file, sec, func, &state);
+> > +		}
+> > +	}
+> > +
+> 
+> I guess this is ok, but is there a valid reason why we don't just call
+> validate_unwind_hints()?
+> 
+> It's also slightly concerning that validate_reachable_instructions()
+> isn't called, I'm not 100% convinced all the code will get checked.
 
-ASoC: Intel: Convert to new X86 CPU match macros
+This will only end up running on .noinstr.text, while
+validate_unwind_hints() will run on *everything*. That is, we're
+purposely not checking everything.
 
-The new macro set has a consistent namespace and uses C99 initializers
-instead of the grufty C89 ones.
-
-Get rid the of the local macro wrappers for consistency.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lkml.kernel.org/r/20200320131510.594671507@linutronix.de
----
- sound/soc/intel/common/soc-intel-quirks.h | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/sound/soc/intel/common/soc-intel-quirks.h b/sound/soc/intel/common/soc-intel-quirks.h
-index 863a477..a917615 100644
---- a/sound/soc/intel/common/soc-intel-quirks.h
-+++ b/sound/soc/intel/common/soc-intel-quirks.h
-@@ -15,13 +15,11 @@
- #include <asm/intel-family.h>
- #include <asm/iosf_mbi.h>
- 
--#define ICPU(model)	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, }
--
- #define SOC_INTEL_IS_CPU(soc, type)				\
- static inline bool soc_intel_is_##soc(void)			\
- {								\
- 	static const struct x86_cpu_id soc##_cpu_ids[] = {	\
--		ICPU(type),					\
-+		X86_MATCH_INTEL_FAM6_MODEL(type, NULL),		\
- 		{}						\
- 	};							\
- 	const struct x86_cpu_id *id;				\
-@@ -32,11 +30,11 @@ static inline bool soc_intel_is_##soc(void)			\
- 	return false;						\
- }
- 
--SOC_INTEL_IS_CPU(byt, INTEL_FAM6_ATOM_SILVERMONT);
--SOC_INTEL_IS_CPU(cht, INTEL_FAM6_ATOM_AIRMONT);
--SOC_INTEL_IS_CPU(apl, INTEL_FAM6_ATOM_GOLDMONT);
--SOC_INTEL_IS_CPU(glk, INTEL_FAM6_ATOM_GOLDMONT_PLUS);
--SOC_INTEL_IS_CPU(cml, INTEL_FAM6_KABYLAKE_L);
-+SOC_INTEL_IS_CPU(byt, ATOM_SILVERMONT);
-+SOC_INTEL_IS_CPU(cht, ATOM_AIRMONT);
-+SOC_INTEL_IS_CPU(apl, ATOM_GOLDMONT);
-+SOC_INTEL_IS_CPU(glk, ATOM_GOLDMONT_PLUS);
-+SOC_INTEL_IS_CPU(cml, KABYLAKE_L);
- 
- static inline bool soc_intel_is_byt_cr(struct platform_device *pdev)
- {
+It very much relies on the !vmlinux mode to do the unreachable things.
