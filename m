@@ -2,132 +2,150 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22143C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A51C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F25242073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E729A20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:36:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="fJ31mfSc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ovIGcrrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbgCXPfV (ORCPT
+        id S1728089AbgCXPgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:35:21 -0400
-Received: from mga04.intel.com ([192.55.52.120]:20383 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727216AbgCXPfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:35:20 -0400
-IronPort-SDR: LgWswiGKgRZcEtQCpX5S3ORFudk+2Zo0lp6rRUAYot75geEy27RdMTAuyYsvdHp0Hn1BWk/mLa
- x5MxbtF0ZSqQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:35:20 -0700
-IronPort-SDR: DjgDT7YuDwbDWYF1HGq2qCo2JezbGlElTudi5lGD2km4UWW+ArvxX+SXNRQf/xcxzNHEj84W24
- iUl24loeegPA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="235616865"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga007.jf.intel.com with ESMTP; 24 Mar 2020 08:35:16 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGlaI-00CZJi-U8; Tue, 24 Mar 2020 17:35:18 +0200
-Date:   Tue, 24 Mar 2020 17:35:18 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     ajayg@nvidia.com, Wolfram Sang <wsa@the-dreams.de>,
-        "open list:I2C CONTROLLER DRIVER FOR NVIDIA GPU" 
-        <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] i2c: nvidia-gpu: Handle timeout correctly in
- gpu_i2c_check_status()
-Message-ID: <20200324153518.GP1922688@smile.fi.intel.com>
-References: <20200324152812.20231-1-kai.heng.feng@canonical.com>
+        Tue, 24 Mar 2020 11:36:15 -0400
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:57505 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727216AbgCXPgP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:36:15 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 6EEF388B;
+        Tue, 24 Mar 2020 11:36:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 24 Mar 2020 11:36:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm2; bh=ey6ezPmPMaFgVvNxPoggC0JkyMH
+        IxDXhR6IcAX+U6aA=; b=fJ31mfSc7adxHOZK4W+MnOgd9hIgs5ks1T/cTcU5+4Y
+        Et3OI2qzFtjXZclKPQ/YbDrqfAJhz9McMFo5uLbFTTVDg346dhXcPuQfqeOKYfC8
+        xNX5PnLrbjlAAqfpDqaaHqwUcNJKUOccrdbq8xAfyeceQ49bafxI069u71znWNC0
+        /jCN3FCFjDic/etAR4RCPxL2MRuKoH8nJTBHONNyn5BUdlDymZTJ+C2gvbSxIKUI
+        qPzKC7C+tfv13S7t/lEkKZk4mHHQrK+Xz6cmqOHJERVnvrnuv04vLhWO7XsnTEEz
+        ZoTzNhgllnZcVKdlRLO1KrnsKw5j32dJ3KeHTaa27rg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ey6ezP
+        mPMaFgVvNxPoggC0JkyMHIxDXhR6IcAX+U6aA=; b=ovIGcrrCcsEyK2ppIfv5Uq
+        jik3pR9HU2lWBXmbmB1W9bXT/sZdqxIMiRuESBfXNWotpv8p2Ek6xuLhdxZf/+Nv
+        Evm6wcHEr1Eaa+X9DJriaJb6wygXstKQG929k+atlO6qKlsOVFqMkyt9Q5xbTkYi
+        MGCOBZrTXdV4QqmREXZ12JvjMOH6uf9ZtppuDQfsl7iv+KiCBrEr1thiVsuOrm4Y
+        2NTDTjX5ODxiO0hsLLMNrx6+3skk9bB1PERr07atUGtrIk6XzdRI7Ju2rHoVdkPc
+        tCOjzJ8yhj/plcRB4NZl5P4AqCorymOMplmzbvVPJyLErjd6yffM0EdwDfJ0njng
+        ==
+X-ME-Sender: <xms:6ih6XtXVSOq43UO0FDOpgLJ18ttTtEIsM7QiB_QaILv4xodIpZBbIA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehuddggeekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecukfhppeeltd
+    drkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghi
+    lhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:6ih6Xld0JyIQmOZpiwYz5EoM49Rx27fWfUcjbq0tXzW0Xhl5cXdQCw>
+    <xmx:6ih6XowSOmMeHITMFY9Dc62vLfOnwn4yygSHFRUC2rwjl7XXPVUYuQ>
+    <xmx:6ih6XoE1xQEBpYtGSZmlNG6Z0eE72hPN6OYQBHnHMXjpOF9GyHK5qA>
+    <xmx:7Sh6Xuz-u5DZ_tiu-AknL7VKYfMOUAVjvE67zNPWHtV7Lxw4Xj5QDg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 9CCA2328005E;
+        Tue, 24 Mar 2020 11:36:10 -0400 (EDT)
+Date:   Tue, 24 Mar 2020 16:36:08 +0100
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Roman Stratiienko <r.stratiienko@gmail.com>
+Cc:     jernej.skrabec@siol.net, wens@csie.org, airlied@linux.ie,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 4/4] RFC: drm/sun4i: Process alpha channel of most
+ bottom layer
+Message-ID: <20200324153608.6whowf2b77k75uhj@gilmour.lan>
+References: <.>
+ <20200302103138.17916-1-r.stratiienko@gmail.com>
+ <20200302103138.17916-5-r.stratiienko@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="adiczxgoolyaz7j5"
 Content-Disposition: inline
-In-Reply-To: <20200324152812.20231-1-kai.heng.feng@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200302103138.17916-5-r.stratiienko@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:28:11PM +0800, Kai-Heng Feng wrote:
-> Nvidia card may come with a "phantom" UCSI device, and its driver gets
-> stuck in probe routine, prevents any system PM operations like suspend.
-> 
-> There's an unaccounted case that the target time can equal to jiffies in
-> gpu_i2c_check_status(), let's solve that by using readl_poll_timeout()
-> instead of jiffies comparison functions. 
-> 
 
-Thank you!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+--adiczxgoolyaz7j5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Mon, Mar 02, 2020 at 12:31:38PM +0200, Roman Stratiienko wrote:
+> Allwinner display engine blender consists of 3 pipelined blending units.
+>
+> PIPE0->\
+>         BLD0-\
+> PIPE1->/      BLD1-\
+> PIPE2->------/      BLD2->OUT
+> PIPE3->------------/
+>
+> This pipeline produces incorrect composition if PIPE0 buffer has alpha.
 
-> Fixes: c71bcdcb42a7 ("i2c: add i2c bus driver for NVIDIA GPU")
-> Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Why? What happens in that case?
+
+> Correct solution is to add one more blending step and mix PIPE0 with
+> background, but it is not supported by the hardware.
+>
+> Use premultiplied alpha buffer of PIPE0 overlay channel as is.
+> In this case we got same effect as mixing PIPE0 with black background.
+>
+> Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
+>
 > ---
-> v3:
-> - Use readl_poll_timeout to make the retry loop simpler.
-> 
-> v2:
-> - Use a boolean to make sure the operation is timeout or not.
-> 
->  drivers/i2c/busses/i2c-nvidia-gpu.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
-> index 62e18b4db0ed..f5d25ce00f03 100644
-> --- a/drivers/i2c/busses/i2c-nvidia-gpu.c
-> +++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
-> @@ -8,6 +8,7 @@
->  #include <linux/delay.h>
->  #include <linux/i2c.h>
->  #include <linux/interrupt.h>
-> +#include <linux/iopoll.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
-> @@ -75,20 +76,15 @@ static void gpu_enable_i2c_bus(struct gpu_i2c_dev *i2cd)
->  
->  static int gpu_i2c_check_status(struct gpu_i2c_dev *i2cd)
->  {
-> -	unsigned long target = jiffies + msecs_to_jiffies(1000);
->  	u32 val;
-> +	int ret;
->  
-> -	do {
-> -		val = readl(i2cd->regs + I2C_MST_CNTL);
-> -		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER))
-> -			break;
-> -		if ((val & I2C_MST_CNTL_STATUS) !=
-> -				I2C_MST_CNTL_STATUS_BUS_BUSY)
-> -			break;
-> -		usleep_range(500, 600);
-> -	} while (time_is_after_jiffies(target));
-> -
-> -	if (time_is_before_jiffies(target)) {
-> +	ret = readl_poll_timeout(i2cd->regs + I2C_MST_CNTL, val,
-> +				 !(val & I2C_MST_CNTL_CYCLE_TRIGGER) ||
-> +				 (val & I2C_MST_CNTL_STATUS) != I2C_MST_CNTL_STATUS_BUS_BUSY,
-> +				 500, 1000 * USEC_PER_MSEC);
-> +
-> +	if (ret) {
->  		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
->  		return -ETIMEDOUT;
->  	}
-> -- 
-> 2.17.1
-> 
+>
+> v4:
+> - Initial version, depends on other unmerged patches in the patchset.
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 2 +-
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> index dd6145f80c36..d94f4d8b9128 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
+> @@ -106,7 +106,7 @@ static void sun8i_ui_layer_update_alpha(struct sun8i_mixer *mixer, int channel,
+>  	regmap_update_bits(mixer->engine.regs,
+>  			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
+>  			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
+> -			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos));
+> +			   zpos ? SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos) : 0);
 
--- 
-With Best Regards,
-Andy Shevchenko
+Can you really use the zpos here? What happens if the zpos doesn't
+match the pipe?
 
+Maxime
 
+--adiczxgoolyaz7j5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXnoo6AAKCRDj7w1vZxhR
+xQ3qAQDi1pvffHHMR3iuY4S1QReEhrb2tXea5b4qGXQRNlFXLgEAoSrDjZzD7BFx
+uqqs3+pIlvIeZFNloU3TyvpOGtTEowo=
+=WfNJ
+-----END PGP SIGNATURE-----
+
+--adiczxgoolyaz7j5--
