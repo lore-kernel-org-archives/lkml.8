@@ -2,149 +2,127 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC67C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 603D1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B552074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="IXdBQHqe"
+	by mail.kernel.org (Postfix) with ESMTP id 43C3820719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:59:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbgCXR7W (ORCPT
+        id S1727942AbgCXR76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:59:22 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40471 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbgCXR7W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:59:22 -0400
-Received: by mail-qt1-f194.google.com with SMTP id c9so8756340qtw.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:59:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zH+BGadp4OmNkvzUZhTO73HLGjoJtfJzYl50kGaQ9wk=;
-        b=IXdBQHqeUJOCCZkIgPOwwZgSnBKeFld/XRqmME+TSc3rxoiYnHV8EgAK6SY/rP6xlv
-         U9fRw/vb55F1clIFXva7MNTzhItj4RSG2F+XGgFYAgrTipDRAZm8z5ZUkQovc4EumeOs
-         zD6Kyyh5KWPcv5DLAV5hgqZQl1m9uaA/XaEvYSfKhMa9585c2w9rlfQpnoi7VQas3S8R
-         UKKPXYTQuHwDenMlqq4JexbrdUBPTBkflax1BCdCMURi+HSFOLlzoah9ss0ZWBxd6OuC
-         VrOBUG1xvv8OAVpd0tD11cCKbQ5FeCGEa/rZq5SnlOwIM5oAz3ohlQFSs9MH6AhA9HQa
-         cZ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zH+BGadp4OmNkvzUZhTO73HLGjoJtfJzYl50kGaQ9wk=;
-        b=SkQPVSbJNpHEkIF17kEAMd80Z2zVWB1ykwhD1OEbRSBWq86yTFnnyHPm/iY72CdaL1
-         GgDlAPjt6OuOLX5CCMVSWl1ruGLgtUIjOATsn3AoYn838ZdW3fkNLf0jGUNzE9BkRd8R
-         IksybG7qG0zLUGDoaWhUhj70UbksIhdj1hR7JOI3yjkLpwT9JVBWIwskoe9ikT2WtWmX
-         BkJLrhbIRQxVjdxzroj6ZWfuBDAtABRyocyH89b3Z0LfPOXgqLr6lRbKNr74vzDdxEe0
-         etHVx/wGoyEz5JCQfMRukUrHWH6Kg3nfF6cWFU6s1dsIAvUIkCAnJjRjZAJM5HUW6DqR
-         xt4Q==
-X-Gm-Message-State: ANhLgQ2+RpfG98K+yX2bQtTMV9doleOOwezQA891l2pTu0pl4gEhugiF
-        jzQZnO6EawpXebUuSG9JuO5Nfg==
-X-Google-Smtp-Source: ADFU+vuQ4Q4V+mScJFlextfScElcSW54hioCdgee8HN9LPyP5FKMTC3Ckqq0+uSRdg0bOwuphm/SkA==
-X-Received: by 2002:ac8:1c17:: with SMTP id a23mr28141558qtk.239.1585072760748;
-        Tue, 24 Mar 2020 10:59:20 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id d72sm13434428qkg.102.2020.03.24.10.59.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 24 Mar 2020 10:59:20 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jGnpe-0006sJ-Ql; Tue, 24 Mar 2020 14:59:18 -0300
-Date:   Tue, 24 Mar 2020 14:59:18 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        arei.gonglei@huawei.com, weidong.huang@huawei.com,
-        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset()
-Message-ID: <20200324175918.GL20941@ziepe.ca>
-References: <20200323160955.GY20941@ziepe.ca>
- <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
- <20200323180706.GC20941@ziepe.ca>
- <88698dd7-eb87-4b0b-7ba7-44ef6eab6a6c@oracle.com>
- <20200323225225.GF20941@ziepe.ca>
- <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
- <20200324115541.GH20941@ziepe.ca>
- <98d35563-8af0-2693-7e76-e6435da0bbee@oracle.com>
- <20200324155552.GK20941@ziepe.ca>
- <66583587-ca4f-9847-c173-4a3d7938fec6@oracle.com>
+        Tue, 24 Mar 2020 13:59:58 -0400
+Received: from foss.arm.com ([217.140.110.172]:39104 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727509AbgCXR76 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:59:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 328D031B;
+        Tue, 24 Mar 2020 10:59:57 -0700 (PDT)
+Received: from localhost (unknown [10.1.198.53])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C79FA3F71F;
+        Tue, 24 Mar 2020 10:59:56 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 17:59:55 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     linux-kernel@vger.kernel.org,
+        Saravana Kannan <saravanak@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        lorenzo.pieralisi@arm.com
+Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
+ creating dead devices
+Message-ID: <20200324175955.GA16972@arm.com>
+References: <20200111052125.238212-1-saravanak@google.com>
+ <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <66583587-ca4f-9847-c173-4a3d7938fec6@oracle.com>
+In-Reply-To: <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:19:29AM -0700, Mike Kravetz wrote:
-> On 3/24/20 8:55 AM, Jason Gunthorpe wrote:
-> > On Tue, Mar 24, 2020 at 08:25:09AM -0700, Mike Kravetz wrote:
-> >> On 3/24/20 4:55 AM, Jason Gunthorpe wrote:
-> >>> Also, since CH moved all the get_user_pages_fast code out of the
-> >>> arch's many/all archs can drop their arch specific version of this
-> >>> routine. This is really just a specialized version of gup_fast's
-> >>> algorithm..
-> >>>
-> >>> (also the arch versions seem different, why do some return actual
-> >>>  ptes, not null?)
-> >>
-> >> Not sure I understand that last question.  The return value should be
-> >> a *pte or null.
-> > 
-> > I mean the common code ends like this:
-> > 
-> > 	pmd = pmd_offset(pud, addr);
-> > 	if (sz != PMD_SIZE && pmd_none(*pmd))
-> > 		return NULL;
-> > 	/* hugepage or swap? */
-> > 	if (pmd_huge(*pmd) || !pmd_present(*pmd))
-> > 		return (pte_t *)pmd;
-> > 
-> > 	return NULL;
-> > 
-> > So it always returns a pointer into a PUD or PMD, while say, ppc
-> > in __find_linux_pte() ends like:
-> > 
-> > 	return pte_offset_kernel(&pmd, ea);
-> > 
-> > Which is pointing to a PTE
+Hi guys,
+
+On Thursday 19 Mar 2020 at 08:47:46 (-0000), tip-bot2 for Saravana Kannan wrote:
+> The following commit has been merged into the timers/core branch of tip:
 > 
-> Ok, now I understand the question.  huge_pte_offset will/should only be
-> called for addresses that are in a vma backed by hugetlb pages.  So,
-> pte_offset_kernel() will only return page table type (PUD/PMD/etc) associated
-> with a huge page supported by the particular arch.
+> Commit-ID:     4f41fe386a94639cd9a1831298d4f85db5662f1e
+> Gitweb:        https://git.kernel.org/tip/4f41fe386a94639cd9a1831298d4f85db5662f1e
+> Author:        Saravana Kannan <saravanak@google.com>
+> AuthorDate:    Fri, 10 Jan 2020 21:21:25 -08:00
+> Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
+> CommitterDate: Tue, 17 Mar 2020 13:10:07 +01:00
+> 
+> clocksource/drivers/timer-probe: Avoid creating dead devices
+> 
+> Timer initialization is done during early boot way before the driver
+> core starts processing devices and drivers. Timers initialized during
+> this early boot period don't really need or use a struct device.
+> 
+> However, for timers represented as device tree nodes, the struct devices
+> are still created and sit around unused and wasting memory. This change
+> avoid this by marking the device tree nodes as "populated" if the
+> corresponding timer is successfully initialized.
+> 
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Link: https://lore.kernel.org/r/20200111052125.238212-1-saravanak@google.com
+> ---
+>  drivers/clocksource/timer-probe.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+> index ee9574d..a10f28d 100644
+> --- a/drivers/clocksource/timer-probe.c
+> +++ b/drivers/clocksource/timer-probe.c
+> @@ -27,8 +27,10 @@ void __init timer_probe(void)
+>  
+>  		init_func_ret = match->data;
+>  
+> +		of_node_set_flag(np, OF_POPULATED);
+>  		ret = init_func_ret(np);
+>  		if (ret) {
+> +			of_node_clear_flag(np, OF_POPULATED);
+>  			if (ret != -EPROBE_DEFER)
+>  				pr_err("Failed to initialize '%pOF': %d\n", np,
+>  				       ret);
+> 
 
-I thought pte_offset_kernel always returns PTEs (ie the 4k entries on
-x86), I suppose what you are saying is that since the caller knows
-this is always a PUD or PMD due to the VMA the pte_offset is dead code.
+This patch is creating problems on some vexpress platforms - ones that
+are using CLKSRC_VERSATILE (drivers/clocksource/timer-versatile.c).
+I noticed issues on TC2 and FVPs (fixed virtual platforms) starting with
+next-20200318 and still reproducible with next-20200323.
 
-> > So does sparc:
-> > 
-> >         pmd = pmd_offset(pud, addr);
-> >         if (pmd_none(*pmd))
-> >                 return NULL;
-> >         if (is_hugetlb_pmd(*pmd))
-> >                 return (pte_t *)pmd;
-> >         return pte_offset_map(pmd, addr);
-> > 
-> > Which is even worse because it is leaking a kmap..
+It seems the issue this patch causes on TC2 and FVP is related to the
+vexpress-sysreg node being used early for sched_clock_init
+(timer_versatile.c: versatile_sched_clock_init). At this point (at
+time_init) the node will be marked as OF_POPULATED, which flags that a
+device is already created for it, but it is not, in this case.
 
-Particularly here which is buggy dead code :)
+Later at sysreg_init (vexpress-sysreg.c) a device will fail to be created
+for it, as one already exists. This will result in a failure to create a
+bridge and a system controller for a bunch of devices (mostly clocks and
+regulators).
 
-Jason
+I think on the FVP it does not cause many issues as clocks are fixed and
+regulator settings are probably nops so it boots fine and throws only
+some warnings. On TC2 on the other hand it fails to boot and it hangs at
+starting the kernel.
+
+In my opinion the idea of the patch is not bad, but I'm not an expert on
+this so the most I can offer for now is the basic understanding of the
+issue. I've Cc-ed a few folks to potentially suggest alternatives/fixes.
+
+For now, reverting this patch solves the problems on both platforms.
+I tested this on next-20200318 which introduced the problem.
+
+Hope it helps,
+Ionela.
