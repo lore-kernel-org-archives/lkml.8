@@ -7,133 +7,220 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DC7C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15F1C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:37:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24012070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A2342080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:37:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OKLqpWJf"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="DSkBFf6j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgCXLdY (ORCPT
+        id S1727270AbgCXLhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:33:24 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:39485 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727194AbgCXLdY (ORCPT
+        Tue, 24 Mar 2020 07:37:48 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:38240 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbgCXLhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:33:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585049603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OmEKUVPUUIW58t8wUbOpcRcdCmPdmzEFAmhnF2iSsrM=;
-        b=OKLqpWJfbCz2ThRq0G4O1Hfzwk2gspTohadxyylSjmXUvgbYBo066qGewryp+VGHyBZZG8
-        Q6VKPB4unXhjE3hcptcN2CDkUvUjdktfFf35a/bANNjFzhix3YHQKbYYviB7chcpTB/nl3
-        hf+feCpF8YDumaozGGPRNEwleNiTXcU=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-277-g2swAAa3PViCr1eb6LVjnw-1; Tue, 24 Mar 2020 07:33:20 -0400
-X-MC-Unique: g2swAAa3PViCr1eb6LVjnw-1
-Received: by mail-wr1-f72.google.com with SMTP id j12so5226107wrr.18
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:33:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OmEKUVPUUIW58t8wUbOpcRcdCmPdmzEFAmhnF2iSsrM=;
-        b=DXSkmGlRUKeDD36XWJvHGsxbcpGPxvqdbZ+A9lsNjFf+4HsdRooaarmczIYheGxKIX
-         J5d8Nt0Dq/JBdlRp4bPbQLFvUzSJAER4BQJp+ViZyJUVJJWJeZtbnrt6kw/7VhOLnQ1R
-         hyyw1jT2LJF20YamfieyoXLfnvtd4vmJluRUMuWLyyh3pzmtQFAOY9oCjLstANrJAVDw
-         Wmc5ji6Jn+OESsV6n23RPEdzuzxlSZJ5/DOY9Ttxa6SP66BuxsWMF/PsxvQXu2h+H37e
-         dcmMY+QXn9h62OzfG1sewsH10gEYPu48XUJVaO8NmKpkNUhDE1tqdh6uqU8NPFG01z12
-         O7PA==
-X-Gm-Message-State: ANhLgQ2RTrvKnZzjUPgvwhz5IuY5dWVHON4XUyE0nVRfOmdHa4mvSRv/
-        xJPUMnSaXXUv0oSbxedAcape4srmIyHI0G+RX4R+PhPudMd/byq7sfic7g3SDrJMBuapSYWMam6
-        AJb/3ASz2tYwqmaTaUFmXoE8U
-X-Received: by 2002:adf:a3db:: with SMTP id m27mr37127626wrb.350.1585049599166;
-        Tue, 24 Mar 2020 04:33:19 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvgZHkdhEh+B+n9ipNvW4FVlwMdOadw+K1ajul8byxpJD6tN65QChX591BtD1p6mNq2BLWstQ==
-X-Received: by 2002:adf:a3db:: with SMTP id m27mr37127590wrb.350.1585049598914;
-        Tue, 24 Mar 2020 04:33:18 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7848:99b4:482a:e888? ([2001:b07:6468:f312:7848:99b4:482a:e888])
-        by smtp.gmail.com with ESMTPSA id s22sm3727898wmc.16.2020.03.24.04.33.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 04:33:18 -0700 (PDT)
-Subject: Re: [PATCH 0/4] KVM: SVM: Move and split up svm.c
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Ashish Kalra <Ashish.Kalra@amd.com>,
-        Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200324094154.32352-1-joro@8bytes.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <33af4430-e19d-c414-3e78-bcbc69d5bfb7@redhat.com>
-Date:   Tue, 24 Mar 2020 12:33:17 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 07:37:48 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200324113744epoutp01710ba802cfa67c6bd2f14e1aac750435~-OnQ6irLu1452014520epoutp01o
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:37:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200324113744epoutp01710ba802cfa67c6bd2f14e1aac750435~-OnQ6irLu1452014520epoutp01o
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1585049864;
+        bh=JgArrA3uQGXN7tH4LXkGzWxmGt7NEFtzC40fxAIIJQg=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=DSkBFf6jpZ3QmdTeckXSTxP3icJbuh9wu9nZP6gIXLHdpQ5jlDu5hrhE5/1oy/03j
+         y+ZTqzoX2LYy0egQFrIwqFMQXDy9FRcyJX9kOmXR9m5GtiR5/df7cL7NC0WxjwIYD1
+         eHhXr4XyN4LW10ALPXpcFfuXzqycCh+P0mmfi4RY=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200324113743epcas1p116ddec95a2720d6e171137d6bb9bec7d~-OnP0Noov1286112861epcas1p18;
+        Tue, 24 Mar 2020 11:37:43 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.163]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 48mq452dFJzMqYkV; Tue, 24 Mar
+        2020 11:37:41 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        36.77.04074.501F97E5; Tue, 24 Mar 2020 20:37:41 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200324113740epcas1p105dbc87fedfa534c2d6b6a8ad515fda0~-OnNQvG9S1286112861epcas1p15;
+        Tue, 24 Mar 2020 11:37:40 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200324113740epsmtrp2625c4b6be22228e08fbc7d5e855cf9f0~-OnNP0IS40928509285epsmtrp27;
+        Tue, 24 Mar 2020 11:37:40 +0000 (GMT)
+X-AuditID: b6c32a39-58bff70000000fea-cc-5e79f1056a6d
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        15.30.04024.401F97E5; Tue, 24 Mar 2020 20:37:40 +0900 (KST)
+Received: from [10.253.104.82] (unknown [10.253.104.82]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200324113739epsmtip24099d55508e3906a0166054ae6c581a8~-OnL6Llao0410204102epsmtip29;
+        Tue, 24 Mar 2020 11:37:39 +0000 (GMT)
+Subject: Re: [RFC PATCH v2 1/3] meminfo_extra: introduce meminfo extra
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     leon@kernel.org, vbabka@suse.cz, adobriyan@gmail.com,
+        akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org
+From:   Jaewon Kim <jaewon31.kim@samsung.com>
+Message-ID: <5E79F102.9080405@samsung.com>
+Date:   Tue, 24 Mar 2020 20:37:38 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
+        Thunderbird/38.7.2
 MIME-Version: 1.0
-In-Reply-To: <20200324094154.32352-1-joro@8bytes.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200324101110.GA2218981@kroah.com>
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBJsWRmVeSWpSXmKPExsWy7bCmvi7rx8o4gzcd/BbTG70s5qxfw2Zx
+        /sEvNovmxevZLLo3z2S0WP7uNKPF7tNfmSxW7vnBZDHl11Jmi83fO9gsLu+aw2Zxb81/Votl
+        X9+zW2xomcVu8WjCJCaLU3c/s1vMbuxjdBD02DnrLrvHplWdbB6bPk1i97hzbQ+bx4kZv1k8
+        9s9dw+6xeUm9x/t9V9k8ziw4wu6x89NmVo/Pm+QCuKNybDJSE1NSixRS85LzUzLz0m2VvIPj
+        neNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOAnlJSKEvMKQUKBSQWFyvp29kU5ZeWpCpk5BeX
+        2CqlFqTkFBgaFOgVJ+YWl+al6yXn51oZGhgYmQJVJuRkvOwTLLgvVXHmx0SWBsYTol2MHBwS
+        AiYST47IdjFycQgJ7GCU2HJpFyuE84lRou/heRYI5xujxJPvH5i7GDnBOhqX32AFsYUE9jJK
+        3HtqA1H0llHi0Lmj7CAJYQE3iX9bz7OB2CICGhIvj94Cm8Qs8J1J4vjiL0wgCTYBbYn3CyaB
+        TeIV0JJYveI62AYWAVWJvW9vgNmiAhESO+Z+ZISoEZQ4OfMJC4jNKWAo8XPDH7BlzALyEs1b
+        ZzODLJAQOMUu8W7pfiaIU10kOiafg7KFJV4d38IOYUtJfH63lw2ioZlR4u3MzYwQTgujxN1N
+        vYwQVcYSvT0XmEHBxCygKbF+lz5EWFFi5++5jBCb+STefe1hhYQkr0RHmxBEiZpEy7OvrBC2
+        jMTff8+gSjwkzv9Tg4TWemBArN7AOoFRYRaS32Yh+WcWwuIFjMyrGMVSC4pz01OLDQtMkWN4
+        EyM4lWtZ7mA8ds7nEKMAB6MSD2/D48o4IdbEsuLK3EOMEhzMSiK8m1Mr4oR4UxIrq1KL8uOL
+        SnNSiw8xmgKDeyKzlGhyPjDP5JXEG5oaGRsbW5iYmZuZGiuJ8069nhMnJJCeWJKanZpakFoE
+        08fEwSnVwHiw7V369uefJjBsWLQs99nHmwv+yZryrXWwOVJgMf/t+n88KocN9ZvL1xy/8aAg
+        X+6b7uY47r9Wtget/CN/31jwl/2ljuBLhre/+1SlvJtC1k6y8d35zE3kLmv9TfEppv1qfV2l
+        0+5X6gbeZX5idiKoPHzaqy7uV+eOH+zcscf8kvqPI966D8KUWIozEg21mIuKEwFBKliZ+wMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFIsWRmVeSWpSXmKPExsWy7bCSvC7Lx8o4g6592hbTG70s5qxfw2Zx
+        /sEvNovmxevZLLo3z2S0WP7uNKPF7tNfmSxW7vnBZDHl11Jmi83fO9gsLu+aw2Zxb81/Votl
+        X9+zW2xomcVu8WjCJCaLU3c/s1vMbuxjdBD02DnrLrvHplWdbB6bPk1i97hzbQ+bx4kZv1k8
+        9s9dw+6xeUm9x/t9V9k8ziw4wu6x89NmVo/Pm+QCuKO4bFJSczLLUov07RK4Ml72CRbcl6o4
+        82MiSwPjCdEuRk4OCQETicblN1i7GLk4hAR2M0rc2bydBSIhI/Hm/FMgmwPIFpY4fLgYouY1
+        o8SW7g4mkBphATeJf1vPs4HYIgIaEi+P3mKBKFrPJLGz9x2YwyzwnUniUt8hsCo2AW2J9wsm
+        sYLYvAJaEqtXXGcGsVkEVCX2vr0BZosKREisXneNGaJGUOLkzCdgF3EKGEr83PCHHcRmFlCX
+        +DPvEjOELS/RvHU28wRGwVlIWmYhKZuFpGwBI/MqRsnUguLc9NxiwwLDvNRyveLE3OLSvHS9
+        5PzcTYzgGNXS3MF4eUn8IUYBDkYlHl6th5VxQqyJZcWVuYcYJTiYlUR4N6dWxAnxpiRWVqUW
+        5ccXleakFh9ilOZgURLnfZp3LFJIID2xJDU7NbUgtQgmy8TBKdXAOP1pjNGxW8UvvmlMeskt
+        2P1n8busvvVP3t1XTDNo6InM/GWTbb/QyiL0g+PtW7m6rRzs+/wDJ9jt3lLAutoj8q/bweik
+        xWVruta2Ht/+9Ycc766dM4873Zn685nwviNB/zgXRDasX2klti7Cae+snXzrDhfeOW5zVWC6
+        xJVN9h/Loib2GIV2limxFGckGmoxFxUnAgC9Jb9gzQIAAA==
+X-CMS-MailID: 20200324113740epcas1p105dbc87fedfa534c2d6b6a8ad515fda0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477
+References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+        <CGME20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477@epcas1p3.samsung.com>
+        <20200323080503.6224-2-jaewon31.kim@samsung.com>
+        <20200323095344.GB425358@kroah.com> <5E79CEB5.8070308@samsung.com>
+        <20200324101110.GA2218981@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/03/20 10:41, Joerg Roedel wrote:
-> Hi,
-> 
-> here is a patch-set agains kvm/queue which moves svm.c into its own
-> subdirectory arch/x86/kvm/svm/ and splits moves parts of it into
-> separate source files:
-> 
-> 	- The parts related to nested SVM to nested.c
-> 
-> 	- AVIC implementation to avic.c
-> 
-> 	- The SEV parts to sev.c
-> 
-> I have tested the changes in a guest with and without SEV.
-> 
-> Please review.
-> 
-> Thanks,
-> 
-> 	Joerg
-> 
-> Joerg Roedel (4):
->   kVM SVM: Move SVM related files to own sub-directory
->   KVM: SVM: Move Nested SVM Implementation to nested.c
->   KVM: SVM: Move AVIC code to separate file
->   KVM: SVM: Move SEV code to separate file
-> 
->  arch/x86/kvm/Makefile                 |    2 +-
->  arch/x86/kvm/svm/avic.c               | 1025 ++++
->  arch/x86/kvm/svm/nested.c             |  823 ++++
->  arch/x86/kvm/{pmu_amd.c => svm/pmu.c} |    0
->  arch/x86/kvm/svm/sev.c                | 1178 +++++
->  arch/x86/kvm/{ => svm}/svm.c          | 6546 ++++++-------------------
->  arch/x86/kvm/svm/svm.h                |  491 ++
->  7 files changed, 5106 insertions(+), 4959 deletions(-)
->  create mode 100644 arch/x86/kvm/svm/avic.c
->  create mode 100644 arch/x86/kvm/svm/nested.c
->  rename arch/x86/kvm/{pmu_amd.c => svm/pmu.c} (100%)
->  create mode 100644 arch/x86/kvm/svm/sev.c
->  rename arch/x86/kvm/{ => svm}/svm.c (56%)
->  create mode 100644 arch/x86/kvm/svm/svm.h
-> 
 
-Queued, thanks (only cursorily reviewed for now).
 
-Paolo
+On 2020년 03월 24일 19:11, Greg KH wrote:
+> On Tue, Mar 24, 2020 at 06:11:17PM +0900, Jaewon Kim wrote:
+>> On 2020년 03월 23일 18:53, Greg KH wrote:
+>>>> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name)
+>>>> +{
+>>>> +	struct meminfo_extra *meminfo, *memtemp;
+>>>> +	int len;
+>>>> +	int error = 0;
+>>>> +
+>>>> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
+>>>> +	if (!meminfo) {
+>>>> +		error = -ENOMEM;
+>>>> +		goto out;
+>>>> +	}
+>>>> +
+>>>> +	meminfo->val = val;
+>>>> +	meminfo->shift_for_page = shift;
+>>>> +	strncpy(meminfo->name, name, NAME_SIZE);
+>>>> +	len = strlen(meminfo->name);
+>>>> +	meminfo->name[len] = ':';
+>>>> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
+>>>> +	while (++len < NAME_BUF_SIZE - 1)
+>>>> +		meminfo->name_pad[len] = ' ';
+>>>> +
+>>>> +	spin_lock(&meminfo_lock);
+>>>> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
+>>>> +		if (memtemp->val == val) {
+>>>> +			error = -EINVAL;
+>>>> +			break;
+>>>> +		}
+>>>> +	}
+>>>> +	if (!error)
+>>>> +		list_add_tail_rcu(&meminfo->list, &meminfo_head);
+>>>> +	spin_unlock(&meminfo_lock);
+>>> If you have a lock, why are you needing rcu?
+>> I think _rcu should be removed out of list_for_each_entry_rcu.
+>> But I'm confused about what you meant.
+>> I used rcu_read_lock on __meminfo_extra,
+>> and I think spin_lock is also needed for addition and deletion to handle multiple modifiers.
+> If that's the case, then that's fine, it just didn't seem like that was
+> needed.  Or I might have been reading your rcu logic incorrectly...
+>
+>>>> +	if (error)
+>>>> +		kfree(meminfo);
+>>>> +out:
+>>>> +
+>>>> +	return error;
+>>>> +}
+>>>> +EXPORT_SYMBOL(register_meminfo_extra);
+>>> EXPORT_SYMBOL_GPL()?  I have to ask :)
+>> I can use EXPORT_SYMBOL_GPL.
+>>> thanks,
+>>>
+>>> greg k-h
+>>>
+>>>
+>> Hello
+>> Thank you for your comment.
+>>
+>> By the way there was not resolved discussion on v1 patch as I mentioned on cover page.
+>> I'd like to hear your opinion on this /proc/meminfo_extra node.
+> I think it is the propagation of an old and obsolete interface that you
+> will have to support for the next 20+ years and yet not actually be
+> useful :)
+>
+>> Do you think this is meaningful or cannot co-exist with other future
+>> sysfs based API.
+> What sysfs-based API?
+Please refer to mail thread on v1 patch set - https://lkml.org/lkml/fancy/2020/3/10/2102
+especially discussion with Leon Romanovsky on https://lkml.org/lkml/fancy/2020/3/16/140
+
+>
+> I still don't know _why_ you want this.  The ION stuff is not needed as
+> that code is about to be deleted, so who else wants this?  What is the
+> use-case for it that is so desperately needed that parsing
+> yet-another-proc file is going to solve the problem?
+In my Android device, there are graphic driver memory, zsmalloc memory except ION.
+I don't know other cases in other platform.
+Not desperately needed but I think we need one userspace knob to see overall hidden huge memory.
+
+Additionally I'd like to see all those hidden memory in OutOfMemory log.
+This is useful to get clue to find memory hogger.
+i.e.) show_mem on oom
+<6>[  420.856428]  Mem-Info:
+<6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
+<6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
+
+Thank you
+Jaewon Kim
+>
+> thanks,
+>
+> greg k-h
+>
+>
 
