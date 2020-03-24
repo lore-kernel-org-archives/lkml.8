@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EA6C54FD0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B86AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669622076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08304206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056647;
-	bh=OOHQbU1RbTHQ1Ma7XU0Q9tWR+VuZggUaN4Rhmo7+W4I=;
+	s=default; t=1585056651;
+	bh=jM7Fews3e1MESegyezgjrz7anoNSo3IuYP4oG7HKigc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lJ8HmyjCIxqPSDAnzARhVuLxWCu8MWAF8bJazInd3K2yqHQI3Ea3ssMrAhAZj56so
-	 GXCmdzPUU9YIDJrEDo63ztuB/lNcO2W1voTM6Wrd14d2+tzZLGPZpDPx01R6Ym+V0U
-	 y3V1YjzPSqsDP4qnl89EVebwruQ2EMNG+H2g94Q4=
+	b=ytaoZoCFeyKo8hJrWMETqdWub4wSDS0xC6AxePv6zZAke378wuM4rTCHwsTEy9Pe7
+	 XWQ9kXI3qi1CqopX/n0pQmMtYi9akS4YU4gzat07X+n2IX1wn/x1CQObUgS/vNAWyq
+	 Rm5c4vx/jBXR0gXz2wQANNsZ38Hf59vB+JPnoHws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728827AbgCXNVp (ORCPT
+        id S1729129AbgCXNau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43538 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgCXNVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:37 -0400
+        id S1729070AbgCXNVk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10C7920775;
-        Tue, 24 Mar 2020 13:21:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D30020870;
+        Tue, 24 Mar 2020 13:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056097;
-        bh=OOHQbU1RbTHQ1Ma7XU0Q9tWR+VuZggUaN4Rhmo7+W4I=;
+        s=default; t=1585056100;
+        bh=jM7Fews3e1MESegyezgjrz7anoNSo3IuYP4oG7HKigc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O6F81Yq+rjVFPcGdkQ2kSff4aLHud9sCkqYn0gcY/PBDuOw8l65xACHLBSMSnR0HN
-         yDbQlnRlFcU3nZpCYLONNnXoxTWsAN5vpFzGo+tDIyEZJCtrRuhEbRXa7s2BoSF3WI
-         RbPPH75B1+57g2InmNPIOF3maoIy6SwOuoQA79RE=
+        b=pcgbAeLCXHVkbBfEOuCMCngWYVZa0u3mwQhYhcM9vgC5Jg1ioC6Rwp71ik1XF9qn+
+         Rj9E300XmBtJAy2p11C7r1QG9U2jZQgwzZbgjbkZP+pxwPmPLEi4mq18LJ7DmluZpx
+         jGS+9cTwo0GF6lTbChLgZpmvnI5Kr1e0vyRUhr+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joakim Zhang <qiangqing.zhang@nxp.com>,
+        stable@vger.kernel.org,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
         Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 020/119] drivers/perf: fsl_imx8_ddr: Correct the CLEAR bit definition
-Date:   Tue, 24 Mar 2020 14:10:05 +0100
-Message-Id: <20200324130810.453209877@linuxfoundation.org>
+Subject: [PATCH 5.5 021/119] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
+Date:   Tue, 24 Mar 2020 14:10:06 +0100
+Message-Id: <20200324130810.523304486@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -59,51 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Zhang <qiangqing.zhang@nxp.com>
+From: luanshi <zhangliguang@linux.alibaba.com>
 
-[ Upstream commit 049d919168458ac54e7fad27cd156a958b042d2f ]
+[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
 
-When disabling a counter from ddr_perf_event_stop(), the counter value
-is reset to 0 at the same time.
+Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
+by checking for a 0 'gicc->performance_interrupt' value instead.
 
-Preserve the counter value by performing a read-modify-write of the
-PMU register and clearing only the enable bit.
-
-Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
 Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/fsl_imx8_ddr_perf.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/perf/arm_pmu_acpi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/perf/fsl_imx8_ddr_perf.c b/drivers/perf/fsl_imx8_ddr_perf.c
-index 95dca2cb52650..90884d14f95fa 100644
---- a/drivers/perf/fsl_imx8_ddr_perf.c
-+++ b/drivers/perf/fsl_imx8_ddr_perf.c
-@@ -388,9 +388,10 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
+diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+index acce8781c456c..f5c7a845cd7bf 100644
+--- a/drivers/perf/arm_pmu_acpi.c
++++ b/drivers/perf/arm_pmu_acpi.c
+@@ -24,8 +24,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
+ 	int gsi, trigger;
  
- 	if (enable) {
- 		/*
--		 * must disable first, then enable again
--		 * otherwise, cycle counter will not work
--		 * if previous state is enabled.
-+		 * cycle counter is special which should firstly write 0 then
-+		 * write 1 into CLEAR bit to clear it. Other counters only
-+		 * need write 0 into CLEAR bit and it turns out to be 1 by
-+		 * hardware. Below enable flow is harmless for all counters.
- 		 */
- 		writel(0, pmu->base + reg);
- 		val = CNTL_EN | CNTL_CLEAR;
-@@ -398,7 +399,8 @@ static void ddr_perf_counter_enable(struct ddr_pmu *pmu, int config,
- 		writel(val, pmu->base + reg);
- 	} else {
- 		/* Disable counter */
--		writel(0, pmu->base + reg);
-+		val = readl_relaxed(pmu->base + reg) & CNTL_EN_MASK;
-+		writel(val, pmu->base + reg);
- 	}
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (WARN_ON(!gicc))
+-		return -EINVAL;
+ 
+ 	gsi = gicc->performance_interrupt;
+ 
+@@ -64,11 +62,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+ 	int gsi;
+ 
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (!gicc)
+-		return;
+ 
+ 	gsi = gicc->performance_interrupt;
+-	acpi_unregister_gsi(gsi);
++	if (gsi)
++		acpi_unregister_gsi(gsi);
  }
  
+ #if IS_ENABLED(CONFIG_ARM_SPE_PMU)
 -- 
 2.20.1
 
