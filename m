@@ -2,156 +2,100 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA80C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 737EFC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8C17208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA232080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 12:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585052001;
-	bh=C4wlqkM3wVp35mo1kxHTuS8DOA3/s4vUyNZ91PUlg0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OAK/nImLJjwdi7wje79FG9+bsE4GxO4eiaQi9t0c7cLgphazqBTLd9bj7cXSM27P2
-	 R7HwxtYcJd14vQPdvr/cTfnZenUP/5/g2x1T8Hwsrvpr/BZIJavsMD0z34KQkba/BR
-	 ak7G9/vVRt3s2XWNVbC7MeVILGYDeXXCVPL5O9F4=
+	s=default; t=1585052059;
+	bh=dhtvbB+PPXUZoBcoMnaOLzrw631OzqnrbINwvvOINt4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=cL8GAM8DxXUP5W/eHVp50vTHZvW0TS+9LQGUFUpTPTjgNRuVChRTPCHo6Go2JUKGR
+	 uPyAJjf9wP7jz4Ct1lvn70+S69ySmCEptbLh/gM1BteGYVVHuTooPmnv0gdwiN2+G8
+	 UnqxTbu3vR8TcMgPfcZ3cFhfAUn9DU8PpMqQQVyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbgCXMNT (ORCPT
+        id S1727461AbgCXMOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 08:13:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54678 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 08:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgCXMNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 08:13:19 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        id S1725767AbgCXMOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 08:14:17 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF3F420870;
-        Tue, 24 Mar 2020 12:13:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A54920658;
+        Tue, 24 Mar 2020 12:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585051998;
-        bh=C4wlqkM3wVp35mo1kxHTuS8DOA3/s4vUyNZ91PUlg0U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Mi3iMe0prSHQGaRwCcAy9PMzwJjZlo3yYG6ABbg8yvL4l/EEIuwFMMYrASKQyqWG4
-         tUo8AWE//Wao9D0y9sM4LPCntZ5Ygaan//Zdw/PlijaAr1BLLKs25WbGuj0XK/rI4t
-         pqR3TxOyOUzCerPQG4RWHJ9uvmSLHX2bEzJMSUNs=
-Date:   Tue, 24 Mar 2020 13:13:14 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
-        glider@google.com, arnd@arndb.de, linux-kernel@vger.kernel.org,
-        rafael@kernel.org,
-        syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] libfs: fix infoleak in simple_attr_read()
-Message-ID: <20200324121314.GC2333340@kroah.com>
-References: <CAG_fn=WvVp7Nxm5E+1dYs4guMYUV8D1XZEt_AZFF6rAQEbbAeg@mail.gmail.com>
- <20200308023849.988264-1-ebiggers@kernel.org>
- <20200313164511.GB907@sol.localdomain>
- <20200318163940.GB2334@sol.localdomain>
- <20200322035620.GB111151@sol.localdomain>
+        s=default; t=1585052057;
+        bh=dhtvbB+PPXUZoBcoMnaOLzrw631OzqnrbINwvvOINt4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=BgAC6V2Az+2jFYEhLlmiHR3DebSQCeuePZdwonD5gjANLrYa9D+arvTk94T7GB+BZ
+         +YV6s/yqUjiFPXUurWd/i7Nk6p/54EQx+aFWgjpj7OXiVAZUdZF+ehgehCHIaMuDJL
+         IsReRW1A7GPCm69FfQjZKPUGQla2Wxpj9rbdq9Zc=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jGiRj-00FFea-4G; Tue, 24 Mar 2020 12:14:15 +0000
+Date:   Tue, 24 Mar 2020 12:14:13 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Auger <eric.auger@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v6 08/23] irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
+Message-ID: <20200324121413.12839170@why>
+In-Reply-To: <0ac3af1c-5160-a528-f2b4-aac4833ce32c@huawei.com>
+References: <20200320182406.23465-1-maz@kernel.org>
+        <20200320182406.23465-9-maz@kernel.org>
+        <0ac3af1c-5160-a528-f2b4-aac4833ce32c@huawei.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200322035620.GB111151@sol.localdomain>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, tglx@linutronix.de, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Mar 21, 2020 at 08:56:20PM -0700, Eric Biggers wrote:
-> On Wed, Mar 18, 2020 at 09:39:40AM -0700, Eric Biggers wrote:
-> > On Fri, Mar 13, 2020 at 09:45:11AM -0700, Eric Biggers wrote:
-> > > On Sat, Mar 07, 2020 at 06:38:49PM -0800, Eric Biggers wrote:
-> > > > From: Eric Biggers <ebiggers@google.com>
-> > > > 
-> > > > Reading from a debugfs file at a nonzero position, without first reading
-> > > > at position 0, leaks uninitialized memory to userspace.
-> > > > 
-> > > > It's a bit tricky to do this, since lseek() and pread() aren't allowed
-> > > > on these files, and write() doesn't update the position on them.  But
-> > > > writing to them with splice() *does* update the position:
-> > > > 
-> > > > 	#define _GNU_SOURCE 1
-> > > > 	#include <fcntl.h>
-> > > > 	#include <stdio.h>
-> > > > 	#include <unistd.h>
-> > > > 	int main()
-> > > > 	{
-> > > > 		int pipes[2], fd, n, i;
-> > > > 		char buf[32];
-> > > > 
-> > > > 		pipe(pipes);
-> > > > 		write(pipes[1], "0", 1);
-> > > > 		fd = open("/sys/kernel/debug/fault_around_bytes", O_RDWR);
-> > > > 		splice(pipes[0], NULL, fd, NULL, 1, 0);
-> > > > 		n = read(fd, buf, sizeof(buf));
-> > > > 		for (i = 0; i < n; i++)
-> > > > 			printf("%02x", buf[i]);
-> > > > 		printf("\n");
-> > > > 	}
-> > > > 
-> > > > Output:
-> > > > 	5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a5a30
-> > > > 
-> > > > Fix the infoleak by making simple_attr_read() always fill
-> > > > simple_attr::get_buf if it hasn't been filled yet.
-> > > > 
-> > > > Reported-by: syzbot+fcab69d1ada3e8d6f06b@syzkaller.appspotmail.com
-> > > > Reported-by: Alexander Potapenko <glider@google.com>
-> > > > Fixes: acaefc25d21f ("[PATCH] libfs: add simple attribute files")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > > > ---
-> > > >  fs/libfs.c | 8 +++++---
-> > > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/fs/libfs.c b/fs/libfs.c
-> > > > index c686bd9caac6..3759fbacf522 100644
-> > > > --- a/fs/libfs.c
-> > > > +++ b/fs/libfs.c
-> > > > @@ -891,7 +891,7 @@ int simple_attr_open(struct inode *inode, struct file *file,
-> > > >  {
-> > > >  	struct simple_attr *attr;
-> > > >  
-> > > > -	attr = kmalloc(sizeof(*attr), GFP_KERNEL);
-> > > > +	attr = kzalloc(sizeof(*attr), GFP_KERNEL);
-> > > >  	if (!attr)
-> > > >  		return -ENOMEM;
-> > > >  
-> > > > @@ -931,9 +931,11 @@ ssize_t simple_attr_read(struct file *file, char __user *buf,
-> > > >  	if (ret)
-> > > >  		return ret;
-> > > >  
-> > > > -	if (*ppos) {		/* continued read */
-> > > > +	if (*ppos && attr->get_buf[0]) {
-> > > > +		/* continued read */
-> > > >  		size = strlen(attr->get_buf);
-> > > > -	} else {		/* first read */
-> > > > +	} else {
-> > > > +		/* first read */
-> > > >  		u64 val;
-> > > >  		ret = attr->get(attr->data, &val);
-> > > >  		if (ret)
-> > > > -- 
-> > > > 2.25.1
-> > > 
-> > > Any comments on this?  Al, seems this is something you should pick up?
-> > > 
-> > > - Eric
-> > 
-> > Ping.
-> > 
+On Tue, 24 Mar 2020 10:27:18 +0800
+Zenghui Yu <yuzenghui@huawei.com> wrote:
+
+> On 2020/3/21 2:23, Marc Zyngier wrote:
+> > +static int its_sgi_set_affinity(struct irq_data *d,
+> > +				const struct cpumask *mask_val,
+> > +				bool force)
+> > +{
+> > +	/*
+> > +	 * There is no notion of affinity for virtual SGIs, at least
+> > +	 * not on the host (since they can only be targetting a vPE).
+> > +	 * Tell the kernel we've done whetever it asked for.  
 > 
-> Andrew, can you consider taking this patch?  Al has been ignoring it, and this
-> seems like a fairly important fix.  This bug affects many (most?) debugfs files,
-> and it affects years old kernels too not just recent ones.
+> new typo?
+> s/whetever/whatever/
 
-As it affects debugfs files, I'll grab it now, thanks.
+Yeah, I'm that good... :-(.
 
-greg k-h
+Fixed now.
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
