@@ -7,40 +7,39 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DF8C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA3C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E81132070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336A4208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbgCXJLC (ORCPT
+        id S1727285AbgCXJLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:11:02 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43724 "EHLO
+        Tue, 24 Mar 2020 05:11:05 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43741 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgCXJLB (ORCPT
+        with ESMTP id S1726818AbgCXJLC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:11:01 -0400
+        Tue, 24 Mar 2020 05:11:02 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfaL-0007UC-56; Tue, 24 Mar 2020 10:10:57 +0100
+        id 1jGfaM-0007V0-FW; Tue, 24 Mar 2020 10:10:58 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BC7161C0451;
-        Tue, 24 Mar 2020 10:10:55 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:10:55 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 82DE81C0475;
+        Tue, 24 Mar 2020 10:10:56 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:10:56 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Fix misreporting if concurrent races on
- same address
+Subject: [tip: locking/kcsan] kcsan: Add test to generate conflicts via debugfs
 Cc:     Marco Elver <elver@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504105545.28353.6034771349524745531.tip-bot2@tip-bot2>
+Message-ID: <158504105622.28353.4207063450407939838.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -56,73 +55,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     3a5b45e5031fa395ab6e53545fb726b2d5b104f0
-Gitweb:        https://git.kernel.org/tip/3a5b45e5031fa395ab6e53545fb726b2d5b104f0
+Commit-ID:     a312013578e4775003689e31c1f487df11f362a3
+Gitweb:        https://git.kernel.org/tip/a312013578e4775003689e31c1f487df11f362a3
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Mon, 10 Feb 2020 15:56:39 +01:00
+AuthorDate:    Thu, 06 Feb 2020 16:46:26 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 21 Mar 2020 09:43:41 +01:00
+CommitterDate: Sat, 21 Mar 2020 09:43:30 +01:00
 
-kcsan: Fix misreporting if concurrent races on same address
+kcsan: Add test to generate conflicts via debugfs
 
-If there are at least 4 threads racing on the same address, it can
-happen that one of the readers may observe another matching reader in
-other_info. To avoid locking up, we have to consume 'other_info'
-regardless, but skip the report. See the added comment for more details.
+Add 'test=<iters>' option to KCSAN's debugfs interface to invoke KCSAN
+checks on a dummy variable. By writing 'test=<iters>' to the debugfs
+file from multiple tasks, we can generate real conflicts, and trigger
+data race reports.
 
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/kcsan/report.c | 38 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ kernel/kcsan/debugfs.c | 51 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 46 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 3bc590e..abf6852 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -422,6 +422,44 @@ retry:
- 			return false;
- 		}
+diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
+index a9dad44..9bbba0e 100644
+--- a/kernel/kcsan/debugfs.c
++++ b/kernel/kcsan/debugfs.c
+@@ -6,6 +6,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/init.h>
+ #include <linux/kallsyms.h>
++#include <linux/sched.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+ #include <linux/sort.h>
+@@ -69,9 +70,9 @@ void kcsan_counter_dec(enum kcsan_counter_id id)
+ /*
+  * The microbenchmark allows benchmarking KCSAN core runtime only. To run
+  * multiple threads, pipe 'microbench=<iters>' from multiple tasks into the
+- * debugfs file.
++ * debugfs file. This will not generate any conflicts, and tests fast-path only.
+  */
+-static void microbenchmark(unsigned long iters)
++static noinline void microbenchmark(unsigned long iters)
+ {
+ 	cycles_t cycles;
  
-+		access_type |= other_info.access_type;
-+		if ((access_type & KCSAN_ACCESS_WRITE) == 0) {
-+			/*
-+			 * While the address matches, this is not the other_info
-+			 * from the thread that consumed our watchpoint, since
-+			 * neither this nor the access in other_info is a write.
-+			 * It is invalid to continue with the report, since we
-+			 * only have information about reads.
-+			 *
-+			 * This can happen due to concurrent races on the same
-+			 * address, with at least 4 threads. To avoid locking up
-+			 * other_info and all other threads, we have to consume
-+			 * it regardless.
-+			 *
-+			 * A concrete case to illustrate why we might lock up if
-+			 * we do not consume other_info:
-+			 *
-+			 *   We have 4 threads, all accessing the same address
-+			 *   (or matching address ranges). Assume the following
-+			 *   watcher and watchpoint consumer pairs:
-+			 *   write1-read1, read2-write2. The first to populate
-+			 *   other_info is write2, however, write1 consumes it,
-+			 *   resulting in a report of write1-write2. This report
-+			 *   is valid, however, now read1 populates other_info;
-+			 *   read2-read1 is an invalid conflict, yet, no other
-+			 *   conflicting access is left. Therefore, we must
-+			 *   consume read1's other_info.
-+			 *
-+			 * Since this case is assumed to be rare, it is
-+			 * reasonable to omit this report: one of the other
-+			 * reports includes information about the same shared
-+			 * data, and at this point the likelihood that we
-+			 * re-report the same race again is high.
-+			 */
-+			release_report(flags, KCSAN_REPORT_RACE_SIGNAL);
-+			return false;
-+		}
-+
+@@ -81,18 +82,52 @@ static void microbenchmark(unsigned long iters)
+ 	while (iters--) {
  		/*
- 		 * Matching & usable access in other_info: keep other_info_lock
- 		 * locked, as this thread consumes it to print the full report;
+ 		 * We can run this benchmark from multiple tasks; this address
+-		 * calculation increases likelyhood of some accesses overlapping
+-		 * (they still won't conflict because all are reads).
++		 * calculation increases likelyhood of some accesses
++		 * overlapping. Make the access type an atomic read, to never
++		 * set up watchpoints and test the fast-path only.
+ 		 */
+ 		unsigned long addr =
+ 			iters % (CONFIG_KCSAN_NUM_WATCHPOINTS * PAGE_SIZE);
+-		__kcsan_check_read((void *)addr, sizeof(long));
++		__kcsan_check_access((void *)addr, sizeof(long), KCSAN_ACCESS_ATOMIC);
+ 	}
+ 	cycles = get_cycles() - cycles;
+ 
+ 	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
+ }
+ 
++/*
++ * Simple test to create conflicting accesses. Write 'test=<iters>' to KCSAN's
++ * debugfs file from multiple tasks to generate real conflicts and show reports.
++ */
++static long test_dummy;
++static noinline void test_thread(unsigned long iters)
++{
++	const struct kcsan_ctx ctx_save = current->kcsan_ctx;
++	cycles_t cycles;
++
++	/* We may have been called from an atomic region; reset context. */
++	memset(&current->kcsan_ctx, 0, sizeof(current->kcsan_ctx));
++
++	pr_info("KCSAN: %s begin | iters: %lu\n", __func__, iters);
++
++	cycles = get_cycles();
++	while (iters--) {
++		__kcsan_check_read(&test_dummy, sizeof(test_dummy));
++		__kcsan_check_write(&test_dummy, sizeof(test_dummy));
++		ASSERT_EXCLUSIVE_WRITER(test_dummy);
++		ASSERT_EXCLUSIVE_ACCESS(test_dummy);
++
++		/* not actually instrumented */
++		WRITE_ONCE(test_dummy, iters);  /* to observe value-change */
++	}
++	cycles = get_cycles() - cycles;
++
++	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
++
++	/* restore context */
++	current->kcsan_ctx = ctx_save;
++}
++
+ static int cmp_filterlist_addrs(const void *rhs, const void *lhs)
+ {
+ 	const unsigned long a = *(const unsigned long *)rhs;
+@@ -242,6 +277,12 @@ debugfs_write(struct file *file, const char __user *buf, size_t count, loff_t *o
+ 		if (kstrtoul(&arg[sizeof("microbench=") - 1], 0, &iters))
+ 			return -EINVAL;
+ 		microbenchmark(iters);
++	} else if (!strncmp(arg, "test=", sizeof("test=") - 1)) {
++		unsigned long iters;
++
++		if (kstrtoul(&arg[sizeof("test=") - 1], 0, &iters))
++			return -EINVAL;
++		test_thread(iters);
+ 	} else if (!strcmp(arg, "whitelist")) {
+ 		set_report_filterlist_whitelist(true);
+ 	} else if (!strcmp(arg, "blacklist")) {
