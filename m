@@ -2,81 +2,89 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881E5C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:51:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00822C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A52520870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585050665;
-	bh=GbjME65ILfkmi8zJstR/SFqAkxmeGRJlOv2QSmeTsWg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O0sk6gjYQjQAr0PX6SLFy+XBpX5f+Hssd2RjIYTRu1dH692u1hU5dgRQg532AfTJt
-	 jvwNdQ2EJuIYtQkAWiiupKOk7XwxCJzSr/w+vtNM5LnhAmm3hc0mvHOhF/+UlH1Ktx
-	 1eljiRj6MM+XQnWECaucrtDjBjFxnOWF2+1wLBqI=
+	by mail.kernel.org (Postfix) with ESMTP id C59BB20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:51:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCXLvE (ORCPT
+        id S1727337AbgCXLv0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49514 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 07:51:26 -0400
+Received: from mga03.intel.com ([134.134.136.65]:2897 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727066AbgCXLvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:51:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2FB1208C3;
-        Tue, 24 Mar 2020 11:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585050663;
-        bh=GbjME65ILfkmi8zJstR/SFqAkxmeGRJlOv2QSmeTsWg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SelyDidDQxeilzoIowIkSureeYmuqpKBdTJT15rQEZ/Fu5q6pCoTIkPiCgt2REO5W
-         uR1PkqKJRSfa7aEEpJQNpyCQjlng6o6oeL4X5t5M0vp+sy6k/0FhNIUsM1iHa4K50h
-         Bu2+mDmKg/hHaOCjvvTGgPVLXrq3yMd+tw/w0GOY=
-Date:   Tue, 24 Mar 2020 12:50:59 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rajat Jain <rajatja@google.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>, dtor@google.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com, rajatxjain@gmail.com
-Subject: Re: [PATCH RESEND 1/5] input/serio/i8042: Attach fwnode to serio
- i8042 kbd device
-Message-ID: <20200324115059.GA2333340@kroah.com>
-References: <20200323234505.226919-1-rajatja@google.com>
+        id S1727066AbgCXLvZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:51:25 -0400
+IronPort-SDR: IM2lJRtS7FizZg8tbY0NNQIKsCDxTL6/j5HutJV1zPzm7wMSSJ7gcy3bnSuczrCe/k/Qr4bjhw
+ BSFFuWCmidPw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 04:51:25 -0700
+IronPort-SDR: 4NeQXEQVZQq9wxOWEzgjsdjrdaWE32X2663rhZruOpKxRR7PERlSHOxJ+3KSFASTMRzbv/GXtK
+ 0Hq3GY9QNxkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
+   d="scan'208";a="270356888"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.120]) ([10.255.31.120])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Mar 2020 04:51:20 -0700
+Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of
+ split lock detection
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>
+References: <20200315050517.127446-1-xiaoyao.li@intel.com>
+ <20200315050517.127446-2-xiaoyao.li@intel.com>
+ <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <95093fb0-df88-0543-c7eb-32b94ac4f99e@intel.com>
+Date:   Tue, 24 Mar 2020 19:51:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200323234505.226919-1-rajatja@google.com>
+In-Reply-To: <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 04:45:01PM -0700, Rajat Jain wrote:
-> Attach the firmware node to the serio i8042 kbd device so that device
-> properties can be passed from the firmware.
+On 3/24/2020 1:02 AM, Thomas Gleixner wrote:
+> Xiaoyao Li <xiaoyao.li@intel.com> writes:
 > 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> Change-Id: I36032f4bdee1dc52f26b57734068fd0ee7a6db0b
+>> Current initialization flow of split lock detection has following issues:
+>> 1. It assumes the initial value of MSR_TEST_CTRL.SPLIT_LOCK_DETECT to be
+>>     zero. However, it's possible that BIOS/firmware has set it.
+> 
+> Ok.
+> 
+>> 2. X86_FEATURE_SPLIT_LOCK_DETECT flag is unconditionally set even if
+>>     there is a virtualization flaw that FMS indicates the existence while
+>>     it's actually not supported.
+>>
+>> 3. Because of #2, KVM cannot rely on X86_FEATURE_SPLIT_LOCK_DETECT flag
+>>     to check verify if feature does exist, so cannot expose it to
+>>     guest.
+> 
+> Sorry this does not make anny sense. KVM is the hypervisor, so it better
+> can rely on the detect flag. Unless you talk about nested virt and a
+> broken L1 hypervisor.
+> 
 
-Didn't you run checkpatch.pl on your patches which told you to remove
-all of these Change-Id: values?
+Yeah. It is for the nested virt on a broken L1 hypervisor.
 
-Please do so...
-
-greg k-h
