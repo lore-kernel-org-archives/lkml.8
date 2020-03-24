@@ -2,137 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88069C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A435DC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59A0B2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:30:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eD7IEbsq"
+	by mail.kernel.org (Postfix) with ESMTP id 7F28E20A8B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbgCXWaA (ORCPT
+        id S1728448AbgCXWcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:30:00 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:34504 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728094AbgCXWaA (ORCPT
+        Tue, 24 Mar 2020 18:32:19 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46362 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728216AbgCXWcT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:30:00 -0400
-Received: by mail-pj1-f68.google.com with SMTP id q16so1631848pje.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x05q+wZ49/Pk/12UuvPipPbvrgDmK5ko/9El70Dqc1M=;
-        b=eD7IEbsqdA0EdD/6H0QwiA/EGsrPJQdYtlFQOYWrSXBeyMN9bdTuHuyh78rgG+fjJD
-         RKHRKGzqUKPoVTAif9N3I9MkyPKkLfXwYHfzMim9KbX49SAKChtq9cA02yLbhhJVMswK
-         C+XVNeiczmeyWyLeUcXOgujZLRCrOOr8aanHD7I/LIr6onAKDYUaZRtQcxR0bavT+YWF
-         XERP/n/kscfA1xMEQSJAxB6s9qxNL7rDfCleVkgBpXTEtjApSHAjPTn3NsQ82Qbvr9se
-         8MOIqcSd6XW5bv83I5CIFkYtg3GAMKP7Dd4qIIklG7oiA08EqbBv72t1lHlKJMtuUFi6
-         f84Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=x05q+wZ49/Pk/12UuvPipPbvrgDmK5ko/9El70Dqc1M=;
-        b=JFykygR2U8dhSfRB61ibLunKTwJyl4ZnVXwXCBJUUGt7XURKYnU946Jj8wUur3i8po
-         6FTTlHS+YkJvRdDUdzfnvM11UPRso7xaFvS9WMQCwM26AiFOkHPRz9q8UDxp/VEtzg+p
-         wh9HmtwkfmJC408ln6TeA8sApcMjCnJehajjEDX4I9jbzuKwTwZwqM4DFJLD4hD4Bi0f
-         Jug4rRssnq/UbbX3p+pwpmcAxPgRhwRtUltOy2W+y8xUGWXZ2cSJOyhlVZDazJYX531W
-         ZQBJfjTwdQ/ktXOVNfU6gncBvlZmaDnBMaYYLVPu23fGfRekGK6s7UKUHOcmmtmGHc91
-         IsXQ==
-X-Gm-Message-State: ANhLgQ0bfFggiuGhQgCf9aiwu0Ww7NS2bbJ58P95H7+E7dyTwGy59WT4
-        zIc5G08dyHq4rcALfJ9Q0/g=
-X-Google-Smtp-Source: ADFU+vtt1BEGsdHYbjJjJk3uLa12ICwoXGAunw/Rg1kDwGKfpOgAvQ3Tj2ZqDRVSYJ09FKBu2mN/OQ==
-X-Received: by 2002:a17:902:7886:: with SMTP id q6mr216928pll.237.1585088999126;
-        Tue, 24 Mar 2020 15:29:59 -0700 (PDT)
-Received: from Gentoo ([103.231.90.172])
-        by smtp.gmail.com with ESMTPSA id m13sm3101250pjq.26.2020.03.24.15.29.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 15:29:58 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 03:59:46 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux@leemhuis.info, rdunlap@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] rearrange the output text, cosmetic changes
-Message-ID: <20200324222943.GA18504@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Joe Perches <joe@perches.com>, linux@leemhuis.info,
-        rdunlap@infradead.org, linux-kernel@vger.kernel.org
-References: <20200324084513.18237-1-unixbhaskar@gmail.com>
- <fb5a17c67f504f5761069ee446cc1b703dd8b54f.camel@perches.com>
+        Tue, 24 Mar 2020 18:32:19 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jGs5m-0006rX-BB; Tue, 24 Mar 2020 23:32:14 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C21B91C0451;
+        Tue, 24 Mar 2020 23:32:13 +0100 (CET)
+Date:   Tue, 24 Mar 2020 22:32:13 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/cpu: Cleanup the now unused CPU match macros
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200320131510.900226233@linutronix.de>
+References: <20200320131510.900226233@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="C7zPtVaVf+AK4Oqc"
-Content-Disposition: inline
-In-Reply-To: <fb5a17c67f504f5761069ee446cc1b703dd8b54f.camel@perches.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Message-ID: <158508913336.28353.6318318172252313940.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The following commit has been merged into the x86/cpu branch of tip:
 
---C7zPtVaVf+AK4Oqc
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Commit-ID:     1826d56bcef9c38287f7c1a8e3b7778863e0b9d7
+Gitweb:        https://git.kernel.org/tip/1826d56bcef9c38287f7c1a8e3b7778863e0b9d7
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Fri, 20 Mar 2020 14:14:07 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Tue, 24 Mar 2020 21:37:23 +01:00
 
-On 08:15 Tue 24 Mar 2020, Joe Perches wrote:
->On Tue, 2020-03-24 at 14:15 +0530, Bhaskar Chowdhury wrote:
->> As the subject like says, purely cosmetic changes to read cleanly.
->> Jumbled up the line.
->
->Subject line should show tools or kernel-chktaint
->
->and:
->
->> diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-ch=
-ktaint
->[]
->> @@ -195,8 +195,9 @@ else
->>  	echo " * kernel was built with the struct randomization plugin (#17)"
->>  fi
->>=20
->> -echo "For a more detailed explanation of the various taint flags see"
->> -echo " Documentation/admin-guide/tainted-kernels.rst in the the Linux k=
-ernel sources"
->> -echo " or https://kernel.org/doc/html/latest/admin-guide/tainted-kernel=
-s.html"
->>  echo "Raw taint value as int/string: $taint/'$out'"
->> +echo
->> +echo "For a more detailed explanation of the various taint flags see be=
-low pointers:"
->> +echo "1) Documentation/admin-guide/tainted-kernels.rst in  the Linux ke=
-rnel sources"
->
->One extra space between "in  the"
->
->
+x86/cpu: Cleanup the now unused CPU match macros
 
-Thanks, Joe ...fixing! next patch should have fixed them.
+No more users.
 
---C7zPtVaVf+AK4Oqc
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/20200320131510.900226233@linutronix.de
+---
+ arch/x86/include/asm/cpu_device_id.h |  3 ---
+ arch/x86/include/asm/intel-family.h  | 13 -------------
+ 2 files changed, 16 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl56idQACgkQsjqdtxFL
-KRU+FQgA0vWZXAC46/cFThHhqi3APYLNXvP1Za3YAOM6bPABw4++toTOsXlD+Bf0
-ezijTIc6cqeU8nQaiyQRjh4k3JQ0p6PAL53+Syqip4su+y3CoTSKg23o4r6S/hGi
-79zwSZWu0MZxIskiL25P+66QUOMM/AiLMNkibU7+MtPPEtB5xNVLmt/vepmXAtyy
-NQ9H9pP7I31d08Zjs3dwXuqo/rl36EEagQ1YfQ0LE34PqVR+PlVv5GE9t+ZSDwWH
-pYDcLwobvsfuMM60skTqS3w0GVxwctuSUjRtcg0UBnyqrLVUeLn+YZn8voYyvZWZ
-lV1YZ0oqOyfbVVEglxsnxslukJhj7Q==
-=aKGe
------END PGP SIGNATURE-----
-
---C7zPtVaVf+AK4Oqc--
+diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
+index f11770f..cf3d621 100644
+--- a/arch/x86/include/asm/cpu_device_id.h
++++ b/arch/x86/include/asm/cpu_device_id.h
+@@ -91,9 +91,6 @@
+ #define X86_MATCH_FEATURE(feature, data)				\
+ 	X86_MATCH_VENDOR_FEATURE(ANY, feature, data)
+ 
+-/* Transitional to keep the existing code working */
+-#define X86_FEATURE_MATCH(feature)	X86_MATCH_FEATURE(feature, NULL)
+-
+ /**
+  * X86_MATCH_VENDOR_FAM_MODEL - Match vendor, family and model
+  * @vendor:	The vendor name, e.g. INTEL, AMD, HYGON, ..., ANY
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 236a87a..8f1e94f 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -124,17 +124,4 @@
+ /* Family 5 */
+ #define INTEL_FAM5_QUARK_X1000		0x09 /* Quark X1000 SoC */
+ 
+-/* Useful macros */
+-#define INTEL_CPU_FAM_ANY(_family, _model, _driver_data)	\
+-{								\
+-	.vendor		= X86_VENDOR_INTEL,			\
+-	.family		= _family,				\
+-	.model		= _model,				\
+-	.feature	= X86_FEATURE_ANY,			\
+-	.driver_data	= (kernel_ulong_t)&_driver_data		\
+-}
+-
+-#define INTEL_CPU_FAM6(_model, _driver_data)			\
+-	INTEL_CPU_FAM_ANY(6, INTEL_FAM6_##_model, _driver_data)
+-
+ #endif /* _ASM_X86_INTEL_FAMILY_H */
