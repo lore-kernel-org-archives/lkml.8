@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9C8C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08056C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05EC7208DB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D681220936
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056404;
-	bh=d/nncTjMbeeP58TbJXgNgimGrQxhP15wf/xapbEf5xI=;
+	s=default; t=1585056409;
+	bh=BQDPMYRwHPpgU70whSDyAfjXMoZ6fOI8mQTYOzBeY4M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pdAx9SulfBQSv/lMt7KQ2aLf3Z+DT9mPFVh5YIFkfm4bOWpdhpFd5Hq6Kw94SFYAs
-	 sNEch+kG+qPWo6NHyxxAUBm6U8EpNXPM8V+zCktrSumjov00a5jN+vhisOgrBTpdLW
-	 /TvC5PXACkoie1DA+McUmITcSIejIXQmJhFBS/Gk=
+	b=vP9phJpYIvq+m7GDZ0BQLt7I468htEVU+oiSEKeNxUngIyffb/oLg7RIhtb1G3QOT
+	 r2Ph0yE5jUbFUhx+WoTNwv6rrwZohnsK5ZHVM2GnsMkf9emA7lV4O98QoARVzlvqaW
+	 m4tiOmtYGWsZqIMRmXmzSeBOURzYHuLlOAPRxbgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729729AbgCXN0m (ORCPT
+        id S1729327AbgCXN0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51714 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:26:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729372AbgCXN0l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:26:41 -0400
+        id S1727843AbgCXN0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:26:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD245208CA;
-        Tue, 24 Mar 2020 13:26:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6876E208CA;
+        Tue, 24 Mar 2020 13:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056401;
-        bh=d/nncTjMbeeP58TbJXgNgimGrQxhP15wf/xapbEf5xI=;
+        s=default; t=1585056403;
+        bh=BQDPMYRwHPpgU70whSDyAfjXMoZ6fOI8mQTYOzBeY4M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QiO6u3inqO8ztBt6KL8Mych0TmPqrJ//AcAG6XW9jM417SKlCe0MFXJ/J/IHMrVur
-         PNUNIbbTr2ymvzY16NexmxPCBLQZE6YZiCQu1zzD0xu2KOL5WeQKBA8qXQ7YGtFM3k
-         L8G49GmXXHtGdx4yBWYnYNukOvs95uOTpD3dNmk0=
+        b=IT+201SkdLtTlfPMbwJXANLkfNivNarFo1OVfBSIR3HlHgIQvwGsfktHEpxSTaM9w
+         umeM8HQqRHOrqn6faH3Rq5yxqC+CDbbp8yb6jocXTw9iiKEg+hBsbkImdizXtFqSQ5
+         2LKURL9Z6vprMv1dCBYSp6HmgHoQfunAJW6kfL5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 5.5 106/119] thunderbolt: Fix error code in tb_port_is_width_supported()
-Date:   Tue, 24 Mar 2020 14:11:31 +0100
-Message-Id: <20200324130818.500007743@linuxfoundation.org>
+        stable@vger.kernel.org, Dave Martin <Dave.Martin@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Cristian Marussi <cristian.marussi@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.5 107/119] arm64: smp: fix smp_send_stop() behaviour
+Date:   Tue, 24 Mar 2020 14:11:32 +0100
+Message-Id: <20200324130818.566564568@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -59,33 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Cristian Marussi <cristian.marussi@arm.com>
 
-commit e9d0e7511fda92a6511904996dd0aa57b6d7687a upstream.
+commit d0bab0c39e32d39a8c5cddca72e5b4a3059fe050 upstream.
 
-This function is type bool, and it's supposed to return true on success.
-Unfortunately, this path takes negative error codes and casts them to
-bool (true) so it's treated as success instead of failure.
+On a system with only one CPU online, when another one CPU panics while
+starting-up, smp_send_stop() will fail to send any STOP message to the
+other already online core, resulting in a system still responsive and
+alive at the end of the panic procedure.
 
-Fixes: 91c0c12080d0 ("thunderbolt: Add support for lane bonding")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[  186.700083] CPU3: shutdown
+[  187.075462] CPU2: shutdown
+[  187.162869] CPU1: shutdown
+[  188.689998] ------------[ cut here ]------------
+[  188.691645] kernel BUG at arch/arm64/kernel/cpufeature.c:886!
+[  188.692079] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+[  188.692444] Modules linked in:
+[  188.693031] CPU: 3 PID: 0 Comm: swapper/3 Not tainted 5.6.0-rc4-00001-g338d25c35a98 #104
+[  188.693175] Hardware name: Foundation-v8A (DT)
+[  188.693492] pstate: 200001c5 (nzCv dAIF -PAN -UAO)
+[  188.694183] pc : has_cpuid_feature+0xf0/0x348
+[  188.694311] lr : verify_local_elf_hwcaps+0x84/0xe8
+[  188.694410] sp : ffff800011b1bf60
+[  188.694536] x29: ffff800011b1bf60 x28: 0000000000000000
+[  188.694707] x27: 0000000000000000 x26: 0000000000000000
+[  188.694801] x25: 0000000000000000 x24: ffff80001189a25c
+[  188.694905] x23: 0000000000000000 x22: 0000000000000000
+[  188.694996] x21: ffff8000114aa018 x20: ffff800011156a38
+[  188.695089] x19: ffff800010c944a0 x18: 0000000000000004
+[  188.695187] x17: 0000000000000000 x16: 0000000000000000
+[  188.695280] x15: 0000249dbde5431e x14: 0262cbe497efa1fa
+[  188.695371] x13: 0000000000000002 x12: 0000000000002592
+[  188.695472] x11: 0000000000000080 x10: 00400032b5503510
+[  188.695572] x9 : 0000000000000000 x8 : ffff800010c80204
+[  188.695659] x7 : 00000000410fd0f0 x6 : 0000000000000001
+[  188.695750] x5 : 00000000410fd0f0 x4 : 0000000000000000
+[  188.695836] x3 : 0000000000000000 x2 : ffff8000100939d8
+[  188.695919] x1 : 0000000000180420 x0 : 0000000000180480
+[  188.696253] Call trace:
+[  188.696410]  has_cpuid_feature+0xf0/0x348
+[  188.696504]  verify_local_elf_hwcaps+0x84/0xe8
+[  188.696591]  check_local_cpu_capabilities+0x44/0x128
+[  188.696666]  secondary_start_kernel+0xf4/0x188
+[  188.697150] Code: 52805001 72a00301 6b01001f 54000ec0 (d4210000)
+[  188.698639] ---[ end trace 3f12ca47652f7b72 ]---
+[  188.699160] Kernel panic - not syncing: Attempted to kill the idle task!
+[  188.699546] Kernel Offset: disabled
+[  188.699828] CPU features: 0x00004,20c02008
+[  188.700012] Memory Limit: none
+[  188.700538] ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+
+[root@arch ~]# echo Helo
+Helo
+[root@arch ~]# cat /proc/cpuinfo | grep proce
+processor	: 0
+
+Make smp_send_stop() account also for the online status of the calling CPU
+while evaluating how many CPUs are effectively online: this way, the right
+number of STOPs is sent, so enforcing a proper freeze of the system at the
+end of panic even under the above conditions.
+
+Fixes: 08e875c16a16c ("arm64: SMP support")
+Reported-by: Dave Martin <Dave.Martin@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/thunderbolt/switch.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/smp.c |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
---- a/drivers/thunderbolt/switch.c
-+++ b/drivers/thunderbolt/switch.c
-@@ -848,7 +848,7 @@ static bool tb_port_is_width_supported(s
- 	ret = tb_port_read(port, &phy, TB_CFG_PORT,
- 			   port->cap_phy + LANE_ADP_CS_0, 1);
- 	if (ret)
--		return ret;
-+		return false;
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -958,11 +958,22 @@ void tick_broadcast(const struct cpumask
+ }
+ #endif
  
- 	widths = (phy & LANE_ADP_CS_0_SUPPORTED_WIDTH_MASK) >>
- 		LANE_ADP_CS_0_SUPPORTED_WIDTH_SHIFT;
++/*
++ * The number of CPUs online, not counting this CPU (which may not be
++ * fully online and so not counted in num_online_cpus()).
++ */
++static inline unsigned int num_other_online_cpus(void)
++{
++	unsigned int this_cpu_online = cpu_online(smp_processor_id());
++
++	return num_online_cpus() - this_cpu_online;
++}
++
+ void smp_send_stop(void)
+ {
+ 	unsigned long timeout;
+ 
+-	if (num_online_cpus() > 1) {
++	if (num_other_online_cpus()) {
+ 		cpumask_t mask;
+ 
+ 		cpumask_copy(&mask, cpu_online_mask);
+@@ -975,10 +986,10 @@ void smp_send_stop(void)
+ 
+ 	/* Wait up to one second for other CPUs to stop */
+ 	timeout = USEC_PER_SEC;
+-	while (num_online_cpus() > 1 && timeout--)
++	while (num_other_online_cpus() && timeout--)
+ 		udelay(1);
+ 
+-	if (num_online_cpus() > 1)
++	if (num_other_online_cpus())
+ 		pr_warn("SMP: failed to stop secondary CPUs %*pbl\n",
+ 			cpumask_pr_args(cpu_online_mask));
+ 
 
 
