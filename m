@@ -2,146 +2,190 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015D0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B51C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D110620658
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC0A20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:45:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585061120;
+	bh=vZW8ydG76ohXnowf6bsyxr6CjWQRA/3WDQvG85/sN5Y=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=IsVwLEyqAGavj/6klhZT42sUI8cbFz3Zh55KAhloOT2Q3h2xOd3NN02H078Kf8tAF
+	 WURPwZDskS9zXjbETfu5BEEIR7hChSdN9lIeABGxfXHDj6OwMPkLfp3snox5/iNQR6
+	 H7CP9s/ykEe72SoeF8H50X8hT4Z233Gl7bvcSoVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgCXOoY (ORCPT
+        id S1727939AbgCXOpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:44:24 -0400
-Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:55821 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727962AbgCXOoX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:44:23 -0400
-Received: from [192.168.42.210] ([93.22.39.100])
-        by mwinf5d18 with ME
-        id JEkD2200M29f5LV03EkD63; Tue, 24 Mar 2020 15:44:21 +0100
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Tue, 24 Mar 2020 15:44:21 +0100
-X-ME-IP: 93.22.39.100
-Subject: Re: [PATCH V2] perf cpumap: Fix snprintf overflow check
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, kan.liang@linux.intel.com,
-        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com,
-        David Laight <David.Laight@aculab.com>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
- <20200324125001.GA21569@kernel.org>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <75a8e792-dc9e-6169-4dd2-8758967c50e2@wanadoo.fr>
-Date:   Tue, 24 Mar 2020 15:44:15 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 24 Mar 2020 10:45:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45020 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727065AbgCXOpT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 10:45:19 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47AD020774;
+        Tue, 24 Mar 2020 14:45:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585061118;
+        bh=vZW8ydG76ohXnowf6bsyxr6CjWQRA/3WDQvG85/sN5Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sEaxv4dRfltXeYQaBsl4NwaL4QgU91FKrq0Uyqxh/WTFzB7NmwUuJ4GizBMHYKMa9
+         Od6Ibj+y0g/bAnkxS8J7ni/cJXuNvQ9T4xy2DBaCMeB5fNlHafXU1030RmOi/xgoZ8
+         9B8encpMWYn+we401leZqiKsskG55TDQb7FyYgjE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jGkns-00FJEX-I6; Tue, 24 Mar 2020 14:45:16 +0000
+Date:   Tue, 24 Mar 2020 14:45:14 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     <will@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
+        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
+Subject: Re: [RFC PATCH v4 5/6] arm64: tlb: Use translation level hint in
+ vm_flags
+Message-ID: <20200324144514.340c78d9@why>
+In-Reply-To: <20200324134534.1570-6-yezhenyu2@huawei.com>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+        <20200324134534.1570-6-yezhenyu2@huawei.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200324125001.GA21569@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org, npiggin@gmail.com, peterz@infradead.org, arnd@arndb.de, rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de, yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com, broonie@kernel.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com, prime.zeng@hisilicon.com, zhangshaokun@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 24/03/2020 à 13:50, Arnaldo Carvalho de Melo a écrit :
-> Em Tue, Mar 24, 2020 at 08:03:19AM +0100, Christophe JAILLET escreveu:
->> 'snprintf' returns the number of characters which would be generated for
->> the given input.
->>
->> If the returned value is *greater than* or equal to the buffer size, it
->> means that the output has been truncated.
->>
->> Fix the overflow test accordingling.
->                                    y
->
-> You forgot to CC David and add this to your patch, which I did:
->
-> Suggested-by: David Laight <David.Laight@ACULAB.COM>
->
-> Ok?
+On Tue, 24 Mar 2020 21:45:33 +0800
+Zhenyu Ye <yezhenyu2@huawei.com> wrote:
 
-No problem for me.
+> This patch used the VM_LEVEL flags in vma->vm_flags to set the
+> TTL field in tlbi instruction.
+> 
+> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+> ---
+>  arch/arm64/include/asm/mmu.h      |  2 ++
+>  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
+>  arch/arm64/mm/mmu.c               | 14 ++++++++++++++
+>  3 files changed, 24 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+> index d79ce6df9e12..a8b8824a7405 100644
+> --- a/arch/arm64/include/asm/mmu.h
+> +++ b/arch/arm64/include/asm/mmu.h
+> @@ -86,6 +86,8 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+>  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+>  extern void mark_linear_text_alias_ro(void);
+>  extern bool kaslr_requires_kpti(void);
+> +extern unsigned int get_vma_level(struct vm_area_struct *vma);
+> +
+>  
+>  #define INIT_MM_CONTEXT(name)	\
+>  	.pgd = init_pg_dir,
+> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+> index d141c080e494..93bb09fdfafd 100644
+> --- a/arch/arm64/include/asm/tlbflush.h
+> +++ b/arch/arm64/include/asm/tlbflush.h
+> @@ -218,10 +218,11 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
+>  					 unsigned long uaddr)
+>  {
+>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
+> +	unsigned int level = get_vma_level(vma);
+>  
+>  	dsb(ishst);
+> -	__tlbi_level(vale1is, addr, 0);
+> -	__tlbi_user_level(vale1is, addr, 0);
+> +	__tlbi_level(vale1is, addr, level);
+> +	__tlbi_user_level(vale1is, addr, level);
+>  }
+>  
+>  static inline void flush_tlb_page(struct vm_area_struct *vma,
+> @@ -242,6 +243,7 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>  				     unsigned long stride, bool last_level)
+>  {
+>  	unsigned long asid = ASID(vma->vm_mm);
+> +	unsigned int level = get_vma_level(vma);
+>  	unsigned long addr;
+>  
+>  	start = round_down(start, stride);
+> @@ -261,11 +263,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>  	dsb(ishst);
+>  	for (addr = start; addr < end; addr += stride) {
+>  		if (last_level) {
+> -			__tlbi_level(vale1is, addr, 0);
+> -			__tlbi_user_level(vale1is, addr, 0);
+> +			__tlbi_level(vale1is, addr, level);
+> +			__tlbi_user_level(vale1is, addr, level);
+>  		} else {
+> -			__tlbi_level(vae1is, addr, 0);
+> -			__tlbi_user_level(vae1is, addr, 0);
+> +			__tlbi_level(vae1is, addr, level);
+> +			__tlbi_user_level(vae1is, addr, level);
+>  		}
+>  	}
+>  	dsb(ish);
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 128f70852bf3..e6a1221cd86b 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -60,6 +60,20 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
+>  
+>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
+>  
+> +inline unsigned int get_vma_level(struct vm_area_struct *vma)
+> +{
+> +	unsigned int level = 0;
+> +	if (vma->vm_flags & VM_LEVEL_PUD)
+> +		level = 1;
+> +	else if (vma->vm_flags & VM_LEVEL_PMD)
+> +		level = 2;
+> +	else if (vma->vm_flags & VM_LEVEL_PTE)
+> +		level = 3;
+> +
+> +	vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PMD | VM_LEVEL_PTE);
+> +	return level;
+> +}
+> +
+>  void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
+>  {
+>  	pgd_t *fixmap_pgdp;
 
-The to: and cc: list are (at least should be :)) the ones given by 
-get_maintainer, and I was not aware of the 'Suggested-by' tag.
 
-BTW, thanks for fixing the typo in the description.
+If feels bizarre a TLBI is now a destructive operation: you've lost the
+flags by having cleared them. Even if that's not really a problem in
+practice (you issue TLBI because you've unmapped the VMA), it remains
+that the act of invalidating TLBs isn't expected to change a kernel
+structure (and I'm not even thinking about potential races here).
 
-CJ
+If anything, I feel this should be based around the mmu_gather
+structure, which already tracks the right level of information and
+additionally knows about the P4D level which is missing in your patches
+(even if arm64 is so far limited to 4 levels).
 
+Thanks,
 
-> - Arnaldo
->   
->> Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
->> Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> V2: keep snprintf
->>      modifiy the tests for truncated output
->>      Update subject and description
->> ---
->>   tools/perf/util/cpumap.c | 10 +++++-----
->>   1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
->> index 983b7388f22b..dc5c5e6fc502 100644
->> --- a/tools/perf/util/cpumap.c
->> +++ b/tools/perf/util/cpumap.c
->> @@ -317,7 +317,7 @@ static void set_max_cpu_num(void)
->>   
->>   	/* get the highest possible cpu number for a sparse allocation */
->>   	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
->> -	if (ret == PATH_MAX) {
->> +	if (ret >= PATH_MAX) {
->>   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->>   		goto out;
->>   	}
->> @@ -328,7 +328,7 @@ static void set_max_cpu_num(void)
->>   
->>   	/* get the highest present cpu number for a sparse allocation */
->>   	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
->> -	if (ret == PATH_MAX) {
->> +	if (ret >= PATH_MAX) {
->>   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->>   		goto out;
->>   	}
->> @@ -356,7 +356,7 @@ static void set_max_node_num(void)
->>   
->>   	/* get the highest possible cpu number for a sparse allocation */
->>   	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
->> -	if (ret == PATH_MAX) {
->> +	if (ret >= PATH_MAX) {
->>   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->>   		goto out;
->>   	}
->> @@ -441,7 +441,7 @@ int cpu__setup_cpunode_map(void)
->>   		return 0;
->>   
->>   	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
->> -	if (n == PATH_MAX) {
->> +	if (n >= PATH_MAX) {
->>   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->>   		return -1;
->>   	}
->> @@ -456,7 +456,7 @@ int cpu__setup_cpunode_map(void)
->>   			continue;
->>   
->>   		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
->> -		if (n == PATH_MAX) {
->> +		if (n >= PATH_MAX) {
->>   			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
->>   			continue;
->>   		}
->> -- 
->> 2.20.1
->>
-
+	M.
+-- 
+Jazz is not dead. It just smells funny...
