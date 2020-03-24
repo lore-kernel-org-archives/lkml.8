@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058ABC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D02E3C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA8A720870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B030420870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:20:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbgCXJQd (ORCPT
+        id S1727682AbgCXJUn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:16:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43869 "EHLO
+        Tue, 24 Mar 2020 05:20:43 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43879 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727213AbgCXJQb (ORCPT
+        with ESMTP id S1727279AbgCXJQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:16:31 -0400
+        Tue, 24 Mar 2020 05:16:32 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfff-0007u1-E8; Tue, 24 Mar 2020 10:16:27 +0100
+        id 1jGffh-0007vE-0t; Tue, 24 Mar 2020 10:16:29 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 12B3B1C0475;
-        Tue, 24 Mar 2020 10:16:27 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:26 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9AEB91C0470;
+        Tue, 24 Mar 2020 10:16:28 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:28 -0000
 From:   "tip-bot2 for SeongJae Park" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] Documentation/memory-barriers: Fix typos
+Subject: [tip: core/rcu] doc/RCU/rcu: Use ':ref:' for links to other docs
 Cc:     SeongJae Park <sjpark@amazon.de>,
         "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504138676.28353.6448892854421862536.tip-bot2@tip-bot2>
+Message-ID: <158504138831.28353.3508857389864335454.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,58 +54,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     8149b5cbfa1540cd7542fd4e790a2874afbc5001
-Gitweb:        https://git.kernel.org/tip/8149b5cbfa1540cd7542fd4e790a2874afbc5001
+Commit-ID:     be2895681d6d8b1eb5a052d4655dea0d7cc2d84d
+Gitweb:        https://git.kernel.org/tip/be2895681d6d8b1eb5a052d4655dea0d7cc2d84d
 Author:        SeongJae Park <sjpark@amazon.de>
-AuthorDate:    Fri, 31 Jan 2020 21:52:37 +01:00
+AuthorDate:    Mon, 06 Jan 2020 21:07:59 +01:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 27 Feb 2020 07:03:14 -08:00
+CommitterDate: Thu, 27 Feb 2020 07:03:13 -08:00
 
-Documentation/memory-barriers: Fix typos
+doc/RCU/rcu: Use ':ref:' for links to other docs
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/memory-barriers.txt | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ Documentation/RCU/rcu.rst | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index 7146da0..e1c355e 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -185,7 +185,7 @@ As a further example, consider this sequence of events:
- 	===============	===============
- 	{ A == 1, B == 2, C == 3, P == &A, Q == &C }
- 	B = 4;		Q = P;
--	P = &B		D = *Q;
-+	P = &B;		D = *Q;
+diff --git a/Documentation/RCU/rcu.rst b/Documentation/RCU/rcu.rst
+index 8dfb437..a1dd71d 100644
+--- a/Documentation/RCU/rcu.rst
++++ b/Documentation/RCU/rcu.rst
+@@ -11,8 +11,8 @@ must be long enough that any readers accessing the item being deleted have
+ since dropped their references.  For example, an RCU-protected deletion
+ from a linked list would first remove the item from the list, wait for
+ a grace period to elapse, then free the element.  See the
+-Documentation/RCU/listRCU.rst file for more information on using RCU with
+-linked lists.
++:ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` for more information on
++using RCU with linked lists.
  
- There is an obvious data dependency here, as the value loaded into D depends on
- the address retrieved from P by CPU 2.  At the end of the sequence, any of the
-@@ -569,7 +569,7 @@ following sequence of events:
- 	{ A == 1, B == 2, C == 3, P == &A, Q == &C }
- 	B = 4;
- 	<write barrier>
--	WRITE_ONCE(P, &B)
-+	WRITE_ONCE(P, &B);
- 			      Q = READ_ONCE(P);
- 			      D = *Q;
+ Frequently Asked Questions
+ --------------------------
+@@ -50,7 +50,7 @@ Frequently Asked Questions
+ - If I am running on a uniprocessor kernel, which can only do one
+   thing at a time, why should I wait for a grace period?
  
-@@ -1721,7 +1721,7 @@ of optimizations:
-      and WRITE_ONCE() are more selective:  With READ_ONCE() and
-      WRITE_ONCE(), the compiler need only forget the contents of the
-      indicated memory locations, while with barrier() the compiler must
--     discard the value of all memory locations that it has currented
-+     discard the value of all memory locations that it has currently
-      cached in any machine registers.  Of course, the compiler must also
-      respect the order in which the READ_ONCE()s and WRITE_ONCE()s occur,
-      though the CPU of course need not do so.
-@@ -1833,7 +1833,7 @@ Aside: In the case of data dependencies, the compiler would be expected
- to issue the loads in the correct order (eg. `a[b]` would have to load
- the value of b before loading a[b]), however there is no guarantee in
- the C specification that the compiler may not speculate the value of b
--(eg. is equal to 1) and load a before b (eg. tmp = a[1]; if (b != 1)
-+(eg. is equal to 1) and load a[b] before b (eg. tmp = a[1]; if (b != 1)
- tmp = a[b]; ).  There is also the problem of a compiler reloading b after
- having loaded a[b], thus having a newer copy of b than a[b].  A consensus
- has not yet been reached about these problems, however the READ_ONCE()
+-  See the Documentation/RCU/UP.rst file for more information.
++  See :ref:`Documentation/RCU/UP.rst <up_doc>` for more information.
+ 
+ - How can I see where RCU is currently used in the Linux kernel?
+ 
+@@ -68,9 +68,9 @@ Frequently Asked Questions
+ 
+ - Why the name "RCU"?
+ 
+-  "RCU" stands for "read-copy update".  The file Documentation/RCU/listRCU.rst
+-  has more information on where this name came from, search for
+-  "read-copy update" to find it.
++  "RCU" stands for "read-copy update".
++  :ref:`Documentation/RCU/listRCU.rst <list_rcu_doc>` has more information on where
++  this name came from, search for "read-copy update" to find it.
+ 
+ - I hear that RCU is patented?  What is with that?
+ 
