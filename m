@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55D23C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F18C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F406208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7CB208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055788;
-	bh=88/XO/N93K3OgCv2drcOHgS1Mvwynwf+rNzOUc7lL+Q=;
+	s=default; t=1585055790;
+	bh=4rTwBD89a4CagL9gDyOgg/0Xk9ZXmPQVpF4kNNBT5fQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Puyay+BACzZyVAZlcajo2lGGqndHtYxymkxD/l/xYe3iU0L43dX7jouc7NgYPgw0P
-	 0RDROLyufx9fPhVihV/dCchg7Bj3P/02dtGqg+wJEpPoNskITqe1Z2ZLuuFm5ucXOU
-	 +gvL8Yu7BZM01m4J2q9v426mzcJ/LwPjvynMQtXc=
+	b=z2nXT40nBKICLIiikeEzzPlgaxcORLlCc2Rm7EcCjlqXE700yEFp9h+OZtumkqp9t
+	 uZkjSKvOtfJsUOXJjTAPzDhL5SrXbcaNUTm5/mjwx7mL/xwM59ZRcTZ+4idQCfEdaW
+	 Rk64Vn9N2FWnkGbEOHqXzYyP1QRisT/KS0q5hEL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgCXNQ1 (ORCPT
+        id S1728407AbgCXNQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:16:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35870 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:16:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728428AbgCXNQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:16:25 -0400
+        id S1728385AbgCXNQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:16:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 088F320775;
-        Tue, 24 Mar 2020 13:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 03D88206F6;
+        Tue, 24 Mar 2020 13:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055784;
-        bh=88/XO/N93K3OgCv2drcOHgS1Mvwynwf+rNzOUc7lL+Q=;
+        s=default; t=1585055787;
+        bh=4rTwBD89a4CagL9gDyOgg/0Xk9ZXmPQVpF4kNNBT5fQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=snY7veSKT+p1kInSHALOlJCGY9KJxgcEPnWsWlwbwxwDo7/M67ijw6R3Dr2YT0IcS
-         GdYSGOO0UWAHVxCUiPO4KkAf2dRFQaWP2CTbEeFwy+xDHkhPK3o19P1BNxfDhUlUTd
-         txdyBtwBT8pIrSUxzYU+balIA1/0etm8Hk/6ouEg=
+        b=u2N7Ss9g9pRtTJ06NcQgvliJIvfJGj7118RXGsPcp6gPq4uaETTiQwwJZHd7dIEP4
+         QkgoGWUWbvCFXU+kKQBgtofs/XFEL63yrgi5VSFe84ICmWVuYYp7pKxp9ILWJ+AUf8
+         kShKSjcLCqtjSYv6bhsZ3xfgqd+Ip/xaAUVHURB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yintian Tao <yttao@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Monk Liu <Monk.Liu@amd.com>,
+        stable@vger.kernel.org,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Hersen Wu <hersenxs.wu@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 028/102] drm/amdgpu: clean wptr on wb when gpu recovery
-Date:   Tue, 24 Mar 2020 14:10:20 +0100
-Message-Id: <20200324130809.342801187@linuxfoundation.org>
+Subject: [PATCH 5.4 029/102] drm/amd/display: Clear link settings on MST disable connector
+Date:   Tue, 24 Mar 2020 14:10:21 +0100
+Message-Id: <20200324130809.444508184@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -62,51 +63,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yintian Tao <yttao@amd.com>
+From: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 
-[ Upstream commit 2ab7e274b86739f4ceed5d94b6879f2d07b2802f ]
+[ Upstream commit 5ac7fd2f597b88ee81f4748ee50cab06192a8dc3 ]
 
-The TDR will be randomly failed due to compute ring
-test failure. If the compute ring wptr & 0x7ff(ring_buf_mask)
-is 0x100 then after map mqd the compute ring rptr will be
-synced with 0x100. And the ring test packet size is also 0x100.
-Then after invocation of amdgpu_ring_commit, the cp will not
-really handle the packet on the ring buffer because rptr is equal to wptr.
+[Why]
+If we have a single MST display and we disconnect it, we dont disable that
+link. This causes the old link settings to still exist
 
-Signed-off-by: Yintian Tao <yttao@amd.com>
-Acked-by: Christian König <christian.koenig@amd.com>
-Reviewed-by: Monk Liu <Monk.Liu@amd.com>
+Now on a replug for MST we think its a link loss and will try to reallocate
+mst payload which will fail, throwing warning below.
+
+[  129.374192] [drm] Failed to updateMST allocation table forpipe idx:0
+[  129.374206] ------------[ cut here ]------------
+[  129.374284] WARNING: CPU: 14 PID: 1710 at
+drivers/gpu/drm/amd/amdgpu/../dal-dev/dc/core/dc_link.c:3153
+dc_link_allocate_mst_payload+0x1f7/0x220 [amdgpu]
+
+[  129.374285] Modules linked in: amdgpu(OE) amd_iommu_v2 gpu_sched ttm
+drm_kms_helper drm fb_sys_fops syscopyarea sysfillrect sysimgblt
+binfmt_misc nls_iso8859_1 edac_mce_amd snd_hda_codec_realtek
+snd_hda_codec_generic ledtrig_audio kvm snd_hda_codec_hdmi snd_hda_intel
+snd_intel_nhlt snd_hda_codec irqbypass snd_hda_core snd_hwdep snd_pcm
+snd_seq_midi snd_seq_midi_event snd_rawmidi crct10dif_pclmul snd_seq
+crc32_pclmul ghash_clmulni_intel snd_seq_device snd_timer snd aesni_intel
+eeepc_wmi crypto_simd asus_wmi joydev cryptd sparse_keymap input_leds
+soundcore video glue_helper wmi_bmof mxm_wmi k10temp ccp mac_hid
+sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4
+hid_generic usbhid hid igb i2c_algo_bit ahci dca i2c_piix4 libahci
+gpio_amdpt wmi gpio_generic
+
+[  129.374318] CPU: 14 PID: 1710 Comm: kworker/14:2 Tainted: G        W  OE     5.4.0-rc7bhawan+ #480
+[  129.374318] Hardware name: System manufacturer System Product Name/PRIME X370-PRO, BIOS 0515 03/30/2017
+[  129.374397] Workqueue: events dm_irq_work_func [amdgpu]
+[  129.374468] RIP: 0010:dc_link_allocate_mst_payload+0x1f7/0x220 [amdgpu]
+[  129.374470] Code: 52 20 e8 1c 63 ad f4 48 8b 5d d0 65 48 33 1c 25 28 00
+00 00 b8 01 00 00 00 75 16 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3
+<0f> 0b e9 fa fe ff ff e8 ed 5b d6 f3 41 0f b6 b6 c4 02 00 00 48 c7
+[  129.374471] RSP: 0018:ffff9f9141e7fcc0 EFLAGS: 00010246
+[  129.374472] RAX: 0000000000000000 RBX: ffff91ef0762f800 RCX: 0000000000000000
+[  129.374473] RDX: 0000000000000005 RSI: ffffffffc0c4a988 RDI: 0000000000000004
+[  129.374474] RBP: ffff9f9141e7fd10 R08: 0000000000000005 R09: 0000000000000000
+[  129.374475] R10: 0000000000000002 R11: 0000000000000001 R12: ffff91eebd510c00
+[  129.374475] R13: ffff91eebd510e58 R14: ffff91ef052c01b8 R15: 0000000000000006
+[  129.374476] FS:  0000000000000000(0000) GS:ffff91ef0ef80000(0000) knlGS:0000000000000000
+[  129.374477] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  129.374478] CR2: 000055623ea01d50 CR3: 0000000408a8c000 CR4: 00000000003406e0
+[  129.374479] Call Trace:
+[  129.374550]  dc_link_reallocate_mst_payload+0x12e/0x150 [amdgpu]
+[  129.374617]  dc_link_handle_hpd_rx_irq+0x6d4/0x6e0 [amdgpu]
+[  129.374693]  handle_hpd_rx_irq+0x77/0x310 [amdgpu]
+[  129.374768]  dm_irq_work_func+0x53/0x70 [amdgpu]
+[  129.374774]  process_one_work+0x1fd/0x3f0
+[  129.374776]  worker_thread+0x255/0x410
+[  129.374778]  kthread+0x121/0x140
+[  129.374780]  ? process_one_work+0x3f0/0x3f0
+[  129.374781]  ? kthread_park+0x90/0x90
+[  129.374785]  ret_from_fork+0x22/0x40
+
+[How]
+when we disable MST we should clear the cur link settings (lane_count=0 is
+good enough). This will cause us to not reallocate payloads earlier than
+expected and not throw the warning
+
+Signed-off-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 1 +
- drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c  | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-index 2816d03297385..14417cebe38ba 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
-@@ -3555,6 +3555,7 @@ static int gfx_v10_0_kcq_init_queue(struct amdgpu_ring *ring)
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index 16218a202b591..28a6c7b2ef4bb 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -379,6 +379,7 @@ static void dm_dp_destroy_mst_connector(struct drm_dp_mst_topology_mgr *mgr,
+ 					   aconnector->dc_sink);
+ 		dc_sink_release(aconnector->dc_sink);
+ 		aconnector->dc_sink = NULL;
++		aconnector->dc_link->cur_link_settings.lane_count = 0;
+ 	}
  
- 		/* reset ring buffer */
- 		ring->wptr = 0;
-+		atomic64_set((atomic64_t *)&adev->wb.wb[ring->wptr_offs], 0);
- 		amdgpu_ring_clear_ring(ring);
- 	} else {
- 		amdgpu_ring_clear_ring(ring);
-diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-index d85e1e559c826..40034efa64bbc 100644
---- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
-@@ -3756,6 +3756,7 @@ static int gfx_v9_0_kcq_init_queue(struct amdgpu_ring *ring)
- 
- 		/* reset ring buffer */
- 		ring->wptr = 0;
-+		atomic64_set((atomic64_t *)&adev->wb.wb[ring->wptr_offs], 0);
- 		amdgpu_ring_clear_ring(ring);
- 	} else {
- 		amdgpu_ring_clear_ring(ring);
+ 	drm_connector_unregister(connector);
 -- 
 2.20.1
 
