@@ -2,60 +2,70 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23C5C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:52:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2196C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:57:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A765B2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4AA22070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:57:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgCXVwi (ORCPT
+        id S1728184AbgCXV5q convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:52:38 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:35091 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727270AbgCXVwi (ORCPT
+        Tue, 24 Mar 2020 17:57:46 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:16497 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgCXV5q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:52:38 -0400
+        Tue, 24 Mar 2020 17:57:46 -0400
 X-Originating-IP: 91.224.148.103
-Received: from localhost.localdomain (unknown [91.224.148.103])
+Received: from xps13 (unknown [91.224.148.103])
         (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id F1EC920003;
-        Tue, 24 Mar 2020 21:52:26 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 34630240006;
+        Tue, 24 Mar 2020 21:57:40 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 22:57:39 +0100
 From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com,
-        richard@nod.at, vigneshr@ti.com, bbrezillon@kernel.org
-Cc:     juliensu@mxic.com.tw, s.hauer@pengutronix.de,
-        yuehaibing@huawei.com, linux-kernel@vger.kernel.org,
-        stefan@agner.ch, linux-mtd@lists.infradead.org,
-        frieder.schrempf@kontron.de, tglx@linutronix.de,
-        allison@lohutok.net
-Subject: Re: [PATCH v4 1/2] mtd: rawnand: Add support for manufacturer specific suspend/resume operation
-Date:   Tue, 24 Mar 2020 22:52:25 +0100
-Message-Id: <20200324215225.14249-1-miquel.raynal@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <1584517348-14486-2-git-send-email-masonccyang@mxic.com.tw>
-References: 
+To:     Mason Yang <masonccyang@mxic.com.tw>
+Cc:     richard@nod.at, vigneshr@ti.com, bbrezillon@kernel.org,
+        frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
+        juliensu@mxic.com.tw, s.hauer@pengutronix.de,
+        linux-kernel@vger.kernel.org, allison@lohutok.net,
+        linux-mtd@lists.infradead.org, yuehaibing@huawei.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: macronix: Add support for deep
+ power down mode
+Message-ID: <20200324225739.11538d08@xps13>
+In-Reply-To: <1584517348-14486-3-git-send-email-masonccyang@mxic.com.tw>
+References: <1584517348-14486-1-git-send-email-masonccyang@mxic.com.tw>
+        <1584517348-14486-3-git-send-email-masonccyang@mxic.com.tw>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-linux-mtd-patch-notification: thanks
-X-linux-mtd-patch-commit: adc6162b9a0c60a81cf6a107196924526cd186f6
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-18 at 07:42:27 UTC, Mason Yang wrote:
-> Patch nand_suspend() & nand_resume() to let manufacturers overwrite
-> suspend/resume operations.
+Hi Mason,
+
+Mason Yang <masonccyang@mxic.com.tw> wrote on Wed, 18 Mar 2020 15:42:28
++0800:
+
+> Macronix AD series support deep power down mode for a minimum
+> power consumption state.
+> 
+> Overload nand_suspend() & nand_resume() in Macronix specific code to
+> support deep power down mode.
 > 
 > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
+This was not based on nand/next so as I applied changes in this files
+(patches 1 and 2 of the original series) this patch did not apply. I
+manually merged it.
 
-Miquel
+
+Thanks,
+Miquèl
