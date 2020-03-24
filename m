@@ -2,209 +2,105 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A487C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3818AC4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14598208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:32:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066AA2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:33:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OK1kyUrg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbgCXLcc (ORCPT
+        id S1727420AbgCXLdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:32:32 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12186 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727201AbgCXLcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:32:31 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D2998ACE1257D981151C;
-        Tue, 24 Mar 2020 19:32:27 +0800 (CST)
-Received: from [127.0.0.1] (10.74.184.86) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
- 19:32:17 +0800
-Subject: Re: [PATCH 11/11] EDAC/ghes: Create one memory controller per
- physical memory array
-To:     John Garry <john.garry@huawei.com>, Borislav Petkov <bp@alien8.de>,
-        "Robert Richter" <rrichter@marvell.com>
-References: <20200306151318.17422-1-rrichter@marvell.com>
- <20200306151318.17422-12-rrichter@marvell.com>
- <20200316095149.GE26126@zn.tnic>
- <924f4c0e-1f9d-e7de-17cd-466eb3a74d90@huawei.com>
-CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Shiju Jose <shiju.jose@huawei.com>
-From:   Xiaofei Tan <tanxiaofei@huawei.com>
-Message-ID: <5E79EFC0.3040108@huawei.com>
-Date:   Tue, 24 Mar 2020 19:32:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Tue, 24 Mar 2020 07:33:03 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33537 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727159AbgCXLdD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:33:03 -0400
+Received: by mail-qt1-f193.google.com with SMTP id c14so2126464qtp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 04:33:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7Qc7uvYUanhBTdoYQFCXEMtsiSU/KMpNbflyVVa/k/0=;
+        b=OK1kyUrgihIZSOJwUiTfwpiYANyW7kApVKmQ41+ImaXUd6xpIUQzC/fBdhJd6QlCtU
+         oOV6vfncP1EW6DCy1bY6KN0oboppZMXnPmlHIxSXvSjDYvnMCxWsYKraHjE4r3DB09UP
+         gnznbW1v5LROUTwb7VS6nbQV/KRcAggzMV/C8CjqHpB9EOCkL7Ft4sV/wD2JgEGuIbwI
+         r94f3QvSrxCo5tRNA+an9IsKvURFkSrk5MibFzg2LP2VY098kj2C1tFT54atLiAOlmph
+         bPR+xlaSuzrnjSslsaH3muNhf39gJfUab7DI9TQtbD4FQuJBwzPeJUr4NAs449zLrAY6
+         A3TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7Qc7uvYUanhBTdoYQFCXEMtsiSU/KMpNbflyVVa/k/0=;
+        b=rMFxmtQLPXmn2UjANT+L81VL9r1gkrJHQclQc6tZ933+xwvCcoYJR3wd+MTigm6/Wm
+         Xj1EXetzYfHQyPgVfwbCrf6TK5hC0fSLsjouxoHRGbMshVkZWHnVBf4+/xl+ZqDgtIOp
+         HJxw51bsDc7lNs5YtJUcWSdUUSRJM/funTNEZCWhmzErISaiq0Uqo5rbsuda22hMyHvx
+         MZlVOtMLb9zwreI4wmUsVS88K9chj6K9yvZMeP58zj1u3WWrvhQqtvW+ZRbtaJsBtgRh
+         4WF2BFNdeaiZ+477ANyU1ZeFty3U0gV5Y3/xbEXLaB8AwX/ACN+Y5eg6Jz7LoY7+E81m
+         FlMg==
+X-Gm-Message-State: ANhLgQ2avvKcszN2XZDSmHtFzILFSdng3xqj6CuFGjg8u0Wqbo/PNy2A
+        3VgSam7o3IBXWkFXjlOAXoRMLzn+h6xb3mqPVYFwcA==
+X-Google-Smtp-Source: ADFU+vtaIDlqEcDPnyVkLDfdein5xnF5prNYs7DXLAe+TaWYWAbSb1st0hXaOIvklJ7ZZ2BZWnsEnu+l8Up+lD0Zfkw=
+X-Received: by 2002:ac8:719a:: with SMTP id w26mr25506964qto.257.1585049581891;
+ Tue, 24 Mar 2020 04:33:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <924f4c0e-1f9d-e7de-17cd-466eb3a74d90@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.184.86]
-X-CFilter-Loop: Reflected
+References: <20200319164227.87419-1-trishalfonso@google.com> <20200319164227.87419-2-trishalfonso@google.com>
+In-Reply-To: <20200319164227.87419-2-trishalfonso@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 24 Mar 2020 12:32:50 +0100
+Message-ID: <CACT4Y+bbVtwfYUC_v3V0ZBh2kVwp=PHKq6Jyqiz6BVbLTtL3bQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] Add KUnit Struct to Current Task
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     David Gow <davidgow@google.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        kunit-dev@googlegroups.com,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 19, 2020 at 5:42 PM Patricia Alfonso
+<trishalfonso@google.com> wrote:
+>
+> In order to integrate debugging tools like KASAN into the KUnit
+> framework, add KUnit struct to the current task to keep track of the
+> current KUnit test.
+>
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> ---
+>  include/linux/sched.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 04278493bf15..1fbfa0634776 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1180,6 +1180,10 @@ struct task_struct {
+>         unsigned int                    kasan_depth;
+>  #endif
+>
+> +#if IS_BUILTIN(CONFIG_KUNIT)
+> +       struct kunit                    *kunit_test;
+> +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
+> +
 
-On 2020/3/18 0:34, John Garry wrote:
-> On 16/03/2020 09:51, Borislav Petkov wrote:
->> On Fri, Mar 06, 2020 at 04:13:18PM +0100, Robert Richter wrote:
->>> The ghes driver only creates one memory controller for the whole
->>> system. This does not reflect memory topology especially in multi-node
->>> systems. E.g. a Marvell ThunderX2 system shows:
->>>
->>>   /sys/devices/system/edac/mc/mc0/dimm0
->>>   /sys/devices/system/edac/mc/mc0/dimm1
->>>   /sys/devices/system/edac/mc/mc0/dimm2
->>>   /sys/devices/system/edac/mc/mc0/dimm3
->>>   /sys/devices/system/edac/mc/mc0/dimm4
->>>   /sys/devices/system/edac/mc/mc0/dimm5
->>>   /sys/devices/system/edac/mc/mc0/dimm6
->>>   /sys/devices/system/edac/mc/mc0/dimm7
->>>   /sys/devices/system/edac/mc/mc0/dimm8
->>>   /sys/devices/system/edac/mc/mc0/dimm9
->>>   /sys/devices/system/edac/mc/mc0/dimm10
->>>   /sys/devices/system/edac/mc/mc0/dimm11
->>>   /sys/devices/system/edac/mc/mc0/dimm12
->>>   /sys/devices/system/edac/mc/mc0/dimm13
->>>   /sys/devices/system/edac/mc/mc0/dimm14
->>>   /sys/devices/system/edac/mc/mc0/dimm15
->>>
->>> The DIMMs 9-15 are located on the 2nd node of the system. On
->>> comparable x86 systems there is one memory controller per node. The
->>> ghes driver should also group DIMMs depending on the topology and
->>> create one MC per node.
->>>
->>> There are several options to detect the topology. ARM64 systems
->>> retrieve the (NUMA) node information from the ACPI SRAT table (see
->>> acpi_table_parse_srat()). The node id is later stored in the physical
->>> address page. The pfn_to_nid() macro could be used for a DIMM after
->>> determining its physical address. The drawback of this approach is
->>> that there are too many subsystems involved it depends on. It could
->>> easily break and makes the implementation complex. E.g. pfn_to_nid()
->>> can only be reliable used on mapped address ranges which is not always
->>> granted, there are various firmware instances involved which could be
->>> broken, or results may vary depending on NUMA settings.
->>>
->>> Another approach that was suggested by James' is to use the DIMM's
->>> physical memory array handle to group DIMMs [1]. The advantage is to
->>> only use the information on memory devices from the SMBIOS table that
->>> contains a reference to the physical memory array it belongs too. This
->>> information is mandatory same as the use of DIMM handle references by
->>> GHES to provide the DIMM location of an error. There is only a single
->>> table to parse which eases implementation. This patch uses this
->>> approach for DIMM grouping.
->>>
->>> Modify the DMI decoder to also detect the physical memory array a DIMM
->>> is linked to and create one memory controller per array to group
->>> DIMMs. With the change DIMMs are grouped, e.g. a ThunderX2 system
->>> shows one MC per node now:
->>>
->>>   # grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
->>>   /sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
->>>   /sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
->>>   /sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
->>>   /sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
->>>   /sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
->>>   /sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
->>>   /sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
->>>   /sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
->>>   /sys/devices/system/edac/mc/mc1/dimm0/dimm_label:N1 DIMM_I0
->>>   /sys/devices/system/edac/mc/mc1/dimm1/dimm_label:N1 DIMM_J0
->>>   /sys/devices/system/edac/mc/mc1/dimm2/dimm_label:N1 DIMM_K0
->>>   /sys/devices/system/edac/mc/mc1/dimm3/dimm_label:N1 DIMM_L0
->>>   /sys/devices/system/edac/mc/mc1/dimm4/dimm_label:N1 DIMM_M0
->>>   /sys/devices/system/edac/mc/mc1/dimm5/dimm_label:N1 DIMM_N0
->>>   /sys/devices/system/edac/mc/mc1/dimm6/dimm_label:N1 DIMM_O0
->>>   /sys/devices/system/edac/mc/mc1/dimm7/dimm_label:N1 DIMM_P0
->>>
->>> [1] https://lkml.kernel.org/r/f878201f-f8fd-0f2a-5072-ba60c64eefaf@arm.com
->>>
->>> Suggested-by: James Morse <james.morse@arm.com>
->>> Signed-off-by: Robert Richter <rrichter@marvell.com>
->>> ---
->>>   drivers/edac/ghes_edac.c | 137 ++++++++++++++++++++++++++++++---------
->>>   1 file changed, 107 insertions(+), 30 deletions(-)
->>
->> This is all fine and good but that change affects the one x86 platform
->> we support so the whole patchset should be tested there too. Adding
->> Toshi.
->>
->> As a matter of fact, the final version of this set should be tested on
->> all platforms which are using this thing. Adding John Garry too who
->> reported issues with this driver recently on his platform.
-> 
-> Adding other RAS-centric guys for H.
-
-Hi John & Borislav & Robert
-I have tested this patch set on our platform. Only one memory controller found when there is one DIMM on
-each socket or node. Just like this:
-estuary:/$ grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
-/sys/devices/system/edac/mc/mc0/dimm0/dimm_label:SOCKET 0 CHANNEL 0 DIMM 0 DIMM0
-/sys/devices/system/edac/mc/mc0/dimm20/dimm_label:SOCKET 1 CHANNEL 2 DIMM 0 DIMM1
-
-It is not the problem of the patch set. Because our BIOS only defined one "Physical Memory Array Handle" in DMI table.
-Just like this:
-estuary:/$ dmidecode -t memory | grep "Array Handle"
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-        Array Handle: 0x0000
-
-BTW, i also test other function of edac driver our platform used. They're all good. :)
-> 
-> Cheers,
-> John
-> 
->>
->> Thx.
->>
-> 
-> 
-> .
-> 
-
--- 
- thanks
-tanxiaofei
-
+Why can't this be used if KUNIT is built as a module?
