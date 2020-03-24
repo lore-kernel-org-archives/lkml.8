@@ -2,92 +2,111 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B6BC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A981C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958EC2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2AED20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 06:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="qrweyHTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbgCXGV2 (ORCPT
+        id S1727290AbgCXGX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 02:21:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12183 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725869AbgCXGV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 02:21:28 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 217FDB9B832C6BE91BF2;
-        Tue, 24 Mar 2020 14:21:09 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 24 Mar 2020 14:21:00 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: fix to avoid double unlock
-Date:   Tue, 24 Mar 2020 14:20:57 +0800
-Message-ID: <20200324062057.52222-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Tue, 24 Mar 2020 02:23:29 -0400
+Received: from ozlabs.org ([203.11.71.1]:39887 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgCXGX3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 02:23:29 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48mh5T3XFyz9sNg;
+        Tue, 24 Mar 2020 17:23:25 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585031005;
+        bh=pyXXTSOM4rJiyzQjZhPpy8qmKgXBedErkVyMHCYOl80=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=qrweyHTwsbAvl7ERrTWZk38mrgANw/NQhKqMufsiiCAth3EoXC5Ob9kEwnV5jOedS
+         iNxbRgJ35iK0SrppQiB7CzsHb9YS/VmMB0LP27lVQMpBKe32Ohzfuj5AA+88nOksyq
+         J9Xq//SDVLs6wMYJP3Qb5i/cOPCV2OuZoJc0XIqlOIIHMuLx6bqI3UGdMXvT78cxa7
+         8VmstvqGa6jL29bJ+QHhSArN7ATzJcXc3gCHSlLY9GTWU1TjddRJfLy2GfR2ZT6bqK
+         hEi7jRWFO68/gqFSH32r1dnWgAxU1ozpsad4171Sd6ut2q7772RSPXC1paQoPNUM9b
+         6ff411U9oiBPw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, mikey@neuling.org
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v5 10/13] powerpc/ptrace: split out ADV_DEBUG_REGS related functions.
+In-Reply-To: <25a7f050-f241-6035-e778-16b1ca9928f3@c-s.fr>
+References: <cover.1582848567.git.christophe.leroy@c-s.fr> <e2bd7d275bd5933d848aad4fee3ca652a14d039b.1582848567.git.christophe.leroy@c-s.fr> <87imizdbaz.fsf@mpe.ellerman.id.au> <25a7f050-f241-6035-e778-16b1ca9928f3@c-s.fr>
+Date:   Tue, 24 Mar 2020 17:23:29 +1100
+Message-ID: <87k13axoda.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On image that has verity and compression feature, if compressed pages
-and non-compressed pages are mixed in one bio, we may double unlock
-non-compressed page in below flow:
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> On 03/20/2020 02:12 AM, Michael Ellerman wrote:
+>> Christophe Leroy <christophe.leroy@c-s.fr> writes:
+>>> Move ADV_DEBUG_REGS functions out of ptrace.c, into
+>>> ptrace-adv.c and ptrace-noadv.c
+>>>
+>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>> ---
+>>> v4: Leave hw_breakpoint.h for ptrace.c
+>>> ---
+>>>   arch/powerpc/kernel/ptrace/Makefile       |   4 +
+>>>   arch/powerpc/kernel/ptrace/ptrace-adv.c   | 468 ++++++++++++++++
+>>>   arch/powerpc/kernel/ptrace/ptrace-decl.h  |   5 +
+>>>   arch/powerpc/kernel/ptrace/ptrace-noadv.c | 236 ++++++++
+>>>   arch/powerpc/kernel/ptrace/ptrace.c       | 650 ----------------------
+>>>   5 files changed, 713 insertions(+), 650 deletions(-)
+>>>   create mode 100644 arch/powerpc/kernel/ptrace/ptrace-adv.c
+>>>   create mode 100644 arch/powerpc/kernel/ptrace/ptrace-noadv.c
+>> 
+>> This is somehow breaking the ptrace-hwbreak selftest on Power8:
+>> 
+>>    test: ptrace-hwbreak
+>>    tags: git_version:v5.6-rc6-892-g7a285a6067d6
+>>    PTRACE_SET_DEBUGREG, WO, len: 1: Ok
+>>    PTRACE_SET_DEBUGREG, WO, len: 2: Ok
+>>    PTRACE_SET_DEBUGREG, WO, len: 4: Ok
+>>    PTRACE_SET_DEBUGREG, WO, len: 8: Ok
+>>    PTRACE_SET_DEBUGREG, RO, len: 1: Ok
+>>    PTRACE_SET_DEBUGREG, RO, len: 2: Ok
+>>    PTRACE_SET_DEBUGREG, RO, len: 4: Ok
+>>    PTRACE_SET_DEBUGREG, RO, len: 8: Ok
+>>    PTRACE_SET_DEBUGREG, RW, len: 1: Ok
+>>    PTRACE_SET_DEBUGREG, RW, len: 2: Ok
+>>    PTRACE_SET_DEBUGREG, RW, len: 4: Ok
+>>    PTRACE_SET_DEBUGREG, RW, len: 8: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_EXACT, WO, len: 1: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RO, len: 1: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_EXACT, RW, len: 1: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, WO, len: 6: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RO, len: 6: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW ALIGNED, RW, len: 6: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, WO, len: 6: Ok
+>>    PPC_PTRACE_SETHWDEBUG, MODE_RANGE, DW UNALIGNED, RO, len: 6: Fail
+>>    failure: ptrace-hwbreak
+>> 
+>> I haven't had time to work out why yet.
+>> 
+>
+> A (big) part of commit c3f68b0478e7 ("powerpc/watchpoint: Fix ptrace 
+> code that muck around with address/len") was lost during rebase.
+>
+> I'll send a fix, up to you to squash it in or commit it as is.
 
-- f2fs_post_read_work
- - f2fs_decompress_work
-  - f2fs_decompress_bio
-   - __read_end_io
-    - unlock_page
- - fsverity_enqueue_verify_work
-  - f2fs_verity_work
-   - f2fs_verify_bio
-    - unlock_page
+Thanks.
 
-So it should skip handling non-compressed page in f2fs_decompress_work()
-if verity is on.
-
-Besides, add missing dec_page_count() in f2fs_verify_bio().
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/data.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index 0197b7b80d19..24643680489b 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -139,6 +139,8 @@ static void __read_end_io(struct bio *bio, bool compr, bool verity)
- 			f2fs_decompress_pages(bio, page, verity);
- 			continue;
- 		}
-+		if (verity)
-+			continue;
- #endif
- 
- 		/* PG_error was set if any post_read step failed */
-@@ -216,6 +218,7 @@ static void f2fs_verify_bio(struct bio *bio)
- 		ClearPageUptodate(page);
- 		ClearPageError(page);
- unlock:
-+		dec_page_count(F2FS_P_SB(page), __read_io_type(page));
- 		unlock_page(page);
- 	}
- }
--- 
-2.18.0.rc1
-
+cheers
