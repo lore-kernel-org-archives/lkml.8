@@ -7,164 +7,201 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F3FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DF6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3D92073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E15AC20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHkvzsim"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uT+26KhJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgCXQFM (ORCPT
+        id S1728212AbgCXQFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:05:12 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38806 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgCXQFL (ORCPT
+        Tue, 24 Mar 2020 12:05:38 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35102 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgCXQFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:05:11 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w2so7967306oic.5;
-        Tue, 24 Mar 2020 09:05:10 -0700 (PDT)
+        Tue, 24 Mar 2020 12:05:38 -0400
+Received: by mail-oi1-f194.google.com with SMTP id k8so19016096oik.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:05:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=2BPzC8bByA/HvMLHNDuJ/sryGIc/DaJrplgVtUGBycE=;
-        b=HHkvzsimNnAlbEd2ZUuSi3tppCCvuexXM92gmWz1PrPvT8/YodDM04j4ICKWyAnScu
-         lQVc8GqPm4s6NagQmUmrlPB8LC59XBwe3fmOfxFvTQGDlBc/DJ2kCEYJuPyjN/jdZMCM
-         WiGVrfbWQgF3pVXk+hsDa3w91B18+Biggx1VXjLNfI5FxYLHGf0VdRKmKAdrd2uze/Df
-         j3/Cdi7oHcf5/pk9AXFpihMvrZN+eeoVsYw7CYhCxrifXYc4ZvSBdl2dCQZ6SZAoS63j
-         7YOSDq8EkuTiktCrVOqggeQQ7SfhdhgjX+Rk4fNnZ0gV+jVf1rd/C3UA87E3s4iGSJBU
-         XjhQ==
+        bh=JwpTKi3gJ8BLkjQrFUw7l6hWz2zTWEixI9aoiPlw/WM=;
+        b=uT+26KhJSGNNjdTx9pC/T5npeV70PL0PGLe+/aEb+5H+SUaaeX6fU4wfCyHA6eLpZs
+         ojYWyx/oM8MwhW4iBGK7nbAO6UBq+q+VUDmnuIhOxPtMABwhCYmcrhLBPz19vOMiQkeR
+         n1SKwoenqQxaopHOox20EOC+X/alIJyxK3rQ2W9zr37BlJ+j34BkEXHkkXdZG7tyP0K6
+         jvR+S0OHxfl1Nw0N+vD4ybcwfk6X1jbljeyIdQiry9qk7Kq1omSOuFUDarP1J8P3PL+9
+         dO4EmidUOl7KZBYwo1DbPR4tw03dkW2DY5t78PDeuj2k4HQ+GKrzbR9c/eBa5N4Cm6n6
+         pyRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=2BPzC8bByA/HvMLHNDuJ/sryGIc/DaJrplgVtUGBycE=;
-        b=EhYdHJTxBwrHxlB4+C3Ou4tFP6XqdGhA4pdUhNPWIFpPyOzFMILMtHu5rYnVdSWM5c
-         cEK7WjSbMPV+aO/kLpNiwpvCTPEgNoF6XThm0D63tq84fs7uuG7D+1lGu/nzEqLYlYmX
-         0YORDKY+cI7EB4LvGnZ15oCCimeBfBRbD1gSUnGETIJUNKyge4NNtkWjlhuDjxjeI3Jk
-         exz7CvAvXepyoeuO9jaNTAHc8GF5/yZ92da+hQYq13mc/9IR/18Q/FBQf4F2kuWwOiZm
-         avW2xOKtHW1f6iMtlccCilX/Sc2FKAuksFkGiHM5TlyfzDzCQfpjpq68hlmRjlkIcR4J
-         DlQA==
-X-Gm-Message-State: ANhLgQ1I7xffVsiugQC86JTFvcq4l9WR8SRzR6S1oPiJgW5PzcSVfJ6x
-        gws2/S4LWmj/V1k/Rk2wEloH1zZuVl1+IpyDMGc=
-X-Google-Smtp-Source: ADFU+vtuwcJhmNvSXVMH0kkPrvHbOp86UIi0sjchaCanrt6uGW6T2n+s1rq6XKFSlBRFrUjjFNxXPvfnLddzYsV6iIY=
-X-Received: by 2002:aca:cf0d:: with SMTP id f13mr3817816oig.162.1585065910345;
- Tue, 24 Mar 2020 09:05:10 -0700 (PDT)
+        bh=JwpTKi3gJ8BLkjQrFUw7l6hWz2zTWEixI9aoiPlw/WM=;
+        b=DmmguzyzdNhpHogJaeHfCxdSnBDbIxZcLO6Du/chMB5WtXH7pBg1Tp+4w6Oh7c0433
+         wwE58ZYeOnhFj03iLQYOS9xecj945A3A+WXXbwUGZI8N5+kj4u2KQp9kPCWurYkTJ7nb
+         MVAne/D/eK+HTUL/ePVVNWOdUtbGOpG/THWtcRdG2+3ES7/XFfHvWqaK0D7/q5sAdxYk
+         rqpkBiRornh0K7qgRary8anB2hPbXmZs/smlXBDNk2s3KTNlEBoVmIq3GVBhFcG+uvFW
+         Wk6an53h1igEamfQtIy5bJFBemt4zZk8LDtYTApjmEUt9QKSa7GpDvmcSVVm8OTWf4rd
+         3R0A==
+X-Gm-Message-State: ANhLgQ3WZ4MfmolTLDImb3pJC+iVoa4hh3W+0LNtUsSKU/u4CbH3X6Sz
+        Bsa5k1I4uqCuZSNL3k4u4ua8eG6DnCVbbBZhQUSL4CYKtCU=
+X-Google-Smtp-Source: ADFU+vvS67Pjuew+uES3TAgl+KCsbVZSgUgZUlkhjy1YaDMbIQ+B9+BqXvwqfHucGDmPVKXp1TQY+VGiMeV/4l910bs=
+X-Received: by 2002:aca:1e1a:: with SMTP id m26mr4012187oic.39.1585065937556;
+ Tue, 24 Mar 2020 09:05:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584133954-6953-1-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <1584133954-6953-2-git-send-email-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200319124452.3yfcvq754vi4q2rv@gilmour.lan> <20200319130348.GC4872@pendragon.ideasonboard.com>
- <CA+V-a8s-GZsYuBLyGnzURZfGD42f0c+QEan6FSwb2ew1=7Gj3g@mail.gmail.com> <20200324154045.whiy6uvlg2mrjv5a@gilmour.lan>
-In-Reply-To: <20200324154045.whiy6uvlg2mrjv5a@gilmour.lan>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Tue, 24 Mar 2020 16:04:43 +0000
-Message-ID: <CA+V-a8tMVoJOdgM_S0sJ0WEGhwBirCC4mi-TtxLCn1SKVXXiBQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] media: dt-bindings: media: i2c: Switch to assigned-clock-rates
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-media <linux-media@vger.kernel.org>,
-        LAK <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <linux-imx@nxp.com>
+References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com>
+ <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com>
+ <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com>
+ <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com>
+ <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com>
+ <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com>
+ <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
+In-Reply-To: <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com>
+From:   ron minnich <rminnich@gmail.com>
+Date:   Tue, 24 Mar 2020 09:05:26 -0700
+Message-ID: <CAP6exYLCFp8AMFx_d3XJtYiSibF76Fo-km4vB5MwSbqE8D8DNA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
+To:     "H. Peter Anvin" <hpa@zytor.com>
+Cc:     Matthew Garrett <mjg59@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+Here is the version that I think does what you asked.
 
-On Tue, Mar 24, 2020 at 3:40 PM Maxime Ripard <maxime@cerno.tech> wrote:
->
-> On Thu, Mar 19, 2020 at 01:17:51PM +0000, Lad, Prabhakar wrote:
-> > Hi Laurent,
-> >
-> > On Thu, Mar 19, 2020 at 1:04 PM Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> > > Hi Maxime,
-> > >
-> > > On Thu, Mar 19, 2020 at 01:44:52PM +0100, Maxime Ripard wrote:
-> > > > On Fri, Mar 13, 2020 at 09:12:31PM +0000, Lad Prabhakar wrote:
-> > > > > Use assigned-clock-rates to specify the clock rate. Also mark
-> > > > > clock-frequency property as deprecated.
-> > > > >
-> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/media/i2c/ov5645.txt | 5 +++--
-> > > > >  1 file changed, 3 insertions(+), 2 deletions(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ov5645.txt b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > > index 72ad992..e62fe82 100644
-> > > > > --- a/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ov5645.txt
-> > > > > @@ -8,7 +8,7 @@ Required Properties:
-> > > > >  - compatible: Value should be "ovti,ov5645".
-> > > > >  - clocks: Reference to the xclk clock.
-> > > > >  - clock-names: Should be "xclk".
-> > > > > -- clock-frequency: Frequency of the xclk clock.
-> > > > > +- clock-frequency (deprecated): Frequency of the xclk clock.
-> > > > >  - enable-gpios: Chip enable GPIO. Polarity is GPIO_ACTIVE_HIGH. This corresponds
-> > > > >    to the hardware pin PWDNB which is physically active low.
-> > > > >  - reset-gpios: Chip reset GPIO. Polarity is GPIO_ACTIVE_LOW. This corresponds to
-> > > > > @@ -37,7 +37,8 @@ Example:
-> > > > >
-> > > > >                     clocks = <&clks 200>;
-> > > > >                     clock-names = "xclk";
-> > > > > -                   clock-frequency = <24000000>;
-> > > > > +                   assigned-clocks = <&clks 200>;
-> > > > > +                   assigned-clock-rates = <24000000>;
-> > > > >
-> > > > >                     vdddo-supply = <&camera_dovdd_1v8>;
-> > > > >                     vdda-supply = <&camera_avdd_2v8>;
-> > > >
-> > > > clock-frequency is quite different from assigned-clock-rates though,
-> > > > semantically speaking. clock-frequency is only about what the clock
-> > > > frequency is, while assigned-clock-rates will change the rate as well,
-> > > > and you have no idea how long it will last.
-> > >
-> > > The driver currently reads the clock-frequency property and then calls
-> > > clk_set_rate(). I agree tht assigned-clock-rates isn't a panacea, but I
-> > > think it's less of a hack than what we currently have.
-> > >
-> > > As discussed on IRC, maybe the best option in this specific case is to
-> > > drop clock-frequency and assigned-clok-rates, and call clk_set_rate()
-> > > with a hardcoded frequency of 24MHz in the driver, as that's the only
-> > > frequency the driver supports.
-> > >
-> > Does this mean any driver which has a fixed clock requirement shouldn't be a
-> > DT property and should be just handled by the drivers internally ?
->
-> It's hard to give a generic policy, but here, the hardware is pretty
-> flexible since it can deal with anything between 6MHz to 50-something
-> MHz, it's the driver that chooses to enforce a 24MHz and be pedantic
-> about it, so it's up to the driver to enforce that policy, not to the
-> DT since it's essentially a software limitation, not a hardware one.
->
-Thank you for the clarification, Ill drop patches 1-4 from this series.
+I'd like to change the patch title but left it on this email thread.
 
-Cheers,
---Prabhakar
 
-> Maxime
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Subject: [PATCH 1/1] initrdmem= option to specify initrd physical address
+
+This patch adds the initrdmem option:
+initrdmem=ss[KMG],nn[KMG]
+which is used to specify the physical address of the initrd,
+almost always an address in FLASH. It also adds code for
+x86 to use the existing phys_init_start and
+phys_init_size variables in the kernel.
+This is useful in cases where we wish to place a kernel
+and initrd in FLASH, but there is no firmware file
+system structure in the FLASH.
+
+One such situation occurs when we have reclaimed unused FLASH
+space on UEFI systems by, e.g., taking it from the Management
+Engine. For example, on many systems, the ME is given half the
+FLASH part; not only is 2.75M of an 8M part unused; but 10.75M
+of a 16M part is unused. We can use this space to contain
+an initrd, but need to tell Linux where it is.
+
+This space is "raw": due to, e.g., UEFI limitations:
+it can not be added to UEFI firmware volumes without rebuilding
+UEFI from source or writing a UEFI device driver. We can reference it
+only as a physical address and size.
+
+At the same time, should we netboot a kernel or load it from
+GRUB or syslinux, we want to have the option of not using
+the physical address specification. Then, should we wish, it
+is easy to boot the kernel and provide an initrd; or boot the
+the kernel and let it use the initrd in FLASH. In practice this
+has proven to be very helpful as we integrate Linux into FLASH
+on x86.
+
+Hence, the most flexible and convenient path is to enable the
+initrdmem command line flag in a way that it is the last choice tried.
+
+For example, on the DigitalLoggers Atomic Pi, we burn an image into
+FLASH with a built-in command line which includes:
+initrdmem=0xff968000,0x200000
+which specifies a location and size.
+
+Signed-off-by: Ronald G. Minnich <rminnich@gmail.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+ arch/x86/kernel/setup.c                         |  6 ++++++
+ init/do_mounts_initrd.c                         | 13 ++++++++++++-
+ 3 files changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt
+b/Documentation/admin-guide/kernel-parameters.txt
+index c07815d230bc..9cd356958a7f 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -1714,6 +1714,13 @@
+
+     initrd=        [BOOT] Specify the location of the initial ramdisk
+
++    initrdmem=    [KNL] Specify a physical adddress and size from which
++            to load the inird. If an initrd is compiled in or
++            specified in the bootparams, it takes priority
++            over this setting.
++            Format: ss[KMG],nn[KMG]
++            Defaut is 0, 0
++
+     init_on_alloc=    [MM] Fill newly allocated pages and heap objects with
+             zeroes.
+             Format: 0 | 1
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index a74262c71484..1b04ef8ea12d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
+
+     ramdisk_image |= (u64)boot_params.ext_ramdisk_image << 32;
+
++    if (ramdisk_image == 0) {
++        ramdisk_image = phys_initrd_start;
++    }
+     return ramdisk_image;
+ }
+ static u64 __init get_ramdisk_size(void)
+@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
+
+     ramdisk_size |= (u64)boot_params.ext_ramdisk_size << 32;
+
++    if (ramdisk_size == 0) {
++        ramdisk_size = phys_initrd_size;
++    }
+     return ramdisk_size;
+ }
+
+diff --git a/init/do_mounts_initrd.c b/init/do_mounts_initrd.c
+index dab8b1151b56..d72beda824aa 100644
+--- a/init/do_mounts_initrd.c
++++ b/init/do_mounts_initrd.c
+@@ -28,7 +28,7 @@ static int __init no_initrd(char *str)
+
+ __setup("noinitrd", no_initrd);
+
+-static int __init early_initrd(char *p)
++static int __init early_initrdmem(char *p)
+ {
+     phys_addr_t start;
+     unsigned long size;
+@@ -43,6 +43,17 @@ static int __init early_initrd(char *p)
+     }
+     return 0;
+ }
++early_param("initrdmem", early_initrdmem);
++
++/*
++ * This is here as the initrd keyword has been in use since 11/2018
++ * on ARM, PowerPC, and MIPS.
++ * It should not be; it is reserved for bootloaders.
++ */
++static int __init early_initrd(char *p)
++{
++    return early_initrdmem(p);
++}
+ early_param("initrd", early_initrd);
+
+ static int init_linuxrc(struct subprocess_info *info, struct cred *new)
+-- 
+2.17.1
