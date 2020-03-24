@@ -2,132 +2,130 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FC8FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A019C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33DBB2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3346320788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:40:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SqvC2kgm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gg6emeKg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCXQjA (ORCPT
+        id S1727705AbgCXQkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:39:00 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36025 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727161AbgCXQi7 (ORCPT
+        Tue, 24 Mar 2020 12:40:18 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42170 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727161AbgCXQkS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:38:59 -0400
-Received: by mail-lj1-f196.google.com with SMTP id g12so19317470ljj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:38:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZzkCQpPbdj2OFyiXSSy0aeIz5QRMq8qWJOYRKQeOTcc=;
-        b=SqvC2kgmwRB6Tw4XKDcWiHvMeyI2C3KLquP94TtLNSUWZkmtCtSc82qScnzWqUkjtu
-         GJ/VmxWlx42XrPVn7bvv1addkWv0DUTK/VlBqLttdTB8Ev+Y7bQtN0Gm7mqH89KBS50I
-         zntcKww3mWjZjjU40cMN4+YEC8bzOjJOOr5U0cyL724nHMiBGyxXilBSE9P0iXs1uDDg
-         EmzZHjPWcMIx86jXLdVgZY5v9fo/Lxos9aq8AFFYJqhPb/jr6fCGvpLL6BJe75NDiDag
-         iVS/80LexsuCyT0i3tOMeoID5FSGXKrUONpM5mO/OBdn0IYRzTiegfj+htQoeOnBLp97
-         +A9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZzkCQpPbdj2OFyiXSSy0aeIz5QRMq8qWJOYRKQeOTcc=;
-        b=bOrYU3tWSEk+waaYAWn8scwLUHu3CWqJdI8g33jupya5y01cXNoLP531oTMprgjan7
-         vtJ1aVlJTC8yyxs1mHKSuHdTt44pXlstUJiZEu9ld7gZK8kgaV/7/T81YL2MPijsXU6+
-         +ADLKkhpusQ4LBG499pWjYwCEfVwrw/XVVHX+bFD3PKOKGl2BkySPx6Ym6Sq4Vfx5D3k
-         Tme80VGW53SL5UXfIf8bkC8u3DFz789KaQSYWvfooH4DIlXl/P9pnndPQFh17lEYiYeQ
-         KSToWFWWNVhCfx5HTb6FvJCmZwAkkWCit4JZ0L8piuszH51fgFTrFn+jWYpRRT3FEJOG
-         vE/A==
-X-Gm-Message-State: ANhLgQ33uqiG25Ppd+aFgfvBzx07cZpL9dGSBrzQbPQrU3fnIF/Soc+N
-        h3a6cdiA38H0fkO7nAYgCHq6FgN6UayNiAxjG9zFTg==
-X-Google-Smtp-Source: ADFU+vugN93Bdz0mI1Sdq6g6dBru8MHy0EA00/IQriSHlqEooPusYfp9U34c35lnJOebx/+jWACTgnIx5cdQ9k3QUGA=
-X-Received: by 2002:a2e:b5d1:: with SMTP id g17mr4517795ljn.139.1585067937520;
- Tue, 24 Mar 2020 09:38:57 -0700 (PDT)
+        Tue, 24 Mar 2020 12:40:18 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OGdEdY166419;
+        Tue, 24 Mar 2020 16:40:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=Z05suOHf2IDzsq2FPAO2+DX7KrqPxW6csjVKUUkFIXw=;
+ b=gg6emeKgunC7p7RGjiJUerU/Uwo15KfvFn7XDFj7zqxWTZtUfQ2n9Yje4bU4h1+j+76q
+ PGp3iuGJgG5dzy/WLXkJuNPFHDpLpLLVewOFZN9o6/JetCpGQg/6ikDOHd8VyjqYQ9rA
+ 0X2qlZf7dOsrQBitgGr2hpQCI4ql2BtpRwztJcKA4L9qX0nOiy0I4B0fD6Ls/SNzSXQl
+ Tnmwpywnw7kGUYUrkXPm+1/46hwiepQECpIY6b3SXoJs+yuqb1Yt3vS1OZWhVHYImhYt
+ HcdpATyKFquNpnEwBl3dMk79FdK+ZOhxZ6wNh6rADwnYpYDdEPSOhMeALIaTBcRkSRnu KA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2ywabr5ef0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 16:40:00 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OGKTKa091634;
+        Tue, 24 Mar 2020 16:40:00 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3030.oracle.com with ESMTP id 2yxw4pmjd7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 16:40:00 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02OGdwIG007862;
+        Tue, 24 Mar 2020 16:39:58 GMT
+Received: from dhcp-10-175-162-99.vpn.oracle.com (/10.175.162.99)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 24 Mar 2020 09:39:57 -0700
+Date:   Tue, 24 Mar 2020 16:39:50 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     Patricia Alfonso <trishalfonso@google.com>
+cc:     davidgow@google.com, brendanhiggins@google.com,
+        aryabinin@virtuozzo.com, dvyukov@google.com, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [RFC PATCH v2 1/3] Add KUnit Struct to Current Task
+In-Reply-To: <20200319164227.87419-2-trishalfonso@google.com>
+Message-ID: <alpine.LRH.2.21.2003241635230.30637@localhost>
+References: <20200319164227.87419-1-trishalfonso@google.com> <20200319164227.87419-2-trishalfonso@google.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200324153643.15527-1-will@kernel.org> <20200324153643.15527-4-will@kernel.org>
- <CAG48ez1yTbbXn__Kf0csf8=LCFL+0hR0EyHNZsryN8p=SsLp5Q@mail.gmail.com> <20200324162652.GA2518046@kroah.com>
-In-Reply-To: <20200324162652.GA2518046@kroah.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 24 Mar 2020 17:38:30 +0100
-Message-ID: <CAG48ez1c5Rjo+RZRW-qR7h40zT4mT8iQv5m3h0qTjfFpsckEsg@mail.gmail.com>
-Subject: Re: [RFC PATCH 03/21] list: Annotate lockless list primitives with data_race()
-To:     Greg KH <greg@kroah.com>
-Cc:     Will Deacon <will@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Maddie Stone <maddiestone@google.com>,
-        Marco Elver <elver@google.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel-team <kernel-team@android.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=3
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=3
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ clxscore=1015 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003240087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 5:26 PM Greg KH <greg@kroah.com> wrote:
-> On Tue, Mar 24, 2020 at 05:20:45PM +0100, Jann Horn wrote:
-> > On Tue, Mar 24, 2020 at 4:37 PM Will Deacon <will@kernel.org> wrote:
-> > > Some list predicates can be used locklessly even with the non-RCU list
-> > > implementations, since they effectively boil down to a test against
-> > > NULL. For example, checking whether or not a list is empty is safe even
-> > > in the presence of a concurrent, tearing write to the list head pointer.
-> > > Similarly, checking whether or not an hlist node has been hashed is safe
-> > > as well.
-> > >
-> > > Annotate these lockless list predicates with data_race() and READ_ONCE()
-> > > so that KCSAN and the compiler are aware of what's going on. The writer
-> > > side can then avoid having to use WRITE_ONCE() in the non-RCU
-> > > implementation.
-> > [...]
-> > >  static inline int list_empty(const struct list_head *head)
-> > >  {
-> > > -       return READ_ONCE(head->next) == head;
-> > > +       return data_race(READ_ONCE(head->next) == head);
-> > >  }
-> > [...]
-> > >  static inline int hlist_unhashed(const struct hlist_node *h)
-> > >  {
-> > > -       return !READ_ONCE(h->pprev);
-> > > +       return data_race(!READ_ONCE(h->pprev));
-> > >  }
-> >
-> > This is probably valid in practice for hlist_unhashed(), which
-> > compares with NULL, as long as the most significant byte of all kernel
-> > pointers is non-zero; but I think list_empty() could realistically
-> > return false positives in the presence of a concurrent tearing store?
-> > This could break the following code pattern:
-> >
-> > /* optimistic lockless check */
-> > if (!list_empty(&some_list)) {
-> >   /* slowpath */
-> >   mutex_lock(&some_mutex);
-> >   list_for_each(tmp, &some_list) {
-> >     ...
-> >   }
-> >   mutex_unlock(&some_mutex);
-> > }
-> >
-> > (I'm not sure whether patterns like this appear commonly though.)
->
->
-> I would hope not as the list could go "empty" before the lock is
-> grabbed.  That pattern would be wrong.
 
-If the list becomes empty in between, the loop just iterates over
-nothing, and the effect is no different from what you'd get if you had
-bailed out before. But sure, you have to be aware that that can
-happen.
+On Thu, 19 Mar 2020, Patricia Alfonso wrote:
+
+> In order to integrate debugging tools like KASAN into the KUnit
+> framework, add KUnit struct to the current task to keep track of the
+> current KUnit test.
+> 
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> ---
+>  include/linux/sched.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 04278493bf15..1fbfa0634776 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1180,6 +1180,10 @@ struct task_struct {
+>  	unsigned int			kasan_depth;
+>  #endif
+>  
+> +#if IS_BUILTIN(CONFIG_KUNIT)
+
+This patch set looks great! You might have noticed I
+refreshed the kunit resources stuff to incorporate
+feedback from Brendan, but I don't think any API changes
+were made that should have consequences for your code
+(I'm building with your patches on top to make sure).
+I'd suggest promoting from RFC to v3 on the next round
+unless anyone objects.
+
+As Dmitry suggested, the above could likely be changed to be
+"#ifdef CONFIG_KUNIT" as kunit can be built as a
+module also. More on this in patch 2..
+
+> +	struct kunit			*kunit_test;
+> +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
+> +
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  	/* Index of current stored address in ret_stack: */
+>  	int				curr_ret_stack;
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
+> 
