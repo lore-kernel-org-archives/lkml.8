@@ -2,54 +2,60 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579B4C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548C8C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 381B320788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E63720788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585064261;
+	bh=ieuN1NJTq+9heb9k5hJc1KkJB7zqBNtgCKe1hqkqObc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LfSvxKxdTnvb1949hXQzBrl6lyuXqfwwe1Cx0QEu0aXjoTbVIhCI/hJzRNmJPAk3V
+	 hVlH91AevXO/sR9eqHz7GJrqqQ2fCgyN4b9BHNTpFcVhw9sIJUdOP+arhdMnujMOqu
+	 3xuLExBc/WtxXInreYqNpQdgRlumpGt2qe+qb9kk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgCXPhe (ORCPT
+        id S1728281AbgCXPhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:37:34 -0400
-Received: from mga05.intel.com ([192.55.52.43]:40198 "EHLO mga05.intel.com"
+        Tue, 24 Mar 2020 11:37:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728608AbgCXPh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:37:27 -0400
-IronPort-SDR: ZG4pQCHbgfmCrF8/DezJ0ChUisQ1FILqliWZCDt8fG1JBWqEhbaOtm7op5sN6iuLFY0qB0oSpb
- 8LKeEPk4WzgA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:37:26 -0700
-IronPort-SDR: Icj05jCEMrNmV0/gz7KTNVEHCBHp5zk00/klmMqsmSqXPLcnqIK/EPSSgJBhksLqJlDNY1UsNN
- AeEYK/RHDxSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="393319737"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 08:37:22 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
+        id S1728709AbgCXPhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:35 -0400
+Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CF882073E;
+        Tue, 24 Mar 2020 15:37:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585064255;
+        bh=ieuN1NJTq+9heb9k5hJc1KkJB7zqBNtgCKe1hqkqObc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FC4e4KubugDTpB2dTINNE4ZzmVzWoJ3zBo41BOOCCa60v3W4JTxEUmucW0IieqI4l
+         wZBVBpH6WdYqZJFU8YUpcCq6bjh0Celqc9ggRZW4zOyKk4kEabDDXGKXOAm9utQybw
+         ouCNAWXeOF7ZvMTnDx5Qm+mOiQ5cZ+619xCWIA6k=
+From:   Will Deacon <will@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
+        Jann Horn <jannh@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Maddie Stone <maddiestone@google.com>,
+        Marco Elver <elver@google.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v6 5/8] kvm: vmx: Extend VMX's #AC interceptor to handle split lock #AC happens in guest
-Date:   Tue, 24 Mar 2020 23:18:56 +0800
-Message-Id: <20200324151859.31068-6-xiaoyao.li@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
+        kernel-hardening@lists.openwall.com
+Subject: [RFC PATCH 18/21] list_bl: Move integrity checking out of line
+Date:   Tue, 24 Mar 2020 15:36:40 +0000
+Message-Id: <20200324153643.15527-19-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200324151859.31068-1-xiaoyao.li@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
+In-Reply-To: <20200324153643.15527-1-will@kernel.org>
+References: <20200324153643.15527-1-will@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,87 +63,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two types of #AC can be generated in Intel CPUs:
- 1. legacy alignment check #AC;
- 2. split lock #AC;
+In preparation for adding full integrity checking to 'hlist_bl', move
+the checks out of line before they become more bloated. At the same,
+swap the argument order for __hlist_bl_add_head_valid() so that it
+follows the same convention as __hlist_add_head_valid().
 
-Legacy alignment check #AC can be injected to guest if guest has enabled
-alignemnet check.
-
-when host enables split lock detectin, i.e., sld_warn or sld_fatal,
-there will be an unexpected #AC in guest and intercepted by KVM because
-KVM doesn't virtualize this feature to guest and hardware value of
-MSR_TEST_CTRL.SLD bit stays unchanged when vcpu is running.
-
-To handle this unexpected #AC, treat guest just like host usermode that
-calling handle_user_split_lock():
- - If host is sld_warn, it warns and set TIF_SLD so that __switch_to_xtra()
-   does the MSR_TEST_CTRL.SLD bit switching when control transfer to/from
-   this vcpu.
- - If host is sld_fatal, forward #AC to userspace, the similar as sending
-   SIGBUS.
-
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 ---
- arch/x86/kvm/vmx/vmx.c | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+ include/linux/list_bl.h    | 34 ++++++----------------------------
+ include/linux/rculist_bl.h |  2 +-
+ lib/list_debug.c           | 28 ++++++++++++++++++++++++++++
+ 3 files changed, 35 insertions(+), 29 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 094dbe375f01..300e1e149372 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4613,6 +4613,12 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
- 	return 1;
- }
+diff --git a/include/linux/list_bl.h b/include/linux/list_bl.h
+index 0839c4f43e6d..dd74043ebae6 100644
+--- a/include/linux/list_bl.h
++++ b/include/linux/list_bl.h
+@@ -33,34 +33,12 @@ struct hlist_bl_node {
+ };
  
-+static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
-+{
-+	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-+	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
-+}
-+
- static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+ #ifdef CONFIG_CHECK_INTEGRITY_LIST
+-static inline bool __hlist_bl_add_head_valid(struct hlist_bl_head *h,
+-					     struct hlist_bl_node *n)
+-{
+-	unsigned long hlock = (unsigned long)h->first & LIST_BL_LOCKMASK;
+-	unsigned long nlock = (unsigned long)n & LIST_BL_LOCKMASK;
+-
+-	return !(CHECK_DATA_CORRUPTION(nlock,
+-			"hlist_bl_add_head: node is locked\n") ||
+-		 CHECK_DATA_CORRUPTION(hlock != LIST_BL_LOCKMASK,
+-			"hlist_bl_add_head: head is unlocked\n"));
+-}
+-
+-static inline bool __hlist_bl_del_valid(struct hlist_bl_node *n)
+-{
+-	unsigned long nlock = (unsigned long)n & LIST_BL_LOCKMASK;
+-
+-	return !(CHECK_DATA_CORRUPTION(nlock,
+-			"hlist_bl_del_valid: node locked") ||
+-		 CHECK_DATA_CORRUPTION(n->next == LIST_POISON1,
+-			"hlist_bl_del corruption, %px->next is LIST_POISON1 (%px)\n",
+-			n, LIST_POISON1) ||
+-		 CHECK_DATA_CORRUPTION(n->pprev == LIST_POISON2,
+-			"hlist_bl_del corruption, %px->pprev is LIST_POISON2 (%px)\n",
+-			n, LIST_POISON2));
+-}
++extern bool __hlist_bl_add_head_valid(struct hlist_bl_node *n,
++				      struct hlist_bl_head *h);
++extern bool __hlist_bl_del_valid(struct hlist_bl_node *node);
+ #else
+-static inline bool __hlist_bl_add_head_valid(struct hlist_bl_head *h,
+-					     struct hlist_bl_node *n)
++static inline bool __hlist_bl_add_head_valid(struct hlist_bl_node *n,
++					     struct hlist_bl_head *h)
  {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -4678,9 +4684,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		return handle_rmode_exception(vcpu, ex_no, error_code);
+ 	return true;
+ }
+@@ -103,7 +81,7 @@ static inline void hlist_bl_add_head(struct hlist_bl_node *n,
+ {
+ 	struct hlist_bl_node *first = hlist_bl_first(h);
  
- 	switch (ex_no) {
--	case AC_VECTOR:
--		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
--		return 1;
- 	case DB_VECTOR:
- 		dr6 = vmcs_readl(EXIT_QUALIFICATION);
- 		if (!(vcpu->guest_debug &
-@@ -4709,6 +4712,27 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
- 		kvm_run->debug.arch.exception = ex_no;
- 		break;
-+	case AC_VECTOR:
-+		/*
-+		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
-+		 * legacy alignment check enabled.  Pre-check host split lock
-+		 * support to avoid the VMREADs needed to check legacy #AC,
-+		 * i.e. reflect the #AC if the only possible source is legacy
-+		 * alignment checks.
-+		 */
-+		if (!split_lock_detect_on() ||
-+		    guest_cpu_alignment_check_enabled(vcpu)) {
-+			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-+			return 1;
-+		}
+-	if (!__hlist_bl_add_head_valid(h, n))
++	if (!__hlist_bl_add_head_valid(n, h))
+ 		return;
+ 
+ 	n->next = first;
+diff --git a/include/linux/rculist_bl.h b/include/linux/rculist_bl.h
+index 553ce3cde104..9356e7283ff0 100644
+--- a/include/linux/rculist_bl.h
++++ b/include/linux/rculist_bl.h
+@@ -63,7 +63,7 @@ static inline void hlist_bl_add_head_rcu(struct hlist_bl_node *n,
+ {
+ 	struct hlist_bl_node *first;
+ 
+-	if (!__hlist_bl_add_head_valid(h, n))
++	if (!__hlist_bl_add_head_valid(n, h))
+ 		return;
+ 
+ 	/* don't need hlist_bl_first_rcu because we're under lock */
+diff --git a/lib/list_debug.c b/lib/list_debug.c
+index b3560de4accc..9591fa6c9337 100644
+--- a/lib/list_debug.c
++++ b/lib/list_debug.c
+@@ -186,3 +186,31 @@ bool __hlist_nulls_del_valid(struct hlist_nulls_node *node)
+ 	return true;
+ }
+ EXPORT_SYMBOL(__hlist_nulls_del_valid);
 +
-+		/*
-+		 * Forward the #AC to userspace if kernel policy does not allow
-+		 * temporarily disabling split lock detection.
-+		 */
-+		if (handle_user_split_lock(kvm_rip_read(vcpu)))
-+			return 1;
-+		fallthrough;
- 	default:
- 		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
- 		kvm_run->ex.exception = ex_no;
++bool __hlist_bl_add_head_valid(struct hlist_bl_node *new,
++			       struct hlist_bl_head *head)
++{
++	unsigned long hlock = (unsigned long)head->first & LIST_BL_LOCKMASK;
++	unsigned long nlock = (unsigned long)new & LIST_BL_LOCKMASK;
++
++	return !(CHECK_DATA_CORRUPTION(nlock,
++			"hlist_bl_add_head: node is locked\n") ||
++		 CHECK_DATA_CORRUPTION(hlock != LIST_BL_LOCKMASK,
++			"hlist_bl_add_head: head is unlocked\n"));
++}
++EXPORT_SYMBOL(__hlist_bl_add_head_valid);
++
++bool __hlist_bl_del_valid(struct hlist_bl_node *node)
++{
++	unsigned long nlock = (unsigned long)node & LIST_BL_LOCKMASK;
++
++	return !(CHECK_DATA_CORRUPTION(nlock,
++			"hlist_bl_del_valid: node locked") ||
++		 CHECK_DATA_CORRUPTION(node->next == LIST_POISON1,
++			"hlist_bl_del corruption, %px->next is LIST_POISON1 (%px)\n",
++			node, LIST_POISON1) ||
++		 CHECK_DATA_CORRUPTION(node->pprev == LIST_POISON2,
++			"hlist_bl_del corruption, %px->pprev is LIST_POISON2 (%px)\n",
++			node, LIST_POISON2));
++}
++EXPORT_SYMBOL(__hlist_bl_del_valid);
 -- 
 2.20.1
 
