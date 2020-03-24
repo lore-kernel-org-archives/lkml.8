@@ -2,101 +2,72 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337E6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EE4C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE4120714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AAB7206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:30:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgCXS2d (ORCPT
+        id S1727594AbgCXSaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:28:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46978 "EHLO mx2.suse.de"
+        Tue, 24 Mar 2020 14:30:14 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34730 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbgCXS20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:28:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 1A1A0ABF4;
-        Tue, 24 Mar 2020 18:28:24 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     linux-kernel@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net, sergei.shtylyov@cogentembedded.com,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH v6 3/4] PCI: brcmstb: Wait for Raspberry Pi's firmware when present
-Date:   Tue, 24 Mar 2020 19:28:11 +0100
-Message-Id: <20200324182812.20420-4-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200324182812.20420-1-nsaenzjulienne@suse.de>
-References: <20200324182812.20420-1-nsaenzjulienne@suse.de>
+        id S1727267AbgCXSaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 14:30:14 -0400
+IronPort-SDR: mFTkOP7K71GplkTDUhiaZN3k1ylGgs7UiHF1FXWXbWTAd/5TZuJ8DbL+5QcBhg5MEQCRUxpw2P
+ 8C1amQlDyOBg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 11:30:13 -0700
+IronPort-SDR: xth4tBULpanFhb+3uafVHhHfTbxNA0xvSSc5K7/cV8QKWxNqO7Q1gDLVi+rEKJjY5/r5bGYhMq
+ KH6TAH/HkEFA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,301,1580803200"; 
+   d="scan'208";a="281807473"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 24 Mar 2020 11:30:13 -0700
+Date:   Tue, 24 Mar 2020 11:30:07 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ashish Kalra <Ashish.Kalra@amd.com>,
+        Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] KVM: SVM: Move and split up svm.c
+Message-ID: <20200324183007.GA7798@linux.intel.com>
+References: <20200324094154.32352-1-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324094154.32352-1-joro@8bytes.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-xHCI's PCI fixup, run at the end of pcie-brcmstb's probe, depends on
-RPi4's VideoCore firmware interface to be up and running. It's possible
-for both initializations to race, so make sure it's available prior to
-starting.
+On Tue, Mar 24, 2020 at 10:41:50AM +0100, Joerg Roedel wrote:
+> Hi,
+> 
+> here is a patch-set agains kvm/queue which moves svm.c into its own
+> subdirectory arch/x86/kvm/svm/ and splits moves parts of it into
+> separate source files:
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 3a10e678c7f4..a3d3070a5832 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -28,6 +28,8 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+
- #include "../pci.h"
- 
- /* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-@@ -917,11 +919,24 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- {
- 	struct device_node *np = pdev->dev.of_node, *msi_np;
- 	struct pci_host_bridge *bridge;
-+	struct device_node *fw_np;
- 	struct brcm_pcie *pcie;
- 	struct pci_bus *child;
- 	struct resource *res;
- 	int ret;
- 
-+	/*
-+	 * We have to wait for the Raspberry Pi's firmware interface to be up
-+	 * as some PCI fixups depend on it.
-+	 */
-+	fw_np = of_find_compatible_node(NULL, NULL,
-+					"raspberrypi,bcm2835-firmware");
-+	if (fw_np && !rpi_firmware_get(fw_np)) {
-+		of_node_put(fw_np);
-+		return -EPROBE_DEFER;
-+	}
-+	of_node_put(fw_np);
-+
- 	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
- 	if (!bridge)
- 		return -ENOMEM;
--- 
-2.25.1
-
+What are people's thoughts on using "arch/x86/kvm/{amd,intel}" instead of
+"arch/x86/kvm/{svm,vmx}"?  Maybe this won't be an issue for AMD/SVM, but on
+the Intel/VMX side, there is stuff in the pipeline that makes using "vmx"
+for the sub-directory quite awkward.  I wasn't planning on proposing the
+rename (from vmx->intel) until I could justify _why_, but perhaps it makes
+sense to bundle all the pain of a reorganizing code into a single kernel
+version?
