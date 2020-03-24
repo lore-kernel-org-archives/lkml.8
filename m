@@ -2,208 +2,91 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FE7C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6822DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C914320775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33A382073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585056591;
+	bh=C6V82WfR0WiPhesQkqIHwf7eUT1pzEcPp6KnE4TR6zY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pvIy4IdOMlas+dm+1kWB2fgrBcmViid66PPeG6CiMJaz/AbYzCJXr+u3HrkOUU5oD
+	 bAYHM1lgpXjdibvGI4isNxXlxm/Rd8/LA4UkVXKfQE8eOTsdzmTgXPVpWf1aY6+n7K
+	 tsOP7Z6fcoaJ5nTp/xyAlAPWr9zPB/nROils1vIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729285AbgCXN3o (ORCPT
+        id S1727725AbgCXN3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:29:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:34492 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 09:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727720AbgCXNX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:23:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 615181045;
-        Tue, 24 Mar 2020 06:23:57 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 133A83F52E;
-        Tue, 24 Mar 2020 06:23:55 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 02/14] net: axienet: Convert DMA error handler to a work queue
-Date:   Tue, 24 Mar 2020 13:23:35 +0000
-Message-Id: <20200324132347.23709-3-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
-References: <20200324132347.23709-1-andre.przywara@arm.com>
+        id S1729486AbgCXNX5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:23:57 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 968CF208CA;
+        Tue, 24 Mar 2020 13:23:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585056237;
+        bh=C6V82WfR0WiPhesQkqIHwf7eUT1pzEcPp6KnE4TR6zY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bnnLn7ZD0QvkeWYvHVkGpDviXz2kTPfjZiUrMgZ+d62+8u3Exdvlqu14Od1zuU7ru
+         H8m9NW5EKWcaxrv/R642rWRRf6/BcdWYQOq3cBvKuZM7mW+CRyI99M2ECZNP/N6kQe
+         i85dGCiqM2TjUtJoIIjxJ/ucarZWGPI7WUldQ4l0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Alexandru Tachici <alexandru.tachici@analog.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.5 065/119] iio: accel: adxl372: Set iio_chan BE
+Date:   Tue, 24 Mar 2020 14:10:50 +0100
+Message-Id: <20200324130814.694004371@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
+References: <20200324130808.041360967@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The DMA error handler routine is currently a tasklet, scheduled to run
-after the DMA error IRQ was handled.
-However it needs to take the MDIO mutex, which is not allowed to do in a
-tasklet. A kernel (with debug options) complains consequently:
-[  614.050361] net eth0: DMA Tx error 0x174019
-[  614.064002] net eth0: Current BD is at: 0x8f84aa0ce
-[  614.080195] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:935
-[  614.109484] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 40, name: kworker/u4:4
-[  614.135428] 3 locks held by kworker/u4:4/40:
-[  614.149075]  #0: ffff000879863328 ((wq_completion)rpciod){....}, at: process_one_work+0x1f0/0x6a8
-[  614.177528]  #1: ffff80001251bdf8 ((work_completion)(&task->u.tk_work)){....}, at: process_one_work+0x1f0/0x6a8
-[  614.209033]  #2: ffff0008784e0110 (sk_lock-AF_INET-RPC){....}, at: tcp_sendmsg+0x24/0x58
-[  614.235429] CPU: 0 PID: 40 Comm: kworker/u4:4 Not tainted 5.6.0-rc3-00926-g4a165a9d5921 #26
-[  614.260854] Hardware name: ARM Test FPGA (DT)
-[  614.274734] Workqueue: rpciod rpc_async_schedule
-[  614.289022] Call trace:
-[  614.296871]  dump_backtrace+0x0/0x1a0
-[  614.308311]  show_stack+0x14/0x20
-[  614.318751]  dump_stack+0xbc/0x100
-[  614.329403]  ___might_sleep+0xf0/0x140
-[  614.341018]  __might_sleep+0x4c/0x80
-[  614.352201]  __mutex_lock+0x5c/0x8a8
-[  614.363348]  mutex_lock_nested+0x1c/0x28
-[  614.375654]  axienet_dma_err_handler+0x38/0x388
-[  614.389999]  tasklet_action_common.isra.15+0x160/0x1a8
-[  614.405894]  tasklet_action+0x24/0x30
-[  614.417297]  efi_header_end+0xe0/0x494
-[  614.429020]  irq_exit+0xd0/0xd8
-[  614.439047]  __handle_domain_irq+0x60/0xb0
-[  614.451877]  gic_handle_irq+0xdc/0x2d0
-[  614.463486]  el1_irq+0xcc/0x180
-[  614.473451]  __tcp_transmit_skb+0x41c/0xb58
-[  614.486513]  tcp_write_xmit+0x224/0x10a0
-[  614.498792]  __tcp_push_pending_frames+0x38/0xc8
-[  614.513126]  tcp_rcv_established+0x41c/0x820
-[  614.526301]  tcp_v4_do_rcv+0x8c/0x218
-[  614.537784]  __release_sock+0x5c/0x108
-[  614.549466]  release_sock+0x34/0xa0
-[  614.560318]  tcp_sendmsg+0x40/0x58
-[  614.571053]  inet_sendmsg+0x40/0x68
-[  614.582061]  sock_sendmsg+0x18/0x30
-[  614.593074]  xs_sendpages+0x218/0x328
-[  614.604506]  xs_tcp_send_request+0xa0/0x1b8
-[  614.617461]  xprt_transmit+0xc8/0x4f0
-[  614.628943]  call_transmit+0x8c/0xa0
-[  614.640028]  __rpc_execute+0xbc/0x6f8
-[  614.651380]  rpc_async_schedule+0x28/0x48
-[  614.663846]  process_one_work+0x298/0x6a8
-[  614.676299]  worker_thread+0x40/0x490
-[  614.687687]  kthread+0x134/0x138
-[  614.697804]  ret_from_fork+0x10/0x18
-[  614.717319] xilinx_axienet 7fe00000.ethernet eth0: Link is Down
-[  615.748343] xilinx_axienet 7fe00000.ethernet eth0: Link is Up - 1Gbps/Full - flow control off
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-Since tasklets are not really popular anymore anyway, lets convert this
-over to a work queue, which can sleep and thus can take the MDIO mutex.
+commit cb2116ff97859d34fda6cb561ac654415f4c6230 upstream.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+Data stored in the iio-buffer is BE and this
+should be specified in the iio_chan_spec struct.
+
+Fixes: f4f55ce38e5f8 ("iio:adxl372: Add FIFO and interrupts support")
+Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/xilinx/xilinx_axienet.h  |  2 +-
- .../net/ethernet/xilinx/xilinx_axienet_main.c | 24 +++++++++----------
- 2 files changed, 13 insertions(+), 13 deletions(-)
+ drivers/iio/accel/adxl372.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-index 2dacfc85b3ba..04e51af32178 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-@@ -435,7 +435,7 @@ struct axienet_local {
- 	void __iomem *regs;
- 	void __iomem *dma_regs;
- 
--	struct tasklet_struct dma_err_tasklet;
-+	struct work_struct dma_err_task;
- 
- 	int tx_irq;
- 	int rx_irq;
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index e2f3e2b0cec7..d4c872425065 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -806,7 +806,7 @@ static irqreturn_t axienet_tx_irq(int irq, void *_ndev)
- 		/* Write to the Rx channel control register */
- 		axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, cr);
- 
--		tasklet_schedule(&lp->dma_err_tasklet);
-+		schedule_work(&lp->dma_err_task);
- 		axienet_dma_out32(lp, XAXIDMA_TX_SR_OFFSET, status);
- 	}
- out:
-@@ -855,7 +855,7 @@ static irqreturn_t axienet_rx_irq(int irq, void *_ndev)
- 		/* write to the Rx channel control register */
- 		axienet_dma_out32(lp, XAXIDMA_RX_CR_OFFSET, cr);
- 
--		tasklet_schedule(&lp->dma_err_tasklet);
-+		schedule_work(&lp->dma_err_task);
- 		axienet_dma_out32(lp, XAXIDMA_RX_SR_OFFSET, status);
- 	}
- out:
-@@ -891,7 +891,7 @@ static irqreturn_t axienet_eth_irq(int irq, void *_ndev)
- 	return IRQ_HANDLED;
+--- a/drivers/iio/accel/adxl372.c
++++ b/drivers/iio/accel/adxl372.c
+@@ -237,6 +237,7 @@ static const struct adxl372_axis_lookup
+ 		.realbits = 12,						\
+ 		.storagebits = 16,					\
+ 		.shift = 4,						\
++		.endianness = IIO_BE,					\
+ 	},								\
  }
  
--static void axienet_dma_err_handler(unsigned long data);
-+static void axienet_dma_err_handler(struct work_struct *work);
- 
- /**
-  * axienet_open - Driver open routine.
-@@ -935,9 +935,8 @@ static int axienet_open(struct net_device *ndev)
- 
- 	phylink_start(lp->phylink);
- 
--	/* Enable tasklets for Axi DMA error handling */
--	tasklet_init(&lp->dma_err_tasklet, axienet_dma_err_handler,
--		     (unsigned long) lp);
-+	/* Enable worker thread for Axi DMA error handling */
-+	INIT_WORK(&lp->dma_err_task, axienet_dma_err_handler);
- 
- 	/* Enable interrupts for Axi DMA Tx */
- 	ret = request_irq(lp->tx_irq, axienet_tx_irq, IRQF_SHARED,
-@@ -966,7 +965,7 @@ static int axienet_open(struct net_device *ndev)
- err_tx_irq:
- 	phylink_stop(lp->phylink);
- 	phylink_disconnect_phy(lp->phylink);
--	tasklet_kill(&lp->dma_err_tasklet);
-+	cancel_work_sync(&lp->dma_err_task);
- 	dev_err(lp->dev, "request_irq() failed\n");
- 	return ret;
- }
-@@ -1025,7 +1024,7 @@ static int axienet_stop(struct net_device *ndev)
- 	axienet_mdio_enable(lp);
- 	mutex_unlock(&lp->mii_bus->mdio_lock);
- 
--	tasklet_kill(&lp->dma_err_tasklet);
-+	cancel_work_sync(&lp->dma_err_task);
- 
- 	if (lp->eth_irq > 0)
- 		free_irq(lp->eth_irq, ndev);
-@@ -1484,17 +1483,18 @@ static const struct phylink_mac_ops axienet_phylink_ops = {
- };
- 
- /**
-- * axienet_dma_err_handler - Tasklet handler for Axi DMA Error
-- * @data:	Data passed
-+ * axienet_dma_err_handler - Work queue task for Axi DMA Error
-+ * @work:	pointer to work_struct
-  *
-  * Resets the Axi DMA and Axi Ethernet devices, and reconfigures the
-  * Tx/Rx BDs.
-  */
--static void axienet_dma_err_handler(unsigned long data)
-+static void axienet_dma_err_handler(struct work_struct *work)
- {
- 	u32 axienet_status;
- 	u32 cr, i;
--	struct axienet_local *lp = (struct axienet_local *) data;
-+	struct axienet_local *lp = container_of(work, struct axienet_local,
-+						dma_err_task);
- 	struct net_device *ndev = lp->ndev;
- 	struct axidma_bd *cur_p;
- 
--- 
-2.17.1
+
 
