@@ -2,149 +2,75 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B293C54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF73C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 423422077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585085835;
-	bh=UNlXwsF42X4sIO9wlTklVc3GtL/vn7nadjDze7rmO1E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=1hUvEWNa+DRtKZtJEYIEMIWTCpR3I++RvmxAVptLQBg48xSUSWIBrHcGWczok/6bN
-	 ld1jpLkrQbBgSaKslt5xKGeSOR0d92YFO2XwlGl+WDmeqyxrtopm3iOCVOKO7cEm4v
-	 Xly9lq9yemVy6yY+/Le11cM/7KR8/Frw5rHQ6Gv0=
+	by mail.kernel.org (Postfix) with ESMTP id F18EB2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:39:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbgCXVhO (ORCPT
+        id S1728036AbgCXVj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:37:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58434 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 17:39:59 -0400
+Received: from sauhun.de ([88.99.104.3]:55432 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727270AbgCXVhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:37:14 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF25206F6;
-        Tue, 24 Mar 2020 21:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585085833;
-        bh=UNlXwsF42X4sIO9wlTklVc3GtL/vn7nadjDze7rmO1E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=yvxgOatxE84HrWUg9e5hWjCasWCWUc9HJ7MaL5RWQ3MUsOt/U1/8iYkSKDf2JzRtY
-         OGr8A+ko/b3FYBlfIk3Z0CyYyaks/WOU8WOzk8aJEz9pegLw2y8AiFI+P7O2IbKXlu
-         76BSgnkKh589t/u3iWwQjo/okKJuVoPEFEWnCF2Y=
-Date:   Tue, 24 Mar 2020 16:37:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v18 10/11] PCI/DPC: Add Error Disconnect Recover (EDR)
- support
-Message-ID: <20200324213710.GA48671@google.com>
+        id S1727023AbgCXVj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 17:39:58 -0400
+Received: from localhost (p54B3339A.dip0.t-ipconnect.de [84.179.51.154])
+        by pokefinder.org (Postfix) with ESMTPSA id 1CA4B2C08EF;
+        Tue, 24 Mar 2020 22:39:57 +0100 (CET)
+Date:   Tue, 24 Mar 2020 22:39:56 +0100
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the i2c tree
+Message-ID: <20200324213956.GH7641@ninjato>
+References: <20200325082837.62555003@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fd5uyaI9j6xoeUBo"
 Content-Disposition: inline
-In-Reply-To: <90f91fe6d25c13f9d2255d2ce97ca15be307e1bb.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200325082837.62555003@canb.auug.org.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:26:07PM -0700, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Error Disconnect Recover (EDR) is a feature that allows ACPI firmware to
-> notify OSPM that a device has been disconnected due to an error condition
-> (ACPI v6.3, sec 5.6.6).  OSPM advertises its support for EDR on PCI devices
-> via _OSC (see [1], sec 4.5.1, table 4-4).  The OSPM EDR notify handler
-> should invalidate software state associated with disconnected devices and
-> may attempt to recover them.  OSPM communicates the status of recovery to
-> the firmware via _OST (sec 6.3.5.2).
-> 
-> For PCIe, firmware may use Downstream Port Containment (DPC) to support
-> EDR.  Per [1], sec 4.5.1, table 4-6, even if firmware has retained control
-> of DPC, OSPM may read/write DPC control and status registers during the EDR
-> notification processing window, i.e., from the time it receives an EDR
-> notification until it clears the DPC Trigger Status.
-> 
-> Note that per [1], sec 4.5.1 and 4.5.2.4,
-> 
->   1. If the OS supports EDR, it should advertise that to firmware by
->      setting OSC_PCI_EDR_SUPPORT in _OSC Support.
-> 
->   2. If the OS sets OSC_PCI_EXPRESS_DPC_CONTROL in _OSC Control to request
->      control of the DPC capability, it must also set OSC_PCI_EDR_SUPPORT in
->      _OSC Support.
-> 
-> Add an EDR notify handler to attempt recovery.
-> 
-> [1] Downstream Port Containment Related Enhancements ECN, Jan 28, 2019,
->     affecting PCI Firmware Specification, Rev. 3.2
->     https://members.pcisig.com/wg/PCI-SIG/document/12888
-> Link: https://lore.kernel.org/r/9ae1d3285beeb81bbf85571a89b8f3d4451eae8f.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
-> Link: https://lore.kernel.org/r/246aa05acca8f0a7e6d20a65ab05af0027f60118.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com
-> [bhelgaas: squash add/enable patches into one]
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 
-> +static int acpi_enable_dpc(struct pci_dev *pdev)
-> +{
-> +	struct acpi_device *adev = ACPI_COMPANION(&pdev->dev);
-> +	union acpi_object *obj, argv4, req;
-> +	int status;
-> +
-> +	/*
-> +	 * Some firmware implementations will return default values for
-> +	 * unsupported _DSM calls. So checking acpi_evaluate_dsm() return
-> +	 * value for NULL condition is not a complete method for finding
-> +	 * whether given _DSM function is supported or not. So use
-> +	 * explicit func 0 call to find whether given _DSM function is
-> +	 * supported or not.
-> +	 */
-> +        status = acpi_check_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> +				1ULL << EDR_PORT_DPC_ENABLE_DSM);
+--fd5uyaI9j6xoeUBo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This is really ugly.  What's the story on this firmware?  It sounds
-defective to me.
 
-Or is everybody that uses _DSM supposed to check before evaluating it?
-E.g.,
+> is missing a Signed-off-by from its committer.
 
-  if (!acpi_check_dsm(...))
-    return -EINVAL;
+Argh, fixed now. Sorry, for some reason I had to deal manually with this
+patch, patchwork didn't pick it, so my custom scripts failed.
 
-  obj = acpi_evaluate_dsm(...);
 
-If everybody is supposed to do this, it seems like the check part
-should be moved into acpi_evaluate_dsm().
+--fd5uyaI9j6xoeUBo
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +        if (!status)
-> +                return 0;
-> +
-> +	status = 0;
-> +	req.type = ACPI_TYPE_INTEGER;
-> +	req.integer.value = 1;
-> +
-> +	argv4.type = ACPI_TYPE_PACKAGE;
-> +	argv4.package.count = 1;
-> +	argv4.package.elements = &req;
-> +
-> +	/*
-> +	 * Per Downstream Port Containment Related Enhancements ECN to PCI
-> +	 * Firmware Specification r3.2, sec 4.6.12, EDR_PORT_DPC_ENABLE_DSM is
-> +	 * optional.  Return success if it's not implemented.
-> +	 */
-> +	obj = acpi_evaluate_dsm(adev->handle, &pci_acpi_dsm_guid, 5,
-> +				EDR_PORT_DPC_ENABLE_DSM, &argv4);
-> +	if (!obj)
-> +		return 0;
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl56figACgkQFA3kzBSg
+KbZGsRAAju2TbMMDK+mAeGXEheoEpt3w3dakboDPG7P4mlBCpzASTRVzcxQofxqT
+lsR5BBqKzKV5Mk7pa+Ab8/nsrfw239sVfm3IeIhwJrqPZbZ9O2tH2UCRWlKFLbis
+lMNDSXgdHQFpCJzZjCfMfc73cyy456mDNrCPZCuj761H9YQl21c3AE/CGHCk08Tb
+ylBK7bHOYc6cIIU3Y3jTw1vGsgNxdNXtdWJ9tYXfIuYE1cLHC/I91W+Ye/b25zcW
+RF4oEZs1fKSVEZ3wA64xHKjuIecdnUN8Zxhti1htd1zNv0H0IBWnnXaqCrtFHDcX
+XfH6Cj8dz6fuldqjiVdgvWPR1YdRR7oVZjqpnARoFVG1Qco2BdXSRePj2EJaQXfJ
+X2wJokKZ2LNBFCSkFJexJiqVgYuYM4LnQq/bctpt97ref2tolKGI53mOzpFOebaL
+GUC6KIKy7TfBJ76IM0Pjvmc0vBRSnBFbAVd7qcWoxDDfeOD8dvTppzpRBIQBzZuL
+0fwR2MOyNxgwdIVRZ9lRVxjX4G+ORJ10YUCByd7V7VbpIJ1Asl9c7wkxs+7Gp30T
+GRUuMh/0M7KhXjUC53P7WwNSBRbodVhp0z9YEMw82T9SIGN1t8shuEgIya4zEBoX
+a5uEu1/44tTjJJmPpLASEkmNqwA/HN0VK3dUoTdpeR0vi/NGJvc=
+=QsrV
+-----END PGP SIGNATURE-----
+
+--fd5uyaI9j6xoeUBo--
