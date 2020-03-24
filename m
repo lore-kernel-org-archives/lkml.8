@@ -5,103 +5,104 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B623C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 04:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC520C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 04:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65D520724
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 04:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A597520719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 04:13:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P3/6W0vo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qsz45JQD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726025AbgCXEMO (ORCPT
+        id S1726070AbgCXENo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 00:12:14 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35825 "EHLO
+        Tue, 24 Mar 2020 00:13:44 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:22289 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725901AbgCXEMO (ORCPT
+        by vger.kernel.org with ESMTP id S1725784AbgCXENo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 00:12:14 -0400
+        Tue, 24 Mar 2020 00:13:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585023133;
+        s=mimecast20190719; t=1585023223;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=ceHpHKXWTcYAP5TikjsX8J3gSNWdyTeLVLjL5RT2pa8=;
-        b=P3/6W0voe1Chs8wYN5TcynvD3pCunH437qbTQXGmaTQ23tmoJkZkb3S2BQTWhfHstZzFGS
-        F9uQgJJ7Ar5hGeApWHuI/XTmJgXXSm2SHX7g6irFIlNmRvagg4JxSxZTvKFQbm8nTMJrqb
-        VsEMhWWJwSikC4aSiGv3gQYeXdBGH3o=
+        bh=mjQ9MbkN2lg9YBuiVW+Ce9he0mEnlCLjk/uJWKcwNpY=;
+        b=Qsz45JQDfEc8063RiWlBt0NYfHNUtY0tChySONc1DfYUZKuw0P6LA8okLVmz5cdiiifuj6
+        GPvjZOpvcAqNJOk26Aqdp8pnOIXItHujuSSz5xAXoCcaY61VqB42Q6Kn/jxPYWSUqJufoZ
+        gYpFmW/d7U0pwetoEA1hpXRI0xNl8hY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-376-ykSNBf7_MaqdVwsV_ZoW5g-1; Tue, 24 Mar 2020 00:12:07 -0400
-X-MC-Unique: ykSNBf7_MaqdVwsV_ZoW5g-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-143-wxBI9LdeNoamUVSLYULY7A-1; Tue, 24 Mar 2020 00:13:41 -0400
+X-MC-Unique: wxBI9LdeNoamUVSLYULY7A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 28EB713F5;
-        Tue, 24 Mar 2020 04:12:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 06187800D50;
+        Tue, 24 Mar 2020 04:13:40 +0000 (UTC)
 Received: from asgard.redhat.com (unknown [10.36.110.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A26C5C1B5;
-        Tue, 24 Mar 2020 04:12:03 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 05:12:09 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12527BBBCE;
+        Tue, 24 Mar 2020 04:13:35 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 05:13:41 +0100
 From:   Eugene Syromiatnikov <esyr@redhat.com>
-To:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+To:     linux-kernel@vger.kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Markus Koch <markus@notsyncing.net>,
         "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: [PATCH] rtc: make definitions in include/uapi/linux/rtc.h actually
- useful for user space
-Message-ID: <20200324041209.GA30727@asgard.redhat.com>
+Subject: [PATCH] input: avoid BIT() macro usage in the serio.h UAPI header
+Message-ID: <20200324041341.GA32335@asgard.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BIT() macro is not defined in UAPI headers; there is, however, similarly
-defined _BITUL() macro present in include/uapi/linux/const.h; use it
-instead and include <linux/const.h> and <linux/ioctl.h> in order to make
-the definitions provided in the header useful.
+The commit 19ba1eb15a2a ("Input: psmouse - add a custom serio protocol
+to send extra information") introduced usage of the BIT() macro
+for SERIO_* flags; this macro is not provided in UAPI headers.
+Replace if with similarly defined _BITUL() macro defined
+in <linux/const.h>.
 
-Fixes: 3431ca4837bf ("rtc: define RTC_VL_READ values")
+Cc: <stable@vger.kernel.org> # v5.0+
+Fixes: 19ba1eb15a2a ("Input: psmouse - add a custom serio protocol to send extra information")
 Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
 ---
- include/uapi/linux/rtc.h | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ include/uapi/linux/serio.h | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/uapi/linux/rtc.h b/include/uapi/linux/rtc.h
-index 095af36..83bba58 100644
---- a/include/uapi/linux/rtc.h
-+++ b/include/uapi/linux/rtc.h
-@@ -12,6 +12,9 @@
- #ifndef _UAPI_LINUX_RTC_H_
- #define _UAPI_LINUX_RTC_H_
+diff --git a/include/uapi/linux/serio.h b/include/uapi/linux/serio.h
+index 50e9919..ed2a96f 100644
+--- a/include/uapi/linux/serio.h
++++ b/include/uapi/linux/serio.h
+@@ -9,7 +9,7 @@
+ #ifndef _UAPI_SERIO_H
+ #define _UAPI_SERIO_H
  
+-
 +#include <linux/const.h>
-+#include <linux/ioctl.h>
-+
+ #include <linux/ioctl.h>
+ 
+ #define SPIOCSTYPE	_IOW('q', 0x01, unsigned long)
+@@ -18,10 +18,10 @@
  /*
-  * The struct used to pass data via the following ioctl. Similar to the
-  * struct tm in <time.h>, but it needs to be here so that the kernel
-@@ -92,10 +95,10 @@ struct rtc_pll_info {
- #define RTC_PLL_GET	_IOR('p', 0x11, struct rtc_pll_info)  /* Get PLL correction */
- #define RTC_PLL_SET	_IOW('p', 0x12, struct rtc_pll_info)  /* Set PLL correction */
+  * bit masks for use in "interrupt" flags (3rd argument)
+  */
+-#define SERIO_TIMEOUT	BIT(0)
+-#define SERIO_PARITY	BIT(1)
+-#define SERIO_FRAME	BIT(2)
+-#define SERIO_OOB_DATA	BIT(3)
++#define SERIO_TIMEOUT	_BITUL(0)
++#define SERIO_PARITY	_BITUL(1)
++#define SERIO_FRAME	_BITUL(2)
++#define SERIO_OOB_DATA	_BITUL(3)
  
--#define RTC_VL_DATA_INVALID	BIT(0) /* Voltage too low, RTC data is invalid */
--#define RTC_VL_BACKUP_LOW	BIT(1) /* Backup voltage is low */
--#define RTC_VL_BACKUP_EMPTY	BIT(2) /* Backup empty or not present */
--#define RTC_VL_ACCURACY_LOW	BIT(3) /* Voltage is low, RTC accuracy is reduced */
-+#define RTC_VL_DATA_INVALID	_BITUL(0) /* Voltage too low, RTC data is invalid */
-+#define RTC_VL_BACKUP_LOW	_BITUL(1) /* Backup voltage is low */
-+#define RTC_VL_BACKUP_EMPTY	_BITUL(2) /* Backup empty or not present */
-+#define RTC_VL_ACCURACY_LOW	_BITUL(3) /* Voltage is low, RTC accuracy is reduced */
- 
- #define RTC_VL_READ	_IOR('p', 0x13, unsigned int)	/* Voltage low detection */
- #define RTC_VL_CLR	_IO('p', 0x14)		/* Clear voltage low information */
+ /*
+  * Serio types
 -- 
 2.1.4
 
