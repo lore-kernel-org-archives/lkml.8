@@ -2,136 +2,104 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4EAC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6A4C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C49B20788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B9F206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585057401;
+	bh=X/F1qWsmyNf72Fejws4IM6/sAtChB+ci2BuEUkaM1RI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PrCFyN+YOj6uKshbk0TFd7+Q5t1JzXTbUKbosXXVf3ordmh3zU5uf9Ta8XxmUKBif
+	 yzvp2rFpuWltEA70Se5lMBVz+g2L+SMof7o9g6nG9UKkaRm/MYbDKz5+mILXmExt4j
+	 gLaQwbjpXx2EVOK0TdBWfxJh2WhzJ1DyDhtC+PXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgCXNmq (ORCPT
+        id S1727937AbgCXNnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:42:46 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3900 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727161AbgCXNmp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:42:45 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ODXvBx024135
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:42:44 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yxw7dc1a4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:42:44 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 24 Mar 2020 13:42:41 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Mar 2020 13:42:37 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ODgboH47120636
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 13:42:37 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 89724AE051;
-        Tue, 24 Mar 2020 13:42:37 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8346AE056;
-        Tue, 24 Mar 2020 13:42:35 +0000 (GMT)
-Received: from [9.199.48.100] (unknown [9.199.48.100])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Mar 2020 13:42:35 +0000 (GMT)
-Subject: Re: [PATCH] perf dso: Fix dso comparison
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        mark.rutland@arm.com, naveen.n.rao@linux.vnet.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200324042424.68366-1-ravi.bangoria@linux.ibm.com>
- <20200324104843.GS1534489@krava>
- <3cf2bd1b-e1c2-f82f-a06a-ce0d5e4b5eac@linux.ibm.com>
- <20200324132258.GX1534489@krava>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Tue, 24 Mar 2020 19:12:34 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 09:43:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39010 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727522AbgCXNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:43:19 -0400
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 895B02076E;
+        Tue, 24 Mar 2020 13:43:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585057398;
+        bh=X/F1qWsmyNf72Fejws4IM6/sAtChB+ci2BuEUkaM1RI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HGWdR+xGLJOfwBIu9aI3NbT96lwp5GhJCAJyCZ9dp6aMWW+ksU8OC3SYwe1UUZja1
+         NSF+ISQ+nFrgPWvqhRC7qCzGlxK1HdOxY5QJGtQnW85kCCFvfNOoLJNTQtpbVKv6ae
+         mFCpCOOyBd8/xU9Zk57eWuOo1aH1A1wHOo5qnyRM=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1jGjps-0025qh-G4; Tue, 24 Mar 2020 14:43:16 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v2 01/20] media: dvb-usb: auto-select CYPRESS_FIRMWARE
+Date:   Tue, 24 Mar 2020 14:42:54 +0100
+Message-Id: <712ca59ba2e1185fc505b52eba9eb3575467f393.1585057134.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1585057134.git.mchehab+huawei@kernel.org>
+References: <cover.1585057134.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200324132258.GX1534489@krava>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032413-0012-0000-0000-00000396DBA7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032413-0013-0000-0000-000021D3CFC8
-Message-Id: <04413346-1dc6-3f24-7f3d-3783b800780c@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999
- mlxscore=0 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240070
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+At least some of the supported boards by dvb-usb
+driver need to load the cypress firmware, so select
+it, as otherwise missing dependencies may popup.
 
+Also, as the cypress firmware load routines are needed
+only by the dvb-usb, dvb-usb-v2 and go7007 drivers, and
+those all (now) select it, there's no need to ask the
+user for manually select it.
 
-On 3/24/20 6:52 PM, Jiri Olsa wrote:
-> On Tue, Mar 24, 2020 at 06:07:23PM +0530, Ravi Bangoria wrote:
-> 
-> SNIP
-> 
->>> looks good, do we need to add the dso_id check to sort__dso_cmp?
->>
->> I guess with different filename there is no need to compare dso_id.
->> But for same filename, adding dso_id cmp will separate out the
->> samples:
->>
->> Ex, Without dso_id compare:
->>
->>    $ ./perf report -s dso,dso_size -v
->>      66.63%  /home/ravi/a.out                                  4096
->>      33.36%  /home/ravi/Workspace/linux/tools/perf/a.out       4096
->>
->>    $ ./perf report -s dso,dso_size
->>      99.99%  a.out                 4096
->>
->>
->> With below diff:
->>
->>    -       return strcmp(dso_name_l, dso_name_r);
->>    +       ret = strcmp(dso_name_l, dso_name_r);
->>    +       if (ret)
->>    +               return ret;
->>    +       else
->>    +               return dso__cmp_id(dso_l, dso_r);
->>
->>
->>    $ ./perf report -s dso,dso_size
->>      99.99%  a.out                 4096
->>      33.36%  a.out                 4096
->>
->> though, the o/p also depends which other sort keys are used along
->> with dso key. Do you think this change makes sense?
-> 
-> the above behaviour is something I'd expect from 'dso'
-> sort key to do - separate out different dsos, even with
-> the same name
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+---
+ drivers/media/common/Kconfig      | 2 +-
+ drivers/media/usb/dvb-usb/Kconfig | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-Yes it does that as well...
-
-   $ ./perf report -s dso
-     66.63%  a.out
-     33.36%  a.out
-
-Ravi
+diff --git a/drivers/media/common/Kconfig b/drivers/media/common/Kconfig
+index 1990b7f09454..4ea03b7899a8 100644
+--- a/drivers/media/common/Kconfig
++++ b/drivers/media/common/Kconfig
+@@ -14,7 +14,7 @@ config VIDEO_TVEEPROM
+ 	depends on I2C
+ 
+ config CYPRESS_FIRMWARE
+-	tristate "Cypress firmware helper routines"
++	tristate
+ 	depends on USB
+ 
+ source "drivers/media/common/videobuf2/Kconfig"
+diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
+index 1a3e5f965ae4..42334a02cdce 100644
+--- a/drivers/media/usb/dvb-usb/Kconfig
++++ b/drivers/media/usb/dvb-usb/Kconfig
+@@ -2,6 +2,7 @@
+ config DVB_USB
+ 	tristate "Support for various USB DVB devices"
+ 	depends on DVB_CORE && USB && I2C && RC_CORE
++	select CYPRESS_FIRMWARE
+ 	help
+ 	  By enabling this you will be able to choose the various supported
+ 	  USB1.1 and USB2.0 DVB devices.
+-- 
+2.24.1
 
