@@ -7,38 +7,37 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42874C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE87C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2208D21707
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE05020658
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727231AbgCXJT1 (ORCPT
+        id S1727758AbgCXJTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:19:27 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43946 "EHLO
+        Tue, 24 Mar 2020 05:19:31 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43959 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727523AbgCXJQq (ORCPT
+        with ESMTP id S1727535AbgCXJQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 05:16:46 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGffv-0007zt-Cw; Tue, 24 Mar 2020 10:16:43 +0100
+        id 1jGffx-00082l-1B; Tue, 24 Mar 2020 10:16:45 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2D8BE1C0493;
-        Tue, 24 Mar 2020 10:16:35 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:34 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 18F881C04D0;
+        Tue, 24 Mar 2020 10:16:39 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:38 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] torture: Allow disabling of boottime CPU-hotplug
- torture operations
+Subject: [tip: core/rcu] srcu: Fix __call_srcu()/srcu_get_delay() datarace
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504139485.28353.5086985526657035319.tip-bot2@tip-bot2>
+Message-ID: <158504139878.28353.2467527074990549522.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -54,73 +53,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     8171d3e0dafd37a9c833904e5a936f4154a1e95b
-Gitweb:        https://git.kernel.org/tip/8171d3e0dafd37a9c833904e5a936f4154a1e95b
+Commit-ID:     8c9e0cb32315835825ea1ad725a858a2d2ce4a8e
+Gitweb:        https://git.kernel.org/tip/8c9e0cb32315835825ea1ad725a858a2d2ce4a8e
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Fri, 06 Dec 2019 15:02:59 -08:00
+AuthorDate:    Sun, 22 Dec 2019 19:36:33 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 16:03:30 -08:00
+CommitterDate: Thu, 20 Feb 2020 16:01:11 -08:00
 
-torture: Allow disabling of boottime CPU-hotplug torture operations
+srcu: Fix __call_srcu()/srcu_get_delay() datarace
 
-In theory, RCU-hotplug operations are supposed to work as soon as there
-is more than one CPU online.  However, in practice, in normal production
-there is no way to make them happen until userspace is up and running.
-Besides which, on smaller systems, rcutorture doesn't start doing hotplug
-operations until 30 seconds after the start of boot, which on most
-systems also means the better part of 30 seconds after the end of boot.
-This commit therefore provides a new torture.disable_onoff_at_boot kernel
-boot parameter that suppresses CPU-hotplug torture operations until
-about the time that init is spawned.
+The srcu_struct structure's ->srcu_gp_seq_needed_exp field is accessed
+locklessly, so updates must use WRITE_ONCE().  This commit therefore
+adds the needed WRITE_ONCE() invocations.
 
-Of course, if you know of a need for boottime CPU-hotplug operations,
-then you should avoid passing this argument to any of the torture tests.
-You might also want to look at the splats linked to below.
+This data race was reported by KCSAN.  Not appropriate for backporting
+due to failure being unlikely.
 
-Link: https://lore.kernel.org/lkml/20191206185208.GA25636@paulmck-ThinkPad-P72/
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 4 ++++
- kernel/torture.c                                | 7 +++++++
- 2 files changed, 11 insertions(+)
+ kernel/rcu/srcutree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ee007b5..868f59a 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4873,6 +4873,10 @@
- 			topology updates sent by the hypervisor to this
- 			LPAR.
- 
-+	torture.disable_onoff_at_boot= [KNL]
-+			Prevent the CPU-hotplug component of torturing
-+			until after init has spawned.
-+
- 	tp720=		[HW,PS2]
- 
- 	tpm_suspend_pcr=[HW,TPM]
-diff --git a/kernel/torture.c b/kernel/torture.c
-index e377b5b..8683375 100644
---- a/kernel/torture.c
-+++ b/kernel/torture.c
-@@ -42,6 +42,9 @@
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Paul E. McKenney <paulmck@linux.ibm.com>");
- 
-+static bool disable_onoff_at_boot;
-+module_param(disable_onoff_at_boot, bool, 0444);
-+
- static char *torture_type;
- static int verbose;
- 
-@@ -229,6 +232,10 @@ torture_onoff(void *arg)
- 		VERBOSE_TOROUT_STRING("torture_onoff end holdoff");
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index b1edac9..79848f7 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -534,7 +534,7 @@ static void srcu_gp_end(struct srcu_struct *ssp)
+ 	rcu_seq_end(&ssp->srcu_gp_seq);
+ 	gpseq = rcu_seq_current(&ssp->srcu_gp_seq);
+ 	if (ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, gpseq))
+-		ssp->srcu_gp_seq_needed_exp = gpseq;
++		WRITE_ONCE(ssp->srcu_gp_seq_needed_exp, gpseq);
+ 	spin_unlock_irq_rcu_node(ssp);
+ 	mutex_unlock(&ssp->srcu_gp_mutex);
+ 	/* A new grace period can start at this point.  But only one. */
+@@ -614,7 +614,7 @@ static void srcu_funnel_exp_start(struct srcu_struct *ssp, struct srcu_node *snp
  	}
- 	while (!torture_must_stop()) {
-+		if (disable_onoff_at_boot && !rcu_inkernel_boot_has_ended()) {
-+			schedule_timeout_interruptible(HZ / 10);
-+			continue;
-+		}
- 		cpu = (torture_random(&rand) >> 4) % (maxcpu + 1);
- 		if (!torture_offline(cpu,
- 				     &n_offline_attempts, &n_offline_successes,
+ 	spin_lock_irqsave_rcu_node(ssp, flags);
+ 	if (ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, s))
+-		ssp->srcu_gp_seq_needed_exp = s;
++		WRITE_ONCE(ssp->srcu_gp_seq_needed_exp, s);
+ 	spin_unlock_irqrestore_rcu_node(ssp, flags);
+ }
+ 
+@@ -674,7 +674,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
+ 		smp_store_release(&ssp->srcu_gp_seq_needed, s); /*^^^*/
+ 	}
+ 	if (!do_norm && ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, s))
+-		ssp->srcu_gp_seq_needed_exp = s;
++		WRITE_ONCE(ssp->srcu_gp_seq_needed_exp, s);
+ 
+ 	/* If grace period not already done and none in progress, start it. */
+ 	if (!rcu_seq_done(&ssp->srcu_gp_seq, s) &&
