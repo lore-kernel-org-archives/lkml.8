@@ -4,56 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A640C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:11:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1E6C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5E39208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56254208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055516;
-	bh=2r/XNzVFSWap5ZGR8e9lGlA6d7DtrmjBgB/Zzu8NrGo=;
+	s=default; t=1585055522;
+	bh=L57iPVKkL097o6qLvQ+L5j2oTFH13RI1AUODGUtvQTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CSRvtZD5eEiCoEowLzI0I2QHTDe2L4u/xCC5cc/+YukXhtW2SrQ3fKn/28VC7gNMK
-	 5e/BQRMtm+vuxaC54pwrCqYECG9HyN4ojViUaM5FKR68EcuFVSggJ9f8O8xoyHZ61V
-	 BQGou9DIKdzrfJjvvSfoofjuNzzsRyQrYHtAY6jk=
+	b=F0VGX8cD2Vql94WiQvrcwIKyz8HIu8PNMfe8GxnbGml8BwTAf5zCq6/4RdZtNCVXm
+	 w+eUql/ihomtuq/jmyHUtmGMv+09esvKXsrzWvzLgfkfSWShvEnQJI1dieC9kTc4yH
+	 JfbtO1mIzgS0v0kNTbaHtJS09PW7JLYJn8Nl57BA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgCXNLz (ORCPT
+        id S1727398AbgCXNMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:11:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57306 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:12:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726190AbgCXNLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:11:54 -0400
+        id S1727304AbgCXNMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE712208CA;
-        Tue, 24 Mar 2020 13:11:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4DF208CA;
+        Tue, 24 Mar 2020 13:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055514;
-        bh=2r/XNzVFSWap5ZGR8e9lGlA6d7DtrmjBgB/Zzu8NrGo=;
+        s=default; t=1585055518;
+        bh=L57iPVKkL097o6qLvQ+L5j2oTFH13RI1AUODGUtvQTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RYHr640FckM5t8tFC+IEy/RI8Q9zAo+HNZFwrK4A0+FRTGMZH65ABkZkk/MaQBy2E
-         KBrQ1bMgA4qDSe0bQH8ZJl3Urb+5QulV33d8zn+M07q/c9qHIOtgKfGluTEQfZP3TI
-         +NVZvdb4BN8bVNdpnwsj3Kv1u6H6tZmpYEfNk9Js=
+        b=x/U8//LCb86FP5GWagwziMBHZwrMXY6kxPaBOed8H5HX7RaIBuCMN1PE6JnZ4TSnL
+         Ykg3B5E2tpFkTl+R0Nfs1B2qHYVkvDeeM9DhC0Wc12vqP0GtL+kr/KZwtnyano6D3P
+         O2l5DGegvvArZE17NIGzwBGwR/Ttz1nQhPc4+wI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Benn <evanbenn@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>, CK Hu <ck.hu@mediatek.com>,
+        stable@vger.kernel.org, Yuji sasaki <sasakiy@chromium.org>,
+        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/65] drm/mediatek: Find the cursor plane instead of hard coding it
-Date:   Tue, 24 Mar 2020 14:10:22 +0100
-Message-Id: <20200324130756.930321348@linuxfoundation.org>
+Subject: [PATCH 4.19 02/65] spi: qup: call spi_qup_pm_resume_runtime before suspending
+Date:   Tue, 24 Mar 2020 14:10:23 +0100
+Message-Id: <20200324130757.061144024@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,58 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Benn <evanbenn@chromium.org>
+From: Yuji Sasaki <sasakiy@chromium.org>
 
-[ Upstream commit 318caac7c81cdf5806df30c3d72385659a5f0f53 ]
+[ Upstream commit 136b5cd2e2f97581ae560cff0db2a3b5369112da ]
 
-The cursor and primary planes were hard coded.
-Now search for them for passing to drm_crtc_init_with_planes
+spi_qup_suspend() will cause synchronous external abort when
+runtime suspend is enabled and applied, as it tries to
+access SPI controller register while clock is already disabled
+in spi_qup_pm_suspend_runtime().
 
-Signed-off-by: Evan Benn <evanbenn@chromium.org>
-Reviewed-by: Sean Paul <seanpaul@chromium.org>
-Signed-off-by: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: Yuji sasaki <sasakiy@chromium.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20200214074340.2286170-1-vkoul@kernel.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ drivers/spi/spi-qup.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-index b86ee7d25af36..eac9caf322f90 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-@@ -506,10 +506,18 @@ static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index 974a8ce58b68b..cb74fd1af2053 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -1190,6 +1190,11 @@ static int spi_qup_suspend(struct device *device)
+ 	struct spi_qup *controller = spi_master_get_devdata(master);
+ 	int ret;
  
- static int mtk_drm_crtc_init(struct drm_device *drm,
- 			     struct mtk_drm_crtc *mtk_crtc,
--			     struct drm_plane *primary,
--			     struct drm_plane *cursor, unsigned int pipe)
-+			     unsigned int pipe)
- {
--	int ret;
-+	struct drm_plane *primary = NULL;
-+	struct drm_plane *cursor = NULL;
-+	int i, ret;
-+
-+	for (i = 0; i < mtk_crtc->layer_nr; i++) {
-+		if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_PRIMARY)
-+			primary = &mtk_crtc->planes[i];
-+		else if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_CURSOR)
-+			cursor = &mtk_crtc->planes[i];
++	if (pm_runtime_suspended(device)) {
++		ret = spi_qup_pm_resume_runtime(device);
++		if (ret)
++			return ret;
 +	}
+ 	ret = spi_master_suspend(master);
+ 	if (ret)
+ 		return ret;
+@@ -1198,10 +1203,8 @@ static int spi_qup_suspend(struct device *device)
+ 	if (ret)
+ 		return ret;
  
- 	ret = drm_crtc_init_with_planes(drm, &mtk_crtc->base, primary, cursor,
- 					&mtk_crtc_funcs, NULL);
-@@ -622,9 +630,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
- 			goto unprepare;
- 	}
+-	if (!pm_runtime_suspended(device)) {
+-		clk_disable_unprepare(controller->cclk);
+-		clk_disable_unprepare(controller->iclk);
+-	}
++	clk_disable_unprepare(controller->cclk);
++	clk_disable_unprepare(controller->iclk);
+ 	return 0;
+ }
  
--	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
--				mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
--				NULL, pipe);
-+	ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, pipe);
- 	if (ret < 0)
- 		goto unprepare;
- 	drm_mode_crtc_set_gamma_size(&mtk_crtc->base, MTK_LUT_SIZE);
 -- 
 2.20.1
 
