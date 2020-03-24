@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 956BBC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA66DC54FCF
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69AF020870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A472820775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056507;
-	bh=8mS+FAB8IVF5c9q/iWbsjfm8yNBggi4EvZnRV6LkbJU=;
+	s=default; t=1585056510;
+	bh=WWOBCiJt+0H4q24Uk5xkRQFtv504xdoqjRy5vYjWMV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OZ5plBJBxCc5Jxe13sIzT+3DaZNCAVdnT1wFDtytMzIiYbVJhKVVqb4oMpCf+YW2J
-	 NPuHzejnywtvMtkFf4kMpiq9JBvH+x9RcJDaG9Npc/AcXECzYkzk62ukBy9WBIKH9C
-	 mqu6Yz16hcumoWlMOuB51tDn5ep8yVXUFb0943g0=
+	b=bv8eF/r/HtbnV1Vswr7o5oBALr8kk7PH4s7KDN6Itcm5e9/33NSpNRx5jq63aFCLh
+	 2a/7Q9ztBNdYtGLXp34tpoLwklcBF5sYkzqjPfP8V9NjVCkDxfo9pM+Z1EodvB7EfZ
+	 NZMI2F0P7Gbxc5Zf26xVIOEoVYSVba8CmwCaBD+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727314AbgCXN20 (ORCPT
+        id S1729528AbgCXN23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:28:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47722 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:28:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729626AbgCXNYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:15 -0400
+        id S1729189AbgCXN1X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:27:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64C2E208C3;
-        Tue, 24 Mar 2020 13:24:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70171206F6;
+        Tue, 24 Mar 2020 13:27:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056254;
-        bh=8mS+FAB8IVF5c9q/iWbsjfm8yNBggi4EvZnRV6LkbJU=;
+        s=default; t=1585056443;
+        bh=WWOBCiJt+0H4q24Uk5xkRQFtv504xdoqjRy5vYjWMV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jCJtVRVQNyQc09xrlY4TCcSEMqZQzm/xSN9o+Xyqu/O5GPg9NzYvDV1yJ+IrLeWqV
-         3pznB7b9JTsn6aySnwC0bD27FMcmOSbEqS1Vt9vdbWxIVGXRbFImIHbZk5vuNelmNB
-         1uOiHOTK9XSsJuWHJwLFzbGveqXXOC5f6k29R5Ik=
+        b=uc7oqw43YIUHu2lC7U7sQqOmniq4cz7wOnRjYNJMGcdddhUC+gCw/y3uYp6RtMEDc
+         PHvmGhKfdhes7qseR3B/fWC0Lx0rA4dJH+SnIJNvyuwKHpj5Rgvr6nQUz4m/HY0LgE
+         6MNdhewgm6Vz92y5bDOkjGpo/HxQxPEeOVa9oj/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Tomas Novotny <tomas@novotny.cz>, Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.5 070/119] iio: light: vcnl4000: update sampling periods for vcnl4040
-Date:   Tue, 24 Mar 2020 14:10:55 +0100
-Message-Id: <20200324130815.212874676@linuxfoundation.org>
+        stable@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+        George Spelvin <lkml@sdf.org>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 5.5 118/119] kconfig: introduce m32-flag and m64-flag
+Date:   Tue, 24 Mar 2020 14:11:43 +0100
+Message-Id: <20200324130819.320806799@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -61,48 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Novotny <tomas@novotny.cz>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit 2ca5a8792d617b4035aacd0a8be527f667fbf912 upstream.
+commit 8cc4fd73501d9f1370c3eebb70cfe8cc9e24062b upstream.
 
-Vishay has published a new version of "Designing the VCNL4200 Into an
-Application" application note in October 2019. The new version specifies
-that there is +-20% of part to part tolerance. Although the application
-note is related to vcnl4200, according to support the vcnl4040's "ASIC
-is quite similar to that one for the VCNL4200".
+When a compiler supports multiple architectures, some compiler features
+can be dependent on the target architecture.
 
-So update the sampling periods (and comment), including the correct
-sampling period for proximity. Both sampling periods are lower. Users
-relying on the blocking behaviour of reading will get proximity
-measurements much earlier.
+This is typical for Clang, which supports multiple LLVM backends.
+Even for GCC, we need to take care of biarch compiler cases.
 
-Fixes: 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
-Reviewed-by: Guido Günther <agx@sigxcpu.org>
-Tested-by: Guido Günther <agx@sigxcpu.org>
-Signed-off-by: Tomas Novotny <tomas@novotny.cz>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+It is not a problem when we evaluate cc-option in Makefiles because
+cc-option is tested against the flag in question + $(KBUILD_CFLAGS).
+
+The cc-option in Kconfig, on the other hand, does not accumulate
+tested flags. Due to this simplification, it could potentially test
+cc-option against a different target.
+
+At first, Kconfig always evaluated cc-option against the host
+architecture.
+
+Since commit e8de12fb7cde ("kbuild: Check for unknown options with
+cc-option usage in Kconfig and clang"), in case of cross-compiling
+with Clang, the target triple is correctly passed to Kconfig.
+
+The case with biarch GCC (and native build with Clang) is still not
+handled properly. We need to pass some flags to specify the target
+machine bit.
+
+Due to the design, all the macros in Kconfig are expanded in the
+parse stage, where we do not know the target bit size yet.
+
+For example, arch/x86/Kconfig allows a user to toggle CONFIG_64BIT.
+If a compiler flag -foo depends on the machine bit, it must be tested
+twice, one with -m32 and the other with -m64.
+
+However, -m32/-m64 are not always recognized. So, this commits adds
+m64-flag and m32-flag macros. They expand to -m32, -m64, respectively
+if supported. Or, they expand to an empty string if unsupported.
+
+The typical usage is like this:
+
+  config FOO
+          bool
+          default $(cc-option,$(m64-flag) -foo) if 64BIT
+          default $(cc-option,$(m32-flag) -foo)
+
+This is clumsy, but there is no elegant way to handle this in the
+current static macro expansion.
+
+There was discussion for static functions vs dynamic functions.
+The consensus was to go as far as possible with the static functions.
+(https://lkml.org/lkml/2018/3/2/22)
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Tested-by: George Spelvin <lkml@sdf.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iio/light/vcnl4000.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ scripts/Kconfig.include |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -174,9 +174,10 @@ static int vcnl4200_init(struct vcnl4000
- 		data->al_scale = 24000;
- 		break;
- 	case VCNL4040_PROD_ID:
--		/* Integration time is 80ms, add 10ms. */
--		data->vcnl4200_al.sampling_rate = ktime_set(0, 100000 * 1000);
--		data->vcnl4200_ps.sampling_rate = ktime_set(0, 100000 * 1000);
-+		/* Default wait time is 80ms, add 20% tolerance. */
-+		data->vcnl4200_al.sampling_rate = ktime_set(0, 96000 * 1000);
-+		/* Default wait time is 5ms, add 20% tolerance. */
-+		data->vcnl4200_ps.sampling_rate = ktime_set(0, 6000 * 1000);
- 		data->al_scale = 120000;
- 		break;
- 	}
+--- a/scripts/Kconfig.include
++++ b/scripts/Kconfig.include
+@@ -40,3 +40,10 @@ $(error-if,$(success, $(LD) -v | grep -q
+ 
+ # gcc version including patch level
+ gcc-version := $(shell,$(srctree)/scripts/gcc-version.sh $(CC))
++
++# machine bit flags
++#  $(m32-flag): -m32 if the compiler supports it, or an empty string otherwise.
++#  $(m64-flag): -m64 if the compiler supports it, or an empty string otherwise.
++cc-option-bit = $(if-success,$(CC) -Werror $(1) -E -x c /dev/null -o /dev/null,$(1))
++m32-flag := $(cc-option-bit,-m32)
++m64-flag := $(cc-option-bit,-m64)
 
 
