@@ -2,167 +2,131 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41299C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:58:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5030C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2216B2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:58:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E32620775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:59:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgCXJ6l (ORCPT
+        id S1727186AbgCXJ7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:58:41 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:43054 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726563AbgCXJ6k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:58:40 -0400
-Received: from [10.130.0.79] (unknown [113.200.148.30])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxT2nJ2XlehHIfAA--.11S3;
-        Tue, 24 Mar 2020 17:58:35 +0800 (CST)
-Subject: Re: [PATCH v2 1/3] MIPS: Loongson: Get host bridge information
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>
-References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
- <1584932355-3642-2-git-send-email-yangtiezhu@loongson.cn>
- <C251FD7C-87F0-454E-83D7-5198A6E060E2@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <c8702862-f9a7-4776-68b9-cc17dba5d6f6@loongson.cn>
-Date:   Tue, 24 Mar 2020 17:58:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Tue, 24 Mar 2020 05:59:24 -0400
+Received: from pecan2-mail.exetel.com.au ([220.233.0.71]:37923 "EHLO
+        pecan2.exetel.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727145AbgCXJ7Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 05:59:24 -0400
+X-Greylist: delayed 2927 seconds by postgrey-1.27 at vger.kernel.org; Tue, 24 Mar 2020 05:59:21 EDT
+Received: from 41.68.233.220.static.exetel.com.au ([220.233.68.41] helo=localhost.localdomain)
+        by pecan2.exetel.com.au with esmtp (Exim 4.91)
+        (envelope-from <flatmax@flatmax.org>)
+        id 1jGfZc-0000Zd-ME; Tue, 24 Mar 2020 20:10:12 +1100
+From:   Matt Flax <flatmax@flatmax.org>
+Cc:     Matt Flax <flatmax@flatmax.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        YueHaibing <yuehaibing@huawei.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alsa-devel@alsa-project.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: bcm2835-i2s: substream alignment now independent in hwparams
+Date:   Tue, 24 Mar 2020 20:08:21 +1100
+Message-Id: <20200324090823.20754-1-flatmax@flatmax.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <C251FD7C-87F0-454E-83D7-5198A6E060E2@flygoat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxT2nJ2XlehHIfAA--.11S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxJw1fKw47Xr1UCr15JrWrKrg_yoW5tFyfpa
-        yxA3W5Gr4rWr17ursxZ3y7urySya95KFW3GF42q3WYkFyDuw1FqF4DKF1UAF4xuF18Ja40
-        qFyFgr1xWFnIkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCYjI0SjxkI62AI1cAE67vI
-        Y487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI
-        0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y
-        0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
-        WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_
-        Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUb0D73
-        UUUUU==
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/24/2020 03:36 PM, Jiaxun Yang wrote:
->
-> 于 2020年3月23日 GMT+08:00 上午10:59:13, Tiezhu Yang <yangtiezhu@loongson.cn> 写到:
->> Read the address of HyperTransport Configuration Space to get the
->> vendor ID
->> and device ID of bridge chip, and then we can distinguish various types
->> of
->> bridge chip such as Loongson 7A1000 or AMD RS780E.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->> arch/mips/include/asm/mach-loongson64/boot_param.h |  6 ++++++
->> arch/mips/loongson64/env.c                         | 16
->> ++++++++++++++++
->> 2 files changed, 22 insertions(+)
->>
->> diff --git a/arch/mips/include/asm/mach-loongson64/boot_param.h
->> b/arch/mips/include/asm/mach-loongson64/boot_param.h
->> index 8c286be..5e8c70d 100644
->> --- a/arch/mips/include/asm/mach-loongson64/boot_param.h
->> +++ b/arch/mips/include/asm/mach-loongson64/boot_param.h
->> @@ -190,6 +190,11 @@ struct boot_params {
->> 	struct efi_reset_system_t reset_system;
->> };
->>
->> +enum loongson_bridge_type {
->> +	RS780E = 1,
->> +	LS7A1000 = 2
->> +};
->> +
->> struct loongson_system_configuration {
->> 	u32 nr_cpus;
->> 	u32 nr_nodes;
->> @@ -198,6 +203,7 @@ struct loongson_system_configuration {
->> 	u16 boot_cpu_id;
->> 	u16 reserved_cpus_mask;
->> 	enum loongson_cpu_type cputype;
->> +	enum loongson_bridge_type bridgetype;
->> 	u64 ht_control_base;
->> 	u64 pci_mem_start_addr;
->> 	u64 pci_mem_end_addr;
->> diff --git a/arch/mips/loongson64/env.c b/arch/mips/loongson64/env.c
->> index 0daeb7b..42542c7 100644
->> --- a/arch/mips/loongson64/env.c
->> +++ b/arch/mips/loongson64/env.c
->> @@ -19,6 +19,8 @@
->> #include <boot_param.h>
->> #include <workarounds.h>
->>
->> +#define HT1_LO_BUS_CONFIG_BASE	0x90000efdfe000000
->> +
->> u32 cpu_clock_freq;
->> EXPORT_SYMBOL(cpu_clock_freq);
->> struct efi_memory_map_loongson *loongson_memmap;
->> @@ -42,6 +44,8 @@ void __init prom_init_env(void)
->> 	struct system_loongson *esys;
->> 	struct efi_cpuinfo_loongson *ecpu;
->> 	struct irq_source_routing_table *eirq_source;
->> +	u32 id;
->> +	u16 vendor, device;
->>
->> 	/* firmware arguments are initialized in head.S */
->> 	boot_p = (struct boot_params *)fw_arg2;
->> @@ -155,4 +159,16 @@ void __init prom_init_env(void)
->> 		memcpy(loongson_sysconf.sensors, esys->sensors,
->> 			sizeof(struct sensor_device) * loongson_sysconf.nr_sensors);
->> 	pr_info("CpuClock = %u\n", cpu_clock_freq);
->> +
->> +	id = readl((u32 *)HT1_LO_BUS_CONFIG_BASE);
-> Is that pointer cast required?
+Substream sample alignment was being set in hwparams for both
+substreams at the same time. This became a problem when	the Audio
+Injector isolated sound card needed to offset sample alignment
+for high sample	rates. The latency difference between playback
+and capture occurs because of the digital isolation chip
+propagation time, particularly when the codec is master and
+the DAC return is twice delayed.
 
-Yes, otherwise it will compile failed:
-arch/mips/loongson64/env.c:163:13: error: passing argument 1 of ‘readl’ 
-makes pointer from integer without a cast [-Werror]
-   id = readl(HT1_LO_BUS_CONFIG_BASE);
-              ^
->
-> And you'd better add a comment here like
-> /* Read HT PCI 00:00:00 Host Bridge's ID to detect bridge model */
-> Otherwise it's hard for others to understand what you are doing.
+This patch sets sample alignment registers  based on the substream
+direction in hwparams. This gives the machine driver more control
+over sample alignment in the bcm2835 i2s driver.
 
-OK, I will do it.
+Signed-off-by: Matt Flax <flatmax@flatmax.org>
+---
+ sound/soc/bcm/bcm2835-i2s.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
 
->
->> +	vendor = id & 0xffff;
->> +	device = (id >> 16) & 0xffff;
->> +
->> +	if (vendor == 0x0014 && device == 0x7a00) {
-> Please confirm with hardware design guys that bridge chip in future will have different dev ID.
-
-Yes, it maybe have a new device ID for the new bridge chip.
-
->
-> Thanks.
->
->> +		pr_info("The bridge chip is Loongson 7A1000\n");
->> +		loongson_sysconf.bridgetype = LS7A1000;
->> +	} else {
->> +		pr_info("The bridge chip is AMD RS780E or SR5690\n");
->> +		loongson_sysconf.bridgetype = RS780E;
->> +	}
->> }
+diff --git a/sound/soc/bcm/bcm2835-i2s.c b/sound/soc/bcm/bcm2835-i2s.c
+index e6a12e271b07..9db542699a13 100644
+--- a/sound/soc/bcm/bcm2835-i2s.c
++++ b/sound/soc/bcm/bcm2835-i2s.c
+@@ -493,11 +493,6 @@ static int bcm2835_i2s_hw_params(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
+ 
+-	bcm2835_i2s_calc_channel_pos(&rx_ch1_pos, &rx_ch2_pos,
+-		rx_mask, slot_width, data_delay, odd_slot_offset);
+-	bcm2835_i2s_calc_channel_pos(&tx_ch1_pos, &tx_ch2_pos,
+-		tx_mask, slot_width, data_delay, odd_slot_offset);
+-
+ 	/*
+ 	 * Transmitting data immediately after frame start, eg
+ 	 * in left-justified or DSP mode A, only works stable
+@@ -508,19 +503,26 @@ static int bcm2835_i2s_hw_params(struct snd_pcm_substream *substream,
+ 			"Unstable slave config detected, L/R may be swapped");
+ 
+ 	/*
+-	 * Set format for both streams.
+-	 * We cannot set another frame length
+-	 * (and therefore word length) anyway,
+-	 * so the format will be the same.
++	 * Set format on a per stream basis.
++	 * The alignment format can be different depending on direction.
+ 	 */
+-	regmap_write(dev->i2s_regmap, BCM2835_I2S_RXC_A_REG, 
+-		  format
+-		| BCM2835_I2S_CH1_POS(rx_ch1_pos)
+-		| BCM2835_I2S_CH2_POS(rx_ch2_pos));
+-	regmap_write(dev->i2s_regmap, BCM2835_I2S_TXC_A_REG, 
+-		  format
+-		| BCM2835_I2S_CH1_POS(tx_ch1_pos)
+-		| BCM2835_I2S_CH2_POS(tx_ch2_pos));
++	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE) {
++		bcm2835_i2s_calc_channel_pos(&rx_ch1_pos, &rx_ch2_pos,
++			rx_mask, slot_width, data_delay, odd_slot_offset);
++		regmap_write(dev->i2s_regmap, BCM2835_I2S_RXC_A_REG,
++			  format
++			| BCM2835_I2S_CH1_POS(rx_ch1_pos)
++			| BCM2835_I2S_CH2_POS(rx_ch2_pos));
++	}
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		bcm2835_i2s_calc_channel_pos(&tx_ch1_pos, &tx_ch2_pos,
++			tx_mask, slot_width, data_delay, odd_slot_offset);
++		regmap_write(dev->i2s_regmap, BCM2835_I2S_TXC_A_REG,
++			  format
++			| BCM2835_I2S_CH1_POS(tx_ch1_pos)
++			| BCM2835_I2S_CH2_POS(tx_ch2_pos));
++	}
+ 
+ 	/* Setup the I2S mode */
+ 
+-- 
+2.20.1
 
