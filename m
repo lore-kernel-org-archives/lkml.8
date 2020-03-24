@@ -2,116 +2,95 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C5CC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D773C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B196620870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056238;
-	bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jnPOknuS7Rs7NgVsDxtdzR4fG+x6O/LkrXSQH3PJXoOjWRm2d/jS3VOY06GMioBaq
-	 ywkXY77hKOWmYz8VBzGHuQyJNe4zCVK/RP1dxULzUXMW/kVzB1gVJr1OfGNKAyJzvz
-	 563zpLzPAZvIbTo/9zCn6ynhBgjtzJHbEPYn/njM=
+	by mail.kernel.org (Postfix) with ESMTP id 40FF3208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="bWlSVSaA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729490AbgCXNX5 (ORCPT
+        id S1729504AbgCXNYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:23:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgCXNXx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:00 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37461 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729468AbgCXNXx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:23:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B04B2208DB;
-        Tue, 24 Mar 2020 13:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056233;
-        bh=JritSytOa17n9A8eCr1IfHZFbdBPS/YBgudn9Ph3Q20=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EKnMKt7W5DfW44YtqKot9dv5Udmk8x8T9OH1r56B1bq8iZa53czN9SmsNYxOM6ERW
-         mivijZrl3zdW8HdJgs22QHVeVAOJZ3QoAmT4fLWqkxYaYgZvD9Pm6/2foQdvLSDWRq
-         X0tzZZppC72lJW+U153odjYwi7bgGQC1cjgaVQ+g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 5.5 064/119] iio: trigger: stm32-timer: disable master mode when stopping
-Date:   Tue, 24 Mar 2020 14:10:49 +0100
-Message-Id: <20200324130814.601492005@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: by mail-wm1-f68.google.com with SMTP id d1so3449097wmb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 06:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=16WGU3cNB1gezVOdWiJDOY/jwLM7wxW+VZ4bxA/PHPk=;
+        b=bWlSVSaAkOrITpOQwvrWt1U9KbT9mbpxsTyfS70Bdu05BJ1bpQu2yaT81q91QdmG8m
+         b2iC6Eyj1qy/xakWe9eSTS+HImwFRVl0AESSqhQrw9NqXo0VwH0qp2T3zTae9TqhsZf/
+         n/Lgm424ZcP3W7ZZ2bRqCxOKpCo5Nk/adFez4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=16WGU3cNB1gezVOdWiJDOY/jwLM7wxW+VZ4bxA/PHPk=;
+        b=h5IUmrm9yUvf2Z5JcSGn5HBcTe2m9inEUZvQgJg17TJnLT6ZBFN1YukUzMr0ugOJPl
+         kFphUqRG9g4dUCGW/1FSE5QEe9Wu0diWaKON9QYnPuCeG5igd+jW4Zc72WlhyLcDsi6V
+         WTAjTtJrwmBCy8bGXSjDrpvT6MpIyQeoUfowKyK05m4bhg1Q99kOQb6jKdE+ZYo5yHJJ
+         IYSxOcHdcz2oHqyd1lg95x8jOJPeVRAzkMAGkVeEGkk8ByQviH7jpRBfhKPR65XsIxOA
+         sNccfd6ECE3DbpbMiIU3zm1WTYUEhkAQTLlURXVlA82h84a3NnWGnfHfQFBdCT5kIMMI
+         u4jA==
+X-Gm-Message-State: ANhLgQ1BA6C8G36mlAyJ+rh65fta/FtV2Of9ZoMif2JXcWEhWTRW8aJB
+        nXQzIDHZS7Q3AOqfFnYWM0DMSg==
+X-Google-Smtp-Source: ADFU+vsRXGhBNDWactdLbIMseJKjnvylYAlIoBTm5ZCXj70sl98tC5w95ZPI7DAjbM3/oddQVqqJtA==
+X-Received: by 2002:a05:600c:280b:: with SMTP id m11mr5309390wmb.99.1585056231630;
+        Tue, 24 Mar 2020 06:23:51 -0700 (PDT)
+Received: from localhost ([2620:10d:c092:180::1:8734])
+        by smtp.gmail.com with ESMTPSA id w7sm29792149wrr.60.2020.03.24.06.23.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 06:23:51 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 13:23:50 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Hui Zhu <teawater@gmail.com>
+Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        akpm@linux-foundation.org, hughd@google.com,
+        yang.shi@linux.alibaba.com, kirill@shutemov.name,
+        dan.j.williams@intel.com, aneesh.kumar@linux.ibm.com,
+        sean.j.christopherson@intel.com, thellstrom@vmware.com,
+        guro@fb.com, shakeelb@google.com, tj@kernel.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-mm@kvack.org,
+        Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: Re: [PATCH] mm, memcg: Add memory.transparent_hugepage_disabled
+Message-ID: <20200324132350.GA7528@chrisdown.name>
+References: <1585045916-27339-1-git-send-email-teawater@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <1585045916-27339-1-git-send-email-teawater@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Hui Zhu writes:
+>/sys/kernel/mm/transparent_hugepage/enabled is the only interface to
+>control if the application can use THP in system level.
+>Sometime, we would not want an application use THP even if
+>transparent_hugepage/enabled is set to "always" or "madvise" because
+>thp may need more cpu and memory resources in some cases.
+>
+>This commit add a new interface memory.transparent_hugepage_disabled
+>in memcg.
+>When it set to 1, the application inside the cgroup cannot use THP
+>except dax.
 
-commit 29e8c8253d7d5265f58122c0a7902e26df6c6f61 upstream.
+I'm against this patch even in the abstract -- this adds an extremely niche use 
+case to a general interface, and there are plenty of ways to already indicate 
+THP preference.
 
-Master mode should be disabled when stopping. This mainly impacts
-possible other use-case after timer has been stopped. Currently,
-master mode remains set (from start routine).
-
-Fixes: 6fb34812c2a2 ("iio: stm32 trigger: Add support for TRGO2 triggers")
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: <Stable@vger.kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/iio/trigger/stm32-timer-trigger.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
---- a/drivers/iio/trigger/stm32-timer-trigger.c
-+++ b/drivers/iio/trigger/stm32-timer-trigger.c
-@@ -161,7 +161,8 @@ static int stm32_timer_start(struct stm3
- 	return 0;
- }
- 
--static void stm32_timer_stop(struct stm32_timer_trigger *priv)
-+static void stm32_timer_stop(struct stm32_timer_trigger *priv,
-+			     struct iio_trigger *trig)
- {
- 	u32 ccer, cr1;
- 
-@@ -179,6 +180,12 @@ static void stm32_timer_stop(struct stm3
- 	regmap_write(priv->regmap, TIM_PSC, 0);
- 	regmap_write(priv->regmap, TIM_ARR, 0);
- 
-+	/* Force disable master mode */
-+	if (stm32_timer_is_trgo2_name(trig->name))
-+		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS2, 0);
-+	else
-+		regmap_update_bits(priv->regmap, TIM_CR2, TIM_CR2_MMS, 0);
-+
- 	/* Make sure that registers are updated */
- 	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
- }
-@@ -197,7 +204,7 @@ static ssize_t stm32_tt_store_frequency(
- 		return ret;
- 
- 	if (freq == 0) {
--		stm32_timer_stop(priv);
-+		stm32_timer_stop(priv, trig);
- 	} else {
- 		ret = stm32_timer_start(priv, trig, freq);
- 		if (ret)
-
-
+Perhaps there is some new interface desirable for your use case, but adding a 
+new global file to memcg certainly isn't it.
