@@ -2,167 +2,144 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974ACC54FCF
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B72C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7196920836
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1E572073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:20:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r2u8CeTq"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="WIlKLYjM";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="VDj7fRWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCXQUM (ORCPT
+        id S1728890AbgCXQUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:20:12 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:42004 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727444AbgCXQUH (ORCPT
+        Tue, 24 Mar 2020 12:20:31 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:44120 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727444AbgCXQUb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:20:07 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OGEe2o178890;
-        Tue, 24 Mar 2020 16:19:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=8+/c9w3BgxRJLSrj2uF9AmceMm8c9V83O9Cmas+6qpw=;
- b=r2u8CeTqtFkN2tBlnu64WUaXJv8VkQH2VTfXx7kCYGVemUCoz6Dl3XQVQpEYpTzXPqoo
- KQU5r/lfIJLCpdXfNuvR2j+Jvx6QAWFncs4keyDbOtjXja4HZVht0ckCecUcp6pZcSfM
- H7zRqz5F2HadZRnH6zsx+kAmglRI1zxkSZBKJAcT55fPgoJK2ocBq/L2URhduLlwsBGB
- h9iqo7yYppWkIHeP1uSzUidUehGKJ3jKA2eucbquHTP16FRRs/wMHykjIsr+JYFm3QD/
- FxzlFVtjd58/y6ISSFeVYMzCQ6HK+Xenb4Xa0DYUARFzP9SI49hT+QlLcUSGzy622IV5 xA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2yx8ac293t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 16:19:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02OGJhPk185489;
-        Tue, 24 Mar 2020 16:19:45 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2yxw6n17rg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 16:19:45 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02OGJVTZ018297;
-        Tue, 24 Mar 2020 16:19:31 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 24 Mar 2020 09:19:31 -0700
-Subject: Re: [PATCH v2] mm/hugetlb: fix a addressing exception caused by
- huge_pte_offset()
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>, akpm@linux-foundation.org,
-        kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
-        arei.gonglei@huawei.com, weidong.huang@huawei.com,
-        weifuqiang@huawei.com, kvm@vger.kernel.org, linux-mm@kvack.org,
-        Matthew Wilcox <willy@infradead.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        stable@vger.kernel.org
-References: <1582342427-230392-1-git-send-email-longpeng2@huawei.com>
- <51a25d55-de49-4c0a-c994-bf1a8cfc8638@oracle.com>
- <20200323160955.GY20941@ziepe.ca>
- <69055395-e7e5-a8e2-7f3e-f61607149318@oracle.com>
- <20200323180706.GC20941@ziepe.ca>
- <88698dd7-eb87-4b0b-7ba7-44ef6eab6a6c@oracle.com>
- <20200323225225.GF20941@ziepe.ca>
- <e8e71ba4-d609-269a-6160-153e373e7563@huawei.com>
- <20200324115541.GH20941@ziepe.ca>
- <98d35563-8af0-2693-7e76-e6435da0bbee@oracle.com>
- <20200324155552.GK20941@ziepe.ca>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <66583587-ca4f-9847-c173-4a3d7938fec6@oracle.com>
-Date:   Tue, 24 Mar 2020 09:19:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <20200324155552.GK20941@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
+        Tue, 24 Mar 2020 12:20:31 -0400
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OGCPNh010844;
+        Tue, 24 Mar 2020 09:20:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=facebook;
+ bh=aen/2FTYFOpp3rvFE/OB8BmIjjjVmfc0IMKoeaD5gQQ=;
+ b=WIlKLYjMjr1anpveb12Y2yWei3B/Q7qSTlhJYJS7yqeKW/8NJOoAEPOGPQf/AiAur0j4
+ EutAK2j0bhXMtcCBZP+FtrJ0c9vSL3MAOW1rExaBHzydQGDBC7vJW94TPUyjcsQzPVvU
+ /bW/LeAwAikR6iSfhF9m02smZp47goWXkvQ= 
+Received: from mail.thefacebook.com ([163.114.132.120])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yx2r4uavx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 24 Mar 2020 09:20:14 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.98.9) by
+ o365-in.thefacebook.com (100.104.94.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1847.3; Tue, 24 Mar 2020 09:20:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CM4r1RNxfspVplFYoLWQ6StieIu8VKONqRA3yPtrwX+M8HHdNRKXn0CBCiBQGqxOdd99JKYrqoTzaJmrqERGxSHfTGJikBSl5YmtRhdMnblA2WrdRrzza4hTfu8Qgb7tEIyu6OTl9rLHPcVa6sQC3vtPvXq7Bddi7N+yvH0xZ5KULuYMqvZY3b9nWI99TWd0mCu9BhjnXec0gZWyA47kylnwT5TxWFo8ER5JZRCzeLqKEtqC/9ugExGBTpfPwiWneI4rTd2fupIcOXF6DFwpVa/uF7s/oORTJToa05EBQxAP5t8LEZMgC9Pc+WTDrofjbeVnM8Wrn965okz0E2Licw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aen/2FTYFOpp3rvFE/OB8BmIjjjVmfc0IMKoeaD5gQQ=;
+ b=hjX6epugWzMKInGYF8u6VTuA16YXQaY+ZO4s4u8e62bqzzBluL56BxLFH1qIvo0SXi2+wHpm0HJwcxI1SpZFhOTEknkr6moSEpvNJh5mYbLZ3tmM3Q2oR/pSovu758PPr4tMkDgR23Cbx4TxqQFmMhBXreWB9FsunF9RJs5/MgJiMdrkulVswAbr6+5Wn5hFB+0W73sbcwNUJjNRMj5mpTcG/UXpU08SpkvsuZZRaD331N1dGFtY7xT0sCuOEzVE28jWyKkGT14JldvlRORlzx0TwNas0ArHARQm3SNyB7QqfMRk/H+9QIQvzuKFc6bBpV8AZTFkG5NFZPwXk42FcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aen/2FTYFOpp3rvFE/OB8BmIjjjVmfc0IMKoeaD5gQQ=;
+ b=VDj7fRWZOAIs3fvJ/UK55EHvBjP6r50WXA0no55RGdoSBsrS1mhu7Hf3RmVb74os6TMfjbID6M6KzbgJU3AJgFMFBUNKJwAsrLSZ7HlR3z/21usnAKtUL3uR+ZizOpUFuZATQqJnANjmn2VmytMatMjaReBdyBUdoaE3LQAvsIE=
+Received: from MW3PR15MB3883.namprd15.prod.outlook.com (2603:10b6:303:51::22)
+ by MW3PR15MB4025.namprd15.prod.outlook.com (2603:10b6:303:46::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Tue, 24 Mar
+ 2020 16:20:12 +0000
+Received: from MW3PR15MB3883.namprd15.prod.outlook.com
+ ([fe80::a49b:8546:912f:dd98]) by MW3PR15MB3883.namprd15.prod.outlook.com
+ ([fe80::a49b:8546:912f:dd98%5]) with mapi id 15.20.2835.023; Tue, 24 Mar 2020
+ 16:20:12 +0000
+Subject: Re: [PATCH v2] bpf: fix build warning - missing prototype
+To:     Jean-Philippe Menil <jpmenil@gmail.com>
+CC:     <kernel-janitors@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <7c27e51f-6a64-7374-b705-450cad42146c@fb.com>
+ <20200324072231.5780-1-jpmenil@gmail.com>
+From:   Yonghong Song <yhs@fb.com>
+Message-ID: <993c9ee8-86b4-5aa0-ce96-ae0621f7ed22@fb.com>
+Date:   Tue, 24 Mar 2020 09:19:54 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+In-Reply-To: <20200324072231.5780-1-jpmenil@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240087
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 suspectscore=0 priorityscore=1501 malwarescore=0
- mlxscore=0 adultscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240087
+X-ClientProxiedBy: MWHPR1701CA0009.namprd17.prod.outlook.com
+ (2603:10b6:301:14::19) To MW3PR15MB3883.namprd15.prod.outlook.com
+ (2603:10b6:303:51::22)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from MacBook-Pro-52.local (2620:10d:c090:400::5:1af3) by MWHPR1701CA0009.namprd17.prod.outlook.com (2603:10b6:301:14::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend Transport; Tue, 24 Mar 2020 16:20:10 +0000
+X-Originating-IP: [2620:10d:c090:400::5:1af3]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: dc7c9090-757a-445c-8d9b-08d7d00f3a5d
+X-MS-TrafficTypeDiagnostic: MW3PR15MB4025:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <MW3PR15MB4025967558BAC7084CA91509D3F10@MW3PR15MB4025.namprd15.prod.outlook.com>
+X-FB-Source: Internal
+X-MS-Oob-TLC-OOBClassifiers: OLM:751;
+X-Forefront-PRVS: 03524FBD26
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(136003)(396003)(366004)(376002)(346002)(39860400002)(2616005)(478600001)(31686004)(53546011)(66556008)(4326008)(316002)(54906003)(2906002)(4744005)(86362001)(6916009)(5660300002)(16526019)(6506007)(52116002)(6512007)(8936002)(66946007)(66476007)(31696002)(186003)(81156014)(81166006)(8676002)(6666004)(36756003)(6486002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW3PR15MB4025;H:MW3PR15MB3883.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7Nr1lbrS8vzJBA5MoKFIJE16HrCXO6jm6jqLKBtRKXn11hZQCwSYst46q7LmCyeBHvMatFQEt/WZfhuxIa+hRpcXvyXzfnNloQ82XVxdGq9VMnRQYxXUcle0GgYQiXbc7PBvcul3dRdJ0g8r49FSBMGXbfRPRW49KQZ6/oqLcxoeWAONA2/DkgL6zwCMZq46S83CEJzlESgPvigZkkvcFufx7C/hliGFhcIKlpX6P0qI1MJHVlEAqQeEVuAgeFGuDN27C//f0gMv32Bh6F7EqyExeUjMToIjzUdqlD6WO4U/Y08hpizAjpPWXQaQFK0dWPPmBdxOkoXMNqJTpnpSLYUe6He/gJiIhj2h57xSdK5N6hV1RCssvJ+3oNTGkIvu3moZE8UvHbaDtTmNZpx7lhj2qXOjGBUNR8ywmuWdsD4L8bJmz0+Lr8VFIAD3iOJO
+X-MS-Exchange-AntiSpam-MessageData: UYZeLfr4TJPXl/T+tiAs6D0O9tEJr4riWswLSRBUHvZvWw9EGwyvpTHQGirdz+poupA+k/DbbjTmrZZh1E5BkUR2r2PUlHADjfsQXSHUb+HDjy2zJWRTJIULDdFlCnEMIYOmR6EI67rJHxh4yc9ET8yKF+RBdjeaz2ik3R3XHn11c/BOvjQrw5+cOUpZMmsr
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc7c9090-757a-445c-8d9b-08d7d00f3a5d
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2020 16:20:12.0970
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3gpg8rZlq+YWOuWUHMXQEefzhuY+e7EQp1OZnF59fxSZwI+lCSs+3QNE4ejRrCuz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR15MB4025
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 malwarescore=0
+ adultscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 suspectscore=0
+ mlxlogscore=919 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003240087
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 8:55 AM, Jason Gunthorpe wrote:
-> On Tue, Mar 24, 2020 at 08:25:09AM -0700, Mike Kravetz wrote:
->> On 3/24/20 4:55 AM, Jason Gunthorpe wrote:
->>> Also, since CH moved all the get_user_pages_fast code out of the
->>> arch's many/all archs can drop their arch specific version of this
->>> routine. This is really just a specialized version of gup_fast's
->>> algorithm..
->>>
->>> (also the arch versions seem different, why do some return actual
->>>  ptes, not null?)
->>
->> Not sure I understand that last question.  The return value should be
->> a *pte or null.
-> 
-> I mean the common code ends like this:
-> 
-> 	pmd = pmd_offset(pud, addr);
-> 	if (sz != PMD_SIZE && pmd_none(*pmd))
-> 		return NULL;
-> 	/* hugepage or swap? */
-> 	if (pmd_huge(*pmd) || !pmd_present(*pmd))
-> 		return (pte_t *)pmd;
-> 
-> 	return NULL;
-> 
-> So it always returns a pointer into a PUD or PMD, while say, ppc
-> in __find_linux_pte() ends like:
-> 
-> 	return pte_offset_kernel(&pmd, ea);
-> 
-> Which is pointing to a PTE
 
-Ok, now I understand the question.  huge_pte_offset will/should only be
-called for addresses that are in a vma backed by hugetlb pages.  So,
-pte_offset_kernel() will only return page table type (PUD/PMD/etc) associated
-with a huge page supported by the particular arch.
 
-> So does sparc:
+On 3/24/20 12:22 AM, Jean-Philippe Menil wrote:
+> Fix build warnings when building net/bpf/test_run.o with W=1 due
+> to missing prototype for bpf_fentry_test{1..6}.
 > 
->         pmd = pmd_offset(pud, addr);
->         if (pmd_none(*pmd))
->                 return NULL;
->         if (is_hugetlb_pmd(*pmd))
->                 return (pte_t *)pmd;
->         return pte_offset_map(pmd, addr);
+> Declare prototypes in order to silence warnings.
 > 
-> Which is even worse because it is leaking a kmap..
-> 
-> etc
-> 
->> /*
->>  * huge_pte_offset() - Walk the page table to resolve the hugepage
->>  * entry at address @addr
->>  *
->>  * Return: Pointer to page table or swap entry (PUD or PMD) for
->                                               ^^^^^^^^^^^^^^^^^^^
-> 
-> Ie the above is not followed by the archs
-> 
-> I'm also scratching my head that a function that returns a pte_t *
-> always returns a PUD or PMD. Strange bit of type casting..
+> Signed-off-by: Jean-Philippe Menil <jpmenil@gmail.com>
 
-Yes, the casting is curious.  The casting continues in potential subsequent
-calls to huge_pte_alloc().
--- 
-Mike Kravetz
+Acked-by: Yonghong Song <yhs@fb.com>
