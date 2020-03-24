@@ -2,105 +2,99 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A93C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD386C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1047420719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:07:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA64720719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:07:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgCXSHO (ORCPT
+        id S1727865AbgCXSHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:07:14 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:33159 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbgCXSHO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:07:14 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 77F59C000B;
-        Tue, 24 Mar 2020 18:07:09 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 19:07:09 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Sergey.Semin@baikalelectronics.ru
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
+        Tue, 24 Mar 2020 14:07:37 -0400
+Received: from elvis.franken.de ([193.175.24.41]:60741 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727611AbgCXSHh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 14:07:37 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1jGnxb-0002Bo-00; Tue, 24 Mar 2020 19:07:31 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 5CA33C09A4; Tue, 24 Mar 2020 18:57:05 +0100 (CET)
+Date:   Tue, 24 Mar 2020 18:57:05 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
         Ralf Baechle <ralf@linux-mips.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        devicetree@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Manuel Lauss <manuel.lauss@gmail.com>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/6] dt-bindings: rtc: Convert snps,dw-apb-timer to DT
- schema
-Message-ID: <20200324180709.GO5504@piout.net>
-References: <20200306125622.839ED80307C4@mail.baikalelectronics.ru>
- <20200324174325.14213-1-Sergey.Semin@baikalelectronics.ru>
- <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v2 0/3] ide/MIPS/docs: remove no longer used au1xxx-ide
+ driver
+Message-ID: <20200324175705.GA8911@alpha.franken.de>
+References: <CGME20200324111437eucas1p1a898c365a825deb9d0dc6c99202e2f57@eucas1p1.samsung.com>
+ <20200324111420.31793-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324174325.14213-2-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20200324111420.31793-1-b.zolnierkie@samsung.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Mar 24, 2020 at 12:14:17PM +0100, Bartlomiej Zolnierkiewicz wrote:
+> Hi,
+> 
+> Commit 54ff4a1d1732 ("MIPS: Alchemy: pata_platform for DB1200")
+> from year 2014 converted the only user of au1xxx-ide IDE host
+> driver (MIPS Alchemy DB1200 platform) to use pata_platform libata
+> host driver instead. This patch series removes dead au1xxx-ide
+> driver code & co.
+> 
+> Please merge through mips tree (IDE changes have been Acked by
+> David Miller).
+> 
+> Changes since v1
+> (https://lore.kernel.org/linux-ide/20200116122938.20789-1-b.zolnierkie@samsung.com/):
+> - added ACKs
+> 
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+> 
+> 
+> Bartlomiej Zolnierkiewicz (3):
+>   ide: remove no longer used au1xxx-ide driver
+>   MIPS: Alchemy: remove no longer used au1xxx_ide.h header
+>   docs: mips: remove no longer needed au1xxx_ide.rst documentation
+> 
+>  Documentation/mips/au1xxx_ide.rst             | 130 ----
+>  Documentation/mips/index.rst                  |   2 -
+>  .../mips/include/asm/mach-au1x00/au1xxx_ide.h | 178 ------
+>  drivers/ide/Kconfig                           |  17 -
+>  drivers/ide/Makefile                          |   2 -
+>  drivers/ide/au1xxx-ide.c                      | 597 ------------------
+>  6 files changed, 926 deletions(-)
+>  delete mode 100644 Documentation/mips/au1xxx_ide.rst
+>  delete mode 100644 arch/mips/include/asm/mach-au1x00/au1xxx_ide.h
+>  delete mode 100644 drivers/ide/au1xxx-ide.c
 
-On 24/03/2020 20:43:20+0300, Sergey.Semin@baikalelectronics.ru wrote:
-> From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> 
-> Modern device tree bindings are supposed to be created as YAML-files
-> in accordance with DT schema. This commit replaces Synopsys DW Timer
-> legacy bare text binding with YAML file. As before the binding file
-> states that the corresponding dts node is supposed to be compatible
-> with generic DW APB Timer indicated by the "snps,dw-apb-timer"
-> compatible string and to provide a mandatory registers memory range,
-> one timer interrupt, either reference clock source or a fixed clock
-> rate value. It may also have an optional APB bus reference clock
-> phandle specified.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-rtc@vger.kernel.org
-> 
-> ---
-> 
-> I have doubts that this binding file belongs to the bindings/rtc
-> directory seeing it's a pure timer with no rtc facilities like
-> days/months/years counting and alarms. What about moving it to the
-> "Documentation/devicetree/bindings/timer/" directory?
-> 
+applied series to mips-next. While applying I've removed the one leftover
+BLK_DEV_IDE_AU1XXX_MDMA2_DBDMA in drivers/ide/Kconfig in patch 1.
 
-Exactly my reaction when seeing the patch, please move it out of
-bindings/rtc/
-
+Thomas.
 
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
