@@ -7,202 +7,387 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC2DCC18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78683C18E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CBBE20719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E33A2073C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nNAICxcB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoJn6fp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCXXyN (ORCPT
+        id S1727230AbgCXXzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:54:13 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41492 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726968AbgCXXyN (ORCPT
+        Tue, 24 Mar 2020 19:55:12 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34258 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbgCXXzM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:54:13 -0400
-Received: by mail-qk1-f193.google.com with SMTP id q188so593043qke.8;
-        Tue, 24 Mar 2020 16:54:12 -0700 (PDT)
+        Tue, 24 Mar 2020 19:55:12 -0400
+Received: by mail-qt1-f194.google.com with SMTP id 10so677482qtp.1;
+        Tue, 24 Mar 2020 16:55:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=bWdQrSC8E4qph62LTErgxscMGGiPy7reC5vJ9ah9h8k=;
-        b=nNAICxcBx0Pd+m7pJ2cu767ivyvG+BJBZ7CnmIRNMGl1+j5Qv4Hioi0DGMhn0udMwC
-         0Sj+v2o4t2wmAjP4WNZr8YjuKF1Rq0hxXvGvKD6ZGXd3QbJ9okgMYT1FwxIUeRJFSXdS
-         i4d9ZDEUQ7jrRM371rEkYhxGU655fTzy1yJ2aOcv4/wlSL3m8g6ARfwOz++ZSbRJIHr/
-         9hR8rmjizVcSSdAncaxPMSx6ERntT2iXWLX3bpMk+OjPExyiTGAXjg0QeUibDEy5V7js
-         H2VvNMBkK3akQBiiot6BhL7noTLbdljNVc/SORkSDu9mXccRtM7u8/ogVMZ48YmqCETs
-         eptQ==
+        bh=x4taz7mXl8pptyKy6vTsxg6OtEjU4FBkuE1nJ/DIKuA=;
+        b=RoJn6fp1RJn8aZlfOCSg3bf8t0mKDJrGg4m+LHhDBZQFbF20gzLqL9NlP5RqwqGpXz
+         evGuJZIK10Jngzmu4bLBPmwZ3Dkj64w0RLl/1nBW31qbA77gaKhyNLsURbDB4cvqcElw
+         ijZ2dWBJMsT6oMsn6SM3dawVros6CKVA4P6vJKavXXqvdDvMrlm8RYmgVJ6RRu1Yr4Zd
+         bzsz2H29+FhNg+B81wCZ24Ktiv0MnP60a1YY0MpSL+aVEwVsNVlvzdNdDkbORqKoX6G1
+         C2bhcN/htFQH6W/2ga0awyd675P1FYrwpGvJczFhWVfbARM8xdaxDjHG2eFCAZljtLoh
+         H6cg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=bWdQrSC8E4qph62LTErgxscMGGiPy7reC5vJ9ah9h8k=;
-        b=HeYIaUgSKBj9WoGDUy6dmgSXvfXAU5T2+hunSDj5MdaBe5AMkO+Vv1leLBufb1FfLP
-         bQWGUQRpHBp4di0cEmDetjrbqYuAsbXqGmjyJUFYdjIGuClD89EDlMvZswUNykG53dnP
-         H1c3tIFGPt6j9o8Plm/zdl40J0oC/66WDRPI0Q2dJob1VofCEQqIHMa4v7yyZwG5FS1g
-         7e9n/2zopgvtc9hXfqO6ENpDJGu1Mh/FUyWEyFjgtn3JyqsYS3SQ9p3HPel18t90+h/d
-         Gd/tV+yXltHQFXQ0YuUxyRAr7IdvooQr83YWBephPdw4pQvjIhsf9utb6IkxJL8ybLfP
-         43eg==
-X-Gm-Message-State: ANhLgQ3CKM5FEB1zRlo6viAdYgr84QQ/X1hgM3H+PJQXc53fmQZTeRrG
-        1aTW/31Ji1xAlRJHMGKKLGGBQ6ZKWRWJlwTQIX8=
-X-Google-Smtp-Source: ADFU+vu8TmmTFhtp932LiK5RXfQw1JiikKNrT3JD96Mn5TJPqPZzPw9VhGygP/zkNCp4+8rHf5Myv3bSXCNTnDLS6WY=
-X-Received: by 2002:a37:4015:: with SMTP id n21mr447066qka.76.1585094051677;
- Tue, 24 Mar 2020 16:54:11 -0700 (PDT)
+        bh=x4taz7mXl8pptyKy6vTsxg6OtEjU4FBkuE1nJ/DIKuA=;
+        b=C/6q2o2f2Rh1x+KzmRD1ojYLSz7lRkGUSjWIGVcVMvi0oWt7c4dGwCZ/XmthHVEyz2
+         L/lmrND9YIqErSEhWfQ3otdcsrcQpFaGsaLYPnN/Cw6Wj5IangbQmKz1eqAp9w3fUw4e
+         wGY2dv0FQn1ge2vVCudVYT3+kONOGv7nYbP0MtoLHBP+MF89xXkJEtAhzalMcEZNCsAQ
+         hWVmhvNf+wPUhxoWf/GgvYxkeSyh3RVG0RR+FnvpHZxW7DrQZ2QMNk7GYDkayWduwpMD
+         mQMmzwvbg8UK49KQ6sWHdzVZ9hsZfJwdcAQvtlg0MmTuT1NKxXm06aqN2puYrocPTsPn
+         UsSQ==
+X-Gm-Message-State: ANhLgQ2q9zgvRbFUXrPfNlkOCfCIHc2alV3ocdSH6pQJ+aemNcEz5iAG
+        7c2OXoP2dnsi/ZzZYWBU9lt+qjRWgEKrS9SA97w=
+X-Google-Smtp-Source: ADFU+vvjtuH2GgiZHGdGFZLEpP9ltYzxWBH9++ulCCIuTz1xtjwtmXEQpwGNTPGEc1XYNHIHWCdk5Em7vkw3NQu8ZFM=
+X-Received: by 2002:ac8:6f1b:: with SMTP id g27mr431798qtv.117.1585094109999;
+ Tue, 24 Mar 2020 16:55:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190813204513.4790-1-skunberg.kelsey@gmail.com>
- <20190815153352.86143-2-skunberg.kelsey@gmail.com> <CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com>
- <20200314112022.GA53794@kroah.com> <CAFVqi1T1Fipajca8exrzs6uQAorSZeke80LYy43aCBpT45nFdA@mail.gmail.com>
- <20200324062422.GA1977781@kroah.com>
-In-Reply-To: <20200324062422.GA1977781@kroah.com>
-From:   Kelsey <skunberg.kelsey@gmail.com>
-Date:   Tue, 24 Mar 2020 17:53:59 -0600
-Message-ID: <CAFVqi1Sqnn6L9xLQ0=BZp6D=aYz74tRMP0WYEXXVsz2cYXaoHA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] PCI: sysfs: Define device attributes with DEVICE_ATTR*
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>,
-        Don Dutile <ddutile@redhat.com>, rbilovol@cisco.com
+References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-8-kpsingh@chromium.org>
+In-Reply-To: <20200323164415.12943-8-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 24 Mar 2020 16:54:59 -0700
+Message-ID: <CAEf4BzZCVqpUDqGetxa=Nx1ZC7Q+2yX2D9FMwywWkFDoN8JHDA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 7/7] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 12:24 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> On Tue, Mar 24, 2020 at 12:10:33AM -0600, Kelsey wrote:
-> > On Sat, Mar 14, 2020 at 5:20 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Sat, Mar 14, 2020 at 12:51:47PM +0200, Ruslan Bilovol wrote:
-> > > > On Thu, Aug 15, 2019 at 7:01 PM Kelsey Skunberg
-> > > > <skunberg.kelsey@gmail.com> wrote:
-> > > > >
-> > > > > Defining device attributes should be done through the helper
-> > > > > DEVICE_ATTR_RO(), DEVICE_ATTR_WO(), or similar. Change all instances using
-> > > > > __ATTR* to now use its equivalent DEVICE_ATTR*.
-> > > > >
-> > > > > Example of old:
-> > > > >
-> > > > > static struct device_attribute dev_name_##_attr=__ATTR_RO(_name);
-> > > > >
-> > > > > Example of new:
-> > > > >
-> > > > > static DEVICE_ATTR_RO(_name);
-> > > > >
-> > > > > Signed-off-by: Kelsey Skunberg <skunberg.kelsey@gmail.com>
-> > > > > ---
-> > > > >  drivers/pci/pci-sysfs.c | 59 +++++++++++++++++++----------------------
-> > > > >  1 file changed, 27 insertions(+), 32 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> > > > > index 965c72104150..8af7944fdccb 100644
-> > > > > --- a/drivers/pci/pci-sysfs.c
-> > > > > +++ b/drivers/pci/pci-sysfs.c
-> > > > > @@ -464,9 +464,7 @@ static ssize_t dev_rescan_store(struct device *dev,
-> > > > >         }
-> > > > >         return count;
-> > > > >  }
-> > > > > -static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> > > > > -                                                       (S_IWUSR|S_IWGRP),
-> > > > > -                                                       NULL, dev_rescan_store);
-> > > > > +static DEVICE_ATTR(rescan, (S_IWUSR | S_IWGRP), NULL, dev_rescan_store);
-> > > > >
-> > > > >  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> > > > >                             const char *buf, size_t count)
-> > > > > @@ -480,9 +478,8 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
-> > > > >                 pci_stop_and_remove_bus_device_locked(to_pci_dev(dev));
-> > > > >         return count;
-> > > > >  }
-> > > > > -static struct device_attribute dev_remove_attr = __ATTR_IGNORE_LOCKDEP(remove,
-> > > > > -                                                       (S_IWUSR|S_IWGRP),
-> > > > > -                                                       NULL, remove_store);
-> > > > > +static DEVICE_ATTR_IGNORE_LOCKDEP(remove, (S_IWUSR | S_IWGRP), NULL,
-> > > > > +                                 remove_store);
-> > > > >
-> > > > >  static ssize_t dev_bus_rescan_store(struct device *dev,
-> > > > >                                     struct device_attribute *attr,
-> > > > > @@ -504,7 +501,7 @@ static ssize_t dev_bus_rescan_store(struct device *dev,
-> > > > >         }
-> > > > >         return count;
-> > > > >  }
-> > > > > -static DEVICE_ATTR(rescan, (S_IWUSR|S_IWGRP), NULL, dev_bus_rescan_store);
-> > > > > +static DEVICE_ATTR(bus_rescan, (S_IWUSR | S_IWGRP), NULL, dev_bus_rescan_store);
-> > > >
-> > > > This patch renamed 'rescan' to 'bus_rescan' and broke my userspace application.
-> > > > There is also mismatch now between real functionality and documentation
-> > > > Documentation/ABI/testing/sysfs-bus-pci which still contains old "rescan"
-> > > > descriptions.
-> > > >
-> > > > Another patch from this patch series also renamed 'rescan' to 'dev_rescan'
-> > > >
-> > > > Here is a comparison between two stable kernels (with and without this
-> > > > patch series):
-> > > >
-> > > > v5.4
-> > > > # find /sys -name '*rescan'
-> > > > /sys/devices/pci0000:00/0000:00:01.2/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:01.0/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:04.0/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:00.0/dev_rescan
-> > > > /sys/devices/pci0000:00/pci_bus/0000:00/bus_rescan
-> > > > /sys/devices/pci0000:00/0000:00:01.3/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:03.0/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:01.1/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:02.0/dev_rescan
-> > > > /sys/devices/pci0000:00/0000:00:05.0/dev_rescan
-> > > > /sys/bus/pci/rescan
-> > > >
-> > > > v4.19
-> > > > # find /sys -name '*rescan'
-> > > > /sys/devices/pci0000:00/0000:00:01.2/rescan
-> > > > /sys/devices/pci0000:00/0000:00:01.0/rescan
-> > > > /sys/devices/pci0000:00/0000:00:04.0/rescan
-> > > > /sys/devices/pci0000:00/0000:00:00.0/rescan
-> > > > /sys/devices/pci0000:00/pci_bus/0000:00/rescan
-> > > > /sys/devices/pci0000:00/0000:00:01.3/rescan
-> > > > /sys/devices/pci0000:00/0000:00:03.0/rescan
-> > > > /sys/devices/pci0000:00/0000:00:01.1/rescan
-> > > > /sys/devices/pci0000:00/0000:00:02.0/rescan
-> > > > /sys/devices/pci0000:00/0000:00:05.0/rescan
-> > > > /sys/bus/pci/rescan
-> > > >
-> > > > Do we maintain this kind of API as non-changeable?
-> > >
-> > > Yeah, that's a bug and should be fixed, sorry for missing that on
-> > > review.
-> > >
-> > > Kelsey, can you fix this up?
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > I'd be happy to help get this fixed up.
-> >
-> > Would it be proper to go back to using DEVICE_ATTR() for 'bus_rescan'
-> > and 'dev_rescan' in order to change their names back to 'rescan'?
+> From: KP Singh <kpsingh@google.com>
 >
-> Yes.
+> * Load/attach a BPF program to the file_mprotect (int) and
+>   bprm_committed_creds (void) LSM hooks.
+> * Perform an action that triggers the hook.
+> * Verify if the audit event was received using a shared global
+>   result variable.
 >
-> thanks,
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> ---
+>  tools/testing/selftests/bpf/lsm_helpers.h     |  19 +++
+>  .../selftests/bpf/prog_tests/lsm_test.c       | 112 ++++++++++++++++++
+>  .../selftests/bpf/progs/lsm_int_hook.c        |  54 +++++++++
+>  .../selftests/bpf/progs/lsm_void_hook.c       |  41 +++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/lsm_helpers.h
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/lsm_test.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/lsm_int_hook.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/lsm_void_hook.c
 >
-> greg k-h
+> diff --git a/tools/testing/selftests/bpf/lsm_helpers.h b/tools/testing/selftests/bpf/lsm_helpers.h
+> new file mode 100644
+> index 000000000000..3de230df93db
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/lsm_helpers.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +/*
+> + * Copyright (C) 2020 Google LLC.
+> + */
+> +#ifndef _LSM_HELPERS_H
+> +#define _LSM_HELPERS_H
+> +
+> +struct lsm_prog_result {
+> +       /* This ensures that the LSM Hook only monitors the PID requested
+> +        * by the loader
+> +        */
+> +       __u32 monitored_pid;
+> +       /* The number of calls to the prog for the monitored PID.
+> +        */
+> +       __u32 count;
+> +};
+> +
+
+Having this extra header just for this simple struct... On BPF side
+it's easier and nicer to just use global variables. Can you please
+drop helper and just pass two variables in prog_test part?
+
+> +#endif /* _LSM_HELPERS_H */
+> diff --git a/tools/testing/selftests/bpf/prog_tests/lsm_test.c b/tools/testing/selftests/bpf/prog_tests/lsm_test.c
+> new file mode 100644
+> index 000000000000..5fd6b8f569f7
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/prog_tests/lsm_test.c
+> @@ -0,0 +1,112 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (C) 2020 Google LLC.
+> + */
+> +
+> +#include <test_progs.h>
+> +#include <sys/mman.h>
+> +#include <sys/wait.h>
+> +#include <unistd.h>
+> +#include <malloc.h>
+> +#include <stdlib.h>
+> +
+> +#include "lsm_helpers.h"
+> +#include "lsm_void_hook.skel.h"
+> +#include "lsm_int_hook.skel.h"
+> +
+> +char *LS_ARGS[] = {"true", NULL};
+> +
+> +int heap_mprotect(void)
+> +{
+> +       void *buf;
+> +       long sz;
+> +
+> +       sz = sysconf(_SC_PAGESIZE);
+> +       if (sz < 0)
+> +               return sz;
+> +
+> +       buf = memalign(sz, 2 * sz);
+> +       if (buf == NULL)
+> +               return -ENOMEM;
+> +
+> +       return mprotect(buf, sz, PROT_READ | PROT_EXEC);
+> +}
+> +
+> +int exec_ls(struct lsm_prog_result *result)
+> +{
+> +       int child_pid;
+> +
+> +       child_pid = fork();
+> +       if (child_pid == 0) {
+> +               result->monitored_pid = getpid();
+
+monitored_pid needed here only
+
+> +               execvp(LS_ARGS[0], LS_ARGS);
+> +               return -EINVAL;
+> +       } else if (child_pid > 0)
+> +               return wait(NULL);
+> +
+> +       return -EINVAL;
+> +}
+> +
+> +void test_lsm_void_hook(void)
+> +{
+> +       struct lsm_prog_result *result;
+> +       struct lsm_void_hook *skel = NULL;
+> +       int err, duration = 0;
+> +
+> +       skel = lsm_void_hook__open_and_load();
+> +       if (CHECK(!skel, "skel_load", "lsm_void_hook skeleton failed\n"))
+> +               goto close_prog;
+> +
+> +       err = lsm_void_hook__attach(skel);
+> +       if (CHECK(err, "attach", "lsm_void_hook attach failed: %d\n", err))
+> +               goto close_prog;
+> +
+> +       result = &skel->bss->result;
+
+if you define variables directly, you'll access them easily as
+skel->bss->monitored_pid and skel->bss->count, no problem, right?
+
+> +
+> +       err = exec_ls(result);
+> +       if (CHECK(err < 0, "exec_ls", "err %d errno %d\n", err, errno))
+> +               goto close_prog;
+> +
+> +       if (CHECK(result->count != 1, "count", "count = %d", result->count))
+> +               goto close_prog;
+> +
+> +       CHECK_FAIL(result->count != 1);
+> +
+> +close_prog:
+> +       lsm_void_hook__destroy(skel);
+> +}
+> +
+> +void test_lsm_int_hook(void)
+> +{
+> +       struct lsm_prog_result *result;
+> +       struct lsm_int_hook *skel = NULL;
+> +       int err, duration = 0;
+> +
+> +       skel = lsm_int_hook__open_and_load();
+> +       if (CHECK(!skel, "skel_load", "lsm_int_hook skeleton failed\n"))
+> +               goto close_prog;
+> +
+> +       err = lsm_int_hook__attach(skel);
+> +       if (CHECK(err, "attach", "lsm_int_hook attach failed: %d\n", err))
+> +               goto close_prog;
+> +
+> +       result = &skel->bss->result;
+> +       result->monitored_pid = getpid();
+> +
+> +       err = heap_mprotect();
+> +       if (CHECK(errno != EPERM, "heap_mprotect", "want errno=EPERM, got %d\n",
+> +                 errno))
+> +               goto close_prog;
+> +
+> +       CHECK_FAIL(result->count != 1);
+> +
+> +close_prog:
+> +       lsm_int_hook__destroy(skel);
+> +}
+> +
+> +void test_lsm_test(void)
+> +{
+> +       test_lsm_void_hook();
+> +       test_lsm_int_hook();
+
+These should be subtests (see test__start_subtest() usage). Also, I'm
+not sure why you need two separate BPF programs, why not create one
+and use it for two subtests?
 
 
-Ack. Sent a patch out. Will stay posted in case any updates need to be made.
+> +}
+> diff --git a/tools/testing/selftests/bpf/progs/lsm_int_hook.c b/tools/testing/selftests/bpf/progs/lsm_int_hook.c
+> new file mode 100644
+> index 000000000000..1c5028ddca61
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/lsm_int_hook.c
 
-commit 4cb9e42d3226 ("PCI: sysfs: Change bus_rescan and dev_rescan to rescan")
+consider it a nit because not every test follows this, but using
+progs/test_whatever.c for BPF side and prog_test/whatever.c makes my
+life a bit easier.
 
-Thanks!
 
-- Kelsey
+> @@ -0,0 +1,54 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright 2020 Google LLC.
+> + */
+> +
+> +#include <linux/bpf.h>
+> +#include <stdbool.h>
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include  <errno.h>
+> +#include "lsm_helpers.h"
+> +
+> +char _license[] SEC("license") = "GPL";
+> +
+> +struct lsm_prog_result result = {
+> +       .monitored_pid = 0,
+> +       .count = 0,
+> +};
+> +
+> +/*
+> + * Define some of the structs used in the BPF program.
+> + * Only the field names and their sizes need to be the
+> + * same as the kernel type, the order is irrelevant.
+> + */
+> +struct mm_struct {
+> +       unsigned long start_brk, brk;
+> +} __attribute__((preserve_access_index));
+> +
+> +struct vm_area_struct {
+> +       unsigned long vm_start, vm_end;
+> +       struct mm_struct *vm_mm;
+> +} __attribute__((preserve_access_index));
+
+Why not just using vmlinux.h instead?
+
+> +
+> +SEC("lsm/file_mprotect")
+> +int BPF_PROG(test_int_hook, struct vm_area_struct *vma,
+> +            unsigned long reqprot, unsigned long prot, int ret)
+> +{
+> +       if (ret != 0)
+> +               return ret;
+> +
+> +       __u32 pid = bpf_get_current_pid_tgid();
+> +       int is_heap = 0;
+> +
+> +       is_heap = (vma->vm_start >= vma->vm_mm->start_brk &&
+> +                  vma->vm_end <= vma->vm_mm->brk);
+> +
+> +       if (is_heap && result.monitored_pid == pid) {
+> +               result.count++;
+> +               ret = -EPERM;
+> +       }
+> +
+> +       return ret;
+> +}
+> diff --git a/tools/testing/selftests/bpf/progs/lsm_void_hook.c b/tools/testing/selftests/bpf/progs/lsm_void_hook.c
+> new file mode 100644
+> index 000000000000..4d01a8536413
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/lsm_void_hook.c
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/*
+> + * Copyright (C) 2020 Google LLC.
+> + */
+> +
+> +#include <linux/bpf.h>
+> +#include <stdbool.h>
+> +#include <bpf/bpf_helpers.h>
+> +#include <bpf/bpf_tracing.h>
+> +#include  <errno.h>
+> +#include "lsm_helpers.h"
+> +
+> +char _license[] SEC("license") = "GPL";
+> +
+> +struct lsm_prog_result result = {
+> +       .monitored_pid = 0,
+> +       .count = 0,
+> +};
+> +
+> +/*
+> + * Define some of the structs used in the BPF program.
+> + * Only the field names and their sizes need to be the
+> + * same as the kernel type, the order is irrelevant.
+> + */
+> +struct linux_binprm {
+> +       const char *filename;
+> +} __attribute__((preserve_access_index));
+> +
+> +SEC("lsm/bprm_committed_creds")
+> +int BPF_PROG(test_void_hook, struct linux_binprm *bprm)
+> +{
+> +       __u32 pid = bpf_get_current_pid_tgid();
+> +       char fmt[] = "lsm(bprm_committed_creds): process executed %s\n";
+
+Try static char fmt[] = "..." instead and then compare BPF assembly
+before and after, you'll be amazed ;)
+
+> +
+> +       bpf_trace_printk(fmt, sizeof(fmt), bprm->filename);
+
+is this part of test?
+
+> +       if (result.monitored_pid == pid)
+> +               result.count++;
+> +
+> +       return 0;
+> +}
+> --
+> 2.20.1
+>
