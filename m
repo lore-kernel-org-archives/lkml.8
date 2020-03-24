@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862C0C54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EE6C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601E4206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1919620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056319;
-	bh=kD5OmQO4pEKHygBevvv6JpUwmgqLQSgBx1YueWzSU08=;
+	s=default; t=1585056323;
+	bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pLY8m3cBJJbc+RFs8Zii3caP5iahN+iLMf6ejLN2T1xcKr2CyRieyzNQi6/RXSHgm
-	 iMSU/yX0Rj/fvKUzAoS3QYnL+6NGW6YQc0/TzV1zYefZvJQ//w3KGd6hhTSDWvrR/0
-	 4XymL5bqQFREEp7jmrTtx/epbDmoyp4KiI3qFhGA=
+	b=bjKVBbLbKer02Sp7cbqEl5vlcVChMEmnZV96HwAXS/nJiMHCPGyBiD11dWc238Eye
+	 72wj6ZPQ1zjB9OwMZc7pwmhU/1OMkK2JVcI+S2SEr3KLxEF6eV6aK5Vv7C/wWbZhiK
+	 OiqcsRaqpYQWmMTDcKQ9zprd5eXrO2gAFaCfQdPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729542AbgCXNZR (ORCPT
+        id S1729606AbgCXNZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:25:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49408 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbgCXNZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:25:16 -0400
+        id S1729373AbgCXNZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:25:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CCD8208E0;
-        Tue, 24 Mar 2020 13:25:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48C8820870;
+        Tue, 24 Mar 2020 13:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056316;
-        bh=kD5OmQO4pEKHygBevvv6JpUwmgqLQSgBx1YueWzSU08=;
+        s=default; t=1585056318;
+        bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VGtfjwDVVWnkde/HMte2BtukMNhEeudULTbaJ6IgczJgap019D40wXKKJ2pzSeO01
-         FTFjZadJdcgP8rm73FDzTTEYWUhozOrG+MY2q0tHV1zzSuOAJpaIzlW9PJgUGGDhfL
-         zJZKLJA8ELpcobh6z940RCi4i0PW/8QVTKvngBy4=
+        b=UxJyZCJytWGSqOiAOO4LkRjz6XuiCXLMGWu+XGQJDe9zu6UFSzQs/rYldrPSRbS6m
+         Ivgd2wjoL3atgMY1rXvvo1ZnP/qS7sGP7ywkbmrzwtmcjeKxV7N5WVRSd9oULMZC2Y
+         loVuYMqBWWzrzB9YAdltkoW1GduGx8MyZsjT9CKM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.5 081/119] intel_th: msu: Fix the unexpected state warning
-Date:   Tue, 24 Mar 2020 14:11:06 +0100
-Message-Id: <20200324130816.400154310@linuxfoundation.org>
+        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 090/119] drm/lease: fix WARNING in idr_destroy
+Date:   Tue, 24 Mar 2020 14:11:15 +0100
+Message-Id: <20200324130817.204608490@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,46 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-commit 885f123554bbdc1807ca25a374be6e9b3bddf4de upstream.
+commit b216a8e7908cd750550c0480cf7d2b3a37f06954 upstream.
 
-The unexpected state warning should only warn on illegal state
-transitions. Fix that.
+drm_lease_create takes ownership of leases. And leases will be released
+by drm_master_put.
 
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Fixes: 615c164da0eb4 ("intel_th: msu: Introduce buffer interface")
-Cc: stable@vger.kernel.org # v5.4+
-Link: https://lore.kernel.org/r/20200317062215.15598-5-alexander.shishkin@linux.intel.com
+drm_master_put
+    ->drm_master_destroy
+            ->idr_destroy
+
+So we needn't call idr_destroy again.
+
+Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwtracing/intel_th/msu.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_lease.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/hwtracing/intel_th/msu.c
-+++ b/drivers/hwtracing/intel_th/msu.c
-@@ -718,9 +718,6 @@ static int msc_win_set_lockout(struct ms
- 
- 	if (old != expect) {
- 		ret = -EINVAL;
--		dev_warn_ratelimited(msc_dev(win->msc),
--				     "expected lockout state %d, got %d\n",
--				     expect, old);
- 		goto unlock;
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct d
  	}
  
-@@ -741,6 +738,10 @@ unlock:
- 		/* from intel_th_msc_window_unlock(), don't warn if not locked */
- 		if (expect == WIN_LOCKED && old == new)
- 			return 0;
-+
-+		dev_warn_ratelimited(msc_dev(win->msc),
-+				     "expected lockout state %d, got %d\n",
-+				     expect, old);
+ 	DRM_DEBUG_LEASE("Creating lease\n");
++	/* lessee will take the ownership of leases */
+ 	lessee = drm_lease_create(lessor, &leases);
+ 
+ 	if (IS_ERR(lessee)) {
+ 		ret = PTR_ERR(lessee);
++		idr_destroy(&leases);
+ 		goto out_leases;
  	}
  
+@@ -580,7 +582,6 @@ out_lessee:
+ 
+ out_leases:
+ 	put_unused_fd(fd);
+-	idr_destroy(&leases);
+ 
+ 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
  	return ret;
 
 
