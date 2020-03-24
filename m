@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCE87C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4584C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE05020658
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A528F20842
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgCXJTb (ORCPT
+        id S1727800AbgCXJTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:19:31 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43959 "EHLO
+        Tue, 24 Mar 2020 05:19:37 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43949 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727535AbgCXJQq (ORCPT
+        with ESMTP id S1727525AbgCXJQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:16:46 -0400
+        Tue, 24 Mar 2020 05:16:45 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGffx-00082l-1B; Tue, 24 Mar 2020 10:16:45 +0100
+        id 1jGffs-0007zG-FG; Tue, 24 Mar 2020 10:16:40 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 18F881C04D0;
-        Tue, 24 Mar 2020 10:16:39 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:16:38 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6208C1C0475;
+        Tue, 24 Mar 2020 10:16:34 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:16:34 -0000
 From:   "tip-bot2 for Paul E. McKenney" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/rcu] srcu: Fix __call_srcu()/srcu_get_delay() datarace
+Subject: [tip: core/rcu] rcutorture: Summarize summary of build and run results
 Cc:     "Paul E. McKenney" <paulmck@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504139878.28353.2467527074990549522.tip-bot2@tip-bot2>
+Message-ID: <158504139404.28353.3714499963063430190.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -53,55 +53,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/rcu branch of tip:
 
-Commit-ID:     8c9e0cb32315835825ea1ad725a858a2d2ce4a8e
-Gitweb:        https://git.kernel.org/tip/8c9e0cb32315835825ea1ad725a858a2d2ce4a8e
+Commit-ID:     c0b94ffb66845d13f9ec537a28bd1466b4de2e14
+Gitweb:        https://git.kernel.org/tip/c0b94ffb66845d13f9ec537a28bd1466b4de2e14
 Author:        Paul E. McKenney <paulmck@kernel.org>
-AuthorDate:    Sun, 22 Dec 2019 19:36:33 -08:00
+AuthorDate:    Mon, 16 Dec 2019 12:04:33 -08:00
 Committer:     Paul E. McKenney <paulmck@kernel.org>
-CommitterDate: Thu, 20 Feb 2020 16:01:11 -08:00
+CommitterDate: Thu, 20 Feb 2020 16:03:30 -08:00
 
-srcu: Fix __call_srcu()/srcu_get_delay() datarace
+rcutorture: Summarize summary of build and run results
 
-The srcu_struct structure's ->srcu_gp_seq_needed_exp field is accessed
-locklessly, so updates must use WRITE_ONCE().  This commit therefore
-adds the needed WRITE_ONCE() invocations.
+When running the default list of tests, the run summary of a successful
+(that is, failed to find any errors) run fits easily on a 24-line screen.
+But a run with something like "--configs '5*CFLIST'" will be 80 lines long,
+and it is all too easy to miss a failure message when scrolling back.
+This commit therefore prints out the number of runs with failing builds
+or runtime failures, but only if there are any such failures.
 
-This data race was reported by KCSAN.  Not appropriate for backporting
-due to failure being unlikely.
+For example, a run with a single build error and a single runtime error
+would print two lines like this:
+
+1 runs with build errors.
+1 runs with runtime errors.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/srcutree.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/testing/selftests/rcutorture/bin/kvm-recheck.sh | 17 +++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
-index b1edac9..79848f7 100644
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -534,7 +534,7 @@ static void srcu_gp_end(struct srcu_struct *ssp)
- 	rcu_seq_end(&ssp->srcu_gp_seq);
- 	gpseq = rcu_seq_current(&ssp->srcu_gp_seq);
- 	if (ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, gpseq))
--		ssp->srcu_gp_seq_needed_exp = gpseq;
-+		WRITE_ONCE(ssp->srcu_gp_seq_needed_exp, gpseq);
- 	spin_unlock_irq_rcu_node(ssp);
- 	mutex_unlock(&ssp->srcu_gp_mutex);
- 	/* A new grace period can start at this point.  But only one. */
-@@ -614,7 +614,7 @@ static void srcu_funnel_exp_start(struct srcu_struct *ssp, struct srcu_node *snp
- 	}
- 	spin_lock_irqsave_rcu_node(ssp, flags);
- 	if (ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, s))
--		ssp->srcu_gp_seq_needed_exp = s;
-+		WRITE_ONCE(ssp->srcu_gp_seq_needed_exp, s);
- 	spin_unlock_irqrestore_rcu_node(ssp, flags);
- }
+diff --git a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+index e5edd51..0326f4a 100755
+--- a/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
++++ b/tools/testing/selftests/rcutorture/bin/kvm-recheck.sh
+@@ -13,6 +13,9 @@
+ #
+ # Authors: Paul E. McKenney <paulmck@linux.ibm.com>
  
-@@ -674,7 +674,7 @@ static void srcu_funnel_gp_start(struct srcu_struct *ssp, struct srcu_data *sdp,
- 		smp_store_release(&ssp->srcu_gp_seq_needed, s); /*^^^*/
- 	}
- 	if (!do_norm && ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, s))
--		ssp->srcu_gp_seq_needed_exp = s;
-+		WRITE_ONCE(ssp->srcu_gp_seq_needed_exp, s);
- 
- 	/* If grace period not already done and none in progress, start it. */
- 	if (!rcu_seq_done(&ssp->srcu_gp_seq, s) &&
++T=/tmp/kvm-recheck.sh.$$
++trap 'rm -f $T' 0 2
++
+ PATH=`pwd`/tools/testing/selftests/rcutorture/bin:$PATH; export PATH
+ . functions.sh
+ for rd in "$@"
+@@ -68,4 +71,16 @@ do
+ 		fi
+ 	done
+ done
+-EDITOR=echo kvm-find-errors.sh "${@: -1}" > /dev/null 2>&1
++EDITOR=echo kvm-find-errors.sh "${@: -1}" > $T 2>&1
++ret=$?
++builderrors="`tr ' ' '\012' < $T | grep -c '/Make.out.diags'`"
++if test "$builderrors" -gt 0
++then
++	echo $builderrors runs with build errors.
++fi
++runerrors="`tr ' ' '\012' < $T | grep -c '/console.log.diags'`"
++if test "$runerrors" -gt 0
++then
++	echo $runerrors runs with runtime errors.
++fi
++exit $ret
