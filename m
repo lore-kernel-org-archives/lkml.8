@@ -2,74 +2,85 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191C5C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:12:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D12AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00F520658
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0F12074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585015937;
-	bh=vIX3tHFAx/hb9jO3Yfjn2tf5HJ8jGnDTBy6+RNXlgps=;
+	s=default; t=1585016671;
+	bh=DAaK2CbfWck+/J2Me5QXKEU6aJw7PhWMHcWs2jUL4TQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=1YKFE927wfVqmWR3SNfegbnvkbEXeF7LuPkdrBle33DZmMxkEr+tjg5PkN/rBkr1B
-	 oGElr3IhdXPE26yaE44NXFJu/sapUHP4mBedLL3/AiSb3GdaXCTcUa7lLFCTUREoOy
-	 kTnWV3ailR1QaWzHfHCE3lA2sSRF7gYeT1qvRh6M=
+	b=xknoR0Eu8ipZQcu8j6xxHBIZhvRwY5vsYpLr70g51yaYYFWoK9T+bI2mbQNmZSKwh
+	 n3QPaKDBw43SrEuX1QuaVEpn+Ys9Pw11NoB+JiegNmSzO7Cd1OWOkyUZx8QcOLeSs1
+	 vR0LS3YyA8aBt8n50KnQCa8joPQzPDBvMYUP9bPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgCXCMQ (ORCPT
+        id S1727149AbgCXCY3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59140 "EHLO mail.kernel.org"
+        Mon, 23 Mar 2020 22:24:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgCXCMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:12:16 -0400
+        id S1727047AbgCXCY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:24:28 -0400
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A2C22051A;
-        Tue, 24 Mar 2020 02:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 057B92073E;
+        Tue, 24 Mar 2020 02:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585015935;
-        bh=vIX3tHFAx/hb9jO3Yfjn2tf5HJ8jGnDTBy6+RNXlgps=;
+        s=default; t=1585016668;
+        bh=DAaK2CbfWck+/J2Me5QXKEU6aJw7PhWMHcWs2jUL4TQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SPyIEi4vkVu4m1Vha3wtARhomeuEyxJozvXFV2ca6mYGGi9SlR9F0K283pmtsJZP2
-         /71LVu/LuMBHCodny2FlhGyRto/IB8rg+hSOQC2pYy7diC4Zt3vFHxN4jSyjytP5FT
-         SYkzNY8/6QDvCgGuphxjFySH/00evY6w/P8ZVQ4Y=
-Date:   Mon, 23 Mar 2020 19:12:14 -0700
+        b=AftW/VPtFgDbbyF9CKB1G09fKVvYmMq7RBK2tRVCT3sHD652GBmyno3XpVBwhJ7Jm
+         +On3J62V2oI4oMWCHIeSXkESXq9sKYBdjYhdVxbMoBZ5njp6JkdbqBWPD6Kwu4J5ER
+         IFWItX8FhNOJWb2KdjrO8xjQ3ky7SnHMKeMr2HE0=
+Date:   Mon, 23 Mar 2020 19:24:27 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     ebiederm@xmission.com (Eric W. Biederman)
-Cc:     Oleg Nesterov <oleg@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ipc/mqueue.c: change __do_notify() to bypass
- check_kill_permission()
-Message-Id: <20200323191214.81a60c4ae1a59fdbd5c5d46d@linux-foundation.org>
-In-Reply-To: <87imivc92n.fsf@x220.int.ebiederm.org>
-References: <20200322110901.GA25108@redhat.com>
-        <87lfnsh3tm.fsf@x220.int.ebiederm.org>
-        <20200322202929.GA1614@redhat.com>
-        <87imivc92n.fsf@x220.int.ebiederm.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Hemant Kumar <hemantk@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH -next/-mmotm] bus/mhi: fix printk format for size_t
+Message-Id: <20200323192427.5903a6224ec85a07bd976c13@linux-foundation.org>
+In-Reply-To: <20200322044952.GA17141@Mani-XPS-13-9360>
+References: <c4852a82-cdb9-6318-70a4-96ccb4ba5af2@infradead.org>
+        <20200322044952.GA17141@Mani-XPS-13-9360>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 23 Mar 2020 11:47:12 -0500 ebiederm@xmission.com (Eric W. Biederman) wrote:
+On Sun, 22 Mar 2020 10:19:52 +0530 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org> wrote:
 
-> I really just want to be certain that things are fixed well enough that
-> we don't risk a regressing again the next time someone touches the code.
+> On Sat, Mar 21, 2020 at 09:17:52PM -0700, Randy Dunlap wrote:
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> > 
+> > Fix printk format warning by using %z for size_t modifier:
+> > 
+> > ../drivers/bus/mhi/core/boot.c: In function ‘mhi_rddm_prepare’:
+> > ../drivers/bus/mhi/core/boot.c:55:15: warning: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 5 has type ‘size_t {aka unsigned int}’ [-Wformat=]
+> >   dev_dbg(dev, "Address: %p and len: 0x%lx sequence: %u\n",
+> > 
+> > 
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-That would be nice ;)
+Thanks.  I guess we should tell Greg, who presently holds the offending
+patch.  I shall add 
 
-But as Oleg indicated, please let's have something minimal for -stable
-backporting friendliness.  A more comprehensive change can then be
-merged following the regular processes.
+Fixes: 6fdfdd27328ce ("bus: mhi: core: Add support for downloading RDDM image du
+ring panic")
+
+and send it over.
