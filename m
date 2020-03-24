@@ -2,82 +2,93 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245B9C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79399C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0E552073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:02:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DVQr77xZ"
+	by mail.kernel.org (Postfix) with ESMTP id 541E52073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgCXQCX (ORCPT
+        id S1727916AbgCXQDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:02:23 -0400
-Received: from mail-qv1-f74.google.com ([209.85.219.74]:45942 "EHLO
-        mail-qv1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727164AbgCXQCW (ORCPT
+        Tue, 24 Mar 2020 12:03:32 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51522 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727443AbgCXQDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:02:22 -0400
-Received: by mail-qv1-f74.google.com with SMTP id d7so16114902qvq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
-        bh=0x/hnTcc2kjPvpKyUGqSSPPjkXWDC7wDxqwKdBvhNVI=;
-        b=DVQr77xZHndYQNTyk9eR1wUxut89ZPRTqVR/uvTz+HhIZCxy2cl1QRd3lxFpcc9t4N
-         XEOKB0oxsLBC5WWTCPJrmChFYD/L12HY4ihcpc3GM0u0VIlQirixO0xoLNJbiA20DYEN
-         nWOy6ozI+fywZNiwjeAhhiKfuB1dJFarDFA9/QsOxK3IBkce6IX+W1XFANV4XQggvYCD
-         mQPL+8FB4o1iMFLsHfeP9oUuPf9qLLy3YltBPowYTxO7KylXg+5jTaYq3aexZ4VKpVD9
-         ur5mMc6Zn7RTVsCizZcVl7T8RoUK/Duh8Y2AvZZVUsYF/vGQlSqZEXXFNshEzsxyPikR
-         lCpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:cc;
-        bh=0x/hnTcc2kjPvpKyUGqSSPPjkXWDC7wDxqwKdBvhNVI=;
-        b=h0zWs4g8MucHUscEdQIpRSI4KtHd1LqpK7XkSDwJGLv0fwjjJK8khhGDaw0ihFRF+u
-         2plY3qsfM7V00xp02om7Ae7PV/inOibJkLxigm/xiAtg7T2asJ/bQRZnUwwZ/dcRdR+i
-         q9AR8MutwsYSGo7C5aTWzvgR8XH/Mn6fxGmUuuvdydR61j+vpuDs4xRFnXwBmjnQHvao
-         yUoT3MI9X3m0S04wayx+GjWOhDyUL5wTro8k77pic/apFHXd3qXZdBfJEBhdex34g9l5
-         AvO0YLrSBnEzBgFaIb7Vvvf/XxdK252BoqmeI3CfI4GC9Wypuh9CkQACcKdV3UT0tuzq
-         PCeg==
-X-Gm-Message-State: ANhLgQ3iCkxitYgx4IzDo+xXuFasjmG5SHAJDuJaJfmBPwOBKLcRxPDR
-        3flLdbyckGWTB9G2JSJns5VhZ5fBGXrd
-X-Google-Smtp-Source: ADFU+vt4nUw+kxEpkgVNrjtxIzP/E5x6J5Fp51tqyY49tAR6Jz1SAq64BXWbIZPWzdOz/ANvIwAu0IDIwkvC
-X-Received: by 2002:ac8:39a1:: with SMTP id v30mr27685736qte.112.1585065741247;
- Tue, 24 Mar 2020 09:02:21 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 17:02:02 +0100
-In-Reply-To: <20200323114207.222412-1-courbet@google.com>
-Message-Id: <20200324160203.99593-1-courbet@google.com>
-Mime-Version: 1.0
-References: <20200323114207.222412-1-courbet@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH]     x86: Alias memset to __builtin_memset.
-From:   Clement Courbet <courbet@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Clement Courbet <courbet@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 24 Mar 2020 12:03:31 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: aratiu)
+        with ESMTPSA id 8E96828C5A3
+From:   Adrian Ratiu <adrian.ratiu@collabora.com>
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>, kernel@collabora.com,
+        kernel@pengutronix.de
+Subject: [PATCH v2] media: coda: jpeg: support optimized huffman tables
+Date:   Tue, 24 Mar 2020 18:04:29 +0200
+Message-Id: <20200324160429.2626-1-adrian.ratiu@collabora.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This shows the kernel getting smaller not larger.
-> Is this still reversed or is this correct?
+Each jpeg can have the huffman tables optimized for its specific content
+meaning that the table lenghts and values don't match the standard table
+of substitutions so there's no reason to hardcode and expect the standard
+lengths, otherwise we just end up rejecting optimized jpegs altogether.
 
-Yes, sorry. This was wrong. The kernel actully shrinks. Fixed.
+Tested on CODA960.
 
+Signed-off-by: Adrian Ratiu <adrian.ratiu@collabora.com>
+---
+Changes since v1:
+  - Added test for DC tables upper boundary (Philipp)
+---
+ drivers/media/platform/coda/coda-jpeg.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/platform/coda/coda-jpeg.c b/drivers/media/platform/coda/coda-jpeg.c
+index 6a11b64efb6b..60d6e1073334 100644
+--- a/drivers/media/platform/coda/coda-jpeg.c
++++ b/drivers/media/platform/coda/coda-jpeg.c
+@@ -343,7 +343,10 @@ int coda_jpeg_decode_header(struct coda_ctx *ctx, struct vb2_buffer *vb)
+ 			v4l2_err(&dev->v4l2_dev, "missing Huffman table\n");
+ 			return -EINVAL;
+ 		}
+-		if (huffman_tables[i].length != ((i & 2) ? 178 : 28)) {
++		/* AC tables should be between 17 -> 178, DC between 17 -> 28 */
++		if (huffman_tables[i].length < 17 ||
++		    huffman_tables[i].length > 178 ||
++		    ((i & 2) == 0 && huffman_tables[i].length > 28)) {
+ 			v4l2_err(&dev->v4l2_dev,
+ 				 "invalid Huffman table %d length: %zu\n",
+ 				 i, huffman_tables[i].length);
+@@ -357,10 +360,12 @@ int coda_jpeg_decode_header(struct coda_ctx *ctx, struct vb2_buffer *vb)
+ 			return -ENOMEM;
+ 		ctx->params.jpeg_huff_tab = huff_tab;
+ 	}
+-	memcpy(huff_tab->luma_dc, huffman_tables[0].start, 16 + 12);
+-	memcpy(huff_tab->chroma_dc, huffman_tables[1].start, 16 + 12);
+-	memcpy(huff_tab->luma_ac, huffman_tables[2].start, 16 + 162);
+-	memcpy(huff_tab->chroma_ac, huffman_tables[3].start, 16 + 162);
++
++	memset(huff_tab, 0, sizeof(*huff_tab));
++	memcpy(huff_tab->luma_dc, huffman_tables[0].start, huffman_tables[0].length);
++	memcpy(huff_tab->chroma_dc, huffman_tables[1].start, huffman_tables[1].length);
++	memcpy(huff_tab->luma_ac, huffman_tables[2].start, huffman_tables[2].length);
++	memcpy(huff_tab->chroma_ac, huffman_tables[3].start, huffman_tables[3].length);
+ 
+ 	/* check scan header */
+ 	for (i = 0; i < scan_header.num_components; i++) {
+-- 
+2.26.0
 
