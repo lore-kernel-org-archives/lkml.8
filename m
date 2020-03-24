@@ -2,108 +2,106 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67DFC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE79CC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3C812078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:11:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="knb2OU/H"
+	by mail.kernel.org (Postfix) with ESMTP id 845322078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 22:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585088101;
+	bh=f77uglcSmAxsgAfAwfMJhkegOVaodxUDDK7fzLLCf3U=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=xdIj5teN9PIZp5shyRQ22L8ObhH91x34d9YLhnnUF+L5nfDjYXIovBxLryo9OOTdb
+	 EznMHyeNU7VQl2oZE2dKQ8biFz7uHIy1HQme3a7jXbAKiVCt2PVZHVxE3iy3++5kJV
+	 zota4Tuc3/82nsImas4umf3yjiaRKnVRC+mtjqjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgCXWLP (ORCPT
+        id S1728277AbgCXWPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 18:11:15 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37142 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727496AbgCXWLP (ORCPT
+        Tue, 24 Mar 2020 18:15:00 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44591 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727664AbgCXWO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 18:11:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fg7lcfYPp/xvJSNTrWbhmzwZRat2kWak0mQQUbMiiP0=; b=knb2OU/H9TS/LRJlLmdm6jeiD9
-        TgHfl6SsT3OOUpR6O7E2Ey/ZxxFi/x7ZpSvJ7yogSXlO7HXZwYDeg8H1r9KCDyPw8TZPoHtiYf2B/
-        zneAl4qNdg2LYeZqC9DJWMzDqD9fTCW9G/uktf/hOshLKjmuos+4UFaDEEMKkvCz9/4RapOyFqQHq
-        YanhGtQlzz2D9wJhIiRrAIcvhfKwPFFSJbUJaTxhGfqJr3vEdXqTNx1zhZsiRBMZk1siFNnbDBUEG
-        hFt+QdTW8ucpF6q3Wjh+B6xzifICa6TdjGRszV0U8N79lkBf+8fXoOTqwmNF4o+KM8Vdv7p9UngSF
-        3UM75bMQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGrlP-0006Oc-BW; Tue, 24 Mar 2020 22:11:11 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9FCCA983502; Tue, 24 Mar 2020 23:11:09 +0100 (CET)
-Date:   Tue, 24 Mar 2020 23:11:09 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v3 18/26] objtool: Fix !CFI insn_state propagation
-Message-ID: <20200324221109.GU2452@worktop.programming.kicks-ass.net>
-References: <20200324153113.098167666@infradead.org>
- <20200324160924.987489248@infradead.org>
- <20200324214006.tlanaff5q6gkgk2a@treble>
+        Tue, 24 Mar 2020 18:14:59 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j188so115131lfj.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:14:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lj+oeqAAr2QWrfodkjia2HsTEsCYoinzCXF/BidYSkw=;
+        b=WDwBRAbEdx1evVQLfeRDVb4gQqRZeJPOFJ7INZV48Gor82hEQSQrzV5JAlG9dfeoH7
+         UDlHtDEnZWx5N1TsSoX/y3BerIpUKI2lMnhnSakfkBzvU3z4RGxqVYchxQA2PMjkMPGE
+         +RXVLvtFm4wKVJ+4tGwthSHjOm1BXTFch6qZY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lj+oeqAAr2QWrfodkjia2HsTEsCYoinzCXF/BidYSkw=;
+        b=P3lJzOiUWZSGusK9KKat0qsqCTKHgL3RM9pC+sqMql3NgVL9yiTWmwNMz9P6c5fxDQ
+         NWiFlbzsWPZaIi4V7bMwyIQIb38EpxCbhAgbb7D2/zDRfsBs9FK+Ds1tRFWOsmjq0Xnx
+         K6O/zyUtvXZj1Ud+MO3KXMprDAWg3BzGASwk5mQ4WAMpz/oszuR5otQZM9TiktR8/rJ+
+         3qNNXfb1wDq3SoIjpElLtRp86GO+2f/XKI0QmZ83PCkhFPhePsiFnej+uFjYTw2MYi5+
+         aEOhoHU7nzJ+TPn3Mxnw9eGbZYYoPC3j8e0WSOThbCunaVIgIX3E0HIYj5vPh4YeFbfB
+         SnSg==
+X-Gm-Message-State: ANhLgQ1P+jSYZvGCheY5NjARHMLHeSXKogVqmfxCQTKC7Wbxxm532tpy
+        N1O1sLRKTWxTLrcS/zdT6JDBZk/7u0o=
+X-Google-Smtp-Source: ADFU+vs/mc5Dq6dQ3Yj9ZRJ2521VP6pirOJJjKDLurOhvwUuTYjCWd6CoZDAf+OIaM9Z0R2lP23wHQ==
+X-Received: by 2002:ac2:41c2:: with SMTP id d2mr151854lfi.164.1585088096036;
+        Tue, 24 Mar 2020 15:14:56 -0700 (PDT)
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
+        by smtp.gmail.com with ESMTPSA id t22sm210810lfl.22.2020.03.24.15.14.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 15:14:54 -0700 (PDT)
+Received: by mail-lf1-f53.google.com with SMTP id q5so109953lfb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 15:14:54 -0700 (PDT)
+X-Received: by 2002:a05:6512:10cf:: with SMTP id k15mr160890lfg.142.1585088094224;
+ Tue, 24 Mar 2020 15:14:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324214006.tlanaff5q6gkgk2a@treble>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200115122458.GB20975@zn.tnic> <20200316160259.GN26126@zn.tnic>
+ <20200323204454.GA2611336@zx2c4.com> <202003231350.7D35351@keescook>
+ <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+ <20200324091437.GB22931@zn.tnic> <CAHmME9q2VuhN+Dhi-nzuJKPjXo8dZq013cZ-0x0t9StZFXCAJQ@mail.gmail.com>
+ <20200324162843.GE22931@zn.tnic> <CAHk-=whXBO-Z=Ra_UX=w_LefG1r6iLXcPT=sLuZ+EaKFtWtCBQ@mail.gmail.com>
+ <20200324164812.GG22931@zn.tnic> <20200324214204.GB3220053@rani.riverdale.lan>
+In-Reply-To: <20200324214204.GB3220053@rani.riverdale.lan>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 24 Mar 2020 15:14:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiFfi8J+vMccQ5VYZMecxyAeA9Cpt-Kui-GHZBbB29OhA@mail.gmail.com>
+Message-ID: <CAHk-=wiFfi8J+vMccQ5VYZMecxyAeA9Cpt-Kui-GHZBbB29OhA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 04:40:06PM -0500, Josh Poimboeuf wrote:
-> On Tue, Mar 24, 2020 at 04:31:31PM +0100, Peter Zijlstra wrote:
+On Tue, Mar 24, 2020 at 2:42 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> This is just a documentation patch right?
 
-> > +		if (!save_insn->visited) {
-> > +			/*
-> > +			 * Oops, no state to copy yet.
-> > +			 * Hopefully we can reach this
-> > +			 * instruction from another branch
-> > +			 * after the save insn has been
-> > +			 * visited.
-> > +			 */
-> > +			if (insn == first)
-> > +				return 0; // XXX
-> 
-> Yeah, moving this code out to apply_insn_hint() seems like a nice idea,
-> but it wouldn't be worth it if it breaks this case.  TBH I don't
-> remember if this check was for a real-world case.  Might be worth
-> looking at...  If this case doesn't exist in reality then we could just
-> remove this check altogether.
+That patch, yes.
 
-I'll go run a bunch of builds with a print on it, that should tell us I
-suppose.
+However, there's a second patch that knows that if we have binutils >=
+2.22, then we don't need to check for AVX2 or ADX support, because we
+know it's there.
 
-> > +
-> > +			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
-> > +					sec, insn->offset);
-> > +			return 1;
-> > +		}
-> > +
-> > +		insn->state = save_insn->state;
-> > +	}
-> > +
-> > +	*state = insn->state;
-> 
-> This would have been easier to review if apply_insn_hint() were added in
-> a separate patch.
-
-27 it will be!
-
-> > +
-> > +	/* restore !CFI state */
-> > +	state->df = old.df;
-> > +	state->uaccess = old.uaccess;
-> > +	state->uaccess_stack = old.uaccess_stack;
-> 
-> Maybe we should just move the CFI stuff into a state->cfi substruct.
-> That would remove the need for these bits and probably also the comment
-> above the insn_state declaration.
-
-Indeed!
+           Linus
