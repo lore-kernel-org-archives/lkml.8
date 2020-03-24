@@ -2,182 +2,195 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A78B1C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6923C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DDC208CA
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056329;
-	bh=lPRPvF+CHwPKMMpFvGm5kduXzPnV9+XMgO6mDjxy17I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cD1W883QsA8xSre7n/dOLZXNPTNSiq6GiL3PE5/Mg/LShalUPkmXFtrmhvd4XFo2c
-	 PDK5oCzfIMAE8bN12bm2YbKaB5nL+Tlz60ynyJVEMKUPNUgv7z+qX+PGE+Xd3DHoNc
-	 ANL+KZEwULlK2vF6v8Ny6/nFqj8EiZ1xEMb/BzpM=
+	by mail.kernel.org (Postfix) with ESMTP id C6AAC20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729191AbgCXNZ2 (ORCPT
+        id S1729367AbgCXNZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:25:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729688AbgCXNZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:25:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AA3D20870;
-        Tue, 24 Mar 2020 13:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056325;
-        bh=lPRPvF+CHwPKMMpFvGm5kduXzPnV9+XMgO6mDjxy17I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cvl7YWSfu8cx4jR2nmdGxuMa71intfh6IlNM55xJUYxyP4olVgBNmnv1Mn3UYrFLP
-         IZvZcIIul5G8Y9OeQPqKQ5+uoGgq5yJuQLU3va8j5twHeMUKfmnfMTd8bjP+vpyjZw
-         rMBKOBRa3TfujyCWH+dkGLSFvfHYRfkadpknS9IE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chunguang Xu <brookxu@tencent.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 092/119] memcg: fix NULL pointer dereference in __mem_cgroup_usage_unregister_event
-Date:   Tue, 24 Mar 2020 14:11:17 +0100
-Message-Id: <20200324130817.371953258@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
-References: <20200324130808.041360967@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 24 Mar 2020 09:25:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728543AbgCXNZM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:25:12 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 1DA525CE02A283122618;
+        Tue, 24 Mar 2020 21:24:41 +0800 (CST)
+Received: from huawei.com (10.175.124.28) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 21:24:32 +0800
+From:   yu kuai <yukuai3@huawei.com>
+To:     <axboe@kernel.dk>, <ming.lei@redhat.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yukuai3@huawei.com>, <yi.zhang@huawei.com>, <houtao1@huawei.com>
+Subject: [PATCH V3] block: rename 'q->debugfs_dir' and 'q->blk_trace->dir' in blk_unregister_queue()
+Date:   Tue, 24 Mar 2020 21:23:15 +0800
+Message-ID: <20200324132315.22133-1-yukuai3@huawei.com>
+X-Mailer: git-send-email 2.17.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.175.124.28]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunguang Xu <brookxu@tencent.com>
+syzbot is reporting use after free bug in debugfs_remove[1].
 
-commit 7d36665a5886c27ca4c4d0afd3ecc50b400f3587 upstream.
+This is because in request_queue, 'q->debugfs_dir' and
+'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
+blk_mq_debugfs_unregister() will remove everything inside the dir.
 
-An eventfd monitors multiple memory thresholds of the cgroup, closes them,
-the kernel deletes all events related to this eventfd.  Before all events
-are deleted, another eventfd monitors the memory threshold of this cgroup,
-leading to a crash:
+With futher investigation of the reporduce repro, the problem can be
+reporduced by following procedure:
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000004
-  #PF: supervisor write access in kernel mode
-  #PF: error_code(0x0002) - not-present page
-  PGD 800000033058e067 P4D 800000033058e067 PUD 3355ce067 PMD 0
-  Oops: 0002 [#1] SMP PTI
-  CPU: 2 PID: 14012 Comm: kworker/2:6 Kdump: loaded Not tainted 5.6.0-rc4 #3
-  Hardware name: LENOVO 20AWS01K00/20AWS01K00, BIOS GLET70WW (2.24 ) 05/21/2014
-  Workqueue: events memcg_event_remove
-  RIP: 0010:__mem_cgroup_usage_unregister_event+0xb3/0x190
-  RSP: 0018:ffffb47e01c4fe18 EFLAGS: 00010202
-  RAX: 0000000000000001 RBX: ffff8bb223a8a000 RCX: 0000000000000001
-  RDX: 0000000000000001 RSI: ffff8bb22fb83540 RDI: 0000000000000001
-  RBP: ffffb47e01c4fe48 R08: 0000000000000000 R09: 0000000000000010
-  R10: 000000000000000c R11: 071c71c71c71c71c R12: ffff8bb226aba880
-  R13: ffff8bb223a8a480 R14: 0000000000000000 R15: 0000000000000000
-  FS:  0000000000000000(0000) GS:ffff8bb242680000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000004 CR3: 000000032c29c003 CR4: 00000000001606e0
-  Call Trace:
-    memcg_event_remove+0x32/0x90
-    process_one_work+0x172/0x380
-    worker_thread+0x49/0x3f0
-    kthread+0xf8/0x130
-    ret_from_fork+0x35/0x40
-  CR2: 0000000000000004
+1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
+create the dir.
+2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
+3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
+will fail because the dir aready exist.
+4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
+5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
+delete the files created in step 4.
+6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
+And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
+try to release the two files created in step 4, wich are aready released
+in step 5.
 
-We can reproduce this problem in the following ways:
+thread1		         |kworker                   |thread2
+ ----------------------- | ------------------------ | --------------------
+loop_control_ioctl       |                          |
+ loop_add                |                          |
+  blk_mq_debugfs_register|                          |
+   debugfs_create_dir    |                          |
+loop_control_ioctl       |                          |
+ loop_remove		 |                          |
+  blk_release_queue      |                          |
+   schedule_work         |                          |
+                         |                          |loop_control_ioctl
+                         |                          | loop_add
+                         |                          |  ...
+                         |                          |blk_trace_ioctl
+                         |                          | __blk_trace_setup
+                         |                          |   debugfs_create_file
+                         |__blk_release_queue       |
+                         | blk_mq_debugfs_unregister|
+                         |  debugfs_remove_recursive|
+                         |                          |loop_control_ioctl
+                         |                          | loop_remove
+                         |                          |  ...
+                         |__blk_release_queue       |
+                         | blk_trace_shutdown       |
+                         |  debugfs_remove          |
 
-1. We create a new cgroup subdirectory and a new eventfd, and then we
-   monitor multiple memory thresholds of the cgroup through this eventfd.
+commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
+final release of request_queue to a workqueue, so, when loop_add() is
+called again(step 3), __blk_release_queue() might not been called yet,
+which causes the problem.
 
-2.  closing this eventfd, and __mem_cgroup_usage_unregister_event ()
-   will be called multiple times to delete all events related to this
-   eventfd.
+Fix the problem by renaming 'q->debugfs_dir' or 'q->blk_trace->dir'
+in blk_unregister_queue() if they exist.
 
-The first time __mem_cgroup_usage_unregister_event() is called, the
-kernel will clear all items related to this eventfd in thresholds->
-primary.
-
-Since there is currently only one eventfd, thresholds-> primary becomes
-empty, so the kernel will set thresholds-> primary and hresholds-> spare
-to NULL.  If at this time, the user creates a new eventfd and monitor
-the memory threshold of this cgroup, kernel will re-initialize
-thresholds-> primary.
-
-Then when __mem_cgroup_usage_unregister_event () is called for the
-second time, because thresholds-> primary is not empty, the system will
-access thresholds-> spare, but thresholds-> spare is NULL, which will
-trigger a crash.
-
-In general, the longer it takes to delete all events related to this
-eventfd, the easier it is to trigger this problem.
-
-The solution is to check whether the thresholds associated with the
-eventfd has been cleared when deleting the event.  If so, we do nothing.
-
-[akpm@linux-foundation.org: fix comment, per Kirill]
-Fixes: 907860ed381a ("cgroups: make cftype.unregister_event() void-returning")
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/077a6f67-aefa-4591-efec-f2f3af2b0b02@gmail.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
+References: CVE-2019-19770
+Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
+Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
+Signed-off-by: yu kuai <yukuai3@huawei.com>
 ---
- mm/memcontrol.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Changes in V2:
+ add device name to the new dir name
+ fix compile err when 'CONFIG_BLK_DEBUG_FS' is not enabled
+ add treatment of 'q->blk_trace->dir'
+Changes in V3:
+ handle 'q->debugfs-dir' and 'q->blk_trace->dir' respectivly
+ remove dev name to avoid memory leek when dev name is too long
+ warn_on when debugfs_rename failed, don't keep trying in a loop
 
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -4027,7 +4027,7 @@ static void __mem_cgroup_usage_unregiste
- 	struct mem_cgroup_thresholds *thresholds;
- 	struct mem_cgroup_threshold_ary *new;
- 	unsigned long usage;
--	int i, j, size;
-+	int i, j, size, entries;
+ block/blk-sysfs.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index fca9b158f4a0..8cd124117e29 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -11,6 +11,8 @@
+ #include <linux/blktrace_api.h>
+ #include <linux/blk-mq.h>
+ #include <linux/blk-cgroup.h>
++#include <linux/debugfs.h>
++#include <linux/atomic.h>
  
- 	mutex_lock(&memcg->thresholds_lock);
+ #include "blk.h"
+ #include "blk-mq.h"
+@@ -1011,6 +1013,53 @@ int blk_register_queue(struct gendisk *disk)
+ }
+ EXPORT_SYMBOL_GPL(blk_register_queue);
  
-@@ -4047,14 +4047,20 @@ static void __mem_cgroup_usage_unregiste
- 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
- 
- 	/* Calculate new number of threshold */
--	size = 0;
-+	size = entries = 0;
- 	for (i = 0; i < thresholds->primary->size; i++) {
- 		if (thresholds->primary->entries[i].eventfd != eventfd)
- 			size++;
-+		else
-+			entries++;
- 	}
- 
- 	new = thresholds->spare;
- 
-+	/* If no items related to eventfd have been cleared, nothing to do */
-+	if (!entries)
-+		goto unlock;
++#ifdef CONFIG_DEBUG_FS
 +
- 	/* Set thresholds array to NULL if we don't have thresholds */
- 	if (!size) {
- 		kfree(new);
-
++void blk_rename_debugfs_dir(struct dentry **old)
++{
++	static atomic_t i = ATOMIC_INIT(0);
++	struct dentry *new;
++	char name[DNAME_INLINE_LEN];
++	u32 index = atomic_fetch_inc(&i);
++
++	snprintf(name, sizeof(name), "ready_to_remove_%u", index);
++	new = debugfs_lookup(name, blk_debugfs_root);
++	if (WARN_ON(new)) {
++		dput(new);
++		return;
++	}
++	new = debugfs_rename(blk_debugfs_root, *old, blk_debugfs_root, name);
++	if (WARN_ON(!new))
++		return;
++	*old = new;
++}
++/*
++ * blk_prepare_release_queue - rename q->debugfs_dir and q->blk_trace->dir
++ * @q: request_queue of which the dir to be renamed belong to.
++ *
++ * Because the final release of request_queue is in a workqueue, the
++ * cleanup might not been finished yet while the same device start to
++ * create. It's not correct if q->debugfs_dir still exist while trying
++ * to create a new one.
++ */
++static void blk_prepare_release_queue(struct request_queue *q)
++{
++#ifdef CONFIG_BLK_DEBUG_FS
++	if (!IS_ERR_OR_NULL(q->debugfs_dir))
++		blk_rename_debugfs_dir(&q->debugfs_dir);
++
++#endif
++#ifdef CONFIG_BLK_DEV_IO_TRACE
++	mutex_lock(&q->blk_trace_mutex);
++	if (q->blk_trace && !IS_ERR_OR_NULL(q->blk_trace->dir))
++		blk_rename_debugfs_dir(&q->blk_trace->dir);
++	mutex_unlock(&q->blk_trace_mutex);
++#endif
++}
++#else
++#define blk_prepare_release_queue(q)		do { } while (0)
++#endif
++
+ /**
+  * blk_unregister_queue - counterpart of blk_register_queue()
+  * @disk: Disk of which the request queue should be unregistered from sysfs.
+@@ -1039,6 +1088,7 @@ void blk_unregister_queue(struct gendisk *disk)
+ 	mutex_unlock(&q->sysfs_lock);
+ 
+ 	mutex_lock(&q->sysfs_dir_lock);
++	blk_prepare_release_queue(q);
+ 	/*
+ 	 * Remove the sysfs attributes before unregistering the queue data
+ 	 * structures that can be modified through sysfs.
+-- 
+2.17.2
 
