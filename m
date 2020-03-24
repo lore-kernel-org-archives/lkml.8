@@ -2,108 +2,96 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B6CC10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D3EC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BDE820722
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54E5B2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:02:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ECfvU7LQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o+2sSDci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCXXAR (ORCPT
+        id S1727504AbgCXXC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:00:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58884 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbgCXXAQ (ORCPT
+        Tue, 24 Mar 2020 19:02:29 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44179 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727432AbgCXXC3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:00:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lMLZN4KAtuo1ufR/sSTZ/YTJGpv+xv3ZRVB8FGX/yGk=; b=ECfvU7LQJ3/ad+P0qhTKIOpSSi
-        tkgUQF/eQ0lskX/01cd8rVtNyqNM07qHca0y8evXPdEFaNgGjpDNJi6qRQGF28eAtM1ykh3eicez6
-        W9Sl/Y5Sn4QV5jQJhpXEPR+dP97C943JtE5gRv1WZ3VmCVX2nDDWhgwdWLx8bLucn4lbj4mWBBey6
-        jLO35EvVmF1+vHhPK8k4eTvgNjnEe3WysV+GjuCkptI8N0Xes6TgZcn8QYrh9ALoYi2jTHHpisR7R
-        y3rnvBzwJfDJMRyTx63SATwbiWAUgUMqKgXj1rascF5kk8cWin2x1Yzx/6mn4581ah5lwkuUlgNAV
-        zRyMiRTA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGsWq-0000bH-U8; Tue, 24 Mar 2020 23:00:13 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C9A83980EBD; Wed, 25 Mar 2020 00:00:10 +0100 (CET)
-Date:   Wed, 25 Mar 2020 00:00:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v3 18/26] objtool: Fix !CFI insn_state propagation
-Message-ID: <20200324230010.GW2452@worktop.programming.kicks-ass.net>
-References: <20200324153113.098167666@infradead.org>
- <20200324160924.987489248@infradead.org>
- <20200324214006.tlanaff5q6gkgk2a@treble>
- <20200324221109.GU2452@worktop.programming.kicks-ass.net>
+        Tue, 24 Mar 2020 19:02:29 -0400
+Received: by mail-pg1-f193.google.com with SMTP id 142so180665pgf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 16:02:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p1s6A7ajW1F7QM+axDcHOvDFt2fqhddwQz0wjaRjcuo=;
+        b=o+2sSDcinDH9mPaO2+diR0Dh4kZk+bsUkXxLBYdxDpZkik7UZ2ErTGY3ftGMEmxjB7
+         LCvhz20LqTUQit52A7f5+r5D3qHgtuZ1y5i67WfVR1PxWJXzOeTIY8aOK4elCZxjILcV
+         5JdvxBmhU+RIhkJ2mVBpPlariTc95cOCOadPBF73JekjKcg4PK7HuZ4tePBQvNoLA7Fv
+         30MJqpsb9HOg5uje6AkdXXDtH/yolMiLRifsHB5U39OgZz0tV8qZROfYqnrpFMK2e7Z3
+         R+Yv66tKv/5uGwwl5smc9NCGpU41kPvGu7gAzJp9ko0AHLhcJ5zpEOFUlR00z/n7oQux
+         kJ/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=p1s6A7ajW1F7QM+axDcHOvDFt2fqhddwQz0wjaRjcuo=;
+        b=kvfkd9urkHXrYg1hLBFvU1ZebZTrLwfVkUJFankACrpi3uIjbHDrpdptfDkobVdfdI
+         jCFk4eJIrpOiw1J/YiP7ma0xlDrh2cSk7Ty1b821K3DTVBNPw2qzOL4fTGqZiMOXznXg
+         NTOr4qBqRcTlJTor6V5n0ceBJsQHl2kFP+FwQP2uF5vInkd2gqLFePwkgfeREnlzr8eX
+         tJff2qFP4tcB+ikSpCCA97qmbSx5+bOgeZwIPMddNtQNp6Fu/NQCS7GeLer09BOfcklj
+         Yv1jeyuiw59vpsNnWod756dH+ipU28OKUiZAfrdn2yZP0OQBf6dMM21W6lu+dEeGy+sN
+         Zbkw==
+X-Gm-Message-State: ANhLgQ0ySA3BTDNBTzUKCBINA+hC0yUkpNUKXCvWJRpPF5pMJmRXgE3l
+        DXGLtUvI+YUX/zaKYndaNwAk/bUt6q8=
+X-Google-Smtp-Source: ADFU+vtDYn2fngQVL6gs8RjH9WVemUNCDxt6lJ6I1hBWdAvKnpho6M6QfDJeWgFsMz/QEFoe7U2JwA==
+X-Received: by 2002:a63:be0f:: with SMTP id l15mr66280pgf.451.1585090947917;
+        Tue, 24 Mar 2020 16:02:27 -0700 (PDT)
+Received: from localhost.localdomain ([103.231.90.172])
+        by smtp.gmail.com with ESMTPSA id k5sm3044384pju.29.2020.03.24.16.02.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 16:02:26 -0700 (PDT)
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     linux@leemhuis.info, rdunlap@infradead.org, joe@perches.com
+Cc:     linux-kernel@vger.kernel.org,
+        Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Subject: [PATCH V2] : kernel-chktaint : Fixed space ,cosmetic change
+Date:   Wed, 25 Mar 2020 04:29:17 +0530
+Message-Id: <20200324225917.26104-1-unixbhaskar@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324221109.GU2452@worktop.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:11:09PM +0100, Peter Zijlstra wrote:
-> On Tue, Mar 24, 2020 at 04:40:06PM -0500, Josh Poimboeuf wrote:
-> > On Tue, Mar 24, 2020 at 04:31:31PM +0100, Peter Zijlstra wrote:
-> 
-> > > +		if (!save_insn->visited) {
-> > > +			/*
-> > > +			 * Oops, no state to copy yet.
-> > > +			 * Hopefully we can reach this
-> > > +			 * instruction from another branch
-> > > +			 * after the save insn has been
-> > > +			 * visited.
-> > > +			 */
-> > > +			if (insn == first)
-> > > +				return 0; // XXX
-> > 
-> > Yeah, moving this code out to apply_insn_hint() seems like a nice idea,
-> > but it wouldn't be worth it if it breaks this case.  TBH I don't
-> > remember if this check was for a real-world case.  Might be worth
-> > looking at...  If this case doesn't exist in reality then we could just
-> > remove this check altogether.
-> 
-> I'll go run a bunch of builds with a print on it, that should tell us I
-> suppose.
+Space bwtween the words is fixed at the bottom of the file,sentence
+starting with "Documentation....."
 
-I can a bunch of builds, including an allmodconfig with the below on top
-and it 'works'.
-
-So I suppose we can remove this special case.
-
+Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 ---
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2134,11 +2134,13 @@ static int apply_insn_hint(struct objtoo
- 			 * after the save insn has been
- 			 * visited.
- 			 */
--			if (insn == first)
--				return 0; // XXX
+ tools/debugging/kernel-chktaint | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- 			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
- 					sec, insn->offset);
-+
-+			if (insn == first)
-+				return -1;
-+
- 			return 1;
- 		}
-
+diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
+index 74fd3282aa1b..1af06bc0e667 100755
+--- a/tools/debugging/kernel-chktaint
++++ b/tools/debugging/kernel-chktaint
+@@ -198,6 +198,6 @@ fi
+ echo "Raw taint value as int/string: $taint/'$out'"
+ echo
+ echo "For a more detailed explanation of the various taint flags see below pointers:"
+-echo "1) Documentation/admin-guide/tainted-kernels.rst in  the Linux kernel sources"
++echo "1) Documentation/admin-guide/tainted-kernels.rst in the Linux kernel sources"
+ echo "2)  https://kernel.org/doc/html/latest/admin-guide/tainted-kernels.html"
+ #EOF#
+-- 
+2.24.1
 
