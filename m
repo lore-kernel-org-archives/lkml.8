@@ -2,50 +2,52 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C991C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA22AC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12F7A20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D36208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055978;
-	bh=6gexxwiQdA9Su+qvuekL8GGkNoASq2gcrDkAT0Kh84Q=;
+	s=default; t=1585055981;
+	bh=Zh6Q81xz4S7Uy/uL5Zghtt2qm145iElh7QjBAawbpiU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wJ9wNwth9nZcPZvtBOSS2soA+qy81hxyWXEzW/Xz8rKp9oncxL27vNSEKbadogCSe
-	 vaanUcb8tFmmrBKzvCkKM15w4vLK7xWhAaHQWOm7isEGt3j3ZeGyPr8+fDNePhwrt5
-	 IuokU6SXMx80CECUiTuFSMnDgDMNUzP8jxoVovy0=
+	b=t1cAJ7NFny7K+i8hYT4d/VdfB6cQsLfa0sHpDL9aFQQJCHq9fGZJZsQJdUpKTIhNU
+	 UCVVtr8Yp2kv58ryzQvbGIVso5gN1BlOnxzGdIHB01I0lw4ONlQxcgEt7HR86D01AA
+	 WBf92KwrCK2wijeRKy9X/6QpJUiNO7FDYNhFivNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728851AbgCXNTg (ORCPT
+        id S1728854AbgCXNTk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:19:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40286 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727770AbgCXNTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:34 -0400
+        id S1728617AbgCXNTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8901C208D5;
-        Tue, 24 Mar 2020 13:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32A2620775;
+        Tue, 24 Mar 2020 13:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055973;
-        bh=6gexxwiQdA9Su+qvuekL8GGkNoASq2gcrDkAT0Kh84Q=;
+        s=default; t=1585055975;
+        bh=Zh6Q81xz4S7Uy/uL5Zghtt2qm145iElh7QjBAawbpiU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/tLLnvZXZ6X6ml49GY6Ir+sF2DFOkdj0uLD4cVSOwxlpV4XleOKrkqVWgMPyz/U8
-         CjEq6L54xCpOND/7xWvMdoHGyxDsDl/b3f+KCUKTQrTJuo2oGF3eigLhUk6bI/x5fl
-         CC+VY4S13Bjdi8Srt3aZF7dATtwwOvmfEUrJDA5o=
+        b=n0hiXq1J9EMue4iEkcyN0wdpx8FhvLi40mh8hNnSyeg2XlZ0a7jPW2haeJ1oMeCpH
+         JFE00XCZSFLJ+8QD7o1Y866EvgFgKY2RTUSWWhmAwaRp8NSWKcYjOReN5Jly1hmlq4
+         iKKUoKpRoy/1Zp69Qqt+szWlbh5hH9AdLvWab3G4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Mallet <anthony.mallet@laas.fr>
-Subject: [PATCH 5.4 046/102] USB: cdc-acm: fix rounding error in TIOCSSERIAL
-Date:   Tue, 24 Mar 2020 14:10:38 +0100
-Message-Id: <20200324130811.411479386@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 047/102] ALSA: line6: Fix endless MIDI read loop
+Date:   Tue, 24 Mar 2020 14:10:39 +0100
+Message-Id: <20200324130811.517312000@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -58,79 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Mallet <anthony.mallet@laas.fr>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit b401f8c4f492cbf74f3f59c9141e5be3071071bb upstream.
+commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 upstream.
 
-By default, tty_port_init() initializes those parameters to a multiple
-of HZ. For instance in line 69 of tty_port.c:
-   port->close_delay = (50 * HZ) / 100;
-https://github.com/torvalds/linux/blob/master/drivers/tty/tty_port.c#L69
+The MIDI input event parser of the LINE6 driver may enter into an
+endless loop when the unexpected data sequence is given, as it tries
+to continue the secondary bytes without termination.  Also, when the
+input data is too short, the parser returns a negative error, while
+the caller doesn't handle it properly.  This would lead to the
+unexpected behavior as well.
 
-With e.g. CONFIG_HZ = 250 (as this is the case for Ubuntu 18.04
-linux-image-4.15.0-37-generic), the default setting for close_delay is
-thus 125.
+This patch addresses those issues by checking the return value
+correctly and handling the one-byte event in the parser properly.
 
-When ioctl(fd, TIOCGSERIAL, &s) is executed, the setting returned in
-user space is '12' (125/10). When ioctl(fd, TIOCSSERIAL, &s) is then
-executed with the same setting '12', the value is interpreted as '120'
-which is different from the current setting and a EPERM error may be
-raised by set_serial_info() if !CAP_SYS_ADMIN.
-https://github.com/torvalds/linux/blob/master/drivers/usb/class/cdc-acm.c#L919
+The bug was reported by syzkaller.
 
-Fixes: ba2d8ce9db0a6 ("cdc-acm: implement TIOCSSERIAL to avoid blocking close(2)")
-Signed-off-by: Anthony Mallet <anthony.mallet@laas.fr>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200312133101.7096-2-anthony.mallet@laas.fr
+Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
+Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/class/cdc-acm.c |   25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+ sound/usb/line6/driver.c  |    2 +-
+ sound/usb/line6/midibuf.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -907,6 +907,7 @@ static int set_serial_info(struct tty_st
- {
- 	struct acm *acm = tty->driver_data;
- 	unsigned int closing_wait, close_delay;
-+	unsigned int old_closing_wait, old_close_delay;
- 	int retval = 0;
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -305,7 +305,7 @@ static void line6_data_received(struct u
+ 				line6_midibuf_read(mb, line6->buffer_message,
+ 						LINE6_MIDI_MESSAGE_MAXLEN);
  
- 	close_delay = msecs_to_jiffies(ss->close_delay * 10);
-@@ -914,18 +915,24 @@ static int set_serial_info(struct tty_st
- 			ASYNC_CLOSING_WAIT_NONE :
- 			msecs_to_jiffies(ss->closing_wait * 10);
+-			if (done == 0)
++			if (done <= 0)
+ 				break;
  
-+	/* we must redo the rounding here, so that the values match */
-+	old_close_delay	= jiffies_to_msecs(acm->port.close_delay) / 10;
-+	old_closing_wait = acm->port.closing_wait == ASYNC_CLOSING_WAIT_NONE ?
-+				ASYNC_CLOSING_WAIT_NONE :
-+				jiffies_to_msecs(acm->port.closing_wait) / 10;
-+
- 	mutex_lock(&acm->port.mutex);
+ 			line6->message_length = done;
+--- a/sound/usb/line6/midibuf.c
++++ b/sound/usb/line6/midibuf.c
+@@ -159,7 +159,7 @@ int line6_midibuf_read(struct midi_buffe
+ 			int midi_length_prev =
+ 			    midibuf_message_length(this->command_prev);
  
--	if (!capable(CAP_SYS_ADMIN)) {
--		if ((close_delay != acm->port.close_delay) ||
--		    (closing_wait != acm->port.closing_wait))
-+	if ((ss->close_delay != old_close_delay) ||
-+            (ss->closing_wait != old_closing_wait)) {
-+		if (!capable(CAP_SYS_ADMIN))
- 			retval = -EPERM;
--		else
--			retval = -EOPNOTSUPP;
--	} else {
--		acm->port.close_delay  = close_delay;
--		acm->port.closing_wait = closing_wait;
--	}
-+		else {
-+			acm->port.close_delay  = close_delay;
-+			acm->port.closing_wait = closing_wait;
-+		}
-+	} else
-+		retval = -EOPNOTSUPP;
- 
- 	mutex_unlock(&acm->port.mutex);
- 	return retval;
+-			if (midi_length_prev > 0) {
++			if (midi_length_prev > 1) {
+ 				midi_length = midi_length_prev - 1;
+ 				repeat = 1;
+ 			} else
 
 
