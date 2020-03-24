@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C97F8C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10DCEC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F51206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88DD208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055856;
-	bh=GWy6tmGEEcVt6nH/teAPu97o9qVvgBZbqgNUofs01Tw=;
+	s=default; t=1585055859;
+	bh=pECr6roWR5M/8MW8H1Bv44fVIzAuTBT4NsDJCxywzY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFepQtuHLqbxPYVuj9IPfvUwRmzhnzWJ6MoGnXpdwc1BfXQjN857FCY6E7QX/5jRN
-	 Ih+vkwcE8SFz4ddsEqgYEhKjYI/G0h27ziKlGBSV+dc3RbwQonOO7vEHwsX+JONXOQ
-	 WOpNVUI0rKocguplRXcI+DFYTSYT5hI4pi8OyI4g=
+	b=y07LOAD+91NmZcmhNo0509NgIWkioEkr3t+46biPzxT/GcZAJ31o2fSHapC3pFzTN
+	 wsn9bk6Q07RW9Xi2BX9Vowj+2rn37rumLeK91QPRZVarV/ooWgNKLzhGiDBsEWjC2r
+	 FksaUO7SJaDCGST4MiXcCO87q0m6X8NXA1cMYkUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCXNRe (ORCPT
+        id S1728627AbgCXNRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:17:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37310 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgCXNRc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:17:32 -0400
+        id S1728150AbgCXNRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:17:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD27120936;
-        Tue, 24 Mar 2020 13:17:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64995206F6;
+        Tue, 24 Mar 2020 13:17:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055852;
-        bh=GWy6tmGEEcVt6nH/teAPu97o9qVvgBZbqgNUofs01Tw=;
+        s=default; t=1585055854;
+        bh=pECr6roWR5M/8MW8H1Bv44fVIzAuTBT4NsDJCxywzY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ET1jA1SiTn6e/bGBAlWD2EKkqtA2dP7k59PbZaKyMGx7uh68onV5jqmF7gpnaWoCM
-         17rI0cHu3rfSSWT516LLINK9Eii/UelpyNs1vWuavhPcaT9fDv7L6b/DeDJ3u8KWZh
-         JhHXplsuNC2NjMCIYEqVzUs6spt+C9Whkof/reow=
+        b=hjnEhFtaJ7bc56qU1tvjNIJjtoJaVMAQ5j1UcuNoY7XPc0MRAxx4ub/edrexpL8/D
+         LcLZA8OF+tAP8q6YQ8hpk3Nnw52fmAGmFKJ3LN4gKIhG3qv9Asgrkn5Ntck9ns+Mb0
+         fA9Znu0Udw0ecq+956Un2xnNeGvqRminvYP3n+QA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.4 039/102] USB: serial: option: add ME910G1 ECM composition 0x110b
-Date:   Tue, 24 Mar 2020 14:10:31 +0100
-Message-Id: <20200324130810.718141045@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 048/102] ALSA: hda/realtek - Enable headset mic of Acer X2660G with ALC662
+Date:   Tue, 24 Mar 2020 14:10:40 +0100
+Message-Id: <20200324130811.623299122@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -59,32 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-commit 8e852a7953be2a6ee371449f7257fe15ace6a1fc upstream.
+commit d858c706bdca97698752bd26b60c21ec07ef04f2 upstream.
 
-Add ME910G1 ECM composition 0x110b: tty, tty, tty, ecm
+The Acer desktop X2660G with ALC662 can't detect the headset microphone
+until ALC662_FIXUP_ACER_X2660G_HEADSET_MODE quirk applied.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Link: https://lore.kernel.org/r/20200304104310.2938-1-dnlplm@gmail.com
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200317082806.73194-2-jian-hong@endlessm.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/pci/hda/patch_realtek.c |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1183,6 +1183,8 @@ static const struct usb_device_id option
- 	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
- 	  .driver_info = NCTRL(0) | RSVD(3) },
-+	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110b, 0xff),	/* Telit ME910G1 (ECM) */
-+	  .driver_info = NCTRL(0) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -8639,6 +8639,7 @@ enum {
+ 	ALC669_FIXUP_ACER_ASPIRE_ETHOS,
+ 	ALC669_FIXUP_ACER_ASPIRE_ETHOS_HEADSET,
+ 	ALC671_FIXUP_HP_HEADSET_MIC2,
++	ALC662_FIXUP_ACER_X2660G_HEADSET_MODE,
+ };
+ 
+ static const struct hda_fixup alc662_fixups[] = {
+@@ -8984,6 +8985,15 @@ static const struct hda_fixup alc662_fix
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc671_fixup_hp_headset_mic2,
+ 	},
++	[ALC662_FIXUP_ACER_X2660G_HEADSET_MODE] = {
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x1a, 0x02a1113c }, /* use as headset mic, without its own jack detect */
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC662_FIXUP_USI_FUNC
++	},
+ };
+ 
+ static const struct snd_pci_quirk alc662_fixup_tbl[] = {
+@@ -8995,6 +9005,7 @@ static const struct snd_pci_quirk alc662
+ 	SND_PCI_QUIRK(0x1025, 0x0349, "eMachines eM250", ALC662_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1025, 0x034a, "Gateway LT27", ALC662_FIXUP_INV_DMIC),
+ 	SND_PCI_QUIRK(0x1025, 0x038b, "Acer Aspire 8943G", ALC662_FIXUP_ASPIRE),
++	SND_PCI_QUIRK(0x1025, 0x124e, "Acer 2660G", ALC662_FIXUP_ACER_X2660G_HEADSET_MODE),
+ 	SND_PCI_QUIRK(0x1028, 0x05d8, "Dell", ALC668_FIXUP_DELL_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x05db, "Dell", ALC668_FIXUP_DELL_MIC_NO_PRESENCE),
+ 	SND_PCI_QUIRK(0x1028, 0x05fe, "Dell XPS 15", ALC668_FIXUP_DELL_XPS13),
 
 
