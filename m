@@ -2,255 +2,199 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5181C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFB8C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7813120719
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A4EE205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 03:38:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Hwmk7YeW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCXDZi convert rfc822-to-8bit (ORCPT
+        id S1727213AbgCXDiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 23:25:38 -0400
-Received: from mail-oln040092254033.outbound.protection.outlook.com ([40.92.254.33]:35680
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727050AbgCXDZi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 23:25:38 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PhInaXWYRcu3ctHlB+qMioQpxFTYoXqWdFzueGF4zmEJe/gMpTkgGw9WVsSPFkJ/ydMeNOC7FuYSFzOm76Qj9ARe2nNPaydSwp3aegcDEG5AhS762SnTL5IGlh3IonNBY9VPXC6cGpkieAXJ4ZFVbeqRM6V+uxafiUOt4OACPGn85laES5P74oFCVCJw97muqq+PaWrBvxR7VWpy4ERgzI0ZntgT8fEwoyt1F2ExYKdAf1rb/TvRx7/icfni48DLewfd8rdrZ+LFoCi27gkzuyJdinR1Nldk+rnOQkgcP8h4qjkhPq3hxYvjcHD6QqLYZshCbW2z14fvWMTqz+kWWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+cDLe9Givxo2puIVTH0ORjYMkyoucVj9WTRR1ZAljPc=;
- b=dsBx9DDzdUHwJanxFZldHoz0sE1TLMx6x5EgOVfBDseDaSmI6cRT9AwZqwJG5bf+nNEWoziJLUs4fYyRFV2db7mVdiMqG9Sr0dGvAfhj6RRILn+vvptEWlqopsxxJS9xMGrJj0b8zWEl2wpEIGy/iH2yt/5Dohyj7iSOl/3rBEB7MdiXsbD5qMj1r+0HBZbnhKmbx8hVra1xTPV4Y3wwNQz9CV3+HntzjE3TiX1VfPfQTyw/xpwPNTucd/MkXrQC9NPlc9r65CdMia4zCidqcFXK6zQk57L9qcd9oDlk8ITXVSpyLUp63nJrl3auPNP5Wk8sUjXChXQvqvbNAaQ+/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HK2APC01FT050.eop-APC01.prod.protection.outlook.com
- (2a01:111:e400:7ebc::37) by
- HK2APC01HT084.eop-APC01.prod.protection.outlook.com (2a01:111:e400:7ebc::357)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2814.13; Tue, 24 Mar
- 2020 03:25:31 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM (10.152.248.58) by
- HK2APC01FT050.mail.protection.outlook.com (10.152.249.87) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13 via Frontend Transport; Tue, 24 Mar 2020 03:25:31 +0000
-Received: from PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::1ddc:43b7:a639:8184]) by PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- ([fe80::1ddc:43b7:a639:8184%9]) with mapi id 15.20.2835.023; Tue, 24 Mar 2020
- 03:25:31 +0000
-Received: from nicholas-dell-linux (2001:44b8:6065:1c:6059:d44:6861:fae2) by ME1PR01CA0085.ausprd01.prod.outlook.com (2603:10c6:200:18::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18 via Frontend Transport; Tue, 24 Mar 2020 03:25:28 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/5] nvmem: Add support for write-only instances
-Thread-Topic: [PATCH 5/5] nvmem: Add support for write-only instances
-Thread-Index: AQHWASPKeVmn6yF+NkittHqcSfj/BahWiaSAgACLxoA=
-Date:   Tue, 24 Mar 2020 03:25:31 +0000
-Message-ID: <PSXP216MB04388FD469630B8F353A375A80F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-References: <20200323150007.7487-1-srinivas.kandagatla@linaro.org>
- <20200323150007.7487-6-srinivas.kandagatla@linaro.org>
- <20200323190505.GB632476@kroah.com>
-In-Reply-To: <20200323190505.GB632476@kroah.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: ME1PR01CA0085.ausprd01.prod.outlook.com
- (2603:10c6:200:18::18) To PSXP216MB0438.KORP216.PROD.OUTLOOK.COM
- (2603:1096:300:d::20)
-x-incomingtopheadermarker: OriginalChecksum:FB318DF5D39536E06C4977D4D61F2F92DC048C072E4F8C128C0E686CCDBC6F8E;UpperCasedChecksum:F7A20CA6EE79C7F6815DFD613629E151154D1A4E795A78D70CFB0702E751C7BE;SizeAsReceived:7859;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [DqyDVYlLDjSnYm8Zz/jO25A5jPoVC+vh1TVE3tqfNFMVVoIByppFKjnRDM82AqeH]
-x-microsoft-original-message-id: <20200324032521.GA2062@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: ea1abfde-588d-42eb-2c0d-08d7cfa30140
-x-ms-traffictypediagnostic: HK2APC01HT084:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qNFTQWZQTJO2VSxGIGXl4Uaure7eY48KCK+P/rRAw9TslSMIsEBs83SgRnW50NHLlvb2wkgVirSAgDfe+uMgPq1pldaBPL+289fQcZklph87Sk8hH5OghG0KT92/gosl7IlqdYOxx3rPz2rygiMpLypxjEgS9oN6alrBZlsIUsCHv0iDziq7ta0YntyQ8BUh
-x-ms-exchange-antispam-messagedata: 7f4VUTLcvFk1bvGW52a4KKa/z2cBBxt+lRldaKKi1UDipP2FNEAJgUzDJGB6tf5rfer+6i2SKcg4LY2TFt0Gqb/UUqZ9LnggwKOZPYlShwT8hyfbEB5OePA8FojzYv0YS+DADKwKbiSVrMMpi+rPtBTnCfGvlQFculIYvOcxaTK0snOMxTMX6RsSuIIKReCNstpNcnflxRmeUFOxLsHIhA==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1EAC5CD6D2177146A191C9A04F5F3A87@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Mon, 23 Mar 2020 23:38:11 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43434 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbgCXDiK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 23:38:10 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so8323409pgb.10
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 20:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EoHFVfVTHKDj3wA1Pgr7GAuawqBtohTxYrc3sgAwjww=;
+        b=Hwmk7YeWhBR+bPT1gb5RzoUAqlgbKKsPNpeRYQ/mz2LUvzbQr9qBK4j2pJF2V9FcnQ
+         hj9w27FSzgAg2S1NXDkkdYugd4QIdIg5Z2lTtwYpGfz+PGFujG7mexZ7uokW+4X0hVzf
+         aL37xaDDprybYy5jKwSsalWxISoQzvlJMFYU0giGF0q8lsdhLJ5W+Hd+H5uwImLXA7Xi
+         lp5qJN8sc5pwwihOM7AAj+At18+jJA+M9BruQFDT2JrY/HYEIvhIg1XPlIPmHn5KvlhZ
+         LRYvAfITHWJ6eSm0kNT5HMfSisKBPNNORQREtLzc2ZvHXAbsTMz0CohVZbcdgo3p13cq
+         IuZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=EoHFVfVTHKDj3wA1Pgr7GAuawqBtohTxYrc3sgAwjww=;
+        b=atLkg0bIQbr3cVmPnz5Hlr2wealsTbYpIiy4cQOkEIERFeqe6kA2SedeNTxMcpe5Te
+         CZD6vquhTAIc+cBWaZUFqcKzgzHgcZ00m+fURfQX+B6n/fGNdt5LBXIqHfHFkS9Dl3sy
+         mPaX4dPoVS6t2qc/LnPdiMX1AMMbdcm6Z4Sx1MqUpUGiY8IjXz1AUBuyVxgfoZphBX5S
+         OIvkAnwt/Ae0OhHkVa5ollT05BedXkbvBTNCyWgSB6nezE8uNcmbOkx+wtFsQ7vmInA8
+         383wnLgruwE9+Np8E84AYGsHzy8jXN1rFFpaOi8a9DMQq1bu75ZlFdbSxJnpnlUSe3r7
+         MP5A==
+X-Gm-Message-State: ANhLgQ3n7xYZM5i9p+s085JYpKWaUKJeh1lRu8GpsexLUjYDYKVcJRfp
+        7wyXxVq1KU7TAB+GX4Wtlv+B5A==
+X-Google-Smtp-Source: ADFU+vtUqBrBYpWGQT0F6qG4VH8WBvkLR2SPKKB9qgPmtRoXxqJJFq2PsqIAfuhTww49jsdZsgx7TQ==
+X-Received: by 2002:a63:1c4d:: with SMTP id c13mr24608158pgm.4.1585021085960;
+        Mon, 23 Mar 2020 20:38:05 -0700 (PDT)
+Received: from [192.168.10.21] (ppp121-45-221-81.bras1.cbr2.internode.on.net. [121.45.221.81])
+        by smtp.gmail.com with ESMTPSA id a185sm15138421pfa.27.2020.03.23.20.38.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Mar 2020 20:38:05 -0700 (PDT)
+Subject: Re: [PATCH 1/2] dma-mapping: add a dma_ops_bypass flag to struct
+ device
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     iommu@lists.linux-foundation.org, linuxppc-dev@lists.ozlabs.org,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+References: <20200320141640.366360-1-hch@lst.de>
+ <20200320141640.366360-2-hch@lst.de>
+ <2f31d0dd-aa7e-8b76-c8a1-5759fda5afc9@ozlabs.ru>
+ <20200323083705.GA31245@lst.de>
+ <37ce1b7e-264d-292d-32b1-093b24b3525c@ozlabs.ru>
+ <20200323172014.GA31269@lst.de>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <d4bf6058-aa77-d0bc-8196-f4c27fb21b74@ozlabs.ru>
+Date:   Tue, 24 Mar 2020 14:37:59 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: ea1abfde-588d-42eb-2c0d-08d7cfa30140
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2020 03:25:31.7590
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT084
+In-Reply-To: <20200323172014.GA31269@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 08:05:05PM +0100, Greg KH wrote:
-> On Mon, Mar 23, 2020 at 03:00:07PM +0000, Srinivas Kandagatla wrote:
-> > From: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > 
-> > There is at least one real-world use-case for write-only nvmem
-> > instances. Refer to 03cd45d2e219 ("thunderbolt: Prevent crash if
-> > non-active NVMem file is read").
-> > 
-> > Add support for write-only nvmem instances by adding attrs for 0200.
-> > 
-> > Change nvmem_register() to abort if NULL group is returned from
-> > nvmem_sysfs_get_groups().
-> > 
-> > Return NULL from nvmem_sysfs_get_groups() in invalid cases.
-> > 
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > ---
-> >  drivers/nvmem/core.c        | 10 +++++--
-> >  drivers/nvmem/nvmem-sysfs.c | 56 +++++++++++++++++++++++++++++++------
-> >  2 files changed, 56 insertions(+), 10 deletions(-)
-> > 
-> > diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> > index 77d890d3623d..ddc7be5149d5 100644
-> > --- a/drivers/nvmem/core.c
-> > +++ b/drivers/nvmem/core.c
-> > @@ -381,6 +381,14 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> >  	nvmem->type = config->type;
-> >  	nvmem->reg_read = config->reg_read;
-> >  	nvmem->reg_write = config->reg_write;
-> > +	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
-> > +	if (!nvmem->dev.groups) {
-> > +		ida_simple_remove(&nvmem_ida, nvmem->id);
-> > +		gpiod_put(nvmem->wp_gpio);
-> > +		kfree(nvmem);
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> >  	if (!config->no_of_node)
-> >  		nvmem->dev.of_node = config->dev->of_node;
-> >  
-> > @@ -395,8 +403,6 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
-> >  	nvmem->read_only = device_property_present(config->dev, "read-only") ||
-> >  			   config->read_only || !nvmem->reg_write;
-> >  
-> > -	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
-> > -
-> >  	device_initialize(&nvmem->dev);
-> >  
-> >  	dev_dbg(&nvmem->dev, "Registering nvmem device %s\n", config->name);
-> > diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> > index 8759c4470012..9728da948988 100644
-> > --- a/drivers/nvmem/nvmem-sysfs.c
-> > +++ b/drivers/nvmem/nvmem-sysfs.c
-> > @@ -202,16 +202,49 @@ static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> >  	NULL,
-> >  };
-> >  
-> > +/* write only permission, root only */
-> > +static struct bin_attribute bin_attr_wo_root_nvmem = {
-> > +	.attr	= {
-> > +		.name	= "nvmem",
-> > +		.mode	= 0200,
-> > +	},
-> > +	.write	= bin_attr_nvmem_write,
-> > +};
+
+
+On 24/03/2020 04:20, Christoph Hellwig wrote:
+> On Mon, Mar 23, 2020 at 07:58:01PM +1100, Alexey Kardashevskiy wrote:
+>>>> 0x100.0000.0000 .. 0x101.0000.0000
+>>>>
+>>>> 2x4G, each is 1TB aligned. And we can map directly only the first 4GB
+>>>> (because of the maximum IOMMU table size) but not the other. And 1:1 on
+>>>> that "pseries" is done with offset=0x0800.0000.0000.0000.
+>>>>
+>>>> So we want to check every bus address against dev->bus_dma_limit, not
+>>>> dev->coherent_dma_mask. In the example above I'd set bus_dma_limit to
+>>>> 0x0800.0001.0000.0000 and 1:1 mapping for the second 4GB would not be
+>>>> tried. Does this sound reasonable? Thanks,
+>>>
+>>> bus_dma_limit is just another limiting factor applied on top of
+>>> coherent_dma_mask or dma_mask respectively.
+>>
+>> This is not enough for the task: in my example, I'd set bus limit to
+>> 0x0800.0001.0000.0000 but this would disable bypass for all RAM
+>> addresses - the first and the second 4GB blocks.
 > 
-> You are adding a new sysfs file without a Documentation/ABI/ new entry
-> as well?
-It is the same existing sysfs file, but adding the ability for that 
-existing sysfs file to have write-only (0200) permissions if the driver 
-requires it. The perms / groups for the nvmem that is getting registered 
-in nvmem_register() in drivers/nvmem/core.c are chosen by 
-nvmem_sysfs_get_groups() in drivers/nvmem/nvmem-sysfs.c, and this new 
-0200 will get selected if reg_read is NULL and reg_write is provided 
-(and nvmem->read_only override is not set).
-
+> So what about something like the version here:
 > 
-> 
-> > +
-> > +static struct bin_attribute *nvmem_bin_wo_root_attributes[] = {
-> > +	&bin_attr_wo_root_nvmem,
-> > +	NULL,
-> > +};
-> > +
-> > +static const struct attribute_group nvmem_bin_wo_root_group = {
-> > +	.bin_attrs	= nvmem_bin_wo_root_attributes,
-> > +	.attrs		= nvmem_attrs,
-> > +};
-> > +
-> > +static const struct attribute_group *nvmem_wo_root_dev_groups[] = {
-> > +	&nvmem_bin_wo_root_group,
-> > +	NULL,
-> > +};
-> > +
-> >  const struct attribute_group **nvmem_sysfs_get_groups(
-> >  					struct nvmem_device *nvmem,
-> >  					const struct nvmem_config *config)
-> >  {
-> > -	if (config->root_only)
-> > -		return nvmem->read_only ?
-> > -			nvmem_ro_root_dev_groups :
-> > -			nvmem_rw_root_dev_groups;
-> > +	/* Read-only */
-> > +	if (nvmem->reg_read && (!nvmem->reg_write || nvmem->read_only))
-> > +		return config->root_only ?
-> > +			nvmem_ro_root_dev_groups : nvmem_ro_dev_groups;
-> > +
-> > +	/* Read-write */
-> > +	if (nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
-> > +		return config->root_only ?
-> > +			nvmem_rw_root_dev_groups : nvmem_rw_dev_groups;
-> > +
-> > +	/* Write-only, do not honour request for global writable entry */
-> > +	if (!nvmem->reg_read && nvmem->reg_write && !nvmem->read_only)
-> > +		return config->root_only ? nvmem_wo_root_dev_groups : NULL;
-> 
-> 
-> What is this supposed to be doing, I am totally lost.
-This nvmem_sysfs_get_groups() is called by nvmem_register() when the 
-nvmem is registered by a driver. This returns the filesystem perms for 
-the nvmem based on the inputs (or NULL to abort). There are four things 
-we care about in the function arguments:
+> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-bypass.3
 
-1. nvmem->reg_read which is a function pointer used when reading from 
-the nvmem
 
-2. nvmem->reg_write which is a function pointer used when writing to the 
-nvmem
+dma_alloc_direct() and dma_map_direct() do the same thing now which is
+good, did I miss anything else?
 
-3. nvmem->read_only which overrides if nvmem is read only
+This lets us disable bypass automatically if this weird memory appears
+in the system but does not let us have 1:1 after that even for normal
+RAM. Thanks,
 
-4. config->root_only which indicates if world perms are used
 
-We use these to decide which perms to return. We can determine whether 
-read-only or write-only or read-write by whether the reg_read and 
-reg_write are provided, using nvmem->read_only as an override (sometimes 
-from dtb, both reg_read and reg_write are provided but it can override 
-to read only with this flag).
-
-Once that is decided, we use config->root_only to determine if 
-world-accessible. We return the appropriate group, or NULL if 
-world-writable requested.
-
-Before this patch, we could not return NULL (always had to return a 
-group, no matter what). This had to be fixed, hence the changes to the 
-caller (nvmem_register() function in drivers/nvmem/core.c) to check for 
-NULL group and abort. Before this patch, any (unsupported) request for 
-write-only was interpreted as read-write, instead of returning an error 
-and failing cleanly. As of this patch, the above 0200 which I am 
-introducing is returned.
-
-Please let me know if I have failed to clarify this for you and I will 
-try again. :)
-> 
-> greg k-h
-
-Kind regards,
-Nicholas Johnson
+-- 
+Alexey
