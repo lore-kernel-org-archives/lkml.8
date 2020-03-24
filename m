@@ -2,85 +2,151 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F897C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 602C7C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F82920735
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:34:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585035294;
-	bh=3p7k+XNYmJjEY9kaw0/x9dsFk6M+aGq/xpxVRBNIW6g=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=gQ1B0BEO4aWO6O8pDAbiS1e4GJtefN37qI8LJs605a+UsUvHOjCTkNVEacZzhuYqf
-	 nbcUd8mEIozK5QRNcwykdUBdwXXHsnNH1eRx+wFFKfmhqA09t98v5VxHyGJd1Wo5OS
-	 fNsdBwy5JFMBMkCqE1Afm3RMSIjVUyxM5Ui+N+kI=
+	by mail.kernel.org (Postfix) with ESMTP id 3126C20719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="W0uk+Ri/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727468AbgCXHex (ORCPT
+        id S1727443AbgCXHgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 03:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55130 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgCXHex (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 03:34:53 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 643CF20719;
-        Tue, 24 Mar 2020 07:34:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585035292;
-        bh=3p7k+XNYmJjEY9kaw0/x9dsFk6M+aGq/xpxVRBNIW6g=;
-        h=From:To:Cc:Subject:Date:From;
-        b=WLx84AyFiLEd8mViP9DzGOGsOyXycwW2BzJapP8bMB0CzgHxOyaJm0o4eUsEx6RVt
-         1wfXJqb7JRlB6OhWt9RAFGQlQ3hExGRbkQjLXviuYiIY1+zHAfuMF2ZggrKKFxs+Fk
-         IVKKV9j6Une21dUYoU0G2tjADbY0KwCSq+w03OlM=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Taeung Song <treeze.taeung@gmail.com>,
-        linux-trace-users@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Alban Crequy <alban@kinvolk.io>
-Subject: [PATCH] ftrace/kprobe: Show the maxactive number on kprobe_events
-Date:   Tue, 24 Mar 2020 16:34:48 +0900
-Message-Id: <158503528846.22706.5549974121212526020.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
+        Tue, 24 Mar 2020 03:36:45 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17868 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725905AbgCXHgp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 03:36:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585035374;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=N7IWVAlNNWp4EVuigm8wn2SOA7IIe22WZ4zksUHg6AI=;
+        b=W0uk+Ri/vVVHLIRpFpRRLijwQHMACh8UuZNg25jmrt41390+ifWZEqeRYLJGyDlr
+        XWl1hD6SPQ6NNotlSmXKY6FseUYMwgOizLCc2BGw7WqTFxn0wzzUJCr6w7lE2rRTjkK
+        BQf6OPHh70USaSqfbSHjbzo7vZXMe2E20mjNNoHA=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585035371619500.95368307954584; Tue, 24 Mar 2020 15:36:11 +0800 (CST)
+Date:   Tue, 24 Mar 2020 15:36:04 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1584932355-3642-2-git-send-email-yangtiezhu@loongson.cn>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn> <1584932355-3642-2-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 1/3] MIPS: Loongson: Get host bridge information
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <C251FD7C-87F0-454E-83D7-5198A6E060E2@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show maxactive parameter on kprobe_events.
-This allows user to save the current configuration and
-restore it without losing maxactive parameter.
 
-Reported-by: Taeung Song <treeze.taeung@gmail.com>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- kernel/trace/trace_kprobe.c |    2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 362cca52f5de..d0568af4a0ef 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1078,6 +1078,8 @@ static int trace_kprobe_show(struct seq_file *m, struct dyn_event *ev)
- 	int i;
- 
- 	seq_putc(m, trace_kprobe_is_return(tk) ? 'r' : 'p');
-+	if (trace_kprobe_is_return(tk) && tk->rp.maxactive)
-+		seq_printf(m, "%d", tk->rp.maxactive);
- 	seq_printf(m, ":%s/%s", trace_probe_group_name(&tk->tp),
- 				trace_probe_name(&tk->tp));
- 
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8823=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+0:59:13, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>Read the address of HyperTransport Configuration Space to get the
+>vendor ID
+>and device ID of bridge chip, and then we can distinguish various types
+>of
+>bridge chip such as Loongson 7A1000 or AMD RS780E=2E
+>
+>Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
+>---
+> arch/mips/include/asm/mach-loongson64/boot_param=2Eh |  6 ++++++
+>arch/mips/loongson64/env=2Ec                         | 16
+>++++++++++++++++
+> 2 files changed, 22 insertions(+)
+>
+>diff --git a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>index 8c286be=2E=2E5e8c70d 100644
+>--- a/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>+++ b/arch/mips/include/asm/mach-loongson64/boot_param=2Eh
+>@@ -190,6 +190,11 @@ struct boot_params {
+> 	struct efi_reset_system_t reset_system;
+> };
+>=20
+>+enum loongson_bridge_type {
+>+	RS780E =3D 1,
+>+	LS7A1000 =3D 2
+>+};
+>+
+> struct loongson_system_configuration {
+> 	u32 nr_cpus;
+> 	u32 nr_nodes;
+>@@ -198,6 +203,7 @@ struct loongson_system_configuration {
+> 	u16 boot_cpu_id;
+> 	u16 reserved_cpus_mask;
+> 	enum loongson_cpu_type cputype;
+>+	enum loongson_bridge_type bridgetype;
+> 	u64 ht_control_base;
+> 	u64 pci_mem_start_addr;
+> 	u64 pci_mem_end_addr;
+>diff --git a/arch/mips/loongson64/env=2Ec b/arch/mips/loongson64/env=2Ec
+>index 0daeb7b=2E=2E42542c7 100644
+>--- a/arch/mips/loongson64/env=2Ec
+>+++ b/arch/mips/loongson64/env=2Ec
+>@@ -19,6 +19,8 @@
+> #include <boot_param=2Eh>
+> #include <workarounds=2Eh>
+>=20
+>+#define HT1_LO_BUS_CONFIG_BASE	0x90000efdfe000000
+>+
+> u32 cpu_clock_freq;
+> EXPORT_SYMBOL(cpu_clock_freq);
+> struct efi_memory_map_loongson *loongson_memmap;
+>@@ -42,6 +44,8 @@ void __init prom_init_env(void)
+> 	struct system_loongson *esys;
+> 	struct efi_cpuinfo_loongson *ecpu;
+> 	struct irq_source_routing_table *eirq_source;
+>+	u32 id;
+>+	u16 vendor, device;
+>=20
+> 	/* firmware arguments are initialized in head=2ES */
+> 	boot_p =3D (struct boot_params *)fw_arg2;
+>@@ -155,4 +159,16 @@ void __init prom_init_env(void)
+> 		memcpy(loongson_sysconf=2Esensors, esys->sensors,
+> 			sizeof(struct sensor_device) * loongson_sysconf=2Enr_sensors);
+> 	pr_info("CpuClock =3D %u\n", cpu_clock_freq);
+>+
+>+	id =3D readl((u32 *)HT1_LO_BUS_CONFIG_BASE);
 
+Is that pointer cast required?
+
+And you'd better add a comment here like
+/* Read HT PCI 00:00:00 Host Bridge's ID to detect bridge model */
+Otherwise it's hard for others to understand what you are doing=2E
+
+>+	vendor =3D id & 0xffff;
+>+	device =3D (id >> 16) & 0xffff;
+>+
+>+	if (vendor =3D=3D 0x0014 && device =3D=3D 0x7a00) {
+
+Please confirm with hardware design guys that bridge chip in future will h=
+ave different dev ID=2E
+
+Thanks=2E
+
+>+		pr_info("The bridge chip is Loongson 7A1000\n");
+>+		loongson_sysconf=2Ebridgetype =3D LS7A1000;
+>+	} else {
+>+		pr_info("The bridge chip is AMD RS780E or SR5690\n");
+>+		loongson_sysconf=2Ebridgetype =3D RS780E;
+>+	}
+> }
+
+--=20
+Jiaxun Yang
