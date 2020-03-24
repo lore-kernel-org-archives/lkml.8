@@ -2,224 +2,108 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17495C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A109C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9246206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:52:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 610D3206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Pvm7RYTC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UWo5YyX/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728001AbgCXQw6 (ORCPT
+        id S1727662AbgCXQyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:52:58 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42283 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbgCXQw6 (ORCPT
+        Tue, 24 Mar 2020 12:54:20 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:38267 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbgCXQyU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:52:58 -0400
-Received: by mail-qk1-f193.google.com with SMTP id e11so19949777qkg.9
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 09:52:57 -0700 (PDT)
+        Tue, 24 Mar 2020 12:54:20 -0400
+Received: by mail-pj1-f67.google.com with SMTP id m15so1715412pje.3;
+        Tue, 24 Mar 2020 09:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=X70HFJUJ8UBP2puE+4Pj/8Ffpu/zNV0pZe3tHi3ELyo=;
-        b=Pvm7RYTCtHAH9sMzgFZ1SrpEviFMtXMGRtXzAfU0f7w4htIjfwtomnoookRoWLaQzj
-         zdLnqaa9pUW1X+U83Ew7VNozcn8y+vfL+UZHu9VfPzY1w7nQD1ocdFi0SmTg1Ir8Mxxn
-         ABnAEoLDabKZuvfN43/KaaDvmdsjLAJIg4d2c=
+        bh=rPZBl+QbGFAFlz2fLf98Z5n8K3I+qd2EtNADkBNRMLw=;
+        b=UWo5YyX/rz4iT22TlUFvMncYW1HL4F8dFNN2Pn6WdGpvsGKs7lRciWnF92mV3MrHXt
+         g9G8ed0fy9z8RVLHDli/tFxC3mdwGVVW2GsLGtBC5d37nzjvaMo+9ZOdpDp96qeNtqrs
+         CsVV5RX+XdgMbCB2HOYg5pK+q2Nyab6kDG8jbCUdlceMncwfXrCuJDlTFiiPfa2PBEkt
+         eKWxH0c0T5nOS+/UvxLM5qEVXPEbvWXIUFX3aVPP1L/BO7ZYnwewjGGZxW79s7XV/y1z
+         Hif8WRbKqmEisX7as5ZgPCdUdDXUY9bUHS9/9w+BegZ6VvoWfR0NiMIeh/K0Tmyxg5y5
+         UCpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X70HFJUJ8UBP2puE+4Pj/8Ffpu/zNV0pZe3tHi3ELyo=;
-        b=n1DVXxoddg5NWNyxHuz+xSMbqx7rTISJCjDaeN8NVczze1TstmK5BV6hOtVi2REc+d
-         DpI4Ho/zgDWdnFeNz2UZuC6yl9LhFWMjeI8Jt3emNiQXwEVWFoqqYMyXpeUUrlxADYwU
-         gK5P9Pvjyo1eJGyJKDltd15EYsP0XTRnAYu4BezgSgkwX/WItKycboh5IbJkom40sMGJ
-         ZfUpbaDpx+ciy5Bq2gYyD+wXofx8RR3h+/47QAtLgb4v6MjBGtLO/yYz1aGwAq/RbNzx
-         r/IvNYJEkkUfaZOtPjOu/X+ycIe9B5hQSF1bFEjhUcuxKR3BRd3wMhSg8rpWFvT0KODR
-         l6lw==
-X-Gm-Message-State: ANhLgQ0q1MGaWUAcRRdgZ46Qc1oVxB9PrX1gpweoIj422QlOEcsm/nF6
-        t1ZfWZV0HhMIpG5FcPnMPuWwEQ==
-X-Google-Smtp-Source: ADFU+vuxk2fU8o/h44zPLHBVcdInqjTDwHMcau9NBCsn9rJc0M8OWFuDgHMv71xrgc9BIbPT2rMHDg==
-X-Received: by 2002:a37:7a46:: with SMTP id v67mr26301949qkc.87.1585068776697;
-        Tue, 24 Mar 2020 09:52:56 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id v75sm13831625qkb.22.2020.03.24.09.52.56
+        bh=rPZBl+QbGFAFlz2fLf98Z5n8K3I+qd2EtNADkBNRMLw=;
+        b=q0dOQgLdBal38HyppEhhlO8qoTULaTS1JwtPGaxxoDRg/018UYRW02WvQVpAIWM/Cc
+         Nprz+JrFhTFhhsS7WUAT3jQAbvI7CKT/4MbfsjUiChNvFao7NGSX7h7oBFgjgvXnVK+N
+         XYkFiQv+YNqadLu5iL0jylGCovjso+7DjX1EVRT27fSvgUYaV7FqP2xcb4kNZL6y7QHx
+         Df6gYcYHAt9CBhOJFGU23GdS2l3vpkWOadZdrM0Ap7u5XpgAQGEHgED7IFDKrI5AcYXZ
+         CKV14kEeTmdzgYBzqwYwXtRYvcLYJVScmAx5kMP6fsNkZHuOEQZ7RB1e+m/SQRUbMAAF
+         yMmA==
+X-Gm-Message-State: ANhLgQ2rfRzXXMbNf8ZjP4L6CNooEJKQMWT4Jwm+Um4fwHcepZu5muqS
+        dk6H8/IwLvkT45cUrIjTbaU=
+X-Google-Smtp-Source: ADFU+vvVT3/hBoL79iWLOhKZfIHg0UIA7zdlV4T9CvIkuEaERJ0ookWRmQeJVoKdWNDIJKR+yO5Owg==
+X-Received: by 2002:a17:90a:bd0c:: with SMTP id y12mr6554330pjr.82.1585068857320;
+        Tue, 24 Mar 2020 09:54:17 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id n30sm8678428pgc.36.2020.03.24.09.54.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 09:52:56 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 12:52:55 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
-        oleg@redhat.com, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        vpillai@digitalocean.com
-Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
- sample state of locked-down task
-Message-ID: <20200324165255.GA242454@google.com>
-References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
- <20200319001100.24917-1-paulmck@kernel.org>
- <20200319132238.75a034c3@gandalf.local.home>
- <20200319173525.GI3199@paulmck-ThinkPad-P72>
- <20200320024943.GA29649@paulmck-ThinkPad-P72>
- <20200324000639.GA29340@google.com>
- <20200324154822.GC19865@paulmck-ThinkPad-P72>
+        Tue, 24 Mar 2020 09:54:16 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 09:54:14 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 08/11] net: ethernet: ti: cpts: move rx
+ timestamp processing to ptp worker only
+Message-ID: <20200324165414.GA30483@localhost>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-9-grygorii.strashko@ti.com>
+ <20200324134343.GD18149@localhost>
+ <13dd9d58-7417-2f39-aa7d-dceae946482c@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324154822.GC19865@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <13dd9d58-7417-2f39-aa7d-dceae946482c@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 08:48:22AM -0700, Paul E. McKenney wrote:
-[..] 
-> > 
-> > > diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-> > > index 44edd0a..43991a4 100644
-> > > --- a/kernel/rcu/tree.h
-> > > +++ b/kernel/rcu/tree.h
-> > > @@ -455,6 +455,8 @@ static void rcu_bind_gp_kthread(void);
-> > >  static bool rcu_nohz_full_cpu(void);
-> > >  static void rcu_dynticks_task_enter(void);
-> > >  static void rcu_dynticks_task_exit(void);
-> > > +static void rcu_dynticks_task_trace_enter(void);
-> > > +static void rcu_dynticks_task_trace_exit(void);
-> > >  
-> > >  /* Forward declarations for tree_stall.h */
-> > >  static void record_gp_stall_check_time(void);
-> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > index 9355536..f4a344e 100644
-> > > --- a/kernel/rcu/tree_plugin.h
-> > > +++ b/kernel/rcu/tree_plugin.h
-> > > @@ -2553,3 +2553,21 @@ static void rcu_dynticks_task_exit(void)
-> > >  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
-> > >  #endif /* #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL) */
-> > >  }
-> > > +
-> > > +/* Turn on heavyweight RCU tasks trace readers on idle/user entry. */
-> > > +static void rcu_dynticks_task_trace_enter(void)
-> > > +{
-> > > +#ifdef CONFIG_TASKS_RCU_TRACE
-> > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
-> > > +		current->trc_reader_special.b.need_mb = true;
-> > 
-> > If this is every called from middle of a reader section (that is we
-> > transition from IPI-mode to using heavier reader-sections), then is a memory
-> > barrier needed here just to protect the reader section that already started?
-> 
-> That memory barrier is provided by the memory ordering in the callers
-> of rcu_dynticks_task_trace_enter() and rcu_dynticks_task_trace_exit(),
-> namely, those callers' atomic_add_return() invocations.  These barriers
-> pair with the pair of smp_rmb() calls in rcu_dynticks_zero_in_eqs(),
-> which is in turn invoked from the function formerly known as
-> trc_inspect_reader_notrunning(), AKA trc_inspect_reader().
-> 
-> This same pair of smp_rmb() calls also pair with the conditional smp_mb()
-> calls in rcu_read_lock_trace() and rcu_read_unlock_trace().
-> 
-> In your scenario, the calls in rcu_read_lock_trace() and
-> rcu_read_unlock_trace() wouldn't happen, but in that case the ordering
-> from atomic_add_return() would suffice.
-> 
-> Does that work?  Or is there an ordering bug in there somewhere?
+On Tue, Mar 24, 2020 at 05:34:34PM +0200, Grygorii Strashko wrote:
+> I tested both ways and kept this version as i'v not seen any degradation,
+> but, of course, i'll redo the test (or may be you can advise what test to run).
 
-Thanks for explaining. Could the following scenario cause a problem?
+Measure the time delay from when the frame arrives in the stack until
+that frame+RxTimestamp arrives in the application.  I expect the round
+about way via kthread takes longer. 
+ 
+> My thoughts were - network stack might not immediately deliver packet to the application
 
-If we consider the litmus test:
+The network stack always delivers the packet, but you artificially
+delay that delivery by calling netif_receive_skb() later on from
+cpts_match_rx_ts().
 
-{
-int x = 1;
-int *y = &x;
-int z = 1;
-}
+> and PTP worker can be tuned (pri and smp_affinity),
 
-P0(int *x, int *z, int **y)
-{
-	int *r0;
-	int r1;
+That won't avoid the net softirq.
 
-	dynticks_eqs_trace_enter();
+> resulted code will be more structured,
 
-	rcu_read_lock();
-	r0 = rcu_dereference(*y);
+I am afraid people will copy this pattern in new drivers.  It really
+does not make much sense.
 
-	dynticks_eqs_trace_exit(); // cut-off reader's mb wings :)
-
-	r1 = READ_ONCE(*r0); // Reordering of this beyond the unlock() is bad.
-	rcu_read_unlock();
-}
-
-P1(int *x, int *z, int **y)
-{
-	rcu_assign_pointer(*y, z);
-	synchronize_rcu();
-	WRITE_ONCE(*x, 0);
-}
-
-exists (0:r0=x /\ 0:r1=0)
-
-Then the following situation can happen?
-
-	READER					UPDATER
-
-						y = &z;
-
-	eqs_enter(); // full-mb
-
-	rcu_read_lock(); // full-mb
-	// r0 = x;
-						// GP-start
-						// ..zero_in_eqs() notices eqs, no IPI
-	eqs_exit(); // full-mb
-
-	// actual r1 = *x but will reorder
-
-	rcu_read_unlock(); // no-mb
-						// GP-finish as notices nesting = 0
-						x = 0;
-	// reordered r1 = *x = 0;
-
-
-Basically r0=x /\ r1=0 happened because r1=0. Or did I miss something that
-prevents it?
-
-thanks,
-
- - Joel
-
-
-
-
-> > thanks,
-> > 
-> >  - Joel
-> > 
-> > 
-> > > +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
-> > > +}
-> > > +
-> > > +/* Turn off heavyweight RCU tasks trace readers on idle/user exit. */
-> > > +static void rcu_dynticks_task_trace_exit(void)
-> > > +{
-> > > +#ifdef CONFIG_TASKS_RCU_TRACE
-> > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
-> > > +		current->trc_reader_special.b.need_mb = false;
-> > > +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
-> > > +}
+Thanks,
+Richard
