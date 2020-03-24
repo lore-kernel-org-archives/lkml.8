@@ -2,99 +2,66 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF04FC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49590C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5FA02073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16E4C20753
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KOV9yBr7"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Zigr7ijl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgCXNnt (ORCPT
+        id S1728501AbgCXNnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:43:49 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:36503 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727920AbgCXNnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:43:47 -0400
-Received: by mail-pj1-f67.google.com with SMTP id nu11so1450116pjb.1;
-        Tue, 24 Mar 2020 06:43:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cjMyCzFsndemlyXlxtjlf/CkB3QYu9IZUo9Mhtw3Nmg=;
-        b=KOV9yBr7ujPbdeR9f3fS+ehTTG+yIcvyBqiigdgScE+Ndkyq1DIdwP8dtj2w8qImhZ
-         LPL9LZHmcCBFLxUPvajrUN+WSejIUDgFx19nqDQhE6TOv4QPGXRkrU0ZMq/MPeNBcPED
-         raxWg+VAe0FmpKvveQXxLVXCuR1UJtjKCNVVhEjfd7MxMidcAoAAYwZDUagXTaJ20g+i
-         ryKndtZuBZQJJI0NUo+NabyEm5UFkp3xRpReQ8c1IyLCbJgFaRJpjzD9lR5RXT6np+cM
-         MAYulg4b97cbH3U2ncnEa3JIzqQciN/5XcDQVZOjrwyv6j9t0xrfH5nytTgUFdpvBoJM
-         i26g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cjMyCzFsndemlyXlxtjlf/CkB3QYu9IZUo9Mhtw3Nmg=;
-        b=L9a1pmeCGN8UjcPas2QnOurLyd2j0tVsisCueRjFfDH94CvSC6lxSBShtd6JXdN280
-         fRcBxinMKNvIDMR/mm35NeX8UK9l7Ychlkc15CT5umkTpgC4CAktUbH9ZdnmeL7MYRNJ
-         8FQIA8L8t8+SwxYQbxxdM0+5x9yRpXNPzlZvc2RCgNQu1l2ccLY60qEKyaHcjOJ/MKn5
-         iFNuiSYv6dRYu5pNd1NEYp5UzPjR/JDeHUIDrCOuEMpobRGY1SoPV4PpxOqJFHKQt+kO
-         r3eI2dMXlaZxKjtwjZP2si7ofeWMrhYwgMEsr4+VbCPkrKrE1o95723I5L4coNWad095
-         9jgQ==
-X-Gm-Message-State: ANhLgQ3ZeiQXJF0WTu+VPrxU0DVKrtIOhH03lLXhH164P3nCKW4f24n7
-        IwkF1o6s0fH/hTjjIkyeRMg=
-X-Google-Smtp-Source: ADFU+vsX0OYFc61qBOPMU/7kig1YoHQyRX11hH+EoJSBKWHEWq+GYvLPqREgpsscs+jJ2yekiJq2Ag==
-X-Received: by 2002:a17:90a:bf91:: with SMTP id d17mr5639971pjs.131.1585057425685;
-        Tue, 24 Mar 2020 06:43:45 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id n30sm8361446pgc.36.2020.03.24.06.43.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 06:43:45 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 06:43:43 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
+        Tue, 24 Mar 2020 09:43:53 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:54480 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728416AbgCXNnu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:43:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=PGTJ624xy37YPjUynlw4h0mO/vuLMxq5CI5b1l8BwNQ=; b=Zigr7ijlBlsCbjDqY2gBPfgJ5B
+        9NpdDRp1mpKob3tjOb3hJ91xItaccKePY5zYCNI7qw0mhN10pZPgqBq6gdfY2ALZJ0XDq8oWFTbBz
+        oulDnAoomL3KCBwxFX6Z7cZ1pRfKOqHQpj8PQe54dF5f1B6VjomSzRDs+BL8el642XyI=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jGjqC-0002NK-Vj; Tue, 24 Mar 2020 14:43:36 +0100
+Date:   Tue, 24 Mar 2020 14:43:36 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Andre Przywara <andre.przywara@arm.com>
 Cc:     "David S . Miller" <davem@davemloft.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 08/11] net: ethernet: ti: cpts: move rx
- timestamp processing to ptp worker only
-Message-ID: <20200324134343.GD18149@localhost>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
- <20200320194244.4703-9-grygorii.strashko@ti.com>
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 10/14] net: axienet: Add mii-tool support
+Message-ID: <20200324134336.GZ3819@lunn.ch>
+References: <20200324132347.23709-1-andre.przywara@arm.com>
+ <20200324132347.23709-11-andre.przywara@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200320194244.4703-9-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324132347.23709-11-andre.przywara@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:42:41PM +0200, Grygorii Strashko wrote:
-> Once CPTS IRQ will be enabled the CPTS irq handler may compete with netif
-> RX sofirq path and so RX timestamp might not be ready at the moment packet
-> is processed. As result, packet has to be deferred and processed later.
+On Tue, Mar 24, 2020 at 01:23:43PM +0000, Andre Przywara wrote:
+> mii-tool is useful for debugging, and all it requires to work is to wire
+> up the ioctl ops function pointer.
+> Add this to the axienet driver to enable mii-tool.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-This change is not necessary.  The Rx path can simply take a spinlock,
-check the event list and the HW queue.
- 
-> This patch moves RX timestamp processing tx timestamp processing to PTP
-> worker always the same way as it's been done for TX timestamps.
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-There is no advantage to delaying Rx time stamp delivery.  In fact, it
-can degrade synchronization performance.  The only reason the
-implementation delays Tx time stamps delivery is because there is no
-other way.
-
-Thanks,
-Richard
+    Andrew
