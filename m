@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78559C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D14C1C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42886208D6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A92A4208E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056422;
-	bh=sV/7tZu+9jzAgfabfiSVc15CYjE0b5LlMjqpkrHWOS0=;
+	s=default; t=1585056424;
+	bh=FP8exDLQWAS3Yv+57ptU0YIK06sxWSjZtdpU9Sx7kZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=seJHCsMVIKq4dTrnrZYxHCDShj8zfV8gT4V5yFDLzN9o5oSH+GVuCBz2YFSqoaLwk
-	 RoR4a4KSIN2eiYiJNBzsOznvQUaXn3Dv3FJeI7iakq2PfVZzi1UDNRTkJ9een6VUI4
-	 z/taJxyjYtorVdGyJR1JTAhIPLLqNcThYpRR3rFE=
+	b=pDuK6hTqBRoOmMWUJQUe7aXfcGfNvEDVaQQBVhMM9I5eLI6Yx9xoGt9/ya1PshcAt
+	 NcLzk6/SR4fSgDBqmPLmVUJcq3vOfGD3xG+zLdubjoIhxSPfWLVBq9x6CZxcxgiuEV
+	 +cCupuRkVQokttvmN+Bmf/OPJ/eJ6sFBA+6qw36M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbgCXN1B (ORCPT
+        id S1727976AbgCXN06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:27:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729754AbgCXN06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:26:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729743AbgCXN0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:26:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4808C20B80;
-        Tue, 24 Mar 2020 13:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3D1C208D6;
+        Tue, 24 Mar 2020 13:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056417;
-        bh=sV/7tZu+9jzAgfabfiSVc15CYjE0b5LlMjqpkrHWOS0=;
+        s=default; t=1585056415;
+        bh=FP8exDLQWAS3Yv+57ptU0YIK06sxWSjZtdpU9Sx7kZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bAzj3TnHl7JAkJ3ccN7Rd0+fzi4p4Hqlw5x/sy5kja0CWcd3lEa+fC5CWoPAlK0Ik
-         hcoXViAWQEaIPKdhMi02wS+gt8fRe2CPN9asCScl41zJnkUBFurhxnWIThglt2NpvK
-         Wq8ei+sqH7zkmhW3+yxRuRYi23GamicsH9YGdxTo=
+        b=oYTbVgoYkKQ/rZD5PHUrgJXHfr1tooPsWr4x+oBqWCAhyf4ZNnmGr86VSXANtPAJy
+         2y5JS4ARSzSVo6bQe78JAkvOFcDbK43oSGTkN89GZ48e7SxdZaNeVrxvtU6/1ydQ03
+         7uYWsw/7IF4SgNwN4Mi/XX+2HiYnGnsYGKwfbeJk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiao Yang <yangx.jy@cn.fujitsu.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 5.5 110/119] modpost: Get proper section index by get_secindex() instead of st_shndx
-Date:   Tue, 24 Mar 2020 14:11:35 +0100
-Message-Id: <20200324130818.764177274@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.5 083/119] intel_th: pci: Add Elkhart Lake CPU support
+Date:   Tue, 24 Mar 2020 14:11:08 +0100
+Message-Id: <20200324130816.567197905@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -59,39 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiao Yang <yangx.jy@cn.fujitsu.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit 4b8a5cfb5fd375cf4c7502a18f0096ed2881be27 upstream.
+commit add492d2e9446a77ede9bb43699ec85ca8fc1aba upstream.
 
-(uint16_t) st_shndx is limited to 65535(i.e. SHN_XINDEX) so sym_get_data() gets
-wrong section index by st_shndx if requested symbol contains extended section
-index that is more than 65535.  In this case, we need to get proper section index
-by .symtab_shndx section.
+This adds support for the Trace Hub in Elkhart Lake CPU.
 
-Module.symvers generated by building kernel with "-ffunction-sections -fdata-sections"
-shows the issue.
-
-Fixes: 56067812d5b0 ("kbuild: modversions: add infrastructure for emitting relative CRCs")
-Fixes: e84f9fbbece1 ("modpost: refactor namespace_from_kstrtabns() to not hard-code section name")
-Signed-off-by: Xiao Yang <yangx.jy@cn.fujitsu.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200317062215.15598-7-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- scripts/mod/modpost.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwtracing/intel_th/pci.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -307,7 +307,8 @@ static const char *sec_name(struct elf_i
- 
- static void *sym_get_data(const struct elf_info *info, const Elf_Sym *sym)
- {
--	Elf_Shdr *sechdr = &info->sechdrs[sym->st_shndx];
-+	unsigned int secindex = get_secindex(info, sym);
-+	Elf_Shdr *sechdr = &info->sechdrs[secindex];
- 	unsigned long offset;
- 
- 	offset = sym->st_value;
+--- a/drivers/hwtracing/intel_th/pci.c
++++ b/drivers/hwtracing/intel_th/pci.c
+@@ -235,6 +235,11 @@ static const struct pci_device_id intel_
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
+ 	},
+ 	{
++		/* Elkhart Lake CPU */
++		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4529),
++		.driver_data = (kernel_ulong_t)&intel_th_2x,
++	},
++	{
+ 		/* Elkhart Lake */
+ 		PCI_DEVICE(PCI_VENDOR_ID_INTEL, 0x4b26),
+ 		.driver_data = (kernel_ulong_t)&intel_th_2x,
 
 
