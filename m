@@ -2,132 +2,82 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F70CC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8DBAC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:17:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93ED20788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:17:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B18F220788
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:17:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i+R3w8ty"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Pfi3U3Ir"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgCXORd (ORCPT
+        id S1727890AbgCXOR5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:17:33 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55158 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbgCXORd (ORCPT
+        Tue, 24 Mar 2020 10:17:57 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:41597 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbgCXOR5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:17:33 -0400
-Received: by mail-pj1-f65.google.com with SMTP id np9so1543413pjb.4;
-        Tue, 24 Mar 2020 07:17:32 -0700 (PDT)
+        Tue, 24 Mar 2020 10:17:57 -0400
+Received: by mail-ed1-f68.google.com with SMTP id v1so6733550edq.8;
+        Tue, 24 Mar 2020 07:17:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=nqAcdWRnqSA/uVQmjWL4caKhzvHsEqccflrG15Mc1BU=;
-        b=i+R3w8tyBBRz7DPLdorBhqwkmJr0che8ngK6INjQt9Dj6plsw9cPLB9/2oL+Ru2Phu
-         EJ1NEWAtawVzsfxWiDf6mPWQ2QVA6l74wvA1wYnt8AuOHHJ9XcQEv4KXa9BnlsrTp7xP
-         X7Y3+pHhYiIBwCbGIVt25dnRGWiYKM0D244lbl7iwbmLPU5XCzvOtJukJXN8MTRcHN0f
-         ypa56lPmgFOS1rviBKXsY3G2+GeKCmst6Wfh2ISNAGqLtX8JEL2BDKa0+BM8onFimw3g
-         Lf7ARAbwGniGWHYWllahoFtg/Ds90+rhgRNTrQ2GceBy5sV18StFxyCic0gb6e49Y1Sz
-         boBw==
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xx2u6dAeKaaJIcCdGG7a+MHyPFXyawY2CxF2KYjyqZQ=;
+        b=Pfi3U3Ir4fQy1Yx260wRphweTsnWzdkKnJG94vRjiuMBLX4MwnIELs2kjki8abS+e9
+         P1mDGBUW8ebLtZWZy8wZ722Cr2ghTK3WhEoE/1L+6ZW8E4iaIcjjv8hcyuh1UtVt8BpM
+         bHx2dhHaSFLlOQHEa3RBTyXULDsxsK4CLfJYbmiHSjj/1edLkjkOCpRFAUg2fh6ezT/F
+         f+w7jTZPtdmPzj68h01NTo22/gSsbrYHAvWRzcOB+WqfJV0XuuRPJAob48hy0O4axb/t
+         3Yk+1QbeLzM7cFUm589nmKPecsboesnHlC+mDNMCOeZKN5yRM+edDvUlY8Vi8H09c2Oo
+         9HIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=nqAcdWRnqSA/uVQmjWL4caKhzvHsEqccflrG15Mc1BU=;
-        b=BwgWn8j1eN/y6D31AyQ9y5X3rsL1fFbyNgd+YKmjLlxjXQBW1L1E8D43YAIcVweoXN
-         eaz8EFYpm7Dl9ui8WuM7jSV+a5igU8SNFEg58/IfvTqz2VDKVF96M28Eb/Cx3wGc/1UN
-         aJba6fNk5ldPZ+cBZtZ2p55VDY4mq8g/U4Ae4cSGq62+di5Im8pCp6OOFRo3EHkvAsv6
-         2lJmIesdPSQBnFcXU3MT0VxIQG93c8RAhT2sGrSBD2qHIc9hnlVmDdHbA/8+K2jq/po8
-         63C2ZGNuUYs6l7oZQcVsVV+cE9ZFw8YvkmndmSRRdwVC53MIuRSXzGiK/EY1NjXUbhxN
-         MgbA==
-X-Gm-Message-State: ANhLgQ24GKiNGMobF5Wl+GZEg7/dOGsqZ7N7JNp126wDtJIMcK0eZCek
-        fQBxMqUsplhltiCTxCmgy/Q=
-X-Google-Smtp-Source: ADFU+vvCSoe1U89aWWTI8mNMwOh7QdhrRFV/bChepi0T+tjxcwIiOwaHnOhN/sgcgKEl4/URYv0CGQ==
-X-Received: by 2002:a17:902:7248:: with SMTP id c8mr12760121pll.243.1585059451710;
-        Tue, 24 Mar 2020 07:17:31 -0700 (PDT)
-Received: from localhost.localdomain ([180.70.143.152])
-        by smtp.gmail.com with ESMTPSA id y3sm16256642pfy.158.2020.03.24.07.17.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 07:17:30 -0700 (PDT)
-From:   Taehee Yoo <ap420073@gmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, j.vosburgh@gmail.com, vfalico@gmail.com,
-        andy@greyhouse.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     ap420073@gmail.com, mitch.a.williams@intel.com
-Subject: [PATCH RESEND net 1/3] class: add class_find_and_get_file_ns() helper function
-Date:   Tue, 24 Mar 2020 14:17:22 +0000
-Message-Id: <20200324141722.21308-1-ap420073@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xx2u6dAeKaaJIcCdGG7a+MHyPFXyawY2CxF2KYjyqZQ=;
+        b=f34uLe0vL+qz+PA/o/LLEIYUG8xC3LageAJRg85gkid+iHjx5bBgnD/mbB42gR0wot
+         IjPjt2+Oa7ZH4pRpEqYe6q9Xy8wRbUgVeTLEA6LXWgYsYH4W1TDmikFmJZvVNub9a8cr
+         WuvIqCZDUYBh5UhF/M9ttTsEhT/AcenzdZn1bCSAbEvdNrEA6pZzmXiBKPPJNtLmZp/7
+         dN6XsrOkI5L2feaPJKzA9nsr4RGYor5LEUvhLt3J5A0UcXUzY8yFwoQ5lQh4PDg6Luuc
+         GCnIALGjlEMEMmDZ9eOflvSLViFLVdel+g550HQWNXbyWFiq85no3CnEi6YvMZNrj8/C
+         uYmA==
+X-Gm-Message-State: ANhLgQ1vDtnHpjujTdnXJPlv+OZLKfjdssSrzHWrmYEUf+0SFruDkXLn
+        im+zZ+g//a3Gpijv8Mwe0uU53bwJxU9AqOy33no=
+X-Google-Smtp-Source: ADFU+vvZgU97KBWThgXsmPEOlxqBfDic4xAuO4yKuCu8eS8LLOFWGOi+tSJBGkNesAYEEyX2igkt8q2rwd+Rdcoco7c=
+X-Received: by 2002:aa7:c910:: with SMTP id b16mr7482653edt.13.1585059474879;
+ Tue, 24 Mar 2020 07:17:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324102030.31000-1-narmstrong@baylibre.com> <20200324102030.31000-4-narmstrong@baylibre.com>
+In-Reply-To: <20200324102030.31000-4-narmstrong@baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Tue, 24 Mar 2020 15:17:44 +0100
+Message-ID: <CAFBinCA53iP3n849JacHjvSJCLxJEwikAspL-MUDJsZi7kWC5g@mail.gmail.com>
+Subject: Re: [PATCH 03/13] usb: dwc3: meson-g12a: handle the phy and glue
+ registers separately
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
+        linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The new helper function is to find and get a class file.
-This function is useful for checking whether the class file is existing
-or not. This function will be used by networking stack to
-check "/sys/class/net/*" file.
-
-Reported-by: syzbot+830c6dbfc71edc4f0b8f@syzkaller.appspotmail.com
-Fixes: b76cdba9cdb2 ("[PATCH] bonding: add sysfs functionality to bonding (large)")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
----
- drivers/base/class.c         | 12 ++++++++++++
- include/linux/device/class.h |  4 +++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/base/class.c b/drivers/base/class.c
-index bcd410e6d70a..dedf41f32f0d 100644
---- a/drivers/base/class.c
-+++ b/drivers/base/class.c
-@@ -105,6 +105,17 @@ void class_remove_file_ns(struct class *cls, const struct class_attribute *attr,
- 		sysfs_remove_file_ns(&cls->p->subsys.kobj, &attr->attr, ns);
- }
- 
-+struct kernfs_node *class_find_and_get_file_ns(struct class *cls,
-+					       const char *name,
-+					       const void *ns)
-+{
-+	struct kernfs_node *kn = NULL;
-+
-+	if (cls)
-+		kn = kernfs_find_and_get_ns(cls->p->subsys.kobj.sd, name, ns);
-+	return kn;
-+}
-+
- static struct class *class_get(struct class *cls)
- {
- 	if (cls)
-@@ -580,6 +591,7 @@ int __init classes_init(void)
- 
- EXPORT_SYMBOL_GPL(class_create_file_ns);
- EXPORT_SYMBOL_GPL(class_remove_file_ns);
-+EXPORT_SYMBOL_GPL(class_find_and_get_file_ns);
- EXPORT_SYMBOL_GPL(class_unregister);
- EXPORT_SYMBOL_GPL(class_destroy);
- 
-diff --git a/include/linux/device/class.h b/include/linux/device/class.h
-index e8d470c457d1..230cf2ce6d3f 100644
---- a/include/linux/device/class.h
-+++ b/include/linux/device/class.h
-@@ -209,7 +209,9 @@ extern int __must_check class_create_file_ns(struct class *class,
- extern void class_remove_file_ns(struct class *class,
- 				 const struct class_attribute *attr,
- 				 const void *ns);
--
-+struct kernfs_node *class_find_and_get_file_ns(struct class *cls,
-+					       const char *name,
-+					       const void *ns);
- static inline int __must_check class_create_file(struct class *class,
- 					const struct class_attribute *attr)
- {
--- 
-2.17.1
-
+On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> On the Amlogic GXL/GXM SoCs, only the USB control registers are available,
+> the PHY mode being handled in the PHY registers.
+>
+> Thus, handle the PHY mode registers in separate regmaps and prepare
+> support for Amlogic GXL/GXM SoCs by moving the regmap setup in a callback
+> set in the SoC match data.
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
