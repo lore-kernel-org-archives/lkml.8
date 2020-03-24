@@ -2,98 +2,155 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71495C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1612BC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526CD2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2A3D20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:47:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585064873;
+	bh=WtoEx689uIy92IuHg5B9nN2uCDlFhHGSJ6zHQ9Z88oE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=jj8y40M5QP1bU90sWjy8lx8RnUPPoVy7rSdLA2fT0HyMYgyVixJ3z1bjvy81NSXJk
+	 lwQkQXy9KPKKM7vOeA/xouUynqU54/+QoTEuL7K5hLg9ArlWBnlMTdW549e5pBhG8m
+	 jZBdUogG6yYytlll5hVEBGYSPiLRr1VLUOafUNvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgCXPrC (ORCPT
+        id S1728405AbgCXPrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:47:02 -0400
-Received: from mga04.intel.com ([192.55.52.120]:21508 "EHLO mga04.intel.com"
+        Tue, 24 Mar 2020 11:47:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbgCXPrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:47:02 -0400
-IronPort-SDR: uiF6sACUtv361W6mPKjOmHze75lhDg10tJTIgAWGEdVcLUF/HiAXnvWRSJx6R3CzgQQTmch0hG
- ZRTNO4yFs5Xg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 08:47:01 -0700
-IronPort-SDR: 88Vm/iaJ5JzgBwlVh6o6UXLS1iKGkcgdhPzit2FTxm7emrUtmOdXaHAaWP3eB1mkjEFYw+Edl1
- Ux6vl9GIVuNA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,300,1580803200"; 
-   d="scan'208";a="447916586"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 24 Mar 2020 08:46:59 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jGlld-00CZUm-Ob; Tue, 24 Mar 2020 17:47:01 +0200
-Date:   Tue, 24 Mar 2020 17:47:01 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Ferry Toth <fntoth@gmail.com>
-Subject: Re: [PATCH v2 1/3] driver core: Break infinite loop when deferred
- probe can't be satisfied
-Message-ID: <20200324154701.GQ1922688@smile.fi.intel.com>
-References: <20200324122023.9649-1-andriy.shevchenko@linux.intel.com>
- <CAJZ5v0hQ2vRE8QAWfxwN1auQd5bQS_ROd6do1bMt8GtLtRypRQ@mail.gmail.com>
- <20200324133903.GK1922688@smile.fi.intel.com>
- <CAJZ5v0gcLkymFNktG=46rxRc=KUGyztxYXmSZ51UxkKM6POnow@mail.gmail.com>
+        id S1727826AbgCXPrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:47:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB90A2076F;
+        Tue, 24 Mar 2020 15:47:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585064871;
+        bh=WtoEx689uIy92IuHg5B9nN2uCDlFhHGSJ6zHQ9Z88oE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=auDPhKwZe7ytFdQC8taLMul6iS+xsqB/7ZpB/ZE4b8VePFmsYDE1fldA2fWnfpm14
+         H8lop1IChvRXPSjcuLF9QfEyGadWme4M5C8zKSuD/kLMPS4KHs8kbOblr/AAjYYozz
+         w3FhB7T4ac8r4+ee6enf1SA31lUjkVzDYzsHTUzo=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jGlmP-00FKPD-5c; Tue, 24 Mar 2020 15:47:49 +0000
+Date:   Tue, 24 Mar 2020 15:47:47 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v6 00/11] Modernize Loongson64 Machine v6
+Message-ID: <20200324154747.18e8ccd5@why>
+In-Reply-To: <20200324153624.23109-1-jiaxun.yang@flygoat.com>
+References: <20190827085302.5197-1-jiaxun.yang@flygoat.com>
+        <20200324153624.23109-1-jiaxun.yang@flygoat.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gcLkymFNktG=46rxRc=KUGyztxYXmSZ51UxkKM6POnow@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, tsbogend@alpha.franken.de, chenhc@lemote.com, allison@lohutok.net, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 04:36:56PM +0100, Rafael J. Wysocki wrote:
->  On Tue, Mar 24, 2020 at 2:39 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Mar 24, 2020 at 01:52:00PM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Mar 24, 2020 at 1:20 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
+Jiaxun,
 
-...
+On Tue, 24 Mar 2020 23:35:57 +0800
+Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 
-> > > > +               atomic_dec(&probe_okay);
-> > >
-> > > Why is this needed?
-> >
-> > Under successful probe the following is comprehended. When probe of the driver
-> > happens it may be discarded (as in above case) as it was initiated by another
-> > driver which got deferred.
-> >
-> > We also discussed this with Peter [1] during his review.
-> >
-> > [1]: https://lkml.org/lkml/2020/3/12/347
+> Loongson have a long history of contributing their code to mainline kernel.
+> However, it seems like recent years, they are focusing on maintain a kernel by themselves
+> rather than contribute there code to the community.
 > 
-> OK, but I would add a comment explaining that to the code.
+> Kernel is progress rapidly too. Their code slept in mainline for a long peroid without proper
+> maintainance and became outdated.
 > 
-> Also it would be good to explain why probe_okay cannot go below zero
-> here in the changelog.
+> This patchset brings modern DeviceTree and irqchip support to the Loongson64 machine, and leaves
+> Loongson 2e/f alone since they are too legacy to touch.
+> 
+> PCI and some legacy I/O device will be converted later, together with LS7A PCH support.
+> 
+> v1:
+> - dt-bindings fixup according to Rob's comments
+> - irqchip fixup according to Marc's comments
+> - ls3-iointc: Make Core&IP map per-IRQ
+> - Regenerate kconfigs
+> - Typo & style improvements
+> 
+> v2:
+> - dt-bindings: Fix IOINTC, collect Rob's review tag
+> - dtbs: Drop CPU Node, merge different ways according to Huacai and Paul's comments
+> 
+> v3:
+> - Split code have been merged
+> - Fix IOINTC binding to allow map any child IRQ to and parent
+> - Convert "HTINTC" into "HTPIC", which mixed HT vectors processing and i8259
+> - Naming style fix according to Huacai's suggestions
+> 
+> v4:
+> - More naming related fixes
+> 
+> v5:
+> - irqchip fixes thanks to maz (see per file changelog)
+> - Remove unnecessary details in dt-bindings
+> - Credit Huacai with Co-developed-by
+> 
+> v6:
+> - HTPIC minor fix
+> - device binding naming fix 
+> 
+> ---
+> Jiaxun Yang (11):
+>   irqchip: Add driver for Loongson I/O Local Interrupt Controller
+>   irqchip: loongson-liointc: Workaround LPC IRQ Errata
+>   dt-bindings: interrupt-controller: Add Loongson LIOINTC
+>   irqchip: Add driver for Loongson-3 HyperTransport PIC controller
+>   dt-bindings: interrupt-controller: Add Loongson-3 HTPIC
+>   irqchip: mips-cpu: Convert to simple domain
+>   MIPS: Loongson64: Drop legacy IRQ code
+>   dt-bindings: mips: Add loongson boards
+>   MIPS: Loongson64: Add generic dts
+>   MIPS: Loongson64: Load built-in dtbs
+>   MIPS: Loongson64: Move MIPS_CPU_IRQ_BASE
 
-Will do, thank you for review!
+[...]
 
+How do you want to get these merged? I can take the first 6 patches
+through the irqchip tree, and leave the rest to go via the MIPS tree.
+
+Otherwise, if you plan to have the whole thing go via the MIPS tree,
+please add my:
+
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+
+to patches 1, 2, 4 and 6.
+
+Please let me know quickly, as I'd like to close the irqchip tree
+tomorrow.
+
+Thanks,
+
+	M.
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jazz is not dead. It just smells funny...
