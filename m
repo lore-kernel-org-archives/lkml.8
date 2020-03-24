@@ -2,285 +2,179 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2CFC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D37C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182CB2070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C58F2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585041169;
+	bh=WZ77bB07ahHDFIxfI0N0EhNYsHG1t+Bp8ngw0FIPZDM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PH5ToqIJ4c46NQzAlv0NDO2hM1Ogp8eFmHQIVRb3rYUN7gS9tKWMO+qOBD2nIbS6g
+	 u8Y3Fp2R82wGuPMRmPGR/kaOQZKPnlytXO/+QxGTwdh5MWqW0oAaHVSGYADE4veugS
+	 PSNGD8XJS5sI1WIPTswlQqK/Do06rwfB3NAxcrME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727671AbgCXJMi (ORCPT
+        id S1727507AbgCXJMs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:12:38 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43717 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgCXJLB (ORCPT
+        Tue, 24 Mar 2020 05:12:48 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:21903 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgCXJMs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:11:01 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfaJ-0007TS-JR; Tue, 24 Mar 2020 10:10:56 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 887641C0481;
-        Tue, 24 Mar 2020 10:10:54 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:10:54 -0000
-From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Introduce kcsan_value_change type
-Cc:     John Hubbard <jhubbard@nvidia.com>, Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Tue, 24 Mar 2020 05:12:48 -0400
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id 02O9Cd40007119
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 18:12:39 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02O9Cd40007119
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585041159;
+        bh=swDS97mEzML7M+UgdPS2qRvo+g9Z1BxodzvheYPexOU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VXFqjHQUpXPnM3EbJTrh//kdquO34vop+pt+NH4INJf+F9mu6j/ATHRApSVQUlRQm
+         BPl3+YRHAoKfJRlWRKwMxPSXpaXTAcMCFSUPnWGm5ld0W+BwYd3FsZpijan1XwPxJA
+         ljsDK2cWC6GA8Mty60EhDjJDGMTLDyERjRZhK1dlODYm8IhoJq1A04BDdYf8afQfat
+         LNg07S+gaevNcjvL/+IpnwSte9qxdDxOtrM4+wAb9uV9OBa0hbToZpnYoDcXEykazb
+         Pmxa+NXsFxgn1g5qjBaiM8MRFSSUFYRCW4qaer0lM4uib8gcIUx+81MvH6sU9krzYl
+         m374HH+iaQW5A==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id u11so715517vsg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 02:12:39 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1qdfW/iUrATWLLPuis6UQCONlFLc4+Ta0vDgDycDXhHnrqG6yu
+        kXha8n3T87lK97HjBpJgsc3pyXmbPwEU2Hu6Odk=
+X-Google-Smtp-Source: ADFU+vuE4DNCdSn6UWfz14oVMVXG4qgoUTYHKqZxfC5M7JxfwigwrK0PbzxrGqAixYqAa52fua5rFT9AxBsaYi7UWVA=
+X-Received: by 2002:a67:8745:: with SMTP id j66mr17620480vsd.181.1585041158484;
+ Tue, 24 Mar 2020 02:12:38 -0700 (PDT)
 MIME-Version: 1.0
-Message-ID: <158504105423.28353.1408710911856962942.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200113161310.GA191743@rani.riverdale.lan> <20200113195337.604646-1-nivedita@alum.mit.edu>
+ <202001131750.C1B8468@keescook> <20200114165135.GK31032@zn.tnic>
+ <20200115002131.GA3258770@rani.riverdale.lan> <20200115122458.GB20975@zn.tnic>
+ <20200316160259.GN26126@zn.tnic> <20200323204454.GA2611336@zx2c4.com>
+ <202003231350.7D35351@keescook> <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+In-Reply-To: <CAK7LNARMBkc666kZ9jOG9sSThzA69JvKi++WZXMtCP9ddyqcBw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 24 Mar 2020 18:12:01 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARDb4SmQ2Y94CHAzP2qh_Ju7pu-w7kb0XKdP=2P-T+njQ@mail.gmail.com>
+Message-ID: <CAK7LNARDb4SmQ2Y94CHAzP2qh_Ju7pu-w7kb0XKdP=2P-T+njQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation/changes: Raise minimum supported binutils
+ version to 2.23
+To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, X86 ML <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Mauro Rossi <issor.oruam@gmail.com>,
+        Michael Matz <matz@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the locking/kcsan branch of tip:
+On Tue, Mar 24, 2020 at 6:02 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> Hi.
+>
+>
+>
+> On Tue, Mar 24, 2020 at 5:51 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Mon, Mar 23, 2020 at 02:44:54PM -0600, Jason A. Donenfeld wrote:
+> > > On Mon, Mar 16, 2020 at 05:02:59PM +0100, Borislav Petkov wrote:
+> > > > Long overdue patch, see below.
+> > > >
+> > > > Plan is to queue it after 5.7-rc1.
+> > > >
+> > > > ---
+> > > > From: Borislav Petkov <bp@suse.de>
+> > > > Date: Mon, 16 Mar 2020 16:28:36 +0100
+> > > > Subject: [PATCH] Documentation/changes: Raise minimum supported binutilsa version to 2.23
+> > > >
+> > > > The currently minimum-supported binutils version 2.21 has the problem of
+> > > > promoting symbols which are defined outside of a section into absolute.
+> > > > According to Arvind:
+> > > >
+> > > >   binutils-2.21 and -2.22. An x86-64 defconfig will fail with
+> > > >           Invalid absolute R_X86_64_32S relocation: _etext
+> > > >   and after fixing that one, with
+> > > >           Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+> > > >
+> > > > Those two versions of binutils have a bug when it comes to handling
+> > > > symbols defined outside of a section and binutils 2.23 has the proper
+> > > > fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
 
-Commit-ID:     b738f6169f1260b4ed5bd9f220b1c84d79f3ab8d
-Gitweb:        https://git.kernel.org/tip/b738f6169f1260b4ed5bd9f220b1c84d79f3ab8d
-Author:        Marco Elver <elver@google.com>
-AuthorDate:    Tue, 11 Feb 2020 17:04:21 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 21 Mar 2020 09:44:03 +01:00
 
-kcsan: Introduce kcsan_value_change type
+This seems to be also related to
+7883a14339299773b2ce08dcfd97c63c199a9289
 
-Introduces kcsan_value_change type, which explicitly points out if we
-either observed a value-change (TRUE), or we could not observe one but
-cannot rule out a value-change happened (MAYBE). The MAYBE state can
-either be reported or not, depending on configuration preferences.
 
-A follow-up patch introduces the FALSE state, which should never be
-reported.
+I had noticed the symbol "_text"
+was absolute on binutils <= 2.22,
+but I was not sure whether it was a bug of the tool.
 
-No functional change intended.
+I applied the fix.
+Perhaps, it was unneeded given that
+we require the binutils 2.23
 
-Acked-by: John Hubbard <jhubbard@nvidia.com>
-Signed-off-by: Marco Elver <elver@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/kcsan/core.c   | 38 ++++++++++++++++++++++----------------
- kernel/kcsan/kcsan.h  | 19 ++++++++++++++++++-
- kernel/kcsan/report.c | 26 ++++++++++++++------------
- 3 files changed, 54 insertions(+), 29 deletions(-)
 
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index 498b1eb..3f89801 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -341,7 +341,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		u32 _4;
- 		u64 _8;
- 	} expect_value;
--	bool value_change = false;
-+	enum kcsan_value_change value_change = KCSAN_VALUE_CHANGE_MAYBE;
- 	unsigned long ua_flags = user_access_save();
- 	unsigned long irq_flags;
- 
-@@ -398,6 +398,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 * Read the current value, to later check and infer a race if the data
- 	 * was modified via a non-instrumented access, e.g. from a device.
- 	 */
-+	expect_value._8 = 0;
- 	switch (size) {
- 	case 1:
- 		expect_value._1 = READ_ONCE(*(const u8 *)ptr);
-@@ -436,24 +437,37 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 */
- 	switch (size) {
- 	case 1:
--		value_change = expect_value._1 != READ_ONCE(*(const u8 *)ptr);
-+		expect_value._1 ^= READ_ONCE(*(const u8 *)ptr);
- 		break;
- 	case 2:
--		value_change = expect_value._2 != READ_ONCE(*(const u16 *)ptr);
-+		expect_value._2 ^= READ_ONCE(*(const u16 *)ptr);
- 		break;
- 	case 4:
--		value_change = expect_value._4 != READ_ONCE(*(const u32 *)ptr);
-+		expect_value._4 ^= READ_ONCE(*(const u32 *)ptr);
- 		break;
- 	case 8:
--		value_change = expect_value._8 != READ_ONCE(*(const u64 *)ptr);
-+		expect_value._8 ^= READ_ONCE(*(const u64 *)ptr);
- 		break;
- 	default:
- 		break; /* ignore; we do not diff the values */
- 	}
- 
-+	/* Were we able to observe a value-change? */
-+	if (expect_value._8 != 0)
-+		value_change = KCSAN_VALUE_CHANGE_TRUE;
-+
- 	/* Check if this access raced with another. */
- 	if (!remove_watchpoint(watchpoint)) {
- 		/*
-+		 * Depending on the access type, map a value_change of MAYBE to
-+		 * TRUE (require reporting).
-+		 */
-+		if (value_change == KCSAN_VALUE_CHANGE_MAYBE && (size > 8 || is_assert)) {
-+			/* Always assume a value-change. */
-+			value_change = KCSAN_VALUE_CHANGE_TRUE;
-+		}
-+
-+		/*
- 		 * No need to increment 'data_races' counter, as the racing
- 		 * thread already did.
- 		 *
-@@ -461,20 +475,12 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		 * therefore both this thread and the racing thread may
- 		 * increment this counter.
- 		 */
--		if (is_assert)
-+		if (is_assert && value_change == KCSAN_VALUE_CHANGE_TRUE)
- 			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
- 
--		/*
--		 * - If we were not able to observe a value change due to size
--		 *   constraints, always assume a value change.
--		 * - If the access type is an assertion, we also always assume a
--		 *   value change to always report the race.
--		 */
--		value_change = value_change || size > 8 || is_assert;
--
- 		kcsan_report(ptr, size, type, value_change, smp_processor_id(),
- 			     KCSAN_REPORT_RACE_SIGNAL);
--	} else if (value_change) {
-+	} else if (value_change == KCSAN_VALUE_CHANGE_TRUE) {
- 		/* Inferring a race, since the value should not have changed. */
- 
- 		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
-@@ -482,7 +488,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
- 
- 		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assert)
--			kcsan_report(ptr, size, type, true,
-+			kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_TRUE,
- 				     smp_processor_id(),
- 				     KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
- 	}
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index 50078e7..83a79b0 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -88,6 +88,22 @@ extern void kcsan_counter_dec(enum kcsan_counter_id id);
-  */
- extern bool kcsan_skip_report_debugfs(unsigned long func_addr);
- 
-+/*
-+ * Value-change states.
-+ */
-+enum kcsan_value_change {
-+	/*
-+	 * Did not observe a value-change, however, it is valid to report the
-+	 * race, depending on preferences.
-+	 */
-+	KCSAN_VALUE_CHANGE_MAYBE,
-+
-+	/*
-+	 * The value was observed to change, and the race should be reported.
-+	 */
-+	KCSAN_VALUE_CHANGE_TRUE,
-+};
-+
- enum kcsan_report_type {
- 	/*
- 	 * The thread that set up the watchpoint and briefly stalled was
-@@ -111,6 +127,7 @@ enum kcsan_report_type {
-  * Print a race report from thread that encountered the race.
-  */
- extern void kcsan_report(const volatile void *ptr, size_t size, int access_type,
--			 bool value_change, int cpu_id, enum kcsan_report_type type);
-+			 enum kcsan_value_change value_change, int cpu_id,
-+			 enum kcsan_report_type type);
- 
- #endif /* _KERNEL_KCSAN_KCSAN_H */
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index abf6852..d871476 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -130,26 +130,27 @@ static bool rate_limit_report(unsigned long frame1, unsigned long frame2)
-  * Special rules to skip reporting.
-  */
- static bool
--skip_report(bool value_change, unsigned long top_frame)
-+skip_report(enum kcsan_value_change value_change, unsigned long top_frame)
- {
- 	/*
--	 * The first call to skip_report always has value_change==true, since we
-+	 * The first call to skip_report always has value_change==TRUE, since we
- 	 * cannot know the value written of an instrumented access. For the 2nd
- 	 * call there are 6 cases with CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY:
- 	 *
--	 * 1. read watchpoint, conflicting write (value_change==true): report;
--	 * 2. read watchpoint, conflicting write (value_change==false): skip;
--	 * 3. write watchpoint, conflicting write (value_change==true): report;
--	 * 4. write watchpoint, conflicting write (value_change==false): skip;
--	 * 5. write watchpoint, conflicting read (value_change==false): skip;
--	 * 6. write watchpoint, conflicting read (value_change==true): report;
-+	 * 1. read watchpoint, conflicting write (value_change==TRUE): report;
-+	 * 2. read watchpoint, conflicting write (value_change==MAYBE): skip;
-+	 * 3. write watchpoint, conflicting write (value_change==TRUE): report;
-+	 * 4. write watchpoint, conflicting write (value_change==MAYBE): skip;
-+	 * 5. write watchpoint, conflicting read (value_change==MAYBE): skip;
-+	 * 6. write watchpoint, conflicting read (value_change==TRUE): report;
- 	 *
- 	 * Cases 1-4 are intuitive and expected; case 5 ensures we do not report
- 	 * data races where the write may have rewritten the same value; case 6
- 	 * is possible either if the size is larger than what we check value
- 	 * changes for or the access type is KCSAN_ACCESS_ASSERT.
- 	 */
--	if (IS_ENABLED(CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY) && !value_change) {
-+	if (IS_ENABLED(CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY) &&
-+	    value_change == KCSAN_VALUE_CHANGE_MAYBE) {
- 		/*
- 		 * The access is a write, but the data value did not change.
- 		 *
-@@ -245,7 +246,7 @@ static int sym_strcmp(void *addr1, void *addr2)
-  * Returns true if a report was generated, false otherwise.
-  */
- static bool print_report(const volatile void *ptr, size_t size, int access_type,
--			 bool value_change, int cpu_id,
-+			 enum kcsan_value_change value_change, int cpu_id,
- 			 enum kcsan_report_type type)
- {
- 	unsigned long stack_entries[NUM_STACK_ENTRIES] = { 0 };
-@@ -258,7 +259,7 @@ static bool print_report(const volatile void *ptr, size_t size, int access_type,
- 	/*
- 	 * Must check report filter rules before starting to print.
- 	 */
--	if (skip_report(true, stack_entries[skipnr]))
-+	if (skip_report(KCSAN_VALUE_CHANGE_TRUE, stack_entries[skipnr]))
- 		return false;
- 
- 	if (type == KCSAN_REPORT_RACE_SIGNAL) {
-@@ -477,7 +478,8 @@ retry:
- }
- 
- void kcsan_report(const volatile void *ptr, size_t size, int access_type,
--		  bool value_change, int cpu_id, enum kcsan_report_type type)
-+		  enum kcsan_value_change value_change, int cpu_id,
-+		  enum kcsan_report_type type)
- {
- 	unsigned long flags = 0;
- 
+
+
+
+> > > >
+> > > > Therefore, up to the fixed version directly, skipping the broken ones.
+> > > >
+> > > > Currently shipping distros already have the fixed binutils version so
+> > > > there should be no breakage resulting from this.
+> > > >
+> > > > For more details about the whole thing, see the thread in Link.
+> > >
+> > > That sounds very good to me. Then we'll be able to use ADX instructions
+> > > without ifdefs.
+> > >
+> > > Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+> >
+> > Can you send these now and we can land in 5.7 with the doc change?
+> >
+> > -Kees
+>
+>
+> Kees,
+>
+> I folded this patch into the following series (16 patches):
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=435391
+>
+> This patch (14/16) is a prerequisite for 15/16.
+>
+>
+>
+> Borislav,
+>
+> When I forwarded this patch, I fixed up one more line.
+> (changes.rst duplicates the same information...)
+>
+> Please see this. I hope this should be OK.
+> https://lore.kernel.org/patchwork/patch/1214519/
+>
+>
+>
+> > --
+> > Kees Cook
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
