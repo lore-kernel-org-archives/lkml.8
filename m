@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6A4C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0EC3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B9F206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C908B206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585057401;
-	bh=X/F1qWsmyNf72Fejws4IM6/sAtChB+ci2BuEUkaM1RI=;
+	s=default; t=1585057403;
+	bh=F8p/ub/kl1GPEtJH80f/2Zq9thwe8Qbz3WN8Z13xJRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PrCFyN+YOj6uKshbk0TFd7+Q5t1JzXTbUKbosXXVf3ordmh3zU5uf9Ta8XxmUKBif
-	 yzvp2rFpuWltEA70Se5lMBVz+g2L+SMof7o9g6nG9UKkaRm/MYbDKz5+mILXmExt4j
-	 gLaQwbjpXx2EVOK0TdBWfxJh2WhzJ1DyDhtC+PXg=
+	b=BVO0UjYTEgBGA9jqFhnlDXS69julFD7Q/qFU68wwZIlgbzGsf+m4lw7shZIBS9CT0
+	 HaxWgcfZJYDeduTYIM0Y/V0MKzpTQA/popjbhFSlf4TiNA8gTu9VN1SCI6Vi1nILHT
+	 oGu6ndgBGF/B8QQtw4zFztGU/VA8nQnHAMtGx+2E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCXNnU (ORCPT
+        id S1728150AbgCXNnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:43:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39010 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:43:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727522AbgCXNnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:43:19 -0400
+        id S1727905AbgCXNnU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:43:20 -0400
 Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 895B02076E;
+        by mail.kernel.org (Postfix) with ESMTPSA id CA8212137B;
         Tue, 24 Mar 2020 13:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585057398;
-        bh=X/F1qWsmyNf72Fejws4IM6/sAtChB+ci2BuEUkaM1RI=;
+        s=default; t=1585057399;
+        bh=F8p/ub/kl1GPEtJH80f/2Zq9thwe8Qbz3WN8Z13xJRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HGWdR+xGLJOfwBIu9aI3NbT96lwp5GhJCAJyCZ9dp6aMWW+ksU8OC3SYwe1UUZja1
-         NSF+ISQ+nFrgPWvqhRC7qCzGlxK1HdOxY5QJGtQnW85kCCFvfNOoLJNTQtpbVKv6ae
-         mFCpCOOyBd8/xU9Zk57eWuOo1aH1A1wHOo5qnyRM=
+        b=BMzcU5yBjgS1Ut0sJB3NWMmdUL7UCZjHjJJBsbMJ2Jp4L9p7PPQAwNwhYP0MnNQ/j
+         dR29bS61hIV3Uc4FcycXHEL2pvR7qhkNW0NCuNiyqjY32T1DjHJmVvMR9ysrGRw/pv
+         s17ubRue3xQhNnF9/A37EWw0NpvCB6V08f3TuPRA=
 Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
         (envelope-from <mchehab@kernel.org>)
-        id 1jGjps-0025qh-G4; Tue, 24 Mar 2020 14:43:16 +0100
+        id 1jGjpt-0025rp-1g; Tue, 24 Mar 2020 14:43:17 +0100
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v2 01/20] media: dvb-usb: auto-select CYPRESS_FIRMWARE
-Date:   Tue, 24 Mar 2020 14:42:54 +0100
-Message-Id: <712ca59ba2e1185fc505b52eba9eb3575467f393.1585057134.git.mchehab+huawei@kernel.org>
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [PATCH v2 15/20] media: Kconfig: move media controller core select to main Kconfig
+Date:   Tue, 24 Mar 2020 14:43:08 +0100
+Message-Id: <84ab3635bd37b47fc01197e1024bbb0287a1f264.1585057134.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1585057134.git.mchehab+huawei@kernel.org>
 References: <cover.1585057134.git.mchehab+huawei@kernel.org>
@@ -60,46 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At least some of the supported boards by dvb-usb
-driver need to load the cypress firmware, so select
-it, as otherwise missing dependencies may popup.
-
-Also, as the cypress firmware load routines are needed
-only by the dvb-usb, dvb-usb-v2 and go7007 drivers, and
-those all (now) select it, there's no need to ask the
-user for manually select it.
+Let's place the main API selections at the media/Kconfig file,
+as this way we can better organize things.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/common/Kconfig      | 2 +-
- drivers/media/usb/dvb-usb/Kconfig | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/media/Kconfig    | 9 +++++++++
+ drivers/media/mc/Kconfig | 9 ---------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/media/common/Kconfig b/drivers/media/common/Kconfig
-index 1990b7f09454..4ea03b7899a8 100644
---- a/drivers/media/common/Kconfig
-+++ b/drivers/media/common/Kconfig
-@@ -14,7 +14,7 @@ config VIDEO_TVEEPROM
- 	depends on I2C
+diff --git a/drivers/media/Kconfig b/drivers/media/Kconfig
+index 54daeba339b7..86cf4f12a70d 100644
+--- a/drivers/media/Kconfig
++++ b/drivers/media/Kconfig
+@@ -140,6 +140,15 @@ config VIDEO_DEV
+ 	depends on MEDIA_SUPPORT
+ 	default MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT || V4L_PLATFORM_DRIVERS
  
- config CYPRESS_FIRMWARE
--	tristate "Cypress firmware helper routines"
-+	tristate
- 	depends on USB
++config MEDIA_CONTROLLER
++	bool "Media Controller API"
++	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_DIGITAL_TV_SUPPORT
++	help
++	  Enable the media controller API used to query media devices internal
++	  topology and configure it dynamically.
++
++	  This API is mostly used by camera interfaces in embedded platforms.
++
+ source "drivers/media/v4l2-core/Kconfig"
  
- source "drivers/media/common/videobuf2/Kconfig"
-diff --git a/drivers/media/usb/dvb-usb/Kconfig b/drivers/media/usb/dvb-usb/Kconfig
-index 1a3e5f965ae4..42334a02cdce 100644
---- a/drivers/media/usb/dvb-usb/Kconfig
-+++ b/drivers/media/usb/dvb-usb/Kconfig
-@@ -2,6 +2,7 @@
- config DVB_USB
- 	tristate "Support for various USB DVB devices"
- 	depends on DVB_CORE && USB && I2C && RC_CORE
-+	select CYPRESS_FIRMWARE
- 	help
- 	  By enabling this you will be able to choose the various supported
- 	  USB1.1 and USB2.0 DVB devices.
+ #
+diff --git a/drivers/media/mc/Kconfig b/drivers/media/mc/Kconfig
+index 3b9795cfcb36..b3579d6c9e32 100644
+--- a/drivers/media/mc/Kconfig
++++ b/drivers/media/mc/Kconfig
+@@ -3,15 +3,6 @@
+ #	Selectable only for webcam/grabbers, as other drivers don't use it
+ #
+ 
+-config MEDIA_CONTROLLER
+-	bool "Media Controller API"
+-	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_DIGITAL_TV_SUPPORT
+-	help
+-	  Enable the media controller API used to query media devices internal
+-	  topology and configure it dynamically.
+-
+-	  This API is mostly used by camera interfaces in embedded platforms.
+-
+ config MEDIA_CONTROLLER_DVB
+ 	bool "Enable Media controller for DVB (EXPERIMENTAL)"
+ 	depends on MEDIA_CONTROLLER && DVB_CORE
 -- 
 2.24.1
 
