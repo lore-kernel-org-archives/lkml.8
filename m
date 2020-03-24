@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EB1C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE757C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD7320870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7ADA20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056292;
-	bh=14OQGIAsg2fHTQaK71jRPu4a4/1bQfh3/oz5rWE3oSQ=;
+	s=default; t=1585056294;
+	bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VLJsHYcHTssU4VYu9EMHKBeJuOGooztqqzhrpufSXkR1qhrChU0X0OsratLh69TM2
-	 upiQBrMIduBu5Rrh2XlUxJ/GUukm2RlznnVnoHGMCZDBQO1jBf/qBY65sW7xH9FE6l
-	 Rqwi+dWHKfmNhKEUGIdAGHgzNjlf1wcole78e440=
+	b=TRfChbaky7ZzAjFD1AOcBMhJU1Qz3sj/Ks42a9TNjAKLajH5Ujr5O5ZdQ8qr6R3tA
+	 TE8YTxNTxigQjkUfx1UiA46ycpAuz2JKJJc0mdGKD9bwX017ImnSIXrxMuKhV/ViMR
+	 WoQZANhi6Ut6b9GrsUx5Q2399F7VSaMYN/TVmN5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729363AbgCXNYv (ORCPT
+        id S1729457AbgCXNYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:24:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48618 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728532AbgCXNYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:24:47 -0400
+        id S1729263AbgCXNYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F82020775;
-        Tue, 24 Mar 2020 13:24:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E44D20775;
+        Tue, 24 Mar 2020 13:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056287;
-        bh=14OQGIAsg2fHTQaK71jRPu4a4/1bQfh3/oz5rWE3oSQ=;
+        s=default; t=1585056289;
+        bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N9yeFyBjSQTF3U6Qa2w4j2E6leUsqdNTxIqjWC3NQH+rpnb+jQnjT3vdSub6xyXor
-         +uFVsYM0s2SBRvH5pKNSSq0K42ryTZTFcbzrCkvURlEDcc3MI9wNfeRnPo+AtJs3nt
-         UYj701aW5xO3NIjeYsXAe1FCIBrJByod35ltaHho=
+        b=iLj8BC3ZKj87DbqH4IJm7YTAeZKm/fejeF3JmmJ/D03Oz3gxIBWPDYZR5SKeEsuFJ
+         10roiVM2RDswbfILLf6gCSjshpw3/i+bLzVUcJqZ3QF5JRzon8msZF8BxigwduSlVv
+         D9Bi5pW3T/9RIl/L8dVxV2qZvOud8PGBwt+zGqTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.5 079/119] staging: greybus: loopback_test: fix poll-mask build breakage
-Date:   Tue, 24 Mar 2020 14:11:04 +0100
-Message-Id: <20200324130816.229163849@linuxfoundation.org>
+        stable@vger.kernel.org, russianneuromancer@ya.ru,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH 5.5 043/119] usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
+Date:   Tue, 24 Mar 2020 14:10:28 +0100
+Message-Id: <20200324130812.646665788@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -58,43 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 8f3675be4bda33adbdc1dd2ab3b6c76a7599a79e upstream.
+commit 75d7676ead19b1fbb5e0ee934c9ccddcb666b68c upstream.
 
-A scripted conversion from userland POLL* to kernel EPOLL* constants
-mistakingly replaced the poll flags in the loopback_test tool, which
-therefore no longer builds.
+We have been receiving bug reports that ethernet connections over
+RTL8153 based ethernet adapters stops working after a while with
+errors like these showing up in dmesg when the ethernet stops working:
 
-Fixes: a9a08845e9ac ("vfs: do bulk POLL* -> EPOLL* replacement")
-Cc: stable <stable@vger.kernel.org>     # 4.16
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20200312110151.22028-2-johan@kernel.org
+[12696.189484] r8152 6-1:1.0 enp10s0u1: Tx timeout
+[12702.333456] r8152 6-1:1.0 enp10s0u1: Tx timeout
+[12707.965422] r8152 6-1:1.0 enp10s0u1: Tx timeout
+
+This has been reported on Dell WD15 docks, Belkin USB-C Express Dock 3.1
+docks and with generic USB to ethernet dongles using the RTL8153
+chipsets. Some users have tried adding usbcore.quirks=0bda:8153:k to
+the kernel commandline and all users who have tried this report that
+this fixes this.
+
+Also note that we already have an existing NO_LPM quirk for the RTL8153
+used in the Microsoft Surface Dock (where it uses a different usb-id).
+
+This commit adds a NO_LPM quirk for the generic Realtek RTL8153
+0bda:8153 usb-id, fixing the Tx timeout errors on these devices.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=198931
+Cc: stable@vger.kernel.org
+Cc: russianneuromancer@ya.ru
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200313120708.100339-1-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/staging/greybus/tools/loopback_test.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/staging/greybus/tools/loopback_test.c
-+++ b/drivers/staging/greybus/tools/loopback_test.c
-@@ -655,7 +655,7 @@ static int open_poll_files(struct loopba
- 			goto err;
- 		}
- 		read(t->fds[fds_idx].fd, &dummy, 1);
--		t->fds[fds_idx].events = EPOLLERR|EPOLLPRI;
-+		t->fds[fds_idx].events = POLLERR | POLLPRI;
- 		t->fds[fds_idx].revents = 0;
- 		fds_idx++;
- 	}
-@@ -748,7 +748,7 @@ static int wait_for_complete(struct loop
- 		}
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -381,6 +381,9 @@ static const struct usb_device_id usb_qu
+ 	/* Realtek hub in Dell WD19 (Type-C) */
+ 	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
  
- 		for (i = 0; i < t->poll_count; i++) {
--			if (t->fds[i].revents & EPOLLPRI) {
-+			if (t->fds[i].revents & POLLPRI) {
- 				/* Dummy read to clear the event */
- 				read(t->fds[i].fd, &dummy, 1);
- 				number_of_events++;
++	/* Generic RTL8153 based ethernet adapters */
++	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* Action Semiconductor flash disk */
+ 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
+ 			USB_QUIRK_STRING_FETCH_255 },
 
 
