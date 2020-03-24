@@ -2,108 +2,108 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429CCC4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C50C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 100DB206F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6240D206F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Pw/jLYEt"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="BQyaiOLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCXAQw (ORCPT
+        id S1727699AbgCXAQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:16:52 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33245 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727551AbgCXAQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:16:52 -0400
-Received: by mail-ed1-f67.google.com with SMTP id z65so18675423ede.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 17:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/2Y64PABVXdc9ONlMpskyvi+SAnumMA7Crj5Bt/DBQ=;
-        b=Pw/jLYEtjS/ATrpjcImP2D5HPDWiFMBcBAxJVSOwIOaspT/epTOM9IydWFzxho9yua
-         oazmW6QWguLgtIbfTk74PkycIDjFDPzKqyzaoh+DhJAVrmkuDU/uAM53LPP8DVs9E40Q
-         tUZMoTzJY+STJT3ur0XbLBaDl6VIvIN8N0+HMJRRBPnxJx3Fysg9dQsHduc19AT8XqUR
-         Z+R5dqyHsad39E8wBrmCN6RWKFaLpPh9SfxtI2Y1DRQLG2Yf+1AwZidHAvD5ViWXYqSy
-         a907RgFuMp40UgoEATMPqB/Btt7FRTYbwdl5UG8XBt+aLoRiYnvjPwNK2Qw9OiPVrwLO
-         +WDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/2Y64PABVXdc9ONlMpskyvi+SAnumMA7Crj5Bt/DBQ=;
-        b=BqJHNNjfpgJaGDPxk18s3M5rN1EghZNpj8ukHqCrV2MdjdfjZjWHOcYfcrvlhyABRG
-         y+JSq5EZKok5tPW3WqPymV7uvdwyDk9T15IcCfwowWl8M5xihTIA2DRS2pH5nNDKNUuK
-         zuGk9RM0n9dIMpU6Sx8VVP8XriPZT58AFxQbaP4zQidg7Hjk1nWjZL3gxuBww+DGcX+M
-         m98oKm4O1goR95fLJpvQCITgLYIb/lCjbOkFquAPXRsGHKoAgn/lAi0VSoUatxnbY+oJ
-         44s9kRdvtr+RJI//wmWm8vvRAoZ3S8yT+HsOyYhaf4WrNMiI+eFQqq3RxCLbK9rlYx4A
-         8VGw==
-X-Gm-Message-State: ANhLgQ0SsixIC28S6BzjiIx6kV6o+Vj6OVSY0PUa8xEZZfTnhMSy3mbU
-        t0Jh83U2uhaOkJR6f5bVv1Tsx/1WO/7/NslTn1CF
-X-Google-Smtp-Source: ADFU+vsjQok/w3GcfT1LJO6k41X3syl3c/RCvqnEbN1LGDpZdSJHQ9PBkLkvozzz1CLw+59ARBWSon4cJDwpW8rrY9U=
-X-Received: by 2002:a17:906:4b52:: with SMTP id j18mr13098102ejv.272.1585009010419;
- Mon, 23 Mar 2020 17:16:50 -0700 (PDT)
+        Mon, 23 Mar 2020 20:16:58 -0400
+Received: from ozlabs.org ([203.11.71.1]:53415 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727438AbgCXAQ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:16:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48mWyb184lz9sSJ;
+        Tue, 24 Mar 2020 11:16:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585009015;
+        bh=UyAyFRUUjQ9pV8eiOPAkzACSHmb6g27IvMDSbEpjDRk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=BQyaiOLeINODXxsqwsABi5YDLuWkCLcEvH9F140P9h4NdRizxWFDbSVF6tCLYfSuA
+         XesN15TPaz/75RDP9c4HLeZP1k3lcAykSmOHpAibDxYzPlMrWrI6myk8rr1cXpsXr0
+         tDinj2rOsJAhMnEJNQCyiZO54a3We1EfvdLsXE5ej7p0nAjXFTTuPtPii6s4b3VvPD
+         CYeQkB0IPHl6O5k2UuPcihUEZcyi1/dyYoPToe53iv5ywCp8XSTRcNzfaq6u/NUng0
+         lGXSFoXNPZ18rPA9rPYfQYLcOKPyU4/CjTlEk9H1KXy18iM8L0aoL09N2BVuPDOf0i
+         vGzB2N7q5vUew==
+Date:   Tue, 24 Mar 2020 11:16:53 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: linux-next: manual merge of the wireless-drivers-next tree with the
+ wireless-drivers tree
+Message-ID: <20200324111653.35c368e4@canb.auug.org.au>
 MIME-Version: 1.0
-References: <CAHC9VhTiCHQbp2SwK0Xb1QgpUZxOQ26JKKPsVGT0ZvMqx28oPQ@mail.gmail.com>
- <CAHC9VhS09b_fM19tn7pHZzxfyxcHnK+PJx80Z9Z1hn8-==4oLA@mail.gmail.com>
- <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca> <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
- <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca> <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
- <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca> <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
- <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca> <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
- <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
-In-Reply-To: <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 23 Mar 2020 20:16:38 -0400
-Message-ID: <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
- the audit daemon
-To:     Richard Guy Briggs <rgb@redhat.com>
-Cc:     Steve Grubb <sgrubb@redhat.com>, linux-audit@redhat.com,
-        nhorman@tuxdriver.com, linux-api@vger.kernel.org,
-        containers@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
-        netfilter-devel@vger.kernel.org, ebiederm@xmission.com,
-        simo@redhat.com, netdev@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
-        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/1iuFxirNRaHI1rvguqsXKpC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> On 2020-03-18 18:06, Paul Moore wrote:
+--Sig_/1iuFxirNRaHI1rvguqsXKpC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-...
+Hi all,
 
-> > I hope we can do better than string manipulations in the kernel.  I'd
-> > much rather defer generating the ACID list (if possible), than
-> > generating a list only to keep copying and editing it as the record is
-> > sent.
->
-> At the moment we are stuck with a string-only format.
+Today's linux-next merge of the wireless-drivers-next tree got a
+conflict in:
 
-Yes, we are.  That is another topic, and another set of changes I've
-been deferring so as to not disrupt the audit container ID work.
+  drivers/net/wireless/intel/iwlwifi/pcie/drv.c
 
-I was thinking of what we do inside the kernel between when the record
-triggering event happens and when we actually emit the record to
-userspace.  Perhaps we collect the ACID information while the event is
-occurring, but we defer generating the record until later when we have
-a better understanding of what should be included in the ACID list.
-It is somewhat similar (but obviously different) to what we do for
-PATH records (we collect the pathname info when the path is being
-resolved).
+between commit:
 
--- 
-paul moore
-www.paul-moore.com
+  cf52c8a776d1 ("iwlwifi: pcie: add 0x2526/0x401* devices back to cfg detec=
+tion")
+
+from the wireless-drivers tree and commits:
+
+  67eb556da609 ("iwlwifi: combine 9260 cfgs that only change names")
+  d6f2134a3831 ("iwlwifi: add mac/rf types and 160MHz to the device tables")
+
+from the wireless-drivers-next tree.
+
+I fixed it up (I am not sure wat to do with this, so I just dropped
+the former changes for now) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/1iuFxirNRaHI1rvguqsXKpC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl55UXUACgkQAVBC80lX
+0GypWAf/ULY84JHkgyu2HVudGAMWzb0lPVYilJbpv8ZXO915xTphftU7gEPLMf8t
+AmRbVQfP1Aw54fr87F4dKOO3gSsquJuIpQhthS9KJBTaxa4Cmms6DuT7J1WrRus8
+pHSXpbOTs9AabtvbkPgjuFdT/4CGFeHoSC6nY6vWIF0BZ0Ox7aeDymCuhyeI0WCO
+Y9sQP4pTMPainFgWi160afa7JZ1eFeVGyI3iNkoAbCsn6trZ0qtdRGOIevABJWhX
+kdFCL8X3MZqGPuduLq44TQJqkYDxs81+XahCtXj2V+hDQlYUf0I52WU6CMyNqPRD
+d+nVfbP533IQz/lNvfK/aPF4sK855A==
+=E1Ol
+-----END PGP SIGNATURE-----
+
+--Sig_/1iuFxirNRaHI1rvguqsXKpC--
