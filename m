@@ -2,51 +2,52 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA80C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F8EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF5E20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C32C208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055636;
-	bh=FDq4mdadFeIRuQ2rR1zm0FRF7qhn70FJTMxqAXXxdBo=;
+	s=default; t=1585055638;
+	bh=2hY2yy0nVV7zzzENxHxzh6cBEDGz8r3oejDRBC2kBmU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UMusUca1TOfIZ7xl17ADDLrxt/gWKPGxa7M1o8jMM/4tpaXSHNmw/a9FkWuRRGIoV
-	 QxqYwGeTft0Jw+eRvM1dvqn3HgIm3WPbRlu5u+zkNabk8r9Zvus5WABHvuq1IuygBL
-	 vr2IIOfqI4Cpda58iF+kCatnb9E5a50aLeMXdNlU=
+	b=pVhHRHmYtoBQnyzof0hXCfS9WyfEfuRgnsY9vWxEzkcEwjfWevTfoHNGt/NKL+McT
+	 4uENHTikyCW13SMlapQX6FeMy1wlYQ1jk55PZGYa5dnm34JkNENjFTA57DvIwYYjsc
+	 YYKeeUz99S8aIqva9zzy0twDxZtQJ3kDEtomL/z8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgCXNNz (ORCPT
+        id S1727969AbgCXNN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:13:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:13:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgCXNNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:13:51 -0400
+        id S1727314AbgCXNNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:13:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DCD3208D5;
-        Tue, 24 Mar 2020 13:13:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D7B920B1F;
+        Tue, 24 Mar 2020 13:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055631;
-        bh=FDq4mdadFeIRuQ2rR1zm0FRF7qhn70FJTMxqAXXxdBo=;
+        s=default; t=1585055633;
+        bh=2hY2yy0nVV7zzzENxHxzh6cBEDGz8r3oejDRBC2kBmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pyeCsoBCDTLhBHto4jS+/QJd43okMw4l0OULN3gIaJ+fmplqS4Pf4Hm58A96GTdH5
-         xAcXGTWLV/yRljlrH6e8nX78T95PIs89AZMqaqV8MxCAVfP/aOqWCjPIVpCnuHN/Cf
-         tbMPTdwO4oCyNL1F1+00q2hylhhMm9VCVEF4/OlA=
+        b=YAtEBASNZL5d8YzCA35GR0duvIh4iLbggiBLof4Uttsurs6IV4a1QEX82M5vHXkNW
+         laiYhV7t5VusVbeXefkSKqfkUBKuIKRlblP2tuzd0NtQnX48538o14XL5Ve54j7jTh
+         Pu6Wq2l61YuDbjn9ER2QmU3XHYtiZ7YQHU2Do3ho=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 44/65] btrfs: fix log context list corruption after rename whiteout error
-Date:   Tue, 24 Mar 2020 14:11:05 +0100
-Message-Id: <20200324130802.605551570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Liguang Zhang <zhangliguang@linux.alibaba.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 09/65] drivers/perf: arm_pmu_acpi: Fix incorrect checking of gicc pointer
+Date:   Tue, 24 Mar 2020 14:10:30 +0100
+Message-Id: <20200324130757.904549373@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -59,45 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: luanshi <zhangliguang@linux.alibaba.com>
 
-commit 236ebc20d9afc5e9ff52f3cf3f365a91583aac10 upstream.
+[ Upstream commit 3ba52ad55b533760a1f65836aa0ec9d35e36bb4f ]
 
-During a rename whiteout, if btrfs_whiteout_for_rename() returns an error
-we can end up returning from btrfs_rename() with the log context object
-still in the root's log context list - this happens if 'sync_log' was
-set to true before we called btrfs_whiteout_for_rename() and it is
-dangerous because we end up with a corrupt linked list (root->log_ctxs)
-as the log context object was allocated on the stack.
+Fix bogus NULL checks on the return value of acpi_cpu_get_madt_gicc()
+by checking for a 0 'gicc->performance_interrupt' value instead.
 
-After btrfs_rename() returns, any task that is running btrfs_sync_log()
-concurrently can end up crashing because that linked list is traversed by
-btrfs_sync_log() (through btrfs_remove_all_log_ctxs()). That results in
-the same issue that commit e6c617102c7e4 ("Btrfs: fix log context list
-corruption after rename exchange operation") fixed.
-
-Fixes: d4682ba03ef618 ("Btrfs: sync log after logging new name")
-CC: stable@vger.kernel.org # 4.19+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/perf/arm_pmu_acpi.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -10015,6 +10015,10 @@ out_fail:
- 		ret = btrfs_sync_log(trans, BTRFS_I(old_inode)->root, &ctx);
- 		if (ret)
- 			commit_transaction = true;
-+	} else if (sync_log) {
-+		mutex_lock(&root->log_mutex);
-+		list_del(&ctx.list);
-+		mutex_unlock(&root->log_mutex);
- 	}
- 	if (commit_transaction) {
- 		ret = btrfs_commit_transaction(trans);
+diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+index 0f197516d7089..9a6f7f822566f 100644
+--- a/drivers/perf/arm_pmu_acpi.c
++++ b/drivers/perf/arm_pmu_acpi.c
+@@ -27,8 +27,6 @@ static int arm_pmu_acpi_register_irq(int cpu)
+ 	int gsi, trigger;
+ 
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (WARN_ON(!gicc))
+-		return -EINVAL;
+ 
+ 	gsi = gicc->performance_interrupt;
+ 
+@@ -67,11 +65,10 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+ 	int gsi;
+ 
+ 	gicc = acpi_cpu_get_madt_gicc(cpu);
+-	if (!gicc)
+-		return;
+ 
+ 	gsi = gicc->performance_interrupt;
+-	acpi_unregister_gsi(gsi);
++	if (gsi)
++		acpi_unregister_gsi(gsi);
+ }
+ 
+ static int arm_pmu_acpi_parse_irqs(void)
+-- 
+2.20.1
+
 
 
