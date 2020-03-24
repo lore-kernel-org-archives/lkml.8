@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42EE6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107E4C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1919620870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D40F0208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056323;
-	bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
+	s=default; t=1585056326;
+	bh=gFYnGMRQ2z2WDGa1Ce7kJVmXByTCRC8DYYrHILf9p74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bjKVBbLbKer02Sp7cbqEl5vlcVChMEmnZV96HwAXS/nJiMHCPGyBiD11dWc238Eye
-	 72wj6ZPQ1zjB9OwMZc7pwmhU/1OMkK2JVcI+S2SEr3KLxEF6eV6aK5Vv7C/wWbZhiK
-	 OiqcsRaqpYQWmMTDcKQ9zprd5eXrO2gAFaCfQdPs=
+	b=T9zo520pYnqHilPLij+bPiVArTO3ATWun46SvOi2u1aJTtS1cQf+96E6K4ZJnrfIQ
+	 H9WmanqBwYJXfmsJLrPk1xzl1mVi07l3LLe31U4re4SIKHIc+Bas9IssAvy2gOP5/6
+	 DI3aUNtRcx2cX+xKtEDa0FiJFuxntSJBxELq8OjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbgCXNZV (ORCPT
+        id S1729691AbgCXNZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:25:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49496 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:25:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbgCXNZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:25:19 -0400
+        id S1728290AbgCXNZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:25:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48C8820870;
-        Tue, 24 Mar 2020 13:25:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE0AF206F6;
+        Tue, 24 Mar 2020 13:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056318;
-        bh=3xW+pscrqJeC5q3xuuLfk72SfIQsKV4XoV/9Yx9ilGo=;
+        s=default; t=1585056323;
+        bh=gFYnGMRQ2z2WDGa1Ce7kJVmXByTCRC8DYYrHILf9p74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UxJyZCJytWGSqOiAOO4LkRjz6XuiCXLMGWu+XGQJDe9zu6UFSzQs/rYldrPSRbS6m
-         Ivgd2wjoL3atgMY1rXvvo1ZnP/qS7sGP7ywkbmrzwtmcjeKxV7N5WVRSd9oULMZC2Y
-         loVuYMqBWWzrzB9YAdltkoW1GduGx8MyZsjT9CKM=
+        b=cEJoue3HquKmPLuRBX0DDXOftbbfcgvGKTMlPk2R+gVLUu7Pgxaf5gLqM8+Bm5ZE0
+         8z4HwN7l2p/0ysXddFWsgr7AAaVsaOez45wjKLOv4RJ+viJj4ogcopsGTu2XnWkDSP
+         Gr6f/8jVNa3pKMn4q2lm0euLgYj+QP//xUYHiI6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiujun Huang <hqjagain@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 090/119] drm/lease: fix WARNING in idr_destroy
-Date:   Tue, 24 Mar 2020 14:11:15 +0100
-Message-Id: <20200324130817.204608490@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.5 091/119] stm class: sys-t: Fix the use of time_after()
+Date:   Tue, 24 Mar 2020 14:11:16 +0100
+Message-Id: <20200324130817.286646453@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -60,52 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 
-commit b216a8e7908cd750550c0480cf7d2b3a37f06954 upstream.
+commit 283f87c0d5d32b4a5c22636adc559bca82196ed3 upstream.
 
-drm_lease_create takes ownership of leases. And leases will be released
-by drm_master_put.
+The operands of time_after() are in a wrong order in both instances in
+the sys-t driver. Fix that.
 
-drm_master_put
-    ->drm_master_destroy
-            ->idr_destroy
-
-So we needn't call idr_destroy again.
-
-Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
+Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 39f10239df75 ("stm class: p_sys-t: Add support for CLOCKSYNC packets")
+Fixes: d69d5e83110f ("stm class: Add MIPI SyS-T protocol support")
+Cc: stable@vger.kernel.org # v4.20+
+Link: https://lore.kernel.org/r/20200317062215.15598-3-alexander.shishkin@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/drm_lease.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/hwtracing/stm/p_sys-t.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct d
- 	}
+--- a/drivers/hwtracing/stm/p_sys-t.c
++++ b/drivers/hwtracing/stm/p_sys-t.c
+@@ -238,7 +238,7 @@ static struct configfs_attribute *sys_t_
+ static inline bool sys_t_need_ts(struct sys_t_output *op)
+ {
+ 	if (op->node.ts_interval &&
+-	    time_after(op->ts_jiffies + op->node.ts_interval, jiffies)) {
++	    time_after(jiffies, op->ts_jiffies + op->node.ts_interval)) {
+ 		op->ts_jiffies = jiffies;
  
- 	DRM_DEBUG_LEASE("Creating lease\n");
-+	/* lessee will take the ownership of leases */
- 	lessee = drm_lease_create(lessor, &leases);
+ 		return true;
+@@ -250,8 +250,8 @@ static inline bool sys_t_need_ts(struct
+ static bool sys_t_need_clock_sync(struct sys_t_output *op)
+ {
+ 	if (op->node.clocksync_interval &&
+-	    time_after(op->clocksync_jiffies + op->node.clocksync_interval,
+-		       jiffies)) {
++	    time_after(jiffies,
++		       op->clocksync_jiffies + op->node.clocksync_interval)) {
+ 		op->clocksync_jiffies = jiffies;
  
- 	if (IS_ERR(lessee)) {
- 		ret = PTR_ERR(lessee);
-+		idr_destroy(&leases);
- 		goto out_leases;
- 	}
- 
-@@ -580,7 +582,6 @@ out_lessee:
- 
- out_leases:
- 	put_unused_fd(fd);
--	idr_destroy(&leases);
- 
- 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
- 	return ret;
+ 		return true;
 
 
