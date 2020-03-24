@@ -2,169 +2,85 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED0BC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1ABAC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D23F2076F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585079914;
-	bh=dHOupjblYOUPni/ZcuLo31R0wGNwXOP6OpeHrlqDM2E=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DWgAEeV6d30YRvWH30JIjrMqYyli2SnVYtKrxAo8YFkEKHSKf9Y6hMa92QeyepPLF
-	 g8c+O7cyylyewsuNEuAxpfhZ+NQp16p1pHF34B5xYdQY2EiUy/klM8tzBlTJeBDHSo
-	 efYqC5I0VUWAn7HvfPaeRNNPsH83kyoyqc4W3mF8=
+	by mail.kernel.org (Postfix) with ESMTP id 8B7322074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qYdy9ZyB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727270AbgCXT6c (ORCPT
+        id S1727659AbgCXT7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:58:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725866AbgCXT6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 15:58:32 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E93D820753;
-        Tue, 24 Mar 2020 19:58:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585079911;
-        bh=dHOupjblYOUPni/ZcuLo31R0wGNwXOP6OpeHrlqDM2E=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=nOLwAAkzxMzoVLazg8LAEeBKflMvqJCwIm0ab+0FfgnaJtwPFE3YBUPYLR2MOBdtY
-         5KaK3KEG9C/P6+Ja0PwCGP4M/yqqkiV700/u/Qhwi/9g2NaJUX2kc1Ic2t8xoPW31X
-         raRf9fiPaUw1xQe43B3o0k53kWK+DxeW8nO5cN84=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id AEAD53522AC8; Tue, 24 Mar 2020 12:58:30 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 12:58:30 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [RESEND][patch V3 17/23] rcu/tree: Mark the idle relevant
- functions noinstr
-Message-ID: <20200324195830.GN19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200320175956.033706968@linutronix.de>
- <20200320180034.095809808@linutronix.de>
- <20200324160909.GD19865@paulmck-ThinkPad-P72>
- <87r1xhd02c.fsf@nanos.tec.linutronix.de>
+        Tue, 24 Mar 2020 15:59:06 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:32777 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727088AbgCXT7G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 15:59:06 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g18so7876604plq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 12:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gcQRcAtEQg4rjglKJRL2d98Lwfwnni+3VOu5y4qk85w=;
+        b=qYdy9ZyBm+V84vQRBdlRTTvNTWSlZa5gYHUIUgd4O4BL5QBdn6VF9+ymfZWyvKzL/2
+         /FOM9/+eBM3zVmgxj6CLruwd+vCZ5F8v6fKWp+ANxQUv9ZKTrG9WXB6KVw+xf15tRh/M
+         bEZpa2mn4ETx1ELJqqGcVJ56DtgBO8mwIYIbKSpeB8ThQwmMHDppJVerNjKNcjMNfIdn
+         4mwR48QTj83kunUhPaEhiY4GG8YIcPxsA/2jWrps7vuIhcEX84DwnB9kQ+DijcW6QF2d
+         HPMyPCpZURVGe/yMfvl4PiIqZnOO4Ujrk2RxJrGbIuD4IctdsbBG3/lOTk27h7IopctE
+         5VdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gcQRcAtEQg4rjglKJRL2d98Lwfwnni+3VOu5y4qk85w=;
+        b=DE1HHVx88MfXMOis2Mwe0ODeEryZILx1WC5zSiBhKDjSY1fYXQgoA3WbNkTXk8LLeQ
+         zFxS/F4c/3Eoxr1DyI3k8kw1owKGnBmWOmhpMuLIUgcwHnVYohc+gs5PSC6Qcd5apkG7
+         snzGqK+TOP9rj+ldlc8Hoshw8aiTHLg92+ql4mVodJPhdE39DVskIBnBRALENwbXeXr5
+         ys3xCCBAqOgKXdrNvQnoLx6/PUF3q9O4lYVNT2MPhvNRdW6xbx2GA17B/kKE6r/hrIkp
+         mDr0nIIQzROr/mDTGkE5P55WZcyA3HwPzICP8WsofhO1S4/UXmrAm4boM7l1V67T4HZ5
+         juRw==
+X-Gm-Message-State: ANhLgQ0PB2V0UL6JdN1UopNDiwVy8dzZhcOxi+mkkDOPVAXLsGD7Why4
+        l0DeOYywszkuuYB+I5+/b2hzeE8/4AkjjsFRvPpqWw==
+X-Google-Smtp-Source: ADFU+vuilu4nK+FQYgpHdIaviKzEUBXNJjUU1ornx3/tJ+r2le+vN0Nlu7KwhPe37OGsZLY9Z8pKyFJL8kFUhNhEyA8=
+X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr21730233plt.223.1585079945020;
+ Tue, 24 Mar 2020 12:59:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87r1xhd02c.fsf@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200324161539.7538-1-masahiroy@kernel.org> <20200324161539.7538-3-masahiroy@kernel.org>
+ <CAKwvOdkjiyyt8Ju2j2O4cm1sB34rb_FTgjCRzEiXM6KL4muO_w@mail.gmail.com>
+In-Reply-To: <CAKwvOdkjiyyt8Ju2j2O4cm1sB34rb_FTgjCRzEiXM6KL4muO_w@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 24 Mar 2020 12:58:54 -0700
+Message-ID: <CAKwvOdmWqAUhL5DRg9oQPXzFtogK-0Q-VZ=FWf=Cjm-RJgR4sw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] kbuild: remove AS variable
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 08:28:43PM +0100, Thomas Gleixner wrote:
-> "Paul E. McKenney" <paulmck@kernel.org> writes:
-> > On Fri, Mar 20, 2020 at 07:00:13PM +0100, Thomas Gleixner wrote:
-> 
-> >> -void rcu_user_enter(void)
-> >> +noinstr void rcu_user_enter(void)
-> >>  {
-> >>  	lockdep_assert_irqs_disabled();
-> >
-> > Just out of curiosity -- this means that lockdep_assert_irqs_disabled()
-> > must be noinstr, correct?
-> 
-> Yes. noinstr functions can call other noinstr functions safely. If there
-> is a instr_begin() then anything can be called up to the corresponding
-> instr_end(). After that the noinstr rule applies again.
+On Tue, Mar 24, 2020 at 12:38 PM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+> consistent in this regard (and not using the compiler as the driver),
 
-Thank you!
+Ah, the preprocessor; we need to preprocess the .S files, .s files are
+fine (though we have .lds.S files that are not `-x
+assembler-with-cpp`)
 
-> >>  	if (rdp->dynticks_nmi_nesting != 1) {
-> >> +		instr_begin();
-> >>  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
-> >>  				  atomic_read(&rdp->dynticks));
-> >>  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
-> >>  			   rdp->dynticks_nmi_nesting - 2);
-> >> +		instr_end();
-> >>  		return;
-> >>  	}
-> >>  
-> >> +		instr_begin();
-> >
-> > Indentation?
-> 
-> Is obviously wrong. You found it so please keep the extra TAB for times
-> when you need a spare one :)
-
-One of my parents like this.  https://en.wikipedia.org/wiki/Tab_(drink)
-
-							Thanx, Paul
-
-> >>   * If you add or remove a call to rcu_user_exit(), be sure to test with
-> >>   * CONFIG_RCU_EQS_DEBUG=y.
-> >>   */
-> >> -void rcu_user_exit(void)
-> >> +void noinstr rcu_user_exit(void)
-> >>  {
-> >>  	rcu_eqs_exit(1);
-> >>  }
-> >> @@ -830,27 +833,33 @@ static __always_inline void rcu_nmi_ente
-> >>  			rcu_cleanup_after_idle();
-> >>  
-> >>  		incby = 1;
-> >> -	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
-> >> -		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
-> >> -		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
-> >> +	} else if (irq) {
-> >>  		// We get here only if we had already exited the extended
-> >>  		// quiescent state and this was an interrupt (not an NMI).
-> >>  		// Therefore, (1) RCU is already watching and (2) The fact
-> >>  		// that we are in an interrupt handler and that the rcu_node
-> >>  		// lock is an irq-disabled lock prevents self-deadlock.
-> >>  		// So we can safely recheck under the lock.
-> >
-> > The above comment is a bit misleading in this location.
-> 
-> True
-> 
-> >> -		raw_spin_lock_rcu_node(rdp->mynode);
-> >> -		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
-> >> -			// A nohz_full CPU is in the kernel and RCU
-> >> -			// needs a quiescent state.  Turn on the tick!
-> >> -			rdp->rcu_forced_tick = true;
-> >> -			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
-> >> +		instr_begin();
-> >> +		if (tick_nohz_full_cpu(rdp->cpu) &&
-> >> +		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
-> >> +		    READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
-> >
-> > So how about like this?
-> >
-> > 			// We get here only if we had already exited
-> > 			// the extended quiescent state and this was an
-> > 			// interrupt (not an NMI).  Therefore, (1) RCU is
-> > 			// already watching and (2) The fact that we are in
-> > 			// an interrupt handler and that the rcu_node lock
-> > 			// is an irq-disabled lock prevents self-deadlock.
-> > 			// So we can safely recheck under the lock.
-> 
-> Yup
-> 
-> Thanks,
-> 
->         tglx
+-- 
+Thanks,
+~Nick Desaulniers
