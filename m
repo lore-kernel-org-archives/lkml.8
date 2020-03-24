@@ -2,244 +2,519 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 283A5C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45511C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1F922076A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E337E206F8
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 07:22:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="KmMafzSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgCXHNx (ORCPT
+        id S1727391AbgCXHWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 03:13:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23944 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbgCXHNw (ORCPT
+        Tue, 24 Mar 2020 03:22:44 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:44102 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727304AbgCXHWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 03:13:52 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02O73tpT095384;
-        Tue, 24 Mar 2020 03:13:41 -0400
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywbuv2b88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 03:13:41 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02O75stb017615;
-        Tue, 24 Mar 2020 07:13:40 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02dal.us.ibm.com with ESMTP id 2ywaw1v8p0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 07:13:40 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02O7Dc9O38011136
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 07:13:38 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D59AF13604F;
-        Tue, 24 Mar 2020 07:13:38 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9D884136051;
-        Tue, 24 Mar 2020 07:13:34 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.199.58.144])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Mar 2020 07:13:34 +0000 (GMT)
-Subject: Re: [PATCH v4] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-To:     Joakim Zhang <qiangqing.zhang@nxp.com>,
-        "acme@kernel.org" <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200212054102.9259-1-kjain@linux.ibm.com>
- <DB7PR04MB46186AB5557F4D04FD5C4FEAE6160@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <be86ba99-ab5a-c845-46b6-8081edee00ca@linux.ibm.com>
- <DB7PR04MB461807389FDF9629ACA04533E6130@DB7PR04MB4618.eurprd04.prod.outlook.com>
- <cb9b353b-c18a-0064-eb72-a6c91d5fdec9@linux.ibm.com>
- <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <648e08fb-ffd2-16f6-005d-527ac3fee6c0@linux.ibm.com>
-Date:   Tue, 24 Mar 2020 12:43:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 24 Mar 2020 03:22:44 -0400
+Received: by mail-oi1-f194.google.com with SMTP id v134so8560146oie.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 00:22:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0koaPTO6pQBqIb+fT+J6EiF7sKyO1cUelKhbWvS1XE8=;
+        b=KmMafzSKtQ/RbH3uihQBKdO4IRHsT4/wFiuwE4gKO8iPZ4X8XtnIbxsdJt8PuMtgfO
+         7SpCmDk8cKGfzsr7NYMCWgeWJK8+K9kOTd8fcGpu/QLjrs8FINQ8RK1aMR76BKC+SAIm
+         FJLU5Tyn+eCGNd2yRZingxfbEWaJexkjMN/57bNFALKroV85oYockHuS2U9wVZZol5jf
+         acQcYwDtdGpHF3/N5gFelz1orsZzlzZ1C2eK0ctxXt2bJu9L7nOrM5aGulMi0SSdpTLE
+         jmma1XzrisJhxkfe6aJN06a1nfvt/7dfYB8GN/U/Xd1kabTAIloNpK+9jzUuqwpDFL5H
+         WlpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0koaPTO6pQBqIb+fT+J6EiF7sKyO1cUelKhbWvS1XE8=;
+        b=AT2eJvTQA0P5bPw2SMueZXrqPmbiUAOfagg6MnAZGZ3wn9LQehk9Ec3dDTJYgEPxH4
+         g03YRwiP2dGBI/P1UTvctDYctPGs74rIBsvFk9u3VExvoKqgYKTBo7M57FxqkZkvmwB6
+         eTe4XMBb2rnUxTBKiE6Kx/Xb0u5dQVD9+ADp8A8RPPPc7icjJZFGpJ7YBnFhmS5wHwhC
+         o/cbmI8TkWb7H5qD6f85NXacwdv6munTgLYs4jpENQSC7HHn5A0h6KFinws4+p+6J4bZ
+         156Rb50IOwziHwdfiQ1Uf2HeINQkT+LWU5/EvFDOiOiCqwlS8dsXPkvDjGFPctiVKHIa
+         Nqpw==
+X-Gm-Message-State: ANhLgQ0g/pMtuXp2Ogu5D4zT3bp+hgZKo45KbjojlAalnaFx9ompb9kg
+        OBJimfyD1oNyts0qhwe/U45z1BmMHJLrGlearLszWFXypRY=
+X-Google-Smtp-Source: ADFU+vsdjcILIQBpo5VwsKBpBCzz/EOs/L4pQ8q4sGcYkz2hz/Tg5aNsK658VgamX0sQfk88Vw35ymxWV4mTOM6qEl4=
+X-Received: by 2002:a05:6808:a08:: with SMTP id n8mr2467709oij.91.1585034563001;
+ Tue, 24 Mar 2020 00:22:43 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DB7PR04MB4618D0696D39AC5D44FF5A51E6F50@DB7PR04MB4618.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_01:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 bulkscore=0
- adultscore=0 mlxscore=0 phishscore=0 impostorscore=0 mlxlogscore=999
- suspectscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240032
+References: <20200303054437.650-1-alex@ghiti.fr> <mhng-346cdebc-e24d-49db-bb2e-0d4fa8d57030@palmerdabbelt-glaptop1>
+ <CANXhq0rvnuzgSxF9b8emkYKLnTwuK90XG3=5-pPFW9a9_5BS3w@mail.gmail.com> <4d8f0629-4815-825f-fda2-3033e7956da3@ghiti.fr>
+In-Reply-To: <4d8f0629-4815-825f-fda2-3033e7956da3@ghiti.fr>
+From:   Zong Li <zong.li@sifive.com>
+Date:   Tue, 24 Mar 2020 15:22:32 +0800
+Message-ID: <CANXhq0q=YPbjHYcZ_icMUTjpFEYu9mr2Fze1_Ep5axRYrR_28A@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2] riscv: Introduce CONFIG_RELOCATABLE
+To:     Alex Ghiti <alex@ghiti.fr>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Mar 22, 2020 at 3:10 PM Alex Ghiti <alex@ghiti.fr> wrote:
+>
+> Hi Zong,
+>
+> Sorry for the response delay, please find below my comments.
+>
+> On 3/12/20 1:57 AM, Zong Li wrote:
+> > On Sat, Mar 7, 2020 at 1:58 AM Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> >>
+> >> On Mon, 02 Mar 2020 21:44:37 PST (-0800), alex@ghiti.fr wrote:
+> >>> This config allows to compile the kernel as PIE and to relocate it at any
+> >>> virtual address at runtime: this paves the way to KASLR and to 4-level
+> >>> page table folding at runtime. Runtime relocation is possible since
+> >>> relocation metadata are embedded into the kernel.
+> >>>
+> >>> Note that relocating at runtime introduces an overhead even if the kernel
+> >>> is loaded at the same address it was linked at and that the compiler
+> >>> options are those used in arm64 which uses the same RELA relocation format.
+> >>>
+> >>> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> >>> Reviewed-by: Zong Li <zong.li@sifive.com>
+> >>> Reviewed-by: Anup Patel <anup@brainfault.org>
+> >>> Tested-by: Zong Li <zong.li@sifive.com>
+> >>> ---
+> >>> Changes in v2:
+> >>> - Make RELOCATABLE depend on MMU as suggested by Anup
+> >>> - Rename kernel_load_addr into kernel_virt_addr as suggested by Anup
+> >>> - Use __pa_symbol instead of __pa, as suggested by Zong
+> >>> - Rebased on top of v5.6-rc3
+> >>> - Tested with sv48 patchset
+> >>> - Add Reviewed/Tested-by from Zong and Anup
+> >>>
+> >>>   arch/riscv/Kconfig              | 12 +++++
+> >>>   arch/riscv/Makefile             |  5 +-
+> >>>   arch/riscv/boot/loader.lds.S    |  2 +-
+> >>>   arch/riscv/include/asm/page.h   |  5 +-
+> >>>   arch/riscv/kernel/head.S        |  3 +-
+> >>>   arch/riscv/kernel/vmlinux.lds.S | 10 ++--
+> >>>   arch/riscv/mm/Makefile          |  4 ++
+> >>>   arch/riscv/mm/init.c            | 92 ++++++++++++++++++++++++++++-----
+> >>>   8 files changed, 111 insertions(+), 22 deletions(-)
+> >>>
+> >>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> >>> index 73f029eae0cc..f5f3d474504d 100644
+> >>> --- a/arch/riscv/Kconfig
+> >>> +++ b/arch/riscv/Kconfig
+> >>> @@ -163,6 +163,18 @@ config PGTABLE_LEVELS
+> >>>        default 3 if 64BIT
+> >>>        default 2
+> >>>
+> >>> +config RELOCATABLE
+> >>> +     bool
+> >>> +     depends on MMU
+> >>> +     help
+> >>> +          This builds a kernel as a Position Independent Executable (PIE),
+> >>> +          which retains all relocation metadata required to relocate the
+> >>> +          kernel binary at runtime to a different virtual address than the
+> >>> +          address it was linked at.
+> >>> +          Since RISCV uses the RELA relocation format, this requires a
+> >>> +          relocation pass at runtime even if the kernel is loaded at the
+> >>> +          same address it was linked at.
+> >>> +
+> >>>   source "arch/riscv/Kconfig.socs"
+> >>>
+> >>>   menu "Platform type"
+> >>> diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+> >>> index b9009a2fbaf5..5a115cf6a9c1 100644
+> >>> --- a/arch/riscv/Makefile
+> >>> +++ b/arch/riscv/Makefile
+> >>> @@ -9,7 +9,10 @@
+> >>>   #
+> >>>
+> >>>   OBJCOPYFLAGS    := -O binary
+> >>> -LDFLAGS_vmlinux :=
+> >>> +ifeq ($(CONFIG_RELOCATABLE),y)
+> >>> +LDFLAGS_vmlinux := -shared -Bsymbolic -z notext -z norelro
+> >>> +KBUILD_CFLAGS += -fPIE
+> >>> +endif
+> >>>   ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
+> >>>        LDFLAGS_vmlinux := --no-relax
+> >>>   endif
+> >>> diff --git a/arch/riscv/boot/loader.lds.S b/arch/riscv/boot/loader.lds.S
+> >>> index 47a5003c2e28..a9ed218171aa 100644
+> >>> --- a/arch/riscv/boot/loader.lds.S
+> >>> +++ b/arch/riscv/boot/loader.lds.S
+> >>> @@ -7,7 +7,7 @@ ENTRY(_start)
+> >>>
+> >>>   SECTIONS
+> >>>   {
+> >>> -     . = PAGE_OFFSET;
+> >>> +     . = CONFIG_PAGE_OFFSET;
+> >>>
+> >>>        .payload : {
+> >>>                *(.payload)
+> >>> diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
+> >>> index 8ca1930caa44..af5810f9aebd 100644
+> >>> --- a/arch/riscv/include/asm/page.h
+> >>> +++ b/arch/riscv/include/asm/page.h
+> >>> @@ -31,9 +31,9 @@
+> >>>    * When not using MMU this corresponds to the first free page in
+> >>>    * physical memory (aligned on a page boundary).
+> >>>    */
+> >>> -#define PAGE_OFFSET          _AC(CONFIG_PAGE_OFFSET, UL)
+> >>> +#define PAGE_OFFSET          kernel_virt_addr
+> >>
+> >> I assume we want to keep PAGE_OFFSET a constant for the non-relocatable
+> >> systems.  As it currently stands this is imposing a performance hit even when
+> >>
+> >
+> > I had almost done the KASLR implementation on top of this patch.
+> > Actually, PAGE_OFFSET change is unnecessary in KASLR , because we
+> > would move kernel image to a random physical address as well, so the
+> > $pc will go to the relevant random virtual address. We need
+>
+> I don't understand what you mean here, can you explain it a bit more ?
+>
+> > kernel_virt_addr to record the new destination, but keep PAGE_OFFSET
+> > to be CONFIG_PAGE_OFFSET is enough.
+>
+>  From my understanding, PAGE_OFFSET should represent the start of the
+> direct mapping, so in case of a relocatable kernel, its value should
+> reflect the offset too.
+>
 
+Let me try to use the common RISC-V case to explain that.
 
-On 3/20/20 12:17 PM, Joakim Zhang wrote:
-> 
-> [...]
->>>>> Hi Kajol,
->>>>>
->>>>> I am not sure if it is good to ask a question here :-)
->>>>>
->>>>> I encountered a perf metricgroup issue, the result is incorrect when
->>>>> the
->>>> metric includes more than 2 events.
->>>>>
->>>>> git log --oneline tools/perf/util/metricgroup.c
->>>>> 3635b27cc058 perf metricgroup: Fix printing event names of metric
->>>>> group with multiple events f01642e4912b perf metricgroup: Support
->>>>> multiple events for metricgroup
->>>>> 287f2649f791 perf metricgroup: Scale the metric result
->>>>>
->>>>> I did a simple test, below is the JSON file and result.
->>>>> [
->>>>>         {
->>>>>              "PublicDescription": "Calculate DDR0 bus actual
->>>>> utilization
->>>> which vary from DDR0 controller clock frequency",
->>>>>              "BriefDescription": "imx8qm: ddr0 bus actual utilization",
->>>>>              "MetricName": "imx8qm-ddr0-bus-util",
->>>>>              "MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ +
->>>> imx8_ddr0\\/write\\-cycles\\/ )",
->>>>>              "MetricGroup": "i.MX8QM_DDR0_BUS_UTIL"
->>>>>         }
->>>>> ]
->>>>> ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
->>>>> #           time             counts unit events
->>>>>      1.000104250              16720      imx8_ddr0/read-cycles/
->>>> #  22921.0 imx8qm-ddr0-bus-util
->>>>>      1.000104250               6201
->> imx8_ddr0/write-cycles/
->>>>>      2.000525625               8316      imx8_ddr0/read-cycles/
->>>> #  12785.5 imx8qm-ddr0-bus-util
->>>>>      2.000525625               2738
->> imx8_ddr0/write-cycles/
->>>>>      3.000819125               1056      imx8_ddr0/read-cycles/
->>>> #   4136.7 imx8qm-ddr0-bus-util
->>>>>      3.000819125                303
->> imx8_ddr0/write-cycles/
->>>>>      4.001103750               6260      imx8_ddr0/read-cycles/
->>>> #   9149.8 imx8qm-ddr0-bus-util
->>>>>      4.001103750               2317
->> imx8_ddr0/write-cycles/
->>>>>      5.001392750               2084      imx8_ddr0/read-cycles/
->>>> #   4516.0 imx8qm-ddr0-bus-util
->>>>>      5.001392750                601
->> imx8_ddr0/write-cycles/
->>>>>
->>>>> You can see that only the first result is correct, could this be
->>>>> reproduced at
->>>> you side?
->>>>
->>>> Hi Joakim,
->>>>         Will try to look into it from my side.
->>>
->>
->>> Thanks Kajol for your help, I look into this issue, but don't know how to fix it.
->>>
->>> The results are always correct if signal event used in "MetricExpr" with "-I"
->> parameters, but the results are incorrect when more than one events used in
->> "MetricExpr".
->>>
->>
->> Hi Joakim,
->>     So, I try to look into this issue and understand the flow. From my
->> understanding, whenever we do
->>     calculation of metric expression we don't use exact count we are getting.
->>     Basically we use mean value of each event in the calculation of metric
->> expression.
->>
->> So, I am taking same example you refer.
->>
->> Metric Event: imx8qm-ddr0-bus-util
->> MetricExpr": "( imx8_ddr0\\/read\\-cycles\\/ + imx8_ddr0\\/write\\-cycles\\/ )"
->>
->> command#: ./perf stat -I 1000 -M imx8qm-ddr0-bus-util
->>
->> #           time             counts unit events
->>      1.000104250              16720      imx8_ddr0/read-cycles/
->> #  22921.0 imx8qm-ddr0-bus-util
->>      1.000104250               6201      imx8_ddr0/write-cycles/
->>      2.000525625               8316      imx8_ddr0/read-cycles/
->> #  12785.5 imx8qm-ddr0-bus-util
->>      2.000525625               2738      imx8_ddr0/write-cycles/
->>      3.000819125               1056      imx8_ddr0/read-cycles/
->> #   4136.7 imx8qm-ddr0-bus-util
->>      3.000819125                303      imx8_ddr0/write-cycles/
->>      4.001103750               6260      imx8_ddr0/read-cycles/
->> #   9149.8 imx8qm-ddr0-bus-util
->>      4.001103750               2317      imx8_ddr0/write-cycles/
->>      5.001392750               2084      imx8_ddr0/read-cycles/
->> #   4516.0 imx8qm-ddr0-bus-util
->>      5.001392750                601      imx8_ddr0/write-cycles/
->>
->> If you see we have a function called 'update_stats' in file util/stat.c where we
->> do this calculation and updating stats->mean value. And this mean value is
->> what we are using actually in our metric expression calculation.
->>
->> We call this function in each iteration where we update stats->mean and
->> stats->n for each event.
->> But one weird issue is, for very first event, stat->n is always 1 that is why we
->> are getting mean same as count.
->> So this is the reason for single event you get exact aggregate of metric
->> expression.
->> So doesn't matter how many events you have in your metric expression, every
->> time you take exact count for first one and normalized value for rest which is
->> weird.
->>
->> According to update_stats function:  We are updating mean as:
->>
->> stats->mean += delta / stats->n where,  delta = val - stats->mean.
->>
->> If we take write-cycles here. Initially mean = 0 and n = 1.
->>
->> 1st iteration: n=1, write cycle : 6201 and mean = 6201  (Final agg value: 16720
->> + 6201 = 22921) 2nd iteration: n=2, write cycles:  6201 + (2738 - 6201)/2 =
->> 4469.5  (Final aggr value: 8316 + 4469.5 = 12785.5) 3rd iteration: n=3, write
->> cycles: 4469.5 + (303 - 4469.5)/3 = 3080.6667 (Final aggr value: 1056 +
->> 3080.6667 = 4136.7)
->>
->> Andi and Jiri, I am not sure if its expected behavior. I mean shouldn't we either
->> take mean value of each event or take n as 1 for each event. And one more
->> question, Should we add an option to say whether user want exact aggregate
->> or this normalize aggregate to remove the confusion? I try to find it out if we
->> already have one but didn't get.
->> Please let me know if my understanding is fine.
-> 
-> Hi Kajol,
-> 
-> Sorry, your reply was buried in a sea of emails, it comes into my eyes when I searched any feedback from you. Much thanks for your great details!!!!!
-> 
-> I can quite understand what you explained. As a user, I think we always want to get the exact result according to the metric expression.
-> 
-> Can you take this case as an example then send out a formal email into mailing list to reflect this weird issue, more people can participate and discuss about it. Or you need me clear up and sent out the email?
-> This could attract maintainers' attention.
-> 
+In this v2 version, we could use a random virtual address to map the
+kernel image which is located in 0x8020_0000 physical address, then we
+could achieve the purpose of randomization, but it only happens on
+virtual address, the kernel image is still in 0x8020_0000 physical
+address, so we would also try to move the physical location of kernel
+image by a random offset.
 
-Hi Joakim,
-    Yes you are right, I will send separate mail on lkml. That way it will be better.
+For example, assume there is a 1G size DDR, the kernel image size is
+10MB and we get a random kernel offset 0x100_0000, finally, kernel
+image would locate in 0x8120_0000, and run on corresponding virtual
+address 0xffff_ffe0_0100_0000 in CPU view. The direct mapping range is
+still got from 0x8020_0000 to 0xc000_0000, that means, there are
+available free pages from 0x8020_0000 to 0x811f_ffff, and a reserved
+region for kernel image from 0x8120_0000 to 0x81c0_0000, the rest of
+the memory are free pages as well (in fact, there are other reserved
+regions such as dtb, initrd and so on). Hence, we don't change
+PAGE_OFFSET, the PAGE_OFFSET still represent the start of the direct
+mapping as you mentioned, but the location of kernel image which in
+direct mapping would be unpredictable.
 
-Thanks,
-Kajol
+> Is there any issue with having PAGE_OFFSET equal to kernel_virt_addr ?
 
-> Best Regards,
-> Joakim Zhang
-> 
+If we make PAGE_OFFSET be the new random kernel start address, the
+system would lose the part of memory after we also moving kernel image
+to a new physical location, that means, the memory which prior of new
+random kernel start address is disappeared, because some reasons like
+it only creates page table start from new physical address, the
+memblock only sees the memory from __pa(PAGE_OFFSET), and etc.
+
+>
+> If we use both, we will need to know precisely when we should use
+> kernel_virt_addr or PAGE_OFFSET, which I think will be painful and error
+> prone.
+
+There is a use case, we could get kernel offset by the expression
+'kernel_virt_addr - PAGE_OFFSET'.
+
+It seems to me that I could post the RFC patches first, but it depends
+on other patch series, include your relocation implementation.
+
+>
+> >
+> >>> -#define KERN_VIRT_SIZE (-PAGE_OFFSET)
+> >>> +#define KERN_VIRT_SIZE               (-_AC(CONFIG_PAGE_OFFSET, UL))
+> >>
+> >> This seems like it would cause issues if the kernel is relocated to high enough
+> >> addresses that "kernel_virt_addr+KERN_VIRT_SIZE" overflows.
+> >>
+> >
+> > Based on the same reason, keep KERN_VIRT_SIZE to be -PAGE_OFFSET is good.
+> >
+> >>>   #ifndef __ASSEMBLY__
+> >>>
+> >>> @@ -97,6 +97,7 @@ extern unsigned long pfn_base;
+> >>>   #define ARCH_PFN_OFFSET              (PAGE_OFFSET >> PAGE_SHIFT)
+> >>>   #endif /* CONFIG_MMU */
+> >>>
+> >>> +extern unsigned long kernel_virt_addr;
+> >>>   extern unsigned long max_low_pfn;
+> >>>   extern unsigned long min_low_pfn;
+> >>>
+> >>> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> >>> index 271860fc2c3f..d792912c2da3 100644
+> >>> --- a/arch/riscv/kernel/head.S
+> >>> +++ b/arch/riscv/kernel/head.S
+> >>> @@ -131,7 +131,8 @@ clear_bss_done:
+> >>>   #ifdef CONFIG_MMU
+> >>>   relocate:
+> >>>        /* Relocate return address */
+> >>> -     li a1, PAGE_OFFSET
+> >>> +     la a1, kernel_virt_addr
+> >>> +     REG_L a1, 0(a1)
+> >>>        la a2, _start
+> >>>        sub a1, a1, a2
+> >>>        add ra, ra, a1
+> >>> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
+> >>> index 1e0193ded420..5bf69e9b91e6 100644
+> >>> --- a/arch/riscv/kernel/vmlinux.lds.S
+> >>> +++ b/arch/riscv/kernel/vmlinux.lds.S
+> >>> @@ -4,7 +4,7 @@
+> >>>    * Copyright (C) 2017 SiFive
+> >>>    */
+> >>>
+> >>> -#define LOAD_OFFSET PAGE_OFFSET
+> >>> +#define LOAD_OFFSET CONFIG_PAGE_OFFSET
+> >>>   #include <asm/vmlinux.lds.h>
+> >>>   #include <asm/page.h>
+> >>>   #include <asm/cache.h>
+> >>> @@ -71,9 +71,11 @@ SECTIONS
+> >>>
+> >>>        EXCEPTION_TABLE(0x10)
+> >>>
+> >>> -     .rel.dyn : {
+> >>> -             *(.rel.dyn*)
+> >>> -     }
+> >>> +        .rela.dyn : ALIGN(8) {
+> >>> +             __rela_dyn_start = .;
+> >>> +                *(.rela .rela*)
+> >>> +             __rela_dyn_end = .;
+> >>> +        }
+> >>
+> >> It looks like the indentation is screwed up here: I see a mix of tabs/spaces
+> >> that doesn't match the rest of the file.
+> >>
+> >>>
+> >>>        _end = .;
+> >>>
+> >>> diff --git a/arch/riscv/mm/Makefile b/arch/riscv/mm/Makefile
+> >>> index 50b7af58c566..27593d362248 100644
+> >>> --- a/arch/riscv/mm/Makefile
+> >>> +++ b/arch/riscv/mm/Makefile
+> >>> @@ -1,6 +1,10 @@
+> >>>   # SPDX-License-Identifier: GPL-2.0-only
+> >>>
+> >>>   CFLAGS_init.o := -mcmodel=medany
+> >>> +ifdef CONFIG_RELOCATABLE
+> >>> +CFLAGS_init.o += -fno-pie
+> >>> +endif
+> >>> +
+> >>>   ifdef CONFIG_FTRACE
+> >>>   CFLAGS_REMOVE_init.o = -pg
+> >>>   endif
+> >>> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> >>> index 965a8cf4829c..428aee2669aa 100644
+> >>> --- a/arch/riscv/mm/init.c
+> >>> +++ b/arch/riscv/mm/init.c
+> >>> @@ -12,6 +12,9 @@
+> >>>   #include <linux/sizes.h>
+> >>>   #include <linux/of_fdt.h>
+> >>>   #include <linux/libfdt.h>
+> >>> +#ifdef CONFIG_RELOCATABLE
+> >>> +#include <linux/elf.h>
+> >>> +#endif
+> >>>
+> >>>   #include <asm/fixmap.h>
+> >>>   #include <asm/tlbflush.h>
+> >>> @@ -28,6 +31,9 @@ EXPORT_SYMBOL(empty_zero_page);
+> >>>   extern char _start[];
+> >>>   void *dtb_early_va;
+> >>>
+> >>> +unsigned long kernel_virt_addr = _AC(CONFIG_PAGE_OFFSET, UL);
+> >>> +EXPORT_SYMBOL(kernel_virt_addr);
+> >>> +
+> >>>   static void __init zone_sizes_init(void)
+> >>>   {
+> >>>        unsigned long max_zone_pfns[MAX_NR_ZONES] = { 0, };
+> >>> @@ -132,7 +138,8 @@ void __init setup_bootmem(void)
+> >>>                phys_addr_t end = reg->base + reg->size;
+> >>>
+> >>>                if (reg->base <= vmlinux_end && vmlinux_end <= end) {
+> >>> -                     mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+> >>> +                     mem_size = min(reg->size,
+> >>> +                                    (phys_addr_t)-kernel_virt_addr);
+> >>
+> >> PAGE_OFFSET is kernel_virt_addr, so I don't see any reason to change these --
+> >> they account for a significant fraction of the diff.
+> >>
+> >
+> > kernel_virt_addr would be assigned to a random destination by KASLR,
+> > but here still should be PAGE_OFFSET rather than kernel_virt_addr as
+> > mentioned above.
+> >
+> >>>                        /*
+> >>>                         * Remove memblock from the end of usable area to the
+> >>> @@ -269,7 +276,7 @@ static phys_addr_t __init alloc_pmd(uintptr_t va)
+> >>>        if (mmu_enabled)
+> >>>                return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+> >>>
+> >>> -     pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
+> >>> +     pmd_num = (va - kernel_virt_addr) >> PGDIR_SHIFT;
+> >
+> > Here is the same, please use PAGE_OFFSET instead of kernel_virt_addr.
+> >
+> >>>        BUG_ON(pmd_num >= NUM_EARLY_PMDS);
+> >>>        return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
+> >>>   }
+> >>> @@ -370,6 +377,54 @@ static uintptr_t __init best_map_size(phys_addr_t base, phys_addr_t size)
+> >>>   #error "setup_vm() is called from head.S before relocate so it should not use absolute addressing."
+> >>>   #endif
+> >>>
+> >>> +#ifdef CONFIG_RELOCATABLE
+> >>> +extern unsigned long __rela_dyn_start, __rela_dyn_end;
+> >>> +
+> >>> +#ifdef CONFIG_64BIT
+> >>> +#define Elf_Rela Elf64_Rela
+> >>> +#define Elf_Addr Elf64_Addr
+> >>> +#else
+> >>> +#define Elf_Rela Elf32_Rela
+> >>> +#define Elf_Addr Elf32_Addr
+> >>> +#endif
+> >>> +
+> >>> +void __init relocate_kernel(uintptr_t load_pa)
+> >>> +{
+> >>> +     Elf_Rela *rela = (Elf_Rela *)&__rela_dyn_start;
+> >>> +     uintptr_t link_addr = _AC(CONFIG_PAGE_OFFSET, UL);
+> >>> +     /*
+> >>> +      * This holds the offset between the linked virtual address and the
+> >>> +      * relocated virtual address.
+> >>> +      */
+> >>> +     uintptr_t reloc_offset = kernel_virt_addr - link_addr;
+> >>> +     /*
+> >>> +      * This holds the offset between linked virtual address and physical
+> >>> +      * address whereas va_pa_offset holds the offset between relocated
+> >>> +      * virtual address and physical address.
+> >>> +      */
+> >>> +     uintptr_t va_link_pa_offset = link_addr - load_pa;
+> >>> +
+> >>> +     for ( ; rela < (Elf_Rela *)&__rela_dyn_end; rela++) {
+> >>> +             Elf_Addr addr = (rela->r_offset - va_link_pa_offset);
+> >>> +             Elf_Addr relocated_addr = rela->r_addend;
+> >>> +
+> >>> +             if (rela->r_info != R_RISCV_RELATIVE)
+> >>> +                     continue;
+> >>
+> >> This should at least provide a warning when it encounters an unresolvable
+> >> relocation.  Is it currently stands this just ignores all other runtime
+> >> relocations, and while I can buy the argument there shouldn't be any (though
+> >> I'd expect R_RISCV_{32,64} to show up?) we certainly shouldn't just silently
+> >> skip them.
+> >>
+> >>> +
+> >>> +             /*
+> >>> +              * Make sure to not relocate vdso symbols like rt_sigreturn
+> >>> +              * which are linked from the address 0 in vmlinux since
+> >>> +              * vdso symbol addresses are actually used as an offset from
+> >>> +              * mm->context.vdso in VDSO_OFFSET macro.
+> >>> +              */
+> >>> +             if (relocated_addr >= link_addr)
+> >>> +                     relocated_addr += reloc_offset;
+> >>> +
+> >>> +             *(Elf_Addr *)addr = relocated_addr;
+> >>> +     }
+> >>> +}
+> >>> +#endif
+> >>> +
+> >>>   asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>>   {
+> >>>        uintptr_t va, end_va;
+> >>> @@ -377,9 +432,20 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>>        uintptr_t load_sz = (uintptr_t)(&_end) - load_pa;
+> >>>        uintptr_t map_size = best_map_size(load_pa, MAX_EARLY_MAPPING_SIZE);
+> >>>
+> >>> -     va_pa_offset = PAGE_OFFSET - load_pa;
+> >>> +     va_pa_offset = kernel_virt_addr - load_pa;
+> >>>        pfn_base = PFN_DOWN(load_pa);
+> >>>
+> >>> +#ifdef CONFIG_RELOCATABLE
+> >>> +     /*
+> >>> +      * Early page table uses only one PGDIR, which makes it possible
+> >>> +      * to map 1GB aligned on 1GB: if the relocation offset makes the kernel
+> >>> +      * cross over a 1G boundary, raise a bug since a part of the kernel
+> >>> +      * would not get mapped.
+> >>> +      */
+> >>> +     BUG_ON(SZ_1G - (kernel_virt_addr & (SZ_1G - 1)) < load_sz);
+> >>> +     relocate_kernel(load_pa);
+> >>> +#endif
+> >>> +
+> >>>        /*
+> >>>         * Enforce boot alignment requirements of RV32 and
+> >>>         * RV64 by only allowing PMD or PGD mappings.
+> >>> @@ -387,7 +453,7 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>>        BUG_ON(map_size == PAGE_SIZE);
+> >>>
+> >>>        /* Sanity check alignment and size */
+> >>> -     BUG_ON((PAGE_OFFSET % PGDIR_SIZE) != 0);
+> >>> +     BUILD_BUG_ON((_AC(CONFIG_PAGE_OFFSET, UL) % PGDIR_SIZE) != 0);
+> >>>        BUG_ON((load_pa % map_size) != 0);
+> >>>        BUG_ON(load_sz > MAX_EARLY_MAPPING_SIZE);
+> >>>
+> >>> @@ -400,13 +466,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>>        create_pmd_mapping(fixmap_pmd, FIXADDR_START,
+> >>>                           (uintptr_t)fixmap_pte, PMD_SIZE, PAGE_TABLE);
+> >>>        /* Setup trampoline PGD and PMD */
+> >>> -     create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> >>> +     create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+> >>>                           (uintptr_t)trampoline_pmd, PGDIR_SIZE, PAGE_TABLE);
+> >>> -     create_pmd_mapping(trampoline_pmd, PAGE_OFFSET,
+> >>> +     create_pmd_mapping(trampoline_pmd, kernel_virt_addr,
+> >>>                           load_pa, PMD_SIZE, PAGE_KERNEL_EXEC);
+> >>>   #else
+> >>>        /* Setup trampoline PGD */
+> >>> -     create_pgd_mapping(trampoline_pg_dir, PAGE_OFFSET,
+> >>> +     create_pgd_mapping(trampoline_pg_dir, kernel_virt_addr,
+> >>>                           load_pa, PGDIR_SIZE, PAGE_KERNEL_EXEC);
+> >>>   #endif
+> >>>
+> >>> @@ -415,10 +481,10 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
+> >>>         * us to reach paging_init(). We map all memory banks later
+> >>>         * in setup_vm_final() below.
+> >>>         */
+> >>> -     end_va = PAGE_OFFSET + load_sz;
+> >>> -     for (va = PAGE_OFFSET; va < end_va; va += map_size)
+> >>> +     end_va = kernel_virt_addr + load_sz;
+> >>> +     for (va = kernel_virt_addr; va < end_va; va += map_size)
+> >>>                create_pgd_mapping(early_pg_dir, va,
+> >>> -                                load_pa + (va - PAGE_OFFSET),
+> >>> +                                load_pa + (va - kernel_virt_addr),
+> >>>                                   map_size, PAGE_KERNEL_EXEC);
+> >>>
+> >>>        /* Create fixed mapping for early FDT parsing */
+> >>> @@ -457,9 +523,9 @@ static void __init setup_vm_final(void)
+> >>>                        break;
+> >>>                if (memblock_is_nomap(reg))
+> >>>                        continue;
+> >>> -             if (start <= __pa(PAGE_OFFSET) &&
+> >>> -                 __pa(PAGE_OFFSET) < end)
+> >>> -                     start = __pa(PAGE_OFFSET);
+> >>> +             if (start <= __pa_symbol(kernel_virt_addr) &&
+> >>> +                 __pa(kernel_virt_addr) < end)
+> >>> +                     start = __pa_symbol(kernel_virt_addr);
+> >
+> > Here is the same, please use PAGE_OFFSET instead of kernel_virt_addr.
+> >
+> >>>
+> >>>                map_size = best_map_size(start, end - start);
+> >>>                for (pa = start; pa < end; pa += map_size) {
+>
+> Thanks,
+>
+> Alex
