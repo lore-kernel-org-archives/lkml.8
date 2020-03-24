@@ -2,221 +2,127 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E17C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7245FC54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6426220786
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vA3p3t11"
+	by mail.kernel.org (Postfix) with ESMTP id 46EBF208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585039865;
+	bh=tamNtwnC+yOYL9Yj1QScIVBjshx39K9c/wgSFqiu+eU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yIecIe+54+y19kXVAanCp0JEDbcXXrFHhHJEAbawI9eXYELKwo+2OcGDiFRW0/6XH
+	 R8K2Jg3GRItKVnb+ULKeY05UfjJ2+VRv81yXJfAkRIqV0VgIPINA758+YiSRGuIAvF
+	 eekshF1KfTb1NlTRnolYRYGq9gjOoW/IUit0fNTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727112AbgCXIs2 (ORCPT
+        id S1727234AbgCXIvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:48:28 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:38762 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726462AbgCXIs2 (ORCPT
+        Tue, 24 Mar 2020 04:51:03 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:16890 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgCXIvC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:48:28 -0400
-Received: by mail-pj1-f67.google.com with SMTP id m15so1136077pje.3;
-        Tue, 24 Mar 2020 01:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=bt3cOsdr0C8cVmPItgi4WdtrPk2V3/FsORYh/CBY/lI=;
-        b=vA3p3t11FbBNkJKydmTaNNK3N5QW4gtpYzmlrgSF1JIT3wXicBoyZQ6X2qPv4Qvl27
-         atW1VCrGbGDlTg1jxwlWdC53pfi5pO12GqKqWwzjPJCi8yZkG6OkVtvJw1OLGhqdMKWJ
-         YVITCgHIF79H5pfiZs2gYUgZSyX4kEOcNHQAOMwGVYaxcpUJsAqTXPerqQZwYHyBEzGP
-         +AvKs5zDXWGhMNjVuH2KjgkSnFMBn/CbVRXP9QCpCiofOD2/GVjOn735K6I/pb/gBuj3
-         IWQbe9lei2ON6VbPeMLYajngQQ1HgV/7UZkMxmMQH9Ng01J1kjTH9anTeMvW0mB2L1lX
-         KhRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=bt3cOsdr0C8cVmPItgi4WdtrPk2V3/FsORYh/CBY/lI=;
-        b=BuT+swMKDciqMfV1Rt6b9L2ej13W46AaJH+nVcnlpLSEvMRgWhqVvEMlbPx0O1YQC9
-         Yts21G3x83lNM0WDFqrTtd6Vvoeh8v7hRSlzqdiaNgp+P+Yk1S0Scm9C2QYzvAQBni35
-         j1OjkBuMgmaMQ5IMAXvZp5p3rykDi7l3j92hy8ogMbDhRkHUodak1UmkyyaRL9Dz5Zjo
-         pwKyyaqClj4WRk7Or93WOs0ytCCwzD8r2QlTmeoKtPnAOvxYiH54ZySEDgCM2R1yt0Ql
-         b/aovxDs72u2Cpv+rwsja1I9yHm2IndN+msDJSle5b7pGg/ST/jVuMZsHl5FtOBgfmwY
-         0P5w==
-X-Gm-Message-State: ANhLgQ1kIirLbHksAVKFZvd36dbcWNzsFfXdJKR2uY1WiK//NFUwKKs4
-        DmmHF9mz15q0B5qvRnc6q5w=
-X-Google-Smtp-Source: ADFU+vvkxp5PNoeenVejrf8tpB2gV5C4JXUjlzG5rk+czBLRFZq2ATdOuyQvst6hI/VEssCwU4vvrg==
-X-Received: by 2002:a17:90a:37c4:: with SMTP id v62mr4006668pjb.151.1585039706935;
-        Tue, 24 Mar 2020 01:48:26 -0700 (PDT)
-Received: from localhost (14-202-190-183.tpgi.com.au. [14.202.190.183])
-        by smtp.gmail.com with ESMTPSA id f22sm10687021pgl.20.2020.03.24.01.48.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 01:48:26 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 18:48:20 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v11 3/8] powerpc/perf: consolidate read_user_stack_32
-To:     linuxppc-dev@lists.ozlabs.org, Michal Suchanek <msuchanek@suse.de>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Eric Richter <erichte@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gustavo Luiz Duarte <gustavold@linux.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jordan Niethe <jniethe5@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Michael Neuling <mikey@neuling.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rob Herring <robh@kernel.org>,
+        Tue, 24 Mar 2020 04:51:02 -0400
+Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id 02O8mgsb011219;
+        Tue, 24 Mar 2020 17:48:49 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsb011219
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585039729;
+        bh=0iYh3JlnuBFF7Uur9DV4v9IZOkYzn33VL647mADyAyw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qhHw2Kmx5u5yCMsCIZagqpsLAvHsuAuPlfCvUABn6OKBgECvqgp4x2KfLYfPrzomY
+         QQcjycJMi090EaUNh0LKu4vx9HeBRhd6OPUXS9Kcc6P9wIN1EXYLG89SXNh/WvVXC6
+         2kq/ZmmZpptrAkQYvUHU2+5jJ0mWO/cDdSmIByBOpNhHOSBXoZP9R8MED3vCANawsX
+         D/nNPFh3hgfkxn19efZghZvAtxdgf8d6lTdVs5eMqnj4vqe3PKCuhCJBQqkgLTA5K0
+         9vVJURmJS4jQou1eBEcgVEW8VJ+eQivAzdMqjfMmybRa9RWm8oH6v9x/eMVpGigKtR
+         5re+JcLbYI2ng==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux@googlegroups.com,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-References: <20200225173541.1549955-1-npiggin@gmail.com>
-        <cover.1584620202.git.msuchanek@suse.de>
-        <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
-In-Reply-To: <184347595442b4ca664613008a09e8cea7188c36.1584620202.git.msuchanek@suse.de>
-MIME-Version: 1.0
-User-Agent: astroid/0.15.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1585039473.da4762n2s0.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-kbuild@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 04/16] x86: remove unneeded (CONFIG_AS_)CFI_SIGNAL_FRAME
+Date:   Tue, 24 Mar 2020 17:48:09 +0900
+Message-Id: <20200324084821.29944-5-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200324084821.29944-1-masahiroy@kernel.org>
+References: <20200324084821.29944-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Suchanek's on March 19, 2020 10:19 pm:
-> There are two almost identical copies for 32bit and 64bit.
->=20
-> The function is used only in 32bit code which will be split out in next
-> patch so consolidate to one function.
->=20
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
-> v6:  new patch
-> v8:  move the consolidated function out of the ifdef block.
-> v11: rebase on top of def0bfdbd603
-> ---
->  arch/powerpc/perf/callchain.c | 48 +++++++++++++++++------------------
->  1 file changed, 24 insertions(+), 24 deletions(-)
->=20
-> diff --git a/arch/powerpc/perf/callchain.c b/arch/powerpc/perf/callchain.=
-c
-> index cbc251981209..c9a78c6e4361 100644
-> --- a/arch/powerpc/perf/callchain.c
-> +++ b/arch/powerpc/perf/callchain.c
-> @@ -161,18 +161,6 @@ static int read_user_stack_64(unsigned long __user *=
-ptr, unsigned long *ret)
->  	return read_user_stack_slow(ptr, ret, 8);
->  }
-> =20
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *re=
-t)
-> -{
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> -		return -EFAULT;
-> -
-> -	if (!probe_user_read(ret, ptr, sizeof(*ret)))
-> -		return 0;
-> -
-> -	return read_user_stack_slow(ptr, ret, 4);
-> -}
-> -
->  static inline int valid_user_sp(unsigned long sp, int is_64)
->  {
->  	if (!sp || (sp & 7) || sp > (is_64 ? TASK_SIZE : 0x100000000UL) - 32)
-> @@ -277,19 +265,9 @@ static void perf_callchain_user_64(struct perf_callc=
-hain_entry_ctx *entry,
->  }
-> =20
->  #else  /* CONFIG_PPC64 */
-> -/*
-> - * On 32-bit we just access the address and let hash_page create a
-> - * HPTE if necessary, so there is no need to fall back to reading
-> - * the page tables.  Since this is called at interrupt level,
-> - * do_page_fault() won't treat a DSI as a page fault.
-> - */
-> -static int read_user_stack_32(unsigned int __user *ptr, unsigned int *re=
-t)
-> +static int read_user_stack_slow(void __user *ptr, void *buf, int nb)
->  {
-> -	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> -	    ((unsigned long)ptr & 3))
-> -		return -EFAULT;
-> -
-> -	return probe_user_read(ret, ptr, sizeof(*ret));
-> +	return 0;
->  }
-> =20
->  static inline void perf_callchain_user_64(struct perf_callchain_entry_ct=
-x *entry,
-> @@ -312,6 +290,28 @@ static inline int valid_user_sp(unsigned long sp, in=
-t is_64)
-> =20
->  #endif /* CONFIG_PPC64 */
-> =20
-> +/*
-> + * On 32-bit we just access the address and let hash_page create a
-> + * HPTE if necessary, so there is no need to fall back to reading
-> + * the page tables.  Since this is called at interrupt level,
-> + * do_page_fault() won't treat a DSI as a page fault.
-> + */
+Commit 131484c8da97 ("x86/debug: Remove perpetually broken,
+unmaintainable dwarf annotations") removes all the users of
+CFI_SIGNAL_FRAME.
 
-The comment is actually probably better to stay in the 32-bit
-read_user_stack_slow implementation. Is that function defined
-on 32-bit purely so that you can use IS_ENABLED()? In that case
-I would prefer to put a BUG() there which makes it self documenting.
+Remove the CFI_SIGNAL_FRAME and CONFIG_AS_CFI_SIGNAL_FRAME.
 
-Thanks,
-Nick
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+---
 
-> +static int read_user_stack_32(unsigned int __user *ptr, unsigned int *re=
-t)
-> +{
-> +	int rc;
-> +
-> +	if ((unsigned long)ptr > TASK_SIZE - sizeof(unsigned int) ||
-> +	    ((unsigned long)ptr & 3))
-> +		return -EFAULT;
-> +
-> +	rc =3D probe_user_read(ret, ptr, sizeof(*ret));
-> +
-> +	if (IS_ENABLED(CONFIG_PPC64) && rc)
-> +		return read_user_stack_slow(ptr, ret, 4);
-> +
-> +	return rc;
-> +}
-> +
->  /*
->   * Layout for non-RT signal frames
->   */
-> --=20
-> 2.23.0
->=20
->=20
-=
+ arch/x86/Makefile             | 6 ++----
+ arch/x86/include/asm/dwarf2.h | 6 ------
+ 2 files changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 72f8f744ebd7..dd275008fc59 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -177,8 +177,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+ 	KBUILD_CFLAGS += $(call cc-option,-maccumulate-outgoing-args,)
+ endif
+ 
+-# is .cfi_signal_frame supported too?
+-cfi-sigframe := $(call as-instr,.cfi_startproc\n.cfi_signal_frame\n.cfi_endproc,-DCONFIG_AS_CFI_SIGNAL_FRAME=1)
+ cfi-sections := $(call as-instr,.cfi_sections .debug_frame,-DCONFIG_AS_CFI_SECTIONS=1)
+ 
+ # does binutils support specific instructions?
+@@ -190,8 +188,8 @@ sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=
+ sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
+ adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+ 
+-KBUILD_AFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+-KBUILD_CFLAGS += $(cfi-sigframe) $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
++KBUILD_AFLAGS += $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
++KBUILD_CFLAGS += $(cfi-sections) $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+ 
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+ 
+diff --git a/arch/x86/include/asm/dwarf2.h b/arch/x86/include/asm/dwarf2.h
+index 90807583cad7..f440790f09f9 100644
+--- a/arch/x86/include/asm/dwarf2.h
++++ b/arch/x86/include/asm/dwarf2.h
+@@ -21,12 +21,6 @@
+ #define CFI_UNDEFINED		.cfi_undefined
+ #define CFI_ESCAPE		.cfi_escape
+ 
+-#ifdef CONFIG_AS_CFI_SIGNAL_FRAME
+-#define CFI_SIGNAL_FRAME	.cfi_signal_frame
+-#else
+-#define CFI_SIGNAL_FRAME
+-#endif
+-
+ #if defined(CONFIG_AS_CFI_SECTIONS)
+ #ifndef BUILD_VDSO
+ 	/*
+-- 
+2.17.1
+
