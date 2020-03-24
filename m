@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E40C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA0C3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E202020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28A0208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055537;
-	bh=7VAsGNAFAa6wIG1YrBMZI+NGgGY/usWxa71Rzj1Z1rg=;
+	s=default; t=1585055539;
+	bh=8utJ4PbiBkJFqLWavO/QYmjVPSaB2McN1fDCS3CNWwg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MR1U40XDAGqKz1YTWb4kCtHnkoi0itHjD87Eg5p5D7GddCYhfWdL+SxpmGkrdsLYu
-	 RAQD/RH6Rlq40D01XPACg7XV1ynHJPt9cJ+ag2H8Y3UVAp2LsZC6qjSPqfpqWYuQu7
-	 3HNPS+2RZgzYnItw1wpDu1uzF9EuyZciZx8XhAqM=
+	b=x4UIoHSgjgiZPIdDdaxKPLCbajqWkdWEOFANvbIVmMABZqkEOrbpuA8oVLS46oj56
+	 0zhozrB1VNuMt4yKVsbD8Zzvnv023avh4+zd6jNabSlQI61hqSI+cC8y14odyk9drj
+	 igiTTKLqVaEJF8yYVnf/1DPYuKev4FmqshSvrlLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727547AbgCXNMP (ORCPT
+        id S1727564AbgCXNMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57872 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727446AbgCXNMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:12:13 -0400
+        id S1727544AbgCXNMQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865B5208E4;
-        Tue, 24 Mar 2020 13:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12D0520936;
+        Tue, 24 Mar 2020 13:12:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055533;
-        bh=7VAsGNAFAa6wIG1YrBMZI+NGgGY/usWxa71Rzj1Z1rg=;
+        s=default; t=1585055535;
+        bh=8utJ4PbiBkJFqLWavO/QYmjVPSaB2McN1fDCS3CNWwg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypEAgjL+9/+eNdrY9BcTriwDzKMqEDgKXkmbKqvuWkhqDiiv7CsMgo4sgR/k03qmM
-         Nh4TvjSPTVM23rmfj+/fK4HJIAXOJ/SeGkHNZ4JwCPjFkCnug9eYyTNknNMFaFunzA
-         vp1KclgZyI/ueQMgVxx9sE9p3xsXwOnZc3Og8r+k=
+        b=yNuHefTHslYbd/RA2y7TIH4TILXMXF/sxMwISpNvJTAxKAXsmE414yuK2KBz66c2d
+         zwECD3fjFjVjnuD2/6/WFxEThkDKloKeTjYMXwsJtT/V51UCrD9EHFwS82TnZUtMGV
+         M2zK4wcMsHaN9iiRrwzhnbHuJ8lnP2rXsng8OsHA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josip Pavic <Josip.Pavic@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Dongli Zhang <dongli.zhang@oracle.com>,
+        Julien Grall <jgrall@amazon.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 15/65] drm/amd/display: fix dcc swath size calculations on dcn1
-Date:   Tue, 24 Mar 2020 14:10:36 +0100
-Message-Id: <20200324130758.839333432@linuxfoundation.org>
+Subject: [PATCH 4.19 16/65] xenbus: req->body should be updated before req->state
+Date:   Tue, 24 Mar 2020 14:10:37 +0100
+Message-Id: <20200324130758.990070566@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -62,45 +61,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josip Pavic <Josip.Pavic@amd.com>
+From: Dongli Zhang <dongli.zhang@oracle.com>
 
-[ Upstream commit a0275dfc82c9034eefbeffd556cca6dd239d7925 ]
+[ Upstream commit 1b6a51e86cce38cf4d48ce9c242120283ae2f603 ]
 
-[Why]
-Swath sizes are being calculated incorrectly. The horizontal swath size
-should be the product of block height, viewport width, and bytes per
-element, but the calculation uses viewport height instead of width. The
-vertical swath size is similarly incorrectly calculated. The effect of
-this is that we report the wrong DCC caps.
+The req->body should be updated before req->state is updated and the
+order should be guaranteed by a barrier.
 
-[How]
-Use viewport width in the horizontal swath size calculation and viewport
-height in the vertical swath size calculation.
+Otherwise, read_reply() might return req->body = NULL.
 
-Signed-off-by: Josip Pavic <Josip.Pavic@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Below is sample callstack when the issue is reproduced on purpose by
+reordering the updates of req->body and req->state and adding delay in
+code between updates of req->state and req->body.
+
+[   22.356105] general protection fault: 0000 [#1] SMP PTI
+[   22.361185] CPU: 2 PID: 52 Comm: xenwatch Not tainted 5.5.0xen+ #6
+[   22.366727] Hardware name: Xen HVM domU, BIOS ...
+[   22.372245] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+... ...
+[   22.392163] RSP: 0018:ffffb2d64023fdf0 EFLAGS: 00010246
+[   22.395933] RAX: 0000000000000000 RBX: 75746e7562755f6d RCX: 0000000000000000
+[   22.400871] RDX: 0000000000000000 RSI: ffffb2d64023fdfc RDI: 75746e7562755f6d
+[   22.405874] RBP: 0000000000000000 R08: 00000000000001e8 R09: 0000000000cdcdcd
+[   22.410945] R10: ffffb2d6402ffe00 R11: ffff9d95395eaeb0 R12: ffff9d9535935000
+[   22.417613] R13: ffff9d9526d4a000 R14: ffff9d9526f4f340 R15: ffff9d9537654000
+[   22.423726] FS:  0000000000000000(0000) GS:ffff9d953bc80000(0000) knlGS:0000000000000000
+[   22.429898] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   22.434342] CR2: 000000c4206a9000 CR3: 00000001ea3fc002 CR4: 00000000001606e0
+[   22.439645] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   22.444941] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   22.450342] Call Trace:
+[   22.452509]  simple_strtoull+0x27/0x70
+[   22.455572]  xenbus_transaction_start+0x31/0x50
+[   22.459104]  netback_changed+0x76c/0xcc1 [xen_netfront]
+[   22.463279]  ? find_watch+0x40/0x40
+[   22.466156]  xenwatch_thread+0xb4/0x150
+[   22.469309]  ? wait_woken+0x80/0x80
+[   22.472198]  kthread+0x10e/0x130
+[   22.474925]  ? kthread_park+0x80/0x80
+[   22.477946]  ret_from_fork+0x35/0x40
+[   22.480968] Modules linked in: xen_kbdfront xen_fbfront(+) xen_netfront xen_blkfront
+[   22.486783] ---[ end trace a9222030a747c3f7 ]---
+[   22.490424] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+
+The virt_rmb() is added in the 'true' path of test_reply(). The "while"
+is changed to "do while" so that test_reply() is used as a read memory
+barrier.
+
+Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+Link: https://lore.kernel.org/r/20200303221423.21962-1-dongli.zhang@oracle.com
+Reviewed-by: Julien Grall <jgrall@amazon.com>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/xen/xenbus/xenbus_comms.c | 2 ++
+ drivers/xen/xenbus/xenbus_xs.c    | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-index 1ea91e153d3a6..c1adac888fd83 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hubbub.c
-@@ -684,8 +684,8 @@ static void hubbub1_det_request_size(
+diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
+index d239fc3c5e3de..852ed161fc2a7 100644
+--- a/drivers/xen/xenbus/xenbus_comms.c
++++ b/drivers/xen/xenbus/xenbus_comms.c
+@@ -313,6 +313,8 @@ static int process_msg(void)
+ 			req->msg.type = state.msg.type;
+ 			req->msg.len = state.msg.len;
+ 			req->body = state.body;
++			/* write body, then update state */
++			virt_wmb();
+ 			req->state = xb_req_state_got_reply;
+ 			req->cb(req);
+ 		} else
+diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
+index ddc18da61834e..3a06eb699f333 100644
+--- a/drivers/xen/xenbus/xenbus_xs.c
++++ b/drivers/xen/xenbus/xenbus_xs.c
+@@ -191,8 +191,11 @@ static bool xenbus_ok(void)
  
- 	hubbub1_get_blk256_size(&blk256_width, &blk256_height, bpe);
+ static bool test_reply(struct xb_req_data *req)
+ {
+-	if (req->state == xb_req_state_got_reply || !xenbus_ok())
++	if (req->state == xb_req_state_got_reply || !xenbus_ok()) {
++		/* read req->state before all other fields */
++		virt_rmb();
+ 		return true;
++	}
  
--	swath_bytes_horz_wc = height * blk256_height * bpe;
--	swath_bytes_vert_wc = width * blk256_width * bpe;
-+	swath_bytes_horz_wc = width * blk256_height * bpe;
-+	swath_bytes_vert_wc = height * blk256_width * bpe;
+ 	/* Make sure to reread req->state each time. */
+ 	barrier();
+@@ -202,7 +205,7 @@ static bool test_reply(struct xb_req_data *req)
  
- 	*req128_horz_wc = (2 * swath_bytes_horz_wc <= detile_buf_size) ?
- 			false : /* full 256B request */
+ static void *read_reply(struct xb_req_data *req)
+ {
+-	while (req->state != xb_req_state_got_reply) {
++	do {
+ 		wait_event(req->wq, test_reply(req));
+ 
+ 		if (!xenbus_ok())
+@@ -216,7 +219,7 @@ static void *read_reply(struct xb_req_data *req)
+ 		if (req->err)
+ 			return ERR_PTR(req->err);
+ 
+-	}
++	} while (req->state != xb_req_state_got_reply);
+ 
+ 	return req->body;
+ }
 -- 
 2.20.1
 
