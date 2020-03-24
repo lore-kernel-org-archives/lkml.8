@@ -2,116 +2,259 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97CEC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE682C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C4820714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:18:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 851FE20714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 18:19:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tQULf6iR"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Lmw4MlZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgCXSSn (ORCPT
+        id S1727672AbgCXSTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 14:18:43 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:38521 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbgCXSSn (ORCPT
+        Tue, 24 Mar 2020 14:19:43 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39705 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727426AbgCXSTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:18:43 -0400
-Received: by mail-ua1-f66.google.com with SMTP id h35so6707317uae.5
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:18:42 -0700 (PDT)
+        Tue, 24 Mar 2020 14:19:43 -0400
+Received: by mail-qt1-f195.google.com with SMTP id f20so15806270qtq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 11:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b8cHeEED3Z92a0ymNocC1wM2oY7nKh155USjPtUlk8U=;
-        b=tQULf6iRNPtrwhWnpGrNRTC/RGfpdVv1KzNlJastPZALMPGl3mbmj1KkNDkkpF5Mxy
-         lixTfrHNpsLM/X4FT9RkxlwmOS3LM/DO+X9aOaor10FOcK6r83pC3mbA+oy2nG2fMr9Z
-         TSWgNKpSo4u0YGxvblpb7nv5keNyk+HW7/FiZC+ngRb8+MkN+mzP3tFATaolDmwakHxG
-         KD8BsH3xzd9yKISmVML8u6OOOFaTQE7e1jRzcmtFV4xbTa8VcUitt4ddiz6OTA1aCToN
-         5/UVt4DhilfXkDTi+MLVQ2VXDWoDB/pDK661FdUgmUssNmKOQ/ACrDQieWFmixwIh8fZ
-         Adaw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cjNIaz1auuBdHXFNvWmCI0qm6HLfIfL49CniMlrQY4c=;
+        b=Lmw4MlZTNv6gXht56YqXxc3bMWPhJy3zedFKOVsm34WXtUHgNX4SUrsabOR4QXzErz
+         yYvxWdw9PzAk+I6NnffptMDBKlHK8GHhoXQlXdc4q2p4xIfXEs3qgAPKUr4OPZfq5kyB
+         r16OIteyRyQQAUgWqtPUyXa9bvhp7uZEmy6lY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b8cHeEED3Z92a0ymNocC1wM2oY7nKh155USjPtUlk8U=;
-        b=MNUky4bA1gVf8zKqZ+jeobkS9A+OkRzB50+g+CSelvjT5DtoRTtU/EoVxzai3mNvP3
-         usXyzkNNtNaCcs6DHe3Z13MEVT8/MPFp5wx4SbYza5MGUB49GHep4y36NdpkYpdGuk1n
-         FdDByQyLQM4uKfYd2OpnVhy+c2bNkWakvI9X4AYkvWaRz24d9sZmL4Y49fOvpBkDqqTY
-         tlaHVUCjbkfRXtekKScGaVuwQD/NFN9zoRd5i0wi1UjwCQh0PIVoY3kymMwO/t9GRKgy
-         f13HINBvY4LYNyledre//H4I4nFgtkPHQcJSLTXCMjzHAlLeC/cmTGg7AhMCr24H2RfD
-         RrNw==
-X-Gm-Message-State: ANhLgQ3hn96OLtHugSxnaVUtd6wa9XqWF8zRrZAcRF6xsbTH16y3DSCr
-        JWg3j+RrxJWPQL2kaQQpZ0cjC2MlxF5TI6xOXiypoQ==
-X-Google-Smtp-Source: ADFU+vvlSyqmWv0VfXpmbCrbzrodCyzdctPb60GOiITOQ8IyBRoVME1UEIqwWvolQznE5P1J/DvCNwQi1YMBK+tDF/4=
-X-Received: by 2002:ab0:7556:: with SMTP id k22mr8587224uaq.104.1585073921836;
- Tue, 24 Mar 2020 11:18:41 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cjNIaz1auuBdHXFNvWmCI0qm6HLfIfL49CniMlrQY4c=;
+        b=q1d0GWUiJimucfMhZzM3jIIBRUFVShgxJshBJVJBNPpBQfdigO4CnRsCY7r0zLEV4d
+         x7EEJefVGpQsrMAD1w4AJpezepyOGg+ayW+QOy+YADnIiq2Ru+0tlxBHjXOMe44bpEeM
+         QWclhVpnB60KtfNMD4Ka4e5TJDeAHLH3fYCx+sXmNtwKgyG6jQXOrVlBzE7rqF7Q+IBO
+         lwxI2D7b7QaOd3C/KsggqXELjBVroeYV+5BLzrHf2wljQUW4lhD+qRPIDCmMbnpmbru0
+         PuT6E+u0Iv3k2B4Sz9TViQcCjXNXVWG1EJiKIV1Xd1+xAhQU/0zfwMYzQ9M8HlfUAnrB
+         jRZA==
+X-Gm-Message-State: ANhLgQ2tZE4VZcx6viHSAAl835nQBI702VKv3tDPMim/xRh9B5YbZ7bL
+        twe01/DbXPasXPEuEbThdhUm6g==
+X-Google-Smtp-Source: ADFU+vvZtM1ZXFyQVhpBY/QHm+TwvlXcSyEPoFiF3JtOw6q//E2x0lF5RtmMgOhbhtMOqtx1mBioNQ==
+X-Received: by 2002:aed:2284:: with SMTP id p4mr26967432qtc.329.1585073980955;
+        Tue, 24 Mar 2020 11:19:40 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id g6sm1260034qtc.31.2020.03.24.11.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 11:19:40 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 14:19:39 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        vpillai@digitalocean.com
+Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
+ sample state of locked-down task
+Message-ID: <20200324181939.GB257597@google.com>
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-1-paulmck@kernel.org>
+ <20200319132238.75a034c3@gandalf.local.home>
+ <20200319173525.GI3199@paulmck-ThinkPad-P72>
+ <20200320024943.GA29649@paulmck-ThinkPad-P72>
+ <20200324000639.GA29340@google.com>
+ <20200324154822.GC19865@paulmck-ThinkPad-P72>
+ <20200324165255.GA242454@google.com>
+ <20200324172026.GK19865@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-References: <20200324041526.GA1978@asgard.redhat.com>
-In-Reply-To: <20200324041526.GA1978@asgard.redhat.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 24 Mar 2020 19:18:05 +0100
-Message-ID: <CAPDyKFqEQZU=xSKX8_D3a7JQ7rRKXP8Yq8wwq9j=YYGQsWv4-w@mail.gmail.com>
-Subject: Re: [PATCH] drivers: firmware: psci: avoid BIT() macro usage in PSCI_1_0_OS_INITIATED
-To:     Eugene Syromiatnikov <esyr@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324172026.GK19865@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 at 05:15, Eugene Syromiatnikov <esyr@redhat.com> wrote:
->
-> The BIT() macro is not available in UAPI headers, so let's replace
-> it with similarly defined _BITUL() macro provided by <linux/const.h>.
->
-> Fixes: 60dd1ead65e8 ("drivers: firmware: psci: Announce support for OS initiated suspend mode")
-> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+On Tue, Mar 24, 2020 at 10:20:26AM -0700, Paul E. McKenney wrote:
+> On Tue, Mar 24, 2020 at 12:52:55PM -0400, Joel Fernandes wrote:
+> > On Tue, Mar 24, 2020 at 08:48:22AM -0700, Paul E. McKenney wrote:
+> > [..] 
+> > > > 
+> > > > > diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> > > > > index 44edd0a..43991a4 100644
+> > > > > --- a/kernel/rcu/tree.h
+> > > > > +++ b/kernel/rcu/tree.h
+> > > > > @@ -455,6 +455,8 @@ static void rcu_bind_gp_kthread(void);
+> > > > >  static bool rcu_nohz_full_cpu(void);
+> > > > >  static void rcu_dynticks_task_enter(void);
+> > > > >  static void rcu_dynticks_task_exit(void);
+> > > > > +static void rcu_dynticks_task_trace_enter(void);
+> > > > > +static void rcu_dynticks_task_trace_exit(void);
+> > > > >  
+> > > > >  /* Forward declarations for tree_stall.h */
+> > > > >  static void record_gp_stall_check_time(void);
+> > > > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > > > index 9355536..f4a344e 100644
+> > > > > --- a/kernel/rcu/tree_plugin.h
+> > > > > +++ b/kernel/rcu/tree_plugin.h
+> > > > > @@ -2553,3 +2553,21 @@ static void rcu_dynticks_task_exit(void)
+> > > > >  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
+> > > > >  #endif /* #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL) */
+> > > > >  }
+> > > > > +
+> > > > > +/* Turn on heavyweight RCU tasks trace readers on idle/user entry. */
+> > > > > +static void rcu_dynticks_task_trace_enter(void)
+> > > > > +{
+> > > > > +#ifdef CONFIG_TASKS_RCU_TRACE
+> > > > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> > > > > +		current->trc_reader_special.b.need_mb = true;
+> > > > 
+> > > > If this is every called from middle of a reader section (that is we
+> > > > transition from IPI-mode to using heavier reader-sections), then is a memory
+> > > > barrier needed here just to protect the reader section that already started?
+> > > 
+> > > That memory barrier is provided by the memory ordering in the callers
+> > > of rcu_dynticks_task_trace_enter() and rcu_dynticks_task_trace_exit(),
+> > > namely, those callers' atomic_add_return() invocations.  These barriers
+> > > pair with the pair of smp_rmb() calls in rcu_dynticks_zero_in_eqs(),
+> > > which is in turn invoked from the function formerly known as
+> > > trc_inspect_reader_notrunning(), AKA trc_inspect_reader().
+> > > 
+> > > This same pair of smp_rmb() calls also pair with the conditional smp_mb()
+> > > calls in rcu_read_lock_trace() and rcu_read_unlock_trace().
+> > > 
+> > > In your scenario, the calls in rcu_read_lock_trace() and
+> > > rcu_read_unlock_trace() wouldn't happen, but in that case the ordering
+> > > from atomic_add_return() would suffice.
+> > > 
+> > > Does that work?  Or is there an ordering bug in there somewhere?
+> > 
+> > Thanks for explaining. Could the following scenario cause a problem?
+> > 
+> > If we consider the litmus test:
+> > 
+> > {
+> > int x = 1;
+> > int *y = &x;
+> > int z = 1;
+> > }
+> > 
+> > P0(int *x, int *z, int **y)
+> > {
+> > 	int *r0;
+> > 	int r1;
+> > 
+> > 	dynticks_eqs_trace_enter();
+> > 
+> > 	rcu_read_lock();
+> > 	r0 = rcu_dereference(*y);
+> > 
+> > 	dynticks_eqs_trace_exit(); // cut-off reader's mb wings :)
+> 
+> RCU Tasks Trace currently assumes that a reader will not start within
+> idle and end outside of idle.  However, keep in mind that eqs exit
+> implies a full memory barrier and changes the ->dynticks counter.
+> The call to rcu_dynticks_task_trace_exit() is not standalone.  Instead,
+> the atomic_add_return() immediately preceding that call is critically
+> important.  And ditto for rcu_dynticks_task_trace_enter() and the
+> atomic_add_return() immediately following it.
+> 
+> The overall effect is similar to that of sequence locks.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+Yes, sounds good. My corner case did consider the full memory barrier aspect.
 
-Kind regards
-Uffe
+> > 	r1 = READ_ONCE(*r0); // Reordering of this beyond the unlock() is bad.
+> > 	rcu_read_unlock();
+> > }
+> > 
+> > P1(int *x, int *z, int **y)
+> > {
+> > 	rcu_assign_pointer(*y, z);
+> > 	synchronize_rcu();
+> > 	WRITE_ONCE(*x, 0);
+> > }
+> > 
+> > exists (0:r0=x /\ 0:r1=0)
+> > 
+> > Then the following situation can happen?
+> > 
+> > 	READER					UPDATER
+> > 
+> > 						y = &z;
+> > 
+> > 	eqs_enter(); // full-mb
+> > 
+> > 	rcu_read_lock(); // full-mb
+> > 	// r0 = x;
+> > 						// GP-start
+> > 						// ..zero_in_eqs() notices eqs, no IPI
+> > 	eqs_exit(); // full-mb
+> > 
+> > 	// actual r1 = *x but will reorder
+> > 
+> > 	rcu_read_unlock(); // no-mb
+> > 						// GP-finish as notices nesting = 0
+> > 						x = 0;
+> 
+> Followed by an smp_rmb() followed the second read of ->dynticks, which
+> will see a non-zero bottom bit for ->dynticks, and thus return false.
+> This in turn will cause the possible zero nesting counter to be ignored.
 
-> ---
->  include/uapi/linux/psci.h | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/include/uapi/linux/psci.h b/include/uapi/linux/psci.h
-> index 2fcad1d..87afdeb 100644
-> --- a/include/uapi/linux/psci.h
-> +++ b/include/uapi/linux/psci.h
-> @@ -12,6 +12,8 @@
->  #ifndef _UAPI_LINUX_PSCI_H
->  #define _UAPI_LINUX_PSCI_H
->
-> +#include <linux/const.h>
-> +
->  /*
->   * PSCI v0.1 interface
->   *
-> @@ -100,7 +102,7 @@
->  #define PSCI_1_0_FEATURES_CPU_SUSPEND_PF_MASK  \
->                         (0x1 << PSCI_1_0_FEATURES_CPU_SUSPEND_PF_SHIFT)
->
-> -#define PSCI_1_0_OS_INITIATED                  BIT(0)
-> +#define PSCI_1_0_OS_INITIATED                  _BITUL(0)
->  #define PSCI_1_0_SUSPEND_MODE_PC               0
->  #define PSCI_1_0_SUSPEND_MODE_OSI              1
->
-> --
-> 2.1.4
->
+Ah, I see. You are re-reading dynticks to confirm that the case I brought up
+does not occur. That sounds good to me :) I drew out all possible (similar)
+scenarios and could not break it and found the GP ordering guarantees holds :)
+
+thanks,
+
+ - Joel
+
+
+> > 	// reordered r1 = *x = 0;
+> > 
+> > 
+> > Basically r0=x /\ r1=0 happened because r1=0. Or did I miss something that
+> > prevents it?
+> 
+> Yes, the change in value of ->dynticks and the full ordering associated
+> with the atomic_add_return() that makes this change.
+> 
+> 							Thanx, Paul
+> 
+> > thanks,
+> > 
+> >  - Joel
+> > 
+> > 
+> > 
+> > 
+> > > > thanks,
+> > > > 
+> > > >  - Joel
+> > > > 
+> > > > 
+> > > > > +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
+> > > > > +}
+> > > > > +
+> > > > > +/* Turn off heavyweight RCU tasks trace readers on idle/user exit. */
+> > > > > +static void rcu_dynticks_task_trace_exit(void)
+> > > > > +{
+> > > > > +#ifdef CONFIG_TASKS_RCU_TRACE
+> > > > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> > > > > +		current->trc_reader_special.b.need_mb = false;
+> > > > > +#endif /* #ifdef CONFIG_TASKS_RCU_TRACE */
+> > > > > +}
