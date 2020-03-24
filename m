@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8848EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434B3C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF8D20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C8D208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056088;
-	bh=e0FJE4mmKOLy1FnSL5Kj2UeQ9zkdN+4VFJKPic2+/YI=;
+	s=default; t=1585056092;
+	bh=FTweWN98BoOY115uzLhzfrdwPwGcwkAI9w3aSqZ/KUs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TxKBrRYgpIFbgWXbyd0c8lGlse5rnlh2duPoDmjszxHRpFo2V3kkFZ83j09VyNK6u
-	 i17OKQ6EpT6DCLGj/nfLjGI923zMZ2ziuAdRgPXmdAtQZuAQhltMDJTENXB+lEKkib
-	 LP3+XUp+mgs9MKKaKIGI/I0mq7WfTOUGSifCqykM=
+	b=OM7aB7If8KVefGG//m697EnMFt+Gv1MgLawwBUtziK46c1V6IE58YQa7uncLNWNx/
+	 Mqh1vW0bfbPjhgveCgC9E4x0sbb65EscP/Q5ynBCR/33z2zObdMvJ4o/rxg8gn17UW
+	 7jtROeWD5TgBh7eKCzbyLST6bRkL/jT3yxzpQzu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgCXNV1 (ORCPT
+        id S1729049AbgCXNVa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43122 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729026AbgCXNVT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:19 -0400
+        id S1729039AbgCXNVZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8FFD208E0;
-        Tue, 24 Mar 2020 13:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84CDF20775;
+        Tue, 24 Mar 2020 13:21:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056079;
-        bh=e0FJE4mmKOLy1FnSL5Kj2UeQ9zkdN+4VFJKPic2+/YI=;
+        s=default; t=1585056085;
+        bh=FTweWN98BoOY115uzLhzfrdwPwGcwkAI9w3aSqZ/KUs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ju1RJlrXlZJ9vNxIaWinDliCXQBtoANvPpJxOX6UAiGDACI52056w7YOub2g/ce1C
-         eAxt9U71RcgqpPxPYHSZh9Kg9jgyHY2hgKtoy5Oq74wEY8ZOz3NND+6Ij+E8rFFyuh
-         mzrflO558U0a6BlpDieQo3Hy0aP8dU/OpwW1ctFY=
+        b=p667t+PXgVjmpEpS9k8xkhZ4tOqpt+QFuOHthnGW6SSw8J0aB+IZ9480zFMI0BvEN
+         mLlFFTqOrBmzzaXKJBkco1QDIZMMRuAawppz9512POWO/+24Dmx2ERj5XxtsZd4qMS
+         6Ay2uIlFH6h5rk1/OLKN+F7PwP1XzrN+e/zlc3HQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thommy Jakobsson <thommyj@gmail.com>,
-        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Inki Dae <inki.dae@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 015/119] spi/zynqmp: remove entry that causes a cs glitch
-Date:   Tue, 24 Mar 2020 14:10:00 +0100
-Message-Id: <20200324130809.465281236@linuxfoundation.org>
+Subject: [PATCH 5.5 017/119] drm/exynos: dsi: propagate error value and silence meaningless warning
+Date:   Tue, 24 Mar 2020 14:10:02 +0100
+Message-Id: <20200324130809.654597043@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -61,56 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thommy Jakobsson <thommyj@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
+[ Upstream commit 0a9d1e3f3f038785ebc72d53f1c409d07f6b4ff5 ]
 
-In the public interface for chipselect, there is always an entry
-commented as "Dummy generic FIFO entry" pushed down to the fifo right
-after the activate/deactivate command. The dummy entry is 0x0,
-irregardless if the intention was to activate or deactive the cs. This
-causes the cs line to glitch rather than beeing activated in the case
-when there was an activate command.
+Properly propagate error value from devm_regulator_bulk_get() and don't
+confuse user with meaningless warning about failure in getting regulators
+in case of deferred probe.
 
-This has been observed on oscilloscope, and have caused problems for at
-least one specific flash device type connected to the qspi port. After
-the change the glitch is gone and cs goes active when intended.
-
-The reason why this worked before (except for the glitch) was because
-when sending the actual data, the CS bits are once again set. Since
-most flashes uses mode 0, there is always a half clk period anyway for
-cs to clk active setup time. If someone would rely on timing from a
-chip_select call to a transfer_one, it would fail though.
-
-It is unknown why the dummy entry was there in the first place, git log
-seems to be of no help in this case. The reference manual gives no
-indication of the necessity of this. In fact the lower 8 bits are a
-setup (or hold in case of deactivate) time expressed in cycles. So this
-should not be needed to fulfill any setup/hold timings.
-
-Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
-Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
-Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-zynqmp-gqspi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
-index 60c4de4e44856..7412a3042a8d2 100644
---- a/drivers/spi/spi-zynqmp-gqspi.c
-+++ b/drivers/spi/spi-zynqmp-gqspi.c
-@@ -401,9 +401,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 72726f2c7a9fb..8d880012b5876 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -1751,8 +1751,9 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+ 	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(dsi->supplies),
+ 				      dsi->supplies);
+ 	if (ret) {
+-		dev_info(dev, "failed to get regulators: %d\n", ret);
+-		return -EPROBE_DEFER;
++		if (ret != -EPROBE_DEFER)
++			dev_info(dev, "failed to get regulators: %d\n", ret);
++		return ret;
+ 	}
  
- 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
- 
--	/* Dummy generic FIFO entry */
--	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
--
- 	/* Manually start the generic FIFO command */
- 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
- 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
+ 	dsi->clks = devm_kcalloc(dev,
 -- 
 2.20.1
 
