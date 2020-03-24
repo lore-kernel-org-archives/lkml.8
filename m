@@ -2,386 +2,111 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA57C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA25C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:50:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E364D206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC63820775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:50:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585072258;
+	bh=CCEABUBAN9MRCpgZksVbrjdDahiV/d+RR5NEsl42kLY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=0eJANJxhWNlO9XzXRz935nV0sMY7d+U6hKmLDg6v1UA6L968kmf0A2Qdg1iJZ11M5
+	 i5NAylBPWxL5xDyuNSvjhsZIlXmd5AhxCbJdjH6OPJaPkRnEwfRRjNY6alWOzcqbFa
+	 iSBB1/8ZJR4dupkG6dRNdA+geT4893W0d+5ZyuJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgCXRtb (ORCPT
+        id S1727609AbgCXRu6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:49:31 -0400
-Received: from mailoutvs44.siol.net ([185.57.226.235]:41667 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727257AbgCXRtb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:49:31 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id C5D455203C2;
-        Tue, 24 Mar 2020 18:49:26 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id GHJdAO5FWp1p; Tue, 24 Mar 2020 18:49:26 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 00C10524752;
-        Tue, 24 Mar 2020 18:49:25 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id 8F7C45203C2;
-        Tue, 24 Mar 2020 18:49:21 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org,
-        Roman Stratiienko <r.stratiienko@gmail.com>
-Cc:     airlied@linux.ie, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        Roman Stratiienko <r.stratiienko@gmail.com>
-Subject: Re: [PATCH v4 3/4] drm/sun4i: Add support for premulti/coverage blending mode handling
-Date:   Tue, 24 Mar 2020 18:49:21 +0100
-Message-ID: <20591297.EfDdHjke4D@jernej-laptop>
-In-Reply-To: <20200302103138.17916-4-r.stratiienko@gmail.com>
-References: <20200302103138.17916-4-r.stratiienko@gmail.com>
+        Tue, 24 Mar 2020 13:50:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35302 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727366AbgCXRu5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:50:57 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B93C206F6;
+        Tue, 24 Mar 2020 17:50:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585072256;
+        bh=CCEABUBAN9MRCpgZksVbrjdDahiV/d+RR5NEsl42kLY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=oTKbBiukjqGnd1ubSkTzU8ZLakbO+PNdBHpsd8jDmeekp1cwfiFnpXrA2nBak0QkQ
+         9mCR81onE5mAvc0ko9+NVjWOYqRzaqDEoNZa9+n+ap7j4FuFUn2oQ2X8zJ2+5Dxm4T
+         vFbo7RkPWVrOqpmSMGot0Yf4DD1FBSBxWL6lhhsE=
+Date:   Tue, 24 Mar 2020 12:50:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@intel.com>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v7] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20200324175054.GA23029@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACO55ttvb5uC37ORiLuVBidhfSn-+WSReJ+aCfWR3k-fLtPBnA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+On Tue, Mar 24, 2020 at 06:31:08PM +0100, Karol Herbst wrote:
+> On Sat, Mar 21, 2020 at 2:02 AM Karol Herbst <kherbst@redhat.com> wrote:
+> >
+> > On Fri, Mar 20, 2020 at 11:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Tue, Mar 10, 2020 at 08:26:27PM +0100, Karol Herbst wrote:
+> > > > Fixes the infamous 'runtime PM' bug many users are facing on Laptops with
+> > > > Nvidia Pascal GPUs by skipping said PCI power state changes on the GPU.
+> > > >
+> > > > Depending on the used kernel there might be messages like those in demsg:
+> > > >
+> > > > "nouveau 0000:01:00.0: Refused to change power state, currently in D3"
+> > > > "nouveau 0000:01:00.0: can't change power state from D3cold to D0 (config
+> > > > space inaccessible)"
+> > > > followed by backtraces of kernel crashes or timeouts within nouveau.
+> > > >
+> > > > It's still unkown why this issue exists, but this is a reliable workaround
+> > > > and solves a very annoying issue for user having to choose between a
+> > > > crashing kernel or higher power consumption of their Laptops.
+> > >
+> > > Thanks for the bugzilla link.  The bugzilla mentions lots of mailing
+> > > list discussion.  Can you include links to some of that?
+> > >
+> > > IIUC this basically just turns off PCI power management for the GPU.
+> > > Can you do that with something like the following?  I don't know
+> > > anything about DRM, so I don't know where you could save the pm_cap,
+> > > but I'm sure the driver could keep it somewhere.
+> > >
+> >
+> > Sure this would work? From a quick look over the pci code, it looks
+> > like a of code would be skipped we really need, like the platform code
+> > to turn off the GPU via ACPI. But I could also remember incorrectly on
+> > how all of that worked again. I can of course try and see what the
+> > effect of this patch would be. And would the parent bus even go into
+> > D3hot if it knows one of its children is still at D0? Because that's
+> > what the result of that would be as well, no? And I know that if the
+> > bus stays in D0, that it has a negative impact on power consumption.
+> >
+> > Anyway, I will try that out, I am just not seeing how that would help.
+> 
+> so it seems like that has worked unless I screwed up locally. Will do
+> some proper testing and then I think we won't need to go through the
+> pci tree anymore as no changes are required there with that.
 
-Dne ponedeljek, 02. marec 2020 ob 11:31:37 CET je Roman Stratiienko 
-napisal(a):
-> Argument:
-> 
-> All information below is author's understanding of underlying processes.
-> This information was obtained from DE2.0-3.0 datasheet analysis and
-> analysis of different DRM driver source code and commit messages.
-> 
-> Input buffers could have 2 ways of holding pixel alpha channel value.
-> 1. Coverage means that in case of transparency - only alpha channel changes.
-> Example of 50% transparent white pixel: R=0xff B=0xff B=0xff A=0x7f
-> 
-> 2. Premultiply means that RGB pixel values should be dimmed proportional to
->    alpha channel value. Alpha channel value has also to be set in this case.
-> Example of 50% transparent white pixel: R=0x7f B=0x7f B=0x7f A=0x7f
-> 
-> Userspace informs DRM/KMS which blending type frame buffer uses with
-> 'pixel blend mode' property.
-> 
-> Allwinner DE2.0 and DE3.0 have 2 block of image processing:
-> Overlay and Blending. Both should aware of blending type are used in the
-> buffer.
-> 
-> Overlay block uses this information to:
-> 1. Unify blending types if more then 1 overlay channel are used. It can
-> unify it only as premultiplied by converting coverage to premultiplied.
-> 2. Calculate correct pixel value in case of applying plane alpha.
->    For coverage alpha only alpha channel should be affected:
->      [Ro=Ri, Go=Gi, Bo=Bi, Ao=Ai*AGlobal]
->    For premultiplied alpha all 4 channels should be affected:
->      [Ro=Ri*AGlobal, Go=Gi*AGlobal, Bo=Bi*AGlobal, Ao=Ai*AGlobal]
-> 
-> Blending functional block should aware of blending type each pipe
-> channel uses. Otherwise image can't blend correctly.
-> 
-> In case we've specified premultiplied format for blending PIPE0, blender
-> converts premultiplied RGB values to original (divides by normalized Alpha).
-> In case for some reason pixel value after division exceeds 0xff, blender
-> clamps it to 0xff. [Was discovered in experimental way]
-> If image that passed through PIPE1-3 restored to coverage before mixing or
-> used in premultiplied form still require testing and out of scope of this
-> patch.
-> 
-> Implementation:
-> 
-> 1. Add blend property to UI channel
-> 2. Add blend property to VI channel in case of DE3.0 used
-> 3. Make all DE2.0 UI and DE3.0 VI overlay channels to use premultiply
-> format. Mark all blending pipes as premultiply except DE2.0 VI plane.
-> 4. If DRM plane uses coverage blending format, set blending mode register
->    to convert it to premultiply.
+Hehe, looks like our responses crossed in the mail :)  I hope further
+testing is still positive; let me know if not.
 
-Regarding 3 and 4 - do we really need to convert everything to premultiply? 
-Currently only one overlay is used in each channel, so there is no need to 
-convert coverage to premultiply if I understand datasheet correctly. Just mark 
-it accordingly in BLD premultiply control register.
-
-> 
-> Signed-off-by: Roman Stratiienko <r.stratiienko@gmail.com>
-> 
-> --
-> 
-> v4:
-> - Initial version (Depends on unmerged patches from patchset)
-> ---
->  drivers/gpu/drm/sun4i/sun8i_mixer.h    |  2 ++
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.c | 33 ++++++++++++++++++-----
->  drivers/gpu/drm/sun4i/sun8i_ui_layer.h |  5 ++++
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.c | 36 +++++++++++++++++++++-----
->  drivers/gpu/drm/sun4i/sun8i_vi_layer.h |  5 ++++
->  5 files changed, 69 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> b/drivers/gpu/drm/sun4i/sun8i_mixer.h index 915479cc3077..8a18372938d5
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
-> @@ -70,6 +70,8 @@
->  #define SUN8I_MIXER_BLEND_ROUTE_PIPE_MSK(n)	(0xf << ((n) << 2))
->  #define SUN8I_MIXER_BLEND_ROUTE_PIPE_SHIFT(n)	((n) << 2)
-> 
-> +#define SUN8I_MIXER_BLEND_PREMULTIPLY_EN(pipe)	BIT(pipe)
-> +
->  #define SUN8I_MIXER_BLEND_OUTCTL_INTERLACED	BIT(1)
-> 
->  #define SUN50I_MIXER_BLEND_CSC_CTL_EN(ch)	BIT(ch)
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c index 5278032567a3..dd6145f80c36
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.c
-> @@ -73,10 +73,12 @@ static void sun8i_ui_layer_enable(struct sun8i_mixer
-> *mixer, int channel, }
-> 
->  static void sun8i_ui_layer_update_alpha(struct sun8i_mixer *mixer, int
-> channel, -					int overlay, struct 
-drm_plane *plane)
-> +					int overlay, struct 
-drm_plane *plane,
-> +					unsigned int zpos)
->  {
-> -	u32 mask, val, ch_base;
-> +	u32 mask, val, ch_base, bld_base;
-> 
-> +	bld_base = sun8i_blender_base(mixer);
->  	ch_base = sun8i_channel_base(mixer, channel);
-> 
->  	mask = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_MASK |
-> @@ -84,13 +86,27 @@ static void sun8i_ui_layer_update_alpha(struct
-> sun8i_mixer *mixer, int channel,
-> 
->  	val = SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA(plane->state->alpha >> 
-8);
-> 
-> -	val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
-> -		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> -		SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +	if (plane->state->pixel_blend_mode == DRM_MODE_BLEND_PIXEL_NONE) {
-> +		val |= SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_LAYER;
-> +	} else {
-> +		val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) ?
-> +			
-SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> +			
-SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +
-> +		if (plane->state->pixel_blend_mode == 
-DRM_MODE_BLEND_COVERAGE)
-> +			val |= 
-SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_COV2PREMUL;
-> +		else
-> +			val |= 
-SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_PREMULTI;
-> +	}
-> 
->  	regmap_update_bits(mixer->engine.regs,
->  			   SUN8I_MIXER_CHAN_UI_LAYER_ATTR(ch_base, 
-overlay),
->  			   mask, val);
-> +
-> +	regmap_update_bits(mixer->engine.regs,
-> +			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
-> +			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
-> +			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos));
-
-As you already figured out in previous patch [1], register values based on zpos 
-can only be properly determined in sun8i_mixer_commit(). To be honest, I would 
-like to see patch [1] to go in before this.
-
-Note: Comment is also applicable to VI layer changes.
-
-Best regards,
-Jernej
-
-[1] https://patchwork.freedesktop.org/patch/346998/
-
->  }
-> 
->  static int sun8i_ui_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, @@ -280,7 +296,7 @@ static void
-> sun8i_ui_layer_atomic_update(struct drm_plane *plane,
-> sun8i_ui_layer_update_coord(mixer, layer->channel,
->  				    layer->overlay, plane, zpos);
->  	sun8i_ui_layer_update_alpha(mixer, layer->channel,
-> -				    layer->overlay, plane);
-> +				    layer->overlay, plane, zpos);
->  	sun8i_ui_layer_update_formats(mixer, layer->channel,
->  				      layer->overlay, plane);
->  	sun8i_ui_layer_update_buffer(mixer, layer->channel,
-> @@ -361,6 +377,11 @@ struct sun8i_ui_layer *sun8i_ui_layer_init_one(struct
-> drm_device *drm, return ERR_PTR(ret);
->  	}
-> 
-> +	drm_plane_create_blend_mode_property(&layer->plane,
-> +					     
-BIT(DRM_MODE_BLEND_PREMULTI) |
-> +					     
-BIT(DRM_MODE_BLEND_COVERAGE) |
-> +					     
-BIT(DRM_MODE_BLEND_PIXEL_NONE));
-> +
->  	ret = drm_plane_create_zpos_property(&layer->plane, channel,
->  					     0, plane_cnt - 
-1);
->  	if (ret) {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
-> b/drivers/gpu/drm/sun4i/sun8i_ui_layer.h index e3e32ee1178d..c5136f4841bc
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_ui_layer.h
-> @@ -41,6 +41,11 @@
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_FBFMT_OFFSET	8
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA(x)		((x) << 24)
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_MASK	GENMASK(16, 17)
-> +
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_COVERAGE		
-((0) << 16)
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_COV2PREMUL		
-((1) << 16)
-> +#define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_BLEND_PREMULTI		
-((2) << 16)
-> 
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_PIXEL		
-((0) << 1)
->  #define SUN8I_MIXER_CHAN_UI_LAYER_ATTR_ALPHA_MODE_LAYER		
-((1) << 1)
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c index f2469b5e97ee..e6d8a539614f
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.c
-> @@ -66,11 +66,13 @@ static void sun8i_vi_layer_enable(struct sun8i_mixer
-> *mixer, int channel, }
-> 
->  static void sun8i_vi_layer_update_alpha(struct sun8i_mixer *mixer, int
-> channel, -					int overlay, struct 
-drm_plane *plane)
-> +					int overlay, struct 
-drm_plane *plane,
-> +					unsigned int zpos)
->  {
-> -	u32 mask, val, ch_base;
-> +	u32 mask, val, ch_base, bld_base;
-> 
->  	ch_base = sun8i_channel_base(mixer, channel);
-> +	bld_base = sun8i_blender_base(mixer);
-> 
->  	if (mixer->cfg->is_de3) {
->  		mask = SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK |
-> @@ -78,9 +80,18 @@ static void sun8i_vi_layer_update_alpha(struct
-> sun8i_mixer *mixer, int channel, val =
-> SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA
->  			(plane->state->alpha >> 8);
-> 
-> -		val |= (plane->state->alpha == DRM_BLEND_ALPHA_OPAQUE) 
-?
-> -			
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> -			
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +		if (plane->state->pixel_blend_mode == 
-DRM_MODE_BLEND_PIXEL_NONE) {
-> +			val |= 
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_LAYER;
-> +		} else {
-> +			val |= (plane->state->alpha == 
-DRM_BLEND_ALPHA_OPAQUE) ?
-> +				
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL :
-> +				
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_COMBINED;
-> +
-> +			if (plane->state->pixel_blend_mode == 
-DRM_MODE_BLEND_COVERAGE)
-> +				val |= 
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_COV2PREMUL;
-> +			else
-> +				val |= 
-SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_PREMULTI;
-> +		}
-> 
->  		regmap_update_bits(mixer->engine.regs,
->  				   
-SUN8I_MIXER_CHAN_VI_LAYER_ATTR(ch_base,
-> @@ -93,6 +104,13 @@ static void sun8i_vi_layer_update_alpha(struct
-> sun8i_mixer *mixer, int channel, SUN8I_MIXER_FCC_GLOBAL_ALPHA
->  					(plane->state->alpha 
->> 8));
->  	}
-> +
-> +	regmap_update_bits(mixer->engine.regs,
-> +			   SUN8I_MIXER_BLEND_PREMULTIPLY(bld_base),
-> +			   SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos),
-> +			   (mixer->cfg->is_de3) ?
-> +				
-SUN8I_MIXER_BLEND_PREMULTIPLY_EN(zpos) : 0);
-> +
->  }
-> 
->  static int sun8i_vi_layer_update_coord(struct sun8i_mixer *mixer, int
-> channel, @@ -396,7 +414,7 @@ static void
-> sun8i_vi_layer_atomic_update(struct drm_plane *plane,
-> sun8i_vi_layer_update_coord(mixer, layer->channel,
->  				    layer->overlay, plane, zpos);
->  	sun8i_vi_layer_update_alpha(mixer, layer->channel,
-> -				    layer->overlay, plane);
-> +				    layer->overlay, plane, zpos);
->  	sun8i_vi_layer_update_formats(mixer, layer->channel,
->  				      layer->overlay, plane);
->  	sun8i_vi_layer_update_buffer(mixer, layer->channel,
-> @@ -504,6 +522,12 @@ struct sun8i_vi_layer *sun8i_vi_layer_init_one(struct
-> drm_device *drm, }
->  	}
-> 
-> +	if (mixer->cfg->is_de3)
-> +		drm_plane_create_blend_mode_property
-> +			(&layer->plane, BIT(DRM_MODE_BLEND_PREMULTI) 
-|
-> +			 BIT(DRM_MODE_BLEND_COVERAGE) |
-> +			 BIT(DRM_MODE_BLEND_PIXEL_NONE));
-> +
->  	ret = drm_plane_create_zpos_property(&layer->plane, index,
->  					     0, plane_cnt - 
-1);
->  	if (ret) {
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h index 48c399e1c86d..a1cf0ff16543
-> 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
-> @@ -43,6 +43,11 @@
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_MASK	GENMASK(2, 1)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK	GENMASK(31, 24)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(x)	((x) << 24)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_MASK	GENMASK(16, 17)
-> +
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_COVERAGE		
-((0) << 16)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_COV2PREMUL	((1) << 16)
-> +#define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_BLEND_PREMULTI		
-((2) << 16)
-> 
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_PIXEL	((0) << 1)
->  #define SUN50I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MODE_LAYER	((1) << 1)
-
-
-
-
+Bjorn
