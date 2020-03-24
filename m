@@ -2,112 +2,207 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF0A6C10DCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EE3C54EEB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B182070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D93D2070A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:27:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A56HSAs5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oFV80YsD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgCXVZP (ORCPT
+        id S1728181AbgCXV1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 17:25:15 -0400
-Received: from mail-qk1-f169.google.com ([209.85.222.169]:44994 "EHLO
-        mail-qk1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727664AbgCXVZP (ORCPT
+        Tue, 24 Mar 2020 17:27:09 -0400
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:42070 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbgCXV1I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 17:25:15 -0400
-Received: by mail-qk1-f169.google.com with SMTP id j4so158996qkc.11;
-        Tue, 24 Mar 2020 14:25:14 -0700 (PDT)
+        Tue, 24 Mar 2020 17:27:08 -0400
+Received: by mail-qv1-f67.google.com with SMTP id ca9so10048958qvb.9;
+        Tue, 24 Mar 2020 14:27:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=eD5Dd9pQbOHWz1I/VV0+OE79XLSILdsUaoiPbisRrS4=;
-        b=A56HSAs5W4MoYsCQD0IJ27zH7qXr4WarPRwLMYsoIKuqgVjnp12ohAe1IsdLnOhpRe
-         WQywVo/+d97g+ZHXCgLp8p7ulnyALWbZ+FfEYRoW07rSn1XumwVxm9v3sbLOG3AC1Yak
-         sAslDG8PtSKGb0MN+p9VvzwIy8m7NAJglRi81PNty/+dGsGQ4mtEU2SxT0UpZ/61ULny
-         By6kpeh19BrJqd3ER7g7UggpaKB6j1oelycJuhPgwkLwfKUJidERq5Ku68uER8pAJfRl
-         XhuQk1mP6zii2J1RRD/CDvqHnqOjEYQ2/nymVIbSMZjW4jtZkx3NhAIWE5uYYInZRJk1
-         edPw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=VEJoT2ftN3/J+JzBUUMUSAFQV5uekS8p6QQqfLbkw4A=;
+        b=oFV80YsDBCCQS0H4uydp2GAraoKy7ypaOl2OlD8XbZYroGuz5VpxBZxfoVMgGBvuQc
+         TAiLpIF5hcEfbtGLKjdqpM7ILoJvZ77DINUgNK+ljR2xi72jnvWddbKxIvlaEAkzGQz0
+         jfbHfUrL7KAIm2RBEoyYfRUy6GRc4G6BwQbOgsHunw7c4GDpx1tXhGWJ2efEdhX1JEve
+         PXSCvO38IkqekjcBSShUg+QPHwEeWr8xAO1AejfTANdqvPGSRfWKYyGa9mR98hazvVGe
+         asS4dfkNHeWJgd8fNvwgSRQQNONdT8/31nSsRRJVI8wvjD8QwQmKmJltOXDL6R8+WyQA
+         AwfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=eD5Dd9pQbOHWz1I/VV0+OE79XLSILdsUaoiPbisRrS4=;
-        b=MUuuL8LujgjFIplJk1yaI6Y9TkMkf4tf89KmhTlI05YoI+CbVdv1G7s0DOuMmfJ+gY
-         WHt/+T4VadiJzccyuEmXKX/0o5sdrqOQstVXmyrOg5noxSiFinWzzyBYBn/0Fo29Up4W
-         5u2yDYfInfgwk8TJp53D5GOYPix5LoU7v8ZeP2VPnDuYdO6uU0eyJH1XDqZgiUjJcHUN
-         Q/7zFngJ0d9DIRZ5/P0bZQsiJbhj6FTzA2eLbY7rXZVFWaktiEPMJk9/4bI7BTj4VVrj
-         FmCIGj6efVXk1YsUvwjREcO6BH6WMiXBvFXmPQWKnkpbgEBjBE9uDzTxkrEq8KAi6+ZO
-         4hPQ==
-X-Gm-Message-State: ANhLgQ3VncbHNOy/Q5F03g7PQiHV9nart6IXoSkhMjgGjgjn9H6eGp4d
-        aLcN56uuH5xAyBpi+uge1oY=
-X-Google-Smtp-Source: ADFU+vvnnFRV7+6xiqxA3i5iiKElP3U5xxZpyKTU4/vSJHEGHvZcSKJGxDfKdnL83o61CEENS29iUA==
-X-Received: by 2002:a05:620a:13a7:: with SMTP id m7mr24976009qki.181.1585085113730;
-        Tue, 24 Mar 2020 14:25:13 -0700 (PDT)
-Received: from [192.168.86.185] ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id u15sm15911755qte.91.2020.03.24.14.25.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 14:25:12 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 18:24:09 -0300
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200324201522.GP2452@worktop.programming.kicks-ass.net>
-References: <20200224043749.69466-1-namhyung@kernel.org> <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com> <20200324163444.GA162390@mtj.duckdns.org> <20200324201522.GP2452@worktop.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=VEJoT2ftN3/J+JzBUUMUSAFQV5uekS8p6QQqfLbkw4A=;
+        b=RUf/ivsbbPqhMBIMgV3NBq72E8Lt0ykepGzQPT11t0Njbi+OkgF8IuLYGKrxQn7tF+
+         cLMCEMo8txjKQxoOBV8JAkHj+uDEgrK5uzN1L4JTijtmQRFZRgLeJo6T5QtGEBf62bxi
+         xUQReLHqbvn6KoXdqB2+RlWksKsGIyVWvZq0NYWiXpffchLX/GzAr7p3I5pUdIo+2oSU
+         kwrMSvmcrnovd1xX/Z8+FojJ/ziWESKhLFifDg60E/ezMx9Sl43/eNxYVAPqpIU8PAIX
+         RtskwiR4A6yV1ODAmhURTvSVwTHWU6FM58QjtkCVYM//6iwxXxLiE9VMpFE12WKVoWhM
+         Qb8w==
+X-Gm-Message-State: ANhLgQ3BvvZiOXX2bu7AnJyFcVpqMkZj83qIygsIFUv6itlUI5LktzSz
+        J9fPTiQahaQRvNzCZ87vYx5VegRRNEH5KkTon10=
+X-Google-Smtp-Source: ADFU+vvnlC2tuBiX08DOSzyNzyZRiEDqPSX5ECF8NjcPaR1qvgPpgcPX+NbxgqdXH4UO5KxsSJRb91QXeEmgiswfoFM=
+X-Received: by 2002:a0c:ee28:: with SMTP id l8mr178148qvs.196.1585085226618;
+ Tue, 24 Mar 2020 14:27:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-4-kpsingh@chromium.org>
+ <CAEf4BzbRivYO=gVjuQw8Z8snN+RFwXswvNxs67c=5g6U3o9rmw@mail.gmail.com>
+ <20200324103910.GA7135@chromium.org> <20200324161211.GA11227@chromium.org>
+In-Reply-To: <20200324161211.GA11227@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 24 Mar 2020 14:26:55 -0700
+Message-ID: <CAEf4BzZZLBf3xRsV4khGCFdTxDFV61KbFfV1mHwM5yiCr4P37w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v5 3/7] bpf: lsm: provide attachment points for
+ BPF LSM programs
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
-To:     Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>
-CC:     Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-From:   Arnaldo Melo <arnaldo.melo@gmail.com>
-Message-ID: <D53AD1F8-4B2B-4B30-BC72-59CCA7F0D268@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On March 24, 2020 5:15:22 PM GMT-03:00, Peter Zijlstra <peterz@infradead=
-=2Eorg> wrote:
->On Tue, Mar 24, 2020 at 12:34:44PM -0400, Tejun Heo wrote:
->> On Mon, Mar 23, 2020 at 08:58:04AM +0900, Namhyung Kim wrote:
->> > Hello Peter, Tejun and folks=2E
->> >=20
->> > Do you have any other comments on the kernel side?
->> > If not, can I get your Ack?
->>=20
->> Everything looks good from cgroup side=2E I think I acked all cgroup
->parts already
->> but if not please feel free to add
->>=20
->>  Acked-by: Tejun Heo <tj@kernel=2Eorg>
+On Tue, Mar 24, 2020 at 9:12 AM KP Singh <kpsingh@chromium.org> wrote:
 >
->Yeah, looks good to me too=2E Since it's mostly userspace patches, will
->you route it Arnaldo?
+> On 24-M=C3=A4r 11:39, KP Singh wrote:
+> > On 23-M=C3=A4r 12:59, Andrii Nakryiko wrote:
+> > > On Mon, Mar 23, 2020 at 9:45 AM KP Singh <kpsingh@chromium.org> wrote=
+:
+> > > >
+> > > > From: KP Singh <kpsingh@google.com>
+> > > >
+> > > > When CONFIG_BPF_LSM is enabled, nops functions, bpf_lsm_<hook_name>=
+, are
+> > > > generated for each LSM hook. These nops are initialized as LSM hook=
+s in
+> > > > a subsequent patch.
+> > > >
+> > > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > > Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> > > > Reviewed-by: Florent Revest <revest@google.com>
+> > > > ---
+> > > >  include/linux/bpf_lsm.h | 21 +++++++++++++++++++++
+> > > >  kernel/bpf/bpf_lsm.c    | 19 +++++++++++++++++++
+> > > >  2 files changed, 40 insertions(+)
+> > > >  create mode 100644 include/linux/bpf_lsm.h
+> > > >
+> > > > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
+> > > > new file mode 100644
+> > > > index 000000000000..c6423a140220
+> > > > --- /dev/null
+> > > > +++ b/include/linux/bpf_lsm.h
+> > > > @@ -0,0 +1,21 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > > +
+> > > > +/*
+> > > > + * Copyright (C) 2020 Google LLC.
+> > > > + */
+> > > > +
+> > > > +#ifndef _LINUX_BPF_LSM_H
+> > > > +#define _LINUX_BPF_LSM_H
+> > > > +
+> > > > +#include <linux/bpf.h>
+> > > > +#include <linux/lsm_hooks.h>
+> > > > +
+> > > > +#ifdef CONFIG_BPF_LSM
+> > > > +
+> > > > +#define LSM_HOOK(RET, NAME, ...) RET bpf_lsm_##NAME(__VA_ARGS__);
+> > > > +#include <linux/lsm_hook_names.h>
+> > > > +#undef LSM_HOOK
+> > > > +
+> > > > +#endif /* CONFIG_BPF_LSM */
+> > > > +
+> > > > +#endif /* _LINUX_BPF_LSM_H */
+> > > > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
+> > > > index 82875039ca90..530d137f7a84 100644
+> > > > --- a/kernel/bpf/bpf_lsm.c
+> > > > +++ b/kernel/bpf/bpf_lsm.c
+> > > > @@ -7,6 +7,25 @@
+> > > >  #include <linux/filter.h>
+> > > >  #include <linux/bpf.h>
+> > > >  #include <linux/btf.h>
+> > > > +#include <linux/lsm_hooks.h>
+> > > > +#include <linux/bpf_lsm.h>
+> > > > +
+> > > > +/* For every LSM hook  that allows attachment of BPF programs, dec=
+lare a NOP
+> > > > + * function where a BPF program can be attached as an fexit trampo=
+line.
+> > > > + */
+> > > > +#define LSM_HOOK(RET, NAME, ...) LSM_HOOK_##RET(NAME, __VA_ARGS__)
+> > > > +
+> > > > +#define LSM_HOOK_int(NAME, ...)                        \
+> > > > +noinline __weak int bpf_lsm_##NAME(__VA_ARGS__)        \
+> > > > +{                                              \
+> > > > +       return 0;                               \
+> > > > +}
+> > > > +
+> > > > +#define LSM_HOOK_void(NAME, ...) \
+> > > > +noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
+> > > > +
+> > >
+> > > Could unify with:
+> > >
+> > > #define LSM_HOOK(RET, NAME, ...) noinline __weak RET bpf_lsm_##NAME(_=
+_VA_ARGS__)
+> > > {
+> > >     return (RET)0;
+> > > }
+> > >
+> > > then you don't need LSM_HOOK_int and LSM_HOOK_void.
+> >
+> > Nice.
+> >
+> > But, given that we are adding default values and that
+> > they are only needed for int hooks, we will need to keep the macros
+> > separate for int and void. Or, Am I missing a trick here?
+> >
+> > - KP
 >
->Acked-by: Peter Zijlstra (Intel) <peterz@infradead=2Eorg>
+> Actually, was able to get it work. not setting a default for void
+> hooks makes the macros messier. So i just set it void. For example:
+>
+>   LSM_HOOK(void, void, bprm_committing_creds, struct linux_binprm *bprm)
 
-Thanks for the acks, I'll process it tomorrow, so tests passing it'll go I=
-ngo's way for 5=2E7 tomorrow=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+surprised this works, was going to propose to specify `(void)0` as
+default value :)
+
+>
+> This also allows me to use the cleanup you suggested and not having
+> to split every usage into int and void.
+>
+
+Nice, one of the reasons for proposing this.
+
+> - KP
+>
+> >
+> > >
+> > > > +#include <linux/lsm_hook_names.h>
+> > > > +#undef LSM_HOOK
+> > > >
+> > > >  const struct bpf_prog_ops lsm_prog_ops =3D {
+> > > >  };
+> > > > --
+> > > > 2.20.1
+> > > >
