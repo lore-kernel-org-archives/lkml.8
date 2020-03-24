@@ -2,78 +2,124 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87630C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0726DC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5865820769
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8A472051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 02:30:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="PyFnFDvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCXC1e (ORCPT
+        id S1727207AbgCXCaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 22:27:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12119 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727047AbgCXC1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 22:27:34 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 561DB2697814C2E51B79;
-        Tue, 24 Mar 2020 10:27:27 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
- 10:27:19 +0800
-Subject: Re: [PATCH v6 08/23] irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
-To:     Marc Zyngier <maz@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-References: <20200320182406.23465-1-maz@kernel.org>
- <20200320182406.23465-9-maz@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <0ac3af1c-5160-a528-f2b4-aac4833ce32c@huawei.com>
-Date:   Tue, 24 Mar 2020 10:27:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 23 Mar 2020 22:30:09 -0400
+Received: from mail-vk1-f195.google.com ([209.85.221.195]:38086 "EHLO
+        mail-vk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726824AbgCXCaJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 22:30:09 -0400
+Received: by mail-vk1-f195.google.com with SMTP id n128so4423263vke.5
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 19:30:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E654FjdUEQHUs8slsoY39LXgqQlQcst7HtR/NPfu2ZU=;
+        b=PyFnFDvHAMFtZOHiL4JFSEvTOpBWyVQ8WX+T2B9tTPB+q275MbxkOqKZ1+ISeFb6gm
+         jaPo5MDrjePiqUG7HWMGP09fCnGlt0kCqsLJhlkJmER/XMa8VnA0R6gso4cAOjV2jLGz
+         VYvcp5LP370pkMyIxuP1Mv0Q+YZEdohyHkUywWz8WjASqHjz0/mJqw/AN3ZwBe7h3/iw
+         WFMiQ+fo5taKM6gEd0Wji7LTUqKGVjCMhp2afWe9qHBhtdfipHQ5zzl7+vqh151bIXi3
+         ylbM+X9UsC7TJ+3N6DunPFxwvzmUjf21SJPrLEuJZuWoYmMFdWgX8tiwFCVEdZgkAyBu
+         RwAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E654FjdUEQHUs8slsoY39LXgqQlQcst7HtR/NPfu2ZU=;
+        b=TWWIPL0jFcT14J+ENGcBKE9OrV3M5XTIfmZepxL/GnIienhboOY7dPWR1KJGr9/SiO
+         QcwhKDY5DQ1wGc9dmUpUkM5Ani+vpv1m/bzCA0qIx5EWeqBHL3swfhDJ/O40TpkD7Gq9
+         oeodg+N0UefUHsyZS8U/73K9dFUouzV3FQp1/mm/LduIxEsdpJJ+4L+fCUJYyfdznTpN
+         9BTAanzv4Wf8JaGojZSuG9uQNWMF5sFFCM7XIFDCnIxVDy69cEcCD0H/x15FaTsMpKZ5
+         jLM9ZdjaJaJ7n2LgvTLocD3Dt/qs6c017MYOeLJ7EwlixaUAagIjQktfvtJUjjX+Ka+T
+         VICw==
+X-Gm-Message-State: ANhLgQ2s5qCyGwh886nvk7rm7DfzMvnhxAS59HLPPA4UHtrt6zixEbjH
+        H5036FyRpSYzQf/PV7DhCcwD1P5eapupe52gqDHrgQ==
+X-Google-Smtp-Source: ADFU+vsNWDf85t42CDUfiM9Il8e3f8zk6wDs/cv9jsrMiNAdLh8PJOcpCzY0DfTq5I6U3WH+HvpaRN6WK1qTQVgkdRo=
+X-Received: by 2002:a1f:ee05:: with SMTP id m5mr17038079vkh.9.1585017006589;
+ Mon, 23 Mar 2020 19:30:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200320182406.23465-9-maz@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+References: <20200321193107.21590-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20200321193107.21590-1-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Tue, 24 Mar 2020 08:00:00 +0530
+Message-ID: <CAHLCerPheqrD4Qkxsy1LmdLP1OTVb2pZkKMVCA0dK3CL9xfGKA@mail.gmail.com>
+Subject: Re: [PATCH] thermal/drivers/cpufreq_cooling: Remove abusing WARN_ON
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Javi Merino <javi.merino@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        "open list:THERMAL/CPU_COOLING" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/21 2:23, Marc Zyngier wrote:
-> +static int its_sgi_set_affinity(struct irq_data *d,
-> +				const struct cpumask *mask_val,
-> +				bool force)
-> +{
-> +	/*
-> +	 * There is no notion of affinity for virtual SGIs, at least
-> +	 * not on the host (since they can only be targetting a vPE).
-> +	 * Tell the kernel we've done whetever it asked for.
+On Sun, Mar 22, 2020 at 1:01 AM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> The WARN_ON macros are used at the entry functions state2power() and
+> set_cur_state().
+>
+> state2power() is called with the max_state retrieved from
+> get_max_state which returns cpufreq_cdev->max_level, then it check if
+> max_state is > cpufreq_cdev->max_level. The test does not really makes
+> sense but let's assume we want to make sure to catch an error if the
+> code evolves. However the WARN_ON is overkill.
+>
+> set_cur_state() is also called from userspace if we write to the
+> sysfs. It is easy to see a stack dumped by just writing to sysfs
+> /sys/class/thermal/cooling_device0/cur_state a value greater than
+> "max_level". A bit scary. Returing -EINVAL is enough.
+>
+> Remove these WARN_ON.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-new typo?
-s/whetever/whatever/
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-> +	 */
-> +	return IRQ_SET_MASK_OK;
-> +}
-
-
-Thanks,
-Zenghui
-
+> ---
+>  drivers/thermal/cpufreq_cooling.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+> index af55ac08e1bd..d66791a71320 100644
+> --- a/drivers/thermal/cpufreq_cooling.c
+> +++ b/drivers/thermal/cpufreq_cooling.c
+> @@ -273,7 +273,7 @@ static int cpufreq_state2power(struct thermal_cooling_device *cdev,
+>         struct cpufreq_cooling_device *cpufreq_cdev = cdev->devdata;
+>
+>         /* Request state should be less than max_level */
+> -       if (WARN_ON(state > cpufreq_cdev->max_level))
+> +       if (state > cpufreq_cdev->max_level)
+>                 return -EINVAL;
+>
+>         num_cpus = cpumask_weight(cpufreq_cdev->policy->cpus);
+> @@ -434,7 +434,7 @@ static int cpufreq_set_cur_state(struct thermal_cooling_device *cdev,
+>         int ret;
+>
+>         /* Request state should be less than max_level */
+> -       if (WARN_ON(state > cpufreq_cdev->max_level))
+> +       if (state > cpufreq_cdev->max_level)
+>                 return -EINVAL;
+>
+>         /* Check if the old cooling action is same as new cooling action */
+> --
+> 2.17.1
+>
