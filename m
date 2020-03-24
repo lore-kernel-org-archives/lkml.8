@@ -2,90 +2,131 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 154D4C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C28CC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DA220775
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 100652051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:49:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727296AbgCXJrz (ORCPT
+        id S1727124AbgCXJte (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:47:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44248 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbgCXJry (ORCPT
+        Tue, 24 Mar 2020 05:49:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:58551 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726413AbgCXJtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:47:54 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGg9j-0000xm-7b; Tue, 24 Mar 2020 10:47:31 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 39C86100292; Tue, 24 Mar 2020 10:47:30 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Paul McKenney <paulmck@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Joel Fernandes \(Google\)" <joel@joelfernandes.org>,
-        "Steven Rostedt \(VMware\)" <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Brian Gerst <brgerst@gmail.com>,
-        Juergen Gross <jgross@suse.com>,
-        Alexandre Chartre <alexandre.chartre@oracle.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [patch V3 04/23] kprobes: Prevent probes in .noinstr.text section
-In-Reply-To: <20200324144953.eec3e73f249901582bdf564e@kernel.org>
-References: <20200320175956.033706968@linutronix.de> <20200320180032.799569116@linutronix.de> <20200323230025.a24f949a2143dbd5f208f00c@kernel.org> <87mu87oy7n.fsf@nanos.tec.linutronix.de> <20200324144953.eec3e73f249901582bdf564e@kernel.org>
-Date:   Tue, 24 Mar 2020 10:47:30 +0100
-Message-ID: <87369yf5jh.fsf@nanos.tec.linutronix.de>
+        Tue, 24 Mar 2020 05:49:33 -0400
+Received: from ptx.hi.pengutronix.de ([2001:67c:670:100:1d::c0])
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGgBZ-0008G8-MI; Tue, 24 Mar 2020 10:49:25 +0100
+Received: from pza by ptx.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <pza@pengutronix.de>)
+        id 1jGgBY-00070X-Ea; Tue, 24 Mar 2020 10:49:24 +0100
+Date:   Tue, 24 Mar 2020 10:49:24 +0100
+From:   Philipp Zabel <pza@pengutronix.de>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, kishon@ti.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] phy: qcom-snps: Add SNPS USB PHY driver for QCOM
+ based SOCs
+Message-ID: <20200324094924.GA22281@pengutronix.de>
+References: <1584994632-31193-1-git-send-email-wcheng@codeaurora.org>
+ <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584994632-31193-3-git-send-email-wcheng@codeaurora.org>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 10:44:11 up 33 days, 17:14, 83 users,  load average: 0.32, 0.42,
+ 0.32
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c0
+X-SA-Exim-Mail-From: pza@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masami Hiramatsu <mhiramat@kernel.org> writes:
-> On Mon, 23 Mar 2020 17:03:24 +0100
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> > @@ -2212,6 +2212,10 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
->> >  	ret = kprobe_add_area_blacklist((unsigned long)__kprobes_text_start,
->> >  					(unsigned long)__kprobes_text_end);
->> >  
->> > +	/* Symbols in noinstr section are blacklisted */
->> > +	ret = kprobe_add_area_blacklist((unsigned long)__noinstr_text_start,
->> > +					(unsigned long)__noinstr_text_end);
->> > +
->> >  	return ret ? : arch_populate_kprobe_blacklist();
->> >  }
->> 
->> So that extra function is not required when adding that, right?
->
-> That's right :)
->
->> 
->> >> +/* Functions in .noinstr.text must not be probed */
->> >> +static bool within_noinstr_text(unsigned long addr)
->> >> +{
->> >> +	/* FIXME: Handle module .noinstr.text */
->
-> And this reminds me that the module .kprobes.text is not handled yet :(.
+Hi Wesley,
 
-Correct. Any idea how to do that with a simple oneliner like the above?
+On Mon, Mar 23, 2020 at 01:17:10PM -0700, Wesley Cheng wrote:
+> This adds the SNPS FemtoPHY driver used in QCOM SOCs.  There
+> are potentially multiple instances of this UTMI PHY on the
+> SOC, all which can utilize this driver.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+> ---
+>  drivers/phy/qualcomm/Kconfig             |  10 ++
+>  drivers/phy/qualcomm/Makefile            |   1 +
+>  drivers/phy/qualcomm/phy-qcom-snps-7nm.c | 294 +++++++++++++++++++++++++++++++
+>  3 files changed, 305 insertions(+)
+>  create mode 100644 drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> 
+[...]
+> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-7nm.c b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> new file mode 100644
+> index 0000000..8d4ba53
+> --- /dev/null
+> +++ b/drivers/phy/qualcomm/phy-qcom-snps-7nm.c
+> @@ -0,0 +1,294 @@
+[...]
+> +static int qcom_snps_hsphy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct qcom_snps_hsphy *hsphy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy *generic_phy;
+> +	struct resource *res;
+> +	int ret, i;
+> +	int num;
+> +
+> +	hsphy = devm_kzalloc(dev, sizeof(*hsphy), GFP_KERNEL);
+> +	if (!hsphy)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	hsphy->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(hsphy->base))
+> +		return PTR_ERR(hsphy->base);
+> +
+> +	hsphy->ref_clk = devm_clk_get(dev, "ref");
+> +	if (IS_ERR(hsphy->ref_clk)) {
+> +		ret = PTR_ERR(hsphy->ref_clk);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get ref clk, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	hsphy->phy_reset = devm_reset_control_get_by_index(&pdev->dev, 0);
+> +	if (IS_ERR(hsphy->phy_reset)) {
+> +		dev_err(dev, "failed to get phy core reset\n");
+> +		return PTR_ERR(hsphy->phy_reset);
+> +	}
 
-Thanks,
+There is only a single reset specified, so there is no need for
+_by_index. Also please explicitly request exclusive reset control
+for this driver, I suggest:
 
-        tglx
+	hsphy->phy_reset = devm_reset_control_get_exclusive(&pdev->dev, NULL);
+
+If you do want to prepare for future addition of other resets to the
+bindings (but if so, why not specify those right now?), you should add
+a reset-names property and request the reset control by id string
+instead.
+
+regards
+Philipp
