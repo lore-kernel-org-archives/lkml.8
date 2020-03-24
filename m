@@ -2,62 +2,59 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2F0C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA69EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF6020714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F85420714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 01:12:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lerPhT70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgCXBLC (ORCPT
+        id S1727133AbgCXBMb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 21:11:02 -0400
-Received: from mga09.intel.com ([134.134.136.24]:60333 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727022AbgCXBLB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 21:11:01 -0400
-IronPort-SDR: UUQjEMkv2MVRDqv/jbl1FwycOuzR4+Ovaxk/OgJ1BAuDVxgNLcwI+JNrx0PCADUx//ZTTdqIqY
- 2AQl4GX4Q/ew==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2020 18:11:00 -0700
-IronPort-SDR: 8tLM9J2Q3IUwdV0gZYXX7kP1ZmmczZjkU7tq2D/ofV+To5kEIHbZFnDZUcUK4F4DQwC+gtblpK
- 7520VZ8FJltQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,298,1580803200"; 
-   d="scan'208";a="270109560"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.120]) ([10.255.31.120])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Mar 2020 18:10:56 -0700
-Subject: Re: [PATCH v5 1/9] x86/split_lock: Rework the initialization flow of
- split lock detection
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-References: <20200315050517.127446-1-xiaoyao.li@intel.com>
- <20200315050517.127446-2-xiaoyao.li@intel.com>
- <87zhc7ovhj.fsf@nanos.tec.linutronix.de>
- <87lfnqq0oo.fsf@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <beb9ab5c-a50d-2ec6-1c23-e426508cdf4e@intel.com>
-Date:   Tue, 24 Mar 2020 09:10:55 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Mon, 23 Mar 2020 21:12:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56712 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727022AbgCXBMb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 21:12:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=PZYj1qXP9cUJY9iynaNb4XscpCafoCGGtBKmUDfUS/4=; b=lerPhT70X2TfXzRff0m5vavcob
+        yY1WpGXb07087FZ8mOg4nuSE+Sgfr2WuFlFbGr1XsfXNWIER+3C/z22uL+FOHJWBNQHXJfWjJdQpp
+        Ckg061gGir6BDHQUrIaXAMXY2ArnrIGgsuZpuTvtZkKsBUCwDhqqQvlUia9qKuOiDlVp7AeGQ3Wef
+        FA+IZlU6UUD/R7W3M8dVzvEBDqhhApaqWlYnHpgI9dVJ14bVGOFOGONUXseUd8YKnaHSCAm5yIwEr
+        TNKZwcBdMkOJRJSCp/tyyP67NQTENbubVFoC9aeYmS4jSi89vKsg1sRvcZYu8FXtTRQszMWXULIS8
+        ub3XCSoQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGY7I-0001a8-UC; Tue, 24 Mar 2020 01:12:28 +0000
+Subject: Re: [PATCH] objtool: Documentation: document UACCESS warnings
+To:     Nick Desaulniers <ndesaulniers@google.com>, jpoimboe@redhat.com,
+        peterz@infradead.org
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
+        Raphael Gault <raphael.gault@arm.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+References: <20200323212538.GN2452@worktop.programming.kicks-ass.net>
+ <20200324001321.39562-1-ndesaulniers@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f55972ee-8e4e-844f-1678-cde1cdcc1fa9@infradead.org>
+Date:   Mon, 23 Mar 2020 18:12:26 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <87lfnqq0oo.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200324001321.39562-1-ndesaulniers@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,94 +62,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/2020 4:24 AM, Thomas Gleixner wrote:
-> Thomas Gleixner <tglx@linutronix.de> writes:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>
->>> Current initialization flow of split lock detection has following issues:
->>> 1. It assumes the initial value of MSR_TEST_CTRL.SPLIT_LOCK_DETECT to be
->>>     zero. However, it's possible that BIOS/firmware has set it.
->>
->> Ok.
->>
->>> 2. X86_FEATURE_SPLIT_LOCK_DETECT flag is unconditionally set even if
->>>     there is a virtualization flaw that FMS indicates the existence while
->>>     it's actually not supported.
->>>
->>> 3. Because of #2, KVM cannot rely on X86_FEATURE_SPLIT_LOCK_DETECT flag
->>>     to check verify if feature does exist, so cannot expose it to
->>>     guest.
->>
->> Sorry this does not make anny sense. KVM is the hypervisor, so it better
->> can rely on the detect flag. Unless you talk about nested virt and a
->> broken L1 hypervisor.
->>
->>> To solve these issues, introducing a new sld_state, "sld_not_exist",
->>> as
->>
->> The usual naming convention is sld_not_supported.
+On 3/23/20 5:13 PM, Nick Desaulniers wrote:
+> Compiling with Clang and CONFIG_KASAN=y was exposing a few warnings:
+>   call to memset() with UACCESS enabled
 > 
-> But this extra state is not needed at all, it already exists:
+> Document how to fix these for future travelers.
 > 
->      X86_FEATURE_SPLIT_LOCK_DETECT
-> 
-> You just need to make split_lock_setup() a bit smarter. Soemthing like
-> the below. It just wants to be split into separate patches.
-> 
-> Thanks,
-> 
->          tglx
+> Link: https://github.com/ClangBuiltLinux/linux/issues/876
+> Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 > ---
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -45,6 +45,7 @@ enum split_lock_detect_state {
->    * split lock detect, unless there is a command line override.
->    */
->   static enum split_lock_detect_state sld_state = sld_off;
-> +static DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
-
-I used percpu cache in v3, but people prefer Tony's cache for reserved 
-bits[1].
-
-If you prefer percpu cache, I'll use it in next version.
-
-[1]: https://lore.kernel.org/lkml/20200303192242.GU1439@linux.intel.com/
-
->   /*
->    * Processors which have self-snooping capability can handle conflicting
-> @@ -984,11 +985,32 @@ static inline bool match_option(const ch
->   	return len == arglen && !strncmp(arg, opt, len);
->   }
->   
-> +static bool __init split_lock_verify_msr(bool on)
-> +{
-> +	u64 ctrl, tmp;
+>  .../Documentation/stack-validation.txt        | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/tools/objtool/Documentation/stack-validation.txt b/tools/objtool/Documentation/stack-validation.txt
+> index de094670050b..156fee13ba02 100644
+> --- a/tools/objtool/Documentation/stack-validation.txt
+> +++ b/tools/objtool/Documentation/stack-validation.txt
+> @@ -289,6 +289,26 @@ they mean, and suggestions for how to fix them.
+>        might be corrupt due to a gcc bug.  For more details, see:
+>        https://gcc.gnu.org/bugzilla/show_bug.cgi?id=70646
+>  
+> +9. file.o: warning: objtool: funcA() call to funcB() with UACCESS enabled
 > +
-> +	if (rdmsrl_safe(MSR_TEST_CTRL, &ctrl))
-> +		return false;
-> +	if (on)
-> +		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +	else
-> +		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
-> +		return false;
-> +	rdmsrl(MSR_TEST_CTRL, tmp);
-> +	return ctrl == tmp;
-> +}
+> +   This means that an unexpected call to a non-whitelisted function exists
+> +   outside of arch-specific guards.
+> +   X86: SMAP (stac/clac): __uaccess_begin()/__uaccess_end()
+> +   ARM: PAN: uaccess_enable()/uaccess_enable()
 > +
->   static void __init split_lock_setup(void)
->   {
->   	char arg[20];
->   	int i, ret;
->   
-> +	if (!split_lock_verify_msr(true) || !split_lock_verify_msr(false)) {
-> +		pr_info("MSR access failed: Disabled\n");
-> +		return;
-> +	}
+> +   These functions should called to denote a minimal critical section around
+
+                      should be called
+
+> +   access to __user variables. See also: https://lwn.net/Articles/517475/
 > +
+> +   The intention of the warning is to prevent calls to funcB() from eventually
+> +   calling schedule(), potentially leaking the AC flags state, and not
+> +   restoring them correctly.
+> +
+> +   To fix, either:
+> +   1) add the correct guards before and after calls to low level functions like
+> +      __get_user_size()/__put_user_size().
+> +   2) add funcB to uaccess_safe_builtin whitelist in tools/objtool/check.c, if
+> +      funcB obviously does not call schedule().
+> +
+>  
+>  If the error doesn't seem to make sense, it could be a bug in objtool.
+>  Feel free to ask the objtool maintainer for help.
+> 
 
-I did similar thing like this in my v3, however Sean raised concern that 
-toggling MSR bit before parsing kernel param is bad behavior. [2]
 
-[2]: https://lore.kernel.org/kvm/20200305162311.GG11500@linux.intel.com/
+-- 
+~Randy
 
