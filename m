@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D0DC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4EAC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E81D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FB2A20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056112;
-	bh=glIX5Z7bJqEDQ5JgvMe9Z3yqwXPHOV3ppkP4+fwmd/g=;
+	s=default; t=1585056115;
+	bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RfdvHikh6vl/m5pN8NZdwDjAplGF03xJJMngG9rxnvPUXjLaMRz9zaXzgs2O8IXSf
-	 XZhoRG5tsBS9GxjCIlqYicLKsRs1gRFK7CJtz5XLHVtphCtxjr9KfrIw3uZP4PlAv2
-	 rlrNo1d1+zU5WtevD1EWtmm8hOtmpWDSJhMOymAs=
+	b=zKzyBKxm2O6F5sgqjyohJ8LlozDHCffzeqSx6Xi6U9Zvx7ViD7YzpUZgh2RH5vXkb
+	 4U74ABJMPWunEsAAU0OOote/JmITsr5rWgDlSNwSYELiCxkILptRLm/sG3sYKRRRld
+	 t60kA8JIeRt2chFEagMcoIj7GQEzWuwyPo0OoE8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgCXNVv (ORCPT
+        id S1729097AbgCXNVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:21:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43788 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgCXNVq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:21:46 -0400
+        id S1729084AbgCXNVs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:21:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A29220775;
-        Tue, 24 Mar 2020 13:21:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA31A20775;
+        Tue, 24 Mar 2020 13:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056105;
-        bh=glIX5Z7bJqEDQ5JgvMe9Z3yqwXPHOV3ppkP4+fwmd/g=;
+        s=default; t=1585056108;
+        bh=4yw0STCK+C5NSsvnEalgO/FdaunLe8EGQsfjZzCvPV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hIqLrVaBAyfR855SVPQbFkUd6/o0XF2/wgpqOh7NAR8VPP3xs3io8pXQ7tLJiRjwA
-         lPC9l0dg8LsKK5xKaCJN/8XVGftV54QQJ+FW9Xe9eorPl15PsE9Zodiht6hBSbnsH2
-         QWmepOaGbeufd3v7DY+COYWEiiVEJZxFprCTHrmo=
+        b=2ZmF9kScIrVDeON15M3SWwGYJzZhA52QzY6k8M+gJoUzY5CMpQrbQsudq6biLuMW/
+         cMDcfewYfqw+8vUdXxUpazTRBSNYGBBLSSo6Sgd8+CXVIBDSwBA6vwcFTPTggy9rjv
+         R8ZqP2SftlIPzAxhMdV964bEQb0akWdTCKbNljNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, "Igor M. Liplianin" <liplianin@netup.ru>,
+        Daniel Axtens <dja@axtens.net>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 023/119] ARM: bcm2835_defconfig: Explicitly restore CONFIG_DEBUG_FS
-Date:   Tue, 24 Mar 2020 14:10:08 +0100
-Message-Id: <20200324130810.692890651@linuxfoundation.org>
+Subject: [PATCH 5.5 024/119] altera-stapl: altera_get_note: prevent write beyond end of key
+Date:   Tue, 24 Mar 2020 14:10:09 +0100
+Message-Id: <20200324130810.786207642@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
 References: <20200324130808.041360967@linuxfoundation.org>
@@ -62,35 +61,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefan Wahren <stefan.wahren@i2se.com>
+From: Daniel Axtens <dja@axtens.net>
 
-[ Upstream commit 1bba60808404b873defa0f3560497eb2e8fe86b8 ]
+[ Upstream commit 3745488e9d599916a0b40d45d3f30e3d4720288e ]
 
-The commit 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-accidentally dropped the DEBUG FS support in bcm2835_defconfig. So
-restore the config as before the commit.
+altera_get_note is called from altera_init, where key is kzalloc(33).
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Fixes: 0e4a459f56c3 ("tracing: Remove unnecessary DEBUG_FS dependency")
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+When the allocation functions are annotated to allow the compiler to see
+the sizes of objects, and with FORTIFY_SOURCE, we see:
+
+In file included from drivers/misc/altera-stapl/altera.c:14:0:
+In function ‘strlcpy’,
+    inlined from ‘altera_init’ at drivers/misc/altera-stapl/altera.c:2189:5:
+include/linux/string.h:378:4: error: call to ‘__write_overflow’ declared with attribute error: detected write beyond size of object passed as 1st parameter
+    __write_overflow();
+    ^~~~~~~~~~~~~~~~~~
+
+That refers to this code in altera_get_note:
+
+    if (key != NULL)
+            strlcpy(key, &p[note_strings +
+                            get_unaligned_be32(
+                            &p[note_table + (8 * i)])],
+                    length);
+
+The error triggers because the length of 'key' is 33, but the copy
+uses length supplied as the 'length' parameter, which is always
+256. Split the size parameter into key_len and val_len, and use the
+appropriate length depending on what is being copied.
+
+Detected by compiler error, only compile-tested.
+
+Cc: "Igor M. Liplianin" <liplianin@netup.ru>
+Signed-off-by: Daniel Axtens <dja@axtens.net>
+Link: https://lore.kernel.org/r/20200120074344.504-2-dja@axtens.net
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Link: https://lore.kernel.org/r/202002251042.D898E67AC@keescook
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/configs/bcm2835_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/misc/altera-stapl/altera.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-index 519ff58e67b30..0afcae9f7cf8a 100644
---- a/arch/arm/configs/bcm2835_defconfig
-+++ b/arch/arm/configs/bcm2835_defconfig
-@@ -178,6 +178,7 @@ CONFIG_SCHED_TRACER=y
- CONFIG_STACK_TRACER=y
- CONFIG_FUNCTION_PROFILER=y
- CONFIG_TEST_KSTRTOX=y
-+CONFIG_DEBUG_FS=y
- CONFIG_KGDB=y
- CONFIG_KGDB_KDB=y
- CONFIG_STRICT_DEVMEM=y
+diff --git a/drivers/misc/altera-stapl/altera.c b/drivers/misc/altera-stapl/altera.c
+index 25e5f24b3fecd..5bdf574723144 100644
+--- a/drivers/misc/altera-stapl/altera.c
++++ b/drivers/misc/altera-stapl/altera.c
+@@ -2112,8 +2112,8 @@ static int altera_execute(struct altera_state *astate,
+ 	return status;
+ }
+ 
+-static int altera_get_note(u8 *p, s32 program_size,
+-			s32 *offset, char *key, char *value, int length)
++static int altera_get_note(u8 *p, s32 program_size, s32 *offset,
++			   char *key, char *value, int keylen, int vallen)
+ /*
+  * Gets key and value of NOTE fields in the JBC file.
+  * Can be called in two modes:  if offset pointer is NULL,
+@@ -2170,7 +2170,7 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 						&p[note_table + (8 * i) + 4])];
+ 
+ 				if (value != NULL)
+-					strlcpy(value, value_ptr, length);
++					strlcpy(value, value_ptr, vallen);
+ 
+ 			}
+ 		}
+@@ -2189,13 +2189,13 @@ static int altera_get_note(u8 *p, s32 program_size,
+ 				strlcpy(key, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i)])],
+-					length);
++					keylen);
+ 
+ 			if (value != NULL)
+ 				strlcpy(value, &p[note_strings +
+ 						get_unaligned_be32(
+ 						&p[note_table + (8 * i) + 4])],
+-					length);
++					vallen);
+ 
+ 			*offset = i + 1;
+ 		}
+@@ -2449,7 +2449,7 @@ int altera_init(struct altera_config *config, const struct firmware *fw)
+ 			__func__, (format_version == 2) ? "Jam STAPL" :
+ 						"pre-standardized Jam 1.1");
+ 		while (altera_get_note((u8 *)fw->data, fw->size,
+-					&offset, key, value, 256) == 0)
++					&offset, key, value, 32, 256) == 0)
+ 			printk(KERN_INFO "%s: NOTE \"%s\" = \"%s\"\n",
+ 					__func__, key, value);
+ 	}
 -- 
 2.20.1
 
