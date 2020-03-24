@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED872C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58DD7C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A2D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF7A208DB
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 15:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585064250;
-	bh=NCj3N5oBB6pG2895MeRz7pky+XQDlDn73NrS+bYc6AM=;
+	s=default; t=1585064254;
+	bh=cYOrYm3TU8Oaswi/PS0pKnS4rYXUoN3KS4S87l1Oy2Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qt2mUz3wgbqyAsiPZTsHIlNS+ozttaRQqbeaVv5De1p7Oik872Kg7aRhJwTQDAPkb
-	 WzhNoOf64k38v1W9QAd1fOZEW95lbTtJDkK5xMLXR4HQT/RbzihAh0xuXE7FLv3WW0
-	 yHJjPgakPxX8D2dLN6J1WFfLtxMAck7PaQ87jMDM=
+	b=rH676aYPjOpUETqn/kfkyKmU9cfPQ6Tu0IU1/n2fwO+1c/73MZVype8UPResOWbTc
+	 q/7dJSDw/+mFFV1Cdquoxdz7ItZ8zDARlzQK83CELUzcIGoUcbayzMRdWAo2EqT5dQ
+	 GnDyEnS30SMM2mRxU7lvHbcDddoFg86RH3Q/UKyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbgCXPh3 (ORCPT
+        id S1728684AbgCXPhc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 11:37:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60152 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 11:37:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728554AbgCXPhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 11:37:20 -0400
+        id S1728579AbgCXPh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:37:26 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A02B9208C3;
-        Tue, 24 Mar 2020 15:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C7EB20788;
+        Tue, 24 Mar 2020 15:37:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585064240;
-        bh=NCj3N5oBB6pG2895MeRz7pky+XQDlDn73NrS+bYc6AM=;
+        s=default; t=1585064245;
+        bh=cYOrYm3TU8Oaswi/PS0pKnS4rYXUoN3KS4S87l1Oy2Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qr1GKvJaUyzDriW0KJU1HKC2q0FydemPOrJKXOPr5JKPucn0IzLnr3tNvkXG4/viU
-         Utvi7LQHj9CsXJmlKMv/38ntVIUYwpRK5Dwr8UqXIIhyOffTODRpZPdtgLTshQwmb0
-         5yPgVBZGdMhl8GIjxKYAl5Nf/2eRzb9jWXyEiFpM=
+        b=k1XBzan/+CO0dNlXvcPznHNdfatVBYZOF2k+EJWIN6NK17dCPQN8YBP/j2MLYpnw9
+         36DjGr7A4vTTVusW6h+pJZOKRPw+Nri81DI5ucdV4f80MStPpEW1IHqvNk9TR/0+ng
+         JsaIpAaRWrlZQz5WqbDP93q07FZrFb6SFT1a8zmw=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
@@ -50,9 +50,9 @@ Cc:     Will Deacon <will@kernel.org>, Eric Dumazet <edumazet@google.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
         kernel-hardening@lists.openwall.com
-Subject: [RFC PATCH 12/21] list: Poison ->next pointer for non-RCU deletion of 'hlist_nulls_node'
-Date:   Tue, 24 Mar 2020 15:36:34 +0000
-Message-Id: <20200324153643.15527-13-will@kernel.org>
+Subject: [RFC PATCH 14/21] plist: Use CHECK_DATA_CORRUPTION instead of explicit {BUG,WARN}_ON()
+Date:   Tue, 24 Mar 2020 15:36:36 +0000
+Message-Id: <20200324153643.15527-15-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200324153643.15527-1-will@kernel.org>
 References: <20200324153643.15527-1-will@kernel.org>
@@ -63,30 +63,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hlist_nulls_del() is used for non-RCU deletion of an 'hlist_nulls_node'
-and so we can safely poison the ->next pointer without having to worry
-about concurrent readers, just like we do for other non-RCU list
-deletion primitives
+CHECK_DATA_CORRUPTION() allows detected data corruption to result
+consistently in either a BUG() or a WARN() depending on
+CONFIG_BUG_ON_DATA_CORRUPTION.
 
+Use CHECK_DATA_CORRUPTION() to report plist integrity checking failures,
+rather than explicit use of BUG_ON() and WARN_ON().
+
+Cc: Kees Cook <keescook@chromium.org>
 Cc: Paul E. McKenney <paulmck@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/linux/list_nulls.h | 1 +
- 1 file changed, 1 insertion(+)
+ lib/plist.c | 63 ++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 40 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/list_nulls.h b/include/linux/list_nulls.h
-index fd154ceb5b0d..48f33ae16381 100644
---- a/include/linux/list_nulls.h
-+++ b/include/linux/list_nulls.h
-@@ -99,6 +99,7 @@ static inline void __hlist_nulls_del(struct hlist_nulls_node *n)
- static inline void hlist_nulls_del(struct hlist_nulls_node *n)
+diff --git a/lib/plist.c b/lib/plist.c
+index c06e98e78259..eb127eaab235 100644
+--- a/lib/plist.c
++++ b/lib/plist.c
+@@ -29,39 +29,46 @@
+ 
+ static struct plist_head test_head;
+ 
+-static void plist_check_prev_next(struct list_head *t, struct list_head *p,
+-				  struct list_head *n)
++static bool plist_prev_next_invalid(struct list_head *t, struct list_head *p,
++				    struct list_head *n)
  {
- 	__hlist_nulls_del(n);
-+	n->next = LIST_POISON1;
- 	n->pprev = LIST_POISON2;
+-	WARN(n->prev != p || p->next != n,
+-			"top: %p, n: %p, p: %p\n"
+-			"prev: %p, n: %p, p: %p\n"
+-			"next: %p, n: %p, p: %p\n",
++	return CHECK_DATA_CORRUPTION(n->prev != p || p->next != n,
++			"plist corruption:\n"
++			"\ttop: %p, n: %p, p: %p\n"
++			"\tprev: %p, n: %p, p: %p\n"
++			"\tnext: %p, n: %p, p: %p\n",
+ 			 t, t->next, t->prev,
+ 			p, p->next, p->prev,
+ 			n, n->next, n->prev);
  }
  
+-static void plist_check_list(struct list_head *top)
++static bool plist_list_invalid(struct list_head *top)
+ {
+ 	struct list_head *prev = top, *next = top->next;
++	bool corruption;
+ 
+-	plist_check_prev_next(top, prev, next);
++	corruption = plist_prev_next_invalid(top, prev, next);
+ 	while (next != top) {
+ 		prev = next;
+ 		next = prev->next;
+-		plist_check_prev_next(top, prev, next);
++		corruption |= plist_prev_next_invalid(top, prev, next);
+ 	}
++
++	return corruption;
+ }
+ 
+-static void plist_check_head(struct plist_head *head)
++static bool plist_head_valid(struct plist_head *head)
+ {
++	bool corruption = false;
++
+ 	if (!plist_head_empty(head))
+-		plist_check_list(&plist_first(head)->prio_list);
+-	plist_check_list(&head->node_list);
++		corruption |= plist_list_invalid(&plist_first(head)->prio_list);
++	corruption |= plist_list_invalid(&head->node_list);
++	return !corruption;
+ }
+ 
+ #else
+-# define plist_check_head(h)	do { } while (0)
++# define plist_head_valid(h)	(true)
+ #endif
+ 
+ /**
+@@ -75,9 +82,12 @@ void plist_add(struct plist_node *node, struct plist_head *head)
+ 	struct plist_node *first, *iter, *prev = NULL;
+ 	struct list_head *node_next = &head->node_list;
+ 
+-	plist_check_head(head);
+-	WARN_ON(!plist_node_empty(node));
+-	WARN_ON(!list_empty(&node->prio_list));
++	if (!plist_head_valid(head) ||
++	    CHECK_DATA_CORRUPTION(!plist_node_empty(node),
++			"plist_add corruption. node list is not empty.\n") ||
++	    CHECK_DATA_CORRUPTION(!list_empty(&node->prio_list),
++			"plist_add corruption. node prio list is not empty.\n"))
++		return;
+ 
+ 	if (plist_head_empty(head))
+ 		goto ins_node;
+@@ -100,7 +110,8 @@ void plist_add(struct plist_node *node, struct plist_head *head)
+ ins_node:
+ 	list_add_tail(&node->node_list, node_next);
+ 
+-	plist_check_head(head);
++	if (!plist_head_valid(head))
++		return;
+ }
+ 
+ /**
+@@ -111,7 +122,8 @@ void plist_add(struct plist_node *node, struct plist_head *head)
+  */
+ void plist_del(struct plist_node *node, struct plist_head *head)
+ {
+-	plist_check_head(head);
++	if (!plist_head_valid(head))
++		return;
+ 
+ 	if (!list_empty(&node->prio_list)) {
+ 		if (node->node_list.next != &head->node_list) {
+@@ -129,7 +141,8 @@ void plist_del(struct plist_node *node, struct plist_head *head)
+ 
+ 	list_del_init(&node->node_list);
+ 
+-	plist_check_head(head);
++	if (!plist_head_valid(head))
++		return;
+ }
+ 
+ /**
+@@ -147,9 +160,12 @@ void plist_requeue(struct plist_node *node, struct plist_head *head)
+ 	struct plist_node *iter;
+ 	struct list_head *node_next = &head->node_list;
+ 
+-	plist_check_head(head);
+-	BUG_ON(plist_head_empty(head));
+-	BUG_ON(plist_node_empty(node));
++	if (!plist_head_valid(head) ||
++	    CHECK_DATA_CORRUPTION(plist_head_empty(head),
++			"plist_requeue corruption. head list is empty.\n") ||
++	    CHECK_DATA_CORRUPTION(plist_node_empty(node),
++			"plist_requeue corruption. node list is empty.\n"))
++		return;
+ 
+ 	if (node == plist_last(head))
+ 		return;
+@@ -169,7 +185,8 @@ void plist_requeue(struct plist_node *node, struct plist_head *head)
+ 	}
+ 	list_add_tail(&node->node_list, node_next);
+ 
+-	plist_check_head(head);
++	if (!plist_head_valid(head))
++		return;
+ }
+ 
+ #ifdef CONFIG_CHECK_INTEGRITY_PLIST
 -- 
 2.20.1
 
