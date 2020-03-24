@@ -2,251 +2,107 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A9CC54FCE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 956BBC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A6020870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69AF020870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056496;
-	bh=56ZiM9ngvtgpS2+CpoNQGLLWww2zfE2Ii5Pgd1jL4ik=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kn6cKmzJ9ugHzSEQaohtndmyFLFpOh5csI3nvQH8JBVZBjkSJSFU9c4uvTNQhoJ22
-	 5wRLBRmRNxDeeYB4mQIfy0l/MnszCrD9/dFHAZwlWfFD27bpVuaum54MD1vl71DMT2
-	 ugMZdYmG8biK0qEgUGUOBXoM1el2ugZ+VcQqjQR0=
+	s=default; t=1585056507;
+	bh=8mS+FAB8IVF5c9q/iWbsjfm8yNBggi4EvZnRV6LkbJU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OZ5plBJBxCc5Jxe13sIzT+3DaZNCAVdnT1wFDtytMzIiYbVJhKVVqb4oMpCf+YW2J
+	 NPuHzejnywtvMtkFf4kMpiq9JBvH+x9RcJDaG9Npc/AcXECzYkzk62ukBy9WBIKH9C
+	 mqu6Yz16hcumoWlMOuB51tDn5ep8yVXUFb0943g0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbgCXN2I (ORCPT
+        id S1727314AbgCXN20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:28:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54022 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:28:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727323AbgCXN2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:28:06 -0400
+        id S1729626AbgCXNYP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:24:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E829820775;
-        Tue, 24 Mar 2020 13:28:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64C2E208C3;
+        Tue, 24 Mar 2020 13:24:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585056485;
-        bh=56ZiM9ngvtgpS2+CpoNQGLLWww2zfE2Ii5Pgd1jL4ik=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kIOfe6Br65Xs59Evt70ByRdrV7WuFJOQ6DUWcvyDT7UNBqPiicHp/2fFjVvNEpFkY
-         k7JfI8sMjCV7Mb1JHW/54/PZPGCu2puvRHh9STZHIroFdZh1GRHer8ErOufuASvlGT
-         i4T/jw2pCZl7Z2jAKUmnbEyXjQikYJu2k3LG03Mo=
-Date:   Tue, 24 Mar 2020 14:19:16 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     leon@kernel.org, vbabka@suse.cz, adobriyan@gmail.com,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
-        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v2 1/3] meminfo_extra: introduce meminfo extra
-Message-ID: <20200324131916.GA2500287@kroah.com>
-References: <20200323080503.6224-1-jaewon31.kim@samsung.com>
- <CGME20200323080508epcas1p387c9c19b480da53be40fe5d51e76a477@epcas1p3.samsung.com>
- <20200323080503.6224-2-jaewon31.kim@samsung.com>
- <20200323095344.GB425358@kroah.com>
- <5E79CEB5.8070308@samsung.com>
- <20200324101110.GA2218981@kroah.com>
- <5E79F102.9080405@samsung.com>
- <20200324114645.GA2330984@kroah.com>
- <5E7A02BC.7020803@samsung.com>
+        s=default; t=1585056254;
+        bh=8mS+FAB8IVF5c9q/iWbsjfm8yNBggi4EvZnRV6LkbJU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jCJtVRVQNyQc09xrlY4TCcSEMqZQzm/xSN9o+Xyqu/O5GPg9NzYvDV1yJ+IrLeWqV
+         3pznB7b9JTsn6aySnwC0bD27FMcmOSbEqS1Vt9vdbWxIVGXRbFImIHbZk5vuNelmNB
+         1uOiHOTK9XSsJuWHJwLFzbGveqXXOC5f6k29R5Ik=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
+        Tomas Novotny <tomas@novotny.cz>, Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.5 070/119] iio: light: vcnl4000: update sampling periods for vcnl4040
+Date:   Tue, 24 Mar 2020 14:10:55 +0100
+Message-Id: <20200324130815.212874676@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
+References: <20200324130808.041360967@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5E7A02BC.7020803@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:53:16PM +0900, Jaewon Kim wrote:
-> 
-> 
-> On 2020년 03월 24일 20:46, Greg KH wrote:
-> > On Tue, Mar 24, 2020 at 08:37:38PM +0900, Jaewon Kim wrote:
-> >>
-> >> On 2020년 03월 24일 19:11, Greg KH wrote:
-> >>> On Tue, Mar 24, 2020 at 06:11:17PM +0900, Jaewon Kim wrote:
-> >>>> On 2020년 03월 23일 18:53, Greg KH wrote:
-> >>>>>> +int register_meminfo_extra(atomic_long_t *val, int shift, const char *name)
-> >>>>>> +{
-> >>>>>> +	struct meminfo_extra *meminfo, *memtemp;
-> >>>>>> +	int len;
-> >>>>>> +	int error = 0;
-> >>>>>> +
-> >>>>>> +	meminfo = kzalloc(sizeof(*meminfo), GFP_KERNEL);
-> >>>>>> +	if (!meminfo) {
-> >>>>>> +		error = -ENOMEM;
-> >>>>>> +		goto out;
-> >>>>>> +	}
-> >>>>>> +
-> >>>>>> +	meminfo->val = val;
-> >>>>>> +	meminfo->shift_for_page = shift;
-> >>>>>> +	strncpy(meminfo->name, name, NAME_SIZE);
-> >>>>>> +	len = strlen(meminfo->name);
-> >>>>>> +	meminfo->name[len] = ':';
-> >>>>>> +	strncpy(meminfo->name_pad, meminfo->name, NAME_BUF_SIZE);
-> >>>>>> +	while (++len < NAME_BUF_SIZE - 1)
-> >>>>>> +		meminfo->name_pad[len] = ' ';
-> >>>>>> +
-> >>>>>> +	spin_lock(&meminfo_lock);
-> >>>>>> +	list_for_each_entry_rcu(memtemp, &meminfo_head, list) {
-> >>>>>> +		if (memtemp->val == val) {
-> >>>>>> +			error = -EINVAL;
-> >>>>>> +			break;
-> >>>>>> +		}
-> >>>>>> +	}
-> >>>>>> +	if (!error)
-> >>>>>> +		list_add_tail_rcu(&meminfo->list, &meminfo_head);
-> >>>>>> +	spin_unlock(&meminfo_lock);
-> >>>>> If you have a lock, why are you needing rcu?
-> >>>> I think _rcu should be removed out of list_for_each_entry_rcu.
-> >>>> But I'm confused about what you meant.
-> >>>> I used rcu_read_lock on __meminfo_extra,
-> >>>> and I think spin_lock is also needed for addition and deletion to handle multiple modifiers.
-> >>> If that's the case, then that's fine, it just didn't seem like that was
-> >>> needed.  Or I might have been reading your rcu logic incorrectly...
-> >>>
-> >>>>>> +	if (error)
-> >>>>>> +		kfree(meminfo);
-> >>>>>> +out:
-> >>>>>> +
-> >>>>>> +	return error;
-> >>>>>> +}
-> >>>>>> +EXPORT_SYMBOL(register_meminfo_extra);
-> >>>>> EXPORT_SYMBOL_GPL()?  I have to ask :)
-> >>>> I can use EXPORT_SYMBOL_GPL.
-> >>>>> thanks,
-> >>>>>
-> >>>>> greg k-h
-> >>>>>
-> >>>>>
-> >>>> Hello
-> >>>> Thank you for your comment.
-> >>>>
-> >>>> By the way there was not resolved discussion on v1 patch as I mentioned on cover page.
-> >>>> I'd like to hear your opinion on this /proc/meminfo_extra node.
-> >>> I think it is the propagation of an old and obsolete interface that you
-> >>> will have to support for the next 20+ years and yet not actually be
-> >>> useful :)
-> >>>
-> >>>> Do you think this is meaningful or cannot co-exist with other future
-> >>>> sysfs based API.
-> >>> What sysfs-based API?
-> >> Please refer to mail thread on v1 patch set - https://protect2.fireeye.com/url?k=16e3accc-4b2f6548-16e22783-0cc47aa8f5ba-935fe828ac2f6656&u=https://lkml.org/lkml/fancy/2020/3/10/2102
-> >> especially discussion with Leon Romanovsky on https://protect2.fireeye.com/url?k=74208ed9-29ec475d-74210596-0cc47aa8f5ba-0bd4ef48931fec95&u=https://lkml.org/lkml/fancy/2020/3/16/140
-> > I really do not understand what you are referring to here, sorry.   I do
-> > not see any sysfs-based code in that thread.
-> Sorry. I also did not see actual code.
-> Hello Leon Romanovsky, could you elaborate your plan regarding sysfs stuff?
-> >
-> > And try to use lore.kernel.org, lkml.org doesn't always work and we have
-> > no control over that :(
-> >
-> >>> I still don't know _why_ you want this.  The ION stuff is not needed as
-> >>> that code is about to be deleted, so who else wants this?  What is the
-> >>> use-case for it that is so desperately needed that parsing
-> >>> yet-another-proc file is going to solve the problem?
-> >> In my Android device, there are graphic driver memory, zsmalloc memory except ION.
-> > Ok, so what does Android have to do with this?
-> Some driver in Android platform may use my API to show its memory usage.
+From: Tomas Novotny <tomas@novotny.cz>
 
-I do not understand what this means.
+commit 2ca5a8792d617b4035aacd0a8be527f667fbf912 upstream.
 
-> >> I don't know other cases in other platform.
-> >> Not desperately needed but I think we need one userspace knob to see overall hidden huge memory.
-> > Why?  Who wants that?  What would userspace do with that?  And what
-> > exactly do you want to show?
-> >
-> > Is this just a debugging thing?  Then use debugfs for that, not proc.
-> > Isn't that what the DRM developers are starting to do?
-> >
-> >> Additionally I'd like to see all those hidden memory in OutOfMemory log.
-> > How is anything hidden, can't you see it in the slab information?
-> >
-> Let me explain more.
-> 
-> 0. slab
-> As I said in cover page, this is not for memory allocated by slab.
+Vishay has published a new version of "Designing the VCNL4200 Into an
+Application" application note in October 2019. The new version specifies
+that there is +-20% of part to part tolerance. Although the application
+note is related to vcnl4200, according to support the vcnl4040's "ASIC
+is quite similar to that one for the VCNL4200".
 
-Great, then have the subsystem that allocates such memory, be the thing
-that exports the information.  Drivers "on their own" do not grab any
-memory without asking for it from other parts of the kernel.
+So update the sampling periods (and comment), including the correct
+sampling period for proximity. Both sampling periods are lower. Users
+relying on the blocking behaviour of reading will get proximity
+measurements much earlier.
 
-Modify those "other parts", this isn't a driver-specific thing at all.
+Fixes: 5a441aade5b3 ("iio: light: vcnl4000 add support for the VCNL4040 proximity and light sensor")
+Reviewed-by: Guido Günther <agx@sigxcpu.org>
+Tested-by: Guido Günther <agx@sigxcpu.org>
+Signed-off-by: Tomas Novotny <tomas@novotny.cz>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-So, what "other parts" are involved here?
+---
+ drivers/iio/light/vcnl4000.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-> I'd like to know where huge memory has gone.
-> Those are directly allocated by alloc_pages instead of slab.
-> /proc/slabinfo does not show this information.
-
-Why isn't alloc_pages information exported anywhere?  Work on that.
-
-> 1. /proc/meminfo_extra
-> /proc/meminfo_extra could be debugging thing to see memory status at a certain time.
-
-If it is debugging, then use debugfs.
-
-> But it, I think, is also basic information rather than just for debugging.
-
-Who would use that information for anything except debugging?
-
-> It is similar with /proc/meminfo which is in procfs instead of debugfs.
-
-meminfo is older than debugfs and sysfs, can't change that today.
-
-> 2. oom log
-> oom log in show_mem is more than just debugging.
-
-Why?  Who sees this?
-
-> As existing oom log shows much memory information, I think we need the hidden memory info.
-> Without these information, we do NOT know oom reason because other traditional stats are not enough.
-
-Why not?  Kernel users of memory shouldn't be triggering OOM events.
+--- a/drivers/iio/light/vcnl4000.c
++++ b/drivers/iio/light/vcnl4000.c
+@@ -174,9 +174,10 @@ static int vcnl4200_init(struct vcnl4000
+ 		data->al_scale = 24000;
+ 		break;
+ 	case VCNL4040_PROD_ID:
+-		/* Integration time is 80ms, add 10ms. */
+-		data->vcnl4200_al.sampling_rate = ktime_set(0, 100000 * 1000);
+-		data->vcnl4200_ps.sampling_rate = ktime_set(0, 100000 * 1000);
++		/* Default wait time is 80ms, add 20% tolerance. */
++		data->vcnl4200_al.sampling_rate = ktime_set(0, 96000 * 1000);
++		/* Default wait time is 5ms, add 20% tolerance. */
++		data->vcnl4200_ps.sampling_rate = ktime_set(0, 6000 * 1000);
+ 		data->al_scale = 120000;
+ 		break;
+ 	}
 
 
-> >> This is useful to get clue to find memory hogger.
-> >> i.e.) show_mem on oom
-> >> <6>[  420.856428]  Mem-Info:
-> >> <6>[  420.856433]  IonSystemHeap:32813kB ZsPages:44114kB GraphicDriver::13091kB
-> >> <6>[  420.856450]  active_anon:957205 inactive_anon:159383 isolated_anon:0
-> > So what does this show you?  That someone is takign a ton of ION memory
-> > for some unknown use?  What can you do with that?  What would you do
-> > with that?
-> We may not know exact memory owner. But we can narrow down.
-> Anyway I think this is meaningful instead of no clue.
-
-Again, work on the subsystems that actually allocate the memory, not
-drivers.  And if you want to mess with drivers, do it in a
-device-specific way, not a driver-specific way.
-
-> > And memory is almost never assigned to a "driver", it is assigned to a
-> > "device" that uses it.  Drivers can handle multiple devices at the same
-> > time, so why would you break this down by drivers?  Are you assuming
-> > that a driver only talks to one piece of hardware?
-> Yes a driver may support several devices. I don't know if it same on an embedded device.
-
-Why wouldn't it be?  Is this new interface somehow only acceptable for
-systems with one-device-per-driver?  If so, that's not going to work at
-all.
-
-> Anyway I think the idea works even for several devices, although the driver should
-> distinguish memory usage for each device and should register each memory stat.
-
-And how would that happen?
-
-thanks,
-
-greg k-h
