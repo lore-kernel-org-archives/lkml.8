@@ -7,39 +7,40 @@ X-Spam-Status: No, score=-11.8 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC727C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FF5C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2DB2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37F1F2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 09:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgCXJMM (ORCPT
+        id S1727233AbgCXJLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 05:12:12 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:43757 "EHLO
+        Tue, 24 Mar 2020 05:11:02 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43732 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726166AbgCXJLE (ORCPT
+        with ESMTP id S1726524AbgCXJLB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 05:11:04 -0400
+        Tue, 24 Mar 2020 05:11:01 -0400
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1jGfaP-0007Wf-89; Tue, 24 Mar 2020 10:11:01 +0100
+        id 1jGfaK-0007TV-SZ; Tue, 24 Mar 2020 10:10:57 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 343651C0470;
-        Tue, 24 Mar 2020 10:10:58 +0100 (CET)
-Date:   Tue, 24 Mar 2020 09:10:57 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E7D631C048C;
+        Tue, 24 Mar 2020 10:10:54 +0100 (CET)
+Date:   Tue, 24 Mar 2020 09:10:54 -0000
 From:   "tip-bot2 for Marco Elver" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: locking/kcsan] kcsan: Clean up the main KCSAN Kconfig option
-Cc:     Marco Elver <elver@google.com>,
+Subject: [tip: locking/kcsan] compiler.h, seqlock.h: Remove unnecessary
+ kcsan.h includes
+Cc:     John Hubbard <jhubbard@nvidia.com>, Marco Elver <elver@google.com>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <158504105785.28353.9595072129299439556.tip-bot2@tip-bot2>
+Message-ID: <158504105462.28353.1245195782241212994.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -55,51 +56,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the locking/kcsan branch of tip:
 
-Commit-ID:     8cfbb04fae75260eae07ab8c74c1dcd44294d739
-Gitweb:        https://git.kernel.org/tip/8cfbb04fae75260eae07ab8c74c1dcd44294d739
+Commit-ID:     b968a08f242d51982e46041c506115b5e11a7570
+Gitweb:        https://git.kernel.org/tip/b968a08f242d51982e46041c506115b5e11a7570
 Author:        Marco Elver <elver@google.com>
-AuthorDate:    Tue, 04 Feb 2020 18:21:12 +01:00
+AuthorDate:    Tue, 11 Feb 2020 17:04:20 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sat, 21 Mar 2020 09:42:26 +01:00
+CommitterDate: Sat, 21 Mar 2020 09:43:57 +01:00
 
-kcsan: Clean up the main KCSAN Kconfig option
+compiler.h, seqlock.h: Remove unnecessary kcsan.h includes
 
-This patch cleans up the rules of the 'KCSAN' Kconfig option by:
+No we longer have to include kcsan.h, since the required KCSAN interface
+for both compiler.h and seqlock.h are now provided by kcsan-checks.h.
 
-  1. implicitly selecting 'STACKTRACE' instead of depending on it;
-  2. depending on DEBUG_KERNEL, to avoid accidentally turning KCSAN on if
-     the kernel is not meant to be a debug kernel;
-  3. updating the short and long summaries.
-
+Acked-by: John Hubbard <jhubbard@nvidia.com>
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- lib/Kconfig.kcsan | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ include/linux/compiler.h | 2 --
+ include/linux/seqlock.h  | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/lib/Kconfig.kcsan b/lib/Kconfig.kcsan
-index 020ac63..9785bbf 100644
---- a/lib/Kconfig.kcsan
-+++ b/lib/Kconfig.kcsan
-@@ -4,12 +4,15 @@ config HAVE_ARCH_KCSAN
- 	bool
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index c1bdf37..f504ede 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -313,8 +313,6 @@ unsigned long read_word_at_a_time(const void *addr)
+ 	__u.__val;					\
+ })
  
- menuconfig KCSAN
--	bool "KCSAN: watchpoint-based dynamic data race detector"
--	depends on HAVE_ARCH_KCSAN && !KASAN && STACKTRACE
-+	bool "KCSAN: dynamic data race detector"
-+	depends on HAVE_ARCH_KCSAN && DEBUG_KERNEL && !KASAN
-+	select STACKTRACE
- 	help
--	  Kernel Concurrency Sanitizer is a dynamic data race detector, which
--	  uses a watchpoint-based sampling approach to detect races. See
--	  <file:Documentation/dev-tools/kcsan.rst> for more details.
-+	  The Kernel Concurrency Sanitizer (KCSAN) is a dynamic data race
-+	  detector, which relies on compile-time instrumentation, and uses a
-+	  watchpoint-based sampling approach to detect data races.
-+
-+	  See <file:Documentation/dev-tools/kcsan.rst> for more details.
+-#include <linux/kcsan.h>
+-
+ /**
+  * data_race - mark an expression as containing intentional data races
+  *
+diff --git a/include/linux/seqlock.h b/include/linux/seqlock.h
+index 239701c..8b97204 100644
+--- a/include/linux/seqlock.h
++++ b/include/linux/seqlock.h
+@@ -37,7 +37,7 @@
+ #include <linux/preempt.h>
+ #include <linux/lockdep.h>
+ #include <linux/compiler.h>
+-#include <linux/kcsan.h>
++#include <linux/kcsan-checks.h>
+ #include <asm/processor.h>
  
- if KCSAN
- 
+ /*
