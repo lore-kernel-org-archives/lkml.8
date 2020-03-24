@@ -2,112 +2,130 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9068C54EEB
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F229FC54FD0
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD7220663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585083460;
-	bh=KezL6M2L1DNMh+ej5VT8WGeB3YlW2PtnSk+Nm/zzhyE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=aR8mPLiSnVNGUMNMk4o4JZFjFKX6Vg68VD6PXmjb9BqxlR30p5vW/7OJisOZHO1U1
-	 A+gJbSWdwVsDTnedN7FqTyEbhbsifFXyNb9j+a57IYipudJmozyvbn2hGLVXiJZTb2
-	 200BY/k6a1gHT/Dg0NxLsQIkGoCCTrYZBPhfYXgc=
+	by mail.kernel.org (Postfix) with ESMTP id CA85320714
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 21:02:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JAa65Qbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgCXU5j (ORCPT
+        id S1728036AbgCXVCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:57:39 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:38947 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725941AbgCXU5i (ORCPT
+        Tue, 24 Mar 2020 17:02:16 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:32506 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727613AbgCXVCP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:57:38 -0400
-Received: by mail-lf1-f65.google.com with SMTP id j15so14468630lfk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:57:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AfkpZBONhIm2kahgF1k041JWmTwgX7aXtGtLwbGmno8=;
-        b=ZrWYfmkROhgW5Qe30qGiRWtsa4lPXPRYSJ7cqapGER4PzRqCxwEF+dJguyJZ7FF6Ll
-         u/Zi1t2urAAq25y6dQ5ynQLQXoBhsw2Q+tNanRBglZqULb7gJYp6SanwRrt7FLa3qIeu
-         9Ib7NWaVYv+Fkb7oj9J2ClZWHS6IY4kKUJ5J0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AfkpZBONhIm2kahgF1k041JWmTwgX7aXtGtLwbGmno8=;
-        b=ZmCURyv73CTweP0bB1M/7mWX2nujmX6I18TvS91YnG+bEmIu59svG3dC6mQwQWFG2g
-         q1ZFbW8ovuLfYU+DQgKPjPzIkX9qyqNaxeajKFnJqmbtXAkJUPy+RnqVh6dzpA8HIlLY
-         TdT9QfkQNfq7GfSQNHjxEjob5K3H1WbtAd3g0ZvQfva4GAUcR3sGZfVl27OzJFPGNT42
-         lFfTgDb1VjuGkSduVPo/JXgnR/ujvoigiakldItX8akJRo8sJKt1WW9qVoJ7jrC2l5IZ
-         hV+fa/+hfW6uf9ghDzhbhRZqJDpHb5BuKiKsHdM6GaeKbVEVdxVgJx2X0y04pHRidecV
-         2n4w==
-X-Gm-Message-State: ANhLgQ33Ebgd0UPz2d83ReLmlsqsteXV2vgXyYkzQdjVcrGFfQnTTnU3
-        YkPlDTgbm1bD5JDVmJyjNqMLAEYcayo=
-X-Google-Smtp-Source: ADFU+vuKI2lTlunwmj6jcCOmLpFfBLbJp4l1z65ZMQqnuUx9phz2RL79OSTiKc3AysWWIVmCJ2wYmQ==
-X-Received: by 2002:ac2:4116:: with SMTP id b22mr16708923lfi.172.1585083456749;
-        Tue, 24 Mar 2020 13:57:36 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id l7sm3980311lfp.65.2020.03.24.13.57.35
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 13:57:35 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id j15so14468577lfk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 13:57:35 -0700 (PDT)
-X-Received: by 2002:a19:6712:: with SMTP id b18mr573410lfc.152.1585083455357;
- Tue, 24 Mar 2020 13:57:35 -0700 (PDT)
+        Tue, 24 Mar 2020 17:02:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585083734;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ezORt9tWKqavsqost0+8jwF+irEVoobXTNyqmEmYnCY=;
+        b=JAa65QbtlGo9vHlvtafvPopAQ6x4otyEMGJ/ycLmejJmBnypEpWR/49ss1qjKojiAl/tgw
+        vHYgMR1u3Up/ncRo3Y0TEaLxZ/1cbjXZ9VwuPr96tpeVpeIUsnmuIaZhMKnvJUzmA2lKV5
+        uUaLdEWZJP+sKD7L/1r4oQH4RbZ9aKI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-289-qKNTB0YPNMSuZYrUnbJeZQ-1; Tue, 24 Mar 2020 17:02:10 -0400
+X-MC-Unique: qKNTB0YPNMSuZYrUnbJeZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CEFF8189D6C0;
+        Tue, 24 Mar 2020 21:02:08 +0000 (UTC)
+Received: from madcap2.tricolour.ca (unknown [10.10.110.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4FADC19925;
+        Tue, 24 Mar 2020 21:01:54 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 17:01:52 -0400
+From:   Richard Guy Briggs <rgb@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     nhorman@tuxdriver.com, linux-api@vger.kernel.org,
+        containers@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>, dhowells@redhat.com,
+        linux-audit@redhat.com, netfilter-devel@vger.kernel.org,
+        ebiederm@xmission.com, simo@redhat.com, netdev@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>,
+        mpatel@redhat.com, Serge Hallyn <serge@hallyn.com>
+Subject: Re: [PATCH ghak90 V8 07/16] audit: add contid support for signalling
+ the audit daemon
+Message-ID: <20200324210152.5uydf3zqi3dwshfu@madcap2.tricolour.ca>
+References: <20200312193037.2tb5f53yeisfq4ta@madcap2.tricolour.ca>
+ <CAHC9VhQoVOzy_b9W6h+kmizKr1rPkC4cy5aYoKT2i0ZgsceNDg@mail.gmail.com>
+ <20200313185900.y44yvrfm4zxa5lfk@madcap2.tricolour.ca>
+ <CAHC9VhR2zCCE5bjH75rSwfLC7TJGFj4RBnrtcOoUiqVp9q5TaA@mail.gmail.com>
+ <20200318212630.mw2geg4ykhnbtr3k@madcap2.tricolour.ca>
+ <CAHC9VhRYvGAru3aOMwWKCCWDktS+2pGr+=vV4SjHW_0yewD98A@mail.gmail.com>
+ <20200318215550.es4stkjwnefrfen2@madcap2.tricolour.ca>
+ <CAHC9VhSdDDP7Ec-w61NhGxZG5ZiekmrBCAg=Y=VJvEZcgQh46g@mail.gmail.com>
+ <20200319220249.jyr6xmwvflya5mks@madcap2.tricolour.ca>
+ <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200323185057.GE23230@ZenIV.linux.org.uk> <20200323185127.252501-1-viro@ZenIV.linux.org.uk>
- <20200323185127.252501-5-viro@ZenIV.linux.org.uk> <CAHk-=wgMmmnQTFT7U9+q2BsyV6Ge+LAnnhPmv0SUtFBV1D4tVw@mail.gmail.com>
- <20200324020846.GG23230@ZenIV.linux.org.uk> <CAHk-=whTwaUZZ5Aj_Viapf2tdvcd65WdM4jjXJ3tdOTDmgkW0g@mail.gmail.com>
- <20200324204246.GH23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200324204246.GH23230@ZenIV.linux.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Tue, 24 Mar 2020 13:57:19 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
-Message-ID: <CAHk-=whnTRF5yA2MrPGcmMm=hXaGHfC2HEDtNzA=_1=szhJ4-w@mail.gmail.com>
-Subject: Re: [RFC][PATCH 5/7] x86: convert arch_futex_atomic_op_inuser() to user_access_begin/user_access_end()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHC9VhR84aN72yNB_j61zZgrQV1y6yvrBLNY7jp7BqQiEDL+cw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 1:45 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> OK...  BTW, I'd been trying to recall the reasons for the way
-> __futex_atomic_op2() loop is done; ISTR some discussion along
-> the lines of cacheline ping-pong prevention, but I'd been unable
-> to reconstruct enough details to find it and I'm not sure it
-> hadn't been about some other code ;-/
+On 2020-03-23 20:16, Paul Moore wrote:
+> On Thu, Mar 19, 2020 at 6:03 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > On 2020-03-18 18:06, Paul Moore wrote:
+> 
+> ...
+> 
+> > > I hope we can do better than string manipulations in the kernel.  I'd
+> > > much rather defer generating the ACID list (if possible), than
+> > > generating a list only to keep copying and editing it as the record is
+> > > sent.
+> >
+> > At the moment we are stuck with a string-only format.
+> 
+> Yes, we are.  That is another topic, and another set of changes I've
+> been deferring so as to not disrupt the audit container ID work.
+> 
+> I was thinking of what we do inside the kernel between when the record
+> triggering event happens and when we actually emit the record to
+> userspace.  Perhaps we collect the ACID information while the event is
+> occurring, but we defer generating the record until later when we have
+> a better understanding of what should be included in the ACID list.
+> It is somewhat similar (but obviously different) to what we do for
+> PATH records (we collect the pathname info when the path is being
+> resolved).
 
-No, that doesn't look like any cacheline advantage I can think of -
-quite the reverse.
+Ok, now I understand your concern.
 
-I suspect it's just lazy code, with the reload being unnecessary. Or
-it might be written that way because you avoid an extra variable.
+In the case of NETFILTER_PKT records, the CONTAINER_ID record is the
+only other possible record and they are generated at the same time with
+a local context.
 
-In fact, from a cacheline optimization standpoint, there are
-advantages to not doing the load even on the initial run: if you know
-a certain value is particularly likely, there are advantages to just
-_assuming_ that value, rather than loading it. So no initial load at
-all, and just initialize the first value to the likely case.
+In the case of any event involving a syscall, that CONTAINER_ID record
+is generated at the time of the rest of the event record generation at
+syscall exit.
 
-That can avoid an unnecessary "load for shared ownership" cacheline
-state transition (since the cmpxchg will want to turn it into an
-exclusive modified cacheline anyway).
+The others are only generated when needed, such as the sig2 reply.
 
-But I don't think that optimization is likely the case here, and
-you're right, the loop would be better written with the initial load
-outside the loop.
+We generally just store the contobj pointer until we actually generate
+the CONTAINER_ID (or CONTAINER_OP) record.
 
-           Linus
+> paul moore
+
+- RGB
+
+--
+Richard Guy Briggs <rgb@redhat.com>
+Sr. S/W Engineer, Kernel Security, Base Operating Systems
+Remote, Ottawa, Red Hat Canada
+IRC: rgb, SunRaycer
+Voice: +1.647.777.2635, Internal: (81) 32635
+
