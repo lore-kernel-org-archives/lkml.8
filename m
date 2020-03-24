@@ -2,135 +2,139 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9707AC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92B3EC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768F72074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:39:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2882074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:42:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dkufhUJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgCXOja convert rfc822-to-8bit (ORCPT
+        id S1727741AbgCXOmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:39:30 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43444 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727289AbgCXOja (ORCPT
+        Tue, 24 Mar 2020 10:42:19 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37589 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727535AbgCXOmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:39:30 -0400
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jGkiF-0003q8-T7
-        for linux-kernel@vger.kernel.org; Tue, 24 Mar 2020 14:39:28 +0000
-Received: by mail-pf1-f199.google.com with SMTP id h125so14102016pfg.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:39:27 -0700 (PDT)
+        Tue, 24 Mar 2020 10:42:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id w10so21800466wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:42:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7vTrTxx0I42zw2BaG0USTFej0dtrrNyaNSAnPWYt9Eo=;
+        b=dkufhUJ9zQgyP8eGpXezEO6a9c0CgpImFYcOb7SPCPnxkVXnUCf9MubJp0Db51xEiq
+         qINGVez4sAiuIZTWVRXxyECGEj+Tt0lNCg0T/cuaWJn6rLAyv22itIBOF196q7ArZrkG
+         Np68R2299lTO/aD1jrc6693/loNDi3KzSYUtE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=olThx3NRWCqmpK/TmIWWUGZYC0Mn3E0rSf0fKwVxX7o=;
-        b=dWbbxHzPN7+H3GjcdAJqO4Q2/EjC0gCnzoFZtxzYt4AU7cqWBNvN1N2PzCa6u9yDaH
-         T+6Q1jl+paFe2qnTAKrGy0OpOfsJD9IJTKffXy7LK2g8p3nffmJMubQOAPwDn+pfq01Z
-         QKlCcz8jQ7Qo0Xo9bQWXmjyO0TuAGC5C66m7LaWtwxtY7ckbzYyvE1/C9+IoaUESze2D
-         sLe2g7SraXUkcSjfXdgKnDLmpRS6pJYQwoBiAcSst2+7dZkUjqBh7o4PpPUdvIhes4lB
-         p8GX33x10JUTErFx+5RjFpXlWZ9HZPQHaollU3orShRFrfnG9KXx11uaNofcWdbp6h7D
-         Gszw==
-X-Gm-Message-State: ANhLgQ1+E1ow7/jUlm5x7gdDcac6sxSBuwWVbxhvCLYA3drsbz/tGnIE
-        T15yTn0upi+5M6tDe2Np7IwhRlosDDM+ccMzzxC83SaJ3gQLSnaJ71KAdsJaX+9/7ZNw+NZ2ZEL
-        roXI65P2sNNeFtsAL515KwaIe5S/50XxqVJYlw5/g8A==
-X-Received: by 2002:a17:90a:c695:: with SMTP id n21mr5744131pjt.133.1585060766305;
-        Tue, 24 Mar 2020 07:39:26 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvUsIoUP8bwD6fmxkTSnpSBTMMDUBbvngGa5KE9+xnM+hNmrTdAQxjevFGk/KpoCFU8s4+isw==
-X-Received: by 2002:a17:90a:c695:: with SMTP id n21mr5744097pjt.133.1585060765945;
-        Tue, 24 Mar 2020 07:39:25 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id f5sm83318pfq.63.2020.03.24.07.39.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 07:39:24 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v2] i2c: nvidia-gpu: Handle timeout correctly in
- gpu_i2c_check_status()
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20200324134124.GL1922688@smile.fi.intel.com>
-Date:   Tue, 24 Mar 2020 22:39:22 +0800
-Cc:     ajayg@nvidia.com, Wolfram Sang <wsa@the-dreams.de>,
-        "open list:I2C CONTROLLER DRIVER FOR NVIDIA GPU" 
-        <linux-i2c@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <AF4DCBBE-FF35-4B58-92EE-8BD804A502C4@canonical.com>
-References: <20200324130712.12289-1-kai.heng.feng@canonical.com>
- <20200324134124.GL1922688@smile.fi.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=7vTrTxx0I42zw2BaG0USTFej0dtrrNyaNSAnPWYt9Eo=;
+        b=ia+8WoHlAeBzeNb/kqt998Rwg9KLcii5up5xnvJlrdRu0W5b9pnsY613z7szvS3ShO
+         hfkC3bWb8D/CSSakLAX08Ly8ZObG2CzuY1sd8v+ekt/8jy5IGOjN9wv5xjNCIyFrXxOW
+         GoAviTfyHgzt9WKfImS9dh1JNXmlOWzvYvB49zb8fqiGNvZHdw8Rvkv3VqgAXeFBpRSO
+         U2jDXOlE+mDEwdu+b3/fev/s4HakV1aqCx8vX1XGSSaAXAtgM7JnFjjm7z0GmQaaCrZd
+         GU7pLUEuxQPi8BmjD9f+x+oA535gDRiycWKg/X3l41CxWzczIQSPfyU62Pj71mOEMP/b
+         kmiA==
+X-Gm-Message-State: ANhLgQ13wQ+EMjr90LwqfadHelqxRU/9X6nlXKGuF43LKlAClLZsikt9
+        sbE6SeVFvE1inAIwuS6ZFZLY7g==
+X-Google-Smtp-Source: ADFU+vvCgG3AatQ3uIwpMlAUCRa8G1ExnmSdd3Fbwn543GAsmTl1Hh4EBhFaLe+iPrfpcTl6xafpCA==
+X-Received: by 2002:a5d:6888:: with SMTP id h8mr27440636wru.159.1585060937530;
+        Tue, 24 Mar 2020 07:42:17 -0700 (PDT)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id s15sm30790432wrr.45.2020.03.24.07.42.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 07:42:16 -0700 (PDT)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 24 Mar 2020 15:42:14 +0100
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v5 5/7] bpf: lsm: Initialize the BPF LSM hooks
+Message-ID: <20200324144214.GA1040@chromium.org>
+References: <20200323164415.12943-1-kpsingh@chromium.org>
+ <20200323164415.12943-6-kpsingh@chromium.org>
+ <6d45de0d-c59d-4ca7-fcc5-3965a48b5997@schaufler-ca.com>
+ <20200324015217.GA28487@chromium.org>
+ <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEjxPJ7LCZYDXN1rYMBA2rko0zbTp0UU0THx0bhsAnv0Eg4Ptg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+On 24-Mär 10:37, Stephen Smalley wrote:
+> On Mon, Mar 23, 2020 at 9:52 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > On 23-Mär 18:13, Casey Schaufler wrote:
+> > > On 3/23/2020 9:44 AM, KP Singh wrote:
+> > > > From: KP Singh <kpsingh@google.com>
+> > > >
+> > > > The bpf_lsm_ nops are initialized into the LSM framework like any other
+> > > > LSM.  Some LSM hooks do not have 0 as their default return value. The
+> > > > __weak symbol for these hooks is overridden by a corresponding
+> > > > definition in security/bpf/hooks.c
+> > > >
+> > > > +   return 0;
+> >
+> > [...]
+> >
+> > > > +}
+> > > > +
+> > > > +DEFINE_LSM(bpf) = {
+> > > > +   .name = "bpf",
+> > > > +   .init = bpf_lsm_init,
+> > >
+> > > Have you given up on the "BPF must be last" requirement?
+> >
+> > Yes, we dropped it for as the BPF programs require CAP_SYS_ADMIN
+> > anwyays so the position ~shouldn't~ matter. (based on some of the
+> > discussions we had on the BPF_MODIFY_RETURN patches).
+> >
+> > However, This can be added later (in a separate patch) if really
+> > deemed necessary.
+> 
+> It matters for SELinux, as I previously explained.  A process that has
+> CAP_SYS_ADMIN is not assumed to be able to circumvent MAC policy.
+> And executing prior to SELinux allows the bpf program to access and
+> potentially leak to userspace information that wouldn't be visible to
+> the
+> process itself. However, I thought you were handling the order issue
+> by putting it last in the list of lsms?
 
-> On Mar 24, 2020, at 21:41, Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> On Tue, Mar 24, 2020 at 09:07:12PM +0800, Kai-Heng Feng wrote:
->> Nvidia card may come with a "phantom" UCSI device, and its driver gets
->> stuck in probe routine, prevents any system PM operations like suspend.
->> 
->> When the target time equals to jiffies, it's not included by
->> time_is_before_jiffies(). So let's use a boolean to make sure the
->> operation is done or timeout.
-> 
-> Thank you for an update, my comments below.
-> 
->> 	unsigned long target = jiffies + msecs_to_jiffies(1000);
->> 	u32 val;
->> +	bool done = false;
->> 
->> 	do {
->> 		val = readl(i2cd->regs + I2C_MST_CNTL);
->> -		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER))
->> -			break;
->> -		if ((val & I2C_MST_CNTL_STATUS) !=
->> -				I2C_MST_CNTL_STATUS_BUS_BUSY)
-> 
->> +		if (!(val & I2C_MST_CNTL_CYCLE_TRIGGER)
->> +		    || (val & I2C_MST_CNTL_STATUS) !=
->> +				I2C_MST_CNTL_STATUS_BUS_BUSY) {
-> 
-> Bad formatting. But see below.
-> 
->> +			done = true;
->> 			break;
->> +		}
->> 		usleep_range(500, 600);
->> 	} while (time_is_after_jiffies(target));
->> 
->> -	if (time_is_before_jiffies(target)) {
->> +	if (!done) {
->> 		dev_err(i2cd->dev, "i2c timeout error %x\n", val);
->> 		return -ETIMEDOUT;
->> 	}
-> 
-> 
-> Overall it can use simple tries since you already have sleep inside, but
-> moreover, you may simple switch to readl_poll_timeout() this entire
-> loop.
+We can still do that if it does not work for SELinux.
 
-Yes that can make the retry loop much simpler.
-I'll send a v3 based on your suggestion.
+Would it be okay to add bpf as LSM_ORDER_LAST?
 
-Kai-Heng
+LSMs like Landlock can then add LSM_ORDER_UNPRIVILEGED to even end up
+after bpf?
 
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+- KP
 
