@@ -4,59 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F04C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E95C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170D5206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F0E206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:31:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056694;
-	bh=8D71hQD/03lTr+XgQno0BDGmgGfxR9qJXHJh2/1h4KI=;
+	s=default; t=1585056704;
+	bh=dsUFn1fct6hE7+Yo16X7dys63JfXbXmd3O1DfgNk3DY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v5XczTMJZ0pVo5DwsIJvgcA5BeBIiDcbONU5Mvf2lFj4uiKHcZWXnnpwQzHMgoTJY
-	 tFOuTnl/GRYyfxLbZJP/snX7Z9KO3T2uDHbd2hNi6E5mRh39lDMe0I00XDWzewVBSu
-	 DECHd7T8HaBfDbhOLIZYSJ6fMPFgs5n/TF1mZwcA=
+	b=mYscoPxfDXI7eTuyFKxUgorSbjMruJroituEnGKfpQb7pafeuU/0Z/IQboaFxVTSG
+	 RKCkVbBGcpd66OWtBOMeE+TTud4OgXdVa9ZKUUFdKwtJqyQwtBbCiVqieNKfIJCKQu
+	 2Ft2Whe8+N7t4plMW+ULOKOC9Xhglw6j7/XBp66c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbgCXNbc (ORCPT
+        id S1728820AbgCXNTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:31:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40912 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:19:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728701AbgCXNT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:19:56 -0400
+        id S1728810AbgCXNTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:19:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A217F208FE;
-        Tue, 24 Mar 2020 13:19:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D30D208E0;
+        Tue, 24 Mar 2020 13:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055995;
-        bh=8D71hQD/03lTr+XgQno0BDGmgGfxR9qJXHJh2/1h4KI=;
+        s=default; t=1585055952;
+        bh=dsUFn1fct6hE7+Yo16X7dys63JfXbXmd3O1DfgNk3DY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SIXP3n8g5UCGg3TgqNEcCSJcpNeyLEAQeumleAYsyLPpDE4e6Teu8F9HyjwhNlQa8
-         D7Nwqyu7vaaewLbmLMvjjov5jh3wKfyqld0Fs8Ll+Alksb2A9DW6D6T+H/bqsMxgeh
-         vE2GNIGyo0a5AqJa0y7AHEtiTTQ76zMaY3CEpU64=
+        b=FJrudf8rnbNhdSDWqtm3CwXS+tTMcPUmceKN4psIR7xualaKRYAsJ66godj4Pmjb7
+         1yM2+zqP/Ynp3zNrmNdtW6Kh+qQrib94W/vwMDV9hRCGDNLl4GDpVjBQ8lIJLptvmH
+         lujSfOrQkzHJ3A4TQwCMpZe3gwQrrpbeyG2YRJpw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <oliver.sang@intel.com>,
-        Shile Zhang <shile.zhang@linux.alibaba.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 093/102] x86/mm: split vmalloc_sync_all()
-Date:   Tue, 24 Mar 2020 14:11:25 +0100
-Message-Id: <20200324130816.253021445@linuxfoundation.org>
+        stable@vger.kernel.org, Alberto Mattea <alberto@mattea.info>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.4 042/102] usb: xhci: apply XHCI_SUSPEND_DELAY to AMD XHCI controller 1022:145c
+Date:   Tue, 24 Mar 2020 14:10:34 +0100
+Message-Id: <20200324130810.999873979@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -69,205 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joerg Roedel <jroedel@suse.de>
+From: Alberto Mattea <alberto@mattea.info>
 
-commit 763802b53a427ed3cbd419dbba255c414fdd9e7c upstream.
+commit 16263abc12d09871156a1c8650fb651f0e552f5e upstream.
 
-Commit 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in
-__purge_vmap_area_lazy()") introduced a call to vmalloc_sync_all() in
-the vunmap() code-path.  While this change was necessary to maintain
-correctness on x86-32-pae kernels, it also adds additional cycles for
-architectures that don't need it.
+This controller timeouts during suspend (S3) with
+[  240.521724] xhci_hcd 0000:30:00.3: WARN: xHC save state timeout
+[  240.521729] xhci_hcd 0000:30:00.3: ERROR mismatched command completion event
+thus preventing the system from entering S3.
+Moreover it remains in an undefined state where some connected devices stop
+working until a reboot.
+Apply the XHCI_SUSPEND_DELAY quirk to make it suspend properly.
 
-Specifically on x86-64 with CONFIG_VMAP_STACK=y some people reported
-severe performance regressions in micro-benchmarks because it now also
-calls the x86-64 implementation of vmalloc_sync_all() on vunmap().  But
-the vmalloc_sync_all() implementation on x86-64 is only needed for newly
-created mappings.
-
-To avoid the unnecessary work on x86-64 and to gain the performance
-back, split up vmalloc_sync_all() into two functions:
-
-	* vmalloc_sync_mappings(), and
-	* vmalloc_sync_unmappings()
-
-Most call-sites to vmalloc_sync_all() only care about new mappings being
-synchronized.  The only exception is the new call-site added in the
-above mentioned commit.
-
-Shile Zhang directed us to a report of an 80% regression in reaim
-throughput.
-
-Fixes: 3f8fd02b1bf1 ("mm/vmalloc: Sync unmappings in __purge_vmap_area_lazy()")
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Reported-by: Shile Zhang <shile.zhang@linux.alibaba.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Tested-by: Borislav Petkov <bp@suse.de>
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>	[GHES]
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: <stable@vger.kernel.org>
-Link: http://lkml.kernel.org/r/20191009124418.8286-1-joro@8bytes.org
-Link: https://lists.01.org/hyperkitty/list/lkp@lists.01.org/thread/4D3JPPHBNOSPFK2KEPC6KGKS6J25AIDB/
-Link: http://lkml.kernel.org/r/20191113095530.228959-1-shile.zhang@linux.alibaba.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+CC: stable@vger.kernel.org
+Signed-off-by: Alberto Mattea <alberto@mattea.info>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200306150858.21904-3-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/mm/fault.c      |   26 ++++++++++++++++++++++++--
- drivers/acpi/apei/ghes.c |    2 +-
- include/linux/vmalloc.h  |    5 +++--
- kernel/notifier.c        |    2 +-
- mm/nommu.c               |   10 +++++++---
- mm/vmalloc.c             |   11 +++++++----
- 6 files changed, 43 insertions(+), 13 deletions(-)
+ drivers/usb/host/xhci-pci.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/x86/mm/fault.c
-+++ b/arch/x86/mm/fault.c
-@@ -189,7 +189,7 @@ static inline pmd_t *vmalloc_sync_one(pg
- 	return pmd_k;
- }
+--- a/drivers/usb/host/xhci-pci.c
++++ b/drivers/usb/host/xhci-pci.c
+@@ -136,7 +136,8 @@ static void xhci_pci_quirks(struct devic
+ 		xhci->quirks |= XHCI_AMD_PLL_FIX;
  
--void vmalloc_sync_all(void)
-+static void vmalloc_sync(void)
- {
- 	unsigned long address;
- 
-@@ -216,6 +216,16 @@ void vmalloc_sync_all(void)
- 	}
- }
- 
-+void vmalloc_sync_mappings(void)
-+{
-+	vmalloc_sync();
-+}
-+
-+void vmalloc_sync_unmappings(void)
-+{
-+	vmalloc_sync();
-+}
-+
- /*
-  * 32-bit:
-  *
-@@ -318,11 +328,23 @@ out:
- 
- #else /* CONFIG_X86_64: */
- 
--void vmalloc_sync_all(void)
-+void vmalloc_sync_mappings(void)
- {
-+	/*
-+	 * 64-bit mappings might allocate new p4d/pud pages
-+	 * that need to be propagated to all tasks' PGDs.
-+	 */
- 	sync_global_pgds(VMALLOC_START & PGDIR_MASK, VMALLOC_END);
- }
- 
-+void vmalloc_sync_unmappings(void)
-+{
-+	/*
-+	 * Unmappings never allocate or free p4d/pud pages.
-+	 * No work is required here.
-+	 */
-+}
-+
- /*
-  * 64-bit:
-  *
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -171,7 +171,7 @@ int ghes_estatus_pool_init(int num_ghes)
- 	 * New allocation must be visible in all pgd before it can be found by
- 	 * an NMI allocating from the pool.
- 	 */
--	vmalloc_sync_all();
-+	vmalloc_sync_mappings();
- 
- 	rc = gen_pool_add(ghes_estatus_pool, addr, PAGE_ALIGN(len), -1);
- 	if (rc)
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -126,8 +126,9 @@ extern int remap_vmalloc_range_partial(s
- 
- extern int remap_vmalloc_range(struct vm_area_struct *vma, void *addr,
- 							unsigned long pgoff);
--void vmalloc_sync_all(void);
-- 
-+void vmalloc_sync_mappings(void);
-+void vmalloc_sync_unmappings(void);
-+
- /*
-  *	Lowlevel-APIs (not for driver use!)
-  */
---- a/kernel/notifier.c
-+++ b/kernel/notifier.c
-@@ -554,7 +554,7 @@ NOKPROBE_SYMBOL(notify_die);
- 
- int register_die_notifier(struct notifier_block *nb)
- {
--	vmalloc_sync_all();
-+	vmalloc_sync_mappings();
- 	return atomic_notifier_chain_register(&die_chain, nb);
- }
- EXPORT_SYMBOL_GPL(register_die_notifier);
---- a/mm/nommu.c
-+++ b/mm/nommu.c
-@@ -359,10 +359,14 @@ void vm_unmap_aliases(void)
- EXPORT_SYMBOL_GPL(vm_unmap_aliases);
- 
- /*
-- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-- * have one.
-+ * Implement a stub for vmalloc_sync_[un]mapping() if the architecture
-+ * chose not to have one.
-  */
--void __weak vmalloc_sync_all(void)
-+void __weak vmalloc_sync_mappings(void)
-+{
-+}
-+
-+void __weak vmalloc_sync_unmappings(void)
- {
- }
- 
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -1259,7 +1259,7 @@ static bool __purge_vmap_area_lazy(unsig
- 	 * First make sure the mappings are removed from all page-tables
- 	 * before they are freed.
- 	 */
--	vmalloc_sync_all();
-+	vmalloc_sync_unmappings();
- 
- 	/*
- 	 * TODO: to calculate a flush range without looping.
-@@ -3050,16 +3050,19 @@ int remap_vmalloc_range(struct vm_area_s
- EXPORT_SYMBOL(remap_vmalloc_range);
- 
- /*
-- * Implement a stub for vmalloc_sync_all() if the architecture chose not to
-- * have one.
-+ * Implement stubs for vmalloc_sync_[un]mappings () if the architecture chose
-+ * not to have one.
-  *
-  * The purpose of this function is to make sure the vmalloc area
-  * mappings are identical in all page-tables in the system.
-  */
--void __weak vmalloc_sync_all(void)
-+void __weak vmalloc_sync_mappings(void)
- {
- }
- 
-+void __weak vmalloc_sync_unmappings(void)
-+{
-+}
- 
- static int f(pte_t *pte, unsigned long addr, void *data)
- {
+ 	if (pdev->vendor == PCI_VENDOR_ID_AMD &&
+-		(pdev->device == 0x15e0 ||
++		(pdev->device == 0x145c ||
++		 pdev->device == 0x15e0 ||
+ 		 pdev->device == 0x15e1 ||
+ 		 pdev->device == 0x43bb))
+ 		xhci->quirks |= XHCI_SUSPEND_DELAY;
 
 
