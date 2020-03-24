@@ -2,137 +2,115 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E51AC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B65EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DD520714
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C2FE2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:35:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6BbAEo/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YiMsSpud"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbgCXOeJ (ORCPT
+        id S1727628AbgCXOff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:34:09 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45333 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726802AbgCXOeJ (ORCPT
+        Tue, 24 Mar 2020 10:35:35 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:44999 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727464AbgCXOff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:34:09 -0400
-Received: by mail-ot1-f66.google.com with SMTP id c9so7018395otl.12;
-        Tue, 24 Mar 2020 07:34:08 -0700 (PDT)
+        Tue, 24 Mar 2020 10:35:35 -0400
+Received: by mail-vs1-f68.google.com with SMTP id e138so11213693vsc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:35:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=V3bCztDeWL/Cm70pLIsnhEmjai7N2DWW/RXznGW8NR0=;
-        b=f6BbAEo/pvipL9yVIKB3lQlaLTcxHYenVT99NwpzEFRjPD1WWdbVha7jrN4aBdqK/X
-         6n++cQrUvNAEQV6r/Nw2mKtxgyFV5YXU1KG3GPoqe7iiiNtDqf6gh5P5KJpZw8oJOIXy
-         29oBZSwoQ4QyVy0k/DEEtLrpDnasj6FxtRcc4O8B0TmBkTJ4+AeUO/Dw3vEX5g5nLOKH
-         yEoD+1+VHmkAKFSdaknNS2y9gINj8OVS+v3A+ubcqLBu/c0/4xC5PwWlktJB4e0pi6R1
-         +OHnTgYJhvyuOv9RyMIg61+F2w6Wh0R3Rrolfpk6fVh9OSOxw2yCl93A/uOUm92g6dKr
-         Fw1A==
+        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
+        b=YiMsSpudpT6FxZHxA6De/saSAHGXK7VlyDXtpNtN9hNzxOPelBBcnUkk9LPz8Mz4Ir
+         KztvWvGmrqbAk7jwUQE14sSAWV4hf05oN5i6odmjR/cou/29qpALc9peKPyrjgXDkrAc
+         oq6V4L/S8pZ9LSBWm00J5so+SUpk1hSQ8Va+g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=V3bCztDeWL/Cm70pLIsnhEmjai7N2DWW/RXznGW8NR0=;
-        b=doBuqw1ilVRQHm4UID6qqYxdmng6OT5QRFyqwq4uBAc6X+vwEp7ZzwxsNTxuiEQns0
-         LI7Oi1qwGbI2+w5Jh/4Cif+JsFSYFcBnCiU16YdSqGWudyoQqyIo8lK4QnGvB5DthKl2
-         aqgwalgGp61iLk5hSNyOTyPJekxO5IizGDYzGfaG5E0gaDVF078kei0ABghoCyBSdDx3
-         76cfnR7saygp09PdQ8/e6cfaZeERNE1IYuiz8hbyKverSG15OfoEahwtCiGPu+Baxui+
-         WSR10WLinaMcuK3VKyRS05K1QtqEA5xLyOHrbgZmye6ttvcb9cNN//PoXEK2RmEGepBq
-         NjSg==
-X-Gm-Message-State: ANhLgQ1Bpdy/b5uifqBtL+XQCAyP7kmx4NR8MaiIACQ3AIHLR/IxKXfn
-        zWRL5edopiMt59kKTnRYChc5LIwz5izj1z5Z7BY=
-X-Google-Smtp-Source: ADFU+vsNpb9KZt+QNv+56/OsWx42rl6MFpi6JRLMhP6ybGeZ5h5PA5DQBbzLbvjEFqINPzu0TEVwA8NF7AtEY94OYuo=
-X-Received: by 2002:a9d:6457:: with SMTP id m23mr22614344otl.162.1585060447978;
- Tue, 24 Mar 2020 07:34:07 -0700 (PDT)
+        bh=vHxRlatObgRvnysxTZAZ7i5pl1JSDT2R3bHKmGhkgUE=;
+        b=Rb2VhTczVERztTtCw/M+jPShvvlRiAvh5j8KRz7BtrhQV8rWRT4+WtS5kCBtroABjB
+         2PmBXd4XD+1dEVQ/B0pgs/QSImyIqQDYrZbm6VfwDnOFH/RfhtYgNlstM7vzBoGnLof0
+         2ezgKTm0ISsnwkldCsLUZ98Y9qv6YWWgek1SLSePfn2Wcdd/4/y9WDpoYEWk1bHF6XLh
+         UUpjMwfBd2m3O6msk/1YDXC/ot95KzUXMoNw2zQKbL9W0f+yPwkgoKl4aBaFoAF0hnY2
+         8RrOxmj1of6uayb9SrUWDmG6cpdH8W2Fwr/0fQs8HV0qj/oK2x6v74dXAT2Al94MtJya
+         yZBA==
+X-Gm-Message-State: ANhLgQ1qrfwhxs3eM73vbt8qQwV8bUTuXghk9GT1kjpIK0dDuYoK+2qa
+        mSIPzGFdegn3pG23xAVxxk5+3MqERfQ=
+X-Google-Smtp-Source: ADFU+vsVd1FWSHGswLQAc2fdZnfOkyHI79FbKSjh+JmWme81WubIUf+pK5eflghKFKBRMhpv5PMMJg==
+X-Received: by 2002:a67:68c5:: with SMTP id d188mr9920226vsc.15.1585060533535;
+        Tue, 24 Mar 2020 07:35:33 -0700 (PDT)
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com. [209.85.222.41])
+        by smtp.gmail.com with ESMTPSA id o39sm10036230uad.6.2020.03.24.07.35.32
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
+Received: by mail-ua1-f41.google.com with SMTP id a6so1528639uao.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:35:32 -0700 (PDT)
+X-Received: by 2002:a9f:300a:: with SMTP id h10mr18039835uab.91.1585060531555;
+ Tue, 24 Mar 2020 07:35:31 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200323164415.12943-1-kpsingh@chromium.org> <20200323164415.12943-5-kpsingh@chromium.org>
-In-Reply-To: <20200323164415.12943-5-kpsingh@chromium.org>
-From:   Stephen Smalley <stephen.smalley.work@gmail.com>
-Date:   Tue, 24 Mar 2020 10:35:16 -0400
-Message-ID: <CAEjxPJ4MukexdmAD=py0r7vkE6vnn6T1LVcybP_GSJYsAdRuxA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 4/7] bpf: lsm: Implement attach, detach and execution
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Moore <paul@paul-moore.com>
+References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
+In-Reply-To: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 24 Mar 2020 07:35:18 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
+Message-ID: <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Kalyan Thota <kalyan_t@codeaurora.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 12:46 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> JITed BPF programs are dynamically attached to the LSM hooks
-> using BPF trampolines. The trampoline prologue generates code to handle
-> conversion of the signature of the hook to the appropriate BPF context.
->
-> The allocated trampoline programs are attached to the nop functions
-> initialized as LSM hooks.
->
-> BPF_PROG_TYPE_LSM programs must have a GPL compatible license and
-> and need CAP_SYS_ADMIN (required for loading eBPF programs).
->
-> Upon attachment:
->
-> * A BPF fexit trampoline is used for LSM hooks with a void return type.
-> * A BPF fmod_ret trampoline is used for LSM hooks which return an
->   int. The attached programs can override the return value of the
->   bpf LSM hook to indicate a MAC Policy decision.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
-> ---
+Hi,
 
-> diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> index 530d137f7a84..2a8131b640b8 100644
-> --- a/kernel/bpf/bpf_lsm.c
-> +++ b/kernel/bpf/bpf_lsm.c
-> @@ -9,6 +9,9 @@
->  #include <linux/btf.h>
->  #include <linux/lsm_hooks.h>
->  #include <linux/bpf_lsm.h>
-> +#include <linux/jump_label.h>
-> +#include <linux/kallsyms.h>
-> +#include <linux/bpf_verifier.h>
+On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
 >
->  /* For every LSM hook  that allows attachment of BPF programs, declare a NOP
->   * function where a BPF program can be attached as an fexit trampoline.
-> @@ -27,6 +30,32 @@ noinline __weak void bpf_lsm_##NAME(__VA_ARGS__) {}
->  #include <linux/lsm_hook_names.h>
->  #undef LSM_HOOK
+> "The PM core always increments the runtime usage counter
+> before calling the ->suspend() callback and decrements it
+> after calling the ->resume() callback"
 >
-> +#define BPF_LSM_SYM_PREFX  "bpf_lsm_"
-> +
-> +int bpf_lsm_verify_prog(struct bpf_verifier_log *vlog,
-> +                       const struct bpf_prog *prog)
-> +{
-> +       /* Only CAP_MAC_ADMIN users are allowed to make changes to LSM hooks
-> +        */
-> +       if (!capable(CAP_MAC_ADMIN))
-> +               return -EPERM;
+> DPU and DSI are managed as runtime devices. When
+> suspend is triggered, PM core adds a refcount on all the
+> devices and calls device suspend, since usage count is
+> already incremented, runtime suspend was not getting called
+> and it kept the clocks on which resulted in target not
+> entering into XO shutdown.
+>
+> Add changes to manage runtime devices during pm sleep.
+>
+> Changes in v1:
+>  - Remove unnecessary checks in the function
+>      _dpu_kms_disable_dpu (Rob Clark).
 
-I had asked before, and will ask again: please provide an explicit LSM
-hook for mediating whether one can make changes to the LSM hooks.
-Neither CAP_MAC_ADMIN nor CAP_SYS_ADMIN suffices to check this for SELinux.
+I'm wondering what happened with my feedback on v1, AKA:
+
+https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
+
+Maybe you didn't see it?  ...or if you or Rob think I'm way off base
+(always possible) then please tell me so.
+
+Thanks!
+
+-Doug
