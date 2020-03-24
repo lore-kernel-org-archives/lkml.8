@@ -2,78 +2,110 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD86C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A95AC10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D23B206F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:23:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OPlW390B"
+	by mail.kernel.org (Postfix) with ESMTP id 0DF2920719
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 00:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgCXAXo (ORCPT
+        id S1727672AbgCXAYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 23 Mar 2020 20:23:44 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:36861 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727421AbgCXAXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 23 Mar 2020 20:23:44 -0400
-Received: from hanvin-mobl2.amr.corp.intel.com (jfdmzpr05-ext.jf.intel.com [134.134.139.74])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02O0NWue2855582
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 23 Mar 2020 17:23:33 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02O0NWue2855582
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020022001; t=1585009415;
-        bh=KlNUCvKLtmgUVe/sER4fOO8SCDvsibuLpMPWSHAaMZ8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=OPlW390BVJ34hyGgN9xrbDxjr3Lr8UVpnhpLEDvX+tP7mNHNfx4qn8qxfMnI5iwxX
-         cZvfHCiTyshO+zIXqEpr8O34WSusbHI5k5/3mhVCN4tMoA2iLBvNrofv1V5yZUAKga
-         y6KmHaA4xmM5oXTHCqM/uWX7LyS9WweCwGDix/zTrwJstEXTGP2MJpc+pXLfgKTTbE
-         7V4TpbynCpYEHUKTJue/VOPAtqFRC8aGuRVB0zPw0TQA+pgSoXxRZ1Hqe88eS2XnZ4
-         yfGlOS9yAWqqIcgVAlOcdhB12oPcR17zSVxHkSAXSStrVNetTePgJ8YWz9IlcdSTMk
-         P5aa6akW8RzdQ==
-Subject: Re: [PATCH v2 9/9] x86: replace arch macros from compiler with
- CONFIG_X86_{32,64}
-To:     Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, linux-crypto@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>
-References: <20200324001358.4520-1-masahiroy@kernel.org>
- <20200324001358.4520-10-masahiroy@kernel.org>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <10b5c2da-38cf-c6ba-bdf5-1064f433c3d6@zytor.com>
-Date:   Mon, 23 Mar 2020 17:23:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 23 Mar 2020 20:24:23 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:43080 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727421AbgCXAYW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 23 Mar 2020 20:24:22 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGXMU-0001KP-Ci; Tue, 24 Mar 2020 01:24:07 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id A4639100292; Tue, 24 Mar 2020 01:24:05 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>, x86@kernel.org
+Cc:     linux-pci <linux-pci@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Evan Green <evgreen@chromium.org>,
+        "Ghorai\, Sukumar" <sukumar.ghorai@intel.com>,
+        "Amara\, Madhusudanarao" <madhusudanarao.amara@intel.com>,
+        "Nandamuri\, Srikanth" <srikanth.nandamuri@intel.com>,
+        x86@kernel.org
+Subject: Re: MSI interrupt for xhci still lost on 5.6-rc6 after cpu hotplug
+In-Reply-To: <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
+References: <806c51fa-992b-33ac-61a9-00a606f82edb@linux.intel.com> <87d0974akk.fsf@nanos.tec.linutronix.de> <b9fbd55a-7f97-088d-2cc2-4e4ea86d9440@linux.intel.com> <87r1xjp3gn.fsf@nanos.tec.linutronix.de> <f8057cbc-4814-5083-cddd-d4eb1459529f@linux.intel.com>
+Date:   Tue, 24 Mar 2020 01:24:05 +0100
+Message-ID: <878sjqfvmi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200324001358.4520-10-masahiroy@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-23 17:13, Masahiro Yamada wrote:
-> If the intention is to check i386/x86_64 excluding UML,
-> checking CONFIG_X86_{32,64} is simpler.
-> 
-> The reason for checking __i386__ / __x86_64__ was perhaps because
-> lib/raid6/algos.c is built not only for the kernel but also for
-> testing the library code from userspace.
-> 
-> However, lib/raid6/test/Makefile passes -DCONFIG_X86_{32,64} for
-> this case. So, I do not see a reason to not use CONFIG option here.
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Mathias Nyman <mathias.nyman@linux.intel.com> writes:
+> On 23.3.2020 16.10, Thomas Gleixner wrote:
+>> 
+>> thanks for providing the data. I think I decoded the issue. Can you
+>> please test the patch below?
+>
+> Unfortunately it didn't help.
 
-Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+I did not expect that to help, simply because the same issue is caught
+by the loop in fixup_irqs(). What I wanted to make sure is that there is
+not something in between which causes the latter to fail.
+
+So I stared at the trace data earlier today and looked at the xhci irq
+events. They are following a more or less periodic schedule and the
+forced migration on CPU hotplug hits definitely in the time frame where
+the next interrupt should be raised by the device.
+
+1) First off all I do not have to understand why new systems released
+   in 2020 still use non-maskable MSI which is the root cause of all of
+   this trouble especially in Intel systems which are known to have
+   this disastrouos interrupt migration troubles.
+
+   Please tell your hardware people to stop this. 
+    
+2) I have no idea why the two step mechanism fails exactly on this
+   system. I tried the same test case on a skylake client and I can
+   clearly see from the traces that the interrupt raised in the device
+   falls exactly into the two step update and causes the IRR to be set
+   which resolves the situation by IPI'ing the new target CPU.
+    
+   I have not found a single instance of IPI recovery in your
+   traces. Instead of that your system stops working in exactly this
+   situation.
+
+   The two step mechanism tries to work around the fact that PCI does
+   not support a 64bit atomic config space update. So we carefully avoid
+   changing more than one 32bit value at a time, i.e. we change first
+   the vector and then the destination ID (part of address_lo).  This
+   ensures that the message is consistent all the time.
+
+   But obviously on your system this does not work as expected. Why? I
+   really can't tell.
+
+   Please talk to your hardware folks.
+
+And of course all of this is so well documented that all of us can
+clearly figure out what's going on...
+
+Thanks,
+
+        tglx
+
+    
+
+
+
+
