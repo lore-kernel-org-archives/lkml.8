@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A287C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA08EC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243DB208E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2BF720775
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055741;
-	bh=VNN/Ba9Qk+2mQeF62pFxERDG8oGP0Rl7oa62vD0FBsU=;
+	s=default; t=1585055744;
+	bh=e0FJE4mmKOLy1FnSL5Kj2UeQ9zkdN+4VFJKPic2+/YI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UfNxb5x1AJoPgq0pTroHRxPkcALKLvdKvz3n+D3bwPQC8WbI2JSjjEDmJ/fgfBc+7
-	 Wl7Z79PgFh9MmJC+FNoHkTsbYG0W2X0P4zynF0HKukA42CauKR4xv9SC/3KnQiFkfc
-	 Glq0IllQr9ZY+odBwffBWDcOcKxoCyhFbLC/zQ68=
+	b=hn0mVj0l88aLrpEv7GwUEXzrEUAY3kPEvYOrYORmfWMtWs+8HF+KbrDK5ilz7AXcp
+	 U/uVxQT4vVt5C3+7oF1IiQSwL2W/tpk40NArSdaRL+zAC41S12rjQXDRrLVEkWiB5+
+	 l63iSC/o2ef6tLqym/pUpzbwm1ub6hOd+lsl/hec=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCXNPj (ORCPT
+        id S1728294AbgCXNPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:15:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34612 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:15:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727744AbgCXNPh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:37 -0400
+        id S1727556AbgCXNPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:15:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13F5C208D6;
-        Tue, 24 Mar 2020 13:15:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 559A9206F6;
+        Tue, 24 Mar 2020 13:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055736;
-        bh=VNN/Ba9Qk+2mQeF62pFxERDG8oGP0Rl7oa62vD0FBsU=;
+        s=default; t=1585055740;
+        bh=e0FJE4mmKOLy1FnSL5Kj2UeQ9zkdN+4VFJKPic2+/YI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZMOM5x6axhYEa6IaMzRUo34NpIKPx9pwpJJjWpoX2UmSiNl3ePBsUkUsq/F0nqftg
-         hoYzxlezxX8Yyzc8/Gdyr2fTPBjU4Tiw2W7dQd22r9YpbhT/95mE3ODp1kdBV4IZ21
-         TbnZuHcWn4l9CYtV+HuMdgZOFtkWnW5qH6wFXVp4=
+        b=Z6xia5oZfYCqDMO3Y07XC8JwuSKwU/qFu0vDx3/xt+z/XJTcchsPDBYOZis8qo4cX
+         ZCOtkWZi5GPhbOmGvyz5L4A4aa28mgQgX6h6s++maMjkHRkxeOgiH+HAKrQHKOpDnI
+         Fx7YEvI9a9rU4DfAfo29CHxl8sUartmUAfV2UBSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rajat Jain <rajatja@google.com>,
-        Evan Green <evgreen@chromium.org>,
+        stable@vger.kernel.org, Thommy Jakobsson <thommyj@gmail.com>,
+        Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>,
         Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 013/102] spi: pxa2xx: Add CS control clock quirk
-Date:   Tue, 24 Mar 2020 14:10:05 +0100
-Message-Id: <20200324130807.885432626@linuxfoundation.org>
+Subject: [PATCH 5.4 014/102] spi/zynqmp: remove entry that causes a cs glitch
+Date:   Tue, 24 Mar 2020 14:10:06 +0100
+Message-Id: <20200324130807.993629707@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
 References: <20200324130806.544601211@linuxfoundation.org>
@@ -61,85 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Green <evgreen@chromium.org>
+From: Thommy Jakobsson <thommyj@gmail.com>
 
-[ Upstream commit 683f65ded66a9a7ff01ed7280804d2132ebfdf7e ]
+[ Upstream commit 5dd8304981ecffa77bb72b1c57c4be5dfe6cfae9 ]
 
-In some circumstances on Intel LPSS controllers, toggling the LPSS
-CS control register doesn't actually cause the CS line to toggle.
-This seems to be failure of dynamic clock gating that occurs after
-going through a suspend/resume transition, where the controller
-is sent through a reset transition. This ruins SPI transactions
-that either rely on delay_usecs, or toggle the CS line without
-sending data.
+In the public interface for chipselect, there is always an entry
+commented as "Dummy generic FIFO entry" pushed down to the fifo right
+after the activate/deactivate command. The dummy entry is 0x0,
+irregardless if the intention was to activate or deactive the cs. This
+causes the cs line to glitch rather than beeing activated in the case
+when there was an activate command.
 
-Whenever CS is toggled, momentarily set the clock gating register
-to "Force On" to poke the controller into acting on CS.
+This has been observed on oscilloscope, and have caused problems for at
+least one specific flash device type connected to the qspi port. After
+the change the glitch is gone and cs goes active when intended.
 
-Signed-off-by: Rajat Jain <rajatja@google.com>
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Link: https://lore.kernel.org/r/20200211223700.110252-1-rajatja@google.com
+The reason why this worked before (except for the glitch) was because
+when sending the actual data, the CS bits are once again set. Since
+most flashes uses mode 0, there is always a half clk period anyway for
+cs to clk active setup time. If someone would rely on timing from a
+chip_select call to a transfer_one, it would fail though.
+
+It is unknown why the dummy entry was there in the first place, git log
+seems to be of no help in this case. The reference manual gives no
+indication of the necessity of this. In fact the lower 8 bits are a
+setup (or hold in case of deactivate) time expressed in cycles. So this
+should not be needed to fulfill any setup/hold timings.
+
+Signed-off-by: Thommy Jakobsson <thommyj@gmail.com>
+Reviewed-by: Naga Sureshkumar Relli <naga.sureshkumar.relli@xilinx.com>
+Link: https://lore.kernel.org/r/20200224162643.29102-1-thommyj@gmail.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/spi/spi-zynqmp-gqspi.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 2fd843b18297d..7231456732068 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -68,6 +68,10 @@ MODULE_ALIAS("platform:pxa2xx-spi");
- #define LPSS_CAPS_CS_EN_SHIFT			9
- #define LPSS_CAPS_CS_EN_MASK			(0xf << LPSS_CAPS_CS_EN_SHIFT)
+diff --git a/drivers/spi/spi-zynqmp-gqspi.c b/drivers/spi/spi-zynqmp-gqspi.c
+index 60c4de4e44856..7412a3042a8d2 100644
+--- a/drivers/spi/spi-zynqmp-gqspi.c
++++ b/drivers/spi/spi-zynqmp-gqspi.c
+@@ -401,9 +401,6 @@ static void zynqmp_qspi_chipselect(struct spi_device *qspi, bool is_high)
  
-+#define LPSS_PRIV_CLOCK_GATE 0x38
-+#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK 0x3
-+#define LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON 0x3
-+
- struct lpss_config {
- 	/* LPSS offset from drv_data->ioaddr */
- 	unsigned offset;
-@@ -84,6 +88,8 @@ struct lpss_config {
- 	unsigned cs_sel_shift;
- 	unsigned cs_sel_mask;
- 	unsigned cs_num;
-+	/* Quirks */
-+	unsigned cs_clk_stays_gated : 1;
- };
+ 	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, genfifoentry);
  
- /* Keep these sorted with enum pxa_ssp_type */
-@@ -154,6 +160,7 @@ static const struct lpss_config lpss_platforms[] = {
- 		.tx_threshold_hi = 56,
- 		.cs_sel_shift = 8,
- 		.cs_sel_mask = 3 << 8,
-+		.cs_clk_stays_gated = true,
- 	},
- };
- 
-@@ -381,6 +388,22 @@ static void lpss_ssp_cs_control(struct spi_device *spi, bool enable)
- 	else
- 		value |= LPSS_CS_CONTROL_CS_HIGH;
- 	__lpss_ssp_write_priv(drv_data, config->reg_cs_ctrl, value);
-+	if (config->cs_clk_stays_gated) {
-+		u32 clkgate;
-+
-+		/*
-+		 * Changing CS alone when dynamic clock gating is on won't
-+		 * actually flip CS at that time. This ruins SPI transfers
-+		 * that specify delays, or have no data. Toggle the clock mode
-+		 * to force on briefly to poke the CS pin to move.
-+		 */
-+		clkgate = __lpss_ssp_read_priv(drv_data, LPSS_PRIV_CLOCK_GATE);
-+		value = (clkgate & ~LPSS_PRIV_CLOCK_GATE_CLK_CTL_MASK) |
-+			LPSS_PRIV_CLOCK_GATE_CLK_CTL_FORCE_ON;
-+
-+		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, value);
-+		__lpss_ssp_write_priv(drv_data, LPSS_PRIV_CLOCK_GATE, clkgate);
-+	}
- }
- 
- static void cs_assert(struct spi_device *spi)
+-	/* Dummy generic FIFO entry */
+-	zynqmp_gqspi_write(xqspi, GQSPI_GEN_FIFO_OFST, 0x0);
+-
+ 	/* Manually start the generic FIFO command */
+ 	zynqmp_gqspi_write(xqspi, GQSPI_CONFIG_OFST,
+ 			zynqmp_gqspi_read(xqspi, GQSPI_CONFIG_OFST) |
 -- 
 2.20.1
 
