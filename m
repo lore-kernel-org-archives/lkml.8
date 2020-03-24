@@ -2,90 +2,113 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0282C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F194EC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9D4020870
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E52208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585056543;
+	bh=p+doGnRzaKO0ei7HENSP5rHdtLQfvDeepgfpWPTJ9Ow=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RDE1vbZFxdvhT1JQuukVIE5sqSOUnIZLg8X+PlbdrjJ4MwLDG4WUIWqrHUvg7fg7r
+	 W//I2D9JUd9pyJw8X9nbwzKDWnwnFTLUGPbBecd+sPfDW49WCdqzE6gkr89u8zBrfV
+	 jOFgggKvRnxfz/3HEG4w/pVUrlcBE276Z3Huis/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgCXN3A (ORCPT
+        id S1729801AbgCXN26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:29:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:34610 "EHLO foss.arm.com"
+        Tue, 24 Mar 2020 09:28:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgCXNYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729562AbgCXNYI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 24 Mar 2020 09:24:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 26B3F1063;
-        Tue, 24 Mar 2020 06:24:08 -0700 (PDT)
-Received: from donnerap.arm.com (donnerap.cambridge.arm.com [10.1.197.25])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBF853F52E;
-        Tue, 24 Mar 2020 06:24:06 -0700 (PDT)
-From:   Andre Przywara <andre.przywara@arm.com>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-Cc:     Michal Simek <michal.simek@xilinx.com>,
-        Robert Hancock <hancock@sedsystems.ca>, netdev@vger.kernel.org,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v3 09/14] net: axienet: Drop MDIO interrupt registers from ethtools dump
-Date:   Tue, 24 Mar 2020 13:23:42 +0000
-Message-Id: <20200324132347.23709-10-andre.przywara@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324132347.23709-1-andre.przywara@arm.com>
-References: <20200324132347.23709-1-andre.przywara@arm.com>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 972A8208CA;
+        Tue, 24 Mar 2020 13:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585056248;
+        bh=p+doGnRzaKO0ei7HENSP5rHdtLQfvDeepgfpWPTJ9Ow=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qSXyph+WQvLtFVfMkAfm7Abn7bmiErbBNiQVvrvkJqXWjw6rsnN7qVZZF5kqQmpxV
+         nYgcmQSIjiJf8idaitFNw0LOG5Ge1HdS7dXF3rLwh9XRWMqt97r9T/9uEV7tG3f7Z0
+         DH3as4Yh5gXRkx9oJogBgy6bHA+4v7hW/xwq1sko=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Eugen Hristev <eugen.hristev@microchip.com>,
+        Stable@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: [PATCH 5.5 068/119] iio: adc: at91-sama5d2_adc: fix differential channels in triggered mode
+Date:   Tue, 24 Mar 2020 14:10:53 +0100
+Message-Id: <20200324130815.011096322@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.2
+In-Reply-To: <20200324130808.041360967@linuxfoundation.org>
+References: <20200324130808.041360967@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Newer revisions of the IP don't have these registers. Since we don't
-really use them, just drop them from the ethtools dump.
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+commit a500f3bd787f8224341e44b238f318c407b10897 upstream.
+
+The differential channels require writing the channel offset register (COR).
+Otherwise they do not work in differential mode.
+The configuration of COR is missing in triggered mode.
+
+Fixes: 5e1a1da0f8c9 ("iio: adc: at91-sama5d2_adc: add hw trigger and buffer support")
+Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/xilinx/xilinx_axienet.h      | 7 -------
- drivers/net/ethernet/xilinx/xilinx_axienet_main.c | 4 ----
- 2 files changed, 11 deletions(-)
+ drivers/iio/adc/at91-sama5d2_adc.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet.h b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-index 04e51af32178..fb7450ca5c53 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet.h
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet.h
-@@ -165,13 +165,6 @@
- #define XAE_MDIO_MCR_OFFSET	0x00000504 /* MII Management Control */
- #define XAE_MDIO_MWD_OFFSET	0x00000508 /* MII Management Write Data */
- #define XAE_MDIO_MRD_OFFSET	0x0000050C /* MII Management Read Data */
--#define XAE_MDIO_MIS_OFFSET	0x00000600 /* MII Management Interrupt Status */
--/* MII Mgmt Interrupt Pending register offset */
--#define XAE_MDIO_MIP_OFFSET	0x00000620
--/* MII Management Interrupt Enable register offset */
--#define XAE_MDIO_MIE_OFFSET	0x00000640
--/* MII Management Interrupt Clear register offset. */
--#define XAE_MDIO_MIC_OFFSET	0x00000660
- #define XAE_UAW0_OFFSET		0x00000700 /* Unicast address word 0 */
- #define XAE_UAW1_OFFSET		0x00000704 /* Unicast address word 1 */
- #define XAE_FMI_OFFSET		0x00000708 /* Filter Mask Index */
-diff --git a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-index 60c8cde365f8..217f58bed2c5 100644
---- a/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-+++ b/drivers/net/ethernet/xilinx/xilinx_axienet_main.c
-@@ -1258,10 +1258,6 @@ static void axienet_ethtools_get_regs(struct net_device *ndev,
- 	data[20] = axienet_ior(lp, XAE_MDIO_MCR_OFFSET);
- 	data[21] = axienet_ior(lp, XAE_MDIO_MWD_OFFSET);
- 	data[22] = axienet_ior(lp, XAE_MDIO_MRD_OFFSET);
--	data[23] = axienet_ior(lp, XAE_MDIO_MIS_OFFSET);
--	data[24] = axienet_ior(lp, XAE_MDIO_MIP_OFFSET);
--	data[25] = axienet_ior(lp, XAE_MDIO_MIE_OFFSET);
--	data[26] = axienet_ior(lp, XAE_MDIO_MIC_OFFSET);
- 	data[27] = axienet_ior(lp, XAE_UAW0_OFFSET);
- 	data[28] = axienet_ior(lp, XAE_UAW1_OFFSET);
- 	data[29] = axienet_ior(lp, XAE_FMI_OFFSET);
--- 
-2.17.1
+--- a/drivers/iio/adc/at91-sama5d2_adc.c
++++ b/drivers/iio/adc/at91-sama5d2_adc.c
+@@ -723,6 +723,7 @@ static int at91_adc_configure_trigger(st
+ 
+ 	for_each_set_bit(bit, indio->active_scan_mask, indio->num_channels) {
+ 		struct iio_chan_spec const *chan = at91_adc_chan_get(indio, bit);
++		u32 cor;
+ 
+ 		if (!chan)
+ 			continue;
+@@ -732,6 +733,20 @@ static int at91_adc_configure_trigger(st
+ 			continue;
+ 
+ 		if (state) {
++			cor = at91_adc_readl(st, AT91_SAMA5D2_COR);
++
++			if (chan->differential)
++				cor |= (BIT(chan->channel) |
++					BIT(chan->channel2)) <<
++					AT91_SAMA5D2_COR_DIFF_OFFSET;
++			else
++				cor &= ~(BIT(chan->channel) <<
++				       AT91_SAMA5D2_COR_DIFF_OFFSET);
++
++			at91_adc_writel(st, AT91_SAMA5D2_COR, cor);
++		}
++
++		if (state) {
+ 			at91_adc_writel(st, AT91_SAMA5D2_CHER,
+ 					BIT(chan->channel));
+ 			/* enable irq only if not using DMA */
+
 
