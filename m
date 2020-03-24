@@ -2,152 +2,141 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0009C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E990C10DCE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A070520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="A9UJ79vk"
+	by mail.kernel.org (Postfix) with ESMTP id 0CFE72073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 05:50:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585029002;
+	bh=yQnsvwhZXQ8wrEvynPUDNp4fQACNGhXn8ZnbVJxLhUk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=thMCyxGUlV1I7O2+zPrBln/Yuujx+4q5tWfBzRcsUbPXV3GRkxaMKfqpLvryjfmCg
+	 Ua2ywBnLgQejtY+z+ZffASC1QSowuXSEwsCik48eAVLksiYu9+HsjjyMqSBGh8hKwy
+	 HDAUg1bUDigelTcFWVjt4ZiW978hbIwMSQ0UggUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727282AbgCXFlf (ORCPT
+        id S1726358AbgCXFuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 01:41:35 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36338 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726212AbgCXFlf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 01:41:35 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g12so17262033ljj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Mar 2020 22:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iyP635DGCeoY4s0M1SRFYb49T5chldy4BU1GFRwdRGU=;
-        b=A9UJ79vk+ocv+jJZF/E6Y5JwxBu0niMrhkdEgBfKszB8ITBkQ6zBLOvm2QDSieCXIp
-         JEKa7yZv0DEKJBUynnrJdv4LBdwa2q7ISiAZ6/d1K9q+3iQ/3ZXm4dOlGBB316oSS7lm
-         5JLISYSN0vJt2SdT1CNUIze+NSrv4VYTM83SE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iyP635DGCeoY4s0M1SRFYb49T5chldy4BU1GFRwdRGU=;
-        b=EjnD3GC6pmFdWgRhv5SDFGNZIHo8MDzdVv8dObMGN4pKNX7WuSzt12RFfW/6GMteZf
-         e0ACDd78DcTiqm4+m5Bez+3Y4PY10yFZ1AqhE8cjpJgjZHWSwt+WIZtITGgrArWMJ8Lo
-         iW9doMr0NsUFrUh4lRqKt1JqgLK3/G7WRL2H9deM9yPqiBInu/b3eVofFKe/phQbfFuq
-         oTKpm1ZDZPVgq8HUPNcIusKwlOtD3X1KDwhXB5APYJuh8nHz8z3DBCjg3hyhU69HcF+/
-         WxYiTfI/bTm1Z7pHZGlCm5Lqv8u6x3Fb0OjdMKsR55ON3CyB7z20CHp3ayal3EBSCOcR
-         kKtw==
-X-Gm-Message-State: ANhLgQ1wiIsz//jE99YB7KxOFsAguWsKRVlc5+BPpyvA3FI6MUcvea88
-        raW7LYC5Q3aqrwjauFRYvHw3S16+ANC8SZh0KZwATGu+
-X-Google-Smtp-Source: ADFU+vsEwAjW9fB2hm9yRNmxVuCvhrnUJ4efiJHOCdo9q5cny3sLyQh6EWdsSs61ggDHMhVTvc80JVacscZJoN3OKOQ=
-X-Received: by 2002:a2e:6819:: with SMTP id c25mr15551262lja.195.1585028492318;
- Mon, 23 Mar 2020 22:41:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
- <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
- <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com> <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
-In-Reply-To: <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Tue, 24 Mar 2020 11:11:20 +0530
-Message-ID: <CAHO=5PFVqdOxKJkO0PoHKhTXEF0VtKqZjCHBSfu9W00_vEGrng@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 24 Mar 2020 01:50:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725867AbgCXFuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 01:50:00 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D1B420724;
+        Tue, 24 Mar 2020 05:49:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585028999;
+        bh=yQnsvwhZXQ8wrEvynPUDNp4fQACNGhXn8ZnbVJxLhUk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=je5uGnLpPYNeLLu2JHUQ10gAQRnSIobdt/d5E5ToyOqsHfbK7XbHdM8ze+G0SWAmq
+         cAcgQyaeHe5NejiG9GZ6e0nWV4WqhFagubfpDkXChr+oJRX4mmDkxUyhtyAP5fDy3X
+         ovVS2JCrJYhyPNiKLKMwcyEQsCDEEL1TNfcpO6s4=
+Date:   Tue, 24 Mar 2020 14:49:53 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Paul McKenney <paulmck@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Joel Fernandes \(Google\)" <joel@joelfernandes.org>,
+        "Steven Rostedt \(VMware\)" <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [patch V3 04/23] kprobes: Prevent probes in .noinstr.text
+ section
+Message-Id: <20200324144953.eec3e73f249901582bdf564e@kernel.org>
+In-Reply-To: <87mu87oy7n.fsf@nanos.tec.linutronix.de>
+References: <20200320175956.033706968@linutronix.de>
+        <20200320180032.799569116@linutronix.de>
+        <20200323230025.a24f949a2143dbd5f208f00c@kernel.org>
+        <87mu87oy7n.fsf@nanos.tec.linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 11:29 AM Rayagonda Kokatanur
-<rayagonda.kokatanur@broadcom.com> wrote:
->
-> On Tue, Mar 3, 2020 at 10:26 AM Rayagonda Kokatanur
-> <rayagonda.kokatanur@broadcom.com> wrote:
-> >
-> > On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
-> > > <rayagonda.kokatanur@broadcom.com> wrote:
-> > > >
-> > > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-> > > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-> > > > these flags if check slave addr valid.
-> > > >
-> > > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> > > > ---
-> > > >  scripts/dtc/Makefile | 2 +-
-> > > >  scripts/dtc/checks.c | 5 +++++
-> > > >  2 files changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > dtc changes must be submitted against upstream dtc.
-> >
-> > Please let me know link to clone the upstream dtc branch.
-> > >
-> > >
-> > > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> > > > index 3acbb410904c..c5e8d6a9e73c 100644
-> > > > --- a/scripts/dtc/Makefile
-> > > > +++ b/scripts/dtc/Makefile
-> > > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
-> > > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
-> > > >
-> > > >  # Source files need to get at the userspace version of libfdt_env.h to compile
-> > > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-> > > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
-> > > >
-> > > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
-> > > >  ifneq ($(CHECK_DTBS),)
-> > > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> > > > index 756f0fa9203f..17c9ed4137b5 100644
-> > > > --- a/scripts/dtc/checks.c
-> > > > +++ b/scripts/dtc/checks.c
-> > > > @@ -3,6 +3,7 @@
-> > > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
-> > > >   */
-> > > >
-> > > > +#include <linux/bits.h>
-> > >
-> > > Not a UAPI header not that that would be much better as dtc also builds on Mac.
-> > >
-> > > >  #include "dtc.h"
-> > > >  #include "srcpos.h"
-> > > >
-> > > > @@ -17,6 +18,9 @@
-> > > >  #define TRACE(c, fmt, ...)     do { } while (0)
-> > > >  #endif
-> > > >
-> > > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
-> > > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-> > > > +
-> > > >  enum checkstatus {
-> > > >         UNCHECKED = 0,
-> > > >         PREREQ,
-> > > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
-> > > >
-> > > >         for (len = prop->val.len; len > 0; len -= 4) {
-> > > >                 reg = fdt32_to_cpu(*(cells++));
-> > > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
-> > >
-> > > I'd just mask the top byte so we don't have to update on the next flag we add.
-> > Do you mean something like this, shown below ?
-> > reg &= 0xFFFF_FC000;
->
-> Hi Rob, waiting for your answer.
-Hi Rob,
-Waiting for your answer.
+On Mon, 23 Mar 2020 17:03:24 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
->
+> Masami,
+> 
+> Masami Hiramatsu <mhiramat@kernel.org> writes:
+> > On Fri, 20 Mar 2020 19:00:00 +0100
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
 > >
-> > >
-> > > Rob
+> >> Instrumentation is forbidden in the .noinstr.text section. Make kprobes
+> >> respect this.
+> >> 
+> >> This lacks support for .noinstr.text sections in modules, which is required
+> >> to handle VMX and SVM.
+> >> 
+> >
+> > Would you have any plan to list or mark the noinstr symbols on
+> > some debugfs interface? I need a blacklist of those symbols so that
+> > user (and perf-probe) can check which function can not be probed.
+> >
+> > It is just calling kprobe_add_area_blacklist() like below.
+> >
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 2625c241ac00..4835b644bd2b 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -2212,6 +2212,10 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
+> >  	ret = kprobe_add_area_blacklist((unsigned long)__kprobes_text_start,
+> >  					(unsigned long)__kprobes_text_end);
+> >  
+> > +	/* Symbols in noinstr section are blacklisted */
+> > +	ret = kprobe_add_area_blacklist((unsigned long)__noinstr_text_start,
+> > +					(unsigned long)__noinstr_text_end);
+> > +
+> >  	return ret ? : arch_populate_kprobe_blacklist();
+> >  }
+> 
+> So that extra function is not required when adding that, right?
+
+That's right :)
+
+> 
+> >> +/* Functions in .noinstr.text must not be probed */
+> >> +static bool within_noinstr_text(unsigned long addr)
+> >> +{
+> >> +	/* FIXME: Handle module .noinstr.text */
+
+And this reminds me that the module .kprobes.text is not handled yet :(.
+
+Thank you,
+
+> >> +	return addr >= (unsigned long)__noinstr_text_start &&
+> >> +	       addr < (unsigned long)__noinstr_text_end;
+> >> +}
+> >> +
+> >>  bool within_kprobe_blacklist(unsigned long addr)
+> >>  {
+> >>  	char symname[KSYM_NAME_LEN], *p;
+> >>  
+> >> +	if (within_noinstr_text(addr))
+> >> +		return true;
+> >> +
+> >>  	if (__within_kprobe_blacklist(addr))
+> >>  		return true;
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
