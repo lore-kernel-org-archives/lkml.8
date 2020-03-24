@@ -2,199 +2,201 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC6BCC41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FB8C2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FE820788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gXgWuCyf"
+	by mail.kernel.org (Postfix) with ESMTP id 11DE220789
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 16:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585067197;
+	bh=v6vmrl85KvdqDMSCspqrKS6nIKJJeoQe5XN+cjpOJhs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=xw8V+3msiXqtnzjBMgLBbjmjqEFKUuV9kWplhcqS9qJ51vDhnzAQFJs3U5Et24RJW
+	 malLaucXSgQesAi5ukKey5E5G+YhqjYRQg0ceEn4P+9IEi55E1ViJBMF1uJC5SQwBW
+	 6oTZ1TrRmInLmrnakFjSx4vdtk2g9Wy8+nQo8mB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728319AbgCXQ0B (ORCPT
+        id S1728343AbgCXQ0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 12:26:01 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:51961 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727872AbgCXQ0A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:26:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585067158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rGlE89xXzndU6kY68rNgDRjOZUQD2MAALUVCdfVBatk=;
-        b=gXgWuCyfNYMPaJKugEapOo0oXAECFkpcvIL4wnyEqDz8vnCZa9Uqpnidk5JTqPKA1QACBQ
-        bCd6DBjej70RRt4fvpulImife5+FuRkBlJm+RUCggefbtEArdVoIa0nV2KNgE10tsBi8JE
-        SvApYvULc6Brw61sVpZxTD4M/hPW7UE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-364-8kk1b4IFMBSkHBDS9EvLCQ-1; Tue, 24 Mar 2020 12:25:56 -0400
-X-MC-Unique: 8kk1b4IFMBSkHBDS9EvLCQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 24 Mar 2020 12:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51422 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727466AbgCXQ0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 12:26:35 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A2BC913F8;
-        Tue, 24 Mar 2020 16:25:54 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-112-139.ams2.redhat.com [10.36.112.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D0E6A5D9C5;
-        Tue, 24 Mar 2020 16:25:48 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 17:25:46 +0100
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Andrei Vagin <avagin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200324162546.GG358599@dcbz.redhat.com>
-References: <20200317083043.226593-1-areber@redhat.com>
- <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
- <20200319081137.GC223854@dcbz.redhat.com>
- <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
- <20200319102955.i7slokibkkysz6g6@wittgenstein>
- <20200320183355.GA118769@gmail.com>
- <20200324160945.orcm75avj2ol3eop@wittgenstein>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB3D20774;
+        Tue, 24 Mar 2020 16:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585067194;
+        bh=v6vmrl85KvdqDMSCspqrKS6nIKJJeoQe5XN+cjpOJhs=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=lYiS3iZ6NudRBIRvd7aKEUydXiJr+RP4Hm2TGEej4tB12a3Esuzwf1Or5Vk0/+vdR
+         +N3W0sW/2Uae6P6iNA8qKBYo48Zg8AHGjWLMPQp3nq8QB9OD/ipaGfk9WQjVt/YKCk
+         CPft9ZtHXWH63nIRcns9NUrKziQQajFB/cSnwxKc=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 32052352275F; Tue, 24 Mar 2020 09:26:34 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 09:26:34 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        dhowells@redhat.com, edumazet@google.com, fweisbec@gmail.com,
+        oleg@redhat.com, Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Subject: Re: [PATCH RFC v2 tip/core/rcu 01/22] sched/core: Add function to
+ sample state of locked-down task
+Message-ID: <20200324162634.GG19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200319001024.GA28798@paulmck-ThinkPad-P72>
+ <20200319001100.24917-1-paulmck@kernel.org>
+ <20200319132238.75a034c3@gandalf.local.home>
+ <20200319173525.GI3199@paulmck-ThinkPad-P72>
+ <20200320024943.GA29649@paulmck-ThinkPad-P72>
+ <20200324000639.GA29340@google.com>
+ <20200324001549.GB42910@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324160945.orcm75avj2ol3eop@wittgenstein>
-X-Operating-System: Linux (5.5.8-200.fc31.x86_64)
-X-Load-Average: 3.46 2.63 2.29
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-X-Url:  <http://lisas.de/~adrian/>
-Organization: Red Hat
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <20200324001549.GB42910@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
-> On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
-> > On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
-> > > On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
-> > > > On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
-> > > > 
-> > > > > With Arnd's idea of only using nanoseconds, timens_offset would then
-> > > > > contain something like this:
-> > > > >
-> > > > > struct timens_offset {
-> > > > >         __aligned_s64 monotonic_offset_ns;
-> > > > >         __aligned_s64 boottime_offset_ns;
-> > > > > };
-> > > > >
-> > > > > I kind of prefer adding boottime and monotonic directly to struct clone_args
-> > > > >
-> > > > >         __aligned_u64 tls;
-> > > > >         __aligned_u64 set_tid;
-> > > > >         __aligned_u64 set_tid_size;
-> > > > > +       __aligned_s64 monotonic_offset_ns;
-> > > > > +       __aligned_s64 boottime_offset_ns;
-> > > > >  };
-> > > > 
-> > > > I would also prefer the second approach using two 64-bit integers
-> > > > instead of a pointer, as it keeps the interface simpler to implement
-> > > > and simpler to interpret by other tools.
+On Mon, Mar 23, 2020 at 08:15:49PM -0400, Joel Fernandes wrote:
+> On Mon, Mar 23, 2020 at 08:06:39PM -0400, Joel Fernandes wrote:
+> > On Thu, Mar 19, 2020 at 07:49:43PM -0700, Paul E. McKenney wrote:
+> > [...] 
+> > > 							Thanx, Paul
 > > > 
-> > > Why I don't like has two reasons. There's the scenario where we have
-> > > added new extensions after the new boottime member and then we introduce
-> > > another offset. Then you'd be looking at:
+> > > ------------------------------------------------------------------------
 > > > 
-> > > __aligned_u64 tls;
-> > > __aligned_u64 set_tid;
-> > > __aligned_u64 set_tid_size;
-> > > + __aligned_s64 monotonic_offset_ns;
-> > > + __aligned_s64 boottime_offset_ns;
-> > > __aligned_s64 something_1
-> > > __aligned_s64 anything_2
-> > > + __aligned_s64 sometime_offset_ns
+> > > commit e26a234c1205bf02b62b62cd7f15f8086fc0b13b
+> > > Author: Paul E. McKenney <paulmck@kernel.org>
+> > > Date:   Thu Mar 19 15:33:12 2020 -0700
 > > > 
-> > > which bothers me just by looking at it. That's in addition to adding two
-> > > new members to the struct when most people will never set CLONE_NEWTIME.
-> > > We'll also likely have more features in the future that will want to
-> > > pass down more info than we want to directly expose in struct
-> > > clone_args, e.g. for a long time I have been thinking about adding a
-> > > struct for CLONE_NEWUSER that allows you to specify the id mappings you
-> > > want the new user namespace to get. We surely don't want to force all
-> > > new info into the uppermost struct. So I'm not convinced we should here.
+> > >     rcu-tasks: Avoid IPIing userspace/idle tasks if kernel is so built
+> > >     
+> > >     Systems running CPU-bound real-time task do not want IPIs sent to CPUs
+> > >     executing nohz_full userspace tasks.  Battery-powered systems don't
+> > >     want IPIs sent to idle CPUs in low-power mode.  Unfortunately, RCU tasks
+> > >     trace can and will send such IPIs in some cases.
+> > >     
+> > >     Both of these situations occur only when the target CPU is in RCU
+> > >     dyntick-idle mode, in other words, when RCU is not watching the
+> > >     target CPU.  This suggests that CPUs in dyntick-idle mode should use
+> > >     memory barriers in outermost invocations of rcu_read_lock_trace()
+> > >     and rcu_read_unlock_trace(), which would allow the RCU tasks trace
+> > >     grace period to directly read out the target CPU's read-side state.
+> > >     One challenge is that RCU tasks trace is not targeting a specific
+> > >     CPU, but rather a task.  And that task could switch from one CPU to
+> > >     another at any time.
+> > >     
+> > >     This commit therefore uses try_invoke_on_locked_down_task()
+> > >     and checks for task_curr() in trc_inspect_reader_notrunning().
+> > >     When this condition holds, the target task is running and cannot move.
+> > >     If CONFIG_TASKS_TRACE_RCU_READ_MB=y, the new rcu_dynticks_zero_in_eqs()
+> > >     function can be used to check if the specified integer (in this case,
+> > >     t->trc_reader_nesting) is zero while the target CPU remains in that same
+> > >     dyntick-idle sojourn.  If so, the target task is in a quiescent state.
+> > >     If not, trc_read_check_handler() must indicate failure so that the
+> > >     grace-period kthread can take appropriate action or retry after an
+> > >     appropriate delay, as the case may be.
+> > >     
+> > >     With this change, given CONFIG_TASKS_TRACE_RCU_READ_MB=y, if a given
+> > >     CPU remains idle or a given task continues executing in nohz_full mode,
+> > >     the RCU tasks trace grace-period kthread will detect this without the
+> > >     need to send an IPI.
+> > >     
+> > >     Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> > >     Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > > 
+> > > diff --git a/kernel/rcu/rcu.h b/kernel/rcu/rcu.h
+> > > index e1089fd..296f926 100644
+> > > --- a/kernel/rcu/rcu.h
+> > > +++ b/kernel/rcu/rcu.h
+> > > @@ -501,6 +501,7 @@ void srcutorture_get_gp_data(enum rcutorture_type test_type,
+> > >  #endif
+> > >  
+> > >  #ifdef CONFIG_TINY_RCU
+> > > +static inline bool rcu_dynticks_zero_in_eqs(int cpu, int *vp) { return false; }
+> > >  static inline unsigned long rcu_get_gp_seq(void) { return 0; }
+> > >  static inline unsigned long rcu_exp_batches_completed(void) { return 0; }
+> > >  static inline unsigned long
+> > > @@ -510,6 +511,7 @@ static inline void show_rcu_gp_kthreads(void) { }
+> > >  static inline int rcu_get_gp_kthreads_prio(void) { return 0; }
+> > >  static inline void rcu_fwd_progress_check(unsigned long j) { }
+> > >  #else /* #ifdef CONFIG_TINY_RCU */
+> > > +bool rcu_dynticks_zero_in_eqs(int cpu, int *vp);
+> > >  unsigned long rcu_get_gp_seq(void);
+> > >  unsigned long rcu_exp_batches_completed(void);
+> > >  unsigned long srcu_batches_completed(struct srcu_struct *sp);
+> > > diff --git a/kernel/rcu/tasks.h b/kernel/rcu/tasks.h
+> > > index d31ed74..36f03d3 100644
+> > > --- a/kernel/rcu/tasks.h
+> > > +++ b/kernel/rcu/tasks.h
+> > > @@ -802,22 +802,38 @@ static void trc_read_check_handler(void *t_in)
+> > >  /* Callback function for scheduler to check non-running) task.  */
+> > >  static bool trc_inspect_reader_notrunning(struct task_struct *t, void *arg)
 > > 
-> > I think here we can start thinking about a netlink-like interface.
+> > This function name is a bit confusing. The task could be running when this
+> > function is called. Below you are detecting that the task is running, by
+> > calling task_curr().
+> > 
+> > Maybe just trc_inspect_reader() is better?
+> > 
+> > [..]
+> > 
+> > > diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> > > index 44edd0a..43991a4 100644
+> > > --- a/kernel/rcu/tree.h
+> > > +++ b/kernel/rcu/tree.h
+> > > @@ -455,6 +455,8 @@ static void rcu_bind_gp_kthread(void);
+> > >  static bool rcu_nohz_full_cpu(void);
+> > >  static void rcu_dynticks_task_enter(void);
+> > >  static void rcu_dynticks_task_exit(void);
+> > > +static void rcu_dynticks_task_trace_enter(void);
+> > > +static void rcu_dynticks_task_trace_exit(void);
+> > >  
+> > >  /* Forward declarations for tree_stall.h */
+> > >  static void record_gp_stall_check_time(void);
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 9355536..f4a344e 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -2553,3 +2553,21 @@ static void rcu_dynticks_task_exit(void)
+> > >  	WRITE_ONCE(current->rcu_tasks_idle_cpu, -1);
+> > >  #endif /* #if defined(CONFIG_TASKS_RCU) && defined(CONFIG_NO_HZ_FULL) */
+> > >  }
+> > > +
+> > > +/* Turn on heavyweight RCU tasks trace readers on idle/user entry. */
+> > > +static void rcu_dynticks_task_trace_enter(void)
+> > > +{
+> > > +#ifdef CONFIG_TASKS_RCU_TRACE
+> > > +	if (IS_ENABLED(CONFIG_TASKS_TRACE_RCU_READ_MB))
+> > > +		current->trc_reader_special.b.need_mb = true;
+> > 
+> > If this is every called from middle of a reader section (that is we
+> > transition from IPI-mode to using heavier reader-sections), then is a memory
+> > barrier needed here just to protect the reader section that already started?
 > 
-> I think netlink is just not a great model for an API and I would not
-> want us to go down that route.
-> 
-> I kept thinking about this for a bit and I think that we will end up
-> growing more namespace-related functionality. So one thing that came to
-> my mind is the following layout:
-> 
-> struct {
-> 	struct {
-> 		__s64 monotonic;
-> 		__s64 boot;
-> 	} time;
-> } namespaces;
-> 
-> struct _clone_args {
-> 	__aligned_u64 flags;
-> 	__aligned_u64 pidfd;
-> 	__aligned_u64 child_tid;
-> 	__aligned_u64 parent_tid;
-> 	__aligned_u64 exit_signal;
-> 	__aligned_u64 stack;
-> 	__aligned_u64 stack_size;
-> 	__aligned_u64 tls;
-> 	__aligned_u64 set_tid;
-> 	__aligned_u64 set_tid_size;
-> 	__aligned_u64 namespaces;
-> 	__aligned_u64 namespaces_size;
-> };
-> 
-> Then when we end up adding id mapping support for CLONE_NEWUSER we can
-> extend this with:
-> 
-> struct {
-> 	struct {
-> 		__aligned_u64 monotonic;
-> 		__aligned_u64 boot;
-> 	} time;
-> 
-> 	struct {
-> 		/* id mapping members */
-> 	} user;
-> } namespaces;
-> 
-> Thoughts? Other ideas?
+> Forgot to add:
+> Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Works for me.
+Applied, thank you!
 
-If we add the user namespace id mappings and then at some point a third
-element for the time namespace appears it would also start to be mixed.
-Just as you mentioned that a few mails ago.
-
-> > > __aligned_u64 set_tid_size;
-> > > + __aligned_s64 monotonic_offset_ns;
-> > > + __aligned_s64 boottime_offset_ns;
-> > > __aligned_s64 something_1
-> > > __aligned_s64 anything_2
-> > > + __aligned_s64 sometime_offset_ns
-
-If we can live with something like this in the namespaces struct you
-proposed, it works for me.
-
-		Adrian
-
+							Thanx, Paul
