@@ -2,113 +2,93 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A133EC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3087CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709672074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:46:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585072010;
-	bh=obBvXsfoQJaST8AIFXbfAeXEKbif9Cn9RfiyBsQ/NFs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DnBVVx+YbQXojhiUxQLUOE497vYFBGw65ErdnCvkKr8z4xHMgO80Kou+sWlO8H5PN
-	 bJpYv2G00pgcvJmQVR9PuUkP+xYYrwJb3Cgfwd3HBjXbF379JmbRSJ4AiYB2Mw13A+
-	 WmA5MjwtE5hulFcF72RMsQ91EqGmj/LXuRy2nO7E=
+	by mail.kernel.org (Postfix) with ESMTP id 0C6252074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:47:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgCXRqt (ORCPT
+        id S1727891AbgCXRrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:46:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34192 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727257AbgCXRqt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:46:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA4AF206F6;
-        Tue, 24 Mar 2020 17:46:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585072007;
-        bh=obBvXsfoQJaST8AIFXbfAeXEKbif9Cn9RfiyBsQ/NFs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RX+rGI3K47uTHTYh9mjgx6P98/NTxlH0v7deLQCa1q3A251+Igvzk4GZRlV0y0M4n
-         YTsDVH3JpsYT5//WkmN1iLiiNkSQYBnzRRK2cOv7sZXuvMObNl0RDADVPJ+3dJy37y
-         SReYguBGIQCAYFymlsdwE7PkC/TUbejJkXlcTv9g=
-Date:   Tue, 24 Mar 2020 18:46:42 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        nicholas.johnson-opensource@outlook.com.au
-Subject: Re: [PATCH 3/3] nvmem: core: use is_bin_visible for permissions
-Message-ID: <20200324174642.GA2524667@kroah.com>
-References: <20200324171600.15606-1-srinivas.kandagatla@linaro.org>
- <20200324171600.15606-4-srinivas.kandagatla@linaro.org>
+        Tue, 24 Mar 2020 13:47:04 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46625 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727630AbgCXRrD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:47:03 -0400
+Received: by mail-oi1-f195.google.com with SMTP id q204so11479021oia.13;
+        Tue, 24 Mar 2020 10:47:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nFb0+kjYmZJ+cufuAmTc9QqVTkqcdWAu4mmr9TgT2PI=;
+        b=dWeTlBW7R/Rq2LncUzlfdNWXtEWKi/rDgUyoDyRSkGfasfzNI2Xxa2UVJL8Su8RfgY
+         e5rKWw4oroQKdBP42BI/CVt8qVt0sNcUC+yqu9pCFagtm7AxWenne5GWZin2rrEI2RKG
+         /Ocg8xTmsRS4AtX1fX09srQHC6j9v0l9t4wX/OwcrpzOjz/7auUfH2CosKP2iK7RUQw2
+         VRC2Fyux34blws4IcIanuXdVX+pg+Vo/yfkXnj3Eq9XF59Bw1ny8PogA6K5vKzZxLVAw
+         X76SzAUSjJs1Tkz1XVfuYH/PEEp05U1pML811ik6oThr1s/5EKKvAqm7Hn+T04+OcSde
+         SD4w==
+X-Gm-Message-State: ANhLgQ1VusJwNCkxR3kSLDbB2v9nVF0/jJ3fQY0dKTppYvMQ2nPm+o4A
+        jRDt426d0WVdcoROHJZ1g0w/RTm/ZfXnnmzvDGI=
+X-Google-Smtp-Source: ADFU+vtUEnZc4Z6IuNrutvUwO6xPFEb3WzJnzZevlqI8IM7CDUn/S2FUiqebh+YHN+1v4ew7zhc/+OJM8G9W2DZKno4=
+X-Received: by 2002:aca:ad93:: with SMTP id w141mr4451051oie.54.1585072022658;
+ Tue, 24 Mar 2020 10:47:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324171600.15606-4-srinivas.kandagatla@linaro.org>
+References: <20200324161539.7538-1-masahiroy@kernel.org>
+In-Reply-To: <20200324161539.7538-1-masahiroy@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 24 Mar 2020 18:46:51 +0100
+Message-ID: <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
+ rebuilding firmware
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:16:00PM +0000, Srinivas Kandagatla wrote:
-> By using is_bin_visible callback to set permissions will remove a large list
-> of attribute groups. These group permissions can be dynamically derived in
-> the callback.
-> 
-> Suggested-by: Greg KH <gregkh@linuxfoundation.org>
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/nvmem/nvmem-sysfs.c | 74 +++++++++----------------------------
->  1 file changed, 18 insertions(+), 56 deletions(-)
-> 
-> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> index 8759c4470012..1ff1801048f6 100644
-> --- a/drivers/nvmem/nvmem-sysfs.c
-> +++ b/drivers/nvmem/nvmem-sysfs.c
-> @@ -103,6 +103,17 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
->  
->  	return count;
->  }
-> +static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
-> +					 struct bin_attribute *attr, int i)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> +
-> +	if (nvmem->root_only)
-> +		return nvmem->read_only ? 0400 : 0600;
-> +
-> +	return nvmem->read_only ? 0444 : 0644;
-> +}
+Hi Yamada-san,
 
-I don't know why this is so hard for me to read, but how about this
-instead:
+On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> As far as I understood from the Kconfig help text, this build rule is
+> used to rebuild the driver firmware, which runs on the QUICC, m68k-based
+> Motorola 68360.
+>
+> The firmware source, wanxlfw.S, is currently compiled by the combo of
+> $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
+> files. In fact, this is the only user of $(AS) in the kernel build.
+>
+> Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
+> PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+> Instead of combining $(CPP) and (AS) from different tool sets, using
+> single $(CC68K) seems simpler, and saner.
+>
+> After this commit, the firmware rebuild will require cc68k instead of
+> as68k. I do not know how many people care about this, though.
+>
+> I do not have cc68k/ld68k in hand, but I was able to build it by using
+> the kernel.org m68k toolchain. [1]
 
-static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
-					 struct bin_attribute *attr, int i)
-{
-	struct device *dev = container_of(kobj, struct device, kobj);
-	struct nvmem_device *nvmem = to_nvmem_device(dev);
-	umode_t mode = 0400;
+Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
+provided by Debian/Ubuntu, too?
 
-	if (!nvmem->root_only)
-		mode |= 0044;
+Gr{oetje,eeting}s,
 
-	if (!nvmem->read_only)
-		mode |= 0200;
+                        Geert
 
-	return mode;
-}
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Did I get the logic corect?
-
-thanks,
-
-greg k-h
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
