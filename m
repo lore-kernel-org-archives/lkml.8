@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90729C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9E1C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6953C208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABFB7208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055556;
-	bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
+	s=default; t=1585055558;
+	bh=GWy6tmGEEcVt6nH/teAPu97o9qVvgBZbqgNUofs01Tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=niYRzjSM+3s2aU5GiBEQbEO4fDIftXyyhjK80JK8WJ/RjsQsoJElnMnY3Kt1poybO
-	 Gw8T/w+9mo1jBrOFBdG0YvSOw6IcBXwHiytuA0/nn/QCm3pZ5MT7dDR9KJYyl6YQbm
-	 hlFucYx8vNKP07NrCNWH7UH3Nw1f0GZPqFIx6fM4=
+	b=eJifsX46VkEJdu5KTgYnn1Uwm0Zbno4+P6MD4CC/uiawlhM0TbvikE58+njOyWg8Z
+	 eviVzvvwBSnGlqtCVLgz7URq1gAZaJ/UbOyzFIU2k2Xh0J2xH2IgjnmsYhvOpLPcWZ
+	 LcBcX2GRvjJ1LQVxD4C8LWxgU0eRhpaUKgCwL0a8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgCXNMf (ORCPT
+        id S1727548AbgCXNMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:12:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58308 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:12:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727628AbgCXNMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:12:30 -0400
+        id S1727652AbgCXNMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B040520775;
-        Tue, 24 Mar 2020 13:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E694720775;
+        Tue, 24 Mar 2020 13:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055550;
-        bh=KDrRnao5wbbT0YX6rAPzXBEoGSRh0mPpQB+PYRr3Fio=;
+        s=default; t=1585055554;
+        bh=GWy6tmGEEcVt6nH/teAPu97o9qVvgBZbqgNUofs01Tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=thaFnimkeuUY0NlZi6bbCuS+9jtNFcJXxQN95H+ZYU7GNydCB80zQ1QvBLyh15EPU
-         CM8DQt6wVG96wU4iucDbKcaInQCC2DExeZsOnnxtOeM2y6ImK6d4hKFqipfFDsryQf
-         zB0y7OFFY2OePwvfT4YMNWAObN8SeIXTIVn9Jfsk=
+        b=GNpNRK+K6LhMLRtYegW3sFgamdSzrUoKlZMsJ+ZQ1797/UNo6OaW3k5ybALbsB+AG
+         LGhNaLD+2Hd24XcxMXT/OGzvF4RPTQ3wz1QRe23zCnyPuk/ICbAHt89CILvT3ILgDy
+         4n3XkGEq+uz/d8f7PC3BFs7l593bP8Q4AyJaMkrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, russianneuromancer@ya.ru,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH 4.19 21/65] usb: quirks: add NO_LPM quirk for RTL8153 based ethernet adapters
-Date:   Tue, 24 Mar 2020 14:10:42 +0100
-Message-Id: <20200324130759.722791906@linuxfoundation.org>
+        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 22/65] USB: serial: option: add ME910G1 ECM composition 0x110b
+Date:   Tue, 24 Mar 2020 14:10:43 +0100
+Message-Id: <20200324130759.850045670@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -59,52 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-commit 75d7676ead19b1fbb5e0ee934c9ccddcb666b68c upstream.
+commit 8e852a7953be2a6ee371449f7257fe15ace6a1fc upstream.
 
-We have been receiving bug reports that ethernet connections over
-RTL8153 based ethernet adapters stops working after a while with
-errors like these showing up in dmesg when the ethernet stops working:
+Add ME910G1 ECM composition 0x110b: tty, tty, tty, ecm
 
-[12696.189484] r8152 6-1:1.0 enp10s0u1: Tx timeout
-[12702.333456] r8152 6-1:1.0 enp10s0u1: Tx timeout
-[12707.965422] r8152 6-1:1.0 enp10s0u1: Tx timeout
-
-This has been reported on Dell WD15 docks, Belkin USB-C Express Dock 3.1
-docks and with generic USB to ethernet dongles using the RTL8153
-chipsets. Some users have tried adding usbcore.quirks=0bda:8153:k to
-the kernel commandline and all users who have tried this report that
-this fixes this.
-
-Also note that we already have an existing NO_LPM quirk for the RTL8153
-used in the Microsoft Surface Dock (where it uses a different usb-id).
-
-This commit adds a NO_LPM quirk for the generic Realtek RTL8153
-0bda:8153 usb-id, fixing the Tx timeout errors on these devices.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=198931
-Cc: stable@vger.kernel.org
-Cc: russianneuromancer@ya.ru
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://lore.kernel.org/r/20200313120708.100339-1-hdegoede@redhat.com
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Link: https://lore.kernel.org/r/20200304104310.2938-1-dnlplm@gmail.com
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -381,6 +381,9 @@ static const struct usb_device_id usb_qu
- 	/* Realtek hub in Dell WD19 (Type-C) */
- 	{ USB_DEVICE(0x0bda, 0x0487), .driver_info = USB_QUIRK_NO_LPM },
- 
-+	/* Generic RTL8153 based ethernet adapters */
-+	{ USB_DEVICE(0x0bda, 0x8153), .driver_info = USB_QUIRK_NO_LPM },
-+
- 	/* Action Semiconductor flash disk */
- 	{ USB_DEVICE(0x10d6, 0x2200), .driver_info =
- 			USB_QUIRK_STRING_FETCH_255 },
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1183,6 +1183,8 @@ static const struct usb_device_id option
+ 	  .driver_info = NCTRL(0) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110a, 0xff),	/* Telit ME910G1 */
+ 	  .driver_info = NCTRL(0) | RSVD(3) },
++	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x110b, 0xff),	/* Telit ME910G1 (ECM) */
++	  .driver_info = NCTRL(0) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910),
+ 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
+ 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE910_USBCFG4),
 
 
