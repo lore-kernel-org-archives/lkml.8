@@ -2,178 +2,169 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F37C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED0BC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:58:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4071920753
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:56:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ra6JwLi5"
+	by mail.kernel.org (Postfix) with ESMTP id 2D23F2076F
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 19:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585079914;
+	bh=dHOupjblYOUPni/ZcuLo31R0wGNwXOP6OpeHrlqDM2E=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=DWgAEeV6d30YRvWH30JIjrMqYyli2SnVYtKrxAo8YFkEKHSKf9Y6hMa92QeyepPLF
+	 g8c+O7cyylyewsuNEuAxpfhZ+NQp16p1pHF34B5xYdQY2EiUy/klM8tzBlTJeBDHSo
+	 efYqC5I0VUWAn7HvfPaeRNNPsH83kyoyqc4W3mF8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgCXT4r (ORCPT
+        id S1727270AbgCXT6c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 15:56:47 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34076 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgCXT4q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 15:56:46 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e9so11357825oii.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 12:56:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gZE4z9h2g7tfeXEc5lAdo2RFUTE0whOYKC3745O/DjI=;
-        b=Ra6JwLi5z3SIsWkH0HVprH09WBCMNGYmHAb/yvkAu+VBUl9J2DnqUF/0wy5p7uiMbf
-         5zeDHgEhuPqCMeuT4M+DDQuAeM5dfahvCpjNymmxCP0rjht3MJJo9QKr1fwlt7v1eSD3
-         sJo1OI0/rWgiDIox7MLNOOI7jzJNBsXwEACdZwsdwuq5Pq7Caah54+C+GZ/+ZuiHCzjS
-         CxNRMAaTZk5FcWjhJlIdstvN6xT3ZshO4df/Tnb0Zp/5SEVC4O9HQPASO241H2jI8X9W
-         8i9m1ruR4g5JImXavIdUr5I8IdQ1hFn+15j+hcmJJTK7+kBffJNsuI2YbKGbsM7dgwe9
-         imJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gZE4z9h2g7tfeXEc5lAdo2RFUTE0whOYKC3745O/DjI=;
-        b=oCh5OIWE3IXfHDg0fjaKKz9d5CYd5iFfXk0p4YnZmagOpijiSfOJVc+WVXv9MVcSov
-         vPEu0DScpJ4LwXJVT3s2up+A2wZmTo26LPBet8DSIPdSKwdvULrUwZDLQA8e9N/Xfx/B
-         IddxnkXFD4YRohMOsCXbpB1NIvWwn7j3rUD2htVgpYdvK6CPGrEdPq8/HDSxuicplaIg
-         lZ829Q2cnQVZw7WH573FubFVr09VmpjK6hpOuBwub5dD1g3fuRaR2SehS7DEt3Jc3yyb
-         NcGJhCY0MqCZEqX8wDADSsk6ylv4Dlf9oVt37SGPgp5K1uewBEXsfG8/DK/dcW513JK5
-         0OGQ==
-X-Gm-Message-State: ANhLgQ3kKLhSl9WWozVWdVVgxhJjzx1F+MCRKPhcS0zg3T4cu+FZqJGM
-        aoa9U5WITaTkCV/fEWg2yJ4EGr2RfDyLuBNqBkhGcw==
-X-Google-Smtp-Source: ADFU+vsi6ImxLbDKf+vohQz5qbijEfOUjGladGN87+7hcEfgPvif7TEITopPoXfRrrJa5PBEiiiRC5sGMo/AGxzxa24=
-X-Received: by 2002:aca:849:: with SMTP id 70mr4827661oii.30.1585079805548;
- Tue, 24 Mar 2020 12:56:45 -0700 (PDT)
+        Tue, 24 Mar 2020 15:58:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60694 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgCXT6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 15:58:32 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E93D820753;
+        Tue, 24 Mar 2020 19:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585079911;
+        bh=dHOupjblYOUPni/ZcuLo31R0wGNwXOP6OpeHrlqDM2E=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=nOLwAAkzxMzoVLazg8LAEeBKflMvqJCwIm0ab+0FfgnaJtwPFE3YBUPYLR2MOBdtY
+         5KaK3KEG9C/P6+Ja0PwCGP4M/yqqkiV700/u/Qhwi/9g2NaJUX2kc1Ic2t8xoPW31X
+         raRf9fiPaUw1xQe43B3o0k53kWK+DxeW8nO5cN84=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AEAD53522AC8; Tue, 24 Mar 2020 12:58:30 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 12:58:30 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [RESEND][patch V3 17/23] rcu/tree: Mark the idle relevant
+ functions noinstr
+Message-ID: <20200324195830.GN19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200320175956.033706968@linutronix.de>
+ <20200320180034.095809808@linutronix.de>
+ <20200324160909.GD19865@paulmck-ThinkPad-P72>
+ <87r1xhd02c.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
- <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
-In-Reply-To: <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 24 Mar 2020 12:56:09 -0700
-Message-ID: <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com>
-Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
- creating dead devices
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87r1xhd02c.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Mar 24, 2020 at 11:00 AM Ionela Voinescu
-> <ionela.voinescu@arm.com> wrote:
+On Tue, Mar 24, 2020 at 08:28:43PM +0100, Thomas Gleixner wrote:
+> "Paul E. McKenney" <paulmck@kernel.org> writes:
+> > On Fri, Mar 20, 2020 at 07:00:13PM +0100, Thomas Gleixner wrote:
+> 
+> >> -void rcu_user_enter(void)
+> >> +noinstr void rcu_user_enter(void)
+> >>  {
+> >>  	lockdep_assert_irqs_disabled();
 > >
-> > Hi guys,
-> >
-> > On Thursday 19 Mar 2020 at 08:47:46 (-0000), tip-bot2 for Saravana Kannan wrote:
-> > > The following commit has been merged into the timers/core branch of tip:
-> > >
-> > > Commit-ID:     4f41fe386a94639cd9a1831298d4f85db5662f1e
-> > > Gitweb:        https://git.kernel.org/tip/4f41fe386a94639cd9a1831298d4f85db5662f1e
-> > > Author:        Saravana Kannan <saravanak@google.com>
-> > > AuthorDate:    Fri, 10 Jan 2020 21:21:25 -08:00
-> > > Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > CommitterDate: Tue, 17 Mar 2020 13:10:07 +01:00
-> > >
-> > > clocksource/drivers/timer-probe: Avoid creating dead devices
-> > >
-> > > Timer initialization is done during early boot way before the driver
-> > > core starts processing devices and drivers. Timers initialized during
-> > > this early boot period don't really need or use a struct device.
-> > >
-> > > However, for timers represented as device tree nodes, the struct devices
-> > > are still created and sit around unused and wasting memory. This change
-> > > avoid this by marking the device tree nodes as "populated" if the
-> > > corresponding timer is successfully initialized.
-> > >
-> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > Link: https://lore.kernel.org/r/20200111052125.238212-1-saravanak@google.com
-> > > ---
-> > >  drivers/clocksource/timer-probe.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-> > > index ee9574d..a10f28d 100644
-> > > --- a/drivers/clocksource/timer-probe.c
-> > > +++ b/drivers/clocksource/timer-probe.c
-> > > @@ -27,8 +27,10 @@ void __init timer_probe(void)
-> > >
-> > >               init_func_ret = match->data;
-> > >
-> > > +             of_node_set_flag(np, OF_POPULATED);
-> > >               ret = init_func_ret(np);
-> > >               if (ret) {
-> > > +                     of_node_clear_flag(np, OF_POPULATED);
-> > >                       if (ret != -EPROBE_DEFER)
-> > >                               pr_err("Failed to initialize '%pOF': %d\n", np,
-> > >                                      ret);
-> > >
-> >
-> > This patch is creating problems on some vexpress platforms - ones that
-> > are using CLKSRC_VERSATILE (drivers/clocksource/timer-versatile.c).
-> > I noticed issues on TC2 and FVPs (fixed virtual platforms) starting with
-> > next-20200318 and still reproducible with next-20200323.
-> >
-> > It seems the issue this patch causes on TC2 and FVP is related to the
-> > vexpress-sysreg node being used early for sched_clock_init
-> > (timer_versatile.c: versatile_sched_clock_init). At this point (at
-> > time_init) the node will be marked as OF_POPULATED, which flags that a
-> > device is already created for it, but it is not, in this case.
-> >
-> > Later at sysreg_init (vexpress-sysreg.c) a device will fail to be created
-> > for it, as one already exists. This will result in a failure to create a
-> > bridge and a system controller for a bunch of devices (mostly clocks and
-> > regulators).
-> >
-> > I think on the FVP it does not cause many issues as clocks are fixed and
-> > regulator settings are probably nops so it boots fine and throws only
-> > some warnings. On TC2 on the other hand it fails to boot and it hangs at
-> > starting the kernel.
-> >
-> > In my opinion the idea of the patch is not bad, but I'm not an expert on
-> > this so the most I can offer for now is the basic understanding of the
-> > issue. I've Cc-ed a few folks to potentially suggest alternatives/fixes.
-> >
-> > For now, reverting this patch solves the problems on both platforms.
-> > I tested this on next-20200318 which introduced the problem.
->
-> I'll reply later today after I take a closer look. But will something
-> like what timer-ingenic.c did work for you? You can clear the flag
-> inside your early init.
+> > Just out of curiosity -- this means that lockdep_assert_irqs_disabled()
+> > must be noinstr, correct?
+> 
+> Yes. noinstr functions can call other noinstr functions safely. If there
+> is a instr_begin() then anything can be called up to the corresponding
+> instr_end(). After that the noinstr rule applies again.
 
-Firstly, sorry my patch broke your platform.
+Thank you!
 
-I took a closer look. So two different drivers [1] [2] are saying they
-know how to handle "arm,vexpress-sysreg" and are expecting to run at
-the same time. That seems a bit unusual to me. I wonder if this is a
-violation of the device-driver model because this expectation would
-never be allowed if these device drivers were actual drivers
-registered with driver-core. But that's a discussion for another time.
+> >>  	if (rdp->dynticks_nmi_nesting != 1) {
+> >> +		instr_begin();
+> >>  		trace_rcu_dyntick(TPS("--="), rdp->dynticks_nmi_nesting, rdp->dynticks_nmi_nesting - 2,
+> >>  				  atomic_read(&rdp->dynticks));
+> >>  		WRITE_ONCE(rdp->dynticks_nmi_nesting, /* No store tearing. */
+> >>  			   rdp->dynticks_nmi_nesting - 2);
+> >> +		instr_end();
+> >>  		return;
+> >>  	}
+> >>  
+> >> +		instr_begin();
+> >
+> > Indentation?
+> 
+> Is obviously wrong. You found it so please keep the extra TAB for times
+> when you need a spare one :)
 
-To fix this issue you are facing, this patch should work:
-https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
+One of my parents like this.  https://en.wikipedia.org/wiki/Tab_(drink)
 
-Can you please test it and give a Tested-by?
+							Thanx, Paul
 
-Thanks,
-Saravana
-
-[1] drivers/mfd/vexpress-sysreg.c:  { .compatible = "arm,vexpress-sysreg", },
-[2] drivers/clocksource/timer-versatile.c:TIMER_OF_DECLARE(vexpress,
-"arm,vexpress-sysreg"
+> >>   * If you add or remove a call to rcu_user_exit(), be sure to test with
+> >>   * CONFIG_RCU_EQS_DEBUG=y.
+> >>   */
+> >> -void rcu_user_exit(void)
+> >> +void noinstr rcu_user_exit(void)
+> >>  {
+> >>  	rcu_eqs_exit(1);
+> >>  }
+> >> @@ -830,27 +833,33 @@ static __always_inline void rcu_nmi_ente
+> >>  			rcu_cleanup_after_idle();
+> >>  
+> >>  		incby = 1;
+> >> -	} else if (irq && tick_nohz_full_cpu(rdp->cpu) &&
+> >> -		   rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> >> -		   READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
+> >> +	} else if (irq) {
+> >>  		// We get here only if we had already exited the extended
+> >>  		// quiescent state and this was an interrupt (not an NMI).
+> >>  		// Therefore, (1) RCU is already watching and (2) The fact
+> >>  		// that we are in an interrupt handler and that the rcu_node
+> >>  		// lock is an irq-disabled lock prevents self-deadlock.
+> >>  		// So we can safely recheck under the lock.
+> >
+> > The above comment is a bit misleading in this location.
+> 
+> True
+> 
+> >> -		raw_spin_lock_rcu_node(rdp->mynode);
+> >> -		if (rdp->rcu_urgent_qs && !rdp->rcu_forced_tick) {
+> >> -			// A nohz_full CPU is in the kernel and RCU
+> >> -			// needs a quiescent state.  Turn on the tick!
+> >> -			rdp->rcu_forced_tick = true;
+> >> -			tick_dep_set_cpu(rdp->cpu, TICK_DEP_BIT_RCU);
+> >> +		instr_begin();
+> >> +		if (tick_nohz_full_cpu(rdp->cpu) &&
+> >> +		    rdp->dynticks_nmi_nesting == DYNTICK_IRQ_NONIDLE &&
+> >> +		    READ_ONCE(rdp->rcu_urgent_qs) && !rdp->rcu_forced_tick) {
+> >
+> > So how about like this?
+> >
+> > 			// We get here only if we had already exited
+> > 			// the extended quiescent state and this was an
+> > 			// interrupt (not an NMI).  Therefore, (1) RCU is
+> > 			// already watching and (2) The fact that we are in
+> > 			// an interrupt handler and that the rcu_node lock
+> > 			// is an irq-disabled lock prevents self-deadlock.
+> > 			// So we can safely recheck under the lock.
+> 
+> Yup
+> 
+> Thanks,
+> 
+>         tglx
