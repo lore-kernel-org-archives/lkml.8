@@ -2,159 +2,212 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D27C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58614C41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC1AF2051A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585070185;
-	bh=phdX10EbQs8XHpNHIWm7HtuHu+ZagE7py/+TI7E//N0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=WYAi1XQFf8+0QeWHQQLhy0tnI2Ht/FF2hYMkJsEF0aPZwk+8TCe3uqLg7d8n1WI47
-	 PNAnwsSTqK2ZZxXoTfJC/hIpzyhyZJ3qSJqsAYIeqNSRa2WQ3ETYFBBw5wbQuychJO
-	 fbF126Uswfleav+50U1rbdotn1RzweiJqww74j0c=
+	by mail.kernel.org (Postfix) with ESMTP id 2541B2051A
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 17:16:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uy7n/9Qu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727790AbgCXRQY (ORCPT
+        id S1727772AbgCXRQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 13:16:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:38500 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727732AbgCXRQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 13:16:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B19B1FB;
-        Tue, 24 Mar 2020 10:16:22 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A1B53F71F;
-        Tue, 24 Mar 2020 10:16:21 -0700 (PDT)
-Date:   Tue, 24 Mar 2020 17:16:20 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     alsa-devel@alsa-project.org, devicetree@vger.kernel.org,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, od@zcrc.me,
-        Rob Herring <robh+dt@kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Subject: Applied "ASoC: jz4740-i2s: Add support for the JZ4760" to the asoc tree
-In-Reply-To:  <20200306222931.39664-5-paul@crapouillou.net>
-Message-Id:  <applied-20200306222931.39664-5-paul@crapouillou.net>
-X-Patchwork-Hint: ignore
+        Tue, 24 Mar 2020 13:16:23 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51431 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727618AbgCXRQU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 13:16:20 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c187so4097709wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 10:16:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nNCOW9v2LJpxTzkezjzdYan/Qow8ukjHWizHnsEFt8w=;
+        b=Uy7n/9QuBGclxlJkPSkG2+4aWIAGdwaVC3V3c65zKIo4biiCJlaOE0d1eyjYEruJGO
+         Cyuttehm5d+TywNg08a+jRVw/B9unVLI/ukfIpATGYVLyPZ/XuhNlzdCkinNpYN9vpLT
+         8YXlQNtg7BSDG2deZWFXHe8gDhGXo9l3JLGQ0cGu6bVAPBbm9b2eKaTP9bGNV/RaFElq
+         fXSl29AqF5QZ1iMLTX301K5eJ+WNIJBjjKvLVY3mviVJJzvl8dy6kOdUcsMQnYNojcLo
+         a6ZSMrt/Kjzi3c9+K+l3IiSJlZUUl06CUAnu4sI4U0iBJZAXxGvmE/PfsOHZvyw8Hmtb
+         KfcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nNCOW9v2LJpxTzkezjzdYan/Qow8ukjHWizHnsEFt8w=;
+        b=DiZXF75HmuWsp5+Eieqrb4I9+VDtvgBM5uztbPHBFldQEmqXLxWsDgu8UT/x42cSTe
+         SVs+o2OYBV3lSlWfobPZO+3Yv5mqmH1t5hagMrGIwS4fOBs7ao/tjWHPDtXjqUjAGeGa
+         gq8usdKuxwjgKk9K5bmtklkoWD0zaZHKPN4hBnbhvhcc6A1j4A7ec6Hz6kHV0mBUBatM
+         vb3/++IPsre3l13AjPxEVGD2nbkAoBktuPybmT+JrClhQAFwC6h89N4juUM+9TRxhRTv
+         kjT5ckXEleNUZgdqae/asXl1MmGNu7nM5KXBmlVLVSqy/OA3VBYjdpOU+JHbEI9I8TCM
+         W/tg==
+X-Gm-Message-State: ANhLgQ3U7OuYRMN3YDfy9aj+ndyuBsUiSe5H98fNmjx9Nn2/JBaNVzx/
+        Y61XeugIaW/YNxDUnV3V006z7Q==
+X-Google-Smtp-Source: ADFU+vslTSoPM/JeHsDXyk2sojlGb5BEd7ouURHT+HPzu6zW9u4eprropMKzkbR/SY2JjWbWx5tI5g==
+X-Received: by 2002:a05:600c:24d2:: with SMTP id 18mr6554773wmu.38.1585070177481;
+        Tue, 24 Mar 2020 10:16:17 -0700 (PDT)
+Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.gmail.com with ESMTPSA id m11sm5269514wmf.9.2020.03.24.10.16.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 10:16:16 -0700 (PDT)
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org,
+        nicholas.johnson-opensource@outlook.com.au,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH 3/3] nvmem: core: use is_bin_visible for permissions
+Date:   Tue, 24 Mar 2020 17:16:00 +0000
+Message-Id: <20200324171600.15606-4-srinivas.kandagatla@linaro.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200324171600.15606-1-srinivas.kandagatla@linaro.org>
+References: <20200324171600.15606-1-srinivas.kandagatla@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+By using is_bin_visible callback to set permissions will remove a large list
+of attribute groups. These group permissions can be dynamically derived in
+the callback.
 
-   ASoC: jz4740-i2s: Add support for the JZ4760
-
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From bde8ca7c87d4388e24195f6c84cd9ac775344d2b Mon Sep 17 00:00:00 2001
-From: Paul Cercueil <paul@crapouillou.net>
-Date: Fri, 6 Mar 2020 23:29:30 +0100
-Subject: [PATCH] ASoC: jz4740-i2s: Add support for the JZ4760
-
-The change of offset for the {rx,tx}_threshold fields in the conf
-register predates the JZ4780, and was first introduced in the JZ4760.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://lore.kernel.org/r/20200306222931.39664-5-paul@crapouillou.net
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Suggested-by: Greg KH <gregkh@linuxfoundation.org>
+Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- sound/soc/jz4740/jz4740-i2s.c | 21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ drivers/nvmem/nvmem-sysfs.c | 74 +++++++++----------------------------
+ 1 file changed, 18 insertions(+), 56 deletions(-)
 
-diff --git a/sound/soc/jz4740/jz4740-i2s.c b/sound/soc/jz4740/jz4740-i2s.c
-index 3f9b2e1b4747..253f8d8ba273 100644
---- a/sound/soc/jz4740/jz4740-i2s.c
-+++ b/sound/soc/jz4740/jz4740-i2s.c
-@@ -49,12 +49,8 @@
+diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+index 8759c4470012..1ff1801048f6 100644
+--- a/drivers/nvmem/nvmem-sysfs.c
++++ b/drivers/nvmem/nvmem-sysfs.c
+@@ -103,6 +103,17 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
  
- #define JZ_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 12
- #define JZ_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 8
--#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 24
--#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 16
--#define JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_MASK \
--			(0xf << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET)
--#define JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_MASK \
--			(0x1f <<  JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET)
-+#define JZ4760_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET 24
-+#define JZ4760_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET 16
- 
- #define JZ_AIC_CTRL_OUTPUT_SAMPLE_SIZE_MASK (0x7 << 19)
- #define JZ_AIC_CTRL_INPUT_SAMPLE_SIZE_MASK (0x7 << 16)
-@@ -90,6 +86,7 @@
- 
- enum jz47xx_i2s_version {
- 	JZ_I2S_JZ4740,
-+	JZ_I2S_JZ4760,
- 	JZ_I2S_JZ4780,
- };
- 
-@@ -403,9 +400,9 @@ static int jz4740_i2s_dai_probe(struct snd_soc_dai *dai)
- 	snd_soc_dai_init_dma_data(dai, &i2s->playback_dma_data,
- 		&i2s->capture_dma_data);
- 
--	if (i2s->soc_info->version >= JZ_I2S_JZ4780) {
--		conf = (7 << JZ4780_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
--			(8 << JZ4780_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
-+	if (i2s->soc_info->version >= JZ_I2S_JZ4760) {
-+		conf = (7 << JZ4760_AIC_CONF_FIFO_RX_THRESHOLD_OFFSET) |
-+			(8 << JZ4760_AIC_CONF_FIFO_TX_THRESHOLD_OFFSET) |
- 			JZ_AIC_CONF_OVERFLOW_PLAY_LAST |
- 			JZ_AIC_CONF_I2S |
- 			JZ_AIC_CONF_INTERNAL_CODEC;
-@@ -467,6 +464,11 @@ static const struct i2s_soc_info jz4740_i2s_soc_info = {
- 	.dai = &jz4740_i2s_dai,
- };
- 
-+static const struct i2s_soc_info jz4760_i2s_soc_info = {
-+	.version = JZ_I2S_JZ4760,
-+	.dai = &jz4740_i2s_dai,
-+};
+ 	return count;
+ }
++static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
++					 struct bin_attribute *attr, int i)
++{
++	struct device *dev = container_of(kobj, struct device, kobj);
++	struct nvmem_device *nvmem = to_nvmem_device(dev);
 +
- static struct snd_soc_dai_driver jz4780_i2s_dai = {
- 	.probe = jz4740_i2s_dai_probe,
- 	.remove = jz4740_i2s_dai_remove,
-@@ -499,6 +501,7 @@ static const struct snd_soc_component_driver jz4740_i2s_component = {
- #ifdef CONFIG_OF
- static const struct of_device_id jz4740_of_matches[] = {
- 	{ .compatible = "ingenic,jz4740-i2s", .data = &jz4740_i2s_soc_info },
-+	{ .compatible = "ingenic,jz4760-i2s", .data = &jz4760_i2s_soc_info },
- 	{ .compatible = "ingenic,jz4780-i2s", .data = &jz4780_i2s_soc_info },
- 	{ /* sentinel */ }
++	if (nvmem->root_only)
++		return nvmem->read_only ? 0400 : 0600;
++
++	return nvmem->read_only ? 0444 : 0644;
++}
+ 
+ /* default read/write permissions */
+ static struct bin_attribute bin_attr_rw_nvmem = {
+@@ -114,18 +125,19 @@ static struct bin_attribute bin_attr_rw_nvmem = {
+ 	.write	= bin_attr_nvmem_write,
  };
+ 
+-static struct bin_attribute *nvmem_bin_rw_attributes[] = {
++static struct bin_attribute *nvmem_bin_attributes[] = {
+ 	&bin_attr_rw_nvmem,
+ 	NULL,
+ };
+ 
+-static const struct attribute_group nvmem_bin_rw_group = {
+-	.bin_attrs	= nvmem_bin_rw_attributes,
++static const struct attribute_group nvmem_bin_group = {
++	.bin_attrs	= nvmem_bin_attributes,
+ 	.attrs		= nvmem_attrs,
++	.is_bin_visible = nvmem_bin_attr_is_visible,
+ };
+ 
+-static const struct attribute_group *nvmem_rw_dev_groups[] = {
+-	&nvmem_bin_rw_group,
++static const struct attribute_group *nvmem_dev_groups[] = {
++	&nvmem_bin_group,
+ 	NULL,
+ };
+ 
+@@ -138,21 +150,6 @@ static struct bin_attribute bin_attr_ro_nvmem = {
+ 	.read	= bin_attr_nvmem_read,
+ };
+ 
+-static struct bin_attribute *nvmem_bin_ro_attributes[] = {
+-	&bin_attr_ro_nvmem,
+-	NULL,
+-};
+-
+-static const struct attribute_group nvmem_bin_ro_group = {
+-	.bin_attrs	= nvmem_bin_ro_attributes,
+-	.attrs		= nvmem_attrs,
+-};
+-
+-static const struct attribute_group *nvmem_ro_dev_groups[] = {
+-	&nvmem_bin_ro_group,
+-	NULL,
+-};
+-
+ /* default read/write permissions, root only */
+ static struct bin_attribute bin_attr_rw_root_nvmem = {
+ 	.attr	= {
+@@ -163,21 +160,6 @@ static struct bin_attribute bin_attr_rw_root_nvmem = {
+ 	.write	= bin_attr_nvmem_write,
+ };
+ 
+-static struct bin_attribute *nvmem_bin_rw_root_attributes[] = {
+-	&bin_attr_rw_root_nvmem,
+-	NULL,
+-};
+-
+-static const struct attribute_group nvmem_bin_rw_root_group = {
+-	.bin_attrs	= nvmem_bin_rw_root_attributes,
+-	.attrs		= nvmem_attrs,
+-};
+-
+-static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
+-	&nvmem_bin_rw_root_group,
+-	NULL,
+-};
+-
+ /* read only permission, root only */
+ static struct bin_attribute bin_attr_ro_root_nvmem = {
+ 	.attr	= {
+@@ -187,31 +169,11 @@ static struct bin_attribute bin_attr_ro_root_nvmem = {
+ 	.read	= bin_attr_nvmem_read,
+ };
+ 
+-static struct bin_attribute *nvmem_bin_ro_root_attributes[] = {
+-	&bin_attr_ro_root_nvmem,
+-	NULL,
+-};
+-
+-static const struct attribute_group nvmem_bin_ro_root_group = {
+-	.bin_attrs	= nvmem_bin_ro_root_attributes,
+-	.attrs		= nvmem_attrs,
+-};
+-
+-static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
+-	&nvmem_bin_ro_root_group,
+-	NULL,
+-};
+-
+ const struct attribute_group **nvmem_sysfs_get_groups(
+ 					struct nvmem_device *nvmem,
+ 					const struct nvmem_config *config)
+ {
+-	if (config->root_only)
+-		return nvmem->read_only ?
+-			nvmem_ro_root_dev_groups :
+-			nvmem_rw_root_dev_groups;
+-
+-	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
++	return nvmem_dev_groups;
+ }
+ 
+ /*
 -- 
-2.20.1
+2.21.0
 
