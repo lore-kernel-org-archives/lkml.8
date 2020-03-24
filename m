@@ -2,29 +2,29 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A83C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0FEC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3CC20788
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3115B2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 20:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728337AbgCXUqW (ORCPT
+        id S1728269AbgCXUqR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 16:46:22 -0400
-Received: from monster.unsafe.ru ([5.9.28.80]:38716 "EHLO mail.unsafe.ru"
+        Tue, 24 Mar 2020 16:46:17 -0400
+Received: from monster.unsafe.ru ([5.9.28.80]:38408 "EHLO mail.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgCXUqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 16:46:19 -0400
+        id S1725941AbgCXUqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 16:46:14 -0400
 Received: from comp-core-i7-2640m-0182e6.redhat.com (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id EB028C61B2D;
-        Tue, 24 Mar 2020 20:46:14 +0000 (UTC)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id B5E57C61AE0;
+        Tue, 24 Mar 2020 20:46:08 +0000 (UTC)
 From:   Alexey Gladkov <gladkov.alexey@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
@@ -49,12 +49,10 @@ Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
         Kees Cook <keescook@chromium.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>
-Subject: [PATCH RESEND v9 8/8] proc: use human-readable values for hidehid
-Date:   Tue, 24 Mar 2020 21:44:49 +0100
-Message-Id: <20200324204449.7263-9-gladkov.alexey@gmail.com>
+Subject: [PATCH RESEND v9 0/8] proc: modernize proc to support multiple private instances
+Date:   Tue, 24 Mar 2020 21:44:41 +0100
+Message-Id: <20200324204449.7263-1-gladkov.alexey@gmail.com>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324204449.7263-1-gladkov.alexey@gmail.com>
-References: <20200324204449.7263-1-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,178 +60,260 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The hidepid parameter values are becoming more and more and it becomes
-difficult to remember what each new magic number means.
+Greetings!
 
-Suggested-by: Andy Lutomirski <luto@kernel.org>
-Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
----
- Documentation/filesystems/proc.txt | 52 +++++++++++++++---------------
- fs/proc/inode.c                    | 13 +++++++-
- fs/proc/root.c                     | 36 +++++++++++++++++++--
- 3 files changed, 71 insertions(+), 30 deletions(-)
+Preface:
+--------
+This is patchset v9 to modernize procfs and make it able to support multiple
+private instances per the same pid namespace.
 
-diff --git a/Documentation/filesystems/proc.txt b/Documentation/filesystems/proc.txt
-index 4741fd092f36..27830a93464b 100644
---- a/Documentation/filesystems/proc.txt
-+++ b/Documentation/filesystems/proc.txt
-@@ -2025,28 +2025,28 @@ The following mount options are supported:
- 	gid=		Set the group authorized to learn processes information.
- 	subset=		Show only the specified subset of procfs.
- 
--hidepid=0 means classic mode - everybody may access all /proc/<pid>/ directories
--(default).
--
--hidepid=1 means users may not access any /proc/<pid>/ directories but their
--own.  Sensitive files like cmdline, sched*, status are now protected against
--other users.  This makes it impossible to learn whether any user runs
--specific program (given the program doesn't reveal itself by its behaviour).
--As an additional bonus, as /proc/<pid>/cmdline is unaccessible for other users,
--poorly written programs passing sensitive information via program arguments are
--now protected against local eavesdroppers.
--
--hidepid=2 means hidepid=1 plus all /proc/<pid>/ will be fully invisible to other
--users.  It doesn't mean that it hides a fact whether a process with a specific
--pid value exists (it can be learned by other means, e.g. by "kill -0 $PID"),
--but it hides process' uid and gid, which may be learned by stat()'ing
--/proc/<pid>/ otherwise.  It greatly complicates an intruder's task of gathering
--information about running processes, whether some daemon runs with elevated
--privileges, whether other user runs some sensitive program, whether other users
--run any program at all, etc.
--
--hidepid=4 means that procfs should only contain /proc/<pid>/ directories
--that the caller can ptrace.
-+hidepid=off or hidepid=0 means classic mode - everybody may access all
-+/proc/<pid>/ directories (default).
-+
-+hidepid=noaccess or hidepid=1 means users may not access any /proc/<pid>/
-+directories but their own.  Sensitive files like cmdline, sched*, status are now
-+protected against other users.  This makes it impossible to learn whether any
-+user runs specific program (given the program doesn't reveal itself by its
-+behaviour).  As an additional bonus, as /proc/<pid>/cmdline is unaccessible for
-+other users, poorly written programs passing sensitive information via program
-+arguments are now protected against local eavesdroppers.
-+
-+hidepid=invisible or hidepid=2 means hidepid=noaccess plus all /proc/<pid>/ will
-+be fully invisible to other users.  It doesn't mean that it hides a fact whether
-+a process with a specific pid value exists (it can be learned by other means,
-+e.g. by "kill -0 $PID"), but it hides process' uid and gid, which may be learned
-+by stat()'ing /proc/<pid>/ otherwise.  It greatly complicates an intruder's task
-+of gathering information about running processes, whether some daemon runs with
-+elevated privileges, whether other user runs some sensitive program, whether
-+other users run any program at all, etc.
-+
-+hidepid=ptraceable or hidepid=4 means that procfs should only contain
-+/proc/<pid>/ directories that the caller can ptrace.
- 
- gid= defines a group authorized to learn processes information otherwise
- prohibited by hidepid=.  If you use some daemon like identd which needs to learn
-@@ -2093,8 +2093,8 @@ creates a new procfs instance. Mount options affect own procfs instance.
- It means that it became possible to have several procfs instances
- displaying tasks with different filtering options in one pid namespace.
- 
--# mount -o hidepid=2 -t proc proc /proc
--# mount -o hidepid=1 -t proc proc /tmp/proc
-+# mount -o hidepid=invisible -t proc proc /proc
-+# mount -o hidepid=noaccess -t proc proc /tmp/proc
- # grep ^proc /proc/mounts
--proc /proc proc rw,relatime,hidepid=2 0 0
--proc /tmp/proc proc rw,relatime,hidepid=1 0 0
-+proc /proc proc rw,relatime,hidepid=invisible 0 0
-+proc /tmp/proc proc rw,relatime,hidepid=noaccess 0 0
-diff --git a/fs/proc/inode.c b/fs/proc/inode.c
-index c1dbcf2b96db..a462fd111719 100644
---- a/fs/proc/inode.c
-+++ b/fs/proc/inode.c
-@@ -165,6 +165,17 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
- 		deactivate_super(old_sb);
- }
- 
-+static inline const char *hidepid2str(int v)
-+{
-+	switch (v) {
-+		case HIDEPID_OFF: return "off";
-+		case HIDEPID_NO_ACCESS: return "noaccess";
-+		case HIDEPID_INVISIBLE: return "invisible";
-+		case HIDEPID_NOT_PTRACEABLE: return "ptraceable";
-+	}
-+	BUG();
-+}
-+
- static int proc_show_options(struct seq_file *seq, struct dentry *root)
- {
- 	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
-@@ -172,7 +183,7 @@ static int proc_show_options(struct seq_file *seq, struct dentry *root)
- 	if (!gid_eq(fs_info->pid_gid, GLOBAL_ROOT_GID))
- 		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, fs_info->pid_gid));
- 	if (fs_info->hide_pid != HIDEPID_OFF)
--		seq_printf(seq, ",hidepid=%u", fs_info->hide_pid);
-+		seq_printf(seq, ",hidepid=%s", hidepid2str(fs_info->hide_pid));
- 	if (fs_info->pidonly != PROC_PIDONLY_OFF)
- 		seq_printf(seq, ",subset=pidfs");
- 
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index 07c309529628..42f3ee05c584 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -45,7 +45,7 @@ enum proc_param {
- 
- static const struct fs_parameter_spec proc_fs_parameters[] = {
- 	fsparam_u32("gid",	Opt_gid),
--	fsparam_u32("hidepid",	Opt_hidepid),
-+	fsparam_string("hidepid",	Opt_hidepid),
- 	fsparam_string("subset",	Opt_subset),
- 	{}
- };
-@@ -58,6 +58,35 @@ static inline int valid_hidepid(unsigned int value)
- 		value == HIDEPID_NOT_PTRACEABLE);
- }
- 
-+static int proc_parse_hidepid_param(struct fs_context *fc, struct fs_parameter *param)
-+{
-+	struct proc_fs_context *ctx = fc->fs_private;
-+	struct fs_parameter_spec hidepid_u32_spec = fsparam_u32("hidepid", Opt_hidepid);
-+	struct fs_parse_result result;
-+	int base = (unsigned long)hidepid_u32_spec.data;
-+
-+	if (param->type != fs_value_is_string)
-+		return invalf(fc, "proc: unexpected type of hidepid value\n");
-+
-+	if (!kstrtouint(param->string, base, &result.uint_32)) {
-+		ctx->hidepid = result.uint_32;
-+		return 0;
-+	}
-+
-+	if (!strcmp(param->string, "off"))
-+		ctx->hidepid = HIDEPID_OFF;
-+	else if (!strcmp(param->string, "noaccess"))
-+		ctx->hidepid = HIDEPID_NO_ACCESS;
-+	else if (!strcmp(param->string, "invisible"))
-+		ctx->hidepid = HIDEPID_INVISIBLE;
-+	else if (!strcmp(param->string, "ptraceable"))
-+		ctx->hidepid = HIDEPID_NOT_PTRACEABLE;
-+	else
-+		return invalf(fc, "proc: unknown value of hidepid - %s\n", param->string);
-+
-+	return 0;
-+}
-+
- static int proc_parse_subset_param(struct fs_context *fc, char *value)
- {
- 	struct proc_fs_context *ctx = fc->fs_private;
-@@ -97,9 +126,10 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 		break;
- 
- 	case Opt_hidepid:
--		if (!valid_hidepid(result.uint_32))
-+		if (proc_parse_hidepid_param(fc, param))
-+			return -EINVAL;
-+		if (!valid_hidepid(ctx->hidepid))
- 			return invalf(fc, "proc: unknown value of hidepid.\n");
--		ctx->hidepid = result.uint_32;
- 		break;
- 
- 	case Opt_subset:
+This patchset can be applied on top of:
+
+git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace.git 58a45d79571a
+
+
+Procfs modernization:
+---------------------
+Historically procfs was always tied to pid namespaces, during pid
+namespace creation we internally create a procfs mount for it. However,
+this has the effect that all new procfs mounts are just a mirror of the
+internal one, any change, any mount option update, any new future
+introduction will propagate to all other procfs mounts that are in the
+same pid namespace.
+
+This may have solved several use cases in that time. However today we
+face new requirements, and making procfs able to support new private
+instances inside same pid namespace seems a major point. If we want to
+to introduce new features and security mechanisms we have to make sure
+first that we do not break existing usecases. Supporting private procfs
+instances will allow to support new features and behaviour without
+propagating it to all other procfs mounts.
+
+Today procfs is more of a burden especially to some Embedded, IoT,
+sandbox, container use cases. In user space we are over-mounting null
+or inaccessible files on top to hide files and information. If we want
+to hide pids we have to create PID namespaces otherwise mount options
+propagate to all other proc mounts, changing a mount option value in one
+mount will propagate to all other proc mounts. If we want to introduce
+new features, then they will propagate to all other mounts too, resulting
+either maybe new useful functionality or maybe breaking stuff. We have
+also to note that userspace should not workaround procfs, the kernel
+should just provide a sane simple interface.
+
+In this regard several developers and maintainers pointed out that
+there are problems with procfs and it has to be modernized:
+
+"Here's another one: split up and modernize /proc." by Andy Lutomirski [1]
+
+Discussion about kernel pointer leaks:
+
+"And yes, as Kees and Daniel mentioned, it's definitely not just dmesg.
+In fact, the primary things tend to be /proc and /sys, not dmesg
+itself." By Linus Torvalds [2]
+
+Lot of other areas in the kernel and filesystems have been updated to be
+able to support private instances, devpts is one major example [3].
+
+Which will be used for:
+
+1) Embedded systems and IoT: usually we have one supervisor for
+apps, we have some lightweight sandbox support, however if we create
+pid namespaces we have to manage all the processes inside too,
+where our goal is to be able to run a bunch of apps each one inside
+its own mount namespace, maybe use network namespaces for vlans
+setups, but right now we only want mount namespaces, without all the
+other complexity. We want procfs to behave more like a real file system,
+and block access to inodes that belong to other users. The 'hidepid=' will
+not work since it is a shared mount option.
+
+2) Containers, sandboxes and Private instances of file systems - devpts case
+Historically, lot of file systems inside Linux kernel view when instantiated
+were just a mirror of an already created and mounted filesystem. This was the
+case of devpts filesystem, it seems at that time the requirements were to
+optimize things and reuse the same memory, etc. This design used to work but not
+anymore with today's containers, IoT, hostile environments and all the privacy
+challenges that Linux faces.
+
+In that regards, devpts was updated so that each new mounts is a total
+independent file system by the following patches:
+
+"devpts: Make each mount of devpts an independent filesystem" by
+Eric W. Biederman [3] [4]
+
+3) Linux Security Modules have multiple ptrace paths inside some
+subsystems, however inside procfs, the implementation does not guarantee
+that the ptrace() check which triggers the security_ptrace_check() hook
+will always run. We have the 'hidepid' mount option that can be used to
+force the ptrace_may_access() check inside has_pid_permissions() to run.
+The problem is that 'hidepid' is per pid namespace and not attached to
+the mount point, any remount or modification of 'hidepid' will propagate
+to all other procfs mounts.
+
+This also does not allow to support Yama LSM easily in desktop and user
+sessions. Yama ptrace scope which restricts ptrace and some other
+syscalls to be allowed only on inferiors, can be updated to have a
+per-task context, where the context will be inherited during fork(),
+clone() and preserved across execve(). If we support multiple private
+procfs instances, then we may force the ptrace_may_access() on
+/proc/<pids>/ to always run inside that new procfs instances. This will
+allow to specifiy on user sessions if we should populate procfs with
+pids that the user can ptrace or not.
+
+By using Yama ptrace scope, some restricted users will only be able to see
+inferiors inside /proc, they won't even be able to see their other
+processes. Some software like Chromium, Firefox's crash handler, Wine
+and others are already using Yama to restrict which processes can be
+ptracable. With this change this will give the possibility to restrict
+/proc/<pids>/ but more importantly this will give desktop users a
+generic and usuable way to specifiy which users should see all processes
+and which user can not.
+
+Side notes:
+
+* This covers the lack of seccomp where it is not able to parse
+arguments, it is easy to install a seccomp filter on direct syscalls
+that operate on pids, however /proc/<pid>/ is a Linux ABI using
+filesystem syscalls. With this change all LSMs should be able to analyze
+open/read/write/close... on /proc/<pid>/
+
+4) This will allow to implement new features either in kernel or
+userspace without having to worry about procfs.
+In containers, sandboxes, etc we have workarounds to hide some /proc
+inodes, this should be supported natively without doing extra complex
+work, the kernel should be able to support sane options that work with
+today and future Linux use cases.
+
+5) Creation of new superblock with all procfs options for each procfs
+mount will fix the ignoring of mount options. The problem is that the
+second mount of procfs in the same pid namespace ignores the mount
+options. The mount options are ignored without error until procfs is
+remounted.
+
+Before:
+
+# grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=2 0 0
+
+# strace -e mount mount -o hidepid=1 -t proc proc /tmp/proc
+mount("proc", "/tmp/proc", "proc", 0, "hidepid=1") = 0
++++ exited with 0 +++
+
+# grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=2 0 0
+proc /tmp/proc proc rw,relatime,hidepid=2 0 0
+
+# mount -o remount,hidepid=1 -t proc proc /tmp/proc
+
+# grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=1 0 0
+proc /tmp/proc proc rw,relatime,hidepid=1 0 0
+
+After:
+
+# grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=ptraceable 0 0
+
+# mount -o hidepid=invisible -t proc proc /tmp/proc
+
+# grep ^proc /proc/mounts
+proc /proc proc rw,relatime,hidepid=ptraceable 0 0
+proc /tmp/proc proc rw,relatime,hidepid=invisible 0 0
+
+
+Introduced changes:
+-------------------
+Each mount of procfs creates a separate procfs instance with its own
+mount options.
+
+This series adds few new mount options:
+
+* New 'hidepid=ptraceable' or 'hidepid=4' mount option to show only ptraceable
+processes in the procfs. This allows to support lightweight sandboxes in
+Embedded Linux, also solves the case for LSM where now with this mount option,
+we make sure that they have a ptrace path in procfs.
+
+* 'subset=pidfs' that allows to hide non-pid inodes from procfs. It can be used
+in containers and sandboxes, as these are already trying to hide and block
+access to procfs inodes anyway.
+
+
+ChangeLog:
+----------
+# v9:
+* Rebase on top of Eric W. Biederman's procfs changes.
+* Add human readable values of 'hidepid' as suggested by Andy Lutomirski.
+
+# v8:
+* Started using RCU lock to clean dcache entries as suggested by Linus Torvalds.
+
+# v7:
+* 'pidonly=1' renamed to 'subset=pidfs' as suggested by Alexey Dobriyan.
+* HIDEPID_* moved to uapi/ as they are user interface to mount().
+  Suggested-by Alexey Dobriyan <adobriyan@gmail.com>
+
+# v6:
+* 'hidepid=' and 'gid=' mount options are moved from pid namespace to superblock.
+* 'newinstance' mount option removed as suggested by Eric W. Biederman.
+   Mount of procfs always creates a new instance.
+* 'limit_pids' renamed to 'hidepid=3'.
+* I took into account the comment of Linus Torvalds [7].
+* Documentation added.
+
+# v5:
+* Fixed a bug that caused a problem with the Fedora boot.
+* The 'pidonly' option is visible among the mount options.
+
+# v2:
+* Renamed mount options to 'newinstance' and 'pids='
+   Suggested-by: Andy Lutomirski <luto@kernel.org>
+* Fixed order of commit, Suggested-by: Andy Lutomirski <luto@kernel.org>
+* Many bug fixes.
+
+# v1:
+* Removed 'unshared' mount option and replaced it with 'limit_pids'
+   which is attached to the current procfs mount.
+   Suggested-by Andy Lutomirski <luto@kernel.org>
+* Do not fill dcache with pid entries that we can not ptrace.
+* Many bug fixes.
+
+
+References:
+-----------
+[1] https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-January/004215.html
+[2] http://www.openwall.com/lists/kernel-hardening/2017/10/05/5
+[3] https://lwn.net/Articles/689539/
+[4] http://lxr.free-electrons.com/source/Documentation/filesystems/devpts.txt?v=3.14
+[5] https://lkml.org/lkml/2017/5/2/407
+[6] https://lkml.org/lkml/2017/5/3/357
+[7] https://lkml.org/lkml/2018/5/11/505
+
+
+Alexey Gladkov (8):
+  proc: rename struct proc_fs_info to proc_fs_opts
+  proc: allow to mount many instances of proc in one pid namespace
+  proc: move hide_pid, pid_gid from pid_namespace to proc_fs_info
+  proc: instantiate only pids that we can ptrace on 'hidepid=4' mount
+    option
+  proc: add option to mount only a pids subset
+  docs: proc: add documentation for "hidepid=4" and "subset=pidfs"
+    options and new mount behavior
+  proc: move hidepid values to uapi as they are user interface to mount
+  proc: use human-readable values for hidehid
+
+ Documentation/filesystems/proc.txt |  93 ++++++++++++++++-----
+ fs/proc/base.c                     |  46 ++++++++---
+ fs/proc/generic.c                  |   9 +++
+ fs/proc/inode.c                    |  28 +++++--
+ fs/proc/root.c                     | 126 +++++++++++++++++++++++------
+ fs/proc/self.c                     |   6 +-
+ fs/proc/thread_self.c              |   6 +-
+ fs/proc_namespace.c                |  14 ++--
+ include/linux/pid_namespace.h      |   8 --
+ include/linux/proc_fs.h            |  22 +++++
+ include/uapi/linux/proc_fs.h       |  13 +++
+ 11 files changed, 288 insertions(+), 83 deletions(-)
+ create mode 100644 include/uapi/linux/proc_fs.h
+
 -- 
 2.25.2
 
