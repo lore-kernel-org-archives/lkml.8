@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 539DDC43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C990CC43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C200208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F379208D5
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585055571;
-	bh=3uYIFyGwaBuZfOVVH3bfbQDJfqRIkb/5lCL2RWgSi5Q=;
+	s=default; t=1585055574;
+	bh=4tIolwig/eG6kdesbtHxMMmhATOgOH0aKutX8PYYDHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZoXQ9JK7IkbkPV0r1ni5c89xgwrlwcBm9SYGFNMPJ7uw+6gLroDjY1wtjteyRfzau
-	 BlDdbakcP0vCGMlwT4nFOOJaG0FK6eBZlHf0BNRrTzARZjnzfkOIzSCBq59humGqe+
-	 EEreZvl5v8Z2JpaaHZokuOZAM8scwyhzXpHQ65jM=
+	b=1WfNULHPPGQysSQTp26HIw+gYzXeH29lv/GDrZPrvRYIFjK9XFjVWlhOA4wsRpxdX
+	 nAPFrkGLZq/MXvSz0yXq1ulg4Y/+vgZIQQTknSbtLxg4ZU1V6aVRWxtM2tEEw6wPEa
+	 TKPCqKnCVczra3ObLr9Tcs7ld3E5QXtZvtx6928g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgCXNMt (ORCPT
+        id S1727737AbgCXNMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:12:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58678 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727698AbgCXNMp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:12:45 -0400
+        id S1727719AbgCXNMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:12:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F293E208CA;
-        Tue, 24 Mar 2020 13:12:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9F6820775;
+        Tue, 24 Mar 2020 13:12:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055564;
-        bh=3uYIFyGwaBuZfOVVH3bfbQDJfqRIkb/5lCL2RWgSi5Q=;
+        s=default; t=1585055568;
+        bh=4tIolwig/eG6kdesbtHxMMmhATOgOH0aKutX8PYYDHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zh6pH5cQBDfHiBQ2JMSZC6739v8vY7pskjeQfFyaNtyr2Ddwt3SNiGC/um92+Kj7d
-         6H0wr4Zqtcb7QXwWCn5QE3iGmU8BSJp0vpRAaPSebtojhapKyCa7ffpZmiQ1QxI/9Q
-         tf6BDhvwUjv34GwYsomyqHF4f6bT44sQ/zRGrjHU=
+        b=DAOrmlXhVzafrWzFRk8GbNO4N3tOh2pnB02Vk0bSDwLkCWjMAa90NSGLU6kLVy4Zn
+         s0HFHoRCfaid+hDObI6mR2YM5y8AFWLGnx10fwUEN/316ldMGdIj3ChvkTb5nIF+vQ
+         kX53kFQai+5IqVaZeW+nVkbstiSEkfUfgN2v3hQc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alberto Mattea <alberto@mattea.info>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 25/65] usb: xhci: apply XHCI_SUSPEND_DELAY to AMD XHCI controller 1022:145c
-Date:   Tue, 24 Mar 2020 14:10:46 +0100
-Message-Id: <20200324130800.374024759@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 26/65] ALSA: line6: Fix endless MIDI read loop
+Date:   Tue, 24 Mar 2020 14:10:47 +0100
+Message-Id: <20200324130800.538866245@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
 In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
 References: <20200324130756.679112147@linuxfoundation.org>
@@ -59,39 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alberto Mattea <alberto@mattea.info>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 16263abc12d09871156a1c8650fb651f0e552f5e upstream.
+commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 upstream.
 
-This controller timeouts during suspend (S3) with
-[  240.521724] xhci_hcd 0000:30:00.3: WARN: xHC save state timeout
-[  240.521729] xhci_hcd 0000:30:00.3: ERROR mismatched command completion event
-thus preventing the system from entering S3.
-Moreover it remains in an undefined state where some connected devices stop
-working until a reboot.
-Apply the XHCI_SUSPEND_DELAY quirk to make it suspend properly.
+The MIDI input event parser of the LINE6 driver may enter into an
+endless loop when the unexpected data sequence is given, as it tries
+to continue the secondary bytes without termination.  Also, when the
+input data is too short, the parser returns a negative error, while
+the caller doesn't handle it properly.  This would lead to the
+unexpected behavior as well.
 
-CC: stable@vger.kernel.org
-Signed-off-by: Alberto Mattea <alberto@mattea.info>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200306150858.21904-3-mathias.nyman@linux.intel.com
+This patch addresses those issues by checking the return value
+correctly and handling the one-byte event in the parser properly.
+
+The bug was reported by syzkaller.
+
+Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
+Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-pci.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/usb/line6/driver.c  |    2 +-
+ sound/usb/line6/midibuf.c |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -128,7 +128,8 @@ static void xhci_pci_quirks(struct devic
- 		xhci->quirks |= XHCI_AMD_PLL_FIX;
+--- a/sound/usb/line6/driver.c
++++ b/sound/usb/line6/driver.c
+@@ -320,7 +320,7 @@ static void line6_data_received(struct u
+ 				line6_midibuf_read(mb, line6->buffer_message,
+ 						LINE6_MIDI_MESSAGE_MAXLEN);
  
- 	if (pdev->vendor == PCI_VENDOR_ID_AMD &&
--		(pdev->device == 0x15e0 ||
-+		(pdev->device == 0x145c ||
-+		 pdev->device == 0x15e0 ||
- 		 pdev->device == 0x15e1 ||
- 		 pdev->device == 0x43bb))
- 		xhci->quirks |= XHCI_SUSPEND_DELAY;
+-			if (done == 0)
++			if (done <= 0)
+ 				break;
+ 
+ 			line6->message_length = done;
+--- a/sound/usb/line6/midibuf.c
++++ b/sound/usb/line6/midibuf.c
+@@ -163,7 +163,7 @@ int line6_midibuf_read(struct midi_buffe
+ 			int midi_length_prev =
+ 			    midibuf_message_length(this->command_prev);
+ 
+-			if (midi_length_prev > 0) {
++			if (midi_length_prev > 1) {
+ 				midi_length = midi_length_prev - 1;
+ 				repeat = 1;
+ 			} else
 
 
