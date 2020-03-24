@@ -2,58 +2,55 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E251C2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C8FC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 408D3206F6
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82715206F6
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585056787;
-	bh=GF0nQgHSqr93FGkRxyrNN14Mg7LyWH6kxP3Xm7fVJ30=;
+	s=default; t=1585056803;
+	bh=Li3XAKpFi3SfzT1r61AYTJ0slB2G1nF5v0Cud+G0CHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OF6bvhdu4C7y7cTTe6iKyMXjOxtkPXkzoTKIEJ1yWWna39/Jokhxgq3avIPEn0XJX
-	 m74riDrvhjZRpX5v63dTgjYhAF1e/UA82swsOVLpF8B1wJ30NJoKyeWForImDvP3N9
-	 Pk/FhoXX1Efha5Xb0ufikgppZPLfiFTCb7Bryxfo=
+	b=a2/Dfju0zgjR2OeYD+2dGk7TWR5b7hLfraCnx7kRW+fkJoV5HSoRbZtA2zlWATUEr
+	 Vk8qojx8BHUHXVQ0VEAetwq4DrjFZfTz3ii69a3RxBnwh54OXSUSL17wgqjOnB2yAh
+	 5vzsSNgJViQUQiwBS1UrbYhQb2z5rmSJx6KD/eD0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728259AbgCXNP2 (ORCPT
+        id S1727936AbgCXNNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:15:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34296 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 09:13:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727743AbgCXNPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:15:24 -0400
+        id S1727926AbgCXNNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:13:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F103208CA;
-        Tue, 24 Mar 2020 13:15:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89A86208D6;
+        Tue, 24 Mar 2020 13:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585055723;
-        bh=GF0nQgHSqr93FGkRxyrNN14Mg7LyWH6kxP3Xm7fVJ30=;
+        s=default; t=1585055626;
+        bh=Li3XAKpFi3SfzT1r61AYTJ0slB2G1nF5v0Cud+G0CHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CEBydxHpWfiR67T/Rgl/BuBETfTyI5n+tSiqycLjzYMH2qCyeaCf0uMnS2tongTnd
-         RbzOHiU9GHr3YUFnuZnJDrX4zk6UzJjFMsu6vvu0E4VrH8CrV5dV2QXMFw/7WKy/8k
-         K17pq+v4HI4mrS8752ZyhWIDcd3ULSJQwiglJy50=
+        b=xfXIrTKz+hXP6OipMp64XR5EASkXe6DQ6rMYO/QCPPIB7e/vc9otpkiZfTRD/uaCP
+         6JdoyT579TdYv+7z7+zdn0MXp/Q146U34GcGR7RoKvTv1pG9NnllDUq0U1hybDjFIM
+         ls1dzX+H7ujEcytvZ3T3DZxL3d35BMIY84iHQClU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/102] locks: fix a potential use-after-free problem when wakeup a waiter
-Date:   Tue, 24 Mar 2020 14:09:53 +0100
-Message-Id: <20200324130806.654542883@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 42/65] rtc: max8907: add missing select REGMAP_IRQ
+Date:   Tue, 24 Mar 2020 14:11:03 +0100
+Message-Id: <20200324130802.421243636@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
-References: <20200324130806.544601211@linuxfoundation.org>
+In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
+References: <20200324130756.679112147@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,78 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yangerkun <yangerkun@huawei.com>
+From: Corentin Labbe <clabbe@baylibre.com>
 
-[ Upstream commit 6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da ]
+commit 5d892919fdd0cefd361697472d4e1b174a594991 upstream.
 
-'16306a61d3b7 ("fs/locks: always delete_block after waiting.")' add the
-logic to check waiter->fl_blocker without blocked_lock_lock. And it will
-trigger a UAF when we try to wakeup some waiter：
+I have hit the following build error:
 
-Thread 1 has create a write flock a on file, and now thread 2 try to
-unlock and delete flock a, thread 3 try to add flock b on the same file.
+  armv7a-hardfloat-linux-gnueabi-ld: drivers/rtc/rtc-max8907.o: in function `max8907_rtc_probe':
+  rtc-max8907.c:(.text+0x400): undefined reference to `regmap_irq_get_virq'
 
-Thread2                         Thread3
-                                flock syscall(create flock b)
-	                        ...flock_lock_inode_wait
-				    flock_lock_inode(will insert
-				    our fl_blocked_member list
-				    to flock a's fl_blocked_requests)
-				   sleep
-flock syscall(unlock)
-...flock_lock_inode_wait
-    locks_delete_lock_ctx
-    ...__locks_wake_up_blocks
-        __locks_delete_blocks(
-	b->fl_blocker = NULL)
-	...
-                                   break by a signal
-				   locks_delete_block
-				    b->fl_blocker == NULL &&
-				    list_empty(&b->fl_blocked_requests)
-	                            success, return directly
-				 locks_free_lock b
-	wake_up(&b->fl_waiter)
-	trigger UAF
+max8907 should select REGMAP_IRQ
 
-Fix it by remove this logic, and this patch may also fix CVE-2019-19769.
+Fixes: 94c01ab6d7544 ("rtc: add MAX8907 RTC driver")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Cc: stable@vger.kernel.org
-Fixes: 16306a61d3b7 ("fs/locks: always delete_block after waiting.")
-Signed-off-by: yangerkun <yangerkun@huawei.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/locks.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ drivers/rtc/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 44b6da0328426..426b55d333d5b 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -753,20 +753,6 @@ int locks_delete_block(struct file_lock *waiter)
- {
- 	int status = -ENOENT;
- 
--	/*
--	 * If fl_blocker is NULL, it won't be set again as this thread
--	 * "owns" the lock and is the only one that might try to claim
--	 * the lock.  So it is safe to test fl_blocker locklessly.
--	 * Also if fl_blocker is NULL, this waiter is not listed on
--	 * fl_blocked_requests for some lock, so no other request can
--	 * be added to the list of fl_blocked_requests for this
--	 * request.  So if fl_blocker is NULL, it is safe to
--	 * locklessly check if fl_blocked_requests is empty.  If both
--	 * of these checks succeed, there is no need to take the lock.
--	 */
--	if (waiter->fl_blocker == NULL &&
--	    list_empty(&waiter->fl_blocked_requests))
--		return status;
- 	spin_lock(&blocked_lock_lock);
- 	if (waiter->fl_blocker)
- 		status = 0;
--- 
-2.20.1
-
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -314,6 +314,7 @@ config RTC_DRV_MAX6900
+ config RTC_DRV_MAX8907
+ 	tristate "Maxim MAX8907"
+ 	depends on MFD_MAX8907 || COMPILE_TEST
++	select REGMAP_IRQ
+ 	help
+ 	  If you say yes here you will get support for the
+ 	  RTC of Maxim MAX8907 PMIC.
 
 
