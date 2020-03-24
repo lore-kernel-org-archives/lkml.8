@@ -2,169 +2,130 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2581CC2BAEE
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A3DC2BAEE
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A302076E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E4D2076E
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 13:46:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgCXNqe (ORCPT
+        id S1728783AbgCXNqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 09:46:34 -0400
-Received: from orion.archlinux.org ([88.198.91.70]:36236 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727905AbgCXNqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:46:33 -0400
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id D8F0A1A620D18C;
-        Tue, 24 Mar 2020 13:46:29 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Tue, 24 Mar 2020 13:46:29 +0000 (UTC)
-Message-ID: <b9a26e3bb00212afd960f98dba8f7bb58cdd49e5.camel@archlinux.org>
-Subject: Re: [PATCH v2] HID: logitech-dj: issue udev change event on device
- connection
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Bastien Nocera <hadess@hadess.net>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Hutterer <peter.hutterer@redhat.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mario Limonciello <superm1@gmail.com>,
-        Richard Hughes <hughsient@gmail.com>
-In-Reply-To: <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
-References: <20200318161906.3340959-1-lains@archlinux.org>
-         <20200318192721.390630-1-lains@archlinux.org>
-         <92f48f409e913299c12322d195c88792bb4e5c9c.camel@hadess.net>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-A/3A7+H0RlrhmhZ/oncV"
-Date:   Tue, 24 Mar 2020 13:46:27 +0000
+        Tue, 24 Mar 2020 09:46:45 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:46280 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727684AbgCXNqo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:46:44 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 69F4F845CCA92D2E04BC;
+        Tue, 24 Mar 2020 21:46:11 +0800 (CST)
+Received: from DESKTOP-KKJBAGG.china.huawei.com (10.173.220.25) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 24 Mar 2020 21:46:00 +0800
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+To:     <will@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
+        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <maz@kernel.org>, <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>
+CC:     <yezhenyu2@huawei.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
+Subject: [RFC PATCH v4 1/6] arm64: Detect the ARMv8.4 TTL feature
+Date:   Tue, 24 Mar 2020 21:45:29 +0800
+Message-ID: <20200324134534.1570-2-yezhenyu2@huawei.com>
+X-Mailer: git-send-email 2.22.0.windows.1
+In-Reply-To: <20200324134534.1570-1-yezhenyu2@huawei.com>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
 MIME-Version: 1.0
-User-Agent: Evolution 3.36.0 
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Marc Zyngier <maz@kernel.org>
 
---=-A/3A7+H0RlrhmhZ/oncV
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
+feature allows TLBs to be issued with a level allowing for quicker
+invalidation.
 
-On Tue, 2020-03-24 at 11:20 +0100, Bastien Nocera wrote:
-> On Wed, 2020-03-18 at 19:27 +0000, Filipe La=C3=ADns wrote:
-> > As discussed in the mailing list:
-> >=20
-> > > Right now the hid-logitech-dj driver will export one node for each
-> > > connected device, even when the device is not connected. That
-> > > causes
-> > > some trouble because in userspace we don't have have any way to
-> > > know if
-> > > the device is connected or not, so when we try to communicate, if
-> > > the
-> > > device is disconnected it will fail.
->=20
-> Why is it a problem that user-space communication fails? Note that
-> sending a signal without any way to fetch the state means that it's
-> always going to be racy.
+Let's detect the feature for now. Further patches will implement
+its actual usage.
 
-It failing is not the problem. The problem is knowing when the device
-is available again. Right now the only way to do that is to listen for
-events or periodically ping it.
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+---
+ arch/arm64/include/asm/cpucaps.h |  3 ++-
+ arch/arm64/include/asm/sysreg.h  |  1 +
+ arch/arm64/kernel/cpufeature.c   | 11 +++++++++++
+ 3 files changed, 14 insertions(+), 1 deletion(-)
 
-We want to only export the HID++ hidraw node when the device is
-available but that will take a while. We will have to test and sync up
-userspace. I also want to write tests for the driver before, to make
-sure there are no regressions. We had a thread discussing this, IIRC
-you were in CC.
+diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+index 865e0253fc1e..8b3b4dd612b3 100644
+--- a/arch/arm64/include/asm/cpucaps.h
++++ b/arch/arm64/include/asm/cpucaps.h
+@@ -58,7 +58,8 @@
+ #define ARM64_WORKAROUND_SPECULATIVE_AT_NVHE	48
+ #define ARM64_HAS_E0PD				49
+ #define ARM64_HAS_RNG				50
++#define ARM64_HAS_ARMv8_4_TTL			51
+ 
+-#define ARM64_NCAPS				51
++#define ARM64_NCAPS				52
+ 
+ #endif /* __ASM_CPUCAPS_H */
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index b91570ff9db1..a28b76f32ba7 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -685,6 +685,7 @@
+ 
+ /* id_aa64mmfr2 */
+ #define ID_AA64MMFR2_E0PD_SHIFT		60
++#define ID_AA64MMFR2_TTL_SHIFT		48
+ #define ID_AA64MMFR2_FWB_SHIFT		40
+ #define ID_AA64MMFR2_AT_SHIFT		32
+ #define ID_AA64MMFR2_LVA_SHIFT		16
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 0b6715625cf6..cbe46ad2900a 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -241,6 +241,7 @@ static const struct arm64_ftr_bits ftr_id_aa64mmfr1[] = {
+ 
+ static const struct arm64_ftr_bits ftr_id_aa64mmfr2[] = {
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_E0PD_SHIFT, 4, 0),
++	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_TTL_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_FWB_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_VISIBLE, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_AT_SHIFT, 4, 0),
+ 	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE, ID_AA64MMFR2_LVA_SHIFT, 4, 0),
+@@ -1523,6 +1524,16 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = has_cpuid_feature,
+ 		.cpu_enable = cpu_has_fwb,
+ 	},
++	{
++		.desc = "ARMv8.4 Translation Table Level",
++		.type = ARM64_CPUCAP_SYSTEM_FEATURE,
++		.capability = ARM64_HAS_ARMv8_4_TTL,
++		.sys_reg = SYS_ID_AA64MMFR2_EL1,
++		.sign = FTR_UNSIGNED,
++		.field_pos = ID_AA64MMFR2_TTL_SHIFT,
++		.min_field_value = 1,
++		.matches = has_cpuid_feature,
++	},
+ #ifdef CONFIG_ARM64_HW_AFDBM
+ 	{
+ 		/*
+-- 
+2.19.1
 
-> > The solution reached to solve this issue is to trigger an udev change
-> > event when the device connects, this way userspace can just wait on
-> > those connections instead of trying to ping the device.
-> >=20
-> > Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> >=20
-> > ---
-> >=20
-> > v2:
-> >   - Issue udev change event on the connected hid device, not on the
-> >   receiver
-> >=20
-> > ---
-> >  drivers/hid/hid-logitech-dj.c | 7 ++++++-
-> >  1 file changed, 6 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
-> > logitech-dj.c
-> > index 48dff5d6b605..282e57dd467d 100644
-> > --- a/drivers/hid/hid-logitech-dj.c
-> > +++ b/drivers/hid/hid-logitech-dj.c
-> > @@ -1412,6 +1412,7 @@ static int logi_dj_dj_event(struct hid_device
-> > *hdev,
-> >  {
-> >  	struct dj_receiver_dev *djrcv_dev =3D hid_get_drvdata(hdev);
-> >  	struct dj_report *dj_report =3D (struct dj_report *) data;
-> > +	struct dj_device *dj_dev;
-> >  	unsigned long flags;
-> > =20
-> >  	/*
-> > @@ -1447,7 +1448,9 @@ static int logi_dj_dj_event(struct hid_device
-> > *hdev,
-> > =20
-> >  	spin_lock_irqsave(&djrcv_dev->lock, flags);
-> > =20
-> > -	if (!djrcv_dev->paired_dj_devices[dj_report->device_index]) {
-> > +	dj_dev =3D djrcv_dev->paired_dj_devices[dj_report->device_index];
-> > +
-> > +	if (!dj_dev) {
-> >  		/* received an event for an unknown device, bail out */
-> >  		logi_dj_recv_queue_notification(djrcv_dev, dj_report);
-> >  		goto out;
-> > @@ -1464,6 +1467,8 @@ static int logi_dj_dj_event(struct hid_device
-> > *hdev,
-> >  		if (dj_report-
-> > > report_params[CONNECTION_STATUS_PARAM_STATUS] =3D=3D
-> >  		    STATUS_LINKLOSS) {
-> >  			logi_dj_recv_forward_null_report(djrcv_dev,
-> > dj_report);
-> > +		} else {
-> > +			kobject_uevent(&dj_dev->hdev->dev.kobj,
-> > KOBJ_CHANGE);
-> >  		}
-> >  		break;
-> >  	default:
---=20
-Filipe La=C3=ADns
 
---=-A/3A7+H0RlrhmhZ/oncV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl56Dy4ACgkQ+JPGdIFq
-qV28lQ/+NSEiN2ak+c4eI2g75OWoNEyUuXEzbh8FdlmGfAehqpKaVqNdHTyDb3rH
-S5MxkU57wrXG5rDUx//lXRAcnzHN1gw++0CNaIPyhH3tJl1+MvuKv9jWsNRYWxfu
-SQhxRmtcbsGO8eMNqSoLdK9IgsH0KWL2Fd7jK2I9dWCeGrqgyu56CL/VwjJHTSFK
-1drDDBxlLuotL5+/O9ch+2M1bsVAxXcowjZv2yUcldipq3pyLPucTSmisCMdgqrj
-VyfQuyvHUB0WeHjlx5g6cQG8iONuqsPqWMbR1EO8XWmFLDSoxI4X0j97q4Py46TM
-YSHn8FxB2C64o0QkMeC89UCqhIybUvzDMM6oQC1d2/5A9w8Elro07cBq4R5UZk/V
-Q2gino2Jl55/M/vZAAnwtoMx3BDYTaf0KLuz4ZF2pLV8V8BWqvvf78nWX1GMaiHZ
-pTTsy4KF0lvW5EJOLK3/GV0OWd+IaM7veT1iENklCk38XVYOivm3cjWtekBsh6cj
-EvK+37HihciTK6J/77JOkNu1AHrhVfPnLKPHRNjGkw7OqSCYRrtXJPnPKXvI6YVC
-bnGJpW8n7RyDfMPm8R3vuQP/z7FtJ2646x6TktfLjsV88VFOeJI3mshV6BeAJS6b
-lm4Bfda3gwWxkKAxVg4Mu+2PJ/Unz1hh8yKvv8KztPJfZT+ea/c=
-=CVnb
------END PGP SIGNATURE-----
-
---=-A/3A7+H0RlrhmhZ/oncV--
