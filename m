@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96103C4332B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3225FC41621
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B95C208D5
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03321208CA
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 08:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585039890;
-	bh=dC+UtIWPTIfE6gTzFrtwWs6FddaIep1P4cFyIVs6exQ=;
+	s=default; t=1585039893;
+	bh=ZGQunMWG2zWvXeH8QdOHrss1nr5uCJXv+n5KXe2k6DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v6Y2HTviS/szcyoOyqFRL9GFvh2lVoGeZWg30SWaSJsUmTDlMv7SD7hBjYBSrk40y
-	 PQbyzoP9I9Wun12qmi0virV1Gu9EN1/Mu71ohDkfIQBgxhkiDsb043rXbzo/chL3ER
-	 h1XlcjsqCZ1ABTl6471SVVWdIaTUKBG1cVRbxzdc=
+	b=lqx2518BtUsYNRRhyU32h1KCpV3CPmSiOw345PZMVn1hN3ZCrY7J6+UxjWW95Y805
+	 KW56ouIyNZ2ZKN1UudQ+iTGTRsApO1wSdDChQ7O0Qfh64AyEe0IiZRYuKe4S/26unp
+	 nU0MVCbd7LEwsI7S6BiAwAhJcUoVZIKKig+fmpV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727462AbgCXIv3 (ORCPT
+        id S1727446AbgCXIv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 04:51:29 -0400
-Received: from conuserg-09.nifty.com ([210.131.2.76]:17668 "EHLO
+        Tue, 24 Mar 2020 04:51:27 -0400
+Received: from conuserg-09.nifty.com ([210.131.2.76]:17573 "EHLO
         conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbgCXIv0 (ORCPT
+        with ESMTP id S1727261AbgCXIvV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 04:51:26 -0400
+        Tue, 24 Mar 2020 04:51:21 -0400
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-09.nifty.com with ESMTP id 02O8mgsl011219;
-        Tue, 24 Mar 2020 17:49:01 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsl011219
+        by conuserg-09.nifty.com with ESMTP id 02O8mgsY011219;
+        Tue, 24 Mar 2020 17:48:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com 02O8mgsY011219
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585039742;
-        bh=s0I5SOuN4Cdii5q1Bnu+2uo8oY7Phl6nmh/yFk4bv3o=;
+        s=dec2015msa; t=1585039725;
+        bh=Zh5UxR06uJCD24GzekHGCCPt3LyuPsfIaph9vVkw9LY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=db6hzkHI/NUH249ZqcRDYDfDe7GjyhgWCZVEEqEZfEZI3S6EwdYG1NtOgjiK171el
-         MjI3tcpwCT0daxXBK+R/TOqQzVneYQsbupnIcxgg2QCaB7ZzDGOzLCDxr8rMTUUFXa
-         B3UBz9H/dfpDiBg64mTb2KNZZOHa85gzYOvTQCyDQ2Yf8CEdnNfKhDbXMhXnTlme5T
-         /vwMJ9P7KSCRdM8GtxROlB105f7gzUPGdScoGbm6cf/CFMcios3IkyOf+f8QRAHZG+
-         NKByMqsLhIOfmKaV0z6CaT+GIjfDMUF/whvLdFouvk7Zjffqz5Aw24Sn/M5pdVEQMU
-         crRjI6Rw5wUNg==
+        b=L4sWk0ZSK1bL75s+iro4Oe0VKEyW1SvlGGCTKWdN1nBVsPxmYqwrxQfyjFxQaETHM
+         go03QH7hFsgQLyNun1Hz2mW/RPsnUeXbeweeUBW0foMKkvHNbVWyPT1gUjsPX3Ym4w
+         yoCNo1MgEG49wUjpbkm9r669Va9PeMEEWC9twGMDdT5wZdQTrEYY+fjO8mHKXpz3y9
+         Eh8xTWXNFDQM2txV7oyU/uNRFx1UAlJw68aPnpBwB7TJtn1mSaw8GKY44cp3u3cLP1
+         mgGQaGH7gF4qWq5cyw+LvzJjpbA8KA97NAGmwzXWt2KF3pqTbL5IkiP9uB9Tb5jVDQ
+         s3/1a5k0KcYDw==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kernel@vger.kernel.org
@@ -55,12 +55,14 @@ Cc:     "David S . Miller" <davem@davemloft.net>,
         Borislav Petkov <bp@alien8.de>,
         Peter Zijlstra <peterz@infradead.org>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kbuild@vger.kernel.org, Borislav Petkov <bp@suse.de>,
+        linux-kbuild@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [PATCH 14/16] Documentation/changes: Raise minimum supported binutils version to 2.23
-Date:   Tue, 24 Mar 2020 17:48:19 +0900
-Message-Id: <20200324084821.29944-15-masahiroy@kernel.org>
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        NeilBrown <neilb@suse.de>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>
+Subject: [PATCH 01/16] lib/raid6/test: fix build on distros whose /bin/sh is not bash
+Date:   Tue, 24 Mar 2020 17:48:06 +0900
+Message-Id: <20200324084821.29944-2-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200324084821.29944-1-masahiroy@kernel.org>
 References: <20200324084821.29944-1-masahiroy@kernel.org>
@@ -69,61 +71,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+You can test raid6 library code from user-space, like this:
 
-The currently minimum-supported binutils version 2.21 has the problem of
-promoting symbols which are defined outside of a section into absolute.
-According to Arvind:
+  $ cd lib/raid6/test
+  $ make
 
-  binutils-2.21 and -2.22. An x86-64 defconfig will fail with
-          Invalid absolute R_X86_64_32S relocation: _etext
-  and after fixing that one, with
-          Invalid absolute R_X86_64_32S relocation: __end_of_kernel_reserve
+The command in $(shell ...) function is evaluated by /bin/sh by default.
+(or, you can change the default shell by setting 'SHELL' in Makefile)
 
-Those two versions of binutils have a bug when it comes to handling
-symbols defined outside of a section and binutils 2.23 has the proper
-fix, see: https://sourceware.org/legacy-ml/binutils/2012-06/msg00155.html
+Currently '>&/dev/null' is used to sink both stdout and stderr. Because
+this code is bash-ism, it only works when /bin/sh is a symbolic link to
+bash (this is the case on RHEL etc.)
 
-Therefore, up to the fixed version directly, skipping the broken ones.
+This does not work on Ubuntu where /bin/sh is a symbolic link to dash.
 
-Currently shipping distros already have the fixed binutils version so
-there should be no breakage resulting from this.
+I see lots of
 
-For more details about the whole thing, see the thread in Link.
+  /bin/sh: 1: Syntax error: Bad fd number
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200110202349.1881840-1-nivedita@alum.mit.edu
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+and
+
+  warning "your version of binutils lacks ... support"
+
+Replace it with portable '>/dev/null 2>&1'.
+
+Fixes: 4f8c55c5ad49 ("lib/raid6: build proper files on corresponding arch")
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
 ---
 
- Documentation/process/changes.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ lib/raid6/test/Makefile | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
-index e47863575917..91c5ff8e161e 100644
---- a/Documentation/process/changes.rst
-+++ b/Documentation/process/changes.rst
-@@ -31,7 +31,7 @@ you probably needn't concern yourself with pcmciautils.
- ====================== ===============  ========================================
- GNU C                  4.6              gcc --version
- GNU make               3.81             make --version
--binutils               2.21             ld -v
-+binutils               2.23             ld -v
- flex                   2.5.35           flex --version
- bison                  2.0              bison --version
- util-linux             2.10o            fdformat --version
-@@ -76,7 +76,7 @@ You will need GNU make 3.81 or later to build the kernel.
- Binutils
- --------
- 
--Binutils 2.21 or newer is needed to build the kernel.
-+Binutils 2.23 or newer is needed to build the kernel.
- 
- pkg-config
- ----------
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index 3ab8720aa2f8..b9e6c3648be1 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -35,13 +35,13 @@ endif
+ ifeq ($(IS_X86),yes)
+         OBJS   += mmx.o sse1.o sse2.o avx2.o recov_ssse3.o recov_avx2.o avx512.o recov_avx512.o
+         CFLAGS += $(shell echo "pshufb %xmm0, %xmm0" |		\
+-                    gcc -c -x assembler - >&/dev/null &&	\
++                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_SSSE3=1)
+         CFLAGS += $(shell echo "vpbroadcastb %xmm0, %ymm1" |	\
+-                    gcc -c -x assembler - >&/dev/null &&	\
++                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_AVX2=1)
+ 	CFLAGS += $(shell echo "vpmovm2b %k1, %zmm5" |          \
+-		    gcc -c -x assembler - >&/dev/null &&        \
++		    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+ 		    rm ./-.o && echo -DCONFIG_AS_AVX512=1)
+ else ifeq ($(HAS_NEON),yes)
+         OBJS   += neon.o neon1.o neon2.o neon4.o neon8.o recov_neon.o recov_neon_inner.o
 -- 
 2.17.1
 
