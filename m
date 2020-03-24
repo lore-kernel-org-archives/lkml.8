@@ -2,94 +2,199 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BF67C41621
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE95C43331
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F207920789
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B3B20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 14:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="EZvggVIe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SPSF+Ik4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbgCXOZB (ORCPT
+        id S1728636AbgCXOZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 10:25:01 -0400
-Received: from mail-pg1-f181.google.com ([209.85.215.181]:40457 "EHLO
-        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbgCXOY5 (ORCPT
+        Tue, 24 Mar 2020 10:25:04 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:53756 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728562AbgCXOY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 10:24:57 -0400
-Received: by mail-pg1-f181.google.com with SMTP id t24so9081577pgj.7
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 07:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=M+b5EPoZFy9O+3BjnkpArQ2labuMLhCHX8xcr7BhQw4=;
-        b=EZvggVIeGhevoh5NNxYlACMHgWkmY/K0mXslP/icPJXJARfdHiBzYBbP2AAXKsTKWf
-         Y+0DkJJBOrWgL+qFV/AZXq6+jssUvCKdQLzQ5rnEmnSKQkEMm66E+WY2BdwdpdlypYW7
-         3TXISRmLCUK8iy9hTpd51B8hIocqvSzGxUsmhAu8z0YPV65dX4jK4g1TTngz41IOSxDJ
-         D0L+MFnG0876R9ojtX3MKplkVwKiex+gs9GdmUgzfzyIbFEofrR8E+XmyORULQms7ce9
-         FCyT615Ds3QxgoVubGxDxNt4cU2+05u4A2aZF0H63HsNm+NMq1jpwurBWvzagR/3iOhz
-         7pKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=M+b5EPoZFy9O+3BjnkpArQ2labuMLhCHX8xcr7BhQw4=;
-        b=ODT/Ihw0FQfi7UR5FI2EBrRHXSvr2AYKvl6dn3xLf6oG8+CrATqnefCHgo09dwG0P/
-         pZMwLtLVORgdIX2/xM/tGvLETjCVywmcFnAwOvgSXv3lxX6NC1HFK0zWlo5Rl3S8GuPI
-         6jhwOrMBEZcektpAfenzJNzzAQnznhfknJIMxR95Hdz5cCTprHoUOmu+7YfllvvHXPbA
-         CeA623FFhit6T2Y+8CqAH9L7XTcnKhe4w/QiT/7ZTDThIRbfQENRahGOunEpdYUV2MnD
-         +/W6Qs5Tf/Z9LUuuSxcoLVSuxZXBDt+wBoT311W1kjKHjH0TjQHbkSdoyYRKmjHuJkPf
-         nkVQ==
-X-Gm-Message-State: ANhLgQ1e4BgXyKQ6OIl3m9o+TttFtc/frDqSEF12DZh8+WFUVcyjtETn
-        4Ue4Abc8OhQDGj96TVTo6oKFYi/6bj7sFA==
-X-Google-Smtp-Source: ADFU+vs4Vjoxi8fKdz2fa2151B1/wWCQtLfuaxVIsCssdZtu8du9Kphyj1xLW+Es30aScCdl4gd6IQ==
-X-Received: by 2002:aa7:8f03:: with SMTP id x3mr30431553pfr.40.1585059895835;
-        Tue, 24 Mar 2020 07:24:55 -0700 (PDT)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id s76sm6680650pgc.64.2020.03.24.07.24.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 07:24:55 -0700 (PDT)
-To:     stable <stable@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-From:   Mark Salyzyn <salyzyn@android.com>
-Subject: locks use-after-free stable request
-Message-ID: <52be02d3-3a6a-c8b8-4177-5cc1d67aedd4@android.com>
-Date:   Tue, 24 Mar 2020 07:24:49 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 24 Mar 2020 10:24:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=YCNRxVdwXiAUVSTcLJEk+raGgN9RNB/RFHzydfwKP+4=; b=SPSF+Ik4V7MRC0Rh4lylOC2Hfj
+        lv+UdTswSZ0K8jhCUAnNxQxfKqr0TK6S0kLoHaSy9m0TizBttS4vHtA/EMTu0/npaz8HmyIT+HnJt
+        oyLqrw/nelp7RVXmJ3r60widcZcH1Q/ZQYeK81gloOR6GtTGJHFKoCS/mC/+OZ+dEWCIkdOpVs2d+
+        05/mmTuNSyJ+TVNkE0FLpofrbsVBquGv9EbKoODMxmamr+v961ZK6PdIN/ivBKmOYI6dhQSgtEH1w
+        2/sngjcp7l5o50bpaR9RwUj2UBGpnjpK6kJAl2vjX2O55SFGw9MGbcy2URQGMGYV13r5Ny4kCiitc
+        /aChjUvg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGkTv-0003oj-38; Tue, 24 Mar 2020 14:24:39 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 148DD3075C0;
+        Tue, 24 Mar 2020 15:24:35 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
+        id E5634286C13AE; Tue, 24 Mar 2020 15:24:34 +0100 (CET)
+Message-Id: <20200324142245.386454807@infradead.org>
+User-Agent: quilt/0.65
+Date:   Tue, 24 Mar 2020 14:56:05 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     x86@kernel.org
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, bristot@redhat.com,
+        jbaron@akamai.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, mingo@kernel.org, namit@vmware.com,
+        hpa@zytor.com, luto@kernel.org, ard.biesheuvel@linaro.org,
+        jpoimboe@redhat.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Robert Richter <rric@kernel.org>
+Subject: [RESEND][PATCH v3 02/17] module: Fix up module_notifier return values
+References: <20200324135603.483964896@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Referencing upstream fixes commit 
-dcf23ac3e846ca0cf626c155a0e3fcbbcf4fae8a ("locks: reinstate 
-locks_delete_block optimization") and commit 
-6d390e4b5d48ec03bb87e63cf0a2bff5f4e116da ("locks: fix a potential 
-use-after-free problem when wakeup a waiter") and possibly address 
-CVE-2019-19769.
+While auditing all module notifiers I noticed a whole bunch of fail
+wrt the return value. Notifiers have a 'special' return semantics.
 
-Please apply to all relevant stable trees including 5.4, 4.19 and below. 
-Confirmed they apply cleanly to 5.4 and 4.19.
+As is; NOTIFY_DONE vs NOTIFY_OK is a bit vague; but
+notifier_from_errno(0) results in NOTIFY_OK and NOTIFY_DONE has a
+comment that says "Don't care".
 
+>From this I've used NOTIFY_DONE when the function completely ignores
+the callback and notifier_to_error() isn't used.
 
-Signed-off-by: Mark Salyzyn <salyzyn@android.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Reviewed-by: Robert Richter <rric@kernel.org>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ drivers/oprofile/buffer_sync.c |    4 ++--
+ kernel/trace/bpf_trace.c       |    8 ++++++--
+ kernel/trace/trace.c           |    2 +-
+ kernel/trace/trace_events.c    |    2 +-
+ kernel/trace/trace_printk.c    |    4 ++--
+ kernel/tracepoint.c            |    2 +-
+ 6 files changed, 13 insertions(+), 9 deletions(-)
 
-Cc: stable@vger.kernel.org
+--- a/drivers/oprofile/buffer_sync.c
++++ b/drivers/oprofile/buffer_sync.c
+@@ -116,7 +116,7 @@ module_load_notify(struct notifier_block
+ {
+ #ifdef CONFIG_MODULES
+ 	if (val != MODULE_STATE_COMING)
+-		return 0;
++		return NOTIFY_DONE;
+ 
+ 	/* FIXME: should we process all CPU buffers ? */
+ 	mutex_lock(&buffer_mutex);
+@@ -124,7 +124,7 @@ module_load_notify(struct notifier_block
+ 	add_event_entry(MODULE_LOADED_CODE);
+ 	mutex_unlock(&buffer_mutex);
+ #endif
+-	return 0;
++	return NOTIFY_OK;
+ }
+ 
+ 
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1451,10 +1451,11 @@ static int bpf_event_notify(struct notif
+ {
+ 	struct bpf_trace_module *btm, *tmp;
+ 	struct module *mod = module;
++	int ret = 0;
+ 
+ 	if (mod->num_bpf_raw_events == 0 ||
+ 	    (op != MODULE_STATE_COMING && op != MODULE_STATE_GOING))
+-		return 0;
++		goto out;
+ 
+ 	mutex_lock(&bpf_module_mutex);
+ 
+@@ -1464,6 +1465,8 @@ static int bpf_event_notify(struct notif
+ 		if (btm) {
+ 			btm->module = module;
+ 			list_add(&btm->list, &bpf_trace_modules);
++		} else {
++			ret = -ENOMEM;
+ 		}
+ 		break;
+ 	case MODULE_STATE_GOING:
+@@ -1479,7 +1482,8 @@ static int bpf_event_notify(struct notif
+ 
+ 	mutex_unlock(&bpf_module_mutex);
+ 
+-	return 0;
++out:
++	return notifier_from_errno(ret);
+ }
+ 
+ static struct notifier_block bpf_module_nb = {
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8696,7 +8696,7 @@ static int trace_module_notify(struct no
+ 		break;
+ 	}
+ 
+-	return 0;
++	return NOTIFY_OK;
+ }
+ 
+ static struct notifier_block trace_module_nb = {
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2442,7 +2442,7 @@ static int trace_module_notify(struct no
+ 	mutex_unlock(&trace_types_lock);
+ 	mutex_unlock(&event_mutex);
+ 
+-	return 0;
++	return NOTIFY_OK;
+ }
+ 
+ static struct notifier_block trace_module_nb = {
+--- a/kernel/trace/trace_printk.c
++++ b/kernel/trace/trace_printk.c
+@@ -95,7 +95,7 @@ static int module_trace_bprintk_format_n
+ 		if (val == MODULE_STATE_COMING)
+ 			hold_module_trace_bprintk_format(start, end);
+ 	}
+-	return 0;
++	return NOTIFY_OK;
+ }
+ 
+ /*
+@@ -173,7 +173,7 @@ __init static int
+ module_trace_bprintk_format_notify(struct notifier_block *self,
+ 		unsigned long val, void *data)
+ {
+-	return 0;
++	return NOTIFY_OK;
+ }
+ static inline const char **
+ find_next_mod_format(int start_index, void *v, const char **fmt, loff_t *pos)
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -521,7 +521,7 @@ static int tracepoint_module_notify(stru
+ 	case MODULE_STATE_UNFORMED:
+ 		break;
+ 	}
+-	return ret;
++	return notifier_from_errno(ret);
+ }
+ 
+ static struct notifier_block tracepoint_module_nb = {
 
-Cc: linux-kernel@vger.kernel.org
-
-Cc: kernel-team@android.com
 
