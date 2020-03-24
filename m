@@ -2,117 +2,209 @@ Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 271D6C43331
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A487C4332B
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ACD02070A
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14598208C3
+	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 11:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbgCXLcN (ORCPT
+        id S1727385AbgCXLcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 07:32:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34120 "EHLO huawei.com"
+        Tue, 24 Mar 2020 07:32:32 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:12186 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727233AbgCXLcM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 07:32:12 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D4455B7EA30AA5648347;
-        Tue, 24 Mar 2020 19:32:04 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
- 19:31:59 +0800
-Subject: Re: [RFC PATCH v3 0/4] arm64: tlb: add support for TTL field
-To:     Zhenyu Ye <yezhenyu2@huawei.com>, <will@kernel.org>,
-        <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <aneesh.kumar@linux.ibm.com>, <maz@kernel.org>,
-        <steven.price@arm.com>, <broonie@kernel.org>,
-        <guohanjun@huawei.com>
-CC:     <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <xiexiangyou@huawei.com>, <zhangshaokun@hisilicon.com>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <prime.zeng@hisilicon.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20200321121621.1600-1-yezhenyu2@huawei.com>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <4e3d42d9-7c57-3659-edbe-1e59ca5b04ea@huawei.com>
-Date:   Tue, 24 Mar 2020 19:31:57 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1727201AbgCXLcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 07:32:31 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id D2998ACE1257D981151C;
+        Tue, 24 Mar 2020 19:32:27 +0800 (CST)
+Received: from [127.0.0.1] (10.74.184.86) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.487.0; Tue, 24 Mar 2020
+ 19:32:17 +0800
+Subject: Re: [PATCH 11/11] EDAC/ghes: Create one memory controller per
+ physical memory array
+To:     John Garry <john.garry@huawei.com>, Borislav Petkov <bp@alien8.de>,
+        "Robert Richter" <rrichter@marvell.com>
+References: <20200306151318.17422-1-rrichter@marvell.com>
+ <20200306151318.17422-12-rrichter@marvell.com>
+ <20200316095149.GE26126@zn.tnic>
+ <924f4c0e-1f9d-e7de-17cd-466eb3a74d90@huawei.com>
+CC:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Aristeu Rozanski <aris@redhat.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Shiju Jose <shiju.jose@huawei.com>
+From:   Xiaofei Tan <tanxiaofei@huawei.com>
+Message-ID: <5E79EFC0.3040108@huawei.com>
+Date:   Tue, 24 Mar 2020 19:32:16 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-In-Reply-To: <20200321121621.1600-1-yezhenyu2@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+In-Reply-To: <924f4c0e-1f9d-e7de-17cd-466eb3a74d90@huawei.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
+X-Originating-IP: [10.74.184.86]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhenyu,
 
-On 2020/3/21 20:16, Zhenyu Ye wrote:
-> --
-> ChangeList:
-> v3:
-> use vma->vm_flags to replace mm->context.flags.
+On 2020/3/18 0:34, John Garry wrote:
+> On 16/03/2020 09:51, Borislav Petkov wrote:
+>> On Fri, Mar 06, 2020 at 04:13:18PM +0100, Robert Richter wrote:
+>>> The ghes driver only creates one memory controller for the whole
+>>> system. This does not reflect memory topology especially in multi-node
+>>> systems. E.g. a Marvell ThunderX2 system shows:
+>>>
+>>>   /sys/devices/system/edac/mc/mc0/dimm0
+>>>   /sys/devices/system/edac/mc/mc0/dimm1
+>>>   /sys/devices/system/edac/mc/mc0/dimm2
+>>>   /sys/devices/system/edac/mc/mc0/dimm3
+>>>   /sys/devices/system/edac/mc/mc0/dimm4
+>>>   /sys/devices/system/edac/mc/mc0/dimm5
+>>>   /sys/devices/system/edac/mc/mc0/dimm6
+>>>   /sys/devices/system/edac/mc/mc0/dimm7
+>>>   /sys/devices/system/edac/mc/mc0/dimm8
+>>>   /sys/devices/system/edac/mc/mc0/dimm9
+>>>   /sys/devices/system/edac/mc/mc0/dimm10
+>>>   /sys/devices/system/edac/mc/mc0/dimm11
+>>>   /sys/devices/system/edac/mc/mc0/dimm12
+>>>   /sys/devices/system/edac/mc/mc0/dimm13
+>>>   /sys/devices/system/edac/mc/mc0/dimm14
+>>>   /sys/devices/system/edac/mc/mc0/dimm15
+>>>
+>>> The DIMMs 9-15 are located on the 2nd node of the system. On
+>>> comparable x86 systems there is one memory controller per node. The
+>>> ghes driver should also group DIMMs depending on the topology and
+>>> create one MC per node.
+>>>
+>>> There are several options to detect the topology. ARM64 systems
+>>> retrieve the (NUMA) node information from the ACPI SRAT table (see
+>>> acpi_table_parse_srat()). The node id is later stored in the physical
+>>> address page. The pfn_to_nid() macro could be used for a DIMM after
+>>> determining its physical address. The drawback of this approach is
+>>> that there are too many subsystems involved it depends on. It could
+>>> easily break and makes the implementation complex. E.g. pfn_to_nid()
+>>> can only be reliable used on mapped address ranges which is not always
+>>> granted, there are various firmware instances involved which could be
+>>> broken, or results may vary depending on NUMA settings.
+>>>
+>>> Another approach that was suggested by James' is to use the DIMM's
+>>> physical memory array handle to group DIMMs [1]. The advantage is to
+>>> only use the information on memory devices from the SMBIOS table that
+>>> contains a reference to the physical memory array it belongs too. This
+>>> information is mandatory same as the use of DIMM handle references by
+>>> GHES to provide the DIMM location of an error. There is only a single
+>>> table to parse which eases implementation. This patch uses this
+>>> approach for DIMM grouping.
+>>>
+>>> Modify the DMI decoder to also detect the physical memory array a DIMM
+>>> is linked to and create one memory controller per array to group
+>>> DIMMs. With the change DIMMs are grouped, e.g. a ThunderX2 system
+>>> shows one MC per node now:
+>>>
+>>>   # grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
+>>>   /sys/devices/system/edac/mc/mc0/dimm0/dimm_label:N0 DIMM_A0
+>>>   /sys/devices/system/edac/mc/mc0/dimm1/dimm_label:N0 DIMM_B0
+>>>   /sys/devices/system/edac/mc/mc0/dimm2/dimm_label:N0 DIMM_C0
+>>>   /sys/devices/system/edac/mc/mc0/dimm3/dimm_label:N0 DIMM_D0
+>>>   /sys/devices/system/edac/mc/mc0/dimm4/dimm_label:N0 DIMM_E0
+>>>   /sys/devices/system/edac/mc/mc0/dimm5/dimm_label:N0 DIMM_F0
+>>>   /sys/devices/system/edac/mc/mc0/dimm6/dimm_label:N0 DIMM_G0
+>>>   /sys/devices/system/edac/mc/mc0/dimm7/dimm_label:N0 DIMM_H0
+>>>   /sys/devices/system/edac/mc/mc1/dimm0/dimm_label:N1 DIMM_I0
+>>>   /sys/devices/system/edac/mc/mc1/dimm1/dimm_label:N1 DIMM_J0
+>>>   /sys/devices/system/edac/mc/mc1/dimm2/dimm_label:N1 DIMM_K0
+>>>   /sys/devices/system/edac/mc/mc1/dimm3/dimm_label:N1 DIMM_L0
+>>>   /sys/devices/system/edac/mc/mc1/dimm4/dimm_label:N1 DIMM_M0
+>>>   /sys/devices/system/edac/mc/mc1/dimm5/dimm_label:N1 DIMM_N0
+>>>   /sys/devices/system/edac/mc/mc1/dimm6/dimm_label:N1 DIMM_O0
+>>>   /sys/devices/system/edac/mc/mc1/dimm7/dimm_label:N1 DIMM_P0
+>>>
+>>> [1] https://lkml.kernel.org/r/f878201f-f8fd-0f2a-5072-ba60c64eefaf@arm.com
+>>>
+>>> Suggested-by: James Morse <james.morse@arm.com>
+>>> Signed-off-by: Robert Richter <rrichter@marvell.com>
+>>> ---
+>>>   drivers/edac/ghes_edac.c | 137 ++++++++++++++++++++++++++++++---------
+>>>   1 file changed, 107 insertions(+), 30 deletions(-)
+>>
+>> This is all fine and good but that change affects the one x86 platform
+>> we support so the whole patchset should be tested there too. Adding
+>> Toshi.
+>>
+>> As a matter of fact, the final version of this set should be tested on
+>> all platforms which are using this thing. Adding John Garry too who
+>> reported issues with this driver recently on his platform.
 > 
-> v2:
-> build the patch on Marc's NV series[1].
-> 
-> v1:
-> add support for TTL field in arm64.
-> 
-> --
-> ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
-> the level of translation table walk holding the leaf entry for the
-> address that is being invalidated. Hardware can use this information
-> to determine if there was a risk of splintering.
-> 
-> Marc has provided basic support for ARM64-TTL features on his
-> NV series[1] patches. NV is a large feature, however, only
-> patches 62[2] and 67[3] are need by this patch set.
-> ** You only need read those two patches before review this patch. **
+> Adding other RAS-centric guys for H.
 
-It'd be good if you can put the whole thing into a series, otherwise
-people will have difficulty when reviewing and testing it...
+Hi John & Borislav & Robert
+I have tested this patch set on our platform. Only one memory controller found when there is one DIMM on
+each socket or node. Just like this:
+estuary:/$ grep . /sys/devices/system/edac/mc/mc*/dimm*/dimm_label
+/sys/devices/system/edac/mc/mc0/dimm0/dimm_label:SOCKET 0 CHANNEL 0 DIMM 0 DIMM0
+/sys/devices/system/edac/mc/mc0/dimm20/dimm_label:SOCKET 1 CHANNEL 2 DIMM 0 DIMM1
 
-I haven't tracked the previous versions. If Marc is OK to share the
-two patches below [2][3], I'd suggest you to pick them up, add them
-in your series, rebase on top of mainline and resend it.
+It is not the problem of the patch set. Because our BIOS only defined one "Physical Memory Array Handle" in DMI table.
+Just like this:
+estuary:/$ dmidecode -t memory | grep "Array Handle"
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
+        Array Handle: 0x0000
 
+BTW, i also test other function of edac driver our platform used. They're all good. :)
+> 
+> Cheers,
+> John
+> 
+>>
+>> Thx.
+>>
+> 
+> 
+> .
+> 
 
-Thanks,
-Zenghui
-
-> 
-> Some of this patch depends on a feature powered by @Will Deacon
-> two years ago, which tracking the level of page tables in mm_gather.
-> See more in commit a6d60245.
-> 
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git kvm-arm64/nv-5.6-rc1
-> [2] https://lore.kernel.org/linux-arm-kernel/20200211174938.27809-63-maz@kernel.org/
-> [3] https://lore.kernel.org/linux-arm-kernel/20200211174938.27809-68-maz@kernel.org/
-> 
-> Zhenyu Ye (4):
->    arm64: Add level-hinted TLB invalidation helper to tlbi_user
->    mm: Add page table level flags to vm_flags
->    arm64: tlb: Use translation level hint in vm_flags
->    mm: Set VM_LEVEL flags in some tlb_flush functions
-> 
->   arch/arm64/include/asm/mmu.h      |  2 ++
->   arch/arm64/include/asm/tlb.h      | 12 +++++++++
->   arch/arm64/include/asm/tlbflush.h | 44 ++++++++++++++++++++++++++-----
->   arch/arm64/mm/hugetlbpage.c       |  4 +--
->   arch/arm64/mm/mmu.c               | 14 ++++++++++
->   include/asm-generic/pgtable.h     | 16 +++++++++--
->   include/linux/mm.h                | 10 +++++++
->   include/trace/events/mmflags.h    | 15 ++++++++++-
->   mm/huge_memory.c                  |  8 +++++-
->   9 files changed, 113 insertions(+), 12 deletions(-)
-> 
+-- 
+ thanks
+tanxiaofei
 
