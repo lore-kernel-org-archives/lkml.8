@@ -4,63 +4,63 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B07AC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B48EC54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC622076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6981E2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585140360;
-	bh=C3m0BcigvE5jzTdr5bqUZO8LG8nNL/SiOAyPvsTkNUw=;
+	s=default; t=1585140363;
+	bh=zyBV+P73UyLz8o4Hc1phk49tBfasMirh9Dv47zl+hyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YAYa/81gHV1wpyLu/gzu+HI9Z4peIObcYXyCFYOc6evfc3dMDL2kK7K+mYjgWSXhI
-	 xTI0xwL64E1/rsgozmVLP1ypX7Xp7ButtWqZ17P1REtZbXRjuvknu9JKc6ZS77rF9d
-	 ikbQJ/HCDdgt1QbHXBwk3VdA095nhAamvG/Rq1GM=
+	b=XeRR4zfOvaLRRtXoowYkvxihqJeaqyM4jOGVHXQC0wjMPZ/m7EueLNn2kB/BRR7kI
+	 CAAZAhRg/NW8Zz92A6SvwbOHkdo6ffWf0AtVbSkJm3CecUG4Jixa2DLV2U+Cv5oOtg
+	 zMYNJlIDUJ/RRDinFp5tbltfSabtQNPuwY/JbdmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbgCYMp6 (ORCPT
+        id S1727580AbgCYMqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:45:58 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43689 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgCYMp6 (ORCPT
+        Wed, 25 Mar 2020 08:46:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35240 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCYMqA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:45:58 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f206so984275pfa.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:45:57 -0700 (PDT)
+        Wed, 25 Mar 2020 08:46:00 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g6so772827plt.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:45:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=teK3a3LWLbiCQvpK9qs2ncAfoeKO94eKFIg30BzrSyM=;
-        b=ILo1owntRQGEMsa25xc7zx6T8apvdzzAcR42O71/aYJA9od9NE8r4MHHG8+2la3ZM8
-         rftLgbhNAU0onxwNId1INoYgrFiTD4rb8n0ZkW4l/kcNV2CX34rPo3HTenTQG9FP179c
-         Wwh5ErFy68YYRWfS4rOA7ePtLpSK037tBK7YBlOdQM689kX8H8/DHjB8UCMXSN9ae2Gn
-         2Hr5oNp9yROxqoqRDdW2PYn0oETO6x30Tflt7XtEeBEQRaJWtuJz9DcA9rtGzMayq6GW
-         y6Hsy4dYT1hGk4eNrWwrSskUbyotOH5+gPDfMF08RbDujI6z4jtXSBpii18J/4sf0iqh
-         bQYw==
+        bh=kW9/sLQIjwWsS2t/myeR9rhJ3uBYPvcqp7lElKcghPU=;
+        b=nUOkabJMO0UME33DTztO53dOpO4Xv3QSKvPIm8h191Hjt55XDec/nj+HnMEeunycD5
+         U8+ILHN3p0NqjjoxJLWdsmYHP6sX7nxk9Mv8DKnQYYPhiUAT62dkQk3/RFnqNz6LFre7
+         HVQmUHTKZmFHbL21wIWh3CJFJt1tvQYxgl3WD3UzV34ShOk5/vaMxLswiFczNQbjkw20
+         SoRtnPmSWTH8rHib8Z0Q9Rf9/H1PcdArPPC7LVU1DtsnEwY4P7bHiRQEKc3zj1/ijW2B
+         tq4aCQCLcEIpA3sJHAEHZ47IoxypYkectx3f6JkJtVQtXNoWeeTyjbsor5YpT02TUOF0
+         6X2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=teK3a3LWLbiCQvpK9qs2ncAfoeKO94eKFIg30BzrSyM=;
-        b=aizsUhf3OodL3elsFbdtEc/K88hsGL4WcCXTlQZ8Y5UL17oRLcK9JPCEXNI8jVQFhc
-         JlalUdxJMomOjubJIpi+9aqfDGWIBc5AsxHhUwEtdJO1YAGxWPnDrS3XSytWwurluBNq
-         /t/skY/rjR25cDgoHpH9G+GJgM5GwC8VX2bIvUPllCAblWFLQLc0AsLANQX76Rrub9mo
-         dQJTTnuaQylcUWRC3JxVPDUIbsGmkTSzCbD+Sn0j9PT8Hppr5nCCIXLbmcC+nSHopp9H
-         JJ3V5G5OUFzTkbF74dGwDCWbKFQ5JPIhmpFRnKqLFHuyu9Skb8DA3gNoOlXGMasSm15F
-         XQhQ==
-X-Gm-Message-State: ANhLgQ06Lqs0AZvWBecAaCzmTJxv0c3n4XKuTejLAzoVF6sreEbtrwbQ
-        9jwnK9XRVwW1aAYcv9svr/I=
-X-Google-Smtp-Source: ADFU+vun6NJwBNZOhMjrXJbZyvj5gJevWdPKspiMlzWFBsIQiGnAIjkqOfh0MAVs9hS3PKTa4W94fw==
-X-Received: by 2002:a62:30c6:: with SMTP id w189mr3286656pfw.257.1585140356582;
-        Wed, 25 Mar 2020 05:45:56 -0700 (PDT)
+        bh=kW9/sLQIjwWsS2t/myeR9rhJ3uBYPvcqp7lElKcghPU=;
+        b=RRWMMx1FGN0bECCNKDuPZ5QVxKcE48tgk5u7mXGu2DrR8LW5+ik5QF4zZ4s87n9/xk
+         XeEFPobG8jYD16weU4FraB8KHWI6XTAEZ0go/xHNJV+8KMlgWHFWiOvQqKJQnv/FBEPR
+         HW8kXSjbrn/TTNdOeILHNc7zWgMdDZ8X2cc3dufep7COAqyyTgA1Zd0TMWzYIUoRKpZ6
+         nLx9gblIp0SAEu7w7Y71ceVlF2AQKE8fdjgMB+A24V8mtyfSEY90RNYx6/lr0Uxee3nR
+         t6/6A4h77CPOIpP5MbSCXv1GLsdAOwz7U/4B5iakC8KR6ciM1eK5Dis947T6LvMdkXHU
+         U7OQ==
+X-Gm-Message-State: ANhLgQ25EER8TmXGeIKeIwgB/QQJjwAS/mJZNRmAN3fpcFTg2XIA9byy
+        ipYoSinwrU3zErhvB8k1jn4+6vgO
+X-Google-Smtp-Source: ADFU+vss5ecwBjV2ZE7vymgXWJwj2mtYEZDVgzMIwmgL7NZ7zR49wZ+Wk7drvJUDbyWOcts8mo6DMQ==
+X-Received: by 2002:a17:90a:326f:: with SMTP id k102mr3546217pjb.48.1585140359384;
+        Wed, 25 Mar 2020 05:45:59 -0700 (PDT)
 Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
-        by smtp.gmail.com with ESMTPSA id h15sm18244648pfq.10.2020.03.25.05.45.53
+        by smtp.gmail.com with ESMTPSA id h15sm18244648pfq.10.2020.03.25.05.45.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 05:45:55 -0700 (PDT)
+        Wed, 25 Mar 2020 05:45:58 -0700 (PDT)
 From:   Namhyung Kim <namhyung@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Jiri Olsa <jolsa@redhat.com>,
@@ -68,12 +68,10 @@ Cc:     Jiri Olsa <jolsa@redhat.com>,
         Ingo Molnar <mingo@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        kernel test robot <rong.a.chen@intel.com>
-Subject: [PATCH 3/9] perf tools: Basic support for CGROUP event
-Date:   Wed, 25 Mar 2020 21:45:30 +0900
-Message-Id: <20200325124536.2800725-4-namhyung@kernel.org>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH 4/9] perf tools: Maintain cgroup hierarchy
+Date:   Wed, 25 Mar 2020 21:45:31 +0900
+Message-Id: <20200325124536.2800725-5-namhyung@kernel.org>
 X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
 In-Reply-To: <20200325124536.2800725-1-namhyung@kernel.org>
 References: <20200325124536.2800725-1-namhyung@kernel.org>
@@ -84,375 +82,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement basic functionality to support cgroup tracking.  Each cgroup
-can be identified by inode number which can be read from userspace
-too.  The actual cgroup processing will come in the later patch.
+Each cgroup is kept in the perf_env's cgroup_tree sorted by the cgroup
+id.  Hist entries have cgroup id can compare it directly and later it
+can be used to find a group name using this tree.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-[fix perf test failure on sampling parsing]
-Reported-by: kernel test robot <rong.a.chen@intel.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/include/uapi/linux/perf_event.h     | 16 ++++++++++++++--
- tools/lib/perf/include/perf/event.h       |  7 +++++++
- tools/perf/builtin-diff.c                 |  1 +
- tools/perf/builtin-report.c               |  1 +
- tools/perf/tests/sample-parsing.c         |  6 +++++-
- tools/perf/util/event.c                   | 18 ++++++++++++++++++
- tools/perf/util/event.h                   |  6 ++++++
- tools/perf/util/evsel.c                   |  6 ++++++
- tools/perf/util/machine.c                 | 12 ++++++++++++
- tools/perf/util/machine.h                 |  3 +++
- tools/perf/util/perf_event_attr_fprintf.c |  2 ++
- tools/perf/util/session.c                 |  4 ++++
- tools/perf/util/synthetic-events.c        |  8 ++++++++
- tools/perf/util/tool.h                    |  1 +
- 14 files changed, 88 insertions(+), 3 deletions(-)
+ tools/perf/util/cgroup.c  | 80 +++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/cgroup.h  | 17 +++++++--
+ tools/perf/util/env.c     |  2 +
+ tools/perf/util/env.h     |  6 +++
+ tools/perf/util/machine.c |  9 ++++-
+ 5 files changed, 109 insertions(+), 5 deletions(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 397cfd65b3fe..7b2d6fc9e6ed 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -142,8 +142,9 @@ enum perf_event_sample_format {
- 	PERF_SAMPLE_REGS_INTR			= 1U << 18,
- 	PERF_SAMPLE_PHYS_ADDR			= 1U << 19,
- 	PERF_SAMPLE_AUX				= 1U << 20,
-+	PERF_SAMPLE_CGROUP			= 1U << 21,
- 
--	PERF_SAMPLE_MAX = 1U << 21,		/* non-ABI */
-+	PERF_SAMPLE_MAX = 1U << 22,		/* non-ABI */
- 
- 	__PERF_SAMPLE_CALLCHAIN_EARLY		= 1ULL << 63, /* non-ABI; internal use */
- };
-@@ -381,7 +382,8 @@ struct perf_event_attr {
- 				ksymbol        :  1, /* include ksymbol events */
- 				bpf_event      :  1, /* include bpf events */
- 				aux_output     :  1, /* generate AUX records instead of events */
--				__reserved_1   : 32;
-+				cgroup         :  1, /* include cgroup events */
-+				__reserved_1   : 31;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-@@ -1012,6 +1014,16 @@ enum perf_event_type {
- 	 */
- 	PERF_RECORD_BPF_EVENT			= 18,
- 
-+	/*
-+	 * struct {
-+	 *	struct perf_event_header	header;
-+	 *	u64				id;
-+	 *	char				path[];
-+	 *	struct sample_id		sample_id;
-+	 * };
-+	 */
-+	PERF_RECORD_CGROUP			= 19,
-+
- 	PERF_RECORD_MAX,			/* non-ABI */
- };
- 
-diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
-index 18106899cb4e..69b44d2cc0f5 100644
---- a/tools/lib/perf/include/perf/event.h
-+++ b/tools/lib/perf/include/perf/event.h
-@@ -105,6 +105,12 @@ struct perf_record_bpf_event {
- 	__u8			 tag[BPF_TAG_SIZE];  // prog tag
- };
- 
-+struct perf_record_cgroup {
-+	struct perf_event_header header;
-+	__u64			 id;
-+	char			 path[PATH_MAX];
-+};
-+
- struct perf_record_sample {
- 	struct perf_event_header header;
- 	__u64			 array[];
-@@ -352,6 +358,7 @@ union perf_event {
- 	struct perf_record_mmap2		mmap2;
- 	struct perf_record_comm			comm;
- 	struct perf_record_namespaces		namespaces;
-+	struct perf_record_cgroup		cgroup;
- 	struct perf_record_fork			fork;
- 	struct perf_record_lost			lost;
- 	struct perf_record_lost_samples		lost_samples;
-diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
-index 5e697cd2224a..c94a002f295e 100644
---- a/tools/perf/builtin-diff.c
-+++ b/tools/perf/builtin-diff.c
-@@ -455,6 +455,7 @@ static struct perf_diff pdiff = {
- 		.fork	= perf_event__process_fork,
- 		.lost	= perf_event__process_lost,
- 		.namespaces = perf_event__process_namespaces,
-+		.cgroup = perf_event__process_cgroup,
- 		.ordered_events = true,
- 		.ordering_requires_timestamps = true,
- 	},
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index ea673b7eb3f4..26d8fc27e427 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -1105,6 +1105,7 @@ int cmd_report(int argc, const char **argv)
- 			.mmap2		 = perf_event__process_mmap2,
- 			.comm		 = perf_event__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
-+			.cgroup		 = perf_event__process_cgroup,
- 			.exit		 = perf_event__process_exit,
- 			.fork		 = perf_event__process_fork,
- 			.lost		 = perf_event__process_lost,
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 14239e472187..61865699c3f4 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -151,6 +151,9 @@ static bool samples_same(const struct perf_sample *s1,
- 	if (type & PERF_SAMPLE_PHYS_ADDR)
- 		COMP(phys_addr);
- 
-+	if (type & PERF_SAMPLE_CGROUP)
-+		COMP(cgroup);
-+
- 	if (type & PERF_SAMPLE_AUX) {
- 		COMP(aux_sample.size);
- 		if (memcmp(s1->aux_sample.data, s2->aux_sample.data,
-@@ -230,6 +233,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
- 			.regs	= regs,
- 		},
- 		.phys_addr	= 113,
-+		.cgroup		= 114,
- 		.aux_sample	= {
- 			.size	= sizeof(aux_data),
- 			.data	= (void *)aux_data,
-@@ -336,7 +340,7 @@ int test__sample_parsing(struct test *test __maybe_unused, int subtest __maybe_u
- 	 * were added.  Please actually update the test rather than just change
- 	 * the condition below.
- 	 */
--	if (PERF_SAMPLE_MAX > PERF_SAMPLE_AUX << 1) {
-+	if (PERF_SAMPLE_MAX > PERF_SAMPLE_CGROUP << 1) {
- 		pr_debug("sample format has changed, some new PERF_SAMPLE_ bit was introduced - test needs updating\n");
- 		return -1;
+diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
+index 5bc9d3b01bd9..b73fb7823048 100644
+--- a/tools/perf/util/cgroup.c
++++ b/tools/perf/util/cgroup.c
+@@ -191,3 +191,83 @@ int parse_cgroups(const struct option *opt, const char *str,
  	}
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index c5447ff516a2..824c038e5c33 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -54,6 +54,7 @@ static const char *perf_event__names[] = {
- 	[PERF_RECORD_NAMESPACES]		= "NAMESPACES",
- 	[PERF_RECORD_KSYMBOL]			= "KSYMBOL",
- 	[PERF_RECORD_BPF_EVENT]			= "BPF_EVENT",
-+	[PERF_RECORD_CGROUP]			= "CGROUP",
- 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
- 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
- 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
-@@ -180,6 +181,12 @@ size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp)
- 	return ret;
+ 	return 0;
  }
- 
-+size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp)
-+{
-+	return fprintf(fp, " cgroup: %" PRI_lu64 " %s\n",
-+		       event->cgroup.id, event->cgroup.path);
-+}
 +
- int perf_event__process_comm(struct perf_tool *tool __maybe_unused,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
-@@ -196,6 +203,14 @@ int perf_event__process_namespaces(struct perf_tool *tool __maybe_unused,
- 	return machine__process_namespaces_event(machine, event, sample);
- }
- 
-+int perf_event__process_cgroup(struct perf_tool *tool __maybe_unused,
-+			       union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct machine *machine)
++static struct cgroup *__cgroup__findnew(struct rb_root *root, uint64_t id,
++					bool create, const char *path)
 +{
-+	return machine__process_cgroup_event(machine, event, sample);
-+}
++	struct rb_node **p = &root->rb_node;
++	struct rb_node *parent = NULL;
++	struct cgroup *cgrp;
 +
- int perf_event__process_lost(struct perf_tool *tool __maybe_unused,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
-@@ -417,6 +432,9 @@ size_t perf_event__fprintf(union perf_event *event, FILE *fp)
- 	case PERF_RECORD_NAMESPACES:
- 		ret += perf_event__fprintf_namespaces(event, fp);
- 		break;
-+	case PERF_RECORD_CGROUP:
-+		ret += perf_event__fprintf_cgroup(event, fp);
-+		break;
- 	case PERF_RECORD_MMAP2:
- 		ret += perf_event__fprintf_mmap2(event, fp);
- 		break;
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 3cda40a2fafc..b8289f160f07 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -135,6 +135,7 @@ struct perf_sample {
- 	u32 raw_size;
- 	u64 data_src;
- 	u64 phys_addr;
-+	u64 cgroup;
- 	u32 flags;
- 	u16 insn_len;
- 	u8  cpumode;
-@@ -322,6 +323,10 @@ int perf_event__process_namespaces(struct perf_tool *tool,
- 				   union perf_event *event,
- 				   struct perf_sample *sample,
- 				   struct machine *machine);
-+int perf_event__process_cgroup(struct perf_tool *tool,
-+			       union perf_event *event,
-+			       struct perf_sample *sample,
-+			       struct machine *machine);
- int perf_event__process_mmap(struct perf_tool *tool,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
-@@ -377,6 +382,7 @@ size_t perf_event__fprintf_switch(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_thread_map(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_cpu_map(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_namespaces(union perf_event *event, FILE *fp);
-+size_t perf_event__fprintf_cgroup(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_ksymbol(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf_bpf(union perf_event *event, FILE *fp);
- size_t perf_event__fprintf(union perf_event *event, FILE *fp);
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 15ccd193483f..b766eb608b97 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2267,6 +2267,12 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		array++;
- 	}
- 
-+	data->cgroup = 0;
-+	if (type & PERF_SAMPLE_CGROUP) {
-+		data->cgroup = *array;
-+		array++;
++	while (*p != NULL) {
++		parent = *p;
++		cgrp = rb_entry(parent, struct cgroup, node);
++
++		if (cgrp->id == id)
++			return cgrp;
++
++		if (cgrp->id < id)
++			p = &(*p)->rb_left;
++		else
++			p = &(*p)->rb_right;
 +	}
 +
- 	if (type & PERF_SAMPLE_AUX) {
- 		OVERFLOW_CHECK_u64(array);
- 		sz = *array++;
++	if (!create)
++		return NULL;
++
++	cgrp = malloc(sizeof(*cgrp));
++	if (cgrp == NULL)
++		return NULL;
++
++	cgrp->name = strdup(path);
++	if (cgrp->name == NULL) {
++		free(cgrp);
++		return NULL;
++	}
++
++	cgrp->fd = -1;
++	cgrp->id = id;
++	refcount_set(&cgrp->refcnt, 1);
++
++	rb_link_node(&cgrp->node, parent, p);
++	rb_insert_color(&cgrp->node, root);
++
++	return cgrp;
++}
++
++struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
++			       const char *path)
++{
++	struct cgroup *cgrp;
++
++	down_write(&env->cgroups.lock);
++	cgrp = __cgroup__findnew(&env->cgroups.tree, id, true, path);
++	up_write(&env->cgroups.lock);
++	return cgrp;
++}
++
++struct cgroup *cgroup__find(struct perf_env *env, uint64_t id)
++{
++	struct cgroup *cgrp;
++
++	down_read(&env->cgroups.lock);
++	cgrp = __cgroup__findnew(&env->cgroups.tree, id, false, NULL);
++	up_read(&env->cgroups.lock);
++	return cgrp;
++}
++
++void perf_env__purge_cgroups(struct perf_env *env)
++{
++	struct rb_node *node;
++	struct cgroup *cgrp;
++
++	down_write(&env->cgroups.lock);
++	while (!RB_EMPTY_ROOT(&env->cgroups.tree)) {
++		node = rb_first(&env->cgroups.tree);
++		cgrp = rb_entry(node, struct cgroup, node);
++
++		rb_erase(node, &env->cgroups.tree);
++		cgroup__put(cgrp);
++	}
++	up_write(&env->cgroups.lock);
++}
+diff --git a/tools/perf/util/cgroup.h b/tools/perf/util/cgroup.h
+index 2ec11f01090d..e98d5975fe55 100644
+--- a/tools/perf/util/cgroup.h
++++ b/tools/perf/util/cgroup.h
+@@ -3,16 +3,19 @@
+ #define __CGROUP_H__
+ 
+ #include <linux/refcount.h>
++#include <linux/rbtree.h>
++#include "util/env.h"
+ 
+ struct option;
+ 
+ struct cgroup {
+-	char *name;
+-	int fd;
+-	refcount_t refcnt;
++	struct rb_node		node;
++	u64			id;
++	char			*name;
++	int			fd;
++	refcount_t		refcnt;
+ };
+ 
+-
+ extern int nr_cgroups; /* number of explicit cgroups defined */
+ 
+ struct cgroup *cgroup__get(struct cgroup *cgroup);
+@@ -26,4 +29,10 @@ void evlist__set_default_cgroup(struct evlist *evlist, struct cgroup *cgroup);
+ 
+ int parse_cgroups(const struct option *opt, const char *str, int unset);
+ 
++struct cgroup *cgroup__findnew(struct perf_env *env, uint64_t id,
++			       const char *path);
++struct cgroup *cgroup__find(struct perf_env *env, uint64_t id);
++
++void perf_env__purge_cgroups(struct perf_env *env);
++
+ #endif /* __CGROUP_H__ */
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 4154f944f474..fadc59708ece 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -6,6 +6,7 @@
+ #include <linux/ctype.h>
+ #include <linux/zalloc.h>
+ #include "bpf-event.h"
++#include "cgroup.h"
+ #include <errno.h>
+ #include <sys/utsname.h>
+ #include <bpf/libbpf.h>
+@@ -168,6 +169,7 @@ void perf_env__exit(struct perf_env *env)
+ 	int i;
+ 
+ 	perf_env__purge_bpf(env);
++	perf_env__purge_cgroups(env);
+ 	zfree(&env->hostname);
+ 	zfree(&env->os_release);
+ 	zfree(&env->version);
+diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
+index 11d05ae3606a..7632075a8792 100644
+--- a/tools/perf/util/env.h
++++ b/tools/perf/util/env.h
+@@ -88,6 +88,12 @@ struct perf_env {
+ 		u32			btfs_cnt;
+ 	} bpf_progs;
+ 
++	/* same reason as above (for perf-top) */
++	struct {
++		struct rw_semaphore	lock;
++		struct rb_root		tree;
++	} cgroups;
++
+ 	/* For fast cpu to numa node lookup via perf_env__numa_node */
+ 	int			*numa_map;
+ 	int			 nr_numa_map;
 diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index fd14f1489802..399b4731b246 100644
+index 399b4731b246..97142e9671be 100644
 --- a/tools/perf/util/machine.c
 +++ b/tools/perf/util/machine.c
-@@ -654,6 +654,16 @@ int machine__process_namespaces_event(struct machine *machine __maybe_unused,
+@@ -33,6 +33,7 @@
+ #include "asm/bug.h"
+ #include "bpf-event.h"
+ #include <internal/lib.h> // page_size
++#include "cgroup.h"
+ 
+ #include <linux/ctype.h>
+ #include <symbol/kallsyms.h>
+@@ -654,13 +655,19 @@ int machine__process_namespaces_event(struct machine *machine __maybe_unused,
  	return err;
  }
  
-+int machine__process_cgroup_event(struct machine *machine __maybe_unused,
-+				  union perf_event *event,
-+				  struct perf_sample *sample __maybe_unused)
-+{
-+	if (dump_trace)
-+		perf_event__fprintf_cgroup(event, stdout);
-+
-+	return 0;
-+}
-+
- int machine__process_lost_event(struct machine *machine __maybe_unused,
- 				union perf_event *event, struct perf_sample *sample __maybe_unused)
- {
-@@ -1878,6 +1888,8 @@ int machine__process_event(struct machine *machine, union perf_event *event,
- 		ret = machine__process_mmap_event(machine, event, sample); break;
- 	case PERF_RECORD_NAMESPACES:
- 		ret = machine__process_namespaces_event(machine, event, sample); break;
-+	case PERF_RECORD_CGROUP:
-+		ret = machine__process_cgroup_event(machine, event, sample); break;
- 	case PERF_RECORD_MMAP2:
- 		ret = machine__process_mmap2_event(machine, event, sample); break;
- 	case PERF_RECORD_FORK:
-diff --git a/tools/perf/util/machine.h b/tools/perf/util/machine.h
-index be0a930eca89..fa1be9ea00fa 100644
---- a/tools/perf/util/machine.h
-+++ b/tools/perf/util/machine.h
-@@ -128,6 +128,9 @@ int machine__process_switch_event(struct machine *machine,
- int machine__process_namespaces_event(struct machine *machine,
- 				      union perf_event *event,
- 				      struct perf_sample *sample);
+-int machine__process_cgroup_event(struct machine *machine __maybe_unused,
 +int machine__process_cgroup_event(struct machine *machine,
-+				  union perf_event *event,
-+				  struct perf_sample *sample);
- int machine__process_mmap_event(struct machine *machine, union perf_event *event,
- 				struct perf_sample *sample);
- int machine__process_mmap2_event(struct machine *machine, union perf_event *event,
-diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
-index 355d3458d4e6..b94fa07f5d32 100644
---- a/tools/perf/util/perf_event_attr_fprintf.c
-+++ b/tools/perf/util/perf_event_attr_fprintf.c
-@@ -35,6 +35,7 @@ static void __p_sample_type(char *buf, size_t size, u64 value)
- 		bit_name(BRANCH_STACK), bit_name(REGS_USER), bit_name(STACK_USER),
- 		bit_name(IDENTIFIER), bit_name(REGS_INTR), bit_name(DATA_SRC),
- 		bit_name(WEIGHT), bit_name(PHYS_ADDR), bit_name(AUX),
-+		bit_name(CGROUP),
- 		{ .name = NULL, }
- 	};
- #undef bit_name
-@@ -132,6 +133,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
- 	PRINT_ATTRf(ksymbol, p_unsigned);
- 	PRINT_ATTRf(bpf_event, p_unsigned);
- 	PRINT_ATTRf(aux_output, p_unsigned);
-+	PRINT_ATTRf(cgroup, p_unsigned);
- 
- 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned);
- 	PRINT_ATTRf(bp_type, p_unsigned);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 055b00abd56d..0b0bfe5bef17 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -471,6 +471,8 @@ void perf_tool__fill_defaults(struct perf_tool *tool)
- 		tool->comm = process_event_stub;
- 	if (tool->namespaces == NULL)
- 		tool->namespaces = process_event_stub;
-+	if (tool->cgroup == NULL)
-+		tool->cgroup = process_event_stub;
- 	if (tool->fork == NULL)
- 		tool->fork = process_event_stub;
- 	if (tool->exit == NULL)
-@@ -1436,6 +1438,8 @@ static int machines__deliver_event(struct machines *machines,
- 		return tool->comm(tool, event, sample, machine);
- 	case PERF_RECORD_NAMESPACES:
- 		return tool->namespaces(tool, event, sample, machine);
-+	case PERF_RECORD_CGROUP:
-+		return tool->cgroup(tool, event, sample, machine);
- 	case PERF_RECORD_FORK:
- 		return tool->fork(tool, event, sample, machine);
- 	case PERF_RECORD_EXIT:
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 3f28af39f9c6..f72d80999506 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -1230,6 +1230,9 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
- 	if (type & PERF_SAMPLE_PHYS_ADDR)
- 		result += sizeof(u64);
- 
-+	if (type & PERF_SAMPLE_CGROUP)
-+		result += sizeof(u64);
+ 				  union perf_event *event,
+ 				  struct perf_sample *sample __maybe_unused)
+ {
++	struct cgroup *cgrp;
 +
- 	if (type & PERF_SAMPLE_AUX) {
- 		result += sizeof(u64);
- 		result += sample->aux_sample.size;
-@@ -1404,6 +1407,11 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
- 		array++;
- 	}
+ 	if (dump_trace)
+ 		perf_event__fprintf_cgroup(event, stdout);
  
-+	if (type & PERF_SAMPLE_CGROUP) {
-+		*array = sample->cgroup;
-+		array++;
-+	}
++	cgrp = cgroup__findnew(machine->env, event->cgroup.id, event->cgroup.path);
++	if (cgrp == NULL)
++		return -ENOMEM;
 +
- 	if (type & PERF_SAMPLE_AUX) {
- 		sz = sample->aux_sample.size;
- 		*array++ = sz;
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 2abbf668b8de..472ef5eb4068 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -46,6 +46,7 @@ struct perf_tool {
- 			mmap2,
- 			comm,
- 			namespaces,
-+			cgroup,
- 			fork,
- 			exit,
- 			lost,
+ 	return 0;
+ }
+ 
 -- 
 2.25.1.696.g5e7596f4ac-goog
 
