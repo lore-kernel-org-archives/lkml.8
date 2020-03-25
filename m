@@ -2,288 +2,146 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BFBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C5CC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53A9620737
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F1B520658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:59:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="qAan3Byk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCYVzG (ORCPT
+        id S1727417AbgCYV7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:55:06 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40080 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbgCYVzG (ORCPT
+        Wed, 25 Mar 2020 17:59:07 -0400
+Received: from sender4-of-o51.zoho.com ([136.143.188.51]:21107 "EHLO
+        sender4-of-o51.zoho.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727374AbgCYV7H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:55:06 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 9290229408A
-Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
-To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, vbendeb@chromium.org,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, andy@infradead.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
- <20200322111022.GA72939@kroah.com>
- <c480f318-c326-d51c-e757-c65c2526ab4d@collabora.com>
- <20200324164956.GE2518746@kroah.com>
- <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
- <3166e472e0ef5c0db8da3ab7d846b47795e69057.camel@linux.intel.com>
- <fbd5e95a-59ab-bb51-892e-ddd220b85215@collabora.com>
- <51a98cae11de1529bdaa695a0c1eeb2043191b3f.camel@linux.intel.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <e29d6279-d7e3-8164-3f52-5017bfe79436@collabora.com>
-Date:   Wed, 25 Mar 2020 22:54:59 +0100
+        Wed, 25 Mar 2020 17:59:07 -0400
+X-Greylist: delayed 904 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 17:59:05 EDT
+ARC-Seal: i=1; a=rsa-sha256; t=1585172614; cv=none; 
+        d=zohomail.com; s=zohoarc; 
+        b=ZSORfTBkrOkN85glZk0NRuP90SGMFU3eASh0QZ4AT2ROVTsclV3AkjiEIsJ2E4lm7uMShrL2QjehzEJXMCkq6njoULLjJCPvgcDPkdSUcQMDmZc2tBHrqZJ4yWY73aamqFjtcGiusjOinVy9iex5A4angQ+VPDV7dXiTXWoyQ1c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+        t=1585172614; h=Content-Type:Content-Transfer-Encoding:Cc:Date:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:To; 
+        bh=6ikTch8JDQ5LCNbBZkc5GMGLLK5g7Wz1EeJzLn7t/oM=; 
+        b=drirh98/sh92TmZmSwvhRedZPfTvwUQqENN7wUY+UPKG/2KkODB5zacGaRJWaAmCKX3AWcMv19AkYq9TqRynwafWw2YBga/kTzl65tJgawqHBANA7hhsftxEAEc6FdzuI0UZNY9FmKIWsrT0QD9QDpq8naHFfUkpStuLqzSV1Aw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+        dkim=pass  header.i=apertussolutions.com;
+        spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
+        dmarc=pass header.from=<dpsmith@apertussolutions.com> header.from=<dpsmith@apertussolutions.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585172614;
+        s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
+        h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:In-Reply-To:Content-Type:Content-Transfer-Encoding;
+        bh=6ikTch8JDQ5LCNbBZkc5GMGLLK5g7Wz1EeJzLn7t/oM=;
+        b=qAan3BykwaGrJssTaprfaWUUDZ4kK9eYLf0Zu7RbQAbhV1bq3ZrrYuA5MtLZPAm5
+        /I6GE6tEDBImsJ3kHytqm1yhUbqU9aREfhM8OfqROCQicemEMx89DJ28X3XLn8WEunp
+        kn+2HIvv2QljqXpNTc+/Q57jn63yjNALbIimnuLs=
+Received: from [10.10.1.24] (c-73-129-47-101.hsd1.md.comcast.net [73.129.47.101]) by mx.zohomail.com
+        with SMTPS id 1585172612264530.4678071564699; Wed, 25 Mar 2020 14:43:32 -0700 (PDT)
+Subject: Re: [RFC PATCH 10/12] x86: Secure Launch adding event log securityfs
+To:     Matthew Garrett <mjg59@google.com>,
+        Ross Philipson <ross.philipson@oracle.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, trenchboot-devel@googlegroups.com
+References: <20200325194317.526492-1-ross.philipson@oracle.com>
+ <20200325194317.526492-11-ross.philipson@oracle.com>
+ <CACdnJuvkrMCbOwqkWUOZunXmu1AwfRpjNp3OAfqR2y0O+OK5Fw@mail.gmail.com>
+From:   "Daniel P. Smith" <dpsmith@apertussolutions.com>
+Message-ID: <38ab048a-f2b0-9778-d9ce-c15374abde94@apertussolutions.com>
+Autocrypt: addr=dpsmith@apertussolutions.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Wed, 25 Mar 2020 17:43:30 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <51a98cae11de1529bdaa695a0c1eeb2043191b3f.camel@linux.intel.com>
+In-Reply-To: <CACdnJuvkrMCbOwqkWUOZunXmu1AwfRpjNp3OAfqR2y0O+OK5Fw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-ZohoMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
-
-On 25/3/20 22:41, Srinivas Pandruvada wrote:
-> Hi Enric,
-> 
-> On Wed, 2020-03-25 at 21:34 +0100, Enric Balletbo i Serra wrote:
->> Hi Srinivas,
+On 3/25/20 4:21 PM, Matthew Garrett wrote:
+> On Wed, Mar 25, 2020 at 12:43 PM Ross Philipson
+> <ross.philipson@oracle.com> wrote:
 >>
->> On 24/3/20 18:20, Srinivas Pandruvada wrote:
->>> On Tue, 2020-03-24 at 18:08 +0100, Enric Balletbo i Serra wrote:
->>>> Hi Greg,
->>>>
->>>> On 24/3/20 17:49, Greg Kroah-Hartman wrote:
->>>>> On Tue, Mar 24, 2020 at 05:31:10PM +0100, Enric Balletbo i
->>>>> Serra
->>>>> wrote:
->>>>>> Hi Greg,
->>>>>>
->>>>>> Many thanks for your quick answer, some comments below.
->>>>>>
->>> [...]
->>>
->>>>> Are you sure they aren't already there under
->>>>> /sys/firmware/acpi/?  I
->>>>> thought all tables and methods were exported there with no need
->>>>> to
->>>>> do
->>>>> anything special.
->>>>>
->>>>
->>>> That's the first I did when I started to forward port this patch
->>>> from
->>>> chromeos
->>>> kernel to mainline.
->>>>
->>>> On my system I get:
->>>>
->>>> /sys/firmware/acpi/tables#
->>>> APIC  DSDT  FACP  FACS  HPET  MCFG  SSDT  data  dynamic
->>>>
->>>> (data and dynamic are empty directories)
->>>>
->>>> I quickly concluded (maybe wrong) that as there is no a MLST
->>>> entry it
->>>> was not
->>>> exported, but maybe one of those already contains the info? Or,
->>>> should I expect
->>>> a MLST entry here?
->>>>
->>> If the data you are reading doesn't depend on any runtime variable
->>> in
->>> ACPI tables then you can read from firmware tables as is.
->>>
->>> You can download acpica tools and run your method on acpi dump
->>> using
->>> acpiexec tool. Once you can take dump, you can run on any Linux
->>> system.
->>>
->>> If you can get what you need from running on the dump, then you can
->>> do
->>> by directly reading from /sys/firmware/acpi/tables/ from user space
->>> without kernel change. Sometimes it is enough as lots of config
->>> data
->>> tend to be static.
->>>
+>> From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
 >>
->> As I said I'm not an ACPI expert, so thanks in advance for your help.
->>
->> I am trying to look if I can get from userspace the value of the HWID
->> entry
->> exported from the driver.
->>
->> $ cat /sys/devices/platform/chromeos_acpi/HWID
->> SAMUS E25-G7R-W35
->>
->> Using acpiexec I get the element list of the MLST method, but I don't
->> know how
->> to get the HWID value.
->>
->> - evaluate crhw.mlst
->> Evaluating \CRHW.MLST
->> Evaluation of \CRHW.MLST returned object 0x55f17a7aed60, external
->> buffer length 158
->>   [Package] Contains 10 Elements:
->>     [String] Length 04 = "CHSW"
->>     [String] Length 04 = "FWID"
->>     [String] Length 04 = "HWID"
->>     [String] Length 04 = "FRID"
->>     [String] Length 04 = "BINF"
->>     [String] Length 04 = "GPIO"
->>     [String] Length 04 = "VBNV"
->>     [String] Length 04 = "VDAT"
->>     [String] Length 04 = "FMAP"
->>     [String] Length 04 = "MECK"
->>
->> Any clue?
->>
-> So I guess your  mlst method gives list of methods you can call.
-> So here your can directly evaluate
-> 
-> - evaluate crhw.HWID
-> 
+>> The late init functionality registers securityfs nodes to allow fetching
+>> of and writing events to the late launch TPM log.
+>=20
+> Is there a reason we would want this exposed separately from the
+> regular event log, rather than just appending it there?
 
-Right, I tried, but that doesn't gives the result I want, for example:
-
-Evaluating \CRHW.HWID
-0x1 Outstanding allocations after evaluation of \CRHW.HWID
-Evaluation of \CRHW.HWID returned object 0x55b9e373fd60, external buffer length 38
-  [Package] Contains 1 Elements:
-    [String] Length 00 = ""
+We created a separate securityfs node as the intent is to eventually
+expose additional information relating to state of the Dynamic Launch.
+We only implemented the log node as it is the only node we required for
+demonstrating the initial capability. By no means are we tied to this
+path for the log. If maintainers would like to see the DRTM log be
+colocated with the SRTM log, we can move the logic over to the tpm
+driver's eventlog code.
 
 
-I found that the VBTx are addresses setup in the following file.
+>> +static ssize_t sl_evtlog_write(struct file *file, const char __user *bu=
+f,
+>> +                               size_t datalen, loff_t *ppos)
+>> +{
+>=20
+> What's expected to be writing to this?
+>=20
 
-src/vendorcode/google/chromeos/acpi/gnvs.asl:
+We want to support a multitude of use cases but for an initial
+demonstrator it was felt better to emulate the way people are using
+Intel TXT, via tboot as an intermediate loader in the boot chain. When
+using a Secure Launch for an intermediate loader implementation, the
+implementer has the richness of the user-space runtime for collecting
+measurements. As a result they may want(be forced) to do the hashing in
+user-space and since this is a measurement that is part of the DRTM
+chain it needs to get appended to that log. Thus it seemed natural to
+enable the extending of the log by allowing one to write to the log's
+securityfs node.
 
-VBT0,   32,     // 0x000 - Boot Reason
-VBT1,   32,     // 0x004 - Active Main Firmware
-VBT2,   32,     // 0x008 - Active EC Firmware
-VBT3,   16,     // 0x00c - CHSW
-VBT4, 2048,     // 0x00e - HWID
-VBT5,  512,     // 0x10e - FWID
-VBT6,  512,     // 0x14e - FRID
-VBT7,   32,     // 0x18e - active main firmware type
-VBT8,   32,     // 0x192 - Recovery Reason
-VBT9,   32,     // 0x196 - FMAP base address
-CHVD, 24576,    // 0x19a - VDAT space filled by verified boot
-VBTA,   32,     // 0xd9a - pointer to smbios FWID
-MEHH,  256,     // 0xd9e - Management Engine Hash
-RMOB,   32,     // 0xdbe - RAM oops base address
-RMOL,   32,     // 0xdc2 - RAM oops length
-ROVP,   32,     // 0xdc6 - pointer to RO_VPD
-ROVL,   32,     // 0xdca - size of RO_VPD
-RWVP,   32,     // 0xdce - pointer to RW_VPD
-RWVL,   32,     // 0xdd2 - size of RW_VPD
-                // 0xdd6
+V/r,
+Daniel P. Smith
 
-Can I assume that the info I want is only accessible in runtime and is not
-exported via the static tables?
-
-Thanks,
- Enric
-
-
-> 
-> Thanks,
-> Srinivas
-> 
-> 
-> 
->> Thanks in advance,
->> Enric
->>
->>
->>> Thanks,
->>> Srinivas
->>>
->>>
->>>
->>>
->>>
->>>
->>>>> What makes these attributes "special" from any other ACPI
->>>>> method?
->>>>>
->>>>
->>>> I can't answer this question right now. I need to investigate
->>>> more I
->>>> guess ;-)
->>>>
->>>> Thanks again for your answer,
->>>> Enric
->>>>
->>>>>>>> +static int __init chromeos_acpi_init(void)
->>>>>>>> +{
->>>>>>>> +	int ret;
->>>>>>>> +
->>>>>>>> +	chromeos_acpi.pdev =
->>>>>>>> platform_device_register_simple("chromeos_acpi",
->>>>>>>> +						PLATFORM_DEVID_
->>>>>>>> NONE, NULL, 0);
->>>>>>>> +	if (IS_ERR(chromeos_acpi.pdev)) {
->>>>>>>> +		pr_err("unable to register chromeos_acpi
->>>>>>>> platform device\n");
->>>>>>>> +		return PTR_ERR(chromeos_acpi.pdev);
->>>>>>>> +	}
->>>>>>>
->>>>>>> Only use platform devices and drivers for things that are
->>>>>>> actually
->>>>>>> platform devices and drivers.  That's not what this is, it
->>>>>>> is
->>>>>>> an ACPI
->>>>>>> device and driver.  Don't abuse the platform interface
->>>>>>> please.
->>>>>>>
->>>>>>
->>>>>> Ok. The purpose was to not break ChromeOS userspace since is
->>>>>> looking for the
->>>>>> attributes inside /sys/devices/platform/chromeos_acpi. Not a
->>>>>> good
->>>>>> reason, I
->>>>>> know, and I assume we will need to change userspace instead,
->>>>>> and
->>>>>> convert this to
->>>>>> a ACPI device and driver only, right?
->>>>>
->>>>> How can any userspace be looking for anything that hasn't been
->>>>> submitted
->>>>> before?  That's nothing to worry about, we don't have to
->>>>> support
->>>>> things
->>>>> like that :)
->>>>>
->>>>>> I'll investigate the different places in userspace where this
->>>>>> is
->>>>>> used and see
->>>>>> how difficult it is to do the changes.
->>>>>
->>>>> Look at /sys/firmware/acpi/ first please.
->>>>>
->>>>> thanks,
->>>>>
->>>>> greg k-h
->>>>>
-> 
