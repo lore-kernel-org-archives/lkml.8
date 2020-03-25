@@ -2,131 +2,208 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56778C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B4CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C21D206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:59:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxDYmGnK"
+	by mail.kernel.org (Postfix) with ESMTP id BDA9B206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:00:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbgCYH7l (ORCPT
+        id S1727279AbgCYIAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:59:41 -0400
-Received: from mail-wm1-f73.google.com ([209.85.128.73]:41738 "EHLO
-        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgCYH7l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:59:41 -0400
-Received: by mail-wm1-f73.google.com with SMTP id f207so567931wme.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 00:59:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
-        bh=hfFzAgFLiPhJI7PNYPoebZUNl36WTAu03kIuyGPpbI8=;
-        b=pxDYmGnKOS3Ef4pWxZN1Ura0RIq7zlN5bDScyl2R/APyLXHYdrpVd4JasW3YV8ovxc
-         tpv/HetTuguGF2H9tM3EvvcPvihKmJPH0GAI7CyAMdHHbiHlPMjp9wavU26rHP4DHW/W
-         zBVkQ5hFebZocWV/Qqa2rZe6/J0hHu3a+w7KlxBT/8Kw94DRetTSnjwc8Q/bXg9wLEyU
-         oo/upaNvUI8DEAdrH2pO3OGukNsyZu8Ah8ClzpJvH/KSBHHt1Ok1j2sdN44M1BJOdyT3
-         FgMckxzlWTQdyPx5Zp6Gl6LhzLUmL71QUe5ZoyfuuLdN7t97o03NpOgsXPOxFHZ58pzh
-         KvNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:cc;
-        bh=hfFzAgFLiPhJI7PNYPoebZUNl36WTAu03kIuyGPpbI8=;
-        b=m3sP7y1DSc+AybqaFn6zIMvykYNkduhzuM9GfZ9NL0pdsi/cgjI8P72783rjuCV0aK
-         NOvdzo7IzSM5tUymvmcxN6A9rqNr2oEukxlpUO/UOtF5HBVxYdbjGFzBBqMJjMSjBmky
-         Ck7v31gQ5ZZ2kmCD8LJBYYM6nqiGJYyggYck/gNGg6bxXxVu9kqj2XaZGw7wZovgoXOs
-         L1Cli1PLjwW37jkprYE+feZhOdrtafutz5Y9+uuC+4M0r3hiB0UHuVGwALkVH9qtZP3m
-         D3JalZ+RqDZ9aUxZwnUEzeT2c4ZkFsdyd9eqUoiJo9ICkEB9syuX9qrIwsRQdfDcbc3Z
-         PP0g==
-X-Gm-Message-State: ANhLgQ3oSxyAanXl0Ey1VRlI2oygyL7ORCw2Sh8xQe66Zv4bVnB/ZXsM
-        GAtSBq+/+Vy+DPfZDOXURC8RsNAnLdk6
-X-Google-Smtp-Source: ADFU+vvI6XyoMyOeAgHW/3T8UjZKl0NtKhNkhRAdej9UofBhaJtmEZYsJcg7YIcnaa8TV0KGL5nKoIKvc1pX
-X-Received: by 2002:adf:cf09:: with SMTP id o9mr1950627wrj.74.1585123179453;
- Wed, 25 Mar 2020 00:59:39 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 08:59:22 +0100
-In-Reply-To: <20200323114207.222412-1-courbet@google.com>
-Message-Id: <20200325075924.109330-1-courbet@google.com>
-Mime-Version: 1.0
-References: <20200323114207.222412-1-courbet@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH]     x86: Alias memset to __builtin_memset.
-From:   Clement Courbet <courbet@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Clement Courbet <courbet@google.com>,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Wed, 25 Mar 2020 04:00:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34996 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725903AbgCYIAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 04:00:40 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 47CDD2D11161DABE2D8E;
+        Wed, 25 Mar 2020 16:00:28 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
+ 16:00:21 +0800
+Subject: Re: [RFC PATCH v4 5/6] arm64: tlb: Use translation level hint in
+ vm_flags
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <will@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
+        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+ <20200324134534.1570-6-yezhenyu2@huawei.com> <20200324144514.340c78d9@why>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <986be927-02c6-3cc2-ca39-30ccad60eae0@huawei.com>
+Date:   Wed, 25 Mar 2020 16:00:19 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <20200324144514.340c78d9@why>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Not sure we should modify this for someone's downstream tree to work
-> around an issue they introduced.  If you want to file a bug
-> internally, I'd be happy to comment on it.
+Hi Marc,
 
-I don't have a strong opinion on that. I don't know the policy of the
-linux kernel w.r.t. this. There is an internal bug for this, where
-kernel maintainers suggested I upstream this patch.
+Thanks for your review.
 
-> Does __builtin_memset detect support for `rep stosb`, then patch the
-> kernel to always use it or not?
+On 2020/3/24 22:45, Marc Zyngier wrote:
+> On Tue, 24 Mar 2020 21:45:33 +0800
+> Zhenyu Ye <yezhenyu2@huawei.com> wrote:
+> 
+>> This patch used the VM_LEVEL flags in vma->vm_flags to set the
+>> TTL field in tlbi instruction.
+>>
+>> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+>> ---
+>>  arch/arm64/include/asm/mmu.h      |  2 ++
+>>  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
+>>  arch/arm64/mm/mmu.c               | 14 ++++++++++++++
+>>  3 files changed, 24 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
+>> index d79ce6df9e12..a8b8824a7405 100644
+>> --- a/arch/arm64/include/asm/mmu.h
+>> +++ b/arch/arm64/include/asm/mmu.h
+>> @@ -86,6 +86,8 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
+>>  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
+>>  extern void mark_linear_text_alias_ro(void);
+>>  extern bool kaslr_requires_kpti(void);
+>> +extern unsigned int get_vma_level(struct vm_area_struct *vma);
+>> +
+>>  
+>>  #define INIT_MM_CONTEXT(name)	\
+>>  	.pgd = init_pg_dir,
+>> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+>> index d141c080e494..93bb09fdfafd 100644
+>> --- a/arch/arm64/include/asm/tlbflush.h
+>> +++ b/arch/arm64/include/asm/tlbflush.h
+>> @@ -218,10 +218,11 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
+>>  					 unsigned long uaddr)
+>>  {
+>>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
+>> +	unsigned int level = get_vma_level(vma);
+>>  
+>>  	dsb(ishst);
+>> -	__tlbi_level(vale1is, addr, 0);
+>> -	__tlbi_user_level(vale1is, addr, 0);
+>> +	__tlbi_level(vale1is, addr, level);
+>> +	__tlbi_user_level(vale1is, addr, level);
+>>  }
+>>  
+>>  static inline void flush_tlb_page(struct vm_area_struct *vma,
+>> @@ -242,6 +243,7 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>>  				     unsigned long stride, bool last_level)
+>>  {
+>>  	unsigned long asid = ASID(vma->vm_mm);
+>> +	unsigned int level = get_vma_level(vma);
+>>  	unsigned long addr;
+>>  
+>>  	start = round_down(start, stride);
+>> @@ -261,11 +263,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+>>  	dsb(ishst);
+>>  	for (addr = start; addr < end; addr += stride) {
+>>  		if (last_level) {
+>> -			__tlbi_level(vale1is, addr, 0);
+>> -			__tlbi_user_level(vale1is, addr, 0);
+>> +			__tlbi_level(vale1is, addr, level);
+>> +			__tlbi_user_level(vale1is, addr, level);
+>>  		} else {
+>> -			__tlbi_level(vae1is, addr, 0);
+>> -			__tlbi_user_level(vae1is, addr, 0);
+>> +			__tlbi_level(vae1is, addr, level);
+>> +			__tlbi_user_level(vae1is, addr, level);
+>>  		}
+>>  	}
+>>  	dsb(ish);
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 128f70852bf3..e6a1221cd86b 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -60,6 +60,20 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
+>>  
+>>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
+>>  
+>> +inline unsigned int get_vma_level(struct vm_area_struct *vma)
+>> +{
+>> +	unsigned int level = 0;
+>> +	if (vma->vm_flags & VM_LEVEL_PUD)
+>> +		level = 1;
+>> +	else if (vma->vm_flags & VM_LEVEL_PMD)
+>> +		level = 2;
+>> +	else if (vma->vm_flags & VM_LEVEL_PTE)
+>> +		level = 3;
+>> +
+>> +	vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PMD | VM_LEVEL_PTE);
+>> +	return level;
+>> +}
+>> +
+>>  void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
+>>  {
+>>  	pgd_t *fixmap_pgdp;
+> 
+> 
+> If feels bizarre a TLBI is now a destructive operation: you've lost the
+> flags by having cleared them. Even if that's not really a problem in
+> practice (you issue TLBI because you've unmapped the VMA), it remains
+> that the act of invalidating TLBs isn't expected to change a kernel
+> structure (and I'm not even thinking about potential races here).
 
-__builtin_memset just allows the compiler to recognize that this has the
-semantics of a memset, exactly like it happens when -freestanding is not
-specified.
+I cleared vm_flags here just out of caution, because every TLBI flush
+action should set vm_flags themself. As I know, the TLB_LEVEL of an vma
+will only be changed by transparent hugepage collapse and merge when
+the page is not mapped, so there may not have potential races.
 
-In terms of what compilers do when expanding the memset, it depends on
-the size.
-gcc or clang obviously do not generate vector code when -no-sse is
-specified, as this would break promises.
+But you are right that TLBI should't change a kernel structure.
+I will remove the clear action and add some notices here.
 
-clang inlines stores for small sizes and switches to memset as the size
-increases: https://godbolt.org/z/_X16xt
+> 
+> If anything, I feel this should be based around the mmu_gather
+> structure, which already tracks the right level of information and
+> additionally knows about the P4D level which is missing in your patches
+> (even if arm64 is so far limited to 4 levels).
+> 
+> Thanks,
+> 
+> 	M.
+> 
 
-gcc inlines stores for tiny sizes, then switches to repstos for larger
-sizes: https://godbolt.org/z/m-G233 This behaviour is additionally
-configurable through command line flags: https://godbolt.org/z/wsoJpQ
+mmu_gather structure has tracked the level information, but we can only
+use the info in the tlb_flush interface. If we want to use the info in
+flush_tlb_range, we may should have to add a parameter to this interface,
+such as:
 
-> Did you verify what this change does for other compilers?
+	flush_tlb_range(vma, start, end, flags);
 
-Are there other compilers are used to build the kernel on x86 ?
+However, the flush_tlb_range is a common interface to all architectures,
+I'm not sure if this is feasible because this feature is only supported
+by ARM64 currently.
 
-icc does the same as gcc and clang: https://godbolt.org/z/yCju_D
+Or can we ignore the flush_tlb_range and only set the TTL field in
+tlb_flush?  Waiting for your suggestion...
 
-> yet it doesn't use vector operations for the general case
 
-I'm not sure how vector operations relate to freestanding, or this change.
+For P4D level, the TTL field is limited to 4 bit(2 for translation granule
+and 2 for page table level), so we can no longer afford more levels :).
 
-> Adding -ffreestanding to optimize one hot memset in
-> one function is using a really big hammer to solve the wrong
-> problem.
 
--ffreestanding was not added to optimize anything. It was already there.
-If anything -ffreestanding actually pessimizes a lot of the code
-generation, as it prevents the compiler from recognizing the semantics
-of common primitives. This is what this change is trying to fix.
-Removing -ffreestanding from the options is another (easier?) way to fix
-the problem. This change is a stab at accomodating both those who want
-freestanding and those who want performance.
 
-The hot memset I mentionned was just the hottest one. But as you can imagine
-there are many constant-size memsets spread across many functions, some of
-which are also very hot, the others constituting a long tail which is not
-negligible.
+
+
 
 
