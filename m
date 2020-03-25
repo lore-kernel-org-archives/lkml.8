@@ -2,75 +2,138 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BF4C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 223ABC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2293D20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0068E20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCYCqu (ORCPT
+        id S1727305AbgCYCrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:46:50 -0400
-Received: from eddie.linux-mips.org ([148.251.95.138]:40940 "EHLO
-        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgCYCqu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:46:50 -0400
-Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
-        with ESMTP id S23992811AbgCYCqrzvS2L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
-        Wed, 25 Mar 2020 03:46:47 +0100
-Date:   Wed, 25 Mar 2020 02:46:47 +0000 (GMT)
-From:   "Maciej W. Rozycki" <macro@linux-mips.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] MIPS: mark some functions as weak to avoid conflict with
- Octeon ones
-In-Reply-To: <20200324164005.8259-1-masahiroy@kernel.org>
-Message-ID: <alpine.LFD.2.21.2003250240110.2689954@eddie.linux-mips.org>
-References: <20200324164005.8259-1-masahiroy@kernel.org>
+        Tue, 24 Mar 2020 22:47:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12122 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727253AbgCYCro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:47:44 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D916CC1B1F67DC29052A;
+        Wed, 25 Mar 2020 10:47:41 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
+ 10:47:32 +0800
+Subject: Re: [RFC PATCH v4 3/6] arm64: Add level-hinted TLB invalidation
+ helper to tlbi_user
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <will@kernel.org>, <mark.rutland@arm.com>,
+        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
+        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
+        <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
+        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
+        <broonie@kernel.org>, <guohanjun@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
+        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+ <20200324134534.1570-4-yezhenyu2@huawei.com> <20200324141939.51917225@why>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <8cf6c576-f0e2-9a52-6919-cb5e27d2ffb5@huawei.com>
+Date:   Wed, 25 Mar 2020 10:47:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200324141939.51917225@why>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020, Masahiro Yamada wrote:
+Hi Marc,
 
-> MIPS provides multiple definitions for the following functions:
+On 2020/3/24 22:19, Marc Zyngier wrote:
+> On Tue, 24 Mar 2020 21:45:31 +0800
+> Zhenyu Ye <yezhenyu2@huawei.com> wrote:
 > 
->   fw_init_cmdline
->   __delay
->   __udelay
->   __ndelay
->   memmove
->   __rmemcpy
->   memcpy
->   __copy_user
+>> Add a level-hinted parameter to __tlbi_user, which only gets used
+>> if ARMv8.4-TTL gets detected.
+>>
+>> ARMv8.4-TTL provides the TTL field in tlbi instruction to indicate
+>> the level of translation table walk holding the leaf entry for the
+>> address that is being invalidated.
+>>
+>> This patch set the default level value to 0.
+>>
+>> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+>> ---
+>>  arch/arm64/include/asm/tlbflush.h | 42 ++++++++++++++++++++++++++-----
+>>  1 file changed, 36 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+>> index a3f70778a325..d141c080e494 100644
+>> --- a/arch/arm64/include/asm/tlbflush.h
+>> +++ b/arch/arm64/include/asm/tlbflush.h
+>> @@ -89,6 +89,36 @@
+>>  		__tlbi(op,  arg);					\
+>>  	} while(0)
+>>  
+>> +#define __tlbi_user_level(op, addr, level)				\
+>> +	do {								\
+>> +		u64 arg = addr;						\
+>> +									\
+>> +		if (!arm64_kernel_unmapped_at_el0())			\
+>> +			break;						\
+>> +									\
+>> +		if (cpus_have_const_cap(ARM64_HAS_ARMv8_4_TTL) &&	\
+>> +		    level) {						\
+>> +			u64 ttl = level;				\
+>> +									\
+>> +			switch (PAGE_SIZE) {				\
+>> +			case SZ_4K:					\
+>> +				ttl |= 1 << 2;				\
+>> +				break;					\
+>> +			case SZ_16K:					\
+>> +				ttl |= 2 << 2;				\
+>> +				break;					\
+>> +			case SZ_64K:					\
+>> +				ttl |= 3 << 2;				\
+>> +				break;					\
+>> +			}						\
+>> +									\
+>> +			arg &= ~TLBI_TTL_MASK;				\
+>> +			arg |= FIELD_PREP(TLBI_TTL_MASK, ttl);		\
+>> +		}							\
+>> +									\
+>> +		__tlbi(op,  (arg) | USER_ASID_FLAG);
+>> 	\
+>> +	} while (0)
+>> +
 > 
-> The generic ones are defined in lib-y objects, which are overridden by
-> the Octeon ones when CONFIG_CAVIUM_OCTEON_SOC is enabled.
+> Isn't this just:
 > 
-> The use of EXPORT_SYMBOL in static libraries potentially causes a
-> problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> objects to vmlinux when CONFIG_MODULES=y.
+> define __tlbi_user_level(op, addr, level)			\
+> 	do {							\
+> 		if (!arm64_kernel_unmapped_at_el0())		\
+> 			break;					\
+> 								\
+> 		__tlbi_level(op, addr | USER_ASID_FLAG, level);	\
+> 	} while (0)
 > 
-> As a groundwork, we must fix multiple definitions that have been
-> hidden by lib-y.
+> Thanks,
+> 
+> 	M.
+> 
 
- IIUC that causes known dead code to be included in the kernel image.  
-Wouldn't it be possible to actually omit replaced functions from output by 
-keying the build of the sources providing generic code with appropriate 
-CONFIG_* settings (such as CONFIG_GENERIC_DELAY, CONFIG_GENERIC_MEMCPY, 
-etc. or suchlike)?
+Yeah, your code is more clear!  I will take it in next version. ;-)
 
-  Maciej
+Thanks,
+zhenyu
+
