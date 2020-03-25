@@ -2,725 +2,296 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2582EC54FDE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF034C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98AB20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC7320714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lh5L0X84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgCYI4R (ORCPT
+        id S1727686AbgCYI4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:56:17 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:52691 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCYI4P (ORCPT
+        Wed, 25 Mar 2020 04:56:50 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:55301 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727301AbgCYI4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:56:15 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0110751-0.00073836-0.988187;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H50xpyL_1585126516)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Wed, 25 Mar 2020 16:55:36 +0800
-From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
-        WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v3 11/11] mtd: new support oops logger based on pstore/blk
-Date:   Wed, 25 Mar 2020 16:55:06 +0800
-Message-Id: <1585126506-18635-12-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
-References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+        Wed, 25 Mar 2020 04:56:50 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585126609; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=662V76aKosOhR0NwjziZiUV5ztE2ikA4eLXKCXRhr8M=;
+ b=lh5L0X84+JJSK7ilyNXPu1fcD40Age3zvwdz9LdTpanmG5LUW8BsuRtVfGADBIFMpSGFIKr4
+ XqgNbYLifql9VTwWbqUjvTgNrQkkWQ8NgDXInQsz0WPk5p5R2IldKWRG0nJo8X4TsPz79c6s
+ QMH4BBAc18GZ0cDnNgfg1OM3Q/Y=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7b1cc7.7f0ca6e57b58-smtp-out-n02;
+ Wed, 25 Mar 2020 08:56:39 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76B2DC43636; Wed, 25 Mar 2020 08:56:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3DDCC433BA;
+        Wed, 25 Mar 2020 08:56:37 +0000 (UTC)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 25 Mar 2020 16:56:37 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] scsi: ufs: Clean up ufshcd_scale_clks() and clock
+ scaling error out path
+In-Reply-To: <SN6PR04MB4640E8EF26802A44B1F5D38AFCF70@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
+ <1584342373-10282-2-git-send-email-cang@codeaurora.org>
+ <SN6PR04MB4640E8EF26802A44B1F5D38AFCF70@SN6PR04MB4640.namprd04.prod.outlook.com>
+Message-ID: <d930bd05f2614092e6d8d3ef62017d89@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's the last one of a series of patches to adapt to MTD device.
+On 2020-03-18 16:19, Avri Altman wrote:
+> Hi,
+> 
+>> 
+>> From: Subhash Jadavani <subhashj@codeaurora.org>
+>> 
+>> This change introduces a func ufshcd_set_clk_freq() to explicitly
+>> set clock frequency so that it can be used in reset_and_resotre path 
+>> and
+>> in ufshcd_scale_clks(). Meanwhile, this change cleans up the clock 
+>> scaling
+>> error out path.
+>> 
+>> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index 2a2a63b..63aaa88f 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -855,28 +855,29 @@ static bool
+>> ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
+>>                 return false;
+>>  }
+>> 
+>> -static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+>> +/**
+>> + * ufshcd_set_clk_freq - set UFS controller clock frequencies
+>> + * @hba: per adapter instance
+>> + * @scale_up: If True, set max possible frequency othewise set low
+>> frequency
+>> + *
+>> + * Returns 0 if successful
+>> + * Returns < 0 for any other errors
+>> + */
+>> +static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
+> Personally I prefer using the convention of "__scale_clks" to describe
+> the privet core of scale_clks,
+> But I know that many people are against it.
+> 
+>>  {
+>>         int ret = 0;
+>>         struct ufs_clk_info *clki;
+>>         struct list_head *head = &hba->clk_list_head;
+>> -       ktime_t start = ktime_get();
+>> -       bool clk_state_changed = false;
+>> 
+>>         if (list_empty(head))
+>>                 goto out;
+>> 
+>> -       ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
+>> -       if (ret)
+>> -               return ret;
+>> -
+>>         list_for_each_entry(clki, head, list) {
+>>                 if (!IS_ERR_OR_NULL(clki->clk)) {
+>>                         if (scale_up && clki->max_freq) {
+>>                                 if (clki->curr_freq == clki->max_freq)
+>>                                         continue;
+>> 
+>> -                               clk_state_changed = true;
+>>                                 ret = clk_set_rate(clki->clk, 
+>> clki->max_freq);
+>>                                 if (ret) {
+>>                                         dev_err(hba->dev, "%s: %s clk 
+>> set rate(%dHz) failed,
+>> %d\n",
+>> @@ -895,7 +896,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba,
+>> bool scale_up)
+>>                                 if (clki->curr_freq == clki->min_freq)
+>>                                         continue;
+>> 
+>> -                               clk_state_changed = true;
+>>                                 ret = clk_set_rate(clki->clk, 
+>> clki->min_freq);
+>>                                 if (ret) {
+>>                                         dev_err(hba->dev, "%s: %s clk 
+>> set rate(%dHz) failed,
+>> %d\n",
+>> @@ -914,13 +914,36 @@ static int ufshcd_scale_clks(struct ufs_hba 
+>> *hba,
+>> bool scale_up)
+>>                                 clki->name, clk_get_rate(clki->clk));
+>>         }
+>> 
+>> +out:
+>> +       return ret;
+>> +}
+>> +
+>> +/**
+>> + * ufshcd_scale_clks - scale up or scale down UFS controller clocks
+>> + * @hba: per adapter instance
+>> + * @scale_up: True if scaling up and false if scaling down
+>> + *
+>> + * Returns 0 if successful
+>> + * Returns < 0 for any other errors
+>> + */
+>> +static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +       ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = ufshcd_set_clk_freq(hba, scale_up);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>>         ret = ufshcd_vops_clk_scale_notify(hba, scale_up, 
+>> POST_CHANGE);
+>> +       if (ret) {
+>> +               ufshcd_set_clk_freq(hba, !scale_up);
+>> +               return ret;
+>> +       }
+>> 
+>> -out:
+>> -       if (clk_state_changed)
+>> -               trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
+>> -                       (scale_up ? "up" : "down"),
+>> -                       ktime_to_us(ktime_sub(ktime_get(), start)), 
+>> ret);
+> 
+> Why remove the ufshcd_profile_clk_scaling trace?
+> 
+> 
 
-The mtdpstore is similar to mtdoops but more powerful. It bases on
-pstore/blk, aims to store panic and oops logs to a flash partition,
-where it can be read back as files after mounting pstore filesystem.
+Shall add it back, this is just a collection of Subhash's changes.
 
-The pstore/blk is designed for block device at the very beginning,
-but now, compatible to non-block device like MTD device.
+>>         return ret;
+>>  }
+>> 
+>> @@ -1106,35 +1129,36 @@ static int ufshcd_devfreq_scale(struct ufs_hba
+>> *hba, bool scale_up)
+>> 
+>>         ret = ufshcd_clock_scaling_prepare(hba);
+>>         if (ret)
+>> -               return ret;
+>> +               goto out;
+> Are you fixing here a hold without release?
+> Should make note of that.
+> 
 
-To make mtdpstore work, "blkdev" of pstore/blk should be set as MTD
-device name or MTD device number. Please refer to document at:
-    Documentation/admin-guide/pstore-block.rst
+Yes, true
 
-Why do we need mtdpstore?
-1. repetitive jobs between pstore and mtdoops
-   Both of pstore and mtdoops do the same jobs that store panic/oops log.
-   They have much similar logic that register to kmsg dumper and store
-   log to several chunks one by one.
-2. do what a driver should do
-   To me, a driver should provide methods instead of policies. What MTD
-   should do is to provide read/write/erase operations, geting rid of codes
-   about chunk management, kmsg dumper and configuration.
-3. enhanced feature
-   Not only store log, but also show it as files.
-   Not only log, but also trigger time and trigger count.
-   Not only panic/oops log, but also log recorder for pmsg, console and
-   ftrace in the future.
+>> 
+>>         /* scale down the gear before scaling down clocks */
+>>         if (!scale_up) {
+>>                 ret = ufshcd_scale_gear(hba, false);
+>>                 if (ret)
+>> -                       goto out;
+>> +                       goto clk_scaling_unprepare;
+>>         }
+>> 
+>>         ret = ufshcd_scale_clks(hba, scale_up);
+>> -       if (ret) {
+>> -               if (!scale_up)
+>> -                       ufshcd_scale_gear(hba, true);
+>> -               goto out;
+>> -       }
+>> +       if (ret)
+>> +               goto scale_up_gear;
+>> 
+>>         /* scale up the gear after scaling up clocks */
+>>         if (scale_up) {
+>>                 ret = ufshcd_scale_gear(hba, true);
+>>                 if (ret) {
+>>                         ufshcd_scale_clks(hba, false);
+>> -                       goto out;
+>> +                       goto clk_scaling_unprepare;
+>>                 }
+>>         }
+>> 
+>> -       ret = ufshcd_vops_clk_scale_notify(hba, scale_up, 
+>> POST_CHANGE);
+>> +       goto clk_scaling_unprepare;
+> I think you should find a way to make this function more readable.
+> Adding all those "spaghetti" gotos making it even harder to read.
+> 
+> Thanks,
+> Avri
+> 
 
-Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
----
- Documentation/admin-guide/pstore-block.rst |   9 +-
- drivers/mtd/Kconfig                        |  10 +
- drivers/mtd/Makefile                       |   1 +
- drivers/mtd/mtdpstore.c                    | 564 +++++++++++++++++++++++++++++
- 4 files changed, 582 insertions(+), 2 deletions(-)
- create mode 100644 drivers/mtd/mtdpstore.c
+This is just a collection of Subhash's changes. I think the 2
+clk_scaling_unprepare and out gotos make sense, but the
+scale_up_gear goto is a bit vague. I will remove the
+scale_up_gear goto.
 
-diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
-index a31155b36e62..464efb0db932 100644
---- a/Documentation/admin-guide/pstore-block.rst
-+++ b/Documentation/admin-guide/pstore-block.rst
-@@ -43,9 +43,9 @@ blkdev
- ~~~~~~
- 
- The block device to use. Most of the time, it is a partition of block device.
--It's required for pstore/blk.
-+It's required for pstore/blk. It is also used for MTD device.
- 
--It accepts the following variants:
-+It accepts the following variants for block device:
- 
- 1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
-    leading 0x, for example b302.
-@@ -64,6 +64,11 @@ It accepts the following variants:
-    partition with a known unique id.
- #. <major>:<minor> major and minor number of the device separated by a colon.
- 
-+It accepts the following variants for MTD device:
-+
-+1. <device name> MTD device name. "pstore" is recommended.
-+#. <device number> MTD device number.
-+
- oops_size
- ~~~~~~~~~
- 
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index 42d401ea60ee..6ddab796216d 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -170,6 +170,16 @@ config MTD_OOPS
- 	  buffer in a flash partition where it can be read back at some
- 	  later point.
- 
-+config MTD_PSTORE
-+	tristate "Log panic/oops to an MTD buffer based on pstore"
-+	depends on PSTORE_BLK
-+	help
-+	  This enables panic and oops messages to be logged to a circular
-+	  buffer in a flash partition where it can be read back as files after
-+	  mounting pstore filesystem.
-+
-+	  If unsure, say N.
-+
- config MTD_SWAP
- 	tristate "Swap on MTD device support"
- 	depends on MTD && SWAP
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 56cc60ccc477..593d0593a038 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_RFD_FTL)		+= rfd_ftl.o
- obj-$(CONFIG_SSFDC)		+= ssfdc.o
- obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
- obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
-+obj-$(CONFIG_MTD_PSTORE)	+= mtdpstore.o
- obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
- 
- nftl-objs		:= nftlcore.o nftlmount.o
-diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
-new file mode 100644
-index 000000000000..e6fdaed6d1d3
---- /dev/null
-+++ b/drivers/mtd/mtdpstore.c
-@@ -0,0 +1,564 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define dev_fmt(fmt) "mtdoops-pstore: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/pstore_blk.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/bitops.h>
-+
-+static struct mtdpstore_context {
-+	int index;
-+	struct psblk_info info;
-+	struct psblk_device dev;
-+	struct mtd_info *mtd;
-+	unsigned long *rmmap;		/* removed bit map */
-+	unsigned long *usedmap;		/* used bit map */
-+	/*
-+	 * used for panic write
-+	 * As there are no block_isbad for panic case, we should keep this
-+	 * status before panic to ensure panic_write not failed.
-+	 */
-+	unsigned long *badmap;		/* bad block bit map */
-+} oops_cxt;
-+
-+static int mtdpstore_block_isbad(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	int ret;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 blknum = div_u64(off, mtd->erasesize);
-+
-+	if (test_bit(blknum, cxt->badmap))
-+		return true;
-+	ret = mtd_block_isbad(mtd, off);
-+	if (ret < 0) {
-+		dev_err(&mtd->dev, "mtd_block_isbad failed, aborting\n");
-+		return ret;
-+	} else if (ret > 0) {
-+		set_bit(blknum, cxt->badmap);
-+		return true;
-+	}
-+	return false;
-+}
-+
-+static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 blknum = div_u64(off, mtd->erasesize);
-+
-+	return test_bit(blknum, cxt->badmap);
-+}
-+
-+static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+
-+	dev_dbg(&mtd->dev, "mark zone %llu used\n", zonenum);
-+	set_bit(zonenum, cxt->usedmap);
-+}
-+
-+static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+
-+	dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
-+	clear_bit(zonenum, cxt->usedmap);
-+}
-+
-+static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
-+
-+	while (zonecnt > 0) {
-+		dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
-+		clear_bit(zonenum, cxt->usedmap);
-+		zonenum++;
-+		zonecnt--;
-+	}
-+}
-+
-+static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+	u64 blknum = div_u64(off, cxt->mtd->erasesize);
-+
-+	if (test_bit(blknum, cxt->badmap))
-+		return true;
-+	return test_bit(zonenum, cxt->usedmap);
-+}
-+
-+static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
-+
-+	while (zonecnt > 0) {
-+		if (test_bit(zonenum, cxt->usedmap))
-+			return true;
-+		zonenum++;
-+		zonecnt--;
-+	}
-+	return false;
-+}
-+
-+static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
-+		size_t size)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t sz;
-+	int i;
-+
-+	sz = min_t(uint32_t, size, mtd->writesize / 4);
-+	for (i = 0; i < sz; i++) {
-+		if (buf[i] != (char)0xFF)
-+			return false;
-+	}
-+	return true;
-+}
-+
-+static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+
-+	dev_dbg(&mtd->dev, "mark zone %llu removed\n", zonenum);
-+	set_bit(zonenum, cxt->rmmap);
-+}
-+
-+static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
-+
-+	while (zonecnt > 0) {
-+		clear_bit(zonenum, cxt->rmmap);
-+		zonenum++;
-+		zonecnt--;
-+	}
-+}
-+
-+static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
-+		loff_t off)
-+{
-+	u64 zonenum = div_u64(off, cxt->info.oops_size);
-+	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
-+
-+	while (zonecnt > 0) {
-+		if (test_bit(zonenum, cxt->rmmap))
-+			return true;
-+		zonenum++;
-+		zonecnt--;
-+	}
-+	return false;
-+}
-+
-+static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	struct erase_info erase;
-+	int ret;
-+
-+	dev_dbg(&mtd->dev, "try to erase off 0x%llx\n", off);
-+	erase.len = cxt->mtd->erasesize;
-+	erase.addr = off;
-+	ret = mtd_erase(cxt->mtd, &erase);
-+	if (!ret)
-+		mtdpstore_block_clear_removed(cxt, off);
-+	else
-+		dev_err(&mtd->dev, "erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
-+		       (unsigned long long)erase.addr,
-+		       (unsigned long long)erase.len, cxt->info.device);
-+	return ret;
-+}
-+
-+/*
-+ * called while removing file
-+ *
-+ * Avoiding over erasing, do erase block only when the whole block is unused.
-+ * If the block contains valid log, do erase lazily on flush_removed() when
-+ * unregister.
-+ */
-+static ssize_t mtdpstore_erase(size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+
-+	if (mtdpstore_block_isbad(cxt, off))
-+		return -EIO;
-+
-+	mtdpstore_mark_unused(cxt, off);
-+
-+	/* If the block still has valid data, mtdpstore do erase lazily */
-+	if (likely(mtdpstore_block_is_used(cxt, off))) {
-+		mtdpstore_mark_removed(cxt, off);
-+		return 0;
-+	}
-+
-+	/* all zones are unused, erase it */
-+	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
-+	return mtdpstore_erase_do(cxt, off);
-+}
-+
-+/*
-+ * What is security for mtdpstore?
-+ * As there is no erase for panic case, we should ensure at least one zone
-+ * is writable. Otherwise, panic write will fail.
-+ * If zone is used, write operation will return -ENOMSG, which means that
-+ * pstore/blk will try one by one until gets an empty zone. So, it is not
-+ * needed to ensure the next zone is empty, but at least one.
-+ */
-+static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
-+{
-+	int ret = 0, i;
-+	struct mtd_info *mtd = cxt->mtd;
-+	u32 zonenum = (u32)div_u64(off, cxt->info.oops_size);
-+	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->info.oops_size);
-+	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
-+	u32 erasesize = cxt->mtd->erasesize;
-+
-+	for (i = 0; i < zonecnt; i++) {
-+		u32 num = (zonenum + i) % zonecnt;
-+
-+		/* found empty zone */
-+		if (!test_bit(num, cxt->usedmap))
-+			return 0;
-+	}
-+
-+	/* If there is no any empty zone, we have no way but to do erase */
-+	off = ALIGN_DOWN(off, erasesize);
-+	while (blkcnt--) {
-+		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
-+
-+		if (mtdpstore_block_isbad(cxt, off))
-+			continue;
-+
-+		ret = mtdpstore_erase_do(cxt, off);
-+		if (!ret) {
-+			mtdpstore_block_mark_unused(cxt, off);
-+			break;
-+		}
-+	}
-+
-+	if (ret)
-+		dev_err(&mtd->dev, "all blocks bad!\n");
-+	dev_dbg(&mtd->dev, "end security\n");
-+	return ret;
-+}
-+
-+static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t retlen;
-+	int ret;
-+
-+	if (mtdpstore_block_isbad(cxt, off))
-+		return -ENOMSG;
-+
-+	/* zone is used, please try next one */
-+	if (mtdpstore_is_used(cxt, off))
-+		return -ENOMSG;
-+
-+	dev_dbg(&mtd->dev, "try to write off 0x%llx size %zu\n", off, size);
-+	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
-+	if (ret < 0 || retlen != size) {
-+		dev_err(&mtd->dev, "write failure at %lld (%zu of %zu written), err %d\n",
-+				off, retlen, size, ret);
-+		return -EIO;
-+	}
-+	mtdpstore_mark_used(cxt, off);
-+
-+	mtdpstore_security(cxt, off);
-+	return retlen;
-+}
-+
-+static inline bool mtdpstore_is_io_error(int ret)
-+{
-+	return ret < 0 && !mtd_is_bitflip(ret) && !mtd_is_eccerr(ret);
-+}
-+
-+/*
-+ * All zones will be read as pstore/blk will read zone one by one when do
-+ * recover.
-+ */
-+static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t retlen, done;
-+	int ret;
-+
-+	if (mtdpstore_block_isbad(cxt, off))
-+		return -ENOMSG;
-+
-+	dev_dbg(&mtd->dev, "try to read off 0x%llx size %zu\n", off, size);
-+	for (done = 0, retlen = 0; done < size; done += retlen) {
-+		retlen = 0;
-+
-+		ret = mtd_read(cxt->mtd, off + done, size - done, &retlen,
-+				(u_char *)buf + done);
-+		if (mtdpstore_is_io_error(ret)) {
-+			dev_err(&mtd->dev, "read failure at %lld (%zu of %zu read), err %d\n",
-+					off + done, retlen, size - done, ret);
-+			/* the zone may be broken, try next one */
-+			return -ENOMSG;
-+		}
-+
-+		/*
-+		 * ECC error. The impact on log data is so small. Maybe we can
-+		 * still read it and try to understand. So mtdpstore just hands
-+		 * over what it gets and user can judge whether the data is
-+		 * valid or not.
-+		 */
-+		if (mtd_is_eccerr(ret)) {
-+			dev_err(&mtd->dev, "ecc error at %lld (%zu of %zu read), err %d\n",
-+					off + done, retlen, size - done, ret);
-+			/* driver may not set retlen when ecc error */
-+			retlen = retlen == 0 ? size - done : retlen;
-+		}
-+	}
-+
-+	if (mtdpstore_is_empty(cxt, buf, size))
-+		mtdpstore_mark_unused(cxt, off);
-+	else
-+		mtdpstore_mark_used(cxt, off);
-+
-+	mtdpstore_security(cxt, off);
-+	return retlen;
-+}
-+
-+static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	size_t retlen;
-+	int ret;
-+
-+	if (mtdpstore_panic_block_isbad(cxt, off))
-+		return -ENOMSG;
-+
-+	/* zone is used, please try next one */
-+	if (mtdpstore_is_used(cxt, off))
-+		return -ENOMSG;
-+
-+	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
-+	if (ret < 0 || size != retlen) {
-+		dev_err(&mtd->dev, "panic write failure at %lld (%zu of %zu read), err %d\n",
-+				off, retlen, size, ret);
-+		return -EIO;
-+	}
-+	mtdpstore_mark_used(cxt, off);
-+
-+	return retlen;
-+}
-+
-+static void mtdpstore_notify_add(struct mtd_info *mtd)
-+{
-+	int ret;
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct psblk_info *info = &cxt->info;
-+	unsigned long longcnt;
-+
-+	if (!strcmp(mtd->name, info->device))
-+		cxt->index = mtd->index;
-+
-+	if (mtd->index != cxt->index || cxt->index < 0)
-+		return;
-+
-+	dev_dbg(&mtd->dev, "found matching MTD device %s\n", mtd->name);
-+
-+	if (mtd->size < info->oops_size * 2) {
-+		dev_err(&mtd->dev, "MTD partition %d not big enough\n",
-+				mtd->index);
-+		return;
-+	}
-+	/*
-+	 * oops_size must be aligned to 4096 Bytes, which is limited by
-+	 * psblk. The default value of oops_size is 64KB. If oops_size
-+	 * is larger than erasesize, some errors will occur since mtdpsotre
-+	 * is designed on it.
-+	 */
-+	if (mtd->erasesize < info->oops_size) {
-+		dev_err(&mtd->dev, "eraseblock size of MTD partition %d too small\n",
-+				mtd->index);
-+		return;
-+	}
-+	if (unlikely(info->oops_size % mtd->writesize)) {
-+		dev_err(&mtd->dev, "record size %lu KB must align to write size %d KB\n",
-+				info->oops_size / 1024,
-+				mtd->writesize / 1024);
-+		return;
-+	}
-+
-+	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->oops_size));
-+	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-+	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-+
-+	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
-+	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
-+
-+	cxt->dev.total_size = mtd->size;
-+	/* just support dmesg right now */
-+	cxt->dev.flags = PSTORE_FLAGS_DMESG;
-+	cxt->dev.read = mtdpstore_read;
-+	cxt->dev.write = mtdpstore_write;
-+	cxt->dev.erase = mtdpstore_erase;
-+	cxt->dev.panic_write = mtdpstore_panic_write;
-+
-+	ret = psblk_register_device(&cxt->dev);
-+	if (ret) {
-+		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
-+				mtd->index);
-+		return;
-+	}
-+	cxt->mtd = mtd;
-+	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
-+}
-+
-+static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
-+		loff_t off, size_t size)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	u_char *buf;
-+	int ret;
-+	size_t retlen;
-+	struct erase_info erase;
-+
-+	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
-+	if (!buf)
-+		return -ENOMEM;
-+
-+	/* 1st. read to cache */
-+	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
-+	if (mtdpstore_is_io_error(ret))
-+		goto free;
-+
-+	/* 2nd. erase block */
-+	erase.len = mtd->erasesize;
-+	erase.addr = off;
-+	ret = mtd_erase(mtd, &erase);
-+	if (ret)
-+		goto free;
-+
-+	/* 3rd. write back */
-+	while (size) {
-+		unsigned int zonesize = cxt->info.oops_size;
-+
-+		/* there is valid data on block, write back */
-+		if (mtdpstore_is_used(cxt, off)) {
-+			ret = mtd_write(mtd, off, zonesize, &retlen, buf);
-+			if (ret)
-+				dev_err(&mtd->dev, "write failure at %lld (%zu of %u written), err %d\n",
-+						off, retlen, zonesize, ret);
-+		}
-+
-+		off += zonesize;
-+		size -= min_t(unsigned int, zonesize, size);
-+	}
-+
-+free:
-+	kfree(buf);
-+	return ret;
-+}
-+
-+/*
-+ * What does mtdpstore_flush_removed() do?
-+ * When user remove any log file on pstore filesystem, mtdpstore should do
-+ * something to ensure log file removed. If the whole block is no longer used,
-+ * it's nice to erase the block. However if the block still contains valid log,
-+ * what mtdpstore can do is to erase and write the valid log back.
-+ */
-+static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
-+{
-+	struct mtd_info *mtd = cxt->mtd;
-+	int ret;
-+	loff_t off;
-+	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
-+
-+	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
-+		ret = mtdpstore_block_isbad(cxt, off);
-+		if (ret)
-+			continue;
-+
-+		ret = mtdpstore_block_is_removed(cxt, off);
-+		if (!ret)
-+			continue;
-+
-+		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static void mtdpstore_notify_remove(struct mtd_info *mtd)
-+{
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+
-+	if (mtd->index != cxt->index || cxt->index < 0)
-+		return;
-+
-+	mtdpstore_flush_removed(cxt);
-+
-+	psblk_unregister_device(&cxt->dev);
-+	kfree(cxt->badmap);
-+	kfree(cxt->usedmap);
-+	kfree(cxt->rmmap);
-+	cxt->mtd = NULL;
-+	cxt->index = -1;
-+}
-+
-+static struct mtd_notifier mtdpstore_notifier = {
-+	.add	= mtdpstore_notify_add,
-+	.remove	= mtdpstore_notify_remove,
-+};
-+
-+static int __init mtdpstore_init(void)
-+{
-+	int ret;
-+	struct mtdpstore_context *cxt = &oops_cxt;
-+	struct mtd_info *mtd = cxt->mtd;
-+	struct psblk_info *info = &cxt->info;
-+
-+	ret = psblk_usr_info(info);
-+	if (unlikely(ret))
-+		return ret;
-+
-+	if (strlen(info->device) == 0) {
-+		dev_err(&mtd->dev, "mtd device must be supplied\n");
-+		return -EINVAL;
-+	}
-+	if (!info->oops_size) {
-+		dev_err(&mtd->dev, "no recorder enabled\n");
-+		return -EINVAL;
-+	}
-+
-+	/* Setup the MTD device to use */
-+	ret = kstrtoint((char *)info->device, 0, &cxt->index);
-+	if (ret)
-+		cxt->index = -1;
-+
-+	register_mtd_user(&mtdpstore_notifier);
-+	return 0;
-+}
-+module_init(mtdpstore_init);
-+
-+static void __exit mtdpstore_exit(void)
-+{
-+	unregister_mtd_user(&mtdpstore_notifier);
-+}
-+module_exit(mtdpstore_exit);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
-+MODULE_DESCRIPTION("MTD Oops/Panic console logger/driver");
--- 
-1.9.1
+Thanks,
 
+Can Guo.
+
+>> 
+>> -out:
+>> +scale_up_gear:
+>> +       if (!scale_up)
+>> +               ufshcd_scale_gear(hba, true);
+>> +clk_scaling_unprepare:
+>>         ufshcd_clock_scaling_unprepare(hba);
+>> +out:
+>>         ufshcd_release(hba);
+>>         return ret;
+>>  }
+>> @@ -6251,7 +6275,7 @@ static int ufshcd_host_reset_and_restore(struct
+>> ufs_hba *hba)
+>>         spin_unlock_irqrestore(hba->host->host_lock, flags);
+>> 
+>>         /* scale up clocks to max frequency before full 
+>> reinitialization */
+>> -       ufshcd_scale_clks(hba, true);
+>> +       ufshcd_set_clk_freq(hba, true);
+>> 
+>>         err = ufshcd_hba_enable(hba);
+>>         if (err)
+>> --
+>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
+>> Linux Foundation Collaborative Project.
