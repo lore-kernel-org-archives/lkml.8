@@ -2,151 +2,92 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E74C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2BBC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF5F2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aD/rHugi"
+	by mail.kernel.org (Postfix) with ESMTP id 5009520740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585151889;
+	bh=yuKPw9zHwSe4jPNUbVFEbNmFqcIFFFDut0JgQS3oKmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ud0/+4ZdhxdcHPu0SYjnUgCa8SyNipEwCR6wDEDu3YD/P7/h/bXoFc32DXFweVJ8C
+	 R5/8iEM82SkOWvkW+WLD6/qWnNouSubRzs3IuZJPEnedkQwdcNMFsmZai5Wb67Phk3
+	 gKsF+MOStAe/Zgxf7JufhEiGmuV4ea1JciAL44ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgCYP6A (ORCPT
+        id S1727965AbgCYP6I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:58:00 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:34464 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727448AbgCYP57 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:57:59 -0400
-Received: by mail-pg1-f194.google.com with SMTP id d37so830695pgl.1;
-        Wed, 25 Mar 2020 08:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W1gJ2xQm9pLhyl3IpAZgE4PmhJL0YaJ4OHDS3ohcGvQ=;
-        b=aD/rHuginT6Lh5StzDcokjsw7RapYazNrnsuzEKngjxu9i98RQ+5pE6XvLHWPJc8c/
-         1sdiyp39z6xbB0FXTmUqHCc7lH/F5EAE3Hzvws+ORcsksW20imt5SLSOUxdCFwe3apJV
-         cnLR9TyiHGeoDUmkVBiRLXXHLSrpgcJjsYtRwIW6xctSawWL3GoIlOGAaEdnPjmVCGvv
-         2iRPPbJ/8JX6oeg/MSac0MJAstNcxsMRQTb9Pml7fVjDaZpimWV0SX1jQzlEXbnNhFoL
-         fgnqNdi/nf4HFqKs1ee3Ee/yc5Vy58QpNb2htCOYhhzIL2EPlU+BDcJy4iAZv9IHnI/Y
-         n+ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W1gJ2xQm9pLhyl3IpAZgE4PmhJL0YaJ4OHDS3ohcGvQ=;
-        b=Jwe7XHMaonmP53OdfoZLYPz6ds3Ou9xnFyByvUaj91xxLms2EF97r7Iq/nShQJGm/6
-         6kQtYPqVIrzCYVX7bpTTEtx3k956mw1gCiWV23l4nKRP2fBBbKi3feeIaoCZJS6YoysD
-         k66ZW+ub8LDDoZQ3bNC/iPJa79dZ5OqU+DqTRJmYTN9tcuyAmFzfuV+A/u3rElEVEQQl
-         whPqPCwmeYGuzuBbSsAT3hKSF8pMnwS/IDuDtPP7dOzDJjAXscR0IZnVjk7hrrYafAX5
-         eRV4DdiMJWKLPh7PvmPKMWP9+k/Fhe2UciJo3FWFmCK2qKhMfvjXx3/DFCpfAmn02/j+
-         j/Hw==
-X-Gm-Message-State: ANhLgQ26n6g6Hy+q+Eox5TARkGhbTI6aGPH5ikTKzA55Ub4CWym5XcyF
-        rtx0l1r0AAXKWPwtkbTVm2lqfLVNx35YR/0b79s=
-X-Google-Smtp-Source: ADFU+vsTJnfH3AnZqp3Nc1xcphC1UlOK9BOcoOfM8HM3keeSZptNHrLX7pTNZTz166n2F16IaoaMUP1pITmTjjqgey0=
-X-Received: by 2002:a63:5859:: with SMTP id i25mr3671432pgm.74.1585151878262;
- Wed, 25 Mar 2020 08:57:58 -0700 (PDT)
+        Wed, 25 Mar 2020 11:58:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727448AbgCYP6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:58:07 -0400
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F0202073E;
+        Wed, 25 Mar 2020 15:58:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585151887;
+        bh=yuKPw9zHwSe4jPNUbVFEbNmFqcIFFFDut0JgQS3oKmM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=V+62TTJEnnakM8FVs3+TfAH+O1aXF1HvMmeMiJl/SqXlqkbVYSu62irvYLvhOUN74
+         9ev7B2Xcdw4Owa+w+k2grU+BoD5RMypGl7iUXrhiOEp6YankzEDZfP3nlJ56BPJpPl
+         /sEtWZSo85MnjUDhIvS/bwuNA1k8K0yE3Prk7BcM=
+Date:   Wed, 25 Mar 2020 08:58:06 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH RFC] f2fs: don't inline compressed inode
+Message-ID: <20200325155806.GC65658@google.com>
+References: <20200325092754.63411-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-References: <20200320104031.31701-1-alexandru.ardelean@analog.com> <20200325100112.85107-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20200325100112.85107-1-alexandru.ardelean@analog.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Mar 2020 17:57:50 +0200
-Message-ID: <CAHp75VfVggWZ6WhOa=nUrxyd0dJrTbZd9NnUMhQ_S=kncrAhOw@mail.gmail.com>
-Subject: Re: [PATCH v2] iio: buffer: Don't allow buffers without any channels
- enabled to be activated
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald <pmeerw@pmeerw.ne>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325092754.63411-1-yuchao0@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:02 PM Alexandru Ardelean
-<alexandru.ardelean@analog.com> wrote:
->
-> From: Lars-Peter Clausen <lars@metafoo.de>
->
-> Before activating a buffer make sure that at least one channel is enabled.
-> Activating a buffer with 0 channels enabled doesn't make too much sense and
-> disallowing this case makes sure that individual driver don't have to add
-> special case code to handle it.
->
-> Currently, without this patch enabling a buffer is possible and no error is
-> produced. With this patch -EINVAL is returned.
->
-> An example of execution with this patch and some instrumented print-code:
->    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
->    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
->    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
->    1: iio_verify_update 753
->    2:__iio_update_buffers 1115 ret -22
->    3: iio_buffer_store_enable 1241 ret -22
->    -bash: echo: write error: Invalid argument
-> 1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
-> rergardless of error path.
->
-> Without this patch (and same instrumented print-code):
->    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
->    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
->    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
->    root@analog:/sys/bus/iio/devices/iio:device3/buffer#
-> Buffer is enabled with no error.
->
-> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+On 03/25, Chao Yu wrote:
+> f2fs_may_inline_data() only check compressed flag on current inode
+> rather than on parent inode, however at this time compressed flag
+> has not been inherited yet.
+
+When write() or other allocation happens, it'll be reset.
+
+> 
+> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 > ---
->
-> Changelog v1 -> v2:
-> * moved check in iio_verify_update()
-> * added dev_dbg() message; should help some folks understand the message
-> * documented steps to reproduce
-
-> * added Fixes tag; hopefully the tag is the good one; if needed, it can be
->   dropped; this has been around for ~8 years; no idea if it's worth
->   backporting
-
-Where?
-
->
->  drivers/iio/industrialio-buffer.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-> index 5ff34ce8b6a2..e6fa1a4e135d 100644
-> --- a/drivers/iio/industrialio-buffer.c
-> +++ b/drivers/iio/industrialio-buffer.c
-> @@ -686,6 +686,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
->         bool scan_timestamp;
->         unsigned int modes;
->
-> +       if (insert_buffer &&
-> +           bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
-> +               dev_dbg(&indio_dev->dev,
-> +                       "At least one scan element must be enabled first\n");
-> +               return -EINVAL;
-> +       }
-> +
->         memset(config, 0, sizeof(*config));
->         config->watermark = ~0;
->
-> --
-> 2.17.1
->
-
-
--- 
-With Best Regards,
-Andy Shevchenko
+> 
+> Jaegeuk,
+> 
+> I'm not sure about this, whether inline_data flag can be compatible with
+> compress flag, thoughts?
+> 
+>  fs/f2fs/namei.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+> index f54119da2217..3807d1b4c4bc 100644
+> --- a/fs/f2fs/namei.c
+> +++ b/fs/f2fs/namei.c
+> @@ -86,7 +86,8 @@ static struct inode *f2fs_new_inode(struct inode *dir, umode_t mode)
+>  	if (test_opt(sbi, INLINE_XATTR))
+>  		set_inode_flag(inode, FI_INLINE_XATTR);
+>  
+> -	if (test_opt(sbi, INLINE_DATA) && f2fs_may_inline_data(inode))
+> +	if (test_opt(sbi, INLINE_DATA) && f2fs_may_inline_data(inode) &&
+> +					!f2fs_compressed_file(dir))
+>  		set_inode_flag(inode, FI_INLINE_DATA);
+>  	if (f2fs_may_inline_dentry(inode))
+>  		set_inode_flag(inode, FI_INLINE_DENTRY);
+> -- 
+> 2.18.0.rc1
