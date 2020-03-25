@@ -2,46 +2,49 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22EE5C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C430C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 025DA20719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50BC520719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:48:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nb0EXZ1y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bVmj9pE0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgCYPsq (ORCPT
+        id S1727968AbgCYPsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:48:46 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48626 "EHLO
+        Wed, 25 Mar 2020 11:48:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48630 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbgCYPsq (ORCPT
+        with ESMTP id S1727855AbgCYPss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:48:46 -0400
+        Wed, 25 Mar 2020 11:48:48 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=AdTAtOQjOFKE/NW0z69GFq9nK4YL4GyPHbtdVxISirQ=; b=nb0EXZ1y9pWV9KDU2IwrqDH1Fu
-        dLlowE+sRsalbvrvK3XZH5ZFrxK6zwS0b28cFBc6y31pqGSJtmS1L4dap9uWvMp/rmxaTGwLj9pNq
-        cqnplIVAxRjtET1tNQ8xKhF6+D1zhyykQ0UYG1rW29V0LeNXpRHWb4asgaPCu4TCMI7J1Cb6S8711
-        OiICVt0la/TS6hKoYSChyb3bq1bi+QG1U9971fmYs3HT+o38oF1ToMm50fVXZxx/5/7DIDT1BL+XC
-        /DFpbKr8acx5aDlVqg8YOgvL0prr6XnF+XHw72EBcX1FXsNz+l943W4TegrH5cd1B0QchGdQPNzir
-        Bqhk7iIQ==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=IkogOyiCcNSk6zKq5EfhqqdWGtjuE6YIQb3KTTakCoo=; b=bVmj9pE06ZCMKCgB5zVQ5dV7JQ
+        Crg3dnK5McUFKUPMNo0qC8MFl8CcPBwisNjYMXrcSxfovfCG6LiecGEwUrA77nddEIJ8QgYG/p7w8
+        ThQ+944/szRitaKiamNP8avfZ+PVw4Tke7c0A1Qfts4PpWrQtBk4uGAMdbpl9/S+f58O6a8ZMin3y
+        kiN5zuCVRYaj9X0Zo0AlB7rxAxDFZM5j0C61it8mZXQvmaH6LuFM5PNtJNi/ambgE60AFQAAVTN0k
+        Q01DtNUWZFGI2ua4Scy17KRyhXO2k79SBRH2p3aQPW1Enri1kc3HTUhQLlsMA5pM3K8jeQzrhCq4E
+        XTUCizSA==;
 Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH8Gr-0005EV-F3; Wed, 25 Mar 2020 15:48:45 +0000
+        id 1jH8Gt-0005FB-UP; Wed, 25 Mar 2020 15:48:48 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: decruft genhd.h v2
-Date:   Wed, 25 Mar 2020 16:48:34 +0100
-Message-Id: <20200325154843.1349040-1-hch@lst.de>
+Subject: [PATCH 1/9] block: mark block_depr static
+Date:   Wed, 25 Mar 2020 16:48:35 +0100
+Message-Id: <20200325154843.1349040-2-hch@lst.de>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200325154843.1349040-1-hch@lst.de>
+References: <20200325154843.1349040-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
@@ -50,10 +53,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/genhd.c         | 2 +-
+ include/linux/genhd.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-this series tries to move as much out of genhd.h that doesn't really
-belong there.
+diff --git a/block/genhd.c b/block/genhd.c
+index 792356e922a1..7dafd7504493 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -27,7 +27,7 @@
+ #include "blk.h"
+ 
+ static DEFINE_MUTEX(block_class_lock);
+-struct kobject *block_depr;
++static struct kobject *block_depr;
+ 
+ /* for extended dynamic devt allocation, currently only one major is used */
+ #define NR_EXT_DEVT		(1 << MINORBITS)
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 790fdc3e0b3d..b322e805a916 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -27,7 +27,6 @@
+ #define part_to_dev(part)	(&((part)->__dev))
+ 
+ extern struct device_type part_type;
+-extern struct kobject *block_depr;
+ extern struct class block_class;
+ 
+ #define DISK_MAX_PARTS			256
+-- 
+2.25.1
 
-Changes since v1:
- - rebased to the latest block tree
