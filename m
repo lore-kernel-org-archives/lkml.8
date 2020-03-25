@@ -2,218 +2,131 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF38C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:58:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56778C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABF620409
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:58:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C21D206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:59:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CZoXUTph"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pxDYmGnK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCYH6w (ORCPT
+        id S1727158AbgCYH7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:58:52 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:43615 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726103AbgCYH6w (ORCPT
+        Wed, 25 Mar 2020 03:59:41 -0400
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:41738 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgCYH7l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:58:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585123130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=C4c0GaVtRDWaU9/xx4/dnvnU5KluYHvHC23BSylmXwA=;
-        b=CZoXUTphPiy057nD1koZk7gUSy9fTSvFNK2/CFYshK1KUT4cDvTarTJjROUwk1gnm+p5Lt
-        eAiykFxSmZuGTenpeeDISMoeAbI34yTy9/aOzT9/SbIQ/ubeRBgpIIZV+3dmfGXUTqdpRU
-        hblMl8uzg8sml38LYz9O6qZfUt0NVtc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-330-Uj3Z2DWiM167ze8Uz5lDbw-1; Wed, 25 Mar 2020 03:58:46 -0400
-X-MC-Unique: Uj3Z2DWiM167ze8Uz5lDbw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0D0413EA;
-        Wed, 25 Mar 2020 07:58:43 +0000 (UTC)
-Received: from dcbz.redhat.com (ovpn-112-139.ams2.redhat.com [10.36.112.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 671CF94B42;
-        Wed, 25 Mar 2020 07:58:38 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 08:58:36 +0100
-From:   Adrian Reber <areber@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     Andrei Vagin <avagin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Radostin Stoyanov <rstoyanov1@gmail.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Wed, 25 Mar 2020 03:59:41 -0400
+Received: by mail-wm1-f73.google.com with SMTP id f207so567931wme.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 00:59:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
+        bh=hfFzAgFLiPhJI7PNYPoebZUNl36WTAu03kIuyGPpbI8=;
+        b=pxDYmGnKOS3Ef4pWxZN1Ura0RIq7zlN5bDScyl2R/APyLXHYdrpVd4JasW3YV8ovxc
+         tpv/HetTuguGF2H9tM3EvvcPvihKmJPH0GAI7CyAMdHHbiHlPMjp9wavU26rHP4DHW/W
+         zBVkQ5hFebZocWV/Qqa2rZe6/J0hHu3a+w7KlxBT/8Kw94DRetTSnjwc8Q/bXg9wLEyU
+         oo/upaNvUI8DEAdrH2pO3OGukNsyZu8Ah8ClzpJvH/KSBHHt1Ok1j2sdN44M1BJOdyT3
+         FgMckxzlWTQdyPx5Zp6Gl6LhzLUmL71QUe5ZoyfuuLdN7t97o03NpOgsXPOxFHZ58pzh
+         KvNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:cc;
+        bh=hfFzAgFLiPhJI7PNYPoebZUNl36WTAu03kIuyGPpbI8=;
+        b=m3sP7y1DSc+AybqaFn6zIMvykYNkduhzuM9GfZ9NL0pdsi/cgjI8P72783rjuCV0aK
+         NOvdzo7IzSM5tUymvmcxN6A9rqNr2oEukxlpUO/UOtF5HBVxYdbjGFzBBqMJjMSjBmky
+         Ck7v31gQ5ZZ2kmCD8LJBYYM6nqiGJYyggYck/gNGg6bxXxVu9kqj2XaZGw7wZovgoXOs
+         L1Cli1PLjwW37jkprYE+feZhOdrtafutz5Y9+uuC+4M0r3hiB0UHuVGwALkVH9qtZP3m
+         D3JalZ+RqDZ9aUxZwnUEzeT2c4ZkFsdyd9eqUoiJo9ICkEB9syuX9qrIwsRQdfDcbc3Z
+         PP0g==
+X-Gm-Message-State: ANhLgQ3oSxyAanXl0Ey1VRlI2oygyL7ORCw2Sh8xQe66Zv4bVnB/ZXsM
+        GAtSBq+/+Vy+DPfZDOXURC8RsNAnLdk6
+X-Google-Smtp-Source: ADFU+vvI6XyoMyOeAgHW/3T8UjZKl0NtKhNkhRAdej9UofBhaJtmEZYsJcg7YIcnaa8TV0KGL5nKoIKvc1pX
+X-Received: by 2002:adf:cf09:: with SMTP id o9mr1950627wrj.74.1585123179453;
+ Wed, 25 Mar 2020 00:59:39 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 08:59:22 +0100
+In-Reply-To: <20200323114207.222412-1-courbet@google.com>
+Message-Id: <20200325075924.109330-1-courbet@google.com>
+Mime-Version: 1.0
+References: <20200323114207.222412-1-courbet@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH]     x86: Alias memset to __builtin_memset.
+From:   Clement Courbet <courbet@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joe Perches <joe@perches.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linux API <linux-api@vger.kernel.org>
-Subject: Re: clone3: allow creation of time namespace with offset
-Message-ID: <20200325075836.GK358599@dcbz.redhat.com>
-References: <20200317083043.226593-1-areber@redhat.com>
- <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
- <20200319081137.GC223854@dcbz.redhat.com>
- <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
- <20200319102955.i7slokibkkysz6g6@wittgenstein>
- <20200320183355.GA118769@gmail.com>
- <20200324160945.orcm75avj2ol3eop@wittgenstein>
- <20200324162546.GG358599@dcbz.redhat.com>
- <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
-X-Operating-System: Linux (5.5.8-200.fc31.x86_64)
-X-Load-Average: 1.78 2.01 1.87
-X-Unexpected: The Spanish Inquisition
-X-GnuPG-Key: gpg --recv-keys D3C4906A
-X-Url:  <http://lisas.de/~adrian/>
-Organization: Red Hat
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Clement Courbet <courbet@google.com>,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 06:56:49PM +0100, Christian Brauner wrote:
-> On Tue, Mar 24, 2020 at 05:25:46PM +0100, Adrian Reber wrote:
-> > On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
-> > > On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
-> > > > On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
-> > > > > On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
-> > > > > > On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
-> > > > > > 
-> > > > > > > With Arnd's idea of only using nanoseconds, timens_offset would then
-> > > > > > > contain something like this:
-> > > > > > >
-> > > > > > > struct timens_offset {
-> > > > > > >         __aligned_s64 monotonic_offset_ns;
-> > > > > > >         __aligned_s64 boottime_offset_ns;
-> > > > > > > };
-> > > > > > >
-> > > > > > > I kind of prefer adding boottime and monotonic directly to struct clone_args
-> > > > > > >
-> > > > > > >         __aligned_u64 tls;
-> > > > > > >         __aligned_u64 set_tid;
-> > > > > > >         __aligned_u64 set_tid_size;
-> > > > > > > +       __aligned_s64 monotonic_offset_ns;
-> > > > > > > +       __aligned_s64 boottime_offset_ns;
-> > > > > > >  };
-> > > > > > 
-> > > > > > I would also prefer the second approach using two 64-bit integers
-> > > > > > instead of a pointer, as it keeps the interface simpler to implement
-> > > > > > and simpler to interpret by other tools.
-> > > > > 
-> > > > > Why I don't like has two reasons. There's the scenario where we have
-> > > > > added new extensions after the new boottime member and then we introduce
-> > > > > another offset. Then you'd be looking at:
-> > > > > 
-> > > > > __aligned_u64 tls;
-> > > > > __aligned_u64 set_tid;
-> > > > > __aligned_u64 set_tid_size;
-> > > > > + __aligned_s64 monotonic_offset_ns;
-> > > > > + __aligned_s64 boottime_offset_ns;
-> > > > > __aligned_s64 something_1
-> > > > > __aligned_s64 anything_2
-> > > > > + __aligned_s64 sometime_offset_ns
-> > > > > 
-> > > > > which bothers me just by looking at it. That's in addition to adding two
-> > > > > new members to the struct when most people will never set CLONE_NEWTIME.
-> > > > > We'll also likely have more features in the future that will want to
-> > > > > pass down more info than we want to directly expose in struct
-> > > > > clone_args, e.g. for a long time I have been thinking about adding a
-> > > > > struct for CLONE_NEWUSER that allows you to specify the id mappings you
-> > > > > want the new user namespace to get. We surely don't want to force all
-> > > > > new info into the uppermost struct. So I'm not convinced we should here.
-> > > > 
-> > > > I think here we can start thinking about a netlink-like interface.
-> > > 
-> > > I think netlink is just not a great model for an API and I would not
-> > > want us to go down that route.
-> > > 
-> > > I kept thinking about this for a bit and I think that we will end up
-> > > growing more namespace-related functionality. So one thing that came to
-> > > my mind is the following layout:
-> > > 
-> > > struct {
-> > > 	struct {
-> > > 		__s64 monotonic;
-> > > 		__s64 boot;
-> > > 	} time;
-> > > } namespaces;
-> > > 
-> > > struct _clone_args {
-> > > 	__aligned_u64 flags;
-> > > 	__aligned_u64 pidfd;
-> > > 	__aligned_u64 child_tid;
-> > > 	__aligned_u64 parent_tid;
-> > > 	__aligned_u64 exit_signal;
-> > > 	__aligned_u64 stack;
-> > > 	__aligned_u64 stack_size;
-> > > 	__aligned_u64 tls;
-> > > 	__aligned_u64 set_tid;
-> > > 	__aligned_u64 set_tid_size;
-> > > 	__aligned_u64 namespaces;
-> > > 	__aligned_u64 namespaces_size;
-> > > };
-> > > 
-> > > Then when we end up adding id mapping support for CLONE_NEWUSER we can
-> > > extend this with:
-> > > 
-> > > struct {
-> > > 	struct {
-> > > 		__aligned_u64 monotonic;
-> > > 		__aligned_u64 boot;
-> 
-> s/__aligned_u64/__s64/g
-> 
-> Sorry, leftover from my first draft.
-> 
-> > > 	} time;
-> > > 
-> > > 	struct {
-> > > 		/* id mapping members */
-> > > 	} user;
-> > > } namespaces;
-> > > 
-> > > Thoughts? Other ideas?
-> > 
-> > Works for me.
-> > 
-> > If we add the user namespace id mappings and then at some point a third
-> > element for the time namespace appears it would also start to be mixed.
-> > Just as you mentioned that a few mails ago.
-> 
-> I think you misunderstand me or I'm misunderstanding you. That new time
-> namespace member would go into struct time {} so
-> 
-> struct {
-> 	struct {
-> 		__s64 monotonic;
-> 		__s64 boot;
-> 		__s64 someothertime;
-> 	} time;
-> 
-> 	struct {
-> 		/* id mapping members */
-> 	} user;
-> } namespaces;
+> Not sure we should modify this for someone's downstream tree to work
+> around an issue they introduced.  If you want to file a bug
+> internally, I'd be happy to comment on it.
 
-My question was about how does the kernel know how 'struct namespaces'
-is structured. How can an older kernel (which only is aware of two
-clocks) deal with a, like in this example, third clock. Will the size
-'__aligned_u64 namespaces_size' be used for versioning?
+I don't have a strong opinion on that. I don't know the policy of the
+linux kernel w.r.t. this. There is an internal bug for this, where
+kernel maintainers suggested I upstream this patch.
 
-		Adrian
+> Does __builtin_memset detect support for `rep stosb`, then patch the
+> kernel to always use it or not?
+
+__builtin_memset just allows the compiler to recognize that this has the
+semantics of a memset, exactly like it happens when -freestanding is not
+specified.
+
+In terms of what compilers do when expanding the memset, it depends on
+the size.
+gcc or clang obviously do not generate vector code when -no-sse is
+specified, as this would break promises.
+
+clang inlines stores for small sizes and switches to memset as the size
+increases: https://godbolt.org/z/_X16xt
+
+gcc inlines stores for tiny sizes, then switches to repstos for larger
+sizes: https://godbolt.org/z/m-G233 This behaviour is additionally
+configurable through command line flags: https://godbolt.org/z/wsoJpQ
+
+> Did you verify what this change does for other compilers?
+
+Are there other compilers are used to build the kernel on x86 ?
+
+icc does the same as gcc and clang: https://godbolt.org/z/yCju_D
+
+> yet it doesn't use vector operations for the general case
+
+I'm not sure how vector operations relate to freestanding, or this change.
+
+> Adding -ffreestanding to optimize one hot memset in
+> one function is using a really big hammer to solve the wrong
+> problem.
+
+-ffreestanding was not added to optimize anything. It was already there.
+If anything -ffreestanding actually pessimizes a lot of the code
+generation, as it prevents the compiler from recognizing the semantics
+of common primitives. This is what this change is trying to fix.
+Removing -ffreestanding from the options is another (easier?) way to fix
+the problem. This change is a stab at accomodating both those who want
+freestanding and those who want performance.
+
+The hot memset I mentionned was just the hottest one. But as you can imagine
+there are many constant-size memsets spread across many functions, some of
+which are also very hot, the others constituting a long tail which is not
+negligible.
+
 
