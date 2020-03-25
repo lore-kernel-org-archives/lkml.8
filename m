@@ -2,181 +2,202 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0172AC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1A7C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C209F20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 882762076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDW1feaQ"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="wA7Kt/YD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgCYP2j (ORCPT
+        id S1727855AbgCYP3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:28:39 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:36816 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgCYP2j (ORCPT
+        Wed, 25 Mar 2020 11:29:18 -0400
+Received: from lb1-smtp-cloud8.xs4all.net ([194.109.24.21]:51057 "EHLO
+        lb1-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgCYP3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:28:39 -0400
-Received: by mail-lf1-f66.google.com with SMTP id s1so2149600lfd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:28:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MAfXLeK4jv3GCXZEXdtxljvjsSAfg9wpjX0t8Ep/xn0=;
-        b=aDW1feaQrj/vQbwncf35ZAbIJQv6QoVYZCbKz9TCT9fUH98JKwEEaGp+U3VA4/RSxj
-         M2U1pJCxnd/u57YPJBO93DEX2pyVd5yTcvNeo3knsXJMSZXsjuSwyZbLvyiU1biwWm6p
-         CGrF1GW7glPm10woi2K7MCSpOd6gPGxgfI5wUW4egp3qRlpv0tElS6C3iexVg400nWrW
-         jFLalqO3PixJa/k6GxgaWExvLfeARawYBJhoYg6e2BCtnChUG8KMqaG1szJeWQ2KoZpY
-         BHHVvBAmrzGU9sAO4d+K7uYZ0ONthZXN1RMD0zzJ5xLy4buThs8hGRL8hQeUor+yr0S0
-         i15A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MAfXLeK4jv3GCXZEXdtxljvjsSAfg9wpjX0t8Ep/xn0=;
-        b=Re2EFhcPg9yVMMj2hGGH4FKFIIu1PaKMUDEFGhlV9EUDXgMPjfxq9GDcWlrUJnRxFz
-         4bdAOkMsvHi5X9wQqAqFRlZB07uLKxDf3KR7zX3dbs6hwJZPhEadEiUR/5pBelotuAjG
-         tzuogVfQ7u0rtfak/fo6V3hYaAHVArk0f1jQf6x1w+lLYLwxonsfQCYi+hAq/XwS/KbW
-         QR1vsSb2YtqLEy5p3nMSdmT8xpDix3H2NsaIIaGCw2/BfcgKvKccFIk4w3AKeaXKqMNI
-         /br+KwBXISMoTj7xsSSpyXYFXqyC+tMBkQa2FZgtTrGRLgeEzFgnBVND3Pmz8wNx2bR2
-         Wr8w==
-X-Gm-Message-State: ANhLgQ38WzH9lyG8wWrSmANES/SFRaZmIfF3WpSQJa8XMJl/fLY5lQYQ
-        UbgreHoumA7Apj6KBZJOz6tFcJVGGJSeJZm9Y1mhLQ==
-X-Google-Smtp-Source: ADFU+vvPsxfhLZkuw1zm3DaRk4jDzbr+V6wKm8OS63ckoV6lXpkrggY1jnKk/LQr1ujMiOa33DUQuJWItnCXDLsD8jE=
-X-Received: by 2002:ac2:43a8:: with SMTP id t8mr2721177lfl.82.1585150114380;
- Wed, 25 Mar 2020 08:28:34 -0700 (PDT)
+        Wed, 25 Mar 2020 11:29:18 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id H7xijfeSKBr2bH7xljIHs8; Wed, 25 Mar 2020 16:29:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585150155; bh=WdXxtpAu7Qy0dGjk7oDPYMFVBNZV4Al73YxfsmMk6Ik=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=wA7Kt/YD9qCqA9K5RJ7UzomtDMEAsGDmVqAZPf4CDNxmSsSJSFYAV9j/NKQU4gDK0
+         C9Qq53pvEHMyxK9/kR5WL34wOv5fHhxb5xXZar0AkOuIR27XXfxj+gm22CSiUqrOTB
+         AV2D7TDAwULbiHQoOtrB9oJHTc+aaM53j1upVAZQnuMlEmXXl4kpStbxJ9ntWjexnt
+         ZelOwky4R24PT80X1w4vtm9+TQ9kxJXFwNhxawMztP0NiGOTJjuJCnFJ22xycCVgFG
+         hVBUHVvhfc+37AKJST/n1uR5RZFRC1p7lLm1uq+IX3votvsG/MkTX2sV5kGXIxTK7r
+         MhuBwvZ7oqbHA==
+Subject: Re: [PATCH v2 3/8] hantro: Use v4l2_m2m_buf_done_and_job_finish
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Rob Herring <robh@kernel.org>
+References: <20200318132108.21873-1-ezequiel@collabora.com>
+ <20200318132108.21873-4-ezequiel@collabora.com>
+ <13b1efe1-8b52-070b-cf11-b230bd405d3e@xs4all.nl>
+ <0a8f6d97e6869ff694aedd67a3176217a885c938.camel@ndufresne.ca>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <50d764ec-1c15-99bd-192b-9aa6ae5bf368@xs4all.nl>
+Date:   Wed, 25 Mar 2020 16:28:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <cover.1585117436.git.amit.kucheria@linaro.org>
- <1ee4240e29edefc36b5d410d4792971c2bb4c5d5.1585117436.git.amit.kucheria@linaro.org>
- <a89df770-eeb9-e4f2-2a46-ee4389720597@arm.com>
-In-Reply-To: <a89df770-eeb9-e4f2-2a46-ee4389720597@arm.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Wed, 25 Mar 2020 20:58:23 +0530
-Message-ID: <CAP245DX04zTMhNep46MNB7yhxnBshX0bb7sQmaSq_6KScvH2jg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] dt-bindings: thermal: Add yaml bindings for
- thermal cooling-devices
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0a8f6d97e6869ff694aedd67a3176217a885c938.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfAwLaPPmqQFPbd5FOJJRJcEy4huCHCeranRD3okAXOel+Y8Rvf2TToDPTWdTWuY/kl/h8TamrSb8wbvFLOu3WmeHZw/8KJu70r9dMKKsVFOMuVioxFzP
+ UBubyswnwHXyeZrkyEdZQRHRaNW4l00P0tfZIyUThJ+vmMKm+sJFi3GRNyxk3bzTzXMK21DQSgmgxXZHQ+nAHAAtVuwGg697X+QQ48yHBHERPEUc8XXoAyrY
+ nhTpLr2l77tLE5OV/AL7qPW9f7FoOuBzmiNP5mTG50lUTbhmUmlFxFZHtwmC6css66acAiIW+5RxcrUI133nub2k6IY2fWlsLNLrfsMwX/N4i23qoPcHX+d3
+ 7x3rlMVtFrk1jNnXsnr4CYySKi83la9H/oiNh3bqjG8Gb6VLVsRkdiCGdWoTIJWRMfxUB+PvnpsmianyOEI8+PHehR6U8iOBIOTe5rBgWG0/LiGdq0eM65y7
+ W2UayCjIML1eiDfvLQOJREsQSggRGH/wZCNIypYinZSm57DUdovJ7bWst9A58AQdunz3bWgQUgXYYs87
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 3:51 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
->
-> Hi Amit,
->
-> On 3/25/20 6:34 AM, Amit Kucheria wrote:
-> > As part of moving the thermal bindings to YAML, split it up into 3
-> > bindings: thermal sensors, cooling devices and thermal zones.
-> >
-> > The property #cooling-cells is required in each device that acts as a
-> > cooling device - whether active or passive. So any device that can
-> > throttle its performance to passively reduce heat dissipation (e.g.
-> > cpus, gpus) and any device that can actively dissipate heat at different
-> > levels (e.g. fans) will contain this property.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >   .../thermal/thermal-cooling-devices.yaml      | 116 ++++++++++++++++++
-> >   1 file changed, 116 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> > new file mode 100644
-> > index 000000000000..b5599f7859f8
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
-> > @@ -0,0 +1,116 @@
-> > +# SPDX-License-Identifier: (GPL-2.0)
-> > +# Copyright 2020 Linaro Ltd.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Thermal cooling device binding
-> > +
-> > +maintainers:
-> > +  - Amit Kucheria <amitk@kernel.org>
-> > +
-> > +description: |
-> > +  Thermal management is achieved in devicetree by describing the sensor hardware
-> > +  and the software abstraction of cooling devices and thermal zones required to
-> > +  take appropriate action to mitigate thermal overload.
-> > +
-> > +  The following node types are used to completely describe a thermal management
-> > +  system in devicetree:
-> > +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-> > +   - cooling-device: device used to dissipate heat either passively or artively
-> > +   - thermal-zones: a container of the following node types used to describe all
-> > +     thermal data for the platform
-> > +
-> > +  This binding describes the cooling devices.
-> > +
-> > +  There are essentially two ways to provide control on power dissipation:
-> > +    - Passive cooling: by means of regulating device performance. A typical
-> > +      passive cooling mechanism is a CPU that has dynamic voltage and frequency
-> > +      scaling (DVFS), and uses lower frequencies as cooling states.
-> > +    - Active cooling: by means of activating devices in order to remove the
-> > +      dissipated heat, e.g. regulating fan speeds.
-> > +
-> > +  Any cooling device has a range of cooling states (i.e. different levels of
-> > +  heat dissipation). They also have a way to determine the state of cooling in
-> > +  which the device is. For example, a fan's cooling states correspond to the
-> > +  different fan speeds possible. Cooling states are referred to by single
-> > +  unsigned integers, where larger numbers mean greater heat dissipation. The
-> > +  precise set of cooling states associated with a device should be defined in
-> > +  a particular device's binding.
->
-> [snip]
->
-> > +
-> > +    thermal-zones {
-> > +            cpu0-thermal {
-> > +                    polling-delay-passive = <250>;
-> > +                    polling-delay = <1000>;
-> > +
-> > +                    thermal-sensors = <&tsens0 1>;
-> > +
-> > +                    trips {
-> > +                            cpu0_alert0: trip-point0 {
-> > +                                    temperature = <90000>;
-> > +                                    hysteresis = <2000>;
-> > +                                    type = "passive";
-> > +                            };
-> > +                    };
-> > +
-> > +                    cooling-maps {
-> > +                            map0 {
-> > +                                    trip = <&cpu0_alert0>;
-> > +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-> > +                                                            THERMAL_NO_LIMIT>;
->
-> Maybe add something like this, to better reflect the description:
->
->                         trip = <&cpu0_alert0>;
->                         /* Corresponds to 1000MHz in OPP table */
->                         cooling-device = <&CPU0 5 5>;
->
-> This is less confusing than THERMAL_NO_LIMIT.
+On 3/25/20 3:02 PM, Nicolas Dufresne wrote:
+> Le mercredi 25 mars 2020 à 09:22 +0100, Hans Verkuil a écrit :
+>> On 3/18/20 2:21 PM, Ezequiel Garcia wrote:
+>>> Let the core sort out the nuances of returning buffers
+>>> to userspace, by using the v4l2_m2m_buf_done_and_job_finish
+>>> helper.
+>>>
+>>> This change also removes usage of buffer sequence fields,
+>>> which shouldn't have any meaning for stateless decoders.
+>>
+>> Uh, why remove this? For one, doesn't this cause fails in v4l2-compliance?
+>> Also, while I agree that it is not terribly useful, it doesn't hurt, does it?
+>>
+>> And the V4L2 spec makes no exception for stateless codecs with respect to the
+>> sequence field.
+>>
+>> Nacked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> 
+> The spec also does not say what it means either. As an example, you
+> have spec for ALTERNATE interlacing mode that changes the meaning of
+> the sequence, but not for alternate H264 fields (which cannot be part
+> of the format, since this changes often). We also don't have spec for
+> the the sequence behaviour while using HOLD features.
 
-Thanks for the review.
+I hate it that the spec changes the sequence meaning for FIELD_ALTERNATE,
+I always thought that that made drivers unnecessarily complicated. Unfortunately,
+this is something we inherited.
 
-Will fix.
+Currently the spec says for sequence:
+
+"Set by the driver, counting the frames (not fields!) in sequence. This field is set
+ for both input and output devices."
+
+The only thing missing here is that it should say that for compressed formats this
+counts the buffers, since one buffer with compressed data may not have a one-to-one
+mapping with frames.
+
+This description for 'sequence' was never updated when compressed data formats were
+added, so it is a bit out of date.
+
+> 
+> I'm worried we are falling into the test driven trap, were people
+> implement features to satisfy a test, while the added complexity don't
+> really make sense. Shouldn't we change our approach and opt-out
+> features for new type of HW, so that we can keep the drivers code
+> saner?
+
+Why wasn't the existing code in this patch sane? Sure, we can change the spec, but
+then 1) all existing drivers need to be updated as well, and 2) v4l2-compliance needs
+to be changed to test specifically for this class of drivers and ensure that for those
+the sequence field is set to 0. Not to mention introducing an exception in the uAPI
+where the sequence field suddenly isn't used anymore.
+
+Frankly, I would prefer that the whole sequence handling is moved to videobuf2-v4l2.c.
+It really doesn't belong in drivers, with the exception of incrementing the sequence
+counter in case of dropped frames.
+
+I think I suggested it when vb2 was being designed, but at the time the preference
+was to keep it in the driver. Long time ago, though.
+
+And another reason why I want to keep it: I find it actually useful to see a running
+counter: it helps keeping track of how many buffers you've processed since you started
+streaming.
+
+Finally, the removal of the sequence counter simply does not belong in this patch.
+
+Regards,
+
+	Hans
+
+> 
+>>
+>> Regards,
+>>
+>> 	Hans
+>>
+>>> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+>>> ---
+>>>  drivers/staging/media/hantro/hantro_drv.c | 27 ++++++++---------------
+>>>  1 file changed, 9 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+>>> index 0b1200fc0e1a..ec889d755cd6 100644
+>>> --- a/drivers/staging/media/hantro/hantro_drv.c
+>>> +++ b/drivers/staging/media/hantro/hantro_drv.c
+>>> @@ -94,32 +94,23 @@ static void hantro_job_finish(struct hantro_dev *vpu,
+>>>  			      unsigned int bytesused,
+>>>  			      enum vb2_buffer_state result)
+>>>  {
+>>> -	struct vb2_v4l2_buffer *src, *dst;
+>>>  	int ret;
+>>>  
+>>>  	pm_runtime_mark_last_busy(vpu->dev);
+>>>  	pm_runtime_put_autosuspend(vpu->dev);
+>>>  	clk_bulk_disable(vpu->variant->num_clocks, vpu->clocks);
+>>>  
+>>> -	src = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+>>> -	dst = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+>>> -
+>>> -	if (WARN_ON(!src))
+>>> -		return;
+>>> -	if (WARN_ON(!dst))
+>>> -		return;
+>>> -
+>>> -	src->sequence = ctx->sequence_out++;
+>>> -	dst->sequence = ctx->sequence_cap++;
+>>> -
+>>> -	ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+>>> -	if (ret)
+>>> -		result = VB2_BUF_STATE_ERROR;
+>>> +	if (ctx->buf_finish) {
+>>> +		struct vb2_v4l2_buffer *dst;
+>>>  
+>>> -	v4l2_m2m_buf_done(src, result);
+>>> -	v4l2_m2m_buf_done(dst, result);
+>>> +		dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+>>> +		ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+>>> +		if (ret)
+>>> +			result = VB2_BUF_STATE_ERROR;
+>>> +	}
+>>>  
+>>> -	v4l2_m2m_job_finish(vpu->m2m_dev, ctx->fh.m2m_ctx);
+>>> +	v4l2_m2m_buf_done_and_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx,
+>>> +					 result);
+>>>  }
+>>>  
+>>>  void hantro_irq_done(struct hantro_dev *vpu, unsigned int bytesused,
+>>>
+> 
+
