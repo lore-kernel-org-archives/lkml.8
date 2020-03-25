@@ -2,158 +2,76 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E2FC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE97C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 212DE20774
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:13:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbJa9fNU"
+	by mail.kernel.org (Postfix) with ESMTP id 6C8F6206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbgCYQN4 (ORCPT
+        id S1728133AbgCYQOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:13:56 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46524 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727174AbgCYQNz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:13:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k191so1345276pgc.13;
-        Wed, 25 Mar 2020 09:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7UJoycXzncq++KEmoEraf9FwjqsaFOTyD4pmVFX86bs=;
-        b=CbJa9fNUZr5nhJpO6iOqTWnVRkFWnvGFHEoJKM1CQL5adb6SFygnKr3AYrS4cug/qu
-         3bVhlztD1yorcyIk4/aDWzdqRLRoGxGxBpMwAh0FTfNM/hfOCLnnyWVNTH+F+vkrU4ei
-         3NXN0II/QWCC+98WNfrKieGHch8uvuU8bFcaz1vTIuBcLSc/bem0F+5J+whKEN3B7Il7
-         nqc1GeP1zls63i6y6Wp+AwzPsOG4zLaIECnm8egUF8zddd4vsblNE07YMqrjPIDwvEsU
-         XTqlbiqvWYH0eztRqsJHiX4LZxoqVxtq0+JLih/IFt8dHtu2najNJlnzdSPYrKCVxHj6
-         t69Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7UJoycXzncq++KEmoEraf9FwjqsaFOTyD4pmVFX86bs=;
-        b=ZsG8Q8cFSPbueLPEXP112PJO50GdB4f9wtx5V+U9MjTRkPj867wMp3u5uyI4xsp/C3
-         c6iO2fJWD2hlkBvROOPm/FpENaH4GW6mMmz9vzjWrST6T5L3Rh/J8NFWmDiik2d/Cluv
-         VdrYETx9AZZJZ15SqZ9xUVuX9KYBdZ1mBeVkRoM9qM/LZ7jY0N4zdfwWhYaN0DDJaCd1
-         JAUQH0f9r6q6As+JCz9mtVbIbNqkTASD+s0Jilh+KHV0oa4F36mOtw/Xz/2+vMyiHThr
-         uLIwO7Vb1f+JQURWIKwGaqR99aIaMK6nkOBgKw1nESQb0IUSdT6SFkrfK9vqx9JNtWON
-         7YKw==
-X-Gm-Message-State: ANhLgQ2pgDm/SUqYoKUOwd9WEr4h2ltJneTaMK4HbycIX0RcOICswiWd
-        WQBjvLzt4/WtNL+QTgoqBLGAhfZk
-X-Google-Smtp-Source: ADFU+vtV4A/tWf85O4ChP2sgKJHiwTlMz2cMpRcl1ZKXYQ4S8+OpD6Cg9+XzLe5iZ2xf5uInEc0dRQ==
-X-Received: by 2002:a63:a505:: with SMTP id n5mr3857737pgf.242.1585152833948;
-        Wed, 25 Mar 2020 09:13:53 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id e7sm18924902pfj.97.2020.03.25.09.13.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 09:13:53 -0700 (PDT)
-Subject: Re: [PATCH] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-To:     Qian Cai <cai@lca.pw>, davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200325155532.7238-1-cai@lca.pw>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <5e2ed86a-23bc-d3e5-05ad-4e7ed147539c@gmail.com>
-Date:   Wed, 25 Mar 2020 09:13:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 12:14:07 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50007 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727174AbgCYQOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:14:07 -0400
+IronPort-SDR: b8mTuNUUNP+XzqBeqZMRGIPT+eBg/gudpHhe9KB5USlCzEstht8eiuNexHoIdS+ZdZdrBHG6SO
+ n98FS7rkz5KQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 09:14:06 -0700
+IronPort-SDR: e2Ug/iZdOJlUCQRIUNttPiRngVaekzIE3L0ixyPw2HDDsCjj2pkvNXD8I7//zXaMmmVQzMAkbI
+ cBbKIh4y4fpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="270854277"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Mar 2020 09:14:06 -0700
+Date:   Wed, 25 Mar 2020 09:14:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
+Message-ID: <20200325161405.GG14294@linux.intel.com>
+References: <20200325195350.7300fee9@canb.auug.org.au>
+ <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
+ <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
+ <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
+ <85430f7e-93e0-3652-0705-9cf6e948a9d8@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200325155532.7238-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <85430f7e-93e0-3652-0705-9cf6e948a9d8@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/25/20 8:55 AM, Qian Cai wrote:
-> fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-> tb_hlist) without rcu_read_lock() will trigger a warning,
+On Wed, Mar 25, 2020 at 05:08:03PM +0100, Paolo Bonzini wrote:
+> On 25/03/20 16:57, Randy Dunlap wrote:
+> >> Randy, can you test it with your compiler?
+> > Nope, no help.  That's the wrong location.
+> > Need a patch for this:
+> >>> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
+> >>> function __cpuid_entry_get_reg(), for the default: case.
 > 
->  net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
-> 
->  other info that might help us debug this:
-> 
->  rcu_scheduler_active = 2, debug_locks = 1
->  1 lock held by proc01/115277:
->   #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-> 
->  Call Trace:
->   dump_stack+0xf4/0x164 (unreliable)
->   lockdep_rcu_suspicious+0x140/0x164
->   fib_triestat_seq_show+0x750/0x880
->   seq_read+0x1a0/0x670
->   proc_reg_read+0x10c/0x1b0
->   __vfs_read+0x3c/0x70
->   vfs_read+0xac/0x170
->   ksys_read+0x7c/0x140
->   system_call+0x5c/0x68
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  net/ipv4/fib_trie.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-> index ff0c24371e33..73fa37476f03 100644
-> --- a/net/ipv4/fib_trie.c
-> +++ b/net/ipv4/fib_trie.c
-> @@ -2577,6 +2577,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
->  		   " %zd bytes, size of tnode: %zd bytes.\n",
->  		   LEAF_SIZE, TNODE_SIZE(0));
->  
-> +	rcu_read_lock();
->  	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
->  		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
->  		struct fib_table *tb;
-> @@ -2597,6 +2598,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
->  #endif
->  		}
->  	}
-> +	rcu_read_unlock();
->  
->  	return 0;
->  }
-> 
+> Doh, right.  I think the only solution for that one is to degrade it to
+> WARN_ON(1).
 
-We probably want to be able to reschedule in the loop (adding a cond_resched() in net-next)
-
-I would prefer :
-
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index ff0c24371e3309b3068980f46d1ed743337d2a3e..4b98ffb27136d3b43f179d6b1b42fe84586acc06 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2581,6 +2581,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
-                struct hlist_head *head = &net->ipv4.fib_table_hash[h];
-                struct fib_table *tb;
- 
-+               rcu_read_lock();
-                hlist_for_each_entry_rcu(tb, head, tb_hlist) {
-                        struct trie *t = (struct trie *) tb->tb_data;
-                        struct trie_stat stat;
-@@ -2596,6 +2597,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
-                        trie_show_usage(seq, t->stats);
- #endif
-                }
-+               rcu_read_unlock();
-        }
- 
-        return 0;
-
-
-
+I reproduced the error, give me a bit to play with the code to see if the
+BUILD_BUG can be preserved.  I'm curious as to why kvm_cpu_cap_mask() is
+special, and why it only fails with this config.
