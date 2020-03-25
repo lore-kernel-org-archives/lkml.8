@@ -2,230 +2,260 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3935C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8100C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A59CF20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B242220772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="qnbYGJq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgCYNHJ (ORCPT
+        id S1727563AbgCYNHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:07:09 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:63930 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727452AbgCYNHG (ORCPT
+        Wed, 25 Mar 2020 09:07:11 -0400
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:38498 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727275AbgCYNHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:07:06 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PD1nSr005049;
-        Wed, 25 Mar 2020 09:06:48 -0400
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu5d5v4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Mar 2020 09:06:48 -0400
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 02PD6kfi044104
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 25 Mar 2020 09:06:46 -0400
-Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 25 Mar
- 2020 06:06:45 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
- (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 25 Mar 2020 06:06:44 -0700
-Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02PD6fxQ027890;
-        Wed, 25 Mar 2020 09:06:43 -0400
-From:   <alexandru.tachici@analog.com>
-To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
-        Alexandru Tachici <alexandru.tachici@analog.com>
-Subject: [PATCH v2 1/2] hwmon: pmbus: adm1266: add support
-Date:   Wed, 25 Mar 2020 15:06:04 +0200
-Message-ID: <20200325130605.2420-2-alexandru.tachici@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325130605.2420-1-alexandru.tachici@analog.com>
-References: <20200325130605.2420-1-alexandru.tachici@analog.com>
+        Wed, 25 Mar 2020 09:07:10 -0400
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 124F02E1564;
+        Wed, 25 Mar 2020 16:07:07 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id 0ZfgZTMiiq-76Y0fUx6;
+        Wed, 25 Mar 2020 16:07:07 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1585141627; bh=kN5evJgfo1PXXDGLaUlt0K4nFK3qgfPaqiBOgDZOdGo=;
+        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
+        b=qnbYGJq8m8FcRMoLrzxJz58B9x54asaKgG/bByurxGYtoTMGplKy90Yx+M/A+TJI4
+         xxZtNrXswoRcuJvBs6YtoLTv8vT0XB4TdjoTu57dTJ3ZjnviCeDTZuQiFA/qR/JknH
+         lWU33Wx6zmnQb56rtlS5Qe2svQxO55ncwKUqP8s0=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:8204::1:e])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id z4qV869qSD-76a0f0Xp;
+        Wed, 25 Mar 2020 16:07:06 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH v4 2/3] block/diskstats: accumulate all per-cpu counters in
+ one pass
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>
+Date:   Wed, 25 Mar 2020 16:07:06 +0300
+Message-ID: <158514162626.7009.2583993017832653145.stgit@buzz>
+In-Reply-To: <158514148436.7009.1234367408038809210.stgit@buzz>
+References: <158514148436.7009.1234367408038809210.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_05:2020-03-24,2020-03-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2003250109
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandru Tachici <alexandru.tachici@analog.com>
+Reading /proc/diskstats iterates over all cpus for summing each field.
+It's faster to sum all fields in one pass.
 
-Add pmbus probing driver for the adm1266 Cascadable
-Super Sequencer with Margin Control and Fault Recording.
-Driver is using the pmbus_core, creating sysfs files
-under hwmon for inputs: vh1->vh4 and vp1->vp13.
+Hammering /proc/diskstats with fio shows 2x performance improvement:
 
-Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+fio --name=test --numjobs=$JOBS --filename=/proc/diskstats \
+    --size=1k --bs=1k --fallocate=none --create_on_open=1 \
+    --time_based=1 --runtime=10 --invalidate=0 --group_report
+
+	  JOBS=1	JOBS=10
+Before:	  7k iops	64k iops
+After:	 18k iops      120k iops
+
+Also this way code is more compact:
+
+add/remove: 1/0 grow/shrink: 0/2 up/down: 194/-1540 (-1346)
+Function                                     old     new   delta
+part_stat_read_all                             -     194    +194
+diskstats_show                              1344     631    -713
+part_stat_show                              1219     392    -827
+Total: Before=14966947, After=14965601, chg -0.01%
+
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 ---
- Documentation/hwmon/adm1266.rst | 35 +++++++++++++++++++
- drivers/hwmon/pmbus/Kconfig     |  9 +++++
- drivers/hwmon/pmbus/Makefile    |  1 +
- drivers/hwmon/pmbus/adm1266.c   | 62 +++++++++++++++++++++++++++++++++
- 4 files changed, 107 insertions(+)
- create mode 100644 Documentation/hwmon/adm1266.rst
- create mode 100644 drivers/hwmon/pmbus/adm1266.c
+ block/genhd.c         |  102 ++++++++++++++++++++++++++++++++++---------------
+ include/linux/genhd.h |    3 -
+ 2 files changed, 70 insertions(+), 35 deletions(-)
 
-diff --git a/Documentation/hwmon/adm1266.rst b/Documentation/hwmon/adm1266.rst
-new file mode 100644
-index 000000000000..65662115750c
---- /dev/null
-+++ b/Documentation/hwmon/adm1266.rst
-@@ -0,0 +1,35 @@
-+Kernel driver adm1266
-+=====================
-+
-+Supported chips:
-+  * Analog Devices ADM1266
-+    Prefix: 'adm1266'
-+    Datasheet: https://www.analog.com/media/en/technical-documentation/data-sheets/ADM1266.pdf
-+
-+Author: Alexandru Tachici <alexandru.tachici@analog.com>
-+
-+
-+Description
-+-----------
-+
-+This driver supports hardware monitoring for Analog Devices ADM1266 sequencer.
-+
-+ADM1266 is a sequencer that features voltage readback from 17 channels via an
-+integrated 12 bit SAR ADC, accessed using a PMBus interface.
-+
-+The driver is a client driver to the core PMBus driver. Please see
-+Documentation/hwmon/pmbus for details on PMBus client drivers.
-+
-+
-+Sysfs entries
-+-------------
-+
-+The following attributes are supported. Limits are read-write, history reset
-+attributes are write-only, all other attributes are read-only.
-+
-+inX_label		"voutx"
-+inX_input		Measured voltage.
-+inX_min			Minimum Voltage.
-+inX_max			Maximum voltage.
-+inX_min_alarm		Voltage low alarm.
-+inX_max_alarm		Voltage high alarm.
-diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
-index a9ea06204767..3096e46e2212 100644
---- a/drivers/hwmon/pmbus/Kconfig
-+++ b/drivers/hwmon/pmbus/Kconfig
-@@ -26,6 +26,15 @@ config SENSORS_PMBUS
- 	  This driver can also be built as a module. If so, the module will
- 	  be called pmbus.
+diff --git a/block/genhd.c b/block/genhd.c
+index f7d60b620b97..9eb981f7e5a4 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -92,6 +92,34 @@ const char *bdevname(struct block_device *bdev, char *buf)
+ }
+ EXPORT_SYMBOL(bdevname);
  
-+config SENSORS_ADM1266
-+	tristate "Analog Devices ADM1266"
-+	help
-+	  If you say yes here you get hardware monitoring support for Analog
-+	  Devices ADM1266 Cascadable Super Sequencer.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called adm1266.
-+
- config SENSORS_ADM1275
- 	tristate "Analog Devices ADM1275 and compatibles"
- 	help
-diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
-index 5feb45806123..ed38f6d6f845 100644
---- a/drivers/hwmon/pmbus/Makefile
-+++ b/drivers/hwmon/pmbus/Makefile
-@@ -5,6 +5,7 @@
- 
- obj-$(CONFIG_PMBUS)		+= pmbus_core.o
- obj-$(CONFIG_SENSORS_PMBUS)	+= pmbus.o
-+obj-$(CONFIG_SENSORS_ADM1266)	+= adm1266.o
- obj-$(CONFIG_SENSORS_ADM1275)	+= adm1275.o
- obj-$(CONFIG_SENSORS_BEL_PFE)	+= bel-pfe.o
- obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
-diff --git a/drivers/hwmon/pmbus/adm1266.c b/drivers/hwmon/pmbus/adm1266.c
-new file mode 100644
-index 000000000000..c1df21d564f3
---- /dev/null
-+++ b/drivers/hwmon/pmbus/adm1266.c
-@@ -0,0 +1,62 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ADM1266 - Cascadable Super Sequencer with Margin
-+ * Control and Fault Recording
-+ *
-+ * Copyright 2020 Analog Devices Inc.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+
-+#include "pmbus.h"
-+
-+static int adm1266_probe(struct i2c_client *client,
-+			 const struct i2c_device_id *id)
++#ifdef CONFIG_SMP
++static void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
 +{
-+	struct pmbus_driver_info *info;
-+	u32 funcs;
-+	int i;
++	int cpu;
 +
-+	info = devm_kzalloc(&client->dev, sizeof(struct pmbus_driver_info),
-+			    GFP_KERNEL);
++	memset(stat, 0, sizeof(struct disk_stats));
++	for_each_possible_cpu(cpu) {
++		struct disk_stats *ptr = per_cpu_ptr(part->dkstats, cpu);
++		int group;
 +
-+	info->pages = 17;
-+	info->format[PSC_VOLTAGE_OUT] = linear;
-+	funcs = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT;
-+	for (i = 0; i < info->pages; i++)
-+		info->func[i] = funcs;
++		for (group = 0; group < NR_STAT_GROUPS; group++) {
++			stat->nsecs[group] += ptr->nsecs[group];
++			stat->sectors[group] += ptr->sectors[group];
++			stat->ios[group] += ptr->ios[group];
++			stat->merges[group] += ptr->merges[group];
++		}
 +
-+	return pmbus_do_probe(client, id, info);
++		stat->io_ticks += ptr->io_ticks;
++		stat->time_in_queue += ptr->time_in_queue;
++	}
 +}
++#else /* CONFIG_SMP */
++static void part_stat_read_all(struct hd_struct *part, struct disk_stats *stat)
++{
++	memcpy(stat, &part->dkstats, sizeof(struct disk_stats));
++}
++#endif /* CONFIG_SMP */
 +
-+static const struct of_device_id adm1266_of_match[] = {
-+	{ .compatible = "adi,adm1266" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, adm1266_of_match);
+ void part_inc_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
+ {
+ 	if (queue_is_mq(q))
+@@ -1214,9 +1242,12 @@ ssize_t part_stat_show(struct device *dev,
+ {
+ 	struct hd_struct *p = dev_to_part(dev);
+ 	struct request_queue *q = part_to_disk(p)->queue;
++	struct disk_stats stat;
+ 	unsigned int inflight;
+ 
++	part_stat_read_all(p, &stat);
+ 	inflight = part_in_flight(q, p);
 +
-+static const struct i2c_device_id adm1266_id[] = {
-+	{ "adm1266", 0 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, adm1266_id);
+ 	return sprintf(buf,
+ 		"%8lu %8lu %8llu %8u "
+ 		"%8lu %8lu %8llu %8u "
+@@ -1224,23 +1255,23 @@ ssize_t part_stat_show(struct device *dev,
+ 		"%8lu %8lu %8llu %8u "
+ 		"%8lu %8u"
+ 		"\n",
+-		part_stat_read(p, ios[STAT_READ]),
+-		part_stat_read(p, merges[STAT_READ]),
+-		(unsigned long long)part_stat_read(p, sectors[STAT_READ]),
+-		(unsigned int)part_stat_read_msecs(p, STAT_READ),
+-		part_stat_read(p, ios[STAT_WRITE]),
+-		part_stat_read(p, merges[STAT_WRITE]),
+-		(unsigned long long)part_stat_read(p, sectors[STAT_WRITE]),
+-		(unsigned int)part_stat_read_msecs(p, STAT_WRITE),
++		stat.ios[STAT_READ],
++		stat.merges[STAT_READ],
++		(unsigned long long)stat.sectors[STAT_READ],
++		(unsigned int)div_u64(stat.nsecs[STAT_READ], NSEC_PER_MSEC),
++		stat.ios[STAT_WRITE],
++		stat.merges[STAT_WRITE],
++		(unsigned long long)stat.sectors[STAT_WRITE],
++		(unsigned int)div_u64(stat.nsecs[STAT_WRITE], NSEC_PER_MSEC),
+ 		inflight,
+-		jiffies_to_msecs(part_stat_read(p, io_ticks)),
+-		jiffies_to_msecs(part_stat_read(p, time_in_queue)),
+-		part_stat_read(p, ios[STAT_DISCARD]),
+-		part_stat_read(p, merges[STAT_DISCARD]),
+-		(unsigned long long)part_stat_read(p, sectors[STAT_DISCARD]),
+-		(unsigned int)part_stat_read_msecs(p, STAT_DISCARD),
+-		part_stat_read(p, ios[STAT_FLUSH]),
+-		(unsigned int)part_stat_read_msecs(p, STAT_FLUSH));
++		jiffies_to_msecs(stat.io_ticks),
++		jiffies_to_msecs(stat.time_in_queue),
++		stat.ios[STAT_DISCARD],
++		stat.merges[STAT_DISCARD],
++		(unsigned long long)stat.sectors[STAT_DISCARD],
++		(unsigned int)div_u64(stat.nsecs[STAT_DISCARD], NSEC_PER_MSEC),
++		stat.ios[STAT_FLUSH],
++		(unsigned int)div_u64(stat.nsecs[STAT_FLUSH], NSEC_PER_MSEC));
+ }
+ 
+ ssize_t part_inflight_show(struct device *dev, struct device_attribute *attr,
+@@ -1492,6 +1523,7 @@ static int diskstats_show(struct seq_file *seqf, void *v)
+ 	struct hd_struct *hd;
+ 	char buf[BDEVNAME_SIZE];
+ 	unsigned int inflight;
++	struct disk_stats stat;
+ 
+ 	/*
+ 	if (&disk_to_dev(gp)->kobj.entry == block_class.devices.next)
+@@ -1503,7 +1535,9 @@ static int diskstats_show(struct seq_file *seqf, void *v)
+ 
+ 	disk_part_iter_init(&piter, gp, DISK_PITER_INCL_EMPTY_PART0);
+ 	while ((hd = disk_part_iter_next(&piter))) {
++		part_stat_read_all(hd, &stat);
+ 		inflight = part_in_flight(gp->queue, hd);
 +
-+static struct i2c_driver adm1266_driver = {
-+	.driver = {
-+		   .name = "adm1266",
-+		   .of_match_table = adm1266_of_match,
-+		  },
-+	.probe = adm1266_probe,
-+	.remove = pmbus_do_remove,
-+	.id_table = adm1266_id,
-+};
-+
-+module_i2c_driver(adm1266_driver);
-+
-+MODULE_AUTHOR("Alexandru Tachici <alexandru.tachici@analog.com>");
-+MODULE_DESCRIPTION("PMBus driver for Analog Devices ADM1266");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
+ 		seq_printf(seqf, "%4d %7d %s "
+ 			   "%lu %lu %lu %u "
+ 			   "%lu %lu %lu %u "
+@@ -1513,23 +1547,27 @@ static int diskstats_show(struct seq_file *seqf, void *v)
+ 			   "\n",
+ 			   MAJOR(part_devt(hd)), MINOR(part_devt(hd)),
+ 			   disk_name(gp, hd->partno, buf),
+-			   part_stat_read(hd, ios[STAT_READ]),
+-			   part_stat_read(hd, merges[STAT_READ]),
+-			   part_stat_read(hd, sectors[STAT_READ]),
+-			   (unsigned int)part_stat_read_msecs(hd, STAT_READ),
+-			   part_stat_read(hd, ios[STAT_WRITE]),
+-			   part_stat_read(hd, merges[STAT_WRITE]),
+-			   part_stat_read(hd, sectors[STAT_WRITE]),
+-			   (unsigned int)part_stat_read_msecs(hd, STAT_WRITE),
++			   stat.ios[STAT_READ],
++			   stat.merges[STAT_READ],
++			   stat.sectors[STAT_READ],
++			   (unsigned int)div_u64(stat.nsecs[STAT_READ],
++							NSEC_PER_MSEC),
++			   stat.ios[STAT_WRITE],
++			   stat.merges[STAT_WRITE],
++			   stat.sectors[STAT_WRITE],
++			   (unsigned int)div_u64(stat.nsecs[STAT_WRITE],
++							NSEC_PER_MSEC),
+ 			   inflight,
+-			   jiffies_to_msecs(part_stat_read(hd, io_ticks)),
+-			   jiffies_to_msecs(part_stat_read(hd, time_in_queue)),
+-			   part_stat_read(hd, ios[STAT_DISCARD]),
+-			   part_stat_read(hd, merges[STAT_DISCARD]),
+-			   part_stat_read(hd, sectors[STAT_DISCARD]),
+-			   (unsigned int)part_stat_read_msecs(hd, STAT_DISCARD),
+-			   part_stat_read(hd, ios[STAT_FLUSH]),
+-			   (unsigned int)part_stat_read_msecs(hd, STAT_FLUSH)
++			   jiffies_to_msecs(stat.io_ticks),
++			   jiffies_to_msecs(stat.time_in_queue),
++			   stat.ios[STAT_DISCARD],
++			   stat.merges[STAT_DISCARD],
++			   stat.sectors[STAT_DISCARD],
++			   (unsigned int)div_u64(stat.nsecs[STAT_DISCARD],
++						 NSEC_PER_MSEC),
++			   stat.ios[STAT_FLUSH],
++			   (unsigned int)div_u64(stat.nsecs[STAT_FLUSH],
++						 NSEC_PER_MSEC)
+ 			);
+ 	}
+ 	disk_part_iter_exit(&piter);
+diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+index 13bb51f37b3f..b0c588d1aa29 100644
+--- a/include/linux/genhd.h
++++ b/include/linux/genhd.h
+@@ -380,9 +380,6 @@ static inline void free_part_stats(struct hd_struct *part)
+ 
+ #endif /* CONFIG_SMP */
+ 
+-#define part_stat_read_msecs(part, which)				\
+-	div_u64(part_stat_read(part, nsecs[which]), NSEC_PER_MSEC)
+-
+ #define part_stat_read_accum(part, field)				\
+ 	(part_stat_read(part, field[STAT_READ]) +			\
+ 	 part_stat_read(part, field[STAT_WRITE]) +			\
 
