@@ -2,128 +2,199 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70FAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DC8C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CBB2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:29:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 324352076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:30:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="QCCnCkwt"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Nd1qeHuK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCYM36 (ORCPT
+        id S1727513AbgCYMa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:29:58 -0400
-Received: from mail-eopbgr00046.outbound.protection.outlook.com ([40.107.0.46]:4315
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        Wed, 25 Mar 2020 08:30:29 -0400
+Received: from mail-eopbgr80083.outbound.protection.outlook.com ([40.107.8.83]:53924
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727046AbgCYM35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:29:57 -0400
+        id S1727046AbgCYMa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:30:28 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LkE1f86/zVDqiu/oxO3BoLImJjH1rmLUVmAZY2+u3RPa0B1qxJMOg2ZMcrrLKOvSNiiDXq0ZB0QY6W0H6nN+q762NB8/wHT+g4vNno9UJbu2ZiNVjJO7Ve/rmPa62k9QKQKRviWW6uaYrg5wAHqCCKRWypcPzM7NAPJvi5HuZxh0O7KMhaJrWUqRWDbhY5q6xFM9Grd6/mAIZZR19BrT7ySjEYm9Rdq9kO9AiC5q1AF1H6sWU/O5BTuEjRolTCvivOETRAVUqD2eJ7IjIwae1HYgSypDo1mk8dCrpxryzRo8UJHhOVFd7IQPa9R6ViZJMVv1vQ9qu5ASP/+UKmNdHA==
+ b=Dsfk93Z7S/jGXIe2Y92MlVHS2ZF4424UQ0RmZMezKo7avpfLfIaJzFdP4Ds3RQt8sMqPLQJopvrF0qevtAD2dV7+FHBkbY2RlbtB6KnyHamPilPnLpZHc9hPGouFgwKl3NpvAlKKbq7FrPmG7Ya7VJOw8uSzL+qnZgXpootrUjmDN89tLnv6XVTxexvyBh68wCqlPwsX357EttE/CN0gfTFiiEOPGJ88uwj95rqFm7MUo073EEhRBDzUxkkt8cnl483jcjT4N4CYg3YDCVBkekl2VX6IzE8ky/90oyREyfqYUi7EBjvUx6nzoYBMQNpUwVWawSvkAr2x3mjlIgl+zA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4t0K9EjkPeuZFuPUph0eo9tlaSIDwMFN6ti1U0DoQo=;
- b=IQJgbla4IEFFAgxPsPEZ0hH1oQ9gdexw2j3O8Nnq775B+aM4D4XhVg2gSp3Bk+u8bycq4RYYpwU4CInUAJStsd68awKYOBzm2kMvZLPgD8jDA61XkmZX+UqYDyITmglJhY9cTCB2ulQCDNCWpLDwrAAMZ8XBBhbM+8WRAxyolVbKiGiVsb1WElSbAQaSAhqKJLq0gRTJHW4Ax73V2D/sapZQCaF3uX3NJPFYWCtQRISQGP6I4rKZigmzYSPhbAfe40FeXNK0bn7mm8qHheNrMYwcryEH1nVbppViKRE4bc09fXDdDlEccvfFEEy5dUbHMn8Dn+FOboaqP2i0lntMvQ==
+ bh=x4BjYlW/6YO0guIU3ipAjjc8TE1V69gyw/Vq7shKALM=;
+ b=SF7MLkmn6HZJoJ64JM3ANB1KKc8+cvv7G0pBHd99nfJy9AvSlmYaC4HMZXgZDTRLowozWSESKjrVEH7I7Cu0Ec4AVbU5d1ZmAGwSebq1/1c0ZSsvgubpgFHQC6vU9vkEm17cMsFoei/0q2qga+RpGxfWtKJqfxi1/HQedh+UuDiy7qEOC12x1lsUgqWOOWRryXomTj5IURmgFRSRAj3ymzCUjJHE5CQXgLXdAFWcf3oaPFevQI12anoluHXbIvwX81lpOmyFcvSYyJDreJuqSE1EaV0gU2hsvRQK9gms5JO1q3njkxXX+90uKXfbujVBrD7CLmbIQehvNRYEO/LqRA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=B4t0K9EjkPeuZFuPUph0eo9tlaSIDwMFN6ti1U0DoQo=;
- b=QCCnCkwtt56ISeKD+0h4dh4fvGQJPpw5Nba62lEmfQni2l0oHDiDA4EnazvMymsoYulnKIUPr3TFUfrrapGcRMT+DCybYfcevcYGobzte433BxAzNcmCmu8cW0rhqYJSXGxhe+WZEcVqN6YJIuiMlUgSyyqHiVufRjC6RGObGpw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB6704.eurprd05.prod.outlook.com (10.141.128.23) with Microsoft SMTP
+ bh=x4BjYlW/6YO0guIU3ipAjjc8TE1V69gyw/Vq7shKALM=;
+ b=Nd1qeHuKyDQLgVWuXwvJXPvZT95ONAzG8eqcVhp7IDw1EarHYMdhC+ZNVYKblKXyxUHl3KGfDFqq4FuutJA2KRZ+vAv8n34UNw2CrL6sAnufI5YfEAwbJNz9MmjyRh+zIag6wmeeR7lIp7RplhRe/+I6x8nTnu2+MUwpNZ2WR2E=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4353.eurprd04.prod.outlook.com (52.134.125.146) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.19; Wed, 25 Mar 2020 12:29:53 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2835.023; Wed, 25 Mar 2020
- 12:29:53 +0000
-Date:   Wed, 25 Mar 2020 09:29:49 -0300
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
-        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
-        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com
-Subject: Re: [PATCH V8 5/9] vDPA: introduce vDPA bus
-Message-ID: <20200325122949.GW13183@mellanox.com>
-References: <20200325082711.1107-1-jasowang@redhat.com>
- <20200325082711.1107-6-jasowang@redhat.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325082711.1107-6-jasowang@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR13CA0006.namprd13.prod.outlook.com
- (2603:10b6:208:160::19) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR13CA0006.namprd13.prod.outlook.com (2603:10b6:208:160::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.9 via Frontend Transport; Wed, 25 Mar 2020 12:29:52 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jH5AL-0006F0-1U; Wed, 25 Mar 2020 09:29:49 -0300
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0d9fe0c7-eb7c-4b90-9069-08d7d0b837ff
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6704:|VI1PR05MB6704:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6704C5FDBDAE585C27F89242CFCE0@VI1PR05MB6704.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0353563E2B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(136003)(366004)(346002)(376002)(2616005)(36756003)(26005)(52116002)(81166006)(81156014)(8936002)(66946007)(66476007)(316002)(66556008)(8676002)(9786002)(4326008)(9746002)(478600001)(6916009)(186003)(5660300002)(33656002)(1076003)(4744005)(7416002)(2906002)(86362001)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6704;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ 15.20.2835.18; Wed, 25 Mar 2020 12:30:11 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::ad44:6b0d:205d:f8fc%7]) with mapi id 15.20.2835.023; Wed, 25 Mar 2020
+ 12:30:11 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+CC:     "will@kernel.org" <will@kernel.org>,
+        "nsaenzjulienne@suse.de" <nsaenzjulienne@suse.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: RE: [PATCH] arm64: mm: make CONFIG_ZONE_DMA configurable without
+ EXPERT
+Thread-Topic: [PATCH] arm64: mm: make CONFIG_ZONE_DMA configurable without
+ EXPERT
+Thread-Index: AQHV9tsrS4nkBuxsuEaY66LPIEgB5ahYGTaAgABvteCAAKZfAIAAJLhQ
+Date:   Wed, 25 Mar 2020 12:30:11 +0000
+Message-ID: <AM0PR04MB4481C3A233AB455BDC68736288CE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1583844526-24229-1-git-send-email-peng.fan@nxp.com>
+ <20200324174134.GH3901@mbp>
+ <AM0PR04MB44819E95EB1FABF09DEE682788CE0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200325101652.GJ3901@mbp>
+In-Reply-To: <20200325101652.GJ3901@mbp>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 2756cbd8-7d92-445e-2c62-08d7d0b842f7
+x-ms-traffictypediagnostic: AM0PR04MB4353:|AM0PR04MB4353:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4353832C686498E2B43E984788CE0@AM0PR04MB4353.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(346002)(376002)(136003)(39860400002)(396003)(45080400002)(64756008)(66446008)(76116006)(66476007)(66946007)(66556008)(7696005)(55016002)(81166006)(81156014)(8936002)(8676002)(478600001)(5660300002)(4326008)(9686003)(966005)(52536014)(316002)(44832011)(6506007)(33656002)(71200400001)(186003)(2906002)(54906003)(86362001)(26005)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4353;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
  permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9k9aO0yVB/ogXbrjmH55++nlJZl8TT2C9x/PladI+n6nYmnMuTNxhox6FSmRHXKlvtKITDu6rP7S9JFdESK2kjmPdLDjEKLegG9r+V47CPaH1KuwyFcG5hVuFSPVk4qWQ8DaOJEF7im/VRQCvfpeIJbdQS3TEcZtw1ec72hzlGBQL4gKQFKKHWppbVgQcNQ7AAGM5pZTwhRCFbcVYG9Tfn6yCNkt9JX+bwpA4zlcBLb8yvvMZ3RPrPuEvn+M9uli16b43lR4xhrWSU4uSSSktMStBRFFLWXbO74YDyONWS2b1bgzwymeEOJuOOPgQcmBq9iq3dYMnsv287sFFDo+91RZGcMwTxkoPBGEs7/Gmy5XzUI3a5vXtZ2uoI6NXlTVn3Yyh5b8OZ/WZ8pTp/l3m0+kmILKOyNxgzAFXtKFLCro0CIA1aQG0hbdzWMYtfUPuyCvMGQO2sfkJhu7INsAtXJG7UDCeTNdXQy32vjGAtp/73L9/iVmmugmjuH6yqEE
-X-MS-Exchange-AntiSpam-MessageData: dWcCjkhYoMMP60CLaxaT0iYo+7g0pjrx9ySgB8t/NZ6fpbajg6y5iwAk5h19M2VcQOnxKNr5oYskxpFyexeLG7KAxAI+bvE7F6TayB2RT3dC/aNzSG2AxAWrJD53FdK5QLQQYFcpHtOmsNqLKitmkw==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d9fe0c7-eb7c-4b90-9069-08d7d0b837ff
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2020 12:29:52.9779
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fmIQPvNrh5P1wVcvbh11m0GzNWPP+Fi4R6m8+qWHXZxABeNgFzdQUj9bPmWz9Nfw4D2bqpGPUNuyu3VFwqHPdJD6Ae3YScaI1yNfxxq9DszP/0TYJMQwd/gUXvD5AhQomSRofDs1xxnfLn3k+/bMPfhGoigmTYub4DxR0WUyvYIHl/3DN9TGOm62pOvk5jHS4NgU5PlKAtfxXqs9s2qzBZJEIpt26bPFDrN0f+RauMJ29i2IRtaW0kIINDiJOILeMuV4ARnWFJ86SXmURA7uh1ZW7fwW6+YEFBnxFcsmDi4ITNIcRp8OFndUkYFB7oTiG/Kihvy2MtSaDntH2JsuLgDLq7Xplz3Z9XDyLNaQKjthYuXeVaILASU+cwTDIYNFyXi2XZmYREh4W2MYFCoN5hQsUKTI2n6ZQlxkQVZXjNvvwY38LHNTGQ4Qn0CLH8RX+MyDK2j93mqJ+Haovq25YTomlSKxmeyskUAjaIPc9gQ7E2iw2BRLwyjDkQyZrOt8b7F1vsmw/zooSffHaBeITQ==
+x-ms-exchange-antispam-messagedata: Po4jOW8p9I14Hl6pv95ENiWVoAYFD79XDwxUEVxVB14SGm6SuzRdV42r3Zg1HVbz/u4bathb4GBN4HpVJwoKRr7ncqNuD4kWItgGoJVHmk5tfqcWtcxBVAPWN88glj4t2MeTBlPrtQZU8ezAQSgFNQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2756cbd8-7d92-445e-2c62-08d7d0b842f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 12:30:11.1599
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yOBACnTHppzZfKksoj68pP8+E/k3KI0xa3ateAEc0S96ursxjbHElBdBtsSX4fNC6YvwxY3ifrlTEuWI2iXnzg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6704
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uo/VuOfGok600PDPuTFOeIFYpI2pCeB/JLn4l+55yqyUaTWmTaSkqVS/N63wV6hzAkq5npypANOE+pqQJn5Wsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4353
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 04:27:07PM +0800, Jason Wang wrote:
-> +struct vdpa_device *__vdpa_alloc_device(struct device *parent,
-> +					const struct vdpa_config_ops *config,
-> +					size_t size);
-> +
-> +#define vdpa_alloc_device(dev_struct, member, parent, config)   \
-> +			  container_of(__vdpa_alloc_device( \
-> +				       parent, config, \
-> +				       sizeof(struct dev_struct) + \
-> +				       BUILD_BUG_ON_ZERO(offsetof( \
-> +				       struct dev_struct, member))), \
-> +				       struct dev_struct, member)
+> Subject: Re: [PATCH] arm64: mm: make CONFIG_ZONE_DMA configurable
+> without EXPERT
+>=20
+> On Wed, Mar 25, 2020 at 12:34:15AM +0000, Peng Fan wrote:
+> > > On Tue, Mar 10, 2020 at 08:48:46PM +0800, peng.fan@nxp.com wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and
+> ZONE_DMA32")
+> > > > enables both ZONE_DMA and ZONE_DMA32. The lower 1GB memory
+> will be
+> > > > occupied by ZONE_DMA, this will cause CMA allocation fail on some
+> > > > platforms, because CMA area could not across different type of
+> > > > memory zones.
+> > > >
+> > > > Make CONFIG_ZONE_DMA configurable without EXPERT option could
+> let
+> > > > people build non debug kernel image with CONFIG_ZONE_DMA
+> disabled.
+> > >
+> > > While I see why you need to toggle this feature, I'd rather try to
+> > > figure out whether there is a better solution that does not break
+> > > the single kernel image aim (i.e. the same config works for all suppo=
+rted
+> SoCs).
+> > >
+> > > When we decided to go ahead with a static 1GB ZONE_DMA for
+> Raspberry
+> > > Pi 4, we thought that other platforms would be fine, ZONE_DMA32
+> > > allocations fall back to ZONE_DMA. We missed the large CMA case.
+> > >
+> > > I see a few potential options:
+> > >
+> > > a) Ensure the CMA is contained within a single zone.
+> >
+> > This will break legacy dts with new version kernel.
+> >
+> > > How large is it in your case?
+> >
+> > It is 1GB
+> >
+> > > Is it allocated by the kernel dynamically or a fixed start set by
+> > > the boot loader?
+> >
+> > We use alloc-ranges and size in kernel dts.
+> >
+> > But there is only 2GB DRAM in the board.
+>=20
+> So I guess without changing the dts, option (a) doesn't really work.
+>=20
+> > > b) Change the CMA allocator to allow spanning multiple zones (last ti=
+me
+> > >    I looked it wasn't trivial since it relied on some per-zone lock).
+> > >
+> > > c) Make ZONE_DMA dynamic on arm64 and only enable it if RPi4.
+> >
+> > Option c seems a bit easier to me :)
+> >
+> > I will try to explore both, but if you have time to help, that would
+> > be appreciated.
+>=20
+> I don't have time but option (c) was already discussed and there are patc=
+hes
+> from Nicolas on the list:
+>=20
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
+ke
+> rnel.org%2Flinux-arm-kernel%2F20190820145821.27214-5-nsaenzjulienne%
+> 40suse.de%2F&amp;data=3D02%7C01%7Cpeng.fan%40nxp.com%7C6403ddf37
+> 89b452ae5ee08d7d0a5a659%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0
+> %7C0%7C637207282191026738&amp;sdata=3Dt2cZ9HTCcRuaL9RO4kD%2BzN
+> 2n4VqM%2F66zYNZIOComCVs%3D&amp;reserved=3D0
+>=20
+> The above series was checking whether the platform is RPi4 and limiting t=
+he
+> ZONE_DMA size to 1GB (otherwise 4GB with ZONE_DMA32 empty). We
+> ended up with a static 1GB for ZONE_DMA but we missed the fact that it ma=
+y
+> break existing platforms.
 
-This all looks robust now, one minor remark is to not do 'struct
-dev_struct' here so the caller has to do
 
-   vdpa_alloc_device(struct foo, vpda, ...)
+Thanks for the information. I'll check the patchset and work out something
+proper to fix the issue I met.
 
-Which suggests to the reader something unusual is happening
+Thanks,
+Peng.
 
-Jason
+>=20
+> So I don't think it would be too hard to revive the above series (most of=
+ it was
+> already merged).
+>=20
+> --
+> Catalin
