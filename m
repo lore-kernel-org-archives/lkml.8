@@ -2,122 +2,85 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56064C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C81FC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326FB20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585152851;
-	bh=wVeCzzQOe5s2fJsmGoK1DwiiQhm+yokBIBkbN7cjDrM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KKUHlLB8ao7zzS/ZFhCJVs29UhjNnnln7P5FUFlXpMDGHhi8s4tR4x92boqeeiTNK
-	 ys3k5+Nm+UdyQFQmfTX2FG5WrvGYzVeZ5EK4OBH7VMhyuRm+pEkZ3WczVVquHy0ybP
-	 /pmoSo8wmuxk0HVu4x6M7Hgl9SOJuGddQCzXrZTo=
+	by mail.kernel.org (Postfix) with ESMTP id 7687C20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:16:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgCYQOK (ORCPT
+        id S1727910AbgCYQQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58152 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 12:16:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:50516 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728132AbgCYQOI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:14:08 -0400
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A8A420836;
-        Wed, 25 Mar 2020 16:14:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585152847;
-        bh=wVeCzzQOe5s2fJsmGoK1DwiiQhm+yokBIBkbN7cjDrM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Jt+Nhvu8WR2HB5LMtLsy+AMnWzMEv6EzjEMwZuYpiXU2HNY24cKyilbtS7gsEo0Dl
-         p9IVkN8+X5tLMau7Si6f2OCiMpQEloPAdwIzCLi8GV2dTWmn9EiLWMRPYI6WaHiQMJ
-         UVoXm6rL2REa+wWrMiprolfN7XJt5C+XRUsgMQ0k=
-Received: by mail-qk1-f172.google.com with SMTP id c145so3090196qke.12;
-        Wed, 25 Mar 2020 09:14:07 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3jHmTjbPypnmDthRX2himDcnnDXq5gl9x9GbZo3fj/ytAyh9yG
-        l38cgXpE0LRIPS2cK8RgwvH6TIGejh0rHJy4JQ==
-X-Google-Smtp-Source: ADFU+vtZfZlg/qTdAzpY920OXOLDt+yCqLosSPRhFxeYgvrlPS+oV459gEy5edJtvAOkVIBuySDN240c6NQffSPyDT8=
-X-Received: by 2002:a37:4a85:: with SMTP id x127mr3744966qka.152.1585152846283;
- Wed, 25 Mar 2020 09:14:06 -0700 (PDT)
+        id S1727666AbgCYQQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:16:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 826631FB;
+        Wed, 25 Mar 2020 09:16:00 -0700 (PDT)
+Received: from [172.16.1.108] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CDEA3F52E;
+        Wed, 25 Mar 2020 09:15:56 -0700 (PDT)
+Subject: Re: [RFC PATCH v4 0/6] arm64: tlb: add support for TTL feature
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, peterz@infradead.org, arnd@arndb.de,
+        rostedt@goodmis.org, maz@kernel.org, suzuki.poulose@arm.com,
+        tglx@linutronix.de, yuzhao@google.com, Dave.Martin@arm.com,
+        steven.price@arm.com, broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+From:   James Morse <james.morse@arm.com>
+Openpgp: preference=signencrypt
+Message-ID: <aaf017a8-3658-fe4d-c0cf-2f45656020af@arm.com>
+Date:   Wed, 25 Mar 2020 16:15:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20200304094220.28156-1-benjamin.gaignard@st.com>
- <20200310211849.GA13562@bogus> <20200325092004.GF442973@dell>
-In-Reply-To: <20200325092004.GF442973@dell>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 25 Mar 2020 10:13:54 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLW-5=T0p85M9ZurywdNj_nFwj0VJyxHSJGrdzZGkQcJQ@mail.gmail.com>
-Message-ID: <CAL_JsqLW-5=T0p85M9ZurywdNj_nFwj0VJyxHSJGrdzZGkQcJQ@mail.gmail.com>
-Subject: Re: [PATCH v5] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Linux Input <linux-input@vger.kernel.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200324134534.1570-1-yezhenyu2@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 3:19 AM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Tue, 10 Mar 2020, Rob Herring wrote:
->
-> > On Wed, 4 Mar 2020 10:42:20 +0100, Benjamin Gaignard wrote:
-> > > Convert stpmic1 bindings to json-schema.
-> > >
-> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > > ---
-> > > version 5:
-> > > - move $ref regulator.yaml under a patternProperties
-> > > - move remain fixed strings under properties field
-> > >
-> > > version 4:
-> > > - move on uppder node $ref: ../regulator/regulator.yaml
-> > > - move fixed strings under properties field
-> > > - remove unneeded () in patternProperties
-> > > - keep ldo3 separate from other ldo properties
-> > > Note:
-> > > - 'st,mask-reset' property stay in each subnode, I don't find
-> > >   the syntax to avoid dupliquate it.
-> > > - ldo6-supply and all possible *-supply are describe by this regular
-> > >   expression: ^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
-> > >
-> > > version 3:
-> > > - put $ref under allOf keyword
-> > > - for each regulator node add the list of supported regulator properties
-> > >
-> > >  .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 --
-> > >  .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ----
-> > >  .../devicetree/bindings/mfd/st,stpmic1.yaml        | 339 +++++++++++++++++++++
-> > >  .../bindings/regulator/st,stpmic1-regulator.txt    |  64 ----
-> > >  .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 -
-> > >  5 files changed, 339 insertions(+), 164 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-> > >  delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
-> > >  delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-> > >  delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
-> > >
-> >
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Can you take this please Rob?
+Hi Zhenyu,
 
-Yes, done.
+On 3/24/20 1:45 PM, Zhenyu Ye wrote:
+> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
+> feature allows TLBs to be issued with a level allowing for quicker
+> invalidation.  This series provide support for this feature. 
+> 
+> Patch 1 and Patch 2 was provided by Marc on his NV series[1] patches,
+> which detect the TTL feature and add __tlbi_level interface.
 
-Rob
+How does this interact with THP?
+(I don't see anything on that in the series.)
+
+With THP, there is no one answer to the size of mapping in a VMA.
+This is a problem because the arm-arm has in "Translation table level
+hints" in D5.10.2 of DDI0487E.a:
+| If an incorrect value for the entry being invalidated by the
+| instruction is specified in the TTL field, then no entries are
+| required by the architecture to be invalidated from the TLB.
+
+If we get it wrong, not TLB maintenance occurs!
+
+Unless THP leaves its fingerprints on the vma, I think you can only do
+this for VMA types that THP can't mess with. (see
+transparent_hugepage_enabled())
+
+
+Thanks,
+
+James
