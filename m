@@ -2,143 +2,133 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07A6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AFFC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90EE320777
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B3D220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:44:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ohyQ0IaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgCYFe7 (ORCPT
+        id S1726139AbgCYFom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:34:59 -0400
-Received: from mga17.intel.com ([192.55.52.151]:31776 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgCYFe5 (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:34:57 -0400
-IronPort-SDR: rj+lCr6mhWumEiY0Wlo9edIxEpGhVV5PR9HAdWURcMO4Ixpdz7YWOdtY4MLL8CmEnjFgHZda3l
- dDwj4lvU2igw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 22:34:57 -0700
-IronPort-SDR: igvLrnb2oYoGC+XBinBi2wi1Yv1bCgvnvMtuSiMPwfXZQWdvJ98jFZClj/1An5RwZUUWCdOD1R
- KiRWPKYNSAcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
-   d="scan'208";a="393523099"
-Received: from kbl-ppc.sh.intel.com ([10.239.159.24])
-  by orsmga004.jf.intel.com with ESMTP; 24 Mar 2020 22:34:54 -0700
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v2 2/2] perf top: support hotkey to change sort order
-Date:   Wed, 25 Mar 2020 06:07:11 +0800
-Message-Id: <20200324220711.6025-2-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324220711.6025-1-yao.jin@linux.intel.com>
-References: <20200324220711.6025-1-yao.jin@linux.intel.com>
+        Wed, 25 Mar 2020 01:44:42 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:37496 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgCYFol (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 01:44:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j11so752564lfg.4;
+        Tue, 24 Mar 2020 22:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5PN2pEY+Kzbz4XFdCE928s35v5++Wy9Ykd/RxXGev44=;
+        b=ohyQ0IaVVwTIOUP8Wrrjs6MbrHL4SxSXu6kuiAoH2a4S2UNj319FtMoCz0yKbZkNUS
+         jagKrf3WLgcONvMPL8fK+mO15JIpo7DVYvu+FYesHrs9vI1jj/1kRFB06y4gZmw0cbL4
+         0G85USaf0uachg+aNBsO3TH8x+pp7BMpV0GUZTngWYbAtoagtFPZIxVR5O/ow3O3MaqR
+         ifRbBlZI2+kj+prnnIENQMaEXMtt4akYgjmR5wYhCrYbVU3acO9QCc9LYwMGMueT4eDN
+         SRvcSUGUjoA34l/LsazWiEIXTL9TcRKlVXEL/rwMze4QI3O2L8SMNGHA5sTTFtgMFLJw
+         aR7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5PN2pEY+Kzbz4XFdCE928s35v5++Wy9Ykd/RxXGev44=;
+        b=n/H6WbBiQ7OQ6M8/68jQL4UE1JpbzjtQn2zCHjy6g1NlwZplR6p0pBDRVWU8P7jBt3
+         m/KWW+DEGLl/VxqnyoI/R+/j6koF8UhK8n5wZDhxJemL/ptZ9eedRg4mFOeci69jOQwh
+         gWCbZxnZtnu7/thl1+fSvwfVgsetDIarPC2ko9P8IjzfHEQZc7tlY6tLbTlqfObN6B+e
+         Mpx/mEVqOk5MmC/FBKE0zn7+0YHsdVLGoeReXojc3vBS4pqww7IqzVRrJuDbhHztifcJ
+         1kXE2o6NIpJrFva6BEHcMLMfZfdsJL8igiiHJ0gMl9W974LM8FyIGbazcgIwrZ0Ma733
+         bNzA==
+X-Gm-Message-State: ANhLgQ2TLSexn9EjigG0sfZpRRPwWUC7t4W6Nwl+EJhIom1KjDNxTXfE
+        3h/s1ZIta3Wv7wN4DKO8w3o=
+X-Google-Smtp-Source: ADFU+vuh0k4Bq4TAYo+XOlNmB+hpG5bs6sQqwD/bNueZp1wQ0NmtvvAsuW8dv+Bl7HFFSHrX/PjPyQ==
+X-Received: by 2002:ac2:44bb:: with SMTP id c27mr1118265lfm.91.1585115079793;
+        Tue, 24 Mar 2020 22:44:39 -0700 (PDT)
+Received: from localhost.localdomain ([185.188.71.122])
+        by smtp.gmail.com with ESMTPSA id c5sm4690876lfg.82.2020.03.24.22.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 22:44:38 -0700 (PDT)
+From:   Pawel Dembicki <paweldembicki@gmail.com>
+Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
+        Cezary Jackiewicz <cezary@eko.one.pl>,
+        Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] USB: serial: option: add support for ASKEY WWHC050
+Date:   Wed, 25 Mar 2020 06:44:17 +0100
+Message-Id: <20200325054419.19128-1-paweldembicki@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be nice if we can use a hotkey in perf top browser to
-select a event for sorting.
+ASKEY WWHC050 is a mcie LTE modem.
+The oem configuration states:
 
-For example,
-perf top --group -e cycles,instructions,cache-misses
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  2 Spd=480  MxCh= 0
+D:  Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1690 ProdID=7588 Rev=ff.ff
+S:  Manufacturer=Android
+S:  Product=Android
+S:  SerialNumber=813f0eef6e6e
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=84(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+E:  Ad=86(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
+E:  Ad=88(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
 
-Samples
-                Overhead  Shared Object             Symbol
-  40.03%  45.71%   0.03%  div                       [.] main
-  20.46%  14.67%   0.21%  libc-2.27.so              [.] __random_r
-  20.01%  19.54%   0.02%  libc-2.27.so              [.] __random
-   9.68%  10.68%   0.00%  div                       [.] compute_flag
-   4.32%   4.70%   0.00%  libc-2.27.so              [.] rand
-   3.84%   3.43%   0.00%  div                       [.] rand@plt
-   0.05%   0.05%   2.33%  libc-2.27.so              [.] __strcmp_sse2_unaligned
-   0.04%   0.08%   2.43%  perf                      [.] perf_hpp__is_dynamic_en
-   0.04%   0.02%   6.64%  perf                      [.] rb_next
-   0.04%   0.01%   3.87%  perf                      [.] dso__find_symbol
-   0.04%   0.04%   1.77%  perf                      [.] sort__dso_cmp
+Tested on openwrt distribution.
 
-When user press hotkey '2' (event index, starting from 0), it indicates
-to sort output by the third event in group (cache-misses).
-
-Samples
-                Overhead  Shared Object               Symbol
-   4.07%   1.28%   6.68%  perf                        [.] rb_next
-   3.57%   3.98%   4.11%  perf                        [.] __hists__insert_output
-   3.67%  11.24%   3.60%  perf                        [.] perf_hpp__is_dynamic_e
-   3.67%   3.20%   3.20%  perf                        [.] hpp__sort_overhead
-   0.81%   0.06%   3.01%  perf                        [.] dso__find_symbol
-   1.62%   5.47%   2.51%  perf                        [.] hists__match
-   2.70%   1.86%   2.47%  libc-2.27.so                [.] _int_malloc
-   0.19%   0.00%   2.29%  [kernel]                    [k] copy_page
-   0.41%   0.32%   1.98%  perf                        [.] hists__decay_entries
-   1.84%   3.67%   1.68%  perf                        [.] sort__dso_cmp
-   0.16%   0.00%   1.63%  [kernel]                    [k] clear_page_erms
-
-Now the output is sorted by cache-misses.
-
- v2:
- ---
- Zero the history if hotkey is pressed.
-
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
+Co-Developed-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Cezary Jackiewicz <cezary@eko.one.pl>
+Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
 ---
- tools/perf/builtin-top.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/usb/serial/option.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 494c7b9a1022..29ddae7e1805 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -616,6 +616,7 @@ static void *display_thread_tui(void *arg)
- 		.arg		= top,
- 		.refresh	= top->delay_secs,
- 	};
-+	int ret;
- 
- 	/* In order to read symbols from other namespaces perf to  needs to call
- 	 * setns(2).  This isn't permitted if the struct_fs has multiple users.
-@@ -626,6 +627,7 @@ static void *display_thread_tui(void *arg)
- 
- 	prctl(PR_SET_NAME, "perf-top-UI", 0, 0, 0);
- 
-+repeat:
- 	perf_top__sort_new_samples(top);
- 
- 	/*
-@@ -638,13 +640,18 @@ static void *display_thread_tui(void *arg)
- 		hists->uid_filter_str = top->record_opts.target.uid_str;
- 	}
- 
--	perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
-+	ret = perf_evlist__tui_browse_hists(top->evlist, help, &hbt,
- 				      top->min_percent,
- 				      &top->session->header.env,
- 				      !top->record_opts.overwrite,
- 				      &top->annotation_opts);
- 
--	stop_top();
-+	if (ret == K_RELOAD) {
-+		top->zero = true;
-+		goto repeat;
-+	} else
-+		stop_top();
-+
- 	return NULL;
- }
- 
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 0b5dcf973d94..ec367a2f7fed 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1992,6 +1992,8 @@ static const struct usb_device_id option_ids[] = {
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
+ 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
++	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
++	  .driver_info = RSVD(1) | RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
+ 	  .driver_info = RSVD(4) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2060, 0xff),			/* BroadMobi BM818 */
 -- 
-2.17.1
+2.20.1
 
