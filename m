@@ -2,93 +2,123 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E897CC54FD2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:37:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF15EC54FD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF4ED20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D72120724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:38:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YKxyAk3Z"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="ilkOae9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgCYCh4 (ORCPT
+        id S1727391AbgCYCiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:37:56 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37345 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbgCYCh4 (ORCPT
+        Tue, 24 Mar 2020 22:38:14 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51897 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbgCYCiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:37:56 -0400
-Received: by mail-pg1-f196.google.com with SMTP id a32so428535pga.4
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 19:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=VRnQilnt07d1oqQ4KQil6Mz63llajYTl97NmNGSglPo=;
-        b=YKxyAk3ZQU7yENdjEqMIxZP3xJ5UXORg5Wf994rlklKQNuw65fwL2GtrHKEuOOgQXY
-         SByDSi7BXw5nEX22nOtxCwYolWNrZ5/RKwfx7pDywcRUfqxqKfQvMdw+iCUaW+DqXrtU
-         WBff/Ecpq8xlXKaDdC+WJaNl9cT7o1158Rv7c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=VRnQilnt07d1oqQ4KQil6Mz63llajYTl97NmNGSglPo=;
-        b=I3nDN8BJnddbhA5l41ZDgIztBG1LqcVJB/87hPpA29jcJ9rM2gmEQY5f8ss1KEQrEs
-         7QfDcUh4uulDt/Olt/byy2HfkuCuRHWsQxRxQj+X9DYQZLnoiv1RHdVHVhdnEh5Fp9GO
-         9+VEXt3yASwveWF3CI3ucjIy2qRU7AIE5saDWp2dF68HBTOlQ0GSm7RX4zHK1/2WDeLC
-         mmKTzLyaFu2LTdy+GhZxdu8oVjwO4AJmNCf/Fa/w8V/Z5iEbOWA3NwULBGq5Ibjkq62r
-         Afd7pbNKNcWZUlbLdye276gCaFgx0lD8jrnHfnFv17+Am0RFkHYn2zDeZMmvUOmXnw5m
-         Qtqw==
-X-Gm-Message-State: ANhLgQ3E3tHPcQqa2SJ2Tkopt4t9uaTJfneFgCe/ODYvigLoFZnh7QYE
-        qebuJ2AgQTOHpEyAscL8VSYH4A==
-X-Google-Smtp-Source: ADFU+vseJ+fw2H4J2gLn7jXALCAM+os616BkOMYNzL7Tq2/7qkx6ZJNgGF+lIAIFjgr8xWMqoG2MaA==
-X-Received: by 2002:a63:1d7:: with SMTP id 206mr727458pgb.99.1585103873356;
-        Tue, 24 Mar 2020 19:37:53 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e14sm16965737pfn.196.2020.03.24.19.37.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 19:37:52 -0700 (PDT)
+        Tue, 24 Mar 2020 22:38:14 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 1645F8364E;
+        Wed, 25 Mar 2020 15:38:10 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1585103890;
+        bh=ZzysIO/9RPDV/A3vlTmlFXsSYJO80TeqS/R9s7obePE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=ilkOae9LxdGbrVW/WD2EbGvKSoIym4cmTHupObqiTYpRhEY/BkStZftFjVqflVCLs
+         7SbyLckNAZuwymM6jGy5UM0ETFXnNgIB52k8S7kMVlx0RV2isSRLKhVGfJoHo38Rca
+         ewgDx5ueBXArhY28cv7ENLdIC98Kx0YnCZ8Xz562nZ1UBVM6GECsvVRMQnzrWidTEp
+         DB39TCvxQJ3HJyW5tg+wDO+7YD5Y+oHX+sqAJe92Bh2ub1QRwkmapd7GOvdwAeFava
+         JfoCUxF+UkpcRF2l9Mmp/1f2/8s/JSJ7AUKXgCZe6k7pxOHh/eQT1hoidjfAqarYMy
+         3+cIS24Hy0XfA==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5e7ac4130000>; Wed, 25 Mar 2020 15:38:11 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 25 Mar 2020 15:38:04 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 25 Mar 2020 15:38:04 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "oss@buserror.net" <oss@buserror.net>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "paulus@samba.org" <paulus@samba.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
+Thread-Topic: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
+Thread-Index: AQHWAiQ+A9/gcoCawUaa9nFTUYpnM6hXs9EAgAACfICAAAhNAA==
+Date:   Wed, 25 Mar 2020 02:38:04 +0000
+Message-ID: <ae2930cdc30779ec0c6183e73849b47dcf5d57b0.camel@alliedtelesis.co.nz>
+References: <20200324213612.31614-1-chris.packham@alliedtelesis.co.nz>
+         <877dz9xkhr.fsf@mpe.ellerman.id.au>
+         <81c68751cb89bbff13a09467b94530a555d69552.camel@buserror.net>
+In-Reply-To: <81c68751cb89bbff13a09467b94530a555d69552.camel@buserror.net>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.14.96]
 Content-Type: text/plain; charset="utf-8"
+Content-ID: <2AB8EC276708ED4F893AB64140E9BBF0@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
-References: <66b8da28bbf0af6d8bd23953936e7feb6a7ed0c2.1584966325.git.mchehab+huawei@kernel.org>
-Subject: Re: [PATCH 1/2] docs: dt: qcom,dwc3.txt: fix cross-reference for a converted file
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        devicetree@vger.kernel.org
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Date:   Tue, 24 Mar 2020 19:37:51 -0700
-Message-ID: <158510387182.125146.16270632251829962912@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Mauro Carvalho Chehab (2020-03-23 05:25:27)
-> The qcom-qusb2-phy.txt file was converted and renamed to yaml.
-> Update cross-reference accordingly.
->=20
-> Fixes: 8ce65d8d38df ("dt-bindings: phy: qcom,qusb2: Convert QUSB2 phy bin=
-dings to yaml")
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
-
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+T24gVHVlLCAyMDIwLTAzLTI0IGF0IDIxOjA4IC0wNTAwLCBTY290dCBXb29kIHdyb3RlOg0KPiBP
+biBXZWQsIDIwMjAtMDMtMjUgYXQgMTI6NTkgKzExMDAsIE1pY2hhZWwgRWxsZXJtYW4gd3JvdGU6
+DQo+ID4gQ2hyaXMgUGFja2hhbSA8Y2hyaXMucGFja2hhbUBhbGxpZWR0ZWxlc2lzLmNvLm56PiB3
+cml0ZXM6DQo+ID4gPiBBZGQgdGhlIGQtY2FjaGUvaS1jYWNoZSBwcm9wZXJ0aWVzIGZvciB0aGUg
+VDIwOHggU29Dcy4gVGhlIEwxDQo+ID4gPiBjYWNoZSBvbg0KPiA+ID4gdGhlc2UgU29DcyBpcyAz
+MktpQiBhbmQgaXMgc3BsaXQgaW50byA2NCBieXRlIGJsb2NrcyAobGluZXMpLg0KPiA+ID4gDQo+
+ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRl
+bGVzaXMuY28ubno+DQo+ID4gPiAtLS0NCj4gPiA+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNs
+L3QyMDh4c2ktcHJlLmR0c2kgfCAxNiArKysrKysrKysrKysrKysrDQo+ID4gPiAgMSBmaWxlIGNo
+YW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBMR1RNLg0KPiA+IA0KPiA+IEknbGwg
+d2FpdCBhIGZldyBkYXlzIHRvIHNlZSBpZiBTY290dCB3YW50cyB0byBhY2sgaXQuDQo+ID4gDQo+
+ID4gY2hlZXJzDQo+ID4gDQo+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jv
+b3QvZHRzL2ZzbC90MjA4eHNpLXByZS5kdHNpDQo+ID4gPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0
+cy9mc2wvdDIwOHhzaS1wcmUuZHRzaQ0KPiA+ID4gaW5kZXggM2Y3NDVkZTQ0Mjg0Li4yYWQyN2Ux
+NmFjMTYgMTAwNjQ0DQo+ID4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QyMDh4
+c2ktcHJlLmR0c2kNCj4gPiA+ICsrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDIwOHhz
+aS1wcmUuZHRzaQ0KPiA+ID4gQEAgLTgxLDYgKzgxLDEwIEBAIGNwdXMgew0KPiA+ID4gIAkJY3B1
+MDogUG93ZXJQQyxlNjUwMEAwIHsNCj4gPiA+ICAJCQlkZXZpY2VfdHlwZSA9ICJjcHUiOw0KPiA+
+ID4gIAkJCXJlZyA9IDwwIDE+Ow0KPiA+ID4gKwkJCWQtY2FjaGUtbGluZS1zaXplID0gPDY0PjsN
+Cj4gPiA+ICsJCQlpLWNhY2hlLWxpbmUtc2l6ZSA9IDw2ND47DQo+ID4gPiArCQkJZC1jYWNoZS1z
+aXplID0gPDMyNzY4PjsNCj4gPiA+ICsJCQlpLWNhY2hlLXNpemUgPSA8MzI3Njg+Ow0KPiA+ID4g
+IAkJCWNsb2NrcyA9IDwmY2xvY2tnZW4gMSAwPjsNCj4gPiA+ICAJCQluZXh0LWxldmVsLWNhY2hl
+ID0gPCZMMl8xPjsNCj4gPiA+ICAJCQlmc2wscG9ydGlkLW1hcHBpbmcgPSA8MHg4MDAwMDAwMD47
+DQo+IA0KPiBVLUJvb3Qgc2hvdWxkIGJlIHNldHRpbmcgZC9pLWNhY2hlLXNpemUgYW5kIGQvaS1j
+YWNoZS1ibG9jay1zaXplIC0tDQo+IGFyZSB5b3UNCj4gdXNpbmcgc29tZXRoaW5nIGVsc2U/DQoN
+Ck5vcGUgaXQgaXMgdS1ib290IHNwZWNpZmljYWxseQ0KDQpVLUJvb3QgMjAxNy4wMS1yYzMtZGly
+dHkNCg0KSSdtIHByZXR0eSBzdXJlIHRoZSAnLWRpcnR5JyBpcyBqdXN0IGEgY2hhbmdlIHRvIHVz
+ZSBhIGRpZmZlcmVudCBjcm9zcy0NCmNvbXBpbGVyIGJ1dCBJIGNhbid0IGNvbmZpcm0gYW5kIEkn
+bSBhIGxpdHRsZSBoZXNpdGFudCB0byB0cnkgdXBkYXRpbmcNCmFzIEkndmUgb25seSBnb3QgcmVt
+b3RlIGFjY2VzcyB0byB0aGUgYm9hcmQgcmlnaHQgbm93Lg0KDQo+IA0KPiBUaGUgbGluZSBzaXpl
+IGlzIHRoZSBzYW1lIGFzIHRoZSBibG9jayBzaXplIHNvIHdlIGRvbid0IG5lZWQgYQ0KPiBzZXBh
+cmF0ZSBkL2ktDQo+IGNhY2hlLWxpbmUtc2l6ZS4NCj4gDQoNCkknbSBub3Qgc3VyZSB0aGF0J2xs
+IHdvcmsgbG9va2luZyBhdCB0aGUgY29kZVsxXS4gSXQgaGFzIGxvZ2ljIHRvIHNldA0KYnNpemVw
+IHRvIGxzaXplcCBpZiBubyBibG9jayBzaXplIGlzIHNldCBidXQgbm90IHRoZSBvdGhlciB3YXkg
+cm91bmQuDQpMb29raW5nIGF0IHRoZSBzcGVjIGZyb20gZGV2aWNldHJlZS5vcmcgdGhpcyBhY3R1
+YWxseSBzZWVtcyB3cm9uZy4NClBlcmhhcHMgdGhhdCBpcyB0aGUgcmVhbCBzb3VyY2Ugb2YgdGhl
+IGVycm9yLg0KDQotLQ0KWzFdIC0gaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4
+L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvYXJjaC9wb3dlcnBjL2tlcm5lbC9z
+ZXR1cF82NC5jI241MTANCg0KDQo=
