@@ -2,115 +2,131 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A210FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F89C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:10:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76D4220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tzGy0N9y"
+	by mail.kernel.org (Postfix) with ESMTP id 85B5320775
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585134647;
+	bh=+oORi421RJ9kNbff15hBXNngbNzPdLiPd7dkY8ZfVx8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b2/OepRIhoOIykuA/2ThYMWfewuP8lJSBIEm9mNPZritHfi754wgCqYQbHZeP8YHd
+	 9Pf/fAkACxggcEph9bCZS/gEzznA/NB+0Ct365y3G9m6lX9Iaj9WX+tSDgWXtSsFQj
+	 E9IGe+ivI44xspmRkHRz125WB1n5blrJlOlROGx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgCYLJr (ORCPT
+        id S1727260AbgCYLKq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:09:47 -0400
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:43879 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726043AbgCYLJr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:09:47 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id H3umjbcsrfHuvH3upjwsDV; Wed, 25 Mar 2020 12:09:44 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585134584; bh=aeOdGZ6OgFt69qgvqx7eLLn3NGTxKw+2xezfTroXWTA=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=tzGy0N9y8M4l52nouIG4+WU6Z4gkn/Mdp1HQBA9tAkgNVOaG8GPhh1aetpvt4kiks
-         /YQCaHbme2Sc6/8N+gXYTd3b0XVe6ZPOP3K7+71sUKaUGWlpAgg+6dL94jRqcBweed
-         Sq9ci3BsuGd3kycMJhAEuo3pxnjBGoXZ1RE/d0z/5Y9V4QFB7ywXSHKd+34alM31a2
-         dw7rWlK1pBcy8D2hsO+j+Gabu1ZZS60UJ+DPRCqLzIHk20AG9GlRbS+KJvUxMxyt82
-         mmfrNDYqpG3Jasx3wFv1sOJctAaKM5vitwzRNo8Uk41bieJCCmlmRf/E86bJlF+nDP
-         Ea9T3arrgpYsA==
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Sakari Ailus <sakari.ailus@iki.fi>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <20200325110358.GB853@valkosipuli.retiisi.org.uk>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <af710b95-55a5-8f20-6617-c1e6f9a3fe79@xs4all.nl>
-Date:   Wed, 25 Mar 2020 12:09:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 07:10:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55142 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726262AbgCYLKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 07:10:46 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B8A320714;
+        Wed, 25 Mar 2020 11:10:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585134645;
+        bh=+oORi421RJ9kNbff15hBXNngbNzPdLiPd7dkY8ZfVx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LyTvEz1HkRScEIks3fLO6NxSaEHP3bTnF7g8lw6/Sw86AIEcst4Vj/SPWtZuK/NmF
+         k0ZGmVK6WItq5DMMpc4X2IZd9Mq49bJLWf0Xffqqi6SYMw1UYEfFYhdKwRRgO6bl8X
+         /zcT5VGeyoe/A3wFwuVze9CnAzNQ3nI/5MVCmnjU=
+Date:   Wed, 25 Mar 2020 11:10:40 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-acpi@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Brice Goglin <Brice.Goglin@inria.fr>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        peterz@infradead.org, dave.hansen@linux.intel.com,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, joao.m.martins@oracle.com
+Subject: Re: [PATCH v2 6/6] ACPI: HMAT: Attach a device for each
+ soft-reserved range
+Message-ID: <20200325111039.GA32109@willie-the-truck>
+References: <158489354353.1457606.8327903161927980740.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158489357825.1457606.17352509511987748598.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfASr57v1HrYBEDdTrXofqBhy5OyWTJt9e1V2D9AsPGRLMdFLfrHk4JYIO/wJ8mCWc1kRrmVkRa3VMq/uRJjL99iLl7N3BQCHPjDmyAQvJl8GwbmviRpJ
- 2kUGLaETo3kWiJv6ySSmQWBpkKYrmuwcB2EMoZ1mW0Qm292OoTclC422cdpsXmO/WqAkjyyS0k4XkBHIHL0HAip25nzPrTG0jiH+FxVB68S0kpJOKPet4AX4
- cKqSYUcpP8ilU8Y6A+FI0PYh2Kfa2Rntk2bTiDE6vyD164N4lGNuSCoxAMD3m3aI2c0Y8yVM1DzRtpfaJZRdKVJpXnzGUWe8hxruHe3nC1G78tAB4xuyXFCs
- LZEvgsPZFojuOcunPRJllbqYEwItiTzawgSVgy7f5W4JzIeI9hwNjCexX/E3bRrMAia56iDlLuWNvv3GdagGtJvjLr3cCaWJGyT7YK64pilWc8V8d9L8GTx0
- XMEjizaV/E3frWDaNwoQVml+qXb9HziBMu4vg6K7qXG1i7HwcEFNO+MrZ4b+IBRCHv2lQWTR6xAoUmdTTWDWTZwki51tM9JQdsORcSH7huS5XfzcBKp5ZDnD
- XGk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158489357825.1457606.17352509511987748598.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 12:03 PM, Sakari Ailus wrote:
-> Hi Sowjanya,
+On Sun, Mar 22, 2020 at 09:12:58AM -0700, Dan Williams wrote:
+> The hmem enabling in commit 'cf8741ac57ed ("ACPI: NUMA: HMAT: Register
+> "soft reserved" memory as an "hmem" device")' only registered ranges to
+> the hmem driver for each soft-reservation that also appeared in the
+> HMAT. While this is meant to encourage platform firmware to "do the
+> right thing" and publish an HMAT, the corollary is that platforms that
+> fail to publish an accurate HMAT will strand memory from Linux usage.
+> Additionally, the "efi_fake_mem" kernel command line option enabling
+> will strand memory by default without an HMAT.
 > 
-> Thanks for the patchset.
+> Arrange for "soft reserved" memory that goes unclaimed by HMAT entries
+> to be published as raw resource ranges for the hmem driver to consume.
 > 
-> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
->> Tegra210 contains a powerful Video Input (VI) hardware controller
->> which can support up to 6 MIPI CSI camera sensors.
->>
->> Each Tegra CSI port can be one-to-one mapped to VI channel and can
->> capture from an external camera sensor connected to CSI or from
->> built-in test pattern generator.
->>
->> Tegra210 supports built-in test pattern generator from CSI to VI.
->>
->> This patch adds a V4L2 media controller and capture driver support
->> for Tegra210 built-in CSI to VI test pattern generator.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/staging/media/Kconfig              |    2 +
->>  drivers/staging/media/Makefile             |    1 +
->>  drivers/staging/media/tegra/Kconfig        |   10 +
->>  drivers/staging/media/tegra/Makefile       |    8 +
->>  drivers/staging/media/tegra/TODO           |   10 +
->>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
->>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
->>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
->>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
->>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
->>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
->>  drivers/staging/media/tegra/tegra-video.h  |   32 +
->>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
->>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
+> Include a module parameter to disable either this fallback behavior, or
+> the hmat enabling from creating hmem devices. The module parameter
+> requires the hmem device enabling to have unique name in the module
+> namespace: "device_hmem".
 > 
-> Why staging? Are there reasons not to aim this to the kernel proper right
-> away? If you only support TPG, the driver may not have too many (if any)
-> real users anyway.
+> Rather than mark this x86-only, include an interim phys_to_target_node()
+> implementation for arm64.
+> 
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Cc: Brice Goglin <Brice.Goglin@inria.fr>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Jeff Moyer <jmoyer@redhat.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  arch/arm64/mm/numa.c      |   13 +++++++++++++
+>  drivers/dax/Kconfig       |    1 +
+>  drivers/dax/hmem/Makefile |    3 ++-
+>  drivers/dax/hmem/device.c |   33 +++++++++++++++++++++++++++++++++
+>  4 files changed, 49 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index 4decf1659700..00fba21eaec0 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -468,3 +468,16 @@ int memory_add_physaddr_to_nid(u64 addr)
+>  	pr_warn("Unknown node for memory at 0x%llx, assuming node 0\n", addr);
+>  	return 0;
+>  }
+> +
+> +/*
+> + * device-dax instance registrations want a valid target-node in case
+> + * they are ever onlined as memory (see hmem_register_device()).
+> + *
+> + * TODO: consult cached numa info
+> + */
+> +int phys_to_target_node(phys_addr_t addr)
+> +{
+> +	pr_warn_once("Unknown target node for memory at 0x%llx, assuming node 0\n",
+> +			addr);
+> +	return 0;
+> +}
 
-A TPG-only driver is not very useful, and I do not believe that belongs in
-the kernel proper. The next phase will add sensor support, and that's a good
-time to move it in the kernel itself.
+Could you implement a generic version of this by iterating over the nodes
+with for_each_{,online_}node() and checking for intersection with
+node_{start,end}_pfn()?
 
-Regards,
-
-	Hans
+Will
