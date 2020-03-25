@@ -3,102 +3,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DF2C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF65C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 031C020772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06D820772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgCYNGr (ORCPT
+        id S1727517AbgCYNHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:06:47 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45357 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbgCYNGq (ORCPT
+        Wed, 25 Mar 2020 09:07:07 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:62088 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727275AbgCYNHF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:07:05 -0400
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PD1nNn005057;
+        Wed, 25 Mar 2020 09:06:47 -0400
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ywfu5d5v1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
         Wed, 25 Mar 2020 09:06:46 -0400
-Received: by mail-oi1-f195.google.com with SMTP id l22so1940733oii.12;
-        Wed, 25 Mar 2020 06:06:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tRAqWE5jTPBEZ5gwwukisG5aliJgP0GpLk1uYWHBM64=;
-        b=nUpC4oaZMccfzvcSkkiSvPSNoynX7krGCR6bgkDYsMCW3pSo/SGHi311rLd9QJLgk7
-         Wj9BxcqwIZEn294wAmlU3xd6yI6QAnBNVl0ZBex0/y8bzkaoGpWLv2OIInByG5wd7MvV
-         m/nAxH+y+iiPrYNJCM/F93lUhm6zPExB7yuOqnPsi/8aHz5148p39TKY6PdJHpmqo13c
-         YmDPi2Ruw1Rsnv4+Kz5EnUrE+5qw9hgl+q7vZlSjon2rkGWjMJ+IpWCJ4+Rk3SlLNmEY
-         348BVFvJp/KIsmXCc3RpTszpNf32p10AUa6YKzbNE2CwfzjTROHW2dQuA3YF0npU6jtK
-         Cgzw==
-X-Gm-Message-State: ANhLgQ3h45evt8WtcVt6Y4MUGszpJEYAj6ud42vGptXEkd6pPh+YVz/G
-        UI09CDS5rCVAEt2ekugdBzNs1kNW8cjTvSOfQsqQ12H7
-X-Google-Smtp-Source: ADFU+vv1evnjrbuj83i0B7RGEzz/c4jPdtY0pyZWk0DBMBbFsDcTsnbzisEyBz8xwP8wDfazp9tgg4fkN70P3agYkFQ=
-X-Received: by 2002:aca:ad93:: with SMTP id w141mr2484859oie.54.1585141604111;
- Wed, 25 Mar 2020 06:06:44 -0700 (PDT)
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 02PD6jRg052202
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 25 Mar 2020 09:06:45 -0400
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 25 Mar 2020 06:06:44 -0700
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 25 Mar 2020 06:06:18 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 25 Mar 2020 06:06:43 -0700
+Received: from localhost.localdomain ([10.48.65.12])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 02PD6fxP027890;
+        Wed, 25 Mar 2020 09:06:41 -0400
+From:   <alexandru.tachici@analog.com>
+To:     <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <robh+dt@kernel.org>, <linux@roeck-us.net>,
+        Alexandru Tachici <alexandru.tachici@analog.com>
+Subject: [PATCH v2 0/2] hwmon: pmbus: adm1266: add support
+Date:   Wed, 25 Mar 2020 15:06:03 +0200
+Message-ID: <20200325130605.2420-1-alexandru.tachici@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <1585117100-8359-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1585117100-8359-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1585117100-8359-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 25 Mar 2020 14:06:33 +0100
-Message-ID: <CAMuHMdXhwxmDuwK9M4ctP9=FVBfdLHSroq-YhuMrFtXaCtNq4Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: phy: rcar-gen3-phy-usb2: add r8a77961 support
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_05:2020-03-24,2020-03-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
+ lowpriorityscore=0 mlxlogscore=779 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003250109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shimoda-san,
+From: Alexandru Tachici <alexandru.tachici@analog.com>
 
-On Wed, Mar 25, 2020 at 7:18 AM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> This patch adds support for r8a77961 (R-Car M3-W+).
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Add pmbus probing driver for the adm1266 Cascadable
+Super Sequencer with Margin Control and Fault Recording.
 
-Thanks for your patch!
+Alexandru Tachici (2):
+  hwmon: pmbus: adm1266: add support
+  dt-bindings: hwmon: Add bindings for ADM1266
 
-> --- a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2.txt
-> @@ -18,6 +18,8 @@ Required properties:
->               SoC.
->               "renesas,usb2-phy-r8a7796" if the device is a part of an R8A7796
+Changelog v1 -> v2:
+- removed multiple chips id checks as this driver will
+support only adm1266
+- moved pmbus configurations in probe function
+- removed adm1266_config, adm1266_data, adm1266_block_wr
+- added adi,connected-adm1266 property to dt bindings
 
-While at it, you may want to update "r8A7796 SoC" to "r8A77960 SoC", to
-avoid confusion between R-Car M3-W (R8A77960) and M3-W+ (R8A77961).
-
-Note that rebasing this patch on top of your "[PATCH v2] dt-bindings:
-phy: renesas: usb2-phy: convert bindings to json-schema"
-(https://lore.kernel.org/linux-devicetree/1572592763-12396-1-git-send-email-yoshihiro.shimoda.uh@renesas.com/)
-would avoid that, too.
-
->               SoC.
-> +             "renesas,usb2-phy-r8a77961" if the device is a part of an
-> +             R8A77961 SoC.
->               "renesas,usb2-phy-r8a77965" if the device is a part of an
->               R8A77965 SoC.
->               "renesas,usb2-phy-r8a77990" if the device is a part of an
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
+ .../bindings/hwmon/adi,adm1266.yaml           | 57 +++++++++++++++++
+ Documentation/hwmon/adm1266.rst               | 35 +++++++++++
+ drivers/hwmon/pmbus/Kconfig                   |  9 +++
+ drivers/hwmon/pmbus/Makefile                  |  1 +
+ drivers/hwmon/pmbus/adm1266.c                 | 62 +++++++++++++++++++
+ 5 files changed, 164 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/adi,adm1266.yaml
+ create mode 100644 Documentation/hwmon/adm1266.rst
+ create mode 100644 drivers/hwmon/pmbus/adm1266.c
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.20.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
