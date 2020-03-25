@@ -2,182 +2,141 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DC2C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D58B6C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E82720740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF1062076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585163262;
-	bh=lhy+Eu3yict1wi7voNpWry2+n+0EtZmY4ZR96Tpx/lk=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=oYmvjZMxjtSj3OAbOz/PH3ov/P9iDhWlVeU1NtjkLa4/nQYplgd7sjwpVSzJsBJrP
-	 d/zeFTbyA9l/wnZUk6nsLPPpS1sNaR7aa+KvioRjNAxwoPo1d91vB1+pRJPkOCUYFD
-	 /hmfJCtO7SYEMuQJD6aScV/yzntmEwXEAXqoMIUU=
+	s=default; t=1585163280;
+	bh=26Uk9meXN96js/gICre78nVAjflPsXGx6aYynHLKmGM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=y/qk9xH3PABLlJjat8tYndmn9iGCLNmi8V/Ar4FnhSCI1ua6wrBytGUVkZWWL5B77
+	 tbL0NPhnOLvo8wl38sW2+P+cFKFdy78p3SamnshuF+VGaxR38zF0daJ+y3EJZdp872
+	 X2SjtFNlwMSk2bgZqdBAsD9MR02tQ0iQfhvCSDn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCYTHl (ORCPT
+        id S1727689AbgCYTH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58320 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 15:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbgCYTHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:07:40 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727027AbgCYTH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:07:59 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FD3820714;
-        Wed, 25 Mar 2020 19:07:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 78E4D20714;
+        Wed, 25 Mar 2020 19:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585163259;
-        bh=lhy+Eu3yict1wi7voNpWry2+n+0EtZmY4ZR96Tpx/lk=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=covR7fziSsoadZsZ3tfWGwczdeUG39GhVnWXCKG+7tq8E1HYiSz1PYd3ELksGojq2
-         rPjZ7AvTthbbsa3jKaD1DrCwkSzWKIliKuXK7H0OJEDATfGIy2Ul1oZeLwElqrnj++
-         VZuuljk7mYTga+VGE220XaFoAartJ1pigV1vzOBo=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 631D33520BDC; Wed, 25 Mar 2020 12:07:39 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 12:07:39 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-Message-ID: <20200325190739.GA19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000742e9e05a10170bc@google.com>
- <87a74arown.fsf@nanos.tec.linutronix.de>
- <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
- <87ftdypyec.fsf@nanos.tec.linutronix.de>
- <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
- <875zeuftwm.fsf@nanos.tec.linutronix.de>
- <20200324020504.GR3199@paulmck-ThinkPad-P72>
- <CAM_iQpVK5tNrer3UnnBVU82cRcdNAVtn5bxCm4rDVZM1_ffPAQ@mail.gmail.com>
+        s=default; t=1585163278;
+        bh=26Uk9meXN96js/gICre78nVAjflPsXGx6aYynHLKmGM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=AvNzVfwsdnqkrxQA3Q54688/DCKofvQC6qVJnKLKNUAHGTtn/glf39ws7XSzGyjyK
+         DHlQ9CRU1d5aMFU6cDgTsp/E+WIaxcwoZ7pSlyS+RsCa213Zyx80G7kxDYwrYSJpfw
+         fQ64BNPKo5N2iJxYJT6DPUH272YT//TfiC386tPY=
+Received: by mail-qt1-f181.google.com with SMTP id i3so3174372qtv.8;
+        Wed, 25 Mar 2020 12:07:58 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0gOoaNzaD+wq+W3uVDHpZb3ZuNBvRqe6DqZVI70un/tWt8YdWy
+        7vQ8GZEuaWQV0+WJd7ACm9Y7pJRRzrFSx0NOWw==
+X-Google-Smtp-Source: ADFU+vuTndY+wDPw79ZNIs5Xbyn1ONlKDN1cNv+Vsq80x/BVGrqoyD/vBaotVdkdCJ1DdFZbyMgkgqCGN7aXaoQEiro=
+X-Received: by 2002:ac8:59:: with SMTP id i25mr4605237qtg.110.1585163272778;
+ Wed, 25 Mar 2020 12:07:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM_iQpVK5tNrer3UnnBVU82cRcdNAVtn5bxCm4rDVZM1_ffPAQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
+ <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com> <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
+In-Reply-To: <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Mar 2020 13:07:41 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLW+3aJrB2EOEU74o+aVO9yPG74xi=Eov5_6++NdnOBPg@mail.gmail.com>
+Message-ID: <CAL_JsqLW+3aJrB2EOEU74o+aVO9yPG74xi=Eov5_6++NdnOBPg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:53:51AM -0700, Cong Wang wrote:
-> On Mon, Mar 23, 2020 at 7:05 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+On Mon, Mar 2, 2020 at 9:56 PM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
+>
+> On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
 > >
-> > On Tue, Mar 24, 2020 at 02:01:13AM +0100, Thomas Gleixner wrote:
-> > > Cong Wang <xiyou.wangcong@gmail.com> writes:
-> > > > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > > >> > We use an ordered workqueue for tc filters, so these two
-> > > >> > works are executed in the same order as they are queued.
-> > > >>
-> > > >> The workqueue is ordered, but look how the work is queued on the work
-> > > >> queue:
-> > > >>
-> > > >> tcf_queue_work()
-> > > >>   queue_rcu_work()
-> > > >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
-> > > >>
-> > > >> So after the grace period elapses rcu_work_rcufn() queues it in the
-> > > >> actual work queue.
-> > > >>
-> > > >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
-> > > >> invoked from preemtible context. Now assume the following:
-> > > >>
-> > > >> CPU0
-> > > >>   tcf_queue_work()
-> > > >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-> > > >>
-> > > >> -> Migration
-> > > >>
-> > > >> CPU1
-> > > >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> > > >>
-> > > >> So your RCU callbacks can be placed on different CPUs which obviously
-> > > >> has no ordering guarantee at all. See also:
-> > > >
-> > > > Good catch!
-> > > >
-> > > > I thought about this when I added this ordered workqueue, but it
-> > > > seems I misinterpret max_active, so despite we have max_active==1,
-> > > > more than 1 work could still be queued on different CPU's here.
+> > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
+> > <rayagonda.kokatanur@broadcom.com> wrote:
 > > >
-> > > The workqueue is not the problem. it works perfectly fine. The way how
-> > > the work gets queued is the issue.
+> > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
+> > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
+> > > these flags if check slave addr valid.
 > > >
-> > > > I don't know how to fix this properly, I think essentially RCU work
-> > > > should be guaranteed the same ordering with regular work. But this
-> > > > seems impossible unless RCU offers some API to achieve that.
+> > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > > ---
+> > >  scripts/dtc/Makefile | 2 +-
+> > >  scripts/dtc/checks.c | 5 +++++
+> > >  2 files changed, 6 insertions(+), 1 deletion(-)
+> >
+> > dtc changes must be submitted against upstream dtc.
+>
+> Please let me know link to clone the upstream dtc branch.
+> >
+> >
+> > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> > > index 3acbb410904c..c5e8d6a9e73c 100644
+> > > --- a/scripts/dtc/Makefile
+> > > +++ b/scripts/dtc/Makefile
+> > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+> > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
 > > >
-> > > I don't think that's possible w/o putting constraints on the flexibility
-> > > of RCU (Paul of course might disagree).
-> >
-> > It is possible, but it does not come for free.
-> >
-> > From an RCU/workqueues perspective, if I understand the scenario, you
-> > can do the following:
-> >
-> >         tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-> >
-> >         rcu_barrier(); // Wait for the RCU callback.
-> >         flush_work(...); // Wait for the workqueue handler.
-> >                          // But maybe for quite a few of them...
-> >
-> >         // All the earlier handlers have completed.
-> >         tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> >
-> > This of course introduces overhead and latency.  Maybe that is not a
-> > problem at teardown time, or maybe the final tcf_queue_work() can itself
-> > be dumped into a workqueue in order to get it off of the critical path.
-> 
-> I personally agree, but nowadays NIC vendors care about tc filter
-> slow path performance as well. :-/
-
-I bet that they do!  ;-)
-
-But have you actually tried the rcu_barrier()/flush_work() approach?
-It is reasonably simple to implement, even if you do have to use multiple
-flush_work() calls, and who knows?  Maybe it is fast enough.
-
-So why not try it?
-
-Hmmm...  Another approach would be to associate a counter with this group
-of requests, incrementing this count in tcf_queue_work() and capturing
-the prior value of the count, then in tcindex_destroy_work() waiting
-for the count to reach the captured value.  This would avoid needless
-waiting in tcindex_destroy_rexts_work().  Such needless waiting would
-be hard to avoid within the confines of either RCU or workqueues, and
-such needless waiting might well slow down this slowpath, which again
-might make the NIC vendors unhappy.
-
-> > However, depending on your constraints ...
-> >
-> > > I assume that the filters which hang of tcindex_data::perfect and
-> > > tcindex_data:p must be freed before tcindex_data, right?
+> > >  # Source files need to get at the userspace version of libfdt_env.h to compile
+> > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+> > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
 > > >
-> > > Refcounting of tcindex_data should do the trick. I.e. any element which
-> > > you add to a tcindex_data instance takes a refcount and when that is
-> > > destroyed then the rcu/work callback drops a reference which once it
-> > > reaches 0 triggers tcindex_data to be freed.
+> > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+> > >  ifneq ($(CHECK_DTBS),)
+> > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+> > > index 756f0fa9203f..17c9ed4137b5 100644
+> > > --- a/scripts/dtc/checks.c
+> > > +++ b/scripts/dtc/checks.c
+> > > @@ -3,6 +3,7 @@
+> > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
+> > >   */
+> > >
+> > > +#include <linux/bits.h>
 > >
-> > ... reference counts might work much better for you.
-> 
-> I need to think about how much work is needed for refcnting, given
-> other filters have the same assumption.
+> > Not a UAPI header not that that would be much better as dtc also builds on Mac.
+> >
+> > >  #include "dtc.h"
+> > >  #include "srcpos.h"
+> > >
+> > > @@ -17,6 +18,9 @@
+> > >  #define TRACE(c, fmt, ...)     do { } while (0)
+> > >  #endif
+> > >
+> > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
+> > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
+> > > +
+> > >  enum checkstatus {
+> > >         UNCHECKED = 0,
+> > >         PREREQ,
+> > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+> > >
+> > >         for (len = prop->val.len; len > 0; len -= 4) {
+> > >                 reg = fdt32_to_cpu(*(cells++));
+> > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
+> >
+> > I'd just mask the top byte so we don't have to update on the next flag we add.
+> Do you mean something like this, shown below ?
+> reg &= 0xFFFF_FC000;
 
-Perhaps you can create some common code to handle this situation, which
-can then be shared among those various filters.
+Yes, but as I said, the 'top byte', so 0xFF000000.
 
-							Thanx, Paul
+Rob
