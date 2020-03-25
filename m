@@ -2,124 +2,147 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1639C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43509C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B985A20722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA4320722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:00:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HioPWdnn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgCYOA0 convert rfc822-to-8bit (ORCPT
+        id S1727593AbgCYOAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:00:26 -0400
-Received: from mga18.intel.com ([134.134.136.126]:5496 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727394AbgCYOA0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:00:26 -0400
-IronPort-SDR: y8CTny0LC/V1noKToXyYmjlSRkjEWBCa8R9UyHHRDrsTg6H4pJD9E2pMDkdVBOVEFV2LhrUVDz
- C+pV3Pn3MXKw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 07:00:25 -0700
-IronPort-SDR: EEp2Qq4JWbGjMbstSwM05aCaqBYkmtYJKSZCLXvQSF1cFKau87tiqI/8VXmeFP2pQCpZ5BbU8b
- N5MABNnXAMLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="247181286"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga003.jf.intel.com with ESMTP; 25 Mar 2020 07:00:25 -0700
-Received: from fmsmsx124.amr.corp.intel.com (10.18.125.39) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Mar 2020 07:00:24 -0700
-Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.38]) by
- fmsmsx124.amr.corp.intel.com ([169.254.8.220]) with mapi id 14.03.0439.000;
- Wed, 25 Mar 2020 07:00:24 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Shane Francis <bigbeeshane@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx-request@lists.freedesktop.org" 
-        <amd-gfx-request@lists.freedesktop.org>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>
-Subject: RE: [PATCH v4 2/3] drm/amdgpu: fix scatter-gather mapping with user
- pages
-Thread-Topic: [PATCH v4 2/3] drm/amdgpu: fix scatter-gather mapping with
- user pages
-Thread-Index: AQHWAoURGp10wyvAFUutB03QxzFyZahZVeWw
-Date:   Wed, 25 Mar 2020 14:00:24 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663FFFBD444@fmsmsx107.amr.corp.intel.com>
-References: <20200325090741.21957-1-bigbeeshane@gmail.com>
- <20200325090741.21957-3-bigbeeshane@gmail.com>
-In-Reply-To: <20200325090741.21957-3-bigbeeshane@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.107]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 25 Mar 2020 10:00:32 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12804 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727394AbgCYOAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:00:31 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7b63a30002>; Wed, 25 Mar 2020 06:58:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 25 Mar 2020 07:00:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 25 Mar 2020 07:00:30 -0700
+Received: from [10.26.72.231] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 14:00:27 +0000
+Subject: Re: tegra124-jetson-tk1: sata doesnt work since 5.2
+To:     LABBE Corentin <clabbe@baylibre.com>,
+        Nicolas Chauvet <kwizart@gmail.com>
+CC:     Thierry Reding <thierry.reding@gmail.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        <pdeschrijver@nvidia.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <axboe@kernel.dk>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-ide@vger.kernel.org>
+References: <20200319074401.GA4116@Red>
+ <CABr+WTnBmJsDZPjUxYkG98dTneDD1p8G=uRftVduTGYbY0ruqQ@mail.gmail.com>
+ <20200325134003.GA27961@Red>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <cf63d40c-7b84-60f6-76be-a13255e69c99@nvidia.com>
+Date:   Wed, 25 Mar 2020 14:00:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200325134003.GA27961@Red>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585144739; bh=EerULfemy2W+M7YTPQPDKXIDApM3m/+qcklquHsA850=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=HioPWdnnu+6z3HdUYuZP9Yfg2iW3zipkeqVa89l7LiyD75kY2jRtJacOcbAaIHYKR
+         AroeGPVnf8Yna6wGjB+4ebS/TJpjIM3xShlEuPOmOhUYrgUeV68iBY+0sAOj0Lglx4
+         GwaOKLz9vZn4bDycD+Q70k2QgQFOq7WmOUVwhT1Wj6WoGAYCeQmwFXdmmZM4k3ldmS
+         mJg9pbpDkGoULAOKsIfLvoib9EqOV7t5grzo0JL+TS1XU9Zq/ExADDCLlSeMYLKOV4
+         mf69jlC87HOjwG77NFw403cMGNzEwA7YbqMr/E6lkwEMdO6wiD++b2t0rofUtLk8Xi
+         YPVdmODECP57g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Shane Francis
->Sent: Wednesday, March 25, 2020 5:08 AM
->To: dri-devel@lists.freedesktop.org
->Cc: airlied@linux.ie; linux-kernel@vger.kernel.org; bigbeeshane@gmail.com;
->amd-gfx-request@lists.freedesktop.org; alexander.deucher@amd.com;
->christian.koenig@amd.com
->Subject: [PATCH v4 2/3] drm/amdgpu: fix scatter-gather mapping with user
->pages
->
->Calls to dma_map_sg may return segments / entries than requested
 
-"may return less segments/entries" ?
-                       ^^^
->if they fall on page bounderies. The old implementation did not
->support this use case.
->
->Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
->---
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->index dee446278417..c6e9885c071f 100644
->--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c
->@@ -974,7 +974,7 @@ static int amdgpu_ttm_tt_pin_userptr(struct ttm_tt
->*ttm)
-> 	/* Map SG to device */
-> 	r = -ENOMEM;
-> 	nents = dma_map_sg(adev->dev, ttm->sg->sgl, ttm->sg->nents,
->direction);
->-	if (nents != ttm->sg->nents)
->+	if (nents == 0)
-> 		goto release_sg;
+On 25/03/2020 13:40, LABBE Corentin wrote:
+> On Thu, Mar 19, 2020 at 08:55:38AM +0100, Nicolas Chauvet wrote:
+>> Le jeu. 19 mars 2020 =C3=A0 08:44, LABBE Corentin <clabbe@baylibre.com> =
+a =C3=A9crit :
+>>>
+>>> Hello
+>>>
+>>> sata doesnt work on tegra124-jetson-tk1 on next and master and at least=
+ since 5.2 (but 5.1 works).
+>>> [    0.492810] +5V_SATA: supplied by +5V_SYS
+>>> [    0.493230] +12V_SATA: supplied by +VDD_MUX
+>>> [    2.088675] tegra-ahci 70027000.sata: 70027000.sata supply ahci not =
+found, using dummy regulator
+>>> [    2.097643] tegra-ahci 70027000.sata: 70027000.sata supply phy not f=
+ound, using dummy regulator
+>>> [    3.314776] tegra-ahci 70027000.sata: 70027000.sata supply ahci not =
+found, using dummy regulator
+>>> [    3.323658] tegra-ahci 70027000.sata: 70027000.sata supply phy not f=
+ound, using dummy regulator
+>>> [    5.236964] tegra-ahci 70027000.sata: 70027000.sata supply ahci not =
+found, using dummy regulator
+>>> [    5.245867] tegra-ahci 70027000.sata: 70027000.sata supply phy not f=
+ound, using dummy regulator
+>>> [    5.254706] tegra-ahci 70027000.sata: 70027000.sata supply target no=
+t found, using dummy regulator
+>>> [    5.310270] phy phy-sata.6: phy poweron failed --> -110
+>>> [    5.315604] tegra-ahci 70027000.sata: failed to power on AHCI contro=
+ller: -110
+>>> [    5.323022] tegra-ahci: probe of 70027000.sata failed with error -11=
+0
+>>> [   35.694269] +5V_SATA: disabling
+>>> [   35.697438] +12V_SATA: disabling
+>>
+>> It looks strange, because (on same device) , I have sata working as
+>> appropriate, but ethernet fails with me.
+>> https://bugzilla.kernel.org/show_bug.cgi?id=3D206217
+>>
+>> It might worth to have another report.
+>>
+>=20
+> Hello
+>=20
+> Mine has ethernet works well. But I hit many problem with it and older ke=
+rnel.
+> Perhaps the 5.1.21, were I am stuck, does not have it.
+>=20
+> Anyway, the tegra of kerneci has the same SATA problem.
+> https://storage.kernelci.org/next/master/next-20200325/arm/multi_v7_defco=
+nfig+CONFIG_SMP=3Dn/gcc-8/lab-baylibre/boot-tegra124-jetson-tk1.txt
+>=20
+> Maintainers, any idea on this sata issue ?
 
-this looks correct to me.
+I have checked our bootlogs for v5.6-rc7 and don't see the issue with
+either the tegra_defconfig or the multi_v7_defconfig. I am wondering if
+this could be due a difference in the bootloader version. Currently we
+are testing with a v2019.07 u-boot bootloader. Looks like the kernelci
+board is using an older u-boot. Obviously it should still work, but
+would be good to know if the reason why were are not seeing this is
+because of the bootloader.
 
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Another thing to check would be the pll_e clock frequency on a working
+build and non-working build to see if there is a difference in the pll
+frequency that is causing this.
 
-> 	/* convert SG to linear array of pages and dma addresses */
->--
->2.26.0
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Cheers
+Jon
+
+--=20
+nvpublic
