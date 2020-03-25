@@ -2,111 +2,109 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD6C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4902C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 958D72076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACF222076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:54:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="N6DjDOyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbgCYMyB (ORCPT
+        id S1727501AbgCYMyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:54:01 -0400
-Received: from a.mx.secunet.com ([62.96.220.36]:35012 "EHLO a.mx.secunet.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbgCYMyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:54:01 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by a.mx.secunet.com (Postfix) with ESMTP id 8753520265;
-        Wed, 25 Mar 2020 13:53:59 +0100 (CET)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Zrh3ebZnZWSs; Wed, 25 Mar 2020 13:53:57 +0100 (CET)
-Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by a.mx.secunet.com (Postfix) with ESMTPS id 9A11A20539;
-        Wed, 25 Mar 2020 13:53:57 +0100 (CET)
-Received: from mbx-essen-02.secunet.de (10.53.40.198) by
- MAIL-ESSEN-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
- 14.3.487.0; Wed, 25 Mar 2020 13:53:57 +0100
-Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
- (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 25 Mar
- 2020 13:53:57 +0100
-Received: by gauss2.secunet.de (Postfix, from userid 1000)      id C5FDD318026D;
- Wed, 25 Mar 2020 13:53:56 +0100 (CET)
-Date:   Wed, 25 Mar 2020 13:53:56 +0100
-From:   Steffen Klassert <steffen.klassert@secunet.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
-        <kuba@kernel.org>, <timo.teras@iki.fi>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] xfrm: policy: Fix doulbe free in xfrm_policy_timer
-Message-ID: <20200325125356.GV13121@gauss3.secunet.de>
-References: <20200318034839.57996-1-yuehaibing@huawei.com>
- <20200323073239.59000-1-yuehaibing@huawei.com>
+        Wed, 25 Mar 2020 08:54:41 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43989 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgCYMyl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:54:41 -0400
+Received: by mail-qk1-f196.google.com with SMTP id o10so2300377qki.10
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=povoSIiCw95ZWLQdoXVlSQBApcOXq2d8n4RLuzoEcos=;
+        b=N6DjDOyXGLVrfhnKgSW6pYwhh4epm7TFTINbnybcohaJp7bpWPTjI0USi9+zwBuc4p
+         hipSxYVV+rwwdBPFATtRmHNSbq9drmSshNOrWWnNWY4e35q5MzM11Qwz7JdPHTaEPVe7
+         KkYzRWmWACEsjLgnLFgr8k6IP1yNHynfTX9ojxWfu4rsZgNWab1eqnE/+6qnVxxf5g/c
+         cBRRQKv9l3QLeOKufr0zjvgqkc1Ko0Frl7n8tWovOAjazwloVRwnp/PhfIH09D16tqUK
+         KSTdpsGNkSk9VT+y0FZinFzhBd5Z/SrfhzUcTbHOsaNuA4UkOCbYnnJRJdzjAVMQ2GpA
+         Ljsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=povoSIiCw95ZWLQdoXVlSQBApcOXq2d8n4RLuzoEcos=;
+        b=Pt3v1o7XnBhonpCmtpRJ8bLj549HuuYK6urk9A7UzLiO4KDbtzGDiOeaQqkXltaxcL
+         IUzHceWCL7W3ts4JiYtZJkPR1IZyrOi2I9JYWSnzkAiPvMG3Lyh1xuvXNWaFPszAu50K
+         2nMZUajW9CYicd4pAteRxSKtgYiMWzCyqYrDua6CFr7otgIw/aDkF4hu3zh81HfTPITS
+         qpbt486FNd/Z/tAMcDfe4NP52bVi2cUwOGxBavcAEej2TNkWhiWZfRMrCGOULBRmkAkl
+         ejP3FXyB28TVt6hGvi5AkKJ4NaPLgQb+Sag7H+S1ZJwRXwlp9nIfWORdNvzpGZdyMtRw
+         sN+Q==
+X-Gm-Message-State: ANhLgQ1Zjneo4x/aT5d7DutMttWN/fzK1kdRGIcWLanfSKUBSmdX1Lc9
+        XmdelQeKna6UBwCHTozpk6hOAWTUl4Uac2ieh5lYCg==
+X-Google-Smtp-Source: ADFU+vtYWyCKpiV6HL9KoZ/zSAsthjsfi5/+bVjB5sm9Hxel0UpTO8bItfwOZbQ3YQBl3fq9NQJ/tKrAmphnLe+CO8M=
+X-Received: by 2002:a37:c444:: with SMTP id h4mr2801574qkm.120.1585140879852;
+ Wed, 25 Mar 2020 05:54:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200323073239.59000-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
- mbx-essen-02.secunet.de (10.53.40.198)
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+References: <20200325100439.14000-1-geert+renesas@glider.be>
+In-Reply-To: <20200325100439.14000-1-geert+renesas@glider.be>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Wed, 25 Mar 2020 13:54:28 +0100
+Message-ID: <CAMpxmJVduY65nnS_k+fa8h+5VXtwWjAfWvi5U8b4i99JD5NTxQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpiolib: gpio_set_config() cleanups
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 03:32:39PM +0800, YueHaibing wrote:
-> After xfrm_add_policy add a policy, its ref is 2, then
-> 
->                              xfrm_policy_timer
->                                read_lock
->                                xp->walk.dead is 0
->                                ....
->                                mod_timer()
-> xfrm_policy_kill
->   policy->walk.dead = 1
->   ....
->   del_timer(&policy->timer)
->     xfrm_pol_put //ref is 1
->   xfrm_pol_put  //ref is 0
->     xfrm_policy_destroy
->       call_rcu
->                                  xfrm_pol_hold //ref is 1
->                                read_unlock
->                                xfrm_pol_put //ref is 0
->                                  xfrm_policy_destroy
->                                   call_rcu
-> 
-> xfrm_policy_destroy is called twice, which may leads to
-> double free.
-> 
-> Call Trace:
-> RIP: 0010:refcount_warn_saturate+0x161/0x210
-> ...
->  xfrm_policy_timer+0x522/0x600
->  call_timer_fn+0x1b3/0x5e0
->  ? __xfrm_decode_session+0x2990/0x2990
->  ? msleep+0xb0/0xb0
->  ? _raw_spin_unlock_irq+0x24/0x40
->  ? __xfrm_decode_session+0x2990/0x2990
->  ? __xfrm_decode_session+0x2990/0x2990
->  run_timer_softirq+0x5c5/0x10e0
-> 
-> Fix this by use write_lock_bh in xfrm_policy_kill.
-> 
-> Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v3: Only lock 'policy->walk.dead'
-> v2: Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
-> ---
+=C5=9Br., 25 mar 2020 o 11:04 Geert Uytterhoeven <geert+renesas@glider.be>
+napisa=C5=82(a):
+>
+>         Hi Linus, Bartosz,
+>
+> This patch sets reworks the parameters for gpio_set_config() and
+> gpio_set_bias(), which simplifies callers, and slightly reduces the
+> number of lines of code.
+>
+> Thanks for your comments!
+>
+> Geert Uytterhoeven (2):
+>   gpiolib: Pass gpio_desc to gpio_set_config()
+>   gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
+>
+>  drivers/gpio/gpiolib.c | 25 ++++++++++---------------
+>  1 file changed, 10 insertions(+), 15 deletions(-)
+>
+> --
+> 2.17.1
+>
+> Gr{oetje,eeting}s,
+>
+>                                                 Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                                             -- Linus Torv=
+alds
 
-Applied, thanks everyone!
+Both look good to me.
+
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
