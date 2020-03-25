@@ -2,112 +2,144 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D8C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:15:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA24CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E969420663
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:15:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44A7F2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLK1rRcl"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="PTXhT7dx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCYIPl (ORCPT
+        id S1727253AbgCYIWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:15:41 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25802 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbgCYIPl (ORCPT
+        Wed, 25 Mar 2020 04:22:18 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:56641 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725903AbgCYIWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:15:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585124140;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hOKCgDt3MdkDi+eEQM/u9xHMiA/ynm2nLfPeOZVBaHM=;
-        b=ZLK1rRclR6XIIVfsjaLJzrCwQ2C+O1qiovpYWBrEOHmgDuJl9pRNtzgZZTLHuFcE+3E08w
-        VtDdn5dNc+5gSDfJEUH9OtKrxQPl5Z1o5OjvSchlJIIMX2m8dDZe1X4ty1wBvsxVw0cIF5
-        N78bar4vnVL4aPQDxAfzH91nm6Hgzzw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-468-dnKYzcUZNe-hkbmv6mqokg-1; Wed, 25 Mar 2020 04:15:35 -0400
-X-MC-Unique: dnKYzcUZNe-hkbmv6mqokg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFAB418B5F6A;
-        Wed, 25 Mar 2020 08:15:33 +0000 (UTC)
-Received: from [10.72.14.13] (ovpn-14-13.pek2.redhat.com [10.72.14.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 41FE65DA7B;
-        Wed, 25 Mar 2020 08:15:21 +0000 (UTC)
-Subject: Re: [PATCH V7 7/8] vdpasim: vDPA device simulator
-To:     kbuild test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org, mst@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-References: <20200324041458.27384-8-jasowang@redhat.com>
- <202003251045.ncVINn70%lkp@intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <26bc89b3-8e29-db25-18fc-64e309951a94@redhat.com>
-Date:   Wed, 25 Mar 2020 16:15:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 25 Mar 2020 04:22:18 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id H1IajKJ5TLu1fH1Iejyo5M; Wed, 25 Mar 2020 09:22:16 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585124536; bh=/aDo3zrCti3BBCrxSQ/TeptM5Zr/TgtJSYJzo5ajLRM=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=PTXhT7dx6nfIYWPJYYNIHXYeLNorVkxVHVFnY1pjFqOiq7smMs9LtERuxEDmmnW3m
+         7uMabsKF0l2keatFvhWzYFHNhn1ZU0hfnfz4PYp4GKM3JxNp8Ysr1YAEBxjCzvryId
+         6nMHe4ztg8JtfgeW6InhTa/1YVo5ZrbC2CTLYNkyPN9N///tuH0rMagAA16k9yt4Fu
+         EhUJ1x7bkNUYPiD2bqfLqxMThVxb9S29DJvOCQsMp0mr9iaoasiPmo3qtiYW8KbWt+
+         uQSx/mxT4Z24OjUNY9g1qO89kpwP8vZKnx6NGyCll5S9QL8jXJDcOmfwCZalRc8kaD
+         GcVEOtJGBE9Lg==
+Subject: Re: [PATCH v2 3/8] hantro: Use v4l2_m2m_buf_done_and_job_finish
+To:     Ezequiel Garcia <ezequiel@collabora.com>,
+        linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Rob Herring <robh@kernel.org>
+References: <20200318132108.21873-1-ezequiel@collabora.com>
+ <20200318132108.21873-4-ezequiel@collabora.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <13b1efe1-8b52-070b-cf11-b230bd405d3e@xs4all.nl>
+Date:   Wed, 25 Mar 2020 09:22:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <202003251045.ncVINn70%lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+In-Reply-To: <20200318132108.21873-4-ezequiel@collabora.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfE8LnAJGtJIuF9Ii9JP2ReP31A+tuYGruVID7G/PunDtKNEu8GDpAbT3oeVtzLFV3wjOopKFvqkPc55xYZuuwPuHicMbx8cgOp3Ifllw4olxPk8FZhYu
+ jarfWIDfSOSqpUvHqBAieb3Q2OgmMYlPiyUg2tc0BajXXb4MfpV2zbUMhNmiDPi8Qz6AfhQtPjeX5AkVgThhFhuW3QL/+WJ3VCJJLaaWcoWQLBMCXAtPqSj3
+ XjfbR7Z2itflfbso8OM9hfsSLCvMS/zE2A7++XvpuE2VbDrUsCnO0dyGYPX1kAk31ZCJVsEaM4miXingB1jsOrVAORb1f+xK5W/4JJLiQZ4EWla+sUQlNZFw
+ OEAkky79aV5R4vqlI1wjjfATAc9Q6X5qyNt9wCvT/8BDY5YviK8MoZhOz9rhhIMFudCnMw75A1JOuh0ep7Dbj522yZSZUuK+q+/PjaTgk6ZMjtTcBV7qkRM/
+ SEnYI7rCyVBrDzCx3ham7nRG4lwtLrqqfnIdCtAI0AnzD2xz27skmqMxzTeZwhKCMWimJh1zZpSDLx2a
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/18/20 2:21 PM, Ezequiel Garcia wrote:
+> Let the core sort out the nuances of returning buffers
+> to userspace, by using the v4l2_m2m_buf_done_and_job_finish
+> helper.
+> 
+> This change also removes usage of buffer sequence fields,
+> which shouldn't have any meaning for stateless decoders.
 
-On 2020/3/25 =E4=B8=8A=E5=8D=8810:25, kbuild test robot wrote:
-> I love your patch! Yet something to improve:
->
-> [auto build test ERROR on vhost/linux-next]
-> [also build test ERROR on linux/master linus/master v5.6-rc7 next-20200=
-324]
-> [if your patch is applied to the wrong git tree, please drop us a note =
-to help
-> improve the system. BTW, we also suggest to use '--base' option to spec=
-ify the
-> base tree in git format-patch, please seehttps://stackoverflow.com/a/37=
-406982]
->
-> url:https://github.com/0day-ci/linux/commits/Jason-Wang/vDPA-support/20=
-200324-142634
-> base:https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git  lin=
-ux-next
-> config: m68k-allyesconfig (attached as .config)
-> compiler: m68k-linux-gcc (GCC) 9.2.0
-> reproduce:
->          wgethttps://raw.githubusercontent.com/intel/lkp-tests/master/s=
-bin/make.cross  -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # save the attached .config to linux build tree
->          GCC_VERSION=3D9.2.0 make.cross ARCH=3Dm68k
->
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot<lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
+Uh, why remove this? For one, doesn't this cause fails in v4l2-compliance?
+Also, while I agree that it is not terribly useful, it doesn't hurt, does it?
 
+And the V4L2 spec makes no exception for stateless codecs with respect to the
+sequence field.
 
-This is because VDPA_SIM selects VHOST_RING which selects VHOST_IOTLB=20
-which depends on VIRTULAIZATION but not defined in m68k.
+Nacked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-I think we should refine the vhost Kconfig and decouple it out of=20
-VIRTUALIZATION.
+Regards,
 
-Will send a new series with this shortly.
+	Hans
 
-Thanks
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  drivers/staging/media/hantro/hantro_drv.c | 27 ++++++++---------------
+>  1 file changed, 9 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+> index 0b1200fc0e1a..ec889d755cd6 100644
+> --- a/drivers/staging/media/hantro/hantro_drv.c
+> +++ b/drivers/staging/media/hantro/hantro_drv.c
+> @@ -94,32 +94,23 @@ static void hantro_job_finish(struct hantro_dev *vpu,
+>  			      unsigned int bytesused,
+>  			      enum vb2_buffer_state result)
+>  {
+> -	struct vb2_v4l2_buffer *src, *dst;
+>  	int ret;
+>  
+>  	pm_runtime_mark_last_busy(vpu->dev);
+>  	pm_runtime_put_autosuspend(vpu->dev);
+>  	clk_bulk_disable(vpu->variant->num_clocks, vpu->clocks);
+>  
+> -	src = v4l2_m2m_src_buf_remove(ctx->fh.m2m_ctx);
+> -	dst = v4l2_m2m_dst_buf_remove(ctx->fh.m2m_ctx);
+> -
+> -	if (WARN_ON(!src))
+> -		return;
+> -	if (WARN_ON(!dst))
+> -		return;
+> -
+> -	src->sequence = ctx->sequence_out++;
+> -	dst->sequence = ctx->sequence_cap++;
+> -
+> -	ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+> -	if (ret)
+> -		result = VB2_BUF_STATE_ERROR;
+> +	if (ctx->buf_finish) {
+> +		struct vb2_v4l2_buffer *dst;
+>  
+> -	v4l2_m2m_buf_done(src, result);
+> -	v4l2_m2m_buf_done(dst, result);
+> +		dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> +		ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+> +		if (ret)
+> +			result = VB2_BUF_STATE_ERROR;
+> +	}
+>  
+> -	v4l2_m2m_job_finish(vpu->m2m_dev, ctx->fh.m2m_ctx);
+> +	v4l2_m2m_buf_done_and_job_finish(ctx->dev->m2m_dev, ctx->fh.m2m_ctx,
+> +					 result);
+>  }
+>  
+>  void hantro_irq_done(struct hantro_dev *vpu, unsigned int bytesused,
+> 
 
