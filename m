@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1B6C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 412A3C54FD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76B7320724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FCCE20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbgCYD1H (ORCPT
+        id S1727360AbgCYD1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 23:27:07 -0400
+        Tue, 24 Mar 2020 23:27:10 -0400
 Received: from mga01.intel.com ([192.55.52.88]:39340 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbgCYD1F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 23:27:05 -0400
-IronPort-SDR: h3eFfxo0rylKWb20oQ3AJrb9Z4LfUwdoTojAWzzao5cSVElr6JsFKeHe4CcuuzerEyRAmYSExD
- iH3t5Dg/h71A==
+        id S1727253AbgCYD1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 23:27:08 -0400
+IronPort-SDR: vKhRNizHQhaRl993yZvAV8tGIzLtohcBjIyivbl1Sl8MGj/vPOjw5c+v4PwNKkA8OazxZ5suVh
+ fzqJnlOMKFpg==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 20:27:05 -0700
-IronPort-SDR: ioPIMCl1Y1tNjAQHWWrr4hrnTiJx167Yu4Lo7sVaaudARlOO6Im8NKTTl8D3ssfVI/bJPXA8I0
- NRnQ/UQAhanA==
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 20:27:08 -0700
+IronPort-SDR: 7I16jIMiWtO8LKycInGLDqLZkstmd2V+72W8N55D6DVRkqRoRYUaMUgMG+8SVfw7uWKIg1uYbF
+ Ci9EJ083pPww==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
-   d="scan'208";a="240290002"
+   d="scan'208";a="240290011"
 Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Mar 2020 20:27:02 -0700
+  by fmsmga008.fm.intel.com with ESMTP; 24 Mar 2020 20:27:05 -0700
 From:   Xiaoyao Li <xiaoyao.li@intel.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>,
         Tony Luck <tony.luck@intel.com>,
         Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v7 1/2] x86/split_lock: Rework the initialization flow of split lock detection
-Date:   Wed, 25 Mar 2020 11:09:23 +0800
-Message-Id: <20200325030924.132881-2-xiaoyao.li@intel.com>
+Subject: [PATCH v7 2/2] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
+Date:   Wed, 25 Mar 2020 11:09:24 +0800
+Message-Id: <20200325030924.132881-3-xiaoyao.li@intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200325030924.132881-1-xiaoyao.li@intel.com>
 References: <20200325030924.132881-1-xiaoyao.li@intel.com>
@@ -58,186 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current initialization flow of split lock detection has following
-issues:
+In a context switch from a task that is detecting split locks
+to one that is not (or vice versa) we need to update the TEST_CTRL
+MSR. Currently this is done with the common sequence:
+	read the MSR
+	flip the bit
+	write the MSR
+in order to avoid changing the value of any reserved bits in the MSR.
 
-1. It assumes the initial value of MSR_TEST_CTRL.SPLIT_LOCK_DETECT to be
-   zero. However, it's possible that BIOS/firmware has set it.
+Cache unused and reserved bits of TEST_CTRL MSR with SPLIT_LOCK_DETECT
+bit cleared during initialization, so we can avoid an expensive RDMSR
+instruction during context switch.
 
-2. X86_FEATURE_SPLIT_LOCK_DETECT flag is unconditionally set even if
-   there is a virtualization flaw that FMS indicates the existence while
-   it's actually not supported.
-
-Rework the initialization flow to solve above issues. In detail,
-explicitly clear and set split_lock_detect bit to verify MSR_TEST_CTRL
-can be accessed, and rdmsr after wrmsr to ensure bit is cleared/set
-successfully.
-
-X86_FEATURE_SPLIT_LOCK_DETECT flag is set only when the feature does
-exist and the feature is not disabled with kernel param
-"split_lock_detect=off"
-
-On each processor, explicitly updating the SPLIT_LOCK_DETECT bit based
-on sld_sate in split_lock_init() since BIOS/firmware may touch it.
-
-Originally-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Originally-by: Tony Luck <tony.luck@intel.com>
 Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 ---
- arch/x86/kernel/cpu/intel.c | 78 +++++++++++++++++++++----------------
- 1 file changed, 45 insertions(+), 33 deletions(-)
+ arch/x86/kernel/cpu/intel.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index db3e745e5d47..deb5c42c2089 100644
+index deb5c42c2089..1f414578899c 100644
 --- a/arch/x86/kernel/cpu/intel.c
 +++ b/arch/x86/kernel/cpu/intel.c
-@@ -44,7 +44,7 @@ enum split_lock_detect_state {
-  * split_lock_setup() will switch this to sld_warn on systems that support
+@@ -45,6 +45,7 @@ enum split_lock_detect_state {
   * split lock detect, unless there is a command line override.
   */
--static enum split_lock_detect_state sld_state = sld_off;
-+static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
+ static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
++static u64 msr_test_ctrl_cache __ro_after_init;
  
  /*
   * Processors which have self-snooping capability can handle conflicting
-@@ -984,78 +984,90 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
- 	return len == arglen && !strncmp(arg, opt, len);
- }
- 
-+static bool split_lock_verify_msr(bool on)
-+{
-+	u64 ctrl, tmp;
-+
-+	if (rdmsrl_safe(MSR_TEST_CTRL, &ctrl))
-+		return false;
-+
-+	if (on)
-+		ctrl |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+	else
-+		ctrl &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-+
-+	if (wrmsrl_safe(MSR_TEST_CTRL, ctrl))
-+		return false;
-+
-+	rdmsrl(MSR_TEST_CTRL, tmp);
-+	return ctrl == tmp;
-+}
-+
- static void __init split_lock_setup(void)
- {
-+	enum split_lock_detect_state state = sld_warn;
- 	char arg[20];
- 	int i, ret;
- 
--	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
--	sld_state = sld_warn;
-+	if (!split_lock_verify_msr(false)) {
-+		pr_info("MSR access failed: Disabled\n");
-+		return;
-+	}
- 
- 	ret = cmdline_find_option(boot_command_line, "split_lock_detect",
- 				  arg, sizeof(arg));
- 	if (ret >= 0) {
- 		for (i = 0; i < ARRAY_SIZE(sld_options); i++) {
- 			if (match_option(arg, ret, sld_options[i].option)) {
--				sld_state = sld_options[i].state;
-+				state = sld_options[i].state;
- 				break;
- 			}
- 		}
- 	}
- 
--	switch (sld_state) {
-+	switch (state) {
- 	case sld_off:
- 		pr_info("disabled\n");
--		break;
--
-+		return;
- 	case sld_warn:
- 		pr_info("warning about user-space split_locks\n");
- 		break;
--
- 	case sld_fatal:
- 		pr_info("sending SIGBUS on user-space split_locks\n");
+@@ -1037,6 +1038,8 @@ static void __init split_lock_setup(void)
  		break;
  	}
-+
-+	if (!split_lock_verify_msr(true)) {
-+		pr_info("MSR access failed: Disabled\n");
-+		return;
-+	}
-+
-+	sld_state = state;
-+	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
- }
  
- /*
-- * Locking is not required at the moment because only bit 29 of this
-- * MSR is implemented and locking would not prevent that the operation
-- * of one thread is immediately undone by the sibling thread.
-- * Use the "safe" versions of rdmsr/wrmsr here because although code
-- * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
-- * exist, there may be glitches in virtualization that leave a guest
-- * with an incorrect view of real h/w capabilities.
-+ * MSR_TEST_CTRL is per core, but we treat it like a per CPU MSR. Locking
-+ * is not implemented as one thread could undo the setting of the other
-+ * thread immediately after dropping the lock anyway.
++	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
++
+ 	if (!split_lock_verify_msr(true)) {
+ 		pr_info("MSR access failed: Disabled\n");
+ 		return;
+@@ -1053,14 +1056,10 @@ static void __init split_lock_setup(void)
   */
--static bool __sld_msr_set(bool on)
-+static void sld_update_msr(bool on)
+ static void sld_update_msr(bool on)
  {
- 	u64 test_ctrl_val;
- 
--	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
--		return false;
-+	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+-	u64 test_ctrl_val;
+-
+-	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
++	u64 test_ctrl_val = msr_test_ctrl_cache;
  
  	if (on)
  		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
- 	else
- 		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+-	else
+-		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
  
--	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
-+	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+ 	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
  }
- 
- static void split_lock_init(void)
- {
--	if (sld_state == sld_off)
--		return;
--
--	if (__sld_msr_set(true))
--		return;
--
--	/*
--	 * If this is anything other than the boot-cpu, you've done
--	 * funny things and you get to keep whatever pieces.
--	 */
--	pr_warn("MSR fail -- disabled\n");
--	sld_state = sld_off;
-+	split_lock_verify_msr(sld_state != sld_off);
- }
- 
- bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-@@ -1071,7 +1083,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
- 	 * progress and set TIF_SLD so the detection is re-enabled via
- 	 * switch_to_sld() when the task is scheduled out.
- 	 */
--	__sld_msr_set(false);
-+	sld_update_msr(false);
- 	set_tsk_thread_flag(current, TIF_SLD);
- 	return true;
- }
-@@ -1085,7 +1097,7 @@ bool handle_user_split_lock(struct pt_regs *regs, long error_code)
-  */
- void switch_to_sld(unsigned long tifn)
- {
--	__sld_msr_set(!(tifn & _TIF_SLD));
-+	sld_update_msr(!(tifn & _TIF_SLD));
- }
- 
- #define SPLIT_LOCK_CPU(model) {X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY}
 -- 
 2.20.1
 
