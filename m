@@ -2,95 +2,110 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C1CC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E151C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26A4A206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:48:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="q/LyPn1A"
+	by mail.kernel.org (Postfix) with ESMTP id 738D5206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:50:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585108233;
+	bh=cNxpKtvb2detmlaTkFT8+8RHgwNtRUySthxtG8KAI7M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Mpf56HBJ/oUEL66yRBLSAiEEBq40cIF3ddk9pnojsoZ3Y5thU+l6s8NnZP4mnrQrb
+	 7+b6UeZZch7xhwH7H2jqPuvLoBSMJjXGPIjR8MrlLr1/TfBbETBFhjd/W9j4SGTLOl
+	 tHndBCwqgd5ci5m4l2nL0gTFVkQEWHjFag6tpqek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727291AbgCYDs3 (ORCPT
+        id S1727332AbgCYDuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 23:48:29 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:36943 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYDs3 (ORCPT
+        Tue, 24 Mar 2020 23:50:32 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:59891 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbgCYDuc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 23:48:29 -0400
-Received: by mail-pj1-f65.google.com with SMTP id o12so463570pjs.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 20:48:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CWdyd6j2r7FGt8O9BrZXJ57QRfz1CXItxfCIuK+HcGQ=;
-        b=q/LyPn1AoWnQFxjXkHL+8Jyn2wCJxi2NRICYkLYc9ppR+AjmgKVExL4QA7TUmZODx8
-         HIg28z2seGLZE4B+yDZ/zWX8HZo82n7SzoPW+4QT8ZPsvZqN4FvOzxJpiiEsZSVlRFMN
-         7PrJKFb3ZC/5HNSlcSojWFdcxzA1fAzi60UodxOOu1EwiNub38j47zQ7v6sb6Z8DfNEI
-         wv4wZVSh2v9Q8TTjh/7v6v8RDdipvTklOqiadmpFVUAATd0UilLg/AhHoqeIk3B4JFYL
-         okDUpFtPz+PCuGXcUYDl+74zzrNcj5Y5AKMiFRLD0vDOJ5/fGsOB70msOG2NoHRMbtN2
-         abZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CWdyd6j2r7FGt8O9BrZXJ57QRfz1CXItxfCIuK+HcGQ=;
-        b=kxUkJ8URoz7Knfng0Tcb82xlURaU4smnWEaCP2Ac6MWfeMxhsjInMV5+JmXrThjsTs
-         lXpxFgJO8M+ujsd+1QSylnROopSO++vJ7IJ7kbUlBFy8Ly49A0WjKOYvygazs/HUQ4hM
-         222Vm6nz99TBFR/VZ336A9orovD1ccExvW8BSVrK+HXRdRSBIzVqupli5cVtQH9QNqqU
-         ITr57csliPeqm9Ey9UXJmnshRg6hVIZ0sj7UoFalZUeoioQSJy/yU8ogGqJ864TD30UJ
-         yMgIDXNJmhu//eFitF3FWKaYjsKVWad47vGGndjuKReOIZlNd58iLlcYNtk8gdXtmS2d
-         HmoQ==
-X-Gm-Message-State: ANhLgQ0dURnQz1zJ7CGZvG9I6w1n9LqK3pEVxtDvM6sFRCZSjx/AOuQG
-        BeCIcchN9nkE2OJQ8sfjTQsrfw==
-X-Google-Smtp-Source: ADFU+vsSQEGJ0EO67Ye7iI8H6ByQmJxZoMFVSEIK9Q4us7O5lWZbGu9+Au+xo0Oc5BoN11s990R5Vg==
-X-Received: by 2002:a17:902:7886:: with SMTP id q6mr1281983pll.237.1585108108106;
-        Tue, 24 Mar 2020 20:48:28 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id i17sm38674pfo.103.2020.03.24.20.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 20:48:27 -0700 (PDT)
-Subject: Re: [PATCH] io_uring:fix missing 'return' in comment
-To:     Chucheng Luo <luochucheng@vivo.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     kernel@vivo.com
-References: <20200325033138.21488-1-luochucheng@vivo.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ee9047e5-c18e-4f41-e45a-0c5e963787f8@kernel.dk>
-Date:   Tue, 24 Mar 2020 21:48:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 24 Mar 2020 23:50:32 -0400
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 02P3oNDZ010002;
+        Wed, 25 Mar 2020 12:50:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02P3oNDZ010002
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585108224;
+        bh=B51d25RhLVLUEBZV9KWWRN6tXxZV+Ex93ixb/7dltgg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Le7+OZ8u8HnRmAwzMt4fHQZedJ35wfYmXP2hGXWJKEK8YjSO3HsHPDSNXh8GWcbCZ
+         qY8bddsN3m6MekkNLlj5yVU/clWjII23lFn6ZEpSFbFKuilzM1Pva8yYoA63f2lv/A
+         pLTtVDaRtEYnG5E2kmbzo6alZcoRTePRHoP9UcUQ97YL6w099Ve9ktMbTPVZk1Uav+
+         bQMRCVRL4ls/dY9vFMZQxqIpobL3VuEsYapC5Ws0YKEQBGJ/w5uied1rn4Fh3ALYFP
+         bLE9jbvCVfQWlnFeAteYO3FLQclv/oILidEZAHvWInDTkourXLCwVNSHOkphHMZETo
+         DK80A4KP0GG4g==
+X-Nifty-SrcIP: [209.85.221.171]
+Received: by mail-vk1-f171.google.com with SMTP id t3so303920vkm.10;
+        Tue, 24 Mar 2020 20:50:24 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ066tFI8VZJWFChRXfmw5Q6R1bZirzuw4ZMz+dPSZ2b7aMhtaSE
+        d76h81106MhepOQAsTnhmX72SbJJ14xaJt9oPxQ=
+X-Google-Smtp-Source: ADFU+vugUnmkSvll3RiJFbA2FTdNiomZtU7A9mupdJ/HuYxSm4m6xNGGuElIsoiBxSJi+JrdbLShk+BTp4vuo97bNMI=
+X-Received: by 2002:a1f:32cf:: with SMTP id y198mr781430vky.96.1585108223131;
+ Tue, 24 Mar 2020 20:50:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200325033138.21488-1-luochucheng@vivo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200324161539.7538-1-masahiroy@kernel.org> <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 12:49:46 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com>
+Message-ID: <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com>
+Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
+ rebuilding firmware
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 9:31 PM, Chucheng Luo wrote:
-> the missing 'return' work may make it hard
-> for other developers to understand it.
+On Wed, Mar 25, 2020 at 2:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Yamada-san,
+>
+> On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > As far as I understood from the Kconfig help text, this build rule is
+> > used to rebuild the driver firmware, which runs on the QUICC, m68k-based
+> > Motorola 68360.
+> >
+> > The firmware source, wanxlfw.S, is currently compiled by the combo of
+> > $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
+> > files. In fact, this is the only user of $(AS) in the kernel build.
+> >
+> > Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
+> > PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+> > Instead of combining $(CPP) and (AS) from different tool sets, using
+> > single $(CC68K) seems simpler, and saner.
+> >
+> > After this commit, the firmware rebuild will require cc68k instead of
+> > as68k. I do not know how many people care about this, though.
+> >
+> > I do not have cc68k/ld68k in hand, but I was able to build it by using
+> > the kernel.org m68k toolchain. [1]
+>
+> Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
+> provided by Debian/Ubuntu, too?
+>
 
-Thanks, that does read better. Notes for future patches:
+Yes, I did 'sudo apt install gcc-8-m68k-linux-gnu'
+It successfully compiled this firmware.
 
-- You should capitalize the first letter in the commit message,
-  any sentence really.
-- Commit messages should use 72-74 chars of line width
-- Add a space after 'io_uring:' and title description
+In my understanding, the difference is that
+the kernel.org ones lack libc,
+so cannot link userspace programs.
 
-I fixed these up and hand applied to for-5.7/io_uring.
+They do not make much difference for this case.
 
 -- 
-Jens Axboe
-
+Best Regards
+Masahiro Yamada
