@@ -7,30 +7,30 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C64C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439A0C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F8F2078E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225612078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgCYRuG (ORCPT
+        id S1728237AbgCYRuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:50:06 -0400
-Received: from mga12.intel.com ([192.55.52.136]:57499 "EHLO mga12.intel.com"
+        Wed, 25 Mar 2020 13:50:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57497 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728087AbgCYRtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:49:50 -0400
-IronPort-SDR: O7XRHf6Ahtaea6zGPr4QdfPexKshWYQqzEbHcopNAX6qdo0SC7HXmLiJJ4OIMLQu+MQvhMUdWb
- 8M6fswOgpbwQ==
+        id S1727253AbgCYRtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:49:49 -0400
+IronPort-SDR: s/0cEpj95p8y/1pMqJT/KJ2I0RoBQMfccHGLYC3nsCmbPbCm2M4NShbbrk3qzSfZZUsrlbbwXh
+ JQcr+rnGEjIw==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 10:49:49 -0700
-IronPort-SDR: CQcA4JfLofRhka9mtUoO5weYjq8bYXaqfofvwTmcPeq2yb9H07yQUMSHv1MIURjk8A/LyZUmQk
- OZG9AbxWJlwQ==
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 10:49:48 -0700
+IronPort-SDR: rMS5sD61cDmEDachtOz9GVJwL/KNWcSfE2e1kywk1AV6w3JZbLqISUqlhXRxUwBW07x/DDAJc2
+ HYsitKMi0+hQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="393702214"
+   d="scan'208";a="393702197"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga004.jf.intel.com with ESMTP; 25 Mar 2020 10:49:48 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -48,9 +48,9 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         Jonathan Cameron <jic23@kernel.org>,
         Eric Auger <eric.auger@redhat.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH 08/10] iommu/ioasid: Introduce notifier APIs
-Date:   Wed, 25 Mar 2020 10:55:29 -0700
-Message-Id: <1585158931-1825-9-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH 03/10] iommu/ioasid: Introduce per set allocation APIs
+Date:   Wed, 25 Mar 2020 10:55:24 -0700
+Message-Id: <1585158931-1825-4-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1585158931-1825-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -59,201 +59,236 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOASID users fit into the publisher-subscriber pattern, a system wide
-blocking notifier chain can be used to inform subscribers of state
-changes. Notifier mechanism also abstracts publisher from knowing the
-private context each subcriber may have.
+IOASID set defines a group of IDs that share the same token. The
+ioasid_set concept helps to do permission checking among users as in the
+current code.
 
-This patch adds APIs and a global notifier chain, a further optimization
-might be per set notifier for ioasid_set aware users.
+With guest SVA usage, each VM has its own IOASID set. More
+functionalities are needed:
+1. Enforce quota, each guest may be assigned limited quota such that one
+guest cannot abuse all the system resource.
+2. Stores IOASID mapping between guest and host IOASIDs
+3. Per set operations, e.g. free the entire set
 
-Usage example:
-KVM register notifier block such that it can keep its guest-host PASID
-translation table in sync with any IOASID updates.
-
-VFIO publish IOASID change by performing alloc/free, bind/unbind
-operations.
-
-IOMMU driver gets notified when IOASID is freed by VFIO or core mm code
-such that PASID context can be cleaned up.
+For each ioasid_set token, a unique set ID is assigned. This makes
+reference of the set and data lookup much easier to implement.
 
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- drivers/iommu/ioasid.c | 61 ++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/ioasid.h | 40 +++++++++++++++++++++++++++++++++
- 2 files changed, 101 insertions(+)
+ drivers/iommu/ioasid.c | 147 +++++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/ioasid.h |  13 +++++
+ 2 files changed, 160 insertions(+)
 
 diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-index 8612fe6477dc..27dce2cb5af2 100644
+index 4026e52855b9..27ee57f7079b 100644
 --- a/drivers/iommu/ioasid.c
 +++ b/drivers/iommu/ioasid.c
-@@ -11,6 +11,22 @@
+@@ -10,6 +10,25 @@
+ #include <linux/spinlock.h>
  #include <linux/xarray.h>
  
- static DEFINE_XARRAY_ALLOC(ioasid_sets);
-+/*
-+ * An IOASID could have multiple consumers. When a status change occurs,
-+ * this notifier chain is used to keep them in sync. Each consumer of the
-+ * IOASID service must register notifier block early to ensure no events
-+ * are missed.
++static DEFINE_XARRAY_ALLOC(ioasid_sets);
++/**
++ * struct ioasid_set_data - Meta data about ioasid_set
 + *
-+ * This is a publisher-subscriber pattern where publisher can change the
-+ * state of each IOASID, e.g. alloc/free, bind IOASID to a device and mm.
-+ * On the other hand, subscribers gets notified for the state change and
-+ * keep local states in sync.
-+ *
-+ * Currently, the notifier is global. A further optimization could be per
-+ * IOASID set notifier chain.
++ * @token:	Unique to identify an IOASID set
++ * @xa:		XArray to store subset ID and IOASID mapping
++ * @size:	Max number of IOASIDs can be allocated within the set
++ * @nr_ioasids	Number of IOASIDs allocated in the set
++ * @sid		ID of the set
 + */
-+static BLOCKING_NOTIFIER_HEAD(ioasid_chain);
++struct ioasid_set_data {
++	struct ioasid_set *token;
++	struct xarray xa;
++	int size;
++	int nr_ioasids;
++	int sid;
++	struct rcu_head rcu;
++};
 +
+ struct ioasid_data {
+ 	ioasid_t id;
+ 	struct ioasid_set *set;
+@@ -388,6 +407,111 @@ void ioasid_free(ioasid_t ioasid)
+ EXPORT_SYMBOL_GPL(ioasid_free);
+ 
  /**
-  * struct ioasid_set_data - Meta data about ioasid_set
-  *
-@@ -408,6 +424,7 @@ static void ioasid_free_locked(ioasid_t ioasid)
- {
- 	struct ioasid_data *ioasid_data;
- 	struct ioasid_set_data *sdata;
-+	struct ioasid_nb_args args;
- 
- 	ioasid_data = xa_load(&active_allocator->xa, ioasid);
- 	if (!ioasid_data) {
-@@ -415,6 +432,13 @@ static void ioasid_free_locked(ioasid_t ioasid)
- 		return;
- 	}
- 
-+	args.id = ioasid;
-+	args.sid = ioasid_data->sdata->sid;
-+	args.pdata = ioasid_data->private;
-+	args.set_token = ioasid_data->sdata->token;
-+
-+	/* Notify all users that this IOASID is being freed */
-+	blocking_notifier_call_chain(&ioasid_chain, IOASID_FREE, &args);
- 	active_allocator->ops->free(ioasid, active_allocator->ops->pdata);
- 	/* Custom allocator needs additional steps to free the xa element */
- 	if (active_allocator->flags & IOASID_ALLOCATOR_CUSTOM) {
-@@ -624,6 +648,43 @@ int ioasid_find_sid(ioasid_t ioasid)
- }
- EXPORT_SYMBOL_GPL(ioasid_find_sid);
- 
-+int ioasid_add_notifier(struct notifier_block *nb)
++ * ioasid_alloc_set - Allocate a set of IOASIDs
++ * @token:	Unique token of the IOASID set
++ * @quota:	Quota allowed in this set
++ * @sid:	IOASID set ID to be assigned
++ *
++ * Return 0 upon success. Token will be stored internally for lookup,
++ * IOASID allocation within the set and other per set operations will use
++ * the @sid assigned.
++ *
++ */
++int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid)
 +{
-+	return blocking_notifier_chain_register(&ioasid_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(ioasid_add_notifier);
-+
-+void ioasid_remove_notifier(struct notifier_block *nb)
-+{
-+	blocking_notifier_chain_unregister(&ioasid_chain, nb);
-+}
-+EXPORT_SYMBOL_GPL(ioasid_remove_notifier);
-+
-+int ioasid_notify(ioasid_t ioasid, enum ioasid_notify_val cmd)
-+{
-+	struct ioasid_data *ioasid_data;
-+	struct ioasid_nb_args args;
++	struct ioasid_set_data *sdata;
++	ioasid_t id;
 +	int ret = 0;
 +
-+	mutex_lock(&ioasid_allocator_lock);
-+	ioasid_data = xa_load(&active_allocator->xa, ioasid);
-+	if (!ioasid_data) {
-+		pr_err("Trying to free unknown IOASID %u\n", ioasid);
-+		mutex_unlock(&ioasid_allocator_lock);
-+		return -EINVAL;
++	if (quota > ioasid_capacity_avail) {
++		pr_warn("Out of IOASID capacity! ask %d, avail %d\n",
++			quota, ioasid_capacity_avail);
++		return -ENOSPC;
 +	}
 +
-+	args.id = ioasid;
-+	args.sid = ioasid_data->sdata->sid;
-+	args.pdata = ioasid_data->private;
++	sdata = kzalloc(sizeof(*sdata), GFP_KERNEL);
++	if (!sdata)
++		return -ENOMEM;
 +
-+	ret = blocking_notifier_call_chain(&ioasid_chain, cmd, &args);
-+	mutex_unlock(&ioasid_allocator_lock);
++	spin_lock(&ioasid_allocator_lock);
++
++	ret = xa_alloc(&ioasid_sets, &id, sdata,
++		       XA_LIMIT(0, ioasid_capacity_avail - quota),
++		       GFP_KERNEL);
++	if (ret) {
++		kfree(sdata);
++		goto error;
++	}
++
++	sdata->token = token;
++	sdata->size = quota;
++	sdata->sid = id;
++
++	/*
++	 * Set Xarray is used to store IDs within the set, get ready for
++	 * sub-set ID and system-wide IOASID allocation results.
++	 */
++	xa_init_flags(&sdata->xa, XA_FLAGS_ALLOC);
++
++	ioasid_capacity_avail -= quota;
++	*sid = id;
++
++error:
++	spin_unlock(&ioasid_allocator_lock);
 +
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(ioasid_notify);
++EXPORT_SYMBOL_GPL(ioasid_alloc_set);
++
++/**
++ * ioasid_free_set - Free all IOASIDs within the set
++ *
++ * @sid:		The IOASID set ID to be freed
++ * @destroy_set:	Whether to keep the set for further allocation.
++ *			If true, the set will be destroyed.
++ *
++ * All IOASIDs allocated within the set will be freed upon return.
++ */
++void ioasid_free_set(int sid, bool destroy_set)
++{
++	struct ioasid_set_data *sdata;
++	struct ioasid_data *entry;
++	unsigned long index;
++
++	spin_lock(&ioasid_allocator_lock);
++	sdata = xa_load(&ioasid_sets, sid);
++	if (!sdata) {
++		pr_err("No IOASID set found to free %d\n", sid);
++		goto done_unlock;
++	}
++
++	if (xa_empty(&sdata->xa)) {
++		pr_warn("No IOASIDs in the set %d\n", sdata->sid);
++		goto done_destroy;
++	}
++
++	/* Just a place holder for now */
++	xa_for_each(&sdata->xa, index, entry) {
++		/* Free from per sub-set pool */
++		xa_erase(&sdata->xa, index);
++	}
++
++done_destroy:
++	if (destroy_set) {
++		xa_erase(&ioasid_sets, sid);
++
++		/* Return the quota back to system pool */
++		ioasid_capacity_avail += sdata->size;
++		kfree_rcu(sdata, rcu);
++	}
++
++done_unlock:
++	spin_unlock(&ioasid_allocator_lock);
++}
++EXPORT_SYMBOL_GPL(ioasid_free_set);
++
++
++/**
+  * ioasid_find - Find IOASID data
+  * @set: the IOASID set
+  * @ioasid: the IOASID to find
+@@ -431,6 +555,29 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ }
+ EXPORT_SYMBOL_GPL(ioasid_find);
+ 
++/**
++ * ioasid_find_sid - Retrieve IOASID set ID from an ioasid
++ *                   Caller must hold a reference to the set.
++ *
++ * @ioasid: IOASID associated with the set
++ *
++ * Return IOASID set ID or error
++ */
++int ioasid_find_sid(ioasid_t ioasid)
++{
++	struct ioasid_data *ioasid_data;
++	int ret = 0;
++
++	spin_lock(&ioasid_allocator_lock);
++	ioasid_data = xa_load(&active_allocator->xa, ioasid);
++	ret = (ioasid_data) ? ioasid_data->sdata->sid : -ENOENT;
++
++	spin_unlock(&ioasid_allocator_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(ioasid_find_sid);
 +
  MODULE_AUTHOR("Jean-Philippe Brucker <jean-philippe.brucker@arm.com>");
  MODULE_AUTHOR("Jacob Pan <jacob.jun.pan@linux.intel.com>");
  MODULE_DESCRIPTION("IO Address Space ID (IOASID) allocator");
 diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-index e19c0ad93bd7..32d032913828 100644
+index 9711fa0dc357..be158e03c034 100644
 --- a/include/linux/ioasid.h
 +++ b/include/linux/ioasid.h
-@@ -4,6 +4,7 @@
- 
- #include <linux/types.h>
- #include <linux/errno.h>
-+#include <linux/notifier.h>
- 
- #define INVALID_IOASID ((ioasid_t)-1)
- #define INVALID_IOASID_SET (-1)
-@@ -30,6 +31,27 @@ struct ioasid_allocator_ops {
- 	void *pdata;
- };
- 
-+/* Notification data when IOASID status changed */
-+enum ioasid_notify_val {
-+	IOASID_ALLOC = 1,
-+	IOASID_FREE,
-+	IOASID_BIND,
-+	IOASID_UNBIND,
-+};
-+
-+/**
-+ * struct ioasid_nb_args - Argument provided by IOASID core when notifier
-+ * is called.
-+ * @id:		the IOASID being notified
-+ * @sid:	the IOASID set @id belongs to
-+ * @pdata:	the private data attached to the IOASID
-+ */
-+struct ioasid_nb_args {
-+	ioasid_t id;
-+	int sid;
-+	struct ioasid_set *set_token;
-+	void *pdata;
-+};
- /* Shared IOASID set for reserved for host system use */
- extern int system_ioasid_sid;
- 
-@@ -43,11 +65,15 @@ void *ioasid_find(int sid, ioasid_t ioasid, bool (*getter)(void *));
- int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
+@@ -41,6 +41,9 @@ int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
- int ioasid_attach_data(ioasid_t ioasid, void *data);
-+int ioasid_add_notifier(struct notifier_block *nb);
-+void ioasid_remove_notifier(struct notifier_block *nb);
+ int ioasid_set_data(ioasid_t ioasid, void *data);
  void ioasid_install_capacity(ioasid_t total);
- int ioasid_alloc_system_set(int quota);
- int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid);
- void ioasid_free_set(int sid, bool destroy_set);
- int ioasid_find_sid(ioasid_t ioasid);
-+int ioasid_notify(ioasid_t id, enum ioasid_notify_val cmd);
-+
++int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid);
++void ioasid_free_set(int sid, bool destroy_set);
++int ioasid_find_sid(ioasid_t ioasid);
  #else /* !CONFIG_IOASID */
- static inline ioasid_t ioasid_alloc(int sid, ioasid_t min,
+ static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
  				    ioasid_t max, void *private)
-@@ -73,6 +99,20 @@ static inline void *ioasid_find(int sid, ioasid_t ioasid, bool (*getter)(void *)
- 	return NULL;
+@@ -52,6 +55,15 @@ static inline void ioasid_free(ioasid_t ioasid)
+ {
  }
  
-+static inline int ioasid_add_notifier(struct notifier_block *nb)
++static inline int ioasid_alloc_set(struct ioasid_set *token, ioasid_t quota, int *sid)
 +{
 +	return -ENOTSUPP;
 +}
 +
-+static inline void ioasid_remove_notifier(struct notifier_block *nb)
++static inline void ioasid_free_set(int sid, bool destroy_set)
 +{
 +}
 +
-+int ioasid_notify(ioasid_t ioasid, enum ioasid_notify_val cmd)
-+{
-+	return -ENOTSUPP;
-+}
-+
- static inline int ioasid_register_allocator(struct ioasid_allocator_ops *allocator)
+ static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+ 				bool (*getter)(void *))
  {
- 	return -ENOTSUPP;
+@@ -75,5 +87,6 @@ static inline int ioasid_set_data(ioasid_t ioasid, void *data)
+ static inline void ioasid_install_capacity(ioasid_t total)
+ {
+ }
++
+ #endif /* CONFIG_IOASID */
+ #endif /* __LINUX_IOASID_H */
 -- 
 2.7.4
 
