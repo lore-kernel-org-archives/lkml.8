@@ -2,187 +2,152 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:36:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48580C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D9E2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:36:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jvkg5nCB"
+	by mail.kernel.org (Postfix) with ESMTP id 2321A2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbgCYVf7 (ORCPT
+        id S1727498AbgCYVhl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:35:59 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:43312 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726664AbgCYVf7 (ORCPT
+        Wed, 25 Mar 2020 17:37:41 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:60905 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgCYVhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:35:59 -0400
-Received: by mail-yb1-f194.google.com with SMTP id o70so2048382ybg.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 14:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kM5tF24jxTWZD1wcuGGjp7ru29LzT/mQ5FW1gUutUcg=;
-        b=Jvkg5nCBH7SaM73Ih/ExS64TqRps5KxwLAt5AkSNFbQ2NaFsbupv6ZGsL4OFXjHFQp
-         zyOwTFAKLAVXhybap93Tqb5KTYsVXJ4B6jE76fXf1VLfLxv1MAYQ0N7X8NV1D6BaFVyO
-         N/dUkhL9rIabj4iJk3Ltc3fnpLiu6NX6Yi2DfseSoW44F8xbzcJsI5qtGdAJEYvmOEGh
-         Z/+G076l+5TTBNscJQ4WHEhkPNwRpfPgQerHBxDsMveMJ4gW79oWU2ea38I59pSPklOP
-         glGfRnd5zX2Ix2xa9MMBoNFZdWLUscsAaCXtSx4Cvno7pVrGk8o85IUGonRtbxsPVJMj
-         4YMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kM5tF24jxTWZD1wcuGGjp7ru29LzT/mQ5FW1gUutUcg=;
-        b=Q6itPr5/75pQPceZr0WSDMah4xH1ak6OBl2RTrwXwslVxHOH0KiiNf32uEnyCwg7lV
-         q5rpWzt20708vesyyfjv1+W4siDvazpYyaAz4SBujX5BTcCxjf5I1KBuAZITjET4lQPZ
-         IHKpTic8gUbArVVL8bnt3bS9BQ1+jP8NWtS9Mrc991G3YyTxswha+p7d6BsAVuB12Z81
-         IjommDkJKCWTi2tNOZTWr4Bov523RaI9eHHVYl+8ZVrX8UzNBQ57efPN3kYtQeVER5Q5
-         UxC3uhxGLEMVBfsjWgcjgLMWLufaqfr/nyeA+T1ilGWXWJU1RCju8NMOs3VbqpI20bdi
-         390A==
-X-Gm-Message-State: ANhLgQ2yyxlmdJImPSM35wdSXjqg1biVMgKB6crHZ7p54ixMJM/qlxUj
-        IOZ76yg1La0HNnKo1r7qH8qbIyH2BTZZa3NFBJau9Q==
-X-Google-Smtp-Source: ADFU+vuqVso8c9jgap1aIZDGTidCgKYfx270CJryNHCPFX7CUmVG0fGeNNOqJwIZBgKz8DT8Qjc3y2UFprHn6+s2FiE=
-X-Received: by 2002:a25:aaa4:: with SMTP id t33mr9126430ybi.324.1585172156837;
- Wed, 25 Mar 2020 14:35:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200325164022.41385-1-irogers@google.com> <20200325192539.GH14102@kernel.org>
-In-Reply-To: <20200325192539.GH14102@kernel.org>
-From:   Ian Rogers <irogers@google.com>
-Date:   Wed, 25 Mar 2020 14:35:45 -0700
-Message-ID: <CAP-5=fV9LVmaeSsXaD_oA=SZHjY=nhXi-RgJFe0EXzWzBdjsOQ@mail.gmail.com>
-Subject: Re: [PATCH] perf parse-events: add defensive null check
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        John Garry <john.garry@huawei.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
+        Wed, 25 Mar 2020 17:37:40 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 73B3CCECD6;
+        Wed, 25 Mar 2020 22:47:10 +0100 (CET)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v2 1/2] Bluetooth: btusb: Indicate Microsoft vendor
+ extension for Intel 9460/9560 and 9160/9260
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CABmPvSFL_bkrZQJkAzUMck_bAY5aBZkL=5HGV_Syv2QRYfRLfw@mail.gmail.com>
+Date:   Wed, 25 Mar 2020 22:37:38 +0100
+Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Alain Michaud <alainm@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        netdev <netdev@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <B2A2CFFE-8FC1-462B-9C7F-1CD584B6EB24@holtmann.org>
+References: <20200325070336.1097-1-mcchou@chromium.org>
+ <20200325000332.v2.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+ <72699110-843A-4382-8FF1-20C5D4D557A2@holtmann.org>
+ <CABmPvSFL_bkrZQJkAzUMck_bAY5aBZkL=5HGV_Syv2QRYfRLfw@mail.gmail.com>
+To:     Miao-chen Chou <mcchou@chromium.org>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:25 PM Arnaldo Carvalho de Melo
-<arnaldo.melo@gmail.com> wrote:
->
-> Em Wed, Mar 25, 2020 at 09:40:22AM -0700, Ian Rogers escreveu:
-> > Terms may have a null config in which case a strcmp will segv. This can
-> > be reproduced with:
-> >   perf stat -e '*/event=?,nr/' sleep 1
-> > Add a null check to avoid this. This was caught by LLVM's libfuzzer.
->
-> Adding the NULL check doesn't hurt, I guess, but I coudln't repro it:
->
->   [root@seventh ~]# perf stat -e '*/event=?,nr/' sleep 1
->   WARNING: multiple event parsing errors
->   event syntax error: '*/event=?,nr/'
->                       \___ 'nr' is not usable in 'perf stat'
->
->   Initial error:
->   event syntax error: '*/event=?,nr/'
->                        \___ Cannot find PMU `*'. Missing kernel support?
->   Run 'perf list' for a list of valid events
->
->    Usage: perf stat [<options>] [<command>]
->
->       -e, --event <event>   event selector. use 'perf list' to list available events
->   [root@seventh ~]#
->
-> Does this take place only when libfuzzer is being used?
+Hi Miao-chen,
 
-Good catch! I was driving the repro through the fuzzer and getting the
-stack trace below and had assumed this would repro on the command
-line. I'm now wondering why it won't reproduce :-) I suspect this
-issue can come up in other scenarios so as you say the null check
-won't hurt, but the commit message is incorrect.
+>>> This adds a bit mask of driver_info for Microsoft vendor extension and
+>>> indicates the support for Intel 9460/9560 and 9160/9260. See
+>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+>>> microsoft-defined-bluetooth-hci-commands-and-events for more information
+>>> about the extension. This was verified with Intel ThunderPeak BT controller
+>>> where msft_vnd_ext_opcode is 0xFC1E.
+>>> 
+>>> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+>>> ---
+>>> 
+>>> Changes in v2:
+>>> - Define struct msft_vnd_ext and add a field of this type to struct
+>>> hci_dev to facilitate the support of Microsoft vendor extension.
+>>> 
+>>> drivers/bluetooth/btusb.c        | 14 ++++++++++++--
+>>> include/net/bluetooth/hci_core.h |  6 ++++++
+>>> 2 files changed, 18 insertions(+), 2 deletions(-)
+>>> 
+>>> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+>>> index 3bdec42c9612..4c49f394f174 100644
+>>> --- a/drivers/bluetooth/btusb.c
+>>> +++ b/drivers/bluetooth/btusb.c
+>>> @@ -58,6 +58,7 @@ static struct usb_driver btusb_driver;
+>>> #define BTUSB_CW6622          0x100000
+>>> #define BTUSB_MEDIATEK                0x200000
+>>> #define BTUSB_WIDEBAND_SPEECH 0x400000
+>>> +#define BTUSB_MSFT_VND_EXT   0x800000
+>>> 
+>>> static const struct usb_device_id btusb_table[] = {
+>>>      /* Generic Bluetooth USB device */
+>>> @@ -335,7 +336,8 @@ static const struct usb_device_id blacklist_table[] = {
+>>> 
+>>>      /* Intel Bluetooth devices */
+>>>      { USB_DEVICE(0x8087, 0x0025), .driver_info = BTUSB_INTEL_NEW |
+>>> -                                                  BTUSB_WIDEBAND_SPEECH },
+>>> +                                                  BTUSB_WIDEBAND_SPEECH |
+>>> +                                                  BTUSB_MSFT_VND_EXT },
+>>>      { USB_DEVICE(0x8087, 0x0026), .driver_info = BTUSB_INTEL_NEW |
+>>>                                                   BTUSB_WIDEBAND_SPEECH },
+>>>      { USB_DEVICE(0x8087, 0x0029), .driver_info = BTUSB_INTEL_NEW |
+>>> @@ -348,7 +350,8 @@ static const struct usb_device_id blacklist_table[] = {
+>>>      { USB_DEVICE(0x8087, 0x0aa7), .driver_info = BTUSB_INTEL |
+>>>                                                   BTUSB_WIDEBAND_SPEECH },
+>>>      { USB_DEVICE(0x8087, 0x0aaa), .driver_info = BTUSB_INTEL_NEW |
+>>> -                                                  BTUSB_WIDEBAND_SPEECH },
+>>> +                                                  BTUSB_WIDEBAND_SPEECH |
+>>> +                                                  BTUSB_MSFT_VND_EXT },
+>>> 
+>>>      /* Other Intel Bluetooth devices */
+>>>      { USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
+>>> @@ -3734,6 +3737,8 @@ static int btusb_probe(struct usb_interface *intf,
+>>>      hdev->send   = btusb_send_frame;
+>>>      hdev->notify = btusb_notify;
+>>> 
+>>> +     hdev->msft_ext.opcode = HCI_OP_NOP;
+>>> +
+>> 
+>> do this in the hci_alloc_dev procedure for every driver. This doesn’t belong in the driver.
+> Thanks for the note, I will address this.
+>> 
+>>> #ifdef CONFIG_PM
+>>>      err = btusb_config_oob_wake(hdev);
+>>>      if (err)
+>>> @@ -3800,6 +3805,11 @@ static int btusb_probe(struct usb_interface *intf,
+>>>              set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
+>>>              set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
+>>>              set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
+>>> +
+>>> +             if (id->driver_info & BTUSB_MSFT_VND_EXT &&
+>>> +                     (id->idProduct == 0x0025 || id->idProduct == 0x0aaa)) {
+>> 
+>> Please scrap this extra check. You already selected out the PID with the blacklist_table. In addition, I do not want to add a PID in two places in the driver.
+> If we scrap the check around idProduct, how do we tell two controllers
+> apart if they use different opcode for Microsoft vendor extension?
 
-#0  __interceptor_strcmp ()
-    at llvm/compiler-rt/lib/sanitizer_common/sanitizer_common_interceptors.inc:448
-#1  0x0000555557345eb2 in pmu_resolve_param_term (term=0x607000081190,
-head_terms=0x602000007cb0,
-    value=0x7ffff4cc0320) at tools/perf/util/pmu.c:994
-#2  0x00005555573389a4 in pmu_config_term (formats=0x6080000012c8,
-attr=0x7ffff4dd4e20,
-    term=0x607000081190, head_terms=0x602000007cb0, zero=false,
-err=0x7ffff4c90020)
-    at tools/perf/util/pmu.c:1117
-#3  0x0000555557337b4e in perf_pmu__config_terms
-(formats=0x6080000012c8, attr=0x7ffff4dd4e20,
-    head_terms=0x602000007cb0, zero=false, err=0x7ffff4c90020)
-    at tools/perf/util/pmu.c:1154
-#4  0x0000555557338f7e in perf_pmu__config (pmu=0x6080000012a0,
-attr=0x7ffff4dd4e20,
-    head_terms=0x602000007cb0, err=0x7ffff4c90020)
-    at tools/perf/util/pmu.c:1174
-#5  0x0000555557314027 in parse_events_add_pmu
-(parse_state=0x7ffff4c900a0, list=0x602000007e10,
-    name=0x602000001910 "uncore_cha_1", head_config=0x602000007cb0,
-auto_merge_stats=true,
-    use_alias=false) at tools/perf/util/parse-events.c:1485
-#6  0x0000555556d257f9 in parse_events_parse
-(_parse_state=0x7ffff4c900a0, scanner=0x611000000cc0)
-    at tools/perf/util/parse-events.y:318
-#7  0x000055555731c573 in parse_events__scanner (str=0x7ffff4d85c40
-"*/event=?,nr/",
-    parse_state=0x7ffff4c900a0, start_token=258)
-    at tools/perf/util/parse-events.c:2026
-#8  0x000055555731cbc3 in parse_events (evlist=0x61e000000080,
-str=0x7ffff4d85c40 "*/event=?,nr/",
-    err=0x7ffff4c90020) at tools/perf/util/parse-events.c:2066
+for Intel controllers this is highly unlikely. If we really decide to change the opcode in newer firmware versions, we then deal with it at that point.
 
-Thanks,
-Ian
+However for Intel controllers I have the feeling that we better do it after the Read the Intel version information and then do it based on hardware revision and firmware version.
 
-> - Arnaldo
->
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/pmu.c | 11 +++++------
-> >  1 file changed, 5 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> > index 616fbda7c3fc..ef6a63f3d386 100644
-> > --- a/tools/perf/util/pmu.c
-> > +++ b/tools/perf/util/pmu.c
-> > @@ -984,12 +984,11 @@ static int pmu_resolve_param_term(struct parse_events_term *term,
-> >       struct parse_events_term *t;
-> >
-> >       list_for_each_entry(t, head_terms, list) {
-> > -             if (t->type_val == PARSE_EVENTS__TERM_TYPE_NUM) {
-> > -                     if (!strcmp(t->config, term->config)) {
-> > -                             t->used = true;
-> > -                             *value = t->val.num;
-> > -                             return 0;
-> > -                     }
-> > +             if (t->type_val == PARSE_EVENTS__TERM_TYPE_NUM &&
-> > +                 t->config && !strcmp(t->config, term->config)) {
-> > +                     t->used = true;
-> > +                     *value = t->val.num;
-> > +                     return 0;
-> >               }
-> >       }
-> >
-> > --
-> > 2.25.1.696.g5e7596f4ac-goog
-> >
->
-> --
->
-> - Arnaldo
+>> An alternative is to not use BTUSB_MSFT_VND_EXT and let the Intel code set it based on the hardware / firmware revision it finds. We might need to discuss which is the better approach for the Intel hardware since not all PIDs are unique.
+> We are expecting to indicate the vendor extension for non-Intel
+> controllers as well, and having BTUSB_MSFT_VND_EXT seems to be more
+> generic. What do you think?
+
+We don’t have to have one specific way of doing it. As I said, if we ever have Zephyr based controller with MSFT extension, we have a vendor command to determine the support and the opcode. So that will not require any extra quirks or alike.
+
+Anyhow, maybe we introduce BTUSB_MSFT_VND_EXT_FC1E that just says set the opcode to FC1E. For all other opcodes we will introduce similar constants. At most I assume we end up with 5-6 constants.
+
+>> 
+>>> +                     hdev->msft_ext.opcode = 0xFC1E;
+>>> +             }
+>>>      }
+
+Regards
+
+Marcel
+
