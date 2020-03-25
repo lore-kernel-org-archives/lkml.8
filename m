@@ -2,125 +2,100 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0241C2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7981EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADC1020777
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5200B20777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:13:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1+oS4Jx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AXRKABpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgCYSNA (ORCPT
+        id S1727655AbgCYSN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:13:00 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34674 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYSNA (ORCPT
+        Wed, 25 Mar 2020 14:13:58 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:60972 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgCYSN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:13:00 -0400
-Received: by mail-wr1-f65.google.com with SMTP id 65so4450143wrl.1;
-        Wed, 25 Mar 2020 11:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3QYyaGrQpYyWaZ6oYwhc56xJCsI+0fcYVeC22HIA+uc=;
-        b=B1+oS4JxxUkN8An2JMtn4rbpXDh5oak3Nhzbu26gmN2zse3nygc/IXtxty0D4nLuej
-         0QeZ4DLTCdNKczDxfBsuNLSD9qClbxxsLJ5aHJFscskDE1Y1ZmJdmpW/+2qSVRRZaicv
-         S/Ih42cnymRQVZ6yU4OgBPZEtJhLI4bcqazrqrAKM/iM0WRDxdv+Ee2dxeCnq7AFFl7L
-         037C5Y9HAQrMHdOxljt1hxOfO7i/ibEOeqGYj8vVWxWet88MhSoJPyg+XEQc8buXlpGN
-         i8Ikon8CS3BDacMg4/IMbR5WHwfq72PeM9yhKAKXqCMvylgC/5JkvIBZQR1Y7SxraOMn
-         rdeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3QYyaGrQpYyWaZ6oYwhc56xJCsI+0fcYVeC22HIA+uc=;
-        b=bOkj+jLUCCCq6eaLz9Ap3KRlNhcqaIxIpKKWrOTBvbXMlX8Y4UgWVKgeJuN7VchZDg
-         bqgDWrCQ/rqlGbcToY+4VhJ2WgHp3kChWrgF2Vngh2TSPba5R4h5zUi73EfUeP4n3+O5
-         Bg2AQAyPtmRxgtftImwslhayoa3z4dS9lxiOF5X3KS4AS0/Nbbtqaqmf6jzSV/65T5ER
-         bJ+On1Ade11CwWPhjnj/VHP138oZohJYAXOcTnJpNTXp7vyzHw9AzNXKmZcG2FawrCob
-         5XENeeMZeiCNSM0Y7V0GVM+85myHI+2cuia/dsZ9RSjE1OPVXo/qdDfjoyrF93+geZ26
-         GdZg==
-X-Gm-Message-State: ANhLgQ1J1oRjzEQwoAM9rt3d1jHIvo0vBJxfLU3uyeFrm7J5J2bq7z+Q
-        /gGOMQSMJ24kKLkihB573g==
-X-Google-Smtp-Source: ADFU+vsK87vWZ86CZbSOPvStWKiJYDwyDfB/k0nWBadKFPEKNE8HclBtYUpqZ807F5qMdQXCmPxW5Q==
-X-Received: by 2002:adf:f6c8:: with SMTP id y8mr5033937wrp.403.1585159978286;
-        Wed, 25 Mar 2020 11:12:58 -0700 (PDT)
-Received: from avx2 ([46.53.251.45])
-        by smtp.gmail.com with ESMTPSA id 71sm20166150wrc.53.2020.03.25.11.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 11:12:57 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 21:12:55 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Jaewon Kim <jaewon31.kim@samsung.com>
-Cc:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
-        akpm@linux-foundation.org, labbott@redhat.com,
-        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
-        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
-        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
-        kexec@lists.infradead.org
-Subject: Re: [RFC PATCH v2 0/3] meminfo_extra: introduce meminfo extra
-Message-ID: <20200325181255.GB18706@avx2>
-References: <CGME20200323080507epcas1p44cdb9ecb70a7a7395b3acddeda3cfd89@epcas1p4.samsung.com>
- <20200323080503.6224-1-jaewon31.kim@samsung.com>
+        Wed, 25 Mar 2020 14:13:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2plezOlRw7hkkh6LziCfkccVGAATkcpghrKnzymW3hs=; b=AXRKABpBtNDx/hoGYGMf6QE6g8
+        I64wQNxK1qd2fOyN33i1Ws85v7xQpI5JKRwdR4eiDlkCahOjxUJPXlBZM+zf2RirH/5vJO36tjzEY
+        IkKIwzcdXQALUKP+hyz86GNLwTLG0oLY0TEwD7R9Xibr569arxZ7HKmfq79OR7rbjis+ZJdJAADaQ
+        IrZpva/sSPcQYPbkmUYkE42gO8XdG+3sivhrKBOkVfHVqlBmYLsuYgN3ONx4JsVD6IM7b7X0fzC68
+        gd1mR7nJJrO96wTgcHMNyuW6plaCcMBAsu4XhgtLZMAN7ki/b3idKDdKpr1qyr0gnsbcH9t1+xyQU
+        JEcb/WdQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHAX8-0004Xw-PB; Wed, 25 Mar 2020 18:13:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 86EE23010CF;
+        Wed, 25 Mar 2020 19:13:39 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 64524201CEE51; Wed, 25 Mar 2020 19:13:39 +0100 (CET)
+Date:   Wed, 25 Mar 2020 19:13:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Anvin <hpa@zytor.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
+Message-ID: <20200325181339.GK20713@hirez.programming.kicks-ass.net>
+References: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
+ <86D80EA7-9087-4042-8119-12DD5FCEAA87@amacapital.net>
+ <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
+ <20200324170306.GU20696@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200323080503.6224-1-jaewon31.kim@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200324170306.GU20696@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 05:05:00PM +0900, Jaewon Kim wrote:
-> /proc/meminfo or show_free_areas does not show full system wide memory
-> usage status because memory stats do not track all memory allocations.
-> There seems to be huge hidden memory especially on embedded system. It
-> is because some HW IPs in the system use common DRAM memory instead of
-> internal memory. Device drivers directly request huge pages from the
-> page allocator with alloc_pages.
-> 
-> In Android system, most of those hidden memory seems to be vmalloc
-> pages, ion system heap memory, graphics memory, and memory for DRAM
-> based compressed swap storage. They may be shown in other node but it
-> seems to be useful if /proc/meminfo_extra shows all those extra memory
-> information. And show_mem also need to print the info in oom situation.
-> 
-> Fortunately vmalloc pages is already shown by commit 97105f0ab7b8
-> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
-> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
-> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
-> 
-> Memory usage of specific driver can be various so that showing the usage
-> through upstream meminfo.c is not easy. To print the extra memory usage
-> of a driver, introduce following APIs. Each driver needs to count as
-> atomic_long_t.
-> 
-> int register_meminfo_extra(atomic_long_t *val, int shift,
-> 			   const char *name);
-> int unregister_meminfo_extra(atomic_long_t *val);
-> 
-> Currently register ION system heap allocator and zsmalloc pages.
-> Additionally tested on local graphics driver.
-> 
-> i.e) cat /proc/meminfo_extra | tail -3
-> IonSystemHeap:    242620 kB
-> ZsPages:          203860 kB
-> GraphicDriver:    196576 kB
+On Tue, Mar 24, 2020 at 06:03:06PM +0100, Peter Zijlstra wrote:
+> On Tue, Mar 24, 2020 at 09:33:21AM -0700, Linus Torvalds wrote:
 
-In that case definitely delete ':', spaces and KB.
-They only slowdown generation and parsing in userspace.
-Values should be printed /proc/vmstat does it, maybe with tab instead of
-space.
+> > Of course, one alternative is to just say "instead of using NOP, use
+> > 'xorl %eax,%eax'", and then we'd have the rule that a NULL conditional
+> > function returns zero (or NULL).
+> > 
+> > I _think_ a "xorl %eax,%eax ; retq" is just three bytes and would fit
+> > in the tailcall slot too.
+> 
+> Correct. The only problem is that our text patching machinery can't
+> replace multiple instructions :/
 
-	foo	1234
-	bar	0
-	zot	111
+To clarify; the problem is a task getting preempted with its RIP at the
+RET. Then when we rewrite the text to be a CALL/JMP.d32 it will read
+garbage (1 byte into the displacement of the instruction) instead of a
+RET when it resumes.
+
+Now, there are ways to fix this, the easiest being calling
+synchronize_rcu_tasks() just like optprobes does (see also commit
+5c02ece81848 ("x86/kprobes: Fix ordering while text-patching")).
+
+It would mean patching a call away from NULL will be 'expensive' but it
+ought to work.
+
+I'll try and do the patch, see what it looks like.
