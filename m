@@ -2,112 +2,270 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BD9C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40786C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564A420714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jOsvlDmA"
+	by mail.kernel.org (Postfix) with ESMTP id 0A6092076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585163150;
+	bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0iJ9Fq3Hm0eVpxB9KJDvQOqmI/3NY1BK55c3Xu1LDj7BqLOKSL+1rLtXBdh5h5cq5
+	 q4/1X8RrUImYd1gWvQ9Xu8RTijq5kd8OyN9fswT7sZesU/IUxFn/XQE4FAd3u6MgUj
+	 Eqi9+duCOixv8bfJS//7nNsIXFV4GR2baZQUpMGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgCYTFn (ORCPT
+        id S1727937AbgCYTFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:05:43 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39064 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727279AbgCYTFn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:05:43 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i20so3740233ljn.6;
-        Wed, 25 Mar 2020 12:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pcRErvm2Q518gCbI05/42E3zgrQBPnKUjsE254rV4i8=;
-        b=jOsvlDmAnsWF8Zgi1Kc+OAsbG3gWnfkPWsVsEAuywtsKrez7awraN/gAflS+VbGpgi
-         lTb+NL7GMqfRW6s9+bLM4tq5JXPaRTnpJQJmzpbZMUsMKaLogF/62JoIQws11Q2bz4Q3
-         kN/q/qbygHS9gbZrwgeP3stxTlSaXTAQB2tLTdVrTk5AZISotzbrm9fUhQddE8Qhp57Q
-         vmcrjRIT5KEr16szoVRPVX9XZpfEia+hbwv14K9xL0XSS116ExAvKiJVMqzwNUOhj3U4
-         Ehspp7hOpL4MalroyZbd3HkMeCw2OmCrO1o/WDTFKkxu9nDrazlcmxDwFmTMOraeEopO
-         kANQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pcRErvm2Q518gCbI05/42E3zgrQBPnKUjsE254rV4i8=;
-        b=CpSO9ng2HxSRENHsqLi8NeR7p2tOMWk6Di29Lz0CCpwaZGPxMSfhnLqPHBUbHVgAfS
-         MMka3msRsHyt+cE8WAVfAyWCQ28EGbXR7JJwZ2SbLuPDB3VqtC1x8xvq3JAqkkf3InWp
-         qgtrM+DIt8WwY2wKSpO5l9jV35zA3BTUOSM8WvnqR1dbYulCakueBLw+lUIxh0ZeTX9R
-         mdNzguAxgn42y5/QfHOZlkUoQ3sLIRXn2urtT68FnvxZIZHeoWFu+XkuzhJXW9+4XeMO
-         TuiRoSiRFSmhTwVXGPW1gIB7Nxbo/AZNoXmvOV8X/cPN/oIj3mP6V7zBE0iiGNumSbn4
-         E0tg==
-X-Gm-Message-State: ANhLgQ2Pjc9+c6fSvjGVF9h0fyXw0mU0ritWV+gc9gVKqAlkIWNh37LA
-        g3oGCremauC8pWoDk6ZQ74U=
-X-Google-Smtp-Source: ADFU+vtNtlANgH6ZU/SxscTh0o9bgRwziu95+xWxmtzh+N/lwSGsvM5yQMpXh/Hd6K53fTv+dhxjBg==
-X-Received: by 2002:a2e:854e:: with SMTP id u14mr2793589ljj.95.1585163140593;
-        Wed, 25 Mar 2020 12:05:40 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
-        by smtp.googlemail.com with ESMTPSA id t23sm4927602lfq.4.2020.03.25.12.05.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 12:05:39 -0700 (PDT)
-Subject: Re: [PATCH v9 13/55] Input: atmel_mxt_ts - add regulator control
- support
-To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
-        dmitry.torokhov@gmail.com, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, bsz@semihalf.com,
-        rydberg@bitmath.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20200325133334.19346-1-jiada_wang@mentor.com>
- <20200325133334.19346-14-jiada_wang@mentor.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <672615bc-adce-213f-9e44-864163c0a770@gmail.com>
-Date:   Wed, 25 Mar 2020 22:05:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 15:05:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727279AbgCYTFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:05:48 -0400
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86522076F;
+        Wed, 25 Mar 2020 19:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585163147;
+        bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kqV2+isT+3mowQAoVTiPQgQ2DjtFWvGZpTKQwUYikcmB/fWfPgUOzc28y2M7gktVI
+         w9tzmg7fhk5C331Kc/oMpWM1lLNsHzDQFQvRYDdyCdR87r7160m86Jcs369tMsYf4c
+         TwyDfgeNuVOacPiiJrzD7oOc/pPLFvQrdRNJADYU=
+Received: by mail-qv1-f51.google.com with SMTP id v38so1662572qvf.6;
+        Wed, 25 Mar 2020 12:05:47 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ16jCYPmu0lN2Sh5en7ug2ds8Z/wJC70bUK3PzGZpr0DsHAH57x
+        CM6D6q9a28uGAZBm6inuyhm68po2AR16OHyixg==
+X-Google-Smtp-Source: ADFU+vsyukn7zvIPawA++JIpoRR33DaG19B2BoYv9ZrgL4BE0crMXNzCbxcpYD7SVqS9OR2ZR0zCz4JJu7zGUp7IlWY=
+X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr4462107qvw.79.1585163146836;
+ Wed, 25 Mar 2020 12:05:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200325133334.19346-14-jiada_wang@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200324094506.55938-1-alexandru.tachici@analog.com> <20200324094506.55938-3-alexandru.tachici@analog.com>
+In-Reply-To: <20200324094506.55938-3-alexandru.tachici@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 25 Mar 2020 13:05:35 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
+Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
+Subject: Re: [RESEND PATCH 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
+To:     Alexandru Tachici <alexandru.tachici@analog.com>
+Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.03.2020 16:32, Jiada Wang пишет:
-> From: Nick Dyer <nick.dyer@itdev.co.uk>
-> 
-> Allow the driver to optionally manage enabling/disable power to the touch
-> controller itself. If the regulators are not present then use the deep
-> sleep power mode instead.
-> 
-> For a correct power on sequence, it is required that we have control over
-> the RESET line.
+On Tue, Mar 24, 2020 at 3:45 AM <alexandru.tachici@analog.com> wrote:
+>
+> From: Alexandru Tachici <alexandru.tachici@analog.com>
+>
+> Replaced num property with reg property, fixed errors
+> reported by dt-binding-check.
+>
+> Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
+> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+> ---
+>  .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
+>  1 file changed, 40 insertions(+), 37 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> index d9c25cf4b92f..d1755dbc1a41 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
+> @@ -2,7 +2,7 @@
+>  # Copyright 2020 Analog Devices Inc.
+>  %YAML 1.2
+>  ---
+> -$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
+> +$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
+>  $schema: http://devicetree.org/meta-schemas/core.yaml#
+>
+>  title: Analog Devices AD5770R DAC device driver
+> @@ -49,83 +49,84 @@ properties:
+>        asserted during driver probe.
+>      maxItems: 1
+>
+> -  channel0:
+> +  channel@0:
+>      description: Represents an external channel which are
+>        connected to the DAC. Channel 0 can act both as a current
+>        source and sink.
+>      type: object
+>
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          const: 0
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/int32-array
+>              - items:
+> -                - enum: [0 300000]
+> -                - enum: [-60000 0]
+> -                - enum: [-60000 300000]
+> +                - const: 0
+> +                - const: 300000
+> +            - items:
+> +                - const: -60000
+> +                - const: 0
+> +            - items:
+> +                - const: -60000
+> +                - const: 300000
+>
+> -  channel1:
+> +  channel@1:
+>      description: Represents an external channel which are
+>        connected to the DAC.
+>      type: object
+>
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          const: 1
 
-...
-> +	data->reg_vdd = devm_regulator_get(dev, "vdd");
-> +	if (IS_ERR(data->reg_vdd)) {
-> +		error = PTR_ERR(data->reg_vdd);
-> +		dev_err(dev, "Error %d getting vdd regulator\n", error);
-> +		goto fail;
-> +	}
-> +
-> +	data->reg_avdd = devm_regulator_get(dev, "avdd");
-> +	if (IS_ERR(data->reg_avdd)) {
-> +		error = PTR_ERR(data->reg_avdd);
-> +		dev_err(dev, "Error %d getting avdd regulator\n", error);
-> +		goto fail_release;
-> +	}
+This should be:
 
-Hello Jiada,
+reg:
+  const: 1
 
-The new regulator properties should be documented in the device-tree
-binding.
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
+>              - items:
+> -                - enum: [0 140000]
+> -                - enum: [0 250000]
+> +                - const: 0
+> +                - const: 140000
+> +            - items:
+> +                - const: 0
+> +                - const: 250000
+>
+> -  channel2:
+> +  channel@2:
+>      description: Represents an external channel which are
+>        connected to the DAC.
+>      type: object
+>
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          const: 2
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
+>              - items:
+> -                - enum: [0 140000]
+> -                - enum: [0 250000]
+> +                - const: 0
+> +                - const: 55000
+> +            - items:
+> +                - const: 0
+> +                - const: 150000
+>
+>  patternProperties:
+>    "^channel@([3-5])$":
+>      type: object
+>      description: Represents the external channels which are connected to the DAC.
+>      properties:
+> -      num:
+> +      reg:
+>          description: This represents the channel number.
+> -        items:
+> -          minimum: 3
+> -          maximum: 5
+
+reg:
+  minimum: 3
+  maximum: 5
+
+>
+>        adi,range-microamp:
+>            description: Output range of the channel.
+>            oneOf:
+> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
+>              - items:
+> -                - enum: [0 45000]
+> -                - enum: [0 100000]
+> +                - const: 0
+> +                - const: 45000
+> +            - items:
+> +                - const: 0
+> +                - const: 100000
+
+This can be simplified to:
+
+items:
+  - const: 0
+  - enum: [ 45000, 100000 ]
+
+>
+>  required:
+>  - reg
+> @@ -150,34 +151,36 @@ examples:
+>                          vref-supply = <&vref>;
+>                          adi,external-resistor;
+>                          reset-gpios = <&gpio 22 0>;
+> +                        #address-cells = <1>;
+> +                        #size-cells = <0>;
+>
+>                          channel@0 {
+> -                                num = <0>;
+> -                                adi,range-microamp = <(-60000) 300000>;
+> +                                reg = <0>;
+> +                                adi,range-microamp = <0 300000>;
+>                          };
+>
+>                          channel@1 {
+> -                                num = <1>;
+> +                                reg = <1>;
+>                                  adi,range-microamp = <0 140000>;
+>                          };
+>
+>                          channel@2 {
+> -                                num = <2>;
+> +                                reg = <2>;
+>                                  adi,range-microamp = <0 55000>;
+>                          };
+>
+>                          channel@3 {
+> -                                num = <3>;
+> +                                reg = <3>;
+>                                  adi,range-microamp = <0 45000>;
+>                          };
+>
+>                          channel@4 {
+> -                                num = <4>;
+> +                                reg = <4>;
+>                                  adi,range-microamp = <0 45000>;
+>                          };
+>
+>                          channel@5 {
+> -                                num = <5>;
+> +                                reg = <5>;
+>                                  adi,range-microamp = <0 45000>;
+>                          };
+>                  };
+> --
+> 2.20.1
+>
