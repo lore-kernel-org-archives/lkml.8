@@ -2,119 +2,100 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E390C54FD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55F39C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37D420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233D120772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:34:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VbJJIdgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCYKcz (ORCPT
+        id S1727459AbgCYKd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:32:55 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47439 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgCYKcy (ORCPT
+        Wed, 25 Mar 2020 06:33:59 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:46743 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726103AbgCYKd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:32:54 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jH3KR-0007j8-0u; Wed, 25 Mar 2020 11:32:07 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 25179100C51; Wed, 25 Mar 2020 11:32:06 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Rong Chen <rong.a.chen@intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "maintainer\:X86 ARCHITECTURE \(32-BIT AND 64-BIT\)" <x86@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Gross <mgross@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-edac@vger.kernel.org,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-hwmon@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Takashi Iwai <tiwai@suse.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto <linux-crypto@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [cpufreq] 06c4d00466: will-it-scale.per_process_ops -53.4% regression
-In-Reply-To: <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
-References: <20200320131509.564059710@linutronix.de> <20200324060124.GC11705@shao2-debian> <CAHp75VeeKZLeZ8E3Py7LECN54SPFHaRgkxrMzBYQWXM8x+4JhA@mail.gmail.com> <43a4189a-7153-18e8-4657-4a4400002c05@intel.com>
-Date:   Wed, 25 Mar 2020 11:32:06 +0100
-Message-ID: <87zhc4ybbt.fsf@nanos.tec.linutronix.de>
+        Wed, 25 Mar 2020 06:33:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585132437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wMz36/b4wvRCQKG24J6IX0P4UpJbOiTrxsPU/Fg1urM=;
+        b=VbJJIdgSxtKEnqT1diDM2NZ4w4IY1thNmhv160YbxpfT0HOtnwV4kkUf4XfBE7Ig89tvps
+        lmLt/LHGinqqwespWJcgpzSoLICzPzROQMdTpSrIQ72TVacw07pLE7TisQdLXi9cxEnUdY
+        ignfSio4y0t6I8B1TxCKM3SDSMyT4b4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-399-yf1_aYnTMRSwPmaIQufFiA-1; Wed, 25 Mar 2020 06:33:54 -0400
+X-MC-Unique: yf1_aYnTMRSwPmaIQufFiA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E20338017CE;
+        Wed, 25 Mar 2020 10:33:52 +0000 (UTC)
+Received: from krava (unknown [10.40.192.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DA5D2BBBE5;
+        Wed, 25 Mar 2020 10:33:49 +0000 (UTC)
+Date:   Wed, 25 Mar 2020 11:33:45 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf tools: Add missing Intel CPU events to parser
+Message-ID: <20200325103345.GA1856035@krava>
+References: <20200324150443.28832-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324150443.28832-1-adrian.hunter@intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rong Chen <rong.a.chen@intel.com> writes:
-> On 3/24/20 6:24 PM, Andy Shevchenko wrote:
->> On Tue, Mar 24, 2020 at 8:02 AM kernel test robot <rong.a.chen@intel.com> wrote:
->>> Greeting,
->>>
->>> FYI, we noticed a -53.4% regression of will-it-scale.per_process_ops due to commit:
->>> commit: 06c4d00466eb374841bc84c39af19b3161ff6917 ("[patch 09/22] cpufreq: Convert to new X86 CPU match macros")
->>> url: https://github.com/0day-ci/linux/commits/Thomas-Gleixner/x86-devicetable-Move-x86-specific-macro-out-of-generic-code/20200321-031729
->>> base: https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git linux-next
->>>
->>> in testcase: will-it-scale
->>> on test machine: 4 threads Intel(R) Core(TM) i3-3220 CPU @ 3.30GHz with 8G memory
->>> with following parameters:
->>
->> drivers/cpufreq/speedstep-centrino.c change missed the terminator,
->> perhaps it's a culprit, because I don't believe removing dups and
->> reordering lines may affect this.
->> Can you restore terminator there and re-test?
->>
->
-> I have retested with the change, but it has no effect on the performance.
+On Tue, Mar 24, 2020 at 05:04:43PM +0200, Adrian Hunter wrote:
+> perf list expects CPU events to be parseable by name, e.g.
+> 
+>     # perf list | grep el-capacity-read
+>       el-capacity-read OR cpu/el-capacity-read/          [Kernel PMU event]
+> 
+> But the event parser does not recognize them that way, e.g.
+> 
+>     # perf test -v "Parse event"
+>     <SNIP>
+>     running test 54 'cycles//u'
+>     running test 55 'cycles:k'
+>     running test 0 'cpu/config=10,config1,config2=3,period=1000/u'
+>     running test 1 'cpu/config=1,name=krava/u,cpu/config=2/u'
+>     running test 2 'cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/'
+>     running test 3 'cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp'
+>     -> cpu/event=0,umask=0x11/
+>     -> cpu/event=0,umask=0x13/
+>     -> cpu/event=0x54,umask=0x1/
+>     failed to parse event 'el-capacity-read:u,cpu/event=el-capacity-read/u', err 1, str 'parser error'
+>     event syntax error: 'el-capacity-read:u,cpu/event=el-capacity-read/u'
+>                            \___ parser error test child finished with 1
+>     ---- end ----
+>     Parse event definition strings: FAILED!
+> 
+> Fix by adding missing Intel CPU events to the event parser.
+> Missing events were found by using:
+> 
+>     grep -r EVENT_ATTR_STR arch/x86/events/intel/core.c
+> 
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Bah. The binary equivalence testing detected this, but I obvioulsy
-missed it. Delta fix below.
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-Thanks,
+thanks,
+jirka
 
-        tglx
-
-8<--------------
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -2727,7 +2727,7 @@ static inline void intel_pstate_request_
- 
- #define X86_MATCH_HWP(model, hwp_mode)					\
- 	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
--					   X86_FEATURE_APERFMPERF, hwp_mode)
-+					   X86_FEATURE_HWP, hwp_mode)
- 
- static const struct x86_cpu_id hwp_support_ids[] __initconst = {
- 	X86_MATCH_HWP(BROADWELL_X,	INTEL_PSTATE_HWP_BROADWELL),
