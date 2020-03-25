@@ -3,65 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48BCCC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841BDC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F9220737
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C7A5207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:09:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgCYVH3 (ORCPT
+        id S1727402AbgCYVJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:07:29 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:55570 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYVH2 (ORCPT
+        Wed, 25 Mar 2020 17:09:52 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:48478 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYVJw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:07:28 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHDF7-002oCO-H9; Wed, 25 Mar 2020 21:07:17 +0000
-Date:   Wed, 25 Mar 2020 21:07:17 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
-Message-ID: <20200325210717.GO23230@ZenIV.linux.org.uk>
-References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
- <20200324214637.GI23230@ZenIV.linux.org.uk>
- <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
- <20200325021327.GJ23230@ZenIV.linux.org.uk>
- <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
- <20200325040359.GK23230@ZenIV.linux.org.uk>
- <20200325055830.GL23230@ZenIV.linux.org.uk>
- <C2554121-109E-450A-965F-B8DFE2B0E528@lca.pw>
+        Wed, 25 Mar 2020 17:09:52 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id 85E2A80307C2;
+        Wed, 25 Mar 2020 21:09:50 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Cv3gjaAA1V8B; Thu, 26 Mar 2020 00:09:49 +0300 (MSK)
+Date:   Thu, 26 Mar 2020 00:09:41 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Rob Herring <robh@kernel.org>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/6] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
+ controller
+Message-ID: <20200325210941.x6wqnlmauxmfkd4j@ubsrv2.baikal.int>
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132018.C268A8030792@mail.baikalelectronics.ru>
+ <20200312214340.GA30360@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <C2554121-109E-450A-965F-B8DFE2B0E528@lca.pw>
+In-Reply-To: <20200312214340.GA30360@bogus>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 03:43:06PM -0400, Qian Cai wrote:
-
-> Since that one has a compilation warning, I have tested this patch and seen no crash so far.
+On Thu, Mar 12, 2020 at 04:43:40PM -0500, Rob Herring wrote:
+> On Fri, 6 Mar 2020 16:19:52 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > Just add the "be,bt1-i2c" compatible string to the bindings. The rest of
+> > the DW APB I2C properties can be freely used to describe the Baikal-T1
+> > I2C controller dts-node.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> > Cc: Paul Burton <paulburton@kernel.org>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > ---
+> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
 > 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 311e33dbac63..73851acdbf3a 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1806,6 +1806,9 @@ static const char *handle_dots(struct nameidata *nd, int type)
->                                          parent, inode, seq);
->                 }
->  
-> +               if (unlikely(error))
-> +                       return error;
-> +
+> Acked-by: Rob Herring <robh@kernel.org>
 
-OK, an equivalent of that had been folded into #work.dotdot/#for-next
-I'll definitely throw a mentioning of your reporting that thing;
-do you want tested-by: added there as well?
+Seeing you and us having doubts regarding our vendor prefix and the
+corresponding patch still hasn't been accepted, in the next patchset release
+perhaps I will have to change the compatible string of this driver. It depends
+on a result of the discussion: https://lkml.org/lkml/2020/3/13/239
+
+Rob, could you get back to it, so we could come up with a solution?
+
+Currently most of our team members are leaning towards "baikal,t1" = "vendor,chip"
+prefixes to all the SoC specific devices. So the Baikal-T1 I2C compatible string
+would be renamed to "baikal,t1-i2c". What do you think?
+
+Regards,
+-Sergey
