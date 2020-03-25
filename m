@@ -2,68 +2,116 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50C4C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 369C5C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90C6020658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:11:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ibiOtYlI"
+	by mail.kernel.org (Postfix) with ESMTP id 0D69220658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCYTLE (ORCPT
+        id S1727505AbgCYTNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:11:04 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58912 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727281AbgCYTLE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:11:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eNOTALyUtOBY7dFKg7mVMblKvoCIM5i+G8S+La4eSMw=; b=ibiOtYlIuHGK3LrkOOqcONPji7
-        JQ7Q2RsQUVu7XQud7qG4+ldH8dCDWKwm5kYahoH/ClnObBCvL7Z6xvPREAj060Y1JLg4oCainXe+v
-        AH4tg4U7SvlFo4VMh5DmodqrNl9XXYka4PbcHHTM/gOJfLOwX97azth/Y6WOWXERzjAXwCNc0Q9xG
-        IPI5GqXUNWPcxWg6sQ2n9ifpnYW0F5ByU7M2KWXlcG0NfP/o46/9xyt5t5E+krzcfX7JjSqSDsAzT
-        6ubm8sIQzcn3HutlBNsNjU9KcaZODBMW4iV8aXCiO9AZfm0e8pd1kse7UpShBnZIU0zU0E+Ox0IIR
-        SQ8XrX1g==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHBQd-00032z-KO; Wed, 25 Mar 2020 19:11:03 +0000
-Date:   Wed, 25 Mar 2020 12:11:03 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nick Bowler <nbowler@draconx.ca>
-Cc:     linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme: Fix NVME_IOCTL_ADMIN_CMD compat address handling.
-Message-ID: <20200325191103.GA6495@infradead.org>
-References: <20200325002847.2140-1-nbowler@draconx.ca>
+        Wed, 25 Mar 2020 15:13:01 -0400
+Received: from mga17.intel.com ([192.55.52.151]:19925 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727279AbgCYTNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:13:00 -0400
+IronPort-SDR: 8UlUOX3Q1KxquXMkk7WywKVPP2/PAa0BMP7JaVNFaubPQwGnTyucWhxe2HyisQiSCQFGDOfC3Q
+ 8Mqc0KIuq/Gw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 12:13:00 -0700
+IronPort-SDR: bQeRBDjYsYwoIzI4XP0Iyc8k6ExUzw5Fb7NEfqduEHTmrXqzi1+unrBqE9U+ap/POV/I74TBMc
+ zeoLXjwt43Rw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
+   d="scan'208";a="357902461"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2020 12:13:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] KVM: x86: Fix BUILD_BUG() in __cpuid_entry_get_reg() w/ CONFIG_UBSAN=y
+Date:   Wed, 25 Mar 2020 12:12:59 -0700
+Message-Id: <20200325191259.23559-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325002847.2140-1-nbowler@draconx.ca>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A couple of comments:
+Take the target reg in __cpuid_entry_get_reg() instead of a pointer to a
+struct cpuid_reg.  When building with -fsanitize=alignment (enabled by
+CONFIG_UBSAN=y), some versions of gcc get tripped up on the pointer and
+trigger the BUILD_BUG().
 
-No need for the "." the end of the subject line.
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: d8577a4c238f8 ("KVM: x86: Do host CPUID at load time to mask KVM cpu caps")
+Fixes: 4c61534aaae2a ("KVM: x86: Introduce cpuid_entry_{get,has}() accessors")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/cpuid.c | 2 +-
+ arch/x86/kvm/cpuid.h | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-I also think you should just talk of the nvme_user_cmd function,
-as that also is used for the NVME_IOCTL_IO_CMD ioctl.  Also there now
-is a nvme_user_cmd64 variant that needs the same fix, can you also
-include that?
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 08280d8a2ac9..16d3ae432420 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -269,7 +269,7 @@ static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
+ 	cpuid_count(cpuid.function, cpuid.index,
+ 		    &entry.eax, &entry.ebx, &entry.ecx, &entry.edx);
+ 
+-	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, &cpuid);
++	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, cpuid.reg);
+ }
+ 
+ void kvm_set_cpu_caps(void)
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 23b4cd1ad986..63a70f6a3df3 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -99,9 +99,9 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned int x86_featu
+ }
+ 
+ static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+-						  const struct cpuid_reg *cpuid)
++						  u32 reg)
+ {
+-	switch (cpuid->reg) {
++	switch (reg) {
+ 	case CPUID_EAX:
+ 		return &entry->eax;
+ 	case CPUID_EBX:
+@@ -121,7 +121,7 @@ static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
+ {
+ 	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
+ 
+-	return __cpuid_entry_get_reg(entry, &cpuid);
++	return __cpuid_entry_get_reg(entry, cpuid.reg);
+ }
+ 
+ static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
+@@ -189,7 +189,7 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu,
+ 	if (!entry)
+ 		return NULL;
+ 
+-	return __cpuid_entry_get_reg(entry, &cpuid);
++	return __cpuid_entry_get_reg(entry, cpuid.reg);
+ }
+ 
+ static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu,
+-- 
+2.24.1
 
-> +	if (in_compat_syscall()) {
-> +		/*
-> +		 * On real 32-bit kernels this implementation ignores the
-> +		 * upper bits of address fields so we must replicate that
-> +		 * behaviour in the compat case.
-
-s/real //g please, there are no fake 32-vit kernels :)
