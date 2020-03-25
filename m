@@ -2,171 +2,85 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F29F0C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B37C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4731206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F014E20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:31:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kdio/mUZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCYJ2Q (ORCPT
+        id S1727313AbgCYJbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:28:16 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:59387 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726154AbgCYJ2O (ORCPT
+        Wed, 25 Mar 2020 05:31:48 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:22729 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726276AbgCYJbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:28:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=changhuaixin@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TtbCEns_1585128421;
-Received: from localhost(mailfrom:changhuaixin@linux.alibaba.com fp:SMTPD_---0TtbCEns_1585128421)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 25 Mar 2020 17:27:05 +0800
-From:   Huaixin Chang <changhuaixin@linux.alibaba.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     shanpeic@linux.alibaba.com, yun.wang@linux.alibaba.com,
-        xlpang@linux.alibaba.com, peterz@infradead.org, mingo@redhat.com,
-        bsegall@google.com, chiluk+linux@indeed.com,
-        vincent.guittot@linaro.org,
-        Huaixin Chang <changhuaixin@linux.alibaba.com>
-Subject: [PATCH] alios: sched: Fix race between runtime distribution and assignment
-Date:   Wed, 25 Mar 2020 17:26:02 +0800
-Message-Id: <20200325092602.22471-1-changhuaixin@linux.alibaba.com>
-X-Mailer: git-send-email 2.14.4.44.g2045bb6
+        Wed, 25 Mar 2020 05:31:47 -0400
+X-UUID: 301a8601b05549c88b2ad0e01bf2627d-20200325
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=B71l7gQY32AVSPj0Iz+n3QYxFS0Q7pqS5cd7ybjbLfI=;
+        b=kdio/mUZ2e+QYgCvT6vpi4W+/wVOT5DZ+NUhzOluD+1Dj2jPR+1cwAnKGnotiVQc6MIR/4F0iP63jkyPjLse9gMGky5QX1LyLx91PRBI8XeRoXNy/kFIKaqJOZPbwlChZpBtTCpoHVdm9yW41IXHxfzIwyCKTWB4Ld1ycNDIjaw=;
+X-UUID: 301a8601b05549c88b2ad0e01bf2627d-20200325
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <hanks.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 816349840; Wed, 25 Mar 2020 17:31:43 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 25 Mar 2020 17:31:41 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 25 Mar 2020 17:31:42 +0800
+From:   Hanks Chen <hanks.chen@mediatek.com>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>
+CC:     Andy Teng <andy.teng@mediatek.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, Hanks Chen <hanks.chen@mediatek.com>,
+        Mars Cheng <mars.cheng@mediatek.com>
+Subject: [PATCH v5 5/6] pinctrl: mediatek: add mt6779 eint support
+Date:   Wed, 25 Mar 2020 17:31:33 +0800
+Message-ID: <1585128694-13881-6-git-send-email-hanks.chen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
+References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, there is a potential race between distribute_cfs_runtime()
-and assign_cfs_rq_runtime(). Race happens when cfs_b->runtime is read,
-distributes without holding lock and finds out there is not enough
-runtime to charge against after distribution. Because
-assign_cfs_rq_runtime() might be called during distribution, and use
-cfs_b->runtime at the same time.
-
-Fibtest is the tool to test this race. Assume all gcfs_rq is throttled
-and cfs period timer runs, slow threads might run and sleep, returning
-unused cfs_rq runtime and keeping min_cfs_rq_runtime in their local
-pool. If all this happens sufficiently quickly, cfs_b->runtime will drop
-a lot. If runtime distributed is large too, over-use of runtime happens.
-
-A runtime over-using by about 70 percent of quota is seen when we
-test fibtest on a 96-core machine. We run fibtest with 1 fast thread and
-95 slow threads in test group, configure 10ms quota for this group and
-see the CPU usage of fibtest is 17.0%, which is far from than the
-expected 10%.
-
-On a smaller machine with 32 cores, we also run fibtest with 96
-threads. CPU usage is more than 12%, which is also more than expected
-10%. This shows that on similar workloads, this race do affect CPU
-bandwidth control.
-
-Solve this by holding lock inside distribute_cfs_runtime().
-
-Fixes: c06f04c70489 ("sched: Fix potential near-infinite distribute_cfs_runtime() loop")
-Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
----
- kernel/sched/fair.c | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index c1217bfe5e81..c9f0e89fe5da 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4629,11 +4629,11 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
- 		resched_curr(rq);
- }
- 
--static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
-+static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
- {
- 	struct cfs_rq *cfs_rq;
--	u64 runtime;
--	u64 starting_runtime = remaining;
-+	u64 runtime, remaining;
-+	unsigned long flags;
- 
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
-@@ -4648,10 +4648,13 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
- 		/* By the above check, this should never be true */
- 		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
- 
-+		raw_spin_lock_irqsave(&cfs_b->lock, flags);
- 		runtime = -cfs_rq->runtime_remaining + 1;
--		if (runtime > remaining)
--			runtime = remaining;
--		remaining -= runtime;
-+		if (runtime > cfs_b->runtime)
-+			runtime = cfs_b->runtime;
-+		cfs_b->runtime -= runtime;
-+		remaining = cfs_b->runtime;
-+		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
- 
- 		cfs_rq->runtime_remaining += runtime;
- 
-@@ -4666,8 +4669,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
- 			break;
- 	}
- 	rcu_read_unlock();
--
--	return starting_runtime - remaining;
- }
- 
- /*
-@@ -4678,7 +4679,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
-  */
- static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, unsigned long flags)
- {
--	u64 runtime;
- 	int throttled;
- 
- 	/* no need to continue the timer with no bandwidth constraint */
-@@ -4708,23 +4708,17 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
- 
- 	/*
- 	 * This check is repeated as we are holding onto the new bandwidth while
--	 * we unthrottle. This can potentially race with an unthrottled group
--	 * trying to acquire new bandwidth from the global pool. This can result
--	 * in us over-using our runtime if it is all used during this loop, but
--	 * only by limited amounts in that extreme case.
-+	 * we unthrottle.
- 	 */
- 	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
--		runtime = cfs_b->runtime;
- 		cfs_b->distribute_running = 1;
- 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
- 		/* we can't nest cfs_b->lock while distributing bandwidth */
--		runtime = distribute_cfs_runtime(cfs_b, runtime);
-+		distribute_cfs_runtime(cfs_b);
- 		raw_spin_lock_irqsave(&cfs_b->lock, flags);
- 
- 		cfs_b->distribute_running = 0;
- 		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
--
--		lsub_positive(&cfs_b->runtime, runtime);
- 	}
- 
- 	/*
-@@ -4858,10 +4852,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
- 	if (!runtime)
- 		return;
- 
--	runtime = distribute_cfs_runtime(cfs_b, runtime);
-+	distribute_cfs_runtime(cfs_b);
- 
- 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
--	lsub_positive(&cfs_b->runtime, runtime);
- 	cfs_b->distribute_running = 0;
- 	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
- }
--- 
-2.14.4.44.g2045bb6
+YWRkIGRyaXZlciBzZXR0aW5nIHRvIHN1cHBvcnQgbXQ2Nzc5IGVpbnQNCg0KQWNrZWQtYnk6IFNl
+YW4gV2FuZyA8c2Vhbi53YW5nQGtlcm5lbC5vcmc+DQpTaWduZWQtb2ZmLWJ5OiBIYW5rcyBDaGVu
+IDxoYW5rcy5jaGVuQG1lZGlhdGVrLmNvbT4NClNpZ25lZC1vZmYtYnk6IE1hcnMgQ2hlbmcgPG1h
+cnMuY2hlbmdAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3Bp
+bmN0cmwtbXQ2Nzc5LmMgfCAgICA4ICsrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDggaW5zZXJ0
+aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9waW5jdHJsL21lZGlhdGVrL3BpbmN0cmwt
+bXQ2Nzc5LmMgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3RybC1tdDY3NzkuYw0KaW5k
+ZXggMTQ1YmYyMi4uMzI4MjI2MCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvcGluY3RybC9tZWRpYXRl
+ay9waW5jdHJsLW10Njc3OS5jDQorKysgYi9kcml2ZXJzL3BpbmN0cmwvbWVkaWF0ZWsvcGluY3Ry
+bC1tdDY3NzkuYw0KQEAgLTczMSwxMSArNzMxLDE5IEBADQogCSJpb2NmZ19ydCIsICJpb2NmZ19s
+dCIsICJpb2NmZ190bCIsDQogfTsNCiANCitzdGF0aWMgY29uc3Qgc3RydWN0IG10a19laW50X2h3
+IG10Njc3OV9laW50X2h3ID0gew0KKwkucG9ydF9tYXNrID0gNywNCisJLnBvcnRzICAgICA9IDYs
+DQorCS5hcF9udW0gICAgPSAxOTUsDQorCS5kYl9jbnQgICAgPSAxMywNCit9Ow0KKw0KIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgbXRrX3Bpbl9zb2MgbXQ2Nzc5X2RhdGEgPSB7DQogCS5yZWdfY2FsID0g
+bXQ2Nzc5X3JlZ19jYWxzLA0KIAkucGlucyA9IG10a19waW5zX210Njc3OSwNCiAJLm5waW5zID0g
+QVJSQVlfU0laRShtdGtfcGluc19tdDY3NzkpLA0KIAkubmdycHMgPSBBUlJBWV9TSVpFKG10a19w
+aW5zX210Njc3OSksDQorCS5laW50X2h3ID0gJm10Njc3OV9laW50X2h3LA0KIAkuZ3Bpb19tID0g
+MCwNCiAJLmllc19wcmVzZW50ID0gdHJ1ZSwNCiAJLmJhc2VfbmFtZXMgPSBtdDY3NzlfcGluY3Ry
+bF9yZWdpc3Rlcl9iYXNlX25hbWVzLA0KLS0gDQoxLjcuOS41DQo=
 
