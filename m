@@ -2,118 +2,152 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E68C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443DBC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD6F206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:40:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SZuiJWZj"
+	by mail.kernel.org (Postfix) with ESMTP id 224EF20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgCYAkX (ORCPT
+        id S1727313AbgCYAlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:40:23 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:53419 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbgCYAkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 20:40:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48n8R80zKKz9sPk;
-        Wed, 25 Mar 2020 11:40:19 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585096820;
-        bh=Bai3sk8CLodeWGRu1CYGl+WPcRwjBXEwTh1ZqVH0/F0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=SZuiJWZjueCoU/j2ge/QJZn5TO8/hbxrbvdGMY0tdUQznTjEXROCYx90KhZvK2r7S
-         AZUcYE3j69ONyJTPgm9k8VBQy+GRwJZOsS/n4xnyoeQR2YsMa/369Yw7+zT1pGktLq
-         cRbYBsWkQMwALGn+8J8xmqVFff5+8zUqedVzBK/W0eJBuLkKE+hvI27U2Uix83qAq/
-         bOVKLD2xjNYjAYsjBaujQaAT54kSwVI77/lzCNRG1nERhmv+8IL56VwN81LpHb6XW7
-         8q0sJ8JCVqDovfkLeLMOQLU4r+jIZIu3Dk0nQ/dTo9W6AVvRIyPJ8MWvHslbQMRlCL
-         +WJ1WbwJLx8eA==
-Date:   Wed, 25 Mar 2020 11:40:16 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Willem de Bruijn <willemb@google.com>,
-        Era Mayflower <mayflowerera@gmail.com>
-Subject: linux-next: manual merge of the net-next tree with the net tree
-Message-ID: <20200325114016.156768f2@canb.auug.org.au>
+        Tue, 24 Mar 2020 20:41:11 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46652 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727099AbgCYAlL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 20:41:11 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGu6I-0000Gg-OE; Wed, 25 Mar 2020 01:40:55 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id DDBF2100C51; Wed, 25 Mar 2020 01:40:53 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
+In-Reply-To: <20200324151859.31068-9-xiaoyao.li@intel.com>
+References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-9-xiaoyao.li@intel.com>
+Date:   Wed, 25 Mar 2020 01:40:53 +0100
+Message-ID: <87eethz2p6.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/sv3AX7jQUXkgO=e5bapi3NH";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/sv3AX7jQUXkgO=e5bapi3NH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>  #ifdef CONFIG_CPU_SUP_INTEL
+> +enum split_lock_detect_state {
+> +	sld_off = 0,
+> +	sld_warn,
+> +	sld_fatal,
+> +};
+> +extern enum split_lock_detect_state sld_state __ro_after_init;
+> +
+> +static inline bool split_lock_detect_on(void)
+> +{
+> +	return sld_state != sld_off;
+> +}
 
-Hi all,
+See previous reply.
 
-Today's linux-next merge of the net-next tree got a conflict in:
+> +void sld_msr_set(bool on)
+> +{
+> +	sld_update_msr(on);
+> +}
+> +EXPORT_SYMBOL_GPL(sld_msr_set);
+> +
+> +void sld_turn_back_on(void)
+> +{
+> +	sld_update_msr(true);
+> +	clear_tsk_thread_flag(current, TIF_SLD);
+> +}
+> +EXPORT_SYMBOL_GPL(sld_turn_back_on);
 
-  drivers/net/macsec.c
+First of all these functions want to be in a separate patch, but aside
+of that they do not make any sense at all.
 
-between commit:
+> +static inline bool guest_cpu_split_lock_detect_on(struct vcpu_vmx *vmx)
+> +{
+> +	return vmx->msr_test_ctrl & MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +}
+> +
+>  static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  {
+>  	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> @@ -4725,12 +4746,13 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+>  	case AC_VECTOR:
+>  		/*
+>  		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
+> -		 * legacy alignment check enabled.  Pre-check host split lock
+> -		 * support to avoid the VMREADs needed to check legacy #AC,
+> -		 * i.e. reflect the #AC if the only possible source is legacy
+> -		 * alignment checks.
+> +		 * legacy alignment check enabled or split lock detect enabled.
+> +		 * Pre-check host split lock support to avoid further check of
+> +		 * guest, i.e. reflect the #AC if host doesn't enable split lock
+> +		 * detection.
+>  		 */
+>  		if (!split_lock_detect_on() ||
+> +		    guest_cpu_split_lock_detect_on(vmx) ||
+>  		    guest_cpu_alignment_check_enabled(vcpu)) {
 
-  b06d072ccc4b ("macsec: restrict to ethernet devices")
+If the host has split lock detection disabled then how is the guest
+supposed to have it enabled in the first place?
 
-from the net tree and commit:
+> @@ -6631,6 +6653,14 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>  	 */
+>  	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
+>  
+> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
+> +	    guest_cpu_split_lock_detect_on(vmx)) {
+> +		if (test_thread_flag(TIF_SLD))
+> +			sld_turn_back_on();
 
-  a21ecf0e0338 ("macsec: Support XPN frame handling - IEEE 802.1AEbw")
+This is completely inconsistent behaviour. The only way that TIF_SLD is
+set is when the host has sld_state == sld_warn and the guest triggered
+a split lock #AC.
 
-from the net-next tree.
+'warn' means that the split lock event is registered and a printk
+emitted and after that the task runs with split lock detection disabled.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+It does not matter at all if the task triggered the #AC while in guest
+or in host user space mode. Stop claiming that virt is special. The only
+special thing about virt is, that it is using a different mechanism to
+exit kernel mode. Aside of that from the kernel POV it is completely
+irrelevant whether the task triggered the split lock in host user space
+or in guest mode.
 
---=20
-Cheers,
-Stephen Rothwell
+If the SLD mode is fatal, then the task is killed no matter what.
 
-diff --cc drivers/net/macsec.c
-index 92bc2b2df660,49b138e7aeac..000000000000
---- a/drivers/net/macsec.c
-+++ b/drivers/net/macsec.c
-@@@ -19,7 -19,7 +19,8 @@@
-  #include <net/gro_cells.h>
-  #include <net/macsec.h>
-  #include <linux/phy.h>
- +#include <linux/if_arp.h>
-+ #include <linux/byteorder/generic.h>
- =20
-  #include <uapi/linux/if_macsec.h>
- =20
+Please sit down and go through your patches and rethink every single
+line instead of sending out yet another half baken and hastily cobbled
+together pile.
 
---Sig_/sv3AX7jQUXkgO=e5bapi3NH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+To be clear, Patch 1 and 2 make sense on their own, so I'm tempted to
+pick them up right now, but the rest is going to be 5.8 material no
+matter what.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl56qHAACgkQAVBC80lX
-0Gxt/Qf9H8xBjtaPori8bP7C7ScBjmtat11519pOpi5LyDdlD1TjEQNV93SmAi/h
-TsfTKpq63rLgfQuEdY7qX4HCfFZtjgfLENbt7Q4ManjoDBmtPTjUz9B7FA+q7nrI
-2bAUjLmapVq1WAK5C5B5kd1wsoVl77FEi7KU29lsYA8K0cgD7JsipSqEDQUldU78
-C2fRFgyde4XbCL+9VnPZmoWDA79qFINZZiYzPXk29lB8MGuE6EeAbYQDoYg7I5Eh
-eVShEytRIEbACpIyYotW8ucJLvOednmCYq1vldaw7BcSuUSlm2pxqbyp04gaMDIy
-A9TUG1Puw6EaisLvHAiLmhTzosv6ew==
-=nL9v
------END PGP SIGNATURE-----
+        tglx
 
---Sig_/sv3AX7jQUXkgO=e5bapi3NH--
