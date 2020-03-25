@@ -2,174 +2,104 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232A7C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB6C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB82A2076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F02A20774
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OzisoSYR"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="PUFK7JiN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgCYSKM (ORCPT
+        id S1727845AbgCYSMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:10:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43660 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726820AbgCYSKM (ORCPT
+        Wed, 25 Mar 2020 14:12:01 -0400
+Received: from mail-wr1-f100.google.com ([209.85.221.100]:39063 "EHLO
+        mail-wr1-f100.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727466AbgCYSMB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:10:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id f206so1423952pfa.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:10:10 -0700 (PDT)
+        Wed, 25 Mar 2020 14:12:01 -0400
+Received: by mail-wr1-f100.google.com with SMTP id p10so4398406wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mCMDLx96gBb9PVNfbGpeGhFfN+gcscZ0Sw/AuceDcYw=;
-        b=OzisoSYR8xG9adN42Vh791qneDavZ0HSxIrazB7q71rTrmkTkPDDUaFbHPKHaVT/MB
-         DVu/4JBu5srpWwblRKe1H6yVro66d6AhkEhz9Vzf+V8U62+HvjfY/utTHz7gppPPcGix
-         vKJzi3T7S4F/ywZtlm+nGKX2vWdyZYUCw4mfJb3slEdIWsi2+mEFRUHXiCxQb5JVlimV
-         2zvEq8CgJq4Gerl/e2Jik+3rJrR3qlegSlwyJtYCCm/Tt0heQ3XLV2n9mTiTkEtPxmiG
-         0WvmtbB5KPFd6zAAQL9hReZXTjQW3rdNFvH9QGs37ABxpVwFfJyY+sw83UPUFwC84J6F
-         /2CQ==
+        d=flowbird.group; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=BlUfBdbKLhRxMxTSsuT+ab6HxEoROd1o/+3/SBIv3Ug=;
+        b=PUFK7JiNhpsF2FlrU1Q9bh39ZOI6jNjKfa1GMbgqJOjXFoLTg980Q//l/B6dZdYmJr
+         Q1n/bHLR6DCJwHRCcp3BW0q89P7eAy5h4MF9FUYE3bExSkbjn2vd24AHhQdrIRCXrREv
+         SpufX1YryF2O6P0vir4uhGB4YqI+QvrD9nz60B5wFNvz4GcgLupvRBOEUivlYPd/tnxy
+         eBgUgyW0yvic953d8u1LD/EtN3S6kyu1SEP8s5pr4SQD2LQWXOGQFvzm6lJyriiCDoUI
+         i5w3ehwOpqYOIiPZ15f9MOlMWpaQStee/VI7tF6cry9oQ4/dRn77iFSq6Ueh5CrsRkYp
+         KNNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mCMDLx96gBb9PVNfbGpeGhFfN+gcscZ0Sw/AuceDcYw=;
-        b=dZm2KZU8DrogEQqSd+Dt7xhvhhi8sjA7qb/jPMwE3Kb4tL0ucTof7hq5j8qEBAwCRY
-         lC2KYp4nHO4yf/UvD4cD7xqSpAh1jldoqWj2hgfmwpo37PA5F5mT+Y5gRJYJ3KJASW6i
-         AInzMrzyoHybFn1p2StPnUADgLSxk261/snARHnfl83FsU/Mo/OoqtxirKXiohFPF5Qf
-         6Rt3lagFUI5xvzPl2qNk0YeqJZtw9XIil7oVP5WfkxGmmuw0t89nspyAS4uFvuDKXY2F
-         yTx12lpoW73gY5bggSoN9bbo/0+AJnfbChxGysw5uoCrXnYBqqIJNOJU+GFDB3pCF9R9
-         eAug==
-X-Gm-Message-State: ANhLgQ2Mwm80lfftMVJ+3S3mXf+P4xdk9dgMPuUrS5j2ENlLC0DkfUm8
-        TuXwwzN95iOtO7AyZER18/C8pE0Z4jEn9NCG0MZ2WA==
-X-Google-Smtp-Source: ADFU+vvnK7P42RfRULi0wmeJinug/pd//+uMrm5Bceh4lyd/Shur0xusPHmdpsgfif4+bs63GDIbu+gd1enYXKvXueE=
-X-Received: by 2002:a62:8343:: with SMTP id h64mr4948056pfe.166.1585159810046;
- Wed, 25 Mar 2020 11:10:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200311222157.259707-1-davidgow@google.com>
-In-Reply-To: <20200311222157.259707-1-davidgow@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 25 Mar 2020 11:09:57 -0700
-Message-ID: <CAFd5g47c+g_ufcOKEkKtCtj71nQtFwp40JuWajh_jPhQt50B_w@mail.gmail.com>
-Subject: Re: [RFC PATCH kunit-next] kunit: kunit_tool: Separate out config/build/exec/parse
-To:     David Gow <davidgow@google.com>
-Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=BlUfBdbKLhRxMxTSsuT+ab6HxEoROd1o/+3/SBIv3Ug=;
+        b=DDFXJ4w5KZMfsclrzLmQ1o08vq4MI+IZSo2miZXejA8lZHWGpKDrXhgtQ/LHVUSCPe
+         O/b4SBQVvgRUJS3aYBr1wWAKfaPm51GKoytZexB94LCDZqNOAjLFyC6zBMLQe/KLPxn7
+         InmKacGeEQAoGviYeRGNRi4obEsfIsfMRXSuluteBbKaeDlfxf9uPeaJrl2KF4CCLeDW
+         4Dmpa3gjFhLBEOb2cnD0bIDoVVD89ARZUuTR1AIYrgQ1JFkWPaoMuzf4EZFVLb1k/fwd
+         0udISgNkCg0jq6TSSloQu2vPqQQnrATwEcM9wl0hw4bod9RD7piiqrTmt36efbWbwRPS
+         lR5Q==
+X-Gm-Message-State: ANhLgQ2iKL8FATNBU+pbD5clbHkMG/opejbuujdGi6p0y/crVQ+L2TEg
+        UwI4GmHakeu6sMmxPqmjxzuaz415LjC6Vme2Uhw1FTxGabk4
+X-Google-Smtp-Source: ADFU+vuXZzrXWPaDv1t6sY87owmRsrjwWY5Prmz78UuvMutD9DLYGNfPcoaw/eL8oyqGShQwhQRS4Um63pdj
+X-Received: by 2002:adf:e34c:: with SMTP id n12mr4466668wrj.97.1585159918373;
+        Wed, 25 Mar 2020 11:11:58 -0700 (PDT)
+Received: from mail.besancon.parkeon.com ([185.149.63.251])
+        by smtp-relay.gmail.com with ESMTPS id a140sm2717wmd.22.2020.03.25.11.11.58
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Wed, 25 Mar 2020 11:11:58 -0700 (PDT)
+X-Relaying-Domain: flowbird.group
+Received: from [172.16.13.190] (port=39524 helo=PC12445-BES.dynamic.besancon.parkeon.com)
+        by mail.besancon.parkeon.com with esmtp (Exim 4.71)
+        (envelope-from <martin.fuzzey@flowbird.group>)
+        id 1jHAVR-0003Oy-P3; Wed, 25 Mar 2020 19:11:57 +0100
+From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
+To:     Fugang Duan <fugang.duan@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     netdev@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
+Subject: [PATCH v2 0/4] Fix Wake on lan with FEC on i.MX6
+Date:   Wed, 25 Mar 2020 19:11:55 +0100
+Message-Id: <1585159919-11491-1-git-send-email-martin.fuzzey@flowbird.group>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 11, 2020 at 3:23 PM David Gow <davidgow@google.com> wrote:
->
-> Add new subcommands to kunit.py to allow stages of the existing 'run'
-> subcommand to be run independently:
-> - 'config': Verifies that .config is a subset of .kunitconfig
-> - 'build': Compiles a UML kernel for KUnit
-> - 'exec': Runs the kernel, and outputs the test results.
-> - 'parse': Parses test results from a file or stdin
+This series fixes WoL support with the FEC on i.MX6
+The support was already in mainline but seems to have bitrotted
+somewhat.
 
-I think all the names are fine. I like the verb-noun pattern.
+Only tested with i.MX6DL
 
->
-> Most of these are not hugely useful by themselves yet, and there's room
-> for plenty of bikeshedding on the names, but this hopefully can form a
-> foundation for future improvements.
->
-> Signed-off-by: David Gow <davidgow@google.com>
+Changes since V1:
+	Move the register offset and bit number from the DT to driver code
+	Add SOB from Fugang Duan for the NXP code on which this is based
 
-This looks really good! I really only have one minor comment right
-now, see below.
+Martin Fuzzey (4):
+  net: fec: set GPR bit on suspend by DT configuration.
+  ARM: dts: imx6: Use gpc for FEC interrupt controller to fix wake on
+    LAN.
+  dt-bindings: fec: document the new gpr property.
+  ARM: dts: imx6: add fec gpr property.
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+ Documentation/devicetree/bindings/net/fsl-fec.txt |   2 +
+ arch/arm/boot/dts/imx6qdl.dtsi                    |   6 +-
+ drivers/net/ethernet/freescale/fec.h              |   7 +
+ drivers/net/ethernet/freescale/fec_main.c         | 149 +++++++++++++++++-----
+ 4 files changed, 132 insertions(+), 32 deletions(-)
 
-> ---
-> [Whoops: typo-ed Brendan's email. Sorry about that!]
->
-> As was briefly disccussed in [1], this change is part of a "separation
-> of concerns" in kunit_tool. This should make it easier to integrate
-> kunit_tool into other setups.
->
-> Of particular intrest is probably 'kunit.py parse', which should allow
-> KUnit results to be parsed from other sources, such as after loading a
-> module, or from a non-UML kernel, or from debugfs when that's
-> supported[2].
->
-> [1]: https://lkml.org/lkml/2020/2/5/552
-> [2]: https://patchwork.kernel.org/patch/11419901/
->
->  tools/testing/kunit/kunit.py           | 236 ++++++++++++++++++++-----
->  tools/testing/kunit/kunit_tool_test.py |  55 ++++++
->  2 files changed, 242 insertions(+), 49 deletions(-)
->
-> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
-> index 180ad1e1b04f..92a634594cf6 100755
-> --- a/tools/testing/kunit/kunit.py
-> +++ b/tools/testing/kunit/kunit.py
+--
+1.9.1
 
-[...]
-
-> @@ -147,6 +244,47 @@ def main(argv, linux=None):
->                 result = run_tests(linux, request)
->                 if result.status != KunitStatus.SUCCESS:
->                         sys.exit(1)
-> +       elif cli_args.subcommand == 'config':
-> +               request = KunitConfigRequest(cli_args.build_dir,
-> +                                            cli_args.defconfig)
-> +               result = config_tests(linux, request)
-> +               kunit_parser.print_with_timestamp((
-> +                       'Elapsed time: %.3fs\n') % (
-> +                               result.elapsed_time))
-> +               if result.status != KunitStatus.SUCCESS:
-> +                       sys.exit(1)
-> +       elif cli_args.subcommand == 'build':
-> +               request = KunitBuildRequest(cli_args.jobs,
-> +                                           cli_args.build_dir)
-> +               result = build_tests(linux, request)
-> +               kunit_parser.print_with_timestamp((
-> +                       'Elapsed time: %.3fs\n') % (
-> +                               result.elapsed_time))
-> +               if result.status != KunitStatus.SUCCESS:
-> +                       sys.exit(1)
-> +       elif cli_args.subcommand == 'exec':
-> +               exec_request = KunitExecRequest(cli_args.timeout,
-> +                                               cli_args.build_dir)
-> +               exec_result = exec_tests(linux, exec_request)
-> +               parse_request = KunitParseRequest(cli_args.raw_output,
-> +                                                 exec_result.result)
-> +               result = parse_tests(parse_request)
-> +               kunit_parser.print_with_timestamp((
-> +                       'Elapsed time: %.3fs\n') % (
-> +                               exec_result.elapsed_time))
-> +               if result.status != KunitStatus.SUCCESS:
-> +                       sys.exit(1)
-> +       elif cli_args.subcommand == 'parse':
-> +               if cli_args.file == '-':
-> +                       kunit_output = sys.stdin
-
-Could you make it so parse accepts the dmesg log from stdin if no file
-is specified instead of a '-'?
-
-> +               else:
-> +                       with open(cli_args.file, 'r') as f:
-> +                               kunit_output = f.read().splitlines()
-> +               request = KunitParseRequest(cli_args.raw_output,
-> +                                           kunit_output)
-> +               result = parse_tests(request)
-> +               if result.status != KunitStatus.SUCCESS:
-> +                       sys.exit(1)
->         else:
->                 parser.print_help()
->
-
-[...]
