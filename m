@@ -2,162 +2,193 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF5AC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABAEC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97C4A20409
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187C220409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HO/ehg7m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hjzQkLqk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727328AbgCYIaB (ORCPT
+        id S1727388AbgCYIaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:30:01 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34563 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726239AbgCYIaB (ORCPT
+        Wed, 25 Mar 2020 04:30:05 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:24420 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727346AbgCYIaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:30:01 -0400
-Received: by mail-oi1-f194.google.com with SMTP id e9so1373370oii.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/JBGauGWYFvkK7q5OmebJs2hWQAW6CIeFHaswGKD4/w=;
-        b=HO/ehg7mYsypcz7OGBQEKHNsFOpTWMwUPrGXUNAvT+c5vk3AMTWPVfl4nDaG7cVTZJ
-         QMUDF5oaw79dgJ85aVNDKIq3eWy1EMTm/zflg3CvyvRPpqfGCc0z6YWVfkh2t5Earz3L
-         7+MFXZyF5UQxEX+2Xw29YSL4OkKdqmlI9NfLReCO6ivwtq1C60ZH2kowSsx1Sf0JmZkk
-         WiGyXQTjZugPiDYLpJE7o8m/pem8O5x5y1uNq+1UtyOv3P3bZcFGkk+YgfxGuZvgm4s4
-         /AbKITZIlObckZzFd+XSIQWZ3Y0deccg9LUcP8b2YQtcywFwT1/PiuNHXyNEiewKjVZy
-         7Y3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/JBGauGWYFvkK7q5OmebJs2hWQAW6CIeFHaswGKD4/w=;
-        b=CAw7RAMN1AYsSdF1ajzbJSuHnoMovW8YnRz8z/6bBV8fW7ZTzseVx+yuBJiEWq7SIu
-         /BAZdtSv2O94+s1NRtO7FO0Sx2mrlGAZQv63yHWGwC6GCdwD24cb4umwgDGQc+2U2YwU
-         sTqy+PLBOK7J+jTcEJk96EMh7IELzsXu3lm9PeKFVJuZpERw+gfXrNIddjek5bADicbq
-         Hr2U+8FOgkA/GhNzUYTx0XgOEDXc2GS4YTQ7PjG08wGsKzJrNsnA3T2rkG//JvUqKPXz
-         A7L0Z7s6jXV/5aGrNcfEdkRBKnOyE7HiUXBZroSI9/KRtC8IW2LAc+6QLeZb05/Lq6Pp
-         vRuQ==
-X-Gm-Message-State: ANhLgQ0n6UNUsGmR7nM4aAJungcc87Uo/IyNA4WSrmd7n03JmDT0yqWX
-        Tr40BSnUrTSBdcdVuQOpQ/0cOEIPRI232L3KFFGR2ntXcWc=
-X-Google-Smtp-Source: ADFU+vvH1zDd/bZWc2cDCtV3hemiN7ZRhuZJ3TE0FoMAMQc0nLsbFOWhV2wn6aEJpHFGJ53mciqpZbZdLgzxpsXfTYk=
-X-Received: by 2002:aca:d489:: with SMTP id l131mr1710135oig.5.1585125000342;
- Wed, 25 Mar 2020 01:30:00 -0700 (PDT)
+        Wed, 25 Mar 2020 04:30:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585125001;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Qv2sf5ZLe8MVzng446R1oQxVfhG/+fRJUSulJ/I8CAY=;
+        b=hjzQkLqkZ84gQ9X9IWjSvhd4KG/S2z+p9uCOwcV6b9UwKIPEzQqbHeJLvvth+R63+SITPC
+        HsZE3n9pl3+/0NkVoXGk/i12rY7vcnVJDag42AZBcFlMnubnPtHAGWpveNUClEatOd/kPb
+        qnGwTWeICMWqd1ZusiO1EtyZaRY/yhE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-466-cuucHGfzOnWFqH-bOVKv-g-1; Wed, 25 Mar 2020 04:30:00 -0400
+X-MC-Unique: cuucHGfzOnWFqH-bOVKv-g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 526041902EA1;
+        Wed, 25 Mar 2020 08:29:57 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-14-13.pek2.redhat.com [10.72.14.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD583194BB;
+        Wed, 25 Mar 2020 08:28:58 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
+        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
+        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
+        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
+        vmireyno@marvell.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V8 2/9] vhost: allow per device message handler
+Date:   Wed, 25 Mar 2020 16:27:04 +0800
+Message-Id: <20200325082711.1107-3-jasowang@redhat.com>
+In-Reply-To: <20200325082711.1107-1-jasowang@redhat.com>
+References: <20200325082711.1107-1-jasowang@redhat.com>
 MIME-Version: 1.0
-References: <1584965910-19068-1-git-send-email-sumit.garg@linaro.org> <1584965910-19068-2-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1584965910-19068-2-git-send-email-sumit.garg@linaro.org>
-From:   Jens Wiklander <jens.wiklander@linaro.org>
-Date:   Wed, 25 Mar 2020 09:29:49 +0100
-Message-ID: <CAHUa44H_r=ttJphjOJRyAtSkzA8j3ZE7jG5a7G3FKCHqr8Tvjw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] tee: enable support to register kernel memory
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stuart Yoder <stuart.yoder@arm.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sumit,
+This patch allow device to register its own message handler during
+vhost_dev_init(). vDPA device will use it to implement its own DMA
+mapping logic.
 
-On Mon, Mar 23, 2020 at 1:19 PM Sumit Garg <sumit.garg@linaro.org> wrote:
->
-> Enable support to register kernel memory reference with TEE. This change
-> will allow TEE bus drivers to register memory references.
->
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  drivers/tee/tee_shm.c   | 26 ++++++++++++++++++++++++--
->  include/linux/tee_drv.h |  1 +
->  2 files changed, 25 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/tee/tee_shm.c b/drivers/tee/tee_shm.c
-> index 937ac5a..b88274c 100644
-> --- a/drivers/tee/tee_shm.c
-> +++ b/drivers/tee/tee_shm.c
-> @@ -9,6 +9,7 @@
->  #include <linux/sched.h>
->  #include <linux/slab.h>
->  #include <linux/tee_drv.h>
-> +#include <linux/uio.h>
->  #include "tee_private.h"
->
->  static void tee_shm_release(struct tee_shm *shm)
-> @@ -218,13 +219,14 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
->  {
->         struct tee_device *teedev = ctx->teedev;
->         const u32 req_flags = TEE_SHM_DMA_BUF | TEE_SHM_USER_MAPPED;
-> +       const u32 req_ker_flags = TEE_SHM_DMA_BUF | TEE_SHM_KERNEL_MAPPED;
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vhost/net.c   |  3 ++-
+ drivers/vhost/scsi.c  |  2 +-
+ drivers/vhost/vhost.c | 12 ++++++++++--
+ drivers/vhost/vhost.h |  6 +++++-
+ drivers/vhost/vsock.c |  2 +-
+ 5 files changed, 19 insertions(+), 6 deletions(-)
 
-I'd prefer naming these two "req_user_flags" and "req_kernel_flags".
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index e158159671fa..c8ab8d83b530 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1324,7 +1324,8 @@ static int vhost_net_open(struct inode *inode, stru=
+ct file *f)
+ 	}
+ 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
+ 		       UIO_MAXIOV + VHOST_NET_BATCH,
+-		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
++		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT,
++		       NULL);
+=20
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev=
+);
+ 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev)=
+;
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index 0b949a14bce3..7653667a8cdc 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -1628,7 +1628,7 @@ static int vhost_scsi_open(struct inode *inode, str=
+uct file *f)
+ 		vs->vqs[i].vq.handle_kick =3D vhost_scsi_handle_kick;
+ 	}
+ 	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV,
+-		       VHOST_SCSI_WEIGHT, 0);
++		       VHOST_SCSI_WEIGHT, 0, NULL);
+=20
+ 	vhost_scsi_init_inflight(vs, NULL);
+=20
+diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+index f44340b41494..8e9e2341e40a 100644
+--- a/drivers/vhost/vhost.c
++++ b/drivers/vhost/vhost.c
+@@ -457,7 +457,9 @@ static size_t vhost_get_desc_size(struct vhost_virtqu=
+eue *vq,
+=20
+ void vhost_dev_init(struct vhost_dev *dev,
+ 		    struct vhost_virtqueue **vqs, int nvqs,
+-		    int iov_limit, int weight, int byte_weight)
++		    int iov_limit, int weight, int byte_weight,
++		    int (*msg_handler)(struct vhost_dev *dev,
++				       struct vhost_iotlb_msg *msg))
+ {
+ 	struct vhost_virtqueue *vq;
+ 	int i;
+@@ -473,6 +475,7 @@ void vhost_dev_init(struct vhost_dev *dev,
+ 	dev->iov_limit =3D iov_limit;
+ 	dev->weight =3D weight;
+ 	dev->byte_weight =3D byte_weight;
++	dev->msg_handler =3D msg_handler;
+ 	init_llist_head(&dev->work_list);
+ 	init_waitqueue_head(&dev->wait);
+ 	INIT_LIST_HEAD(&dev->read_list);
+@@ -1178,7 +1181,12 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev=
+,
+ 		ret =3D -EINVAL;
+ 		goto done;
+ 	}
+-	if (vhost_process_iotlb_msg(dev, &msg)) {
++
++	if (dev->msg_handler)
++		ret =3D dev->msg_handler(dev, &msg);
++	else
++		ret =3D vhost_process_iotlb_msg(dev, &msg);
++	if (ret) {
+ 		ret =3D -EFAULT;
+ 		goto done;
+ 	}
+diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
+index a123fd70847e..f9d1a03dd153 100644
+--- a/drivers/vhost/vhost.h
++++ b/drivers/vhost/vhost.h
+@@ -174,11 +174,15 @@ struct vhost_dev {
+ 	int weight;
+ 	int byte_weight;
+ 	u64 kcov_handle;
++	int (*msg_handler)(struct vhost_dev *dev,
++			   struct vhost_iotlb_msg *msg);
+ };
+=20
+ bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int tota=
+l_len);
+ void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
+-		    int nvqs, int iov_limit, int weight, int byte_weight);
++		    int nvqs, int iov_limit, int weight, int byte_weight,
++		    int (*msg_handler)(struct vhost_dev *dev,
++				       struct vhost_iotlb_msg *msg));
+ long vhost_dev_set_owner(struct vhost_dev *dev);
+ bool vhost_dev_has_owner(struct vhost_dev *dev);
+ long vhost_dev_check_owner(struct vhost_dev *);
+diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+index c2d7d57e98cf..97669484a3f6 100644
+--- a/drivers/vhost/vsock.c
++++ b/drivers/vhost/vsock.c
+@@ -621,7 +621,7 @@ static int vhost_vsock_dev_open(struct inode *inode, =
+struct file *file)
+=20
+ 	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
+ 		       UIO_MAXIOV, VHOST_VSOCK_PKT_WEIGHT,
+-		       VHOST_VSOCK_WEIGHT);
++		       VHOST_VSOCK_WEIGHT, NULL);
+=20
+ 	file->private_data =3D vsock;
+ 	spin_lock_init(&vsock->send_pkt_list_lock);
+--=20
+2.20.1
 
-Thanks,
-Jens
-
->         struct tee_shm *shm;
->         void *ret;
->         int rc;
->         int num_pages;
->         unsigned long start;
->
-> -       if (flags != req_flags)
-> +       if (flags != req_flags && flags != req_ker_flags)
->                 return ERR_PTR(-ENOTSUPP);
->
->         if (!tee_device_get(teedev))
-> @@ -259,7 +261,27 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
->                 goto err;
->         }
->
-> -       rc = get_user_pages_fast(start, num_pages, FOLL_WRITE, shm->pages);
-> +       if (flags & TEE_SHM_USER_MAPPED) {
-> +               rc = get_user_pages_fast(start, num_pages, FOLL_WRITE,
-> +                                        shm->pages);
-> +       } else {
-> +               struct kvec *kiov;
-> +               int i;
-> +
-> +               kiov = kcalloc(num_pages, sizeof(*kiov), GFP_KERNEL);
-> +               if (!kiov) {
-> +                       ret = ERR_PTR(-ENOMEM);
-> +                       goto err;
-> +               }
-> +
-> +               for (i = 0; i < num_pages; i++) {
-> +                       kiov[i].iov_base = (void *)(start + i * PAGE_SIZE);
-> +                       kiov[i].iov_len = PAGE_SIZE;
-> +               }
-> +
-> +               rc = get_kernel_pages(kiov, num_pages, 0, shm->pages);
-> +               kfree(kiov);
-> +       }
->         if (rc > 0)
->                 shm->num_pages = rc;
->         if (rc != num_pages) {
-> diff --git a/include/linux/tee_drv.h b/include/linux/tee_drv.h
-> index 7a03f68..dedf8fa 100644
-> --- a/include/linux/tee_drv.h
-> +++ b/include/linux/tee_drv.h
-> @@ -26,6 +26,7 @@
->  #define TEE_SHM_REGISTER       BIT(3)  /* Memory registered in secure world */
->  #define TEE_SHM_USER_MAPPED    BIT(4)  /* Memory mapped in user space */
->  #define TEE_SHM_POOL           BIT(5)  /* Memory allocated from pool */
-> +#define TEE_SHM_KERNEL_MAPPED  BIT(6)  /* Memory mapped in kernel space */
->
->  struct device;
->  struct tee_device;
-> --
-> 2.7.4
->
