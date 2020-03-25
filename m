@@ -2,136 +2,177 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD71C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B10C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:47:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8654520719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FEC820719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:47:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKURBEc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCYPqT (ORCPT
+        id S1727849AbgCYPrI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:46:19 -0400
-Received: from elvis.franken.de ([193.175.24.41]:34398 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727386AbgCYPqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:46:19 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jH8EN-0003EB-00; Wed, 25 Mar 2020 16:46:11 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 36265C0C3F; Wed, 25 Mar 2020 16:46:00 +0100 (CET)
-Date:   Wed, 25 Mar 2020 16:46:00 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Marc Zyngier <maz@kernel.org>, linux-mips@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-Message-ID: <20200325154600.GA14923@alpha.franken.de>
-References: <20200325035537.156911-7-jiaxun.yang@flygoat.com>
- <20200325123742.GA9911@alpha.franken.de>
- <a69f727d37daac6e20ac08de022245b1@kernel.org>
- <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
- <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org>
- <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com>
- <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
- <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com>
- <20200325150437.GA14217@alpha.franken.de>
- <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com>
+        Wed, 25 Mar 2020 11:47:08 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:21685 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727604AbgCYPrH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:47:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585151226;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qsbegkRHan3DuLAELekm42LLJlFfOlzRQS+36Fq49pk=;
+        b=XKURBEc+nQPqu9I+YcJwc8WgXmuIGk2It8mIyHYH+ll40HBZgKnITiSh+leM1ELPI6d6fl
+        qhvprYMEP0A6zq7jkCZJspsNKX7KnKq1/GKKm7BJuNNQ3MkpbpOiHBDeaqIgj37i4tbB/m
+        vBfUa6ep+JF7x6wJ97x/IKYxDgRPkks=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-54-CeMcgVNxMtmkPjuzq2eS1Q-1; Wed, 25 Mar 2020 11:47:02 -0400
+X-MC-Unique: CeMcgVNxMtmkPjuzq2eS1Q-1
+Received: by mail-wm1-f69.google.com with SMTP id x23so840075wmj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:47:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qsbegkRHan3DuLAELekm42LLJlFfOlzRQS+36Fq49pk=;
+        b=MzHZ/4YRm0fverYnOz/Eb3Yf+LZLZcWLiCub0yibN1K6kVOVxEVADduWfe+S+EgVb/
+         HRus8D8scEfBMgWUmxa5BYTqu0JF1H2crBf/RM07Xhagv3ji7lWWtWrkG1hEMQCLta1X
+         eW4sVyHgh0nK+tyHkC1VpmALHd7xNZtDgL777eInp/MYeTaNQw+jyc0H4k1jdEzP+H37
+         aFp04hqWVZ5SbuSjp7lcTjcufndzNhuKeP8ffB07AIerUTA9CYsOGwEMV8smdh0sBq0B
+         o15ABD8IKgVgudk9IFkq25HbrDlGU1tnYGs9LOz+Epe5GPDYFhdF3k4g5vCVBhtaFLxs
+         07HQ==
+X-Gm-Message-State: ANhLgQ2yrdE60s1Q1NxWuPotHaSHBRpYMmbGCweR//s0o+TTjHvBLlZ0
+        ONDQ6cUvMX6TdNPRoWRfh7JNhadZhHR4rPP8ulDuw+5UaFBEP9nMAFhuN9NbmWxQq6vpbTZTXNd
+        N2e4RxX5jc3wEKgZphSZ4pftj
+X-Received: by 2002:adf:aa04:: with SMTP id p4mr3916823wrd.238.1585151221107;
+        Wed, 25 Mar 2020 08:47:01 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vsZHECaet0KUWkvOJFnDgmZuy8qHncmITJGzzqdVDGD2FrO8zw/XQ7rMXn+OVGg5IylvX4GdA==
+X-Received: by 2002:adf:aa04:: with SMTP id p4mr3916792wrd.238.1585151220818;
+        Wed, 25 Mar 2020 08:47:00 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
+        by smtp.gmail.com with ESMTPSA id m5sm2523976wmg.13.2020.03.25.08.46.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:47:00 -0700 (PDT)
+Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200325195350.7300fee9@canb.auug.org.au>
+ <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
+Date:   Wed, 25 Mar 2020 16:46:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:09:10PM +0800, Jiaxun Yang wrote:
+On 25/03/20 16:30, Randy Dunlap wrote:
+> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
+> function __cpuid_entry_get_reg(), for the default: case.
 > 
 > 
-> 于 2020年3月25日 GMT+08:00 下午11:04:37, Thomas Bogendoerfer <tsbogend@alpha.franken.de> 写到:
-> >On Wed, Mar 25, 2020 at 10:31:21PM +0800, Jiaxun Yang wrote:
-> >> 
-> >> 
-> >> 于 2020年3月25日 GMT+08:00 下午10:15:16, Marc Zyngier <maz@kernel.org> 写到:
-> >> >On 2020-03-25 13:59, Jiaxun Yang wrote:
-> >> >
-> >> >[...]
-> >> >
-> >> >>>> So probably we can use legacy domain when  MIPS IRQ BASE is in
-> >the
-> >> >>>> range of legacy IRQ
-> >> >>>> and switch to simple domain when it's not in that range?
-> >> >>> 
-> >> >>> No, see below.
-> >> >>> 
-> >> >>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did
-> >> >this
-> >> >>>> hack.
-> >> >>> 
-> >> >>> Well, if you have to consider which Linux IRQ gets assigned,
-> >> >>> then your platform is definitely not ready for non-legacy
-> >> >>> irqdomains. Just stick to legacy for now until you have removed
-> >> >>> all the code that knows the hwirq mapping.
-> >> >> 
-> >> >> Thanks.
-> >> >> 
-> >> >> So I have to allocate irq_desc here in driver manually?
-> >> >
-> >> >No, you are probably better off just dropping this patch, as MIPS
-> >> >doesn't seem to be ready for a wholesale switch to virtual
-> >interrupts.
-> >> 
-> >> It can't work without this patch.
-> >> 
-> >> Legacy domain require IRQ number within 0-15 
-> >> however it's already occupied by i8259 or "HTPIC" driver.
-> >
-> >what's the problem here ? AFAIK there could be more than one
-> >legacy domain, at least that's what at least IP22/SNI in MIPS world 
-> >are doing.
+>   CC      arch/x86/kvm/cpuid.o
+> In file included from ../include/linux/export.h:43:0,
+>                  from ../include/linux/linkage.h:7,
+>                  from ../include/linux/preempt.h:10,
+>                  from ../include/linux/hardirq.h:5,
+>                  from ../include/linux/kvm_host.h:7,
+>                  from ../arch/x86/kvm/cpuid.c:12:
+> In function ‘__cpuid_entry_get_reg’,
+>     inlined from ‘kvm_cpu_cap_mask’ at ../arch/x86/kvm/cpuid.c:272:25,
+>     inlined from ‘kvm_set_cpu_caps’ at ../arch/x86/kvm/cpuid.c:292:2:
+> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_114’ declared with attribute error: BUILD_BUG failed
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>                                       ^
+> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
+>     prefix ## suffix();    \
+>     ^~~~~~
+> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
+>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>   ^~~~~~~~~~~~~~~~~~~
+> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>                                      ^~~~~~~~~~~~~~~~~~
+> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+>                      ^~~~~~~~~~~~~~~~
+> ../arch/x86/kvm/cpuid.h:114:3: note: in expansion of macro ‘BUILD_BUG’
+>    BUILD_BUG();
+>    ^~~~~~~~~
 > 
-> MIPS_IRQ_BASE must be higher than 15, otherwise it will conflict with i8259.
 
-I still don't get it.
+Looks like the compiler is not smart enough to figure out the constant 
+expressions in BUILD_BUG.  I think we need to do something like this:
 
-We have following in arch/mips/include/asm/mach-generic/irq.h:
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 23b4cd1ad986..8f711b0cdec0 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -40,6 +40,7 @@ struct cpuid_reg {
+ 	int reg;
+ };
+ 
++/* Update reverse_cpuid_check as well when adding an entry.  */
+ static const struct cpuid_reg reverse_cpuid[] = {
+ 	[CPUID_1_EDX]         = {         1, 0, CPUID_EDX},
+ 	[CPUID_8000_0001_EDX] = {0x80000001, 0, CPUID_EDX},
+@@ -68,12 +69,21 @@ static const struct cpuid_reg reverse_cpuid[] = {
+  */
+ static __always_inline void reverse_cpuid_check(unsigned int x86_leaf)
+ {
+-	BUILD_BUG_ON(x86_leaf == CPUID_LNX_1);
+-	BUILD_BUG_ON(x86_leaf == CPUID_LNX_2);
+-	BUILD_BUG_ON(x86_leaf == CPUID_LNX_3);
+-	BUILD_BUG_ON(x86_leaf == CPUID_LNX_4);
+-	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
+-	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
++	BUILD_BUG_ON(x86_leaf != CPUID_1_EDX &&
++	             x86_leaf != CPUID_8000_0001_EDX &&
++	             x86_leaf != CPUID_8086_0001_EDX &&
++	             x86_leaf != CPUID_1_ECX &&
++	             x86_leaf != CPUID_C000_0001_EDX &&
++	             x86_leaf != CPUID_8000_0001_ECX &&
++	             x86_leaf != CPUID_7_0_EBX &&
++	             x86_leaf != CPUID_D_1_EAX &&
++	             x86_leaf != CPUID_8000_0008_EBX &&
++	             x86_leaf != CPUID_6_EAX &&
++	             x86_leaf != CPUID_8000_000A_EDX &&
++	             x86_leaf != CPUID_7_ECX &&
++	             x86_leaf != CPUID_8000_0007_EBX &&
++	             x86_leaf != CPUID_7_EDX &&
++	             x86_leaf != CPUID_7_1_EAX);
+ }
+ 
+ /*
 
-#ifndef MIPS_CPU_IRQ_BASE
-#ifdef CONFIG_I8259
-#define MIPS_CPU_IRQ_BASE 16
-#else
-#define MIPS_CPU_IRQ_BASE 0
-#endif /* CONFIG_I8259 */
-#endif
+Randy, can you test it with your compiler?
 
-So every legacy platform with i8259 has MIPS_CPU_IRQ_BASE = 16.
+Thanks,
 
-> However we have only preallocated irq_desc for 0-15.
-> And legacy domain require irq_desc being preallocated.
+Paolo
 
-maybe I'm too fast by judging the irq code, but without CONFIG_SPARSE_IRQ
-the whole irq_desc is pre-allocated.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
