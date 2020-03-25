@@ -2,113 +2,98 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB64C54FD2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1406C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:12:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A2B2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 947912073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:12:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727301AbgCYCKv (ORCPT
+        id S1727302AbgCYCM6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:10:51 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3045 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727212AbgCYCKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:10:50 -0400
-Received: from dggeml405-hub.china.huawei.com (unknown [172.30.72.56])
-        by Forcepoint Email with ESMTP id F278CAC235422688F1C5;
-        Wed, 25 Mar 2020 10:10:47 +0800 (CST)
-Received: from DGGEML421-HUB.china.huawei.com (10.1.199.38) by
- dggeml405-hub.china.huawei.com (10.3.17.49) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Wed, 25 Mar 2020 10:10:47 +0800
-Received: from DGGEML533-MBS.china.huawei.com ([169.254.10.196]) by
- dggeml421-hub.china.huawei.com ([10.1.199.38]) with mapi id 14.03.0487.000;
- Wed, 25 Mar 2020 10:10:40 +0800
-From:   "yezhenyu (A)" <yezhenyu2@huawei.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "npiggin@gmail.com" <npiggin@gmail.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
-        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "yuzhao@google.com" <yuzhao@google.com>,
-        "Dave.Martin@arm.com" <Dave.Martin@arm.com>,
-        "steven.price@arm.com" <steven.price@arm.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "arm@kernel.org" <arm@kernel.org>,
-        Xiexiangyou <xiexiangyou@huawei.com>,
-        "Zengtao (B)" <prime.zeng@hisilicon.com>,
-        Zhangshaokun <zhangshaokun@hisilicon.com>
-Subject: RE: [RFC PATCH v4 4/6] mm: Add page table level flags to vm_flags
-Thread-Topic: [RFC PATCH v4 4/6] mm: Add page table level flags to vm_flags
-Thread-Index: AQHWAeKVXiq19lnJ+0q/54z19KSbo6hXjqYAgAD+HPA=
-Date:   Wed, 25 Mar 2020 02:10:40 +0000
-Message-ID: <10338CF38D9A684EA38E1CF7D8D3411B045BA207@dggeml533-mbs.china.huawei.com>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
-        <20200324134534.1570-5-yezhenyu2@huawei.com>
- <20200324144436.043659c2@gandalf.local.home>
-In-Reply-To: <20200324144436.043659c2@gandalf.local.home>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.220.25]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Tue, 24 Mar 2020 22:12:58 -0400
+Received: from baldur.buserror.net ([165.227.176.147]:55816 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727230AbgCYCM6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:12:58 -0400
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1jGvSx-0004so-1k; Tue, 24 Mar 2020 21:08:23 -0500
+Message-ID: <81c68751cb89bbff13a09467b94530a555d69552.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        robh+dt@kernel.org, mark.rutland@arm.com, paulus@samba.org,
+        benh@kernel.crashing.org
+Cc:     Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
+        devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 24 Mar 2020 21:08:21 -0500
+In-Reply-To: <877dz9xkhr.fsf@mpe.ellerman.id.au>
+References: <20200324213612.31614-1-chris.packham@alliedtelesis.co.nz>
+         <877dz9xkhr.fsf@mpe.ellerman.id.au>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: mpe@ellerman.id.au, chris.packham@alliedtelesis.co.nz, robh+dt@kernel.org, mark.rutland@arm.com, paulus@samba.org, benh@kernel.crashing.org, hamish.martin@alliedtelesis.co.nz, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH] powerpc/fsl: Add cache properties for T2080/T2081
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgU3RldmUsDQoNCk9uIFdlZCwgMjUgTWFyIDIwMjAgMjo0NSwgU3RldmUgd3JvdGU6DQo+IE9u
-IFR1ZSwgMjQgTWFyIDIwMjAgMjE6NDU6MzIgKzA4MDANCj4gWmhlbnl1IFllIDx5ZXpoZW55dTJA
-aHVhd2VpLmNvbT4gd3JvdGU6DQo+IA0KPiA+IC0tLSBhL2luY2x1ZGUvdHJhY2UvZXZlbnRzL21t
-ZmxhZ3MuaA0KPiA+ICsrKyBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL21tZmxhZ3MuaA0KPiA+IEBA
-IC0xMzAsNiArMTMwLDE2IEBAIElGX0hBVkVfUEdfSURMRShQR19pZGxlLAkJImlkbGUiCQkpDQo+
-ID4gICNkZWZpbmUgSUZfSEFWRV9WTV9TT0ZURElSVFkoZmxhZyxuYW1lKQ0KPiA+ICAjZW5kaWYN
-Cj4gPg0KPiA+ICsjaWZkZWYgQ09ORklHXzY0QklUDQo+ID4gKyNkZWZpbmUgSUZfSEFWRV9WTV9M
-RVZFTF9QVUQoZmxhZyxuYW1lKQl7ZmxhZywgbmFtZX0NCj4gPiArI2RlZmluZSBJRl9IQVZFX1ZN
-X0xFVkVMX1BNRChmbGFnLG5hbWUpCXtmbGFnLCBuYW1lfQ0KPiA+ICsjZGVmaW5lIElGX0hBVkVf
-Vk1fTEVWRUxfUFRFKGZsYWcsbmFtZSkJe2ZsYWcsIG5hbWV9DQo+ID4gKyNlbHNlDQo+ID4gKyNk
-ZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QVUQoZmxhZyxuYW1lKQ0KPiA+ICsjZGVmaW5lIElGX0hB
-VkVfVk1fTEVWRUxfUE1EKGZsYWcsbmFtZSkNCj4gPiArI2RlZmluZSBJRl9IQVZFX1ZNX0xFVkVM
-X1BURShmbGFnLG5hbWUpDQo+ID4gKyNlbmRpZg0KPiA+ICsNCj4gPiAgI2RlZmluZSBfX2RlZl92
-bWFmbGFnX25hbWVzCQkJCQkJXA0KPiA+ICAJe1ZNX1JFQUQsCQkJInJlYWQiCQl9LAkJXA0KPiA+
-ICAJe1ZNX1dSSVRFLAkJCSJ3cml0ZSIJCX0sCQlcDQo+ID4gQEAgLTE2MSw3ICsxNzEsMTAgQEAg
-SUZfSEFWRV9WTV9TT0ZURElSVFkoVk1fU09GVERJUlRZLA0KPiAJInNvZnRkaXJ0eSIJKQkJXA0K
-PiA+ICAJe1ZNX01JWEVETUFQLAkJCSJtaXhlZG1hcCIJfSwJCVwNCj4gPiAgCXtWTV9IVUdFUEFH
-RSwJCQkiaHVnZXBhZ2UiCX0sCQlcDQo+ID4gIAl7Vk1fTk9IVUdFUEFHRSwJCQkibm9odWdlcGFn
-ZSIJfSwJCVwNCj4gPiAtCXtWTV9NRVJHRUFCTEUsCQkJIm1lcmdlYWJsZSIJfQkJXA0KPiA+ICsJ
-e1ZNX01FUkdFQUJMRSwJCQkibWVyZ2VhYmxlIgl9LAkJXA0KPiA+ICtJRl9IQVZFX1ZNX0xFVkVM
-X1BVRChWTV9MRVZFTF9QVUQsCSJwdWQtbGV2ZWwiCSksCQlcDQo+ID4gK0lGX0hBVkVfVk1fTEVW
-RUxfUE1EKFZNX0xFVkVMX1BNRCwJInBtZC1sZXZlbCIJKSwJCVwNCj4gPiArSUZfSEFWRV9WTV9M
-RVZFTF9QVEUoVk1fTEVWRUxfUFRFLAkicHRlLWxldmVsIgkpCQlcDQo+ID4NCj4gDQo+IEhhdmUg
-eW91IHRlc3RlZCB0aGlzIG9uIDMyYml0PyBJdCBsb29rcyBsaWtlIHlvdSdsbCBnZXQgZW1wdHkg
-Y29tbWFzIHRoZXJlLg0KPiBQZXJoYXBzIHRoZSBkZWZpbmVzIG5lZWQgdG8gYmU6DQo+IA0KPiAj
-aWZkZWYgQ09ORklHXzY0QklUDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QVUQoZmxhZyxu
-YW1lKQl7ZmxhZywgbmFtZX0sDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QTUQoZmxhZyxu
-YW1lKQl7ZmxhZywgbmFtZX0sDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QVEUoZmxhZyxu
-YW1lKQl7ZmxhZywgbmFtZX0NCj4gI2Vsc2UNCj4gI2RlZmluZSBJRl9IQVZFX1ZNX0xFVkVMX1BV
-RChmbGFnLG5hbWUpDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QTUQoZmxhZyxuYW1lKQ0K
-PiAjZGVmaW5lIElGX0hBVkVfVk1fTEVWRUxfUFRFKGZsYWcsbmFtZSkNCj4gI2VuZGlmDQo+IA0K
-PiBBbmQgbGVhdmUgb3V0IHRoZSBjb21tYXMgaW4gdGhlIGxpc3QuDQo+IA0KPiAtLSBTdGV2ZQ0K
-DQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LiBJIHdpbGwgZml4IHRoaXMgaW4gbmV4dCB2ZXJzaW9u
-LCBpZiBJIGNvdWxkIHN0aWxsIHVzZSB2bV9mbGFncw0KYXQgdGhhdCB0aW1lIDopLg0KDQpaaGVu
-eXUNCg0K
+On Wed, 2020-03-25 at 12:59 +1100, Michael Ellerman wrote:
+> Chris Packham <chris.packham@alliedtelesis.co.nz> writes:
+> > Add the d-cache/i-cache properties for the T208x SoCs. The L1 cache on
+> > these SoCs is 32KiB and is split into 64 byte blocks (lines).
+> > 
+> > Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> > ---
+> >  arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> 
+> LGTM.
+> 
+> I'll wait a few days to see if Scott wants to ack it.
+> 
+> cheers
+> 
+> 
+> > diff --git a/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
+> > b/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
+> > index 3f745de44284..2ad27e16ac16 100644
+> > --- a/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
+> > +++ b/arch/powerpc/boot/dts/fsl/t208xsi-pre.dtsi
+> > @@ -81,6 +81,10 @@ cpus {
+> >  		cpu0: PowerPC,e6500@0 {
+> >  			device_type = "cpu";
+> >  			reg = <0 1>;
+> > +			d-cache-line-size = <64>;
+> > +			i-cache-line-size = <64>;
+> > +			d-cache-size = <32768>;
+> > +			i-cache-size = <32768>;
+> >  			clocks = <&clockgen 1 0>;
+> >  			next-level-cache = <&L2_1>;
+> >  			fsl,portid-mapping = <0x80000000>;
+
+U-Boot should be setting d/i-cache-size and d/i-cache-block-size -- are you
+using something else?
+
+The line size is the same as the block size so we don't need a separate d/i-
+cache-line-size.
+
+-Scott
+
+
