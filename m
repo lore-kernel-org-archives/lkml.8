@@ -6,42 +6,42 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F8FC2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8417C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99FC120658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:06:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC80A20719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgCYUGM (ORCPT
+        id S1727464AbgCYUHM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:06:12 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23072 "EHLO mga05.intel.com"
+        Wed, 25 Mar 2020 16:07:12 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2145 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbgCYUGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:06:12 -0400
-IronPort-SDR: koSNnrt4qVnOOmNASs+uafay7IJIyV1AuPr3zpa/U4oEvrecgHHOrQx6WfqgxNsFn1XRLnuMWV
- rvxOK/tqpHFQ==
+        id S1727236AbgCYUHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 16:07:12 -0400
+IronPort-SDR: 9yEtO9WmSu6s2rUumzUQ6XqJwSVUyRQjZqvyPA40tyjDaAmxsPjzvAXgfE6cdKsBgrTxTAL5ZY
+ bX+b7eT4DW0g==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 13:06:10 -0700
-IronPort-SDR: FuRaQ8WjBiIMn1QP8ayfXQfvHZ0dmEgvN+0rUKJYlse8fqp8D8Rr7MV3RevcO0KEToo6rSS4Dz
- XugFD0633M2A==
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 13:07:11 -0700
+IronPort-SDR: +sRrRJR4oKvuxpsji2EHtEppPYDwMbs9xtzf69x7YVFRe4wgX/lF2xQ1aM2eB8fF3UCAIckSbB
+ UgbxIByMRfgw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="393736768"
+   d="scan'208";a="448387527"
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 25 Mar 2020 13:06:08 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2020 13:07:10 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1jHCHw-000HoF-1N; Thu, 26 Mar 2020 04:06:08 +0800
-Date:   Thu, 26 Mar 2020 04:05:54 +0800
+        id 1jHCIv-0004S6-Tu; Thu, 26 Mar 2020 04:07:09 +0800
+Date:   Thu, 26 Mar 2020 04:06:08 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     "x86-ml" <x86@kernel.org>
 Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:smp/core] BUILD SUCCESS
- 33c3736ec88811b9b6f6ce2cc8967f6b97c3db5e
-Message-ID: <5e7bb9a2.LwhhN3ilmTQzkHeD%lkp@intel.com>
+Subject: [tip:x86/cleanups] BUILD SUCCESS
+ 244febbee876203d8505dfadcc6edb82a0e061b8
+Message-ID: <5e7bb9b0.tKo66f6CSQjdcfDH%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -51,13 +51,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  smp/core
-branch HEAD: 33c3736ec88811b9b6f6ce2cc8967f6b97c3db5e  cpu/hotplug: Hide cpu_up/down()
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
+branch HEAD: 244febbee876203d8505dfadcc6edb82a0e061b8  x86/alternatives: Mark text_poke_loc_init() static
 
 elapsed time: 485m
 
-configs tested: 164
-configs skipped: 0
+configs tested: 163
+configs skipped: 106
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -68,14 +68,14 @@ arm                              allyesconfig
 arm64                            allmodconfig
 arm64                             allnoconfig
 arm64                            allyesconfig
-arm                           efm32_defconfig
 arm                         at91_dt_defconfig
-arm                        shmobile_defconfig
-arm64                               defconfig
+arm                           efm32_defconfig
 arm                          exynos_defconfig
 arm                        multi_v5_defconfig
-arm                           sunxi_defconfig
 arm                        multi_v7_defconfig
+arm                        shmobile_defconfig
+arm                           sunxi_defconfig
+arm64                               defconfig
 sparc                            allyesconfig
 mips                             allmodconfig
 xtensa                       common_defconfig
@@ -89,11 +89,10 @@ mips                             allyesconfig
 s390                              allnoconfig
 sh                            titan_defconfig
 csky                                defconfig
-mips                              allnoconfig
 sparc64                           allnoconfig
 i386                              allnoconfig
-i386                             alldefconfig
 i386                             allyesconfig
+i386                             alldefconfig
 i386                                defconfig
 ia64                             alldefconfig
 ia64                             allmodconfig
@@ -124,6 +123,7 @@ powerpc                       ppc64_defconfig
 powerpc                          rhel-kconfig
 mips                           32r2_defconfig
 mips                         64r6el_defconfig
+mips                              allnoconfig
 mips                      fuloong2e_defconfig
 mips                      malta_kvm_defconfig
 parisc                            allnoconfig
@@ -204,11 +204,10 @@ riscv                             allnoconfig
 riscv                               defconfig
 riscv                    nommu_virt_defconfig
 riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                       zfcpdump_defconfig
-s390                          debug_defconfig
-s390                             allmodconfig
 s390                             alldefconfig
+s390                             allmodconfig
+s390                          debug_defconfig
+s390                       zfcpdump_defconfig
 sh                               allmodconfig
 sh                                allnoconfig
 sh                          rsk7269_defconfig
@@ -220,12 +219,12 @@ sparc64                             defconfig
 um                                  defconfig
 um                             i386_defconfig
 um                           x86_64_defconfig
+x86_64                                   rhel
+x86_64                               rhel-7.6
+x86_64                         rhel-7.2-clear
+x86_64                                    lkp
 x86_64                              fedora-25
 x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
