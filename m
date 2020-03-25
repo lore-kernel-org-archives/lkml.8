@@ -2,173 +2,118 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C263DC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8D4C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94AD62076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:58:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585162698;
-	bh=o2BxTxrj2k/0+cVDWwgkhZMSJ2JxXuAjc4rM4LKbWQI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=MZHMvwLYHpi/0X8XV0UpQpzQGyfe6HpeE1e8Cs2DnAiYeS6Td+IQt1UOiZeGHG7WY
-	 QgxWkrQoLaPvsmdKFkh5xz3O23uwXeUQ/L51jFjkDui+vAx+t8z1j9IdmYknmZ5QuJ
-	 rmdG2Xnt1FVH9kOAuCrxE/nkiX+LcMLnJ00Zv5RU=
+	by mail.kernel.org (Postfix) with ESMTP id 28BA420740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:00:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="knqpvRSg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgCYS6R (ORCPT
+        id S1727485AbgCYTA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:58:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgCYS6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:58:17 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE5F52074D;
-        Wed, 25 Mar 2020 18:58:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585162695;
-        bh=o2BxTxrj2k/0+cVDWwgkhZMSJ2JxXuAjc4rM4LKbWQI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cieVYahw7ltmho4E7Q/hOVLLfXwjAMsqgxZvokkGkzO+orFVOyE4NVoY5pWcXrudb
-         Br0S73Avfih96H0pJ1oOJRQqF6GD4PNS7Zv1Ht9hw5jh/ouGNkfERP+ZQWXErAoOJq
-         Rvcgq4ETgIy9GR4NyWsd3gRF0YXfuIacIrB8b0Ys=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 8E8BA3520BDC; Wed, 25 Mar 2020 11:58:15 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 11:58:15 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-Message-ID: <20200325185815.GW19865@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000742e9e05a10170bc@google.com>
- <87a74arown.fsf@nanos.tec.linutronix.de>
- <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
- <87ftdypyec.fsf@nanos.tec.linutronix.de>
- <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
- <875zeuftwm.fsf@nanos.tec.linutronix.de>
- <CAM_iQpWkNJ+yQ1g+pdkhJBCZ-CJfUGGpvJqOz1JH7LPVtqbRxg@mail.gmail.com>
+        Wed, 25 Mar 2020 15:00:28 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44150 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727027AbgCYTA1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:00:27 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so3687421lji.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 12:00:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=zlA6YBylA5M0mOiSW9L4RZATO8uQW1547KHnBaE+ghE=;
+        b=knqpvRSgG9yGm0bcVOsMEg3LvVRUbyXthnu83i4ti20kLguZ/KlzQkdTfjqia6bIDH
+         RqmJAe/OyUbdof6Ow8OxSSoOQzMiY4DGsWxQB65pNrqfxeUNzYsSVgQoJawSSjs9De+V
+         PuDskXXM6Iz+hplJaWkpRXl6GJI0o8Y4HzpHQrUOoTKuHA9Q55T8ulUKTSrSRL2hTuZq
+         +PmnqOgkf4QH36m6JaQ+rl2dQ64wkVJMANXDA7BBpm9RD9l5c17ORPRuLKOIIywYd9RX
+         e7EWrwiv8CmRvN3qKfFI39QafKyjFAB/p+bE0T6BzgjT2o5YeRq8aTZt+GoTbzdHHVxx
+         rWTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=zlA6YBylA5M0mOiSW9L4RZATO8uQW1547KHnBaE+ghE=;
+        b=Rzbn3RmMsx5GMwexng78hWpLXjnSLaVUS+fkY+hIG7xJ4M/1c0mMxnp+rBYMLAOa3q
+         3/ByK1ruN95LQ0+HJwp3PrJMOZuw8IZ8eq6AkP8SJGEcQNuZPOpA8D/8sz8oa/4D+iFd
+         PkMHJoWcq6qgYn1d2knTT+hBlGiqePwChsoqZg2pq0vhY7eXU2mpEkrrQkyjgeWcmFZV
+         pyxW8BPQowy7Qp4gemwUjD8J+5z3gxEZ9RGC8hv4hG41LDghqaZeIxRULiCE6RSBPUDU
+         mmoH8MRdD+2bbmFRmtrf0qXPMx2wnE02gTxdU9wTwOghlKuMuiPEHOrr7+lez1NG/MT+
+         Sasg==
+X-Gm-Message-State: AGi0PubT1G9k2DFMnYEtRz3/h9lhQeqF9EDq5mKdUPMzHsFD7hOSLi4k
+        mZ7nJeIQ6ORj9nuSADTvkzAdTBS87C2IFaY6fTHJAw==
+X-Google-Smtp-Source: ADFU+vu0U/GoBhKGNLp7JbO4SycFKqeluj/hk+w11ceallgxqj/4DRnGJYVsYhboVT3+cb41AjXCTc6AVCyjPssN6vg=
+X-Received: by 2002:a05:651c:1026:: with SMTP id w6mr2801452ljm.168.1585162825609;
+ Wed, 25 Mar 2020 12:00:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAM_iQpWkNJ+yQ1g+pdkhJBCZ-CJfUGGpvJqOz1JH7LPVtqbRxg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Wed, 25 Mar 2020 20:00:14 +0100
+Message-ID: <CACRpkdY8d=zG-z0Ju7k3Suj+seiexAdyQezcMxWV5rKHJhE3+Q@mail.gmail.com>
+Subject: [GIT PULL] GPIO fixes for v5.6
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Hans de Goede <hdegoede@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:36:16AM -0700, Cong Wang wrote:
-> On Mon, Mar 23, 2020 at 6:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Cong Wang <xiyou.wangcong@gmail.com> writes:
-> > > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >> > We use an ordered workqueue for tc filters, so these two
-> > >> > works are executed in the same order as they are queued.
-> > >>
-> > >> The workqueue is ordered, but look how the work is queued on the work
-> > >> queue:
-> > >>
-> > >> tcf_queue_work()
-> > >>   queue_rcu_work()
-> > >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
-> > >>
-> > >> So after the grace period elapses rcu_work_rcufn() queues it in the
-> > >> actual work queue.
-> > >>
-> > >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
-> > >> invoked from preemtible context. Now assume the following:
-> > >>
-> > >> CPU0
-> > >>   tcf_queue_work()
-> > >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-> > >>
-> > >> -> Migration
-> > >>
-> > >> CPU1
-> > >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> > >>
-> > >> So your RCU callbacks can be placed on different CPUs which obviously
-> > >> has no ordering guarantee at all. See also:
-> > >
-> > > Good catch!
-> > >
-> > > I thought about this when I added this ordered workqueue, but it
-> > > seems I misinterpret max_active, so despite we have max_active==1,
-> > > more than 1 work could still be queued on different CPU's here.
-> >
-> > The workqueue is not the problem. it works perfectly fine. The way how
-> > the work gets queued is the issue.
-> 
-> Well, a RCU work is also a work, so the ordered workqueue should
-> apply to RCU works too, from users' perspective. Users should not
-> need to learn queue_rcu_work() is actually a call_rcu() which does
-> not guarantee the ordering for an ordered workqueue.
+Hi Linus,
 
-And the workqueues might well guarantee the ordering in cases where the
-pair of RCU callbacks are invoked in a known order.  But that workqueues
-ordering guarantee does not extend upstream to RCU, nor do I know of a
-reasonable way to make this happen within the confines of RCU.
+here are some additional GPIO fixes for the v5.6 series.
 
-If you have ideas, please do not keep them a secret, but please also
-understand that call_rcu() must meet some pretty severe performance and
-scalability constraints.
+Sorry that it is coming in late, we had some issues with retagging
+one of the patches due to problems in -next but overall it is just
+bad timing and me being a bit snowed under.
 
-I suppose that queue_rcu_work() could track outstanding call_rcu()
-invocations, and (one way or another) defer the second queue_rcu_work()
-if a first one is still pending from the current task, but that might not
-make the common-case user of queue_rcu_work() all that happy.  But perhaps
-there is a way to restrict these semantics to ordered workqueues.  In that
-case, one could imagine the second and subsequent too-quick call to
-queue_rcu_work() using the rcu_head structure's ->next field to queue these
-too-quick callbacks, and then having rcu_work_rcufn() check for queued
-too-quick callbacks, queuing the first one.
+Please pull it in!
 
-But I must defer to Tejun on this one.
+Yours,
+Linus Walleij
 
-And one additional caution...  This would meter out ordered
-queue_rcu_work() requests at a rate of no faster than one per RCU
-grace period.  The queue might build up, resulting in long delays.
-Are you sure that your use case can live with this?
+The following changes since commit f8788d86ab28f61f7b46eb6be375f8a726783636:
 
-> > > I don't know how to fix this properly, I think essentially RCU work
-> > > should be guaranteed the same ordering with regular work. But this
-> > > seems impossible unless RCU offers some API to achieve that.
-> >
-> > I don't think that's possible w/o putting constraints on the flexibility
-> > of RCU (Paul of course might disagree).
-> >
-> > I assume that the filters which hang of tcindex_data::perfect and
-> > tcindex_data:p must be freed before tcindex_data, right?
-> >
-> > Refcounting of tcindex_data should do the trick. I.e. any element which
-> > you add to a tcindex_data instance takes a refcount and when that is
-> > destroyed then the rcu/work callback drops a reference which once it
-> > reaches 0 triggers tcindex_data to be freed.
-> 
-> Yeah, but the problem is more than just tcindex filter, we have many
-> places make the same assumption of ordering.
+  Linux 5.6-rc3 (2020-02-23 16:17:42 -0800)
 
-But don't you also have a situation where there might be a large group
-of queue_rcu_work() invocations whose order doesn't matter, followed by a
-single queue_rcu_work() invocation that must be ordered after the earlier
-group?  If so, ordering -all- of these invocations might be overkill.
+are available in the Git repository at:
 
-Or did I misread your code?
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.6-3
 
-							Thanx, Paul
+for you to fetch changes up to 0c625ccfe6f754d0896b8881f5c85bcb81699f1f:
+
+  gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT +
+AXP288 model (2020-03-24 10:06:54 +0100)
+
+----------------------------------------------------------------
+GPIO fixes for the v5.6 series:
+
+- One core quirk by myself to fix the .irq_disable()
+  semantics when the gpiolib core takes over this callback.
+
+- The rest is an elaborate series of 4 patches fixing Intel
+  laptop ACPI wakeup quirks.
+
+----------------------------------------------------------------
+Hans de Goede (4):
+      gpiolib: acpi: Correct comment for HP x2 10 honor_wakeup quirk
+      gpiolib: acpi: Rework honor_wakeup option into an ignore_wake option
+      gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 BYT +
+AXP288 model
+      gpiolib: acpi: Add quirk to ignore EC wakeups on HP x2 10 CHT +
+AXP288 model
+
+Linus Walleij (1):
+      gpiolib: Fix irq_disable() semantics
+
+ drivers/gpio/gpiolib-acpi.c | 140 ++++++++++++++++++++++++++++++++++++--------
+ drivers/gpio/gpiolib.c      |   9 ++-
+ 2 files changed, 122 insertions(+), 27 deletions(-)
