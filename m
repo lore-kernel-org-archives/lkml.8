@@ -2,129 +2,108 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A1EBC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1CAC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264312076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE1EB2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbgCYJM5 (ORCPT
+        id S1726998AbgCYJPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:12:57 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:36149 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCYJM4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:12:56 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l23so1264498otf.3;
-        Wed, 25 Mar 2020 02:12:56 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gz93DcG7Dz2tFD+p9ycJ3JCHnMtIcY7SzR3oKARZebY=;
-        b=W8eQ9jgYBxTqYOA99RvjSZSj8z7HIKo24AeBXrL0BmmL9ukEF23b+HOmBs/4miPf+V
-         qLR3Z1q0vjLv+pRo9rEvTPFi+z8h7uIOCWlZCZFmR8zbitECypBAR6EsCvI5fhRuchO1
-         9JYkmrSOXwHZSD7TCPNNvKJKBXCi29R6Bkagw+wLHnjQeDnYhdIZlnqTMib49G2+QVhY
-         VLPAxeT5we99FonE9zoN5qfeaSi3kRQ+jdwWC4qc7le6Aq0dbpC7ETvim7hH1yTizkUM
-         bg9QnSGRqV8WcQ3roj+nbigs9EpcagpxOkVeChqP+fPEl7cG3jmrXzbcVDEapVRkuIwV
-         dfkg==
-X-Gm-Message-State: ANhLgQ046ubfCWd7RbP39gICGgBDJQc2L1XOSGmFShcpMZieUBBg4zIE
-        8jqSK3uh9Ca+qkwlgOuzKZvpciIFUDlIfNEG61A=
-X-Google-Smtp-Source: ADFU+vvQhHUfMDl51KjMOop/re3P3z/uwXKVl6Pn2is5x/6Hk6ukY0mwXIYDd716VvToctFXK+bVAnjHkHoT8uUYi+M=
-X-Received: by 2002:a9d:5c0c:: with SMTP id o12mr1727378otk.145.1585127575893;
- Wed, 25 Mar 2020 02:12:55 -0700 (PDT)
+        Wed, 25 Mar 2020 05:15:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46044 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgCYJPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 05:15:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 950E3ABD1;
+        Wed, 25 Mar 2020 09:15:01 +0000 (UTC)
+Date:   Wed, 25 Mar 2020 10:14:57 +0100
+From:   Jean Delvare <jdelvare@suse.de>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-gpio@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-renesas-soc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <qemu-devel@nongnu.org>,
+        <linux-i2c@vger.kernel.org>
+Subject: Re: [PATCH v6 2/8] i2c: i801: Use GPIO_LOOKUP() helper macro
+Message-ID: <20200325101457.0fff5bb9@endymion>
+In-Reply-To: <20200324135653.6676-2-geert+renesas@glider.be>
+References: <20200324135328.5796-1-geert+renesas@glider.be>
+        <20200324135653.6676-1-geert+renesas@glider.be>
+        <20200324135653.6676-2-geert+renesas@glider.be>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-References: <20200324161539.7538-1-masahiroy@kernel.org> <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
- <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com>
- <CAMuHMdXeOUu_zxKHXnNoLwyExy1GTp6N5UP2Neqyc8M3w2B8KQ@mail.gmail.com> <CAK7LNAST-ygeLAAneKRhr-uMdSW0V_V1s9AvN6VJSqfWfN4Otg@mail.gmail.com>
-In-Reply-To: <CAK7LNAST-ygeLAAneKRhr-uMdSW0V_V1s9AvN6VJSqfWfN4Otg@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 25 Mar 2020 10:12:45 +0100
-Message-ID: <CAMuHMdUMhPg2Du9_EowsKL9b8fpz8ymc_8E2VLybWs7mpN2DDg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
- rebuilding firmware
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+On Tue, 24 Mar 2020 14:56:47 +0100, Geert Uytterhoeven wrote:
+> i801_add_mux() fills in the GPIO lookup table by manually populating an
+> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP() helper
+> macro instead, to relax a dependency on the gpiod_lookup structure's
+> member names.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Jean Delvare <jdelvare@suse.com>
+> Cc: linux-i2c@vger.kernel.org
+> ---
+> While this patch is a dependency for "[PATCH v6 4/8] gpiolib: Add
+> support for GPIO lookup by line name", it can be applied independently.
+> But an Acked-by would be nice, too.
+> 
+> Cover letter and full series at
+> https://lore.kernel.org/r/20200324135328.5796-1-geert+renesas@glider.be/
+> 
+> v6:
+>   - New.
+> ---
+>  drivers/i2c/busses/i2c-i801.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> index ca4f096fef749302..8e64a71bea684cc7 100644
+> --- a/drivers/i2c/busses/i2c-i801.c
+> +++ b/drivers/i2c/busses/i2c-i801.c
+> @@ -1444,9 +1444,9 @@ static int i801_add_mux(struct i801_priv *priv)
+>  		return -ENOMEM;
+>  	lookup->dev_id = "i2c-mux-gpio";
+>  	for (i = 0; i < mux_config->n_gpios; i++) {
+> -		lookup->table[i].chip_label = mux_config->gpio_chip;
+> -		lookup->table[i].chip_hwnum = mux_config->gpios[i];
+> -		lookup->table[i].con_id = "mux";
+> +		lookup->table[i] = (struct gpiod_lookup)
+> +			GPIO_LOOKUP(mux_config->gpio_chip,
+> +				    mux_config->gpios[i], "mux", 0);
+>  	}
+>  	gpiod_add_lookup_table(lookup);
+>  	priv->lookup = lookup;
 
-On Wed, Mar 25, 2020 at 10:06 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> On Wed, Mar 25, 2020 at 4:53 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Wed, Mar 25, 2020 at 4:50 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > On Wed, Mar 25, 2020 at 2:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > > On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > > > As far as I understood from the Kconfig help text, this build rule is
-> > > > > used to rebuild the driver firmware, which runs on the QUICC, m68k-based
-> > > > > Motorola 68360.
-> > > > >
-> > > > > The firmware source, wanxlfw.S, is currently compiled by the combo of
-> > > > > $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
-> > > > > files. In fact, this is the only user of $(AS) in the kernel build.
-> > > > >
-> > > > > Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
-> > > > > PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
-> > > > > Instead of combining $(CPP) and (AS) from different tool sets, using
-> > > > > single $(CC68K) seems simpler, and saner.
-> > > > >
-> > > > > After this commit, the firmware rebuild will require cc68k instead of
-> > > > > as68k. I do not know how many people care about this, though.
-> > > > >
-> > > > > I do not have cc68k/ld68k in hand, but I was able to build it by using
-> > > > > the kernel.org m68k toolchain. [1]
-> > > >
-> > > > Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
-> > > > provided by Debian/Ubuntu, too?
-> > > >
-> > >
-> > > Yes, I did 'sudo apt install gcc-8-m68k-linux-gnu'
-> > > It successfully compiled this firmware.
-> >
-> > Thanks for checking!
-> >
-> > > In my understanding, the difference is that
-> > > the kernel.org ones lack libc,
-> > > so cannot link userspace programs.
-> > >
-> > > They do not make much difference for this case.
-> >
-> > Indeed.
-> >
-> > So perhaps it makes sense to replace cc68k and ld68k in the Makefile by
-> > m68k-linux-gnu-gcc and m68k-linux-gnu-ld, as these are easier to get hold
-> > of on a modern system?
->
-> If desired, I can do like this:
->
-> ifeq ($(ARCH),m68k)
->   CC_M68K = $(CC)
->   LD_M68K = $(LD)
-> else
->   CC_M68K = $(CROSS_COMPILE_M68K)gcc
->   LD_M68K = $(CROSS_COMPILE_M68K)ld
-> endif
-
-Thanks, that looks good to me.
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Jean Delvare
+SUSE L3 Support
