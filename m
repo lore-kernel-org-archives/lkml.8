@@ -2,148 +2,200 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDBBC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E0EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:27:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5AF920775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:26:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="N1qHxAU8"
+	by mail.kernel.org (Postfix) with ESMTP id 8A3D420771
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:27:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727486AbgCYL00 (ORCPT
+        id S1727417AbgCYL1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:26:26 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46728 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726700AbgCYL0Z (ORCPT
+        Wed, 25 Mar 2020 07:27:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:51282 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726700AbgCYL1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:26:25 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v16so1961872ljk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 04:26:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=YOfrzNtBD+kaSq3A3o6ofrhotN+4gW4t0TzfIyOGf6g=;
-        b=N1qHxAU8daqgzKVA78lW1z8YiWgnyQflNvanwAbaaSbxe+J6qsWIiYobd8fHoKVJAT
-         3pzs0pJSa3qhLC4wTSVnZIUW+cr+9Kck5ptl0DQbp7+nJKbKrgIifDJKIkVZOTsI4XJk
-         DXEOT8fI2Tj8Xgup8Rp78iA43fQJFXNleB6Tpdt3ASUW2I6QzHbGKAwcYK5Kk2XsqZlO
-         z4o94BI4nhziUaiOGhBtPDMV5+Z0k9NycrxFI2GzvhreAbN4Wg70JVSh9QIyh5d/HM17
-         aeOaPfErX/ejPcovWvvoX6yB69UZ51xHfKeoQYPfGjJq1XS9Sje7GMcNFSxwjfaNDvc/
-         a3hQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=YOfrzNtBD+kaSq3A3o6ofrhotN+4gW4t0TzfIyOGf6g=;
-        b=c6KkQTPWOF0HBCkXoA/LrA9IwsCqPZjf8TmlbqBJ4LHrvf+IhaDJ2KzWiprV+r8n1C
-         JqCDv0x/NUiN26O5avKuhLWrKGoutRWk+1ZPUWdLBrYI604jUHj2a9D0G9qa2vqjCYuj
-         qdLPRIUEidLwQt3e5jPoucFGBn52u17BjLlggPLhp5i3CCRYNu7ZiUvQn3GLRla5wHfG
-         28jKWtNPcPykMyWkF1PGVxlLJRO9y9RQxrO+BvY+dODmLJtTjGKzYEjyckM7fbtpJueE
-         6a8/9YQNeb6ljjLt4xNhIkdp53ZUNcV7mbSSu9xkGODO76ipnwnisUnwaqJTO5K7DTfC
-         Fgow==
-X-Gm-Message-State: ANhLgQ3a9L0qckgBWNv8dhwswQ7p59VjUCCrkfO15usQzWWGEgBDCycS
-        O5dK+h9uO1Ol/jbZzWS4ivTIRw==
-X-Google-Smtp-Source: ADFU+vtoB2CKJ9MUshcTofbsGK5QAiU+q6+TSbvsyySoYsuH66LVFaZ+n2c2xv0jk4QHgC5PAs/71A==
-X-Received: by 2002:a2e:b4e9:: with SMTP id s9mr1386148ljm.108.1585135583316;
-        Wed, 25 Mar 2020 04:26:23 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id t1sm11416204lji.98.2020.03.25.04.26.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 04:26:22 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E53A61020AF; Wed, 25 Mar 2020 14:26:23 +0300 (+03)
-Date:   Wed, 25 Mar 2020 14:26:23 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
-Message-ID: <20200325112623.ur4owwbnow5c5mng@box>
-References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200319001258.creziw6ffw4jvwl3@box>
- <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
- <db660bef-c927-b793-7a79-a88df197a756@linux.alibaba.com>
- <20200319104938.vphyajoyz6ob6jtl@box>
- <99b78cdb-5a4d-e28b-4464-d34ee39e5501@linux.alibaba.com>
+        Wed, 25 Mar 2020 07:27:15 -0400
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1jH4BR-0007uT-JQ; Wed, 25 Mar 2020 11:26:53 +0000
+Date:   Wed, 25 Mar 2020 12:26:52 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Andrei Vagin <avagin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Radostin Stoyanov <rstoyanov1@gmail.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        Linux API <linux-api@vger.kernel.org>
+Subject: Re: clone3: allow creation of time namespace with offset
+Message-ID: <20200325112652.sx66bhad7cqdsatm@wittgenstein>
+References: <20200317083043.226593-1-areber@redhat.com>
+ <CAK8P3a2-qQhpRdF0+iVrpp=vEvgwtndQL89CUm_QzoW2QYX1Jw@mail.gmail.com>
+ <20200319081137.GC223854@dcbz.redhat.com>
+ <CAK8P3a18YySozk6P77JpS58Hbtz=QQmLKw+PrzXbdOwtOQQuJA@mail.gmail.com>
+ <20200319102955.i7slokibkkysz6g6@wittgenstein>
+ <20200320183355.GA118769@gmail.com>
+ <20200324160945.orcm75avj2ol3eop@wittgenstein>
+ <20200324162546.GG358599@dcbz.redhat.com>
+ <20200324175649.fqkwiuvs2drk26ln@wittgenstein>
+ <20200325075836.GK358599@dcbz.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99b78cdb-5a4d-e28b-4464-d34ee39e5501@linux.alibaba.com>
+In-Reply-To: <20200325075836.GK358599@dcbz.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 10:17:13AM -0700, Yang Shi wrote:
-> 
-> 
-> On 3/19/20 3:49 AM, Kirill A. Shutemov wrote:
-> > On Wed, Mar 18, 2020 at 10:39:21PM -0700, Yang Shi wrote:
-> > > 
-> > > On 3/18/20 5:55 PM, Yang Shi wrote:
-> > > > 
-> > > > On 3/18/20 5:12 PM, Kirill A. Shutemov wrote:
-> > > > > On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
-> > > > > > When khugepaged collapses anonymous pages, the base pages would
-> > > > > > be freed
-> > > > > > via pagevec or free_page_and_swap_cache().  But, the anonymous page may
-> > > > > > be added back to LRU, then it might result in the below race:
+On Wed, Mar 25, 2020 at 08:58:36AM +0100, Adrian Reber wrote:
+> On Tue, Mar 24, 2020 at 06:56:49PM +0100, Christian Brauner wrote:
+> > On Tue, Mar 24, 2020 at 05:25:46PM +0100, Adrian Reber wrote:
+> > > On Tue, Mar 24, 2020 at 05:09:45PM +0100, Christian Brauner wrote:
+> > > > On Fri, Mar 20, 2020 at 11:33:55AM -0700, Andrei Vagin wrote:
+> > > > > On Thu, Mar 19, 2020 at 11:29:55AM +0100, Christian Brauner wrote:
+> > > > > > On Thu, Mar 19, 2020 at 09:16:43AM +0100, Arnd Bergmann wrote:
+> > > > > > > On Thu, Mar 19, 2020 at 9:11 AM Adrian Reber <areber@redhat.com> wrote:
+> > > > > > > 
+> > > > > > > > With Arnd's idea of only using nanoseconds, timens_offset would then
+> > > > > > > > contain something like this:
+> > > > > > > >
+> > > > > > > > struct timens_offset {
+> > > > > > > >         __aligned_s64 monotonic_offset_ns;
+> > > > > > > >         __aligned_s64 boottime_offset_ns;
+> > > > > > > > };
+> > > > > > > >
+> > > > > > > > I kind of prefer adding boottime and monotonic directly to struct clone_args
+> > > > > > > >
+> > > > > > > >         __aligned_u64 tls;
+> > > > > > > >         __aligned_u64 set_tid;
+> > > > > > > >         __aligned_u64 set_tid_size;
+> > > > > > > > +       __aligned_s64 monotonic_offset_ns;
+> > > > > > > > +       __aligned_s64 boottime_offset_ns;
+> > > > > > > >  };
+> > > > > > > 
+> > > > > > > I would also prefer the second approach using two 64-bit integers
+> > > > > > > instead of a pointer, as it keeps the interface simpler to implement
+> > > > > > > and simpler to interpret by other tools.
 > > > > > > 
-> > > > > >      CPU A                CPU B
-> > > > > > khugepaged:
-> > > > > >     unlock page
-> > > > > >     putback_lru_page
-> > > > > >       add to lru
-> > > > > >                  page reclaim:
-> > > > > >                    isolate this page
-> > > > > >                    try_to_unmap
-> > > > > >     page_remove_rmap <-- corrupt _mapcount
+> > > > > > Why I don't like has two reasons. There's the scenario where we have
+> > > > > > added new extensions after the new boottime member and then we introduce
+> > > > > > another offset. Then you'd be looking at:
 > > > > > > 
-> > > > > > It looks nothing would prevent the pages from isolating by reclaimer.
-> > > > > Hm. Why should it?
+> > > > > > __aligned_u64 tls;
+> > > > > > __aligned_u64 set_tid;
+> > > > > > __aligned_u64 set_tid_size;
+> > > > > > + __aligned_s64 monotonic_offset_ns;
+> > > > > > + __aligned_s64 boottime_offset_ns;
+> > > > > > __aligned_s64 something_1
+> > > > > > __aligned_s64 anything_2
+> > > > > > + __aligned_s64 sometime_offset_ns
+> > > > > > 
+> > > > > > which bothers me just by looking at it. That's in addition to adding two
+> > > > > > new members to the struct when most people will never set CLONE_NEWTIME.
+> > > > > > We'll also likely have more features in the future that will want to
+> > > > > > pass down more info than we want to directly expose in struct
+> > > > > > clone_args, e.g. for a long time I have been thinking about adding a
+> > > > > > struct for CLONE_NEWUSER that allows you to specify the id mappings you
+> > > > > > want the new user namespace to get. We surely don't want to force all
+> > > > > > new info into the uppermost struct. So I'm not convinced we should here.
 > > > > > 
-> > > > > try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
-> > > > > protected by ptl. And this particular _mapcount pin is reachable for
-> > > > > reclaim as it's not part of usual page table tree. Basically
-> > > > > try_to_unmap() will never succeeds until we give up the _mapcount on
-> > > > > khugepaged side.
-> > > > I don't quite get. What does "not part of usual page table tree" means?
+> > > > > I think here we can start thinking about a netlink-like interface.
 > > > > 
-> > > > How's about try_to_unmap() acquires ptl before khugepaged?
-> > The page table we are dealing with was detached from the process' page
-> > table tree: see pmdp_collapse_flush(). try_to_unmap() will not see the
-> > pte.
+> > > > I think netlink is just not a great model for an API and I would not
+> > > > want us to go down that route.
+> > > > 
+> > > > I kept thinking about this for a bit and I think that we will end up
+> > > > growing more namespace-related functionality. So one thing that came to
+> > > > my mind is the following layout:
+> > > > 
+> > > > struct {
+> > > > 	struct {
+> > > > 		__s64 monotonic;
+> > > > 		__s64 boot;
+> > > > 	} time;
+> > > > } namespaces;
+> > > > 
+> > > > struct _clone_args {
+> > > > 	__aligned_u64 flags;
+> > > > 	__aligned_u64 pidfd;
+> > > > 	__aligned_u64 child_tid;
+> > > > 	__aligned_u64 parent_tid;
+> > > > 	__aligned_u64 exit_signal;
+> > > > 	__aligned_u64 stack;
+> > > > 	__aligned_u64 stack_size;
+> > > > 	__aligned_u64 tls;
+> > > > 	__aligned_u64 set_tid;
+> > > > 	__aligned_u64 set_tid_size;
+> > > > 	__aligned_u64 namespaces;
+> > > > 	__aligned_u64 namespaces_size;
+> > > > };
+> > > > 
+> > > > Then when we end up adding id mapping support for CLONE_NEWUSER we can
+> > > > extend this with:
+> > > > 
+> > > > struct {
+> > > > 	struct {
+> > > > 		__aligned_u64 monotonic;
+> > > > 		__aligned_u64 boot;
+> > 
+> > s/__aligned_u64/__s64/g
+> > 
+> > Sorry, leftover from my first draft.
+> > 
+> > > > 	} time;
+> > > > 
+> > > > 	struct {
+> > > > 		/* id mapping members */
+> > > > 	} user;
+> > > > } namespaces;
+> > > > 
+> > > > Thoughts? Other ideas?
+> > > 
+> > > Works for me.
+> > > 
+> > > If we add the user namespace id mappings and then at some point a third
+> > > element for the time namespace appears it would also start to be mixed.
+> > > Just as you mentioned that a few mails ago.
+> > 
+> > I think you misunderstand me or I'm misunderstanding you. That new time
+> > namespace member would go into struct time {} so
+> > 
+> > struct {
+> > 	struct {
+> > 		__s64 monotonic;
+> > 		__s64 boot;
+> > 		__s64 someothertime;
+> > 	} time;
+> > 
+> > 	struct {
+> > 		/* id mapping members */
+> > 	} user;
+> > } namespaces;
 > 
-> A follow-up question here. pmdp_collapse_flush() clears pmd entry and does
-> TLB shootdown on x86. I'm supposed the main purpose is to serialize fast gup
-> since it doesn't acquire any lock (mmap_sem, ptl ,etc), but disable
-> interrupt so the TLB shootdown IPI would get blocked. This could guarantee
-> synchronization on x86, but it looks not all architectures do TLB shootdown
-> or implement it via IPI, so how they could serialize with fast gup?
+> My question was about how does the kernel know how 'struct namespaces'
+> is structured. How can an older kernel (which only is aware of two
+> clocks) deal with a, like in this example, third clock. Will the size
+> '__aligned_u64 namespaces_size' be used for versioning?
 
-The main purpose of pmdp_collapse_flush() is to block access to pages
-under collapse, including access via GUP (and its variants).
+Yes, that would be the idea.
 
-It's up to architecture to implement it correctly, including TLB flush vs.
-GUP_fast serialization. Genetic way works fine for most architectures.
-Notable exceptions are Power and S390.
+I don't want to give the impression that I think this is the best
+solution. It's one solution that I think is feasible. But if we have
+something better that is also future proof I'm happy to hear ideas.
 
-> In addition it looks acquiring pmd lock is not necessary. Before both write
-> mmap_sem and write anon_vma lock are acquired which could serialize page
-> fault and rmap walk, so it looks fast gup is the only one which could run
-> concurrently, but fast gup doesn't acquire ptl at all. It seems the
-> pmd_lock/unlock could be removed.
-
-This is likely true. And we have a comment there. But taking uncontended
-lock is check, so why not.
-
--- 
- Kirill A. Shutemov
+Christian
