@@ -2,97 +2,94 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F47DC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6770C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:18:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 107822073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:17:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 892E62073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:18:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgCYBRq (ORCPT
+        id S1727290AbgCYBSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:17:46 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63498 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgCYBRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:17:45 -0400
-IronPort-SDR: QXzpPXbxaPpPJryQvXagFSmUyif5iRMs77RQhaTLJivW2cC1Fzgi9LAEfC2hBBZe4OtKY1xNYX
- HLY8/0T6UuTQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 18:17:45 -0700
-IronPort-SDR: kxzbOiJ4c7MKljyC35eszgw9oLZcg/hkKSPkEMFCGkM+EqZIi88KJ2Wh0Mp0P2RgkGVK2zxPSM
- ugAHk/cjthVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
-   d="scan'208";a="265371309"
-Received: from hmendezc-mobl1.amr.corp.intel.com (HELO [10.254.108.97]) ([10.254.108.97])
-  by orsmga002.jf.intel.com with ESMTP; 24 Mar 2020 18:17:44 -0700
-Subject: Re: [PATCH v18 03/11] PCI/DPC: Fix DPC recovery issue in non hotplug
- case
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-References: <20200324234944.GA73526@google.com>
-From:   "Kuppuswamy, Sathyanarayanan" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <e5af8e6e-ce37-eba4-330e-94b43bd0adb7@linux.intel.com>
-Date:   Tue, 24 Mar 2020 18:17:44 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 24 Mar 2020 21:18:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:49570 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727102AbgCYBSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 21:18:48 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id DE254EDA07573CE7D228;
+        Wed, 25 Mar 2020 09:18:36 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
+ 09:18:29 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <vishal@chelsio.com>, <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rahul.lakkireddy@chelsio.com>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 net-next] cxgb4: remove set but not used variable 'tab'
+Date:   Wed, 25 Mar 2020 09:17:50 +0800
+Message-ID: <20200325011750.53008-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200324062614.29644-1-yuehaibing@huawei.com>
+References: <20200324062614.29644-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200324234944.GA73526@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c: In function cxgb4_get_free_ftid:
+drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c:547:23:
+ warning: variable tab set but not used [-Wunused-but-set-variable]
 
-On 3/24/20 4:49 PM, Bjorn Helgaas wrote:
-> I don't understand why hotplug is relevant here.  This path
-> (dpc_reset_link()) is only used for downstream ports that support DPC.
-> DPC has already disabled the link, which resets everything below the
-> port, regardless of whether the port supports hotplug.
-> 
-> I do see that PCI_ERS_RESULT_NEED_RESET seems to promise a lot more
-> than it actually*does*.  The doc (pci-error-recovery.rst) says
-> .error_detected() can return PCI_ERS_RESULT_NEED_RESET to*request*  a
-> slot reset.  But if that happens, pcie_do_recovery() doesn't do a
-> reset at all.  It calls the driver's .slot_reset() method, which tells
-> the driver "we've reset your device; please re-initialize the
-> hardware."
-> 
-> I guess this abuses PCI_ERS_RESULT_NEED_RESET by taking advantage of
-> that implementation deficiency in pcie_do_recovery(): we know the
-> downstream devices have already been reset via DPC, and returning
-> PCI_ERS_RESULT_NEED_RESET means we'll call .slot_reset() to tell the
-> driver about that reset.
-> 
-> I can see how this achieves the desired result, but if/when we fix
-> pcie_do_recovery() to actually*do*  the reset promised by
-> PCI_ERS_RESULT_NEED_RESET, we will be doing*two*  resets: the first
-> via DPC and a second via whatever slot reset mechanism
-> pcie_do_recovery() would use.
-When we fix this issue, if we make sure the reset logic is
-implemented before we call .reset_link callback we should be
-able to avoid resetting the device twice. Before we call DPC
-.reset_link callback, the device link will not up and hence we
-should not able to reset it.
-> 
-> So I guess the real issue (as you allude to in the commit log) is that
-> we rely on hotplug to unbind/rebind the driver, and without hotplug we
-> need to at least tell the driver the device was reset.
-Agree
-> 
-> I'll try to expand the comment here so it reminds me what's going on
-> when we have to look at this again:)   Let me know if I'm on the right
-> track.
-Yes, your understanding is correct.
+commit 8d174351f285 ("cxgb4: rework TC filter rule insertion across regions")
+involved this, remove it.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: keep christmas tree ordering
+---
+ drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+index e8852dfcc1f1..4490042b5a95 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
+@@ -544,8 +544,8 @@ int cxgb4_get_free_ftid(struct net_device *dev, u8 family, bool hash_en,
+ {
+ 	struct adapter *adap = netdev2adap(dev);
+ 	struct tid_info *t = &adap->tids;
+-	struct filter_entry *tab, *f;
+ 	u32 bmap_ftid, max_ftid;
++	struct filter_entry *f;
+ 	unsigned long *bmap;
+ 	bool found = false;
+ 	u8 i, cnt, n;
+@@ -617,7 +617,6 @@ int cxgb4_get_free_ftid(struct net_device *dev, u8 family, bool hash_en,
+ 
+ 			bmap = t->hpftid_bmap;
+ 			bmap_ftid = ftid;
+-			tab = t->hpftid_tab;
+ 		} else if (hash_en) {
+ 			/* Ensure priority is >= last rule in HPFILTER
+ 			 * region.
+@@ -657,7 +656,6 @@ int cxgb4_get_free_ftid(struct net_device *dev, u8 family, bool hash_en,
+ 
+ 			bmap = t->ftid_bmap;
+ 			bmap_ftid = ftid - t->nhpftids;
+-			tab = t->ftid_tab;
+ 		}
+ 
+ 		cnt = 0;
+-- 
+2.17.1
+
+
