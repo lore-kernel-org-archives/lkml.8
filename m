@@ -2,54 +2,88 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960ACC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29663C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7389C2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED02620772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585130279;
+	bh=VBlYmGDntmPnOzTL6eabTzbRIvqY0qeVA9siIV5zk+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tpnRaTX7fRr9KGUrl2ldRw8TdXZ8gpwr1vLIKNEK6RQvmB31eOaN6SAuYQN/xj328
+	 G1DHP0Mirhh+ymxjkK0OwpuRmlHDbGQdlwMs5lmCfPmcfF4xN5vwuzgfGbf+aUDyYZ
+	 LQ1EOyyXJkLbHKz6P3ysDMHZuhjH+w4PelBj73WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbgCYJ42 (ORCPT
+        id S1727320AbgCYJ55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:56:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43914 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725873AbgCYJ41 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:56:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7962AAD0F;
-        Wed, 25 Mar 2020 09:56:26 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 10:56:25 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        brgerst@gmail.com
-Subject: Re: [PATCH v3 05/26] x86/kexec: Make relocate_kernel_64.S objtool
- clean
-In-Reply-To: <20200324160924.202621656@infradead.org>
-Message-ID: <alpine.LSU.2.21.2003251043370.12098@pobox.suse.cz>
-References: <20200324153113.098167666@infradead.org> <20200324160924.202621656@infradead.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 25 Mar 2020 05:57:57 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38856 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbgCYJ55 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 05:57:57 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w2so1537101oic.5;
+        Wed, 25 Mar 2020 02:57:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NrHDtRwPhSmDON/us38dmUQzHS32k9eLAFxKK6HSnl0=;
+        b=DP5Pw4stLMIJ3D8u9E+sYOz+ggv19+wfz6lhCAXn9J/q33q40xLDZrQSjmxJDmjwBE
+         8Tnb9BHJSb9wmbO5GJ94j3hoVDHOhtbzk+w1HMBVrrqhwbD2eZc597NxsIWgk3fDOT5/
+         d8F+BmwYAK/83jBMeMB8JZe+vVk8bBs7rE/BOV2B5Zj0NT0CHJgUBa7HDqWeV8TLWg+C
+         HieZTQZB1rRuPJ+EqpkSSWfSU+q78rX9KZasWs76i+0/DYP84s/fwLnU3uRisqGLQ1qo
+         AAHYSqHCWwdz+jbIOr4b+vrF2i0JSYJSgdpCevoF4ljn6md7OLwvMybM051VZDhEpZ91
+         j0Yg==
+X-Gm-Message-State: ANhLgQ2Br9vXkzBJDuzDPCpHnU2+KYGp1DEIi8rfR4TWw6WTPP1v5ZX5
+        q/4Nnn3T0S9pXF5ub7rogm8BgU19c7tGULEufek=
+X-Google-Smtp-Source: ADFU+vty5QelQ9Rhdv8R71W76aSaOFGqdoguN3P+mdffL711qq/q5fywvQlk5Zp4b94WCLMPnyxxHbnfrLJNF+Yh9dw=
+X-Received: by 2002:a05:6808:8f:: with SMTP id s15mr1941750oic.110.1585130276966;
+ Wed, 25 Mar 2020 02:57:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <CGME20200324234525epcas1p28f4150423112c61645bc19e3742b22bf@epcas1p2.samsung.com>
+ <21bd6b76-5a3e-96c1-4184-49e96ea5f594@samsung.com>
+In-Reply-To: <21bd6b76-5a3e-96c1-4184-49e96ea5f594@samsung.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 25 Mar 2020 10:57:45 +0100
+Message-ID: <CAJZ5v0gDJkH=TBE4tFTz94rLoCCUnN1UNOpeYxRNPjf8uQsOsg@mail.gmail.com>
+Subject: Re: [GIT PULL] devfreq next for v5.7
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chanwoo Choi (samsung.com)" <chanwoo@kernel.org>,
+        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020, Peter Zijlstra wrote:
+On Wed, Mar 25, 2020 at 12:45 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>
+> Dear Rafael,
+>
+> This is devfreq-next pull request for v5.7-rc1. I add detailed description of
+> this pull request on the following tag. Please pull devfreq with following updates.
+> - tag name : devfreq-next-for-5.7
+>
+> Best Regards,
+> Chanwoo Choi
+>
+> The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
+>
+>   Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-next-for-5.7
 
-> Having fixed the biggest objtool issue in this file; fix up the rest
-> and remove the exception.
-> 
-> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-
-M
+Pulled, thanks!
