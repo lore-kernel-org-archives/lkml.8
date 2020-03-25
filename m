@@ -2,231 +2,130 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 702FBC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D76AC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:46:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4558E20777
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56A422074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:46:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="adnY5bf1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727719AbgCYSpJ (ORCPT
+        id S1727772AbgCYSqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:45:09 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64344 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbgCYSpI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:45:08 -0400
-IronPort-SDR: vbw/+O65bJSFkWbgp3TALPN5qQ7YjWytjAuAqZIUu3EOKUfxOhg6iFyI0xQIIzywJOX1f/C5kX
- Z8pMczcXZtUA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 11:45:07 -0700
-IronPort-SDR: +2JpBfMSgxJRdsXMqbVx3+2rJ18EuoVFAXyEFeK8SkEdqR6KGszggKiDp1qAclqmtnLI3IOKm/
- i9CNi1IAojuA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="446714169"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 11:45:06 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jHB1V-000E8l-PQ; Thu, 26 Mar 2020 02:45:05 +0800
-Date:   Thu, 26 Mar 2020 02:44:59 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/entry] BUILD SUCCESS
- 290a4474d019c7e49c186100e157fff5e273ab3b
-Message-ID: <5e7ba6ab.AOhPROOgE2Hekqae%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 25 Mar 2020 14:46:19 -0400
+Received: from mail-eopbgr1300109.outbound.protection.outlook.com ([40.107.130.109]:3278
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727027AbgCYSqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:46:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=l0/akW0+/jxVV1yO8/SNGnTenboeK4QI83LyLFopr/JkacjtUmPcAUNOsKXMpCneEBBmmF4S675e67ia7LLGYt9e0qx6AMD3VA57Su8zosI8Vn9vxiY7b1Fz0RGgFFv08N8kuD5hPQsUmORKvig+oPcnsQSOZVzGBLpAicXdGvcLUkiAsond9TI6ggbNIbQE0VSTzJjzk4zM0VoFB+uxKuasDOIKcLjIg2iW1/HMJ9PEMpa3QQn2fTdRBZmE6dY+gdfW1fL54K7ydJ1a2TyYGzSnwex8FwA6agLgL3TSdprpYz3OnUKb4PP3my47TcDSbGMCBi7yLnr9jPk0bLG0Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9y1sBBsEoSHTNIwfSIa7HjqizKab5qUjk0buT2t09XU=;
+ b=LXzR9z0yx53BbWFO0qzZr1kUtl5Wj5yRPZAVH6gRVUJBRjyY6AB4x6LTbJXNcEglpOx6ScVehW/dLqxKuB1V4XkvS2Ynh14JMhrUQaZz607dTsz/e5ijx/bgHrhL1Z9wnZePXKM3XUFj2UJqP+GDtN03AkaJKQu5xN5HDKB7ZX89Pn4WQuk8N3rR1ignt4ckjIms9VP7CBOYuZ1ZNwKNRdI4DJ8+VmzwReL3yFQxDImrBi8CXs+OyPysVakGq0sXvO80dm0PkFX/wqmHXxvwXG3T6TuR6WoYuUKbTnTLksnfZGI2kk8M7/PBcmGQYct2jQaEM8rVJqmtow8yjYY0nA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9y1sBBsEoSHTNIwfSIa7HjqizKab5qUjk0buT2t09XU=;
+ b=adnY5bf1ldo2XP3jAwNJ07I7FL2h678iV6H9bgFDWHlK9jrmmt8dXTPZRtlZfUhxIYuLfnmOo8X3s4nW5WcYMwj/qTBaG7FtnGJReihIOqh7odDSwpM8ASdTCS1yWbK622zQdh4FK76BV3sme4GoFJC3D7Ebgo77Z7A58HYB5KU=
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM (52.132.236.76) by
+ HK0P153MB0145.APCP153.PROD.OUTLOOK.COM (52.133.156.22) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2878.2; Wed, 25 Mar 2020 18:46:09 +0000
+Received: from HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a]) by HK0P153MB0273.APCP153.PROD.OUTLOOK.COM
+ ([fe80::2d07:e045:9d5b:898a%2]) with mapi id 15.20.2878.007; Wed, 25 Mar 2020
+ 18:46:09 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Yubo Xie <ltykernel@gmail.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     Yubo Xie <yuboxie@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: RE: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong
+ time unit
+Thread-Topic: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong
+ time unit
+Thread-Index: AQHWAe+sIAx5Fyul2kCy9Ve4hkotjqhZotyQ
+Date:   Wed, 25 Mar 2020 18:46:08 +0000
+Message-ID: <HK0P153MB0273AEB3D64694E8DF31C0B0BFCE0@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+References: <20200324151935.15814-1-yuboxie@microsoft.com>
+In-Reply-To: <20200324151935.15814-1-yuboxie@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:46:05.1806297Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5f141aee-3c29-4a29-a518-1eaaf4ed75fb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:7f70:5896:cf8a:cefe:fd7]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 40370955-164e-446a-ca3c-08d7d0ecc897
+x-ms-traffictypediagnostic: HK0P153MB0145:|HK0P153MB0145:|HK0P153MB0145:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <HK0P153MB0145F019E012A065DD12F30DBFCE0@HK0P153MB0145.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:1923;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HK0P153MB0273.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(6636002)(86362001)(8676002)(2906002)(110136005)(8990500004)(54906003)(64756008)(81156014)(66556008)(66946007)(66446008)(107886003)(81166006)(6506007)(66476007)(71200400001)(5660300002)(9686003)(55016002)(8936002)(498600001)(186003)(4744005)(52536014)(33656002)(7696005)(76116006)(4326008)(10290500003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rNG3kqcVDkUi3OWc+wWizxR0kV324lyjZKVbeEe3qAi0tj+lBb9KjbVNY03C5Q7oBAKFXswH1Yuky+SZ3D/Bo/XAezeasB9BhYjU46jDdLDteFLurF6OaAw1MujwhpkaJcclqlnhc0qxIw5yodmgwLJ7+cikmjmE3HOGcejSOKpMfgKcvb3lwNkEoK2lcTElJ0np7DxyASJfgPBk4vMHzx3cbhleEsn4Q2I7jSMElrFhEB0TfOkh+Pm3lOyKQ0Dd/Hz45D02GYpmVaS3Qw8X0f8+pwCGIeKmS0FTF88g15n/3cKyIvPg9LTDj9yPIQvta3DYPexJZBg4O/b5iVWMIBOfYKNyQDsYsuusyWWEMC3qWQtxRxgdBrsIRQbkiqPttdQRF1X3CKZC9tKBjtHSRJsgm2Ms02HlUDcjqvIIzagYGmddIwHysptKciFpAKeC
+x-ms-exchange-antispam-messagedata: Iw9i+7E/2lre9msuHgZHT+iRyf4AslnQIJHYXD3eA4rKYzldZWy6knS0Uv9ikn1K8cnDDYHtXsvpTIwx9kIIG0VhI7ZVr2AsirrTsMJO8TpjKONR1O2itkeoHJT6gnUnT+qfGPyyE+yuUCu/ZWNoGl27O+xs6nFxbnl+Bk6v/AjP7j0dNZ1OcYyGW4E/hRm9VG308sqWsqy9eRQk1Uqmrg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40370955-164e-446a-ca3c-08d7d0ecc897
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:46:08.8297
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tuNX0ND4ggfXj/+pMSK7VsWr1lr+jSxE4uk0LDHFnsfokrUAKuRgLALu0TnRBKTgeSmV2C8dyN9ccNExEHOsQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK0P153MB0145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/entry
-branch HEAD: 290a4474d019c7e49c186100e157fff5e273ab3b  x86/entry: Fix build error x86 with !CONFIG_POSIX_TIMERS
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Yubo Xie
+> Sent: Tuesday, March 24, 2020 8:20 AM
+> ...
+> sched clock callback should return time with nano second as unit
+> but current hv callback returns time with 100ns. Fix it.
 
-elapsed time: 483m
+Hi Yubo,
+I'm curious how you found the bug? :-) Did you notice some kind of symtom?
 
-configs tested: 164
-configs skipped: 0
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-h8300                     edosk2674_defconfig
-mips                      malta_kvm_defconfig
-mips                             allmodconfig
-xtensa                       common_defconfig
-microblaze                    nommu_defconfig
-s390                                defconfig
-h8300                       h8s-sim_defconfig
-m68k                           sun3_defconfig
-s390                             allyesconfig
-csky                                defconfig
-sparc64                           allnoconfig
-i386                              allnoconfig
-i386                             alldefconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-m68k                       m5475evb_defconfig
-m68k                             allmodconfig
-h8300                    h8300h-sim_defconfig
-m68k                          multi_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-mips                      fuloong2e_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                             allyesconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200325
-x86_64               randconfig-a002-20200325
-x86_64               randconfig-a003-20200325
-i386                 randconfig-a001-20200325
-i386                 randconfig-a002-20200325
-i386                 randconfig-a003-20200325
-mips                 randconfig-a001-20200325
-nds32                randconfig-a001-20200325
-m68k                 randconfig-a001-20200325
-parisc               randconfig-a001-20200325
-alpha                randconfig-a001-20200325
-riscv                randconfig-a001-20200325
-h8300                randconfig-a001-20200325
-nios2                randconfig-a001-20200325
-c6x                  randconfig-a001-20200325
-sparc64              randconfig-a001-20200325
-microblaze           randconfig-a001-20200325
-s390                 randconfig-a001-20200325
-xtensa               randconfig-a001-20200325
-csky                 randconfig-a001-20200325
-openrisc             randconfig-a001-20200325
-sh                   randconfig-a001-20200325
-x86_64               randconfig-b001-20200325
-x86_64               randconfig-b002-20200325
-x86_64               randconfig-b003-20200325
-i386                 randconfig-b001-20200325
-i386                 randconfig-b002-20200325
-i386                 randconfig-b003-20200325
-x86_64               randconfig-c001-20200325
-x86_64               randconfig-c002-20200325
-x86_64               randconfig-c003-20200325
-i386                 randconfig-c001-20200325
-i386                 randconfig-c002-20200325
-i386                 randconfig-c003-20200325
-x86_64               randconfig-d001-20200325
-x86_64               randconfig-d002-20200325
-x86_64               randconfig-d003-20200325
-i386                 randconfig-d001-20200325
-i386                 randconfig-d002-20200325
-i386                 randconfig-d003-20200325
-x86_64               randconfig-e001-20200325
-x86_64               randconfig-e002-20200325
-x86_64               randconfig-e003-20200325
-i386                 randconfig-e001-20200325
-i386                 randconfig-e002-20200325
-i386                 randconfig-e003-20200325
-x86_64               randconfig-f001-20200325
-x86_64               randconfig-f002-20200325
-x86_64               randconfig-f003-20200325
-i386                 randconfig-f001-20200325
-i386                 randconfig-f002-20200325
-i386                 randconfig-f003-20200325
-x86_64               randconfig-g001-20200325
-x86_64               randconfig-g002-20200325
-x86_64               randconfig-g003-20200325
-i386                 randconfig-g001-20200325
-i386                 randconfig-g002-20200325
-i386                 randconfig-g003-20200325
-x86_64               randconfig-h001-20200325
-x86_64               randconfig-h002-20200325
-x86_64               randconfig-h003-20200325
-i386                 randconfig-h001-20200325
-i386                 randconfig-h002-20200325
-i386                 randconfig-h003-20200325
-arc                  randconfig-a001-20200325
-arm                  randconfig-a001-20200325
-arm64                randconfig-a001-20200325
-ia64                 randconfig-a001-20200325
-powerpc              randconfig-a001-20200325
-sparc                randconfig-a001-20200325
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                          debug_defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Thanks,
+-- Dexuan
