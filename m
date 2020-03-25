@@ -2,106 +2,104 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41D1FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576CDC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E4320737
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:06:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kFfszCj8"
+	by mail.kernel.org (Postfix) with ESMTP id 341B820737
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCYXGw (ORCPT
+        id S1727550AbgCYXLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 19:06:52 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35729 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCYXGw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 19:06:52 -0400
-Received: by mail-ot1-f67.google.com with SMTP id k26so3939534otr.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 16:06:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gSeT6PbqAXC+RZ7fex1F/Qco9gPlMFnDZIOtqUymYIY=;
-        b=kFfszCj8WOXLltRIen3p/mLqt3nA3hHtMUxnONC2/Xe8FHmTK4+aBGpJSExXNej03h
-         zCdraEfzjqh8PZkTTGWuWNbSIE5M1EoEwtxM+00+J0P/Lpt7dZMIrYTPgAc430slst4T
-         u44FxJACNVqfv5Cac2DUf4TFzWll1xxaIp+rv7IAyLSPcwZxwHBPpvCxYMYeb0DOrJoa
-         87BVL3I3kldHT/5ZOgLDLdbIvYoByRTpl1o5sZyo9PONR9vYNu0MdjmhguRiXqldpiPS
-         vKcqL+seFDV+pK6O6ph364nRp6f0qUcISe2kQvr2bthbUAwL7X5NUK1HkEkOyVHGdaEZ
-         G8FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gSeT6PbqAXC+RZ7fex1F/Qco9gPlMFnDZIOtqUymYIY=;
-        b=qHtujUpNRu4aP/kwPwKawlQADaLA5otqMmcaWhwop1Q6HMYGl0L/lGGkGSp7Jxk0RP
-         AnFWkHslEaQ4Ya9nLUn+FZrH/HV7mSedA1KBCdvtiJq6vtM0y98ylErn8HlzOHeveN9L
-         MDLXs8WBss0tVjHqvGyxvQEbGY0lHNZKdWn7pQm9DqOxfNkqt1OLu5Q9pOlRx7qE6DtR
-         gs8jEr8nIkFBAcimTeqim2RlJrm+G2GXB04CzJ7wVezRsVb90UgA4gRfr4YPN/tkeLyV
-         AzkOUoS9RyeyCluRAcFU9WrRiJpKuUsNj12mz//erml41udwwrjwgLT09lHUWAGpvbTk
-         nxuw==
-X-Gm-Message-State: ANhLgQ3xLbobsqtpVlXinROLORsRJ2VB7NHSF64rbVhVm2SNmOc+B2Fv
-        3Yt0KO6csotlpke23RVuprDfrB+N1UDrH6/nZLcuTA==
-X-Google-Smtp-Source: ADFU+vs0O3noWCqvzSEKQGm34TPZtpX8RSea0LBVKeJ7RPXLdbsBi2pRXsGBqAcvYH2k7BJZKzr+p6CkqgZ3OjLmCk0=
-X-Received: by 2002:a9d:5ad:: with SMTP id 42mr4495473otd.231.1585177611608;
- Wed, 25 Mar 2020 16:06:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
- <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
- <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com>
- <87lfnoxg2a.fsf@nanos.tec.linutronix.de> <CAGETcx_3GSKmSveiGrM2vQp=q57iZYc0T4ELMY7Zw8UwzPEnYA@mail.gmail.com>
-In-Reply-To: <CAGETcx_3GSKmSveiGrM2vQp=q57iZYc0T4ELMY7Zw8UwzPEnYA@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 25 Mar 2020 16:06:15 -0700
-Message-ID: <CAGETcx_BZhSmUpN+Gssp1jcjGzG7SdOmg9TAQRhn4q4G_rFUfg@mail.gmail.com>
-Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
- creating dead devices
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        Wed, 25 Mar 2020 19:11:25 -0400
+Received: from mga03.intel.com ([134.134.136.65]:3368 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbgCYXLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 19:11:24 -0400
+IronPort-SDR: C4ajVmlgzXTXLPpb7jkEnusiLd822e8LlcZcWEpvZBCluPrvc6x6DtlxgPzpmbKDGe9EfetV4Q
+ cy4s+CPFEiHA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 16:11:24 -0700
+IronPort-SDR: w231FeYMX1qlC26S1fobhpS9w1G2THEmgk6xNgH7LXe0Z9HxNZ77GcXYtv+d1jHOU6Ca6tjMw/
+ jLHcWy2nOa6Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
+   d="scan'208";a="236083686"
+Received: from jacob-builder.jf.intel.com ([10.7.199.155])
+  by orsmga007.jf.intel.com with ESMTP; 25 Mar 2020 16:11:24 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Hunter <jonathanh@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>
+Cc:     "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 0/3] IOMMU user API enhancement
+Date:   Wed, 25 Mar 2020 16:17:04 -0700
+Message-Id: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 3:56 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Mar 25, 2020 at 2:47 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > Saravana Kannan <saravanak@google.com> writes:
-> > > On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
-> > > I took a closer look. So two different drivers [1] [2] are saying they
-> > > know how to handle "arm,vexpress-sysreg" and are expecting to run at
-> > > the same time. That seems a bit unusual to me. I wonder if this is a
-> > > violation of the device-driver model because this expectation would
-> > > never be allowed if these device drivers were actual drivers
-> > > registered with driver-core. But that's a discussion for another time.
-> > >
-> > > To fix this issue you are facing, this patch should work:
-> > > https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
-> >
-> > Sorry, that's not a fix. That's a crude hack.
->
-> If device nodes are being handled by drivers without binding a driver
-> to struct devices, then not setting OF_POPULATED is wrong. So the
-> original patch sets it. There are also very valid reasons for allowing
-> OF_POPULATED to be cleared by a driver as discussed here [1].
+IOMMU user API header was introduced to support nested DMA translation and
+related fault handling. The current UAPI data structures consist of three
+areas that cover the interactions between host kernel and guest:
+ - fault handling
+ - cache invalidation
+ - bind guest page tables, i.e. guest PASID
 
-Forgot to include [1]
-[1] - https://lore.kernel.org/lkml/20200111052125.238212-1-saravanak@google.com/T/#m7b043de4c75e6c1de309d3ca5146bb0c7b3dfc80
-For some reason Paul's email is missing from lore.kernel.org.
+With future extensions in mind, the UAPI structures passed from user to kernel
+always starts with a mandatory version field (u32). While this is flexible
+for extensions of individual structures, it is difficult to maintain support
+of combinations of version numbers.
 
--Saravana
+This patchset introduces a unified UAPI version number that governs all the
+UAPI data structure versions. When userspace query UAPI version for check on
+compatibility, a single match would be sufficient.
+
+After UAPI version check, users such as VFIO can also retrieve the matching
+data structure size based on version and type. Kernel IOMMU UAPI support is
+always backward compatible. Data structures are also only open to extension
+and closed to modifications.
+
+The introduction of UAPI version does not change the existing UAPI but rather
+simplify the data structure version and size matching.
+
+Changelog:
+- v2 Rewrite the extension rules that disallows adding new members at the end
+     of each UAPI data structures. Only padding bytes and union can be extended.
+     Clarified size look up array extension rules with examples.
+
+Thanks,
+
+Jacob
+
+
+Jacob Pan (3):
+  iommu/uapi: Define uapi version and capabilities
+  iommu/uapi: Use unified UAPI version
+  iommu/uapi: Add helper function for size lookup
+
+ drivers/iommu/intel-iommu.c |  3 +-
+ drivers/iommu/intel-svm.c   |  2 +-
+ drivers/iommu/iommu.c       | 75 ++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/iommu.h       |  6 ++++
+ include/uapi/linux/iommu.h  | 62 +++++++++++++++++++++++++++++++++----
+ 5 files changed, 139 insertions(+), 9 deletions(-)
+
+-- 
+2.7.4
+
