@@ -2,106 +2,131 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B560EC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E6AC54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:52:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 935722073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56CC820719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:52:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uicKA8wI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qXr6yoXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgCYPwF (ORCPT
+        id S1727989AbgCYPwL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:52:05 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:36289 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727501AbgCYPwF (ORCPT
+        Wed, 25 Mar 2020 11:52:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:49040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727848AbgCYPwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:52:05 -0400
-Received: by mail-lj1-f194.google.com with SMTP id g12so3026691ljj.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:52:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FFKgDeHvhTCS00AQN8L5xpmPeeM6E1oKLK7azqnWDiE=;
-        b=uicKA8wIvWFlXoj/N3LEYBm1C4A3V4P9iw9tec/gYSHrhStzUBQCHg9572Xte1kjgR
-         ThMBTvZUPKiWKz7FpDL5FpZdKIk2YCmk4xT9mv8vXzDYbG7BnewAeqmTmjbMblvWal3H
-         mWL8hgD8rxlqA3cc+cD7G6ybnkogU1aJ7AGejI0PI8JR5OHaQ8Yinse9H4h+GK2Hb1A4
-         AO25iODgSANaemv90W5sSFYFQjzOpxBoKLIe96Vf8WjB/zrqJX1NEJY7yq750pQkaqOk
-         1+9OYeGLNZxl0e6F3esYfat8n9CQbuKfwTbzDvu3Chf0eeKLqiEo59Jx1mNdOEbnZcqK
-         7RZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=FFKgDeHvhTCS00AQN8L5xpmPeeM6E1oKLK7azqnWDiE=;
-        b=C6sBNnfxyzMepl+HITtSOc0CZnOM10uDzxkz6PcMdOnCBq0g5qMcN5BaUZdxwxw+2A
-         eK1rpN3TnH1gAamgb43XDi8g4awDL/6DQKkSrYFQQtGj1LHoO4qtSBGu+k+OAnGbrzG4
-         OBB2a7QNluQuLa7q5/GOroNw5wZETqnABcTBRPV+fmcrNqkc2OMs/bnP16IYlat9Tb0B
-         bLFjN46WiBMOXZV9yTdjb0/e0qF7nwV/OQSwuEh47Ek5WH3YGSGw2Bfc6T4yFpbbI5yv
-         Gl39gqvcA7kzlp6hEe5jxLse3TKf9QRbqy43OItH1ibx0ThSwE7vEZ8m5FZWGcNQG7eN
-         Hp2Q==
-X-Gm-Message-State: AGi0PuYNElIjruLWX5L5yqzD/AkyuACMTnZdN6nwImHOs1woQFhD9/tE
-        T8RSPVCpaxw5Iha145N82z2bbQ==
-X-Google-Smtp-Source: ADFU+vv75ZUwXg2vEi4sa3vjU/XvBmaxBeQGnk0gRxgFefclx3FSltiYeD1SYorsoysNlfqIA2nFcA==
-X-Received: by 2002:a2e:964e:: with SMTP id z14mr2510095ljh.44.1585151522265;
-        Wed, 25 Mar 2020 08:52:02 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([2a00:1fa0:4678:2dac:733f:487d:7a84:7bac])
-        by smtp.gmail.com with ESMTPSA id l21sm275175lfh.63.2020.03.25.08.52.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:52:01 -0700 (PDT)
-Subject: Re: [PATCH 1/4] ubifs: remove broken lazytime support
-To:     Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>, linux-xfs@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org
-References: <20200325122825.1086872-1-hch@lst.de>
- <20200325122825.1086872-2-hch@lst.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <3771d2fd-b563-b74d-491b-e2bab9242126@cogentembedded.com>
-Date:   Wed, 25 Mar 2020 18:51:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Wed, 25 Mar 2020 11:52:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=G5IqHi85lKRyOGN1ba+XW+BgTmyu4gcHkmkrDclUbYk=; b=qXr6yoXABFiiDc+aEhIek/J1gD
+        HjMSEHyvb8dbqZYv+Xr5CKG0JHdRg7FfX+TOyopbQ8wcU1TCpwyM9xKq+r0nceUtyAsqUVKikL2a/
+        1tl1Q4i1H+NIC8CilxkP1XYSrXt+gwIMe8ocWGDv0Xl6o7xNULNmN6m09Wi/jN5DzsxsRGFCqBHxa
+        imX5TqnFM68XU5lFMbCmkO8OJ5wIWaAw8obVXClXqUkQg3GVC1eMWtpCxMRauZg/lNo9Y6VDtCRy8
+        gPqQhIFSiausVxoxpq+/TqiS6Lts56XDqT2fM7rOwNNcxsa0e7Q95Vd6w4GayuDqMTmYmf7oSmc4N
+        EExKXaaQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH8K9-0006qW-J4; Wed, 25 Mar 2020 15:52:09 +0000
+Subject: Re: mmotm 2020-03-23-21-29 uploaded
+ (pci/controller/dwc/pcie-tegra194.c)
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, lorenzo.pieralisi@arm.com
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-pci <linux-pci@vger.kernel.org>
+References: <20200324161851.GA2300@google.com>
+ <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <20f349f0-872a-08fa-1a4e-53712b31e547@infradead.org>
+Date:   Wed, 25 Mar 2020 08:52:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200325122825.1086872-2-hch@lst.de>
+In-Reply-To: <eb101f02-c893-e16e-0f3f-151aac223205@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 03/25/2020 03:28 PM, Christoph Hellwig wrote:
-
-> When "ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs" introduces atime
-> support to ubifs, it also lazytime support, but that support is
-                           ^ includes?
-
-> terminally broken, as it causes mark_inode_dirty_sync to be called from
-> __writeback_single_inode, which will then trigger the locking assert
-> in ubifs_dirty_inode.  Just remove this broken support for now, it can
-> be readded later, especially as some infrastructure changes should
-> make that easier soon.
+On 3/25/20 8:13 AM, Vidya Sagar wrote:
 > 
-> Fixes: 8c1c5f263833 ("ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs")
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-[...]
+> 
+> On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
+>>> On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
+>>>> The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
+>>>>
+>>>>     http://www.ozlabs.org/~akpm/mmotm/
+>>>>
+>>>> mmotm-readme.txt says
+>>>>
+>>>> README for mm-of-the-moment:
+>>>>
+>>>> http://www.ozlabs.org/~akpm/mmotm/
+>>>>
+>>>> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+>>>> more than once a week.
+>>>>
+>>>> You will need quilt to apply these patches to the latest Linus release (5.x
+>>>> or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+>>>> http://ozlabs.org/~akpm/mmotm/series
+>>>
+>>>
+>>> on x86_64:
+>>>
+>>> ../drivers/pci/controller/dwc/pcie-tegra194.c: In function ‘tegra_pcie_dw_parse_dt’:
+>>> ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_phy_get’? [-Werror=implicit-function-declaration]
+>>>    pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
+>>>                          ^~~~~~~~~~~~~~
+>>>                          devm_phy_get
+>>
+>> Thanks a lot for the report!
+>>
+>> This was found on mmotm, but I updated my -next branch with Lorenzo's
+>> latest pci/endpoint branch (current head 775d9e68f470) and reproduced
+>> this build failure with the .config you attached.
+>>
+>> I dropped that branch from my -next branch for now and pushed it.
+> I found that one header file inclusion is missing.
+> The following patch fixes it.
+> Also, I wanted to know how can I catch this locally? i.e. How can I generate the config file attached by Randy locally so that I can get the source ready without these kind of issues?
+> 
+> Bjorn/Lorenzo, would you be able to apply below change in your trees or do I need to send a patch for this?
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 97d3f3db1020..eeeca18892c6 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
 
-MBR, Sergei
+Yes, that works/fixes the problem.  Thanks.
+
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
+
+-- 
+~Randy
+
