@@ -2,228 +2,108 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D297C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F94BC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F05BD20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:24:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="R2q/t0cP"
+	by mail.kernel.org (Postfix) with ESMTP id 098EF20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbgCYDYF (ORCPT
+        id S1727286AbgCYD1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 23:24:05 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34383 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYDYE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 23:24:04 -0400
-Received: by mail-qk1-f195.google.com with SMTP id i6so1175383qke.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 20:24:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lxxZGvRGJjfqPblxToXiOBcEL7NivaeSifGXK+WfYKI=;
-        b=R2q/t0cPO8AvxdiJ5rMsHn5g+CRJvintIn2Sxpxo7FcBjadbCuQN9HNm++LD2upjyX
-         hHLmhXpGq3JLJ1e3JSSaYLqAmrR5aoyCz35GmAclS1/pzzycXOy/dZZjFsffCV2tvwrL
-         fnw1fr71wnxtpguvVVczxXv8m/22mA60/NEsrGQoC8sAseglUaWXxRiAYpwlZXMhydG9
-         OicVMDO+jA5xACnQdrKuLyzmgxQlR5z0u4TxSgmCMwVBjwbn5InTdGkbvPuWmD8RSnQ9
-         lJY8lgPvxYDPndInSeQoEuQ5IaTunHWOZYT/kqUDErQ49uEZqGSobzc8D5tug19Gqkvq
-         dt4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lxxZGvRGJjfqPblxToXiOBcEL7NivaeSifGXK+WfYKI=;
-        b=Fm+c44fekCc7epXpSmHdwF5H2eqUIKIXoLQ/V7+rXxWuu/VH0o2QlT6vQHfqbc037P
-         RnyB7N5L2gDKnByni1QbaYijPY9JXFGSQnoMwvkoU7dEiS/qQempLEXtqB+y+t3k31N3
-         OryCE5/koThbHeXDzepG3hQqMGXCMwGR5xxMF5DuAsMsEVpTNNHCtMNoRN3FIMXTEWS4
-         PD1jVZZ3X3y8GlXfb3pRbkf2hcZ3G5OhmuxuLfTxpMGc5zTKp/f2EPcupSzSycNutHaj
-         yOf6X4qVnHeSUDK7DNBVGHx+AB8rmPvacCLUh7mJwyv1oOxhwOVnxbOoTjJtRWvOSW6p
-         wQkg==
-X-Gm-Message-State: ANhLgQ10lsOaqzcxHNv9cgJel/qFnLzIebt5w49jXIsMZzCPWalHWkTn
-        DEDx6ebLlGSptmyG3/0Hhi7j2w==
-X-Google-Smtp-Source: ADFU+vsHuAxJiNsoCz+bGbXTwfwJGprmIaLeu3KlQ3SbdBX963gzgHtcbXYptEKP7jPOJtdBM7Y8sA==
-X-Received: by 2002:a37:c0d:: with SMTP id 13mr1013501qkm.417.1585106642744;
-        Tue, 24 Mar 2020 20:24:02 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id g2sm14695589qkb.27.2020.03.24.20.24.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 20:24:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200325021327.GJ23230@ZenIV.linux.org.uk>
-Date:   Tue, 24 Mar 2020 23:24:01 -0400
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
-References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
- <20200324214637.GI23230@ZenIV.linux.org.uk>
- <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
- <20200325021327.GJ23230@ZenIV.linux.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Tue, 24 Mar 2020 23:27:03 -0400
+Received: from mga01.intel.com ([192.55.52.88]:39340 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727253AbgCYD1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 23:27:02 -0400
+IronPort-SDR: /5q/KG6Pa1PEwP7uIKH+WKc99hg/HsJaCaLcnf44byDueCJNcEvFzXZVEDOS/bqcUYEOH4nYYU
+ F3F99vJcc+UQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 20:27:02 -0700
+IronPort-SDR: FH6bjPXY6FeAwFrnCanQrNQ0zL1VoRbz8uFRLkqKpbOuK8usTcbogX/beeL1DDcbJ0KlaP+P/E
+ 4mBXgbKsuZAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
+   d="scan'208";a="240289990"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
+  by fmsmga008.fm.intel.com with ESMTP; 24 Mar 2020 20:26:59 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v7 0/2] Fix and optimization of split_lock_detection
+Date:   Wed, 25 Mar 2020 11:09:22 +0800
+Message-Id: <20200325030924.132881-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series is split from "[PATCH v6 0/8] x86/split_lock: Fix and
+virtualization of split lock detection"[1]. It contains one fix for the
+initialization flow of split_lock_detection and one optimiazation for
+runtime TEST_CTRL MSR access.
+
+Other patches of [1] needs more time to improve.
+
+Thanks.
+
+[1]: https://lore.kernel.org/kvm/20200324151859.31068-1-xiaoyao.li@intel.com/
+
+Changes in v7:
+ - only pick patch 1 and patch 2, and hold all the left.
+ - Update SLD bit on each processor based on sld_state.
+
+Changes in v6:
+ - Drop the sld_not_exist flag and use X86_FEATURE_SPLIT_LOCK_DETECT to
+   check whether need to init split lock detection. [tglx]
+ - Use tglx's method to verify the existence of split lock detectoin.
+ - small optimization of sld_update_msr() that the default value of
+   msr_test_ctrl_cache has split_lock_detect bit cleared.
+ - Drop the patch3 in v5 that introducing kvm_only option. [tglx]
+ - Rebase patch4-8 to kvm/queue.
+ - use the new kvm-cpu-cap to expose X86_FEATURE_CORE_CAPABILITIES in
+   Patch 6.
+
+Changes in v5:
+ - Use X86_FEATURE_SPLIT_LOCK_DETECT flag in kvm to ensure split lock
+   detection is really supported.
+ - Add and export sld related helper functions in their related usecase 
+   kvm patches.
+
+Changes in v4:
+ - Add patch 1 to rework the initialization flow of split lock
+   detection.
+ - Drop percpu MSR_TEST_CTRL cache, just use a static variable to cache
+   the reserved/unused bit of MSR_TEST_CTRL. [Sean]
+ - Add new option for split_lock_detect kernel param.
+ - Changlog refinement. [Sean]
+ - Add a new patch to enable MSR_TEST_CTRL for intel guest. [Sean]
 
 
-> On Mar 24, 2020, at 10:13 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
->=20
-> On Tue, Mar 24, 2020 at 09:49:48PM -0400, Qian Cai wrote:
->=20
->> It does not catch anything at all with the patch,
->=20
-> You mean, oops happens, but neither WARN_ON() is triggered?
-> Lovely...  Just to make sure: could you slap the same couple
-> of lines just before
->                if (unlikely(!d_can_lookup(nd->path.dentry))) {
-> in link_path_walk(), just to check if I have misread the trace
-> you've got?
->=20
-> Does that (+ other two inserts) end up with
-> 	1) some of these WARN_ON() triggered when oops happens or
-> 	2) oops is happening, but neither WARN_ON() triggers or
-> 	3) oops not happening / becoming harder to hit?
+Xiaoyao Li (2):
+  x86/split_lock: Rework the initialization flow of split lock detection
+  x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
 
-Only the one just before
- if (unlikely(!d_can_lookup(nd->path.dentry))) {
-In link_path_walk() will trigger.
+ arch/x86/kernel/cpu/intel.c | 85 +++++++++++++++++++++----------------
+ 1 file changed, 48 insertions(+), 37 deletions(-)
 
-[  245.766216][ T5020] WARNING: CPU: 65 PID: 5020 at fs/namei.c:2182 =
-link_path_walk+0x29c/0x510
-[  245.766242][ T5020] Modules linked in: kvm_hv kvm ip_tables x_tables =
-xfs sd_mod bnx2x ahci libahci mdio libata tg3 libphy firmware_class =
-dm_mirror dm_region_hash dm_log dm_mod
-[  245.766289][ T5020] CPU: 65 PID: 5020 Comm: vdo Not tainted =
-5.6.0-rc7-next-20200324+ #6
-[  245.766314][ T5020] NIP:  c0000000004dbffc LR: c0000000004dc0e0 CTR: =
-0000000000000000
-[  245.766338][ T5020] REGS: c000200ec1fcf6c0 TRAP: 0700   Not tainted  =
-(5.6.0-rc7-next-20200324+)
-[  245.766374][ T5020] MSR:  9000000000029033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
-CR: 28228422  XER: 20040000
-[  245.766415][ T5020] CFAR: c0000000004dc0e4 IRQMASK: 0=20
-[  245.766415][ T5020] GPR00: c0000000004dc0e0 c000200ec1fcf950 =
-c00000000165a500 0000000000000000=20
-[  245.766415][ T5020] GPR04: c000000001511408 0000000000000000 =
-c000200ec1fcf6a4 0000000000000002=20
-[  245.766415][ T5020] GPR08: 0000000000000001 0000000000000000 =
-0000000000000001 0000000000000001=20
-[  245.766415][ T5020] GPR12: 0000000000008000 c000201fff7fa700 =
-00007fffa6f0f360 c000200579ec7ae0=20
-[  245.766415][ T5020] GPR16: 7fffffffffffffff fffffffffffffe00 =
-0000000000000000 0000000000000000=20
-[  245.766415][ T5020] GPR20: c000000c415a2498 c0002011e2cabd83 =
-2f2f2f2f2f2f2f2f 0000000000000003=20
-[  245.766415][ T5020] GPR24: 0000000000000000 c000200ec1fcfab8 =
-fffffffffffff000 0000000000200000=20
-[  245.766415][ T5020] GPR28: ffffffffffffffff 61c8864680b583eb =
-0000000000000001 0000000000002e2e=20
-[  245.766632][ T5020] NIP [c0000000004dbffc] link_path_walk+0x29c/0x510
-[  245.766655][ T5020] LR [c0000000004dc0e0] link_path_walk+0x380/0x510
-[  245.766677][ T5020] Call Trace:
-[  245.766698][ T5020] [c000200ec1fcf950] [c0000000004dc0e0] =
-link_path_walk+0x380/0x510 (unreliable)
-[  245.766725][ T5020] [c000200ec1fcfa50] [c0000000004dc3c4] =
-path_lookupat+0x94/0x1b0
-[  245.766739][ T5020] [c000200ec1fcfa90] [c0000000004de010] =
-filename_lookup.part.55+0xa0/0x170
-[  245.766778][ T5020] [c000200ec1fcfbd0] [c00000000096cbe8] =
-unix_find_other+0x58/0x3c0
-[  245.766803][ T5020] [c000200ec1fcfc60] [c00000000096de54] =
-unix_stream_connect+0x144/0x870
-[  245.766842][ T5020] [c000200ec1fcfd30] [c0000000007cf860] =
-__sys_connect+0x140/0x170
-[  245.766881][ T5020] [c000200ec1fcfe00] [c0000000007cf8b8] =
-sys_connect+0x28/0x40
-[  245.766897][ T5020] [c000200ec1fcfe20] [c00000000000b378] =
-system_call+0x5c/0x68
-[  245.766921][ T5020] Instruction dump:
-[  245.766952][ T5020] 38800000 7f23cb78 7fde07b4 1d5e0030 7d295214 =
-eaa90020 4bfffab5 2fa30000=20
-[  245.767003][ T5020] 409e00fc e9390008 7d2a0074 794ad182 <0b0a0000> =
-2fa90000 419e0184 81290000=20
-[  245.767031][ T5020] irq event stamp: 27044
-[  245.767052][ T5020] hardirqs last  enabled at (27043): =
-[<c0000000004db354>] handle_dots.part.47+0x224/0x960
-[  245.767068][ T5020] hardirqs last disabled at (27044): =
-[<c000000000008fbc>] program_check_common+0x21c/0x230
-[  245.767096][ T5020] softirqs last  enabled at (27018): =
-[<c000000000968620>] unix_create1+0x1e0/0x2a0
-[  245.767144][ T5020] softirqs last disabled at (27016): =
-[<c000000000968620>] unix_create1+0x1e0/0x2a0
-[  245.767180][ T5020] ---[ end trace 7b3382b3d92e587f ]---
-[  245.767202][ T5020] pathname =3D /var/run/nscd/socket
-[  245.767225][ T5020] BUG: Kernel NULL pointer dereference on read at =
-0x00000000
-[  245.767248][ T5020] Faulting instruction address: 0xc0000000004dc008
-[  245.767298][ T5020] Oops: Kernel access of bad area, sig: 11 [#1]
-[  245.767320][ T5020] LE PAGE_SIZE=3D64K MMU=3DRadix SMP NR_CPUS=3D256 =
-DEBUG_PAGEALLOC NUMA PowerNV
-[  245.767354][ T5020] Modules linked in: kvm_hv kvm ip_tables x_tables =
-xfs sd_mod bnx2x ahci libahci mdio libata tg3 libphy firmware_class =
-dm_mirror dm_region_hash dm_log dm_mod
-[  245.767425][ T5020] CPU: 65 PID: 5020 Comm: vdo Tainted: G        W   =
-      5.6.0-rc7-next-20200324+ #6
-[  245.767460][ T5020] NIP:  c0000000004dc008 LR: c0000000004dc19c CTR: =
-0000000000000000
-[  245.767494][ T5020] REGS: c000200ec1fcf6c0 TRAP: 0300   Tainted: G    =
-    W          (5.6.0-rc7-next-20200324+)
-[  245.767541][ T5020] MSR:  9000000000009033 <SF,HV,EE,ME,IR,DR,RI,LE>  =
-CR: 48228222  XER: 20040000
-[  245.767579][ T5020] CFAR: c0000000004dc1a4 DAR: 0000000000000000 =
-DSISR: 40000000 IRQMASK: 0=20
-[  245.767579][ T5020] GPR00: c0000000004dc19c c000200ec1fcf950 =
-c00000000165a500 000000000000001f=20
-[  245.767579][ T5020] GPR04: 0000000000000006 0000000000000000 =
-c000200ec1fcf6b4 0000000000000007=20
-[  245.767579][ T5020] GPR08: 0000000000000003 0000000000000000 =
-c000200ec118aa80 0000000000000000=20
-[  245.767579][ T5020] GPR12: 0000000000008000 c000201fff7fa700 =
-00007fffa6f0f360 c000200579ec7ae0=20
-[  245.767579][ T5020] GPR16: 7fffffffffffffff fffffffffffffe00 =
-0000000000000000 0000000000000000=20
-[  245.767579][ T5020] GPR20: c000000c415a2498 c0002011e2cabd83 =
-2f2f2f2f2f2f2f2f 0000000000000003=20
-[  245.767579][ T5020] GPR24: 0000000000000000 c000200ec1fcfab8 =
-fffffffffffff000 0000000000200000=20
-[  245.767579][ T5020] GPR28: ffffffffffffffff 61c8864680b583eb =
-0000000000000001 0000000000002e2e=20
-[  245.767830][ T5020] NIP [c0000000004dc008] link_path_walk+0x2a8/0x510
-[  245.767852][ T5020] LR [c0000000004dc19c] link_path_walk+0x43c/0x510
-[  245.767884][ T5020] Call Trace:
-[  245.767903][ T5020] [c000200ec1fcf950] [c0000000004dc19c] =
-link_path_walk+0x43c/0x510 (unreliable)
-[  245.767950][ T5020] [c000200ec1fcfa50] [c0000000004dc3c4] =
-path_lookupat+0x94/0x1b0
-[  245.767974][ T5020] [c000200ec1fcfa90] [c0000000004de010] =
-filename_lookup.part.55+0xa0/0x170
-[  245.768070][ T5020] [c000200ec1fcfbd0] [c00000000096cbe8] =
-unix_find_other+0x58/0x3c0
-[  245.768155][ T5020] [c000200ec1fcfc60] [c00000000096de54] =
-unix_stream_connect+0x144/0x870
-[  245.768255][ T5020] [c000200ec1fcfd30] [c0000000007cf860] =
-__sys_connect+0x140/0x170
-[  245.768358][ T5020] [c000200ec1fcfe00] [c0000000007cf8b8] =
-sys_connect+0x28/0x40
-[  245.768468][ T5020] [c000200ec1fcfe20] [c00000000000b378] =
-system_call+0x5c/0x68
-[  245.768545][ T5020] Instruction dump:
-[  245.768609][ T5020] 1d5e0030 7d295214 eaa90020 4bfffab5 2fa30000 =
-409e00fc e9390008 7d2a0074=20
-[  245.768705][ T5020] 794ad182 0b0a0000 2fa90000 419e0184 <81290000> =
-55290256 7f89d800 419efe8c=20
-[  245.768816][ T5020] ---[ end trace 7b3382b3d92e5880 ]---
-[  245.820494][ T5040] sda2: Can't mount, would change RO state=
+-- 
+2.20.1
+
