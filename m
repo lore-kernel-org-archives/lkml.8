@@ -2,169 +2,100 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD10C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE053C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36692074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A37F920722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yQJWcnOf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wI19RzK0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbgCYOxH (ORCPT
+        id S1727491AbgCYOzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:53:07 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44488 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgCYOxH (ORCPT
+        Wed, 25 Mar 2020 10:55:31 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:39065 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbgCYOzb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:53:07 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PEnCVY123452;
-        Wed, 25 Mar 2020 14:52:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=zAbyJ2Adl64oNbkxQzSsrnmxkJw2yY8FglQ1E9FwStQ=;
- b=yQJWcnOfku9uKxYBkOXUpDtesOWtiEBYp+1Hn3ZsnCMfcihU0S3HrgOE9CJ2R2xHfmMc
- tr3u0Ao+VmlsOjX8PR2UBoVXQJsO6uej3N8QdvLA9O7Rtozbcor1SJ6LaodjwvnICNmm
- R7yuxqbigT1spwuEPU8c7yv8mvNZm/mGB4y9thRh7WIVVDUOINh/TUPUov2whNxRGg2r
- +dOv+2swst5qtmqNcs8a4Zc3UHhkXKIWogzCLc4nvBZSqUgjkZLwgM1/gtDwtMjg3H/W
- ir0ECcbuUvPjrr1+xcIVylcLAHSQovB2JGmxHZGNSBVA+mJjW2vPsX8ylAtFGU7aQjPP 6w== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ywabra6g4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 14:52:51 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PEnjRm022210;
-        Wed, 25 Mar 2020 14:52:50 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 3003ghv4qe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 14:52:50 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02PEqkf5008920;
-        Wed, 25 Mar 2020 14:52:46 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 07:52:46 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
-Date:   Wed, 25 Mar 2020 10:52:44 -0400
-Cc:     trond.myklebust@hammerspace.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>, davem@davemloft.net,
-        kuba@kernel.org, gnb@sgi.com, Neil Brown <neilb@suse.de>,
-        Tom Tucker <tom@opengridcomputing.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250122
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
- clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003250122
+        Wed, 25 Mar 2020 10:55:31 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i20so2775452ljn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:55:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tClvuEu9pWeb1x79xCQBbu9D0y79x9BZKfLEVx6id5I=;
+        b=wI19RzK0wqnX7uLlPYQGV9dRj+z/hVLNVLPbB+8GBZJokXhcNQQQLwxzRMQzp8z1xL
+         xo0ZoTkdH4hl4n7KcZ8cGvpFUUEUtFujUxCvCfpneaPWOsvyLg5s5qhOTtOD4xr2Vm7U
+         e+gp7UDhEBlv6njzQz7K/7i1UzJjmLdNBXO63Kut8MtVp9C3UtQiwyc5L2TlH5m+xAUA
+         FgMy+IYAyl4hW1hFnI19KvCerTF3iRVVibj5cKXJnDVHz/p35yaSgQez3YeEW47nH80l
+         +L9hooquuP1D1mspFNNy2fq7JpL83dAL3mdPkjjFAHZk63yqNe8/A8l9ab/mIBCw+Nl3
+         E3ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tClvuEu9pWeb1x79xCQBbu9D0y79x9BZKfLEVx6id5I=;
+        b=LOsqMdqiymPt5oCjFOyQctK+JD9kuEgyxk3YRBmAHv3Z639dtV9IASJOHmTl+Lqlzu
+         HzCTw0BtpV9zLBHfSRQJcFf+hy3nWTUZse5hskN+W6wTRgiMG7D2rDCFcOIb8dYAasiB
+         x31JEslBI224AstqG9b31cbE4+uXzkFGhMRqJhcv/U4expjmcFQFMpcXuTGhT/Thr9v3
+         ByxweU9RCD8Hk4DGF17eObSz3VABXzNa33t+uHdorYdr+DLqz8MWphqUFOZseDPqC0Pi
+         MZqqIsnHyQ6/rzbGoEC1BQoYyCdG5DREneH1u2pCN6R3vGNiCXC3jshnq1CG/IVjZE9w
+         9tVA==
+X-Gm-Message-State: ANhLgQ3x93KnQtGhCP1vJAlNyitH/ndjOxXtOsvuUQ3GpAnDVprohjsm
+        cmZVvhqHuP6Xyqp3g/neZ4Xnvt4+zQKUkPp3D4bOcA==
+X-Google-Smtp-Source: APiQypL8Qr4X286WSiXghK6eCjsBZaPQXYAe/v9k6tgkL3mtSNux4OVhLeLbtYNnWNlRoxanCdLDnL66kEACq4diAJ8=
+X-Received: by 2002:a2e:b042:: with SMTP id d2mr2261110ljl.245.1585148127245;
+ Wed, 25 Mar 2020 07:55:27 -0700 (PDT)
+MIME-Version: 1.0
+References: <CA+G9fYtiroQnpwGu4oLA=ChmS==XGpmAAqB_Oa9nrXC3vQ0xsQ@mail.gmail.com>
+ <20200325142323.GE14102@kernel.org>
+In-Reply-To: <20200325142323.GE14102@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 25 Mar 2020 20:25:15 +0530
+Message-ID: <CA+G9fYtr+Je4=pLWUgUvPNzUSUmg04oXPJ8zFwTRKji_udcZzA@mail.gmail.com>
+Subject: Re: tools: Perf: build failed on linux next
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        jolsa@redhat.com, Namhyung Kim <namhyung@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Leo Yan <leo.yan@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christophe,
+On Wed, 25 Mar 2020 at 19:53, Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Wed, Mar 25, 2020 at 07:37:10PM +0530, Naresh Kamboju escreveu:
+> > Perf build broken on Linux next and mainline on x86_64.
+> >
+> > x86_64-linaro-linux-gcc: error: unrecognized command line option
+> > '-m64/include/uapi/asm-generic/errno.h'
+> > x86_64-linaro-linux-gcc: fatal error: no input files
+> > compilation terminated.
+> >   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jevents.o
+> >   MKDIR    /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/
+> > x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+> >   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jsmn.o
+> > x86_64-linaro-linux-gcc: error: unrecognized command line option
+>
+> Right, there is some patch handling this, which we're trying to process
+> but has some issues.
 
+Thanks for responding on reported issue.
 
-> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET =
-<christophe.jaillet@wanadoo.fr> wrote:
->=20
-> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
-> overflow.
-
-That's true as a general statement, but how likely is such an
-overflow to occur here?
-
-
-> The return value can also be used to avoid a strlen a call.
-
-That's also true of sprintf, isn't it?
-
-
-> Finally, we know where we need to copy and the length to copy, so, we
-> can save a few cycles by rearraging the code and using a memcpy =
-instead of
-> a strcat.
-
-I would be OK with squashing these two patches together. I don't
-see the need to keep the two changes separated.
-
-
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> ---
-> This patch should have no functionnal change.
-> We could go further, use scnprintf and write directly in the =
-destination
-> buffer. However, this could lead to a truncated last line.
-
-That's exactly what this function is trying to avoid. As part of any
-change in this area, it would be good to replace the current block
-comment before this function with a Doxygen-format comment that
-documents that goal.
-
-
-> ---
-> net/sunrpc/svc_xprt.c | 8 ++++----
-> 1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index df39e7b8b06c..6df861650040 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
-> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-> 		int slen;
->=20
-> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
-xcl->xcl_max_payload);
-> -		slen =3D strlen(tmpstr);
-> -		if (len + slen >=3D maxlen)
-> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
-> +				xcl->xcl_name, xcl->xcl_max_payload);
-> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
-> 			break;
-> +		memcpy(buf + len, tmpstr, slen + 1);
-> 		len +=3D slen;
-> -		strcat(buf, tmpstr);
-
-IMO replacing the strcat makes the code harder to read, and this
-is certainly not a performance path. Can you drop that part of the
-patch?
-
-
-> 	}
-> 	spin_unlock(&svc_xprt_class_lock);
->=20
-> --=20
-> 2.20.1
->=20
-
---
-Chuck Lever
-
-
-
+>
+> - Arnaldo
