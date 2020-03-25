@@ -2,150 +2,93 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22F6C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D9FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42022076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:30:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B5032076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HGCmcGSG"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="O244h4YG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCYNaT (ORCPT
+        id S1727394AbgCYNbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:30:19 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:45114 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726967AbgCYNaT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:30:19 -0400
-Received: by mail-qv1-f66.google.com with SMTP id g4so975072qvo.12
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 06:30:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uWPS7PjoiY9R8TaTiA5QpjnYh9arIvd3P3PvhKcV++I=;
-        b=HGCmcGSGlRDNCmP0Jhf2uCs5OygM7WjiumSyx+Xl6GteDLbyDJ0zWp6KCvZ6ErjC7A
-         UoU+/jERRkcNX+mNfTm4puy4dmMcs84JSqTgMzJJ4vzB3RmDO2LmmRe6fj72GqYW6zmm
-         w/Dhb0u4Codfnzfr7HU1qS3GqBQNDTj892Y4MdOzj6pUhxIz3VwlRsFhN9l85OSlDNX3
-         MO5mN80hBJzvOUfF3t78W7R6hPXfe6vOA7DX7MKziOQGkCfNjr4vHlOyzmiYvxfIc5kj
-         NMwMtdC4z7qIBbGAocB4xJTH61QRgszVD6wNfdKzjjF5bm9NBcweu8OW4juosyUY9KK9
-         zh8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uWPS7PjoiY9R8TaTiA5QpjnYh9arIvd3P3PvhKcV++I=;
-        b=R8KGOTj3E5r8/DCZ3Luw68PMANHcBf9iriMB6Qio9DRQwMeemXcwrEdN3FX73gzmf0
-         s1qnLJhBV3srr74HOuK0phe4jKT5P298rV/ObprB8PoB6NZpbpqV7ffC9smnnLjJiS1I
-         +VFLS3i3s4Dw9Zh1DeK71zgj1nZHYRSPd8OrLJ9G8WCjbfl+rd0WZiokb3Q7KAwYo87J
-         iEgvMks/Nk10tMluntQ40T+W217b4Q9aobDUKRaRskyslMsdEdLWUkBVhEbr8ERbZvkr
-         tjCah5RYhHaj2l7Q6sHoTS5g2Ok86QM5NVqEapUHy1hWbvW9QmKWdqool+MXTX13FTj9
-         tHdQ==
-X-Gm-Message-State: ANhLgQ1PLZpwiMguZYe4oTvzgp5POF2L67XSJ3Gl3qbCZrhJ4nWjQmsh
-        EwJgaIrAcGqMECCXMO1jRpw=
-X-Google-Smtp-Source: ADFU+vuJMLXE7T6HLEU4+q2yuldglAuXi642aB1S1Kg4oQePb3ikWpuWfow4XE19do+HiYQw6zBxcg==
-X-Received: by 2002:a05:6214:1412:: with SMTP id n18mr3167697qvx.219.1585143016012;
-        Wed, 25 Mar 2020 06:30:16 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id x51sm17665716qtj.82.2020.03.25.06.30.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 06:30:15 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 3BAD340F77; Wed, 25 Mar 2020 10:30:12 -0300 (-03)
-Date:   Wed, 25 Mar 2020 10:30:12 -0300
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     Jiri Olsa <jolsa@redhat.com>, peterz@infradead.org,
-        mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, Sam Lunt <samueljlunt@gmail.com>
-Subject: Re: [PATCH 1/2] perf: Be compatible with all python versions when
- fetching ldflags
-Message-ID: <20200325133012.GC14102@kernel.org>
-References: <1581618066-187262-1-git-send-email-zhe.he@windriver.com>
- <20200216222148.GA161771@krava>
- <8cc46abf-208d-4aa4-8d0d-4922106bee6e@windriver.com>
+        Wed, 25 Mar 2020 09:31:40 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:60910 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727021AbgCYNbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:31:40 -0400
+Received: from zn.tnic (p200300EC2F0B060010E890E7BB95F8DC.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:600:10e8:90e7:bb95:f8dc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CDD431EC0716;
+        Wed, 25 Mar 2020 14:31:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585143099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=8kZyeaI5oOo91uXYyG7kPVenFF4gjZf+S4YQBpUAj8c=;
+        b=O244h4YGCltekNAcmTTxiV9SeigtjeyNTY5ZCESFQStvEZLOwRESjeBAnWUCDwyWZ3z/im
+        pWO7PMStP7PPzrNLtD+nRY7c2Ll+nDy0EH/7JWCFK8Ulw5OoZa3x3y8dHJha8lxQ/8idok
+        UPmfX3Kss5d7UXoutgSMBYLXn6+21ro=
+Date:   Wed, 25 Mar 2020 14:31:37 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sergei Trofimovich <slyfox@gentoo.org>
+Cc:     Jakub Jelinek <jakub@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
+Message-ID: <20200325133137.GC27261@zn.tnic>
+References: <20200314164451.346497-1-slyfox@gentoo.org>
+ <20200316130414.GC12561@hirez.programming.kicks-ass.net>
+ <20200316132648.GM2156@tucnak>
+ <20200316134234.GE12561@hirez.programming.kicks-ass.net>
+ <20200316175450.GO26126@zn.tnic>
+ <20200316180303.GR2156@tucnak>
+ <20200317143602.GC15609@zn.tnic>
+ <20200317143914.GI2156@tucnak>
+ <20200317144942.GE15609@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <8cc46abf-208d-4aa4-8d0d-4922106bee6e@windriver.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200317144942.GE15609@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Feb 17, 2020 at 10:24:27AM +0800, He Zhe escreveu:
+On Tue, Mar 17, 2020 at 03:49:42PM +0100, Borislav Petkov wrote:
+> On Tue, Mar 17, 2020 at 03:39:14PM +0100, Jakub Jelinek wrote:
+> > That is because the option is called -fno-stack-protector, so one needs to
+> > use __attribute__((optimize("no-stack-protector")))
 > 
+> Ha, that works even! :-)
 > 
-> On 2/17/20 6:22 AM, Jiri Olsa wrote:
-> > On Fri, Feb 14, 2020 at 02:21:05AM +0800, zhe.he@windriver.com wrote:
-> >> From: He Zhe <zhe.he@windriver.com>
-> >>
-> >> Since Python v3.8.0, with the following commit
-> >> 0a8e57248b91 ("bpo-36721: Add --embed option to python-config (GH-13500)"),
-> > we got similar change recently.. might have not been picked up yet
-> >
-> >   https://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com/
+> And my guest boots.
 > 
-> Thanks for pointing out.
+> I guess we can do that then. Looks like the optimal solution to me.
+> 
+> Also, I'm assuming older gccs will simply ignore unknown optimize
+> options?
 
-So, just with your patch:
+Sergei,
 
-[acme@five perf]$ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
-[acme@five perf]$ make PYTHON=python3 -C tools/perf O=/tmp/build/perf install-bin |& grep python
-...                     libpython: [ OFF ]
-Makefile.config:750: No 'Python.h' (for Python 2.x support) was found: disables Python support - please install python-devel/python-dev
-  CC       /tmp/build/perf/tests/python-use.o
-[acme@five perf]$
+wanna send v2 where you add the function attribute to start_secondary()
+only instead?
 
-[acme@five perf]$ rpm -q python2-devel python3-devel python-devel
-package python2-devel is not installed
-python3-devel-3.7.6-2.fc31.x86_64
-package python-devel is not installed
-[acme@five perf]$
+Thx.
 
-[acme@five perf]$ cat /tmp/build/perf/feature/test-libpython.make.output
-/bin/sh: --configdir: command not found
-[acme@five perf]$ cat /tmp/build/perf/feature/test-libpython
-test-libpython.make.output          test-libpython-version.make.output
-[acme@five perf]$ cat /tmp/build/perf/feature/test-libpython-version.make.output
-/bin/sh: --configdir: command not found
-[acme@five perf]$
+-- 
+Regards/Gruss,
+    Boris.
 
-
-Without your patch:
-
-[acme@five perf]$ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
-[acme@five perf]$ make PYTHON=python3 -C tools/perf O=/tmp/build/perf install-bin |& grep python
-...                     libpython: [ on  ]
-  GEN      /tmp/build/perf/python/perf.so
-  MKDIR    /tmp/build/perf/scripts/python/Perf-Trace-Util/
-  CC       /tmp/build/perf/scripts/python/Perf-Trace-Util/Context.o
-  LD       /tmp/build/perf/scripts/python/Perf-Trace-Util/perf-in.o
-  CC       /tmp/build/perf/tests/python-use.o
-  CC       /tmp/build/perf/util/scripting-engines/trace-event-python.o
-  INSTALL  python-scripts
-[acme@five perf]$
-
-[acme@five perf]$ ldd /tmp/build/perf/perf |& grep python
-	libpython3.7m.so.1.0 => /lib64/libpython3.7m.so.1.0 (0x00007f11dd1ee000)
-[acme@five perf]$ perf -vv |& grep -i python
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-[acme@five perf]$
-
-What am I missing?
-
-
-[acme@five perf]$ cat /etc/redhat-release
-Fedora release 31 (Thirty One)
-[acme@five perf]$
-
-- Arnaldo
+https://people.kernel.org/tglx/notes-about-netiquette
