@@ -2,111 +2,179 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B41AAC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9529C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9291A2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988812073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:38:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cCxSv0lU"
+	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="JAbr8OsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCYQeF (ORCPT
+        id S1727417AbgCYQi0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:34:05 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:37284 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727275AbgCYQeF (ORCPT
+        Wed, 25 Mar 2020 12:38:26 -0400
+Received: from aer-iport-2.cisco.com ([173.38.203.52]:39205 "EHLO
+        aer-iport-2.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbgCYQi0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:34:05 -0400
-Received: by mail-pj1-f66.google.com with SMTP id o12so1227416pjs.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:34:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/mwcS2k49Q8FtkpWy9oWS3FImYCLq2+zg7rNJhSOZg=;
-        b=cCxSv0lUkGe2EkApXp9qAszTvolABAR+7z9AuUMmHhvDbeRZpWR6Q0bYuAPqFUF6Zp
-         jAqjCTAjkGIbSmWBIMSVXhJN66nTO6w4p8bJGqbMGN0RHan4V/rN4nSpCoCZW/+IZ6Lb
-         BapU1uUUBkAzcg6RjyW9DQk9sAa9zz9BVA+3jFW4plA85kvU4GJN2702eW4e7McqWvGD
-         vqNc4jpN6Islq1dfjZ+sI3gFRBxhl9R7Wxh+vHtiJsDfeEADMZK5MKd2zrcYY7mHxonR
-         FLL/P9nRwVdwkoJlihPemv1VYENWVfU4m5DOYZYY4ZipQAOx0dPlpJrEcWA7pK8BdsOj
-         UcwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/mwcS2k49Q8FtkpWy9oWS3FImYCLq2+zg7rNJhSOZg=;
-        b=B6dMagGMh2N6kAyYHh0qgOEGhujn337id75oSBxSta7ctJWR2bNw62/WwQiW8oYkz9
-         QUtKbNo4A5Uw2fHXxftZnPxzy/dv6vcu+qccFbEW1b6PUkazAau6+g4XsyEOwTnYhwW3
-         epxMDA7fTmol+EEqyogUgK6O0rem5vOvZmcgMuUst7DPpopWyvLNUu3xinh8W5eH097x
-         /fDEi7FcLFrAmi8UyIeXWsuteeCjaEGOMJet5Mu74wCtrgsuJfAAZtlVTurU77ocMzOn
-         8GvmtFs7zc6to9TGZpu91mJ8pAMpGUyg5tGnO8VbYDjfuu0CvEW8w0Gjr4N+YtF0LMf0
-         DCfQ==
-X-Gm-Message-State: ANhLgQ2rLvnHaWOREfn7iP3c/u7ljAfdVTEkOLzuhj1mLhJgzCHCQfsW
-        8NMzG6St66Rk4Ig88TE+APdceNHXfUje6JS1XxbCtg==
-X-Google-Smtp-Source: ADFU+vtCxCivYqNY8mO/9aWa/cKHkQkKuRGcuG8inKcGrdz+TlM7ovpnPxVq4LLDz6GsobBMJqt1oTu+L8Xs6yWLSDM=
-X-Received: by 2002:a17:90a:32c5:: with SMTP id l63mr4814987pjb.47.1585154043671;
- Wed, 25 Mar 2020 09:34:03 -0700 (PDT)
+        Wed, 25 Mar 2020 12:38:26 -0400
+X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 12:38:24 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=cisco.com; i=@cisco.com; l=3706; q=dns/txt; s=iport;
+  t=1585154305; x=1586363905;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=XODqsNkzk78qQBBhDHsB4Un4cvki1BxKm7wKbk22n68=;
+  b=JAbr8OsV6a3zLgK9aBr+d6zHSeHq+Xu40ocCmSIkjRbRKM+UexwD74ob
+   IVWsJHmDEGki1wB7rpRxUzo1D2AGmiw5etbqVi5SflRxXBbnvi7V8q71Z
+   Wq0UoIlCC2e37LI9Rc2l3mCo1InaXP55i9zRSMHx0Azvf3UExUIZP3hyu
+   Q=;
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0ANAAAgh3te/xbLJq1mGgEBAQEBAQE?=
+ =?us-ascii?q?BAQMBAQEBEQEBAQICAQEBAYFpAwEBAQELAYF8gW0gEiqEGYkCh2sIJYlsj2C?=
+ =?us-ascii?q?BewoBAQEMAQEvBAEBhEQCgkw2Bw4CAwEBCwEBBQEBAQIBBQRthWKFYwEBAQE?=
+ =?us-ascii?q?CASMVQRALFQMCAiYCAiE2BgEMBgIBAYMigkwDDiCtN3WBMoVLgmsNYoE+gQ4?=
+ =?us-ascii?q?qAYxIgUE/gREnDIJhPoIbhUGCXgSNWIk3cZgRRIJGkkuENwYdjyeMNy2OZIt?=
+ =?us-ascii?q?HkC0CBAsCFYFZAjCBWDMaCBsVgydQGA2OKReBBAEIjRo/AzCPJwEB?=
+X-IronPort-AV: E=Sophos;i="5.72,304,1580774400"; 
+   d="scan'208";a="24752855"
+Received: from aer-iport-nat.cisco.com (HELO aer-core-2.cisco.com) ([173.38.203.22])
+  by aer-iport-2.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 25 Mar 2020 16:31:14 +0000
+Received: from [10.63.114.242] ([10.63.114.242])
+        (authenticated bits=0)
+        by aer-core-2.cisco.com (8.15.2/8.15.2) with ESMTPSA id 02PGVCim026801
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Wed, 25 Mar 2020 16:31:13 GMT
+Subject: Re: [PATCH v2] PCI: sysfs: Change bus_rescan and dev_rescan to rescan
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Cc:     ddutile@redhat.com, bodong@mellanox.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, ruslan.bilovol@gmail.com,
+        bhelgaas@google.com, Kelsey Skunberg <kelsey.skunberg@gmail.com>,
+        stable <stable@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
+From:   Ruslan Bilovol <rbilovol@cisco.com>
+Message-ID: <bf3ffd93-5dac-0c38-9029-9e58bfb187a5@cisco.com>
+Date:   Wed, 25 Mar 2020 18:31:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20191121235058.21653-1-davidgow@google.com> <CAFd5g46Z_vVb92Y-sfWi68=HFy5+kukZXvT9usEEnhBUvPg3AQ@mail.gmail.com>
- <CABVgOSn1azUN4XujHLsc3NY9fOUPB4Vw6930zc4oR26kxqrwOg@mail.gmail.com>
-In-Reply-To: <CABVgOSn1azUN4XujHLsc3NY9fOUPB4Vw6930zc4oR26kxqrwOg@mail.gmail.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 25 Mar 2020 09:33:52 -0700
-Message-ID: <CAFd5g44ZNv-BP_t6M1EWQjXbgBYsA0+oBZ_-nTAmZbE4GNWgpQ@mail.gmail.com>
-Subject: Re: [PATCH kselftest/test] kunit: Always print actual pointer values
- in asserts
-To:     shuah <shuah@kernel.org>, David Gow <davidgow@google.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-User: rbilovol
+X-Outbound-SMTP-Client: 10.63.114.242, [10.63.114.242]
+X-Outbound-Node: aer-core-2.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 8:33 PM David Gow <davidgow@google.com> wrote:
->
-> On Tue, Dec 3, 2019 at 3:44 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
-> >
-> > On Thu, Nov 21, 2019 at 3:51 PM David Gow <davidgow@google.com> wrote:
-> > >
-> > > KUnit assertions and expectations will print the values being tested. If
-> > > these are pointers (e.g., KUNIT_EXPECT_PTR_EQ(test, a, b)), these
-> > > pointers are currently printed with the %pK format specifier, which -- to
-> > > prevent information leaks which may compromise, e.g., ASLR -- are often
-> > > either hashed or replaced with ____ptrval____ or similar, making debugging
-> > > tests difficult.
-> > >
-> > > By replacing %pK with %px as Documentation/core-api/printk-formats.rst
-> > > suggests, we disable this security feature for KUnit assertions and
-> > > expectations, allowing the actual pointer values to be printed. Given
-> > > that KUnit is not intended for use in production kernels, and the
-> > > pointers are only printed on failing tests, this seems like a worthwhile
-> > > tradeoff.
-> >
-> > I agree. However, I also remember that others in the past yelled at me
-> > for assuming that KUnit would not be built into production kernels.
-> >
-> > I feel like +Kees Cook would have a good opinion on this (or will at
-> > least CC the right people).
-> >
->
-> I'm tempted to take the silence as a sign that no-one is upset by
-> this. Otherwise, consider this a gentle reminder to file any
-> objections you may have. :-)
->
-> Otherwise, I've confirmed that this still applies cleanly to the
-> latest linux-kselftest/kunit branch, so -- assuming there are no
-> last-minute objections -- this ought to be ready to go.
+On 3/25/20 5:17 PM, Kelsey Skunberg wrote:
+> From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+> 
+> rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
+> to avoid breaking userspace applications.
+> 
+> The attribute argument names were changed in the following commits:
+> 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+> 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+> 
+> Revert the names used for attributes back to the names used before the above
+> patches were applied. This also requires to change DEVICE_ATTR_WO() to
+> DEVICE_ATTR() and __ATTR().
+> 
+> Note when using DEVICE_ATTR() the attribute is automatically named
+> dev_attr_<name>.attr. To avoid duplicated names between attributes, use
+> __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
+> dev_rescan.
+> 
+> change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
+> names used before the mentioned patches were applied.
+> 
+> Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+> Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
 
-Shuah, can you pick this up for 5.7?
+Thanks Kelsey for the quick fix.
+
+Tested-by: Ruslan Bilovol <rbilovol@cisco.com>
+
+> 
+> Cc: stable <stable@vger.kernel.org>
+> Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> 
+> v2 updates:
+> 	commit log updated to include 'Fixes: *' and Cc: stable to aid commit
+> 	being backported properly.
+> 
+>   drivers/pci/pci-sysfs.c | 17 ++++++++++-------
+>   1 file changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 13f766db0684..667e13d597ff 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
+>   	}
+>   	return count;
+>   }
+> -static DEVICE_ATTR_WO(dev_rescan);
+> +static struct device_attribute dev_rescan_attr = __ATTR(rescan,
+> +							0220, NULL,
+> +							dev_rescan_store);
+> +
+>   
+>   static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>   			    const char *buf, size_t count)
+> @@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
+>   static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
+>   				  remove_store);
+>   
+> -static ssize_t bus_rescan_store(struct device *dev,
+> -				struct device_attribute *attr,
+> -				const char *buf, size_t count)
+> +static ssize_t dev_bus_rescan_store(struct device *dev,
+> +				    struct device_attribute *attr,
+> +				    const char *buf, size_t count)
+>   {
+>   	unsigned long val;
+>   	struct pci_bus *bus = to_pci_bus(dev);
+> @@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
+>   	}
+>   	return count;
+>   }
+> -static DEVICE_ATTR_WO(bus_rescan);
+> +static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
+>   
+>   #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
+>   static ssize_t d3cold_allowed_store(struct device *dev,
+> @@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
+>   };
+>   
+>   static struct attribute *pcibus_attrs[] = {
+> -	&dev_attr_bus_rescan.attr,
+> +	&dev_attr_rescan.attr,
+>   	&dev_attr_cpuaffinity.attr,
+>   	&dev_attr_cpulistaffinity.attr,
+>   	NULL,
+> @@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
+>   
+>   static struct attribute *pci_dev_hp_attrs[] = {
+>   	&dev_attr_remove.attr,
+> -	&dev_attr_dev_rescan.attr,
+> +	&dev_rescan_attr.attr,
+>   	NULL,
+>   };
+>   
+> 
