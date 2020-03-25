@@ -2,117 +2,77 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 802D3C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D3EC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:54:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F2A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9062C20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:54:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbgCYHxB (ORCPT
+        id S1727290AbgCYHyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:53:01 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45359 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgCYHxA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:53:00 -0400
-Received: by mail-oi1-f196.google.com with SMTP id l22so1224821oii.12;
-        Wed, 25 Mar 2020 00:53:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GES48oHSY1Nd2O0lvCRAE6tTRjmq2R3zWeOpNWZv/6s=;
-        b=nx6/3wHdIcOGSHAZyvMI0iFex4JsotJQ8TEghZnOvJ+UiVt8gY7r+VbuCH/Ll7tSuv
-         AMgXWuWlyogKY3R5SLGI7HroboqCbBijY/fu65Dq6xI65PNEPZWOvroYo8lnm7TjgH64
-         zEcoky3mGu/B9olZbjAa6Zkbh6RysN7VWkNbTO+xyErD2KNQQCpmul3gQqezwVOLpE4t
-         IosheBgPLoglSuGiH+rEjhgQgTRvz3Z5lZuei9vJTkWo1sA6tSlysbYlopiWE6VGjWKy
-         yAReMv2x7Cj4wo4u0q4weS6gs4him7Xlb62a2AKvT+1NxJlvSpgKbK7AMMA7cUslrjpU
-         qKsQ==
-X-Gm-Message-State: ANhLgQ0Gn6CoyUPhpa3MvZ+Gp/WcyD10yASdAuQh/hCsEW+hLUiissx6
-        IWstWVeN9T3mWPv6di7AiL/LweYiM2qT1nmcmOkiQDG+
-X-Google-Smtp-Source: ADFU+vtU+LhtZD1BFjienI4GJGjRNMAYuZdM/gxsuYm095k4wQaysCl8pIhASj79Lt78UKLt/MNSAKlkRQmV+YNNwns=
-X-Received: by 2002:aca:4e57:: with SMTP id c84mr1539522oib.148.1585122780154;
- Wed, 25 Mar 2020 00:53:00 -0700 (PDT)
+        Wed, 25 Mar 2020 03:54:15 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56512 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726103AbgCYHyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 03:54:15 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DD25C3C7575C8B8A45B8;
+        Wed, 25 Mar 2020 15:54:02 +0800 (CST)
+Received: from [127.0.0.1] (10.67.102.197) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
+ 15:53:52 +0800
+Subject: Re: [PATCH] mtd:Fix issue where write_cached_data() fails but write()
+ still returns success
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+CC:     <richard@nod.at>, <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <zhangweimin12@huawei.com>, <wangle6@huawei.com>
+References: <1584674111-101462-1-git-send-email-nixiaoming@huawei.com>
+ <20200324230620.174db1a7@xps13>
+From:   Xiaoming Ni <nixiaoming@huawei.com>
+Message-ID: <b37235a2-d949-7f78-770b-4a69d9d7aaaa@huawei.com>
+Date:   Wed, 25 Mar 2020 15:53:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <20200324161539.7538-1-masahiroy@kernel.org> <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
- <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com>
-In-Reply-To: <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 25 Mar 2020 08:52:49 +0100
-Message-ID: <CAMuHMdXeOUu_zxKHXnNoLwyExy1GTp6N5UP2Neqyc8M3w2B8KQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
- rebuilding firmware
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200324230620.174db1a7@xps13>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.102.197]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Yamada-san,
+On 2020/3/25 6:06, Miquel Raynal wrote:
+> Hi Xiaoming,
+> 
+> Xiaoming Ni <nixiaoming@huawei.com> wrote on Fri, 20 Mar 2020 11:15:11
+> +0800:
+> 
+>> mtdblock_flush()
+>> 	-->write_cached_data()
+>> 		--->erase_write()
+>> 		     mtdblock: erase of region [0x40000, 0x20000] on "xxx" failed
+>>
+>> Because mtdblock_flush() always returns 0,
+>> even if write_cached_data() fails and data is not written to the device,
+>> syscall_write() still returns success
+> 
+> I reworded a bit the commit log and also added a ' ' after 'mtd:' in
+> the title when applying.
+> 
+> Thanks,
+> Miquèl
 
-On Wed, Mar 25, 2020 at 4:50 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> On Wed, Mar 25, 2020 at 2:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > As far as I understood from the Kconfig help text, this build rule is
-> > > used to rebuild the driver firmware, which runs on the QUICC, m68k-based
-> > > Motorola 68360.
-> > >
-> > > The firmware source, wanxlfw.S, is currently compiled by the combo of
-> > > $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
-> > > files. In fact, this is the only user of $(AS) in the kernel build.
-> > >
-> > > Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
-> > > PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
-> > > Instead of combining $(CPP) and (AS) from different tool sets, using
-> > > single $(CC68K) seems simpler, and saner.
-> > >
-> > > After this commit, the firmware rebuild will require cc68k instead of
-> > > as68k. I do not know how many people care about this, though.
-> > >
-> > > I do not have cc68k/ld68k in hand, but I was able to build it by using
-> > > the kernel.org m68k toolchain. [1]
-> >
-> > Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
-> > provided by Debian/Ubuntu, too?
-> >
->
-> Yes, I did 'sudo apt install gcc-8-m68k-linux-gnu'
-> It successfully compiled this firmware.
+Your revised commit log is more accurate and clearer, thanks for your 
+correction
+Thanks.
+Xiaoming Ni
 
-Thanks for checking!
 
-> In my understanding, the difference is that
-> the kernel.org ones lack libc,
-> so cannot link userspace programs.
->
-> They do not make much difference for this case.
-
-Indeed.
-
-So perhaps it makes sense to replace cc68k and ld68k in the Makefile by
-m68k-linux-gnu-gcc and m68k-linux-gnu-ld, as these are easier to get hold
-of on a modern system?
-
-What do you think?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
