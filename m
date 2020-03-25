@@ -2,94 +2,82 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD1CDC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A814AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 667B3206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:24:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TOCrmYgh"
+	by mail.kernel.org (Postfix) with ESMTP id 852AD206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbgCYJYX (ORCPT
+        id S1727286AbgCYJZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:24:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44196 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgCYJYW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:24:22 -0400
-Received: by mail-wr1-f68.google.com with SMTP id m17so1909646wrw.11
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 02:24:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=e/WRJY9hQuNERtjXc09PjFiO3i3OW3unssmQAUH0xA4=;
-        b=TOCrmYghtMdNGSvBQLK0URmEQ2tphjMCtWdqTNQLfEEIKlWc630TT8syVVPNq7H0gx
-         hc53Ll+uNR/z6pxaCIe8CXsOCYie9+qyGH+pKXSF262iX0H+0IZrKoDy1LkXpwtAzZnj
-         so3gCvF9WEAQx7FLcg59c+RWWXjSyoJVwpqg0ghvz91XFhmPQK1sJt1Jc+McGvhBaafV
-         40qBsJTYJN1Jb2LhMO4j3qdDmHEWozzjlq++36QgQACcnbdi10CoPqSJ4tZJ+DL3KEEz
-         QAEQzieg6yqjV5DmCk6DfKhw32c30sJIV+RRzc1MF+aY4HevxngSE3KlZpPx7DGuAmmP
-         NSfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=e/WRJY9hQuNERtjXc09PjFiO3i3OW3unssmQAUH0xA4=;
-        b=n5H5YCQgz457vMnstUY/EEZYLVzgWPPCRLSYBaddVx/Hn9PrTJqm6PEwSDrRBRGv/T
-         nrth8ObNDLaRgtp0ySdTo7wj/WuGyo+KOg54ZxX9z+zpDROo86gE1yb5baCXacEuYwtH
-         l9naOBsFBUrUat1ALY+sSmXLwweZlazDjIZ05sNkM5dieWDaia82D7hyKWg3Sev+KMjA
-         XYcEfF2N+E54OhQ0658/OJjrCxAubPvh6T7FGaFOCz/S636C6nmGDtCQRY2+4m6zYLgn
-         ckDGQVzpdUc63cAOWtaHkGiZiDl8c5jvGlSIlHMDjA7uX23vMyb+6q7GZJQ+siGqzEmI
-         BFUQ==
-X-Gm-Message-State: ANhLgQ15GQrOZ83USkHaHlsrdmVb5s9iCphJBaG6SIvUrip5imo1C2wi
-        ZV13GD6dUxmRGhYGzW3g9hJg4bRAqyI=
-X-Google-Smtp-Source: ADFU+vvtM0r7YTLHYZmqyR/58pxdWaO+bfZ5E24Een0DugXny/ubfRaizT1o8b5ABKmii6yJ3QXIbg==
-X-Received: by 2002:a5d:4ecf:: with SMTP id s15mr2523301wrv.302.1585128259469;
-        Wed, 25 Mar 2020 02:24:19 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id l64sm8381606wmf.30.2020.03.25.02.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 02:24:18 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 09:25:08 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mfd: aat2870: Use scnprintf() for avoiding potential
- buffer overflow
-Message-ID: <20200325092508.GG442973@dell>
-References: <20200311074738.8679-1-tiwai@suse.de>
+        Wed, 25 Mar 2020 05:25:23 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12127 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726116AbgCYJZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 05:25:23 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8D90EB79BF7B9AB480BF;
+        Wed, 25 Mar 2020 17:25:20 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 25 Mar 2020 17:25:11 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: clean up dic->tpages assignment
+Date:   Wed, 25 Mar 2020 17:25:07 +0800
+Message-ID: <20200325092507.62977-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200311074738.8679-1-tiwai@suse.de>
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020, Takashi Iwai wrote:
+Just cleanup, no logic change.
 
-> There is still one call of sprintf() without checking the proper
-> buffer overflow in aat2870_dump_reg().  Replace it with scnprintf()
-> call for covering that.
-> 
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
-> ---
->  drivers/mfd/aat2870-core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/compress.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-Applied, thanks.
-
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index c82ebba26e75..9cc279ea3bfb 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -1363,20 +1363,16 @@ struct decompress_io_ctx *f2fs_alloc_dic(struct compress_ctx *cc)
+ 		goto out_free;
+ 
+ 	for (i = 0; i < dic->cluster_size; i++) {
+-		if (cc->rpages[i])
++		if (cc->rpages[i]) {
++			dic->tpages[i] = cc->rpages[i];
+ 			continue;
++		}
+ 
+ 		dic->tpages[i] = f2fs_grab_page();
+ 		if (!dic->tpages[i])
+ 			goto out_free;
+ 	}
+ 
+-	for (i = 0; i < dic->cluster_size; i++) {
+-		if (dic->tpages[i])
+-			continue;
+-		dic->tpages[i] = cc->rpages[i];
+-	}
+-
+ 	return dic;
+ 
+ out_free:
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.18.0.rc1
+
