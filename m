@@ -2,124 +2,106 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD02FC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:32:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1978C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6789D2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:32:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C3820789
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Lz6jH6Md"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="XITeJn9E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgCYOcN (ORCPT
+        id S1727758AbgCYOdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:32:13 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37449 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727717AbgCYOcM (ORCPT
+        Wed, 25 Mar 2020 10:33:21 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17809 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727566AbgCYOdV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:32:12 -0400
-Received: by mail-qk1-f195.google.com with SMTP id x3so2723998qki.4
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:32:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TF9iJBiO0AuQd8nd0BlphkST/Pt9KVdxrtvPH4as2h8=;
-        b=Lz6jH6Md1qAZCC/5tbCU1I+Dtky/ug5dvJDwjhk6TclPOXVHde1FZwa31s1yiEI6ci
-         8jM9Q/9ov0fXa9sA1erX232HFwUXgZgaPhoVuf861MsT44CC0f6DVaElHgtbHEv3EYUJ
-         lKlG2H7wcqWdiRwEXKi9+aBBNHmsgfWaJ5E+p4WrBEH3R+4s/FgqnAcIAfdYpH/DqfAf
-         7tyj+SlrsRzTJ6mlKtfXpfpbgDZ0Fm/+f3gruIF0EVRqrIfJ9hD7sKEqXFbPg7sHZvKN
-         vuhDgTET/1fZX02IlXcA7jSy7EZeNGb4UVctN+3wGxXbNcd7bSZVQI2XhUdiGwg9ROND
-         ghRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TF9iJBiO0AuQd8nd0BlphkST/Pt9KVdxrtvPH4as2h8=;
-        b=Q9fO+micY7bJ4FxzV2+dBp2DEKC4GM9S4YB9A5FWVFRRZRJoYzgpPFZXou6S3rXgDr
-         VCeYzY+wr0JeQ0kWzId1KV/TY3hzXdJfQji/2aokOvTuIv0deOJ8tTtnyxguEkC+Znlt
-         nJOLrZh5FjugPhiBAf+Y4FKXNYoogTG+hlMk8dh/R1RAZ5riTmnENQ8uKeL/fFCVvC2F
-         nCTGf09E0DHY9XTn6wDbi6u2CidycoTNYCcTh721zxy7rNleRxB1mKgHQr2f1tf3SGWF
-         Rt94StLYR9hH6KEbws2Andiua1vrLio7vZ2Fy/qLWfG1x9uW5N7jFk93hgmnhz2Va279
-         aiGA==
-X-Gm-Message-State: ANhLgQ0hwWdQvjd+ZiqSdDfrTE1Y5ieFMw7RGPvou86wB0WDd157a1sj
-        /VH4Ymz+/X+8IFNdiLXNtSBk+A==
-X-Google-Smtp-Source: ADFU+vslIu4ym3oWBVgsGOjHnZWCwTiIQHGRt1uueBxGQSZBviKE1ph/j83kf3q1XH4TpTCuWS0u/w==
-X-Received: by 2002:a37:a597:: with SMTP id o145mr3175372qke.106.1585146731697;
-        Wed, 25 Mar 2020 07:32:11 -0700 (PDT)
-Received: from ovpn-66-69.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v76sm342432qka.32.2020.03.25.07.32.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 07:32:11 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de
-Cc:     davem@davemloft.net, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH] netfilter/nf_tables: silence a RCU-list warning
-Date:   Wed, 25 Mar 2020 10:31:42 -0400
-Message-Id: <20200325143142.6955-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Wed, 25 Mar 2020 10:33:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585146687;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=WUIqMTbG4P3A6zbN3GpLXbJ8Ubb/GOs43bUPmngTtEw=;
+        b=XITeJn9EVhgHJXIRTsYdv6whZhZfE5OBEn9ae/y5pKEFuEv38GYT6wq2lH/M8F9j
+        BIW5j3U3FUJZuLwaJ/CRnHi5YhyjRmIFHYlG2CjMhBMd//H03UmcVLYrTCSZacXF5ha
+        /e+YY0j0pWw1XH5yU8MHk7M26r54N4+xmrsajRUs=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585146685016379.50509572583246; Wed, 25 Mar 2020 22:31:25 +0800 (CST)
+Date:   Wed, 25 Mar 2020 22:31:21 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is safe to traverse &net->nft.tables with &net->nft.commit_mutex
-held using list_for_each_entry_rcu(). Silence the PROVE_RCU_LIST false
-positive,
 
-WARNING: suspicious RCU usage
-net/netfilter/nf_tables_api.c:523 RCU-list traversed in non-reader section!!
 
-other info that might help us debug this:
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+0:15:16, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On 2020-03-25 13:59, Jiaxun Yang wrote:
+>
+>[=2E=2E=2E]
+>
+>>>> So probably we can use legacy domain when  MIPS IRQ BASE is in the
+>>>> range of legacy IRQ
+>>>> and switch to simple domain when it's not in that range?
+>>>=20
+>>> No, see below=2E
+>>>=20
+>>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did
+>this
+>>>> hack=2E
+>>>=20
+>>> Well, if you have to consider which Linux IRQ gets assigned,
+>>> then your platform is definitely not ready for non-legacy
+>>> irqdomains=2E Just stick to legacy for now until you have removed
+>>> all the code that knows the hwirq mapping=2E
+>>=20
+>> Thanks=2E
+>>=20
+>> So I have to allocate irq_desc here in driver manually?
+>
+>No, you are probably better off just dropping this patch, as MIPS
+>doesn't seem to be ready for a wholesale switch to virtual interrupts=2E
 
-rcu_scheduler_active = 2, debug_locks = 1
-1 lock held by iptables/1384:
- #0: ffffffff9745c4a8 (&net->nft.commit_mutex){+.+.}, at: nf_tables_valid_genid+0x25/0x60 [nf_tables]
+It can't work without this patch=2E
 
-Call Trace:
- dump_stack+0xa1/0xea
- lockdep_rcu_suspicious+0x103/0x10d
- nft_table_lookup.part.0+0x116/0x120 [nf_tables]
- nf_tables_newtable+0x12c/0x7d0 [nf_tables]
- nfnetlink_rcv_batch+0x559/0x1190 [nfnetlink]
- nfnetlink_rcv+0x1da/0x210 [nfnetlink]
- netlink_unicast+0x306/0x460
- netlink_sendmsg+0x44b/0x770
- ____sys_sendmsg+0x46b/0x4a0
- ___sys_sendmsg+0x138/0x1a0
- __sys_sendmsg+0xb6/0x130
- __x64_sys_sendmsg+0x48/0x50
- do_syscall_64+0x69/0xf4
- entry_SYSCALL_64_after_hwframe+0x49/0xb3
+Legacy domain require IRQ number within 0-15=20
+however it's already occupied by i8259 or "HTPIC" driver=2E
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- net/netfilter/nf_tables_api.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Previously Loongson even didn't enable IRQ domain so it's not a problem=2E
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 38c680f28f15..e398d1491057 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -520,7 +520,8 @@ static struct nft_table *nft_table_lookup(const struct net *net,
- 	if (nla == NULL)
- 		return ERR_PTR(-EINVAL);
- 
--	list_for_each_entry_rcu(table, &net->nft.tables, list) {
-+	list_for_each_entry_rcu(table, &net->nft.tables, list,
-+				lockdep_is_held(&net->nft.commit_mutex)) {
- 		if (!nla_strcmp(nla, table->name) &&
- 		    table->family == family &&
- 		    nft_active_genmask(table, genmask))
--- 
-2.21.0 (Apple Git-122.2)
 
+>
+>         M=2E
+
+--=20
+Jiaxun Yang
