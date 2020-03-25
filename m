@@ -2,377 +2,205 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F2AC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F71CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:46:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D064C2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69108206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:46:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="axIVAF/4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbgCYIqC (ORCPT
+        id S1727493AbgCYIqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:46:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33156 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbgCYIqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:46:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 54F24AFE8;
-        Wed, 25 Mar 2020 08:45:58 +0000 (UTC)
-Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
-To:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suman Anna <s-anna@ti.com>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        xiang xiao <xiaoxiang781216@gmail.com>
-References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
- <20200324170407.16470-3-arnaud.pouliquen@st.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e458f805-c746-c88e-98f4-d874a7552933@suse.cz>
-Date:   Wed, 25 Mar 2020 09:45:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 04:46:12 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:43947 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgCYIqL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 04:46:11 -0400
+Received: by mail-vs1-f65.google.com with SMTP id w185so983031vsw.10;
+        Wed, 25 Mar 2020 01:46:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5MIiTW9Ytzte99WeenMF81qYVzmN4cMx/ufBSjES47w=;
+        b=axIVAF/4mMgKGhZXuDt1jyUjTzacbl6BR/h+EGepTJL/PFuu00A1jL60hNA3z5b38m
+         AA4S7HclPVeTIXMyGSwKlF9vCw2wPFao97Ihc0tUox42sJvc0nSu+MVYuHHBDEn/kXIW
+         Q3Ch6qyG5GcdhVoJtDe4RgY4cX2LK9SBSFQdVzRX3Y+PfiiTAch442igaE4txkyohKkd
+         M1J5US+i+GctbjQ+PcHveWgqGnEUWKyQAgAL8GYAn/I9/ysnas+iAr0B5hVwXbA+LaOM
+         c9kqO6bgqgDh9x5ten1lywbFRfm4g7y2KURfsrRQpgtGGiesI8fWZOyX5AJyiqNnH/hZ
+         x+XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5MIiTW9Ytzte99WeenMF81qYVzmN4cMx/ufBSjES47w=;
+        b=KLdIxqwn8c1D4vYey76jel9moX7koOpBnFNqBZDEOFE32V627p6ijfXUYqMSvM+RXb
+         tHCO+E4iOcPHqmLFqLMWAnuPkjpHY1gaA+qIzw+dIAWqQDI1Fu+9zHNwVc9NDtYBjvMK
+         RRzUw6KLA4HExegRgF661KidgGB7WBKKFR5k/q6pAKwQjgVEpJfKX3O/tt52JQyYJPPL
+         ZuCIcO5+P+HlmtjjcJYgVqnyUOKu/1JqWAljx8VJApQnYRZhJTkBpTNfT31vSueJvsCW
+         GvAjK9mWwi7zrAw0tN4GoWXEfnTvFbVyEnkLN2qlf6lrnzpGSsXt3R03JW+JZTmJgsaq
+         ET5w==
+X-Gm-Message-State: ANhLgQ3MMU+k/zJz6dujiq3Vh/gV8DZFNjaOqgUdXm6IMZ71DchclzSD
+        fAaghHYLKxF08ETZisqWc9hkSLW/FfP8UXxDa20lVs6GGC4=
+X-Google-Smtp-Source: ADFU+vvmv6G94nXegVPaUhLUoiuhutsXjS9fU+mu16KSFYz3lKT7gaXvljbjuXFSD4XbCFpgcdIUDOSanNELClOfLxk=
+X-Received: by 2002:a67:c189:: with SMTP id h9mr1606233vsj.91.1585125968774;
+ Wed, 25 Mar 2020 01:46:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200324170407.16470-3-arnaud.pouliquen@st.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <00000000000039420505a14e4951@google.com>
+In-Reply-To: <00000000000039420505a14e4951@google.com>
+From:   Qiujun Huang <anenbupt@gmail.com>
+Date:   Wed, 25 Mar 2020 16:45:57 +0800
+Message-ID: <CADG63jANt9w4rFWKg6cw_S4jvB+Q-2hyOp9Mm0WD3oyQofY6UA@mail.gmail.com>
+Subject: Re: KASAN: slab-out-of-bounds Read in hfa384x_usbin_callback
+To:     syzbot <syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        devel@driverdev.osuosl.org, Greg KH <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        nishkadg.linux@gmail.com, syzkaller-bugs@googlegroups.com
+Content-Type: multipart/mixed; boundary="0000000000004b5e2605a1a9e684"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24. 03. 20, 18:04, Arnaud Pouliquen wrote:
-> --- /dev/null
-> +++ b/drivers/tty/rpmsg_tty.c
-> @@ -0,0 +1,417 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) STMicroelectronics 2020 - All Rights Reserved
-> + * Authors: Arnaud Pouliquen <arnaud.pouliquen@st.com> for STMicroelectronics.
-> + */
-...
-> +typedef void (*rpmsg_tty_rx_cb_t)(struct rpmsg_device *, void *, int, void *,
-> +				  u32);
+--0000000000004b5e2605a1a9e684
+Content-Type: text/plain; charset="UTF-8"
 
-Unused, it seems?
+#syz test: https://github.com/google/kasan.git e17994d1
 
-> +static int rpmsg_tty_cb(struct rpmsg_device *rpdev, void *data, int len,
-> +			void *priv, u32 src)
-> +{
-> +	struct rpmsg_tty_port *cport = dev_get_drvdata(&rpdev->dev);
-> +	int copied;
-> +
-> +	if (src == cport->data_dst) {
-> +		/* data message */
-> +		if (!len)
-> +			return -EINVAL;
-> +		copied = tty_insert_flip_string_fixed_flag(&cport->port, data,
-> +							   TTY_NORMAL, len);
+On Sat, Mar 21, 2020 at 3:28 AM syzbot
+<syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11d74573e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
+> dashboard link: https://syzkaller.appspot.com/bug?extid=7d42d68643a35f71ac8a
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15fa561de00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15d74573e00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+7d42d68643a35f71ac8a@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: slab-out-of-bounds in memcpy include/linux/string.h:381 [inline]
+> BUG: KASAN: slab-out-of-bounds in skb_put_data include/linux/skbuff.h:2284 [inline]
+> BUG: KASAN: slab-out-of-bounds in hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
+> BUG: KASAN: slab-out-of-bounds in hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
+> BUG: KASAN: slab-out-of-bounds in hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
+> Read of size 19671 at addr ffff8881d226413c by task swapper/0/0
+>
+> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  <IRQ>
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0xef/0x16e lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+>  __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+>  kasan_report+0xe/0x20 mm/kasan/common.c:641
+>  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+>  check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
+>  memcpy+0x20/0x50 mm/kasan/common.c:127
+>  memcpy include/linux/string.h:381 [inline]
+>  skb_put_data include/linux/skbuff.h:2284 [inline]
+>  hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
+>  hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
+>  hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
+>  __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+>  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+>  dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+>  call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+>  expire_timers kernel/time/timer.c:1449 [inline]
+>  __run_timers kernel/time/timer.c:1773 [inline]
+>  __run_timers kernel/time/timer.c:1740 [inline]
+>  run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+>  __do_softirq+0x21e/0x950 kernel/softirq.c:292
+>  invoke_softirq kernel/softirq.c:373 [inline]
+>  irq_exit+0x178/0x1a0 kernel/softirq.c:413
+>  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+>  smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+>  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+>  </IRQ>
+> RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:696
+> Code: cc cc 41 56 41 55 65 44 8b 2d 44 77 72 7a 41 54 55 53 0f 1f 44 00 00 e8 b6 62 b5 fb e9 07 00 00 00 0f 00 2d ea 0c 53 00 fb f4 <65> 44 8b 2d 20 77 72 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+> RSP: 0018:ffffffff87007d80 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> RAX: 0000000000000007 RBX: ffffffff8702cc40 RCX: 0000000000000000
+> RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff8702d48c
+> RBP: fffffbfff0e05988 R08: ffffffff8702cc40 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: ffffffff87e607c0 R15: 0000000000000000
+>  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+>  do_idle+0x3e0/0x500 kernel/sched/idle.c:269
+>  cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
+>  start_kernel+0xe16/0xe5a init/main.c:998
+>  secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:242
+>
+> The buggy address belongs to the page:
+> page:ffffea0007489800 refcount:32744 mapcount:0 mapping:0000000000000000 index:0x0 compound_mapcount: 0
+> flags: 0x200000000010000(head)
+> raw: 0200000000010000 dead000000000100 dead000000000122 0000000000000000
+> raw: 0000000000000000 0000000000000000 00007fe8ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  ffff8881d2268000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffff8881d2268080: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >ffff8881d2268100: fc fc fc fc fc fc fc fc 00 00 00 00 00 00 00 00
+>                    ^
+>  ffff8881d2268180: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>  ffff8881d2268200: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
 
-Provided you always pass TTY_NORMAL, why not simply call
-tty_insert_flip_string instead?
+--0000000000004b5e2605a1a9e684
+Content-Type: application/octet-stream; 
+	name="0002-staging-wlan-ng-fix-ODEBUG-bug-in-prism2sta_disconne.patch"
+Content-Disposition: attachment; 
+	filename="0002-staging-wlan-ng-fix-ODEBUG-bug-in-prism2sta_disconne.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_k8731i4t0>
+X-Attachment-Id: f_k8731i4t0
 
-> +		if (copied != len)
-> +			dev_dbg(&rpdev->dev, "trunc buffer: available space is %d\n",
-> +				copied);
-> +		tty_flip_buffer_push(&cport->port);
-> +	} else {
-> +		/* control message */
-> +		struct rpmsg_tty_ctrl *msg = data;
-> +
-> +		if (len != sizeof(*msg))
-> +			return -EINVAL;
-> +
-> +		cport->data_dst = msg->d_ept_addr;
-> +
-> +		/* Update remote cts state */
-> +		cport->cts = msg->cts ? 1 : 0;
-
-Number to bool implicit conversion needs no magic, just do:
-cport->cts = msg->cts;
-
-> +		if (cport->cts)
-> +			tty_port_tty_wakeup(&cport->port);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void rpmsg_tty_send_term_ready(struct tty_struct *tty, u8 state)
-
-Should the state be bool? Should it be named "ready" instead?
-
-> +{
-> +	struct rpmsg_tty_port *cport = tty->driver_data;
-> +	struct rpmsg_tty_ctrl m_ctrl;
-> +	int ret;
-> +
-> +	m_ctrl.cts = state;
-> +	m_ctrl.d_ept_addr = cport->d_ept->addr;
-> +
-> +	ret = rpmsg_trysend(cport->cs_ept, &m_ctrl, sizeof(m_ctrl));
-> +	if (ret < 0)
-> +		dev_dbg(tty->dev, "cannot send control (%d)\n", ret);
-> +};
-> +
-> +static void rpmsg_tty_throttle(struct tty_struct *tty)
-> +{
-> +	struct rpmsg_tty_port *cport = tty->driver_data;
-> +
-> +	/* Disable remote transmission */
-> +	if (cport->cs_ept)
-> +		rpmsg_tty_send_term_ready(tty, 0);
-
-then s/0/false/;
-
-> +};
-> +
-> +static void rpmsg_tty_unthrottle(struct tty_struct *tty)
-> +{
-> +	struct rpmsg_tty_port *cport = tty->driver_data;
-> +
-> +	/* Enable remote transmission */
-> +	if (cport->cs_ept)
-> +		rpmsg_tty_send_term_ready(tty, 1);
-
-and s/1/true/;
-
-> +};
-...
-> +static int rpmsg_tty_write(struct tty_struct *tty, const u8 *buf, int len)
-> +{
-> +	struct rpmsg_tty_port *cport = tty->driver_data;
-> +	struct rpmsg_device *rpdev;
-> +	int msg_max_size, msg_size;
-> +	int ret;
-> +	u8 *tmpbuf;
-> +
-> +	/* If cts not set, the message is not sent*/
-> +	if (!cport->cts)
-> +		return 0;
-> +
-> +	rpdev = cport->rpdev;
-> +
-> +	dev_dbg(&rpdev->dev, "%s: send msg from tty->index = %d, len = %d\n",
-> +		__func__, tty->index, len);
-> +
-> +	msg_max_size = rpmsg_get_mtu(rpdev->ept);
-> +
-> +	msg_size = min(len, msg_max_size);
-> +	tmpbuf = kzalloc(msg_size, GFP_KERNEL);
-> +	if (!tmpbuf)
-> +		return -ENOMEM;
-> +
-> +	memcpy(tmpbuf, buf, msg_size);
-
-This is kmemdup, but why do you do that in the first place?
-
-> +	/*
-> +	 * Try to send the message to remote processor, if failed return 0 as
-> +	 * no data sent
-> +	 */
-> +	ret = rpmsg_trysendto(cport->d_ept, tmpbuf, msg_size, cport->data_dst);
-
-data of rpmsg_trysendto is not const. OK, you seem you need to change
-that first, I see no blocker for that.
-
-> +	kfree(tmpbuf);
-> +	if (ret) {
-> +		dev_dbg(&rpdev->dev, "rpmsg_send failed: %d\n", ret);
-> +		return 0;
-> +	}
-> +
-> +	return msg_size;
-> +}
-> +
-> +static int rpmsg_tty_write_room(struct tty_struct *tty)
-> +{
-> +	struct rpmsg_tty_port *cport = tty->driver_data;
-> +
-> +	return cport->cts ? rpmsg_get_mtu(cport->rpdev->ept) : 0;
-
-With if, this would be more readable, IMO.
-
-> +}
-...> +static struct rpmsg_tty_port *rpmsg_tty_alloc_cport(void)
-> +{
-> +	struct rpmsg_tty_port *cport;
-> +
-> +	cport = kzalloc(sizeof(*cport), GFP_KERNEL);
-> +	if (!cport)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	mutex_lock(&idr_lock);
-> +	cport->id = idr_alloc(&tty_idr, cport, 0, MAX_TTY_RPMSG, GFP_KERNEL);
-> +	mutex_unlock(&idr_lock);
-> +
-> +	if (cport->id < 0) {
-> +		kfree(cport);
-> +		return ERR_PTR(-ENOSPC);
-
-You should return ERR_PTR(cport->id) instead. It might be ENOMEM too.
-
-> +	}
-> +
-> +	return cport;
-> +}
-...
-> +static int rpmsg_tty_port_activate(struct tty_port *p, struct tty_struct *tty)
-> +{
-> +	p->low_latency = (p->flags & ASYNC_LOW_LATENCY) ? 1 : 0;
-> +
-> +	/* Allocate the buffer we use for writing data */
-
-Where exactly -- am I missing something?
-
-> +	return tty_port_alloc_xmit_buf(p);
-> +}
-> +
-> +static void rpmsg_tty_port_shutdown(struct tty_port *p)
-> +{
-> +	/* Free the write buffer */
-> +	tty_port_free_xmit_buf(p);
-> +}
-...
-> +static int rpmsg_tty_probe(struct rpmsg_device *rpdev)
-> +{
-> +	struct rpmsg_tty_port *cport;
-> +	struct device *dev = &rpdev->dev;
-> +	struct rpmsg_channel_info chinfo;
-> +	struct device *tty_dev;
-> +	int ret;
-> +
-> +	cport = rpmsg_tty_alloc_cport();
-> +	if (IS_ERR(cport)) {
-> +		dev_err(dev, "failed to alloc tty port\n");
-> +		return PTR_ERR(cport);
-> +	}
-> +
-> +	if (!strncmp(rpdev->id.name, TTY_CH_NAME_WITH_CTS,
-> +		     sizeof(TTY_CH_NAME_WITH_CTS))) {
-
-sizeof of a string feels unnatural, but will work in this case. Can a
-compiler optimize strlen of a static string?
-
-> +		/*
-> +		 * the default endpoint is used for control. Create a second
-> +		 * endpoint for the data that would be exchanges trough control
-> +		 * endpoint. address of the data endpoint will be provided with
-> +		 * the cts state
-> +		 */
-> +		cport->cs_ept = rpdev->ept;
-> +		cport->data_dst = RPMSG_ADDR_ANY;
-> +
-> +		strscpy(chinfo.name, TTY_CH_NAME_WITH_CTS, sizeof(chinfo.name));
-> +		chinfo.src = RPMSG_ADDR_ANY;
-> +		chinfo.dst = RPMSG_ADDR_ANY;
-> +
-> +		cport->d_ept = rpmsg_create_ept(rpdev, rpmsg_tty_cb, cport,
-> +						chinfo);
-> +		if (!cport->d_ept) {
-> +			dev_err(dev, "failed to create tty control channel\n");
-> +			ret = -ENOMEM;
-> +			goto err_r_cport;
-> +		}
-> +		dev_dbg(dev, "%s: creating data endpoint with address %#x\n",
-> +			__func__, cport->d_ept->addr);
-> +	} else {
-> +		/*
-> +		 * TTY over rpmsg without CTS management the default endpoint
-> +		 * is use for raw data transmission.
-> +		 */
-> +		cport->cs_ept = NULL;
-> +		cport->cts = 1;
-> +		cport->d_ept = rpdev->ept;
-> +		cport->data_dst = rpdev->dst;
-> +	}
-> +
-> +	tty_port_init(&cport->port);
-> +	cport->port.ops = &rpmsg_tty_port_ops;
-
-I expected these two in rpmsg_tty_alloc_cport.
-
-> +
-> +	tty_dev = tty_port_register_device(&cport->port, rpmsg_tty_driver,
-> +					   cport->id, dev);
-> +	if (IS_ERR(tty_dev)) {
-> +		dev_err(dev, "failed to register tty port\n");
-> +		ret = PTR_ERR(tty_dev);
-> +		goto  err_destroy;
-> +	}
-> +
-> +	cport->rpdev = rpdev;
-> +
-> +	dev_set_drvdata(dev, cport);
-> +
-> +	dev_dbg(dev, "new channel: 0x%x -> 0x%x : ttyRPMSG%d\n",
-> +		rpdev->src, rpdev->dst, cport->id);
-> +
-> +	return 0;
-> +
-> +err_destroy:
-> +	tty_port_destroy(&cport->port);
-> +	if (cport->cs_ept)
-> +		rpmsg_destroy_ept(cport->d_ept);
-> +err_r_cport:
-> +	rpmsg_tty_release_cport(cport);
-> +
-> +	return ret;
-> +}
-
-thanks,
--- 
-js
-suse labs
+RnJvbSA4NGEzMWJhMzI2ZjRiODAyYjIyYThkMjgyNTFiODgxYmY0YzcyOTBkIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBRaXVqdW4gSHVhbmcgPGhxamFnYWluQGdtYWlsLmNvbT4KRGF0
+ZTogV2VkLCAyNSBNYXIgMjAyMCAxNDo1NToyNSArMDgwMApTdWJqZWN0OiBbUEFUQ0ggMi8zXSBz
+dGFnaW5nOiB3bGFuLW5nOiBmaXggT0RFQlVHIGJ1ZyBpbgogcHJpc20yc3RhX2Rpc2Nvbm5lY3Rf
+dXNiCgpXZSBzaG91bGQgY2FuY2VsIGh3LT51c2Jfd29yayBiZWZvcmUga2ZyZWUoaHcpLgoKUmVw
+b3J0ZWQtYnk6IHN5emJvdCs2ZDJlN2Y2ZmE5MGUyN2JlOWQ2MkBzeXprYWxsZXIuYXBwc3BvdG1h
+aWwuY29tClNpZ25lZC1vZmYtYnk6IFFpdWp1biBIdWFuZyA8aHFqYWdhaW5AZ21haWwuY29tPgot
+LS0KIGRyaXZlcnMvc3RhZ2luZy93bGFuLW5nL3ByaXNtMnVzYi5jIHwgMSArCiAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3N0YWdpbmcvd2xhbi1u
+Zy9wcmlzbTJ1c2IuYyBiL2RyaXZlcnMvc3RhZ2luZy93bGFuLW5nL3ByaXNtMnVzYi5jCmluZGV4
+IDM1MjU1NmYuLjQ2ODliMjEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvc3RhZ2luZy93bGFuLW5nL3By
+aXNtMnVzYi5jCisrKyBiL2RyaXZlcnMvc3RhZ2luZy93bGFuLW5nL3ByaXNtMnVzYi5jCkBAIC0x
+ODAsNiArMTgwLDcgQEAgc3RhdGljIHZvaWQgcHJpc20yc3RhX2Rpc2Nvbm5lY3RfdXNiKHN0cnVj
+dCB1c2JfaW50ZXJmYWNlICppbnRlcmZhY2UpCiAKIAkJY2FuY2VsX3dvcmtfc3luYygmaHctPmxp
+bmtfYmgpOwogCQljYW5jZWxfd29ya19zeW5jKCZody0+Y29tbXNxdWFsX2JoKTsKKwkJY2FuY2Vs
+X3dvcmtfc3luYygmaHctPnVzYl93b3JrKTsKIAogCQkvKiBOb3cgd2UgY29tcGxldGUgYW55IG91
+dHN0YW5kaW5nIGNvbW1hbmRzCiAJCSAqIGFuZCB0ZWxsIGV2ZXJ5b25lIHdobyBpcyB3YWl0aW5n
+IGZvciB0aGVpcgotLSAKMS44LjMuMQoK
+--0000000000004b5e2605a1a9e684--
