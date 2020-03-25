@@ -2,114 +2,69 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5B9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2958EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:42:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C436A20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:41:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lLrrU0TN"
+	by mail.kernel.org (Postfix) with ESMTP id 02A7A20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:42:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCYNlw (ORCPT
+        id S1727619AbgCYNmB convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:41:52 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:50775 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727114AbgCYNlw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:41:52 -0400
-Received: by mail-pj1-f65.google.com with SMTP id v13so1056030pjb.0;
-        Wed, 25 Mar 2020 06:41:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fc6W0JXmmadOQ0swBSxFn65817l4LzrYHT49sb98cUg=;
-        b=lLrrU0TNyaPUwk3xtXB+PN1ftG4z8BLpPfziRfD48kcHiMUF3J1NweM6t0y1tXGKbW
-         7yu12WqX0ujKEZTuqHZwddEMTlZeZUk9aU4tI2lNDf0VuQO5CS/J+HNXMbVwWUuApj6J
-         TJLrdgsMYwESP7JnVu7NTGAVRyEddFA5AmYQV5NgsOXOO1rMOpAH7yFU5KwZ/G/ws+/7
-         9rdHERRzrpVec+KaGmrUnacnm07/D3G45wjI+FxKmsV8DcaWaHPudzj8CvC9zYS9REZr
-         1E4FWR635lqCEnG1tM2SKRLf+VUPwKiPyBMLkOwG7/UicKkhyK3sRLOfmhojH7kodyIe
-         6hIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fc6W0JXmmadOQ0swBSxFn65817l4LzrYHT49sb98cUg=;
-        b=Mb/VY0W65sriPC0v+Ze5M76BR6WaxDVBTxx3a7rZV8YXn1r25jr3qQtpKdwh5UP+IT
-         zuAGGmIpd9/SIb79gKsph5qw1BIYMexEh3P7mi9kivHZnu8QK2Jtszd3NKFaf5QnYoQy
-         GxSfBpUeEi4ccntptJYrr91H+GJgR/Lfyr7GlBDPdlQp2hijEKb9SD/J/LIpG7K4MXnr
-         kOyRZgS62hPIS1nAqHp25ebQT82x1z4ngM6qigDH+sb5Y6gUzNEUtyDpI23QPMMRPvZc
-         MS+c5Le5xD3cf2uFgUhEYUu1MjY7aUDIVgee59U7BeOs838xwU3w5vo/XLi2ILkYOHNf
-         VJQA==
-X-Gm-Message-State: ANhLgQ3931ILiO2KhoB6xuwczDqyiDs8hUH0rFYiUgN3/xaE0ZNEQYgd
-        tlr8smK3tN8b7Rc663jBhU3GMbI1
-X-Google-Smtp-Source: ADFU+vtME+OlQ0JE+bJZcPyTEYkWi/mDZvuYCt5SUYnLVfdl4avtfGOJUo3bp2mtw9rS4zXMPuvYog==
-X-Received: by 2002:a17:90a:1f07:: with SMTP id u7mr3995255pja.24.1585143710497;
-        Wed, 25 Mar 2020 06:41:50 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id w9sm18816660pfd.94.2020.03.25.06.41.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 06:41:49 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 06:41:47 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     "Y.b. Lu" <yangbo.lu@nxp.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
-Message-ID: <20200325134147.GB32284@localhost>
-References: <20200320103726.32559-1-yangbo.lu@nxp.com>
- <20200320103726.32559-7-yangbo.lu@nxp.com>
- <20200324130733.GA18149@localhost>
- <AM7PR04MB688500546D0FC4A64F0DA19DF8CE0@AM7PR04MB6885.eurprd04.prod.outlook.com>
+        Wed, 25 Mar 2020 09:42:01 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:36420 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgCYNmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:42:01 -0400
+Received: from ip5f5a5d2f.dynamic.kabel-deutschland.de ([95.90.93.47] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1jH6I2-0005OR-Tp; Wed, 25 Mar 2020 14:41:50 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Lukas Wunner <lukas@wunner.de>, gregkh@linuxfoundation.org,
+        jslaby@suse.com, matwey.kornilov@gmail.com,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
+Date:   Wed, 25 Mar 2020 14:41:50 +0100
+Message-ID: <1688171.mLF46rTMEE@diego>
+In-Reply-To: <20200323134106.GL1922688@smile.fi.intel.com>
+References: <20200318142640.982763-1-heiko@sntech.de> <20200323131714.vmhjws5xpj6yf536@wunner.de> <20200323134106.GL1922688@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <AM7PR04MB688500546D0FC4A64F0DA19DF8CE0@AM7PR04MB6885.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 03:08:46AM +0000, Y.b. Lu wrote:
+Am Montag, 23. März 2020, 14:41:06 CET schrieb Andy Shevchenko:
+> On Mon, Mar 23, 2020 at 02:17:14PM +0100, Lukas Wunner wrote:
+> > On Mon, Mar 23, 2020 at 09:25:57AM +0100, Heiko Stübner wrote:
+> > > Am Donnerstag, 19. März 2020, 06:40:34 CET schrieb Lukas Wunner:
+> 
+> > "rs485-re-gpios" seems a bit cryptic, how about "rs485-rx-enable-gpios"
+> > or "rs485-full-duplex-gpios"?
+> 
+> First is in align with well established pin name, second is its elaboration,
+> I'm for any, but last.
 
-> The calling should be like this,
-> ptp_set_pinfunc (hold pincfg_mux)
-> ---> ptp_disable_pinfunc
->    ---> .enable
->       ---> ptp_find_pin (hold pincfg_mux)
+So I guess the intersection of both your preferences
+is "rs485-rx-enable-gpios" ... and I did go with that ;-)
 
-I see.  The call
+I've now moved my rs485 things over to tty-next + taking
+	- "serial: Allow uart_get_rs485_mode() to return errno"
+	- "serial: 8250: Support rs485 bus termination GPIO"
+from Lukas' git-tree + fixing other things according to review comments.
 
-    ptp_disable_pinfunc() --> .enable()
+I guess I'll now just sit on things till after the 5.7 merge window for
+the depending patches to get posted.
 
-is really
 
-    ptp_disable_pinfunc() --> .enable(on=0)
+Heiko
 
-or disable.
 
-All of the other drivers (except mv88e6xxx which has a bug) avoid the
-deadlock by only calling ptp_find_pin() when invoked by .enable(on=1);
-
-Of course, that is horrible, and I am going to find a way to fix it.
-
-For now, maybe you can drop the "programmable pins" feature for your
-driver?  After all, the pins are not programmable.
-
-Thanks,
-Richard
