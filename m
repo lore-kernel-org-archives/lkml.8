@@ -2,113 +2,68 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57805C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF93C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3101020772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:35:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 412C420772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:36:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCYKfp (ORCPT
+        id S1727641AbgCYKgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:35:45 -0400
-Received: from protonic.xs4all.nl ([83.163.252.89]:39992 "EHLO protonic.nl"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727407AbgCYKfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:35:44 -0400
-X-Greylist: delayed 409 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 06:35:43 EDT
-Received: from erd988 (erd988.prtnl [192.168.224.30])
-        by sparta.prtnl (Postfix) with ESMTP id A803844A024D;
-        Wed, 25 Mar 2020 11:28:52 +0100 (CET)
-Date:   Wed, 25 Mar 2020 11:28:51 +0100
-From:   David Jander <david@protonic.nl>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        David Miller <davem@davemloft.net>, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, mark.rutland@arm.com,
-        robh+dt@kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        marex@denx.de, devicetree@vger.kernel.org, olteanv@gmail.com
-Subject: Re: user space interface for configuring T1 PHY management mode
- (master/slave)
-Message-ID: <20200325112851.43b3e6bc@erd988>
-In-Reply-To: <20200325101111.GZ25745@shell.armlinux.org.uk>
-References: <20200325083449.GA8404@pengutronix.de>
-        <20200325101111.GZ25745@shell.armlinux.org.uk>
-Organization: Protonic Holland
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 25 Mar 2020 06:36:21 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:58286 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727332AbgCYKgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:36:21 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id a27912dfd0cb6c9e; Wed, 25 Mar 2020 11:36:18 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Pratik Rajesh Sampat <psampat@linux.ibm.com>,
+        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, pratik.r.sampat@gmail.com,
+        ego@linux.vnet.ibm.com, dja@axtens.net
+Subject: Re: [PATCH] cpufreq: powernv: Fix frame-size-overflow in powernv_cpufreq_work_fn
+Date:   Wed, 25 Mar 2020 11:36:18 +0100
+Message-ID: <7394005.IE404Cl4Vv@kreacher>
+In-Reply-To: <87h7yexnu7.fsf@mpe.ellerman.id.au>
+References: <20200316135743.57735-1-psampat@linux.ibm.com> <1921198.IfoiWgUDIW@kreacher> <87h7yexnu7.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 10:11:12 +0000
-Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-
-> On Wed, Mar 25, 2020 at 09:34:49AM +0100, Oleksij Rempel wrote:
-> > Hi all,
-> > 
-> > I'm working on mainlining of NXP1102 PHY (BroadR Reach/802.3bw) support.
-> > 
-> > Basic functionality is working and support with mainline kernel. Now it is
-> > time to extend it. According to the specification, each PHY can be master
-> > or slave.
-> > 
-> > The HW can be pre configured via bootstrap pins or fuses to have a default
-> > configuration. But in some cases we still need to be able to configure the
-> > PHY in a different mode: 
-> > --------------------------------------------------------------------------------
-> > http://www.ieee802.org/3/1TPCESG/public/BroadR_Reach_Automotive_Spec_V3.0.pdf
-> > 
-> > 6.1 MASTER-SLAVE configuration resolution
-> > 
-> > All BroadR-Reach PHYs will default to configure as SLAVE upon power up or
-> > reset until a management system (for example, processor/microcontroller)
-> > configures it to be MASTER. MASTER-SLAVE assignment for each link
-> > configuration is necessary for establishing the timing control of each PHY.
-> > 
-> > 6.2 PHY-Initialization
-> > 
-> > Both PHYs sharing a link segment are capable of being MASTER or SLAVE. In
-> > IEEE 802.3-2012, MASTER-SLAVE resolution is attained during the
-> > Auto-Negotiation process (see IEEE 802.3-2012 Clause 28). However, the
-> > latency for this process is not acceptable for automotive application. A
-> > forced assignment scheme is employed depending on the physical deployment
-> > of the PHY within the car. This process is conducted at the power-up or
-> > reset condition. The station management system manually configures the
-> > BroadR-Reach PHY to be MASTER (before the link acquisition process starts)
-> > while the link partner defaults to SLAVE (un-managed).
-> > --------------------------------------------------------------------------------
-> > 
-> > Should phylink be involved in this configuration? What's the proper user
-> > space interface to use for this kind of configuration?  ethtool or ip
-> > comes into mind. Further having a Device Tree property to configure a
-> > default mode to overwrite the boot strap pins would be nice to have.  
+On Tuesday, March 24, 2020 7:34:56 AM CET Michael Ellerman wrote:
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> > On Monday, March 16, 2020 2:57:43 PM CET Pratik Rajesh Sampat wrote:
+> >> The patch avoids allocating cpufreq_policy on stack hence fixing frame
+> >> size overflow in 'powernv_cpufreq_work_fn'
+> >> 
+> >> Fixes: 227942809b52 ("cpufreq: powernv: Restore cpu frequency to policy->cur on unthrottling")
+> >> Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+> >
+> > Any objections or concerns here?
+> >
+> > If not, I'll queue it up.
 > 
-> Well, the first question would be whether this is something that
-> userspace needs to alter, or whether static configuration at boot
-> time is what is necessary.
-> 
-> Given what is in the description, it seems that the concern is with
-> the latency it takes for the link to come up. I would suggest that
-> the lowest latency would be achieved when using static configuration
-> rather than waiting for the kernel to fully boot and userspace to
-> start before configuring the PHY.
+> I have it in my testing branch,
 
-Yes, that would be the fastest, and in many cases the preferred way. But the
-lack of auto negotiation is not a choice. It is imposed by the spec. Because
-of this, and since the PHY's are configurable in software, there is some need
-for configuration in user-space. Of course latency would not be an issue in
-such a case, otherwise a fixed strapped configuration was chosen.
+Great!
 
-Best regards,
+> but if you pick it up I can drop it.
 
--- 
-David Jander
-Protonic Holland.
+Let it go in through your tree.
+
+Cheers!
+
+
+
