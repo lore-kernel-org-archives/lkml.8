@@ -2,117 +2,116 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F33C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C19C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10522206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59C86206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jDm+gCbr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbgCYGgm (ORCPT
+        id S1727253AbgCYGhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 02:36:42 -0400
-Received: from mga18.intel.com ([134.134.136.126]:47292 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgCYGgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 02:36:42 -0400
-IronPort-SDR: pxhg9WRJMgcsIu/oQcAFkmOaf/HP8qFaq/sjenQka4WnGzDLeoVJXccsJq0LG1y0xMxbHCLyRL
- /y+rRR1TrnUA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 23:36:41 -0700
-IronPort-SDR: 3Td4nQqzHu1XAMtC2noNIdMXCZj4aCwq/T1T4z21ZSQoVVZPPaCeM7Dx+0o7jbNSRY25BfdeB7
- +tehq/JEvJTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
-   d="scan'208";a="270704738"
-Received: from sneftin-mobl1.ger.corp.intel.com (HELO [10.214.212.82]) ([10.214.212.82])
-  by fmsmga004.fm.intel.com with ESMTP; 24 Mar 2020 23:36:38 -0700
-Subject: Re: [PATCH] e1000e: bump up timeout to wait when ME un-configure ULP
- mode
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Aaron Ma <aaron.ma@canonical.com>
-Cc:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
-        David Miller <davem@davemloft.net>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>, rex.tsai@intel.com
-References: <20200323191639.48826-1-aaron.ma@canonical.com>
- <EC4F7F0B-90F8-4325-B170-84C65D8BBBB8@canonical.com>
-From:   "Neftin, Sasha" <sasha.neftin@intel.com>
-Message-ID: <2c765c59-556e-266b-4d0d-a4602db94476@intel.com>
-Date:   Wed, 25 Mar 2020 08:36:36 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 02:37:17 -0400
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:38362 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbgCYGhQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 02:37:16 -0400
+Received: by mail-vk1-f193.google.com with SMTP id n128so380989vke.5
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 23:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9jSH6IwIzcHxO1dEAdKynoMSu3DuDL5sjpp02Uv2TK0=;
+        b=jDm+gCbrABJRyKRkp6gI9YwPYuCeyHlXluAEXOh4yEMKoB+Tdx9T0+7noW1hpUNKzZ
+         Kx/ZghXAAOW1qwMTlbHcf7Cig7EJ1MkmptqzUsnzhGfuytVbR6W5/tZy0c9w68S09hEb
+         GoXhEGlfEndrcxqymIz5E4AK/TERQhQBmuoYIdgtF2ZaqtXRhVe8H86H7NSD7Jjg04nA
+         STKax034sKWZzH1CevSpC8khjbcZcVVxIAJfS5r9pkeDk5lT61cLr+mNuU+KGm22qLTf
+         YAMJokPA29sN9sDPIx7mSxT1/xoMMrPUqC9d3wBKZ8Siulb2zK8uHy0mqdOxj8FTcBaV
+         P+dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9jSH6IwIzcHxO1dEAdKynoMSu3DuDL5sjpp02Uv2TK0=;
+        b=OvlnwC+GcPJ2CBDXEfqZwVWZu6z4qU65lfZphuDzAtKXL3+F06L8ABkFaCYbAoS+qK
+         j1eOhhxcFKIaibaDPNuXCyq9bcTFPXTMqEokRWaz61+SpoXFema3uTv9SAEI57PMfBhJ
+         P5yUtszxhZTsqGJn4ch/j+QK7fBXHg61yM+O1mmvm+0SvPd7rdynCWAJpyE8GJh5x2ww
+         4UXbqN7ukbjQdFEHO5n0MPiqjmd8qC+fT2HehiMAhvNb9wGOYPaYe2ICZ8VpCwBri0dY
+         UFjjecn00yuCnHbm0bEKjvSkrpkSIJtEZ3ywPnIq18PpveYn8zytoKpXjPJouwe8hjaR
+         yNBg==
+X-Gm-Message-State: ANhLgQ0j41Pd028XI7SFhr5xPNSclsobfJ7td7MykO8Pxl+Wr/2fXRP0
+        85Az+kJkL6tb/RPAa/a3GDt1AVZjpK1r1gxo+4nPXw==
+X-Google-Smtp-Source: ADFU+vsYq8yJ59LPZqkr3eoifR7LDoo0CMncce0p+aNIhNSb+G7C4aTfiUP1oZ5YrcCWtKdvlXN7vBWm52sQhYicOGo=
+X-Received: by 2002:a1f:ee05:: with SMTP id m5mr1056922vkh.9.1585118235539;
+ Tue, 24 Mar 2020 23:37:15 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <EC4F7F0B-90F8-4325-B170-84C65D8BBBB8@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200309045411.21859-1-andy.tang@nxp.com> <18c58e1b-583c-2308-ee60-a8923c2027ee@linaro.org>
+ <CAHLCerPBxe=Az=EexxYQkgvhRO40JT0qEhnAwqnGbeesiU-bnQ@mail.gmail.com>
+In-Reply-To: <CAHLCerPBxe=Az=EexxYQkgvhRO40JT0qEhnAwqnGbeesiU-bnQ@mail.gmail.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 25 Mar 2020 12:07:04 +0530
+Message-ID: <CAHLCerN6ccJ7zbj9uYKGp-b05q1o7HsaUyW_oTZmEJX1EWXWQQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: thermal: make cooling-maps property optional
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Yuantian Tang <andy.tang@nxp.com>, Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/2020 06:17, Kai-Heng Feng wrote:
-> Hi Aaron,
-> 
->> On Mar 24, 2020, at 03:16, Aaron Ma <aaron.ma@canonical.com> wrote:
->>
->> ME takes 2+ seconds to un-configure ULP mode done after resume
->> from s2idle on some ThinkPad laptops.
->> Without enough wait, reset and re-init will fail with error.
-> 
-> Thanks, this patch solves the issue. We can drop the DMI quirk in favor of this patch.
-> 
->>
->> Fixes: f15bb6dde738cc8fa0 ("e1000e: Add support for S0ix")
->> BugLink: https://bugs.launchpad.net/bugs/1865570
->> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
->> ---
->> drivers/net/ethernet/intel/e1000e/ich8lan.c | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> index b4135c50e905..147b15a2f8b3 100644
->> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->> @@ -1240,9 +1240,9 @@ static s32 e1000_disable_ulp_lpt_lp(struct e1000_hw *hw, bool force)
->> 			ew32(H2ME, mac_reg);
->> 		}
->>
->> -		/* Poll up to 300msec for ME to clear ULP_CFG_DONE. */
->> +		/* Poll up to 2.5sec for ME to clear ULP_CFG_DONE. */
->> 		while (er32(FWSM) & E1000_FWSM_ULP_CFG_DONE) {
->> -			if (i++ == 30) {
->> +			if (i++ == 250) {
->> 				ret_val = -E1000_ERR_PHY;
->> 				goto out;
->> 			}
-> 
-> The return value was not caught by the caller, so the error ends up unnoticed.
-> Maybe let the caller check the return value of e1000_disable_ulp_lpt_lp()?
-> 
-> Kai-Heng
-Hello Kai-Heng and Aaron,
-I a bit confused. In our previous conversation you told ME not running. 
-let me shimming in. Increasing delay won't be solve the problem and just 
-mask it. We need to understand why ME take too much time. What is 
-problem with this specific system?
-So, basically no ME system should works for you.
+On Mon, Mar 16, 2020 at 9:43 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Mon, Mar 16, 2020 at 8:22 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+> >
+> > On 09/03/2020 05:54, andy.tang@nxp.com wrote:
+> > > From: Yuantian Tang <andy.tang@nxp.com>
+> > >
+> > > Cooling-maps doesn't have to be a required property because there may
+> > > be no cooling device on system, or there are no enough cooling devices for
+> > > each thermal zone in multiple thermal zone cases since cooling devices
+> > > can't be shared.
+> > > So make this property optional to remove such limitations.
+> > >
+> > > For thermal zones with no cooling-maps, there could be critic trips
+> > > that can trigger CPU reset or shutdown. So they still can take actions.
+> > >
+> > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+>
+> Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+>
+> >
+> > Amit, I'm about to pick this patch, it will collide with the yaml
+> > conversion changes.
+>
+> Thanks for the headsup. I can fixup v3 when I respin.
+>
+> However, I've always interpreted this binding as follows:
+> - cooling-maps should be mandatory for active and passive trip types
+> otherwise there will be no cooling
+> - cooling-maps make no sense for critical trip type since we're
+> invoking system shutdown
+> - cooling-maps are optional for hot trip types.
+>
+> Is this your understanding too?
+>
+> We should be able to enforce this in YAML.
 
-Meanwhile I prefer keep DMI quirk.
-Thanks,
-Sasha
-> 
->> -- 
->> 2.17.1
->>
-> 
+Rui, Daniel,
 
+What do you think about the above interpretation of the cooling-maps bindings?
+
+Regards,
+Amit
