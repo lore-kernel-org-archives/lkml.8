@@ -2,79 +2,118 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E203CC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D8EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF9D320658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7522A207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:39:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585143595;
+	bh=yuWwvozHMKKmR/O++GIvoJ2kBVPow876tzB+1f2Q4l0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DSDALJTPzFei1zNkt2fjO7KZ3oeIYTS0I0YeRaIhuVujtn+aqV01p7w1/9OvWp+Va
+	 xXGVHk1T5ZzBEdwPhNdC9nspYjHJVSQRiUc6wPVRgQPz1+UCmc3T9NCsBnySWCd01R
+	 OMU4NwOeA4dMuqgtiSCSRkH+y7bd4akxqLu9ud4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbgCYNhX (ORCPT
+        id S1727469AbgCYNjy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:37:23 -0400
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:34681 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgCYNhU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:37:20 -0400
-IronPort-SDR: EnQ15c651USx5bSveWBlSwn4rviqqjOGj7Y2ileG/lXeq+m3rv5Aum/9jfMiWNC0QAxcf7ckf4
- CdPbKK/GddCdZo7myDml14d0nk12kXX7gXFFtFAhwOf7H7Hqo43PU3WSABja9IQZ/T1jHdGHai
- 2u7EMScla6hsGc97NNvg80vFovSdd0vVaOLUEa8a66QZSpkVAZl06fUHMzikQfEMG5j+7Wl66O
- k8obzPnYf7QI8K23I6e1HK0SFLdp+VQLzrL1k4Gp0IxFga82CSwa91evzyVfG0imkyroBU7FbI
- pkI=
-X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="47143580"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa4.mentor.iphmx.com with ESMTP; 25 Mar 2020 05:37:20 -0800
-IronPort-SDR: ljHn8vTxJIQ5G1NvGM0TNMXytrpYp25TluGS9uV2rvLzawDAXvssAyDyhFzzxf4O0g0yyT3C4Q
- TFXjMfWMU9Cuuzhs63iTMJSqdfBWbGN5xYacCVljiTks5bTEaXAyq6BDysJ/pOr3mzutLAPgl/
- XDOYtFelgnf7+9HieaVd6Xhfq2fuPkHEYLS14u5tztzPFCQU91Nxbhg88DPeur4LvM7B56rVrG
- sCkcdaneJ0G/dFnlHz3JSAjBpx6TOyVsxAGO5O6yYbhsIXpdiGHKjwSN1nu6YQL/pmw6MVUF5q
- phQ=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v9 55/55] Input: atmel_mxt_ts - Fix compilation warning
-Date:   Wed, 25 Mar 2020 06:33:34 -0700
-Message-ID: <20200325133334.19346-56-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325133334.19346-1-jiada_wang@mentor.com>
-References: <20200325133334.19346-1-jiada_wang@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 25 Mar 2020 09:39:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727114AbgCYNjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:39:54 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90A142078A;
+        Wed, 25 Mar 2020 13:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585143593;
+        bh=yuWwvozHMKKmR/O++GIvoJ2kBVPow876tzB+1f2Q4l0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZKSjNK+PGupENdbT3vo6xXKF8HEAd7hVYRtJE30Dp8043BwMGlbUq6Y5zoMn4Ewt8
+         7MFxtob35Un3x2aJFhQeEGHEcIx5xBYguNvaRg90BX32Qrtz96jSlvaqo58E/P7E+s
+         wYBu3W4QT6EEI76IxcQky4diZZAXmyIY3qwI33Ts=
+Date:   Wed, 25 Mar 2020 22:39:46 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Paul McKenney <paulmck@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Joel Fernandes \(Google\)" <joel@joelfernandes.org>,
+        "Steven Rostedt \(VMware\)" <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [patch V3 04/23] kprobes: Prevent probes in .noinstr.text
+ section
+Message-Id: <20200325223946.837da768d92102b47c833ba3@kernel.org>
+In-Reply-To: <87369yf5jh.fsf@nanos.tec.linutronix.de>
+References: <20200320175956.033706968@linutronix.de>
+        <20200320180032.799569116@linutronix.de>
+        <20200323230025.a24f949a2143dbd5f208f00c@kernel.org>
+        <87mu87oy7n.fsf@nanos.tec.linutronix.de>
+        <20200324144953.eec3e73f249901582bdf564e@kernel.org>
+        <87369yf5jh.fsf@nanos.tec.linutronix.de>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix "make W=1" compilation warnings from Atmel driver
-as per the compilation logs.
+On Tue, 24 Mar 2020 10:47:30 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Masami Hiramatsu <mhiramat@kernel.org> writes:
+> > On Mon, 23 Mar 2020 17:03:24 +0100
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > @@ -2212,6 +2212,10 @@ static int __init populate_kprobe_blacklist(unsigned long *start,
+> >> >  	ret = kprobe_add_area_blacklist((unsigned long)__kprobes_text_start,
+> >> >  					(unsigned long)__kprobes_text_end);
+> >> >  
+> >> > +	/* Symbols in noinstr section are blacklisted */
+> >> > +	ret = kprobe_add_area_blacklist((unsigned long)__noinstr_text_start,
+> >> > +					(unsigned long)__noinstr_text_end);
+> >> > +
+> >> >  	return ret ? : arch_populate_kprobe_blacklist();
+> >> >  }
+> >> 
+> >> So that extra function is not required when adding that, right?
+> >
+> > That's right :)
+> >
+> >> 
+> >> >> +/* Functions in .noinstr.text must not be probed */
+> >> >> +static bool within_noinstr_text(unsigned long addr)
+> >> >> +{
+> >> >> +	/* FIXME: Handle module .noinstr.text */
+> >
+> > And this reminds me that the module .kprobes.text is not handled yet :(.
+> 
+> Correct. Any idea how to do that with a simple oneliner like the above?
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 7bd926f04e9f..c6e3905bb50f 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2048,7 +2048,7 @@ static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
- 
- 			byte_offset = reg + i - cfg->start_ofs;
- 
--			if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
-+			if (byte_offset < cfg->mem_size) {
- 				*(cfg->mem + byte_offset) = val;
- 			} else {
- 				dev_err(dev, "Bad object: reg:%d, T%d, ofs=%d\n",
+Hmm, we can store the .kprobes.text and .noinstr.text section info in the struct
+module and register it in module callback. But before that, I have to introduce
+a remove function. Currently, the blacklist can only add symbols. So that will
+not be a oneliner.
+
+Let me try.
+
+Thank you,
+
+
 -- 
-2.17.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
