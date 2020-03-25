@@ -2,99 +2,112 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E49FC54FCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD04BC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:07:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 679242073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rqWZy+mx"
+	by mail.kernel.org (Postfix) with ESMTP id 7F2CB2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:07:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727299AbgCYABM (ORCPT
+        id S1727212AbgCYAHN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:01:12 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15473 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727262AbgCYABM (ORCPT
+        Tue, 24 Mar 2020 20:07:13 -0400
+Received: from alexa-out-sd-01.qualcomm.com ([199.106.114.38]:11963 "EHLO
+        alexa-out-sd-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726968AbgCYAHN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 20:01:12 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7a9eec0000>; Tue, 24 Mar 2020 16:59:40 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 24 Mar 2020 17:01:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 17:01:11 -0700
-Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 00:01:10 +0000
-Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
- device tree
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
- <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
- <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
- <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
-Date:   Tue, 24 Mar 2020 17:01:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585094380; bh=UlxBKHdiYfVf84pWue7S26iqlGChyU/5RVRLZidgwwY=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=rqWZy+mxTmPdOwYibjStZKZSubndUNS8+XhlzGnz5s3ZA4tZUoYEr+KvptK6GAJ3j
-         14LqB77/IfcA2rtKMXyg2Nqz14NIMP901W8KCMnYTotoYx4aHKQxUlxowFE2WQBxbG
-         l+dEM7XVgtK1PROmxIWXax9ZtjzWUVAdq8saJSs9QeN6se6VAFjALh9nXgEvB0FFW/
-         TMqVp9DsOuv8ML6ZpsYlCTw6tRwTfWmMPEjCRN9CBVHgv9Q5RuuDe/9ljx2/cKQL8S
-         oVdsIHp1lmY/f+YsU+eiUZ2k1Bnx+Isi8/wfeuQ+BloO/7BYBPgdUPCXms2YHlUnuJ
-         hL/lDjN/OPDjA==
+        Tue, 24 Mar 2020 20:07:13 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-01.qualcomm.com with ESMTP; 24 Mar 2020 17:07:12 -0700
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 24 Mar 2020 17:07:11 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id DF6991F79D; Tue, 24 Mar 2020 17:07:11 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     cang@codeaurora.org, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/3] scsi: ufshcd: Update the set frequency to devfreq
+Date:   Tue, 24 Mar 2020 17:07:03 -0700
+Message-Id: <ebd9ea7d0ebb1884b15e4fe7e3e03460c1e3c52b.1585094538.git.asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, the frequency that devfreq provides the
+driver to set always leads the clocks to be scaled up.
+Hence, round the clock-rate to the nearest frequency
+before deciding to scale.
 
-On 3/24/20 3:48 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 25.03.2020 00:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> ...
->>>> +                     pd_venc: venc {
->>>> +                             clocks =3D <&tegra_car TEGRA210_CLK_VI>,
->>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
->>>> +                             resets =3D <&mc TEGRA210_MC_RESET_VI>,
->>> The MC resetting should be needed only for a hardware hot-resetting. It
->>> should be wrong to add it to the power domain.
->> TRM recommends to do MC client hot-reset during VE power gate and ungate=
-.
-> Could you please tell what TRM it is and what's the page#?
-Tegra TX1 TRM Page 425, Section 12.2.7.14 Procedures for VE Power Domains
+Also update the devfreq statistics of current frequency.
+
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2a2a63b..4607bc6 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1187,6 +1187,9 @@ static int ufshcd_devfreq_target(struct device *dev,
+ 	if (!ufshcd_is_clkscaling_supported(hba))
+ 		return -EINVAL;
+ 
++	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
++	/* Override with the closest supported frequency */
++	*freq = (unsigned long) clk_round_rate(clki->clk, *freq);
+ 	spin_lock_irqsave(hba->host->host_lock, irq_flags);
+ 	if (ufshcd_eh_in_progress(hba)) {
+ 		spin_unlock_irqrestore(hba->host->host_lock, irq_flags);
+@@ -1201,8 +1204,13 @@ static int ufshcd_devfreq_target(struct device *dev,
+ 		goto out;
+ 	}
+ 
+-	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
++	/* Decide based on the rounded-off frequency and update */
+ 	scale_up = (*freq == clki->max_freq) ? true : false;
++	if (scale_up)
++		*freq = clki->max_freq;
++	else
++		*freq = clki->min_freq;
++	/* Update the frequency */
+ 	if (!ufshcd_is_devfreq_scaling_required(hba, scale_up)) {
+ 		spin_unlock_irqrestore(hba->host->host_lock, irq_flags);
+ 		ret = 0;
+@@ -1250,6 +1258,8 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	struct ufs_hba *hba = dev_get_drvdata(dev);
+ 	struct ufs_clk_scaling *scaling = &hba->clk_scaling;
+ 	unsigned long flags;
++	struct list_head *clk_list = &hba->clk_list_head;
++	struct ufs_clk_info *clki;
+ 
+ 	if (!ufshcd_is_clkscaling_supported(hba))
+ 		return -EINVAL;
+@@ -1260,6 +1270,8 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	if (!scaling->window_start_t)
+ 		goto start_window;
+ 
++	clki = list_first_entry(clk_list, struct ufs_clk_info, list);
++	stat->current_frequency = clki->curr_freq;
+ 	if (scaling->is_busy_started)
+ 		scaling->tot_busy_t += ktime_to_us(ktime_sub(ktime_get(),
+ 					scaling->busy_start_t));
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+
