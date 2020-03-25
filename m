@@ -2,85 +2,140 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842A2C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5144EC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F7BA2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BA932076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:53:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRUs5gXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727666AbgCYSrt (ORCPT
+        id S1727491AbgCYSxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:47:49 -0400
-Received: from mga03.intel.com ([134.134.136.65]:53481 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgCYSrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:47:49 -0400
-IronPort-SDR: lQAMRVfMC5uhTTel3MP2HVQrp543pnQhw6dp2BRhf60rh8TjNtKm8JvIafEBvtxeSqo52A6oYa
- LEMVHHp2+cAA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 11:47:42 -0700
-IronPort-SDR: q13Gvqo8nPRJc1Uw5Sc4GokeBFpqpnCJ5cnXAqZf5qjY30hPaGZm6LXZZHir7XfTHITTn3zJo2
- SdkDa7HFhnCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="446714675"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 11:47:41 -0700
-Date:   Wed, 25 Mar 2020 11:47:41 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
-Message-ID: <20200325184741.GI14294@linux.intel.com>
-References: <20200325195350.7300fee9@canb.auug.org.au>
- <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
- <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
- <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
- <85430f7e-93e0-3652-0705-9cf6e948a9d8@redhat.com>
- <20200325161405.GG14294@linux.intel.com>
- <7b71119b-4594-2535-24ba-2c59430e4f30@redhat.com>
- <20200325164606.GH14294@linux.intel.com>
+        Wed, 25 Mar 2020 14:53:55 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45814 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbgCYSxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:53:55 -0400
+Received: by mail-pg1-f195.google.com with SMTP id o26so1577597pgc.12;
+        Wed, 25 Mar 2020 11:53:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0A8XwLK/VHei5BNSLIP6RyAAlYr0PTQ3mUKooO2YHBI=;
+        b=lRUs5gXjxEoqkj3/if5a2+eHB3Ind5z4U93waFxX6C2QEaho1OmHCbTn6w3kJqmrsf
+         zrDUxx73i5J8KwBO5S1V+hx9GySQTXzGAkJ3upVOVowTfBnu49udAiW/y844IdGedClK
+         loRaz52mO50+7BX5vqOf86CiRhXFAceiVCgzU+dOcR89dabpTMxLvslKANhq0WAxcZZg
+         45ve6G5zRJgMup1TmPq8jKMj3OdlJXKEOOBhKbr9Sjo/MCHm5x60TFVxK4281OPRHOwk
+         3KE1NAALBMq4ydP/SB1Gn/MKu8LbM6XLamBKfdq03weClINJIji8s8YHQbCDJFK+pFtS
+         +U3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0A8XwLK/VHei5BNSLIP6RyAAlYr0PTQ3mUKooO2YHBI=;
+        b=TosjpIzVAaeYKt72kBu+nI5nRxMr09HgGYrbm43h3BGcxwhMxA3koeDws8giKWQgQ/
+         8LpOttTzknZkeu9+CdKgOJFo0+TZj5Z+2x9eRJ1PVYJQnTiTueHe1IAkOxGQfjccNvEV
+         eAghES++wvjxVQwS+JD13ZqFWYbxz9F5jNJywIyecIs6AWxj6bb8eW3ynqygJJ0G8RvS
+         CblVVdjH+AtND5g852411g60kEnECCopHKAYyFranZ9IavUn2XMt/DztOmRU/bLi5mWN
+         KneICZQiNU2dp9KzJ7VtHeROE9dsQ04HMcfx9mz61+F8WZTmwHxBKfPqYF+4kLtDwoUf
+         C8zA==
+X-Gm-Message-State: ANhLgQ2zBx1ps2EQrWx5lHcbXHciM92R8oZ9gd619vU5/sd8r0rhRaZ1
+        4jcnWF4L0phERvXW1B7NJBFUgmDsNTqf2GfCxJY=
+X-Google-Smtp-Source: ADFU+vs5IGiqDBHOJuHFA5G0E6zEcgp/2GS7T1qnTQ7Iwf3xjKO0zWxnArLFNE7IurwGXRC7fD0ppU5owx2lakG1HzI=
+X-Received: by 2002:a63:5859:: with SMTP id i25mr4349929pgm.74.1585162433449;
+ Wed, 25 Mar 2020 11:53:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325164606.GH14294@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1585161361-3408-1-git-send-email-alain.volmat@st.com> <1585161361-3408-3-git-send-email-alain.volmat@st.com>
+In-Reply-To: <1585161361-3408-3-git-send-email-alain.volmat@st.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Mar 2020 20:53:45 +0200
+Message-ID: <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
+To:     Alain Volmat <alain.volmat@st.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        pierre-yves.mordret@st.com,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        fabrice.gasnier@st.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 09:46:06AM -0700, Sean Christopherson wrote:
-> On Wed, Mar 25, 2020 at 05:26:20PM +0100, Paolo Bonzini wrote:
-> > On 25/03/20 17:14, Sean Christopherson wrote:
-> > >> Doh, right.  I think the only solution for that one is to degrade it to
-> > >> WARN_ON(1).
-> > > I reproduced the error, give me a bit to play with the code to see if the
-> > > BUILD_BUG can be preserved.  I'm curious as to why kvm_cpu_cap_mask() is
-> > > special, and why it only fails with this config.
-> > > 
-> > 
-> > I could not reproduce it, but I would not be surprised if there are
-> > other configurations where the compiler cannot constant-propagate from
-> > the reverse_cpuid struct into __cpuid_entry_get_reg.
-> 
-> The error is related to UBSAN.  There is at least one legitimate (but benign)
-> underlying issue.  I'm chasing down a second instance of the BUILD_BUG.
+On Wed, Mar 25, 2020 at 8:38 PM Alain Volmat <alain.volmat@st.com> wrote:
+>
+> Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
+> instead allows any frequency (if it matches timing requirements).
+> Depending on the requested frequency, use the spec data from either
+> Standard, Fast or Fast Plus mode.
+>
+> Hardcoding of min/max bus frequencies is removed and is instead computed.
+>
+> The driver do not use anymore speed identifier but instead handle
+> directly the frequency and figure out the spec data (necessary
+> for the computation of the timing register) based on the frequency.
 
-Argh, red herring.  There is no underlying issue other than gcc tripping up
-when -fsanitize=alignment is enabled by UBSAN.  Good news is that the build
-error can be fixed without resorting to a hack.
+...
+
+> +static struct stm32f7_i2c_spec *get_specs(u32 rate)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(i2c_specs); i++)
+> +               if (rate <= i2c_specs[i].rate)
+> +                       return &i2c_specs[i];
+> +
+
+> +       /* NOT REACHED */
+> +       return ERR_PTR(-EINVAL);
+
+WARN_ONCE() ?
+
+> +}
+
+...
+
+> -                       if ((tscl_l < i2c_specs[setup->speed].l_min) ||
+> +                       if ((tscl_l < specs->l_min) ||
+
+>                             (i2cclk >=
+>                              ((tscl_l - af_delay_min - dnf_delay) / 4))) {
+
+Perhaps squash above two to one line at the same time?
+
+...
+
+> +       int i;
+> +
+> +       for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
+
+
+Perhaps
+
+       int i = ARRAY_SIZE(i2c_specs);
+
+       while(i--)
+
+?
+
+> +               if (i2c_specs[i].rate < rate)
+> +                       return i2c_specs[i].rate;
+
+-- 
+With Best Regards,
+Andy Shevchenko
