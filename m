@@ -2,252 +2,112 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0DCBC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA09C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B651220722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318D820722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Aq8uYCH+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPqCGbGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbgCYJLL (ORCPT
+        id S1727259AbgCYJLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:11:11 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39062 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCYJLL (ORCPT
+        Wed, 25 Mar 2020 05:11:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:55414 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725873AbgCYJL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:11:11 -0400
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id CFFD580C;
-        Wed, 25 Mar 2020 10:11:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1585127469;
-        bh=h0S77ZM+eorU0Bj5tWHi+EgzvOZ1BT+YGd02enoTmdk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Aq8uYCH+3nd88qxPAUWcGyHandJr27L+DHMSaB2DpJeVoITAH5c1uafzoKIv0oJ6+
-         cKnqaT1IS/A77GYy87L73q2OEWSjaptG5+vBMPXSGK1PuEaRlLCeFCktKlJKUjbBmE
-         D09qm3urkl0FsKoEHv5u6Hfk0k2O4VPOQeaVKQJo=
-Date:   Wed, 25 Mar 2020 11:11:07 +0200
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Dafna Hirschfeld <dafna3@gmail.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        hans.verkuil@cisco.com, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-Message-ID: <20200325091107.GB4760@pendragon.ideasonboard.com>
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com>
- <86e17716-193f-ca49-1104-9c599a667eeb@collabora.com>
- <f229a840-bcf3-50c8-27c6-363c72de1d01@xs4all.nl>
- <20190815193511.GB5011@pendragon.ideasonboard.com>
- <CAJ1myNREvdbfw5t7RCX1RtBZnarXy7O6_+Cg89w7njWutijNqQ@mail.gmail.com>
- <20200325071157.GA4760@pendragon.ideasonboard.com>
- <CAJ1myNT5AdWRsJHn34xwWsO9XssnHdhsJRdwRgi+TfGguL+h=Q@mail.gmail.com>
+        Wed, 25 Mar 2020 05:11:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585127488;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tpkY/0lY7hpHmA05svGpFbUDqP2D/nkfiH+o4beESdM=;
+        b=iPqCGbGyGMaLBvKL05CcmsJA1SPBGA3IUv8xpeNGF+sSjVDMmAgIg5G/PEAaOI1Kw9aRWy
+        QyKYZYycZypB7Zb2BW4cdYcZDsTacZR/RAcrlY1kFcR9Y+E57dG2phMy0nvQh12sdjV5Aj
+        bbXnR1zvsUAyVH3evs6WznzEB/8Cpsg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-95-yFDH14ZWOBmUqrL7kRzgMA-1; Wed, 25 Mar 2020 05:11:24 -0400
+X-MC-Unique: yFDH14ZWOBmUqrL7kRzgMA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 51F9A801F7B;
+        Wed, 25 Mar 2020 09:11:23 +0000 (UTC)
+Received: from new-host-5 (unknown [10.40.194.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A9EDF5C241;
+        Wed, 25 Mar 2020 09:11:20 +0000 (UTC)
+Message-ID: <e1733a5fd6f6bbeeae82c0cbc62c17675818bb6c.camel@redhat.com>
+Subject: Re: [PATCH v2 3/3] driver core: Skip unnecessary work when device
+ doesn't have sync_state()
+From:   Davide Caratti <dcaratti@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Vladimir Benes <vbenes@redhat.com>, kernel-team@android.com,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20200325074428.GA3014101@kroah.com>
+References: <20200221080510.197337-1-saravanak@google.com>
+         <20200221080510.197337-4-saravanak@google.com>
+         <f22b7cd6fb6256f56e908e021f4fe389f3a6ee07.camel@redhat.com>
+         <20200325074428.GA3014101@kroah.com>
+Organization: red hat
+Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 25 Mar 2020 10:11:19 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJ1myNT5AdWRsJHn34xwWsO9XssnHdhsJRdwRgi+TfGguL+h=Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dafna,
+On Wed, 2020-03-25 at 08:44 +0100, Greg Kroah-Hartman wrote:
+> On Tue, Mar 24, 2020 at 09:03:28PM +0100, Davide Caratti wrote:
+> > On Fri, 2020-02-21 at 00:05 -0800, Saravana Kannan wrote:
+> > > A bunch of busy work is done for devices that don't have sync_state()
+> > > support. Stop doing the busy work.
+> > > 
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/base/core.c | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > 
+> > hello Greg,
+> > 
+> > this patch and patch 2/3 of the same series proved to fix systematic
+> > crashes (NULL pointer dereference in device_links_flush_sync_list() while
+> > loading mac80211_hwsim.ko, see [1]) on Fedora 31, that are triggered by
+> > NetworkManager-ci [2]. May I ask to queue these two patches for the next
+> > 5.5 stable?
+> 
+> What are the git commit ids of these patches in Linus's tree that you
+> want backported?
 
-On Wed, Mar 25, 2020 at 09:51:51AM +0100, Dafna Hirschfeld wrote:
-> On Wed, Mar 25, 2020 at 8:12 AM Laurent Pinchart wrote:
-> > On Wed, Mar 25, 2020 at 07:34:37AM +0100, Dafna Hirschfeld wrote:
-> > > On Thu, Aug 15, 2019 at 10:17 PM Laurent Pinchart wrote:
-> > > > On Wed, Aug 07, 2019 at 12:39:17PM +0200, Hans Verkuil wrote:
-> > > > > On 8/6/19 8:51 PM, Helen Koike wrote:
-> > > > > > On 7/30/19 3:42 PM, Helen Koike wrote:
-> > > > > >> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> > > > > >>
-> > > > > >> Add the subdev driver for rockchip isp1.
-> > > > > >>
-> > > > > >> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-> > > > > >> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> > > > > >> Signed-off-by: Yichong Zhong <zyc@rock-chips.com>
-> > > > > >> Signed-off-by: Jacob Chen <cc@rock-chips.com>
-> > > > > >> Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
-> > > > > >> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > > > > >> Signed-off-by: Allon Huang <allon.huang@rock-chips.com>
-> > > > > >> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> > > > > >> [fixed unknown entity type / switched to PIXEL_RATE]
-> > > > > >> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > > > >> [update for upstream]
-> > > > > >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > > > > >>
-> > > > > >> ---
-> > > > > >>
-> > > > > >> Changes in v8: None
-> > > > > >> Changes in v7:
-> > > > > >> - fixed warning because of unknown entity type
-> > > > > >> - fixed v4l2-compliance errors regarding rkisp1 formats, try formats
-> > > > > >> and default values
-> > > > > >> - fix typo riksp1/rkisp1
-> > > > > >> - redesign: remove mipi/csi subdevice, sensors connect directly to the
-> > > > > >> isp subdevice in the media topology now. As a consequence, remove the
-> > > > > >> hack in mipidphy_g_mbus_config() where information from the sensor was
-> > > > > >> being propagated through the topology.
-> > > > > >> - From the old dphy:
-> > > > > >>         * cache get_remote_sensor() in s_stream
-> > > > > >>         * use V4L2_CID_PIXEL_RATE instead of V4L2_CID_LINK_FREQ
-> > > > > >> - Replace stream state with a boolean
-> > > > > >> - code styling and checkpatch fixes
-> > > > > >> - fix stop_stream (return after calling stop, do not reenable the stream)
-> > > > > >> - fix rkisp1_isp_sd_get_selection when V4L2_SUBDEV_FORMAT_TRY is set
-> > > > > >> - fix get format in output (isp_sd->out_fmt.mbus_code was being ignored)
-> > > > > >> - s/intput/input
-> > > > > >> - remove #define sd_to_isp_sd(_sd), add a static inline as it will be
-> > > > > >> reused by the capture
-> > > > > >>
-> > > > > >>  drivers/media/platform/rockchip/isp1/rkisp1.c | 1286 +++++++++++++++++
-> > > > > >>  drivers/media/platform/rockchip/isp1/rkisp1.h |  111 ++
-> > > > > >>  2 files changed, 1397 insertions(+)
-> > > > > >>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
-> > > > > >>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
-> > > > > >>
-> > > > > >> diff --git a/drivers/media/platform/rockchip/isp1/rkisp1.c b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> > > > > >> new file mode 100644
-> > > > > >> index 000000000000..6d0c0ffb5e03
-> > > > > >> --- /dev/null
-> > > > > >> +++ b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> > > > > >> @@ -0,0 +1,1286 @@
-> > > > >
-> > > > > <snip>
-> > > > >
-> > > > > >> +static int rkisp1_isp_sd_get_fmt(struct v4l2_subdev *sd,
-> > > > > >> +                           struct v4l2_subdev_pad_config *cfg,
-> > > > > >> +                           struct v4l2_subdev_format *fmt)
-> > > > > >> +{
-> > > > > >> +  struct rkisp1_isp_subdev *isp_sd = sd_to_isp_sd(sd);
-> > > > > >> +  struct v4l2_mbus_framefmt *mf = &fmt->format;
-> > > > > >> +
-> > > > > >> +  if ((fmt->pad != RKISP1_ISP_PAD_SINK) &&
-> > > > > >> +      (fmt->pad != RKISP1_ISP_PAD_SOURCE_PATH)) {
-> > > > > >> +          fmt->format.code = MEDIA_BUS_FMT_FIXED;
-> > > > > >> +          /*
-> > > > > >> +           * NOTE: setting a format here doesn't make much sense
-> > > > > >> +           * but v4l2-compliance complains
-> > > > > >> +           */
-> > > > > >> +          fmt->format.width = RKISP1_DEFAULT_WIDTH;
-> > > > > >> +          fmt->format.height = RKISP1_DEFAULT_HEIGHT;
-> > > > > >
-> > > > > > As I had mentioned to you, this is called for the isp pads connected to the
-> > > > > > DMA engines for statistics and parameters (meta data).
-> > > > > >
-> > > > > > If I remove those, I get the following errors:
-> > > > > >
-> > > > > > Sub-Device ioctls (Sink Pad 1):
-> > > > > >         test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> > > > > >                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-> > > > > >                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-> > > > > >         test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-> > > > > >         test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
-> > > > > >         test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> > > > > >                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-> > > > > >                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-> > > > > >         test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-> > > > > >         test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
-> > > > > >         test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-> > > > > >
-> > > > > > Here is the full log: http://ix.io/1QNt
-> > > > > >
-> > > > > > Is this a bug in v4l2-compliance?
-> > > > >
-> > > > > Yes and no :-)
-> > > > >
-> > > > > Currently v4l2-compliance assumes that only video is transferred over a media bus.
-> > > > > But that's not the case here, and testing the code field doesn't help v4l2-compliance
-> > > > > since MEDIA_BUS_FMT_FIXED is also still used by some older subdev drivers for video.
-> > > > >
-> > > > > I think we need a new bus format: MEDIA_BUS_FMT_FIXED_METADATA. Then v4l2-compliance
-> > > > > can tell it apart from the regular fixed video bus format.
-> > > >
-> > > > Wouldn't a pad flag that identifies the type of data transmitted by a
-> > > > pad be a better, backward-compatible option ? This could be useful for
-> > > > audio as well.
-> > >
-> > > Hi,
-> > > Can you explain what pad flag do you mean?
-> > > Do you mean adding a flag in the 'MEDIA_LNK_FL_*' list ?
-> >
-> > I meant MEDIA_PAD_FL_*. We could reserve a few bits in
-> > media_pad_desc.flags to tell what type of data is being transported.
-> >
-> So the idea is that when the MBUS format is MEDIA_BUS_FMT_FIXED,
-> then userspace should look at the flags of the pad to see what format is it?
-> So if I add a flag  'MEDIA_PAD_FL_METADATA' it knows it is a metadata ?
+right, I should have mentioned them also here: 
 
-Not just when it's MEDIA_BUS_FMT_FIXED. Userspace can look at the pad
-flags to determine the type of data carried by the pad. This can, for
-instance, allow userspace to walk graphs to find video data paths
-without going down metadata or audio links.
+ac338acf514e "(driver core: Add dev_has_sync_state())" <-- patch 2/3 
+77036165d8bc "(driver core: Skip unnecessary work when device doesn't have sync_state())" <-- patch 3/3
 
-> What makes is more backward-comaptible ?
+like Saravana mentioned, the problem is probably introduced by patch
+1/3 of the series, 
 
-We won't need to change the current format used on those pads
-(MEDIA_BUS_FMT_FIXED), which would break userspace that relies on that
-format. Of course, if it's just for the rkisp1 driver, we don't care
-much about breakages as the driver is in staging :-)
+77036165d8bc "(driver core: Skip unnecessary work when device doesn't have sync_state())"
 
-> > > Also, some valid value should be set to  'fmt->format.code' so with
-> > > the flags solution
-> > > that you suggest it should stay  MEDIA_BUS_FMT_FIXED ?
-> >
-> > Correct.
-> >
-> > > > > If I do a 'git grep MEDIA_BUS_FMT_FIXED' then I see that it is also in use by vsp1
-> > > > > for histogram information, so that should also be converted to use the new FIXED_METADATA
-> > > > > format, although that might be too late (there might be userspace complications).
-> > > >
-> > > > Yes, probably not a good idea.
-> > > >
-> > > > > >> +          fmt->format.field = V4L2_FIELD_NONE;
-> > > > > >> +          return 0;
-> > > > > >> +  }
-> > > > > >> +
-> > > > > >> +  if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> > > > > >> +          mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
-> > > > > >> +          fmt->format = *mf;
-> > > > > >> +          return 0;
-> > > > > >> +  }
-> > > > > >> +
-> > > > > >> +  if (fmt->pad == RKISP1_ISP_PAD_SINK) {
-> > > > > >> +          *mf = isp_sd->in_frm;
-> > > > > >> +  } else if (fmt->pad == RKISP1_ISP_PAD_SOURCE_PATH) {
-> > > > > >> +          /* format of source pad */
-> > > > > >> +          *mf = isp_sd->in_frm;
-> > > > > >> +          mf->code = isp_sd->out_fmt.mbus_code;
-> > > > > >> +          /* window size of source pad */
-> > > > > >> +          mf->width = isp_sd->out_crop.width;
-> > > > > >> +          mf->height = isp_sd->out_crop.height;
-> > > > > >> +          mf->quantization = isp_sd->quantization;
-> > > > > >> +  }
-> > > > > >> +  mf->field = V4L2_FIELD_NONE;
-> > > > > >> +
-> > > > > >> +  return 0;
-> > > > > >> +}
+that's already in stable 5.5.
 
+thanks!
 -- 
-Regards,
+davide
 
-Laurent Pinchart
+
