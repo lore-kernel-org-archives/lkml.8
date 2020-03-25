@@ -2,106 +2,161 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9184C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:04:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107A0C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:05:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8BA92078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:04:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC1B82077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:05:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585130750;
+	bh=IqlfnFelAWvPe2y4xDnwYRiMUJhKhX78uzhM/X4uE3k=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=CIlI2VhPk1EXFA8WMnxT+ABYM1w2Bxu9IQnwbzUDiVb5rSBICvIK/SAVQBZUV4ogr
+	 h7wzDVbOOlx4FBQHW+OzhJ7eUKBMLifK3drWwle1YDSb58mLZym7Nqa3R7EDsFkoNs
+	 mHCLa4pxJYWjYIS6WCScBKW4TC/kfckFwXPoS3v4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCYKEq (ORCPT
+        id S1727360AbgCYKFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:04:46 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:59658 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCYKEp (ORCPT
+        Wed, 25 Mar 2020 06:05:50 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33690 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbgCYKFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:04:45 -0400
-Received: from ramsan ([84.195.182.253])
-        by xavier.telenet-ops.be with bizsmtp
-        id Ja4k220035USYZQ01a4kxT; Wed, 25 Mar 2020 11:04:44 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jH2tw-00033y-2V; Wed, 25 Mar 2020 11:04:44 +0100
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jH2tw-0003ei-1c; Wed, 25 Mar 2020 11:04:44 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] gpiolib: Remove unused gpio_chip parameter from gpio_set_bias()
-Date:   Wed, 25 Mar 2020 11:04:39 +0100
-Message-Id: <20200325100439.14000-3-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325100439.14000-1-geert+renesas@glider.be>
-References: <20200325100439.14000-1-geert+renesas@glider.be>
+        Wed, 25 Mar 2020 06:05:49 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m14so1585797oic.0;
+        Wed, 25 Mar 2020 03:05:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kx6zWzWlFb2q6tLbIGNUJ4/Vt+PrSLq5ud8xhYBRhgA=;
+        b=EuHEDyB57eZf3L3yGmVihgmC3bhHNHnRnNVZvLjoQWe+u8StLC1YQIfPwyJrM4tWK0
+         yFlceBXYHUKEa/KBzJ/eR+vW5M+lc1Q+Wm5EqcvNCz1o8USb85MrN14AJyHXwR9EF0O3
+         qPV0FPAKsI2yT+YzwQdvsJC5ha9Xl2MRRZamrCD1Zew7nf2HPfjAhoKVh1n1oMpvbx6Q
+         2ojqVAi1H2qEk16yKT1UjI8h5FOrY6SEmY//sXONb4uGsbAjFMs56kVeJr0oPuUtLLjm
+         rDEbds3LcqdM0mC2VS6uAs5P/42aniJOahc6Pz7YUa34TyYjJW8mqWzZOr9T5RdwYIRS
+         0Fbw==
+X-Gm-Message-State: ANhLgQ1bdoWfe8PqPeFJ7/DaVz34mpkj0q6cyMtV5m+nlEoTfqcQTP8j
+        JtJ93tKFt99v/VFHFzoRg4JfBYodIRgBStumKfk=
+X-Google-Smtp-Source: ADFU+vtOyDIGXvu5ZBYH6gJK0sVQRrbQ385r2m1A6DOdRsKzFm55S1la0Vnjw3U5JFdGNrLljxf66cKaHUbGIpXYluQ=
+X-Received: by 2002:aca:f07:: with SMTP id 7mr215666oip.68.1585130747875; Wed,
+ 25 Mar 2020 03:05:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200319195046.GA452@embeddedor.com>
+In-Reply-To: <20200319195046.GA452@embeddedor.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 25 Mar 2020 11:05:36 +0100
+Message-ID: <CAJZ5v0iDVL1WWTmmQX+2JDmyAfu2e8nSdLSmCqA-WZV+7pBHvw@mail.gmail.com>
+Subject: Re: [PATCH][next] acpi: nfit.h: Replace zero-length array with
+ flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gpio_set_bias() no longer uses the passed gpio_chip pointer parameter.
-Remove it.
+On Thu, Mar 19, 2020 at 9:15 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/gpio/gpiolib.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Dan,
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8eeb29de12cb5811..7e3c19bd21cdf327 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -3264,7 +3264,7 @@ static int gpio_set_config(struct gpio_desc *desc, enum pin_config_param mode)
- 	return gpio_do_set_config(chip, gpio_chip_hwgpio(desc), config);
- }
- 
--static int gpio_set_bias(struct gpio_chip *chip, struct gpio_desc *desc)
-+static int gpio_set_bias(struct gpio_desc *desc)
- {
- 	int bias = 0;
- 	int ret = 0;
-@@ -3330,7 +3330,7 @@ int gpiod_direction_input(struct gpio_desc *desc)
- 	}
- 	if (ret == 0) {
- 		clear_bit(FLAG_IS_OUT, &desc->flags);
--		ret = gpio_set_bias(chip, desc);
-+		ret = gpio_set_bias(desc);
- 	}
- 
- 	trace_gpio_direction(desc_to_gpio(desc), 1, ret);
-@@ -3414,7 +3414,6 @@ EXPORT_SYMBOL_GPL(gpiod_direction_output_raw);
-  */
- int gpiod_direction_output(struct gpio_desc *desc, int value)
- {
--	struct gpio_chip *gc;
- 	int ret;
- 
- 	VALIDATE_DESC(desc);
-@@ -3432,7 +3431,6 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 		return -EIO;
- 	}
- 
--	gc = desc->gdev->chip;
- 	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags)) {
- 		/* First see if we can enable open drain in hardware */
- 		ret = gpio_set_config(desc, PIN_CONFIG_DRIVE_OPEN_DRAIN);
-@@ -3458,7 +3456,7 @@ int gpiod_direction_output(struct gpio_desc *desc, int value)
- 	}
- 
- set_output_value:
--	ret = gpio_set_bias(gc, desc);
-+	ret = gpio_set_bias(desc);
- 	if (ret)
- 		return ret;
- 	return gpiod_direction_output_raw_commit(desc, value);
--- 
-2.17.1
+I'm assuming that you will take care of this one or please let me know
+otherwise.
 
+Cheers!
+
+> ---
+>  drivers/acpi/nfit/nfit.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/acpi/nfit/nfit.h b/drivers/acpi/nfit/nfit.h
+> index 24241941181c..af09143ce403 100644
+> --- a/drivers/acpi/nfit/nfit.h
+> +++ b/drivers/acpi/nfit/nfit.h
+> @@ -144,32 +144,32 @@ struct nfit_spa {
+>         unsigned long ars_state;
+>         u32 clear_err_unit;
+>         u32 max_ars;
+> -       struct acpi_nfit_system_address spa[0];
+> +       struct acpi_nfit_system_address spa[];
+>  };
+>
+>  struct nfit_dcr {
+>         struct list_head list;
+> -       struct acpi_nfit_control_region dcr[0];
+> +       struct acpi_nfit_control_region dcr[];
+>  };
+>
+>  struct nfit_bdw {
+>         struct list_head list;
+> -       struct acpi_nfit_data_region bdw[0];
+> +       struct acpi_nfit_data_region bdw[];
+>  };
+>
+>  struct nfit_idt {
+>         struct list_head list;
+> -       struct acpi_nfit_interleave idt[0];
+> +       struct acpi_nfit_interleave idt[];
+>  };
+>
+>  struct nfit_flush {
+>         struct list_head list;
+> -       struct acpi_nfit_flush_address flush[0];
+> +       struct acpi_nfit_flush_address flush[];
+>  };
+>
+>  struct nfit_memdev {
+>         struct list_head list;
+> -       struct acpi_nfit_memory_map memdev[0];
+> +       struct acpi_nfit_memory_map memdev[];
+>  };
+>
+>  enum nfit_mem_flags {
+> --
+> 2.23.0
+>
