@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AAAC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8425AC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8783A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2652073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eE/AdT5L"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3LZN0My"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgCYImj (ORCPT
+        id S1727587AbgCYImk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:42:39 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:39682 "EHLO
+        Wed, 25 Mar 2020 04:42:40 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:30197 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727501AbgCYImX (ORCPT
+        by vger.kernel.org with ESMTP id S1727442AbgCYImX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Mar 2020 04:42:23 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585125743;
+        s=mimecast20190719; t=1585125742;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UrdvUnhrwryyBR43K7InCr/vnbST4z9N1od+0RG8OUQ=;
-        b=eE/AdT5LZmkW/0NUY7Yd8q6LfOvvxj8rl6qvtfNts80zWqrgUdobQMmTff/VcxncxpbMgB
-        ypGBaLVNHx1c5BxzAVk0OM5p5lpRz8ime27BM5PPDX+nIVG6y+J4ozrSvkcctbtZhBT2s2
-        PHx45ioPXilWj+TTtBZBCMiiSja16wo=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-UJGpaBeqO46GdeucCClHjA-1; Wed, 25 Mar 2020 04:42:21 -0400
-X-MC-Unique: UJGpaBeqO46GdeucCClHjA-1
-Received: by mail-wm1-f70.google.com with SMTP id n25so405470wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:21 -0700 (PDT)
+        bh=5HVI2W6fr/+4cyEErTt71G4IXrR6DcIMT5jhV/dd41c=;
+        b=N3LZN0My+Qxg4HNYqcqEJiqiVzUWs3la2aQ0bIIOeffocm0ZK/sla2ZQCehJ/ggQUpYA8N
+        pymMi7XyKZowTRDgH9d+x6AQmr/0N1JP9vC/uudgAT/wQQUcZgtDlATpZSZQT3QvKUQDeL
+        m8ONMg3yY8LWR2rdXs/M/Hvx4uwEgOg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-476-qPL4pY1sPXu54ysXbQD7hQ-1; Wed, 25 Mar 2020 04:42:20 -0400
+X-MC-Unique: qPL4pY1sPXu54ysXbQD7hQ-1
+Received: by mail-wr1-f69.google.com with SMTP id i18so790833wrx.17
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UrdvUnhrwryyBR43K7InCr/vnbST4z9N1od+0RG8OUQ=;
-        b=eMu8DGqKtKqH9i8FHtGlauLrXDf3Nmxm/GtniqGv1+1S9ZFnkq8ycHBJ1YG+G8GkPc
-         38zbXwzfBJJCufDHj/DWwP1gYQCM+JzuxuDzTf5UbJD6+/atj9zk32AD6gN6tPTv4bgm
-         jwUWsWsADzNQ2TVd56WTkzo/zyn1GjS3wU/ZBsU3vI0Mt7f9vcyd4w98WpTSeoXJkNGz
-         UfkVfzS5CS0U5thsqxbDqntUP6bC7AMpm6PyO/RxUiQqnQFLj4loLHJIIEHWNONLWgxs
-         hNVPcFX5RIV+Ce7vFKFvjO0y4AN0CP6sNIReqf6q6tjE5Zrlf3pgJnrUyl7zrIT/4HiV
-         Jy5w==
-X-Gm-Message-State: ANhLgQ16ef1SUoMnRLz8gUdqhOiLW/DVrMKbIhISFYtTR1APfsxw9FBs
-        /BGpdYOkCSkrgXm6A/zxX6r3t073DFzAtzAHctXa66rze/7DPXGVp13KF/ogrS7EXS4/u8cNnWt
-        Q0KS4Eo8aOLoe1vL/MptWIF11
-X-Received: by 2002:adf:f8cd:: with SMTP id f13mr2080901wrq.119.1585125740112;
-        Wed, 25 Mar 2020 01:42:20 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vurw86r6TOM0OujIpqSTbXgvDzROEI718CpCwwv+RJTJMC4gbShTbqnqTbDyKNtWRy94QMxjA==
-X-Received: by 2002:adf:f8cd:: with SMTP id f13mr2080880wrq.119.1585125739801;
-        Wed, 25 Mar 2020 01:42:19 -0700 (PDT)
+        bh=5HVI2W6fr/+4cyEErTt71G4IXrR6DcIMT5jhV/dd41c=;
+        b=fBajI1XkglEB0vXtkbQUCYl04FikgJrPkJoLkBRHxaunfMfx9ZD5kuc7VIgWrFr0Pa
+         kAfQH7fSpAglWp/uOfNhk5EWi8Ph4IyvjwyoDxRLCxA7mBRDJ+7qYNOQxOCi9m0o31q/
+         7Yuz0u4+8n+sHAW3vARaDe4S7Un+Go11Db31gX3PhAGxPJwAKs70XnQ7Dpoiv6cLR/FW
+         pufev/mn1tPF1HIRf0wkRSquRsZ8SXcjMbzVlCvrljGhZmN9zVYx8UsZzWHIGEZh0p8k
+         tRPFrvRpw9KcUkHzgqOrLjU+OhfuEdfWG05p97BJEx8OnJASvS5TptYqHhov+ng1IjMD
+         Pegg==
+X-Gm-Message-State: ANhLgQ0aAdhqQNOA+M0FyWkJvraG3h+1qNXo4LggQtajv0O0jjN6KCYG
+        cxB0r6mB98hHN0WIMH8l3dznLPi9xXo/cvqN4B++pm35Yi2bVsPkvBLfidzCTEjrqIGbHW/I/q3
+        gHBv6fuJTiaVx52IfJfb7pgDv
+X-Received: by 2002:adf:9465:: with SMTP id 92mr2204017wrq.122.1585125738390;
+        Wed, 25 Mar 2020 01:42:18 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vv7BwDD2SdbvU1R3h86Qs9oxq8u1/0pJB6Ih7oQviZ3JSRocjcPar/MmJCMD68sh+RJF3DJMQ==
+X-Received: by 2002:adf:9465:: with SMTP id 92mr2204004wrq.122.1585125738252;
+        Wed, 25 Mar 2020 01:42:18 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.18
+        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 01:42:19 -0700 (PDT)
+        Wed, 25 Mar 2020 01:42:17 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 07/10] objtool: check: Allow save/restore hint in non standard function symbols
-Date:   Wed, 25 Mar 2020 08:42:00 +0000
-Message-Id: <20200325084203.17005-8-jthierry@redhat.com>
+Subject: [PATCH 06/10] objtool: check: Use arch specific values in restore_reg()
+Date:   Wed, 25 Mar 2020 08:41:59 +0000
+Message-Id: <20200325084203.17005-7-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200325084203.17005-1-jthierry@redhat.com>
 References: <20200325084203.17005-1-jthierry@redhat.com>
@@ -79,102 +79,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kernel code base provides CODE_SYM_START/END to declare assembly
-code sequences that don't follow function standard calling conventions.
+Initial register state is set up by arch specific code. Use the value
+the arch code has set when restoring registers from the stack.
 
-As non-C/non-standard code, these sequences can very much benefit from
-unwind hints. However, when a restore unwind_hint is used in a
-non-function code sequence, objtool will crash when looking for the
-corresponding save hint.
-
-Record the code symbol an instruction belongs to and look for save hints
-belonging to the same code symbol as the restore hint.
-
+Suggested-by: Raphael Gault <raphael.gault@arm.com>
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/check.c | 27 +++++++++++++++++++--------
- tools/objtool/check.h |  1 +
- 2 files changed, 20 insertions(+), 8 deletions(-)
+ tools/objtool/check.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 7bf4dbc2e31f..90d3db00352d 100644
+index b8c288c02c99..7bf4dbc2e31f 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -236,7 +236,7 @@ static void clear_insn_state(struct insn_state *state)
- static int decode_instructions(struct objtool_file *file)
+@@ -1501,8 +1501,8 @@ static void save_reg(struct insn_state *state, unsigned char reg, int base,
+ 
+ static void restore_reg(struct insn_state *state, unsigned char reg)
  {
- 	struct section *sec;
--	struct symbol *func;
-+	struct symbol *sym;
- 	unsigned long offset;
- 	struct instruction *insn;
- 	int ret;
-@@ -276,18 +276,22 @@ static int decode_instructions(struct objtool_file *file)
- 			list_add_tail(&insn->list, &file->insn_list);
- 		}
+-	state->regs[reg].base = CFI_UNDEFINED;
+-	state->regs[reg].offset = 0;
++	state->regs[reg].base = initial_func_cfi.regs[reg].base;
++	state->regs[reg].offset = initial_func_cfi.regs[reg].offset;
+ }
  
--		list_for_each_entry(func, &sec->symbol_list, list) {
--			if (func->type != STT_FUNC || func->alias != func)
-+		list_for_each_entry(sym, &sec->symbol_list, list) {
-+			if ((sym->type != STT_FUNC && sym->type != STT_NOTYPE) ||
-+			     sym->alias != sym)
- 				continue;
- 
--			if (!find_insn(file, sec, func->offset)) {
-+			if (!find_insn(file, sec, sym->offset)) {
- 				WARN("%s(): can't find starting instruction",
--				     func->name);
-+				     sym->name);
- 				return -1;
- 			}
- 
--			func_for_each_insn(file, func, insn)
--				insn->func = func;
-+			func_for_each_insn(file, sym, insn) {
-+				insn->code_sym = sym;
-+				if (sym->type == STT_FUNC)
-+					insn->func = sym;
-+			}
- 		}
- 	}
- 
-@@ -771,6 +775,7 @@ static int handle_group_alt(struct objtool_file *file,
- 		fake_jump->type = INSN_JUMP_UNCONDITIONAL;
- 		fake_jump->jump_dest = list_next_entry(last_orig_insn, list);
- 		fake_jump->func = orig_insn->func;
-+		fake_jump->code_sym = orig_insn->code_sym;
- 	}
- 
- 	if (!special_alt->new_len) {
-@@ -2043,9 +2048,15 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			if (insn->restore) {
- 				struct instruction *save_insn, *i;
- 
-+				if (!insn->code_sym) {
-+					WARN_FUNC("restore instruction doesn't belong to any symbol",
-+						  insn->sec, insn->offset);
-+					return 1;
-+				}
-+
- 				i = insn;
- 				save_insn = NULL;
--				func_for_each_insn_continue_reverse(file, func, i) {
-+				func_for_each_insn_continue_reverse(file, insn->code_sym, i) {
- 					if (i->save) {
- 						save_insn = i;
- 						break;
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 6d875ca6fce0..0cfdad839b76 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -42,6 +42,7 @@ struct instruction {
- 	struct rela *jump_table;
- 	struct list_head alts;
- 	struct symbol *func;
-+	struct symbol *code_sym;
- 	struct stack_op stack_op;
- 	struct insn_state state;
- 	struct orc_entry orc;
+ /*
 -- 
 2.21.1
 
