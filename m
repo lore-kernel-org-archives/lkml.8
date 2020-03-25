@@ -2,147 +2,183 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5FE8C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64383C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:03:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 888812074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33FD62074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="s2xSwASh"
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="vZ0o9kxO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbgCYPDl (ORCPT
+        id S1727738AbgCYPDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:03:41 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:36374 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgCYPDl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:03:41 -0400
-IronPort-SDR: +tq5UOjQLY5dJ8neMc3qlSoThvBTrjEXQDHC13N+Oe0n5JP4vM0ZySZ2ByzTdvbgsz6P+4W6KA
- FzfrrZrMZsf77HtJrnD5gDuOZ5Ks/xFZ0mKe1mfxFuS9587J5AGB3gDY/Zu8IW9aPYMsRP0uYT
- 9O8obwpwk6tf/2FUnUSuX/jRYH+3MYtD2C+XHOJ3dGqUgaL98ci0KAV9phnpSZP/N3aiwwMN72
- 0HgcnxzudFq5VXAZ58dI/+LHR2vNRZ6Ex68KKMT9lfc8PtSsFzeuSBaFF3y/OGEiUt+1dsj55d
- tmY=
-X-IronPort-AV: E=Sophos;i="5.72,304,1580799600"; 
-   d="scan'208";a="68350373"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 25 Mar 2020 08:03:35 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 25 Mar 2020 08:03:34 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 25 Mar 2020 08:03:34 -0700
+        Wed, 25 Mar 2020 11:03:49 -0400
+Received: from mail-eopbgr40116.outbound.protection.outlook.com ([40.107.4.116]:14177
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727123AbgCYPDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:03:48 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cjkGGz8ABvkMbhnie91nUi+0AKxsW/rGUSqT+JWGoXVW/ldHYWxCF9DOfinkU2nWi1A0mAJ0DXVpBanEbdsSzrW8ZPrjFZU4tXxDkpYOS0WlbAnD0ptAaw4rT9Ybi7rJWLoPzdf+JfH1gjeb/1VUYCF9IbvO9VGkLPSm1VBFG+Ru6cWcZOFQt1spJCnnZjiBQLRJVzI/Q/Ov/HajKAU9RTBv0WULboNMsndOu8tu+UN0ekzKElhy/I90AHZoFAoaQXWZFymuEauqpc/LFUd+2ZWXKs+vz/jVXrQ7fgbIFIHpsoG5DSfS4vYQE5mq4+MG74MHQE8+r+uJezB6tWoN2A==
+ b=aL5UK4G9HPhmJiwxPIKBVYO0z3c1ThPQbBugioBqQ3ovC8Plrmcxwn9aKlwbTnutmhTvjLxtfCCaSaZ6grOT2BUVtBQvF/9+MQMFydaG57kn6yOGfexq1V7ErktSbItG7bv5IDxflXX+nYHRSEWw2tmx9ifYSPuU7EJ3Y/bT8DhZNqi3WBsCnAnVx847BGh1JgpdBtu+zqJvTnY3W5gAa1LI1JxdDLCNR6iNZrShkPoFW1oNrf9VqMkHSD5vN6zQKmMBh8B9rlqQc/zbl+bzNe5nIpirw1KEAkQGVPsnaMA1mn+Kdhpb7kGT5eXwnXFiae6pjLo6sZg9a1cV02XuHQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xagPh31+B75x1pdbi0jhQhC0iACfTr7CqS6WXcz6hwM=;
- b=KSRrqRxq9DZmt8lAexEf7hjPVVsprCLDpYRX1VvvsROcQwvlxAHimR84t4lmhzZ16WAOk46z2Ukfj6TrR1+298LuFcSQneE444Nd3TJdt50wYt4hw2bVT+QR/mSZTWnXDdAWSsqB0sTo2lOP0EC/UimtCptnsF74qel0LZQsRZiyoQgFU6YgqDLKRLaxGvmUTaYiByCXDX70RiOX3J8tybYzAT3k5bv1vF7CQyXqc47pVsq7L9xdHHUhQXA83pFU39beUqj4eBIb500bw8vCHfqxedVEIc/QKM9lslBHzC1YalU2dN/ecDy2h1zquYZUtteYcvloG6QxvZr2Lb4sYA==
+ bh=AKJiWvzcNraqSjt8EG3Ql36A51XHoMCiGMvkNJXKhII=;
+ b=SHfslB3Q1m5/BOTgKxmBApVkg7xWx4BN7fmO4nXxRG3sP8pQWknBrIZmhBexwEnEauOr7NObzQgBY/DbfRIYwK1PV2QnItvw7YIu5pIf3elxzTDcbAbrM3QwKGaqW30bgj4WMg9vTmccujUI6mI97w/S36vtcKWq5LtP13SlE2GLJq/C7x0ApiCP6NaImHQMXpmGrNdDpipGS77TPDK9rsjiJKFFJjyfl2bqBLYzFe9YDHYH3povGxC4PPI39SegIN1lKutdErUwcLy8DWn8bT3Nka97j9q9Rvw+N8WxvkfBV0Gh73c9NuuMkDALZcml+OFUX0E4BK7+KQy3W3XQ0w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xagPh31+B75x1pdbi0jhQhC0iACfTr7CqS6WXcz6hwM=;
- b=s2xSwAShAVQVydIDkF5++edGSdEz7u2LaPMq9aKDz+lQk53gCV4ERJq88x63Tt/qS7d+mqenpfC4S7J3JuVRYoMYoU5xkz48LUATHalwJSB+Ahk8Y8dUh4fvvtBt8Eh6i+WOTrs4XPR206ixSI++Q2c8WygOiZb8PpVUwABNibw=
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com (2603:10b6:a03:1cc::28)
- by BY5PR11MB3943.namprd11.prod.outlook.com (2603:10b6:a03:185::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Wed, 25 Mar
- 2020 15:03:33 +0000
-Received: from BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::114b:fdb3:5bf5:2694]) by BY5PR11MB4497.namprd11.prod.outlook.com
- ([fe80::114b:fdb3:5bf5:2694%5]) with mapi id 15.20.2835.023; Wed, 25 Mar 2020
- 15:03:33 +0000
-From:   <Codrin.Ciubotariu@microchip.com>
-To:     <colin.king@canonical.com>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
-        <Nicolas.Ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-        <Ludovic.Desroches@microchip.com>, <alsa-devel@alsa-project.org>,
-        <linux-arm-kernel@lists.infradead.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: mchp-i2s-mcc: make signed 1 bit bitfields unsigned
-Thread-Topic: [PATCH] ASoC: mchp-i2s-mcc: make signed 1 bit bitfields unsigned
-Thread-Index: AQHWAqluo8Epior2o0KE9euqviFOj6hZZ8YA
-Date:   Wed, 25 Mar 2020 15:03:32 +0000
-Message-ID: <130efce3-5a04-a813-062b-79f8b4284db8@microchip.com>
-References: <20200325132913.110115-1-colin.king@canonical.com>
-In-Reply-To: <20200325132913.110115-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Codrin.Ciubotariu@microchip.com; 
-x-originating-ip: [86.121.14.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1b0ea2b4-cf85-4e6d-0945-08d7d0cdafb2
-x-ms-traffictypediagnostic: BY5PR11MB3943:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BY5PR11MB3943972DCDD95D7D52C02C24E7CE0@BY5PR11MB3943.namprd11.prod.outlook.com>
-x-bypassexternaltag: True
-x-ms-oob-tlc-oobclassifiers: OLM:530;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(366004)(136003)(478600001)(6512007)(8936002)(81156014)(81166006)(6486002)(6506007)(8676002)(53546011)(4744005)(36756003)(2906002)(2616005)(31696002)(26005)(71200400001)(91956017)(76116006)(31686004)(66476007)(66446008)(186003)(4326008)(54906003)(110136005)(66946007)(64756008)(7416002)(316002)(5660300002)(66556008)(86362001)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR11MB3943;H:BY5PR11MB4497.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0Rs4zLEOPKiRryYJdqSh0/9ucEe1Q3WTw/84CfyhUce+6iy6avIGURAq/u/RAcjQlcpqSlLpQFpwJ4px74RiBDQ70UD9RsKTAWkeHm0j717L2MoyeBUQMw1QEoAJSv0w+MrK150oKHEiiyCYi43dj21M7tVH2krcigjaD8wjozfR3l8h7hwIBLD/Tpq9JCOnWNONXoDWRe9DKphJKZUB39l5LNZbCf0N2jyM1LZnAD1331edx3p7MddvBxe7u4Hj83Oksjtz21eTYMhtgi1BODA5/z5y5ZMt0XfX2dWQc/6KeVj3x1MKpaouZ3wHeqafaMJh+HN3l759o50O8vaFZ3KuykMjvyTR5LshhYoCxT+AW6+B/HkFPrxFNkyZd/RCZ4ACGAOUJPIdmvGPzMHiqHgGag3MyGYXzdNDVAir/bj83NaR7Lu5csfB3thIR7rVtMUsQ2Rdi9XNyBnhYXl8dwCzAkwg+mVr05+QQWU+PXmBcNhCfx4OxFZdxFBHnTAG
-x-ms-exchange-antispam-messagedata: YepDUms8wh/4mTrWnG1OGtrx0ncT/P8OeSwiwvL/TvB+A1iLMWixZi5lZ4/OtZOFVeBPbuq9OIS7Qky3ue0D/yVICnB+k4SnR7s2b8QUlQq9YFKWoZcuttCyOptYg6HXImXahPZiwTRKKrSJnT9aOA==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <35594FF49A90AA4DA6C85EB2FDC5F5D8@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ bh=AKJiWvzcNraqSjt8EG3Ql36A51XHoMCiGMvkNJXKhII=;
+ b=vZ0o9kxO7Exc1eEHFVKk6Ggyvk9L1BpPqgs/CkoNojhNtSqWObWpZzrMUHm0/ZWqSx+S88fOktCJul5o/SG9XWS8xS/C2r3NZyuFZDrpHWErfbG8lJs2eadk6/+/Ypfs+JiWI9bLf3+ipse6f1HE0VNgqXboHTETGk0jrqTH4q8=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.1.217) by
+ AM6PR05MB6550.eurprd05.prod.outlook.com (20.179.6.77) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.20; Wed, 25 Mar 2020 15:03:44 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::dee:ffa2:1d09:30e]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::dee:ffa2:1d09:30e%4]) with mapi id 15.20.2835.021; Wed, 25 Mar 2020
+ 15:03:44 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        linux@armlinux.org.uk, netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com
+Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
+        silvan.murer@gmail.com, s.hauer@pengutronix.de,
+        a.fatoum@pengutronix.de,
+        Philippe Schenker <philippe.schenker@toradex.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay possibility to ksz9131
+Date:   Wed, 25 Mar 2020 16:03:27 +0100
+Message-Id: <20200325150329.228329-1-philippe.schenker@toradex.com>
+X-Mailer: git-send-email 2.26.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PR0P264CA0215.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1f::35) To AM6PR05MB6120.eurprd05.prod.outlook.com
+ (2603:10a6:20b:a8::25)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1b0ea2b4-cf85-4e6d-0945-08d7d0cdafb2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 15:03:32.8869
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from philippe-pc.toradex.int (31.10.206.125) by PR0P264CA0215.FRAP264.PROD.OUTLOOK.COM (2603:10a6:100:1f::35) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend Transport; Wed, 25 Mar 2020 15:03:43 +0000
+X-Mailer: git-send-email 2.26.0
+X-Originating-IP: [31.10.206.125]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5dbc19e7-6b4a-49b0-07b1-08d7d0cdb65b
+X-MS-TrafficTypeDiagnostic: AM6PR05MB6550:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR05MB65502FCC16B760B4449657F1F4CE0@AM6PR05MB6550.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-Forefront-PRVS: 0353563E2B
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(366004)(346002)(39850400004)(396003)(136003)(5660300002)(316002)(66556008)(66476007)(52116002)(8676002)(54906003)(1076003)(86362001)(66946007)(6506007)(6666004)(81156014)(81166006)(36756003)(26005)(6486002)(16526019)(186003)(2616005)(956004)(2906002)(7416002)(8936002)(478600001)(44832011)(6512007)(4326008)(16060500001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB6550;H:AM6PR05MB6120.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZrOPF0FEJRUBP1y6YuYdW8JbVHDctL5iCpdFp1/CYVpYepNpNNUJAj3DzriTXeqxicVNmUKmU1eQiT+2K9kgj2zKEFBXcviM+yajUBxEZfqoZm4SAXI8nqiDGXIL5jSr9WAE7d7rhB0FNcjnPRcw8/nJLqhxPksUdMeFO3nWkEzQhEm5DY1M54yOGm00Rqel5wqFlNAW2KzThMKP18lqNDUt01MUJROP5pSxC4OhQOFzQ8VJULgZT55Q4fEkNXEkT3XbrHBWDZDXXrx+yzmhkqDZowN+nL0J1VLAYzUkjk0fYBh0ygrP5HPzSOsefRTKYeNUOsAWxHS8ndrbrcaf9T7c8HKvMEk0k7GK1O+66eQtiggYyFwEt0oRw9n2WbUvtMla9bB5RwJdOV0jNeof+bNbqRMnMZITHXAg523HU3W8zL7npdbqUtJD3Jn1popHmzCKfcZcUG5VDd0yb+6zdk7TKnvJx6GIkjVfdRxN3I9O1aeidph4Okt+6wKS3vV2
+X-MS-Exchange-AntiSpam-MessageData: bHCSlhHJ7vStP2LjwLWb9VCYuUmdrIuD59e6v4gBREb7J1LaRsdMHSFSBrbF28AAVeJBUVqHawHddT2njyOJ7TBMgqLXZp5oTx8lxexWIoSOQF+e1/bqCwqNgHKF+DGGNFpX40UTs4SiCHAd7fy2mA==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5dbc19e7-6b4a-49b0-07b1-08d7d0cdb65b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2020 15:03:44.5714
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: piFdO9lOTY66XuOgBot0jcDzYLW29jeqxGwg5vm3cz4qZL3enTiZUryXFV5DVpo56Nu6hNld5kQUuCi0MT0PfsKnnOi7Ekor+8nVqSrmY+k=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR11MB3943
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VoqCh++Qwvny867I29l2jlXhqGMvRv22Zh+c/meoow28VfjJBQPIDRRoXSDxbKzHUplIZPCD0CXpw5TY+nZvatQD3VGUEJhGfYus+gGUSgk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6550
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjUuMDMuMjAyMCAxNToyOSwgQ29saW4gS2luZyB3cm90ZToNCj4gRnJvbTogQ29saW4gSWFu
-IEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gDQo+IFRoZSBzaWduZWQgMSBiaXQg
-Yml0ZmllbGRzIHNob3VsZCBiZSB1bnNpZ25lZCwgc28gbWFrZSB0aGVtIHVuc2lnbmVkLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNv
-bT4NCg0KUmV2aWV3ZWQtYnk6IENvZHJpbiBDaXVib3Rhcml1IDxjb2RyaW4uY2l1Ym90YXJpdUBt
-aWNyb2NoaXAuY29tPg0KDQpUaGFua3MhDQoNCj4gLS0tDQo+ICAgc291bmQvc29jL2F0bWVsL21j
-aHAtaTJzLW1jYy5jIHwgOCArKysrLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlv
-bnMoKyksIDQgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvc291bmQvc29jL2F0bWVs
-L21jaHAtaTJzLW1jYy5jIGIvc291bmQvc29jL2F0bWVsL21jaHAtaTJzLW1jYy5jDQo+IGluZGV4
-IGJlZmMyYTNhMDViMC4uM2NiNjM4ODYxOTVmIDEwMDY0NA0KPiAtLS0gYS9zb3VuZC9zb2MvYXRt
-ZWwvbWNocC1pMnMtbWNjLmMNCj4gKysrIGIvc291bmQvc29jL2F0bWVsL21jaHAtaTJzLW1jYy5j
-DQo+IEBAIC0yMzksMTAgKzIzOSwxMCBAQCBzdHJ1Y3QgbWNocF9pMnNfbWNjX2RldiB7DQo+ICAg
-ICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgICAgICAgICAgICAgICAgICBmcmFtZV9sZW5n
-dGg7DQo+ICAgICAgICAgIGludCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0
-ZG1fc2xvdHM7DQo+ICAgICAgICAgIGludCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICBjaGFubmVsczsNCj4gLSAgICAgICBpbnQgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgZ2Nsa191c2U6MTsNCj4gLSAgICAgICBpbnQgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgZ2Nsa19ydW5uaW5nOjE7DQo+IC0gICAgICAgaW50ICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHR4X3JkeToxOw0KPiAtICAgICAgIGludCAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByeF9yZHk6MTsNCj4gKyAgICAgICB1bnNpZ25l
-ZCBpbnQgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2Nsa191c2U6MTsNCj4gKyAgICAgICB1
-bnNpZ25lZCBpbnQgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2Nsa19ydW5uaW5nOjE7DQo+
-ICsgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR4X3JkeTox
-Ow0KPiArICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgICAgICAgICAgICAgICAgICByeF9y
-ZHk6MTsNCj4gICB9Ow0KPiANCj4gICBzdGF0aWMgaXJxcmV0dXJuX3QgbWNocF9pMnNfbWNjX2lu
-dGVycnVwdChpbnQgaXJxLCB2b2lkICpkZXZfaWQpDQo+IC0tDQo+IDIuMjUuMQ0KPiANCg==
+The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
+patch makes use of those delays. The information which delays should
+be enabled or disabled comes from the interface names, documented in
+ethernet-controller.yaml:
+
+rgmii:      Disable RXC and TXC delays
+rgmii-id:   Enable RXC and TXC delays
+rgmii-txid: Enable only TXC delay, disable RXC delay
+rgmii-rxid: Enable onlx RXC delay, disable TXC delay
+
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+---
+
+ drivers/net/phy/micrel.c | 45 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index 63dedec0433d..d3ad09774847 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -704,6 +704,48 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
+ 	return phy_write_mmd(phydev, 2, reg, newval);
+ }
+ 
++/* MMD Address 0x2 */
++#define KSZ9131RN_RXC_DLL_CTRL		76
++#define KSZ9131RN_TXC_DLL_CTRL		77
++#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
++#define KSZ9131RN_DLL_ENABLE_DELAY	0
++#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
++
++static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
++{
++	int ret;
++	u16 rxcdll_val, txcdll_val;
++
++	switch (phydev->interface) {
++	case PHY_INTERFACE_MODE_RGMII:
++		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
++		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_ID:
++		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
++		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
++		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
++		break;
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
++		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
++		break;
++	default:
++		return 0;
++	}
++
++	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
++				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
++	if (ret < 0)
++		return ret;
++
++	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
++				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
++}
++
+ static int ksz9131_config_init(struct phy_device *phydev)
+ {
+ 	const struct device *dev = &phydev->mdio.dev;
+@@ -730,6 +772,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
+ 	if (!of_node)
+ 		return 0;
+ 
++	if (phy_interface_is_rgmii(phydev))
++		ksz9131_config_rgmii_delay(phydev);
++
+ 	ret = ksz9131_of_load_skew_values(phydev, of_node,
+ 					  MII_KSZ9031RN_CLK_PAD_SKEW, 5,
+ 					  clk_skews, 2);
+-- 
+2.26.0
+
