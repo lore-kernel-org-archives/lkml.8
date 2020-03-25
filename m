@@ -4,36 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B615CC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17F5C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9217E2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BD202077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbgCYNgH (ORCPT
+        id S1727983AbgCYNgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:36:07 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:53226 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgCYNgE (ORCPT
+        Wed, 25 Mar 2020 09:36:12 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:4463 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727948AbgCYNgK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:36:04 -0400
-IronPort-SDR: eXPkiR2SqMGcynKU6yrFjwf2tKOW43Ld4mKR7gsqSXxgCryPX1J+Af3n+ikofrqiQPJnlJJyF5
- CVKkcQCpX5iJ2lXvE0N5mQ597jauj5c62NfXCSlEqHO5B0BAPYhdHI/akKdCTgXgiceTxeqRMv
- GlKGPZHHbeEUrkP69hqzJnjO1Ve8CzowV9pkvV9oEXvyo+7ZJXbzpY0mfeAksNgt9onkTS57aA
- 2PHa8qfep0GbezIWU2jsPA1h7YoS04pgiJWUmRA1LZ2P/IHxxK3Fd2JgRjiUDFB/w5CYNgYJuc
- Xtg=
+        Wed, 25 Mar 2020 09:36:10 -0400
+IronPort-SDR: VnlIIkIznCUr4o5T+oseVSnWa8G1KUj/OtBqIA2zppijgv4fwhSoG6zRR9JCKVTxkv3nyIh7jR
+ DrXur5RoZColw9VHTpL/oEXm85TFyt2AFVTpUT0WtZ2pd7ck0rGR4sAEZQlu/bO2QJc1lvld2r
+ 1zR48u+FwrFh8pLqQqmKfaewJcaTLsglGEYCxsUCTilb8ldsZjg98WRCoAtzgN0lzjI+DKBcvC
+ iCsXpxmbzDxASjYBEAK56AmZhi0zwVlaamff6pq1xDSpaK8vicsaPhV9888cmk5d7vP4UI52FF
+ sKc=
 X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="47099750"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 25 Mar 2020 05:35:52 -0800
-IronPort-SDR: W0C88yslZHCLrS6DGsvAoxd+os8Ca0DQ0x7qHtAIdIkxRofOE3UQ514OlZZdjbp9mlS8eHNSSQ
- OFIOpFIsT6xZP1sXNDwhCxpXKWVMF/hsX6JbGtceXVyIOT4Ek28hesiI5qSXWzFbfBDiByZGV6
- kSZQpLgyPAGoKaAFBQcH300cO7aN9n2Wy47xfrN4VPeDCxe7DwIp38j0ag4Iyz7RVebuXATAWe
- dQQgQay4eMbP4UuGwmABU0Gt0G2mZk3hHMbRYbr2EbuXUFTGmBghd7JJoodEGqKnqiDoZkTROC
- Rfs=
+   d="scan'208";a="49060139"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 25 Mar 2020 05:36:08 -0800
+IronPort-SDR: LAF+UUivNXHcV3L+e0zxYfQOcHfbT4ndWu4Ml54qCbV/K54szAccifGT9f+E9LPMBnxuTdio3n
+ M+ASexPnDUvo6TeIfiFcuwW62Q3SK6jaucPluU2mKvkkP9K59uH/69JIllDYTQKW6wtBa8HrHu
+ pwv9BrOvWuUci8oqYKVfNFvAnO1ruSJoMl9TJpnkbxMU+5LeSYH3bkL5yFWWUT5uG/L3iRzdky
+ VOo3ANldjD3FjdAmbfP073aShFZvtUruWjnlAMAjXn96DCpUGaQSyRrTnrgGCopvFwfqeQ5NwH
+ tt4=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
         <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
@@ -41,9 +42,9 @@ To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
         <jiada_wang@mentor.com>
-Subject: [PATCH v9 33/55] Input: atmel_mxt_ts - orientation is not present in hover
-Date:   Wed, 25 Mar 2020 06:33:12 -0700
-Message-ID: <20200325133334.19346-34-jiada_wang@mentor.com>
+Subject: [PATCH v9 37/55] Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+Date:   Wed, 25 Mar 2020 06:33:16 -0700
+Message-ID: <20200325133334.19346-38-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200325133334.19346-1-jiada_wang@mentor.com>
 References: <20200325133334.19346-1-jiada_wang@mentor.com>
@@ -54,33 +55,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
+From: Kautuk Consul <kautuk_consul@mentor.com>
 
-When in hover, the orientation information is not sent
+Revamping the code to call mxt_free_object_table and mxt_free_input_device
+functions only in the following scenarios and code paths:
+1) The error path of the mxt_probe() entry point
+2) The mxt_remove de-init path entry point
+3) All paths which definitely expect to populate the object table
+   like:
+   - the mxt_update_fw_store path which first calls
+     mxt_load_fw and then resorts to calling mxt_initialize itself.
+   - the mxt_read_info_block function which attempts to fill in the
+     object table itself as the main non-error part of the logic.
+4) All paths in the code expected to definitely allocate and register
+   the input device such as:
+   - the mxt_update_fw_store path which first calls
+     mxt_load_fw and then resorts to calling mxt_initialize itself.
+   - the mxt_update_cfg_store function which will call
+     mxt_configure_objects.
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit 0c885d5bd276bd9240c43aa046fc407cbe2ae864)
+Signed-off-by: Kautuk Consul <kautuk_consul@mentor.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index daa77eb9561b..b1f54bf207b8 100644
+index 36a87d9b9c83..860e8ddd4c6b 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -1026,10 +1026,6 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
- 			distance = MXT_DISTANCE_HOVERING;
- 			hover = true;
- 			active = true;
--
--			if (data->t100_aux_vect)
--				orientation = message[data->t100_aux_vect];
--
- 			break;
+@@ -3336,21 +3336,21 @@ static int mxt_configure_objects(struct mxt_data *data,
+ 	error = mxt_init_t7_power_cfg(data);
+ 	if (error) {
+ 		dev_err(dev, "Failed to initialize power cfg\n");
+-		goto err_free_object_table;
++		return error;
+ 	}
  
- 		case MXT_T100_TYPE_FINGER:
+ 	if (cfg) {
+ 		error = mxt_update_cfg(data, cfg);
+ 		if (error) {
+ 			dev_warn(dev, "Error %d updating config\n", error);
+-			goto err_free_object_table;
++			return error;
+ 		}
+ 	}
+ 
+ 	if (data->multitouch) {
+ 		error = mxt_initialize_input_device(data);
+ 		if (error)
+-			goto err_free_object_table;
++			return error;
+ 	} else {
+ 		dev_warn(dev, "No touch object detected\n");
+ 	}
+@@ -3358,10 +3358,6 @@ static int mxt_configure_objects(struct mxt_data *data,
+ 	mxt_debug_init(data);
+ 
+ 	return 0;
+-
+-err_free_object_table:
+-	mxt_free_object_table(data);
+-	return error;
+ }
+ 
+ /* Configuration crc check sum is returned as hex xxxxxx */
+@@ -4106,16 +4102,21 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 
+ 	error = mxt_initialize(data);
+ 	if (error)
+-		return error;
++		goto err_free_object;
+ 
+ 	error = sysfs_create_group(&client->dev.kobj, &mxt_fw_attr_group);
+ 	if (error) {
+ 		dev_err(&client->dev, "Failure %d creating fw sysfs group\n",
+ 			error);
+-		return error;
++		goto err_free_object;
+ 	}
+ 
+ 	return 0;
++
++err_free_object:
++	mxt_free_input_device(data);
++	mxt_free_object_table(data);
++	return error;
+ }
+ 
+ static int mxt_remove(struct i2c_client *client)
 -- 
 2.17.1
 
