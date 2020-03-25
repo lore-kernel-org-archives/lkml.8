@@ -2,113 +2,95 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 215B7C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472B3C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6532077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585145721;
-	bh=4e5a3dthO0KUl7222D0WTEADwSKwuGJMGtQdIOGhnLA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=KXfRtqH3miCvwsla5TrMOdB3JVb8MiunP+9zoRG9rEgpOITKviKFLxrDoOYJ0KHLG
-	 P1xHW8fdcRObQQJw9xCgxrLHFfVw2xfAa7VE/Ckcl0/4q4Ye9AVBPW16UjDDv/o0Ik
-	 VcPAlIebuv5B1nsyDQVY8CNtHD9CZioCYdYL94AM=
+	by mail.kernel.org (Postfix) with ESMTP id 1EA65207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCYOPT (ORCPT
+        id S1727695AbgCYOTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:15:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41122 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 10:19:11 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42324 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgCYOPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:15:19 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A89DA20658;
-        Wed, 25 Mar 2020 14:15:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585145718;
-        bh=4e5a3dthO0KUl7222D0WTEADwSKwuGJMGtQdIOGhnLA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KTJeidKgfSVy1x+XACNkhs0RALfLf4mqWrAgZoxIEpBs15MGrOlsymhj5+V884fsl
-         jWXJ4syWFJ/e8tvYajfc6Io+0fsOX28fH4KTuG6Ecb4QvBoH2hGd9WnVt2jpaDf3mA
-         Kz6mglsepSuQOfpuM2G5LPzqKOkVXnmrzPk6gF7A=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jH6oP-00FasG-0L; Wed, 25 Mar 2020 14:15:17 +0000
+        id S1727549AbgCYOTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:19:10 -0400
+IronPort-SDR: vCZkbwfm1OYWK4CBuTCsjI40i8ujIwCA4UpbwjtOfGh/9VcZ+wjjYtvCxGMr5otFDZucngBZdx
+ tbxwnu59fqfw==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 07:19:10 -0700
+IronPort-SDR: 4j5oJBDaQj2KzJ63xjdYy/OcamE8di33XJj7oIvv1g7nyN7ulox6D2Kwj7ntvS4qQBbqzX6vbQ
+ QM7tIkCXSlnQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="270811071"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Mar 2020 07:19:08 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Shuah Khan <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [PATCH v2 0/6] Fix errors when try to build kvm selftests on specified output
+Date:   Wed, 25 Mar 2020 22:01:27 +0800
+Message-Id: <20200325140133.103236-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 25 Mar 2020 14:15:16 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-In-Reply-To: <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
- <20200325035537.156911-7-jiaxun.yang@flygoat.com>
- <20200325123742.GA9911@alpha.franken.de>
- <a69f727d37daac6e20ac08de022245b1@kernel.org>
- <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
- <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org>
- <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com>
-Message-ID: <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com, allison@lohutok.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-25 13:59, Jiaxun Yang wrote:
+I attempted to build KVM selftests on a specified dir, unfortunately
+neither	"make O=/path/to/mydir TARGETS=kvm" in tools/testing/selftests, nor
+"make OUTPUT=/path/to/mydir" in tools/testing/selftests/kvm work.
 
-[...]
+This series aims to fix them.
 
->>> So probably we can use legacy domain when  MIPS IRQ BASE is in the
->>> range of legacy IRQ
->>> and switch to simple domain when it's not in that range?
->> 
->> No, see below.
->> 
->>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did this
->>> hack.
->> 
->> Well, if you have to consider which Linux IRQ gets assigned,
->> then your platform is definitely not ready for non-legacy
->> irqdomains. Just stick to legacy for now until you have removed
->> all the code that knows the hwirq mapping.
-> 
-> Thanks.
-> 
-> So I have to allocate irq_desc here in driver manually?
+Patch 1 fixes the issue that output directory is not exist.
 
-No, you are probably better off just dropping this patch, as MIPS
-doesn't seem to be ready for a wholesale switch to virtual interrupts.
+Patch 2 and 3 are the preparation for kvm to get the right path of
+installed linux headers.
 
-         M.
+Patch 4 and 6 prepare the INSTALL_HDR_PATH to tell sub TARGET where the
+linux headers are installed.
+
+Patch 5 fixes the issue that with OUTPUT specified, it still make the
+linux tree dirty.
+
+I only test the sub TARGET of kvm.
+In theory, it won't break other TARGET of selftests.
+
+Changes in v2:
+ - fix the no directory issue in lib.mk
+ - make kvm fixes seperate patch
+ - Add the patch to fix linux src tree not clean issue
+
+v1:
+https://lore.kernel.org/kvm/20200315093425.33600-1-xiaoyao.li@intel.com/
+
+Xiaoyao Li (6):
+  selftests: Create directory when OUTPUT specified
+  selftests: kvm: Include lib.mk earlier
+  selftests: kvm: Use the default linux header path only when
+    INSTALL_HDR_PATH not defined
+  selftests: Create variable INSTALL_HDR_PATH if need to install linux
+    headers to $(OUTPUT)/usr
+  selftests: Generate build output of linux headers to
+    $(OUTPUT)/linux-header-build
+  selftests: export INSTALL_HDR_PATH if using "O" to specify output dir
+
+ tools/testing/selftests/Makefile     |  6 +++++-
+ tools/testing/selftests/kvm/Makefile |  9 +++++----
+ tools/testing/selftests/lib.mk       | 19 ++++++++++++++++++-
+ 3 files changed, 28 insertions(+), 6 deletions(-)
+
 -- 
-Jazz is not dead. It just smells funny...
+2.20.1
+
