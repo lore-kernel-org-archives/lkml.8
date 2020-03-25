@@ -6,295 +6,141 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9428AC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C0EC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB9D20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6827020663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:23:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727265AbgCYIXJ (ORCPT
+        id S1727290AbgCYIXT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:23:09 -0400
-Received: from [58.211.163.100] ([58.211.163.100]:49995 "EHLO
-        mail.advantech.com.cn" rhost-flags-FAIL-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725903AbgCYIXI (ORCPT
+        Wed, 25 Mar 2020 04:23:19 -0400
+Received: from mo-csw1516.securemx.jp ([210.130.202.155]:46920 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgCYIXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:23:08 -0400
-Received: from ACNMB2.ACN.ADVANTECH.CORP (unverified [172.21.128.148]) by ACN-SWEEPER01.ACN.ADVANTECH.CORP
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tde1ee9bab1ac1580301704@ACN-SWEEPER01.ACN.ADVANTECH.CORP>;
- Wed, 25 Mar 2020 16:22:53 +0800
-Received: from ADVANTECH.CORP (172.17.10.69) by ACNMB2.ACN.ADVANTECH.CORP
- (172.21.128.148) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 25 Mar
- 2020 16:22:53 +0800
-From:   <yuechao.zhao@advantech.com.cn>
-To:     <345351830@qq.com>
-CC:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, <shengkui.leng@advantech.com.cn>,
-        Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-Subject: [v2,1/1] hwmon: (nct7904) Add watchdog function
-Date:   Wed, 25 Mar 2020 08:22:37 +0000
-Message-ID: <20200325082237.7002-1-yuechao.zhao@advantech.com.cn>
-X-Mailer: git-send-email 2.17.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.69]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- ACNMB2.ACN.ADVANTECH.CORP (172.21.128.148)
+        Wed, 25 Mar 2020 04:23:18 -0400
+Received: by mo-csw.securemx.jp (mx-mo-csw1516) id 02P8MuYD003287; Wed, 25 Mar 2020 17:22:57 +0900
+X-Iguazu-Qid: 34trcFcTRJxa7WDNQZ
+X-Iguazu-QSIG: v=2; s=0; t=1585124576; q=34trcFcTRJxa7WDNQZ; m=W7gmK4DKrNiSCJBF3mY2YxXV1oZxu7GXwOuhitf8o3I=
+Received: from imx12.toshiba.co.jp (imx12.toshiba.co.jp [61.202.160.132])
+        by relay.securemx.jp (mx-mr1510) id 02P8Mtni010856;
+        Wed, 25 Mar 2020 17:22:56 +0900
+Received: from enc02.toshiba.co.jp ([61.202.160.51])
+        by imx12.toshiba.co.jp  with ESMTP id 02P8MtPD015687;
+        Wed, 25 Mar 2020 17:22:55 +0900 (JST)
+Received: from hop101.toshiba.co.jp ([133.199.85.107])
+        by enc02.toshiba.co.jp  with ESMTP id 02P8MsgB027015;
+        Wed, 25 Mar 2020 17:22:54 +0900
+From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+To:     miquel.raynal@bootlin.com, vigneshr@ti.com
+Cc:     linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Subject: [PATCH v4] mtd: rawnand: toshiba: Support reading the number of bitflips for BENAND (Built-in ECC NAND)
+Date:   Wed, 25 Mar 2020 17:22:52 +0900
+X-TSB-HOP: ON
+Message-Id: <1585124572-4693-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
+Add support vendor specific commands for KIOXIA CORPORATION BENAND.
+The actual bitflips number can be retrieved by this command.
 
-implement watchdong functionality into the "hwmon/nct7904.c"
-
-Signed-off-by: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
+Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
 ---
-v2:
-- Modify dependency of NC7904 into "drivers/hwmon/Kconfig".
----
- drivers/hwmon/Kconfig   |   6 +-
- drivers/hwmon/nct7904.c | 157 +++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 160 insertions(+), 3 deletions(-)
+changelog[v4]:Change title and message.
+              Define "max ecc steps for BENAND".
+changelog[v3]:Tested version.
+original patch:"[RFC,v2] mtd: nand: toshiba: Add support for ->exec_op()".
 
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 05a3083..cd0ae82 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1340,10 +1340,12 @@ config SENSORS_NCT7802
+ drivers/mtd/nand/raw/nand_toshiba.c | 58 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 56 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/nand_toshiba.c b/drivers/mtd/nand/raw/nand_toshiba.c
+index 9c03fbb..f3dcd69 100644
+--- a/drivers/mtd/nand/raw/nand_toshiba.c
++++ b/drivers/mtd/nand/raw/nand_toshiba.c
+@@ -14,14 +14,68 @@
+ /* Recommended to rewrite for BENAND */
+ #define TOSHIBA_NAND_STATUS_REWRITE_RECOMMENDED	BIT(3)
  
- config SENSORS_NCT7904
- 	tristate "Nuvoton NCT7904"
--	depends on I2C
-+	depends on I2C && WATCHDOG
-+	select WATCHDOG_CORE
- 	help
- 	  If you say yes here you get support for the Nuvoton NCT7904
--	  hardware monitoring chip, including manual fan speed control.
-+	  hardware monitoring chip, including manual fan speed control
-+	  and support for the integrated watchdog.
- 
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nct7904.
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 1f5743d..137199c 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -8,6 +8,9 @@
-  * Copyright (c) 2019 Advantech
-  * Author: Amy.Shih <amy.shih@advantech.com.tw>
-  *
-+ * Copyright (c) 2020 Advantech
-+ * Author: Yuechao Zhao <yuechao.zhao@advantech.com.cn>
-+ *
-  * Supports the following chips:
-  *
-  * Chip        #vin  #fan  #pwm  #temp  #dts  chip ID
-@@ -20,6 +23,7 @@
- #include <linux/i2c.h>
- #include <linux/mutex.h>
- #include <linux/hwmon.h>
-+#include <linux/watchdog.h>
- 
- #define VENDOR_ID_REG		0x7A	/* Any bank */
- #define NUVOTON_ID		0x50
-@@ -87,18 +91,39 @@
- #define FANCTL1_FMR_REG		0x00	/* Bank 3; 1 reg per channel */
- #define FANCTL1_OUT_REG		0x10	/* Bank 3; 1 reg per channel */
- 
-+#define WDT_LOCK_REG		0xE0	/* W/O Lock Watchdog Register */
-+#define WDT_EN_REG		0xE1	/* R/O Watchdog Enable Register */
-+#define WDT_STS_REG		0xE2	/* R/O Watchdog Status Register */
-+#define WDT_TIMER_REG		0xE3	/* R/W Watchdog Timer Register */
-+#define WDT_SOFT_EN		0x55	/* Enable soft watchdog timer */
-+#define WDT_SOFT_DIS		0xAA	/* Disable soft watchdog timer */
++/* ECC Status Read Command for BENAND */
++#define TOSHIBA_NAND_CMD_ECC_STATUS_READ	0x7A
 +
- #define VOLT_MONITOR_MODE	0x0
- #define THERMAL_DIODE_MODE	0x1
- #define THERMISTOR_MODE		0x3
- 
- #define ENABLE_TSI	BIT(1)
- 
-+#define WATCHDOG_TIMEOUT	1	/* 1 minute default timeout */
-+static int ping_timeout = WATCHDOG_TIMEOUT; /* default feeding timeout */
++/* ECC Status Mask for BENAND */
++#define TOSHIBA_NAND_ECC_STATUS_MASK		0x0F
 +
-+static int timeout = WATCHDOG_TIMEOUT;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Watchdog timeout in minutes. 1 <= timeout <= 255, default="
-+			__MODULE_STRING(WATCHODOG_TIMEOUT) ".");
++/* Uncorrectable Error for BENAND */
++#define TOSHIBA_NAND_ECC_STATUS_UNCORR		0x0F
 +
-+static bool nowayout = WATCHDOG_NOWAYOUT;
-+module_param(nowayout, bool, 0);
-+MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started once started (default="
-+			__MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
++/* Max ECC Steps for BENAND */
++#define TOSHIBA_NAND_MAX_ECC_STEPS		8
 +
- static const unsigned short normal_i2c[] = {
- 	0x2d, 0x2e, I2C_CLIENT_END
- };
- 
- struct nct7904_data {
- 	struct i2c_client *client;
-+	struct watchdog_device wdt;
- 	struct mutex bank_lock;
- 	int bank_sel;
- 	u32 fanin_mask;
-@@ -889,6 +914,91 @@ static int nct7904_detect(struct i2c_client *client,
- 	.info = nct7904_info,
- };
- 
-+/*
-+ * Wathcdog Function
-+ */
-+static int nct7904_wdt_start(struct watchdog_device *wdt)
++static int toshiba_nand_benand_read_eccstatus_op(struct nand_chip *chip,
++						 u8 *buf)
 +{
-+	int ret;
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
++	u8 *ecc_status = buf;
 +
-+	/* Disable soft watchdog timer first */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-+	if (ret < 0)
-+		return ret;
++	if (nand_has_exec_op(chip)) {
++		const struct nand_sdr_timings *sdr =
++			nand_get_sdr_timings(&chip->data_interface);
++		struct nand_op_instr instrs[] = {
++			NAND_OP_CMD(TOSHIBA_NAND_CMD_ECC_STATUS_READ,
++				    PSEC_TO_NSEC(sdr->tADL_min)),
++			NAND_OP_8BIT_DATA_IN(chip->ecc.steps, ecc_status, 0),
++		};
++		struct nand_operation op = NAND_OPERATION(chip->cur_cs, instrs);
 +
-+	/* Enable soft watchdog timer */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_EN);
-+	return ret;
++		return nand_exec_op(chip, &op);
++	}
++
++	return -ENOTSUPP;
 +}
 +
-+static int nct7904_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+	int ret;
-+
-+	ret = nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-+
-+	return ret;
-+}
-+
-+static int nct7904_wdt_set_timeout(struct watchdog_device *wdt,
-+				   unsigned int timeout)
-+{
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+
-+	ping_timeout = timeout / 60;
-+
-+	return nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, ping_timeout);
-+}
-+
-+static int nct7904_wdt_ping(struct watchdog_device *wdt)
-+{
-+	/*
-+	 * Note:
-+	 * NCT7904 is not supported refresh WDT_TIMER_REG register when the
-+	 * watchdog is actiove. Please disable watchdog before fedding the
-+	 * watchdog and enable it again.
-+	 */
-+	struct nct7904_data *data = watchdog_get_drvdata(wdt);
-+	int ret;
-+
-+	/* Disable soft watchdog timer */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-+	if (ret < 0)
-+		goto ping_err;
-+
-+	/* feed watchdog */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, ping_timeout);
-+	if (ret < 0)
-+		goto ping_err;
-+
-+	/* Enable soft watchdog timer */
-+	ret = nct7904_write_reg(data, BANK_0, WDT_TIMER_REG, WDT_SOFT_EN);
-+	if (ret < 0)
-+		goto ping_err;
-+
-+	return 0;
-+
-+ping_err:
-+	pr_err("nct7904 ping error\n");
-+	return ret;
-+}
-+
-+static const struct watchdog_info nct7904_wdt_info = {
-+	.options	= WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING |
-+				WDIOF_MAGICCLOSE,
-+	.identity	= "nct7904 watchdog",
-+};
-+
-+static const struct watchdog_ops nct7904_wdt_ops = {
-+	.owner		= THIS_MODULE,
-+	.start		= nct7904_wdt_start,
-+	.stop		= nct7904_wdt_stop,
-+	.ping		= nct7904_wdt_ping,
-+	.set_timeout	= nct7904_wdt_set_timeout,
-+};
-+
- static int nct7904_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
+ static int toshiba_nand_benand_eccstatus(struct nand_chip *chip)
  {
-@@ -1012,7 +1122,51 @@ static int nct7904_probe(struct i2c_client *client,
- 	hwmon_dev =
- 		devm_hwmon_device_register_with_info(dev, client->name, data,
- 						     &nct7904_chip_info, NULL);
--	return PTR_ERR_OR_ZERO(hwmon_dev);
-+	ret = PTR_ERR_OR_ZERO(hwmon_dev);
-+	if (ret)
-+		return ret;
+ 	struct mtd_info *mtd = nand_to_mtd(chip);
+ 	int ret;
+ 	unsigned int max_bitflips = 0;
+-	u8 status;
++	u8 status, ecc_status[TOSHIBA_NAND_MAX_ECC_STEPS];
+ 
+ 	/* Check Status */
++	ret = toshiba_nand_benand_read_eccstatus_op(chip, ecc_status);
++	if (!ret) {
++		unsigned int i, bitflips = 0;
 +
-+	/* Watchdog initialization */
-+	data->wdt.ops = &nct7904_wdt_ops;
-+	data->wdt.info = &nct7904_wdt_info;
++		for (i = 0; i < chip->ecc.steps; i++) {
++			bitflips = ecc_status[i] & TOSHIBA_NAND_ECC_STATUS_MASK;
++			if (bitflips == TOSHIBA_NAND_ECC_STATUS_UNCORR) {
++				mtd->ecc_stats.failed++;
++			} else {
++				mtd->ecc_stats.corrected += bitflips;
++				max_bitflips = max(max_bitflips, bitflips);
++			}
++		}
 +
-+	data->wdt.timeout = timeout * 60; /* in seconds */
-+	data->wdt.min_timeout = 1;
-+	data->wdt.max_timeout = 15300;
-+	data->wdt.parent = &client->dev;
++		return max_bitflips;
++	}
 +
-+	watchdog_init_timeout(&data->wdt, timeout, &client->dev);
-+	watchdog_set_nowayout(&data->wdt, nowayout);
-+	watchdog_set_drvdata(&data->wdt, data);
-+
-+	i2c_set_clientdata(client, data);
-+
-+	ret = watchdog_register_device(&data->wdt);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(&client->dev, "NCT7904 HWMON and Watchdog device probed\n");
-+
-+	return ret;
-+}
-+
-+static int nct7904_remove(struct i2c_client *client)
-+{
 +	/*
-+	 * HWMON use devm_hwmon_device_register_with_info() register. So, do
-+	 * not need unregister it manually.
++	 * Fallback to regular status check if
++	 * toshiba_nand_benand_read_eccstatus_op() failed.
 +	 */
-+	struct nct7904_data *data = i2c_get_clientdata(client);
-+
-+	/* disable watchdog */
-+	if (!nowayout)
-+		nct7904_write_reg(data, BANK_0, WDT_LOCK_REG, WDT_SOFT_DIS);
-+
-+	watchdog_unregister_device(&data->wdt);
-+
-+	dev_info(&client->dev, "NCT7904 driver removed\n");
-+
-+	return 0;
- }
- 
- static const struct i2c_device_id nct7904_id[] = {
-@@ -1030,6 +1184,7 @@ static int nct7904_probe(struct i2c_client *client,
- 	.id_table = nct7904_id,
- 	.detect = nct7904_detect,
- 	.address_list = normal_i2c,
-+	.remove = nct7904_remove,
- };
- 
- module_i2c_driver(nct7904_driver);
+ 	ret = nand_status_op(chip, &status);
+ 	if (ret)
+ 		return ret;
+@@ -108,7 +162,7 @@ static void toshiba_nand_decode_id(struct nand_chip *chip)
+ 	 */
+ 	if (chip->id.len >= 6 && nand_is_slc(chip) &&
+ 	    (chip->id.data[5] & 0x7) == 0x6 /* 24nm */ &&
+-	    !(chip->id.data[4] & 0x80) /* !BENAND */) {
++	    !(chip->id.data[4] & TOSHIBA_NAND_ID4_IS_BENAND) /* !BENAND */) {
+ 		memorg->oobsize = 32 * memorg->pagesize >> 9;
+ 		mtd->oobsize = memorg->oobsize;
+ 	}
 -- 
-1.8.3.1
+1.9.1
 
