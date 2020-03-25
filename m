@@ -2,313 +2,130 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 900AEC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0D8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:57:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDDF2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A21920719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:57:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ez0ax3TT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GxwBWqTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgCYW4x (ORCPT
+        id S1727466AbgCYW5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:56:53 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52718 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbgCYW4u (ORCPT
+        Wed, 25 Mar 2020 18:57:36 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38695 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbgCYW5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:56:50 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z18so4637462wmk.2;
-        Wed, 25 Mar 2020 15:56:48 -0700 (PDT)
+        Wed, 25 Mar 2020 18:57:35 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w2so3807757oic.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:57:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lfzJYp8dyLFLrZ3XzFRK9XhdmNJPESSVFFNeh4Nvs1A=;
-        b=ez0ax3TTWeRuQvdBbUtCRmo3wToAMvAsB0qskjccs8t6ETkdkskkPjkwG9xRK6i0fi
-         oPG+mU+Z0F9wmMde3Ptuxo+/BffFp7Soo/vExiSx2wjsOHTAWJ1wncTbBHSuRP+1R8mV
-         +MOBjq3kKkYvDcENrMimuHJCMpYt3gv+fYcsLc1ok7aJ5QSaCllfP4LH0TWr8KvC1prk
-         FsClNEkqeyg+6S9zNAT/06CX5+9Dmdzw87WOJFmAEhQxQwydbwSOeh6QhCPPPNAUQG5u
-         DR4pwBBSGSTEvS4q+h29fit8fYUZaOOhaGKlzMx2ggEx6Obdw0OVA3xZdykH01knMlhg
-         QUlA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9jk+TK7FwkOPEaur7O1L8OS9jETz+MSJg1VV7n1BSs4=;
+        b=GxwBWqTFlxG98S9ZgY1fMAL0tAsYuZ0m+aPOljO3Xfs1s1k4IM4Z6rhrMk6Ql7XSUT
+         4mWApBCFTrfKp6drIjCeBZ22t4OkenZwoP1FZahVthaLuTjjCewBRL8aIev2Piwxo6C+
+         FHZxYBo9uKWkC4O6tYuCA1ZkX528etgAPF6vNu/Ddp4VMdv7e6BS77PDAiIiXSPpKoiL
+         Cax5k/ZorEWQg+IbDRPMrYRocxX/yUcB0Zs31hlqT5atlkJmA6MnjPjtppi9UDN7fGdj
+         xPMWWHj0TJTqYinpZxUGm+KtY+jLE4ETwlGGBh5xV1Wh9z8hvhHiMtJO6b6NX1wEMpOO
+         RLnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lfzJYp8dyLFLrZ3XzFRK9XhdmNJPESSVFFNeh4Nvs1A=;
-        b=jGh0Uq84TjPQitjAM432YtkAjNelRGMEIZJnt40/g4Dkj8HeCCEvIRSKsP7w95mriP
-         y3wDrixeAwcUeAkw0gO1Jtp6ZwlLe797gfSpETJEBSwZRBRM/2fgaPsZ3NQ6IIWo9Ocy
-         vC+/nHHNvzhFR4shRnlfmbHjs3QTVGihSnqIpRmMmnuoTPFfbSvpSWuBlUd+SDhGnsuP
-         5GunmmNn/4YVdKBNnO9OBNdAILfulOpCXZFRej03HfQ8DYnH2vEqkWraTWK/3vVXN00p
-         l8EpjvzjpnwpIX9O7lyYHczSRhw+pryMw8d9aZmveYYs9srN+CnXDhvlmBJMGnlvqzGK
-         SRwA==
-X-Gm-Message-State: ANhLgQ0/w3Ap1OaKvP5mJaw3GLAUQCVK2+4kO9loHYxuEZqNhuQIjme9
-        GlXSCib/5eZRYXg2yoIZvfWYyhzzGRwan+ji
-X-Google-Smtp-Source: ADFU+vsrL4j347gh/Zhd83oQhqt+MKlbUbuhydvsCah+bRewftTJ5V0TREdOrMRrdwPbBNziUVzczg==
-X-Received: by 2002:a1c:b446:: with SMTP id d67mr5642505wmf.103.1585177007619;
-        Wed, 25 Mar 2020 15:56:47 -0700 (PDT)
-Received: from andrea.corp.microsoft.com ([86.61.236.197])
-        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 15:56:47 -0700 (PDT)
-From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: [RFC PATCH 11/11] scsi: storvsc: Re-init stor_chns when a channel interrupt is re-assigned
-Date:   Wed, 25 Mar 2020 23:55:05 +0100
-Message-Id: <20200325225505.23998-12-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200325225505.23998-1-parri.andrea@gmail.com>
-References: <20200325225505.23998-1-parri.andrea@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9jk+TK7FwkOPEaur7O1L8OS9jETz+MSJg1VV7n1BSs4=;
+        b=QJVjWiErwufRI/FfCmY+PWAMlmAAWDadxhXp2Hf2LuERNqFVls7KBblZGTaSOXr+8d
+         sT+4fvZUw5+z+qOG49kEUpsDgzpD14eeJyQfZUAZaJFCzy8nogB/H6Fsl67jd1nPeaKq
+         m6w6YUmMfWKCsx1q7AmieoRPntXllMJoXpc2uU/SY60t3ZTLmvjsJWCEcq0zEGvPnGxA
+         nxmbuVFpOBCBwF8XQ3PknKyHv8YSc5Yk08FhDuNyAUTQ8LYYMhaLTNnzptNb3OZRFJ2O
+         P10QR3aCPVnknzsoWf8rOIIkmq7nEeUmSL44SMLNKBOT/xTOLm95Ch9CjbjxxiCc4PzS
+         sy6g==
+X-Gm-Message-State: ANhLgQ2KGJiFY1JMbX8iCZ4sy2WHfVGf88IKYENUouaIuhczm2fsX/IG
+        QGP/wE2GdcUZuee9QFVaf5jdUuEI4im+WO77kktbzg==
+X-Google-Smtp-Source: ADFU+vs75qlVmpOsRcDth/eoqYjqQ/mG2s3897unixiQ4nm2aHS/No7meg/TiHJFnk+64H57Bfx8zHOHDUqC1RdlIoU=
+X-Received: by 2002:aca:682:: with SMTP id 124mr4297113oig.69.1585177053451;
+ Wed, 25 Mar 2020 15:57:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
+ <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
+ <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com> <87lfnoxg2a.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <87lfnoxg2a.fsf@nanos.tec.linutronix.de>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Wed, 25 Mar 2020 15:56:56 -0700
+Message-ID: <CAGETcx_3GSKmSveiGrM2vQp=q57iZYc0T4ELMY7Zw8UwzPEnYA@mail.gmail.com>
+Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
+ creating dead devices
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For each storvsc_device, storvsc keeps track of the channel target CPUs
-associated to the device (alloced_cpus) and it uses this information to
-fill a "cache" (stor_chns) mapping CPU->channel according to a certain
-heuristic.  Update the alloced_cpus mask and the stor_chns array when a
-channel of the storvsc device is re-assigned to a different CPU.
+On Wed, Mar 25, 2020 at 2:47 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Saravana Kannan <saravanak@google.com> writes:
+> > On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
+> > I took a closer look. So two different drivers [1] [2] are saying they
+> > know how to handle "arm,vexpress-sysreg" and are expecting to run at
+> > the same time. That seems a bit unusual to me. I wonder if this is a
+> > violation of the device-driver model because this expectation would
+> > never be allowed if these device drivers were actual drivers
+> > registered with driver-core. But that's a discussion for another time.
+> >
+> > To fix this issue you are facing, this patch should work:
+> > https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
+>
+> Sorry, that's not a fix. That's a crude hack.
 
-Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: <linux-scsi@vger.kernel.org>
----
- drivers/hv/vmbus_drv.c     |  4 ++
- drivers/scsi/storvsc_drv.c | 95 ++++++++++++++++++++++++++++++++++----
- include/linux/hyperv.h     |  3 ++
- 3 files changed, 94 insertions(+), 8 deletions(-)
+If device nodes are being handled by drivers without binding a driver
+to struct devices, then not setting OF_POPULATED is wrong. So the
+original patch sets it. There are also very valid reasons for allowing
+OF_POPULATED to be cleared by a driver as discussed here [1].
 
-diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
-index 84d2f22c569aa..7199fee2b5869 100644
---- a/drivers/hv/vmbus_drv.c
-+++ b/drivers/hv/vmbus_drv.c
-@@ -1721,6 +1721,10 @@ static ssize_t target_cpu_store(struct vmbus_channel *channel,
- 	 * in on a CPU that is different from the channel target_cpu value.
- 	 */
- 
-+	if (channel->change_target_cpu_callback)
-+		(*channel->change_target_cpu_callback)(channel,
-+				channel->target_cpu, target_cpu);
-+
- 	channel->target_cpu = target_cpu;
- 	channel->target_vp = hv_cpu_number_to_vp_number(target_cpu);
- 	channel->numa_node = cpu_to_node(target_cpu);
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index fb41636519ee8..a680592b9d32a 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -621,6 +621,63 @@ static inline struct storvsc_device *get_in_stor_device(
- 
- }
- 
-+void storvsc_change_target_cpu(struct vmbus_channel *channel, u32 old, u32 new)
-+{
-+	struct storvsc_device *stor_device;
-+	struct vmbus_channel *cur_chn;
-+	bool old_is_alloced = false;
-+	struct hv_device *device;
-+	unsigned long flags;
-+	int cpu;
-+
-+	device = channel->primary_channel ?
-+			channel->primary_channel->device_obj
-+				: channel->device_obj;
-+	stor_device = get_out_stor_device(device);
-+	if (!stor_device)
-+		return;
-+
-+	/* See storvsc_do_io() -> get_og_chn(). */
-+	spin_lock_irqsave(&device->channel->lock, flags);
-+
-+	/*
-+	 * Determines if the storvsc device has other channels assigned to
-+	 * the "old" CPU to update the alloced_cpus mask and the stor_chns
-+	 * array.
-+	 */
-+	if (device->channel != channel && device->channel->target_cpu == old) {
-+		cur_chn = device->channel;
-+		old_is_alloced = true;
-+		goto old_is_alloced;
-+	}
-+	list_for_each_entry(cur_chn, &device->channel->sc_list, sc_list) {
-+		if (cur_chn == channel)
-+			continue;
-+		if (cur_chn->target_cpu == old) {
-+			old_is_alloced = true;
-+			goto old_is_alloced;
-+		}
-+	}
-+
-+old_is_alloced:
-+	if (old_is_alloced)
-+		WRITE_ONCE(stor_device->stor_chns[old], cur_chn);
-+	else
-+		cpumask_clear_cpu(old, &stor_device->alloced_cpus);
-+
-+	/* "Flush" the stor_chns array. */
-+	for_each_possible_cpu(cpu) {
-+		if (stor_device->stor_chns[cpu] && !cpumask_test_cpu(
-+					cpu, &stor_device->alloced_cpus))
-+			WRITE_ONCE(stor_device->stor_chns[cpu], NULL);
-+	}
-+
-+	WRITE_ONCE(stor_device->stor_chns[new], channel);
-+	cpumask_set_cpu(new, &stor_device->alloced_cpus);
-+
-+	spin_unlock_irqrestore(&device->channel->lock, flags);
-+}
-+
- static void handle_sc_creation(struct vmbus_channel *new_sc)
- {
- 	struct hv_device *device = new_sc->primary_channel->device_obj;
-@@ -648,6 +705,8 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
- 		return;
- 	}
- 
-+	new_sc->change_target_cpu_callback = storvsc_change_target_cpu;
-+
- 	/* Add the sub-channel to the array of available channels. */
- 	stor_device->stor_chns[new_sc->target_cpu] = new_sc;
- 	cpumask_set_cpu(new_sc->target_cpu, &stor_device->alloced_cpus);
-@@ -876,6 +935,8 @@ static int storvsc_channel_init(struct hv_device *device, bool is_fc)
- 	if (stor_device->stor_chns == NULL)
- 		return -ENOMEM;
- 
-+	device->channel->change_target_cpu_callback = storvsc_change_target_cpu;
-+
- 	stor_device->stor_chns[device->channel->target_cpu] = device->channel;
- 	cpumask_set_cpu(device->channel->target_cpu,
- 			&stor_device->alloced_cpus);
-@@ -1248,8 +1309,10 @@ static struct vmbus_channel *get_og_chn(struct storvsc_device *stor_device,
- 	const struct cpumask *node_mask;
- 	int num_channels, tgt_cpu;
- 
--	if (stor_device->num_sc == 0)
-+	if (stor_device->num_sc == 0) {
-+		stor_device->stor_chns[q_num] = stor_device->device->channel;
- 		return stor_device->device->channel;
-+	}
- 
- 	/*
- 	 * Our channel array is sparsley populated and we
-@@ -1258,7 +1321,6 @@ static struct vmbus_channel *get_og_chn(struct storvsc_device *stor_device,
- 	 * The strategy is simple:
- 	 * I. Ensure NUMA locality
- 	 * II. Distribute evenly (best effort)
--	 * III. Mapping is persistent.
- 	 */
- 
- 	node_mask = cpumask_of_node(cpu_to_node(q_num));
-@@ -1268,8 +1330,10 @@ static struct vmbus_channel *get_og_chn(struct storvsc_device *stor_device,
- 		if (cpumask_test_cpu(tgt_cpu, node_mask))
- 			num_channels++;
- 	}
--	if (num_channels == 0)
-+	if (num_channels == 0) {
-+		stor_device->stor_chns[q_num] = stor_device->device->channel;
- 		return stor_device->device->channel;
-+	}
- 
- 	hash_qnum = q_num;
- 	while (hash_qnum >= num_channels)
-@@ -1295,6 +1359,7 @@ static int storvsc_do_io(struct hv_device *device,
- 	struct storvsc_device *stor_device;
- 	struct vstor_packet *vstor_packet;
- 	struct vmbus_channel *outgoing_channel, *channel;
-+	unsigned long flags;
- 	int ret = 0;
- 	const struct cpumask *node_mask;
- 	int tgt_cpu;
-@@ -1308,10 +1373,11 @@ static int storvsc_do_io(struct hv_device *device,
- 
- 	request->device  = device;
- 	/*
--	 * Select an an appropriate channel to send the request out.
-+	 * Select an appropriate channel to send the request out.
- 	 */
--	if (stor_device->stor_chns[q_num] != NULL) {
--		outgoing_channel = stor_device->stor_chns[q_num];
-+	/* See storvsc_change_target_cpu(). */
-+	outgoing_channel = READ_ONCE(stor_device->stor_chns[q_num]);
-+	if (outgoing_channel != NULL) {
- 		if (outgoing_channel->target_cpu == q_num) {
- 			/*
- 			 * Ideally, we want to pick a different channel if
-@@ -1324,7 +1390,10 @@ static int storvsc_do_io(struct hv_device *device,
- 					continue;
- 				if (tgt_cpu == q_num)
- 					continue;
--				channel = stor_device->stor_chns[tgt_cpu];
-+				channel = READ_ONCE(
-+					stor_device->stor_chns[tgt_cpu]);
-+				if (channel == NULL)
-+					continue;
- 				if (hv_get_avail_to_write_percent(
- 							&channel->outbound)
- 						> ring_avail_percent_lowater) {
-@@ -1350,7 +1419,10 @@ static int storvsc_do_io(struct hv_device *device,
- 			for_each_cpu(tgt_cpu, &stor_device->alloced_cpus) {
- 				if (cpumask_test_cpu(tgt_cpu, node_mask))
- 					continue;
--				channel = stor_device->stor_chns[tgt_cpu];
-+				channel = READ_ONCE(
-+					stor_device->stor_chns[tgt_cpu]);
-+				if (channel == NULL)
-+					continue;
- 				if (hv_get_avail_to_write_percent(
- 							&channel->outbound)
- 						> ring_avail_percent_lowater) {
-@@ -1360,7 +1432,14 @@ static int storvsc_do_io(struct hv_device *device,
- 			}
- 		}
- 	} else {
-+		spin_lock_irqsave(&device->channel->lock, flags);
-+		outgoing_channel = stor_device->stor_chns[q_num];
-+		if (outgoing_channel != NULL) {
-+			spin_unlock_irqrestore(&device->channel->lock, flags);
-+			goto found_channel;
-+		}
- 		outgoing_channel = get_og_chn(stor_device, q_num);
-+		spin_unlock_irqrestore(&device->channel->lock, flags);
- 	}
- 
- found_channel:
-diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
-index edfcd42319ef3..9018b89614b78 100644
---- a/include/linux/hyperv.h
-+++ b/include/linux/hyperv.h
-@@ -773,6 +773,9 @@ struct vmbus_channel {
- 	void (*onchannel_callback)(void *context);
- 	void *channel_callback_context;
- 
-+	void (*change_target_cpu_callback)(struct vmbus_channel *channel,
-+			u32 old, u32 new);
-+
- 	/*
- 	 * Synchronize channel scheduling and channel removal; see the inline
- 	 * comments in vmbus_chan_sched() and vmbus_reset_channel_cb().
--- 
-2.24.0
+The approach of the original patch (setting the flag and letting the
+driver sometimes clear it) is also followed by many other frameworks
+like irq, clk, i2c, etc. Even ingenic-timer.c already does it for the
+exact same reason.
 
+So, why is the vexpress fix a crude hack?
+
+> As this is also causing trouble on tegra30-cardhu-a04 the only sane
+> solution is to revert it and start over with a proper solution for the
+> vexpress problem and a root cause analysis for the tegra.
+
+If someone can tell me which of the timer drivers are relevant for
+tegra30-cardhu-a04, I can help fix it.
+If you want to revert the original patch first before waiting for a
+tegra fix, that's okay by me.
+
+However, for vexpress, what do you propose I do? The driver itself is
+doing weird stuff with two drivers handling the exact same device. I
+can't just go edit the DT files because technically I don't know their
+hardware. Looks to me like they should have a separate and proper
+device for the timer and not have two drivers handle the same device.
+If you don't like my vexpress fix, then don't take it but ask the
+vexpress maintainer to fix their DT and driver maybe? But that might
+break the kernel compatibility with existing DT binaries on devices
+(yes, vexpress seems like a virtual platform, so updating DT blobs
+might not be hard). My vexpress fix doesn't break backwards
+compatibility.
+
+So, can you please accept my vexpress fix or tell us what you think is
+a "proper solution"?
+
+-Saravana
