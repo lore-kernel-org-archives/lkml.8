@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970FEC54FD9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2582EC54FDE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 636F220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98AB20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCYI4H (ORCPT
+        id S1727707AbgCYI4R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:56:07 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:54913 "EHLO
+        Wed, 25 Mar 2020 04:56:17 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:52691 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727457AbgCYI4F (ORCPT
+        by vger.kernel.org with ESMTP id S1727566AbgCYI4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:56:05 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0775484-0.000381191-0.92207;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
+        Wed, 25 Mar 2020 04:56:15 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0110751-0.00073836-0.988187;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
 Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H50xpyL_1585126516)
           by smtp.aliyun-inc.com(10.147.42.241);
-          Wed, 25 Mar 2020 16:55:31 +0800
+          Wed, 25 Mar 2020 16:55:36 +0800
 From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
 To:     Kees Cook <keescook@chromium.org>,
         Anton Vorontsov <anton@enomsg.org>,
@@ -42,9 +42,9 @@ To:     Kees Cook <keescook@chromium.org>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org,
         WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v3 06/11] pstore/blk: blkoops: support ftrace recorder
-Date:   Wed, 25 Mar 2020 16:55:01 +0800
-Message-Id: <1585126506-18635-7-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: [PATCH v3 11/11] mtd: new support oops logger based on pstore/blk
+Date:   Wed, 25 Mar 2020 16:55:06 +0800
+Message-Id: <1585126506-18635-12-git-send-email-liaoweixiong@allwinnertech.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
 References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
@@ -53,389 +53,674 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support recorder for ftrace. To enable ftrace recorder, just make
-ftrace_size be greater than 0 and a multiple of 4096.
+It's the last one of a series of patches to adapt to MTD device.
+
+The mtdpstore is similar to mtdoops but more powerful. It bases on
+pstore/blk, aims to store panic and oops logs to a flash partition,
+where it can be read back as files after mounting pstore filesystem.
+
+The pstore/blk is designed for block device at the very beginning,
+but now, compatible to non-block device like MTD device.
+
+To make mtdpstore work, "blkdev" of pstore/blk should be set as MTD
+device name or MTD device number. Please refer to document at:
+    Documentation/admin-guide/pstore-block.rst
+
+Why do we need mtdpstore?
+1. repetitive jobs between pstore and mtdoops
+   Both of pstore and mtdoops do the same jobs that store panic/oops log.
+   They have much similar logic that register to kmsg dumper and store
+   log to several chunks one by one.
+2. do what a driver should do
+   To me, a driver should provide methods instead of policies. What MTD
+   should do is to provide read/write/erase operations, geting rid of codes
+   about chunk management, kmsg dumper and configuration.
+3. enhanced feature
+   Not only store log, but also show it as files.
+   Not only log, but also trigger time and trigger count.
+   Not only panic/oops log, but also log recorder for pmsg, console and
+   ftrace in the future.
 
 Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 ---
- fs/pstore/Kconfig           |  12 ++++
- fs/pstore/pstore_blk.c      |   9 +++
- fs/pstore/pstore_zone.c     | 172 +++++++++++++++++++++++++++++++++++++++++++-
- include/linux/pstore_zone.h |   2 +
- 4 files changed, 193 insertions(+), 2 deletions(-)
+ Documentation/admin-guide/pstore-block.rst |   9 +-
+ drivers/mtd/Kconfig                        |  10 +
+ drivers/mtd/Makefile                       |   1 +
+ drivers/mtd/mtdpstore.c                    | 564 +++++++++++++++++++++++++++++
+ 4 files changed, 582 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/mtd/mtdpstore.c
 
-diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index bf90de48ad3c..55ce726be795 100644
---- a/fs/pstore/Kconfig
-+++ b/fs/pstore/Kconfig
-@@ -237,6 +237,18 @@ config PSTORE_BLK_CONSOLE_SIZE
- 	  NOTE that, both Kconfig and module parameters can configure
- 	  pstore/blk, but module parameters have priority over Kconfig.
+diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
+index a31155b36e62..464efb0db932 100644
+--- a/Documentation/admin-guide/pstore-block.rst
++++ b/Documentation/admin-guide/pstore-block.rst
+@@ -43,9 +43,9 @@ blkdev
+ ~~~~~~
  
-+config PSTORE_BLK_FTRACE_SIZE
-+	int "Size in Kbytes of ftarce to store"
+ The block device to use. Most of the time, it is a partition of block device.
+-It's required for pstore/blk.
++It's required for pstore/blk. It is also used for MTD device.
+ 
+-It accepts the following variants:
++It accepts the following variants for block device:
+ 
+ 1. <hex_major><hex_minor> device number in hexadecimal represents itself; no
+    leading 0x, for example b302.
+@@ -64,6 +64,11 @@ It accepts the following variants:
+    partition with a known unique id.
+ #. <major>:<minor> major and minor number of the device separated by a colon.
+ 
++It accepts the following variants for MTD device:
++
++1. <device name> MTD device name. "pstore" is recommended.
++#. <device number> MTD device number.
++
+ oops_size
+ ~~~~~~~~~
+ 
+diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+index 42d401ea60ee..6ddab796216d 100644
+--- a/drivers/mtd/Kconfig
++++ b/drivers/mtd/Kconfig
+@@ -170,6 +170,16 @@ config MTD_OOPS
+ 	  buffer in a flash partition where it can be read back at some
+ 	  later point.
+ 
++config MTD_PSTORE
++	tristate "Log panic/oops to an MTD buffer based on pstore"
 +	depends on PSTORE_BLK
-+	depends on PSTORE_FTRACE
-+	default 64
 +	help
-+	  This just sets size of ftrace (ftrace_size) for pstore/blk. The
-+	  size is in KB and must be a multiple of 4.
++	  This enables panic and oops messages to be logged to a circular
++	  buffer in a flash partition where it can be read back as files after
++	  mounting pstore filesystem.
 +
-+	  NOTE that, both Kconfig and module parameters can configure
-+	  pstore/blk, but module parameters have priority over Kconfig.
++	  If unsure, say N.
 +
- config PSTORE_BLK_DUMP_OOPS
- 	bool "dump oops"
- 	depends on PSTORE_BLK
-diff --git a/fs/pstore/pstore_blk.c b/fs/pstore/pstore_blk.c
-index 2b513acaa18f..560e7b3f0945 100644
---- a/fs/pstore/pstore_blk.c
-+++ b/fs/pstore/pstore_blk.c
-@@ -34,6 +34,14 @@
- module_param(console_size, long, 0400);
- MODULE_PARM_DESC(console_size, "console size in kbytes");
+ config MTD_SWAP
+ 	tristate "Swap on MTD device support"
+ 	depends on MTD && SWAP
+diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+index 56cc60ccc477..593d0593a038 100644
+--- a/drivers/mtd/Makefile
++++ b/drivers/mtd/Makefile
+@@ -20,6 +20,7 @@ obj-$(CONFIG_RFD_FTL)		+= rfd_ftl.o
+ obj-$(CONFIG_SSFDC)		+= ssfdc.o
+ obj-$(CONFIG_SM_FTL)		+= sm_ftl.o
+ obj-$(CONFIG_MTD_OOPS)		+= mtdoops.o
++obj-$(CONFIG_MTD_PSTORE)	+= mtdpstore.o
+ obj-$(CONFIG_MTD_SWAP)		+= mtdswap.o
  
-+#if IS_ENABLED(CONFIG_PSTORE_FTRACE)
-+static long ftrace_size = CONFIG_PSTORE_BLK_FTRACE_SIZE;
-+#else
-+static long ftrace_size = -1;
-+#endif
-+module_param(ftrace_size, long, 0400);
-+MODULE_PARM_DESC(ftrace_size, "ftrace size in kbytes");
+ nftl-objs		:= nftlcore.o nftlmount.o
+diff --git a/drivers/mtd/mtdpstore.c b/drivers/mtd/mtdpstore.c
+new file mode 100644
+index 000000000000..e6fdaed6d1d3
+--- /dev/null
++++ b/drivers/mtd/mtdpstore.c
+@@ -0,0 +1,564 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- static int dump_oops = CONFIG_PSTORE_BLK_DUMP_OOPS;
- module_param(dump_oops, int, 0400);
- MODULE_PARM_DESC(total_size, "whether dump oops");
-@@ -141,6 +149,7 @@ static int psblk_register_do(struct psblk_device *dev)
- 	verify_size(oops_size, 4096, dev->flags & PSTORE_FLAGS_DMESG);
- 	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
- 	verify_size(console_size, 4096, dev->flags & PSTORE_FLAGS_CONSOLE);
-+	verify_size(ftrace_size, 4096, dev->flags & PSTORE_FLAGS_FTRACE);
- #undef verify_size
- 	dump_oops = dump_oops <= 0 ? 0 : 1;
- 
-diff --git a/fs/pstore/pstore_zone.c b/fs/pstore/pstore_zone.c
-index e1e84505b046..1da4fc760d31 100644
---- a/fs/pstore/pstore_zone.c
-+++ b/fs/pstore/pstore_zone.c
-@@ -88,11 +88,14 @@ struct psz_zone {
-  * @opszs: oops/panic storage zones
-  * @ppsz: pmsg storage zone
-  * @cpsz: console storage zone
-+ * @fpszs: ftrace storage zones
-  * @oops_max_cnt: max count of @opszs
-  * @oops_read_cnt: counter to read oops zone
-  * @oops_write_cnt: counter to write
-  * @pmsg_read_cnt: counter to read pmsg zone
-  * @console_read_cnt: counter to read console zone
-+ * @ftrace_max_cnt: max count of @fpszs
-+ * @ftrace_read_cnt: counter to read ftrace zone
-  * @oops_counter: counter to oops
-  * @panic_counter: counter to panic
-  * @recovered: whether finish recovering data from storage
-@@ -105,11 +108,14 @@ struct psz_context {
- 	struct psz_zone **opszs;
- 	struct psz_zone *ppsz;
- 	struct psz_zone *cpsz;
-+	struct psz_zone **fpszs;
- 	unsigned int oops_max_cnt;
- 	unsigned int oops_read_cnt;
- 	unsigned int oops_write_cnt;
- 	unsigned int pmsg_read_cnt;
- 	unsigned int console_read_cnt;
-+	unsigned int ftrace_max_cnt;
-+	unsigned int ftrace_read_cnt;
- 	/*
- 	 * the counter should be recovered when recover.
- 	 * It records the oops/panic times after burning rather than booting.
-@@ -308,6 +314,7 @@ static void psz_flush_all_dirty_zones(struct work_struct *work)
- 	psz_flush_dirty_zone(cxt->ppsz);
- 	psz_flush_dirty_zone(cxt->cpsz);
- 	psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
-+	psz_flush_dirty_zones(cxt->fpszs, cxt->ftrace_max_cnt);
- }
- 
- static int psz_recover_oops_data(struct psz_context *cxt)
-@@ -542,6 +549,31 @@ static int psz_recover_zone(struct psz_context *cxt, struct psz_zone *zone)
- 	return ret;
- }
- 
-+static int psz_recover_zones(struct psz_context *cxt,
-+		struct psz_zone **zones, unsigned int cnt)
++#define dev_fmt(fmt) "mtdoops-pstore: " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/pstore_blk.h>
++#include <linux/mtd/mtd.h>
++#include <linux/bitops.h>
++
++static struct mtdpstore_context {
++	int index;
++	struct psblk_info info;
++	struct psblk_device dev;
++	struct mtd_info *mtd;
++	unsigned long *rmmap;		/* removed bit map */
++	unsigned long *usedmap;		/* used bit map */
++	/*
++	 * used for panic write
++	 * As there are no block_isbad for panic case, we should keep this
++	 * status before panic to ensure panic_write not failed.
++	 */
++	unsigned long *badmap;		/* bad block bit map */
++} oops_cxt;
++
++static int mtdpstore_block_isbad(struct mtdpstore_context *cxt, loff_t off)
 +{
 +	int ret;
-+	unsigned int i;
-+	struct psz_zone *zone;
++	struct mtd_info *mtd = cxt->mtd;
++	u64 blknum = div_u64(off, mtd->erasesize);
 +
-+	if (!zones)
-+		return 0;
-+
-+	for (i = 0; i < cnt; i++) {
-+		zone = zones[i];
-+		if (unlikely(!zone))
-+			continue;
-+		ret = psz_recover_zone(cxt, zone);
-+		if (ret)
-+			goto recover_fail;
++	if (test_bit(blknum, cxt->badmap))
++		return true;
++	ret = mtd_block_isbad(mtd, off);
++	if (ret < 0) {
++		dev_err(&mtd->dev, "mtd_block_isbad failed, aborting\n");
++		return ret;
++	} else if (ret > 0) {
++		set_bit(blknum, cxt->badmap);
++		return true;
 +	}
++	return false;
++}
 +
-+	return 0;
-+recover_fail:
-+	pr_debug("recover %s[%u] failed\n", zone->name, i);
++static inline int mtdpstore_panic_block_isbad(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	u64 blknum = div_u64(off, mtd->erasesize);
++
++	return test_bit(blknum, cxt->badmap);
++}
++
++static inline void mtdpstore_mark_used(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++
++	dev_dbg(&mtd->dev, "mark zone %llu used\n", zonenum);
++	set_bit(zonenum, cxt->usedmap);
++}
++
++static inline void mtdpstore_mark_unused(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++
++	dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
++	clear_bit(zonenum, cxt->usedmap);
++}
++
++static inline void mtdpstore_block_mark_unused(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
++
++	while (zonecnt > 0) {
++		dev_dbg(&mtd->dev, "mark zone %llu unused\n", zonenum);
++		clear_bit(zonenum, cxt->usedmap);
++		zonenum++;
++		zonecnt--;
++	}
++}
++
++static inline int mtdpstore_is_used(struct mtdpstore_context *cxt, loff_t off)
++{
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++	u64 blknum = div_u64(off, cxt->mtd->erasesize);
++
++	if (test_bit(blknum, cxt->badmap))
++		return true;
++	return test_bit(zonenum, cxt->usedmap);
++}
++
++static int mtdpstore_block_is_used(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
++
++	while (zonecnt > 0) {
++		if (test_bit(zonenum, cxt->usedmap))
++			return true;
++		zonenum++;
++		zonecnt--;
++	}
++	return false;
++}
++
++static int mtdpstore_is_empty(struct mtdpstore_context *cxt, char *buf,
++		size_t size)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	size_t sz;
++	int i;
++
++	sz = min_t(uint32_t, size, mtd->writesize / 4);
++	for (i = 0; i < sz; i++) {
++		if (buf[i] != (char)0xFF)
++			return false;
++	}
++	return true;
++}
++
++static void mtdpstore_mark_removed(struct mtdpstore_context *cxt, loff_t off)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++
++	dev_dbg(&mtd->dev, "mark zone %llu removed\n", zonenum);
++	set_bit(zonenum, cxt->rmmap);
++}
++
++static void mtdpstore_block_clear_removed(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
++
++	while (zonecnt > 0) {
++		clear_bit(zonenum, cxt->rmmap);
++		zonenum++;
++		zonecnt--;
++	}
++}
++
++static int mtdpstore_block_is_removed(struct mtdpstore_context *cxt,
++		loff_t off)
++{
++	u64 zonenum = div_u64(off, cxt->info.oops_size);
++	u32 zonecnt = cxt->mtd->erasesize / cxt->info.oops_size;
++
++	while (zonecnt > 0) {
++		if (test_bit(zonenum, cxt->rmmap))
++			return true;
++		zonenum++;
++		zonecnt--;
++	}
++	return false;
++}
++
++static int mtdpstore_erase_do(struct mtdpstore_context *cxt, loff_t off)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	struct erase_info erase;
++	int ret;
++
++	dev_dbg(&mtd->dev, "try to erase off 0x%llx\n", off);
++	erase.len = cxt->mtd->erasesize;
++	erase.addr = off;
++	ret = mtd_erase(cxt->mtd, &erase);
++	if (!ret)
++		mtdpstore_block_clear_removed(cxt, off);
++	else
++		dev_err(&mtd->dev, "erase of region [0x%llx, 0x%llx] on \"%s\" failed\n",
++		       (unsigned long long)erase.addr,
++		       (unsigned long long)erase.len, cxt->info.device);
 +	return ret;
 +}
 +
- /**
-  * psz_recovery() - recover data from storage
-  * @cxt: the context of pstore/zone
-@@ -569,6 +601,10 @@ static inline int psz_recovery(struct psz_context *cxt)
- 	if (ret)
- 		goto recover_fail;
- 
-+	ret = psz_recover_zones(cxt, cxt->fpszs, cxt->ftrace_max_cnt);
-+	if (ret)
-+		goto recover_fail;
-+
- 	pr_debug("recover end!\n");
- 	atomic_set(&cxt->recovered, 1);
- 	return 0;
-@@ -585,6 +621,7 @@ static int psz_pstore_open(struct pstore_info *psi)
- 	cxt->oops_read_cnt = 0;
- 	cxt->pmsg_read_cnt = 0;
- 	cxt->console_read_cnt = 0;
-+	cxt->ftrace_read_cnt = 0;
- 	return 0;
- }
- 
-@@ -651,6 +688,10 @@ static int psz_pstore_erase(struct pstore_record *record)
- 		return psz_record_erase(cxt, cxt->ppsz);
- 	case PSTORE_TYPE_CONSOLE:
- 		return psz_record_erase(cxt, cxt->cpsz);
-+	case PSTORE_TYPE_FTRACE:
-+		if (record->id >= cxt->ftrace_max_cnt)
-+			return -EINVAL;
-+		return psz_record_erase(cxt, cxt->fpszs[record->id]);
- 	default: return -EINVAL;
- 	}
- }
-@@ -806,6 +847,13 @@ static int notrace psz_pstore_write(struct pstore_record *record)
- 		return psz_record_write(cxt->cpsz, record);
- 	case PSTORE_TYPE_PMSG:
- 		return psz_record_write(cxt->ppsz, record);
-+	case PSTORE_TYPE_FTRACE: {
-+		int zonenum = smp_processor_id();
-+
-+		if (!cxt->fpszs)
-+			return -ENOSPC;
-+		return psz_record_write(cxt->fpszs[zonenum], record);
-+	}
- 	default:
- 		return -EINVAL;
- 	}
-@@ -821,6 +869,14 @@ static struct psz_zone *psz_read_next_zone(struct psz_context *cxt)
- 			return zone;
- 	}
- 
-+	if (cxt->ftrace_read_cnt < cxt->ftrace_max_cnt)
-+		/*
-+		 * No need psz_old_ok(). Let psz_ftrace_read() do so for
-+		 * combination. psz_ftrace_read() should traverse over
-+		 * all zones in case of some zone without data.
-+		 */
-+		return cxt->fpszs[cxt->ftrace_read_cnt++];
-+
- 	if (cxt->pmsg_read_cnt == 0) {
- 		cxt->pmsg_read_cnt++;
- 		zone = cxt->ppsz;
-@@ -894,6 +950,98 @@ static ssize_t psz_oops_read(struct psz_zone *zone,
- 	return size + hlen;
- }
- 
-+static int psz_ftrace_combine(char *src1_buf, size_t src1_size,
-+		char *src2_buf, size_t src2_size,
-+		char **dest_buf, size_t *dest_size)
++/*
++ * called while removing file
++ *
++ * Avoiding over erasing, do erase block only when the whole block is unused.
++ * If the block contains valid log, do erase lazily on flush_removed() when
++ * unregister.
++ */
++static ssize_t mtdpstore_erase(size_t size, loff_t off)
 +{
-+	size_t src1_off, src2_off, total;
-+	size_t src1_idx = 0, src2_idx = 0, merged_idx = 0;
-+	void *merged_buf;
-+	struct pstore_ftrace_record *mrec, *s1rec, *s2rec;
-+	size_t record_size = sizeof(struct pstore_ftrace_record);
++	struct mtdpstore_context *cxt = &oops_cxt;
 +
-+	src1_off = src1_size % record_size;
-+	src1_size -= src1_off;
++	if (mtdpstore_block_isbad(cxt, off))
++		return -EIO;
 +
-+	src2_off = src2_size % record_size;
-+	src2_size -= src2_off;
++	mtdpstore_mark_unused(cxt, off);
 +
-+	total = src1_size + src2_size;
-+	merged_buf = kmalloc(total, GFP_KERNEL);
-+	if (!merged_buf)
-+		return -ENOMEM;
++	/* If the block still has valid data, mtdpstore do erase lazily */
++	if (likely(mtdpstore_block_is_used(cxt, off))) {
++		mtdpstore_mark_removed(cxt, off);
++		return 0;
++	}
 +
-+	s1rec = (struct pstore_ftrace_record *)(src1_buf + src1_off);
-+	s2rec = (struct pstore_ftrace_record *)(src2_buf + src2_off);
-+	mrec = (struct pstore_ftrace_record *)(merged_buf);
++	/* all zones are unused, erase it */
++	off = ALIGN_DOWN(off, cxt->mtd->erasesize);
++	return mtdpstore_erase_do(cxt, off);
++}
 +
-+	while (src1_size > 0 && src2_size > 0) {
-+		u64 s1_ts, s2_ts;
++/*
++ * What is security for mtdpstore?
++ * As there is no erase for panic case, we should ensure at least one zone
++ * is writable. Otherwise, panic write will fail.
++ * If zone is used, write operation will return -ENOMSG, which means that
++ * pstore/blk will try one by one until gets an empty zone. So, it is not
++ * needed to ensure the next zone is empty, but at least one.
++ */
++static int mtdpstore_security(struct mtdpstore_context *cxt, loff_t off)
++{
++	int ret = 0, i;
++	struct mtd_info *mtd = cxt->mtd;
++	u32 zonenum = (u32)div_u64(off, cxt->info.oops_size);
++	u32 zonecnt = (u32)div_u64(cxt->mtd->size, cxt->info.oops_size);
++	u32 blkcnt = (u32)div_u64(cxt->mtd->size, cxt->mtd->erasesize);
++	u32 erasesize = cxt->mtd->erasesize;
 +
-+		s1_ts = pstore_ftrace_read_timestamp(&s1rec[src1_idx]);
-+		s2_ts = pstore_ftrace_read_timestamp(&s2rec[src2_idx]);
-+		if (s1_ts < s2_ts) {
-+			mrec[merged_idx++] = s1rec[src1_idx++];
-+			src1_size -= record_size;
-+		} else {
-+			mrec[merged_idx++] = s2rec[src2_idx++];
-+			src2_size -= record_size;
++	for (i = 0; i < zonecnt; i++) {
++		u32 num = (zonenum + i) % zonecnt;
++
++		/* found empty zone */
++		if (!test_bit(num, cxt->usedmap))
++			return 0;
++	}
++
++	/* If there is no any empty zone, we have no way but to do erase */
++	off = ALIGN_DOWN(off, erasesize);
++	while (blkcnt--) {
++		div64_u64_rem(off + erasesize, cxt->mtd->size, (u64 *)&off);
++
++		if (mtdpstore_block_isbad(cxt, off))
++			continue;
++
++		ret = mtdpstore_erase_do(cxt, off);
++		if (!ret) {
++			mtdpstore_block_mark_unused(cxt, off);
++			break;
 +		}
 +	}
 +
-+	while (src1_size > 0) {
-+		mrec[merged_idx++] = s1rec[src1_idx++];
-+		src1_size -= record_size;
++	if (ret)
++		dev_err(&mtd->dev, "all blocks bad!\n");
++	dev_dbg(&mtd->dev, "end security\n");
++	return ret;
++}
++
++static ssize_t mtdpstore_write(const char *buf, size_t size, loff_t off)
++{
++	struct mtdpstore_context *cxt = &oops_cxt;
++	struct mtd_info *mtd = cxt->mtd;
++	size_t retlen;
++	int ret;
++
++	if (mtdpstore_block_isbad(cxt, off))
++		return -ENOMSG;
++
++	/* zone is used, please try next one */
++	if (mtdpstore_is_used(cxt, off))
++		return -ENOMSG;
++
++	dev_dbg(&mtd->dev, "try to write off 0x%llx size %zu\n", off, size);
++	ret = mtd_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
++	if (ret < 0 || retlen != size) {
++		dev_err(&mtd->dev, "write failure at %lld (%zu of %zu written), err %d\n",
++				off, retlen, size, ret);
++		return -EIO;
++	}
++	mtdpstore_mark_used(cxt, off);
++
++	mtdpstore_security(cxt, off);
++	return retlen;
++}
++
++static inline bool mtdpstore_is_io_error(int ret)
++{
++	return ret < 0 && !mtd_is_bitflip(ret) && !mtd_is_eccerr(ret);
++}
++
++/*
++ * All zones will be read as pstore/blk will read zone one by one when do
++ * recover.
++ */
++static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
++{
++	struct mtdpstore_context *cxt = &oops_cxt;
++	struct mtd_info *mtd = cxt->mtd;
++	size_t retlen, done;
++	int ret;
++
++	if (mtdpstore_block_isbad(cxt, off))
++		return -ENOMSG;
++
++	dev_dbg(&mtd->dev, "try to read off 0x%llx size %zu\n", off, size);
++	for (done = 0, retlen = 0; done < size; done += retlen) {
++		retlen = 0;
++
++		ret = mtd_read(cxt->mtd, off + done, size - done, &retlen,
++				(u_char *)buf + done);
++		if (mtdpstore_is_io_error(ret)) {
++			dev_err(&mtd->dev, "read failure at %lld (%zu of %zu read), err %d\n",
++					off + done, retlen, size - done, ret);
++			/* the zone may be broken, try next one */
++			return -ENOMSG;
++		}
++
++		/*
++		 * ECC error. The impact on log data is so small. Maybe we can
++		 * still read it and try to understand. So mtdpstore just hands
++		 * over what it gets and user can judge whether the data is
++		 * valid or not.
++		 */
++		if (mtd_is_eccerr(ret)) {
++			dev_err(&mtd->dev, "ecc error at %lld (%zu of %zu read), err %d\n",
++					off + done, retlen, size - done, ret);
++			/* driver may not set retlen when ecc error */
++			retlen = retlen == 0 ? size - done : retlen;
++		}
 +	}
 +
-+	while (src2_size > 0) {
-+		mrec[merged_idx++] = s2rec[src2_idx++];
-+		src2_size -= record_size;
++	if (mtdpstore_is_empty(cxt, buf, size))
++		mtdpstore_mark_unused(cxt, off);
++	else
++		mtdpstore_mark_used(cxt, off);
++
++	mtdpstore_security(cxt, off);
++	return retlen;
++}
++
++static ssize_t mtdpstore_panic_write(const char *buf, size_t size, loff_t off)
++{
++	struct mtdpstore_context *cxt = &oops_cxt;
++	struct mtd_info *mtd = cxt->mtd;
++	size_t retlen;
++	int ret;
++
++	if (mtdpstore_panic_block_isbad(cxt, off))
++		return -ENOMSG;
++
++	/* zone is used, please try next one */
++	if (mtdpstore_is_used(cxt, off))
++		return -ENOMSG;
++
++	ret = mtd_panic_write(cxt->mtd, off, size, &retlen, (u_char *)buf);
++	if (ret < 0 || size != retlen) {
++		dev_err(&mtd->dev, "panic write failure at %lld (%zu of %zu read), err %d\n",
++				off, retlen, size, ret);
++		return -EIO;
++	}
++	mtdpstore_mark_used(cxt, off);
++
++	return retlen;
++}
++
++static void mtdpstore_notify_add(struct mtd_info *mtd)
++{
++	int ret;
++	struct mtdpstore_context *cxt = &oops_cxt;
++	struct psblk_info *info = &cxt->info;
++	unsigned long longcnt;
++
++	if (!strcmp(mtd->name, info->device))
++		cxt->index = mtd->index;
++
++	if (mtd->index != cxt->index || cxt->index < 0)
++		return;
++
++	dev_dbg(&mtd->dev, "found matching MTD device %s\n", mtd->name);
++
++	if (mtd->size < info->oops_size * 2) {
++		dev_err(&mtd->dev, "MTD partition %d not big enough\n",
++				mtd->index);
++		return;
++	}
++	/*
++	 * oops_size must be aligned to 4096 Bytes, which is limited by
++	 * psblk. The default value of oops_size is 64KB. If oops_size
++	 * is larger than erasesize, some errors will occur since mtdpsotre
++	 * is designed on it.
++	 */
++	if (mtd->erasesize < info->oops_size) {
++		dev_err(&mtd->dev, "eraseblock size of MTD partition %d too small\n",
++				mtd->index);
++		return;
++	}
++	if (unlikely(info->oops_size % mtd->writesize)) {
++		dev_err(&mtd->dev, "record size %lu KB must align to write size %d KB\n",
++				info->oops_size / 1024,
++				mtd->writesize / 1024);
++		return;
 +	}
 +
-+	*dest_buf = merged_buf;
-+	*dest_size = total;
++	longcnt = BITS_TO_LONGS(div_u64(mtd->size, info->oops_size));
++	cxt->rmmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
++	cxt->usedmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
++
++	longcnt = BITS_TO_LONGS(div_u64(mtd->size, mtd->erasesize));
++	cxt->badmap = kcalloc(longcnt, sizeof(long), GFP_KERNEL);
++
++	cxt->dev.total_size = mtd->size;
++	/* just support dmesg right now */
++	cxt->dev.flags = PSTORE_FLAGS_DMESG;
++	cxt->dev.read = mtdpstore_read;
++	cxt->dev.write = mtdpstore_write;
++	cxt->dev.erase = mtdpstore_erase;
++	cxt->dev.panic_write = mtdpstore_panic_write;
++
++	ret = psblk_register_device(&cxt->dev);
++	if (ret) {
++		dev_err(&mtd->dev, "mtd%d register to psblk failed\n",
++				mtd->index);
++		return;
++	}
++	cxt->mtd = mtd;
++	dev_info(&mtd->dev, "Attached to MTD device %d\n", mtd->index);
++}
++
++static int mtdpstore_flush_removed_do(struct mtdpstore_context *cxt,
++		loff_t off, size_t size)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	u_char *buf;
++	int ret;
++	size_t retlen;
++	struct erase_info erase;
++
++	buf = kmalloc(mtd->erasesize, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	/* 1st. read to cache */
++	ret = mtd_read(mtd, off, mtd->erasesize, &retlen, buf);
++	if (mtdpstore_is_io_error(ret))
++		goto free;
++
++	/* 2nd. erase block */
++	erase.len = mtd->erasesize;
++	erase.addr = off;
++	ret = mtd_erase(mtd, &erase);
++	if (ret)
++		goto free;
++
++	/* 3rd. write back */
++	while (size) {
++		unsigned int zonesize = cxt->info.oops_size;
++
++		/* there is valid data on block, write back */
++		if (mtdpstore_is_used(cxt, off)) {
++			ret = mtd_write(mtd, off, zonesize, &retlen, buf);
++			if (ret)
++				dev_err(&mtd->dev, "write failure at %lld (%zu of %u written), err %d\n",
++						off, retlen, zonesize, ret);
++		}
++
++		off += zonesize;
++		size -= min_t(unsigned int, zonesize, size);
++	}
++
++free:
++	kfree(buf);
++	return ret;
++}
++
++/*
++ * What does mtdpstore_flush_removed() do?
++ * When user remove any log file on pstore filesystem, mtdpstore should do
++ * something to ensure log file removed. If the whole block is no longer used,
++ * it's nice to erase the block. However if the block still contains valid log,
++ * what mtdpstore can do is to erase and write the valid log back.
++ */
++static int mtdpstore_flush_removed(struct mtdpstore_context *cxt)
++{
++	struct mtd_info *mtd = cxt->mtd;
++	int ret;
++	loff_t off;
++	u32 blkcnt = (u32)div_u64(mtd->size, mtd->erasesize);
++
++	for (off = 0; blkcnt > 0; blkcnt--, off += mtd->erasesize) {
++		ret = mtdpstore_block_isbad(cxt, off);
++		if (ret)
++			continue;
++
++		ret = mtdpstore_block_is_removed(cxt, off);
++		if (!ret)
++			continue;
++
++		ret = mtdpstore_flush_removed_do(cxt, off, mtd->erasesize);
++		if (ret)
++			return ret;
++	}
 +	return 0;
 +}
 +
-+/* try to combine all ftrace zones */
-+static ssize_t psz_ftrace_read(struct psz_zone *zone,
-+		struct pstore_record *record)
++static void mtdpstore_notify_remove(struct mtd_info *mtd)
 +{
-+	struct psz_context *cxt = record->psi->data;
-+	struct psz_buffer *buf;
-+	char *dest;
-+	size_t dest_size;
++	struct mtdpstore_context *cxt = &oops_cxt;
++
++	if (mtd->index != cxt->index || cxt->index < 0)
++		return;
++
++	mtdpstore_flush_removed(cxt);
++
++	psblk_unregister_device(&cxt->dev);
++	kfree(cxt->badmap);
++	kfree(cxt->usedmap);
++	kfree(cxt->rmmap);
++	cxt->mtd = NULL;
++	cxt->index = -1;
++}
++
++static struct mtd_notifier mtdpstore_notifier = {
++	.add	= mtdpstore_notify_add,
++	.remove	= mtdpstore_notify_remove,
++};
++
++static int __init mtdpstore_init(void)
++{
 +	int ret;
++	struct mtdpstore_context *cxt = &oops_cxt;
++	struct mtd_info *mtd = cxt->mtd;
++	struct psblk_info *info = &cxt->info;
 +
-+	if (!zone || !record)
-+		return -ENOSPC;
-+
-+	if (!psz_old_ok(zone))
-+		goto out;
-+
-+	buf = (struct psz_buffer *)zone->oldbuf;
-+	if (!buf)
-+		return -ENOMSG;
-+
-+	ret = psz_ftrace_combine(record->buf, record->size,
-+			(char *)buf->data, atomic_read(&buf->datalen),
-+			&dest, &dest_size);
++	ret = psblk_usr_info(info);
 +	if (unlikely(ret))
 +		return ret;
 +
-+	kfree(record->buf);
-+	record->buf = dest;
-+	record->size = dest_size;
-+
-+out:
-+	if (cxt->ftrace_read_cnt < cxt->ftrace_max_cnt)
-+		/* then, read next ftrace zone */
-+		return -ENOMSG;
-+	record->id = 0;
-+	return record->size ? record->size : -ENOMSG;
-+}
-+
- static ssize_t psz_record_read(struct psz_zone *zone,
- 		struct pstore_record *record)
- {
-@@ -944,6 +1092,9 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
- 		readop = psz_oops_read;
- 		record->id = cxt->oops_read_cnt - 1;
- 		break;
-+	case PSTORE_TYPE_FTRACE:
-+		readop = psz_ftrace_read;
-+		break;
- 	case PSTORE_TYPE_CONSOLE:
- 		fallthrough;
- 	case PSTORE_TYPE_PMSG:
-@@ -1095,6 +1246,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
- 		psz_free_zone(&cxt->ppsz);
- 	if (cxt->cpsz)
- 		psz_free_zone(&cxt->cpsz);
-+	if (cxt->fpszs)
-+		psz_free_zones(&cxt->fpszs, &cxt->ftrace_max_cnt);
- }
- 
- static int psz_alloc_zones(struct psz_context *cxt)
-@@ -1119,6 +1272,16 @@ static int psz_alloc_zones(struct psz_context *cxt)
- 		goto free_out;
- 	}
- 
-+	off_size += info->ftrace_size;
-+	cxt->fpszs = psz_init_zones(PSTORE_TYPE_FTRACE, &off,
-+			info->ftrace_size,
-+			info->ftrace_size / nr_cpu_ids,
-+			&cxt->ftrace_max_cnt);
-+	if (IS_ERR(cxt->fpszs)) {
-+		err = PTR_ERR(cxt->fpszs);
-+		goto free_out;
++	if (strlen(info->device) == 0) {
++		dev_err(&mtd->dev, "mtd device must be supplied\n");
++		return -EINVAL;
++	}
++	if (!info->oops_size) {
++		dev_err(&mtd->dev, "no recorder enabled\n");
++		return -EINVAL;
 +	}
 +
- 	cxt->opszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
- 			info->total_size - off_size,
- 			info->oops_size, &cxt->oops_max_cnt);
-@@ -1182,6 +1345,7 @@ int psz_register(struct psz_info *info)
- 	check_size(oops_size, SECTOR_SIZE);
- 	check_size(pmsg_size, SECTOR_SIZE);
- 	check_size(console_size, SECTOR_SIZE);
-+	check_size(ftrace_size, SECTOR_SIZE);
- 
- #undef check_size
- 
-@@ -1215,6 +1379,7 @@ int psz_register(struct psz_info *info)
- 	pr_debug("\toops size : %ld Bytes\n", info->oops_size);
- 	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
- 	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
-+	pr_debug("\tftrace size : %ld Bytes\n", info->ftrace_size);
- 
- 	err = psz_alloc_zones(cxt);
- 	if (err) {
-@@ -1238,12 +1403,15 @@ int psz_register(struct psz_info *info)
- 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
- 	if (info->console_size)
- 		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-+	if (info->ftrace_size)
-+		cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
- 
--	pr_info("Registered %s as pszone backend for%s%s%s%s\n", info->name,
-+	pr_info("Registered %s as pszone backend for%s%s%s%s%s\n", info->name,
- 			cxt->opszs && cxt->psz_info->dump_oops ? " Oops" : "",
- 			cxt->opszs && cxt->psz_info->panic_write ? " Panic" : "",
- 			cxt->ppsz ? " Pmsg" : "",
--			cxt->cpsz ? " Console" : "");
-+			cxt->cpsz ? " Console" : "",
-+			cxt->fpszs ? " Ftrace" : "");
- 
- 	err = pstore_register(&cxt->pstore);
- 	if (err) {
-diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
-index 8a1838633010..a138e8b7dc20 100644
---- a/include/linux/pstore_zone.h
-+++ b/include/linux/pstore_zone.h
-@@ -18,6 +18,7 @@
-  *		it must be multiple of SECTOR_SIZE(512 Bytes).
-  * @pmsg_size:	The size of pmsg zone which is the same as @oops_size.
-  * @console_size:The size of console zone which is the same as @oops_size.
-+ * @ftrace_size:The size of ftrace zone which is the same as @oops_size.
-  * @dump_oops:	Whether to dump oops log.
-  * @read:	The general read operation. Both of the function parameters
-  *		@size and @offset are relative value to storage.
-@@ -36,6 +37,7 @@ struct psz_info {
- 	unsigned long oops_size;
- 	unsigned long pmsg_size;
- 	unsigned long console_size;
-+	unsigned long ftrace_size;
- 	int dump_oops;
- 	psz_read_op read;
- 	psz_write_op write;
++	/* Setup the MTD device to use */
++	ret = kstrtoint((char *)info->device, 0, &cxt->index);
++	if (ret)
++		cxt->index = -1;
++
++	register_mtd_user(&mtdpstore_notifier);
++	return 0;
++}
++module_init(mtdpstore_init);
++
++static void __exit mtdpstore_exit(void)
++{
++	unregister_mtd_user(&mtdpstore_notifier);
++}
++module_exit(mtdpstore_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
++MODULE_DESCRIPTION("MTD Oops/Panic console logger/driver");
 -- 
 1.9.1
 
