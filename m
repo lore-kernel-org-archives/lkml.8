@@ -2,161 +2,300 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EC0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DCEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B5820772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8CF720772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:02:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="YZurTUac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgCYNAb (ORCPT
+        id S1727376AbgCYNCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:00:31 -0400
-Received: from mailgate1.rohmeurope.com ([87.129.152.131]:51274 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgCYNAb (ORCPT
+        Wed, 25 Mar 2020 09:02:31 -0400
+Received: from forwardcorp1p.mail.yandex.net ([77.88.29.217]:39384 "EHLO
+        forwardcorp1p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727129AbgCYNCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:00:31 -0400
-X-AuditID: c0a8fbf4-473ff70000004419-13-5e7b55ec4e15
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 9D.22.17433.CE55B7E5; Wed, 25 Mar 2020 14:00:28 +0100 (CET)
-Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0487.000; Wed, 25 Mar 2020 14:00:22 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "brendanhiggins@google.com" <brendanhiggins@google.com>,
-        "olteanv@gmail.com" <olteanv@gmail.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "talgi@mellanox.com" <talgi@mellanox.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "davidgow@google.com" <davidgow@google.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
-        "bp@suse.de" <bp@suse.de>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
-        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
-        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
-        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
-        "sre@kernel.org" <sre@kernel.org>,
-        "ardb@kernel.org" <ardb@kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
-Thread-Topic: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
-Thread-Index: AQHWAbbAyLpT1a+wPEGvvo/J38Wk46hXbxYAgAAMuoCAAaNYgIAACT8AgAAOHAA=
-Date:   Wed, 25 Mar 2020 13:00:21 +0000
-Message-ID: <d533c18dcd7b4d4ca453661b3f9495a840b3313b.camel@fi.rohmeurope.com>
-References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
-         <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
-         <20200324095024.GE1922688@smile.fi.intel.com>
-         <20200324103557.GH1922688@smile.fi.intel.com>
-         <4d75bfeab55c04cc3ca751cf7c364c812848e9ed.camel@fi.rohmeurope.com>
-         <20200325120956.GW1922688@smile.fi.intel.com>
-In-Reply-To: <20200325120956.GW1922688@smile.fi.intel.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [62.78.225.252]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8458127121B9DC4B8A7B83B56FAB4226@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 25 Mar 2020 09:02:30 -0400
+Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
+        by forwardcorp1p.mail.yandex.net (Yandex) with ESMTP id 221D62E1614;
+        Wed, 25 Mar 2020 16:02:27 +0300 (MSK)
+Received: from vla1-81430ab5870b.qloud-c.yandex.net (vla1-81430ab5870b.qloud-c.yandex.net [2a02:6b8:c0d:35a1:0:640:8143:ab5])
+        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id n8GlL8OM7f-2PtqAQAE;
+        Wed, 25 Mar 2020 16:02:27 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1585141347; bh=Pz4DD9gshYiNtXEWT5kDJvNb7yJzHhGdcxZucNz+1fU=;
+        h=In-Reply-To:Message-ID:From:Date:References:To:Subject:Cc;
+        b=YZurTUacvHKUdg8moh8IMGkwcXqM20aESBHxjuq4xS0tNO0yuTgzEuxy5C8vLmgAP
+         MvMzvBcvvTGcsNhJlhHnr3lUlo3tqpowmxM8lORpHZr9BYfAPWDpli93/tCNM4QOzS
+         5hR7G5aPjkr00xgbY5u28Z0AvPnwZoM2TfrS0Ryo=
+Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from unknown (unknown [2a02:6b8:b080:8204::1:e])
+        by vla1-81430ab5870b.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id f0qznRAmnk-2Pa4Me0T;
+        Wed, 25 Mar 2020 16:02:25 +0300
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH v3 1/3] block/diskstats: more accurate approximation of
+ io_ticks for slow disks
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        linux-kernel@vger.kernel.org,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+References: <158503038812.1955.7827988255138056389.stgit@buzz>
+ <158503198072.1955.16227279292140721351.stgit@buzz>
+ <20200324140656.GA23550@ming.t460p> <20200325034024.GC6086@ming.t460p>
+ <841346dd-95b0-859f-79ec-dfbdedc16628@yandex-team.ru>
+ <4f267148-8d6a-e3c8-2518-b2a3bd579454@yandex-team.ru>
+ <20200325085432.GA31035@ming.t460p>
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Message-ID: <f4a84e7d-02d4-657d-c2d9-31c98ff31615@yandex-team.ru>
+Date:   Wed, 25 Mar 2020 16:02:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wbZRjH995d7w62mlsp9l2HIl22Baab80fyahYz/cMcbjFsczHRCLvJ
-        SZvBlVxbBacRt0loKxEcXaVCWcr4IWkstOgYtKzWSkBN6yayoTglI4sFh3FbhjCyecdtg7/u
-        uef7/Tzf902el8Y1/ZSeNglWXhS4UgOZTkQ7bwUf+3v/4cLHxy5tQk0BP4lqj7gxNH/jH4Dq
-        P8lF5y4ex5FrcopEbtdPADUljxFouKebQC3xhAodbQ2QyDmdhZLJbgrdHK3BUMNiB4Z+7m8i
-        0fXaOEBtF85hqKltmECtHZtQd2gOQ1cn3AT6KBKnUMTdrkI/DFjRieYIhUJBF44uXPsVQ5Hb
-        8wSKXLoO0NC/82BnNuv3+gHb+8U4xp7x/E6xX0c3sieDNjbUmce2hlMYG+yyk+yn7T4VOzEW
-        JtnZRIJihz+7RbB1vihgvSN72LPNfoq94v4WK8h4bfWOg5z17X2mEmHbcwdWG/3xo1R5e06F
-        L1KvqgJ9jzhAGg2Zp2Br6D+VA6TTGuYXALt6W+7+DAM4FR4nHYCmSWYHdIxTMqBldsGF2YtA
-        9uCMl4aXR84vAauYGAFbQl5MdmUw+bDzD1mQiZdgR3WEVOqXof9aIyHXBLMR2n+0A7lWS317
-        9TFKSV7E4J2Id8mUxjwLA8nBJRNgHoL2qtmlAJzRweCVOZVyBwaeCidxpc6Eqcu37/Zz4Om5
-        Lwn5BjiTCwP92xR0J2ypcRBKnQMbnJOUcoa1cKRxiqgDOs+KBM8y7VlBe1bQnhX0SaDqArCM
-        M5WWcFZ++1aRt20VzcYy6fOmuSwIlF280QfuxPJjAKNBDKyjMUOmOrTncKHmgYPm4kojZzEW
-        ibZS3hIDkMYNWnWIryjUqIu5ynd50XxPWk8TBp1682T9GxpGzjrE8+W8eE/NomkDVDtfkYau
-        FfkSvuItU6l1WcboNHl4ul5r4YViXuRsVmORvC1FFmldZGmNlPv+PglXW8q5MqmroN+DLXRd
-        qtmH0/HmNh+uIQSzwOt16s/lJEa2Gm3C/aBpoKOBIUN9Vh60RnqQ9+dMSxGYFFHieUeOsHLL
-        kr4KRD+cyTux5eH12q/CA9nZ1XZOwFKLtQszxxNObTg/pwdUOT94cTwvt/0mufCoVfWE++nM
-        Iwc2DG42few/PzGU9WdBz0xP6sycftXrv32HvbeuczS98sm+idreQ42uUSHa9uDA7qn604GG
-        /VcDib2eGteru/96IVk8+M0GNMSOFex6/hkDYTFy2/Nw0cL9D9Cl1mZNBAAA
+In-Reply-To: <20200325085432.GA31035@ming.t460p>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V2VsbCwgR29vZCBtb3JuaW5nIEFuZHkgOikNCg0KT24gV2VkLCAyMDIwLTAzLTI1IGF0IDE0OjA5
-ICswMjAwLCBhbmRyaXkuc2hldmNoZW5rb0BsaW51eC5pbnRlbC5jb20NCndyb3RlOg0KPiBPbiBX
-ZWQsIE1hciAyNSwgMjAyMCBhdCAxMTozNjo0NkFNICswMDAwLCBWYWl0dGluZW4sIE1hdHRpIHdy
-b3RlOg0KPiA+IE9uIFR1ZSwgMjAyMC0wMy0yNCBhdCAxMjozNSArMDIwMCwgQW5keSBTaGV2Y2hl
-bmtvIHdyb3RlOg0KPiA+ID4gT24gVHVlLCBNYXIgMjQsIDIwMjAgYXQgMTE6NTA6MjRBTSArMDIw
-MCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiA+ID4gPiBPbiBUdWUsIE1hciAyNCwgMjAyMCBh
-dCAxMDozMjoxOUFNICswMjAwLCBNYXR0aSBWYWl0dGluZW4NCj4gPiA+ID4gd3JvdGU6DQo+ID4g
-PiA+ID4gKyNpbmNsdWRlIDxsaW51eC9hY3BpLmg+DQo+ID4gPiA+ID4gKyNpbmNsdWRlIDxsaW51
-eC9vZi5oPg0KPiA+ID4gPiANCj4gPiA+ID4gSSBkaWRuJ3QgZmluZCBhbnkgZXZpZGVuY2Ugb2Yg
-dXNlIG9mIHRob3NlIHR3bywgb3RoZXJ3aXNlLA0KPiA+ID4gPiBtaXNzZWQNCj4gPiA+ID4gcHJv
-cGVydHkuaA0KPiA+ID4gPiBhbmQgcGVyaGFwcyBtb2RfZGV2aWNldGFibGUuaC4NCj4gDQo+IC4u
-Lg0KPiANCj4gPiA+ID4gPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYmQ5OTk1eF9vZl9tYXRj
-aCk7DQo+ID4gPiA+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUoYWNwaSwgYmQ5OTk1eF9hY3BpX21h
-dGNoKTsNCj4gPiA+IA0KPiA+ID4gSSBoYXZlIHRvIGFkZCBzaW5jZSB5b3UgYXJlIHVzaW5nIHRo
-b3NlIG1hY3JvcyB3aXRob3V0IGlmZGVmZmVyeSwNCj4gPiA+IHlvdQ0KPiA+ID4gc2hvdWxkDQo+
-ID4gPiBnZXQgd2FybmluZyBpbiAhQUNQSSBhbmQvb3IgIU9GIGNhc2VzLg0KPiA+ID4gDQo+ID4g
-PiBTbywgZHJvcCB0aG9zZSBvZl9tYXRjaF9wdHIoKSAvIEFDUElfUFRSKCkgYW5kIHRodXMgYWJv
-dmUNCj4gPiA+IGhlYWRlcnMuDQo+ID4gDQo+ID4gU29ycnkgYnV0IEkgZG9uJ3QgZm9sbG93IDov
-IEkgZGlkIGRyb3Agd2hvbGUgQUNQSSB0YWJsZSBhcyB0aGUNCj4gPiBiYXR0ZXJ5DQo+ID4gaW5m
-b3JtYXRpb24gaXMgbm90IGZldGNoZWQgZnJvbSBBQ1BJIGFueXdheXMuDQo+IA0KPiBPa2F5LCBs
-ZXQncyBmb3JnZXQgdGhlbiBhYm91dCBBQ1BJIGJpdHMuDQo+IA0KPiA+IEJ1dCBJIGRvbid0IGtu
-b3cgd2hhdCB5b3UNCj4gPiBtZWFuIGJ5IGRyb3BwaW5nIHRoZSBvZl9tYXRjaF9wdHI/DQo+IA0K
-PiBMaXRlcmFsbHkgZG8gbm90IHVzZSB0aGlzIG1hY3JvLiBPdGhlcndpc2UgeW91IG1ha2UgYSBk
-ZXBlbmRlbmN5IHRvDQo+IE9GIHdoaWNoDQo+IHNob3VsZCBiZSB0aGVuIGluIHRoZSBLY29uZmln
-IGxpa2UNCj4gDQo+IAlkZXBlbmQgb24gT0YgfHwgQ09NUElMRV9URVNUDQo+IA0KDQpIbW0uLi4g
-V2h5IGlzIHRoYXQ/IEluIG9mLmggd2UgaGF2ZSAjaWZuZGVmIENPTkZJR19PRiBzZWN0aW9uIHdo
-aWNoDQpkZWZpbmVzOg0KDQojZGVmaW5lIG9mX21hdGNoX3B0cihfcHRyKQlOVUxMDQoNClNvLCB0
-aGlzIG1hY3JvIGlzIHdlbGwgZGVmaW5lZCBldmVuIGlmICFDT05GSUdfT0YsIHJpZ2h0Pw0KDQoN
-Cj4gYnV0IGluIHRoaXMgY2FzZSB5b3Ugd2lsbCBnZXQgY29tcGlsZXIgd2FybmluZyB3aXRob3V0
-IHVnbHkgaWZkZWZmZXJ5DQo+IGFyb3VuZA0KPiBPRiBJRCB0YWJsZSAoYXMgeW91IHBvaW50ZWQg
-YmVsb3cgeW91IGRpZG4ndCB0ZXN0IHRoYXQgc2NlbmFyaW8pLg0KPiANCj4gPiBJIGZvciBzdXJl
-IG5lZWQgdGhlIG9mX2RldmljZV9pZCBhcw0KPiA+IGluIG1hbnkgY2FzZXMgYm90aCB0aGUgZGV2
-aWNlIG1hdGNoaW5nIGFuZCBtb2R1bGUgbWF0Y2hpbmcgYXJlIGRvbmUNCj4gPiBiYXNlZCBvbiAg
-b2ZfbWF0Y2hfdGFibGUgYW5kIG9mX2RldmljZV9pZC4NCj4gPiANCj4gPiBJIGFkbWl0IEkgZGlk
-bid0IHRyeSBjb21waWxpbmcgdGhlICFPRiBjb25maWcuIEFyZSB5b3Ugc3VnZ2VzdGluZyBJDQo+
-ID4gc2hvdWxkIHB1dCB0aGUgb2ZfZGV2aWNlX2lkIGFycmF5IGFuZCBwb3B1bGF0aW5nIHRoZSBv
-Zl9tYXRjaF90YWJsZQ0KPiA+IGluDQo+ID4gI2lmZGVmIENPTkZJR19PRj8gT3IgbWF5YmUgeW91
-IHN1Z2dlc3QgdGhhdCBJIHdpbGwgcHV0IG9mX2RldmljZV9pZA0KPiA+IGFycmF5IGluICNpZmRl
-ZiBDT05GSUdfT0YgYW5kIHVzZSBvZl9tYXRjaF9wdHIoKSB3aGVuIHBvcHVsYXRpbmcNCj4gPiB0
-aGUNCj4gPiBvZl9tYXRjaF90YWJsZSBwb2ludGVyPyBJIGd1ZXNzIHRoYXQgd291bGQgbWFrZSBz
-ZW5zZS4gSSdsbCBkbyB0aGF0DQo+ID4gLQ0KPiA+IGNhbiB5b3UgcGxlYXNlIGV4cGxhaW4gaWYg
-dGhpcyB3YXMgbm90IHdoYXQgeW91IG1lYW50Lg0KPiANCj4gT25lIG9mIHVzIG5lZWRzIGEgbW9y
-bmluZyBjb3ZmZWZlLCBJIHRoaW5rIDotKQ0KDQpTbyBpbiAhQ09ORklHX09GIGNhc2Ugd2Ugd2ls
-bCBoYXZlDQoub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIoYmQ5OTk1eF9vZl9tYXRjaCks
-DQpwcmVwcm9jZXNzZWQgdG8gZm9ybQ0KLm9mX21hdGNoX3RhYmxlID0gTlVMTCwNCg0KcmlnaHQ/
-IFNvIHdpdGggdGhpcyBtYWNybyB3ZSBjYW4gb21pdCBpbnRyb2R1Y3Rpb24gb2YgYmQ5OTk1eF9v
-Zl9tYXRjaA0Kd2hlbiAhQ09ORklHX09GIC0gbWVhbmluZyB3ZSBvbmx5IGJ1aWxkICNpZmRlZmZl
-cnkgYXJvdW5mIHRoZSBtYXRjaA0KdGFibGUgYW5kIG5vdCBhcm91bmQgdGhpcyBhc3NpZ25tZW50
-Lg0KDQpTbyBJJ2xsIGp1c3QgZG8gDQoNCiNpZmRlZiBDT05GSUdfT0YgICANCnN0YXRpYyBjb25z
-dCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGJkOTk5NXhfb2ZfbWF0Y2hbXSA9IHsNCiAgICAgICAgeyAu
-Y29tcGF0aWJsZSA9ICJyb2htLGJkOTk5NTQiLCB9LA0KICAgICAgICB7IH0NCn07ICAgICAgICAg
-IA0KTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYmQ5OTk1eF9vZl9tYXRjaCk7DQojZW5kaWYNCg0K
-YW5kIGxldCB0aGUNCiNkZWZpbmUgb2ZfbWF0Y2hfcHRyKF9wdHIpCU5VTEwNCmZpeCBhc3NpZ25t
-ZW50DQoub2ZfbWF0Y2hfdGFibGUgPSBvZl9tYXRjaF9wdHIoYmQ5OTk1eF9vZl9tYXRjaCksDQoN
-CndoZW4gIUNPTkZJR19PRi4NCg0KQnIsDQoJTWF0dGkNCg==
+On 25/03/2020 11.54, Ming Lei wrote:
+> On Wed, Mar 25, 2020 at 11:02:39AM +0300, Konstantin Khlebnikov wrote:
+>>
+>>
+>> On 25/03/2020 09.28, Konstantin Khlebnikov wrote:
+>>>
+>>>
+>>> On 25/03/2020 06.40, Ming Lei wrote:
+>>>> On Tue, Mar 24, 2020 at 10:06:56PM +0800, Ming Lei wrote:
+>>>>> On Tue, Mar 24, 2020 at 09:39:40AM +0300, Konstantin Khlebnikov wrote:
+>>>>>> Currently io_ticks is approximated by adding one at each start and end of
+>>>>>> requests if jiffies counter has changed. This works perfectly for requests
+>>>>>> shorter than a jiffy or if one of requests starts/ends at each jiffy.
+>>>>>>
+>>>>>> If disk executes just one request at a time and they are longer than two
+>>>>>> jiffies then only first and last jiffies will be accounted.
+>>>>>>
+>>>>>> Fix is simple: at the end of request add up into io_ticks jiffies passed
+>>>>>> since last update rather than just one jiffy.
+>>>>>>
+>>>>>> Example: common HDD executes random read 4k requests around 12ms.
+>>>>>>
+>>>>>> fio --name=test --filename=/dev/sdb --rw=randread --direct=1 --runtime=30 &
+>>>>>> iostat -x 10 sdb
+>>>>>>
+>>>>>> Note changes of iostat's "%util" 8,43% -> 99,99% before/after patch:
+>>>>>>
+>>>>>> Before:
+>>>>>>
+>>>>>> Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+>>>>>> sdb               0,00     0,00   82,60    0,00   330,40     0,00     8,00     0,96   12,09   12,09    0,00   1,02   8,43
+>>>>>>
+>>>>>> After:
+>>>>>>
+>>>>>> Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+>>>>>> sdb               0,00     0,00   82,50    0,00   330,00     0,00     8,00     1,00   12,10   12,10    0,00  12,12  99,99
+>>>>>>
+>>>>>> For load estimation "%util" is not as useful as average queue length,
+>>>>>> but it clearly shows how often disk queue is completely empty.
+>>>>>>
+>>>>>> Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
+>>>>>> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+>>>>>> ---
+>>>>>>    Documentation/admin-guide/iostats.rst |    5 ++++-
+>>>>>>    block/bio.c                           |    8 ++++----
+>>>>>>    block/blk-core.c                      |    4 ++--
+>>>>>>    include/linux/genhd.h                 |    2 +-
+>>>>>>    4 files changed, 11 insertions(+), 8 deletions(-)
+>>>>>>
+>>>>>> diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
+>>>>>> index df5b8345c41d..9b14b0c2c9c4 100644
+>>>>>> --- a/Documentation/admin-guide/iostats.rst
+>>>>>> +++ b/Documentation/admin-guide/iostats.rst
+>>>>>> @@ -100,7 +100,7 @@ Field 10 -- # of milliseconds spent doing I/Os (unsigned int)
+>>>>>>        Since 5.0 this field counts jiffies when at least one request was
+>>>>>>        started or completed. If request runs more than 2 jiffies then some
+>>>>>> -    I/O time will not be accounted unless there are other requests.
+>>>>>> +    I/O time might be not accounted in case of concurrent requests.
+>>>>>>    Field 11 -- weighted # of milliseconds spent doing I/Os (unsigned int)
+>>>>>>        This field is incremented at each I/O start, I/O completion, I/O
+>>>>>> @@ -143,6 +143,9 @@ are summed (possibly overflowing the unsigned long variable they are
+>>>>>>    summed to) and the result given to the user.  There is no convenient
+>>>>>>    user interface for accessing the per-CPU counters themselves.
+>>>>>> +Since 4.19 request times are measured with nanoseconds precision and
+>>>>>> +truncated to milliseconds before showing in this interface.
+>>>>>> +
+>>>>>>    Disks vs Partitions
+>>>>>>    -------------------
+>>>>>> diff --git a/block/bio.c b/block/bio.c
+>>>>>> index 0985f3422556..b1053eb7af37 100644
+>>>>>> --- a/block/bio.c
+>>>>>> +++ b/block/bio.c
+>>>>>> @@ -1762,14 +1762,14 @@ void bio_check_pages_dirty(struct bio *bio)
+>>>>>>        schedule_work(&bio_dirty_work);
+>>>>>>    }
+>>>>>> -void update_io_ticks(struct hd_struct *part, unsigned long now)
+>>>>>> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
+>>>>>>    {
+>>>>>>        unsigned long stamp;
+>>>>>>    again:
+>>>>>>        stamp = READ_ONCE(part->stamp);
+>>>>>>        if (unlikely(stamp != now)) {
+>>>>>>            if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
+>>>>>> -            __part_stat_add(part, io_ticks, 1);
+>>>>>> +            __part_stat_add(part, io_ticks, end ? now - stamp : 1);
+>>>>>>            }
+>>>>>>        }
+>>>>>>        if (part->partno) {
+>>>>>> @@ -1785,7 +1785,7 @@ void generic_start_io_acct(struct request_queue *q, int op,
+>>>>>>        part_stat_lock();
+>>>>>> -    update_io_ticks(part, jiffies);
+>>>>>> +    update_io_ticks(part, jiffies, false);
+>>>>>>        part_stat_inc(part, ios[sgrp]);
+>>>>>>        part_stat_add(part, sectors[sgrp], sectors);
+>>>>>>        part_inc_in_flight(q, part, op_is_write(op));
+>>>>>> @@ -1803,7 +1803,7 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
+>>>>>>        part_stat_lock();
+>>>>>> -    update_io_ticks(part, now);
+>>>>>> +    update_io_ticks(part, now, true);
+>>>>>>        part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
+>>>>>>        part_stat_add(part, time_in_queue, duration);
+>>>>>>        part_dec_in_flight(q, part, op_is_write(req_op));
+>>>>>> diff --git a/block/blk-core.c b/block/blk-core.c
+>>>>>> index abfdcf81a228..4401b30a1751 100644
+>>>>>> --- a/block/blk-core.c
+>>>>>> +++ b/block/blk-core.c
+>>>>>> @@ -1337,7 +1337,7 @@ void blk_account_io_done(struct request *req, u64 now)
+>>>>>>            part_stat_lock();
+>>>>>>            part = req->part;
+>>>>>> -        update_io_ticks(part, jiffies);
+>>>>>> +        update_io_ticks(part, jiffies, true);
+>>>>>>            part_stat_inc(part, ios[sgrp]);
+>>>>>>            part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
+>>>>>>            part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
+>>>>>> @@ -1379,7 +1379,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
+>>>>>>            rq->part = part;
+>>>>>>        }
+>>>>>> -    update_io_ticks(part, jiffies);
+>>>>>> +    update_io_ticks(part, jiffies, false);
+>>>>>>        part_stat_unlock();
+>>>>>>    }
+>>>>>> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+>>>>>> index d5c75df64bba..f1066f10b062 100644
+>>>>>> --- a/include/linux/genhd.h
+>>>>>> +++ b/include/linux/genhd.h
+>>>>>> @@ -467,7 +467,7 @@ static inline void free_part_info(struct hd_struct *part)
+>>>>>>        kfree(part->info);
+>>>>>>    }
+>>>>>> -void update_io_ticks(struct hd_struct *part, unsigned long now);
+>>>>>> +void update_io_ticks(struct hd_struct *part, unsigned long now, bool end);
+>>>>>>    /* block/genhd.c */
+>>>>>>    extern void device_add_disk(struct device *parent, struct gendisk *disk,
+>>>>>>
+>>>>>
+>>>>> Looks fine:
+>>>>>
+>>>>> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+>>>>
+>>>> BTW, there is still some gap(%65 vs. 99%) between this fix and the original
+>>>> accounting(before applying Mike/Mikulas's 7 patches), and it might be
+>>>> one thing to improve in future.
+>>>>
+>>>> 1) test, sda is single queue virtio-scsi, which is emulated by one HDD
+>>>> image
+>>>>
+>>>> 2) fio test script:
+>>>> fio --direct=1 --size=128G --bsrange=4k-4k \
+>>>>          --runtime=20 --numjobs=1 \
+>>>>          --ioengine=libaio --iodepth=16 \
+>>>>          --iodepth_batch_submit=16 \
+>>>>          --iodepth_batch_complete_min=16 \
+>>>>          --group_reporting=1 --filename=/dev/sda \
+>>>>          --name=seq-test --rw=read
+>>>>
+>>>> 3) result:
+>>>> - v5.6-rc with this patch
+>>>> Run status group 0 (all jobs):
+>>>>      READ: bw=79.4MiB/s (83.3MB/s), 79.4MiB/s-79.4MiB/s (83.3MB/s-83.3MB/s), io=155
+>>>> 88MiB (1665MB), run=20001-20001msec
+>>>>
+>>>> Disk stats (read/write):
+>>>>     sda: ios=25039/0, merge=375596/0, ticks=18823/0, in_queue=4330, util=99.43%
+>>>>
+>>>>
+>>>> - commit 112f158f66cb (which is previous commit of 5b18b5a73760)
+>>>> Run status group 0 (all jobs):
+>>>>      READ: bw=81.4MiB/s (85.3MB/s), 81.4MiB/s-81.4MiB/s (85.3MB/s-85.3MB/s), io=166
+>>>> 28MiB (1707MB), run=20001-20001msec
+>>>>
+>>>> Disk stats (read/write):
+>>>>     sda: ios=25749/0, merge=386236/0, ticks=17963/0, in_queue=12976, util=65.20%
+>>>>
+>>
+>> Oh, no. Your result is opposite.
+>>
+>> Well, 99.43% with this patch is actually more correct result:
+>> every millisecond there is at least one request in disk.
+>>
+>> Old code sampled in-flight at start and end of each request, not regularly every jiffy.
+> 
+> It doesn't matter if it is regularly every jiffy, or the sample point.
+> 
+> It is perfect to just sample at start and end, and not necessary to
+> do it in merge.
+> 
+> What matters is that only IO time is accounted. And when there isn't
+> any IO in-flight, the time shouldn't be accounted into io_ticks.
+> That is it, however, the new approach can't do that at all.
+
+Yeah, should be right but something fishy in old statistics anyway.
+
+It looks timestamp (part->stamp) sometimes updated non-atomically
+without queue_lock.
+
+> 
+>> And accounted whole jiffy as inactive if in-flight currently is zero.
+>> This way statistics was biased to samples where queue is empty.
+> 
+> It is just one sequential read test, single job, and there are lots of
+> merge, so disk utilization shouldn't be close to 100%, should it?
+
+Why not? It doesn't took a long time to complete request and issue another.
+
+Look, for single-thread fio iostat show %util 100% but avgqu-sz is 1 too
+it's estimated using total I/O time which counted in nanoseconds.
+
+Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
+sdb               0,00     0,00   83,30    0,00   333,20     0,00     8,00     1,00   11,98   11,98    0,00  12,00 100,00
+
+Probably old blk stack was generally slower and delayed requests somewhere.
+
+> 
+> With your patch, now it is much easy to observe 100% utilization.
+> 
+> More ticks are counted in v5.6-rc with this patch than old kernel, the
+> reason is that new approach counts 1 tick for IDLE time(no any IO)
+> in blk_account_io_start(). Old approach knows if there is any in-flight
+> IO, if there isn't, the period since last stamp is thought as IO idle,
+> and that time won't be accounted. >
+> However, the new approach doesn't know IO IDLE period at all, just
+> add 1 tick for this period.
+
+There is I/O during jiffy when request starts =) So it's counted as 1.
+This kind of rounding up I/O shorter than jiffy.
+
+> 
+> 
+> Thanks,
+> Ming
+>
