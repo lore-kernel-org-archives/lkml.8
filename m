@@ -2,138 +2,121 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D96C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54FE1C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E3482082E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:11:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585174272;
-	bh=yWNg9yztHt+7I4h0soifkK3UL3DvWslZVJ7YKdYxXzM=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=huVdhg8EiAbtQliHzg/X512sLG2kqA8OfS55qz/WhsSOuYWSSUglRy7eEcMDaP94X
-	 OAWWtcWcHfbJ5EdUvQRR5YXZqPyOEwqls1bH8IK0zFfN+C2SrpyHlYcLr8m6oENRQY
-	 Usw+VKUNZMmkjJzBYQPWw1oo9k/oo+od8dDrajVA=
+	by mail.kernel.org (Postfix) with ESMTP id 2B80020719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:13:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dBbIKbIz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgCYWLL (ORCPT
+        id S1727456AbgCYWNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:11:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgCYWLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:11:11 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC2D520719;
-        Wed, 25 Mar 2020 22:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585174270;
-        bh=yWNg9yztHt+7I4h0soifkK3UL3DvWslZVJ7YKdYxXzM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=civQwJIX1MzK96vfW26z8Mc4qQdpo12r5aMh1NIM9mjYIm7Nr8ig9pskeVZ2uGAF9
-         9VNljHBmxcbjtmyVADgCM4D189mssdgH2VezZbOGKaiQvMRNpudaIzmCLLKVwe+ZyR
-         uiv8YskcJTZHhmHcZLso+ITce7hQ4QCHPzOXg0Dw=
-Subject: Re: [PATCH v7 kunit-next 3/4] kunit: subtests should be indented 4
- spaces according to TAP
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, corbet@lwn.net,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
- <1584110682-3837-4-git-send-email-alan.maguire@oracle.com>
- <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
- <alpine.LRH.2.21.2003252202360.25268@localhost>
-From:   shuah <shuah@kernel.org>
-Message-ID: <6b41e9fe-aa9e-698b-d356-0227e6f2021c@kernel.org>
-Date:   Wed, 25 Mar 2020 16:11:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 25 Mar 2020 18:13:18 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:42744 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgCYWNS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 18:13:18 -0400
+Received: by mail-qt1-f194.google.com with SMTP id t9so3660389qto.9;
+        Wed, 25 Mar 2020 15:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kPUS/Aysk3tY6XivwpkoTqisyDuIuo8Gofrkf6ppxIs=;
+        b=dBbIKbIzungrAOXSqRsPOGmOljJQP3fqPF2goF6c0O7M08MjlIviBG3/Kwk/RguoIc
+         XYSAVLs6uvaiFzXVhIGTpM4JV4RwVWQxDS/U66UjoOEWH6ViUMifz74BRlKWcCEATuBu
+         4IQnUybUJSfnKvtdQ2rx3L7pGAsYSEVWM71D9e7ESbu2uld0B9Gga/tYFwYo3ms5LjYl
+         YPfKjbfYhx9qJGukJB+uZJwdwmX2TGuVfL1sjw/CpwpWGfoJlw7FwME32Cts0YfiskoS
+         6qg7usgmUJhHTKWogB8SEfCZ6jC1RXEZNPrPD0UJ7WKynvhO4sHg20R1bQqGAclS2QJQ
+         M9qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kPUS/Aysk3tY6XivwpkoTqisyDuIuo8Gofrkf6ppxIs=;
+        b=Orxtvqj2pcmd+dhE+XBxDaOPjiBxpy05RUm9Y+axw1+3k3L2ttkvWIHdE1Fx4leMME
+         EkF/MUOwT81fW8Yv+KJVYS5iJhXdzvIM/hGIGRIKKICvaBV7MCeVfktXAvA+KRr9xsjR
+         CdQMQq4B679+GC/ZwUlc73HGqTFBi/5MosIVuBqad0rXLfWH42D5msLVsLOBh2eV4Rb4
+         DIj7vHCcO19P39wcDFD79SPztZDERf2gB0zMmWc3B/qCzWZsmIZTUgY4NR9XAgcBhN/Z
+         n+uayTHyEry+5+6L9ij28q3xKtwFkc+QM+LueV75LMAUwKYUzIuk3u61JnAA+QXICzsZ
+         Lupg==
+X-Gm-Message-State: ANhLgQ0NojtzC/lyewHFlzojNQWndwiH9MwFCJjZ9eVpnKbEYvxBEljA
+        bDLCUgku3U0wKg5W5OXLS2w=
+X-Google-Smtp-Source: ADFU+vvjrJQiWKrMoQjR9d9oQ6UUHt+nZcS7+oXfkgFokukX+VzGlQZHZQeiDRVmqgI2+VRjybKI3Q==
+X-Received: by 2002:ac8:4e4f:: with SMTP id e15mr4889814qtw.212.1585174397027;
+        Wed, 25 Mar 2020 15:13:17 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id t123sm122843qkc.81.2020.03.25.15.13.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 15:13:16 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 25 Mar 2020 18:13:15 -0400
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
+Message-ID: <20200325221315.GB290267@rani.riverdale.lan>
+References: <20200319192855.29876-1-nivedita@alum.mit.edu>
+ <20200320020028.1936003-1-nivedita@alum.mit.edu>
+ <dcb1bfb1-9663-f149-a29c-87e5a6c6c2f0@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LRH.2.21.2003252202360.25268@localhost>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <dcb1bfb1-9663-f149-a29c-87e5a6c6c2f0@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 4:03 PM, Alan Maguire wrote:
-> On Wed, 25 Mar 2020, shuah wrote:
+On Wed, Mar 25, 2020 at 05:50:19PM +0100, Hans de Goede wrote:
+> Hi,
 > 
->> On 3/13/20 8:44 AM, Alan Maguire wrote:
->>> Introduce KUNIT_INDENT macro which corresponds to 4-space indentation,
->>> and use it to modify indentation from tab to 4 spaces.
->>>
->>> Suggested-by: Frank Rowand <frowand.list@gmail.com>
->>> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
->>> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
->>> ---
->>>    include/kunit/test.h                |  7 +++-
->>>    lib/kunit/assert.c                  | 79
->>>    +++++++++++++++++++------------------
->>>    lib/kunit/test.c                    |  6 +--
->>>    tools/testing/kunit/kunit_parser.py | 10 ++---
->>>    4 files changed, 54 insertions(+), 48 deletions(-)
->>>
->>> diff --git a/include/kunit/test.h b/include/kunit/test.h
->>> index f7b2ed4c..d49cdb4 100644
->>> --- a/include/kunit/test.h
->>> +++ b/include/kunit/test.h
->>> @@ -84,6 +84,10 @@ struct kunit_resource {
->>>    /* Size of log associated with test. */
->>>    #define KUNIT_LOG_SIZE	512
->>>    
->>> +/* TAP specifies subtest indentation of 4 spaces. */
->>> +#define KUNIT_INDENT	"    "
->>> +#define KUNIT_INDENT2	KUNIT_INDENT KUNIT_INDENT
->>
->> Sorry for a late comment on this.
->>
->> What's the reason to do it this way? Why wouldn't you define
->> it as 8 spaces long string?
->>
+> On 3/20/20 3:00 AM, Arvind Sankar wrote:
+> > This series is against tip:efi/core.
+> > 
+> > Patches 1-9 are small cleanups and refactoring of the code in
+> > libstub/gop.c.
+> > 
+> > The rest of the patches add the ability to use a command-line option to
+> > switch the gop's display mode.
+> > 
+> > The options supported are:
+> > video=efifb:mode=n
+> >          Choose a specific mode number
+> > video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
+> >          Specify mode by resolution and optionally color depth
+> > video=efifb:auto
+> >          Let the EFI stub choose the highest resolution mode available.
+> > 
+> > The mode-setting additions increase code size of gop.o by about 3k on
+> > x86-64 with EFI_MIXED enabled.
 > 
-> I could have I suppose; I thought it makes it a bit easier
-> to read as above (though it did generate a checkpatch
-> warning; I thought readability was more important in this
-> case, but I can alter if needed).
->   
-Please do. Couple of things. KUNIT_INDENT2 doesn't really
-tell me much. Same with KUNIT_INDENT
-
-Please make the names more descriptive. Something along the
-lines of
-
-KUNIT_INDENT_4SPACE
-KUNIT_INDENT_8SPACE
-
->> Also can you please make sure to run checkpatch --strict on the
->> patches you send?
->>
+> Thank you for adding me to the Cc. I will add these to my personal
+> tree, which I test semi-regular on various hardware.
 > 
-> Sure! There were also some other line-too-long warnings
-> generated as a result of this patch, but when I fixed those
-> checkpatch complained about splitting strings across multiple
-> lines.  The only way out was to reduce the amount of information
-> in the log messages, which I didn't want to do.  In future I can
-> note checkpatch warnings that I couldn't find a way to fix in the
-> commit message if that would help?
+> I've only looked at patches 10 - 14 and a quick glance these look
+> good to me.
+> 
+> I was worried that you would maybe always enumerate the modes or
+> some such, but I see that you have structured things in such a way
+> that if the new kernel cmdline options are not used no extra EFI
+> calls are made, which make me very happy!
+> 
+> This way we do not need to worry about this patch-set tripping up
+> buggy firmware (which is quite likely to be out there somewhere)
+> by making new, previously unused, EFI calls.
 > 
 
-I understand. This is an error though. I am willing to ignore line-too
-long warnings for the most part. I don't like to see errors in general.
-
-thanks,
--- Shuah
-
-
-
+Yep. Also, if the option is specified, it does enumerate the modes, but
+if the currently set mode matches what the cmdline option wants, it
+won't reset the mode, so it shouldn't interfere with seamless boot as
+long as the mode doesn't have to be changed.
