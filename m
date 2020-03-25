@@ -2,386 +2,111 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2570C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FA0C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90779206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DB92074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585169543;
+	bh=uswinrTaSWk8KJ7IEc3EprMVnttfltaTPgQ8mFU9bzk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=k3W/4oprbo6wVFYBsEtvf0Y2SWUdpcDYYBwuKbT8i1szK1uibBd5xL53BvTXzahx/
+	 gaozA2PBw3szVessYHcj2ocpGI8UmXbblELvDCBa2F6Id2/yFUH528i5XjvTtuaM57
+	 i7DQHK+4sKd7eePPW3ZfLhkzlDvhoLi7+m800/rY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgCYUt6 (ORCPT
+        id S1727389AbgCYUwW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:49:58 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48412 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727356AbgCYUt6 (ORCPT
+        Wed, 25 Mar 2020 16:52:22 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43210 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYUwV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:49:58 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 707958030778;
-        Wed, 25 Mar 2020 20:49:54 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id K_XICqRFe6dt; Wed, 25 Mar 2020 23:49:53 +0300 (MSK)
-Date:   Wed, 25 Mar 2020 23:49:44 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/6] dt-bindings: i2c: Replace DW I2C legacy bindings
- with YAML-based one
-Message-ID: <20200325204944.cgkca7jvxtud3emk@ubsrv2.baikal.int>
-References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132011.66A7A80307C4@mail.baikalelectronics.ru>
- <20200312214308.GA17405@bogus>
+        Wed, 25 Mar 2020 16:52:21 -0400
+Received: by mail-lf1-f65.google.com with SMTP id n20so2986864lfl.10
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 13:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8Pa+6azOo7sQo71Yu5iIRHQVPNPI12P6LJ/tfFkG6qc=;
+        b=DkQ69LlY50kg4Ct2XxaOH8lbPW7R6Q25M2TFwKyAymIBZfdVJCYt+BsG7mY0Apiz77
+         bU4RHdWgvQng7MmfM3C7YtmdSeXoysIQk8XGVhrZSETgSXkpablGmOyDyWMREeBP1X0g
+         /1W6Q6yurPD/D0aYF4vfuNYt2KaGGZXnuTyBQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8Pa+6azOo7sQo71Yu5iIRHQVPNPI12P6LJ/tfFkG6qc=;
+        b=nZVl/SeY7LqsXeOigEOtVwnk1caxBowVUwoL5excRqTiTSLL5EyugnJbjFqYe9vkBv
+         mVMpu5SwMZsPBb6xrnDP+P6jUM1C+LQmPZ8GpVVmFUUqHQ9e7y59dN6Qo9nar/cs965C
+         cIEIl/JcZpssgvHt9L7ube4bXbuhkc2oMDUQZuj/tTyQxe/dUGtUc1NbJ0AnCKIjJ1zI
+         bK3rDUQeUjmU5x9+izwPWmblchw1rBVqsARhOKaK3Y7jj6eqvp+ouA9Yv7vNXQ4ZuHds
+         B79ex8cRCckwm7ZiT1jxXrQtt1okCnZiY5feebq6Ong5ZAziKYU0xEUKr+YSDYpya27B
+         4P2A==
+X-Gm-Message-State: ANhLgQ3vFv9TxaOWFxInhR2Vx4E9gPrRsOOVheacONdDjxIIEcKkdOFp
+        Q2J75T3TBfl6Kgurx8D8I2vY4Nl+db4=
+X-Google-Smtp-Source: ADFU+vsUKq5PD8W8fpAcrIVxHumfodHBJN60cZ+lr5EHKpUUONiGq3rAOgtCgqpwEz7uG+15AVwDZw==
+X-Received: by 2002:ac2:4316:: with SMTP id l22mr3497785lfh.150.1585169538460;
+        Wed, 25 Mar 2020 13:52:18 -0700 (PDT)
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com. [209.85.167.48])
+        by smtp.gmail.com with ESMTPSA id c22sm169273lja.86.2020.03.25.13.52.17
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 13:52:17 -0700 (PDT)
+Received: by mail-lf1-f48.google.com with SMTP id q5so2988075lfb.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 13:52:17 -0700 (PDT)
+X-Received: by 2002:a19:f015:: with SMTP id p21mr3562264lfc.10.1585169536709;
+ Wed, 25 Mar 2020 13:52:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200312214308.GA17405@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
+ <86D80EA7-9087-4042-8119-12DD5FCEAA87@amacapital.net> <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
+ <59FDEFC1-9353-453F-84E5-F94995157B27@zytor.com>
+In-Reply-To: <59FDEFC1-9353-453F-84E5-F94995157B27@zytor.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 25 Mar 2020 13:52:00 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgBpTqWD=cm2xDsRSCb8keL6_9VKBSE7TUrToErtO6sdQ@mail.gmail.com>
+Message-ID: <CAHk-=wgBpTqWD=cm2xDsRSCb8keL6_9VKBSE7TUrToErtO6sdQ@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
+To:     Peter Anvin <hpa@zytor.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:43:08PM -0500, Rob Herring wrote:
-> On Fri, Mar 06, 2020 at 04:19:51PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Modern device tree bindings are supposed to be created as YAML-files
-> > in accordance with dt-schema. This commit replaces Synopsys DW I2C
-> > legacy bare text bindings with YAML file. As before the bindings file
-> > states that the corresponding dts node is supposed to be compatible
-> > either with generic DW I2C controller or with Microsemi Ocelot SoC I2C
-> > one, to have registers, interrupts and clocks properties. In addition
-> > the node may have clock-frequency, i2c-sda-hold-time-ns,
-> > i2c-scl-falling-time-ns and i2c-sda-falling-time-ns optional properties.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  .../bindings/i2c/i2c-designware.txt           |  73 --------
-> >  .../bindings/i2c/snps,designware-i2c.yaml     | 156 ++++++++++++++++++
-> >  2 files changed, 156 insertions(+), 73 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > deleted file mode 100644
-> > index 08be4d3846e5..000000000000
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-> > +++ /dev/null
-> > @@ -1,73 +0,0 @@
-> > -* Synopsys DesignWare I2C
-> > -
-> > -Required properties :
-> > -
-> > - - compatible : should be "snps,designware-i2c"
-> > -                or "mscc,ocelot-i2c" with "snps,designware-i2c" for fallback
-> > - - reg : Offset and length of the register set for the device
-> > - - interrupts : <IRQ> where IRQ is the interrupt number.
-> > - - clocks : phandles for the clocks, see the description of clock-names below.
-> > -   The phandle for the "ic_clk" clock is required. The phandle for the "pclk"
-> > -   clock is optional. If a single clock is specified but no clock-name, it is
-> > -   the "ic_clk" clock. If both clocks are listed, the "ic_clk" must be first.
-> > -
-> > -Recommended properties :
-> > -
-> > - - clock-frequency : desired I2C bus clock frequency in Hz.
-> > -
-> > -Optional properties :
-> > -
-> > - - clock-names : Contains the names of the clocks:
-> > -    "ic_clk", for the core clock used to generate the external I2C clock.
-> > -    "pclk", the interface clock, required for register access.
-> > -
-> > - - reg : for "mscc,ocelot-i2c", a second register set to configure the SDA hold
-> > -   time, named ICPU_CFG:TWI_DELAY in the datasheet.
-> > -
-> > - - i2c-sda-hold-time-ns : should contain the SDA hold time in nanoseconds.
-> > -   This option is only supported in hardware blocks version 1.11a or newer and
-> > -   on Microsemi SoCs ("mscc,ocelot-i2c" compatible).
-> > -
-> > - - i2c-scl-falling-time-ns : should contain the SCL falling time in nanoseconds.
-> > -   This value which is by default 300ns is used to compute the tLOW period.
-> > -
-> > - - i2c-sda-falling-time-ns : should contain the SDA falling time in nanoseconds.
-> > -   This value which is by default 300ns is used to compute the tHIGH period.
-> > -
-> > -Examples :
-> > -
-> > -	i2c@f0000 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		compatible = "snps,designware-i2c";
-> > -		reg = <0xf0000 0x1000>;
-> > -		interrupts = <11>;
-> > -		clock-frequency = <400000>;
-> > -	};
-> > -
-> > -	i2c@1120000 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		compatible = "snps,designware-i2c";
-> > -		reg = <0x1120000 0x1000>;
-> > -		interrupt-parent = <&ictl>;
-> > -		interrupts = <12 1>;
-> > -		clock-frequency = <400000>;
-> > -		i2c-sda-hold-time-ns = <300>;
-> > -		i2c-sda-falling-time-ns = <300>;
-> > -		i2c-scl-falling-time-ns = <300>;
-> > -	};
-> > -
-> > -	i2c@1120000 {
-> > -		#address-cells = <1>;
-> > -		#size-cells = <0>;
-> > -		reg = <0x2000 0x100>;
-> > -		clock-frequency = <400000>;
-> > -		clocks = <&i2cclk>;
-> > -		interrupts = <0>;
-> > -
-> > -		eeprom@64 {
-> > -			compatible = "linux,slave-24c02";
-> > -			reg = <0x40000064>;
-> > -		};
-> > -	};
-> > diff --git a/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > new file mode 100644
-> > index 000000000000..3f348f1ce172
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml
-> > @@ -0,0 +1,156 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/i2c/snps,designware-i2c.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Synopsys DesignWare APB I2C Device Tree Bindings
-> > +
-> > +maintainers:
-> > +  - Jarkko Nikula <jarkko.nikula@linux.intel.com>
-> > +
-> > +allOf:
-> > +  - $ref: /schemas/i2c/i2c-controller.yaml#
-> > +
-> > +if:
-> > +  properties:
-> > +    compatible:
-> > +      contains:
-> > +        const: mscc,ocelot-i2c
-> > +then:
-> > +  properties:
-> > +    reg:
-> > +      minItems: 1
-> > +      items:
-> > +        - description: DW APB I2C controller memory mapped registers.
-> > +        - description: ICPU_CFG:TWI_DELAY registers to setup the SDA hold time.
-> 
-> This won't work (it would be good to have an example that exercises 
-> this). You need to move this definition to the main 'reg' definition 
-> below and then do:
-> 
-> if:
->   properties:
->     compatible:
->       not:
->         contains:
->           const: mscc,ocelot-i2c
-> then:
->   properties:
->     reg:
->       maxItems: 1
-> 
+On Wed, Mar 25, 2020 at 12:35 PM <hpa@zytor.com> wrote:
+>
+> "movl $0,%eax" is five bytes, the same length as a call. Doesn't work for a tailcall, still, although if the sequence:
+>
+>     jmp tailcall
+>     retq
+>
+> ... can be generated at the tailcall site then the jmp can get patched out.
 
-Hm, I thought I tested this. Apparently I didn't do this well. Thanks for
-pointing me out to this problem. I'll add the mscc,ocelot-i2c node to the examples
-list to cover the optional two-regs case as well.
+No, the problem is literally that the whole approach depends on the
+compiler just generating normal code for the static calls.
 
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - description: Generic Synopsys DesignWare I2C controller.
-> > +        const: snps,designware-i2c
-> > +      - description: Microsemi Ocelot SoCs I2C controller.
-> > +        items:
-> > +          - const: mscc,ocelot-i2c
-> > +          - const: snps,designware-i2c
-> > +
-> > +  reg:
-> > +    items:
-> > +      - description: DW APB I2C controller memory mapped registers.
-> > +
-> > +  "#address-cells": true
-> > +
-> > +  "#size-cells": true
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    minItems: 1
-> > +    items:
-> > +      - description: I2C controller reference clock source.
-> > +      - description: APB interface clock source.
-> > +
-> > +  clock-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: ref
-> > +      - const: pclk
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  clock-frequency:
-> > +    description: Desired I2C bus clock frequency in Hz.
-> > +    enum: [100000, 400000, 1000000, 3400000]
-> > +    default: 400000
-> > +
-> > +  i2c-sda-hold-time-ns:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> 
-> Anything with a unit suffix has a type, so you can drop this.
-> 
+And the tailcall is the only interesting case. The normal call thing
+can be trivially just a single instruction (a mov like you say, but
+also easily just a xor padded with prefixes).
 
-Yes, but this and the following time-related properties are supposed to be
-single numbers (see ./drivers/i2c/i2c-core-base.c for details), while "^.*-ns$"
-is defined as uint32-array. So if I removed this $ref, I would have to add a
-constraint like:
-
-+ maxItems: 1
-+ items:
-+   maxItems: 1
-
-which isn't that obvious, than just explicit uint32-type setting.
-
-> > +    description: |
-> > +      The property should contain the SDA hold time in nanoseconds. This option
-> > +      is only supported in hardware blocks version 1.11a or newer or on
-> > +      Microsemi SoCs.
-> > +
-> > +  i2c-scl-falling-time-ns:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> > +      The property should contain the SCL falling time in nanoseconds.
-> > +      This value is used to compute the tLOW period.
-> > +    default: 300
-> > +
-> > +  i2c-sda-falling-time-ns:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description: |
-> > +      The property should contain the SDA falling time in nanoseconds.
-> > +      This value is used to compute the tHIGH period.
-> > +    default: 300
-> > +
-> > +  dmas:
-> > +    items:
-> > +      - description: TX DMA Channel.
-> > +      - description: RX DMA Channel.
-> > +
-> > +  dma-names:
-> > +    items:
-> > +      - const: tx
-> > +      - const: rx
-> > +
-> 
-> > +patternProperties:
-> > +  "^.*@[0-9a-f]+$":
-> > +    type: object
-> > +    properties:
-> > +      reg:
-> > +        maxItems: 1
-> 
-> No need for this as i2c-controller.yaml does this.
-> 
-
-Agreed.
-
-> > +
-> > +additionalProperties: false
-> 
-> This doesn't work with i2c-controller.yaml. Change it to 
-> 'unevaluatedProperties: false' and eventually that will do what we need.
-> 
-
-Yeah, I tried the "unevaluatedProperties: false" setting and discovered that
-it didn't work. That's why I defined all the possible properties in this
-DT schema with at least boolean type including the sub-node
-pattern-based properties and set the "additionalProperties:
-false", so unknown properties would cause the dt_binding_check error.
-
-Since you are saying that unevaluatedProperties: is not implemented,
-but it will be in future, and it's ok that currently we may have some
-unevaluated properties left declared, then I'll do as you say:
-remove all dummy boolean properties and replace "additionalProperties"
-property with "unevaluatedProperties" one.
-
-Regards,
--Sergey
-
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - "#address-cells"
-> > +  - "#size-cells"
-> > +  - interrupts
-> > +
-> > +examples:
-> > +  - |
-> > +    i2c@f0000 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      compatible = "snps,designware-i2c";
-> > +      reg = <0xf0000 0x1000>;
-> > +      interrupts = <11>;
-> > +      clock-frequency = <400000>;
-> > +    };
-> > +
-> > +  - |
-> > +    i2c@1120000 {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      compatible = "snps,designware-i2c";
-> > +      reg = <0x1120000 0x1000>;
-> > +      interrupt-parent = <&ictl>;
-> > +      interrupts = <12 1>;
-> > +      clock-frequency = <400000>;
-> > +      i2c-sda-hold-time-ns = <300>;
-> > +      i2c-sda-falling-time-ns = <300>;
-> > +      i2c-scl-falling-time-ns = <300>;
-> > +    };
-> > +
-> > +  - |
-> > +    i2c@1120000 {
-> > +      compatible = "snps,designware-i2c";
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +      reg = <0x2000 0x100>;
-> > +      clock-frequency = <400000>;
-> > +      clocks = <&i2cclk>;
-> > +      interrupts = <0>;
-> > +
-> > +      eeprom@64 {
-> > +        compatible = "linux,slave-24c02";
-> > +        reg = <0x40000064>;
-> > +      };
-> > +    };
-> > +...
-> > -- 
-> > 2.25.1
-> > 
+                  Linus
