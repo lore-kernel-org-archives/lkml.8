@@ -2,301 +2,180 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10173C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBA3C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C660F20775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AF2520714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:24:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wwy7zP3z"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="sU0a7J0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgCYKXt (ORCPT
+        id S1727620AbgCYKYU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:23:49 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:21375 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbgCYKXt (ORCPT
+        Wed, 25 Mar 2020 06:24:20 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:37072 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgCYKYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:23:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585131827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6dJAVutViyziW48uoJ1vZ2A5XPOsDEHehNDmLJL+Tn8=;
-        b=Wwy7zP3z0/k4fwIzGQwZIJYkikWagSLxKdMMRtrNz/1C/tTc4tikvjRyYfuBsVi12uJoX1
-        wj82fHKzhJ2KlV1CcVnjjHfAQWZX8AMTR7zc13uWaFvOe3vZxdODMqEm0XabMkFwWJeiwh
-        msU1jsY8zqcwSnz1pUlC1CZS8cwWkfs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-tKEs3ZJjNg-iNlkSlIBorA-1; Wed, 25 Mar 2020 06:23:46 -0400
-X-MC-Unique: tKEs3ZJjNg-iNlkSlIBorA-1
-Received: by mail-wm1-f71.google.com with SMTP id x26so221526wmc.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 03:23:45 -0700 (PDT)
+        Wed, 25 Mar 2020 06:24:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w10so2264513wrm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 03:24:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BzfHzYyeVZSWPZmf8Nhpyum9G6Q8ZKSfkWFQNKWGsCE=;
+        b=sU0a7J0Gs/HUbiRP/++nlwRUahSg/FE2iHXQpHBkAJZubhqtSCLXwDHbVsilwBsPcH
+         UCM1UpzMXM0KxHO9aiaXkmtFvcRycP2SVUU+Z5JEadxttHW2Z4/KLM3B4jZPl3svT2FR
+         wTpjVtUqnlDU2KqWAnqlyuLdzLWRbXdkLUmHpXgxotqrSJxSJGrDbkO9rRU+hFL1ToFi
+         3fI5u/RH/rkga9INNxa9/uN3gODIDCm1P7hr+mKjEF8uJyr3FVbVaWEh/Q4Cby+12hKI
+         SFglv4CMGtdNZ5ey/YkGbmn5KYd//7uU3/RqROKJ307oYDbmkX84gH+OvQj53/xGQ40Y
+         4k7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=6dJAVutViyziW48uoJ1vZ2A5XPOsDEHehNDmLJL+Tn8=;
-        b=nzpMWJDORipn5oEHtXZfxlFJtk3ZumOyMOQSASudswQZNkyqxsak5norh5xVXaYv32
-         my7ZM+FzNeY8Pf63oWxEBkXF5qKRveuqEwaxB9bHXVXrRVtWXI3uerys4aiXma9VLGyA
-         Yjs3uHtyY3pMIW6PLR9Okp9MLV4KEd1mYBeKeojIGLJH4clLauGaem8D5AcWT+eXBK9G
-         zOqR9BfX0RRsk8zHZzW+9t/cyQiuS6s74fGxuZBB/t02Edt2KZz4nxh9Ry6KNjT7d7OH
-         wX9m2doQ0VPDfHu9nXVNuJZZn37MBuOKYQ0ShtJMj/MjRtwYX6l7WR0RqCDlNjppC+KE
-         16Cw==
-X-Gm-Message-State: ANhLgQ2eBs7GGHFtIa1upRKzIK6F0sDklZuQw0QZ6MIdineS4uy2XIPr
-        Sip68kU8Vr1skvnubHbhn3eNS3x/KlMYu/ADhbiPrhuSjPU7qaZBYBt0uozOUymFgM2GK5VGzOm
-        yy6lrF/Uqen5f4U7E4UnMc3Sh
-X-Received: by 2002:a5d:66c3:: with SMTP id k3mr2586483wrw.407.1585131824808;
-        Wed, 25 Mar 2020 03:23:44 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vv6n1iEZwxUl0A6R9tozXB8P4hVHaC/oMdbsftTCdWmzxPturH/edEywa0J0gSH7MPaHg0cDw==
-X-Received: by 2002:a5d:66c3:: with SMTP id k3mr2586449wrw.407.1585131824427;
-        Wed, 25 Mar 2020 03:23:44 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id f207sm8902528wme.9.2020.03.25.03.23.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 03:23:43 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ben Gardon <bgardon@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        John Haxby <john.haxby@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [PATCH v3 14/37] KVM: x86: Move "flush guest's TLB" logic to separate kvm_x86_ops hook
-In-Reply-To: <20200320212833.3507-15-sean.j.christopherson@intel.com>
-References: <20200320212833.3507-1-sean.j.christopherson@intel.com> <20200320212833.3507-15-sean.j.christopherson@intel.com>
-Date:   Wed, 25 Mar 2020 11:23:41 +0100
-Message-ID: <87369w7mxe.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=BzfHzYyeVZSWPZmf8Nhpyum9G6Q8ZKSfkWFQNKWGsCE=;
+        b=pVr/FPGaGA5wLDWDzzPNGPLhT4pKN0YRgMARu0/fJn5x6zNXFjiwPMgk6MchnRNn35
+         rycptzCdnJlDfy4yqTmILkX/gXAAZWVZaIiIkkFjccKkMzWYxpPUKlKqZ+5H4qjI2DtX
+         IvIG222JvLvovu8FxDC8KSvYH/fBU5tSf1e/DzTdWJuPTi/E3ZqB4CfDVzTPmmEjFONa
+         MnSnFrN3WwbAEMG1E0zqPyxBDFbDZ+412jXm+lh6zw5ok3a4tkM7ESYzmoE5cZUKUwJe
+         SNp6jPSAcEmw1l72IX3E309Icm5hPh6BcMT9V0LyhEAUMaJhRYbq9SDWNTNcoIy0n9r7
+         4LaA==
+X-Gm-Message-State: ANhLgQ0mHh4l4CedE0yn84JXZWMZVkJaspWDaGzMvifPCLIQBEJ6OacR
+        KgboW7tWCkrdEq0p55RedYEbdA==
+X-Google-Smtp-Source: ADFU+vvLJbAbbUIWJHam7GRwCI9HtZWGavPvsJGJ2ROzjsDECG7fc2inbvS7x4LguS+4Gq8i7PwDTg==
+X-Received: by 2002:a5d:664d:: with SMTP id f13mr2546821wrw.51.1585131856849;
+        Wed, 25 Mar 2020 03:24:16 -0700 (PDT)
+Received: from ?IPv6:2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2? ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
+        by smtp.gmail.com with ESMTPSA id s15sm35271104wrr.45.2020.03.25.03.24.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 03:24:16 -0700 (PDT)
+Subject: Re: [PATCH v4 7/8] drm/fourcc: amlogic: Add modifier definitions for
+ the Scatter layout
+To:     Simon Ser <contact@emersion.fr>
+Cc:     "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "mjourdan@baylibre.com" <mjourdan@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20200325085025.30631-1-narmstrong@baylibre.com>
+ <20200325085025.30631-8-narmstrong@baylibre.com>
+ <JgBZ7eZYMgXRNu_-E4ItS1bud9mEe15xptZEX_XhsM_h8_iIZTOmPokEVxPJYwX0wP0pmb5p-ymubyyZP3kVbcfuDNdmM0__L8wBR5IykfE=@emersion.fr>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <b1386ef5-c3e3-c07b-5982-e3f02441b431@baylibre.com>
+Date:   Wed, 25 Mar 2020 11:24:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <JgBZ7eZYMgXRNu_-E4ItS1bud9mEe15xptZEX_XhsM_h8_iIZTOmPokEVxPJYwX0wP0pmb5p-ymubyyZP3kVbcfuDNdmM0__L8wBR5IykfE=@emersion.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi,
 
-> Add a dedicated hook to handle flushing TLB entries on behalf of the
-> guest, i.e. for a paravirtualized TLB flush, and use it directly instead
-> of bouncing through kvm_vcpu_flush_tlb().
->
-> For VMX, change the effective implementation implementation to never do
-> INVEPT and flush only the current context, i.e. to always flush via
-> INVVPID(SINGLE_CONTEXT).  The INVEPT performed by __vmx_flush_tlb() when
-> @invalidate_gpa=false and enable_vpid=0 is unnecessary, as it will only
-> flush guest-physical mappings; linear and combined mappings are flushed
-> by VM-Enter when VPID is disabled, and changes in the guest pages tables
-> do not affect guest-physical mappings.
->
-> When EPT and VPID are enabled, doing INVVPID is not required (by Intel's
-> architecture) to invalidate guest-physical mappings, i.e. TLB entries
-> that cache guest-physical mappings can live across INVVPID as the
-> mappings are associated with an EPTP, not a VPID.  The intent of
-> @invalidate_gpa is to inform vmx_flush_tlb() that it must "invalidate
-> gpa mappings", i.e. do INVEPT and not simply INVVPID.  Other than nested
-> VPID handling, which now calls vpid_sync_context() directly, the only
-> scenario where KVM can safely do INVVPID instead of INVEPT (when EPT is
-> enabled) is if KVM is flushing TLB entries from the guest's perspective,
-> i.e. is only required to invalidate linear mappings.
->
-> For SVM, flushing TLB entries from the guest's perspective can be done
-> by flushing the current ASID, as changes to the guest's page tables are
-> associated only with the current ASID.
->
-> Adding a dedicated ->tlb_flush_guest() paves the way toward removing
-> @invalidate_gpa, which is a potentially dangerous control flag as its
-> meaning is not exactly crystal clear, even for those who are familiar
-> with the subtleties of what mappings Intel CPUs are/aren't allowed to
-> keep across various invalidation scenarios.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  6 ++++++
->  arch/x86/kvm/svm.c              |  6 ++++++
->  arch/x86/kvm/vmx/vmx.c          | 13 +++++++++++++
->  arch/x86/kvm/x86.c              |  2 +-
->  4 files changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index cdbf822c5c8b..c08f4c0bf4d1 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1118,6 +1118,12 @@ struct kvm_x86_ops {
->  	 */
->  	void (*tlb_flush_gva)(struct kvm_vcpu *vcpu, gva_t addr);
->  
-> +	/*
-> +	 * Flush any TLB entries created by the guest.  Like tlb_flush_gva(),
-> +	 * does not need to flush GPA->HPA mappings.
-> +	 */
-> +	void (*tlb_flush_guest)(struct kvm_vcpu *vcpu);
-> +
->  	void (*run)(struct kvm_vcpu *vcpu);
->  	int (*handle_exit)(struct kvm_vcpu *vcpu,
->  		enum exit_fastpath_completion exit_fastpath);
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 08568ae9f7a1..396f42753489 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -5643,6 +5643,11 @@ static void svm_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t gva)
->  	invlpga(gva, svm->vmcb->control.asid);
->  }
->  
-> +static void svm_flush_tlb_guest(struct kvm_vcpu *vcpu)
-> +{
-> +	svm_flush_tlb(vcpu, false);
-> +}
-> +
->  static void svm_prepare_guest_switch(struct kvm_vcpu *vcpu)
->  {
->  }
-> @@ -7400,6 +7405,7 @@ static struct kvm_x86_ops svm_x86_ops __ro_after_init = {
->  
->  	.tlb_flush = svm_flush_tlb,
->  	.tlb_flush_gva = svm_flush_tlb_gva,
-> +	.tlb_flush_guest = svm_flush_tlb_guest,
->  
->  	.run = svm_vcpu_run,
->  	.handle_exit = handle_exit,
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index ba24bbda2c12..57c1cee58d18 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2862,6 +2862,18 @@ static void vmx_flush_tlb_gva(struct kvm_vcpu *vcpu, gva_t addr)
->  	 */
->  }
->  
-> +static void vmx_flush_tlb_guest(struct kvm_vcpu *vcpu)
-> +{
-> +	/*
-> +	 * vpid_sync_context() is a nop if vmx->vpid==0, e.g. if enable_vpid==0
-> +	 * or a vpid couldn't be allocated for this vCPU.  VM-Enter and VM-Exit
-> +	 * are required to flush GVA->{G,H}PA mappings from the TLB if vpid is
-> +	 * disabled (VM-Enter with vpid enabled and vpid==0 is disallowed),
-> +	 * i.e. no explicit INVVPID is necessary.
-> +	 */
-> +	vpid_sync_context(to_vmx(vcpu)->vpid);
-> +}
-> +
->  static void vmx_decache_cr0_guest_bits(struct kvm_vcpu *vcpu)
->  {
->  	ulong cr0_guest_owned_bits = vcpu->arch.cr0_guest_owned_bits;
-> @@ -7875,6 +7887,7 @@ static struct kvm_x86_ops vmx_x86_ops __ro_after_init = {
->  
->  	.tlb_flush = vmx_flush_tlb,
->  	.tlb_flush_gva = vmx_flush_tlb_gva,
-> +	.tlb_flush_guest = vmx_flush_tlb_guest,
->  
->  	.run = vmx_vcpu_run,
->  	.handle_exit = vmx_handle_exit,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index f506248d61a1..0b90ec2c93cf 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2725,7 +2725,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
->  	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
->  		st->preempted & KVM_VCPU_FLUSH_TLB);
->  	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
-> -		kvm_vcpu_flush_tlb(vcpu, false);
-> +		kvm_x86_ops->tlb_flush_guest(vcpu);
->  
->  	vcpu->arch.st.preempted = 0;
+On 25/03/2020 10:04, Simon Ser wrote:
+> On Wednesday, March 25, 2020 9:50 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> 
+>> Amlogic uses a proprietary lossless image compression protocol and format
+>> for their hardware video codec accelerators, either video decoders or
+>> video input encoders.
+>>
+>> This introduces the Scatter Memory layout, means the header contains IOMMU
+>> references to the compressed frames content to optimize memory access
+>> and layout.
+>>
+>> In this mode, only the header memory address is needed, thus the content
+>> memory organization is tied to the current producer execution and cannot
+>> be saved/dumped neither transferrable between Amlogic SoCs supporting this
+>> modifier.
+> 
+> I don't think this is suitable for modifiers. User-space relies on
+> being able to copy a buffer from one machine to another over the
+> network. It would be pretty annoying for user-space to have a blacklist
+> of modifiers that don't work this way.
+> 
+> Example of such user-space:
+> https://gitlab.freedesktop.org/mstoeckl/waypipe/
+> 
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+I really understand your point, but this is one of the use-cases we need solve.
+This is why I split the fourcc patch and added an explicit comment.
 
-I *think* I've commented on the previous version that we also have
-hyperv-style PV TLB flush and this will likely need to be switched to
-tlb_flush_guest(). What do you think about the following (very lightly
-tested)?
+Please point me a way to display such buffer, the HW exists, works like that and
+it's a fact and can't change.
 
-commit 485b4a579605597b9897b3d9ec118e0f7f1138ad
-Author: Vitaly Kuznetsov <vkuznets@redhat.com>
-Date:   Wed Mar 25 11:14:25 2020 +0100
+It will be the same for secure zero-copy buffers we can't map from userspace, but
+only the HW decoder can read/write and HW display can read.
 
-    KVM: x86: make Hyper-V PV TLB flush use tlb_flush_guest()
-    
-    Hyper-V PV TLB flush mechanism does TLB flush on behalf of the guest
-    so doing tlb_flush_all() is an overkill, switch to using tlb_flush_guest()
-    (just like KVM PV TLB flush mechanism) instead. Introduce
-    KVM_REQ_HV_TLB_FLUSH to support the change.
-    
-    Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+We need a solution for those if we want embedded and secure products to be supported
+upstream, otherwise they will stay in an obscure off-tree linux tree and for example
+AOSP support (which will support these secure video buffers) will use these vendor
+specific hacks.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 167729624149..8c5659ed211b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -84,6 +84,7 @@
- #define KVM_REQ_APICV_UPDATE \
- 	KVM_ARCH_REQ_FLAGS(25, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
- #define KVM_REQ_TLB_FLUSH_CURRENT	KVM_ARCH_REQ(26)
-+#define KVM_REQ_HV_TLB_FLUSH		KVM_ARCH_REQ(27)
- 
- #define CR0_RESERVED_BITS                                               \
- 	(~(unsigned long)(X86_CR0_PE | X86_CR0_MP | X86_CR0_EM | X86_CR0_TS \
-diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-index a86fda7a1d03..0d051ed11f38 100644
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -1425,8 +1425,7 @@ static u64 kvm_hv_flush_tlb(struct kvm_vcpu *current_vcpu, u64 ingpa,
- 	 * vcpu->arch.cr3 may not be up-to-date for running vCPUs so we can't
- 	 * analyze it here, flush TLB regardless of the specified address space.
- 	 */
--	kvm_make_vcpus_request_mask(kvm,
--				    KVM_REQ_TLB_FLUSH | KVM_REQUEST_NO_WAKEUP,
-+	kvm_make_vcpus_request_mask(kvm, KVM_REQ_HV_TLB_FLUSH,
- 				    vcpu_mask, &hv_vcpu->tlb_flush);
- 
- ret_success:
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 210af343eebf..5096a9b1a04e 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2702,6 +2702,12 @@ static void kvm_vcpu_flush_tlb_all(struct kvm_vcpu *vcpu)
- 	kvm_x86_ops->tlb_flush_all(vcpu);
- }
- 
-+static void kvm_vcpu_flush_tlb_guest(struct kvm_vcpu *vcpu)
-+{
-+	++vcpu->stat.tlb_flush;
-+	kvm_x86_ops->tlb_flush_guest(vcpu);
-+}
-+
- static void record_steal_time(struct kvm_vcpu *vcpu)
- {
- 	struct kvm_host_map map;
-@@ -2725,7 +2731,7 @@ static void record_steal_time(struct kvm_vcpu *vcpu)
- 	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
- 		st->preempted & KVM_VCPU_FLUSH_TLB);
- 	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
--		kvm_x86_ops->tlb_flush_guest(vcpu);
-+		kvm_vcpu_flush_tlb_guest(vcpu);
- 
- 	vcpu->arch.st.preempted = 0;
- 
-@@ -8219,7 +8225,8 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 		}
- 		if (kvm_check_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu))
- 			kvm_vcpu_flush_tlb_current(vcpu);
--
-+		if (kvm_check_request(KVM_REQ_HV_TLB_FLUSH, vcpu))
-+			kvm_vcpu_flush_tlb_guest(vcpu);
- 		if (kvm_check_request(KVM_REQ_REPORT_TPR_ACCESS, vcpu)) {
- 			vcpu->run->exit_reason = KVM_EXIT_TPR_ACCESS;
- 			r = 0;
-
--- 
-Vitaly
-
+Neil
