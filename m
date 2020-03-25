@@ -2,111 +2,73 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53523C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CFDC2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:43:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6CccuvD"
+	by mail.kernel.org (Postfix) with ESMTP id 203AE20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:47:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgCYVnT (ORCPT
+        id S1727406AbgCYVrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:43:19 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40400 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgCYVnT (ORCPT
+        Wed, 25 Mar 2020 17:47:32 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:49070 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727355AbgCYVrb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:43:19 -0400
-Received: by mail-pf1-f193.google.com with SMTP id l184so1710493pfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 14:43:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=h0hI1ctK7evRWi0Tx3F+lFEp/ylOEoUVzXunsODTLdY=;
-        b=K6CccuvDhDFg4uDguK3OiesQSTy4fN0R7L2ZKiBbN6KUB5W5JGjUjBeE8sAHEWaPX2
-         w/HSgNcZUtbTEQ28K1Q8MlNo5DaOd8AscgJK5B3m5OeehiuaHg1US+Hapq413+gXZgxD
-         pC/tsiWBNJEFkVFyevTpcfH7QZijl90PLmgGflSa8Fy7sXpNJtnKbfG++5ArAO6Rdaj+
-         gDFnjrinuJIrGqgR5G4NygPWvjK7+oq7x6gE9H1UhL0UfjtPwT5biCQ+bEhxPvjmMzzS
-         ZgkB+HD5/RSOurcjFBSUuP1KD5/ocn9MzxOEE4CNq1jVf5ZbdVHr3IrFWx1V8RBeCj3p
-         fpMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=h0hI1ctK7evRWi0Tx3F+lFEp/ylOEoUVzXunsODTLdY=;
-        b=d0j811x1uAEi6MdMjDvAIZpNpqajsNfgn09+jGXPX6HyLC5/5blc1GnGzttjvhk3xB
-         gbiBCOrZTWJcZWF/jOsLNPDnWLU6uD6tSx/ebUhuS1eGsu1WOVP+W6sNfptdVsg7yfQM
-         C6yP7pXTfYXtaOE37ZOL3QCMORYPTpfFd0oHyx93vsfa/0XXK5JkOhFw1aWlGpvLbx4Y
-         ft0fzPERxbRlZxgkJVIKrCQ4J69JdqV+/nln8TDUqHfQ91E7pu46yW2oYo31Dilzc5PM
-         JsoeqC9EiGNG1aZTLpw88qQr7PTHJKPQL5Q4+Y/CF3rXbQbuEKX/rIK5aeVb6j8+3xDh
-         VjzA==
-X-Gm-Message-State: ANhLgQ1ws/ERxUqDd4odxYXGNQzNx0PiNySAlHxA5daOlzlL2OcnQSPV
-        m+7EQRlo/xGBk5hDciilMUw=
-X-Google-Smtp-Source: ADFU+vswKqbNWwboFJ5F9a2l/B9QXa6IvqAjyDmNjtLiyGK2ZPZ2k32SjAAvPZlNAiOyyLKTauRU9g==
-X-Received: by 2002:aa7:828e:: with SMTP id s14mr5336751pfm.15.1585172598186;
-        Wed, 25 Mar 2020 14:43:18 -0700 (PDT)
-Received: from simran-Inspiron-5558 ([2409:4052:78f:bb47:8124:5e4b:ea06:7595])
-        by smtp.gmail.com with ESMTPSA id a19sm87724pfk.110.2020.03.25.14.43.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 14:43:17 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 03:13:12 +0530
-From:   Simran Singhal <singhalsimran0@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-Subject: [PATCH] staging: rtl8723bs: hal: Compress return logic
-Message-ID: <20200325214312.GA1936@simran-Inspiron-5558>
+        Wed, 25 Mar 2020 17:47:31 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jHDrx-0000zc-Pk; Wed, 25 Mar 2020 22:47:25 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 3E80F100C51; Wed, 25 Mar 2020 22:47:25 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Saravana Kannan <saravanak@google.com>,
+        Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
+        liviu.dudau@arm.com, sudeep.holla@arm.com,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid creating dead devices
+In-Reply-To: <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com>
+References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2> <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com> <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com>
+Date:   Wed, 25 Mar 2020 22:47:25 +0100
+Message-ID: <87lfnoxg2a.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Simplify function returns by merging assignment and return into
-one command line.
-Found with Coccinelle
+Saravana Kannan <saravanak@google.com> writes:
+> On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
+> I took a closer look. So two different drivers [1] [2] are saying they
+> know how to handle "arm,vexpress-sysreg" and are expecting to run at
+> the same time. That seems a bit unusual to me. I wonder if this is a
+> violation of the device-driver model because this expectation would
+> never be allowed if these device drivers were actual drivers
+> registered with driver-core. But that's a discussion for another time.
+>
+> To fix this issue you are facing, this patch should work:
+> https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
 
-@@
-local idexpression ret;
-expression e;
-@@
+Sorry, that's not a fix. That's a crude hack.
 
--ret =
-+return
-     e;
--return ret;
+As this is also causing trouble on tegra30-cardhu-a04 the only sane
+solution is to revert it and start over with a proper solution for the
+vexpress problem and a root cause analysis for the tegra.
 
-Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
----
- drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Thanks,
 
-diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
-index eb7de3617d83..767e2a784f78 100644
---- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
-+++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
-@@ -1498,9 +1498,7 @@ s8 PHY_GetTxPowerByRate(
- 		return value;
- 	}
- 
--	value = pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex];
--
--	return value;
-+	return pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex];
- 
- }
- 
--- 
-2.17.1
-
+        tglx
