@@ -2,93 +2,149 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A63BC18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92AA0C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D252074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 657F320714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:14:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585098869;
+	bh=DX1u6DeppxRCrHzxGji1nY+IzMcI/Xcw2CsrqmnfwEI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=VessED5dmRldpWgaM1dxdEbHkvHfQaCwxUJqEtEnwdFnrNOmnETiYRunLIOTjX+DE
+	 qciHeFySVeFj9oi0cwth4n3utvZozwIAd9WuZPJMUWSDvqHrB5Jpkd2qCcDh09AC0i
+	 mSGfwoFKI5XZFUpr2hzVnT4exP4dNDkHwny+fTf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727339AbgCYBOD (ORCPT
+        id S1727380AbgCYBO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:14:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46700 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727298AbgCYBOC (ORCPT
+        Tue, 24 Mar 2020 21:14:28 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:34772 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727188AbgCYBO2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:14:02 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGuSb-0000rB-FO; Wed, 25 Mar 2020 02:03:57 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E240E100C51; Wed, 25 Mar 2020 02:03:56 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        kvm@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v5 3/9] x86/split_lock: Re-define the kernel param option for split_lock_detect
-In-Reply-To: <54b2b9b5-2307-b5da-6b63-319e9626bcc1@intel.com>
-References: <20200315050517.127446-1-xiaoyao.li@intel.com> <20200315050517.127446-4-xiaoyao.li@intel.com> <87r1xjov3a.fsf@nanos.tec.linutronix.de> <e708f6d2-8f96-903c-0bce-2eeecc4a237d@intel.com> <87r1xidoj1.fsf@nanos.tec.linutronix.de> <54b2b9b5-2307-b5da-6b63-319e9626bcc1@intel.com>
-Date:   Wed, 25 Mar 2020 02:03:56 +0100
-Message-ID: <878sjpz1mr.fsf@nanos.tec.linutronix.de>
+        Tue, 24 Mar 2020 21:14:28 -0400
+Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 02P1E3aD015611
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 10:14:04 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02P1E3aD015611
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585098844;
+        bh=Du0zvU/kKAL8IvGiRqHBSbx7z6kjBsdUMl9fi/jYHfU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CmBBqcd636qqSj5ss3/pAlUApkkQw3SpDtaGjLBFVNgUjopNWmBHijKJ2t1GIv9sV
+         ABjbr6WG0sDnmRZ9Mu7Q7ndHoShX0IVAagRmAnN07RUwv3Q2nK8KZnuxkn4pZAIO9i
+         EUWCuFL5WUeO5/69pqB+6rLy+r7sXZjRilBNUWvWXyGifkZXknW/7sBGBCYqyyB72P
+         ut72XASzzrV5vxCZQVb9nxcXov5YhyQ56W+EJsmsR2mYgeN9SFYj9igEHSbpD0LZLQ
+         jezIoot7mFSV0RVZ1KSVAaekJDvlhsh6YZrP9pDmdVqTSkEepBu9siGl1VWwdfBVXL
+         zEgAweVZWeU0A==
+X-Nifty-SrcIP: [209.85.222.42]
+Received: by mail-ua1-f42.google.com with SMTP id o15so173948ual.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 18:14:04 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1LbcfLnryQ3H5nCjWeHu5gLRBrOOGXgH38nPCYxT3QCxkM+Omy
+        UFuZLiH0baRBc8h+gcHQQhgFVSekpi4lgC1IPYY=
+X-Google-Smtp-Source: ADFU+vsMC3zRa6ZCPZj56ljmM8HiIe+u3r7TwuTb0+ibRUQbbRZXBTBPHZ2fpKGbyXecBLtrlGGqLwlnGLzcN6iVsgo=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr688955uar.109.1585098843120;
+ Tue, 24 Mar 2020 18:14:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200213153928.28407-1-masahiroy@kernel.org> <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
+ <CADnq5_Mieh9G-8hheKRdKe=qMbAQjwTheM2TWWSaZjeGU3635Q@mail.gmail.com>
+In-Reply-To: <CADnq5_Mieh9G-8hheKRdKe=qMbAQjwTheM2TWWSaZjeGU3635Q@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 10:13:27 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT2r3Octg-Pdjn6xNzGM49_PiGqoJSTzbmL4iBpH6_AaQ@mail.gmail.com>
+Message-ID: <CAK7LNAT2r3Octg-Pdjn6xNzGM49_PiGqoJSTzbmL4iBpH6_AaQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] drm/radeon: remove unneeded header include path
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?B?Q2hyaXN0aWFuIEvvv73vv73Dk25pZw==?= 
+        <christian.koenig@amd.com>, David Zhou <David1.Zhou@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
-
-> On 3/24/2020 6:40 PM, Thomas Gleixner wrote:
->> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>> On 3/24/2020 1:10 AM, Thomas Gleixner wrote:
->>>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>>>
->>>>> Change sld_off to sld_disable, which means disabling feature split lock
->>>>> detection and it cannot be used in kernel nor can kvm expose it guest.
->>>>> Of course, the X86_FEATURE_SPLIT_LOCK_DETECT is not set.
->>>>>
->>>>> Add a new optioin sld_kvm_only, which means kernel turns split lock
->>>>> detection off, but kvm can expose it to guest.
->>>>
->>>> What's the point of this? If the host is not clean, then you better fix
->>>> the host first before trying to expose it to guests.
->>>
->>> It's not about whether or not host is clean. It's for the cases that
->>> users just don't want it enabled on host, to not break the applications
->>> or drivers that do have split lock issue.
->> 
->> It's very much about whether the host is split lock clean.
->> 
->> If your host kernel is not, then this wants to be fixed first. If your
->> host application is broken, then either fix it or use "warn".
->> 
+On Wed, Mar 25, 2020 at 4:42 AM Alex Deucher <alexdeucher@gmail.com> wrote:
 >
-> My thought is for CSPs that they might not turn on SLD on their product 
-> environment. Any split lock in kernel or drivers may break their service 
-> for tenants.
+> On Tue, Mar 24, 2020 at 12:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > I think this series is a good clean-up.
+> >
+> > Could you take a look at this please?
+>
+> Can you resend?  I don't seem to have gotten it.  Must have ended up
+> getting flagged a spam or something.
 
-Again you are proliferating crap and making excuses for Common Sense
-violating Purposes (CSP).
 
-Thanks,
+Can you take it from patchwork ?  (4 patches)
 
-        tglx
+https://lore.kernel.org/patchwork/project/lkml/list/?series=429491
+
+
+Thanks.
+
+
+
+
+
+
+> Alex
+>
+> >
+> >
+> >
+> > On Fri, Feb 14, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > A header include path without $(srctree)/ is suspicious because it does
+> > > not work with O= builds.
+> > >
+> > > You can build drivers/gpu/drm/radeon/ without this include path.
+> > >
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > ---
+> > >
+> > >  drivers/gpu/drm/radeon/Makefile | 2 --
+> > >  1 file changed, 2 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/radeon/Makefile b/drivers/gpu/drm/radeon/Makefile
+> > > index c693b2ca0329..9d5d3dc1011f 100644
+> > > --- a/drivers/gpu/drm/radeon/Makefile
+> > > +++ b/drivers/gpu/drm/radeon/Makefile
+> > > @@ -3,8 +3,6 @@
+> > >  # Makefile for the drm device driver.  This driver provides support for the
+> > >  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+> > >
+> > > -ccflags-y := -Idrivers/gpu/drm/amd/include
+> > > -
+> > >  hostprogs := mkregtable
+> > >  clean-files := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
+> > >
+> > > --
+> > > 2.17.1
+> > >
+> >
+> >
+> > --
+> > Best Regards
+> > Masahiro Yamada
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
