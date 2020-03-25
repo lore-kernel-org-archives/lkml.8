@@ -4,27 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0908BC54FD7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40670C54FD8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBC6320714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AE5820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgCYIzx (ORCPT
+        id S1727550AbgCYIzo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:55:53 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:46175 "EHLO
+        Wed, 25 Mar 2020 04:55:44 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:43573 "EHLO
         smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727392AbgCYIzs (ORCPT
+        by vger.kernel.org with ESMTP id S1727376AbgCYIzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:55:48 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.219303-0.000850805-0.779847;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03268;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
+        Wed, 25 Mar 2020 04:55:42 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.196746-0.000294681-0.802959;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16378;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
 Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H50xpyL_1585126516)
           by smtp.aliyun-inc.com(10.147.42.241);
-          Wed, 25 Mar 2020 16:55:26 +0800
+          Wed, 25 Mar 2020 16:55:30 +0800
 From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
 To:     Kees Cook <keescook@chromium.org>,
         Anton Vorontsov <anton@enomsg.org>,
@@ -42,9 +42,9 @@ To:     Kees Cook <keescook@chromium.org>,
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-mtd@lists.infradead.org,
         WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v3 01/11] pstore/zone: a common layer to manage storage as zones
-Date:   Wed, 25 Mar 2020 16:54:56 +0800
-Message-Id: <1585126506-18635-2-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: [PATCH v3 05/11] pstore/blk: blkoops: support console recorder
+Date:   Wed, 25 Mar 2020 16:55:00 +0800
+Message-Id: <1585126506-18635-6-git-send-email-liaoweixiong@allwinnertech.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
 References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
@@ -53,1126 +53,318 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a pre patch to support pstore/blk.
-
-Pstore/zone provides the zones management of storage. It's designed
-to work for pstore/blk and pstore/ram in the future.
+Support recorder for console. To enable console recorder, just make
+console_size be greater than 0 and a multiple of 4096.
 
 Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
 ---
- fs/pstore/Kconfig           |   7 +
- fs/pstore/Makefile          |   2 +
- fs/pstore/platform.c        |   3 +-
- fs/pstore/pstore_zone.c     | 989 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/pstore.h      |   1 +
- include/linux/pstore_zone.h |  44 ++
- 6 files changed, 1045 insertions(+), 1 deletion(-)
- create mode 100644 fs/pstore/pstore_zone.c
- create mode 100644 include/linux/pstore_zone.h
+ fs/pstore/Kconfig           | 12 ++++++++
+ fs/pstore/pstore_blk.c      | 12 +++++++-
+ fs/pstore/pstore_zone.c     | 70 +++++++++++++++++++++++++++++++++++++++++----
+ include/linux/pstore_zone.h |  4 ++-
+ 4 files changed, 91 insertions(+), 7 deletions(-)
 
 diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index 8f0369aad22a..5ad4ab68ac4f 100644
+index 8cead860dcfc..bf90de48ad3c 100644
 --- a/fs/pstore/Kconfig
 +++ b/fs/pstore/Kconfig
-@@ -153,3 +153,10 @@ config PSTORE_RAM
- 	  "ramoops.ko".
+@@ -225,6 +225,18 @@ config PSTORE_BLK_PMSG_SIZE
+ 	  NOTE that, both Kconfig and module parameters can configure
+ 	  pstore/blk, but module parameters have priority over Kconfig.
  
- 	  For more information, see Documentation/admin-guide/ramoops.rst.
-+
-+config PSTORE_ZONE
-+	tristate
-+	depends on PSTORE
++config PSTORE_BLK_CONSOLE_SIZE
++	int "Size in Kbytes of console to store"
++	depends on PSTORE_BLK
++	depends on PSTORE_CONSOLE
++	default 64
 +	help
-+	  The common layer for pstore/blk (and pstore/ram in the future)
-+	  to manager storage as zones.
-diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
-index 967b5891f325..94f3631c80ce 100644
---- a/fs/pstore/Makefile
-+++ b/fs/pstore/Makefile
-@@ -12,3 +12,5 @@ pstore-$(CONFIG_PSTORE_PMSG)	+= pmsg.o
- 
- ramoops-objs += ram.o ram_core.o
- obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
++	  This just sets size of console (console_size) for pstore/blk. The
++	  size is in KB and must be a multiple of 4.
 +
-+obj-$(CONFIG_PSTORE_ZONE)	+= pstore_zone.o
-diff --git a/fs/pstore/platform.c b/fs/pstore/platform.c
-index d896457e7c11..80b4728c702f 100644
---- a/fs/pstore/platform.c
-+++ b/fs/pstore/platform.c
-@@ -129,7 +129,7 @@ enum pstore_type_id pstore_name_to_type(const char *name)
- }
- EXPORT_SYMBOL_GPL(pstore_name_to_type);
++	  NOTE that, both Kconfig and module parameters can configure
++	  pstore/blk, but module parameters have priority over Kconfig.
++
+ config PSTORE_BLK_DUMP_OOPS
+ 	bool "dump oops"
+ 	depends on PSTORE_BLK
+diff --git a/fs/pstore/pstore_blk.c b/fs/pstore/pstore_blk.c
+index 85cd9f2335be..2b513acaa18f 100644
+--- a/fs/pstore/pstore_blk.c
++++ b/fs/pstore/pstore_blk.c
+@@ -26,6 +26,14 @@
+ module_param(pmsg_size, long, 0400);
+ MODULE_PARM_DESC(pmsg_size, "pmsg size in kbytes");
  
--static const char *get_reason_str(enum kmsg_dump_reason reason)
-+const char *get_reason_str(enum kmsg_dump_reason reason)
- {
- 	switch (reason) {
- 	case KMSG_DUMP_PANIC:
-@@ -148,6 +148,7 @@ static const char *get_reason_str(enum kmsg_dump_reason reason)
- 		return "Unknown";
- 	}
- }
-+EXPORT_SYMBOL_GPL(get_reason_str);
++#if IS_ENABLED(CONFIG_PSTORE_CONSOLE)
++static long console_size = CONFIG_PSTORE_BLK_CONSOLE_SIZE;
++#else
++static long console_size = -1;
++#endif
++module_param(console_size, long, 0400);
++MODULE_PARM_DESC(console_size, "console size in kbytes");
++
+ static int dump_oops = CONFIG_PSTORE_BLK_DUMP_OOPS;
+ module_param(dump_oops, int, 0400);
+ MODULE_PARM_DESC(total_size, "whether dump oops");
+@@ -81,7 +89,8 @@
+  *		whole disk).
+  *		On success, the number of bytes should be returned, others
+  *		means error.
+- * @write:	The same as @read.
++ * @write:	The same as @read, but the following error number:
++ *		-EBUSY means try to write again later.
+  * @panic_write:The write operation only used for panic case. It's optional
+  *		if you do not care panic log. The parameters and return value
+  *		are the same as @read.
+@@ -131,6 +140,7 @@ static int psblk_register_do(struct psblk_device *dev)
  
- /*
-  * Should pstore_dump() wait for a concurrent pstore_dump()? If
+ 	verify_size(oops_size, 4096, dev->flags & PSTORE_FLAGS_DMESG);
+ 	verify_size(pmsg_size, 4096, dev->flags & PSTORE_FLAGS_PMSG);
++	verify_size(console_size, 4096, dev->flags & PSTORE_FLAGS_CONSOLE);
+ #undef verify_size
+ 	dump_oops = dump_oops <= 0 ? 0 : 1;
+ 
 diff --git a/fs/pstore/pstore_zone.c b/fs/pstore/pstore_zone.c
-new file mode 100644
-index 000000000000..62c834072498
---- /dev/null
+index 444bce7f9ac3..e1e84505b046 100644
+--- a/fs/pstore/pstore_zone.c
 +++ b/fs/pstore/pstore_zone.c
-@@ -0,0 +1,989 @@
-+// SPDX-License-Identifier: GPL-2.0
+@@ -87,10 +87,12 @@ struct psz_zone {
+  *
+  * @opszs: oops/panic storage zones
+  * @ppsz: pmsg storage zone
++ * @cpsz: console storage zone
+  * @oops_max_cnt: max count of @opszs
+  * @oops_read_cnt: counter to read oops zone
+  * @oops_write_cnt: counter to write
+  * @pmsg_read_cnt: counter to read pmsg zone
++ * @console_read_cnt: counter to read console zone
+  * @oops_counter: counter to oops
+  * @panic_counter: counter to panic
+  * @recovered: whether finish recovering data from storage
+@@ -102,10 +104,12 @@ struct psz_zone {
+ struct psz_context {
+ 	struct psz_zone **opszs;
+ 	struct psz_zone *ppsz;
++	struct psz_zone *cpsz;
+ 	unsigned int oops_max_cnt;
+ 	unsigned int oops_read_cnt;
+ 	unsigned int oops_write_cnt;
+ 	unsigned int pmsg_read_cnt;
++	unsigned int console_read_cnt;
+ 	/*
+ 	 * the counter should be recovered when recover.
+ 	 * It records the oops/panic times after burning rather than booting.
+@@ -125,6 +129,9 @@ struct psz_context {
+ };
+ static struct psz_context psz_cxt;
+ 
++static void psz_flush_all_dirty_zones(struct work_struct *);
++static DECLARE_WORK(psz_cleaner, psz_flush_all_dirty_zones);
 +
-+#define MODNAME "pstore-zone"
-+#define pr_fmt(fmt) MODNAME ": " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/pstore.h>
-+#include <linux/mount.h>
-+#include <linux/printk.h>
-+#include <linux/fs.h>
-+#include <linux/pstore_zone.h>
-+#include <linux/kdev_t.h>
-+#include <linux/device.h>
-+#include <linux/namei.h>
-+#include <linux/fcntl.h>
-+#include <linux/uio.h>
-+#include <linux/writeback.h>
-+
-+/**
-+ * struct psz_head - header of zone to flush to storage
-+ *
-+ * @sig: signature to indicate header (PSZ_SIG xor PSZONE-type value)
-+ * @datalen: length of data in @data
-+ * @data: zone data.
-+ */
-+struct psz_buffer {
-+#define PSZ_SIG (0x43474244) /* DBGC */
-+	uint32_t sig;
-+	atomic_t datalen;
-+	uint8_t data[];
-+};
-+
-+/**
-+ * struct psz_oops_header - sub header of oops zones to flush to storage
-+ *
-+ * @magic: magic num for oops header
-+ * @time: oops/panic trigger time
-+ * @compressed: whether conpressed
-+ * @counter: oops/panic counter
-+ * @reason: identify oops or panic
-+ * @data: pointer to log data
-+ *
-+ * It's a sub-header of oops zone, trailing after &psz_buffer.
-+ */
-+struct psz_oops_header {
-+#define OOPS_HEADER_MAGIC 0x4dfc3ae5 /* Just a ramdom number */
-+	uint32_t magic;
-+	struct timespec64 time;
-+	bool compressed;
-+	uint32_t counter;
-+	enum kmsg_dump_reason reason;
-+	uint8_t data[];
-+};
-+
-+/**
-+ * struct psz_zone - zone information
-+ *
-+ * @off: zone offset of storage
-+ * @type: front-end type for this zone
-+ * @name: front-end name for this zone
-+ * @buffer: pointer to data buffer managed by this zone
-+ * @oldbuf: pointer to old data buffer.
-+ * @buffer_size: bytes in @buffer->data
-+ * @should_recover: whether this zone should recover from storage
-+ * @dirty: whether the data in @buffer dirty
-+ *
-+ * zone structure in memory.
-+ */
-+struct psz_zone {
-+	loff_t off;
-+	const char *name;
-+	enum pstore_type_id type;
-+
-+	struct psz_buffer *buffer;
-+	struct psz_buffer *oldbuf;
-+	size_t buffer_size;
-+	bool should_recover;
-+	atomic_t dirty;
-+};
-+
-+/**
-+ * struct psz_context - all about running state of pstore/zone
-+ *
-+ * @opszs: oops/panic storage zones
-+ * @oops_max_cnt: max count of @opszs
-+ * @oops_read_cnt: counter to read oops zone
-+ * @oops_write_cnt: counter to write
-+ * @oops_counter: counter to oops
-+ * @panic_counter: counter to panic
-+ * @recovered: whether finish recovering data from storage
-+ * @on_panic: whether occur panic
-+ * @psz_info_lock: lock to @psz_info
-+ * @psz_info: information from back-end
-+ * @pstore: structure for pstore
-+ */
-+struct psz_context {
-+	struct psz_zone **opszs;
-+	unsigned int oops_max_cnt;
-+	unsigned int oops_read_cnt;
-+	unsigned int oops_write_cnt;
-+	/*
-+	 * the counter should be recovered when recover.
-+	 * It records the oops/panic times after burning rather than booting.
-+	 */
-+	unsigned int oops_counter;
-+	unsigned int panic_counter;
-+	atomic_t recovered;
-+	atomic_t on_panic;
-+
-+	/*
-+	 * psz_info_lock just protects "psz_info" during calls to
-+	 * psz_register/psz_unregister
-+	 */
-+	spinlock_t psz_info_lock;
-+	struct psz_info *psz_info;
-+	struct pstore_info pstore;
-+};
-+static struct psz_context psz_cxt;
-+
-+/**
-+ * enum psz_flush_mode - flush mode for psz_zone_write()
-+ *
-+ * @FLUSH_NONE: do not flush to storage but update data on memory
-+ * @FLUSH_PART: just flush part of data including meta data to storage
-+ * @FLUSH_META: just flush meta data of zone to storage
-+ * @FLUSH_ALL: flush all of zone
-+ */
-+enum psz_flush_mode {
-+	FLUSH_NONE = 0,
-+	FLUSH_PART,
-+	FLUSH_META,
-+	FLUSH_ALL,
-+};
-+
-+static inline int buffer_datalen(struct psz_zone *zone)
-+{
-+	return atomic_read(&zone->buffer->datalen);
-+}
-+
-+static inline bool is_on_panic(void)
+ /**
+  * enum psz_flush_mode - flush mode for psz_zone_write()
+  *
+@@ -235,6 +242,9 @@ static int psz_zone_write(struct psz_zone *zone,
+ 	return 0;
+ dirty:
+ 	atomic_set(&zone->dirty, true);
++	/* flush dirty zones nicely */
++	if (wcnt == -EBUSY && !is_on_panic())
++		schedule_work(&psz_cleaner);
+ 	return -EBUSY;
+ }
+ 
+@@ -291,6 +301,15 @@ static int psz_move_zone(struct psz_zone *old, struct psz_zone *new)
+ 	return 0;
+ }
+ 
++static void psz_flush_all_dirty_zones(struct work_struct *work)
 +{
 +	struct psz_context *cxt = &psz_cxt;
 +
-+	return atomic_read(&cxt->on_panic);
++	psz_flush_dirty_zone(cxt->ppsz);
++	psz_flush_dirty_zone(cxt->cpsz);
++	psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
 +}
 +
-+static ssize_t psz_zone_read(struct psz_zone *zone, char *buf,
-+		size_t len, unsigned long off)
-+{
-+	if (!buf || !zone->buffer)
-+		return -EINVAL;
-+	if (off > zone->buffer_size)
-+		return -EINVAL;
-+	len = min_t(size_t, len, zone->buffer_size - off);
-+	memcpy(buf, zone->buffer->data + off, len);
-+	return len;
-+}
+ static int psz_recover_oops_data(struct psz_context *cxt)
+ {
+ 	struct psz_info *info = cxt->psz_info;
+@@ -546,6 +565,10 @@ static inline int psz_recovery(struct psz_context *cxt)
+ 	if (ret)
+ 		goto recover_fail;
+ 
++	ret = psz_recover_zone(cxt, cxt->cpsz);
++	if (ret)
++		goto recover_fail;
 +
-+static int psz_zone_write(struct psz_zone *zone,
-+		enum psz_flush_mode flush_mode, const char *buf,
-+		size_t len, unsigned long off)
-+{
-+	struct psz_info *info = psz_cxt.psz_info;
-+	ssize_t wcnt = 0;
-+	ssize_t (*writeop)(const char *buf, size_t bytes, loff_t pos);
-+	size_t wlen;
-+
-+	if (off > zone->buffer_size)
-+		return -EINVAL;
-+
-+	wlen = min_t(size_t, len, zone->buffer_size - off);
-+	if (buf && wlen) {
-+		memcpy(zone->buffer->data + off, buf, wlen);
-+		atomic_set(&zone->buffer->datalen, wlen + off);
-+	}
-+
-+	/* avoid to damage old records */
-+	if (!is_on_panic() && !atomic_read(&psz_cxt.recovered))
-+		goto dirty;
-+
-+	writeop = is_on_panic() ? info->panic_write : info->write;
-+	if (!writeop)
-+		goto dirty;
-+
-+	switch (flush_mode) {
-+	case FLUSH_NONE:
-+		if (unlikely(buf && wlen))
-+			goto dirty;
-+		return 0;
-+	case FLUSH_PART:
-+		wcnt = writeop((const char *)zone->buffer->data + off, wlen,
-+				zone->off + sizeof(*zone->buffer) + off);
-+		if (wcnt != wlen)
-+			goto dirty;
-+		fallthrough;
-+	case FLUSH_META:
-+		wlen = sizeof(struct psz_buffer);
-+		wcnt = writeop((const char *)zone->buffer, wlen, zone->off);
-+		if (wcnt != wlen)
-+			goto dirty;
-+		break;
-+	case FLUSH_ALL:
-+		wlen = zone->buffer_size + sizeof(*zone->buffer);
-+		wcnt = writeop((const char *)zone->buffer, wlen, zone->off);
-+		if (wcnt != wlen)
-+			goto dirty;
-+		break;
-+	}
-+
-+	return 0;
-+dirty:
-+	atomic_set(&zone->dirty, true);
-+	return -EBUSY;
-+}
-+
-+static int psz_flush_dirty_zone(struct psz_zone *zone)
-+{
-+	int ret;
-+
-+	if (!zone)
-+		return -EINVAL;
-+
-+	if (!atomic_read(&zone->dirty))
-+		return 0;
-+
-+	if (!atomic_read(&psz_cxt.recovered))
+ 	pr_debug("recover end!\n");
+ 	atomic_set(&cxt->recovered, 1);
+ 	return 0;
+@@ -561,6 +584,7 @@ static int psz_pstore_open(struct pstore_info *psi)
+ 
+ 	cxt->oops_read_cnt = 0;
+ 	cxt->pmsg_read_cnt = 0;
++	cxt->console_read_cnt = 0;
+ 	return 0;
+ }
+ 
+@@ -625,8 +649,9 @@ static int psz_pstore_erase(struct pstore_record *record)
+ 		return psz_oops_erase(cxt, cxt->opszs[record->id], record);
+ 	case PSTORE_TYPE_PMSG:
+ 		return psz_record_erase(cxt, cxt->ppsz);
+-	default:
+-		return -EINVAL;
++	case PSTORE_TYPE_CONSOLE:
++		return psz_record_erase(cxt, cxt->cpsz);
++	default: return -EINVAL;
+ 	}
+ }
+ 
+@@ -767,9 +792,18 @@ static int notrace psz_pstore_write(struct pstore_record *record)
+ 			record->reason == KMSG_DUMP_PANIC)
+ 		atomic_set(&cxt->on_panic, 1);
+ 
++	/*
++	 * if on panic, do not write except panic records
++	 * Fix case that panic_write prints log which wakes up console recorder.
++	 */
++	if (is_on_panic() && record->type != PSTORE_TYPE_DMESG)
 +		return -EBUSY;
 +
-+	ret = psz_zone_write(zone, FLUSH_ALL, NULL, 0, 0);
-+	if (!ret)
-+		atomic_set(&zone->dirty, false);
-+	return ret;
-+}
-+
-+static int psz_flush_dirty_zones(struct psz_zone **zones, unsigned int cnt)
-+{
-+	int i, ret;
-+	struct psz_zone *zone;
-+
-+	if (!zones)
-+		return -EINVAL;
-+
-+	for (i = 0; i < cnt; i++) {
-+		zone = zones[i];
-+		if (!zone)
-+			return -EINVAL;
-+		ret = psz_flush_dirty_zone(zone);
-+		if (ret)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
-+static int psz_move_zone(struct psz_zone *old, struct psz_zone *new)
-+{
-+	const char *data = (const char *)old->buffer->data;
-+	int ret;
-+
-+	ret = psz_zone_write(new, FLUSH_ALL, data, buffer_datalen(old), 0);
-+	if (ret) {
-+		atomic_set(&new->buffer->datalen, 0);
-+		atomic_set(&new->dirty, false);
-+		return ret;
-+	}
-+	atomic_set(&old->buffer->datalen, 0);
-+	return 0;
-+}
-+
-+static int psz_recover_oops_data(struct psz_context *cxt)
-+{
-+	struct psz_info *info = cxt->psz_info;
-+	struct psz_zone *zone = NULL;
-+	struct psz_buffer *buf;
-+	unsigned long i;
-+	ssize_t rcnt;
-+
-+	if (!info->read)
-+		return -EINVAL;
-+
-+	for (i = 0; i < cxt->oops_max_cnt; i++) {
-+		zone = cxt->opszs[i];
-+		if (unlikely(!zone))
-+			return -EINVAL;
-+		if (atomic_read(&zone->dirty)) {
-+			unsigned int wcnt = cxt->oops_write_cnt;
-+			struct psz_zone *new = cxt->opszs[wcnt];
-+			int ret;
-+
-+			ret = psz_move_zone(zone, new);
-+			if (ret) {
-+				pr_err("move zone from %lu to %d failed\n",
-+						i, wcnt);
-+				return ret;
-+			}
-+			cxt->oops_write_cnt = (wcnt + 1) % cxt->oops_max_cnt;
-+		}
-+		if (!zone->should_recover)
-+			continue;
-+		buf = zone->buffer;
-+		rcnt = info->read((char *)buf, zone->buffer_size + sizeof(*buf),
-+				zone->off);
-+		if (rcnt != zone->buffer_size + sizeof(*buf))
-+			return (int)rcnt < 0 ? (int)rcnt : -EIO;
-+	}
-+	return 0;
-+}
-+
-+static int psz_recover_oops_meta(struct psz_context *cxt)
-+{
-+	struct psz_info *info = cxt->psz_info;
-+	struct psz_zone *zone;
-+	size_t rcnt, len;
-+	struct psz_buffer *buf;
-+	struct psz_oops_header *hdr;
-+	struct timespec64 time = {0};
-+	unsigned long i;
-+	/*
-+	 * Recover may on panic, we can't allocate any memory by kmalloc.
-+	 * So, we use local array instead.
-+	 */
-+	char buffer_header[sizeof(*buf) + sizeof(*hdr)] = {0};
-+
-+	if (!info->read)
-+		return -EINVAL;
-+
-+	len = sizeof(*buf) + sizeof(*hdr);
-+	buf = (struct psz_buffer *)buffer_header;
-+	for (i = 0; i < cxt->oops_max_cnt; i++) {
-+		zone = cxt->opszs[i];
-+		if (unlikely(!zone))
-+			return -EINVAL;
-+
-+		rcnt = info->read((char *)buf, len, zone->off);
-+		if (rcnt != len) {
-+			pr_err("read %s with id %lu failed\n", zone->name, i);
-+			return (int)rcnt < 0 ? (int)rcnt : -EIO;
-+		}
-+
-+		if (buf->sig != zone->buffer->sig) {
-+			pr_debug("no valid data in oops zone %lu\n", i);
-+			continue;
-+		}
-+
-+		if (zone->buffer_size < atomic_read(&buf->datalen)) {
-+			pr_info("found overtop zone: %s: id %lu, off %lld, size %zu\n",
-+					zone->name, i, zone->off,
-+					zone->buffer_size);
-+			continue;
-+		}
-+
-+		hdr = (struct psz_oops_header *)buf->data;
-+		if (hdr->magic != OOPS_HEADER_MAGIC) {
-+			pr_info("found invalid zone: %s: id %lu, off %lld, size %zu\n",
-+					zone->name, i, zone->off,
-+					zone->buffer_size);
-+			continue;
-+		}
-+
-+		/*
-+		 * we get the newest zone, and the next one must be the oldest
-+		 * or unused zone, because we do write one by one like a circle.
-+		 */
-+		if (hdr->time.tv_sec >= time.tv_sec) {
-+			time.tv_sec = hdr->time.tv_sec;
-+			cxt->oops_write_cnt = (i + 1) % cxt->oops_max_cnt;
-+		}
-+
-+		if (hdr->reason == KMSG_DUMP_OOPS)
-+			cxt->oops_counter =
-+				max(cxt->oops_counter, hdr->counter);
-+		else
-+			cxt->panic_counter =
-+				max(cxt->panic_counter, hdr->counter);
-+
-+		if (!atomic_read(&buf->datalen)) {
-+			pr_debug("found erased zone: %s: id %lu, off %lld, size %zu, datalen %d\n",
-+					zone->name, i, zone->off,
-+					zone->buffer_size,
-+					atomic_read(&buf->datalen));
-+			continue;
-+		}
-+
-+		if (!is_on_panic())
-+			zone->should_recover = true;
-+		pr_debug("found nice zone: %s: id %lu, off %lld, size %zu, datalen %d\n",
-+				zone->name, i, zone->off,
-+				zone->buffer_size, atomic_read(&buf->datalen));
-+	}
-+
-+	return 0;
-+}
-+
-+static int psz_recover_oops(struct psz_context *cxt)
-+{
-+	int ret;
-+
-+	if (!cxt->opszs)
-+		return 0;
-+
-+	ret = psz_recover_oops_meta(cxt);
-+	if (ret)
-+		goto recover_fail;
-+
-+	ret = psz_recover_oops_data(cxt);
-+	if (ret)
-+		goto recover_fail;
-+
-+	return 0;
-+recover_fail:
-+	pr_debug("recover oops failed\n");
-+	return ret;
-+}
-+
-+/**
-+ * psz_recovery() - recover data from storage
-+ * @cxt: the context of pstore/zone
-+ *
-+ * recovery means reading data back from storage after rebooting
-+ *
-+ * Return: 0 on success, others on failure.
-+ */
-+static inline int psz_recovery(struct psz_context *cxt)
-+{
-+	int ret = -EBUSY;
-+
-+	if (atomic_read(&cxt->recovered))
-+		return 0;
-+
-+	ret = psz_recover_oops(cxt);
-+	if (ret)
-+		goto recover_fail;
-+
-+	pr_debug("recover end!\n");
-+	atomic_set(&cxt->recovered, 1);
-+	return 0;
-+
-+recover_fail:
-+	pr_err("recover failed\n");
-+	return ret;
-+}
-+
-+static int psz_pstore_open(struct pstore_info *psi)
-+{
-+	struct psz_context *cxt = psi->data;
-+
-+	cxt->oops_read_cnt = 0;
-+	return 0;
-+}
-+
-+static inline bool psz_ok(struct psz_zone *zone)
-+{
-+	if (zone && zone->buffer && buffer_datalen(zone))
-+		return true;
-+	return false;
-+}
-+
-+static inline int psz_oops_erase(struct psz_context *cxt,
-+		struct psz_zone *zone, struct pstore_record *record)
-+{
-+	struct psz_buffer *buffer = zone->buffer;
-+	struct psz_oops_header *hdr =
-+		(struct psz_oops_header *)buffer->data;
-+
-+	if (unlikely(!psz_ok(zone)))
-+		return 0;
-+	/* this zone is already updated, no need to erase */
-+	if (record->count != hdr->counter)
-+		return 0;
-+
-+	atomic_set(&zone->buffer->datalen, 0);
-+	return psz_zone_write(zone, FLUSH_META, NULL, 0, 0);
-+}
-+
-+static int psz_pstore_erase(struct pstore_record *record)
-+{
-+	struct psz_context *cxt = record->psi->data;
-+
-+	switch (record->type) {
-+	case PSTORE_TYPE_DMESG:
-+		if (record->id >= cxt->oops_max_cnt)
-+			return -EINVAL;
-+		return psz_oops_erase(cxt, cxt->opszs[record->id], record);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static void psz_write_kmsg_hdr(struct psz_zone *zone,
-+		struct pstore_record *record)
-+{
-+	struct psz_context *cxt = record->psi->data;
-+	struct psz_buffer *buffer = zone->buffer;
-+	struct psz_oops_header *hdr =
-+		(struct psz_oops_header *)buffer->data;
-+
-+	hdr->magic = OOPS_HEADER_MAGIC;
-+	hdr->compressed = record->compressed;
-+	hdr->time.tv_sec = record->time.tv_sec;
-+	hdr->time.tv_nsec = record->time.tv_nsec;
-+	hdr->reason = record->reason;
-+	if (hdr->reason == KMSG_DUMP_OOPS)
-+		hdr->counter = ++cxt->oops_counter;
-+	else
-+		hdr->counter = ++cxt->panic_counter;
-+}
-+
-+static inline int notrace psz_oops_write_record(struct psz_context *cxt,
-+		struct pstore_record *record)
-+{
-+	size_t size, hlen;
-+	struct psz_zone *zone;
-+	unsigned int zonenum;
-+
-+	zonenum = cxt->oops_write_cnt;
-+	zone = cxt->opszs[zonenum];
-+	if (unlikely(!zone))
-+		return -ENOSPC;
-+	cxt->oops_write_cnt = (zonenum + 1) % cxt->oops_max_cnt;
-+
-+	pr_debug("write %s to zone id %d\n", zone->name, zonenum);
-+	psz_write_kmsg_hdr(zone, record);
-+	hlen = sizeof(struct psz_oops_header);
-+	size = min_t(size_t, record->size, zone->buffer_size - hlen);
-+	return psz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
-+}
-+
-+static int notrace psz_oops_write(struct psz_context *cxt,
-+		struct pstore_record *record)
-+{
-+	int ret;
-+	struct psz_info *info = cxt->psz_info;
-+
-+	/*
-+	 * Out of the various oops/panic dump types, pstore/zone is currently
-+	 * designed to only store crash logs, rather than storing general
-+	 * kernel logs.
-+	 */
-+	if (record->reason != KMSG_DUMP_OOPS &&
-+			record->reason != KMSG_DUMP_PANIC)
-+		return -EINVAL;
-+
-+	/* Skip Oopes when configured to do so. */
-+	if (record->reason == KMSG_DUMP_OOPS && !info->dump_oops)
-+		return -EINVAL;
-+
-+	/*
-+	 * Explicitly only take the first part of any new crash.
-+	 * If our buffer is larger than kmsg_bytes, this can never happen,
-+	 * and if our buffer is smaller than kmsg_bytes, we don't want the
-+	 * report split across multiple records.
-+	 */
-+	if (record->part != 1)
-+		return -ENOSPC;
-+
-+	if (!cxt->opszs)
-+		return -ENOSPC;
-+
-+	ret = psz_oops_write_record(cxt, record);
-+	if (!ret) {
-+		pr_debug("try to flush other dirty oops zones\n");
-+		psz_flush_dirty_zones(cxt->opszs, cxt->oops_max_cnt);
-+	}
-+
-+	/* alway return 0 as we had handled it on buffer */
-+	return 0;
-+}
-+
-+static int notrace psz_pstore_write(struct pstore_record *record)
-+{
-+	struct psz_context *cxt = record->psi->data;
-+
-+	if (record->type == PSTORE_TYPE_DMESG &&
-+			record->reason == KMSG_DUMP_PANIC)
-+		atomic_set(&cxt->on_panic, 1);
-+
-+	switch (record->type) {
-+	case PSTORE_TYPE_DMESG:
-+		return psz_oops_write(cxt, record);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static struct psz_zone *psz_read_next_zone(struct psz_context *cxt)
-+{
-+	struct psz_zone *zone = NULL;
-+
-+	while (cxt->oops_read_cnt < cxt->oops_max_cnt) {
-+		zone = cxt->opszs[cxt->oops_read_cnt++];
-+		if (psz_ok(zone))
+ 	switch (record->type) {
+ 	case PSTORE_TYPE_DMESG:
+ 		return psz_oops_write(cxt, record);
++	case PSTORE_TYPE_CONSOLE:
++		return psz_record_write(cxt->cpsz, record);
+ 	case PSTORE_TYPE_PMSG:
+ 		return psz_record_write(cxt->ppsz, record);
+ 	default:
+@@ -794,6 +828,13 @@ static struct psz_zone *psz_read_next_zone(struct psz_context *cxt)
+ 			return zone;
+ 	}
+ 
++	if (cxt->console_read_cnt == 0) {
++		cxt->console_read_cnt++;
++		zone = cxt->cpsz;
++		if (psz_old_ok(zone))
 +			return zone;
 +	}
 +
-+	return NULL;
-+}
-+
-+static int psz_read_oops_hdr(struct psz_zone *zone,
-+		struct pstore_record *record)
-+{
-+	struct psz_buffer *buffer = zone->buffer;
-+	struct psz_oops_header *hdr =
-+		(struct psz_oops_header *)buffer->data;
-+
-+	if (hdr->magic != OOPS_HEADER_MAGIC)
-+		return -EINVAL;
-+	record->compressed = hdr->compressed;
-+	record->time.tv_sec = hdr->time.tv_sec;
-+	record->time.tv_nsec = hdr->time.tv_nsec;
-+	record->reason = hdr->reason;
-+	record->count = hdr->counter;
-+	return 0;
-+}
-+
-+static ssize_t psz_oops_read(struct psz_zone *zone,
-+		struct pstore_record *record)
-+{
-+	ssize_t size, hlen = 0;
-+
-+	size = buffer_datalen(zone);
-+	/* Clear and skip this oops record if it has no valid header */
-+	if (psz_read_oops_hdr(zone, record)) {
-+		atomic_set(&zone->buffer->datalen, 0);
-+		atomic_set(&zone->dirty, 0);
-+		return -ENOMSG;
-+	}
-+	size -= sizeof(struct psz_oops_header);
-+
-+	if (!record->compressed) {
-+		char *buf = kasprintf(GFP_KERNEL, "%s: Total %d times\n",
-+				get_reason_str(record->reason), record->count);
-+		hlen = strlen(buf);
-+		record->buf = krealloc(buf, hlen + size, GFP_KERNEL);
-+		if (!record->buf) {
-+			kfree(buf);
-+			return -ENOMEM;
-+		}
-+	} else {
-+		record->buf = kmalloc(size, GFP_KERNEL);
-+		if (!record->buf)
-+			return -ENOMEM;
-+	}
-+
-+	size = psz_zone_read(zone, record->buf + hlen, size,
-+			sizeof(struct psz_oops_header) < 0);
-+	if (unlikely(size < 0)) {
-+		kfree(record->buf);
-+		return -ENOMSG;
-+	}
-+
-+	return size + hlen;
-+}
-+
-+static ssize_t psz_pstore_read(struct pstore_record *record)
-+{
-+	struct psz_context *cxt = record->psi->data;
-+	ssize_t (*readop)(struct psz_zone *zone,
-+			struct pstore_record *record);
-+	struct psz_zone *zone;
-+	ssize_t ret;
-+
-+	/* before read, we must recover from storage */
-+	ret = psz_recovery(cxt);
-+	if (ret)
-+		return ret;
-+
-+next_zone:
-+	zone = psz_read_next_zone(cxt);
-+	if (!zone)
-+		return 0;
-+
-+	record->type = zone->type;
-+	switch (record->type) {
-+	case PSTORE_TYPE_DMESG:
-+		readop = psz_oops_read;
-+		record->id = cxt->oops_read_cnt - 1;
-+		break;
-+	default:
-+		goto next_zone;
-+	}
-+
-+	ret = readop(zone, record);
-+	if (ret == -ENOMSG)
-+		goto next_zone;
-+	return ret;
-+}
-+
-+static struct psz_context psz_cxt = {
-+	.psz_info_lock = __SPIN_LOCK_UNLOCKED(psz_cxt.psz_info_lock),
-+	.recovered = ATOMIC_INIT(0),
-+	.on_panic = ATOMIC_INIT(0),
-+	.pstore = {
-+		.owner = THIS_MODULE,
-+		.name = MODNAME,
-+		.open = psz_pstore_open,
-+		.read = psz_pstore_read,
-+		.write = psz_pstore_write,
-+		.erase = psz_pstore_erase,
-+	},
-+};
-+
-+static struct psz_zone *psz_init_zone(enum pstore_type_id type,
-+		loff_t *off, size_t size)
-+{
-+	struct psz_info *info = psz_cxt.psz_info;
-+	struct psz_zone *zone;
-+	const char *name = pstore_type_to_name(type);
-+
-+	if (!size)
-+		return NULL;
-+
-+	if (*off + size > info->total_size) {
-+		pr_err("no room for %s (0x%zx@0x%llx over 0x%lx)\n",
-+			name, size, *off, info->total_size);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	zone = kzalloc(sizeof(struct psz_zone), GFP_KERNEL);
-+	if (!zone)
-+		return ERR_PTR(-ENOMEM);
-+
-+	zone->buffer = kmalloc(size, GFP_KERNEL);
-+	if (!zone->buffer) {
-+		kfree(zone);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	memset(zone->buffer, 0xFF, size);
-+	zone->off = *off;
-+	zone->name = name;
-+	zone->type = type;
-+	zone->buffer_size = size - sizeof(struct psz_buffer);
-+	zone->buffer->sig = type ^ PSZ_SIG;
-+	atomic_set(&zone->dirty, 0);
-+	atomic_set(&zone->buffer->datalen, 0);
-+
-+	*off += size;
-+
-+	pr_debug("pszone %s: off 0x%llx, %zu header, %zu data\n", zone->name,
-+			zone->off, sizeof(*zone->buffer), zone->buffer_size);
-+	return zone;
-+}
-+
-+static struct psz_zone **psz_init_zones(enum pstore_type_id type,
-+	loff_t *off, size_t total_size, ssize_t record_size,
-+	unsigned int *cnt)
-+{
-+	struct psz_info *info = psz_cxt.psz_info;
-+	struct psz_zone **zones, *zone;
-+	const char *name = pstore_type_to_name(type);
-+	int c, i;
-+
-+	if (!total_size || !record_size)
-+		return NULL;
-+
-+	if (*off + total_size > info->total_size) {
-+		pr_err("no room for zones %s (0x%zx@0x%llx over 0x%lx)\n",
-+			name, total_size, *off, info->total_size);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	c = total_size / record_size;
-+	zones = kcalloc(c, sizeof(*zones), GFP_KERNEL);
-+	if (!zones) {
-+		pr_err("allocate for zones %s failed\n", name);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	memset(zones, 0, c * sizeof(*zones));
-+
-+	for (i = 0; i < c; i++) {
-+		zone = psz_init_zone(type, off, record_size);
-+		if (!zone || IS_ERR(zone)) {
-+			pr_err("initialize zones %s failed\n", name);
-+			while (--i >= 0) {
-+				kfree(zones[i]->buffer);
-+				kfree(zones[i]);
-+			}
-+			kfree(zones);
-+			return (void *)zone;
-+		}
-+		zones[i] = zone;
-+	}
-+
-+	*cnt = c;
-+	return zones;
-+}
-+
-+static void psz_free_zone(struct psz_zone **pszone)
-+{
-+	struct psz_zone *zone = *pszone;
-+
-+	if (!zone)
-+		return;
-+
-+	kfree(zone->buffer);
-+	kfree(zone);
-+	*pszone = NULL;
-+}
-+
-+static void psz_free_zones(struct psz_zone ***pszones, unsigned int *cnt)
-+{
-+	struct psz_zone **zones = *pszones;
-+
-+	if (!zones)
-+		return;
-+
-+	while (*cnt > 0) {
-+		psz_free_zone(&zones[*cnt]);
-+		(*cnt)--;
-+	}
-+	kfree(zones);
-+	*pszones = NULL;
-+}
-+
-+static void psz_free_all_zones(struct psz_context *cxt)
-+{
-+	if (cxt->opszs)
-+		psz_free_zones(&cxt->opszs, &cxt->oops_max_cnt);
-+}
-+
-+static int psz_alloc_zones(struct psz_context *cxt)
-+{
-+	struct psz_info *info = cxt->psz_info;
-+	loff_t off = 0;
-+	int err;
-+	size_t size;
-+
-+	size = info->total_size;
-+	cxt->opszs = psz_init_zones(PSTORE_TYPE_DMESG, &off, size,
-+			info->oops_size, &cxt->oops_max_cnt);
-+	if (IS_ERR(cxt->opszs)) {
-+		err = PTR_ERR(cxt->opszs);
-+		goto fail_out;
-+	}
-+
-+	return 0;
-+fail_out:
-+	return err;
-+}
-+
-+/**
-+ * psz_register() - register to pstore/zone
-+ *
-+ * @info: back-end driver information. See &struct psz_info.
-+ *
-+ * Only one back-end at one time.
-+ *
-+ * Return: 0 on success, others on failure.
-+ */
-+int psz_register(struct psz_info *info)
-+{
-+	int err = -EINVAL;
-+	struct psz_context *cxt = &psz_cxt;
-+	struct module *owner = info->owner;
-+
-+	if (!info->total_size) {
-+		pr_warn("the total size must be non-zero\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!info->oops_size) {
-+		pr_warn("at least one of the records be non-zero\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!info->name || !info->name[0])
-+		return -EINVAL;
-+
-+	if (info->total_size < 4096) {
-+		pr_err("total size must be greater than 4096 bytes\n");
-+		return -EINVAL;
-+	}
-+
-+#define check_size(name, size) {					\
-+		if (info->name > 0 && info->name < (size)) {		\
-+			pr_err(#name " must be over %d\n", (size));	\
-+			return -EINVAL;					\
-+		}							\
-+		if (info->name & (size - 1)) {				\
-+			pr_err(#name " must be a multiple of %d\n",	\
-+					(size));			\
-+			return -EINVAL;					\
-+		}							\
-+	}
-+
-+	check_size(total_size, 4096);
-+	check_size(oops_size, SECTOR_SIZE);
-+
-+#undef check_size
-+
-+	/*
-+	 * the @read and @write must be applied.
-+	 * if no @read, pstore may mount failed.
-+	 * if no @write, pstore do not support to remove record file.
-+	 */
-+	if (!info->read || !info->write) {
-+		pr_err("no valid general read/write interface\n");
-+		return -EINVAL;
-+	}
-+
-+	spin_lock(&cxt->psz_info_lock);
-+	if (cxt->psz_info) {
-+		pr_warn("'%s' already loaded: ignoring '%s'\n",
-+				cxt->psz_info->name, info->name);
-+		spin_unlock(&cxt->psz_info_lock);
-+		return -EBUSY;
-+	}
-+	cxt->psz_info = info;
-+	spin_unlock(&cxt->psz_info_lock);
-+
-+	if (owner && !try_module_get(owner)) {
-+		err = -EBUSY;
-+		goto fail_out;
-+	}
-+
-+	pr_debug("register %s with properties:\n", info->name);
-+	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
-+	pr_debug("\toops size : %ld Bytes\n", info->oops_size);
-+
-+	err = psz_alloc_zones(cxt);
-+	if (err) {
-+		pr_err("alloc zones failed\n");
-+		goto put_module;
-+	}
-+
-+	if (info->oops_size) {
-+		cxt->pstore.bufsize = cxt->opszs[0]->buffer_size -
-+			sizeof(struct psz_oops_header);
-+		cxt->pstore.buf = kzalloc(cxt->pstore.bufsize, GFP_KERNEL);
-+		if (!cxt->pstore.buf) {
-+			err = -ENOMEM;
-+			goto free_all_zones;
-+		}
-+	}
-+	cxt->pstore.data = cxt;
-+	if (info->oops_size)
-+		cxt->pstore.flags = PSTORE_FLAGS_DMESG;
-+
-+	pr_info("Registered %s as pszone backend for%s%s\n", info->name,
-+			cxt->opszs && cxt->psz_info->dump_oops ? " Oops" : "",
-+			cxt->opszs && cxt->psz_info->panic_write ? " Panic" : "");
-+
-+	err = pstore_register(&cxt->pstore);
-+	if (err) {
-+		pr_err("registering with pstore failed\n");
-+		goto free_pstore_buf;
-+	}
-+
-+	module_put(owner);
-+	return 0;
-+
-+free_pstore_buf:
-+	kfree(cxt->pstore.buf);
-+free_all_zones:
-+	psz_free_all_zones(cxt);
-+put_module:
-+	module_put(owner);
-+fail_out:
-+	spin_lock(&psz_cxt.psz_info_lock);
-+	psz_cxt.psz_info = NULL;
-+	spin_unlock(&psz_cxt.psz_info_lock);
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(psz_register);
-+
-+/**
-+ * psz_unregister() - unregister to pstore/zone
-+ *
-+ * @info: back-end driver information. See &struct psz_info.
-+ */
-+void psz_unregister(struct psz_info *info)
-+{
-+	struct psz_context *cxt = &psz_cxt;
-+
-+	pstore_unregister(&cxt->pstore);
-+	kfree(cxt->pstore.buf);
-+	cxt->pstore.bufsize = 0;
-+
-+	spin_lock(&cxt->psz_info_lock);
-+	cxt->psz_info = NULL;
-+	spin_unlock(&cxt->psz_info_lock);
-+
-+	psz_free_all_zones(cxt);
-+}
-+EXPORT_SYMBOL_GPL(psz_unregister);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
-+MODULE_DESCRIPTION("Storage Manager for Pstore/blk and Pstore/ram");
-diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-index e779441e6d26..859583a7104d 100644
---- a/include/linux/pstore.h
-+++ b/include/linux/pstore.h
-@@ -45,6 +45,7 @@ enum pstore_type_id {
+ 	return NULL;
+ }
  
- const char *pstore_type_to_name(enum pstore_type_id type);
- enum pstore_type_id pstore_name_to_type(const char *name);
-+const char *get_reason_str(enum kmsg_dump_reason reason);
+@@ -903,6 +944,8 @@ static ssize_t psz_pstore_read(struct pstore_record *record)
+ 		readop = psz_oops_read;
+ 		record->id = cxt->oops_read_cnt - 1;
+ 		break;
++	case PSTORE_TYPE_CONSOLE:
++		fallthrough;
+ 	case PSTORE_TYPE_PMSG:
+ 		readop = psz_record_read;
+ 		break;
+@@ -1050,6 +1093,8 @@ static void psz_free_all_zones(struct psz_context *cxt)
+ 		psz_free_zones(&cxt->opszs, &cxt->oops_max_cnt);
+ 	if (cxt->ppsz)
+ 		psz_free_zone(&cxt->ppsz);
++	if (cxt->cpsz)
++		psz_free_zone(&cxt->cpsz);
+ }
  
- struct pstore_info;
- /**
+ static int psz_alloc_zones(struct psz_context *cxt)
+@@ -1066,6 +1111,14 @@ static int psz_alloc_zones(struct psz_context *cxt)
+ 		goto free_out;
+ 	}
+ 
++	off_size += info->console_size;
++	cxt->cpsz = psz_init_zone(PSTORE_TYPE_CONSOLE, &off,
++			info->console_size);
++	if (IS_ERR(cxt->cpsz)) {
++		err = PTR_ERR(cxt->cpsz);
++		goto free_out;
++	}
++
+ 	cxt->opszs = psz_init_zones(PSTORE_TYPE_DMESG, &off,
+ 			info->total_size - off_size,
+ 			info->oops_size, &cxt->oops_max_cnt);
+@@ -1100,7 +1153,7 @@ int psz_register(struct psz_info *info)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!info->oops_size && !info->pmsg_size) {
++	if (!info->oops_size && !info->pmsg_size && !info->console_size) {
+ 		pr_warn("at least one of the records be non-zero\n");
+ 		return -EINVAL;
+ 	}
+@@ -1128,6 +1181,7 @@ int psz_register(struct psz_info *info)
+ 	check_size(total_size, 4096);
+ 	check_size(oops_size, SECTOR_SIZE);
+ 	check_size(pmsg_size, SECTOR_SIZE);
++	check_size(console_size, SECTOR_SIZE);
+ 
+ #undef check_size
+ 
+@@ -1160,6 +1214,7 @@ int psz_register(struct psz_info *info)
+ 	pr_debug("\ttotal size : %ld Bytes\n", info->total_size);
+ 	pr_debug("\toops size : %ld Bytes\n", info->oops_size);
+ 	pr_debug("\tpmsg size : %ld Bytes\n", info->pmsg_size);
++	pr_debug("\tconsole size : %ld Bytes\n", info->console_size);
+ 
+ 	err = psz_alloc_zones(cxt);
+ 	if (err) {
+@@ -1181,11 +1236,14 @@ int psz_register(struct psz_info *info)
+ 		cxt->pstore.flags |= PSTORE_FLAGS_DMESG;
+ 	if (info->pmsg_size)
+ 		cxt->pstore.flags |= PSTORE_FLAGS_PMSG;
++	if (info->console_size)
++		cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+ 
+-	pr_info("Registered %s as pszone backend for%s%s%s\n", info->name,
++	pr_info("Registered %s as pszone backend for%s%s%s%s\n", info->name,
+ 			cxt->opszs && cxt->psz_info->dump_oops ? " Oops" : "",
+ 			cxt->opszs && cxt->psz_info->panic_write ? " Panic" : "",
+-			cxt->ppsz ? " Pmsg" : "");
++			cxt->ppsz ? " Pmsg" : "",
++			cxt->cpsz ? " Console" : "");
+ 
+ 	err = pstore_register(&cxt->pstore);
+ 	if (err) {
+@@ -1219,6 +1277,8 @@ void psz_unregister(struct psz_info *info)
+ {
+ 	struct psz_context *cxt = &psz_cxt;
+ 
++	flush_work(&psz_cleaner);
++
+ 	pstore_unregister(&cxt->pstore);
+ 	kfree(cxt->pstore.buf);
+ 	cxt->pstore.bufsize = 0;
 diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
-new file mode 100644
-index 000000000000..afc10a67a777
---- /dev/null
+index 85e159d8f935..8a1838633010 100644
+--- a/include/linux/pstore_zone.h
 +++ b/include/linux/pstore_zone.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __PSTORE_ZONE_H_
-+#define __PSTORE_ZONE_H_
-+
-+#include <linux/types.h>
-+
-+typedef ssize_t (*psz_read_op)(char *, size_t, loff_t);
-+typedef ssize_t (*psz_write_op)(const char *, size_t, loff_t);
-+/**
-+ * struct psz_info - pstore/zone back-end driver structure
-+ *
-+ * @owner:	Module which is responsible for this back-end driver.
-+ * @name:	Name of the back-end driver.
-+ * @total_size: The total size in bytes pstore/zone can use. It must be greater
-+ *		than 4096 and be multiple of 4096.
-+ * @oops_size:	The size of oops/panic zone. Zero means disabled, otherwise,
-+ *		it must be multiple of SECTOR_SIZE(512 Bytes).
-+ * @dump_oops:	Whether to dump oops log.
-+ * @read:	The general read operation. Both of the function parameters
-+ *		@size and @offset are relative value to storage.
-+ *		On success, the number of bytes should be returned, others
-+ *		means error.
-+ * @write:	The same as @read.
-+ * @panic_write:The write operation only used for panic case. It's optional
-+ *		if you do not care panic log. The parameters and return value
-+ *		are the same as @read.
-+ */
-+struct psz_info {
-+	struct module *owner;
-+	const char *name;
-+
-+	unsigned long total_size;
-+	unsigned long oops_size;
-+	int dump_oops;
-+	psz_read_op read;
-+	psz_write_op write;
-+	psz_write_op panic_write;
-+};
-+
-+extern int psz_register(struct psz_info *info);
-+extern void psz_unregister(struct psz_info *info);
-+
-+#endif
+@@ -17,12 +17,13 @@
+  * @oops_size:	The size of oops/panic zone. Zero means disabled, otherwise,
+  *		it must be multiple of SECTOR_SIZE(512 Bytes).
+  * @pmsg_size:	The size of pmsg zone which is the same as @oops_size.
++ * @console_size:The size of console zone which is the same as @oops_size.
+  * @dump_oops:	Whether to dump oops log.
+  * @read:	The general read operation. Both of the function parameters
+  *		@size and @offset are relative value to storage.
+  *		On success, the number of bytes should be returned, others
+  *		means error.
+- * @write:	The same as @read.
++ * @write:	The same as @read, but -EBUSY means try to write again later.
+  * @panic_write:The write operation only used for panic case. It's optional
+  *		if you do not care panic log. The parameters and return value
+  *		are the same as @read.
+@@ -34,6 +35,7 @@ struct psz_info {
+ 	unsigned long total_size;
+ 	unsigned long oops_size;
+ 	unsigned long pmsg_size;
++	unsigned long console_size;
+ 	int dump_oops;
+ 	psz_read_op read;
+ 	psz_write_op write;
 -- 
 1.9.1
 
