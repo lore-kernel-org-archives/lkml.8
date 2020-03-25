@@ -2,125 +2,188 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2FCAC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B610C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:19:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85B5F2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ECBE20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:19:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDTWMwqn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sSGL31M6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCYMRr (ORCPT
+        id S1727459AbgCYMTR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:17:47 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:46287 "EHLO
+        Wed, 25 Mar 2020 08:19:17 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:43209 "EHLO
         mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgCYMRr (ORCPT
+        with ESMTP id S1727137AbgCYMTQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:17:47 -0400
-Received: by mail-qv1-f66.google.com with SMTP id m2so859032qvu.13;
-        Wed, 25 Mar 2020 05:17:46 -0700 (PDT)
+        Wed, 25 Mar 2020 08:19:16 -0400
+Received: by mail-qv1-f66.google.com with SMTP id c28so867653qvb.10;
+        Wed, 25 Mar 2020 05:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=pCHqbfOcz9l1jIgI5+QSL8qEVN5vTHKN+GHmYTlp45w=;
-        b=QDTWMwqnimXH9BgJrZzF+2LHILQZrdax1XSud9DKh10Y67tjuwD7eyWW7E0u6Z/zdd
-         TKMrknL3wikSdgYxlZBDa07yj6UMtG5/7lqzY32J09CuDe44OxEM+ywXfKXvy1cdrSFK
-         g8nM/4qw0bjJ3HPlKI/QUbtvNCYyH3ZEBSoMwzeL+1ejiCo8Pepx3zRArKXaNFjowZef
-         8OlzdHPkMgberpSaJqMx6xbaH10pPqq5TwtLl6qd3NHQLHQ427IdoMzJm2exPPB1BS2V
-         Q6J96R4NMUJ/ge/uCxRwcUjXh990F2Y8COCYIS4MqEZaLMRVa/W/EaHLLyZG3H7KNcfe
-         3i/w==
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=DTxawltzS1lPKLYzoK32IEBrxWYB6OQX2yr97kcmDt4=;
+        b=sSGL31M6tJ0mLuBcNqL0/LgdW3qvr2foVy7LYat3NFS6fSaBtX0GoEDfPEoJLF+YUn
+         +ZF7S1vBplmTJq2EQYqU+715X81ciPHMvc0ku14oiWGKbPeMO9rEfRwoyoIi8lnl8w0o
+         DoyvFwgIo4229KEH+OedZb1dplvsWjKg00vGFTaPktfz2PR7oTAKyodJCAxk0kOXhC0q
+         0L+hGsnw/2t2oIZ6wJbDqEqlAAqseHGkUdoPt5O+MFSUmOMEAKaay8Sqg8lZmlWFH9xv
+         qO6fGAplBcSr/a6tVSpnff0D8H/09FtkyE8ixSyZSis7M4VvlkZiUjn/676vxzz0axv6
+         srew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=pCHqbfOcz9l1jIgI5+QSL8qEVN5vTHKN+GHmYTlp45w=;
-        b=KeVnn6vo7LNVK2kEPOtC2wIWBEsECef26i5FBuDFswUBnp6oFj35mlR/ZXiIXnxbNh
-         vmQuhh8NpLB1HZ304zOCrBte2uT8QPE8xN/xl1pbP7NVF1R6CHDFVAEHVIyNUqFh2NCb
-         Yl31r9ksFxXzS5lTdin9VSC5M5Qfi/jtJSIx+3lTURQMTolDFRtEHTP7t78PgX8I/xBZ
-         DdslmRhPYkt/y67l6pkJuyBqIaQWiFFDb4xxENHac2YYfgXPGuTP7vUJVqR5jPY2Bv87
-         WXkhOYgikxPJbahfwS/YVvwgACBNanczBGblWbRReL7RIlNZN5MDfS+of/yxJAi9iqf6
-         eCrw==
-X-Gm-Message-State: ANhLgQ0fAG/D9jLA8v69zUohh6ndERZLTBELbTCNi5b4XB7z5KQS9Bmf
-        RAIjV4SSNqa1U4FGcLfpb9s=
-X-Google-Smtp-Source: ADFU+vu0ZXFGriF908POiSFosFKaQnLnOfMY/fECiEMBSS9Kd0l6vVikqWXqq8m4s+0cPi3rzpUoDA==
-X-Received: by 2002:a05:6214:118d:: with SMTP id t13mr2675365qvv.192.1585138665891;
-        Wed, 25 Mar 2020 05:17:45 -0700 (PDT)
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=DTxawltzS1lPKLYzoK32IEBrxWYB6OQX2yr97kcmDt4=;
+        b=gjKEv9V22cnngD3mxACCQn+IIPk9KUeuTJZxIFg4R1cOUczL66j9MjI42O9qeKhmt0
+         7BNA36w61620JgfITPtCuVzrjB8oPBKODuRBTg2AfzPdNOmROVtIAqQuNF8ndq8oLZVt
+         0k+/C3aKlehsKGrEMlCN33csFBUdRBDUlxcBh/FQRlSDl8X/KAKlc4OTU/MErkNh6Da8
+         PIFq4P9QMGptM7k+kJ1oDx3NHaX1++tvXIPE9CtovnkTuIRnZqnaGthf+N5Vorv677OU
+         SVzAXqmPBdE6ZRrAJh899ppnEaqYD+VCvNwEzCTm5vblQIzt/oLEiWm9HvTDkaBhT8pd
+         bJ4A==
+X-Gm-Message-State: ANhLgQ10y7fmg0E2htHNU4Cva+Vobq8f6N8cCP1hmblrl7qZk1MpHz31
+        mjHkLi4D5fF4WfRQxgY0Z0Y=
+X-Google-Smtp-Source: ADFU+vsN9xBU/hFmbIUCX3uv7JwvoAfJiQnQZGisUcE1wSw2QznC7uiLpX0zgzLAdJ12LU8ttEuYOQ==
+X-Received: by 2002:a0c:e7c7:: with SMTP id c7mr2785480qvo.188.1585138754958;
+        Wed, 25 Mar 2020 05:19:14 -0700 (PDT)
 Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id c14sm4021332qtv.32.2020.03.25.05.17.44
+        by smtp.gmail.com with ESMTPSA id c27sm5459843qkk.0.2020.03.25.05.19.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 05:17:44 -0700 (PDT)
+        Wed, 25 Mar 2020 05:19:14 -0700 (PDT)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 9725740F77; Wed, 25 Mar 2020 09:17:42 -0300 (-03)
-Date:   Wed, 25 Mar 2020 09:17:42 -0300
-To:     Namhyung Kim <namhyung@kernel.org>
-Cc:     Arnaldo Melo <arnaldo.melo@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCHSET 00/10] perf: Improve cgroup profiling (v5)
-Message-ID: <20200325121742.GI9917@kernel.org>
-References: <20200224043749.69466-1-namhyung@kernel.org>
- <CAM9d7chneHzibiQFopmN1rED=mf-nBpy58kauXWSOSYy2zCtzQ@mail.gmail.com>
- <20200324163444.GA162390@mtj.duckdns.org>
- <20200324201522.GP2452@worktop.programming.kicks-ass.net>
- <D53AD1F8-4B2B-4B30-BC72-59CCA7F0D268@gmail.com>
- <CAM9d7chu0xowWK19fBQdSueVmAacpE6qO4x4NPjOY9Tcm8_AqA@mail.gmail.com>
+        id 5AEFA40F77; Wed, 25 Mar 2020 09:19:12 -0300 (-03)
+Date:   Wed, 25 Mar 2020 09:19:12 -0300
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
+        namhyung@kernel.org, kan.liang@linux.intel.com,
+        zhe.he@windriver.com, dzickus@redhat.com, jstancek@redhat.com,
+        David Laight <David.Laight@aculab.com>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH V2] perf cpumap: Fix snprintf overflow check
+Message-ID: <20200325121912.GJ9917@kernel.org>
+References: <20200324070319.10901-1-christophe.jaillet@wanadoo.fr>
+ <20200324125001.GA21569@kernel.org>
+ <75a8e792-dc9e-6169-4dd2-8758967c50e2@wanadoo.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAM9d7chu0xowWK19fBQdSueVmAacpE6qO4x4NPjOY9Tcm8_AqA@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <75a8e792-dc9e-6169-4dd2-8758967c50e2@wanadoo.fr>
 X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Mar 25, 2020 at 07:24:37PM +0900, Namhyung Kim escreveu:
-> On Wed, Mar 25, 2020 at 6:25 AM Arnaldo Melo <arnaldo.melo@gmail.com> wrote:
-> > On March 24, 2020 5:15:22 PM GMT-03:00, Peter Zijlstra <peterz@infradead.org> wrote:
-> > >On Tue, Mar 24, 2020 at 12:34:44PM -0400, Tejun Heo wrote:
-> > >> On Mon, Mar 23, 2020 at 08:58:04AM +0900, Namhyung Kim wrote:
-> > >> > Hello Peter, Tejun and folks.
-> > >> >
-> > >> > Do you have any other comments on the kernel side?
-> > >> > If not, can I get your Ack?
-> > >>
-> > >> Everything looks good from cgroup side. I think I acked all cgroup
-> > >parts already
-> > >> but if not please feel free to add
-> > >>
-> > >>  Acked-by: Tejun Heo <tj@kernel.org>
-> > >
-> > >Yeah, looks good to me too. Since it's mostly userspace patches, will
-> > >you route it Arnaldo?
-> > >
-> > >Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> >
-> > Thanks for the acks, I'll process it tomorrow, so tests passing it'll go Ingo's way for 5.7 tomorrow.
+Em Tue, Mar 24, 2020 at 03:44:15PM +0100, Christophe JAILLET escreveu:
+> Le 24/03/2020 à 13:50, Arnaldo Carvalho de Melo a écrit :
+> > Em Tue, Mar 24, 2020 at 08:03:19AM +0100, Christophe JAILLET escreveu:
+> > > 'snprintf' returns the number of characters which would be generated for
+> > > the given input.
+> > > 
+> > > If the returned value is *greater than* or equal to the buffer size, it
+> > > means that the output has been truncated.
+> > > 
+> > > Fix the overflow test accordingling.
+> >                                    y
+> > 
+> > You forgot to CC David and add this to your patch, which I did:
+> > 
+> > Suggested-by: David Laight <David.Laight@ACULAB.COM>
+> > 
+> > Ok?
 > 
-> Thanks all for the acks,
+> No problem for me.
 > 
-> Arnaldo, as it's floating around on the list about a month already
-> I guess it needs a rebase.  Also I need to check TUI as Jiri reported.
-> Will post a next version soon.
+> The to: and cc: list are (at least should be :)) the ones given by
+> get_maintainer, and I was not aware of the 'Suggested-by' tag.
 
-Thanks, I'll wait then.
+Sure, that is the starting point, but if someone participates in the
+discussion and provides suggestions, comments, then it is sensible to
+add them to the CC list in follow up patches.
+ 
+> BTW, thanks for fixing the typo in the description.
+
+Part of my job as a maintainer :-)
+
+- Arnaldo
+ 
+> CJ
+> 
+> 
+> > - Arnaldo
+> > > Fixes: 7780c25bae59f ("perf tools: Allow ability to map cpus to nodes easily")
+> > > Fixes: 92a7e1278005b ("perf cpumap: Add cpu__max_present_cpu()")
+> > > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > > ---
+> > > V2: keep snprintf
+> > >      modifiy the tests for truncated output
+> > >      Update subject and description
+> > > ---
+> > >   tools/perf/util/cpumap.c | 10 +++++-----
+> > >   1 file changed, 5 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+> > > index 983b7388f22b..dc5c5e6fc502 100644
+> > > --- a/tools/perf/util/cpumap.c
+> > > +++ b/tools/perf/util/cpumap.c
+> > > @@ -317,7 +317,7 @@ static void set_max_cpu_num(void)
+> > >   	/* get the highest possible cpu number for a sparse allocation */
+> > >   	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/possible", mnt);
+> > > -	if (ret == PATH_MAX) {
+> > > +	if (ret >= PATH_MAX) {
+> > >   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+> > >   		goto out;
+> > >   	}
+> > > @@ -328,7 +328,7 @@ static void set_max_cpu_num(void)
+> > >   	/* get the highest present cpu number for a sparse allocation */
+> > >   	ret = snprintf(path, PATH_MAX, "%s/devices/system/cpu/present", mnt);
+> > > -	if (ret == PATH_MAX) {
+> > > +	if (ret >= PATH_MAX) {
+> > >   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+> > >   		goto out;
+> > >   	}
+> > > @@ -356,7 +356,7 @@ static void set_max_node_num(void)
+> > >   	/* get the highest possible cpu number for a sparse allocation */
+> > >   	ret = snprintf(path, PATH_MAX, "%s/devices/system/node/possible", mnt);
+> > > -	if (ret == PATH_MAX) {
+> > > +	if (ret >= PATH_MAX) {
+> > >   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+> > >   		goto out;
+> > >   	}
+> > > @@ -441,7 +441,7 @@ int cpu__setup_cpunode_map(void)
+> > >   		return 0;
+> > >   	n = snprintf(path, PATH_MAX, "%s/devices/system/node", mnt);
+> > > -	if (n == PATH_MAX) {
+> > > +	if (n >= PATH_MAX) {
+> > >   		pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+> > >   		return -1;
+> > >   	}
+> > > @@ -456,7 +456,7 @@ int cpu__setup_cpunode_map(void)
+> > >   			continue;
+> > >   		n = snprintf(buf, PATH_MAX, "%s/%s", path, dent1->d_name);
+> > > -		if (n == PATH_MAX) {
+> > > +		if (n >= PATH_MAX) {
+> > >   			pr_err("sysfs path crossed PATH_MAX(%d) size\n", PATH_MAX);
+> > >   			continue;
+> > >   		}
+> > > -- 
+> > > 2.20.1
+> > > 
+> 
+
+-- 
 
 - Arnaldo
