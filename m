@@ -2,130 +2,308 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0D8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A92FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A21920719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:57:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 501FB20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:59:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GxwBWqTF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VZziPPs1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCYW5g (ORCPT
+        id S1727488AbgCYW7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:57:36 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:38695 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727389AbgCYW5f (ORCPT
+        Wed, 25 Mar 2020 18:59:18 -0400
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:52104 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCYW7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:57:35 -0400
-Received: by mail-oi1-f194.google.com with SMTP id w2so3807757oic.5
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:57:34 -0700 (PDT)
+        Wed, 25 Mar 2020 18:59:18 -0400
+Received: by mail-pg1-f201.google.com with SMTP id p13so3067700pgk.18
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:59:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9jk+TK7FwkOPEaur7O1L8OS9jETz+MSJg1VV7n1BSs4=;
-        b=GxwBWqTFlxG98S9ZgY1fMAL0tAsYuZ0m+aPOljO3Xfs1s1k4IM4Z6rhrMk6Ql7XSUT
-         4mWApBCFTrfKp6drIjCeBZ22t4OkenZwoP1FZahVthaLuTjjCewBRL8aIev2Piwxo6C+
-         FHZxYBo9uKWkC4O6tYuCA1ZkX528etgAPF6vNu/Ddp4VMdv7e6BS77PDAiIiXSPpKoiL
-         Cax5k/ZorEWQg+IbDRPMrYRocxX/yUcB0Zs31hlqT5atlkJmA6MnjPjtppi9UDN7fGdj
-         xPMWWHj0TJTqYinpZxUGm+KtY+jLE4ETwlGGBh5xV1Wh9z8hvhHiMtJO6b6NX1wEMpOO
-         RLnA==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=703Y1PKm2HWn9gyPtbR/P+tRSHGQjnfCphPxIyJ++J4=;
+        b=VZziPPs1mjARJd6AZ56ZxyW5rHGu9WA3EZSuYl9kTjjuf0x/0CH7yg8NVIqd6zk8TY
+         lm01RhEXyetye3UALFPTmfzh1YbtqEHXp3JIeGaI2jAgUEJofz9UufpxWLVHMP7a2QWH
+         TBA4CnBZYTtQ6gIc1AhrFSPRA1AKYOqBnDzV113dBtJXb+k3ny46yScHa6R56A5tfXIk
+         p1D0RsTB0VUpcFVeE94bkLYSuKdlUHNm2pcJn6PElW04pM+eXmzOiZWjt294qYe1cj7l
+         pgT0sf2qnpAo4KkVr7oI3LsO6s1cM3dLmnc2y8kOjamZ7kJ3c9bw2exCS+caZIBNRt4q
+         oGzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9jk+TK7FwkOPEaur7O1L8OS9jETz+MSJg1VV7n1BSs4=;
-        b=QJVjWiErwufRI/FfCmY+PWAMlmAAWDadxhXp2Hf2LuERNqFVls7KBblZGTaSOXr+8d
-         sT+4fvZUw5+z+qOG49kEUpsDgzpD14eeJyQfZUAZaJFCzy8nogB/H6Fsl67jd1nPeaKq
-         m6w6YUmMfWKCsx1q7AmieoRPntXllMJoXpc2uU/SY60t3ZTLmvjsJWCEcq0zEGvPnGxA
-         nxmbuVFpOBCBwF8XQ3PknKyHv8YSc5Yk08FhDuNyAUTQ8LYYMhaLTNnzptNb3OZRFJ2O
-         P10QR3aCPVnknzsoWf8rOIIkmq7nEeUmSL44SMLNKBOT/xTOLm95Ch9CjbjxxiCc4PzS
-         sy6g==
-X-Gm-Message-State: ANhLgQ2KGJiFY1JMbX8iCZ4sy2WHfVGf88IKYENUouaIuhczm2fsX/IG
-        QGP/wE2GdcUZuee9QFVaf5jdUuEI4im+WO77kktbzg==
-X-Google-Smtp-Source: ADFU+vs75qlVmpOsRcDth/eoqYjqQ/mG2s3897unixiQ4nm2aHS/No7meg/TiHJFnk+64H57Bfx8zHOHDUqC1RdlIoU=
-X-Received: by 2002:aca:682:: with SMTP id 124mr4297113oig.69.1585177053451;
- Wed, 25 Mar 2020 15:57:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
- <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
- <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com> <87lfnoxg2a.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87lfnoxg2a.fsf@nanos.tec.linutronix.de>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 25 Mar 2020 15:56:56 -0700
-Message-ID: <CAGETcx_3GSKmSveiGrM2vQp=q57iZYc0T4ELMY7Zw8UwzPEnYA@mail.gmail.com>
-Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
- creating dead devices
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Ionela Voinescu <ionela.voinescu@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
-        liviu.dudau@arm.com, sudeep.holla@arm.com,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jon Hunter <jonathanh@nvidia.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=703Y1PKm2HWn9gyPtbR/P+tRSHGQjnfCphPxIyJ++J4=;
+        b=tfV4XYCH2zlPihy5MIWR+1OtW+57WdNKrRbAPaHwKq3EJZflzREmJ8yUge/dM6e97k
+         3+Lo7a4c9UkF7KsZexIrWPhnUC8R1swzigDpWMk4PqSpwu0B98/7ClCM21BRePWJrBOS
+         9XNlejNCZE3HqKJYpnK4fjz3qgJMLb1pUzxALllKwtvF3BIOdz7qK1w0P1BJgLgPZvKs
+         zsOfhuVPiXK29U6lFFyL2M2hSweYXR0v+rgdy0f5PF+Q2lpeP8aynuUhfcEfe6d7d57d
+         dWS4lOLSEMCGGAieLGGK8P4A/hx0ltXBXpG8k8/uO1M9shYORmH+SoKJNFv4Z1CgJdP3
+         Tyfg==
+X-Gm-Message-State: ANhLgQ1sDS/o2jyQCpvtzbHuxMrx9gatLKv5DPbBPNHFO6Pq/AsRlfEX
+        xRG6zNxWuCmQ/14FtRPBu61L99X/wwA6rHyp
+X-Google-Smtp-Source: ADFU+vuwkS7dNE4QXSH3KezWUSyd/AkcKfOxcYmWASCMPqnU+oTugdftTDt9jJWjpg7ksfZEMa/vf/gku87K4HtE
+X-Received: by 2002:a17:90a:e382:: with SMTP id b2mr5863803pjz.83.1585177155864;
+ Wed, 25 Mar 2020 15:59:15 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 15:59:11 -0700
+Message-Id: <20200325225911.131940-1-heidifahim@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH] kunit: convert test results to JSON
+From:   Heidi Fahim <heidifahim@google.com>
+To:     brendanhiggins@google.com, skhan@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com
+Cc:     Heidi Fahim <heidifahim@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 2:47 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Saravana Kannan <saravanak@google.com> writes:
-> > On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
-> > I took a closer look. So two different drivers [1] [2] are saying they
-> > know how to handle "arm,vexpress-sysreg" and are expecting to run at
-> > the same time. That seems a bit unusual to me. I wonder if this is a
-> > violation of the device-driver model because this expectation would
-> > never be allowed if these device drivers were actual drivers
-> > registered with driver-core. But that's a discussion for another time.
-> >
-> > To fix this issue you are facing, this patch should work:
-> > https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
->
-> Sorry, that's not a fix. That's a crude hack.
+Add a --json flag, which when specified when kunit_tool is run, calls
+method get_json_result.  This is a method within kunit_json.py that
+formats KUnit results into a dict conforming to the following KernelCI
+API test_group spec:
+https://api.kernelci.org/schema-test-group.html#post.  The user can
+specify a filename as the value to json in order to store the JSON
+results under linux/.
+Tested within kunit_tool_test.py in a new test case called
+KUnitJsonTest.
 
-If device nodes are being handled by drivers without binding a driver
-to struct devices, then not setting OF_POPULATED is wrong. So the
-original patch sets it. There are also very valid reasons for allowing
-OF_POPULATED to be cleared by a driver as discussed here [1].
+Signed-off-by: Heidi Fahim <heidifahim@google.com>
+---
+ tools/testing/kunit/kunit.py                  |  24 ++++++-
+ tools/testing/kunit/kunit_json.py             |  63 ++++++++++++++++++
+ tools/testing/kunit/kunit_tool_test.py        |  33 +++++++++
+ .../kunit/test_data/test_pound_sign.log       | Bin 0 -> 1656 bytes
+ 4 files changed, 118 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/kunit/kunit_json.py
 
-The approach of the original patch (setting the flag and letting the
-driver sometimes clear it) is also followed by many other frameworks
-like irq, clk, i2c, etc. Even ingenic-timer.c already does it for the
-exact same reason.
+diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+index 7dca74774dd2..ce8f8e5e0ccb 100755
+--- a/tools/testing/kunit/kunit.py
++++ b/tools/testing/kunit/kunit.py
+@@ -17,6 +17,7 @@ from collections import namedtuple
+ from enum import Enum, auto
+ 
+ import kunit_config
++import kunit_json
+ import kunit_kernel
+ import kunit_parser
+ 
+@@ -24,10 +25,11 @@ KunitResult = namedtuple('KunitResult', ['status','result'])
+ 
+ KunitRequest = namedtuple('KunitRequest', ['raw_output','timeout', 'jobs',
+ 					   'build_dir', 'defconfig',
+-					   'alltests', 'make_options'])
++					   'alltests', 'make_options', 'json'])
+ 
+ KernelDirectoryPath = sys.argv[0].split('tools/testing/kunit/')[0]
+ 
++
+ class KunitStatus(Enum):
+ 	SUCCESS = auto()
+ 	CONFIG_FAILURE = auto()
+@@ -70,6 +72,7 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 	kunit_output = linux.run_kernel(
+ 		timeout=None if request.alltests else request.timeout,
+ 		build_dir=request.build_dir)
++
+ 	if request.raw_output:
+ 		raw_output = kunit_parser.raw_output(kunit_output)
+ 		isolated = list(kunit_parser.isolate_kunit_output(raw_output))
+@@ -86,6 +89,15 @@ def run_tests(linux: kunit_kernel.LinuxSourceTree,
+ 				build_end - build_start,
+ 				test_end - test_start))
+ 
++	if request.json:
++		json_obj = kunit_json.get_json_result(
++					test_result=test_result,
++					def_config='kunit_defconfig',
++					build_dir=request.build_dir,
++					json_path=request.json)
++		if request.json == 'stdout':
++			print(json_obj)
++
+ 	if test_result.status != kunit_parser.TestStatus.SUCCESS:
+ 		return KunitResult(KunitStatus.TEST_FAILURE, test_result)
+ 	else:
+@@ -130,6 +142,13 @@ def main(argv, linux=None):
+ 				help='X=Y make option, can be repeated.',
+ 				action='append')
+ 
++	run_parser.add_argument('--json',
++				nargs='?',
++				help='Stores test results in a JSON, and either '
++				'prints to stdout or saves to file if a '
++				'filename is specified',
++				const='stdout')
++
+ 	cli_args = parser.parse_args(argv)
+ 
+ 	if cli_args.subcommand == 'run':
+@@ -155,7 +174,8 @@ def main(argv, linux=None):
+ 				       cli_args.build_dir,
+ 				       cli_args.defconfig,
+ 				       cli_args.alltests,
+-				       cli_args.make_options)
++				       cli_args.make_options,
++				       cli_args.json)
+ 		result = run_tests(linux, request)
+ 		if result.status != KunitStatus.SUCCESS:
+ 			sys.exit(1)
+diff --git a/tools/testing/kunit/kunit_json.py b/tools/testing/kunit/kunit_json.py
+new file mode 100644
+index 000000000000..624b31b2dbd6
+--- /dev/null
++++ b/tools/testing/kunit/kunit_json.py
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# Generates JSON from KUnit results according to
++# KernelCI spec: https://github.com/kernelci/kernelci-doc/wiki/Test-API
++#
++# Copyright (C) 2020, Google LLC.
++# Author: Heidi Fahim <heidifahim@google.com>
++
++import json
++import os
++
++import kunit_parser
++
++from kunit_parser import TestStatus
++
++def get_json_result(test_result, def_config, build_dir, json_path):
++	sub_groups = []
++
++	# Each test suite is mapped to a KernelCI sub_group
++	for test_suite in test_result.suites:
++		sub_group = {
++			"name": test_suite.name,
++			"arch": "UM",
++			"defconfig": def_config,
++			"build_environment": build_dir,
++			"test_cases": [],
++			"lab_name": None,
++			"kernel": None,
++			"job": None,
++			"git_branch": "kselftest",
++		}
++		test_cases = []
++		# TODO: Add attachments attribute in test_case with detailed
++		#  failure message, see https://api.kernelci.org/schema-test-case.html#get
++		for case in test_suite.cases:
++			test_case = {"name": case.name, "status": "FAIL"}
++			if case.status == TestStatus.SUCCESS:
++				test_case["status"] = "PASS"
++			elif case.status == TestStatus.TEST_CRASHED:
++				test_case["status"] = "ERROR"
++			test_cases.append(test_case)
++		sub_group["test_cases"] = test_cases
++		sub_groups.append(sub_group)
++	test_group = {
++		"name": "KUnit Test Group",
++		"arch": "UM",
++		"defconfig": def_config,
++		"build_environment": build_dir,
++		"sub_groups": sub_groups,
++		"lab_name": None,
++		"kernel": None,
++		"job": None,
++		"git_branch": "kselftest",
++	}
++	json_obj = json.dumps(test_group, indent=4)
++	if json_path != 'stdout':
++		with open(json_path, 'w') as result_path:
++			result_path.write(json_obj)
++		root = __file__.split('tools/testing/kunit/')[0]
++		kunit_parser.print_with_timestamp(
++			"Test results stored in %s" %
++			os.path.join(root, result_path.name))
++	return json_obj
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index ce47e87b633a..94e8a295d466 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -11,11 +11,13 @@ from unittest import mock
+ 
+ import tempfile, shutil # Handling test_tmpdir
+ 
++import json
+ import os
+ 
+ import kunit_config
+ import kunit_parser
+ import kunit_kernel
++import kunit_json
+ import kunit
+ 
+ test_tmpdir = ''
+@@ -219,6 +221,37 @@ class KUnitParserTest(unittest.TestCase):
+ 			result = kunit_parser.parse_run_tests(file.readlines())
+ 		self.assertEqual('kunit-resource-test', result.suites[0].name)
+ 
++class KUnitJsonTest(unittest.TestCase):
++
++	def _json_for(self, log_file):
++		with(open(get_absolute_path(log_file))) as file:
++			test_result = kunit_parser.parse_run_tests(file)
++			json_obj = kunit_json.get_json_result(
++				test_result=test_result,
++				def_config='kunit_defconfig',
++				build_dir=None,
++				json_path='stdout')
++		return json.loads(json_obj)
++
++	def test_failed_test_json(self):
++		result = self._json_for(
++			'test_data/test_is_test_passed-failure.log')
++		self.assertEqual(
++			{'name': 'example_simple_test', 'status': 'FAIL'},
++			result["sub_groups"][1]["test_cases"][0])
++
++	def test_crashed_test_json(self):
++		result = self._json_for(
++			'test_data/test_is_test_passed-crash.log')
++		self.assertEqual(
++			{'name': 'example_simple_test', 'status': 'ERROR'},
++			result["sub_groups"][1]["test_cases"][0])
++
++	def test_no_tests_json(self):
++		result = self._json_for(
++			'test_data/test_is_test_passed-no_tests_run.log')
++		self.assertEqual(0, len(result['sub_groups']))
++
+ class StrContains(str):
+ 	def __eq__(self, other):
+ 		return self in other
+diff --git a/tools/testing/kunit/test_data/test_pound_sign.log b/tools/testing/kunit/test_data/test_pound_sign.log
+index e69de29bb2d1d6434b8b29ae775ad8c2e48c5391..28ffa5ba03bfa81ea02ea9d38e7de7acf3dd9e5d 100644
+GIT binary patch
+literal 1656
+zcmah}U2EGg6n$=g#f7|Vtj^>lPBOzDM#o@mlt9+Kgd${FPEBlGBgsqs?{^h<Y3h$o
+zFBaGLocpP>13GNVmW<8=R3_K%5Q9W*u~4upWe`4q(jqBTdcAw?ZG=v-jA5@FZ|^*5
+zoU$NALGF+lEFssq<A{~zdHR7p&7+U(X~E!_yGM{l@40vQ%(~pazHH!+GB!sI;iCKZ
+zY69Cjp-?V{LrnyMQ5I_>Rp5<1_i#FmdPY1z2tkYI|M1-7PdS}Ub_h8eK~m)?&(I;{
+zd<2<NV1vyl7BWOggn_Hc5ba`wRu)R=x;oPiRuheYD}$9XJTpphG^wKX*mr|pw(;#T
+zTvPxWb#R&-VC|~9KeFD0ooNCooO~P|@vNKL)n#t&WQm2JSh%gFRMuv7!M#yqYailx
+z8TM&AUN~yqVM$ThVIE55OcVU4mW$eHC#dHEeUvCiE1wT#?U%cS^A_HAK$VqiIBG75
+z($V`G!unJPuo@k2@gj4y7$WV7g73Ls@d32giPqc=`3mz^u|IR`05hOx29+=__XXIv
+z%Xf#6<%P11b*dyatBVv$thED!=x%_Ts?sj1OY%b*t$Y}rODc$J2is^#<A~w+w`~mf
+zCs_oC7u=9pAjzurLE}*e38}&1-KX^pd*7wM-Q35(VDtTJOgeOnB`K*rii#c_+)*qi
+zNQ+5Dqv>MG0wcp<uf!}(SCXw)kqXk>xCSP@rQbRs58c`TmTbn>%WO@TFp;w*gB6RU
+km;Ljlo8cvfMVVCc>`K4bOfE$-fO&T9$C>+RbV7Fh7t6}$ApigX
 
-So, why is the vexpress fix a crude hack?
+literal 0
+HcmV?d00001
 
-> As this is also causing trouble on tegra30-cardhu-a04 the only sane
-> solution is to revert it and start over with a proper solution for the
-> vexpress problem and a root cause analysis for the tegra.
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
-If someone can tell me which of the timer drivers are relevant for
-tegra30-cardhu-a04, I can help fix it.
-If you want to revert the original patch first before waiting for a
-tegra fix, that's okay by me.
-
-However, for vexpress, what do you propose I do? The driver itself is
-doing weird stuff with two drivers handling the exact same device. I
-can't just go edit the DT files because technically I don't know their
-hardware. Looks to me like they should have a separate and proper
-device for the timer and not have two drivers handle the same device.
-If you don't like my vexpress fix, then don't take it but ask the
-vexpress maintainer to fix their DT and driver maybe? But that might
-break the kernel compatibility with existing DT binaries on devices
-(yes, vexpress seems like a virtual platform, so updating DT blobs
-might not be hard). My vexpress fix doesn't break backwards
-compatibility.
-
-So, can you please accept my vexpress fix or tell us what you think is
-a "proper solution"?
-
--Saravana
