@@ -2,132 +2,146 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB37C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8E0C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F84C2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:44:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DA2D20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:45:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0pW9HSR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tvnkhHvm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbgCYFow (ORCPT
+        id S1727302AbgCYFp2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:44:52 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33019 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgCYFov (ORCPT
+        Wed, 25 Mar 2020 01:45:28 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:44189 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgCYFp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:44:51 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f20so1180672ljm.0;
-        Tue, 24 Mar 2020 22:44:50 -0700 (PDT)
+        Wed, 25 Mar 2020 01:45:27 -0400
+Received: by mail-lj1-f193.google.com with SMTP id p14so1104847lji.11
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 22:45:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=VCJjnDC7YcFnHUwAaqZugTYOL5Vd2ZqGA7nY4SOPq8g=;
-        b=D0pW9HSRd3T2bIeDSEHq6UF5cq4pyyow6Cf8P88fd4FXZACHeV2KGmtieOSq2OfJxY
-         Z4UZC04/FF7x29jZjjVm8216Zu1dwWEa1+2uCJfh2iAXZz/ynK2ao0V/HUthWp/E38Ip
-         Aazu54zTVdv+5ejVW54J1PqfUi2rkHF02BttNce6ndikZ2wzgYjv5hUGpCfM2GPRPmgH
-         JlqnDZZVyipplqGbr0eO9l+oHFOkMsq/TsWgVPm9j3gCfIMxy4FOXjZze/cZFXatOCqr
-         KU/G98FcU/sKjgKoeNQECelJpQ7//8Dk1hyFs5chW9Pj2S8rWahIaWhm/HTRJjlOnR7d
-         8ytQ==
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=lYD4gV2aiMtygPtwbX++wP+dM6O7K0V0RGjep/0vOgo=;
+        b=tvnkhHvm4PdvQZoTz5e5X+Zuh1SFtGki8xsPdRgux9SuV490qyjLdAXhHXfl6YUc7b
+         TKA6AB+0uG0vcllAzYR41yl6Uk3pFSL6KpsvlEVd7LvAyBb2oAIwhBNVNibfYH3Eu1mI
+         +W+Zm/S3JCVEiXosbVrpeyegBqZQRR2dyZG+mWK1IAuFfIHqLb1/egL8DarnDe4yfsGL
+         l6ejO9jXdwKHZXGaUKbKYLAoESeEk3PNkGTm5zfbI78CaA8waQiHOfPVzwftKJCKKkrZ
+         oTPheye5pAZndL+1O6AGancWuRiU9OUpEz7aNX+rxmRAbqcdgKomLFCf75wpTs9NIFln
+         9+Hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VCJjnDC7YcFnHUwAaqZugTYOL5Vd2ZqGA7nY4SOPq8g=;
-        b=tGypZzznXQ7MB+Jg/yyr2SiFsq3e9xcEHuDpZboG+JkJ5C7hyuEOwfMD/FhTzVMJGc
-         CYYtbw0RmRtxC54o1UhRHBUc6nP853eBG6Hlt3me48WjYxBCMJPdDAGohmo3yOnY0b2G
-         EpFFTaQKmalHvrF4SyLKvh/s62hMQfOH/6MPopGiMHXQct4C29WkqJJlIevjpX3UlMFc
-         96L8OCvLnSWb6wQWcyZ3TnAFiA98QiqtBuMxLjdNFfcMAmnyZCElhzNTy0OGVXDSvZX0
-         Dkypwjm0Ey9Z4GfRB2zMn8lfO5k9mC4VqPu4H1XUQ/dKQPa+kpnfx/HGhFI87Cf94s0f
-         b/OA==
-X-Gm-Message-State: ANhLgQ14lckdb+7zadyVqqYhsl5+b5L3ZjBA8/XgCPgCKcsiBHX/FrgT
-        2+Efa4FHcvWSYRwoG7uNqoU=
-X-Google-Smtp-Source: APiQypJSdSdcqdutv/jQse/UnuwN06v0CvCoGCBqKh+kkMEi7fzh/lh1Q6J7PLPO2Qo99HXvngZIwQ==
-X-Received: by 2002:a2e:b5d1:: with SMTP id g17mr811251ljn.139.1585115089376;
-        Tue, 24 Mar 2020 22:44:49 -0700 (PDT)
-Received: from localhost.localdomain ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id c5sm4690876lfg.82.2020.03.24.22.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 22:44:48 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
-        Johan Hovold <johan@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] USB: serial: option: add Wistron Neweb D19Q1
-Date:   Wed, 25 Mar 2020 06:44:19 +0100
-Message-Id: <20200325054419.19128-3-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200325054419.19128-1-paweldembicki@gmail.com>
-References: <20200325054419.19128-1-paweldembicki@gmail.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=lYD4gV2aiMtygPtwbX++wP+dM6O7K0V0RGjep/0vOgo=;
+        b=ZTFVADlnSuA2H0/NiSB1nezE8fVFAHKw5eLiEOxE5dFqrui7wDZvMYj60Gb++7KZwR
+         OCfFq3uWR3vUx097d98afimTxOLP0461kNuLWk/0M/7FAUnO38OEvQ7bJvJ1WVL9JyS3
+         EgEzzYDqROTrMB2YjtSMAEjaiqueSeCXzO4OVCFyKhbVc8Ffq4TitfNnbrU9CYzOUqCM
+         +XHekOYQDLk3IjpftzQH28Wy7JMx9h8xROiE9o84gEbr2ObeaQXk194+BvAa3kohiy4f
+         8l4pcGeBnuevl+B2PuZmjjwHYqCpFNxy79JIQx8eBH+KdcEZxa2svhsQiyp4h7mm8Tsf
+         lhEQ==
+X-Gm-Message-State: AGi0PuYH1JHetfEbXKWP0LEJ+mpin/EvX+kOA3jeQwv/2U3WgmZ6mndS
+        5a/f8ForfsI+3Tuy48S0ma641bscfAMWiDTUtjVF7Vh1+/krtg==
+X-Google-Smtp-Source: APiQypJEZ5vvAF9MO4gXQ+t7bUi6zsTgvnRPAe7WZWydS2OyyM8x5YA29XYUAWgjrddMaB02h7sWA6m1G5a7LVftCtY=
+X-Received: by 2002:a2e:990b:: with SMTP id v11mr856142lji.243.1585115125736;
+ Tue, 24 Mar 2020 22:45:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 25 Mar 2020 11:15:14 +0530
+Message-ID: <CA+G9fYuAib1xN5gKwr1_xrjPd=zE-qsAA53VZL6npvZWgJ_fTQ@mail.gmail.com>
+Subject: perf failure list
+To:     open list <linux-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Dan Rue <dan.rue@linaro.org>, lkft-triage@lists.linaro.org,
+        Anders Roxell <anders.roxell@linaro.org>,
+        =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This modem is embedded on dlink dwr-960 router.
-The oem configuration states:
+We have been noticing multiple perf test failures on LKFT test plan.
+I request you to investigate these problems.
+Please guide us to enable missing Kconfigs and userspace tools.
 
-T: Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#= 2 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs= 1
-P: Vendor=1435 ProdID=d191 Rev=ff.ff
-S: Manufacturer=Android
-S: Product=Android
-S: SerialNumber=0123456789ABCDEF
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E: Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
-E: Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=84(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=83(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E: Ad=86(I) Atr=03(Int.) MxPS= 10 Ivl=32ms
-E: Ad=85(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-E: Ad=88(I) Atr=03(Int.) MxPS= 8 Ivl=32ms
-E: Ad=87(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E: Ad=89(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E: Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
+The listed failures are from stable rc 5.5 branch.
 
-Tested on openwrt distribution
+arm beagleboard x15 device [1] & [2]
+----------------------------
+PERF_RECORD_* events & perf_sample fields: FAILED!
+'import perf' in python: FAILED!
+Watchpoint subtest 1: FAILED!
+Watchpoint subtest 2: FAILED!
+Watchpoint subtest 4: FAILED!
+Object code reading: FAILED!
+LLVM search and compile subtest 1: FAILED!
+Session topology: FAILED!
+Merge cpu map: FAILED!
+time utils: FAILED!
+DWARF unwind: FAILED!
+PERF_RECORD_*-events-&-perf_sample-fields FAILED!
+'import-perf'-in-python FAILED!
+Watchpoint-subtest-1 FAILED!
+Watchpoint-subtest-2 FAILED!
+Watchpoint-subtest-4 FAILED!
+Object-code-reading FAILED!
+LLVM-search-and-compile-subtest-1 FAILED!
+Session-topology FAILED!
+Merge-cpu-map FAILED!
+time-utils FAILED!
+DWARF-unwind FAILED!
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
- drivers/usb/serial/option.c | 2 ++
- 1 file changed, 2 insertions(+)
+arm64 Juno  [3] & [4]
+-----------------
+PERF_RECORD_* events & perf_sample fields: FAILED!
+'import perf' in python: FAILED!
+Number of exit events of a simple workload: FAILED!
+Object code reading: FAILED!
+LLVM search and compile subtest 1: FAILED!
+Session topology: FAILED!
+PERF_RECORD_*-events-&-perf_sample-fields FAILED!
+'import-perf'-in-python FAILED!
+Number-of-exit-events-of-a-simple-workload FAILED!
+Object-code-reading FAILED!
+LLVM-search-and-compile-subtest-1 FAILED!
+Session-topology FAILED!
 
-diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
-index 8f6ed0cdddf4..8bfffca3e4ae 100644
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1992,6 +1992,8 @@ static const struct usb_device_id option_ids[] = {
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e01, 0xff, 0xff, 0xff) },	/* D-Link DWM-152/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x3e02, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/C1 */
- 	{ USB_DEVICE_AND_INTERFACE_INFO(0x07d1, 0x7e11, 0xff, 0xff, 0xff) },	/* D-Link DWM-156/A3 */
-+	{ USB_DEVICE_INTERFACE_CLASS(0x1435, 0xd191, 0xff),			/* Wistron Neweb D19Q1 */
-+	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x1690, 0x7588, 0xff),			/* ASKEY WWHC050 */
- 	  .driver_info = RSVD(1) | RSVD(4) },
- 	{ USB_DEVICE_INTERFACE_CLASS(0x2020, 0x2031, 0xff),			/* Olicard 600 */
+x86_64 [5] & [6]
+-----------
+PERF_RECORD_* events & perf_sample fields: FAILED!
+'import perf' in python: FAILED!
+LLVM search and compile subtest 1: FAILED!
+Session topology: FAILED!
+PERF_RECORD_*-events-&-perf_sample-fields FAILED!
+'import-perf'-in-python FAILED!
+LLVM-search-and-compile-subtest-1 FAILED!
+Session-topology FAILED!
+
+
+
+[1]
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/build/v5.5.11-120-g738ff80e1bc6/testrun/1311723/suite/perf/tests/
+[2]
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/build/v5.5.11-120-g738ff80e1bc6/testrun/1311723/log
+
+[3]
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/build/v5.5.11-120-g738ff80e1bc6/testrun/1311746/suite/perf/tests/
+
+[4]
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/build/v5.5.11-120-g738ff80e1bc6/testrun/1311746/log
+
+[5]
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/build/v5.5.11-120-g738ff80e1bc6/testrun/1311665/suite/perf/tests/
+
+[6]
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/build/v5.5.11-120-g738ff80e1bc6/testrun/1311665/log
 -- 
-2.20.1
-
+Linaro LKFT
+https://lkft.linaro.org
