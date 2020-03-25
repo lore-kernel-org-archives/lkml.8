@@ -2,160 +2,106 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4035C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C480DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8470320409
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A477C2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="SSYChqb1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VKNLFdBy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgCYQEo (ORCPT
+        id S1727912AbgCYQIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:04:44 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17805 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbgCYQEo (ORCPT
+        Wed, 25 Mar 2020 12:08:09 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:21739 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbgCYQIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:04:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585152166;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=CRLfE2jz7muXeJ6qeLvUrod4IRB84jHCPnWRdiwg/sA=;
-        b=SSYChqb1m1zrASxa3+5zJjrUtMKnv9+6kTT50o212WoZGJBKE+2duup3tWenPe99
-        EGwtRDYOrgwoJ8RtPYjwvnjMdGG7AM1H2zWyeo1d9z99Rt1kbP2qdd/KPHatUNPgUy0
-        d706UjL0F/enoxNjBmfFPAbALumoy1HCfJEvY/mE=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585152161181504.9058622774445; Thu, 26 Mar 2020 00:02:41 +0800 (CST)
-Date:   Thu, 26 Mar 2020 00:02:28 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200325154600.GA14923@alpha.franken.de>
-References: <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org> <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com> <20200325150437.GA14217@alpha.franken.de> <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com> <20200325154600.GA14923@alpha.franken.de>
+        Wed, 25 Mar 2020 12:08:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585152487;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KQO5Ewg01ixtL/pUvCaQWy2hwzdcfLmoIS7TRCLSyP4=;
+        b=VKNLFdByTUBLL29Z27PGJzOciSuW43SphXMteyWoGePZvjvzqf+CImIcsUiw6YDCQ6OIq2
+        jpmDvExk+oJ/6jUGaRKB0OKW+smOnikMMjUOu8u0lluT1B/kK5LoYsIuh4V6JqtnOroSq+
+        KRo9AuQC4AChJoiyNsPbKQ1b8UiG8I4=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-300-6xv-odLeMwWEDgEDT66WBw-1; Wed, 25 Mar 2020 12:08:06 -0400
+X-MC-Unique: 6xv-odLeMwWEDgEDT66WBw-1
+Received: by mail-wr1-f70.google.com with SMTP id d1so1351170wru.15
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:08:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KQO5Ewg01ixtL/pUvCaQWy2hwzdcfLmoIS7TRCLSyP4=;
+        b=TtIqiqTgiSblqMBJb+vnBJKB2YBxzPTdtP9x6bWc2hVF3PD4jYz/upP6J4X2wLfvI4
+         Fw9OJJgwNPy8p9NSCUXBibIgz/wLsuk6BhdSq+H+Ss2jWWXWLlKt0DpgncPby6D4Uz7V
+         ZeeLdfJ5vhXICHwN7kNPvFdBmhccWEi1XCi80bgpY4rlYRVs+D3P3vqhOkOM+NPicmlg
+         kDFYwXrihvl4cH6oaWbafYKVgq8xTtN7YT+YsFghP52gdDOfbAY6EQFbWaewMhAB10dX
+         MWJIB6unhqhYYLVRlA2oaGXXOv5CmatfnlPfQSrGvK6aUMfkCHzeipYpVg54QEIH/Xy0
+         5LFQ==
+X-Gm-Message-State: ANhLgQ1ct55eTUsKLy18SHycV0I/GTusI6z4Vg+vyGOE6H9y0uYpuxob
+        kBrvoxo46ad9Y+5blhm1ron8OSRm5hvAN6/Co3KBwFbyqAAKR8Efs661/JZydWOvIKggcx71DQh
+        l0ZFlIlufYymXuVBn0nIp7Bln
+X-Received: by 2002:adf:f386:: with SMTP id m6mr4273260wro.107.1585152485053;
+        Wed, 25 Mar 2020 09:08:05 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vs2RbBSSENYa1saW4WvfsxYiIaG52scS5B1XDE46lVvH86KlHN01LnBRy1sc44INfcBCW6dIA==
+X-Received: by 2002:adf:f386:: with SMTP id m6mr4273243wro.107.1585152484873;
+        Wed, 25 Mar 2020 09:08:04 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
+        by smtp.gmail.com with ESMTPSA id k185sm9788103wmb.7.2020.03.25.09.08.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 09:08:04 -0700 (PDT)
+Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200325195350.7300fee9@canb.auug.org.au>
+ <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
+ <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
+ <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <85430f7e-93e0-3652-0705-9cf6e948a9d8@redhat.com>
+Date:   Wed, 25 Mar 2020 17:08:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     Marc Zyngier <maz@kernel.org>, linux-mips@vger.kernel.org,
-        Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <8F2B64C3-A887-4D4B-ABEA-4BE3D30F4632@flygoat.com>
-X-ZohoCNMailClient: External
+In-Reply-To: <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25/03/20 16:57, Randy Dunlap wrote:
+>> Randy, can you test it with your compiler?
+> Nope, no help.  That's the wrong location.
+> Need a patch for this:
+>>> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
+>>> function __cpuid_entry_get_reg(), for the default: case.
 
+Doh, right.  I think the only solution for that one is to degrade it to
+WARN_ON(1).
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-1:46:00, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
-=88=B0:
->On Wed, Mar 25, 2020 at 11:09:10PM +0800, Jiaxun Yang wrote:
->>=20
->>=20
->> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
-=8811:04:37, Thomas Bogendoerfer
-><tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=B0:
->> >On Wed, Mar 25, 2020 at 10:31:21PM +0800, Jiaxun Yang wrote:
->> >>=20
->> >>=20
->> >> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=8810:15:16, Marc Zyngier <maz@kernel=2Eorg>
->=E5=86=99=E5=88=B0:
->> >> >On 2020-03-25 13:59, Jiaxun Yang wrote:
->> >> >
->> >> >[=2E=2E=2E]
->> >> >
->> >> >>>> So probably we can use legacy domain when  MIPS IRQ BASE is
->in
->> >the
->> >> >>>> range of legacy IRQ
->> >> >>>> and switch to simple domain when it's not in that range?
->> >> >>>=20
->> >> >>> No, see below=2E
->> >> >>>=20
->> >> >>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I
->did
->> >> >this
->> >> >>>> hack=2E
->> >> >>>=20
->> >> >>> Well, if you have to consider which Linux IRQ gets assigned,
->> >> >>> then your platform is definitely not ready for non-legacy
->> >> >>> irqdomains=2E Just stick to legacy for now until you have
->removed
->> >> >>> all the code that knows the hwirq mapping=2E
->> >> >>=20
->> >> >> Thanks=2E
->> >> >>=20
->> >> >> So I have to allocate irq_desc here in driver manually?
->> >> >
->> >> >No, you are probably better off just dropping this patch, as MIPS
->> >> >doesn't seem to be ready for a wholesale switch to virtual
->> >interrupts=2E
->> >>=20
->> >> It can't work without this patch=2E
->> >>=20
->> >> Legacy domain require IRQ number within 0-15=20
->> >> however it's already occupied by i8259 or "HTPIC" driver=2E
->> >
->> >what's the problem here ? AFAIK there could be more than one
->> >legacy domain, at least that's what at least IP22/SNI in MIPS world=20
->> >are doing=2E
->>=20
->> MIPS_IRQ_BASE must be higher than 15, otherwise it will conflict with
->i8259=2E
->
->I still don't get it=2E
->
->We have following in arch/mips/include/asm/mach-generic/irq=2Eh:
->
->#ifndef MIPS_CPU_IRQ_BASE
->#ifdef CONFIG_I8259
->#define MIPS_CPU_IRQ_BASE 16
->#else
->#define MIPS_CPU_IRQ_BASE 0
->#endif /* CONFIG_I8259 */
->#endif
->
->So every legacy platform with i8259 has MIPS_CPU_IRQ_BASE =3D 16=2E
->
->> However we have only preallocated irq_desc for 0-15=2E
->> And legacy domain require irq_desc being preallocated=2E
->
->maybe I'm too fast by judging the irq code, but without
->CONFIG_SPARSE_IRQ
->the whole irq_desc is pre-allocated=2E
+Paolo
 
-Sorry=2E You're right=2E
-I found the problem is CONFIG_SPARSE_IRQ is accidentally enabled in my con=
-fig due to another out-of-tree patch
-during my initial test and I always consider it as a problem=2E
-
-So we can drop this patch safely for now=2E
-But just need to consider how to deal with it when we want to enable SPARS=
-E_IRQ=2E
-
-Thanks=2E
-
->
->Thomas=2E
-
---=20
-Jiaxun Yang
