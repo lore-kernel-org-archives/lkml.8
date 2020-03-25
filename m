@@ -2,86 +2,162 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52917C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:02:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4578FC10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20D2520771
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585098122;
-	bh=THm7hnZmohNLxGwf0nad1iO7T9b9hejDN5HpxC6xU74=;
-	h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
-	 List-ID:From;
-	b=lSm9TZ4qT+FKxstO+Q55ppYYjEg7RUhPUG1RRsQHSAgaWiMfa0HQn9SdVbNYVy9Pn
-	 bYvcwl0pI6NLWYxCIKjtkUQRrWL4sz9CXeT1RCucyjQXTn8wOJDIyXTBSZdB0KK09n
-	 0zPUWv2gNMAVxfsgZhJunopIcZO8ebK/QhCz/z/I=
+	by mail.kernel.org (Postfix) with ESMTP id 18F1420724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:06:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCYBCB (ORCPT
+        id S1727249AbgCYBGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:02:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
+        Tue, 24 Mar 2020 21:06:11 -0400
+Received: from mga01.intel.com ([192.55.52.88]:32038 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgCYBCA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:02:00 -0400
-Received: from localhost (unknown [137.135.114.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A25632076A;
-        Wed, 25 Mar 2020 01:01:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585098119;
-        bh=THm7hnZmohNLxGwf0nad1iO7T9b9hejDN5HpxC6xU74=;
-        h=Date:From:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:From;
-        b=S6YigvvI3kSoDyHQ49XpmluaBE1KPAhhr2/Cy2aWFvJO2e2Smy7M7MRtZbD15fIU3
-         pEq97gIBaf9lJK88tvz1jp2lSqzzuU9Np/sfgdO6nByVyPNWrmdEJrf2uea4f2S5oV
-         ukQG7wuMTe+TZJpS98GyW/x6IOC637N4KNi4kCN4=
-Date:   Wed, 25 Mar 2020 01:01:58 +0000
-From:   Sasha Levin <sashal@kernel.org>
-To:     Sasha Levin <sashal@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-To:     MyungJoo Ham <myungjoo.ham@samsung.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Cc:     stable@vger.kernel.org
-Subject: Re: [PATCH resend] extcon: axp288: Add wakeup support
-In-Reply-To: <20200323215939.79008-1-hdegoede@redhat.com>
-References: <20200323215939.79008-1-hdegoede@redhat.com>
-Message-Id: <20200325010159.A25632076A@mail.kernel.org>
+        id S1727113AbgCYBGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 21:06:10 -0400
+IronPort-SDR: ay7TFHOeaJW50VAXg7l3jaenbZgbJsPVBDEB4Y+bVy36KnY9b5Op1l+e93oEBA9LSNX4H0Z+/+
+ gFdRlu6zEybg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 18:06:09 -0700
+IronPort-SDR: z5R6lpjG8+2Oc1MM89RRMHOBYnTW4DVLrjfbD/wS/e2JrgHpwwTPP0nHfUphaKQqI2BmxmGIG/
+ bf8OkxO1AWWg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
+   d="scan'208";a="246951513"
+Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
+  by orsmga003.jf.intel.com with ESMTP; 24 Mar 2020 18:06:03 -0700
+Date:   Tue, 24 Mar 2020 20:56:32 -0400
+From:   Yan Zhao <yan.y.zhao@intel.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        "cjia@nvidia.com" <cjia@nvidia.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "aik@ozlabs.ru" <aik@ozlabs.ru>,
+        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
+        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
+        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "eauger@redhat.com" <eauger@redhat.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "Yang, Ziye" <ziye.yang@intel.com>,
+        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "libvir-list@redhat.com" <libvir-list@redhat.com>,
+        "felipe@nutanix.com" <felipe@nutanix.com>,
+        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "dinechin@redhat.com" <dinechin@redhat.com>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "Liu, Changpeng" <changpeng.liu@intel.com>,
+        "berrange@redhat.com" <berrange@redhat.com>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
+        "He, Shaopeng" <shaopeng.he@intel.com>
+Subject: Re: [PATCH v4 0/2] introduction of migration_version attribute for
+ VFIO live migration
+Message-ID: <20200325005631.GA20109@joy-OptiPlex-7040>
+Reply-To: Yan Zhao <yan.y.zhao@intel.com>
+References: <20190531004438.24528-1-yan.y.zhao@intel.com>
+ <20190603132932.1b5dc7fe@x1.home>
+ <20190604003422.GA30229@joy-OptiPlex-7040>
+ <20200323152959.1c39e9a7@w520.home>
+ <20200324035316.GE5456@joy-OptiPlex-7040>
+ <20200324092331.GA2645@work-vm>
+ <20200324084954.0dd835e2@w520.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324084954.0dd835e2@w520.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
+On Tue, Mar 24, 2020 at 10:49:54PM +0800, Alex Williamson wrote:
+> On Tue, 24 Mar 2020 09:23:31 +0000
+> "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
+> 
+> > * Yan Zhao (yan.y.zhao@intel.com) wrote:
+> > > On Tue, Mar 24, 2020 at 05:29:59AM +0800, Alex Williamson wrote:  
+> > > > On Mon, 3 Jun 2019 20:34:22 -0400
+> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > >   
+> > > > > On Tue, Jun 04, 2019 at 03:29:32AM +0800, Alex Williamson wrote:  
+> > > > > > On Thu, 30 May 2019 20:44:38 -0400
+> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
+> > > > > >     
+> > > > > > > This patchset introduces a migration_version attribute under sysfs of VFIO
+> > > > > > > Mediated devices.
+> > > > > > > 
+> > > > > > > This migration_version attribute is used to check migration compatibility
+> > > > > > > between two mdev devices of the same mdev type.
+> > > > > > > 
+> > > > > > > Patch 1 defines migration_version attribute in
+> > > > > > > Documentation/vfio-mediated-device.txt
+> > > > > > > 
+> > > > > > > Patch 2 uses GVT as an example to show how to expose migration_version
+> > > > > > > attribute and check migration compatibility in vendor driver.    
+> > > > > > 
+> > > > > > Thanks for iterating through this, it looks like we've settled on
+> > > > > > something reasonable, but now what?  This is one piece of the puzzle to
+> > > > > > supporting mdev migration, but I don't think it makes sense to commit
+> > > > > > this upstream on its own without also defining the remainder of how we
+> > > > > > actually do migration, preferably with more than one working
+> > > > > > implementation and at least prototyped, if not final, QEMU support.  I
+> > > > > > hope that was the intent, and maybe it's now time to look at the next
+> > > > > > piece of the puzzle.  Thanks,
+> > > > > > 
+> > > > > > Alex    
+> > > > > 
+> > > > > Got it. 
+> > > > > Also thank you and all for discussing and guiding all along:)
+> > > > > We'll move to the next episode now.  
+> > > > 
+> > > > Hi Yan,
+> > > > 
+> > > > As we're hopefully moving towards a migration API, would it make sense
+> > > > to refresh this series at the same time?  I think we're still expecting
+> > > > a vendor driver implementing Kirti's migration API to also implement
+> > > > this sysfs interface for compatibility verification.  Thanks,
+> > > >  
+> > > Hi Alex
+> > > Got it!
+> > > Thanks for reminding of this. And as now we have vfio-pci implementing
+> > > vendor ops to allow live migration of pass-through devices, is it
+> > > necessary to implement similar sysfs node for those devices?
+> > > or do you think just PCI IDs of those devices are enough for libvirt to
+> > > know device compatibility ?  
+> > 
+> > Wasn't the problem that we'd have to know how to check for things like:
+> >   a) Whether different firmware versions in the device were actually
+> > compatible
+> >   b) Whether minor hardware differences were compatible - e.g. some
+> > hardware might let you migrate to the next version of hardware up.
+> 
+> Yes, minor changes in hardware or firmware that may not be represented
+> in the device ID or hardware revision.  Also the version is as much for
+> indicating the compatibility of the vendor defined migration protocol
+> as it is for the hardware itself.  I certainly wouldn't be so bold as
+> to create a protocol that is guaranteed compatible forever.  We'll need
+> to expose the same sysfs attribute in some standard location for
+> non-mdev devices.  I assume vfio-pci would provide the vendor ops some
+> mechanism to expose these in a standard namespace of sysfs attributes
+> under the device itself.  Perhaps that indicates we need to link the
+> mdev type version under the mdev device as well to make this
+> transparent to userspace tools like libvirt.  Thanks,
+>
+Got it. will do it.
+Thanks!
 
-[This is an automated email]
-
-This commit has been processed because it contains a -stable tag.
-The stable tag indicates that it's relevant for the following trees: all
-
-The bot has tested the following trees: v5.5.11, v5.4.27, v4.19.112, v4.14.174, v4.9.217, v4.4.217.
-
-v5.5.11: Build OK!
-v5.4.27: Build OK!
-v4.19.112: Build OK!
-v4.14.174: Build failed! Errors:
-    drivers/extcon/extcon-axp288.c:326:21: error: ‘dev’ undeclared (first use in this function); did you mean ‘pdev’?
-
-v4.9.217: Failed to apply! Possible dependencies:
-    dd3a55fc688b ("extcon: axp288: Fix the module not auto-loading")
-
-v4.4.217: Failed to apply! Possible dependencies:
-    dd3a55fc688b ("extcon: axp288: Fix the module not auto-loading")
-
-
-NOTE: The patch will not be queued to stable trees until it is upstream.
-
-How should we proceed with this patch?
-
--- 
-Thanks
-Sasha
+Yan
