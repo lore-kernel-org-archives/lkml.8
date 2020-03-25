@@ -2,91 +2,186 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 940A7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDC1C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66577206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0DE206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727281AbgCYKqG (ORCPT
+        id S1727259AbgCYKtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:46:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:47490 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726139AbgCYKqG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:46:06 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jH3Xv-0007zD-1P; Wed, 25 Mar 2020 11:46:03 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 9B8BF1C0450;
-        Wed, 25 Mar 2020 11:46:02 +0100 (CET)
-Date:   Wed, 25 Mar 2020 10:46:02 -0000
-From:   "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/entry] x86/entry: Fix build error x86 with !CONFIG_POSIX_TIMERS
-Cc:     Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324143520.898733-1-brgerst@gmail.com>
-References: <20200324143520.898733-1-brgerst@gmail.com>
+        Wed, 25 Mar 2020 06:49:15 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2587 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726103AbgCYKtP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:49:15 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id D3B41D71D1F25870776E;
+        Wed, 25 Mar 2020 10:49:11 +0000 (GMT)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 25 Mar 2020 10:49:01 +0000
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <James.Bottomley@HansenPartnership.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v4 0/7] ima: support stronger algorithms for attestation
+Date:   Wed, 25 Mar 2020 11:47:05 +0100
+Message-ID: <20200325104712.25694-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Message-ID: <158513316218.28353.4031249115801698486.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/entry branch of tip:
+IMA extends Platform Configuration Registers (PCRs) of the TPM to give a
+proof to a remote verifier that the measurement list contains all
+measurements done by the kernel and that the list was not maliciously
+modified by an attacker.
 
-Commit-ID:     290a4474d019c7e49c186100e157fff5e273ab3b
-Gitweb:        https://git.kernel.org/tip/290a4474d019c7e49c186100e157fff5e273ab3b
-Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Tue, 24 Mar 2020 10:35:20 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 25 Mar 2020 10:06:20 +01:00
+IMA was originally designed to extend PCRs with a SHA1 digest, provided
+with the measurement list, and was subsequently updated to extend all PCR
+banks in case a TPM 2.0 is used. Non-SHA1 PCR banks are not supposed to be
+used for remote attestation, as they are extended with a SHA1 digest padded
+with zeros, which does not increase the strength.
 
-x86/entry: Fix build error x86 with !CONFIG_POSIX_TIMERS
+This patch set addresses this issue by extending PCRs with the digest of
+the measurement entry calculated with the crypto subsystem. The list of
+algorithms used to calculate the digest are taken from
+ima_tpm_chip->allocated_banks, returned by the TPM driver. The SHA1 digest
+is always calculated, as SHA1 still remains the default algorithm for the
+template digest in the measurement list.
 
-Add missing semicolon.
+This patch set also makes two additional modifications related to the usage
+of hash algorithms. First, since now the template digest for the default
+IMA algorithm is always calculated, this is used for hash collision
+detection, to check if there are duplicate measurement entries.
 
-Fixes: a74d187c2df3 ("x86/entry: Refactor SYS_NI macros")
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20200324143520.898733-1-brgerst@gmail.com
+Second, it uses the IMA default hash algorithm to calculate the boot
+aggregate, assuming that the corresponding PCR bank is currently allocated.
+If it does not find it, it selects the SHA256 PCR bank for TPM 2.0 and SHA1
+for TPM 1.2 (their use is mandatory according to TCG PC Client
+specification). Ultimately, it selects SHA1 also for TPM 2.0 if the SHA256
+PCR bank is not found.
 
+This patch set does not yet modify the format of the measurement list to
+provide the digests passed to the TPM. However, reconstructing the value of
+the quoted PCR is still possible for the verifier by calculating the digest
+on measurement data found in binary_runtime_measurements.
+
+attest-tools (https://github.com/euleros/attest-tools, branch 0.2-devel)
+has the ability to parse the BIOS and IMA event logs, and to compare
+boot_aggregate with the digest of final PCR values obtained by performing
+in software the PCR extend operation with digests in the BIOS event log.
+
+To perform the test, it is necessary to have a complete BIOS event log and
+to apply the boot_aggregate patches. It would be possible to use qemu and
+swtpm from Stefan Berger, but at the moment I had to change the ACPI parser
+in drivers/char/tpm/event_log/acpi.c to accept TPM 2.0 and to return
+EFI_TCG2_EVENT_LOG_FORMAT_TCG_2.
+
+Create req.json with this content:
 ---
- arch/x86/include/asm/syscall_wrapper.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+{
+  "reqs":{
+    "dummy|verify":"",
+    "ima_boot_aggregate|verify":""
+  }
+}
+---
 
-diff --git a/arch/x86/include/asm/syscall_wrapper.h b/arch/x86/include/asm/syscall_wrapper.h
-index e10efa1..a84333a 100644
---- a/arch/x86/include/asm/syscall_wrapper.h
-+++ b/arch/x86/include/asm/syscall_wrapper.h
-@@ -86,7 +86,7 @@ extern long __ia32_sys_ni_syscall(const struct pt_regs *regs);
- 	}
- 
- #define __SYS_NI(abi, name)						\
--	SYSCALL_ALIAS(__##abi##_##name, sys_ni_posix_timers)
-+	SYSCALL_ALIAS(__##abi##_##name, sys_ni_posix_timers);
- 
- #ifdef CONFIG_X86_64
- #define __X64_SYS_STUB0(name)						\
+With the requirements above, attest-tools verifies boot_aggregate and
+accepts any other entry in the event logs.
+
+On server side run:
+# attest_ra_server -p 10 -r req.json -s -i
+
+-s disables TPM signature verification
+-i allows IMA violations
+
+To enable TPM signature verification it is necessary to have a valid AK
+certificate. It can be obtained by following the instructions at:
+
+https://github.com/euleros/attest-tools/blob/0.2-devel/README
+
+On client side run:
+# echo test > aik_cert.pem
+# echo aik_cert.pem > list_privacy_ca
+# attest_ra_client -A
+
+The commands above generate an AK and tell attest-tools to use a dummy AK
+certificate.
+
+# attest_ra_client -s <server IP> -q -p 10 -P <PCR algo> -b -i
+
+The command above sends the TPM quote and the event logs to the RA server
+and gets the response (successful/failed verification).
+
+-b includes the BIOS event log from securityfs
+-i includes the IMA event log from securityfs
+
+To check that IMA extends non-SHA1 PCR banks with an appropriate digest,
+use -P sha256, so that attest_ra_client selects the SHA256 PCR bank. To
+check that boot_aggregate is calculated properly, set ima_hash=sha256 in
+the kernel command line.
+
+Changelog
+
+v3:
+- Remove option to select the first PCR bank and select SHA1 as fallback
+  choice also for TPM 2.0 (suggested by Mimi)
+- improve comment for ima_extra_slots (suggested by Mimi)
+- declare local variable digests in ima_alloc_init_template() and
+  ima_restore_template_data() (suggested by Mimi)
+
+v2:
+- add NR_BANKS macro to return zero if ima_tpm_chip is NULL
+- replace ima_num_template_digests with
+  NR_BANKS(ima_tpm_chip) + ima_extra_slots (suggested by Mimi)
+- add __ro_after_init to declaration of ima_sha1_idx ima_hash_algo_idx and
+  ima_extra_slots (suggested by Mimi)
+- declare ima_init_ima_crypto() as static (reported by kbuild test robot)
+- use ima_sha1_idx and ima_hash_algo_idx to access ima_algo_array elements
+  in ima_init_crypto()
+
+v1:
+- move ima_sha1_idx and ima_hash_algo_idx to ima_crypto.c
+- introduce ima_num_template_digests (suggested by Mimi)
+- determine ima_num_template_digests before allocating ima_algo_array
+  (suggested by Mimi)
+- replace kmalloc_array() with kcalloc() in ima_init_crypto() (suggested by
+  Mimi)
+- check if ima_tpm_chip is NULL
+
+Roberto Sassu (7):
+  ima: Switch to ima_hash_algo for boot aggregate
+  ima: Evaluate error in init_ima()
+  ima: Store template digest directly in ima_template_entry
+  ima: Switch to dynamically allocated buffer for template digests
+  ima: Allocate and initialize tfm for each PCR bank
+  ima: Calculate and extend PCR with digests in ima_template_entry
+  ima: Use ima_hash_algo for collision detection in the measurement list
+
+ security/integrity/ima/ima.h          |  10 +-
+ security/integrity/ima/ima_api.c      |  22 +--
+ security/integrity/ima/ima_crypto.c   | 248 ++++++++++++++++++++++----
+ security/integrity/ima/ima_fs.c       |   4 +-
+ security/integrity/ima/ima_init.c     |  22 ++-
+ security/integrity/ima/ima_main.c     |   3 +
+ security/integrity/ima/ima_queue.c    |  36 ++--
+ security/integrity/ima/ima_template.c |  25 ++-
+ 8 files changed, 297 insertions(+), 73 deletions(-)
+
+-- 
+2.17.1
+
