@@ -2,153 +2,117 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25897C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18824C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EA920836
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB2FD2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:49:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LslK6rOY"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="CArd9H+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgCYRrt (ORCPT
+        id S1727856AbgCYRtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:47:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47266 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727280AbgCYRrt (ORCPT
+        Wed, 25 Mar 2020 13:49:13 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45998 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYRtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:47:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=elFJ6MP2SsmSQz5ZCasofx0hdffplqLelmi5Polbq9o=; b=LslK6rOY+z8/oQ4YsLDfYv3ZR2
-        fpRVzqk9lEPUmLYLK09LBf+zEX8negfJBj/L0JsZLJ0Xrr1avbgMT8E9+drgOv4wAZTyWes1epOCP
-        UGwg21H6+mE2Txk4mCV/YXolarUVMrrz80tE3C83m/0i1RPUctP+F5bK0Z6w7LIeB3NKzjB40Ttrc
-        ZkJXwHW87FmiszPeFm/AL0qdNcgCqfkiMcgQc1sx568b2KZExqz9jMpCGdjg+vyy5oQXawwOsueIi
-        oVyYxTbnaD1RzOoSuHCwREsWMRF3qJb0xnrbn6M7NcojqU6QBk4jrSL4Cg4vgjbxEy18I/J1yQV9U
-        z6vsL2Xg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHA81-0008Qy-0a; Wed, 25 Mar 2020 17:47:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDED43011DE;
-        Wed, 25 Mar 2020 18:47:42 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id A4BE929BD8A29; Wed, 25 Mar 2020 18:47:42 +0100 (CET)
-Message-Id: <20200325174605.455086309@infradead.org>
-User-Agent: quilt/0.65
-Date:   Wed, 25 Mar 2020 18:45:27 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, peterz@infradead.org,
-        mhiramat@kernel.org, mbenes@suse.cz
-Subject: [PATCH v4 02/13] objtool: Factor out CFI hints
-References: <20200325174525.772641599@infradead.org>
+        Wed, 25 Mar 2020 13:49:12 -0400
+Received: by mail-ed1-f68.google.com with SMTP id u59so3579843edc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 10:49:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UQLg73f4A6IdCvlkz6AAgidHZXBVbjJUTIhnj9QMJq0=;
+        b=CArd9H+nUYQo86GgTO34kcf8M/qaGTtxoUap7Zv3rckjuMdaZYN1F6JjgfnWPrmmQD
+         STLiZXfm9tTL4tzLvCBpRJ7We2yFE5YuaVYOVylxRmNv+lJGiiAUSyUkCZ2JU2MdAdtK
+         /mehUtAxrA6Npr8A1L1muHfUvFvs2COnFJy1ZnrkPpjoNS8yFICdQt3s0xwQfjnwCpbU
+         iX04wAD3h9RPqTOKiG6KbgGQ4OF9ezvrMsfHGyNb7m92ahBGPMbYr0/XbX7m2hj1Pebn
+         xuQdsVlIEt+LULaBWLDhOZkiim1Sh7F259hWZF0OdyJeF8VkU9WQLChRU/rMYvagJ8Gg
+         Gcpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UQLg73f4A6IdCvlkz6AAgidHZXBVbjJUTIhnj9QMJq0=;
+        b=MiP7dDLeGBBV+7L81+zxo0JZxHe2plp9sUUliX90/yKlEfLAdPEX4xuq15ksN+wduq
+         yJeOfvXBJ4G131rTIPHejZ82GznFvbifR30giYbjFpiqgXRrf9JExNBQjg0Rp2cLsRj3
+         CE8UV5kmLztv8O8hW1GYJbFGT1ukVWJYHObijbDk0+A5y0f2mNgvf1+N8EI6vnFGL0Cy
+         aJzWux3kqe8X/4FngKlCpR7PaUgV83NNbrOOgO9zlbuusIZa7o1miWtJtc/EjR9ZK+Ti
+         UoDb96J//XZYlQ6leygGz4/uh7zKGTLAdbE4noBX63jXE4uTMER1wph7uLl77veHv8oj
+         2XcA==
+X-Gm-Message-State: ANhLgQ1TW+Qy8HKpA09W/GHbuB2dS12o0UcqFg4+1jUfZhDDxYytF8MX
+        Z2gSXpcidYhcCegp4RORJkVCK1I4lSDWe6VbNOIgQQ==
+X-Google-Smtp-Source: ADFU+vvboEnhuKsKIQb1Icp0tf2ZKIBZhzX0zsyDsXuxXz0SOdiPzd+VaI3b61+gj6WVPFLBvXBLoqtuW6eHq2rVeAE=
+X-Received: by 2002:aa7:c609:: with SMTP id h9mr4043188edq.93.1585158550697;
+ Wed, 25 Mar 2020 10:49:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <158500767138.2088294.17131646259803932461.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <158500773552.2088294.8756587190550753100.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <9a6ff83f-095c-0689-d6d1-693a6e9c07e6@oracle.com> <c673cba2-8749-d63e-f0b2-592ed753481d@oracle.com>
+In-Reply-To: <c673cba2-8749-d63e-f0b2-592ed753481d@oracle.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 25 Mar 2020 10:48:58 -0700
+Message-ID: <CAPcyv4gBQOh9sba+Zbpo6yw3sh9JCKC7Cd10qdNc7d1TvTFfYQ@mail.gmail.com>
+Subject: Re: [PATCH 11/12] device-dax: Add dis-contiguous resource support
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the application of CFI hints into it's own function.
-No functional changes intended.
+On Wed, Mar 25, 2020 at 3:35 AM Joao Martins <joao.m.martins@oracle.com> wrote:
+>
+> On 3/24/20 4:12 PM, Joao Martins wrote:
+> > On 3/23/20 11:55 PM, Dan Williams wrote:
+> >>  static ssize_t dev_dax_resize(struct dax_region *dax_region,
+> >>              struct dev_dax *dev_dax, resource_size_t size)
+> >>  {
+> >>      resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
+> >> -    resource_size_t dev_size = range_len(&dev_dax->range);
+> >> +    resource_size_t dev_size = dev_dax_size(dev_dax);
+> >>      struct resource *region_res = &dax_region->res;
+> >>      struct device *dev = &dev_dax->dev;
+> >> -    const char *name = dev_name(dev);
+> >>      struct resource *res, *first;
+> >> +    resource_size_t alloc = 0;
+> >> +    int rc;
+> >>
+> >>      if (dev->driver)
+> >>              return -EBUSY;
+> >> @@ -684,38 +766,47 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
+> >>       * allocating a new resource.
+> >>       */
+> >>      first = region_res->child;
+> >> -    if (!first)
+> >> -            return __alloc_dev_dax_range(dev_dax, dax_region->res.start,
+> >> -                            to_alloc);
+> >
+> > You probably want to retain the condition above?
+> >
+> > Otherwise it removes the ability to create new devices or resizing it , once we
+> > have zero-ed the last one.
+> >
+>
+> A quick unit test that I had stashed here to help explain what I mean:
+>
+>         cd /sys/bus/dax/devices
+>         # dax0.0 is the only dax device in the corresponding dax_region
+>         echo dax0.0 > dax0.0/driver/unbind
+>         echo 0 > dax0.0/size
+>         # Shouldn't fail but returns -ENOSPC despite having
+>         # the full region available
+>         cat $(readlink -f dax0.0/../dax_region/available_size) > dax0.0/size
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/check.c |   67 ++++++++++++++++++++++++++++----------------------
- 1 file changed, 38 insertions(+), 29 deletions(-)
-
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2033,6 +2033,41 @@ static int validate_return(struct symbol
- 	return 0;
- }
- 
-+static int apply_insn_hint(struct objtool_file *file, struct section *sec,
-+			   struct symbol *func, struct instruction *insn,
-+			   struct insn_state *state)
-+{
-+	if (insn->restore) {
-+		struct instruction *save_insn, *i;
-+
-+		i = insn;
-+		save_insn = NULL;
-+		sym_for_each_insn_continue_reverse(file, func, i) {
-+			if (i->save) {
-+				save_insn = i;
-+				break;
-+			}
-+		}
-+
-+		if (!save_insn) {
-+			WARN_FUNC("no corresponding CFI save for CFI restore",
-+				  sec, insn->offset);
-+			return 1;
-+		}
-+
-+		if (!save_insn->visited) {
-+			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
-+				  sec, insn->offset);
-+			return 1;
-+		}
-+
-+		insn->state = save_insn->state;
-+	}
-+
-+	state = insn->state;
-+	return 0;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2081,35 +2116,9 @@ static int validate_branch(struct objtoo
- 		}
- 
- 		if (insn->hint) {
--			if (insn->restore) {
--				struct instruction *save_insn, *i;
--
--				i = insn;
--				save_insn = NULL;
--				sym_for_each_insn_continue_reverse(file, func, i) {
--					if (i->save) {
--						save_insn = i;
--						break;
--					}
--				}
--
--				if (!save_insn) {
--					WARN_FUNC("no corresponding CFI save for CFI restore",
--						  sec, insn->offset);
--					return 1;
--				}
--
--				if (!save_insn->visited) {
--					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
--						  sec, insn->offset);
--					return 1;
--				}
--
--				insn->state = save_insn->state;
--			}
--
--			state = insn->state;
--
-+			ret = apply_insn_hint(file, sec, func, insn, &state);
-+			if (ret)
-+				return ret;
- 		} else
- 			insn->state = state;
- 
-
-
+Thanks! Will incorporate that test before resending the series.
