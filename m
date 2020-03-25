@@ -2,172 +2,149 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC744C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDA7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A11C320775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585144674;
-	bh=Et7ilZ2iSNQe0WMJIlJXaPolWCo3ZKQ1yz30y5NgNiw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rOURUkRp1JAzgJ0WhBwRyNmHSx2KHoxpDqzWSrEk96N2eDIVkGUXt9ZjKyIqAeuxp
-	 CY/BYrcHcJxLHTJNSLNT61tme9l9S2lOq68v+t4iHYlEjkmEdsxL4NCzeMpMPJlDi/
-	 ArB4vJ7OWoYGFk1IlPBAj+m4xkanL9sY3WY+hyx8=
+	by mail.kernel.org (Postfix) with ESMTP id 26E5720663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:58:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/dc46LQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbgCYN5x (ORCPT
+        id S1727563AbgCYN57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36646 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726967AbgCYN5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:57:53 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B197120663;
-        Wed, 25 Mar 2020 13:57:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585144671;
-        bh=Et7ilZ2iSNQe0WMJIlJXaPolWCo3ZKQ1yz30y5NgNiw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=k9bzfTUSkpjYxwgvTeSMSaOOMZXZxAf9pHh5DGqgYBahSk0Ehk3wBG+WXY4UMhVDF
-         E7w5492eBVdcqAVJh90ysSmZA6+5DBZ89aWQTVJ8q6cnOtWjONh53ltODaWm3T0Np3
-         2cT4tUQrmIcapRvaBLgKaBpkOACx502pU73rVudM=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jH6XV-00Faf6-Up; Wed, 25 Mar 2020 13:57:50 +0000
+        Wed, 25 Mar 2020 09:57:59 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35981 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726967AbgCYN56 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:57:58 -0400
+Received: by mail-pg1-f194.google.com with SMTP id j29so1186882pgl.3;
+        Wed, 25 Mar 2020 06:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UK1bTCjwWjERwUjBRJwj5mEVh+i6Cx+AtXtd2ZWguHU=;
+        b=Q/dc46LQGtihMg+xa069FnlVeBFJlEXwOOxRsN753Z76Ne+z3LYxYWJo+L2lbE4Fad
+         V8XGq5vBzJ3l731HxKxH7DycOAPc4jt4XvcddsqYX54/QkwEhfDo5D2mioTZne9cmn0t
+         IrJCKQtpaMzg2S4OffZC3m45QnCt84BLX/RcKdP2iCejB8B4zsH8cBAiAxe0j4P0sK3w
+         hayhiQFYu446lMreJKPDtWo3aMGr2eReEg2XvLIkS1uVUjuAoegZxwVZgx+0YbgywaVp
+         i5Ag/5207lNwTiQRmfIblk4IbgfhPbVU9J/ukNCUnj8wlxigklgS3N3iL9Lf5kvx0hm+
+         mCdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UK1bTCjwWjERwUjBRJwj5mEVh+i6Cx+AtXtd2ZWguHU=;
+        b=T2yhMQLKRLybwRvNEIcuD8RGNm1t+knSuIIl01ybfTnxIgBUtnSmZHu4O+nboYv3w4
+         C95IPS9xjPvIxpOdjTfIJH8o1zYBzv7D8/V2FVBt+miDPCQBQa00chG8Po4Hnupy8J2d
+         KhPcvfWh3Ihfl5pDz14/sv368q4vBGSPUBxcW+NV9b7mTfLELQWiaVYD3lKoRPBLu3R2
+         OllnN8h+1Cge/jKyCEfSJSZSPA4i0espkKL+Pttxony55dAVjF72mjAeVWSlZYraV96k
+         FVDIqeFg7WReWh/uFmDm/+dHrKqWN1OuZV72WGCXbrTP+I/yE4kZnxdIz9BjC1U9HOEd
+         PT/Q==
+X-Gm-Message-State: ANhLgQ3bp2gQ4LZcmYK+EOHr2dh+0gzSLCUBpXaqNbj2O9w5nuPRc6X9
+        QLUMHUXX18S9Ar0F4Q9TGcA=
+X-Google-Smtp-Source: ADFU+vslu82Vg7HGoUVYAIPV1Q8ize5C9abSZMr6O3jjfgTuW8qGRtcVRrvTGKOjfabRs/GBBMWYtw==
+X-Received: by 2002:a65:5b49:: with SMTP id y9mr3204412pgr.153.1585144677478;
+        Wed, 25 Mar 2020 06:57:57 -0700 (PDT)
+Received: from ?IPv6:2404:f801:0:6:8000::a31c? ([2404:f801:9000:1a:efeb::a31c])
+        by smtp.gmail.com with ESMTPSA id a19sm18841126pfk.110.2020.03.25.06.57.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 06:57:57 -0700 (PDT)
+Subject: Re: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong
+ time unit
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Yubo Xie <yuboxie@microsoft.com>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        michael.h.kelley@microsoft.com
+References: <20200324151935.15814-1-yuboxie@microsoft.com>
+ <87ftdx7nxv.fsf@vitty.brq.redhat.com>
+From:   Tianyu Lan <ltykernel@gmail.com>
+Message-ID: <039e126f-f00d-d7e1-aa92-c049c9e3333b@gmail.com>
+Date:   Wed, 25 Mar 2020 21:57:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 25 Mar 2020 13:57:49 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-In-Reply-To: <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
- <20200325035537.156911-7-jiaxun.yang@flygoat.com>
- <20200325123742.GA9911@alpha.franken.de>
- <a69f727d37daac6e20ac08de022245b1@kernel.org>
- <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
-Message-ID: <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com, allison@lohutok.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <87ftdx7nxv.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-25 13:07, Jiaxun Yang wrote:
-> 于 2020年3月25日 GMT+08:00 下午9:00:01, Marc Zyngier <maz@kernel.org> 写到:
->> On 2020-03-25 12:37, Thomas Bogendoerfer wrote:
->>> On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
->>>> The old code is using legacy domain to setup irq_domain for CPU
->>>> interrupts
->>>> which requires irq_desc to be preallocated.
->>>> 
->>>> However, when MIPS_CPU_IRQ_BASE >= 16, irq_desc for CPU IRQs may end
->> 
->>>> up
->>>> unallocated and lead to incorrect behavior.
->>>> 
->>>> Thus we convert the legacy domain to simple domain which can
->> allocate
->>>> irq_desc during initialization.
->>>> 
->>>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->>>> Co-developed-by: Huacai Chen <chenhc@lemote.com>
->>>> Signed-off-by: Huacai Chen <chenhc@lemote.com>
->>>> Reviewed-by: Marc Zyngier <maz@kernel.org>
->>>> ---
->>>>  drivers/irqchip/irq-mips-cpu.c | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>> 
->>>> diff --git a/drivers/irqchip/irq-mips-cpu.c
->>>> b/drivers/irqchip/irq-mips-cpu.c
->>>> index 95d4fd8f7a96..c3cf7fa76424 100644
->>>> --- a/drivers/irqchip/irq-mips-cpu.c
->>>> +++ b/drivers/irqchip/irq-mips-cpu.c
->>>> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct
->>>> device_node *of_node)
->>>>  	clear_c0_status(ST0_IM);
->>>>  	clear_c0_cause(CAUSEF_IP);
->>>> 
->>>> -	irq_domain = irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE,
->> 0,
->>>> +	irq_domain = irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
->>>>  					   &mips_cpu_intc_irq_domain_ops,
->>>>  					   NULL);
->>> 
->>> this breaks at least IP30 and guess it will break every platform
->> where
->>> MIPS_CPU_IRQ_BASE == 0. add_legacy will always do
->>> irq_domain_associate_many(),
->>> while add_simple doesn't do it, if first_irq == 0.
->>> 
->>> Marc, what is the reason not doing it all the time ? What's the
->> correct
->>> way here to work with irq_domain_add_simple() in this case ?
->> 
->> On a fully DT-ified platform, using non-legacy irqdomains, virtual
->> interrupts
->> are allocated as a "random" number, depending on the order of
->> allocation,
->> and on demand.
->> 
->> The first_irq hack in irq_domain_add_simple() is just a way to still
->> allocate
->> descriptors upfront (and I wish we could drop it...).
->> 
->> If you have legacy code that "knows" about the relationship between
->> Linux's
->> virtual interrupt and the hwirq (that is only meaningful to the
->> interrupt
->> controller), you're screwed, and need to stick to the legacy 
->> irqdomain.
->> 
->> It feels like the MIPS code is squarely in the latter case, so I guess
->> this
->> patch is probably the wrong thing to do for this architecture.
+Hi Vitaly:
+     Thanks for your review.
+
+On 3/24/2020 11:49 PM, Vitaly Kuznetsov wrote:
+> Yubo Xie <ltykernel@gmail.com> writes:
 > 
-> So probably we can use legacy domain when  MIPS IRQ BASE is in the
-> range of legacy IRQ
-> and switch to simple domain when it's not in that range?
+>> sched clock callback should return time with nano second as unit
+>> but current hv callback returns time with 100ns. Fix it.
+>>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Yubo Xie <yuboxie@microsoft.com>
+>> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+>> Fixes: adb87ff4f96c ("clocksource/drivers/hyperv: Allocate Hyper-V TSC page statically")
+> 
+> I don't think this is the right commit to reference,
+> 
+> commit bd00cd52d5be655a2f217e2ed74b91a71cb2b14f
+> Author: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> Date:   Wed Aug 14 20:32:16 2019 +0800
+> 
+>      clocksource/drivers/hyperv: Add Hyper-V specific sched clock function
+> 
+> looks like the one.
 
-No, see below.
+Sorry. You are right. Will update in the next version.
 
-> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did this 
-> hack.
+> 
+>> ---
+>>   drivers/clocksource/hyperv_timer.c | 6 ++++--
+>>   1 file changed, 4 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/hyperv_timer.c b/drivers/clocksource/hyperv_timer.c
+>> index 9d808d595ca8..662ed978fa24 100644
+>> --- a/drivers/clocksource/hyperv_timer.c
+>> +++ b/drivers/clocksource/hyperv_timer.c
+>> @@ -343,7 +343,8 @@ static u64 notrace read_hv_clock_tsc_cs(struct clocksource *arg)
+>>   
+>>   static u64 read_hv_sched_clock_tsc(void)
+>>   {
+>> -	return read_hv_clock_tsc() - hv_sched_clock_offset;
+>> +	return (read_hv_clock_tsc() - hv_sched_clock_offset)
+>> +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+>>   }
+>>   
+>>   static void suspend_hv_clock_tsc(struct clocksource *arg)
+>> @@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+>>   
+>>   static u64 read_hv_sched_clock_msr(void)
+>>   {
+>> -	return read_hv_clock_msr() - hv_sched_clock_offset;
+>> +	return (read_hv_clock_msr() - hv_sched_clock_offset)
+>> +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+>>   }
+> 
+> kvmclock seems to have the same (pre-patch) code ...
 
-Well, if you have to consider which Linux IRQ gets assigned,
-then your platform is definitely not ready for non-legacy
-irqdomains. Just stick to legacy for now until you have removed
-all the code that knows the hwirq mapping.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+kvm sched clock gets time from pvclock_clocksource_read() and
+the time unit is nanosecond. So there is such issue in KVM code.
+
+> 
+>>   
+>>   static struct clocksource hyperv_cs_msr = {
+> 
