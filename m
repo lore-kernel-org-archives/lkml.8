@@ -2,121 +2,115 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 152E5C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92EC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D969A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B486820714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:01:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="A/kprHm6"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pZvmY7Zk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgCYEBT (ORCPT
+        id S1727316AbgCYEBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:01:19 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17814 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725263AbgCYEBT (ORCPT
+        Wed, 25 Mar 2020 00:01:23 -0400
+Received: from mail-qk1-f180.google.com ([209.85.222.180]:33963 "EHLO
+        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgCYEBV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:01:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585108817;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=JV1rNdnx9buJ6QvvmNhPnHsJZgIXv+xyASVQ93NXFoY=;
-        b=A/kprHm6K/xqDUVP+cMXpymCC9BAG6GwPHaieZOmyCI7dRHaEcMuLJD7R1Vj+PqB
-        ggwdhxBRvEfe+3hMK3qoc+GifyHzIeOIROBOL6EfKKWg9Xhe/i8tygB8ZUrmA6GcKYz
-        ofgrpicIlK2LFlrpSx7JNSG5CeBfre7eMRkdnYqI=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585108815317133.5840528855042; Wed, 25 Mar 2020 12:00:15 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Rob Herring <robh@kernel.org>, Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200325035537.156911-9-jiaxun.yang@flygoat.com>
-Subject: [PATCH v8 08/11] dt-bindings: mips: Add loongson boards
-Date:   Wed, 25 Mar 2020 11:55:01 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
-MIME-Version: 1.0
+        Wed, 25 Mar 2020 00:01:21 -0400
+Received: by mail-qk1-f180.google.com with SMTP id i6so1248430qke.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 21:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=DskibvAiGWQU1ARR7W7zFMaIjJJriimC2l9FtZs64I0=;
+        b=pZvmY7ZkAuo+/4NyiQcHwafNLNtwnKmB3PrdQGW6qKrTjt/CMJ+uEYqcrz9xT2Cw4x
+         j13vxwwYZSriP3IBLLplKbBjj/wTLCohU5oINSohFlBoPZ+U+FRZgxX1liqYM2GAfs7Y
+         w3QXDzUn9kf3fOGGmdgbk6W10mH2wEmrsdmC7YpXDTDDpqlIZc6Fz3RwpzCnvmk2L7aA
+         Y+4/KG+JkjZzYZ3N9BFkxA0xztIgklf5Yvx8KIIaBFrUqwN7MEc4tsSDZ8/D84EtBhCQ
+         8DFe13NsU8zwxP27EwxdFzuhpKLSFPg2TDEpKL82wn9P1pOepYnUnkyNFSh3EsUmaf/M
+         dUyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=DskibvAiGWQU1ARR7W7zFMaIjJJriimC2l9FtZs64I0=;
+        b=otOFUacqgsoMI1DP9AgqSCl322qzemcV0FdPcECuthvWPLVKU3khCQ5qCxzp06WuTo
+         9XTCYkqB+DJ6g9JqksSLKO3rdi76UQR7t3rSlTB2iNpeDTVvo6tOiakIKrtMfeoF74RR
+         fw9Yv1gSf0G2E3L0sjd3+pGTlYRbtHD3wHWoXkx3B8t5DVp5wfOekn5Cyt1tyG+OG0rQ
+         6IIOo9EeIjNbrOBpJlgq5AdFxW+5wECZKJy/2x4j+ILvjxchRUE/W2Z4b+X8ZjQX3z4t
+         2alfq8I8Z6dQkFmYQbdQ3rnHpoqi6C1VueJ4HMcBzjWpKCT2SXe9o8cCMMn8wo7gUpkr
+         GCQg==
+X-Gm-Message-State: ANhLgQ1+j+TjWPrel8/YvitWalFvVoTfoM/zrjS/2fnEwSXR1IQSKohR
+        DgWHzmXuEpZJ2lbDXJyKjwIJOA==
+X-Google-Smtp-Source: ADFU+vsdiGhtpKoOEJ+eixikB8yrQocIP7tDnbFeUUKU+nUsAgxyDuV4OYOhCiPsPbyS4lLGKFs/Pw==
+X-Received: by 2002:a37:2f43:: with SMTP id v64mr1115949qkh.480.1585108879825;
+        Tue, 24 Mar 2020 21:01:19 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w28sm16608346qtc.27.2020.03.24.21.01.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 24 Mar 2020 21:01:18 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+Content-Type: text/plain;
+        charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: No networking due to "net/mlx5e: Add support for devlink-port in
+ non-representors mode"
+Message-Id: <0DF043A6-F507-4CB4-9764-9BD472ABCF01@lca.pw>
+Date:   Wed, 25 Mar 2020 00:01:17 -0400
+Cc:     Moshe Shemesh <moshe@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Parav Pandit <parav@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+To:     Vladyslav Tarasiuk <vladyslavt@mellanox.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Prepare for later dts.
+Reverted the linux-next commit c6acd629ee (=E2=80=9Cnet/mlx5e: Add =
+support for devlink-port in non-representors mode=E2=80=9D)
+and its dependencies,
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Co-developed-by: Huacai Chen <chenhc@lemote.com>
-Signed-off-by: Huacai Chen <chenhc@lemote.com>
+162add8cbae4 (=E2=80=9Cnet/mlx5e: Use devlink virtual flavour for VF =
+devlink port=E2=80=9D)
+31e87b39ba9d (=E2=80=9Cnet/mlx5e: Fix devlink port register sequence=E2=80=
+=9D)
 
---
-v4-v5:
-=09Remove unnecessary kernel details.
-v5-v6:
-=09Use quad & octa instead of 4 and 8.
----
- .../bindings/mips/loongson/devices.yaml       | 27 +++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/loongson/devices=
-.yaml
+on the top of next-20200324 allowed NICs to obtain an IPv4 address from =
+DHCP again.
 
-diff --git a/Documentation/devicetree/bindings/mips/loongson/devices.yaml b=
-/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-new file mode 100644
-index 000000000000..74ed4e397a78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/loongson/devices.yaml
-@@ -0,0 +1,27 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mips/loongson/devices.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Loongson based Platforms Device Tree Bindings
-+
-+maintainers:
-+  - Jiaxun Yang <jiaxun.yang@flygoat.com>
-+description: |
-+  Devices with a Loongson CPU shall have the following properties.
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+
-+      - description: Generic Loongson3 Quad Core + RS780E
-+        items:
-+          - const: loongson,loongson3-4core-rs780e
-+
-+      - description: Generic Loongson3 Octa Core + RS780E
-+        items:
-+          - const: loongson,loongson3-8core-rs780e
-+...
---=20
-2.26.0.rc2
+0b:00.0 Ethernet controller: Mellanox Technologies MT27710 Family =
+[ConnectX-4 Lx]
+0b:00.1 Ethernet controller: Mellanox Technologies MT27710 Family =
+[ConnectX-4 Lx]
 
-
+[  223.280777][   T13] mlx5_core 0000:0b:00.0: firmware version: =
+14.21.1000
+[  223.287753][   T13] mlx5_core 0000:0b:00.0: 63.008 Gb/s available =
+PCIe bandwidth (8.0 GT/s PCIe x8 link)
+[  226.292153][    C0] mlx5_core 0000:0b:00.0: Port module event: module =
+0, Cable plugged
+[  226.874100][ T2023] mlx5_core 0000:0b:00.1: Adding to iommu group 2
+[  227.343553][   T13] mlx5_core 0000:0b:00.1: firmware version: =
+14.21.1000
+[  227.350467][   T13] mlx5_core 0000:0b:00.1: 63.008 Gb/s available =
+PCIe bandwidth (8.0 GT/s PCIe x8 link)
+[  230.026346][    C0] mlx5_core 0000:0b:00.1: Port module event: module =
+1, Cable unplugged
+[  230.522660][ T2023] mlx5_core 0000:0b:00.0: MLX5E: StrdRq(0) =
+RqSz(1024) StrdSz(256) RxCqeCmprss(0)
+[  231.448493][ T2023] mlx5_core 0000:0b:00.1: MLX5E: StrdRq(0) =
+RqSz(1024) StrdSz(256) RxCqeCmprss(0)
+[  232.436993][ T2007] mlx5_core 0000:0b:00.1 enp11s0f1np1: renamed from =
+eth1
+[  232.690895][ T2013] mlx5_core 0000:0b:00.0 enp11s0f0np0: renamed from =
+eth0=
