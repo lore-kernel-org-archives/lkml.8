@@ -2,95 +2,113 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D06CC54FCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01400C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65F5A20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:08:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="and8LT/3"
+	by mail.kernel.org (Postfix) with ESMTP id D4EF92073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:09:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgCYBIx (ORCPT
+        id S1727279AbgCYBJr convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:08:53 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16847 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbgCYBIx (ORCPT
+        Tue, 24 Mar 2020 21:09:47 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:10779 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgCYBJr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:08:53 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7aaef70000>; Tue, 24 Mar 2020 18:08:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 24 Mar 2020 18:08:52 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 18:08:52 -0700
-Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 01:08:51 +0000
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5695fc27-6839-dda3-9d06-77ef36ecfd43@nvidia.com>
-Date:   Tue, 24 Mar 2020 18:08:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 24 Mar 2020 21:09:47 -0400
+Received: from twhfm1p2.macronix.com (twhfmlp2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id 02P19dJM056234;
+        Wed, 25 Mar 2020 09:09:39 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 8F40FA52ED8DA1FC9596;
+        Wed, 25 Mar 2020 09:09:39 +0800 (CST)
+In-Reply-To: <20200324225739.11538d08@xps13>
+References: <1584517348-14486-1-git-send-email-masonccyang@mxic.com.tw> <1584517348-14486-3-git-send-email-masonccyang@mxic.com.tw> <20200324225739.11538d08@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     allison@lohutok.net, bbrezillon@kernel.org,
+        frieder.schrempf@kontron.de, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        richard@nod.at, s.hauer@pengutronix.de, stefan@agner.ch,
+        tglx@linutronix.de, vigneshr@ti.com, yuehaibing@huawei.com
+Subject: Re: [PATCH v4 2/2] mtd: rawnand: macronix: Add support for deep power down
+ mode
 MIME-Version: 1.0
-In-Reply-To: <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585098487; bh=aKHthfLue+1H2XDz473VqkpiUrB/NbryW9pP8d76r+s=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=and8LT/30BHlj1Hs1vFx5H2aqxApXzDkDdNer+loRB+Wgj+01QrMDvgjzESzdwwxd
-         ChtlCFqZQPGZmdLWJzx/x22OQ94pCqO3R0jismKLaALCIUtlesptrkE/fxP1CjLca2
-         jCU4ugZjhQ2n1Kd6KriXNfve5uSN/5KC6JpGGCOF4EUDEzlE3sV1vXPjQxA6m+ijg5
-         wr5E/1sX3iF0JjJAE4mmwDI+MciU9rfJd7Q/0zczolkJQBXUTmTUeJmDs06vD/ZbtF
-         5dbYP/EJ5QxPkoff0zwMjk/SNPEFuxKOMOSf8HfSGvZBfsfWUguUEGkVao+Duojqf/
-         D952W4A2bjHdg==
+X-KeepSent: 7F063DBA:65AA16F3-48258536:0006374F;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF7F063DBA.65AA16F3-ON48258536.0006374F-48258536.00065F7D@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 25 Mar 2020 09:09:39 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2020/03/25 AM 09:09:39,
+        Serialize complete at 2020/03/25 AM 09:09:39
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-MAIL: TWHMLLG4.macronix.com 02P19dJM056234
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 3/24/20 5:34 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static void tegra_channel_vi_soft_reset(struct tegra_vi_channel *chan)
->> +{
->> +     /* disable clock gating to enable continuous clock */
->> +     tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0);
->> +     /*
->> +      * Soft reset memory client interface, pixel format logic, sensor
->> +      * control logic, and a shadow copy logic to bring VI to clean sta=
-te.
->> +      */
->> +     vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xf);
->> +     usleep_range(100, 200);
->> +     vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0);
-> Is it safe to reset MCCIF without blocking and flushing memory requests
-> at first?
-Yes to bring VI to clean state on errors its recommended by HW design team.
+Hi Miquel,
+
+> Mason Yang <masonccyang@mxic.com.tw> wrote on Wed, 18 Mar 2020 15:42:28
+> +0800:
+> 
+> > Macronix AD series support deep power down mode for a minimum
+> > power consumption state.
+> > 
+> > Overload nand_suspend() & nand_resume() in Macronix specific code to
+> > support deep power down mode.
+> > 
+> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+> 
+> This was not based on nand/next so as I applied changes in this files
+> (patches 1 and 2 of the original series) this patch did not apply. I
+> manually merged it.
+
+Got it and thanks a lot for your help.
+
+> 
+> 
+> Thanks,
+> Miquèl
+
+best regards,
+Mason
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
