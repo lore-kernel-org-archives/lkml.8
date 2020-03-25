@@ -2,245 +2,128 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACCC0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D195FC54FD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BD4820774
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ABA206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:35:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oddnZKU5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CKVkfHoj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726116AbgCYGe4 (ORCPT
+        id S1726842AbgCYGfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 02:34:56 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46961 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgCYGe4 (ORCPT
+        Wed, 25 Mar 2020 02:35:03 -0400
+Received: from mail-pg1-f181.google.com ([209.85.215.181]:33667 "EHLO
+        mail-pg1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726206AbgCYGfD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 02:34:56 -0400
-Received: by mail-vs1-f65.google.com with SMTP id z125so813372vsb.13;
-        Tue, 24 Mar 2020 23:34:54 -0700 (PDT)
+        Wed, 25 Mar 2020 02:35:03 -0400
+Received: by mail-pg1-f181.google.com with SMTP id d17so692199pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 23:35:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=snvaZXInR5TYHvvzgnuHJAggy00IBOf7fQ0noztQ8E4=;
-        b=oddnZKU5NssB+gR71xQBOw2hGnN04656Bx3NAHpeILiNc8i2ylGS9fMnY2nPY0Fgfw
-         /V0XNrvvnh7S6V5HaCLWrsXjwlEklwyk5jAuCAAG4YL8JV1cccW5RAP8EIEy/5Jxqhwa
-         bdihFpK3cZjpy1KTPi5urAYInCGhaAYBgSSySYNtMdla7r9rT2kTFO1CJUJg49RlwTgl
-         h+89QYgTEYbump1xooL4PFhRXAHmnKqLRkpCh8b7sKQ3LoLxZ9/9EaOlrmGo608jSrIz
-         zlKeFrY4tSqz2kRY+H/9N4n1xxhSybMZgGiK09rPVdLqSPIWD7xt6KlCXHhS6X1I3NBy
-         04Fw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XDUtIM4paHW0qOUeTkKt8AFyM+VSRp0AScAk260LK2s=;
+        b=CKVkfHoj/nZYW3irz1TY3+48Q6839881dDZMIU45L1EzcFqwV35P6C6D5VXZbnAfkI
+         tu5oq99VfrqvYMrRTwHB+ffrmsUeO73kq5AywG8YIxrLJCU2JQ/m4mjDnhLIzlbXAzG5
+         SRjKCWBaMUvDV2WOmQ4X6Q+w+Y9osPekTs/ID/BqAvIoLpSOxc4HnScud9yLgNY22BV3
+         XhTQUN0ixUIwXaFqK8DGM6gfhGPLErBzVqy3pfNHNisbhISiExCGQI7vp9FMuVZt4C0C
+         1SSrq1Tf/01TtmFIebam6DXTtX0/R7oIq+0/GGSm9kuQOxGawvfTylFbGYn01s8Kc9fv
+         mqaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=snvaZXInR5TYHvvzgnuHJAggy00IBOf7fQ0noztQ8E4=;
-        b=WgDIV904u734OQ7bbLp6or/OJ+WQqLS1LJxVx3CCwBZ8rOirxvTVDgh816GyyWwPkf
-         tkSKX5miar2u197jindkW6U+z89u0sr8Kd2J/wLtYtKckAZ75KSEM1DQdRzNGeOkGnnJ
-         sSLnal5xuAPnVuAbzg99ISLRoBmnYy0S07buA5umvGNr71hcYSEyJRC719d3QCe5RyLc
-         UGPvP4JKrkgssI02wiIYxC/sRkXWYJRUWJdrzOEP/l0TZdmEycSbRJ0Xyfjvff97OB04
-         v3im6arj3/ajNouwPIERK3ilCUcxMKcNxfp+3yf7R/XmvqPnPxh6Dvw+iMsugFRQkaD8
-         X/1w==
-X-Gm-Message-State: ANhLgQ2u3DsxyxchKnmNAPObXsfZzrSGS1UP8ruNTXTgLCcQbUjAUhSL
-        e/7JxFj80EocdBT4uk1NC9IAx64V4QXtBaMDbHg=
-X-Google-Smtp-Source: ADFU+vvwR5kUzjT5BR7CPePZ0VHwUgxxNtVvkWmwCciImo1s/lwHpeFZ/Nosapw/3p/r7QtJO6jypTwLwWXqbx8xu6k=
-X-Received: by 2002:a67:fad8:: with SMTP id g24mr1342780vsq.136.1585118093783;
- Tue, 24 Mar 2020 23:34:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XDUtIM4paHW0qOUeTkKt8AFyM+VSRp0AScAk260LK2s=;
+        b=HyHJde99RstlberoOB8OoppiP9TQhvHqzpPnDigIleGUMPFaeIutdWUCk52bGeDGJ+
+         k6msfqbPF+sA20QZApdlX3X1Mkv46/mtdapfiCFJTl80miSqW9rptN6Ehc5x8c/NFwCb
+         FON/Mb4FGa4pdSc2LrbSCW4HrlXgf4tad0AAw2CwZ7yis0PZ5FTx9IwunPXBw8f2LFNM
+         tiGvRnzDwWcW4ux+ixxOdqWPiRNuvPXKQeyI34HxrfFWsmjcxdV5vNmHEJydTpmq97kx
+         fTturtwZUBrSYULFesT42BlUB6ZUSdemC9LDiXTbZPB/cLiQ9/X+ldC9fbWVjgQ+ZDw0
+         9E9w==
+X-Gm-Message-State: ANhLgQ0jetYxJ/2/YmfvfeUl+g+gjuAJCqEnfJN6cxKfq4MwvoK7n03l
+        q+AVzpTsf34zuGGT+kjVmXQsh7kx6b8=
+X-Google-Smtp-Source: ADFU+vvN3H7QGlUvfXSacv91SL0XLSkc7dVACoE1ob84EaxILfcJuRko4ery4B/XIUxIwrAPyWlDqQ==
+X-Received: by 2002:a63:da4d:: with SMTP id l13mr1705064pgj.216.1585118100212;
+        Tue, 24 Mar 2020 23:35:00 -0700 (PDT)
+Received: from localhost ([103.195.202.71])
+        by smtp.gmail.com with ESMTPSA id d26sm4059263pfo.37.2020.03.24.23.34.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 23:34:58 -0700 (PDT)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v3 0/3] Convert thermal bindings to yaml
+Date:   Wed, 25 Mar 2020 12:04:51 +0530
+Message-Id: <cover.1585117436.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190730184256.30338-1-helen.koike@collabora.com>
- <20190730184256.30338-6-helen.koike@collabora.com> <86e17716-193f-ca49-1104-9c599a667eeb@collabora.com>
- <f229a840-bcf3-50c8-27c6-363c72de1d01@xs4all.nl> <20190815193511.GB5011@pendragon.ideasonboard.com>
-In-Reply-To: <20190815193511.GB5011@pendragon.ideasonboard.com>
-From:   Dafna Hirschfeld <dafna3@gmail.com>
-Date:   Wed, 25 Mar 2020 07:34:37 +0100
-Message-ID: <CAJ1myNREvdbfw5t7RCX1RtBZnarXy7O6_+Cg89w7njWutijNqQ@mail.gmail.com>
-Subject: Re: [PATCH v8 05/14] media: rkisp1: add Rockchip ISP1 subdev driver
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
-        Helen Koike <helen.koike@collabora.com>,
-        hans.verkuil@cisco.com, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, eddie.cai.linux@gmail.com,
-        mchehab@kernel.org, heiko@sntech.de, jacob2.chen@rock-chips.com,
-        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
-        linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        sakari.ailus@linux.intel.com, kernel@collabora.com,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, zhengsq@rock-chips.com,
-        Jacob Chen <cc@rock-chips.com>,
-        Allon Huang <allon.huang@rock-chips.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 15, 2019 at 10:17 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->
-> Hi Hans,
->
-> On Wed, Aug 07, 2019 at 12:39:17PM +0200, Hans Verkuil wrote:
-> > On 8/6/19 8:51 PM, Helen Koike wrote:
-> > > On 7/30/19 3:42 PM, Helen Koike wrote:
-> > >> From: Jacob Chen <jacob2.chen@rock-chips.com>
-> > >>
-> > >> Add the subdev driver for rockchip isp1.
-> > >>
-> > >> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
-> > >> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
-> > >> Signed-off-by: Yichong Zhong <zyc@rock-chips.com>
-> > >> Signed-off-by: Jacob Chen <cc@rock-chips.com>
-> > >> Signed-off-by: Eddie Cai <eddie.cai.linux@gmail.com>
-> > >> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
-> > >> Signed-off-by: Allon Huang <allon.huang@rock-chips.com>
-> > >> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
-> > >> [fixed unknown entity type / switched to PIXEL_RATE]
-> > >> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > >> [update for upstream]
-> > >> Signed-off-by: Helen Koike <helen.koike@collabora.com>
-> > >>
-> > >> ---
-> > >>
-> > >> Changes in v8: None
-> > >> Changes in v7:
-> > >> - fixed warning because of unknown entity type
-> > >> - fixed v4l2-compliance errors regarding rkisp1 formats, try formats
-> > >> and default values
-> > >> - fix typo riksp1/rkisp1
-> > >> - redesign: remove mipi/csi subdevice, sensors connect directly to the
-> > >> isp subdevice in the media topology now. As a consequence, remove the
-> > >> hack in mipidphy_g_mbus_config() where information from the sensor was
-> > >> being propagated through the topology.
-> > >> - From the old dphy:
-> > >>         * cache get_remote_sensor() in s_stream
-> > >>         * use V4L2_CID_PIXEL_RATE instead of V4L2_CID_LINK_FREQ
-> > >> - Replace stream state with a boolean
-> > >> - code styling and checkpatch fixes
-> > >> - fix stop_stream (return after calling stop, do not reenable the stream)
-> > >> - fix rkisp1_isp_sd_get_selection when V4L2_SUBDEV_FORMAT_TRY is set
-> > >> - fix get format in output (isp_sd->out_fmt.mbus_code was being ignored)
-> > >> - s/intput/input
-> > >> - remove #define sd_to_isp_sd(_sd), add a static inline as it will be
-> > >> reused by the capture
-> > >>
-> > >>  drivers/media/platform/rockchip/isp1/rkisp1.c | 1286 +++++++++++++++++
-> > >>  drivers/media/platform/rockchip/isp1/rkisp1.h |  111 ++
-> > >>  2 files changed, 1397 insertions(+)
-> > >>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.c
-> > >>  create mode 100644 drivers/media/platform/rockchip/isp1/rkisp1.h
-> > >>
-> > >> diff --git a/drivers/media/platform/rockchip/isp1/rkisp1.c b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> > >> new file mode 100644
-> > >> index 000000000000..6d0c0ffb5e03
-> > >> --- /dev/null
-> > >> +++ b/drivers/media/platform/rockchip/isp1/rkisp1.c
-> > >> @@ -0,0 +1,1286 @@
-> >
-> > <snip>
-> >
-> > >> +static int rkisp1_isp_sd_get_fmt(struct v4l2_subdev *sd,
-> > >> +                           struct v4l2_subdev_pad_config *cfg,
-> > >> +                           struct v4l2_subdev_format *fmt)
-> > >> +{
-> > >> +  struct rkisp1_isp_subdev *isp_sd = sd_to_isp_sd(sd);
-> > >> +  struct v4l2_mbus_framefmt *mf = &fmt->format;
-> > >> +
-> > >> +  if ((fmt->pad != RKISP1_ISP_PAD_SINK) &&
-> > >> +      (fmt->pad != RKISP1_ISP_PAD_SOURCE_PATH)) {
-> > >> +          fmt->format.code = MEDIA_BUS_FMT_FIXED;
-> > >> +          /*
-> > >> +           * NOTE: setting a format here doesn't make much sense
-> > >> +           * but v4l2-compliance complains
-> > >> +           */
-> > >> +          fmt->format.width = RKISP1_DEFAULT_WIDTH;
-> > >> +          fmt->format.height = RKISP1_DEFAULT_HEIGHT;
-> > >
-> > > As I had mentioned to you, this is called for the isp pads connected to the
-> > > DMA engines for statistics and parameters (meta data).
-> > >
-> > > If I remove those, I get the following errors:
-> > >
-> > > Sub-Device ioctls (Sink Pad 1):
-> > >         test Try VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> > >                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-> > >                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-> > >         test Try VIDIOC_SUBDEV_G/S_FMT: FAIL
-> > >         test Try VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
-> > >         test Active VIDIOC_SUBDEV_ENUM_MBUS_CODE/FRAME_SIZE/FRAME_INTERVAL: OK
-> > >                 fail: v4l2-test-subdevs.cpp(311): fmt.width == 0 || fmt.width > 65536
-> > >                 fail: v4l2-test-subdevs.cpp(356): checkMBusFrameFmt(node, fmt.format)
-> > >         test Active VIDIOC_SUBDEV_G/S_FMT: FAIL
-> > >         test Active VIDIOC_SUBDEV_G/S_SELECTION/CROP: OK
-> > >         test VIDIOC_SUBDEV_G/S_FRAME_INTERVAL: OK (Not Supported)
-> > >
-> > > Here is the full log: http://ix.io/1QNt
-> > >
-> > > Is this a bug in v4l2-compliance?
-> >
-> > Yes and no :-)
-> >
-> > Currently v4l2-compliance assumes that only video is transferred over a media bus.
-> > But that's not the case here, and testing the code field doesn't help v4l2-compliance
-> > since MEDIA_BUS_FMT_FIXED is also still used by some older subdev drivers for video.
-> >
-> > I think we need a new bus format: MEDIA_BUS_FMT_FIXED_METADATA. Then v4l2-compliance
-> > can tell it apart from the regular fixed video bus format.
->
-> Wouldn't a pad flag that identifies the type of data transmitted by a
-> pad be a better, backward-compatible option ? This could be useful for
-> audio as well.
+Hi all,
 
-Hi,
-Can you explain what pad flag do you mean?
-Do you mean adding a flag in the 'MEDIA_LNK_FL_*' list ?
-Also, some valid value should be set to  'fmt->format.code' so with
-the flags solution
-that you suggest it should stay  MEDIA_BUS_FMT_FIXED ?
+Here is a series splitting up the thermal bindings into 3 separate bindings
+in YAML, one each of the sensor, cooling-device and the thermal zones.
 
-thanks,
-Dafna
->
-> > If I do a 'git grep MEDIA_BUS_FMT_FIXED' then I see that it is also in use by vsp1
-> > for histogram information, so that should also be converted to use the new FIXED_METADATA
-> > format, although that might be too late (there might be userspace complications).
->
-> Yes, probably not a good idea.
->
-> > >> +          fmt->format.field = V4L2_FIELD_NONE;
-> > >> +          return 0;
-> > >> +  }
-> > >> +
-> > >> +  if (fmt->which == V4L2_SUBDEV_FORMAT_TRY) {
-> > >> +          mf = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
-> > >> +          fmt->format = *mf;
-> > >> +          return 0;
-> > >> +  }
-> > >> +
-> > >> +  if (fmt->pad == RKISP1_ISP_PAD_SINK) {
-> > >> +          *mf = isp_sd->in_frm;
-> > >> +  } else if (fmt->pad == RKISP1_ISP_PAD_SOURCE_PATH) {
-> > >> +          /* format of source pad */
-> > >> +          *mf = isp_sd->in_frm;
-> > >> +          mf->code = isp_sd->out_fmt.mbus_code;
-> > >> +          /* window size of source pad */
-> > >> +          mf->width = isp_sd->out_crop.width;
-> > >> +          mf->height = isp_sd->out_crop.height;
-> > >> +          mf->quantization = isp_sd->quantization;
-> > >> +  }
-> > >> +  mf->field = V4L2_FIELD_NONE;
-> > >> +
-> > >> +  return 0;
-> > >> +}
->
-> --
-> Regards,
->
-> Laurent Pinchart
+A series to remove thermal.txt and change over all references to it will
+follow shortly. Another series to fixup problems found by enforcing this
+yaml definition across dts files will also follow.
+
+Changes since v2:
+- Addressed review comment from Rob
+- Added required properties for thermal-zones node
+- Added select: true to thermal-cooling-devices.yaml
+- Fixed up example to pass dt_binding_check
+
+Changes since v1:
+- Addressed review comments from Rob
+- Moved the license back to GPLv2, waiting for other authors to give
+  permission to relicense to BSD-2-Clause as well
+- Fixed up warnings thrown by dt_binding_check
+
+I have to add that the bindings as they exist today, don't really follow
+the "describe the hardware" model of devicetree. e.g. the entire
+thermal-zone binding is a software abstraction to tie arbitrary,
+board-specific trip points to cooling strategies. This doesn't fit well
+into the model where the same SoC in two different form-factor devices e.g.
+mobile and laptop, will have fairly different thermal profiles and might
+benefit from different trip points and mitigation heuristics. I've started
+some experiments with moving the thermal zone data to a board-specific
+platform data that is used to initialise a "thermal zone driver".
+
+In any case, if we ever move down that path, it'll probably end up being v2
+of the binding, so this series is still relevant.
+
+Please help review.
+
+Regards,
+Amit
+
+Amit Kucheria (3):
+  dt-bindings: thermal: Add yaml bindings for thermal sensors
+  dt-bindings: thermal: Add yaml bindings for thermal cooling-devices
+  dt-bindings: thermal: Add yaml bindings for thermal zones
+
+ .../thermal/thermal-cooling-devices.yaml      | 116 +++++++
+ .../bindings/thermal/thermal-sensor.yaml      |  72 ++++
+ .../bindings/thermal/thermal-zones.yaml       | 324 ++++++++++++++++++
+ 3 files changed, 512 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-sensor.yaml
+ create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+
+-- 
+2.20.1
+
