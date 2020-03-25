@@ -2,64 +2,64 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C760C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D42C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8932076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85DA22076F
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="rrNk6Kcx"
+	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="iLyoXKlK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727973AbgCYSMF (ORCPT
+        id S1728036AbgCYSMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:12:05 -0400
-Received: from mail-ed1-f99.google.com ([209.85.208.99]:40505 "EHLO
-        mail-ed1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727466AbgCYSMD (ORCPT
+        Wed, 25 Mar 2020 14:12:10 -0400
+Received: from mail-lf1-f99.google.com ([209.85.167.99]:38298 "EHLO
+        mail-lf1-f99.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727911AbgCYSME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:12:03 -0400
-Received: by mail-ed1-f99.google.com with SMTP id w26so3721246edu.7
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:12:01 -0700 (PDT)
+        Wed, 25 Mar 2020 14:12:04 -0400
+Received: by mail-lf1-f99.google.com with SMTP id c5so2636474lfp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:12:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=flowbird.group; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KKpKhLhaC9HGAwcc/wCEo8PVI3BgJbUGYTvCaeR49Ok=;
-        b=rrNk6KcxURyxMqPmDLj2w7bRmiDPMbUI0d/kn5MoPrEUo33YzVn3zrxcuD85NeIErE
-         +uGfzC7ut3SYcHQaLhmVWeUTDF73/vZGMa7Ku0Mz/KEWdWqxjWZHRLrkQP0RfXWMGD0m
-         g8VbKMTkYncsJmDzeZV4BiiiM5zYJmPUIi2Cs4pHzaY5pWLRtjTfZVHxHP9YFhI9gv2h
-         /soDGEdt35MheO4BaZk6KhmtRX4IfSR4z5IKnqcXCOr/49iFIdKQh5jwWJD6BMQDXElL
-         to2vidpfeVH7HdXqu2o5MY3gopz3yUWfxHW8arc0tljoE4wT5MR3wxtPfBk3kpMziCWj
-         MZ5A==
+        bh=fLsD0pf0Z2Qy/ATTVpbRFX98Scq2+qNt41yDSpwIQQk=;
+        b=iLyoXKlKVAEeJKb4GZYsqeun1adVsC9YRwFHuXskB9nuaEPBvhLao07deNQYw72RQZ
+         wUwwf0sN6Ny/pl8t5eyZT7VfFmA3hHfjm0p/6KznAlT68UT2/NfUk4WM2Bzg2QPFbQNK
+         Dq1SSAcgbZ97s/TTEkSa8wqn5E9oLog/QQ9+ti8S0vepfcEUM3V4wFHq5Zow6/K/fYGH
+         U/veqSNDhMM86ByHOJR9SIOtlnkc38IhLnho9ySmFzY8ZsFnUvBQ23Ybb+NcJ4a7pQMO
+         XTwn5dlOUF1oWN2ly2rRSEI7VzWpGaIUzS7n+zM1bjONc+vbSRGCjXC0QOf+r1RIlru6
+         +A3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=KKpKhLhaC9HGAwcc/wCEo8PVI3BgJbUGYTvCaeR49Ok=;
-        b=FO99ZDjixh+imycVc0MxOstci9D/wtkzcWxeNt05jH2kU9aGxPpDd6U5iF+woI6XVO
-         XdqEeIfgZxpGnbGQSGFwIo/A5e5Nzt5o8Cv8h3eM0laSvV3Dlz9n8UP/L1byabXN+ZQo
-         72UnK9bzmN8gLyo7mWRoqt5x82/gO8z77l/3eTHBu9fnA23elIl5Xrcwm6z1G7G2Sptu
-         ogvkWAwGxIIpZFE71/LKqsy9wtk9ZmnjRGvoeg14FRvg2TDWmWC6xkp9hUWC47h0IZ6R
-         9/DUhGaGBKl7GAGPX2WWRkFPsWjVqfAlai52cdUYxkQWJcY1J6+3tJnCEqIS3C7Q4IRK
-         JS0Q==
-X-Gm-Message-State: ANhLgQ1F+b82ZetHaKvze+E8GA1+wMuk/NSMgNujD/ol5UAFGTADEdP4
-        PKrJfiCFjKeJWFDh3Qdl7pmvdg8i8MwyIqrpW4aaO52yyjqy
-X-Google-Smtp-Source: ADFU+vuep+cArUuYfyT4aIlU+oz4LwkVg1M9a67K8D0RfGmqdTIIjC4kRTkukTB5EAVMq2zHqSjAPESSkERj
-X-Received: by 2002:a17:906:1cc9:: with SMTP id i9mr2034588ejh.0.1585159920479;
-        Wed, 25 Mar 2020 11:12:00 -0700 (PDT)
+        bh=fLsD0pf0Z2Qy/ATTVpbRFX98Scq2+qNt41yDSpwIQQk=;
+        b=SekPodEz+bj5xCKdqGkKFEVEqm7LRCTqYd3PAs5w71ZDbB9rL9CDGeZ3Yvh/n3N1nt
+         cB0/yhkb6CTHL3TpJmaKnNSG34ZRYzvTHFuwOizcC7BBKrtSvtttYzKPLi0OmnAmELpD
+         cRfUIZ/RDcJfWOmvttXFn4HHA6NS6zyxGqAvTq1zaBcG4pztJWFtVkMeZcgDcuq/DiAZ
+         +KpyCaW/Ll7wnmybDiEKXWKVTHAD6pkIBQY+8JWSW9Lb3dSSSasCAgeb8mQ7vR5OxCeC
+         RVmE9GToMpf05O11cbNPao1LBdHKjN7UaIG8a5WMnCi6m8ALKxPcS9wzSqzqsvVQeRBv
+         KuNg==
+X-Gm-Message-State: ANhLgQ1eoJlZK15Cpiwy6Lx42Ggeet7um0SquFTpK4pAWhqNwofvkFZN
+        B7Y+xwMbb3gIPcoSbM0dpKXTVEsyx0rLKyizJtv9hv/HY7F2
+X-Google-Smtp-Source: ADFU+vu3J9uRTLiIP5vf8lSLTAkoSWCPvzFRTGJZ+RRp6NqycNXaFIzinWVyrA2u9iaNoUfPCIbblHthN6mv
+X-Received: by 2002:a19:660a:: with SMTP id a10mr3091046lfc.9.1585159921405;
+        Wed, 25 Mar 2020 11:12:01 -0700 (PDT)
 Received: from mail.besancon.parkeon.com ([185.149.63.251])
-        by smtp-relay.gmail.com with ESMTPS id x25sm182281edl.7.2020.03.25.11.12.00
+        by smtp-relay.gmail.com with ESMTPS id x11sm55799lji.25.2020.03.25.11.12.01
         (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 25 Mar 2020 11:12:00 -0700 (PDT)
+        Wed, 25 Mar 2020 11:12:01 -0700 (PDT)
 X-Relaying-Domain: flowbird.group
 Received: from [172.16.13.190] (port=39524 helo=PC12445-BES.dynamic.besancon.parkeon.com)
         by mail.besancon.parkeon.com with esmtp (Exim 4.71)
         (envelope-from <martin.fuzzey@flowbird.group>)
-        id 1jHAVT-0003Oy-U9; Wed, 25 Mar 2020 19:12:00 +0100
+        id 1jHAVU-0003Oy-K9; Wed, 25 Mar 2020 19:12:00 +0100
 From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
 To:     Fugang Duan <fugang.duan@nxp.com>,
         Rob Herring <robh+dt@kernel.org>,
@@ -70,9 +70,9 @@ Cc:     netdev@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         NXP Linux Team <linux-imx@nxp.com>,
         devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v2 3/4] dt-bindings: fec: document the new gpr property.
-Date:   Wed, 25 Mar 2020 19:11:58 +0100
-Message-Id: <1585159919-11491-4-git-send-email-martin.fuzzey@flowbird.group>
+Subject: [PATCH v2 4/4] ARM: dts: imx6: add fec gpr property.
+Date:   Wed, 25 Mar 2020 19:11:59 +0100
+Message-Id: <1585159919-11491-5-git-send-email-martin.fuzzey@flowbird.group>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1585159919-11491-1-git-send-email-martin.fuzzey@flowbird.group>
 References: <1585159919-11491-1-git-send-email-martin.fuzzey@flowbird.group>
@@ -81,27 +81,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This property allows the gpr register bit to be defined
-for wake on lan support.
+This is required for wake on lan on i.MX6
 
 Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
 ---
- Documentation/devicetree/bindings/net/fsl-fec.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6qdl.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-index 5b88fae0..ff8b0f2 100644
---- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-+++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-@@ -22,6 +22,8 @@ Optional properties:
- - fsl,err006687-workaround-present: If present indicates that the system has
-   the hardware workaround for ERR006687 applied and does not need a software
-   workaround.
-+- gpr: phandle of SoC general purpose register mode. Required for wake on LAN
-+  on some SoCs
-  -interrupt-names:  names of the interrupts listed in interrupts property in
-   the same order. The defaults if not specified are
-   __Number of interrupts__   __Default__
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index bc488df..65b0c8a 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1045,6 +1045,7 @@
+ 					 <&clks IMX6QDL_CLK_ENET>,
+ 					 <&clks IMX6QDL_CLK_ENET_REF>;
+ 				clock-names = "ipg", "ahb", "ptp";
++				gpr = <&gpr>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
 1.9.1
 
