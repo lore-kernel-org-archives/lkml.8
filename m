@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C39F2C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711DDC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CD71206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3B220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCYIno (ORCPT
+        id S1727356AbgCYIo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:43:44 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60568 "EHLO mx2.suse.de"
+        Wed, 25 Mar 2020 04:44:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:32794 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbgCYIno (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:43:44 -0400
+        id S1726658AbgCYIo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 04:44:58 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 10FAEAFB8;
-        Wed, 25 Mar 2020 08:43:43 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 09:43:41 +0100 (CET)
+        by mx2.suse.de (Postfix) with ESMTP id 77F06AFD4;
+        Wed, 25 Mar 2020 08:44:57 +0000 (UTC)
+Date:   Wed, 25 Mar 2020 09:44:56 +0100 (CET)
 From:   Miroslav Benes <mbenes@suse.cz>
 To:     Peter Zijlstra <peterz@infradead.org>
 cc:     tglx@linutronix.de, jpoimboe@redhat.com,
         linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
         brgerst@gmail.com
-Subject: Re: [PATCH v3 02/26] objtool: Rename func_for_each_insn()
-In-Reply-To: <20200324160924.024341229@infradead.org>
-Message-ID: <alpine.LSU.2.21.2003250942370.12098@pobox.suse.cz>
-References: <20200324153113.098167666@infradead.org> <20200324160924.024341229@infradead.org>
+Subject: Re: [PATCH v3 03/26] objtool: Rename func_for_each_insn_all()
+In-Reply-To: <20200324160924.083720147@infradead.org>
+Message-ID: <alpine.LSU.2.21.2003250944430.12098@pobox.suse.cz>
+References: <20200324153113.098167666@infradead.org> <20200324160924.083720147@infradead.org>
 User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,17 +43,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Tue, 24 Mar 2020, Peter Zijlstra wrote:
 
-> There is func_for_each_insn() and func_for_each_insn_all(), the both
-> iterate the instructions, but the first uses symbol offset/length
-> while the second uses insn->func.
+> Now that func_for_each_insn() is available, rename
+> func_for_each_insn_all(). This gets us:
 > 
-> Rename func_for_each_insn() to sym_for_eac_insn() because it iterates
-
-I did not notice before, but there is a typo
-
-s/sym_for_eac_insn/sym_for_each_insn/
-
-> on symbol information.
+>   sym_for_each_insn()  - iterate on symbol offset/len
+>   func_for_each_insn() - iterate on insn->func
 > 
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
