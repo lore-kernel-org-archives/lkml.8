@@ -2,121 +2,221 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 594CBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:53:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10ED1C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BD1620772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDAF42076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:54:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=micronovasrl.com header.i=@micronovasrl.com header.b="AoUPJH25"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgCYXxR (ORCPT
+        id S1727553AbgCYXyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 19:53:17 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:37183 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727420AbgCYXxQ (ORCPT
+        Wed, 25 Mar 2020 19:54:54 -0400
+Received: from mail.micronovasrl.com ([212.103.203.10]:54634 "EHLO
+        mail.micronovasrl.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbgCYXyy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 19:53:16 -0400
-Received: by mail-il1-f198.google.com with SMTP id z89so3729462ilk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 16:53:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=UNj2qoNp2EDsJduyq1HEeQOiY3pxbpZumTQii8yfjlU=;
-        b=mq8rlQ1b/sJVENtWEAxnE5H04gkAGKcBREgRjrrut/2Ql1CVakR99t7/E/DVe58ZpI
-         82wgKHc8muRx0BsKOWM/x9Z7zXEC4jR4TtnMQL01elQcwRuEVzP5+opKVPs9zVmusgQX
-         hFPKSXDOW5Z0uw6yXwPa0MyrwAmXztqU7zLnVSw+yJISrLYLRdzcWsAIncV3a7e/LM3o
-         5/+nvFN7U8xLBtKCia+r1Qe8xEYtRB7gb1nguNPcGV3aCAOIgyyF4F81WY8lXeVGg/Qw
-         ktJLCXuGh1j1uol6UnqroOKcxS76MpQRengnqtjtVJD3lhIV6HcoW/whUcYOzDTP8TzO
-         XwJA==
-X-Gm-Message-State: ANhLgQ2q+km+xaBOSohpEtsP18ChEd1HdbhcwavNLtamqC6ru4K3iVCX
-        rpPu0CTwXFbfN69WXBzVqSpcrbtataMEKE+5SRmPYwlZsHkD
-X-Google-Smtp-Source: ADFU+vvagsNoX0oJkZQjuoypra4R0dtpTSblri6+fSiMlfyRYg9bqvbHPwT+F5fSS7hidwGJX6GAKOdsLZyJ7UUGiWnLEGRrgUDL
+        Wed, 25 Mar 2020 19:54:54 -0400
+Received: from mail.micronovasrl.com (mail.micronovasrl.com [127.0.0.1])
+        by mail.micronovasrl.com (Postfix) with ESMTP id CCD88B02EB5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:47:39 +0100 (CET)
+Authentication-Results: mail.micronovasrl.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=micronovasrl.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=micronovasrl.com;
+         h=content-transfer-encoding:content-language:content-type
+        :content-type:in-reply-to:mime-version:user-agent:date:date
+        :message-id:from:from:references:to:subject:subject; s=dkim; t=
+        1585180059; x=1586044060; bh=hwawGVLeEGKlOEKyGcHOaP4x1GO8hx2CZJL
+        TZm7JUXI=; b=AoUPJH25pI4oMJqKYEpNS7bT5Iwr/HC3crlHMgK2xgWu4/t1rDO
+        1/FGfmEXI2fafrGY+GasxHnEgvkEefwXwB4ziqtbXdv2iFqUrIjYQOozjGv4lvgZ
+        0mCrDXpA3WPtqyZYi8BiqWhXbkC/DkhKz2sjZcp+v6nHiePNpZOqV3ik=
+X-Virus-Scanned: Debian amavisd-new at mail.micronovasrl.com
+Received: from mail.micronovasrl.com ([127.0.0.1])
+        by mail.micronovasrl.com (mail.micronovasrl.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id njhiqmd70Bgb for <linux-kernel@vger.kernel.org>;
+        Thu, 26 Mar 2020 00:47:39 +0100 (CET)
+Received: from [10.212.134.200] (unknown [192.168.123.254])
+        by mail.micronovasrl.com (Postfix) with ESMTPSA id 42F53B02E4E;
+        Thu, 26 Mar 2020 00:47:38 +0100 (CET)
+Subject: Re: [PATCH v2 4/7] serial: 8250: Handle implementations not having
+ TEMT interrupt using em485
+To:     Heiko Stuebner <heiko@sntech.de>, gregkh@linuxfoundation.org
+Cc:     jslaby@suse.com, andriy.shevchenko@linux.intel.com,
+        matwey.kornilov@gmail.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, lukas@wunner.de,
+        christoph.muellner@theobroma-systems.com,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+References: <20200325231422.1502366-1-heiko@sntech.de>
+ <20200325231422.1502366-5-heiko@sntech.de>
+From:   Giulio Benetti <giulio.benetti@micronovasrl.com>
+Message-ID: <3a5df648-b054-3338-f7a4-4c01783eabf6@micronovasrl.com>
+Date:   Thu, 26 Mar 2020 00:47:38 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:740d:: with SMTP id o13mr5164814jac.113.1585180395611;
- Wed, 25 Mar 2020 16:53:15 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 16:53:15 -0700
-In-Reply-To: <000000000000269a1405a12fdc77@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000062ad2005a1b69253@google.com>
-Subject: Re: WARNING in kcm_write_msgs
-From:   syzbot <syzbot+52624bdfbf2746d37d70@syzkaller.appspotmail.com>
-To:     andriin@fb.com, anenbupt@gmail.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        edumazet@google.com, info@metux.net, jonathan.lemon@gmail.com,
-        jslaby@suse.cz, kafai@fb.com, kstewart@linuxfoundation.org,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, samitolvanen@google.com,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, willy@infradead.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200325231422.1502366-5-heiko@sntech.de>
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
+Content-Language: it
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Heiko,
 
-HEAD commit:    29f3490b net: use indirect call wrappers for skb_copy_data..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12876b91e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8d5bbd990b8ab319
-dashboard link: https://syzkaller.appspot.com/bug?extid=52624bdfbf2746d37d70
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1394bd39e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10da50ade00000
+very cleaner way to handle TEMT as a capability!
+And I've found one thing...
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+52624bdfbf2746d37d70@syzkaller.appspotmail.com
+Il 26/03/2020 00:14, Heiko Stuebner ha scritto:
+> From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> 
+> Some 8250 ports have a TEMT interrupt but it's not a part of the 8250
+> standard, instead only available on some implementations.
+> 
+> The current em485 implementation does not work on ports without it.
+> The only chance to make it work is to loop-read on LSR register.
+> 
+> So add UART_CAP_TEMT to mark 8250 uarts having this interrupt,
+> update all current em485 users with that capability and make
+> the stop_tx function loop-read on uarts not having it.
+> 
+> Signed-off-by: Giulio Benetti <giulio.benetti@micronovasrl.com>
+> [moved to use added UART_CAP_TEMT, use readx_poll_timeout]
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>   drivers/tty/serial/8250/8250.h            |  1 +
+>   drivers/tty/serial/8250/8250_bcm2835aux.c |  2 +-
+>   drivers/tty/serial/8250/8250_of.c         |  2 ++
+>   drivers/tty/serial/8250/8250_omap.c       |  2 +-
+>   drivers/tty/serial/8250/8250_port.c       | 25 +++++++++++++++++++----
+>   5 files changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
+> index 52bb21205bb6..770eb00db497 100644
+> --- a/drivers/tty/serial/8250/8250.h
+> +++ b/drivers/tty/serial/8250/8250.h
+> @@ -82,6 +82,7 @@ struct serial8250_config {
+>   #define UART_CAP_MINI	(1 << 17)	/* Mini UART on BCM283X family lacks:
+>   					 * STOP PARITY EPAR SPAR WLEN5 WLEN6
+>   					 */
+> +#define UART_CAP_TEMT	(1 << 18)	/* UART has TEMT interrupt */
+>   
+>   #define UART_BUG_QUOT	(1 << 0)	/* UART has buggy quot LSB */
+>   #define UART_BUG_TXEN	(1 << 1)	/* UART has buggy TX IIR status */
+> diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
+> index 12d03e678295..3881242424ca 100644
+> --- a/drivers/tty/serial/8250/8250_bcm2835aux.c
+> +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
+> @@ -91,7 +91,7 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
+>   		return -ENOMEM;
+>   
+>   	/* initialize data */
+> -	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI;
+> +	up.capabilities = UART_CAP_FIFO | UART_CAP_MINI | UART_CAP_TEMT;
+>   	up.port.dev = &pdev->dev;
+>   	up.port.regshift = 2;
+>   	up.port.type = PORT_16550;
+> diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
+> index 65e9045dafe6..841f6fcb2878 100644
+> --- a/drivers/tty/serial/8250/8250_of.c
+> +++ b/drivers/tty/serial/8250/8250_of.c
+> @@ -225,6 +225,8 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>   			&port8250.overrun_backoff_time_ms) != 0)
+>   		port8250.overrun_backoff_time_ms = 0;
+>   
+> +	port8250.capabilities |= UART_CAP_TEMT;
+> +
 
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 11822 at net/kcm/kcmsock.c:628 kcm_write_msgs+0xfb6/0x1760 net/kcm/kcmsock.c:628
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 11822 Comm: syz-executor408 Not tainted 5.6.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x188/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x35 kernel/panic.c:582
- report_bug+0x27b/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x12b/0x220 arch/x86/kernel/traps.c:267
- do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:kcm_write_msgs+0xfb6/0x1760 net/kcm/kcmsock.c:628
-Code: fa 48 c1 ea 03 80 3c 02 00 0f 85 5e 05 00 00 48 8b 44 24 50 45 31 e4 48 8b 74 24 08 48 89 70 10 e9 95 f4 ff ff e8 7a 8a 53 fa <0f> 0b 41 bc ea ff ff ff e9 83 f4 ff ff e8 68 8a 53 fa 0f 0b e9 1c
-RSP: 0018:ffffc900015e7978 EFLAGS: 00010293
-RAX: ffff888085688240 RBX: ffff88808571e800 RCX: ffffffff871e8c3c
-RDX: 0000000000000000 RSI: ffffffff871e9496 RDI: 0000000000000001
-RBP: 0000000000000000 R08: ffff888085688240 R09: fffffbfff185158c
-R10: fffffbfff185158b R11: ffffffff8c28ac5f R12: 0000000000008000
-R13: ffff8880a65b96c0 R14: 00000000000000c0 R15: ffff8880a6fe6d40
- kcm_sendmsg+0x1b67/0x2129 net/kcm/kcmsock.c:1034
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- sock_write_iter+0x283/0x3c0 net/socket.c:1004
- call_write_iter include/linux/fs.h:1901 [inline]
- new_sync_write+0x49c/0x700 fs/read_write.c:483
- __vfs_write+0xc9/0x100 fs/read_write.c:496
- vfs_write+0x262/0x5c0 fs/read_write.c:558
- ksys_write+0x1e8/0x250 fs/read_write.c:611
- do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x446b79
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 5b 07 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2e8f3e5d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000006dbc48 RCX: 0000000000446b79
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: 00000000006dbc40 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc4c
-R13: 00000000200003c0 R14: 00000000004aea28 R15: 000000000000d4f5
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+Shouldn't this be NOT UART_CAP_TEMT set by default? On all other
+vendor specific files you enable it, I think here you shouldn't enable
+it too by default. Right?
+
+Best regards
+-- 
+Giulio Benetti
+CTO
+
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale ¤ 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
+
+>   	ret = serial8250_register_8250_port(&port8250);
+>   	if (ret < 0)
+>   		goto err_dispose;
+> diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+> index dd69226ce918..d29d5b0cf8c1 100644
+> --- a/drivers/tty/serial/8250/8250_omap.c
+> +++ b/drivers/tty/serial/8250/8250_omap.c
+> @@ -1140,7 +1140,7 @@ static int omap8250_probe(struct platform_device *pdev)
+>   	up.port.regshift = 2;
+>   	up.port.fifosize = 64;
+>   	up.tx_loadsz = 64;
+> -	up.capabilities = UART_CAP_FIFO;
+> +	up.capabilities = UART_CAP_FIFO | UART_CAP_TEMT;
+>   #ifdef CONFIG_PM
+>   	/*
+>   	 * Runtime PM is mostly transparent. However to do it right we need to a
+> diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
+> index 47c059987538..41ad7db6a31e 100644
+> --- a/drivers/tty/serial/8250/8250_port.c
+> +++ b/drivers/tty/serial/8250/8250_port.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/moduleparam.h>
+>   #include <linux/ioport.h>
+>   #include <linux/init.h>
+> +#include <linux/iopoll.h>
+>   #include <linux/console.h>
+>   #include <linux/sysrq.h>
+>   #include <linux/delay.h>
+> @@ -1520,6 +1521,11 @@ static inline void __do_stop_tx(struct uart_8250_port *p)
+>   		serial8250_rpm_put_tx(p);
+>   }
+>   
+> +static inline int __get_lsr(struct uart_8250_port *p)
+> +{
+> +	return serial_in(p, UART_LSR);
+> +}
+> +
+>   static inline void __stop_tx(struct uart_8250_port *p)
+>   {
+>   	struct uart_8250_em485 *em485 = p->em485;
+> @@ -1529,11 +1535,22 @@ static inline void __stop_tx(struct uart_8250_port *p)
+>   		/*
+>   		 * To provide required timeing and allow FIFO transfer,
+>   		 * __stop_tx_rs485() must be called only when both FIFO and
+> -		 * shift register are empty. It is for device driver to enable
+> -		 * interrupt on TEMT.
+> +		 * shift register are empty. If 8250 port supports it,
+> +		 * it is for device driver to enable interrupt on TEMT.
+> +		 * Otherwise must loop-read until TEMT and THRE flags are set.
+>   		 */
+> -		if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
+> -			return;
+> +		if (p->capabilities & UART_CAP_TEMT) {
+> +			if ((lsr & BOTH_EMPTY) != BOTH_EMPTY)
+> +				return;
+> +		} else {
+> +			int lsr;
+> +
+> +			if (readx_poll_timeout(__get_lsr, p, lsr,
+> +					(lsr & BOTH_EMPTY) == BOTH_EMPTY,
+> +					0, 10000) < 0)
+> +				pr_warn("%s: timeout waiting for fifos to empty\n",
+> +					p->port.name);
+> +		}
+>   
+>   		__stop_tx_rs485(p);
+>   	}
+> 
 
