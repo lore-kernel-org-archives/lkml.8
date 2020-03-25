@@ -2,115 +2,311 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD92EC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22D12C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B486820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E38AC206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:02:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pZvmY7Zk"
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="gmdaQYYx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbgCYEBX (ORCPT
+        id S1726104AbgCYECd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:01:23 -0400
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:33963 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCYEBV (ORCPT
+        Wed, 25 Mar 2020 00:02:33 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17852 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725832AbgCYECd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:01:21 -0400
-Received: by mail-qk1-f180.google.com with SMTP id i6so1248430qke.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 21:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=DskibvAiGWQU1ARR7W7zFMaIjJJriimC2l9FtZs64I0=;
-        b=pZvmY7ZkAuo+/4NyiQcHwafNLNtwnKmB3PrdQGW6qKrTjt/CMJ+uEYqcrz9xT2Cw4x
-         j13vxwwYZSriP3IBLLplKbBjj/wTLCohU5oINSohFlBoPZ+U+FRZgxX1liqYM2GAfs7Y
-         w3QXDzUn9kf3fOGGmdgbk6W10mH2wEmrsdmC7YpXDTDDpqlIZc6Fz3RwpzCnvmk2L7aA
-         Y+4/KG+JkjZzYZ3N9BFkxA0xztIgklf5Yvx8KIIaBFrUqwN7MEc4tsSDZ8/D84EtBhCQ
-         8DFe13NsU8zwxP27EwxdFzuhpKLSFPg2TDEpKL82wn9P1pOepYnUnkyNFSh3EsUmaf/M
-         dUyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=DskibvAiGWQU1ARR7W7zFMaIjJJriimC2l9FtZs64I0=;
-        b=otOFUacqgsoMI1DP9AgqSCl322qzemcV0FdPcECuthvWPLVKU3khCQ5qCxzp06WuTo
-         9XTCYkqB+DJ6g9JqksSLKO3rdi76UQR7t3rSlTB2iNpeDTVvo6tOiakIKrtMfeoF74RR
-         fw9Yv1gSf0G2E3L0sjd3+pGTlYRbtHD3wHWoXkx3B8t5DVp5wfOekn5Cyt1tyG+OG0rQ
-         6IIOo9EeIjNbrOBpJlgq5AdFxW+5wECZKJy/2x4j+ILvjxchRUE/W2Z4b+X8ZjQX3z4t
-         2alfq8I8Z6dQkFmYQbdQ3rnHpoqi6C1VueJ4HMcBzjWpKCT2SXe9o8cCMMn8wo7gUpkr
-         GCQg==
-X-Gm-Message-State: ANhLgQ1+j+TjWPrel8/YvitWalFvVoTfoM/zrjS/2fnEwSXR1IQSKohR
-        DgWHzmXuEpZJ2lbDXJyKjwIJOA==
-X-Google-Smtp-Source: ADFU+vsdiGhtpKoOEJ+eixikB8yrQocIP7tDnbFeUUKU+nUsAgxyDuV4OYOhCiPsPbyS4lLGKFs/Pw==
-X-Received: by 2002:a37:2f43:: with SMTP id v64mr1115949qkh.480.1585108879825;
-        Tue, 24 Mar 2020 21:01:19 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w28sm16608346qtc.27.2020.03.24.21.01.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Mar 2020 21:01:18 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-Content-Type: text/plain;
-        charset=utf-8
+        Wed, 25 Mar 2020 00:02:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585108852;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=RQVm0r+luGqUVLFzRTEPol0zczKTRb0/Y5keRAUawAw=;
+        b=gmdaQYYxYvNP1ZOi0y1oJMda+oTBpA+gfTnDA6UhmMKPwr7/4RfwhTylUmwirgLF
+        H6iOJK59rI8r7nZcZNTCxPsNJ0+xgoQCo4jqaSySMU3wSdVCsnGLfpexs0INGbGQ+0t
+        N0te+VqPWwX6J8iZ4ev0xpT5VtvpbAtf4seMaJBw=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1585108849743904.9854707624836; Wed, 25 Mar 2020 12:00:49 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Message-ID: <20200325035537.156911-10-jiaxun.yang@flygoat.com>
+Subject: [PATCH v8 09/11] MIPS: Loongson64: Add generic dts
+Date:   Wed, 25 Mar 2020 11:55:02 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: No networking due to "net/mlx5e: Add support for devlink-port in
- non-representors mode"
-Message-Id: <0DF043A6-F507-4CB4-9764-9BD472ABCF01@lca.pw>
-Date:   Wed, 25 Mar 2020 00:01:17 -0400
-Cc:     Moshe Shemesh <moshe@mellanox.com>, Jiri Pirko <jiri@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-To:     Vladyslav Tarasiuk <vladyslavt@mellanox.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reverted the linux-next commit c6acd629ee (=E2=80=9Cnet/mlx5e: Add =
-support for devlink-port in non-representors mode=E2=80=9D)
-and its dependencies,
+Add generic device dts for Loongson-3 devices.
+They are currently almost identical but will be different later.
+Some PCH devices like PCI Host Bridge is still enabled by platform
+code for now.
 
-162add8cbae4 (=E2=80=9Cnet/mlx5e: Use devlink virtual flavour for VF =
-devlink port=E2=80=9D)
-31e87b39ba9d (=E2=80=9Cnet/mlx5e: Fix devlink port register sequence=E2=80=
-=9D)
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Co-developed-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+---
+ arch/mips/Kconfig                             |  6 +-
+ arch/mips/boot/dts/Makefile                   |  1 +
+ arch/mips/boot/dts/loongson/Makefile          |  4 ++
+ .../boot/dts/loongson/loongson3-package.dtsi  | 64 +++++++++++++++++++
+ .../dts/loongson/loongson3_4core_rs780e.dts   | 25 ++++++++
+ .../dts/loongson/loongson3_8core_rs780e.dts   | 25 ++++++++
+ arch/mips/boot/dts/loongson/rs780e-pch.dtsi   | 26 ++++++++
+ 7 files changed, 149 insertions(+), 2 deletions(-)
+ create mode 100644 arch/mips/boot/dts/loongson/Makefile
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3-package.dtsi
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+ create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch.dtsi
 
-on the top of next-20200324 allowed NICs to obtain an IPv4 address from =
-DHCP again.
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index ca3045b2a2d9..4a0b2f494d79 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -486,9 +486,11 @@ config MACH_LOONGSON64
+ =09select SYS_SUPPORTS_HIGHMEM
+ =09select SYS_SUPPORTS_LITTLE_ENDIAN
+ =09select SYS_SUPPORTS_ZBOOT
+-=09select LOONGSON_MC146818
+ =09select ZONE_DMA32
+ =09select NUMA
++=09select COMMON_CLK
++=09select USE_OF
++=09select BUILTIN_DTB
+ =09help
+ =09  This enables the support of Loongson-2/3 family of machines.
+=20
+@@ -3081,7 +3083,7 @@ endchoice
+ choice
+ =09prompt "Kernel command line type" if !CMDLINE_OVERRIDE
+ =09default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 && !MACH_INGENIC && \
+-=09=09=09=09=09 !MIPS_MALTA && \
++=09=09=09=09=09 !MACH_LOONGSON64 && !MIPS_MALTA && \
+ =09=09=09=09=09 !CAVIUM_OCTEON_SOC
+ =09default MIPS_CMDLINE_FROM_BOOTLOADER
+=20
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index 1e79cab8e269..d429a69bfe30 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -4,6 +4,7 @@ subdir-y=09+=3D cavium-octeon
+ subdir-y=09+=3D img
+ subdir-y=09+=3D ingenic
+ subdir-y=09+=3D lantiq
++subdir-y=09+=3D loongson
+ subdir-y=09+=3D mscc
+ subdir-y=09+=3D mti
+ subdir-y=09+=3D netlogic
+diff --git a/arch/mips/boot/dts/loongson/Makefile b/arch/mips/boot/dts/loon=
+gson/Makefile
+new file mode 100644
+index 000000000000..56d379471262
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/Makefile
+@@ -0,0 +1,4 @@
++# SPDX_License_Identifier: GPL_2.0
++dtb-$(CONFIG_MACH_LOONGSON64)=09+=3D loongson3_4core_rs780e.dtb loongson3_=
+8core_rs780e.dtb
++
++obj-$(CONFIG_BUILTIN_DTB)=09+=3D $(addsuffix .o, $(dtb-y))
+diff --git a/arch/mips/boot/dts/loongson/loongson3-package.dtsi b/arch/mips=
+/boot/dts/loongson/loongson3-package.dtsi
+new file mode 100644
+index 000000000000..5bb876a4de52
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3-package.dtsi
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/ {
++=09#address-cells =3D <2>;
++=09#size-cells =3D <2>;
++
++=09cpuintc: interrupt-controller {
++=09=09#address-cells =3D <0>;
++=09=09#interrupt-cells =3D <1>;
++=09=09interrupt-controller;
++=09=09compatible =3D "mti,cpu-interrupt-controller";
++=09};
++
++=09package0: bus@1fe00000 {
++=09=09compatible =3D "simple-bus";
++=09=09#address-cells =3D <2>;
++=09=09#size-cells =3D <1>;
++=09=09ranges =3D <0 0x1fe00000 0 0x1fe00000 0x100000
++=09=09=090 0x3ff00000 0 0x3ff00000 0x100000
++=09=09=09/* 3A HT Config Space */
++=09=09=090xefd 0xfb000000 0xefd 0xfb000000 0x10000000
++=09=09=09/* 3B HT Config Space */
++=09=09=090x1efd 0xfb000000 0x1efd 0xfb000000 0x10000000>;
++
++=09=09liointc: interrupt-controller@3ff01400 {
++=09=09=09compatible =3D "loongson,liointc-1.0";
++=09=09=09reg =3D <0 0x3ff01400 0x64>;
++
++=09=09=09interrupt-controller;
++=09=09=09#interrupt-cells =3D <2>;
++
++=09=09=09interrupt-parent =3D <&cpuintc>;
++=09=09=09interrupts =3D <2>, <3>;
++=09=09=09interrupt-names =3D "int0", "int1";
++
++=09=09=09loongson,parent_int_map =3D <0xf0ffffff>, /* int0 */
++=09=09=09=09=09=09<0x0f000000>, /* int1 */
++=09=09=09=09=09=09<0x00000000>, /* int2 */
++=09=09=09=09=09=09<0x00000000>; /* int3 */
++
++=09=09};
++
++=09=09cpu_uart0: serial@1fe001e0 {
++=09=09=09compatible =3D "ns16550a";
++=09=09=09reg =3D <0 0x1fe001e0 0x8>;
++=09=09=09clock-frequency =3D <33000000>;
++=09=09=09interrupt-parent =3D <&liointc>;
++=09=09=09interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
++=09=09=09no-loopback-test;
++=09=09};
++
++=09=09cpu_uart1: serial@1fe001e8 {
++=09=09=09status =3D "disabled";
++=09=09=09compatible =3D "ns16550a";
++=09=09=09reg =3D <0 0x1fe001e8 0x8>;
++=09=09=09clock-frequency =3D <33000000>;
++=09=09=09interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
++=09=09=09interrupt-parent =3D <&liointc>;
++=09=09=09no-loopback-test;
++=09=09};
++=09};
++};
+diff --git a/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts b/arch/=
+mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+new file mode 100644
+index 000000000000..6b5694ca0f95
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include "loongson3-package.dtsi"
++#include "rs780e-pch.dtsi"
++
++/ {
++=09compatible =3D "loongson,loongson3-4core-rs780e";
++};
++
++&package0 {
++=09htpic: interrupt-controller@efdfb000080 {
++=09=09compatible =3D "loongson,htpic-1.0";
++=09=09reg =3D <0xefd 0xfb000080 0x40>;
++=09=09interrupt-controller;
++=09=09#interrupt-cells =3D <1>;
++
++=09=09interrupt-parent =3D <&liointc>;
++=09=09interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<25 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<26 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<27 IRQ_TYPE_LEVEL_HIGH>;
++=09};
++};
+diff --git a/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts b/arch/=
+mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+new file mode 100644
+index 000000000000..ffefa2f829b0
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e.dts
+@@ -0,0 +1,25 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/dts-v1/;
++
++#include "loongson3-package.dtsi"
++#include "rs780e-pch.dtsi"
++
++/ {
++=09compatible =3D "loongson,loongson3-8core-rs780e";
++};
++
++&package0 {
++=09htpic: interrupt-controller@1efdfb000080 {
++=09=09compatible =3D "loongson,htpic-1.0";
++=09=09reg =3D <0x1efd 0xfb000080 0x40>;
++=09=09interrupt-controller;
++=09=09#interrupt-cells =3D <1>;
++
++=09=09interrupt-parent =3D <&liointc>;
++=09=09interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<25 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<26 IRQ_TYPE_LEVEL_HIGH>,
++=09=09=09=09<27 IRQ_TYPE_LEVEL_HIGH>;
++=09};
++};
+diff --git a/arch/mips/boot/dts/loongson/rs780e-pch.dtsi b/arch/mips/boot/d=
+ts/loongson/rs780e-pch.dtsi
+new file mode 100644
+index 000000000000..45c54d555fa4
+--- /dev/null
++++ b/arch/mips/boot/dts/loongson/rs780e-pch.dtsi
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/ {
++=09bus@10000000 {
++=09=09compatible =3D "simple-bus";
++=09=09#address-cells =3D <2>;
++=09=09#size-cells =3D <2>;
++=09=09ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
++=09=09=09=090 0x40000000 0 0x40000000 0 0x40000000
++=09=09=09=090xfd 0xfe000000 0xfd 0xfe000000  0 0x2000000 /* PCI Config Spa=
+ce */>;
++
++=09=09isa {
++=09=09=09compatible =3D "isa";
++=09=09=09#address-cells =3D <2>;
++=09=09=09#size-cells =3D <1>;
++=09=09=09ranges =3D <1 0 0 0 0x1000>;
++
++=09=09=09rtc0: rtc@70 {
++=09=09=09=09compatible =3D "motorola,mc146818";
++=09=09=09=09reg =3D <1 0x70 0x8>;
++=09=09=09=09interrupts =3D <8>;
++=09=09=09=09interrupt-parent =3D <&htpic>;
++=09=09=09};
++=09=09};
++=09};
++};
+--=20
+2.26.0.rc2
 
-0b:00.0 Ethernet controller: Mellanox Technologies MT27710 Family =
-[ConnectX-4 Lx]
-0b:00.1 Ethernet controller: Mellanox Technologies MT27710 Family =
-[ConnectX-4 Lx]
 
-[  223.280777][   T13] mlx5_core 0000:0b:00.0: firmware version: =
-14.21.1000
-[  223.287753][   T13] mlx5_core 0000:0b:00.0: 63.008 Gb/s available =
-PCIe bandwidth (8.0 GT/s PCIe x8 link)
-[  226.292153][    C0] mlx5_core 0000:0b:00.0: Port module event: module =
-0, Cable plugged
-[  226.874100][ T2023] mlx5_core 0000:0b:00.1: Adding to iommu group 2
-[  227.343553][   T13] mlx5_core 0000:0b:00.1: firmware version: =
-14.21.1000
-[  227.350467][   T13] mlx5_core 0000:0b:00.1: 63.008 Gb/s available =
-PCIe bandwidth (8.0 GT/s PCIe x8 link)
-[  230.026346][    C0] mlx5_core 0000:0b:00.1: Port module event: module =
-1, Cable unplugged
-[  230.522660][ T2023] mlx5_core 0000:0b:00.0: MLX5E: StrdRq(0) =
-RqSz(1024) StrdSz(256) RxCqeCmprss(0)
-[  231.448493][ T2023] mlx5_core 0000:0b:00.1: MLX5E: StrdRq(0) =
-RqSz(1024) StrdSz(256) RxCqeCmprss(0)
-[  232.436993][ T2007] mlx5_core 0000:0b:00.1 enp11s0f1np1: renamed from =
-eth1
-[  232.690895][ T2013] mlx5_core 0000:0b:00.0 enp11s0f0np0: renamed from =
-eth0=
