@@ -2,81 +2,94 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8BFBC54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEBA8C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:13:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1382073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:13:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95C0F2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585152832;
+	bh=z/l7SBBshWOFYbBGR0ClUkeQrd+UBb2CWsZuH43i4Vg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ReH+YhToo5yWQf/wVg/RxloufyaEHYdRT3dNvpiYaOfDp4bYcYwKDfDVtgTBKoA86
+	 p1OdNI+knLhiC1h6F3Fes44frc8vxE8hGvG0NYCeOBhNBOboepHm2VsEQYzWNqopZV
+	 eR3Ja+ktGNdPKVoHJ6jI/UH6bszs+QfsiVBEx+k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgCYQNj (ORCPT
+        id S1728075AbgCYQNv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:13:39 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2602 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727600AbgCYQNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:13:38 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id DA8992CFA7F3ED2B89C1;
-        Wed, 25 Mar 2020 16:13:36 +0000 (GMT)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
- by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Wed, 25 Mar 2020 16:13:27 +0000
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <krzysztof.struczynski@huawei.com>,
-        <silviu.vlasceanu@huawei.com>, <stable@vger.kernel.org>
-Subject: [PATCH 3/5] ima: Fix ima digest hash table key calculation
-Date:   Wed, 25 Mar 2020 17:11:14 +0100
-Message-ID: <20200325161116.7082-3-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325161116.7082-1-roberto.sassu@huawei.com>
-References: <20200325161116.7082-1-roberto.sassu@huawei.com>
+        Wed, 25 Mar 2020 12:13:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727174AbgCYQNv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:13:51 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7641720409;
+        Wed, 25 Mar 2020 16:13:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585152830;
+        bh=z/l7SBBshWOFYbBGR0ClUkeQrd+UBb2CWsZuH43i4Vg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=d5srGXVBWjNKP/w4N+eoVs88y3PQJBDFqAEI8Qpi/R/mv7gG84m3wE1+TDSovJtiw
+         ruLJW+9oq2T58EGMsju0piBrSirMWrctSS4dxMbZ15nrmdYnDSVUnhpvLQhV7keyQr
+         8G3VNE98fkGr35AEvcwLw5c7slY680aAF+jKxojQ=
+Subject: Re: [PATCH v2 0/6] Fix errors when try to build kvm selftests on
+ specified output
+To:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200325140133.103236-1-xiaoyao.li@intel.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <8e5a7de6-25f3-7979-c6b9-49e1ea717f8e@kernel.org>
+Date:   Wed, 25 Mar 2020 10:12:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.160]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200325140133.103236-1-xiaoyao.li@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
+On 3/25/20 8:01 AM, Xiaoyao Li wrote:
+> I attempted to build KVM selftests on a specified dir, unfortunately
+> neither	"make O=/path/to/mydir TARGETS=kvm" in tools/testing/selftests, nor
+> "make OUTPUT=/path/to/mydir" in tools/testing/selftests/kvm work.
+> 
 
-Function hash_long() accepts unsigned long, while currently only one byte
-is passed from ima_hash_key(), which calculates a key for ima_htable. Use
-more bytes to avoid frequent collisions.
+Please elaborate on the problems you are seeing. I would like you
+to describe in detail the problems you are seeing and how you are
+fixing them in this patch series.
 
-Length of the buffer is not explicitly passed as a function parameter,
-because this function expects a digest whose length is greater than the
-size of unsigned long.
+The problem you are fixing here is subdir structure not being
+supported for relocatable builds and the Makefile not being
+able to locate headers files. These are issues, however, these
+need to be fixed in the kvm Makefile.
 
-Cc: stable@vger.kernel.org
-Fixes: 3323eec921ef ("integrity: IMA as an integrity service provider")
-Signed-off-by: Krzysztof Struczynski <krzysztof.struczynski@huawei.com>
----
- security/integrity/ima/ima.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please look at arm64, android, futex tests as examples. lib.mk
+and main selftests Makefile allow for overrides for make targets.
+When a test has sub-dir structure and libraries, it is easier to
+handle these in the individual Makefile.
 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 64317d95363e..cf0022c2bc14 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -177,7 +177,7 @@ extern struct ima_h_table ima_htable;
- 
- static inline unsigned long ima_hash_key(u8 *digest)
- {
--	return hash_long(*digest, IMA_HASH_BITS);
-+	return hash_long(*((unsigned long *)digest), IMA_HASH_BITS);
- }
- 
- #define __ima_hooks(hook)		\
--- 
-2.17.1
+Please fix the problems you are seeing in kvm Makefile.
 
+ >I only test the sub TARGET of kvm.
+ >In theory, it won't break other TARGET of selftests.
+
+When you change lib.mk which is a common infrastructure, theory
+doesn't help. Statements like this make me very reluctant to
+accept patches. :)
+
+This is one reason why I asked Paolo to drop these patches.
+
+thanks,
+-- Shuah
