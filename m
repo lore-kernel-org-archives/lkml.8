@@ -2,68 +2,154 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 538A5C54FD2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77191C54FD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:32:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F9E20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F1F20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:32:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="UarPfnSO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCYCaK (ORCPT
+        id S1727301AbgCYCct (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:30:10 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12189 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727249AbgCYCaJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:30:09 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 53BDA7AC20471C7F9F2F;
-        Wed, 25 Mar 2020 10:30:07 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 25 Mar 2020 10:30:01 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
-        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>
-CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] drm/amdgpu/uvd7: remove unnecessary conversion to bool
-Date:   Wed, 25 Mar 2020 10:32:50 +0800
-Message-ID: <20200325023250.163321-1-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 24 Mar 2020 22:32:49 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17833 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727259AbgCYCct (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:32:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585103515;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=IrhqHZkIgBzBX0NyQ/AdHmhnZ5Hiqdy+Ikjqv3i39Yo=;
+        b=UarPfnSOcQ4sjXrN8oKc7mlQTD0HEm33Qx8s6HXUka0Z4prsBLK6HU8zxXq88j3G
+        4W9MGjhQ8vnuw9SyB9ou2bTaJC8pEKR1ek9/mdl/CQZ4yGD4Pf4fGV5SDSqVpgdQjaj
+        yQFc1h4wr5SQ4i3m89+VtFwnmaU2xmWJCkMhHwSE=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 15851035137201004.1544709728074; Wed, 25 Mar 2020 10:31:53 +0800 (CST)
+Date:   Wed, 25 Mar 2020 10:31:50 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
+References: <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324153624.23109-3-jiaxun.yang@flygoat.com> <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v6 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
+To:     Huacai Chen <chenhc@lemote.com>
+CC:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <C87B57FD-F4C2-4464-9692-A28DE343FDDB@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion to bool is not needed, remove it.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-index 0995378..20f10a5 100644
---- a/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/uvd_v7_0.c
-@@ -1694,7 +1694,7 @@ static int uvd_v7_0_set_clockgating_state(void *handle,
- 					  enum amd_clockgating_state state)
- {
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
--	bool enable = (state == AMD_CG_STATE_GATE) ? true : false;
-+	bool enable = (state == AMD_CG_STATE_GATE);
- 
- 	uvd_v7_0_set_bypass_mode(adev, enable);
- 
--- 
-2.7.4
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=889=
+:52:26, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
+>Hi, Jiaxun,
+>
+>On Tue, Mar 24, 2020 at 11:39 PM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
+>
+>wrote:
+>>
+>> The 1=2E0 version of that controller has a bug that status bit
+>> of LPC IRQ sometimes doesn't get set correctly=2E
+>>
+>> So we can always blame LPC IRQ when spurious interrupt happens
+>> at the parent interrupt line which LPC IRQ supposed to route
+>> to=2E
+>>
+>> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> ---
+>>  drivers/irqchip/irq-loongson-liointc=2Ec | 16 ++++++++++++++--
+>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-loongson-liointc=2Ec
+>b/drivers/irqchip/irq-loongson-liointc=2Ec
+>> index 8b6d7b8ddaca=2E=2Ed5054e90eab8 100644
+>> --- a/drivers/irqchip/irq-loongson-liointc=2Ec
+>> +++ b/drivers/irqchip/irq-loongson-liointc=2Ec
+>> @@ -32,6 +32,8 @@
+>>
+>>  #define LIOINTC_SHIFT_INTx     4
+>>
+>> +#define LIOINTC_ERRATA_IRQ     10
+>> +
+>>  struct liointc_handler_data {
+>>         struct liointc_priv     *priv;
+>>         u32                     parent_int_map;
+>> @@ -41,6 +43,7 @@ struct liointc_priv {
+>>         struct irq_chip_generic         *gc;
+>>         struct liointc_handler_data     handler[LIOINTC_NUM_PARENT];
+>>         u8                              map_cache[LIOINTC_CHIP_IRQ];
+>> +       bool                            have_lpc_irq_errata;
+>Maybe has_lpc_irq_errata?
 
+Fixed, thanks=2E
+
+>
+>>  };
+>>
+>>  static void liointc_chained_handle_irq(struct irq_desc *desc)
+>> @@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct
+>irq_desc *desc)
+>>
+>>         pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
+>>
+>> -       if (!pending)
+>> -               spurious_interrupt();
+>> +       if (!pending) {
+>> +               /* Always blame LPC IRQ if we have that bug and LPC
+>IRQ is enabled */
+>> +               if (handler->priv->have_lpc_irq_errata &&
+>> +                       (handler->parent_int_map & ~gc->mask_cache &
+>BIT(LIOINTC_ERRATA_IRQ)))
+>> +                       pending =3D BIT(LIOINTC_ERRATA_IRQ);
+>> +               else
+>> +                       spurious_interrupt();
+>> +       }
+>>
+>>         while (pending) {
+>>                 int bit =3D __ffs(pending);
+>> @@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node
+>*node,
+>>                 goto out_iounmap;
+>>         }
+>>
+>> +       if (of_device_is_compatible(node, "loongson,liointc-1=2E0"))
+>> +               priv->have_lpc_irq_errata =3D true;
+>> +
+>>         sz =3D of_property_read_variable_u32_array(node,
+>"loongson,parent_int_map",
+>>                                               =20
+>&of_parent_int_map[0], LIOINTC_NUM_PARENT,
+>>                                                 LIOINTC_NUM_PARENT);
+>> --
+>> 2=2E26=2E0=2Erc2
+>>
+>>
+>
+>Regards,
+>Huacai Chen
+
+--=20
+Jiaxun Yang
