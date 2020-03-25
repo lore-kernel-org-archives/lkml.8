@@ -2,91 +2,160 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B756AC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4035C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 946332073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8470320409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:04:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NgTT4k5j"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="SSYChqb1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbgCYQEM (ORCPT
+        id S1728100AbgCYQEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:04:12 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46149 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727936AbgCYQEM (ORCPT
+        Wed, 25 Mar 2020 12:04:44 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17805 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725812AbgCYQEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:04:12 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v16so2999417ljk.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:04:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pn2KqvNFk/Kh/oN0XHQ6BHDkBBBhQ3u1DOedSWlNkfQ=;
-        b=NgTT4k5jlKQgS4xPUfrNeL4uN7tSr+FEjGTa0+opI2N8PJO6UtRhuIb/sfAji0iY5E
-         rpYPeEVdAQ+nQvJJF5LweKq2TJ1MRLDae7RaM6LxnVdeeulKZjz1ZsvXv8uVrZ1V3THB
-         uSYPP1p5vjzUNLwlKM728XMoTGFMLF7FmKOv4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pn2KqvNFk/Kh/oN0XHQ6BHDkBBBhQ3u1DOedSWlNkfQ=;
-        b=bz++Yexs342Rnm+rfW2x+VjV8ymf4L2A2hvjW4fbUMyF6v700PM7Y/K0KVWLNxZZfb
-         /V+gChLirafpBz6fxYOpKGTQN2RKCKjtaYVQQxWNsYI4JWP9e2AM5acBOhU66cGz++TE
-         UMpvv/jKhurrSg6++thNXfHP45+h6gxzbSr8ZYFYCd7n1PlpkbR+ZWuos8QqETsozEOu
-         TbqqXPanPHQlvhf6KHntYSjnIjldyxNdcHZi3QXpDsSEy2pANsAApa7Y+GynxpqzgetA
-         OorLVZbPa5H24TWquyPliVu+rtbdq3gjnPkyuw2eBfFjm1el2EJBCDlVa5moWnQyUwBe
-         emHw==
-X-Gm-Message-State: ANhLgQ2yBV+6bqnWTEKx0TYdHuzJcuwPLZT/lvyGxt8/fatzj0kORtfb
-        XSk8V8bBKh35i6iSQNSlmqNc8+PfvcY=
-X-Google-Smtp-Source: ADFU+vvBYbmvc9V1PKxar7MW3tqD3E9VYzgKkKzbE64R/vmTXARmGNmYEzFXKQpQnS+Gkb0n+LG2Rg==
-X-Received: by 2002:a2e:88d9:: with SMTP id a25mr2478316ljk.267.1585152249331;
-        Wed, 25 Mar 2020 09:04:09 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com. [209.85.208.170])
-        by smtp.gmail.com with ESMTPSA id e14sm11924118ljb.97.2020.03.25.09.04.08
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 09:04:08 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id p10so2830618ljn.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:04:08 -0700 (PDT)
-X-Received: by 2002:a2e:9216:: with SMTP id k22mr2471412ljg.278.1585152247655;
- Wed, 25 Mar 2020 09:04:07 -0700 (PDT)
+        Wed, 25 Mar 2020 12:04:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585152166;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=CRLfE2jz7muXeJ6qeLvUrod4IRB84jHCPnWRdiwg/sA=;
+        b=SSYChqb1m1zrASxa3+5zJjrUtMKnv9+6kTT50o212WoZGJBKE+2duup3tWenPe99
+        EGwtRDYOrgwoJ8RtPYjwvnjMdGG7AM1H2zWyeo1d9z99Rt1kbP2qdd/KPHatUNPgUy0
+        d706UjL0F/enoxNjBmfFPAbALumoy1HCfJEvY/mE=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585152161181504.9058622774445; Thu, 26 Mar 2020 00:02:41 +0800 (CST)
+Date:   Thu, 26 Mar 2020 00:02:28 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200325154600.GA14923@alpha.franken.de>
+References: <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org> <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com> <20200325150437.GA14217@alpha.franken.de> <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com> <20200325154600.GA14923@alpha.franken.de>
 MIME-Version: 1.0
-References: <1580822300-4491-1-git-send-email-pillair@codeaurora.org>
- <CAE=gft7EOALEMUWzoR3+pjoxCUTYWbiXoXY=dXH1BDhS3KwBzg@mail.gmail.com> <000901d60295$3acc79b0$b0656d10$@codeaurora.org>
-In-Reply-To: <000901d60295$3acc79b0$b0656d10$@codeaurora.org>
-From:   Evan Green <evgreen@chromium.org>
-Date:   Wed, 25 Mar 2020 09:03:31 -0700
-X-Gmail-Original-Message-ID: <CAE=gft7zqbUnx+BULDD+35z2p1=545=jF0=n6kFXZgo3ZTdCHQ@mail.gmail.com>
-Message-ID: <CAE=gft7zqbUnx+BULDD+35z2p1=545=jF0=n6kFXZgo3ZTdCHQ@mail.gmail.com>
-Subject: Re: [PATCH v6] arm64: dts: qcom: sc7180: Add WCN3990 WLAN module
- device node
-To:     pillair@codeaurora.org
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Marc Zyngier <maz@kernel.org>, linux-mips@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <8F2B64C3-A887-4D4B-ABEA-4BE3D30F4632@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 4:05 AM <pillair@codeaurora.org> wrote:
->
-> Hi Evan,
->
-> I will send out a v7 for this patchset.
-> Since I have to configure the S2 SIDs, it is dependent on below ath10k patchset.
-> https://patchwork.kernel.org/project/linux-wireless/list/?series=261367
 
-Ah, right. Thanks for the info, I'll check out that series as well.
--Evan
+
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+1:46:00, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
+=88=B0:
+>On Wed, Mar 25, 2020 at 11:09:10PM +0800, Jiaxun Yang wrote:
+>>=20
+>>=20
+>> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=8811:04:37, Thomas Bogendoerfer
+><tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=B0:
+>> >On Wed, Mar 25, 2020 at 10:31:21PM +0800, Jiaxun Yang wrote:
+>> >>=20
+>> >>=20
+>> >> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
+=8D=8810:15:16, Marc Zyngier <maz@kernel=2Eorg>
+>=E5=86=99=E5=88=B0:
+>> >> >On 2020-03-25 13:59, Jiaxun Yang wrote:
+>> >> >
+>> >> >[=2E=2E=2E]
+>> >> >
+>> >> >>>> So probably we can use legacy domain when  MIPS IRQ BASE is
+>in
+>> >the
+>> >> >>>> range of legacy IRQ
+>> >> >>>> and switch to simple domain when it's not in that range?
+>> >> >>>=20
+>> >> >>> No, see below=2E
+>> >> >>>=20
+>> >> >>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I
+>did
+>> >> >this
+>> >> >>>> hack=2E
+>> >> >>>=20
+>> >> >>> Well, if you have to consider which Linux IRQ gets assigned,
+>> >> >>> then your platform is definitely not ready for non-legacy
+>> >> >>> irqdomains=2E Just stick to legacy for now until you have
+>removed
+>> >> >>> all the code that knows the hwirq mapping=2E
+>> >> >>=20
+>> >> >> Thanks=2E
+>> >> >>=20
+>> >> >> So I have to allocate irq_desc here in driver manually?
+>> >> >
+>> >> >No, you are probably better off just dropping this patch, as MIPS
+>> >> >doesn't seem to be ready for a wholesale switch to virtual
+>> >interrupts=2E
+>> >>=20
+>> >> It can't work without this patch=2E
+>> >>=20
+>> >> Legacy domain require IRQ number within 0-15=20
+>> >> however it's already occupied by i8259 or "HTPIC" driver=2E
+>> >
+>> >what's the problem here ? AFAIK there could be more than one
+>> >legacy domain, at least that's what at least IP22/SNI in MIPS world=20
+>> >are doing=2E
+>>=20
+>> MIPS_IRQ_BASE must be higher than 15, otherwise it will conflict with
+>i8259=2E
+>
+>I still don't get it=2E
+>
+>We have following in arch/mips/include/asm/mach-generic/irq=2Eh:
+>
+>#ifndef MIPS_CPU_IRQ_BASE
+>#ifdef CONFIG_I8259
+>#define MIPS_CPU_IRQ_BASE 16
+>#else
+>#define MIPS_CPU_IRQ_BASE 0
+>#endif /* CONFIG_I8259 */
+>#endif
+>
+>So every legacy platform with i8259 has MIPS_CPU_IRQ_BASE =3D 16=2E
+>
+>> However we have only preallocated irq_desc for 0-15=2E
+>> And legacy domain require irq_desc being preallocated=2E
+>
+>maybe I'm too fast by judging the irq code, but without
+>CONFIG_SPARSE_IRQ
+>the whole irq_desc is pre-allocated=2E
+
+Sorry=2E You're right=2E
+I found the problem is CONFIG_SPARSE_IRQ is accidentally enabled in my con=
+fig due to another out-of-tree patch
+during my initial test and I always consider it as a problem=2E
+
+So we can drop this patch safely for now=2E
+But just need to consider how to deal with it when we want to enable SPARS=
+E_IRQ=2E
+
+Thanks=2E
+
+>
+>Thomas=2E
+
+--=20
+Jiaxun Yang
