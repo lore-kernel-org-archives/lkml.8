@@ -2,60 +2,116 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB4FEC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EDBC2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C561B20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF7C20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:04:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbgCYTDJ (ORCPT
+        id S1727850AbgCYTEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:03:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57126 "EHLO mx2.suse.de"
+        Wed, 25 Mar 2020 15:04:36 -0400
+Received: from monster.unsafe.ru ([5.9.28.80]:43518 "EHLO mail.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727328AbgCYTDJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:03:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 87CEFAC44;
-        Wed, 25 Mar 2020 19:03:08 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 20:03:07 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org
-Subject: Re: [PATCH v4 00/13] objtool: vmlinux.o and moinstr validation
-In-Reply-To: <20200325174525.772641599@infradead.org>
-Message-ID: <alpine.LSU.2.21.2003252002230.3128@pobox.suse.cz>
-References: <20200325174525.772641599@infradead.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1727027AbgCYTEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:04:36 -0400
+Received: from comp-core-i7-2640m-0182e6 (ip-89-102-33-211.net.upcbroadband.cz [89.102.33.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 495E5C61AE0;
+        Wed, 25 Mar 2020 19:04:31 +0000 (UTC)
+Date:   Wed, 25 Mar 2020 20:04:29 +0100
+From:   Alexey Gladkov <gladkov.alexey@gmail.com>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH RESEND v9 3/8] proc: move hide_pid, pid_gid from
+ pid_namespace to proc_fs_info
+Message-ID: <20200325190429.73k52amlfjer7epa@comp-core-i7-2640m-0182e6>
+References: <20200324204449.7263-1-gladkov.alexey@gmail.com>
+ <20200324204449.7263-4-gladkov.alexey@gmail.com>
+ <CAHk-=whXbgW7-FYL4Rkaoh8qX+CkS5saVGP2hsJPV0c+EZ6K7A@mail.gmail.com>
+ <20200325180015.GA18706@avx2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325180015.GA18706@avx2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020, Peter Zijlstra wrote:
-
-> Hi all,
+On Wed, Mar 25, 2020 at 09:00:15PM +0300, Alexey Dobriyan wrote:
+> On Tue, Mar 24, 2020 at 02:21:59PM -0700, Linus Torvalds wrote:
+> > On Tue, Mar 24, 2020 at 1:46 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
+> > >
+> > > +/* definitions for hide_pid field */
+> > > +enum {
+> > > +       HIDEPID_OFF       = 0,
+> > > +       HIDEPID_NO_ACCESS = 1,
+> > > +       HIDEPID_INVISIBLE = 2,
+> > > +};
+> > 
+> > Should this enum be named...
+> > 
+> > >  struct proc_fs_info {
+> > >         struct pid_namespace *pid_ns;
+> > >         struct dentry *proc_self;        /* For /proc/self */
+> > >         struct dentry *proc_thread_self; /* For /proc/thread-self */
+> > > +       kgid_t pid_gid;
+> > > +       int hide_pid;
+> > >  };
+> > 
+> > .. and then used here instead of "int"?
+> > 
+> > Same goes for 'struct proc_fs_context' too, for that matter?
+> > 
+> > And maybe in the function declarations and definitions too? In things
+> > like 'has_pid_permissions()' (the series adds some other cases later,
+> > like hidepid2str() etc)
+> > 
+> > Yeah, enums and ints are kind of interchangeable in C, but even if it
+> > wouldn't give us any more typechecking (except perhaps with sparse if
+> > you mark it so), it would be documenting the use.
+> > 
+> > Or am I missing something?
+> > 
+> > Anyway, I continue to think the series looks fine, bnut would love to
+> > see it in -next and perhaps comments from Al and Alexey Dobriyan..
 > 
-> This lacks the first 17 patches of the v3 posting which are en-route to
-> tip/core/objtool and should show up there somewhere later this evening.
-> 
-> As should be familiar by now; these patches implement the noinstr
-> (no-instrument) validation in objtool as requested by Thomas, to ensure
-> critical code (entry for now, idle later) run no unexpected code.
-> 
-> Functions are marked with: noinstr, which implies notrace, noinline and sticks
-> things in the .noinstr.text section. Such functions can then use instr_begin()
-> and instr_end() to allow calls to code outside of this section in sanctioned
-> areas.
+> Patches are OK, except the part where "pid" is named "pidfs" and
+> the suffix doesn't convey any information.
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+I will fix this in the final version.
 
-M
+> 	mount -t proc -o subset=pid,sysctl,misc
+
+I have not yet figured out how to implement this. I mean subset=meminfo,misc.
+
+-- 
+Rgrds, legion
+
