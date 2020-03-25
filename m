@@ -2,429 +2,117 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F11E5C54FD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F33C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B53EA206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:35:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zVbM/vDo"
+	by mail.kernel.org (Postfix) with ESMTP id 10522206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727374AbgCYGfR (ORCPT
+        id S1726276AbgCYGgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 02:35:17 -0400
-Received: from mail-pf1-f174.google.com ([209.85.210.174]:41923 "EHLO
-        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727325AbgCYGfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 02:35:15 -0400
-Received: by mail-pf1-f174.google.com with SMTP id z65so556727pfz.8
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 23:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eeiOAr1bPpvgXy0vhV//U7er0O9Q5/zHZMycxpnng7U=;
-        b=zVbM/vDoASONJRxczunDLcJbykdpbVYDWp56GDRY9NT+E8zkY3q9vTNyv8aitwIJ1W
-         7KtR6atqm3ahQNF4+593dilj+M5S8i2Knwj0q15hhRlLTP91s72UqiBVgSk7E56wbCYO
-         u03TEfoZWKTNbm3oYmUXG6HymfxcytpObA1CXRzxKCbDo0A4mxa8o2IDL7GzXquYfdki
-         JgbTxZLMN4JutK7WaJzecvi6838TiupSJ+RALPTA5lhqVpwV+GGWlsrKOdqDtw1aWjIZ
-         1Rq30KV+7vgkBlcDG9wzBSXnmLn1CSkC1ggDHBed0xhIpY8+rvMVjzh4+NDNFqa487j9
-         0mHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eeiOAr1bPpvgXy0vhV//U7er0O9Q5/zHZMycxpnng7U=;
-        b=g/CFyLwxKQz0LpZ2Heo85sQERv2wJ47/XjhBovHEkej+xRLs/KdsUvpJcyK/eOZzNv
-         eGVOUFeUa1WMPCJ1MNi+NRfJt2+D5pno4qJhvSUsVI21+xf1dnmXdy66KY3qf1GjxkC/
-         luxrJhtQ/Bftp+8YaXXVOVHF7B+WY9z2h7dWs/9AAgn/W103EgzRozdKWsy0PdbxQ6X8
-         J4b0NgQKmg0Tfx5jOTqOKspeFm05NaYqeeenE9GY+dFUnEsg9fLnelZefiThQSsXCGJ/
-         UwNuKm/nmuHKQUmRu8Xj6H19Pactua7bhJIw7rUMVkBfBXtAf80bYd+uJyTiQ+xH6sjX
-         aEVg==
-X-Gm-Message-State: ANhLgQ29ePsVk4TYPHqyfv87A/XSEh2NzL8oFruVZtY0va/Fn40/GKAC
-        7ybYmRdDWRYFCktvGpzpKyGY1tqMI1A=
-X-Google-Smtp-Source: ADFU+vvvl1TC9EwH+BfAnIxTjtl8CuJxMiTIRZEDEth1Hm29rNHfOKYBJOE0Au5c5QF4PKDwk9Prag==
-X-Received: by 2002:a63:7e1a:: with SMTP id z26mr1640261pgc.226.1585118112739;
-        Tue, 24 Mar 2020 23:35:12 -0700 (PDT)
-Received: from localhost ([103.195.202.71])
-        by smtp.gmail.com with ESMTPSA id 184sm16020779pgb.52.2020.03.24.23.35.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 23:35:11 -0700 (PDT)
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 3/3] dt-bindings: thermal: Add yaml bindings for thermal zones
-Date:   Wed, 25 Mar 2020 12:04:54 +0530
-Message-Id: <9c447186008ef2e3f4c3e712458dc0ddcd8a8b03.1585117436.git.amit.kucheria@linaro.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <cover.1585117436.git.amit.kucheria@linaro.org>
-References: <cover.1585117436.git.amit.kucheria@linaro.org>
+        Wed, 25 Mar 2020 02:36:42 -0400
+Received: from mga18.intel.com ([134.134.136.126]:47292 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgCYGgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 02:36:42 -0400
+IronPort-SDR: pxhg9WRJMgcsIu/oQcAFkmOaf/HP8qFaq/sjenQka4WnGzDLeoVJXccsJq0LG1y0xMxbHCLyRL
+ /y+rRR1TrnUA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 23:36:41 -0700
+IronPort-SDR: 3Td4nQqzHu1XAMtC2noNIdMXCZj4aCwq/T1T4z21ZSQoVVZPPaCeM7Dx+0o7jbNSRY25BfdeB7
+ +tehq/JEvJTg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
+   d="scan'208";a="270704738"
+Received: from sneftin-mobl1.ger.corp.intel.com (HELO [10.214.212.82]) ([10.214.212.82])
+  by fmsmga004.fm.intel.com with ESMTP; 24 Mar 2020 23:36:38 -0700
+Subject: Re: [PATCH] e1000e: bump up timeout to wait when ME un-configure ULP
+ mode
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Aaron Ma <aaron.ma@canonical.com>
+Cc:     "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>,
+        David Miller <davem@davemloft.net>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "Lifshits, Vitaly" <vitaly.lifshits@intel.com>, rex.tsai@intel.com
+References: <20200323191639.48826-1-aaron.ma@canonical.com>
+ <EC4F7F0B-90F8-4325-B170-84C65D8BBBB8@canonical.com>
+From:   "Neftin, Sasha" <sasha.neftin@intel.com>
+Message-ID: <2c765c59-556e-266b-4d0d-a4602db94476@intel.com>
+Date:   Wed, 25 Mar 2020 08:36:36 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <EC4F7F0B-90F8-4325-B170-84C65D8BBBB8@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of moving the thermal bindings to YAML, split it up into 3
-bindings: thermal sensors, cooling devices and thermal zones.
+On 3/25/2020 06:17, Kai-Heng Feng wrote:
+> Hi Aaron,
+> 
+>> On Mar 24, 2020, at 03:16, Aaron Ma <aaron.ma@canonical.com> wrote:
+>>
+>> ME takes 2+ seconds to un-configure ULP mode done after resume
+>> from s2idle on some ThinkPad laptops.
+>> Without enough wait, reset and re-init will fail with error.
+> 
+> Thanks, this patch solves the issue. We can drop the DMI quirk in favor of this patch.
+> 
+>>
+>> Fixes: f15bb6dde738cc8fa0 ("e1000e: Add support for S0ix")
+>> BugLink: https://bugs.launchpad.net/bugs/1865570
+>> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
+>> ---
+>> drivers/net/ethernet/intel/e1000e/ich8lan.c | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+>> index b4135c50e905..147b15a2f8b3 100644
+>> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
+>> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+>> @@ -1240,9 +1240,9 @@ static s32 e1000_disable_ulp_lpt_lp(struct e1000_hw *hw, bool force)
+>> 			ew32(H2ME, mac_reg);
+>> 		}
+>>
+>> -		/* Poll up to 300msec for ME to clear ULP_CFG_DONE. */
+>> +		/* Poll up to 2.5sec for ME to clear ULP_CFG_DONE. */
+>> 		while (er32(FWSM) & E1000_FWSM_ULP_CFG_DONE) {
+>> -			if (i++ == 30) {
+>> +			if (i++ == 250) {
+>> 				ret_val = -E1000_ERR_PHY;
+>> 				goto out;
+>> 			}
+> 
+> The return value was not caught by the caller, so the error ends up unnoticed.
+> Maybe let the caller check the return value of e1000_disable_ulp_lpt_lp()?
+> 
+> Kai-Heng
+Hello Kai-Heng and Aaron,
+I a bit confused. In our previous conversation you told ME not running. 
+let me shimming in. Increasing delay won't be solve the problem and just 
+mask it. We need to understand why ME take too much time. What is 
+problem with this specific system?
+So, basically no ME system should works for you.
 
-The thermal-zone binding is a software abstraction to capture the
-properties of each zone - how often they should be checked, the
-temperature thresholds (trips) at which mitigation actions need to be
-taken and the level of mitigation needed at those thresholds.
-
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
-Changes since v2:
-- Addressed review comment from Rob
-- Added required properties for thermal-zones node
-- Added select: true to thermal-cooling-devices.yaml
-- Fixed up example to pass dt_binding_check
-
- .../bindings/thermal/thermal-zones.yaml       | 324 ++++++++++++++++++
- 1 file changed, 324 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-
-diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-new file mode 100644
-index 000000000000..5632304dcf62
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
-@@ -0,0 +1,324 @@
-+# SPDX-License-Identifier: (GPL-2.0)
-+# Copyright 2020 Linaro Ltd.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
-+$schema: http://devicetree.org/meta-schemas/base.yaml#
-+
-+title: Thermal zone binding
-+
-+maintainers:
-+  - Amit Kucheria <amitk@kernel.org>
-+
-+description: |
-+  Thermal management is achieved in devicetree by describing the sensor hardware
-+  and the software abstraction of cooling devices and thermal zones required to
-+  take appropriate action to mitigate thermal overloads.
-+
-+  The following node types are used to completely describe a thermal management
-+  system in devicetree:
-+   - thermal-sensor: device that measures temperature, has SoC-specific bindings
-+   - cooling-device: device used to dissipate heat either passively or actively
-+   - thermal-zones: a container of the following node types used to describe all
-+     thermal data for the platform
-+
-+  This binding describes the thermal-zones.
-+
-+  The polling-delay properties of a thermal-zone are bound to the maximum dT/dt
-+  (temperature derivative over time) in two situations for a thermal zone:
-+    1. when passive cooling is activated (polling-delay-passive)
-+    2. when the zone just needs to be monitored (polling-delay) or when
-+       active cooling is activated.
-+
-+  The maximum dT/dt is highly bound to hardware power consumption and
-+  dissipation capability. The delays should be chosen to account for said
-+  max dT/dt, such that a device does not cross several trip boundaries
-+  unexpectedly between polls. Choosing the right polling delays shall avoid
-+  having the device in temperature ranges that may damage the silicon structures
-+  and reduce silicon lifetime.
-+
-+properties:
-+  $nodename:
-+    const: thermal-zones
-+    description:
-+      A /thermal-zones node is required in order to use the thermal framework to
-+      manage input from the various thermal zones in the system in order to
-+      mitigate thermal overload conditions. It does not represent a real device
-+      in the system, but acts as a container to link thermal sensor devices,
-+      platform-data regarding temperature thresholds and the mitigation actions
-+      to take when the temperature crosses those thresholds.
-+
-+patternProperties:
-+  "^[a-zA-Z][a-zA-Z0-9\\-]{1,12}-thermal$":
-+    type: object
-+    description:
-+      Each thermal zone node contains information about how frequently it
-+      must be checked, the sensor responsible for reporting temperature for
-+      this zone, one sub-node containing the various trip points for this
-+      zone and one sub-node containing all the zone cooling-maps.
-+
-+    properties:
-+      polling-delay:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          The maximum number of milliseconds to wait between polls when
-+          checking this thermal zone. Setting this to 0 disables the polling
-+          timers setup by the thermal framework and assumes that the thermal
-+          sensors in this zone support interrupts.
-+
-+      polling-delay-passive:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          The maximum number of milliseconds to wait between polls when
-+          checking this thermal zone while doing passive cooling. Setting
-+          this to 0 disables the polling timers setup by the thermal
-+          framework and assumes that the thermal sensors in this zone
-+          support interrupts.
-+
-+      thermal-sensors:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        description:
-+          A list of thermal sensor phandles and sensor specifiers used to
-+          monitor this thermal zone.
-+
-+      trips:
-+        type: object
-+        description:
-+          This node describes a set of points in the temperature domain at
-+          which the thermal framework needs to takes action. The actions to
-+          be taken are defined in another node called cooling-maps.
-+
-+        patternProperties:
-+          "^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$":
-+            type: object
-+
-+            properties:
-+              temperature:
-+                $ref: /schemas/types.yaml#/definitions/int32
-+                minimum: -273000
-+                maximum: 200000
-+                description:
-+                  An integer expressing the trip temperature in millicelsius.
-+
-+              hysteresis:
-+                $ref: /schemas/types.yaml#/definitions/uint32
-+                description:
-+                  An unsigned integer expressing the hysteresis delta with
-+                  respect to the trip temperature property above, also in
-+                  millicelsius.
-+
-+              type:
-+                $ref: /schemas/types.yaml#/definitions/string
-+                enum:
-+                  - active   # enable active cooling e.g. fans
-+                  - passive  # enable passive cooling e.g. throttling cpu
-+                  - hot      # send notification to driver
-+                  - critical # send notification to driver, trigger shutdown
-+                description: |
-+                  There are four valid trip types: active, passive, hot,
-+                  critical.
-+
-+                  The critical trip type is used to set the maximum
-+                  temperature threshold above which the HW becomes
-+                  unstable and underlying firmware might even trigger a
-+                  reboot. Hitting the critical threshold triggers a system
-+                  shutdown.
-+
-+                  The hot trip type can be used to send a notification to
-+                  the thermal driver (if a .notify callback is registered).
-+                  The action to be taken is left to the driver.
-+
-+                  The passive trip type can be used to slow down HW e.g. run
-+                  the CPU, GPU, bus at a lower frequency.
-+
-+                  The active trip type can be used to control other HW to
-+                  help in cooling e.g. fans can be sped up or slowed down
-+
-+            required:
-+              - temperature
-+              - hysteresis
-+              - type
-+            additionalProperties: false
-+
-+        additionalProperties: false
-+
-+      cooling-maps:
-+        type: object
-+        description:
-+          This node describes the action to be taken when a thermal zone
-+          crosses one of the temperature thresholds described in the trips
-+          node. The action takes the form of a mapping relation between a
-+          trip and the target cooling device state.
-+
-+        patternProperties:
-+          "^map[-a-zA-Z0-9]*$":
-+            type: object
-+
-+            properties:
-+              trip:
-+                $ref: /schemas/types.yaml#/definitions/phandle
-+                description:
-+                  A phandle of a trip point node within this thermal zone.
-+
-+              cooling-device:
-+                $ref: /schemas/types.yaml#/definitions/phandle-array
-+                description:
-+                  A list of cooling device phandles along with the minimum
-+                  and maximum cooling state specifiers for each cooling
-+                  device. Using the THERMAL_NO_LIMIT (-1UL) constant in the
-+                  cooling-device phandle limit specifier lets the framework
-+                  use the minimum and maximum cooling state for that cooling
-+                  device automatically.
-+
-+              contribution:
-+                $ref: /schemas/types.yaml#/definitions/uint32
-+                minimum: 0
-+                maximum: 100
-+                description:
-+                  The contribution of the cooling devices at the trip
-+                  temperature, both referenced in this map, to this thermal
-+                  zone as a percentage.
-+
-+            required:
-+              - trip
-+              - cooling-device
-+            additionalProperties: false
-+
-+    required:
-+      - polling-delay
-+      - polling-delay-passive
-+      - thermal-sensors
-+      - trips
-+    additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/thermal/thermal.h>
-+
-+    // Example 1: SDM845 TSENS
-+    soc: soc@0 {
-+            #address-cells = <2>;
-+            #size-cells = <2>;
-+
-+            /* ... */
-+
-+            tsens0: thermal-sensor@c263000 {
-+                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+                    reg = <0 0x0c263000 0 0x1ff>, /* TM */
-+                          <0 0x0c222000 0 0x1ff>; /* SROT */
-+                    #qcom,sensors = <13>;
-+                    interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "uplow", "critical";
-+                    #thermal-sensor-cells = <1>;
-+            };
-+
-+            tsens1: thermal-sensor@c265000 {
-+                    compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
-+                    reg = <0 0x0c265000 0 0x1ff>, /* TM */
-+                          <0 0x0c223000 0 0x1ff>; /* SROT */
-+                    #qcom,sensors = <8>;
-+                    interrupts = <GIC_SPI 507 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 509 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "uplow", "critical";
-+                    #thermal-sensor-cells = <1>;
-+            };
-+    };
-+
-+    /* ... */
-+
-+    thermal-zones {
-+            cpu0-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 1>;
-+
-+                    trips {
-+                            cpu0_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                            };
-+
-+                            cpu0_alert1: trip-point1 {
-+                                    temperature = <95000>;
-+                                    hysteresis = <2000>;
-+                                    type = "passive";
-+                            };
-+
-+                            cpu0_crit: cpu_crit {
-+                                    temperature = <110000>;
-+                                    hysteresis = <1000>;
-+                                    type = "critical";
-+                            };
-+                    };
-+
-+                    cooling-maps {
-+                            map0 {
-+                                    trip = <&cpu0_alert0>;
-+                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>,
-+                                                     <&CPU1 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>,
-+                                                     <&CPU2 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>,
-+                                                     <&CPU3 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>;
-+                            };
-+
-+                            map1 {
-+                                    trip = <&cpu0_alert1>;
-+                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>,
-+                                                     <&CPU1 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>,
-+                                                     <&CPU2 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>,
-+                                                     <&CPU3 THERMAL_NO_LIMIT
-+                                                            THERMAL_NO_LIMIT>;
-+                            };
-+                    };
-+            };
-+
-+            /* ... */
-+
-+            cluster0-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 5>;
-+
-+                    trips {
-+                            cluster0_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "hot";
-+                            };
-+                            cluster0_crit: cluster0_crit {
-+                                    temperature = <110000>;
-+                                    hysteresis = <2000>;
-+                                    type = "critical";
-+                            };
-+                    };
-+            };
-+
-+            /* ... */
-+
-+            gpu-top-thermal {
-+                    polling-delay-passive = <250>;
-+                    polling-delay = <1000>;
-+
-+                    thermal-sensors = <&tsens0 11>;
-+
-+                    trips {
-+                            gpu1_alert0: trip-point0 {
-+                                    temperature = <90000>;
-+                                    hysteresis = <2000>;
-+                                    type = "hot";
-+                            };
-+                    };
-+            };
-+    };
-+...
--- 
-2.20.1
+Meanwhile I prefer keep DMI quirk.
+Thanks,
+Sasha
+> 
+>> -- 
+>> 2.17.1
+>>
+> 
 
