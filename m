@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC333C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E67C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD17420838
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9EC62076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727656AbgCYXL1 (ORCPT
+        id S1727590AbgCYXLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 19:11:27 -0400
+        Wed, 25 Mar 2020 19:11:25 -0400
 Received: from mga03.intel.com ([134.134.136.65]:3368 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgCYXL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 19:11:26 -0400
-IronPort-SDR: oYh1NAl4pzjbPRjHimL+xxwg7hnwKIJXwq/fBGc+rm/6Mq180ty85zjvi91Eb8rnF4W4Bxi0wz
- Dkpnom6/3Mig==
+        id S1727487AbgCYXLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 19:11:25 -0400
+IronPort-SDR: acbVRKwsqd8jjsA9EcdrrR8Z76lv2zO9wLhxDUlzpu7AsHe/wW63YnlJ54DnlVaT4SDqb2zMd1
+ qspXUvnG0HqA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 16:11:25 -0700
-IronPort-SDR: 0JhoBzWNGABgRwjt/Yz2DNVfBwqniP12x6oT0GKNf8CgrEOGDaQ4JrlGTd9uCiFfTPHnIvzF6A
- QOVX6pcb0y5A==
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 16:11:24 -0700
+IronPort-SDR: q1SfkvZ/eKjh21PLtsAMc9gjXTkvpsc68UU2/mRAJlJVCfyeGhTw56vpaYrL2GVtkx0J0w0q4z
+ OlX+tXSt+WwA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
-   d="scan'208";a="236083698"
+   d="scan'208";a="236083689"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
-  by orsmga007.jf.intel.com with ESMTP; 25 Mar 2020 16:11:25 -0700
+  by orsmga007.jf.intel.com with ESMTP; 25 Mar 2020 16:11:24 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
 To:     Joerg Roedel <joro@8bytes.org>,
         Alex Williamson <alex.williamson@redhat.com>,
@@ -45,9 +45,9 @@ Cc:     "Yi Liu" <yi.l.liu@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         Eric Auger <eric.auger@redhat.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 3/3] iommu/uapi: Add helper function for size lookup
-Date:   Wed, 25 Mar 2020 16:17:07 -0700
-Message-Id: <1585178227-17061-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 1/3] iommu/uapi: Define uapi version and capabilities
+Date:   Wed, 25 Mar 2020 16:17:05 -0700
+Message-Id: <1585178227-17061-2-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1585178227-17061-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -56,134 +56,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IOMMU UAPI can be extended in the future by adding new
-fields at the end of each user data structure. Since we use
-a unified UAPI version for compatibility checking, a lookup
-function is needed to find the correct user data size to copy
-from user.
+Having a single UAPI version to govern the user-kernel data structures
+makes compatibility check straightforward. On the contrary, supporting
+combinations of multiple versions of the data can be a nightmare to
+maintain.
 
-This patch adds a helper function based on a 2D lookup with
-version and type as input arguments.
+This patch defines a unified UAPI version to be used for compatibility
+checks between user and kernel.
 
 ---
-v2: Clarify size lookup array extension rules, backfill -EINVAL
-    if new version introduce new union members.
+v2: Rewrite extension rules to disallow adding new members. Use padding
+    and union extensions only.
 ---
 
 Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Link: https://lkml.org/lkml/2020/2/3/1126
 ---
- drivers/iommu/iommu.c | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/iommu.h |  6 +++++
- 2 files changed, 78 insertions(+)
+ include/uapi/linux/iommu.h | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index c476b58e0ffb..e91ced212653 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
-@@ -1724,6 +1724,78 @@ int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct device *dev,
- }
- EXPORT_SYMBOL_GPL(iommu_sva_unbind_gpasid);
+diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+index d7bcbc5f79b0..25dba9198d7f 100644
+--- a/include/uapi/linux/iommu.h
++++ b/include/uapi/linux/iommu.h
+@@ -8,6 +8,59 @@
  
-+
+ #include <linux/types.h>
+ 
 +/**
-+ * Maintain a UAPI version to user data structure size lookup for each
-+ * API function types we support. e.g. bind guest pasid, cache invalidation.
-+ * As data structures being extended with new members, offsetofend() is
-+ * used to identify the size. In case of adding a new member to a union,
-+ * offsetofend() applies to the largest member which may not be the newest.
++ * Current version of the IOMMU user API. This is intended for query
++ * between user and kernel to determine compatible data structures.
 + *
-+ * When new types are introduced with new versions, the new types for older
-+ * version must be filled with -EINVAL.
++ * UAPI version can be bumped up with the following rules:
++ * 1. All data structures passed between user and kernel space share
++ *    the same version number. i.e. any extension to any structure
++ *    results in version number increment.
 + *
-+ * The table below documents UAPI revision history with the name of the
-+ * newest member of each data structure. The largest member of a union was
-+ * used for the initial version of each type.
++ * 2. Data structures are open to extension but closed to modification.
++ *    Extensions are allowed in two places:
++ *    - the padding bytes with a flag bit for each new member
++ *    - new union members at the end of each structure
 + *
-+ * +--------------+---------------+
-+ * | Type /       |       V1      |
-+ * | UAPI Version |               |
-+ * +==============+===============+
-+ * | BIND_GPASID  |       vtd     |
-+ * +--------------+---------------+
-+ * | CACHE_INVAL  |  addr_info    |
-+ * +--------------+---------------+
-+ * | PAGE_RESP    |  code         |
-+ * +--------------+---------------+
++ *    No new members can be added after padding bytes are exhausted.
++ *    The reason is that the union size can change when new members are
++ *    added, having new member at the end would break backward
++ *    compatibility. Expansion of the union would move the new member
++ *    to different offset between versions.
 + *
-+ * Examples of future extensions:
-+ * V2 addes new member to the union
-+ * +--------------+---------------+---------------+
-+ * | Type /       |       V1      |      V2       |
-+ * | UAPI Version |               |               |
-+ * +==============+===============+===============+
-+ * | BIND_GPASID  |       vtd     |      smmu_v3  |
-+ * +--------------+---------------+---------------+
-+ * | CACHE_INVAL  |  addr_info    |     new_info  |
-+ * +--------------+---------------+---------------+
-+ * | PAGE_RESP    |  code         |     N/A       |
-+ * +--------------+---------------+---------------+
++ *    Flag bits can be added without size change but existing ones
++ *    cannot be altered.
 + *
-+ * V3 introduces a new UAPI data type: NEW_TYPE but with no new members
-+ * added to the existing types.
-+ * +--------------+---------------+---------------+---------------+
-+ * | Type /       |       V1      |      V2       |      V3       |
-+ * | UAPI Version |               |               |               |
-+ * +==============+===============+===============+===============+
-+ * | BIND_GPASID  |       vtd     |      smmu_v3  |       N/A     |
-+ * +--------------+---------------+---------------+---------------+
-+ * | CACHE_INVAL  |  addr_info    |    new_info   |       N/A     |
-+ * +--------------+---------------+---------------+---------------+
-+ * | PAGE_RESP    |  code         |    N/A        |       N/A     |
-+ * +--------------+---------------+---------------+---------------+
-+ * | NEW_TYPE     |  -EINVAL      |     -EINVAL   | largest_member|
-+ * +--------------+---------------+---------------+---------------+
++ * 3. Versions are backward compatible.
++ *
++ * 4. Version to size lookup is supported by kernel internal API for each
++ *    API function type. @version is mandatory for new data structures
++ *    and must be at the beginning with type of __u32.
 + */
-+const static int iommu_uapi_data_size[NR_IOMMU_UAPI_TYPE][IOMMU_UAPI_VERSION] = {
-+	/* IOMMU_UAPI_BIND_GPASID */
-+	{offsetofend(struct iommu_gpasid_bind_data, vtd)},
-+	/* IOMMU_UAPI_CACHE_INVAL */
-+	{offsetofend(struct iommu_cache_invalidate_info, addr_info)},
-+	/* IOMMU_UAPI_PAGE_RESP */
-+	{offsetofend(struct iommu_page_response, code)},
++#define IOMMU_UAPI_VERSION	1
++static inline int iommu_get_uapi_version(void)
++{
++	return IOMMU_UAPI_VERSION;
++}
++
++/*
++ * Supported UAPI features that can be reported to user space.
++ * These types represent the capability available in the kernel.
++ *
++ * REVISIT: UAPI version also implies the capabilities. Should we
++ * report them explicitly?
++ */
++enum IOMMU_UAPI_DATA_TYPES {
++	IOMMU_UAPI_BIND_GPASID,
++	IOMMU_UAPI_CACHE_INVAL,
++	IOMMU_UAPI_PAGE_RESP,
++	NR_IOMMU_UAPI_TYPE,
 +};
 +
-+int iommu_uapi_get_data_size(int type, int version)
-+{
-+	if (type >= NR_IOMMU_UAPI_TYPE || version > IOMMU_UAPI_VERSION)
-+		return -EINVAL;
++#define IOMMU_UAPI_CAP_MASK ((1 << IOMMU_UAPI_BIND_GPASID) |	\
++				(1 << IOMMU_UAPI_CACHE_INVAL) |	\
++				(1 << IOMMU_UAPI_PAGE_RESP))
 +
-+	return iommu_uapi_data_size[type][version - 1];
-+}
-+EXPORT_SYMBOL_GPL(iommu_uapi_get_data_size);
-+
- static void __iommu_detach_device(struct iommu_domain *domain,
- 				  struct device *dev)
- {
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index d1b5f4d98569..4908919a98f1 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -510,6 +510,7 @@ extern int iommu_report_device_fault(struct device *dev,
- 				     struct iommu_fault_event *evt);
- extern int iommu_page_response(struct device *dev,
- 			       struct iommu_page_response *msg);
-+extern int iommu_uapi_get_data_size(int type, int version);
- 
- extern int iommu_group_id(struct iommu_group *group);
- extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
-@@ -897,6 +898,11 @@ static inline int iommu_page_response(struct device *dev,
- 	return -ENODEV;
- }
- 
-+static inline int iommu_uapi_get_data_size(int type, int version)
-+{
-+	return -ENODEV;
-+}
-+
- static inline int iommu_group_id(struct iommu_group *group)
- {
- 	return -ENODEV;
+ #define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
+ #define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
+ #define IOMMU_FAULT_PERM_EXEC	(1 << 2) /* exec */
 -- 
 2.7.4
 
