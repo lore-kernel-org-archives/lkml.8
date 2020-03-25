@@ -2,137 +2,110 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C64C6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E46C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBED20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DE92077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:34:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="aN+73uG1"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SLk1pebG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbgCYRem (ORCPT
+        id S1727989AbgCYReu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:34:42 -0400
-Received: from mail-vi1eur05on2093.outbound.protection.outlook.com ([40.107.21.93]:44928
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727718AbgCYRel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:34:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jDt8+Fu+WEG8aM2Zxkjr0ZCx0LjlVKeT2mYTmYlDjZjUe//vyxhXJD6F6kZZA7VLgchxzl0YN/CJdOFvPZv8jCwQiztIj7TeqR+Zm31cp7qpgL0XefruIV7+3lHJbLSSsROCd0rIX5rDHsuVY/P0+kEeCVyHhsoWKPJQpyGsoGpg+QLRP4HkgBwp92hyniyq+XTby4rv97rjAT7zyjT+20rb+99BYTWmzo1paB7t/aXsI2xa3UMvgePucpdC7KDmMDTvodlIk5+ADSJIo/uWyMomOCIP7FwvqrwriS83+pZ6uJv64Z3QShC1ikPq7l+gCvoU53Jru8m9wfKnW6biYA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A4ZcaHWkuaQBByNYHGizRq232qJwHZnXa7JSm9iT4iQ=;
- b=gT49errYXDsf5X3eocjyWYHR35N7az0q15bEKg7PliBhMfDjdHujuUbZb8GplDPECML7yeNCc/jS6G4XbS0PGDOUGDbQyMbRHwAqgLh9wsmJ1jUiXNpQ3E/VyfJXc98TKfhdkCy0MCbulMo8QjIywjK0c31yq8Dcp7sfk93oP3AuM+gciPJ4+P5IAPGDXVonda6rFSzKx9SvyzSsbAetWZ+7kRmwLlWxTAksf/3nqu7HmJrByeE4yPk85BhEYKk6L2ZQ5hREefidDrjLo67tZNxfG8KMYQAr9eyClgv3YIcJH1vTUdDAzzE6ajS1seFFCFgail2SqsytkUIWBbtD1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
- dkim=pass header.d=toradex.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A4ZcaHWkuaQBByNYHGizRq232qJwHZnXa7JSm9iT4iQ=;
- b=aN+73uG1hXIexJasfuiqX7R9G6BybtUIN/YBa7gMZ9CtwUHqfB0sLaKRkTmk2g3GwLqYn+0U07GMuVD1XEeoWzsMSzVUIND3ebdDFlQJAVe9wH+4F4qicriW7bFH9cjxE5VhJsaWBZfc5T4MFeqUIE2050xvk5ZXssMOjSIm2ec=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=philippe.schenker@toradex.com; 
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.1.217) by
- AM6PR05MB4872.eurprd05.prod.outlook.com (20.177.35.32) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.19; Wed, 25 Mar 2020 17:34:35 +0000
-Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::dee:ffa2:1d09:30e]) by AM6PR05MB6120.eurprd05.prod.outlook.com
- ([fe80::dee:ffa2:1d09:30e%4]) with mapi id 15.20.2835.021; Wed, 25 Mar 2020
- 17:34:35 +0000
-From:   Philippe Schenker <philippe.schenker@toradex.com>
-To:     andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        linux@armlinux.org.uk, netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-kernel@vger.kernel.org, silvan.murer@gmail.com,
-        a.fatoum@pengutronix.de, s.hauer@pengutronix.de,
-        o.rempel@pengutronix.de,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next v2 2/2] ARM: dts: apalis-imx6qdl: use rgmii-id instead of rgmii
-Date:   Wed, 25 Mar 2020 18:34:25 +0100
-Message-Id: <20200325173425.306802-2-philippe.schenker@toradex.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200325173425.306802-1-philippe.schenker@toradex.com>
-References: <20200325173425.306802-1-philippe.schenker@toradex.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZRAP278CA0001.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:10::11) To AM6PR05MB6120.eurprd05.prod.outlook.com
- (2603:10a6:20b:a8::25)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from philippe-pc.toradex.int (31.10.206.125) by ZRAP278CA0001.CHEP278.PROD.OUTLOOK.COM (2603:10a6:910:10::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend Transport; Wed, 25 Mar 2020 17:34:34 +0000
-X-Mailer: git-send-email 2.26.0
-X-Originating-IP: [31.10.206.125]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 5deeabd9-930a-4bb2-8c7c-08d7d0e2c912
-X-MS-TrafficTypeDiagnostic: AM6PR05MB4872:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR05MB48722E871B6B61C31FFA01C8F4CE0@AM6PR05MB4872.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0353563E2B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(136003)(39850400004)(396003)(366004)(346002)(81166006)(8936002)(8676002)(6486002)(16526019)(2906002)(186003)(7416002)(478600001)(86362001)(66556008)(6666004)(66476007)(66946007)(956004)(44832011)(81156014)(2616005)(5660300002)(4744005)(1076003)(316002)(52116002)(6512007)(54906003)(4326008)(26005)(36756003)(6506007)(16060500001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB4872;H:AM6PR05MB6120.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cZYe5pXT7AI6rJRL4XgclEeA3D+syEkMQM+suuRrEq89wAA4wuXUCdMHUHlKPWZR4uEdxodG3DamtFbBIQoFQywwg8F3l9FRrp46mIDfZ5pcplrUpPKgsjvs+Kmn1SrUq18PiJkDAtwkhSrMLv33tItW6opNUS6QnN6opxUeSN49rsrhxpelgv2xHLzgtk2JS7W+arqVnX0UYOXPYO0m3uNBfdDF0GZRK9oQ7vlYtVEIXZ3e0NLe9j+o/LtiUm7n5T1v7y2Mw1J1Vu97kMHVxV6SBRSh6mv49s4fAMTSCZXEWA7NQGUSgyqCFvFTa3BqLEzpekwlNLeDGPmWB7I+vokDZdYwo5TNxBN6ChxgGE6RddsmYuLqw/LvlHWjPSj8gdrrjd0lISbcQmSIL2KTnZsKQfxiGKjK5FQEn3bhTeRBPqwrqwu2k8dAmQRCtwoCvBB/rY/iB9xke0RjmLsTQTvnaB8JOv6v52ABkMq8TLgfu8bqleohifjp9MGWpUIg
-X-MS-Exchange-AntiSpam-MessageData: 5JLHK6nddyFY3sDV5EX3ZrU5trGRUAzWtsqVwf0J9+ZOLhlTxAEZuR/6vQi0neRbNU5L1CLr2Wx1la6lIFxNUgI3THmchBUlhZMQ3wmWVDrMxjia+awiu+vruOKZ0JIUIKmcZJ7+hV5ejeQHojeAjQ==
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5deeabd9-930a-4bb2-8c7c-08d7d0e2c912
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2020 17:34:35.2435
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zezU0R3+IqTNgu549o81moS7JG01UxWGNMaUphyjO4VrD5HXz3E13zwLyEE2pD7FdPis9mUgwvvkhtpwqHOqxm9jM3PdWtpHpnWux2Nd5SM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB4872
+        Wed, 25 Mar 2020 13:34:50 -0400
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:41287 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYRet (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:34:49 -0400
+Received: by mail-qv1-f66.google.com with SMTP id o7so1486855qvq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 10:34:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=Yi5HT0gIMU1vXoOcsaUkgeprWNpD7T8tR8cpKS9kJTk=;
+        b=SLk1pebGcLYeZ4z/jd6Fqh1mraqZbisWYOTgqwiA5nLWQUaeYs7xUhpQRw+6W11/Hu
+         MrORLS95iFFGSRc/yEb/ns1zlod6UnpB5l4z0azg2eiIpg3WKa/yDjVuLsPWkWpGeg52
+         tOlgKuoSPSayanlhLPewETKDhOLWvDFYt53WzVCNcwwMRtns6kZVip3OIAGlrBIBnfCt
+         2tM82vWYGCpWCv6X5zk8lZgG8TTGMVLjMDGZG8DuyFWnyz9Ot/3WgromPZxnGJ0YT/eL
+         BCX0epCrTOGn6RJFODaZQwBmD3tkMuWwOFnQwaxpJbqHb3RdwGYtwDT0DsX/MMgAUvVp
+         gJ1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=Yi5HT0gIMU1vXoOcsaUkgeprWNpD7T8tR8cpKS9kJTk=;
+        b=ktTdoEv0txm3FOm6uSArkrAXBtGjP5AZxfpZvc6PsADQkP3NSmCzWb7Qb1+9EqDh8G
+         v+E4W2VFNSflNC6JrGgdkT7zlBVTMtHhjqE67URyqWdgqBqruGnhH5TKgw7UTiJ+cO6b
+         U5W/E2UptQpszoQo4G8VcRQui3XBgj/D3nWsys3/Kq/KTrftafyGrQnD25gHaqivgT1q
+         2/FfrKrQsL1CatT8vvAcUrbUcwjE7fbdZLfdtvY5OCrkFR6V0z7absABp+0OM6ApjmbQ
+         jb/YFeFZ67GatB8+dH717x1Ixq/DMINz2L1HP6RiNOpmDbt9WbBj2fc1fLBZROSo4H1k
+         mDlg==
+X-Gm-Message-State: ANhLgQ0Ky50qY/OvYyWOXnPTQ9KdxLFjh1JMppO5POP1Ua43eotg0hp9
+        BI165UCpu2Fm7qIowSfXLXlYBA==
+X-Google-Smtp-Source: ADFU+vvSTm3iJZG8SeK5DwIXubRWFkjx6qZHORcGN9/Uw+XHKMovA4wLWTp/xZfcBXIPrNG0XpH9HA==
+X-Received: by 2002:a05:6214:aa2:: with SMTP id ew2mr4279653qvb.123.1585157687498;
+        Wed, 25 Mar 2020 10:34:47 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u25sm11933305qkj.71.2020.03.25.10.34.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 10:34:46 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] ipv4: fix a RCU-list lock in fib_triestat_seq_show
+Date:   Wed, 25 Mar 2020 13:34:46 -0400
+Message-Id: <92C7474D-4592-44BF-B0ED-26253196511E@lca.pw>
+References: <5e2ed86a-23bc-d3e5-05ad-4e7ed147539c@gmail.com>
+Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <5e2ed86a-23bc-d3e5-05ad-4e7ed147539c@gmail.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Until now a PHY-fixup in mach-imx set our rgmii timing correctly. For
-the PHY KSZ9131 there is no PHY-fixup in mach-imx. To support this PHY
-too, use rgmii-id.
-For the now used KSZ9031 nothing will change, as rgmii-id is only
-implemented and supported by the KSZ9131.
 
-Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
----
+> On Mar 25, 2020, at 12:13 PM, Eric Dumazet <eric.dumazet@gmail.com> wrote:=
 
-Changes in v2: None
+>=20
+> I would prefer :
+>=20
+> diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
+> index ff0c24371e3309b3068980f46d1ed743337d2a3e..4b98ffb27136d3b43f179d6b1b=
+42fe84586acc06 100644
+> --- a/net/ipv4/fib_trie.c
+> +++ b/net/ipv4/fib_trie.c
+> @@ -2581,6 +2581,7 @@ static int fib_triestat_seq_show(struct seq_file *se=
+q, void *v)
+>                struct hlist_head *head =3D &net->ipv4.fib_table_hash[h];
+>                struct fib_table *tb;
+>=20
+> +               rcu_read_lock();
+>                hlist_for_each_entry_rcu(tb, head, tb_hlist) {
+>                        struct trie *t =3D (struct trie *) tb->tb_data;
+>                        struct trie_stat stat;
+> @@ -2596,6 +2597,7 @@ static int fib_triestat_seq_show(struct seq_file *se=
+q, void *v)
+>                        trie_show_usage(seq, t->stats);
+> #endif
+>                }
+> +               rcu_read_unlock();
+>        }
+>=20
+>        return 0;
 
- arch/arm/boot/dts/imx6qdl-apalis.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 1b5bc6b5e806..347a5edc6927 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -180,7 +180,7 @@ &ecspi2 {
- &fec {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_enet>;
--	phy-mode = "rgmii";
-+	phy-mode = "rgmii-id";
- 	phy-handle = <&ethphy>;
- 	phy-reset-duration = <10>;
- 	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_LOW>;
--- 
-2.26.0
-
+I have no strong opinion either way. My initial thought was to save 255 extr=
+a lock/unlock with a single lock/unlock, but I am not sure how time-consumin=
+g for each iteration of the outer loop could be. If it could take a bit too l=
+ong, it does make a lot of sense to reduce the critical section.=
