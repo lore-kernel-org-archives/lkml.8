@@ -2,114 +2,112 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CB0C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 230D8C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4982820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E969420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:15:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWq3ZSNU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZLK1rRcl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCYIOh (ORCPT
+        id S1727299AbgCYIPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:14:37 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45821 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725903AbgCYIOh (ORCPT
+        Wed, 25 Mar 2020 04:15:41 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25802 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbgCYIPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:14:37 -0400
-Received: by mail-pg1-f195.google.com with SMTP id o26so783583pgc.12;
-        Wed, 25 Mar 2020 01:14:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nHriMRRnBlnzmaQlY1pxbBcl5uot0p0Yl6mHzSeiY0w=;
-        b=PWq3ZSNUpvOaBMwo5MFqymaxHPGaAAVl+lDwGQhstHsVI8xm23z+XLs3izHJplQ6Ig
-         NjqQmiuzvvdp8iei98+wdxzNvu7YB4rTWnDGx12d+IUbbsWIs+YE6K+FCDSS5vUNMsK5
-         yqPKY9f98DvyXxEkWT9zg6ESd7NSGTptCxS2A+gcd2vRcBKav25VLx8uRd4dcAiiaCfh
-         5C2NfRodHPNxubNEcMhEIHxcBshk0Nj8Ivp+zOCmN164nW5tfzUclABzXTvLQvzOp7P+
-         xE8wndofldx/VmkoNDa7QL2Bzk9Rr7PQ0v9MRxAnJUXQD+5mAZMpnBXSu/A/wdt3c9vg
-         T9Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nHriMRRnBlnzmaQlY1pxbBcl5uot0p0Yl6mHzSeiY0w=;
-        b=UqpyatctPCi5Nzqgoj7LFgYfaDxllO0v3pgJwOeLv24C7L6UJxinPpOFayJ8k8gIC3
-         WhVnsdtt6p73yuHMpJzazWzuZRlKbtjD8VTiwrtbE+/w+TI0NPAeNLtm/K+X2wEP0bii
-         G73CQareVImAfXYGvzr7woFjBQIRwY6z4FyEJGc06xFmnmeYtV0ZqV/gXTBkQpboTqtC
-         DeD+WwC8pSFevhSWKrVYlq2SxxfvPTPlvMPaXZON7GQzPr5v8jI0pf5HxfiFVf7vNkYB
-         +ZU4QDU8UupbnjTo3JtJkNB81C2VteLZJTWiZ8nAPi3tnaAFn1BGTS/QfbzwyglG/0sx
-         /+Lw==
-X-Gm-Message-State: ANhLgQ2T4RFMs1H+dBbCmeY9qY0NZZGBVoDzd+IbiP3VdBLZD/XqKubq
-        uKhZ/e+NrlmjijTjCRYhh2Y=
-X-Google-Smtp-Source: ADFU+vsWjVwmho5mKXPOUHGggde/eZaV7TnENdUUVoDY3fxC/MWXMcRKVAxNhD0gw4fxe4DTGQVDAA==
-X-Received: by 2002:aa7:8685:: with SMTP id d5mr2221555pfo.3.1585124074438;
-        Wed, 25 Mar 2020 01:14:34 -0700 (PDT)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id 5sm17893766pfw.98.2020.03.25.01.14.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 01:14:33 -0700 (PDT)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH v2] tty: serial: make SERIAL_SPRD depend on COMMON_CLK
-Date:   Wed, 25 Mar 2020 16:14:27 +0800
-Message-Id: <20200325081427.20312-1-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 25 Mar 2020 04:15:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585124140;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=hOKCgDt3MdkDi+eEQM/u9xHMiA/ynm2nLfPeOZVBaHM=;
+        b=ZLK1rRclR6XIIVfsjaLJzrCwQ2C+O1qiovpYWBrEOHmgDuJl9pRNtzgZZTLHuFcE+3E08w
+        VtDdn5dNc+5gSDfJEUH9OtKrxQPl5Z1o5OjvSchlJIIMX2m8dDZe1X4ty1wBvsxVw0cIF5
+        N78bar4vnVL4aPQDxAfzH91nm6Hgzzw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-468-dnKYzcUZNe-hkbmv6mqokg-1; Wed, 25 Mar 2020 04:15:35 -0400
+X-MC-Unique: dnKYzcUZNe-hkbmv6mqokg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BFAB418B5F6A;
+        Wed, 25 Mar 2020 08:15:33 +0000 (UTC)
+Received: from [10.72.14.13] (ovpn-14-13.pek2.redhat.com [10.72.14.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 41FE65DA7B;
+        Wed, 25 Mar 2020 08:15:21 +0000 (UTC)
+Subject: Re: [PATCH V7 7/8] vdpasim: vDPA device simulator
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, mst@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+References: <20200324041458.27384-8-jasowang@redhat.com>
+ <202003251045.ncVINn70%lkp@intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <26bc89b3-8e29-db25-18fc-64e309951a94@redhat.com>
+Date:   Wed, 25 Mar 2020 16:15:18 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <202003251045.ncVINn70%lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
 
-kbuild-test reported an error:
+On 2020/3/25 =E4=B8=8A=E5=8D=8810:25, kbuild test robot wrote:
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on vhost/linux-next]
+> [also build test ERROR on linux/master linus/master v5.6-rc7 next-20200=
+324]
+> [if your patch is applied to the wrong git tree, please drop us a note =
+to help
+> improve the system. BTW, we also suggest to use '--base' option to spec=
+ify the
+> base tree in git format-patch, please seehttps://stackoverflow.com/a/37=
+406982]
+>
+> url:https://github.com/0day-ci/linux/commits/Jason-Wang/vDPA-support/20=
+200324-142634
+> base:https://git.kernel.org/pub/scm/linux/kernel/git/mst/vhost.git  lin=
+ux-next
+> config: m68k-allyesconfig (attached as .config)
+> compiler: m68k-linux-gcc (GCC) 9.2.0
+> reproduce:
+>          wgethttps://raw.githubusercontent.com/intel/lkp-tests/master/s=
+bin/make.cross  -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          GCC_VERSION=3D9.2.0 make.cross ARCH=3Dm68k
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot<lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
 
-  config: mips-randconfig-a001-20200321 ...
-  >> drivers/tty/serial/sprd_serial.c:1175: undefined reference
-  to `clk_set_parent'
 
-Because some mips Kconfig selects HAVE_CLK but not COMMON_CLK and no
-clk_set_parent implemented, so the error was exposed. So adding
-dependence on COMMON_CLK can fix this issue.
+This is because VDPA_SIM selects VHOST_RING which selects VHOST_IOTLB=20
+which depends on VIRTULAIZATION but not defined in m68k.
 
-Fixes: 7ba87cfec71a ("tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
-Changes from v1:
-* Change to depend on COMMON_CLK instead of ARM
----
- drivers/tty/serial/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+I think we should refine the vhost Kconfig and decouple it out of=20
+VIRTUALIZATION.
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index b43dce785a58..ff942ca95b66 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1444,6 +1444,7 @@ config SERIAL_MEN_Z135
- config SERIAL_SPRD
- 	tristate "Support for Spreadtrum serial"
- 	select SERIAL_CORE
-+	depends on COMMON_CLK
- 	help
- 	  This enables the driver for the Spreadtrum's serial.
- 
--- 
-2.20.1
+Will send a new series with this shortly.
+
+Thanks
 
