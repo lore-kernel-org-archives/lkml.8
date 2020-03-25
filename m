@@ -2,86 +2,49 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD10DC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53659C54FD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A02020777
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u6luavn1"
+	by mail.kernel.org (Postfix) with ESMTP id 1B05720777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgCYOfi (ORCPT
+        id S1727837AbgCYOg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:35:38 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46554 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbgCYOfh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:35:37 -0400
-Received: by mail-qv1-f67.google.com with SMTP id m2so1113665qvu.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+kwXOGpMaPekrAzfhftfE+gw1YnXEMbIx547SEtRJs8=;
-        b=u6luavn1Vsw0nblaWrGICZrBOI5aygYZDNJfSeSFwROrkidjCDpGRJgdi+mMUs+U9A
-         26JsvmnurOMQEScqA26HQRFi4gm1TdEoiPfyNgm61+5ElwYvpXdwjZIq0WDJNpo6GOIl
-         mRyvDRy0cvxi/aMelDBdZxLuBFv3lg9MAHWR5F940+ht5bkDBC7PRRUzuPqTHg+mP+r2
-         xX1yUBj2Sp6HbxoRaFEK7zBrX7C44/pI6m1V8rQbsm8ojLa5IKBI/k9HD5JNpH62a9TS
-         b491lAKXeaksvjjDBsDn77sAoj/E6wd/c03D8zTphOR3/5K9c6XkVzfgh/qzgpk4UXGy
-         T5FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+kwXOGpMaPekrAzfhftfE+gw1YnXEMbIx547SEtRJs8=;
-        b=PcwV65+P4zE3rkvO8wWunMSKjKMDgw0is54EMlWZAtJGhFlV8j8OvIZRWHkuXGwznE
-         uHm5XDRoboZlq2D+2oxfNgrj+NgI1T15w9IlppeAZUzKDV9tb72sB931oUTcv0FbCnr8
-         IMoJcb/Z6bFnnoAmO2LPp95HbsbGhk8PCJAmx1fYYjLiv+23JjFQJapK1gykG7s+/dC+
-         vKIRidSJf/7LXRHzmMRm/wD9koGMCPTnH4D+i8J85lKy/3erDFQ7WLtiIc6/Ab7i2Tss
-         uSSmKGDkB9gu3jc3Ac6nAa8WN0W7BhprFvwzQexObNesdg+Hrci8A2Mfyd5Zj4oA7BQa
-         32+w==
-X-Gm-Message-State: ANhLgQ2wb1QV/wCpdIBt26U+0gqbJp/iFYGMa4l9reQJvvmE+3/9CPX+
-        nqqZPrj7NmIDbjMgLBG0gnJf4mYAOAI=
-X-Google-Smtp-Source: ADFU+vuNxobH1Mq6LBSt0Der6JSj8ojaHpucegR+t8b4DvSDA49x5wkorDVhZyM7KlZMcxClhmiQkg==
-X-Received: by 2002:a0c:fe87:: with SMTP id d7mr2362960qvs.37.1585146934157;
-        Wed, 25 Mar 2020 07:35:34 -0700 (PDT)
-Received: from [192.168.1.92] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id l18sm15345100qke.132.2020.03.25.07.35.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 07:35:33 -0700 (PDT)
-Subject: Re: [Patch v5 3/6] thermal: Add generic power domain warming device
- driver.
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, Rob Herring <robh@kernel.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200320014107.26087-1-thara.gopinath@linaro.org>
- <20200320014107.26087-4-thara.gopinath@linaro.org>
- <CAPDyKFqn0E=-sNZy=09tLZn=6VxEfiXL-vUNwb9HK8+WLDBiPw@mail.gmail.com>
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <31aba776-28ee-3aac-08eb-6f39f8279bfe@linaro.org>
-Date:   Wed, 25 Mar 2020 10:35:31 -0400
+        Wed, 25 Mar 2020 10:36:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36610 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727695AbgCYOg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:36:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 38A0DAC50;
+        Wed, 25 Mar 2020 14:36:24 +0000 (UTC)
+Subject: Re: [RFC v2 2/2] kernel/sysctl: support handling command line aliases
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <20200325120345.12946-2-vbabka@suse.cz>
+ <20200325142936.GC19542@dhcp22.suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <52faea3b-6442-3b1b-9404-6a018d1d1c44@suse.cz>
+Date:   Wed, 25 Mar 2020 15:36:23 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAPDyKFqn0E=-sNZy=09tLZn=6VxEfiXL-vUNwb9HK8+WLDBiPw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200325142936.GC19542@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -89,184 +52,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ulf,
-Thanks for the review!
+On 3/25/20 3:29 PM, Michal Hocko wrote:
+> Both patches look really great to me. I haven't really checked all the
+> details but from a quick glance they both seem ok.
 
-On 3/23/20 11:57 AM, Ulf Hansson wrote:
+Thanks.
 
---snip
->> +
->> +static void pd_warming_release(struct device *dev)
->> +{
->> +       kfree(dev);
-> 
-> This is wrong, you should free a "struct pd_warming_device *". Use the
-> "container of" macro to get it from 'dev'.
+> I would just add a small clarification here. Unless I am mistaken
+> early_param is called earlier than it would be now. But that shouldn't
+> cause any problems because the underlying implementation is just a noop
+> for backward compatibility.
 
-Will fix this.
-> 
->> +}
->> +
->> +struct thermal_cooling_device *
->> +of_pd_warming_register(struct device *parent, int pd_id)
->> +{
->> +       struct pd_warming_device *pd_wdev;
->> +       struct of_phandle_args pd_args;
->> +       char cdev_name[THERMAL_NAME_LENGTH];
->> +       int ret;
->> +
->> +       pd_wdev = kzalloc(sizeof(*pd_wdev), GFP_KERNEL);
->> +       if (!pd_wdev)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       dev_set_name(&pd_wdev->dev, "%s_%d_warming_dev",
->> +                    dev_name(parent), pd_id);
->> +       pd_wdev->dev.parent = parent;
->> +       pd_wdev->dev.release = pd_warming_release;
->> +
->> +       ret = device_register(&pd_wdev->dev);
->> +       if (ret) {
->> +               put_device(&pd_wdev->dev);
->> +               goto free_pd_wdev;
->> +       }
->> +
->> +       ret = ida_simple_get(&pd_ida, 0, 0, GFP_KERNEL);
->> +       if (ret < 0)
->> +               goto unregister_device;
-> 
-> If you use and ida, you might as well use it as a part of the
-> dev_set_name() above.
-> 
-> That should give you a unique name, similar to how you use it for the
-> cdev_name below.
+Yeah, indeed worth noting somewhere explicitly. The conversion can't be done
+blindly, one has to consider whether the delay compared to early_param can be a
+disadvantage or not. For example the nmi_watchdog parameter is probably best
+left as it is?
 
-dev_set_name above already has a unique name with the power controller 
-name and the power domain id. cdev on the other hand creates a virtual 
-thermal device and needs a unique name.
-
+> Thanks a lot this looks like a very nice improvement.
 > 
->> +
->> +       pd_wdev->id = ret;
->> +
->> +       pd_args.np = parent->of_node;
->> +       pd_args.args[0] = pd_id;
->> +       pd_args.args_count = 1;
->> +
->> +       ret = of_genpd_add_device(&pd_args, &pd_wdev->dev);
->> +
->> +       if (ret)
->> +               goto remove_ida;
->> +
->> +       ret = dev_pm_genpd_performance_state_count(&pd_wdev->dev);
->> +       if (ret < 0)
->> +               goto out_genpd;
->> +
->> +       pd_wdev->max_state = ret - 1;
->> +       pm_runtime_enable(&pd_wdev->dev);
->> +       pd_wdev->runtime_resumed = false;
->> +
->> +       snprintf(cdev_name, sizeof(cdev_name), "thermal-pd-%d", pd_wdev->id);
->> +       pd_wdev->cdev = thermal_of_cooling_device_register
->> +                                       (NULL, cdev_name, pd_wdev,
->> +                                        &pd_warming_device_ops);
->> +       if (IS_ERR(pd_wdev->cdev)) {
->> +               pr_err("unable to register %s cooling device\n", cdev_name);
->> +               ret = PTR_ERR(pd_wdev->cdev);
->> +               goto out_runtime_disable;
->> +       }
->> +
->> +       return pd_wdev->cdev;
->> +
->> +out_runtime_disable:
->> +       pm_runtime_disable(&pd_wdev->dev);
->> +out_genpd:
->> +       pm_genpd_remove_device(&pd_wdev->dev);
->> +remove_ida:
->> +       ida_simple_remove(&pd_ida, pd_wdev->id);
->> +unregister_device:
->> +       device_unregister(&pd_wdev->dev);
->> +       pd_warming_release(&pd_wdev->dev);
-> 
-> This is wrong, drop this.
-
-Oops . sorry . Will do. Will fix rest of the comments below as well.
-
-> 
->> +free_pd_wdev:
->> +       kfree(pd_wdev);
-> 
-> Since you should free this from the ->release() callback, there is no
-> need to do this here.
-> 
->> +       return ERR_PTR(ret);
->> +}
->> +EXPORT_SYMBOL_GPL(of_pd_warming_register);
->> +
->> +void pd_warming_unregister(struct thermal_cooling_device *cdev)
->> +{
->> +       struct pd_warming_device *pd_wdev = cdev->devdata;
->> +       struct device *dev = &pd_wdev->dev;
->> +
->> +       if (pd_wdev->runtime_resumed) {
->> +               dev_pm_genpd_set_performance_state(dev, 0);
->> +               pm_runtime_put(dev);
->> +               pd_wdev->runtime_resumed = false;
->> +       }
->> +       pm_runtime_disable(dev);
->> +       pm_genpd_remove_device(dev);
->> +       ida_simple_remove(&pd_ida, pd_wdev->id);
->> +       thermal_cooling_device_unregister(cdev);
->> +       kfree(pd_wdev);
-> 
-> Don't use kfree here, but instead device_unregister(dev);
-> 
->> +}
->> +EXPORT_SYMBOL_GPL(pd_warming_unregister);
->> diff --git a/include/linux/pd_warming.h b/include/linux/pd_warming.h
->> new file mode 100644
->> index 000000000000..550a5683b56d
->> --- /dev/null
->> +++ b/include/linux/pd_warming.h
->> @@ -0,0 +1,29 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2019, Linaro Ltd.
->> + */
->> +#ifndef __PWR_DOMAIN_WARMING_H__
->> +#define __PWR_DOMAIN_WARMING_H__
->> +
->> +#include <linux/pm_domain.h>
->> +#include <linux/thermal.h>
->> +
->> +#ifdef CONFIG_PWR_DOMAIN_WARMING_THERMAL
->> +struct thermal_cooling_device *
->> +of_pd_warming_register(struct device *parent, int pd_id);
->> +
->> +void pd_warming_unregister(struct thermal_cooling_device *cdev);
->> +
->> +#else
->> +static inline struct thermal_cooling_device *
->> +of_pd_warming_register(struct device *parent, int pd_id)
->> +{
->> +       return ERR_PTR(-ENOSYS);
->> +}
->> +
->> +static inline void
->> +pd_warming_unregister(struct thermal_cooling_device *cdev)
->> +{
->> +}
->> +#endif /* CONFIG_PWR_DOMAIN_WARMING_THERMAL */
->> +#endif /* __PWR_DOMAIN_WARMING_H__ */
->> --
->> 2.20.1
->>
-> 
-> Besides the few things above, this looks good to me.
-> 
-> Kind regards
-> Uffe
+> On Wed 25-03-20 13:03:45, Vlastimil Babka wrote:
+> [...]
+>> -static __init int setup_numa_zonelist_order(char *s)
+>> -{
+>> -	if (!s)
+>> -		return 0;
+>> -
+>> -	return __parse_numa_zonelist_order(s);
+>> -}
+>> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
+>> -
+>>  char numa_zonelist_order[] = "Node";
+>>  
+>>  /*
+>> -- 
+>> 2.25.1
 > 
 
--- 
-Warm Regards
-Thara
