@@ -6,83 +6,97 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 841BDC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA7FC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:13:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C7A5207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F116B207FC
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:13:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgCYVJw (ORCPT
+        id S1727488AbgCYVNW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:09:52 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:48478 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYVJw (ORCPT
+        Wed, 25 Mar 2020 17:13:22 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:53325 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbgCYVNV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:09:52 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id 85E2A80307C2;
-        Wed, 25 Mar 2020 21:09:50 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Cv3gjaAA1V8B; Thu, 26 Mar 2020 00:09:49 +0300 (MSK)
-Date:   Thu, 26 Mar 2020 00:09:41 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Rob Herring <robh@kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/6] dt-bindings: i2c: dw: Add Baikal-T1 SoC I2C
- controller
-Message-ID: <20200325210941.x6wqnlmauxmfkd4j@ubsrv2.baikal.int>
-References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
- <20200306132018.C268A8030792@mail.baikalelectronics.ru>
- <20200312214340.GA30360@bogus>
+        Wed, 25 Mar 2020 17:13:21 -0400
+Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1N5FQJ-1jQfbG41CP-01178k; Wed, 25 Mar 2020 22:13:20 +0100
+Received: by mail-qk1-f170.google.com with SMTP id o10so4229550qki.10;
+        Wed, 25 Mar 2020 14:13:19 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0LONAbeSxw4khp+j5NYRVO/giJMuxHjWYdo4nsNufUq1zmcG64
+        ZURuF/A0KxW13qXAdek2oFToUPzgoN3XaHmHz6o=
+X-Google-Smtp-Source: ADFU+vu9l/z+oM0lxSfEA0g3Poid+2S8rWoUyL4yoOgi/cbZMJnhoiOFpbVGBHfvi6Rzso58zdS/a4b1BFTBjUGoCJc=
+X-Received: by 2002:a37:6285:: with SMTP id w127mr4965337qkb.138.1585170798637;
+ Wed, 25 Mar 2020 14:13:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200312214340.GA30360@bogus>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20200302020757.551483-1-bjorn.andersson@linaro.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 25 Mar 2020 22:13:02 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
+Message-ID: <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc firmware
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:23AlKoK7JfyvIqlkPc2VNTcV1RVX6tcnr2s1dZFIRMkWYb7/awp
+ ToEpktsd3CItXRFAKCESrsG53CRGbCXOwV2fH9Rz/yBIlqzgYngxZkOEQC2ynk4arBSE5tL
+ CslJuye1gSg+YynI0TyV0P7tOcgysN7S8JhG1ptU3k0+HOtWz4Bwdo9GHN+p4hFwT1Z6xK8
+ x8pb2A05E5bWaPhQOLnRw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:80eBV72EX1k=:5PQ4T/KOmiq/GiMZnDYD8K
+ H/yEaQViDU7LY+uGNFn5GRXtLk0i9D4tv7DUcWPYn5ALhKUx6hD9eS2aQlVd3q2oL0pX77h3X
+ UsmgHW/67rZrNfRfGwT6xr6Hr9hSzi2maKVpuu7h47p5dNPFW+k/rTm7+kkIjdzMzgLjpUBMm
+ YN5MoWcDZBsCovQt+zH1roRUWWSNiHuHwJil1WQUduppWN0xTITPDNPT0zVVU7XGOAUq8Jx2f
+ xm8F1fHEauh2wKQab8dM24NseCAQz4+2Mm2XXcZypcYAJbX9cXQdNIpsE5ocD9GMWwsA38zRX
+ 3Rag2GtLyfYr1tw80sk/rRoi63R31qRuaxZA645ZHi+83lqmsQS01feFr0TuMxSlgHDOi8Q61
+ 2/D+L0qiZWvIreH7saLip87Eq2Cy3udR1rfa95HLDwqeCyfsS847eruetwlsi2I5bOu+ExL63
+ iacvaztwU9JNsBRNb3mwl1xbABcPKvXalE7A+KgZiUZiAwU433iZUydR8gkSczBzkwRQ1UKLT
+ HRbavrgty6wlGCgBIFvPehF5qZQ3c0c3vrKsG1QtCgtzvzwFKgVLpch5DjGyzlLBSO36C6Pk/
+ /7Ju8OEseF7iKN174DpfAFaav6yqIY+x4DGQbtbog2Rb6pGMa6bav5CKl12696bT2vvRWWodu
+ 4rsrtUCl1oVCGVPbkKBav0oGZ9sZBwIbj98jcy+HejBI3oaZZe2GRFmtDGOOxmUU0WYA1UMcs
+ qfkVeY7DyFya+dqGkBiWOhO5oaDxTF2fOCfYyIDNEMinokmnJYxa7BKT/JSqog8l93tgqvb6G
+ snyKyPwJ2lXSaIKBTizN93rWTDdldTZwoRizbxg77RTtIUjJYA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 12, 2020 at 04:43:40PM -0500, Rob Herring wrote:
-> On Fri, 6 Mar 2020 16:19:52 +0300, <Sergey.Semin@baikalelectronics.ru> wrote:
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Just add the "be,bt1-i2c" compatible string to the bindings. The rest of
-> > the DW APB I2C properties can be freely used to describe the Baikal-T1
-> > I2C controller dts-node.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  Documentation/devicetree/bindings/i2c/snps,designware-i2c.yaml | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Update the firmware-name of the remoteproc nodes to mimic the firmware
+> structure on other 845 devices.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-Seeing you and us having doubts regarding our vendor prefix and the
-corresponding patch still hasn't been accepted, in the next patchset release
-perhaps I will have to change the compatible string of this driver. It depends
-on a result of the discussion: https://lkml.org/lkml/2020/3/13/239
+Hi Bjorn,
 
-Rob, could you get back to it, so we could come up with a solution?
+Sorry for the late reply, I only came across this one while going
+through the pull requests
+that we had failed to pick up earlier.
 
-Currently most of our team members are leaning towards "baikal,t1" = "vendor,chip"
-prefixes to all the SoC specific devices. So the Baikal-T1 I2C compatible string
-would be renamed to "baikal,t1-i2c". What do you think?
+I really dislike the idea of hardcoding a firmware name in the
+devicetree, we had long
+discussions about this a few years ago and basically concluded that the firmware
+name needs to be generated by the driver after identifying the hardware itself.
 
-Regards,
--Sergey
+The problem is that the firmware generally needs to match both the device driver
+and the hardware, so when there is a firmware update that changes the behavior
+(intentionally or not) in a way the driver needs to know about, then
+the driver should
+be able to request a particular firmware file based on information
+that the owner
+of the dtb may not have.
+
+I'm holding off on the pull request for today, maybe there is something we can
+still do about it before the merge window.
+
+        Arnd
