@@ -2,133 +2,396 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DE17C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22297C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3104A20777
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C092078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="W3EUKdwU"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zg2Tx1mp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727982AbgCYSgd (ORCPT
+        id S1728035AbgCYSgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:36:33 -0400
-Received: from mail-bn7nam10on2136.outbound.protection.outlook.com ([40.107.92.136]:1216
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727129AbgCYSgb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:36:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BcI4qrWiRlXexWJAhqxGE2fTVNFLeSLwi+rhNwgnni7LDWwmTtagFkblRlObS+uLcDD0LN566UNO89If53H5Fqi4Urp4QZST7WHSs3LNbHcSNvxZXdLThJqw9kOueJjaMWMgV+Sb+H7p9uJtWQPt58QowWMGMOwz0dtQJA697m7y9PqdQCv3/Ma+CxZRJBmcx9vpTupa3urIfCs8Om0DfOnXf23bWahtjF883g5tDR9KPN1ZG0Q+9wYutwT+m54xk1EjGIH+UkUhB9yKob8Z/xvbCjLIE9l7aJd1/x6hBdePTbC14rQEG212OVOojNq3zjP2Z6bK6U+j6GA0fqLawg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Dv0nqc4XZmPdpO/MYhePmGzOmulFY9821am2laK3Bc=;
- b=nH3wgWFODn166HFIuyn6x4iVk7mIUkSP93/I3RLLv19tx0YXk9cpRbSU0NK5ry4+95kXO1u6t3AwNDwRU3fuxtiuR+6n9dL/WaPkKrXo0+ZFV1tkKU1O1s7R+Yk0/2Y3ksozSctLmRY83I6W8EG8qrlq685+NiNvkqox4AaScukOVqDXIoozLlH6jxbvsllVQ98XYT8XCc4sfFdBoYVjfWZipB4XL/zRWlSZpmKiRCWvFUPJVRfwmONuMbX088uS7Iw19tFcmXE4Ry9WJnHN9Y9Yeqi8zBOg96iN+0gLxlPnJrtr5gpBJTFEMs4VEOFR8rk6vS9V1Yxp1tyFyDff/A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6Dv0nqc4XZmPdpO/MYhePmGzOmulFY9821am2laK3Bc=;
- b=W3EUKdwUWINU59gXntM1Nlw1bBCJnzDtpF5kZrRjqzzEH8urAsTbQxy5+M/z7xZtP7egGfSxSj6dvdyWQtMbqcg7PQg07yVzrhW1an/0FN3EK2OGuTag4hegQ90J+aYeZSpu42SnA9XTDBYdz/HMBMRYYYhKNm6u+9admN5wqXU=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Wed, 25 Mar
- 2020 18:36:28 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.007; Wed, 25 Mar 2020
- 18:36:28 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH V3 6/6] x86/Hyper-V: Report crash data in die() when
- panic_on_oops is set
-Thread-Topic: [PATCH V3 6/6] x86/Hyper-V: Report crash data in die() when
- panic_on_oops is set
-Thread-Index: AQHWAbHlE3/XLPZl30CkWCL0+2KemqhZpLyA
-Date:   Wed, 25 Mar 2020 18:36:28 +0000
-Message-ID: <MW2PR2101MB1052C69095FDC8BA12573165D7CE0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
- <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200324075720.9462-7-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:36:26.9351444Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=a887b670-2f3e-40f4-9f9d-b96d7b156150;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a3a0b34e-cf0d-4157-fbbe-08d7d0eb6e9e
-x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB093896E405009B723FC1A0B7D7CE0@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:473;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(366004)(110136005)(66446008)(64756008)(6506007)(8676002)(66946007)(66556008)(66476007)(2906002)(54906003)(33656002)(81156014)(81166006)(26005)(4744005)(8990500004)(10290500003)(186003)(498600001)(55016002)(6636002)(71200400001)(7696005)(76116006)(8936002)(5660300002)(86362001)(4326008)(52536014)(9686003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WSgqEbs7kN8/quHnuaMQro4iuGmH31qewDgtrwtjro9lwA2FzDw/EF7NCDRXM9C/Cpd8mCJ4hBoccf8xdfO08pENmxIG5K4vauXofFpeDNkCaSiiCNXUqplOfKCzdddMPuLfIxv6wjBZb+/5vPLPb8WOaWn/6bOYetIagZ8q5aUeqUuEFUSiYlnDcA/n7+IwO+BBv8y6vM6weApBbHqOQVszydIE1ffIxHt0NtUM7P/IGIIwrCKv+dqy5n+2dArfKQaBMCzB4JAGB4bjRI5TYi169Ip0ybv3dgcdY5PYpWsKPKoyWZ898Nr3YCtP5r4RMM+CLk1QHNIBLNezhYX6A4jIbbqAOj0RUJfkrMBOyw2s6oeTj38Y4mX9n1xmfNASwyrODnxC50tREV4Osa333ybk81L6H3ZtYbS/ALIylUwwBtUkZDKF6x86EXQg+sS4
-x-ms-exchange-antispam-messagedata: WXVbbpLjMZOOpKSCe/pK/SIIWNZVm0kOwgnfnQASYh7/Md2dBorDhApBwX4wwO9O3HqlcdXCGPbdFuB4iCOTJHm8p/WW8or9cJAvXjEMY7/+IOj+5q5DD2zWRy0XG+sKyaHkPI5IZgGvKcB7ftI/ZA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Mar 2020 14:36:37 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1703 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727006AbgCYSg2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:36:28 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PIMKlw009688;
+        Wed, 25 Mar 2020 19:36:12 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=/HtXOyV8IC+585gZCxiuUnGAlm8aIKPz5D+MjD67Axo=;
+ b=zg2Tx1mpIevhWW56XD+UPlgIySQL+87SOls877BjHeljCdNONZaPWDC9ZIA1ogS7zERy
+ 66w1wj38G5T3F9whKbWRiHC8PbUyqMzc7cvlZRYZYSQWQDjHl62x0vmUO57UzA1BTLgh
+ XKYpUo3lQZnNhpj9qKxVXmyMnfwHq9luaieKQtBtEN9egZoi/4RDS5OzXTC2A8lt4GHc
+ dqN+xwIbWPiuLxssSo7HHuOl78WTK0g6rvvGDoljQ26oufPSDX8GURITX/y58XMtkOZu
+ 9nSM9Lp+2fNcr5w2yFPdJTIAH7/bhnmZRLh69RlHo5zBQ3PMgvK/MkKHiCSql/q/90yu ng== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xe7eq8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Mar 2020 19:36:12 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8FFA2100038;
+        Wed, 25 Mar 2020 19:36:11 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 819462AD2DB;
+        Wed, 25 Mar 2020 19:36:11 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 25 Mar 2020 19:36:10
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
+Date:   Wed, 25 Mar 2020 19:36:01 +0100
+Message-ID: <1585161361-3408-3-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
+References: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3a0b34e-cf0d-4157-fbbe-08d7d0eb6e9e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:36:28.5680
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EWUwNGZLHAOmIYRyvWbiFEHivruODKjHdhO8HEcKO2KMrOMm6pr2atfJnfGv6pscZd/JojALRrc57N/MrMUTOc1dF0apX2PX+mC6tuO//bU=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_09:2020-03-24,2020-03-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 24, 2020 1=
-2:57 AM
->=20
-> When oops happens with panic_on_oops unset, the oops
-> thread is killed by die() and system continues to run.
-> In such case, guest should not report crash register
-> data to host since system still runs. Fix it.
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
+Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
+instead allows any frequency (if it matches timing requirements).
+Depending on the requested frequency, use the spec data from either
+Standard, Fast or Fast Plus mode.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Hardcoding of min/max bus frequencies is removed and is instead computed.
+
+The driver do not use anymore speed identifier but instead handle
+directly the frequency and figure out the spec data (necessary
+for the computation of the timing register) based on the frequency.
+
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+---
+ drivers/i2c/busses/i2c-stm32f7.c | 116 ++++++++++++++++---------------
+ 1 file changed, 61 insertions(+), 55 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-stm32f7.c b/drivers/i2c/busses/i2c-stm32f7.c
+index 330ffed011e0..5e8b6fb8b29d 100644
+--- a/drivers/i2c/busses/i2c-stm32f7.c
++++ b/drivers/i2c/busses/i2c-stm32f7.c
+@@ -189,8 +189,6 @@ struct stm32f7_i2c_regs {
+ /**
+  * struct stm32f7_i2c_spec - private i2c specification timing
+  * @rate: I2C bus speed (Hz)
+- * @rate_min: 80% of I2C bus speed (Hz)
+- * @rate_max: 100% of I2C bus speed (Hz)
+  * @fall_max: Max fall time of both SDA and SCL signals (ns)
+  * @rise_max: Max rise time of both SDA and SCL signals (ns)
+  * @hddat_min: Min data hold time (ns)
+@@ -201,8 +199,6 @@ struct stm32f7_i2c_regs {
+  */
+ struct stm32f7_i2c_spec {
+ 	u32 rate;
+-	u32 rate_min;
+-	u32 rate_max;
+ 	u32 fall_max;
+ 	u32 rise_max;
+ 	u32 hddat_min;
+@@ -214,7 +210,6 @@ struct stm32f7_i2c_spec {
+ 
+ /**
+  * struct stm32f7_i2c_setup - private I2C timing setup parameters
+- * @speed: I2C speed mode (standard, Fast Plus)
+  * @speed_freq: I2C speed frequency  (Hz)
+  * @clock_src: I2C clock source frequency (Hz)
+  * @rise_time: Rise time (ns)
+@@ -224,7 +219,6 @@ struct stm32f7_i2c_spec {
+  * @fmp_clr_offset: Fast Mode Plus clear register offset from set register
+  */
+ struct stm32f7_i2c_setup {
+-	enum stm32_i2c_speed speed;
+ 	u32 speed_freq;
+ 	u32 clock_src;
+ 	u32 rise_time;
+@@ -287,7 +281,7 @@ struct stm32f7_i2c_msg {
+  * @base: virtual memory area
+  * @complete: completion of I2C message
+  * @clk: hw i2c clock
+- * @speed: I2C clock frequency of the controller. Standard, Fast or Fast+
++ * @bus_rate: I2C clock frequency of the controller
+  * @msg: Pointer to data to be written
+  * @msg_num: number of I2C messages to be executed
+  * @msg_id: message identifiant
+@@ -314,7 +308,7 @@ struct stm32f7_i2c_dev {
+ 	void __iomem *base;
+ 	struct completion complete;
+ 	struct clk *clk;
+-	int speed;
++	unsigned int bus_rate;
+ 	struct i2c_msg *msg;
+ 	unsigned int msg_num;
+ 	unsigned int msg_id;
+@@ -343,10 +337,8 @@ struct stm32f7_i2c_dev {
+  * and Fast-mode Plus I2C-bus devices
+  */
+ static struct stm32f7_i2c_spec i2c_specs[] = {
+-	[STM32_I2C_SPEED_STANDARD] = {
++	{
+ 		.rate = I2C_MAX_STANDARD_MODE_FREQ,
+-		.rate_min = I2C_MAX_STANDARD_MODE_FREQ * 8 / 10,	/* 80% */
+-		.rate_max = I2C_MAX_STANDARD_MODE_FREQ,
+ 		.fall_max = 300,
+ 		.rise_max = 1000,
+ 		.hddat_min = 0,
+@@ -355,10 +347,8 @@ static struct stm32f7_i2c_spec i2c_specs[] = {
+ 		.l_min = 4700,
+ 		.h_min = 4000,
+ 	},
+-	[STM32_I2C_SPEED_FAST] = {
++	{
+ 		.rate = I2C_MAX_FAST_MODE_FREQ,
+-		.rate_min = I2C_MAX_FAST_MODE_FREQ * 8 / 10,		/* 80% */
+-		.rate_max = I2C_MAX_FAST_MODE_FREQ,
+ 		.fall_max = 300,
+ 		.rise_max = 300,
+ 		.hddat_min = 0,
+@@ -367,10 +357,8 @@ static struct stm32f7_i2c_spec i2c_specs[] = {
+ 		.l_min = 1300,
+ 		.h_min = 600,
+ 	},
+-	[STM32_I2C_SPEED_FAST_PLUS] = {
++	{
+ 		.rate = I2C_MAX_FAST_MODE_PLUS_FREQ,
+-		.rate_min = I2C_MAX_FAST_MODE_PLUS_FREQ * 8 / 10,	/* 80% */
+-		.rate_max = I2C_MAX_FAST_MODE_PLUS_FREQ,
+ 		.fall_max = 100,
+ 		.rise_max = 120,
+ 		.hddat_min = 0,
+@@ -411,10 +399,24 @@ static void stm32f7_i2c_disable_irq(struct stm32f7_i2c_dev *i2c_dev, u32 mask)
+ 	stm32f7_i2c_clr_bits(i2c_dev->base + STM32F7_I2C_CR1, mask);
+ }
+ 
++static struct stm32f7_i2c_spec *get_specs(u32 rate)
++{
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(i2c_specs); i++)
++		if (rate <= i2c_specs[i].rate)
++			return &i2c_specs[i];
++
++	/* NOT REACHED */
++	return ERR_PTR(-EINVAL);
++}
++
++#define	RATE_MIN(rate)	(rate * 8 / 10)
+ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 				      struct stm32f7_i2c_setup *setup,
+ 				      struct stm32f7_i2c_timings *output)
+ {
++	struct stm32f7_i2c_spec *specs;
+ 	u32 p_prev = STM32F7_PRESC_MAX;
+ 	u32 i2cclk = DIV_ROUND_CLOSEST(NSEC_PER_SEC,
+ 				       setup->clock_src);
+@@ -432,18 +434,19 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 	u16 p, l, a, h;
+ 	int ret = 0;
+ 
+-	if (setup->speed >= STM32_I2C_SPEED_END) {
+-		dev_err(i2c_dev->dev, "speed out of bound {%d/%d}\n",
+-			setup->speed, STM32_I2C_SPEED_END - 1);
++	specs = get_specs(setup->speed_freq);
++	if (specs == ERR_PTR(-EINVAL)) {
++		dev_err(i2c_dev->dev, "speed out of bound {%d}\n",
++			setup->speed_freq);
+ 		return -EINVAL;
+ 	}
+ 
+-	if ((setup->rise_time > i2c_specs[setup->speed].rise_max) ||
+-	    (setup->fall_time > i2c_specs[setup->speed].fall_max)) {
++	if ((setup->rise_time > specs->rise_max) ||
++	    (setup->fall_time > specs->fall_max)) {
+ 		dev_err(i2c_dev->dev,
+ 			"timings out of bound Rise{%d>%d}/Fall{%d>%d}\n",
+-			setup->rise_time, i2c_specs[setup->speed].rise_max,
+-			setup->fall_time, i2c_specs[setup->speed].fall_max);
++			setup->rise_time, specs->rise_max,
++			setup->fall_time, specs->fall_max);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -454,12 +457,6 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (setup->speed_freq > i2c_specs[setup->speed].rate) {
+-		dev_err(i2c_dev->dev, "ERROR: Freq {%d/%d}\n",
+-			setup->speed_freq, i2c_specs[setup->speed].rate);
+-		return -EINVAL;
+-	}
+-
+ 	/*  Analog and Digital Filters */
+ 	af_delay_min =
+ 		(setup->analog_filter ?
+@@ -469,13 +466,13 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 		 STM32F7_I2C_ANALOG_FILTER_DELAY_MAX : 0);
+ 	dnf_delay = setup->dnf * i2cclk;
+ 
+-	sdadel_min = i2c_specs[setup->speed].hddat_min + setup->fall_time -
++	sdadel_min = specs->hddat_min + setup->fall_time -
+ 		af_delay_min - (setup->dnf + 3) * i2cclk;
+ 
+-	sdadel_max = i2c_specs[setup->speed].vddat_max - setup->rise_time -
++	sdadel_max = specs->vddat_max - setup->rise_time -
+ 		af_delay_max - (setup->dnf + 4) * i2cclk;
+ 
+-	scldel_min = setup->rise_time + i2c_specs[setup->speed].sudat_min;
++	scldel_min = setup->rise_time + specs->sudat_min;
+ 
+ 	if (sdadel_min < 0)
+ 		sdadel_min = 0;
+@@ -530,8 +527,8 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 
+ 	tsync = af_delay_min + dnf_delay + (2 * i2cclk);
+ 	s = NULL;
+-	clk_max = NSEC_PER_SEC / i2c_specs[setup->speed].rate_min;
+-	clk_min = NSEC_PER_SEC / i2c_specs[setup->speed].rate_max;
++	clk_max = NSEC_PER_SEC / RATE_MIN(setup->speed_freq);
++	clk_min = NSEC_PER_SEC / setup->speed_freq;
+ 
+ 	/*
+ 	 * Among Prescaler possibilities discovered above figures out SCL Low
+@@ -549,7 +546,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 		for (l = 0; l < STM32F7_SCLL_MAX; l++) {
+ 			u32 tscl_l = (l + 1) * prescaler + tsync;
+ 
+-			if ((tscl_l < i2c_specs[setup->speed].l_min) ||
++			if ((tscl_l < specs->l_min) ||
+ 			    (i2cclk >=
+ 			     ((tscl_l - af_delay_min - dnf_delay) / 4))) {
+ 				continue;
+@@ -561,7 +558,7 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 					setup->rise_time + setup->fall_time;
+ 
+ 				if ((tscl >= clk_min) && (tscl <= clk_max) &&
+-				    (tscl_h >= i2c_specs[setup->speed].h_min) &&
++				    (tscl_h >= specs->h_min) &&
+ 				    (i2cclk < tscl_h)) {
+ 					int clk_error = tscl - i2cbus;
+ 
+@@ -607,6 +604,17 @@ static int stm32f7_i2c_compute_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 	return ret;
+ }
+ 
++static u32 get_lower_rate(u32 rate)
++{
++	int i;
++
++	for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
++		if (i2c_specs[i].rate < rate)
++			return i2c_specs[i].rate;
++
++	return i2c_specs[0].rate;
++}
++
+ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 				    struct stm32f7_i2c_setup *setup)
+ {
+@@ -619,18 +627,15 @@ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 
+ 	i2c_parse_fw_timings(i2c_dev->dev, t, false);
+ 
+-	if (t->bus_freq_hz >= I2C_MAX_FAST_MODE_PLUS_FREQ)
+-		i2c_dev->speed = STM32_I2C_SPEED_FAST_PLUS;
+-	else if (t->bus_freq_hz >= I2C_MAX_FAST_MODE_FREQ)
+-		i2c_dev->speed = STM32_I2C_SPEED_FAST;
+-	else
+-		i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
++	if (t->bus_freq_hz > I2C_MAX_FAST_MODE_PLUS_FREQ) {
++		dev_err(i2c_dev->dev, "Invalid bus speed (%i>%i)\n",
++			t->bus_freq_hz, I2C_MAX_FAST_MODE_PLUS_FREQ);
++		return -EINVAL;
++	}
+ 
++	setup->speed_freq = t->bus_freq_hz;
+ 	i2c_dev->setup.rise_time = t->scl_rise_ns;
+ 	i2c_dev->setup.fall_time = t->scl_fall_ns;
+-
+-	setup->speed = i2c_dev->speed;
+-	setup->speed_freq = i2c_specs[setup->speed].rate;
+ 	setup->clock_src = clk_get_rate(i2c_dev->clk);
+ 
+ 	if (!setup->clock_src) {
+@@ -644,14 +649,12 @@ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 		if (ret) {
+ 			dev_err(i2c_dev->dev,
+ 				"failed to compute I2C timings.\n");
+-			if (i2c_dev->speed > STM32_I2C_SPEED_STANDARD) {
+-				i2c_dev->speed--;
+-				setup->speed = i2c_dev->speed;
++			if (setup->speed_freq > I2C_MAX_STANDARD_MODE_FREQ) {
+ 				setup->speed_freq =
+-					i2c_specs[setup->speed].rate;
++					get_lower_rate(setup->speed_freq);
+ 				dev_warn(i2c_dev->dev,
+ 					 "downgrade I2C Speed Freq to (%i)\n",
+-					 i2c_specs[setup->speed].rate);
++					 setup->speed_freq);
+ 			} else {
+ 				break;
+ 			}
+@@ -663,13 +666,15 @@ static int stm32f7_i2c_setup_timing(struct stm32f7_i2c_dev *i2c_dev,
+ 		return ret;
+ 	}
+ 
+-	dev_dbg(i2c_dev->dev, "I2C Speed(%i), Freq(%i), Clk Source(%i)\n",
+-		setup->speed, setup->speed_freq, setup->clock_src);
++	dev_dbg(i2c_dev->dev, "I2C Speed(%i), Clk Source(%i)\n",
++		setup->speed_freq, setup->clock_src);
+ 	dev_dbg(i2c_dev->dev, "I2C Rise(%i) and Fall(%i) Time\n",
+ 		setup->rise_time, setup->fall_time);
+ 	dev_dbg(i2c_dev->dev, "I2C Analog Filter(%s), DNF(%i)\n",
+ 		(setup->analog_filter ? "On" : "Off"), setup->dnf);
+ 
++	i2c_dev->bus_rate = setup->speed_freq;
++
+ 	return 0;
+ }
+ 
+@@ -1866,7 +1871,7 @@ static int stm32f7_i2c_write_fm_plus_bits(struct stm32f7_i2c_dev *i2c_dev,
+ {
+ 	int ret;
+ 
+-	if (i2c_dev->speed != STM32_I2C_SPEED_FAST_PLUS ||
++	if (i2c_dev->bus_rate <= I2C_MAX_FAST_MODE_FREQ ||
+ 	    IS_ERR_OR_NULL(i2c_dev->regmap))
+ 		/* Optional */
+ 		return 0;
+@@ -2020,7 +2025,8 @@ static int stm32f7_i2c_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto clk_free;
+ 
+-	if (i2c_dev->speed == STM32_I2C_SPEED_FAST_PLUS) {
++	/* Setup Fast mode plus if necessary */
++	if (i2c_dev->bus_rate > I2C_MAX_FAST_MODE_FREQ) {
+ 		ret = stm32f7_i2c_setup_fm_plus_bits(pdev, i2c_dev);
+ 		if (ret)
+ 			goto clk_free;
+-- 
+2.17.1
 
