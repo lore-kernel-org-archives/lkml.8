@@ -2,125 +2,218 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3564BC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04712C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0AF2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="VWDVw0jl"
+	by mail.kernel.org (Postfix) with ESMTP id D1D952078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:51:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727459AbgCYMuw (ORCPT
+        id S1727483AbgCYMvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:50:52 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17851 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726820AbgCYMuu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:50:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585140544;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=vqy9KgzyVYxmnrqFQc0i1Zu/TD9bYgtnU+TgEsbMRRo=;
-        b=VWDVw0jlewF6cYs4orJtnyyrFP4lXEoBwc3qWxgWugL6Qbe5rnNu8cQYlvTuA4Zs
-        GIStJDBaX9M0K3uYMcklLmRX8voyqvSfdxxSmwBsIWhTsTS9QXzABA4xO2dslNYWMvu
-        Jtk1j1/vyJijL2Sv/5B5q8zNdjNl5Pum0UfJ3N88=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585140543288901.7885813665146; Wed, 25 Mar 2020 20:49:03 +0800 (CST)
-Date:   Wed, 25 Mar 2020 20:48:55 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200325123742.GA9911@alpha.franken.de>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de>
+        Wed, 25 Mar 2020 08:51:23 -0400
+Received: from mga06.intel.com ([134.134.136.31]:41398 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726820AbgCYMvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:51:22 -0400
+IronPort-SDR: ReFhl/8dJkKl3Sh4AR0pR/HAJ9Q9dDdK7HMBtQ3jMzTs9OtfNB00nDQK4UWi03VQOXhuQnjasy
+ LmMvNeFaC44w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 05:51:21 -0700
+IronPort-SDR: 4UGOnkfEhu4Ai8WJKJ2ypyQu+d+OroBtb+6YtpHLTuRjp98guUTsQehfiURK8bHRpDek9WlnAC
+ deR7pdkEcGQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="448255548"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2020 05:51:18 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jH5VA-00Couf-OH; Wed, 25 Mar 2020 14:51:20 +0200
+Date:   Wed, 25 Mar 2020 14:51:20 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     a.hajda@samsung.com, artem.bityutskiy@linux.intel.com,
+        balbi@kernel.org, broonie@kernel.org, fntoth@gmail.com,
+        grant.likely@arm.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        peter.ujfalusi@ti.com, rafael@kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+Message-ID: <20200325125120.GX1922688@smile.fi.intel.com>
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-CC:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <DC9062E8-42E3-4139-99F9-157DEAF5DB7B@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325032901.29551-1-saravanak@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
+> On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > Consider the following scenario.
+> > 
+> > The main driver of USB OTG controller (dwc3-pci), which has the following
+> > functional dependencies on certain platform:
+> > - ULPI (tusb1210)
+> > - extcon (tested with extcon-intel-mrfld)
+> > 
+> > Note, that first driver, tusb1210, is available at the moment of
+> > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> > won't appear till user space does something about it.
+> > 
+> > This is depicted by kernel configuration excerpt:
+> > 
+> >	CONFIG_PHY_TUSB1210=y
+> >	CONFIG_USB_DWC3=y
+> >	CONFIG_USB_DWC3_ULPI=y
+> >	CONFIG_USB_DWC3_DUAL_ROLE=y
+> >	CONFIG_USB_DWC3_PCI=y
+> >	CONFIG_EXTCON_INTEL_MRFLD=m
+> > 
+> > In the Buildroot environment the modules are probed by alphabetical ordering
+> > of their modaliases. The latter comes to the case when USB OTG driver will be
+> > probed first followed by extcon one.
+> > 
+> > So, if the platform anticipates extcon device to be appeared, in the above case
+> > we will get deferred probe of USB OTG, because of ordering.
+> > 
+> > Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> > deferral race condition fix") counts the amount of triggered deferred probe,
+> > we never advance the situation -- the change makes it to be an infinite loop.
+> 
+> Hi Andy,
+> 
+> I'm trying to understand this sequence of steps. Sorry if the questions
+> are stupid -- I'm not very familiar with USB/PCI stuff.
+
+Thank you for looking into this. My answer below.
+
+As a first thing I would like to tell that there is another example of bad
+behaviour of deferred probe with no relation to USB. The proposed change also
+fixes that one (however, less possible to find in real life).
+
+> > ---8<---8<---
+> > 
+> > [   22.187127] driver_deferred_probe_trigger <<< 1
+> > 
+> > ...here is the late initcall triggers deferred probe...
+> > 
+> > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> > 
+> > ...dwc3.0.auto is the only device in the deferred list...
+> 
+> Ok, dwc3.0.auto is the only unprobed device at this point?
+
+Correct.
+
+> > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> > 
+> > ...the counter before mutex is unlocked is kept the same...
+> > 
+> > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> > 
+> > ...mutes has been unlocked, we try to re-probe the driver...
+> > 
+> > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> > [   22.263723] driver_deferred_probe_trigger <<< 2
+> > 
+> > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> > 
+> > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+> 
+> So where did this dwc3.0.auto.ulpi come from?
+
+> Looks like the device is created by dwc3_probe() through this call flow:
+> dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
+> dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
+
+Correct.
+
+> > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> 
+> Can you please point me to which code patch actually caused the probe
+> deferral?
+
+Sure, it's in drd.c.
+
+if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
+  edev = extcon_get_extcon_dev(name);
+  if (!edev)
+    return ERR_PTR(-EPROBE_DEFER);
+  return edev;
+}
+
+> > ...but extcon driver is still missing...
+> > 
+> > [   22.283174] platform dwc3.0.auto: Added to deferred list
+> > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> 
+> I'm not fully aware of all the USB implications, but if extcon is
+> needed, why can't that check be done before we add and probe the ulpi
+> device? That'll avoid this whole "fake" probing and avoid the counter
+> increase. And avoid the need for this patch that's touching the code
+> code that's already a bit delicate.
+
+> Also, with my limited experience with all the possible drivers in the
+> kernel, it's weird that the ulpi device is added and probed before we
+> make sure the parent device (dwc3.0.auto) can actually probe
+> successfully.
+
+As I said above the deferred probe trigger has flaw on its own.
+Even if we fix for USB case, there is (and probably will be) others.
+
+> Most of the platform device code I've seen in systems with OF (device
+> tree) add the child devices towards the end of the parent's probe
+> function.
+
+> > ...and since we had a successful probe, we got counter mismatch...
+> > 
+> > [   22.297490] driver_deferred_probe_trigger <<< 3
+> > [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
+> > 
+> > ...at the end we have a new counter and loop repeats again, see 22.198727...
+> > 
+> > ---8<---8<---
+> > 
+> > Revert of the commit helps, but it is probably not helpful for the initially
+> > found regression. Artem Bityutskiy suggested to use counter of the successful
+> > probes instead. This fixes above mentioned case and shouldn't prevent driver
+> > to reprobe deferred ones.
+> > 
+> > Under "successful probe" we understand the state when a driver of the certain
+> > device is being kept bound after deferred probe trigger cycle. For instance,
+> > in the above mentioned case probing of tusb1210 is not successful because dwc3
+> > driver unbinds device dwc3.0.auto.ulpi. The atomic_dec() call is used to keep
+> > track of this. The amount of bindings is always great than or equal to the
+> > amount of unbindings as guaranteed by design of the driver binding mechanism.
+> 
+> The unbindings count can increase for other unrelated drivers unbinding
+> too. Wouldn't it? Seems a bit fragile and racy in a fashion similar to
+> the issue the original patch was trying to fix.
+
+Yes, it's (unlikely) possible (*), but it will give one more iteration per such
+case. It's definitely better than infinite loop. Do you agree?
+
+*) It means during probe you have _intensive_ removing, of course you may keep
+kernel busy with iterations, but it has no practical sense. DoS attacks more
+effective in different ways.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
-:37:42, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
-=B0:
->On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
->> The old code is using legacy domain to setup irq_domain for CPU
->interrupts
->> which requires irq_desc to be preallocated=2E
->>=20
->> However, when MIPS_CPU_IRQ_BASE >=3D 16, irq_desc for CPU IRQs may end
->up
->> unallocated and lead to incorrect behavior=2E
->>=20
->> Thus we convert the legacy domain to simple domain which can allocate
->> irq_desc during initialization=2E
->>=20
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
->> Signed-off-by: Huacai Chen <chenhc@lemote=2Ecom>
->> Reviewed-by: Marc Zyngier <maz@kernel=2Eorg>
->> ---
->>  drivers/irqchip/irq-mips-cpu=2Ec | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/drivers/irqchip/irq-mips-cpu=2Ec
->b/drivers/irqchip/irq-mips-cpu=2Ec
->> index 95d4fd8f7a96=2E=2Ec3cf7fa76424 100644
->> --- a/drivers/irqchip/irq-mips-cpu=2Ec
->> +++ b/drivers/irqchip/irq-mips-cpu=2Ec
->> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct
->device_node *of_node)
->>  	clear_c0_status(ST0_IM);
->>  	clear_c0_cause(CAUSEF_IP);
->> =20
->> -	irq_domain =3D irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE,
->0,
->> +	irq_domain =3D irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
->>  					   &mips_cpu_intc_irq_domain_ops,
->>  					   NULL);
->
->this breaks at least IP30 and guess it will break every platform where
->MIPS_CPU_IRQ_BASE =3D=3D 0=2E add_legacy will always do
->irq_domain_associate_many(),
->while add_simple doesn't do it, if first_irq =3D=3D 0=2E
->
->Marc, what is the reason not doing it all the time ? What's the correct
->way here to work with irq_domain_add_simple() in this case ?
-=20
-I guess there is a inconsistent about whether IRQ 0 is a valid IRQ=2E
-
-In many places we consider IRQ 0 is invalid but here it should be valid=2E
-
-Thanks=2E
-
-
->
->Thomas=2E
-
---=20
-Jiaxun Yang
