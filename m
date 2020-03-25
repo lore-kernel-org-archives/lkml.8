@@ -2,106 +2,108 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1978C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0785C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:34:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1C3820789
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7904120777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:34:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="XITeJn9E"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="RpqWsxtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727758AbgCYOdV (ORCPT
+        id S1727803AbgCYOef (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:33:21 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17809 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCYOdV (ORCPT
+        Wed, 25 Mar 2020 10:34:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19730 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727566AbgCYOef (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:33:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585146687;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=WUIqMTbG4P3A6zbN3GpLXbJ8Ubb/GOs43bUPmngTtEw=;
-        b=XITeJn9EVhgHJXIRTsYdv6whZhZfE5OBEn9ae/y5pKEFuEv38GYT6wq2lH/M8F9j
-        BIW5j3U3FUJZuLwaJ/CRnHi5YhyjRmIFHYlG2CjMhBMd//H03UmcVLYrTCSZacXF5ha
-        /e+YY0j0pWw1XH5yU8MHk7M26r54N4+xmrsajRUs=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585146685016379.50509572583246; Wed, 25 Mar 2020 22:31:25 +0800 (CST)
-Date:   Wed, 25 Mar 2020 22:31:21 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
+        Wed, 25 Mar 2020 10:34:35 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PEWvHx012902;
+        Wed, 25 Mar 2020 15:34:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=tdaK4kNuJv1E9o/omGzEOLv3OEUVPQ8rJCVCtHHOQ7E=;
+ b=RpqWsxtL8DoKhjuaok0OltLjnuzvXX+Md6Vy/dXbOOwA0IbOjluaMj3zIolvxrSvPUqv
+ NLZoeZzv88UrVpgnyVRIOTi1gDaObX0YlI7RepoCemCnuEHEunrUJw8jH03xbO6hGFy0
+ hEdCXAUm7vdPLvmJQ8V251btNF1v1uGmRxvKE2b2+yY3VwT+usuz+Mh701pWGlG0aEPm
+ FrbdBkS7iE++6PgWuxyxdTBbcKOtXYigze2eKqhX9YFlq6HZQQlHKvdMPhll90y1370g
+ RQJdYX/VTGHyXOOjIqnliKT0TXakaCKt+hPETi+mjQgn9gfssRvjOnlWewgnJX/3zdss qw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw9k066um-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Mar 2020 15:34:21 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 50D32100034;
+        Wed, 25 Mar 2020 15:34:20 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3AE022B2527;
+        Wed, 25 Mar 2020 15:34:20 +0100 (CET)
+Received: from localhost (10.75.127.50) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar 2020 15:34:19
+ +0100
+From:   Ludovic Barre <ludovic.barre@st.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-mmc@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Ludovic Barre <ludovic.barre@st.com>
+Subject: [PATCH V2 1/2] mmc: mmci_sdmmc: fix clear busyd0end irq flag
+Date:   Wed, 25 Mar 2020 15:34:08 +0100
+Message-ID: <20200325143409.13005-2-ludovic.barre@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200325143409.13005-1-ludovic.barre@st.com>
+References: <20200325143409.13005-1-ludovic.barre@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com>
-X-ZohoCNMailClient: External
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_07:2020-03-24,2020-03-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The busyd0 line transition can be very fast. The busy request
+may be completed by busy_d0end without wait the busy_d0 steps.
+The busyd0end irq flag must be cleared even if no busy_status.
 
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci_stm32_sdmmc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
-0:15:16, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
->On 2020-03-25 13:59, Jiaxun Yang wrote:
->
->[=2E=2E=2E]
->
->>>> So probably we can use legacy domain when  MIPS IRQ BASE is in the
->>>> range of legacy IRQ
->>>> and switch to simple domain when it's not in that range?
->>>=20
->>> No, see below=2E
->>>=20
->>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did
->this
->>>> hack=2E
->>>=20
->>> Well, if you have to consider which Linux IRQ gets assigned,
->>> then your platform is definitely not ready for non-legacy
->>> irqdomains=2E Just stick to legacy for now until you have removed
->>> all the code that knows the hwirq mapping=2E
->>=20
->> Thanks=2E
->>=20
->> So I have to allocate irq_desc here in driver manually?
->
->No, you are probably better off just dropping this patch, as MIPS
->doesn't seem to be ready for a wholesale switch to virtual interrupts=2E
+diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
+index f76e82f8f12f..d33e62bd6153 100644
+--- a/drivers/mmc/host/mmci_stm32_sdmmc.c
++++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
+@@ -358,11 +358,11 @@ static bool sdmmc_busy_complete(struct mmci_host *host, u32 status, u32 err_msk)
+ 	if (host->busy_status) {
+ 		writel_relaxed(mask & ~host->variant->busy_detect_mask,
+ 			       base + MMCIMASK0);
+-		writel_relaxed(host->variant->busy_detect_mask,
+-			       base + MMCICLEAR);
+ 		host->busy_status = 0;
+ 	}
+ 
++	writel_relaxed(host->variant->busy_detect_mask, base + MMCICLEAR);
++
+ 	return true;
+ }
+ 
+-- 
+2.17.1
 
-It can't work without this patch=2E
-
-Legacy domain require IRQ number within 0-15=20
-however it's already occupied by i8259 or "HTPIC" driver=2E
-
-Previously Loongson even didn't enable IRQ domain so it's not a problem=2E
-
-
->
->         M=2E
-
---=20
-Jiaxun Yang
