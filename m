@@ -2,149 +2,110 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1D4C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC72C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7EEC20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7703D2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:54:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="adSrmU5E"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="JyaRjhBB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgCYQu6 (ORCPT
+        id S1727525AbgCYQyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:50:58 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53548 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgCYQu6 (ORCPT
+        Wed, 25 Mar 2020 12:54:33 -0400
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:51505 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgCYQyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:50:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=s7ImFkVNzd0EVebzyqYWogl6KMDAeW152fkisQem/34=; b=adSrmU5EieOTos2teFmSTYPrUe
-        dVFksML2LS5o4ZTBtjE83p4dvcmSydcNY12P8B7YU7+eNqX3aDHgxPac23YFQzKTNK296nnp3zGY2
-        nwrtCCZ5EFLotBZfWPX0GMinEfBfD/GqNBWFO5bUAiB3ACQTmmR5fMs8P8+8IHDUMd12TniM258TO
-        A8d9+7ZIIeTf6/VmYHnMv5L0ncvOR14S0djRM2Lsg7NzvaaJC93aD4toMDqVejyTkA5mFYXr5mxvX
-        UuuFBo848h7U90EFUopT3XTEgeL+dKF9Q0MFIv5OxuMeSpj6GSM2qfCQmjhh19phRZWwfwUKQCnaR
-        p5GJa82w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH9Ey-0002hx-Tk; Wed, 25 Mar 2020 16:50:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3A1373011DE;
-        Wed, 25 Mar 2020 17:50:50 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2481529A7FAFE; Wed, 25 Mar 2020 17:50:50 +0100 (CET)
-Date:   Wed, 25 Mar 2020 17:50:50 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com,
-        jthierry@redhat.com
-Subject: Re: [PATCH v3 26/26] objtool: Add STT_NOTYPE noinstr validation
-Message-ID: <20200325165050.GC20696@hirez.programming.kicks-ass.net>
-References: <20200324153113.098167666@infradead.org>
- <20200324160925.470421121@infradead.org>
- <20200324221616.2tdljgyay37aiw2t@treble>
- <20200324223455.GV2452@worktop.programming.kicks-ass.net>
- <20200325144211.irnwnly37fyhapvx@treble>
- <20200325155348.GA20696@hirez.programming.kicks-ass.net>
- <20200325164046.p2oxemcjnj2tnxbz@treble>
+        Wed, 25 Mar 2020 12:54:33 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id H9IRjgCfxBr2bH9IVjIfa9; Wed, 25 Mar 2020 17:54:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585155271; bh=iS6jb4nVJ328cKw60HlU88wMMG8URM3B8kU0TKTSFwk=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=JyaRjhBB/u8lB+ErXH87D1DRxhYADFSvqbHzIlXTnd0ATOhEycyJGDKsojsH77EJ+
+         0+vWuyJPOQSilaN2ZzmFiSInijLlaKoLCvQfl4rzI4zqkXTiielD++mshFjV4htRwq
+         Ob3TQC/8pHRqRySATtrFD/0EcQzf+sMM8/9Vi28dGaF9y+U7Yzh6m+siTSS6lhxaAT
+         DZHSmW3TmuLSFzac39OPgic3SEGEmOeq7P9wwBNhrKd4RH9hBh+qMiMVOl/BC4VtBo
+         uHBCOCbsOrHK3Y0AFIqNnsWSUdmzFMsOJNWcbyfyDisIi97l6hoQ9y9JYqZm+z0wXH
+         syHcQYTAfPowg==
+Subject: Re: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
+ condition
+To:     Seungchul Kim <sc377.kim@samsung.com>, mchehab@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200323023045epcas2p12007502edd2a65efcccb00eb899d5532@epcas2p1.samsung.com>
+ <000601d600bb$0e2d4320$2a87c960$@samsung.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <1a0ad24c-e577-e6d2-32ca-514a645b008f@xs4all.nl>
+Date:   Wed, 25 Mar 2020 17:54:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325164046.p2oxemcjnj2tnxbz@treble>
+In-Reply-To: <000601d600bb$0e2d4320$2a87c960$@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGng8Vdo9jUZGcpRDgzESsB6NHS45BZGfTGDBsC9roLpcV9T8CExtqLySQSFtV4/qFoaWwGGPz5IU77Ntr93Rp9ex8h8R2420eKGxAac6x02VNCgSVoh
+ VSHi59yqPhj51j7GRONzRfEWvpYnPsKCIwmPdIabiRsiz8qNKOVMXx/Hn6OGg/qTh9bcZhKqu2IatXCP2b3ubEWKiFL727JXEBswPfVQ7slEQxupfLpOdpjg
+ zlNWq0pe/3AMChpElln0+O7SNNYuYQfherSEjR4yJaxTY/5iKSblCOVlV1HF2j+6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:40:46AM -0500, Josh Poimboeuf wrote:
-> On Wed, Mar 25, 2020 at 04:53:48PM +0100, Peter Zijlstra wrote:
-> > On Wed, Mar 25, 2020 at 09:42:11AM -0500, Josh Poimboeuf wrote:
-> > > Sure, but couldn't validate_unwind_hints() and
-> > > validate_reachable_instructions() be changed to *only* run on
-> > > .noinstr.text, for the vmlinux case?  That might help converge the
-> > > vmlinux and !vmlinux paths.
-> > 
-> > You're thinking something like so then?
+On 3/23/20 3:30 AM, Seungchul Kim wrote:
+> v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
+> If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module, it can make the
+> mismatch of v4l2_fh sturct.
 > 
-> Not exactly.  But I don't want to keep churning this patch set.  I can
-> add more patches later, so don't worry about it.
+> By the mismatch, the following error occurs.
+> ===============================
+> [    7.533506] v4l2_mem2mem: disagrees about version of symbol video_devdata
+> [    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
+> [    7.535319] v4l2_mem2mem: disagrees about version of symbol
+> v4l2_event_pending
+> [    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
+> ===============================
 > 
-> But I was thinking it would eventually be good to have the top-level
-> check() be like
+> So v4l2_fh struct is modified to does not have dependency for
+> CONFIG_V4L2_MEM2MEM_DEV.
 > 
-> 	sec = NULL;
-> 	if (!validate_all)
-> 		sec = find_section_by_name(file->elf, ".noinstr.text");
+> Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
+> ---
+>  include/media/v4l2-fh.h | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> 	ret = validate_functions(&file, sec);
-> 	if (ret < 0)
-> 		goto out;
-> 	warnings += ret;
-> 
-> 	ret = validate_unwind_hints(&file, sec);
-> 	if (ret < 0)
-> 		goto out;
-> 	warnings += ret;
-> 
-> 	if (!warnings) {
-> 		ret = validate_reachable_instructions(&file, sec);
-> 		if (ret < 0)
-> 			goto out;
-> 		warnings += ret;
-> 	}
-> 
-> 	if (!validate_all)
-> 		goto out;
-> 
-> 	ret = validate_retpoline(&file);
-> 	....
-> 
-> that way the general flow is the same regardless...
+> diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h index
+> 53b4dbb..b5b3e00 100644
+> --- a/include/media/v4l2-fh.h
+> +++ b/include/media/v4l2-fh.h
+> @@ -53,9 +53,7 @@ struct v4l2_fh {
+>  	unsigned int		navailable;
+>  	u32			sequence;
+>  
+> -#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
+>  	struct v4l2_m2m_ctx	*m2m_ctx;
+> -#endif
 
-Ah,... I see what you mean, there's two little wrinkles with that:
+This is a good change, but please also remove the same #if from v4l2_ioctl_get_lock()
+in drivers/media/v4l2-core/v4l2-ioctl.c. That is now no longer needed there either
+and without removing that those vendor drivers would be using the wrong lock.
 
- - validate_reachable_instructions() is strictly superluous, it does no
-   additional validation between the !vmlinux and vmlinux mode, so I'd
-   put that if (!validate_all) goto out, one up.
+Regards,
 
- - tglx has a patch adding .entry.text to be considered as noinstr as a
-   whole, which has:
+	Hans
 
+>  };
+>  
+>  /**
+> --
+> 2.7.4
+> 
 
-@@ -2636,11 +2637,16 @@ static int validate_vmlinux_functions(st
- 	int warnings = 0;
- 
- 	sec = find_section_by_name(file->elf, ".noinstr.text");
--	if (!sec)
--		return 0;
-+	if (sec) {
-+		warnings += validate_section(file, sec);
-+		warnings += validate_unwind_hints(file, sec);
-+	}
- 
--	warnings += validate_section(file, sec);
--	warnings += validate_unwind_hints(file, sec);
-+	sec = find_section_by_name(file->elf, ".entry.text");
-+	if (sec) {
-+		warnings += validate_section(file, sec);
-+		warnings += validate_unwind_hints(file, sec);
-+	}
- 
- 	return warnings;
- }
-
-Anyway, yes, we can do this on top.
-
-I was going to commit the first 17 patches to tip/core/objtool and
-repost the remaining 13 once more. And then see how much pain I did to
-Julien's patches :-)
