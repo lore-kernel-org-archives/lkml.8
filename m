@@ -2,98 +2,94 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2AFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A169C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C94B2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4192078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:41:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCYMjV (ORCPT
+        id S1727376AbgCYMlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:39:21 -0400
-Received: from elvis.franken.de ([193.175.24.41]:34061 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727316AbgCYMjV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:39:21 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1jH5JN-0002o0-00; Wed, 25 Mar 2020 13:39:09 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id B928DC09A5; Wed, 25 Mar 2020 13:37:42 +0100 (CET)
-Date:   Wed, 25 Mar 2020 13:37:42 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Marc Zyngier <maz@kernel.org>,
+        Wed, 25 Mar 2020 08:41:36 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:47905 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727279AbgCYMlf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:41:35 -0400
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1jH5Lc-0001Xv-9h; Wed, 25 Mar 2020 13:41:29 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CE2911C0450;
+        Wed, 25 Mar 2020 13:41:15 +0100 (CET)
+Date:   Wed, 25 Mar 2020 12:41:15 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] cpufreq/intel_pstate: Fix wrong macro conversion
+Cc:     kernel test robot <rong.a.chen@intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
-Message-ID: <20200325123742.GA9911@alpha.franken.de>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
- <20200325035537.156911-7-jiaxun.yang@flygoat.com>
+        Borislav Petkov <bp@suse.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200324060124.GC11705@shao2-debian>
+References: <20200324060124.GC11705@shao2-debian>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325035537.156911-7-jiaxun.yang@flygoat.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Message-ID: <158514007544.28353.4934308733566744386.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
-> The old code is using legacy domain to setup irq_domain for CPU interrupts
-> which requires irq_desc to be preallocated.
-> 
-> However, when MIPS_CPU_IRQ_BASE >= 16, irq_desc for CPU IRQs may end up
-> unallocated and lead to incorrect behavior.
-> 
-> Thus we convert the legacy domain to simple domain which can allocate
-> irq_desc during initialization.
-> 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> Co-developed-by: Huacai Chen <chenhc@lemote.com>
-> Signed-off-by: Huacai Chen <chenhc@lemote.com>
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> ---
->  drivers/irqchip/irq-mips-cpu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/irqchip/irq-mips-cpu.c b/drivers/irqchip/irq-mips-cpu.c
-> index 95d4fd8f7a96..c3cf7fa76424 100644
-> --- a/drivers/irqchip/irq-mips-cpu.c
-> +++ b/drivers/irqchip/irq-mips-cpu.c
-> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct device_node *of_node)
->  	clear_c0_status(ST0_IM);
->  	clear_c0_cause(CAUSEF_IP);
->  
-> -	irq_domain = irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE, 0,
-> +	irq_domain = irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
->  					   &mips_cpu_intc_irq_domain_ops,
->  					   NULL);
+The following commit has been merged into the x86/cpu branch of tip:
 
-this breaks at least IP30 and guess it will break every platform where
-MIPS_CPU_IRQ_BASE == 0. add_legacy will always do irq_domain_associate_many(),
-while add_simple doesn't do it, if first_irq == 0.
+Commit-ID:     d97828072d0bcecb6655f0966efc38a2647d3dfb
+Gitweb:        https://git.kernel.org/tip/d97828072d0bcecb6655f0966efc38a2647d3dfb
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Wed, 25 Mar 2020 13:21:55 +01:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Wed, 25 Mar 2020 13:21:55 +01:00
 
-Marc, what is the reason not doing it all the time ? What's the correct
-way here to work with irq_domain_add_simple() in this case ?
+cpufreq/intel_pstate: Fix wrong macro conversion
 
-Thomas.
+The feature flag hwp_support_ids are supposed to match on is
+X86_FEATURE_HWP, not X86_FEATURE_APERFMPERF. Fix it.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+ [ bp: Write commit message. ]
+
+Fixes: b11d77fa300d ("cpufreq: Convert to new X86 CPU match macros")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200324060124.GC11705@shao2-debian
+---
+ drivers/cpufreq/intel_pstate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 780c387..46bce09 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2727,7 +2727,7 @@ static inline void intel_pstate_request_control_from_smm(void) {}
+ 
+ #define X86_MATCH_HWP(model, hwp_mode)					\
+ 	X86_MATCH_VENDOR_FAM_MODEL_FEATURE(INTEL, 6, INTEL_FAM6_##model, \
+-					   X86_FEATURE_APERFMPERF, hwp_mode)
++					   X86_FEATURE_HWP, hwp_mode)
+ 
+ static const struct x86_cpu_id hwp_support_ids[] __initconst = {
+ 	X86_MATCH_HWP(BROADWELL_X,	INTEL_PSTATE_HWP_BROADWELL),
