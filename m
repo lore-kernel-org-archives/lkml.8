@@ -2,344 +2,152 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06BDEC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C2FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C03F520772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1BD72076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:15:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jeg4XdTK"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="CE6OPq90"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727487AbgCYMNp (ORCPT
+        id S1727394AbgCYMPT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:13:45 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33051 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726969AbgCYMNp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:13:45 -0400
-Received: by mail-wr1-f68.google.com with SMTP id a25so2815341wrd.0;
-        Wed, 25 Mar 2020 05:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=hOl/owfaYb87sP9mVjhujvo/kAvWxhYs1nSOGilmW4A=;
-        b=jeg4XdTKu/XvPZ1Xt3cF8yIQaKYs5aWC2NHt59RttrPbt0SqxL2nONJvUXDtWR3VsM
-         he/pJZaKOoztPwWFclpqXDea5mIxyMAXnmrmQBRA3Lo1X2D0c9AtixK0wOl5PJVOKxsP
-         dtrIBzMNlVI0yIXWPyGzcLXIg6VTsUTkqvOFD5AaYZZLdfWhWub+Ai197xzoUIYQdOiB
-         U+EuUQvyxX0Cwf6/0k68URomy6Raj2+HVNMsmLdVBBVrJhxocwaam1YWoKzvZ3XSTdIn
-         g4z0cAGsqFFqmCd0myDe/h4G3ntMr5OezQaQCanFHA92fGQDPU+iQbhOOfQ9I6iodafQ
-         Zs+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hOl/owfaYb87sP9mVjhujvo/kAvWxhYs1nSOGilmW4A=;
-        b=XpYh76mfoMyrsm6us0FLyZVdZK7ZR3jhDh5i6ONH8ln5Io3tPpOBtGrHTa4mPz9BUk
-         FEI0//fCvZRorNNe2h9HSkdqs904o49f5BYVMhXc8bGZ6VMR47ZJVn5l+a3newSujdDz
-         hIq/o1QM9dzpYv8YW4TR1NE6Cu6PcAbWUiz79evhEmOAG4K0ZZXY3HUKgYQVqvkLYvWL
-         eyZ7ZG5HhczO/qij/lvXbL8K5UmRZ7hwxwWQMN+qJO0pzJOVuBspWzi1sjSeFlogrcgH
-         ZDDUJU5wf7EvK6bxLLs3US0fwVPy3rYSqD3h/v2v46pUBatl4nO0AC5k7NnUu7B/0xHM
-         zQ9Q==
-X-Gm-Message-State: ANhLgQ1SBDVtTPJdUpG5U+8he/QNjBwVrryEu0pc+XlZpVyWFpKO+qPG
-        BiWlvninZiu+cWOcSk666+M=
-X-Google-Smtp-Source: ADFU+vsAfNfD810hUfVVo81ck+67IHCKX2XgtJjX/9gCIeuNFKMXkmYoMLeOykpyMlq1qsRO68Tlig==
-X-Received: by 2002:a5d:4e05:: with SMTP id p5mr3120806wrt.59.1585138421936;
-        Wed, 25 Mar 2020 05:13:41 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id k9sm35010397wrd.74.2020.03.25.05.13.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 05:13:41 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     kishon@ti.com
-Cc:     heiko@sntech.de, robh+dt@kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3] dt-bindings: phy: convert phy-rockchip-inno-usb2 bindings to yaml
-Date:   Wed, 25 Mar 2020 13:13:35 +0100
-Message-Id: <20200325121335.12249-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Wed, 25 Mar 2020 08:15:19 -0400
+Received: from mga17.intel.com ([192.55.52.151]:53764 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726969AbgCYMPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:15:19 -0400
+IronPort-SDR: tgydRZ6ZuFzDmDqYOJnTfDFbQkXerY2lsXfO/bE9XFgtxT7ItMGO5PKr9bKs0UuJrR98Cx0CWc
+ 2zc02MsaBzTA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 05:15:18 -0700
+IronPort-SDR: fshHeAjRpcY2QmeRHJ1oayCf+XifNxCDfJLwJiGn+cFX1tws7VlOKitEAEkmV6KGOdSn4NwC1R
+ g3rl1BhCgTCA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="420294717"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by orsmga005.jf.intel.com with ESMTP; 25 Mar 2020 05:15:17 -0700
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Mar 2020 05:15:17 -0700
+Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 25 Mar 2020 05:15:16 -0700
+Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 25 Mar 2020 05:15:16 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.170)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Wed, 25 Mar 2020 05:15:14 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QrSSnE+xLd7T99TOEmQSdD8WXzwERX7NctpBhGfNGVyuGdsVE4cKTa8ME6JH/LRDsvlIxK7Hfw1gG/z2Y+486CY+D/vdfyZ+u3O1fomyMOMVwJTUVzqpSjUyogsxnREzgFbMrLcMNb1rwp6rbBCVYCc4w7lkEu2hzDPNCLZ3dwFRDXtdEPeal4ENH3mvwsJZWw3cMSqeTIbjBGnEBIWqOkLEWb3dYgTTyumgNB+nSPwftanfKUDuJkEDSWrb3dKVQPR3s7KTsi1Qffu6nu0LuLDILFkLdCwiV1fvTJt8KvHYvdudAjeT9JA6tNgTfyOQIgfPaTa++V+mOnka515kcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YrAe+ZxIvMfxBdnhr2CijWf5vpWwbAXFuv2S6UTzOZQ=;
+ b=c7dkQtqz5QDI0tmn2NKblgeYmiIkfSw5FdmdhYPMIBfZD8Xb2HiiUbj/gmtIhb3s+hjKenhjNZAbdAxfU7cYR8cg2gAVYuCi8mrdmhqNWKw7nXAl8fbraoU9TGmgu3jwKiPbr/kpdZuz2EcvkCj9JA+25AbpOC6SbSk8Ig5Wq/sv1+1J21tVx2JHWx8bwvFUXEQ2umEOrHqEhTF4Rt9ogfUhq7eRuATOfYRr+R21XtyQU0gIerJscS6blOSW1v8fPA2+NOaTOxABzKY/i11whwZoU3APqSEEuMBVJAHzmIDZIGLdjoqZFcClTpr15efan7ewILdo6kWR+tnNT9Zeyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YrAe+ZxIvMfxBdnhr2CijWf5vpWwbAXFuv2S6UTzOZQ=;
+ b=CE6OPq90eYLysvXzc521yPqnRiYrLoaO6yr2Ws6wXY8PB76eWoe+FVF8+XbOlsqOixkHEgyrZpuWWTbh2t1f3EfgcsDSIsQxVIfu7pzhmf+ZnhmFNY33qPCpWVvLkr8Ban4AGixxmDgAUCBAsKUbzzXoGQ/ulEjid4VwxMFB+gU=
+Received: from BL0PR11MB3281.namprd11.prod.outlook.com (2603:10b6:208:66::33)
+ by BL0PR11MB3220.namprd11.prod.outlook.com (2603:10b6:208:2f::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Wed, 25 Mar
+ 2020 12:15:13 +0000
+Received: from BL0PR11MB3281.namprd11.prod.outlook.com
+ ([fe80::e0a0:7b4b:3824:17e6]) by BL0PR11MB3281.namprd11.prod.outlook.com
+ ([fe80::e0a0:7b4b:3824:17e6%7]) with mapi id 15.20.2835.023; Wed, 25 Mar 2020
+ 12:15:13 +0000
+From:   "Reshetova, Elena" <elena.reshetova@intel.com>
+To:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "Alexander Potapenko" <glider@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 0/5] Optionally randomize kernel stack offset each
+ syscall
+Thread-Topic: [PATCH v2 0/5] Optionally randomize kernel stack offset each
+ syscall
+Thread-Index: AQHWAhtwq3buLIhNY0uHCAE/uJPRC6hYQiKAgAAbvoCAANt94A==
+Date:   Wed, 25 Mar 2020 12:15:12 +0000
+Message-ID: <BL0PR11MB3281D8D615FA521401B8E320E7CE0@BL0PR11MB3281.namprd11.prod.outlook.com>
+References: <20200324203231.64324-1-keescook@chromium.org>
+ <CAG48ez3yYkMdxEEW6sJzBC5BZSbzEZKnpWzco32p-TJx7y_srg@mail.gmail.com>
+ <202003241604.7269C810B@keescook>
+In-Reply-To: <202003241604.7269C810B@keescook>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=elena.reshetova@intel.com; 
+x-originating-ip: [193.210.230.89]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9b4fbd89-f70c-4462-79a3-08d7d0b62bb6
+x-ms-traffictypediagnostic: BL0PR11MB3220:
+x-microsoft-antispam-prvs: <BL0PR11MB32207DC9ABA2DCEAE8BEF60BE7CE0@BL0PR11MB3220.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(376002)(136003)(396003)(39860400002)(346002)(5660300002)(66946007)(6506007)(66476007)(7416002)(2906002)(26005)(52536014)(66556008)(64756008)(66446008)(33656002)(76116006)(55016002)(86362001)(81156014)(81166006)(8936002)(8676002)(9686003)(71200400001)(4326008)(478600001)(186003)(7696005)(54906003)(110136005)(316002)(4744005);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR11MB3220;H:BL0PR11MB3281.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: R0fHfiHe8IwDhu/PudqxvcDZ+HOwdID1+Ng9PLiwh0AO1XId7kD5n6/N6KkV53W4qA5fCWm1kMve7REZUR8b7tfsZ0qwzO1SbmzfzUQuTef3Q+RWQizkUkYOeFdNG9QLqnsGNyhhKpTeHHKHAoC4GFvWo4/fjB1EaC3+6oQRGRJcBSyXd9ZvKE2SnVVzKJZ7Zrd1BNOW8gk+0CDvQ1pE6PEAionQk/bCbpGWMP+cjfucQM5Iz8gOvPfOvt2jSzXH/ZVO2yeoHuhQzV8ijn20hPRMlKrV9A697E5gJICuCt6rqGUznVewzCHr1aUmYKoLmo3n21Xj6AA7+LQwriDcfqXX9+3uFAoupeeHwP8GgrAiYmz9N3XQHDgLpgpEqXlL2z+735Dt1q/0R88sYS8pxh9HILua5BGYthTXDBiP8bmt1Bi2Plg/wkUSdnnJenMP
+x-ms-exchange-antispam-messagedata: /CNCpOp659D172WBicTizC4uCv6sPoROncMCkc7ljYWplLv4kJ8C/Ss7dwBTKoPT+B9cN+1DoEN/AQPs7mMyIYvDkPMoQMYW4Gi/KGoDUcdz3XyyuTKwfhNpVkmCtSxcrVO1oEa6sESZV3nQbrXr5A==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b4fbd89-f70c-4462-79a3-08d7d0b62bb6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 12:15:12.9820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9BUpkDalH6Xfnn9q/Z4fatBvI6iYdf5wUeTPr7aT+6vnesukWh+gAF4FEkKMS4KS4GMmteUqxdITni7Y6iZK8dHgLLKOWqP5PLikRjEu6Ew=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR11MB3220
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files for Rockchip with 'usb2-phy' subnodes
-are manually verified. In order to automate this process
-phy-rockchip-inno-usb2.txt has to be converted to yaml.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changes v3:
-  Replace oneOf by enum
-  Remove allOf phy-provider.yaml
-  Add "#phy-cells"
-  Add additionalProperties: false
+> > Also, are you sure that it isn't possible to make the syscall that
+> > leaked its stack pointer never return to userspace (via ptrace or
+> > SIGSTOP or something like that), and therefore never realign its
+> > stack, while keeping some controlled data present on the syscall's
+> > stack?
 
-Changes v2:
-  Keep "rockchip,rk3366-usb2phy" support.
-  Add "#phy-cells" to example.
-  Add allOf phy-provider.yaml
----
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  81 -----------
- .../bindings/phy/phy-rockchip-inno-usb2.yaml       | 155 +++++++++++++++++++++
- 2 files changed, 155 insertions(+), 81 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
- create mode 100644 Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
+How would you reliably detect that a stack pointer has been leaked
+to userspace while it has been in a syscall? Does not seem to be a trivial
+task to me.=20
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-deleted file mode 100644
-index 541f52988..000000000
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ /dev/null
-@@ -1,81 +0,0 @@
--ROCKCHIP USB2.0 PHY WITH INNO IP BLOCK
--
--Required properties (phy (parent) node):
-- - compatible : should be one of the listed compatibles:
--	* "rockchip,px30-usb2phy"
--	* "rockchip,rk3228-usb2phy"
--	* "rockchip,rk3328-usb2phy"
--	* "rockchip,rk3366-usb2phy"
--	* "rockchip,rk3399-usb2phy"
--	* "rockchip,rv1108-usb2phy"
-- - reg : the address offset of grf for usb-phy configuration.
-- - #clock-cells : should be 0.
-- - clock-output-names : specify the 480m output clock name.
--
--Optional properties:
-- - clocks : phandle + phy specifier pair, for the input clock of phy.
-- - clock-names : input clock name of phy, must be "phyclk".
-- - assigned-clocks : phandle of usb 480m clock.
-- - assigned-clock-parents : parent of usb 480m clock, select between
--		 usb-phy output 480m and xin24m.
--		 Refer to clk/clock-bindings.txt for generic clock
--		 consumer properties.
-- - rockchip,usbgrf : phandle to the syscon managing the "usb general
--		 register files". When set driver will request its
--		 phandle as one companion-grf for some special SoCs
--		 (e.g RV1108).
-- - extcon : phandle to the extcon device providing the cable state for
--		 the otg phy.
--
--Required nodes : a sub-node is required for each port the phy provides.
--		 The sub-node name is used to identify host or otg port,
--		 and shall be the following entries:
--	* "otg-port" : the name of otg port.
--	* "host-port" : the name of host port.
--
--Required properties (port (child) node):
-- - #phy-cells : must be 0. See ./phy-bindings.txt for details.
-- - interrupts : specify an interrupt for each entry in interrupt-names.
-- - interrupt-names : a list which should be one of the following cases:
--	Regular case:
--	* "otg-id" : for the otg id interrupt.
--	* "otg-bvalid" : for the otg vbus interrupt.
--	* "linestate" : for the host/otg linestate interrupt.
--	Some SoCs use one interrupt with the above muxed together, so for these
--	* "otg-mux" : otg-port interrupt, which mux otg-id/otg-bvalid/linestate
--		to one.
--
--Optional properties:
-- - phy-supply : phandle to a regulator that provides power to VBUS.
--		See ./phy-bindings.txt for details.
--
--Example:
--
--grf: syscon@ff770000 {
--	compatible = "rockchip,rk3366-grf", "syscon", "simple-mfd";
--	#address-cells = <1>;
--	#size-cells = <1>;
--
--...
--
--	u2phy: usb2-phy@700 {
--		compatible = "rockchip,rk3366-usb2phy";
--		reg = <0x700 0x2c>;
--		#clock-cells = <0>;
--		clock-output-names = "sclk_otgphy0_480m";
--
--		u2phy_otg: otg-port {
--			#phy-cells = <0>;
--			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "otg-id", "otg-bvalid", "linestate";
--		};
--
--		u2phy_host: host-port {
--			#phy-cells = <0>;
--			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
--			interrupt-names = "linestate";
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
-new file mode 100644
-index 000000000..cb71561a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.yaml
-@@ -0,0 +1,155 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/phy-rockchip-inno-usb2.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip USB2.0 phy with inno IP block
-+
-+maintainers:
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,px30-usb2phy
-+      - rockchip,rk3228-usb2phy
-+      - rockchip,rk3328-usb2phy
-+      - rockchip,rk3366-usb2phy
-+      - rockchip,rk3399-usb2phy
-+      - rockchip,rv1108-usb2phy
-+
-+  reg:
-+    maxItems: 1
-+
-+  clock-output-names:
-+    description:
-+      The usb 480m output clock name.
-+
-+  "#clock-cells":
-+    const: 0
-+
-+  "#phy-cells":
-+    const: 0
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    const: phyclk
-+
-+  assigned-clocks:
-+    description:
-+      Phandle of the usb 480m clock.
-+
-+  assigned-clock-parents:
-+    description:
-+      Parent of the usb 480m clock.
-+      Select between usb-phy output 480m and xin24m.
-+      Refer to clk/clock-bindings.txt for generic clock consumer properties.
-+
-+  extcon:
-+    description:
-+      Phandle to the extcon device providing the cable state for the otg phy.
-+
-+  rockchip,usbgrf:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description:
-+      Phandle to the syscon managing the 'usb general register files'.
-+      When set the driver will request its phandle as one companion-grf
-+      for some special SoCs (e.g rv1108).
-+
-+  host-port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#phy-cells":
-+        const: 0
-+
-+      interrupts:
-+        description: host linestate interrupt
-+
-+      interrupt-names:
-+        const: linestate
-+
-+      phy-supply:
-+        description:
-+          Phandle to a regulator that provides power to VBUS.
-+          See ./phy-bindings.txt for details.
-+
-+    required:
-+      - "#phy-cells"
-+      - interrupts
-+      - interrupt-names
-+
-+  otg-port:
-+    type: object
-+    additionalProperties: false
-+
-+    properties:
-+      "#phy-cells":
-+        const: 0
-+
-+      interrupts:
-+        minItems: 1
-+        maxItems: 3
-+
-+      interrupt-names:
-+        oneOf:
-+          - const: linestate
-+          - const: otg-mux
-+          - items:
-+            - const: otg-bvalid
-+            - const: otg-id
-+            - const: linestate
-+
-+      phy-supply:
-+        description:
-+          Phandle to a regulator that provides power to VBUS.
-+          See ./phy-bindings.txt for details.
-+
-+    required:
-+      - "#phy-cells"
-+      - interrupts
-+      - interrupt-names
-+
-+required:
-+  - compatible
-+  - reg
-+  - clock-output-names
-+  - "#clock-cells"
-+  - "#phy-cells"
-+  - host-port
-+  - otg-port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3399-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    u2phy0: usb2-phy@e450 {
-+      compatible = "rockchip,rk3399-usb2phy";
-+      reg = <0xe450 0x10>;
-+      clocks = <&cru SCLK_USB2PHY0_REF>;
-+      clock-names = "phyclk";
-+      clock-output-names = "clk_usbphy0_480m";
-+      #clock-cells = <0>;
-+      #phy-cells = <0>;
-+
-+      u2phy0_host: host-port {
-+        #phy-cells = <0>;
-+        interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
-+        interrupt-names = "linestate";
-+      };
-+
-+      u2phy0_otg: otg-port {
-+        #phy-cells = <0>;
-+        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH 0>,
-+                     <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH 0>,
-+                     <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH 0>;
-+        interrupt-names = "otg-bvalid", "otg-id", "linestate";
-+      };
-+    };
--- 
-2.11.0
-
+Best Regards,
+Elena.=20
