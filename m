@@ -2,123 +2,120 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B80C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68673C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 203732051A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3260220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585121648;
-	bh=GvP5NdOOBS99rKi5axnZFFpSaoWIIxL6DD3dfPbWa1g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DXfdzDGSu77FiOwqtlKi73MnrFeogElqtO+pFJGvxBUIqvNhXpiTWZ/mMyT9S2C5T
-	 Lk5xfEokU9k6qV9WW6SyDSKuKW9BTm14yQq7IMOnwfHfQHSAe9jUJsS1SgTIE5VdKU
-	 N9rCWx9YPEmxxUGZ0a6DLBWfBYTXrxBZH6jTmGeo=
+	s=default; t=1585121821;
+	bh=KFHVOj3TQ5nDXf7jm3X9jRhbM3EIINnqrMU+w1cIYWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=iODN8lnFIZuWzKADLLooNuBCT+Wk12qQlpVIA35NDw9l1JcJOz6tNMXuLOACqir8U
+	 3g/kzdtjhvj2izHoUF6vrnr5jTR/W2agS6cPNwOSJLISJ6/Ul9lyQ4vLsTSyRN+DhH
+	 bIQell0Sz+IayvNPf4l/3Xu6y4hwZ+m8H1SVdjFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726239AbgCYHeH (ORCPT
+        id S1726154AbgCYHhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:34:07 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:18719 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726017AbgCYHeG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:34:06 -0400
-X-Greylist: delayed 53583 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 03:34:05 EDT
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 02P7Xo5Y011468;
-        Wed, 25 Mar 2020 16:33:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 02P7Xo5Y011468
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585121631;
-        bh=kh7EjCwaL2YO03hE6EYB+/Y7QkJFCBvPs4JMoSyx6h8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2K6Z/0OmUrzRBRj/QobY6dhMiiEs5Wt0uXhs+A4PS2ipnw8EU6AZ964xRSmcUcBXl
-         WSycTTjbaA617VvDQVPG+byzuFN6f/rTWBr+aWtYcvUZSZHGS6AxGNBMbTNA97srDS
-         GuXanGNfCbgYo+siB3QmiNafpqxWeREnzRXxzYMxRCzc3O8OcmX4DW7wSej0Ezw5QM
-         0NJX/NfS/EgMSGVk+IeP6TW7MhEsjlfZCwcmW5n+F1VsIcfaxWA5FJCCJhCTjve3SN
-         XfpQER8cXCMdnQ3ZiLAWL9kSYdRCGiZ4F7kejrE3TRtlu2JLFuwt6XrhvRfXNj6Fqm
-         Oeu/Tpv3BedJw==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id j128so905716vsd.6;
-        Wed, 25 Mar 2020 00:33:51 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ2iaPPQUK+8w2yf8hDHahDAtpFUad2Z0ec/lJQGev6UwPzKQFAP
-        g+ABurcDyPqDzvhose/YWgDrftceojFeeVhKYrI=
-X-Google-Smtp-Source: ADFU+vupY5MKc0N7phoId/Wg3qfoFYs2Xj94X9bAAO5uwR+leqxxVHKV7RSZG+L/Iht2P9KlsTGSu6FiHR8YTYsr23k=
-X-Received: by 2002:a67:3201:: with SMTP id y1mr1636838vsy.54.1585121629966;
- Wed, 25 Mar 2020 00:33:49 -0700 (PDT)
+        Wed, 25 Mar 2020 03:37:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38290 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726043AbgCYHg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 03:36:59 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A40C92051A;
+        Wed, 25 Mar 2020 07:36:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585121819;
+        bh=KFHVOj3TQ5nDXf7jm3X9jRhbM3EIINnqrMU+w1cIYWY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IJ+K28CjFmrvTBzuky+gQfJF0tQggxOXPEJMqNUKLjJbWhzrbs8dwWIzNyYea1DHX
+         Pf+epF0xPc+FuR+54ReOUHR/iAl0axw7tj6Jff2j41yeYeQg3rWZRuneLBAYkDggSk
+         kdGbwzCWMer9pO9io56ay18RBTA70s6Kyh37w+K4=
+Date:   Wed, 25 Mar 2020 08:36:56 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] nvmem: core: use is_bin_visible for permissions
+Message-ID: <20200325073656.GA2985010@kroah.com>
+References: <20200324171600.15606-1-srinivas.kandagatla@linaro.org>
+ <20200324171600.15606-4-srinivas.kandagatla@linaro.org>
+ <PSXP216MB04380BBC9B7488DEC47ACB6A80F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20200324164005.8259-1-masahiroy@kernel.org> <alpine.LFD.2.21.2003250240110.2689954@eddie.linux-mips.org>
-In-Reply-To: <alpine.LFD.2.21.2003250240110.2689954@eddie.linux-mips.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 25 Mar 2020 16:33:14 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQA1Z3=9QFvvVx8Zqiq3zKTM8W=JurBuua4iEZf=WL9ZA@mail.gmail.com>
-Message-ID: <CAK7LNAQA1Z3=9QFvvVx8Zqiq3zKTM8W=JurBuua4iEZf=WL9ZA@mail.gmail.com>
-Subject: Re: [PATCH] MIPS: mark some functions as weak to avoid conflict with
- Octeon ones
-To:     "Maciej W. Rozycki" <macro@linux-mips.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB04380BBC9B7488DEC47ACB6A80F10@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maciej,
+On Tue, Mar 24, 2020 at 11:05:07PM +0000, Nicholas Johnson wrote:
+> On Tue, Mar 24, 2020 at 05:16:00PM +0000, Srinivas Kandagatla wrote:
+> > By using is_bin_visible callback to set permissions will remove a large list
+> > of attribute groups. These group permissions can be dynamically derived in
+> > the callback.
+> > 
+> > Suggested-by: Greg KH <gregkh@linuxfoundation.org>
+> > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > ---
+> >  drivers/nvmem/nvmem-sysfs.c | 74 +++++++++----------------------------
+> >  1 file changed, 18 insertions(+), 56 deletions(-)
+> > 
+> > diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
+> > index 8759c4470012..1ff1801048f6 100644
+> > --- a/drivers/nvmem/nvmem-sysfs.c
+> > +++ b/drivers/nvmem/nvmem-sysfs.c
+> > @@ -103,6 +103,17 @@ static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
+> >  
+> >  	return count;
+> >  }
+> > +static umode_t nvmem_bin_attr_is_visible(struct kobject *kobj,
+> > +					 struct bin_attribute *attr, int i)
+> > +{
+> > +	struct device *dev = container_of(kobj, struct device, kobj);
+> > +	struct nvmem_device *nvmem = to_nvmem_device(dev);
+> > +
+> > +	if (nvmem->root_only)
+> > +		return nvmem->read_only ? 0400 : 0600;
+> > +
+> > +	return nvmem->read_only ? 0444 : 0644;
+> > +}
+> Looks like I did a pretty good job as I arrived at a similar result 
+> independently. Even added root_only to nvmem_device. You beat me to it. 
+> :)
+> 
+> >  const struct attribute_group **nvmem_sysfs_get_groups(
+> >  					struct nvmem_device *nvmem,
+> >  					const struct nvmem_config *config)
+> >  {
+> > -	if (config->root_only)
+> > -		return nvmem->read_only ?
+> > -			nvmem_ro_root_dev_groups :
+> > -			nvmem_rw_root_dev_groups;
+> > -
+> > -	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
+> > +	return nvmem_dev_groups;
+> >  }
+> I was wondering if we can export nvmem_dev_group instead of this 
+> nvmem_sysfs_get_groups() to fetch it.
+> 
+> Also, we need some logic in nvmem_register() to abort if bad combination 
+> is given (i.e. root_only set but no reg_read), as returning 0 in 
+> is_bin_visible callback does not abort. I can do that in my patch if you 
+> want.
 
-On Wed, Mar 25, 2020 at 11:46 AM Maciej W. Rozycki <macro@linux-mips.org> wrote:
->
-> On Wed, 25 Mar 2020, Masahiro Yamada wrote:
->
-> > MIPS provides multiple definitions for the following functions:
-> >
-> >   fw_init_cmdline
-> >   __delay
-> >   __udelay
-> >   __ndelay
-> >   memmove
-> >   __rmemcpy
-> >   memcpy
-> >   __copy_user
-> >
-> > The generic ones are defined in lib-y objects, which are overridden by
-> > the Octeon ones when CONFIG_CAVIUM_OCTEON_SOC is enabled.
-> >
-> > The use of EXPORT_SYMBOL in static libraries potentially causes a
-> > problem for the llvm linker [1]. So, I want to forcibly link lib-y
-> > objects to vmlinux when CONFIG_MODULES=y.
-> >
-> > As a groundwork, we must fix multiple definitions that have been
-> > hidden by lib-y.
->
->  IIUC that causes known dead code to be included in the kernel image.
-> Wouldn't it be possible to actually omit replaced functions from output by
-> keying the build of the sources providing generic code with appropriate
-> CONFIG_* settings (such as CONFIG_GENERIC_DELAY, CONFIG_GENERIC_MEMCPY,
-> etc. or suchlike)?
->
->   Maciej
+Returning 0 will cause the file to not be created at all, which is
+probably what you want, right?
 
+thanks,
 
-You are right.
-__weak cannot trim the dead code.
-
-
-I can work on the CONFIG_ approach,
-but I'd rather to use inverted
-CONFIG_HAVE_PLAT_* because it is easier
-to make CAVIUM_OCTEON_SOC select them.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+greg k-h
