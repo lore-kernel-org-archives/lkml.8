@@ -2,124 +2,111 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AAD9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AD6C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3DE2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958D72076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:54:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727504AbgCYMvg (ORCPT
+        id S1727510AbgCYMyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:51:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:48004 "EHLO foss.arm.com"
+        Wed, 25 Mar 2020 08:54:01 -0400
+Received: from a.mx.secunet.com ([62.96.220.36]:35012 "EHLO a.mx.secunet.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727290AbgCYMvg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:51:36 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 495FC31B;
-        Wed, 25 Mar 2020 05:51:35 -0700 (PDT)
-Received: from red-moon.cambridge.arm.com (unknown [10.57.20.165])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F43B3F71F;
-        Wed, 25 Mar 2020 05:51:30 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 12:51:18 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     laurentiu.tudor@nxp.com
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
-        robin.murphy@arm.com, ard.biesheuvel@linaro.org,
-        ioana.ciornei@nxp.com, diana.craciun@oss.nxp.com, maz@kernel.org,
-        jon@solid-run.com, pankaj.bansal@nxp.com, makarand.pawagi@nxp.com,
-        calvin.johnson@nxp.com, V.Sethi@nxp.com, cristian.sovaiala@nxp.com,
-        Stuart.Yoder@arm.com, jeremy.linton@arm.com, joro@8bytes.org,
-        tglx@linutronix.de, jason@lakedaemon.net
-Subject: Re: [RFC PATCH 1/4] bus: fsl-mc: add custom .dma_configure
- implementation
-Message-ID: <20200325125109.GA5430@red-moon.cambridge.arm.com>
-References: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
+        id S1727279AbgCYMyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:54:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by a.mx.secunet.com (Postfix) with ESMTP id 8753520265;
+        Wed, 25 Mar 2020 13:53:59 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from a.mx.secunet.com ([127.0.0.1])
+        by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Zrh3ebZnZWSs; Wed, 25 Mar 2020 13:53:57 +0100 (CET)
+Received: from mail-essen-01.secunet.de (mail-essen-01.secunet.de [10.53.40.204])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by a.mx.secunet.com (Postfix) with ESMTPS id 9A11A20539;
+        Wed, 25 Mar 2020 13:53:57 +0100 (CET)
+Received: from mbx-essen-02.secunet.de (10.53.40.198) by
+ MAIL-ESSEN-01.secunet.de (10.53.40.204) with Microsoft SMTP Server (TLS) id
+ 14.3.487.0; Wed, 25 Mar 2020 13:53:57 +0100
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
+ (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3; Wed, 25 Mar
+ 2020 13:53:57 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)      id C5FDD318026D;
+ Wed, 25 Mar 2020 13:53:56 +0100 (CET)
+Date:   Wed, 25 Mar 2020 13:53:56 +0100
+From:   Steffen Klassert <steffen.klassert@secunet.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <kuba@kernel.org>, <timo.teras@iki.fi>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] xfrm: policy: Fix doulbe free in xfrm_policy_timer
+Message-ID: <20200325125356.GV13121@gauss3.secunet.de>
+References: <20200318034839.57996-1-yuehaibing@huawei.com>
+ <20200323073239.59000-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20200227100542.13819-1-laurentiu.tudor@nxp.com>
+In-Reply-To: <20200323073239.59000-1-yuehaibing@huawei.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: cas-essen-02.secunet.de (10.53.40.202) To
+ mbx-essen-02.secunet.de (10.53.40.198)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:05:39PM +0200, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+On Mon, Mar 23, 2020 at 03:32:39PM +0800, YueHaibing wrote:
+> After xfrm_add_policy add a policy, its ref is 2, then
 > 
-> The devices on this bus are not discovered by way of device tree
-> but by queries to the firmware. It makes little sense to trick the
-> generic of layer into thinking that these devices are of related so
-> that we can get our dma configuration. Instead of doing that, add
-> our custom dma configuration implementation.
+>                              xfrm_policy_timer
+>                                read_lock
+>                                xp->walk.dead is 0
+>                                ....
+>                                mod_timer()
+> xfrm_policy_kill
+>   policy->walk.dead = 1
+>   ....
+>   del_timer(&policy->timer)
+>     xfrm_pol_put //ref is 1
+>   xfrm_pol_put  //ref is 0
+>     xfrm_policy_destroy
+>       call_rcu
+>                                  xfrm_pol_hold //ref is 1
+>                                read_unlock
+>                                xfrm_pol_put //ref is 0
+>                                  xfrm_policy_destroy
+>                                   call_rcu
 > 
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> xfrm_policy_destroy is called twice, which may leads to
+> double free.
+> 
+> Call Trace:
+> RIP: 0010:refcount_warn_saturate+0x161/0x210
+> ...
+>  xfrm_policy_timer+0x522/0x600
+>  call_timer_fn+0x1b3/0x5e0
+>  ? __xfrm_decode_session+0x2990/0x2990
+>  ? msleep+0xb0/0xb0
+>  ? _raw_spin_unlock_irq+0x24/0x40
+>  ? __xfrm_decode_session+0x2990/0x2990
+>  ? __xfrm_decode_session+0x2990/0x2990
+>  run_timer_softirq+0x5c5/0x10e0
+> 
+> Fix this by use write_lock_bh in xfrm_policy_kill.
+> 
+> Fixes: ea2dea9dacc2 ("xfrm: remove policy lock when accessing policy->walk.dead")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/bus/fsl-mc/fsl-mc-bus.c | 31 ++++++++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> index 36eb25f82c8e..eafaa0e0b906 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
-> @@ -132,11 +132,40 @@ static int fsl_mc_bus_uevent(struct device *dev, struct kobj_uevent_env *env)
->  static int fsl_mc_dma_configure(struct device *dev)
->  {
->  	struct device *dma_dev = dev;
-> +	struct iommu_fwspec *fwspec;
-> +	const struct iommu_ops *iommu_ops;
-> +	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
-> +	int ret;
-> +	u32 icid;
->  
->  	while (dev_is_fsl_mc(dma_dev))
->  		dma_dev = dma_dev->parent;
->  
-> -	return of_dma_configure(dev, dma_dev->of_node, 0);
-> +	fwspec = dev_iommu_fwspec_get(dma_dev);
-> +	if (!fwspec)
-> +		return -ENODEV;
-> +	iommu_ops = iommu_ops_from_fwnode(fwspec->iommu_fwnode);
-> +	if (!iommu_ops)
-> +		return -ENODEV;
-> +
-> +	ret = iommu_fwspec_init(dev, fwspec->iommu_fwnode, iommu_ops);
-> +	if (ret)
-> +		return ret;
-> +
-> +	icid = mc_dev->icid;
-> +	ret = iommu_fwspec_add_ids(dev, &icid, 1);
+> v3: Only lock 'policy->walk.dead'
+> v2: Fix typo 'write_lock_bh'--> 'write_unlock_bh' while unlocking
+> ---
 
-I see. So with this patch we would use the MC named component only to
-retrieve the iommu_ops - the streamid are injected directly here
-bypassing OF/IORT bindings translations altogether. Am I reading this
-code correctly ?
-
-Thanks,
-Lorenzo
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (!device_iommu_mapped(dev)) {
-> +		ret = iommu_probe_device(dev);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	arch_setup_dma_ops(dev, 0, *dma_dev->dma_mask + 1, iommu_ops, true);
-> +
-> +	return 0;
->  }
->  
->  static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
-> -- 
-> 2.17.1
-> 
+Applied, thanks everyone!
