@@ -2,131 +2,83 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960BBC2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 890AAC2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6513920774
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:34:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655B62078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="L3Njugs0"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ByJ3yaD+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgCYSes (ORCPT
+        id S1727857AbgCYSg1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:34:48 -0400
-Received: from mail-mw2nam10on2097.outbound.protection.outlook.com ([40.107.94.97]:5697
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727027AbgCYSer (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:34:47 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JUSkyjpr651DzQ7qnQqMKGONpf6e+PUIYSSY4d4eCf/cbvF6I17hq/0ZhXzNmDMFM2eXWmprJJVcWNEXktjFoTy7VaGVx+NxpXR6v5T+hJIAboUFz0W2KgC869vxcR6UhyTSIw7MEWc3EpcfOxw+VSbbHVU3Gzr0ncJbI4nE+ceItvafA38jZz5zgABYoAy0O1I0EtmljOEDJFUeDGS/NrAOQcujEXYxaZoXXWfQNZrq+zmPCTjXxzI2vckWbDcX1QiQ6INzcnsdXqK6PlhM84AAhtntJIz3RmoCPIlpN9dBTpTBjj4N1qYO2ljXZ91p05vO5lvHfafmR85+j5eC2Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FgUxVdex1iU7QIEig9HQQ8bFCESH7ip4yo3v0I/OQ6g=;
- b=bFxklnucx+3jGFEHC8bBQOS/H+GpIUkr1lX8ZBKnmXdSxdPYZKQX/XOF40zSwC/hJX2dAwSKfz1c6sh511kwNFguzGBqYlmmYU3gF7UsOtv4WK9UWoxckVAG8zAmUUdPu+/AoDdnvyc7R1Rpy31Rj173zY5IDsm934Qyy46MWiqLqoXgK2OQT/59Tcfi1Pfya0B2uIaW73ikU6WF9Bbw7iIcVf+JGRsGa9LSmq8c0V8ukTaLKyauqHTgWbq04FSnOwIhjp9aOhKFpjdwbi9hV4HoEH9afgCq1tfNkD21urQlo6juKNYX8HUoI/VsYZlLSDnpEmhUxeEbY+k5g4AYlA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FgUxVdex1iU7QIEig9HQQ8bFCESH7ip4yo3v0I/OQ6g=;
- b=L3Njugs09igFuUjMnAF+Jvu//quSw1Mf6LM7w3fICupQJyHRC/UmXTB0ntTfJDt8tx6SS44v1i0LtYXN9u97vDCmGJ9dhahslJrE/L5XKoPGeLFsRP/lkZCWFQbygcKLMzI+v4CJM6FnJeFeM3xM9QvbK1u3FpwhCsjGmb45nOo=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB1066.namprd21.prod.outlook.com (2603:10b6:302:a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Wed, 25 Mar
- 2020 18:34:45 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.007; Wed, 25 Mar 2020
- 18:34:44 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH V3 5/6] x86/Hyper-V: Report crash register data when
- sysctl_record_panic_msg is not set
-Thread-Topic: [PATCH V3 5/6] x86/Hyper-V: Report crash register data when
- sysctl_record_panic_msg is not set
-Thread-Index: AQHWAbHmp7wZEIm1G0eQ3sRDXEuKK6hZpF+w
-Date:   Wed, 25 Mar 2020 18:34:44 +0000
-Message-ID: <MW2PR2101MB10521B1900ED5A4EF425EF56D7CE0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
- <20200324075720.9462-6-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200324075720.9462-6-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:34:42.5997724Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c4074bdb-e464-49c7-a17e-80b13c09f274;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c7e1bb9e-d57d-4003-8b4e-08d7d0eb30ba
-x-ms-traffictypediagnostic: MW2PR2101MB1066:|MW2PR2101MB1066:|MW2PR2101MB1066:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB1066B286A37914BF9B1FC350D7CE0@MW2PR2101MB1066.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:595;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(376002)(366004)(136003)(346002)(39860400002)(396003)(33656002)(71200400001)(110136005)(66446008)(6506007)(66556008)(26005)(66946007)(4744005)(186003)(64756008)(66476007)(8990500004)(86362001)(76116006)(54906003)(8676002)(316002)(478600001)(55016002)(5660300002)(10290500003)(6636002)(4326008)(81156014)(9686003)(81166006)(2906002)(8936002)(7696005)(52536014);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9jAdJLTvyxbWRpf0insOBCQTKy5MINI/Gn4O5LpeG/8FseWOUnmRP4UAMjFXvZs4a50FcM42QBWkA64vWPnv3Hqkl6p+rbMekD/piCZzksVSQWfb0aiBxNVEBXleK/wFoTEox85ev8JHDpAmHY1AH6GngPfw4qToFXB13sCL1jkB1KkINuvIsUTmObyPdPddlrzyHVvRZ+OpvtjyNIUHlQgz0ZmOx06LyPR+eLHKDG8lhprmdY7CETvxkzPJNoDHjm5KzyjKQK5O3cb9/LlfJAUMWlJh5lx7DYawJzOdJaMqodGUrYFNVVzViQUJMzfqS0WLE7CKXXj3Fs8leE41h/2RZqrvYpqXDNQruiaK+3myv4y9MqwuJSsyt0VVp2baW6ArIvFohWHSs1CtWMjsVVW9BbN6c4YVAjODZvQ+w2FegdBv8ymqp99RD62IG32w
-x-ms-exchange-antispam-messagedata: QX4eaFtkrV8LJr2qg29HOEdz/iY9JIc9wGe95iyfmixtb7RuvQq79BTxpAiQsWlMjc0PTNUW6m9Ei4KU57UYEQ+gxP9KwT3tj2azxuYHtZTmNz61YDX+6tnbmouO2ufiE0WbmkaOHtx2foAOtcOc8g==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Mar 2020 14:36:27 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:14496 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727129AbgCYSg0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:36:26 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PIMLoR009691;
+        Wed, 25 Mar 2020 19:36:11 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=4smaSaGfx0ev3ozXhDm/hbuZrYNRElVuP+FA/ERuJiw=;
+ b=ByJ3yaD+xINB9VaUHJ/PwlGxKeGleD3vbhjgasPCzJ8qEzXCFhY2U/N1P5DaDMa0wgop
+ Yjm3ep8OrMG79/KbRe7bMxVXw5si2a9hVYZPhgNNKNzeVg+ONNRIuKoyvNRajrS7gB1P
+ j0RXM2+Ih1W/F+Yu0Xz9LCJDpA5SdEtf17gSQ7uurKqEv3jCddjomxh4+kcTsm56kBVI
+ kd52NyWwxGSu8C03L4WsyC/TML0d99vF30GTndQ6RY1+CT8E7CQhiMHmJe5J3nn7oTNw
+ UE7cHLTb5cacry8+s9eakpmAIpUiS6QA5G73Vl8Bl6+wC36coRy1G8BFj3ZtaoTppf0r Yg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xe7eq5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Mar 2020 19:36:11 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D9CAF10002A;
+        Wed, 25 Mar 2020 19:36:10 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B4C792AD2DB;
+        Wed, 25 Mar 2020 19:36:10 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 25 Mar 2020 19:36:10
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH 0/2] i2c: i2c-stm32f7: allow range of I2C bus frequency
+Date:   Wed, 25 Mar 2020 19:35:59 +0100
+Message-ID: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c7e1bb9e-d57d-4003-8b4e-08d7d0eb30ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:34:44.7269
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +HR24tqbxaZ9EVP0x5LJfwBHLvdCdVzcq2m/PcM+iw5W/QsMzsoedIBlTZG9cMcZmMeMgZEaM5vndTBfDA4D4JYf+yEQF/o0N7evk9MnCac=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1066
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_09:2020-03-24,2020-03-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 24, 2020 1=
-2:57 AM
->=20
-> When sysctl_record_panic_msg is not set, the panic will
-> not be reported to Hyper-V via hyperv_report_panic_msg().
-> So the crash should be reported via hyperv_report_panic().
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
->  drivers/hv/vmbus_drv.c | 23 ++++++++++++++---------
->  1 file changed, 14 insertions(+), 9 deletions(-)
->=20
+This serie introduces the possibility to set bus frequency other
+than 100KHz, 400KHz and 1MHz.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Alain Volmat (2):
+  dt-bindings: i2c: i2c-stm32f7: allow clock-frequency range
+  i2c: i2c-stm32f7: allows for any bus frequency
+
+ .../devicetree/bindings/i2c/st,stm32-i2c.yaml |   8 +-
+ drivers/i2c/busses/i2c-stm32f7.c              | 116 +++++++++---------
+ 2 files changed, 65 insertions(+), 59 deletions(-)
+
