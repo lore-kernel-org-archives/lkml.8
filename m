@@ -2,167 +2,252 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 456C8C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D0BC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DE2206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5F7A20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:14:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="lH+tuMFZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="ZUJ7PJnh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727501AbgCYKND (ORCPT
+        id S1727279AbgCYKOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:13:03 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:3550 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726043AbgCYKNB (ORCPT
+        Wed, 25 Mar 2020 06:14:43 -0400
+Received: from esa3.hc3370-68.iphmx.com ([216.71.145.155]:6495 "EHLO
+        esa3.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbgCYKOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:13:01 -0400
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02P9tSkE028369;
-        Wed, 25 Mar 2020 06:12:41 -0400
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2043.outbound.protection.outlook.com [104.47.66.43])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ywcs65643-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Mar 2020 06:12:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lyMgog0rHUK3YUSeuMjt3qoIp8PutodAJ9ped/pKmhsi8d9bfFGil5OywH0pEPciGFlEkCe8riJ0ak1lPjX6GDjV9jZ2kJOs7UHQRte4WD1w6ozn1juy+TKqIPyS5O6Mr/NXmzCuHAyEbxCUM+ziM4eY7P/4pthrkZfEt3Vt7673mSG+1bntjXw1zPNM/dg8dJ4GUxJf/mhmdGiNSWhRZKMAQjYmO6qmJjnSWNLAONocP2XIrqJkdVOfCpl8no15bUT4J0Xm888AeiKTUOp87aoP5DVgy8ZVKQDR4lAiQblPLKB6I/fZzKEtumTubaRL1L+bGOfLwYydu/6xVeglaQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zHm2r9tT+3394KqeB4biXUtZG9W91/YgqSfdHcgDBk4=;
- b=FM+SYf7Ib8sy59bWZGzGyhXOFm9LF5HE5MOb7DyErNJAuSmkoWSlwvSBwjvklEhZAJZd6zD2QAMPh0E9DLC4xtKGzfSibLJtdqXjRKSQ9wBFDNihEupM6Imb9MluF0m5MMVu1Gih5ExNys/un+exb4PicS+LLmaxBF4A/IgN8Gqgr8N3lk4yUi8nvbplaq+MHpRoqS89zGVWnGWtgFG670T0rTpL61nmArp3rYyeN/gaJUvncpSH0tUAtdDsEMgsq2CLXnYg6Vlqzf/Zq94sYpJ+WSknTO445/WbjGos+3lWcR8UrOJzFb6gmKoDbr3JeMfv+VABCUt/4jAtGrEe/g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zHm2r9tT+3394KqeB4biXUtZG9W91/YgqSfdHcgDBk4=;
- b=lH+tuMFZr0DaAlO3LcrDcWchDvuUuSs6PJRsYn4btM5a2c8Af0v78yISdp/2nzNjA0t3I+TKozxzNxsi8PZrxOTbHBujmu9vAfpWXmPAM2BLF72njgIvazWM24J1TyqltkpUkO/vkBVhfA+COrW8bgJETCKN3E01Su/WzQcgcHA=
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com (2603:10b6:5:10f::14)
- by DM6PR03MB3594.namprd03.prod.outlook.com (2603:10b6:5:b9::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Wed, 25 Mar
- 2020 10:12:40 +0000
-Received: from DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f]) by DM6PR03MB4411.namprd03.prod.outlook.com
- ([fe80::c47f:ceee:cfda:6a7f%3]) with mapi id 15.20.2835.023; Wed, 25 Mar 2020
- 10:12:40 +0000
-From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-CC:     "jic23@kernel.org" <jic23@kernel.org>,
-        "lars@metafoo.de" <lars@metafoo.de>,
-        "knaack.h@gmx.de" <knaack.h@gmx.de>,
-        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2] iio: buffer: Don't allow buffers without any channels
- enabled to be activated
-Thread-Topic: [PATCH v2] iio: buffer: Don't allow buffers without any channels
- enabled to be activated
-Thread-Index: AQHWAoxiXsh0om2yLEiNKsKsJIqrVahZF7WA
-Date:   Wed, 25 Mar 2020 10:12:40 +0000
-Message-ID: <934b37d485571d842be297e5a2ab0d9cb881c4e8.camel@analog.com>
-References: <20200320104031.31701-1-alexandru.ardelean@analog.com>
-         <20200325100112.85107-1-alexandru.ardelean@analog.com>
-In-Reply-To: <20200325100112.85107-1-alexandru.ardelean@analog.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [188.26.73.247]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 68036605-2404-469d-fffb-08d7d0a50d12
-x-ms-traffictypediagnostic: DM6PR03MB3594:
-x-microsoft-antispam-prvs: <DM6PR03MB35944CF632826B7ABACEF8B9F9CE0@DM6PR03MB3594.namprd03.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(396003)(366004)(136003)(346002)(376002)(2906002)(6506007)(5660300002)(86362001)(6512007)(4326008)(2616005)(26005)(66556008)(71200400001)(186003)(64756008)(66446008)(66476007)(66946007)(6486002)(478600001)(76116006)(91956017)(8936002)(316002)(81156014)(36756003)(110136005)(8676002)(54906003)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR03MB3594;H:DM6PR03MB4411.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: analog.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: HonWsXWQC/KOK2TFwvlHmVfoyzrkfXjE8Sw3YhH+kOoty5VgtFmFiMGJf9KeLQbIUmbyoSLU3Ax9ijJiRQYit07mAMJgskORznHGxI9IKUb1zEn5cyPJTAOyUQGXZ4r/Qg/qUgGhtqecoVpCnLDJ+pHAbD1dYgfZ9TvtaIu0egYNXPNUYR7c7HvXzEWx3kV2NVg0PhHZExoie66EnJYifnfozCydYonf3/Dju1F2/9WaJDUr3rQxkowYnUNCIV21o7g2ZSefyMPTVbSkI7LYGoolVf6RmEFAZVl0q1bORajHhz+l3/V4IzezZ/+NIdfTYnb9y1ESX/EMfS4kU0lCcJh1lmfa24vbTHhGxvjxd3R4qyb6sFG+OhbmTjB9TxNU1L2ULbMxOxBRAdjVkUEWWgJ0Qp/cxIVOAliLgft4cJE6Apw0iAEhk2t/PBrGkC5H
-x-ms-exchange-antispam-messagedata: xCNEsPNHTd++xEdHJRRFVCkV+FvqcnwDxknHVmJ7XM43u5K+2W9ZJhNtL0T0vc9W9cY49KzDpry1hpq6DxyEkBHuWox5UmW5xbQpo0RmPHyv9tun6453AI7X3RA84GX/JZRqMtImYoR0hVswtZ87nQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <582209CD0B30BA4B955E3A167BC00AF5@namprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 25 Mar 2020 06:14:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1585131283;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=HGOJS2fOv/uszg9zMTZ0Pk+5SqksTTlrIT7p7p7GpNk=;
+  b=ZUJ7PJnhLSDbfiigFXxaQlPdztAaVhQk/czVFL5OykcIBq/miYH92fF0
+   YBtIGcJaymoDARBZHRxhr5Z/J7znuM/hfX+QuXzOvSHBejRpYCdKRoegB
+   KFwV3IS1wjvyVss9U+E9xauxYUl8XOHY0QsTKgGu3lNNJE81xqi4fPO8l
+   Y=;
+Authentication-Results: esa3.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=andrew.cooper3@citrix.com; spf=Pass smtp.mailfrom=Andrew.Cooper3@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  andrew.cooper3@citrix.com) identity=pra;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="andrew.cooper3@citrix.com";
+  x-conformance=sidf_compatible
+Received-SPF: Pass (esa3.hc3370-68.iphmx.com: domain of
+  Andrew.Cooper3@citrix.com designates 162.221.158.21 as
+  permitted sender) identity=mailfrom;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="Andrew.Cooper3@citrix.com";
+  x-conformance=sidf_compatible; x-record-type="v=spf1";
+  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
+  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
+  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
+  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
+  ip4:168.245.78.127 ~all"
+Received-SPF: None (esa3.hc3370-68.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@mail.citrix.com) identity=helo;
+  client-ip=162.221.158.21; receiver=esa3.hc3370-68.iphmx.com;
+  envelope-from="Andrew.Cooper3@citrix.com";
+  x-sender="postmaster@mail.citrix.com";
+  x-conformance=sidf_compatible
+IronPort-SDR: r/duezuPH95hneB0/6WiVnY7dVNcDiDLinZUb8n5MUnf4OrVPpdVF0jTSag0GTB1xkfm3Ubrjl
+ 2Br2IgAz9LjqMDwhGObwCn1Lfzw1mDFw0IjvtGT2TCIqUUVEbMm5Zf+I5oK/+vkmb+vOkrWJXc
+ h5kwlYMlRzDU7VOb9XZMt1Nxgor5pBpwSsNp7ucLyVvjiR57qDj84b/Bw7N0GSjIpc2CEjH0wj
+ 64ZZ4MkvLSazeACNFca1jBl3m5g9jDggi6n+sH9Z+rpIaPVlrc9u/rATgDrmBsoIunkNXXOv1C
+ lM8=
+X-SBRS: 2.7
+X-MesageID: 14580578
+X-Ironport-Server: esa3.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.72,304,1580792400"; 
+   d="scan'208";a="14580578"
+From:   Andrew Cooper <andrew.cooper3@citrix.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+CC:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
+        "Jan Kiszka" <jan.kiszka@siemens.com>,
+        James Morris <jmorris@namei.org>,
+        "David Howells" <dhowells@redhat.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Josh Boyer <jwboyer@redhat.com>,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Mike Travis <mike.travis@hpe.com>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Giovanni Gherdovich <ggherdovich@suse.cz>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Len Brown <len.brown@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Martin Molnar <martin.molnar.programming@gmail.com>,
+        Pingfan Liu <kernelfans@gmail.com>,
+        <jailhouse-dev@googlegroups.com>
+Subject: [PATCH] x86/smpboot: Remove 486-isms from the modern AP boot path
+Date:   Wed, 25 Mar 2020 10:14:31 +0000
+Message-ID: <20200325101431.12341-1-andrew.cooper3@citrix.com>
+X-Mailer: git-send-email 2.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68036605-2404-469d-fffb-08d7d0a50d12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 10:12:40.2465
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aiGV+k/8FhIF0j1UnD7xeHj6VIGJoLIBaghkoJ+PjIRRQl+MxiKsH+8W0RumPp8tjzhno6Vfh+I+PrAkYjydBKAzTA+aLgf15Fu6hkKm0vQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR03MB3594
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_04:2020-03-23,2020-03-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=956
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003250085
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gV2VkLCAyMDIwLTAzLTI1IGF0IDEyOjAxICswMjAwLCBBbGV4YW5kcnUgQXJkZWxlYW4gd3Jv
-dGU6DQo+IEZyb206IExhcnMtUGV0ZXIgQ2xhdXNlbiA8bGFyc0BtZXRhZm9vLmRlPg0KPiANCj4g
-QmVmb3JlIGFjdGl2YXRpbmcgYSBidWZmZXIgbWFrZSBzdXJlIHRoYXQgYXQgbGVhc3Qgb25lIGNo
-YW5uZWwgaXMgZW5hYmxlZC4NCj4gQWN0aXZhdGluZyBhIGJ1ZmZlciB3aXRoIDAgY2hhbm5lbHMg
-ZW5hYmxlZCBkb2Vzbid0IG1ha2UgdG9vIG11Y2ggc2Vuc2UgYW5kDQo+IGRpc2FsbG93aW5nIHRo
-aXMgY2FzZSBtYWtlcyBzdXJlIHRoYXQgaW5kaXZpZHVhbCBkcml2ZXIgZG9uJ3QgaGF2ZSB0byBh
-ZGQNCj4gc3BlY2lhbCBjYXNlIGNvZGUgdG8gaGFuZGxlIGl0Lg0KPiANCg0Kb29wcywgaSBnb29m
-LWVkIHBldGVyJ3MgZW1haWwgb24gdGhpcyBzZW5kOw0KWyBjb3B5ICsgcGFzdGUgZXJyIF0NCnNo
-b3VsZCBiZSBmaXhlZCBub3c7DQoNCj4gQ3VycmVudGx5LCB3aXRob3V0IHRoaXMgcGF0Y2ggZW5h
-YmxpbmcgYSBidWZmZXIgaXMgcG9zc2libGUgYW5kIG5vIGVycm9yIGlzDQo+IHByb2R1Y2VkLiBX
-aXRoIHRoaXMgcGF0Y2ggLUVJTlZBTCBpcyByZXR1cm5lZC4NCj4gDQo+IEFuIGV4YW1wbGUgb2Yg
-ZXhlY3V0aW9uIHdpdGggdGhpcyBwYXRjaCBhbmQgc29tZSBpbnN0cnVtZW50ZWQgcHJpbnQtY29k
-ZToNCj4gICAgcm9vdEBhbmFsb2c6fiMgY2QgL3N5cy9idXMvaWlvL2RldmljZXMvaWlvXDpkZXZp
-Y2UzL2J1ZmZlcg0KPiAgICByb290QGFuYWxvZzovc3lzL2J1cy9paW8vZGV2aWNlcy9paW86ZGV2
-aWNlMy9idWZmZXIjIGVjaG8gMSA+IGVuYWJsZQ0KPiAgICAwOiBpaW9fdmVyaWZ5X3VwZGF0ZSA3
-NDggaW5kaW9fZGV2LT5tYXNrbGVuZ3RoIDIgKmluc2VydF9idWZmZXItPnNjYW5fbWFzaw0KPiAw
-MDAwMDAwMA0KPiAgICAxOiBpaW9fdmVyaWZ5X3VwZGF0ZSA3NTMNCj4gICAgMjpfX2lpb191cGRh
-dGVfYnVmZmVycyAxMTE1IHJldCAtMjINCj4gICAgMzogaWlvX2J1ZmZlcl9zdG9yZV9lbmFibGUg
-MTI0MSByZXQgLTIyDQo+ICAgIC1iYXNoOiBlY2hvOiB3cml0ZSBlcnJvcjogSW52YWxpZCBhcmd1
-bWVudA0KPiAxLCAyICYgMyBhcmUgZXhpdC1lcnJvciBwYXRocy4gMCB0aGUgZmlyc3QgcHJpbnQg
-aW4gaWlvX3ZlcmlmeV91cGRhdGUoKQ0KPiByZXJnYXJkbGVzcyBvZiBlcnJvciBwYXRoLg0KPiAN
-Cj4gV2l0aG91dCB0aGlzIHBhdGNoIChhbmQgc2FtZSBpbnN0cnVtZW50ZWQgcHJpbnQtY29kZSk6
-DQo+ICAgIHJvb3RAYW5hbG9nOn4jIGNkIC9zeXMvYnVzL2lpby9kZXZpY2VzL2lpb1w6ZGV2aWNl
-My9idWZmZXINCj4gICAgcm9vdEBhbmFsb2c6L3N5cy9idXMvaWlvL2RldmljZXMvaWlvOmRldmlj
-ZTMvYnVmZmVyIyBlY2hvIDEgPiBlbmFibGUNCj4gICAgMDogaWlvX3ZlcmlmeV91cGRhdGUgNzQ4
-IGluZGlvX2Rldi0+bWFza2xlbmd0aCAyICppbnNlcnRfYnVmZmVyLT5zY2FuX21hc2sNCj4gMDAw
-MDAwMDANCj4gICAgcm9vdEBhbmFsb2c6L3N5cy9idXMvaWlvL2RldmljZXMvaWlvOmRldmljZTMv
-YnVmZmVyIw0KPiBCdWZmZXIgaXMgZW5hYmxlZCB3aXRoIG5vIGVycm9yLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogTGFycy1QZXRlciBDbGF1c2VuIDxsYXJzQG1ldGFmb28uZGU+DQo+IFNpZ25lZC1v
-ZmYtYnk6IEFsZXhhbmRydSBBcmRlbGVhbiA8YWxleGFuZHJ1LmFyZGVsZWFuQGFuYWxvZy5jb20+
-DQo+IC0tLQ0KPiANCj4gQ2hhbmdlbG9nIHYxIC0+IHYyOg0KPiAqIG1vdmVkIGNoZWNrIGluIGlp
-b192ZXJpZnlfdXBkYXRlKCkNCj4gKiBhZGRlZCBkZXZfZGJnKCkgbWVzc2FnZTsgc2hvdWxkIGhl
-bHAgc29tZSBmb2xrcyB1bmRlcnN0YW5kIHRoZSBtZXNzYWdlDQo+ICogZG9jdW1lbnRlZCBzdGVw
-cyB0byByZXByb2R1Y2UNCj4gKiBhZGRlZCBGaXhlcyB0YWc7IGhvcGVmdWxseSB0aGUgdGFnIGlz
-IHRoZSBnb29kIG9uZTsgaWYgbmVlZGVkLCBpdCBjYW4gYmUNCj4gICBkcm9wcGVkOyB0aGlzIGhh
-cyBiZWVuIGFyb3VuZCBmb3IgfjggeWVhcnM7IG5vIGlkZWEgaWYgaXQncyB3b3J0aA0KPiAgIGJh
-Y2twb3J0aW5nDQo+IA0KPiAgZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWJ1ZmZlci5jIHwgNyAr
-KysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWJ1ZmZlci5jIGIvZHJpdmVycy9paW8vaW5k
-dXN0cmlhbGlvLQ0KPiBidWZmZXIuYw0KPiBpbmRleCA1ZmYzNGNlOGI2YTIuLmU2ZmExYTRlMTM1
-ZCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9paW8vaW5kdXN0cmlhbGlvLWJ1ZmZlci5jDQo+ICsr
-KyBiL2RyaXZlcnMvaWlvL2luZHVzdHJpYWxpby1idWZmZXIuYw0KPiBAQCAtNjg2LDYgKzY4Niwx
-MyBAQCBzdGF0aWMgaW50IGlpb192ZXJpZnlfdXBkYXRlKHN0cnVjdCBpaW9fZGV2ICppbmRpb19k
-ZXYsDQo+ICAJYm9vbCBzY2FuX3RpbWVzdGFtcDsNCj4gIAl1bnNpZ25lZCBpbnQgbW9kZXM7DQo+
-ICANCj4gKwlpZiAoaW5zZXJ0X2J1ZmZlciAmJg0KPiArCSAgICBiaXRtYXBfZW1wdHkoaW5zZXJ0
-X2J1ZmZlci0+c2Nhbl9tYXNrLCBpbmRpb19kZXYtPm1hc2tsZW5ndGgpKSB7DQo+ICsJCWRldl9k
-YmcoJmluZGlvX2Rldi0+ZGV2LA0KPiArCQkJIkF0IGxlYXN0IG9uZSBzY2FuIGVsZW1lbnQgbXVz
-dCBiZSBlbmFibGVkIGZpcnN0XG4iKTsNCj4gKwkJcmV0dXJuIC1FSU5WQUw7DQo+ICsJfQ0KPiAr
-DQo+ICAJbWVtc2V0KGNvbmZpZywgMCwgc2l6ZW9mKCpjb25maWcpKTsNCj4gIAljb25maWctPndh
-dGVybWFyayA9IH4wOw0KPiAgDQo=
+Linux has an implementation of the Universal Start-up Algorithm (MP spec,
+Appendix B.4, Application Processor Startup), which includes unconditionally
+writing to the Bios Data Area and CMOS registers.
+
+The warm reset vector is only necessary in the non-integrated Local APIC case.
+UV and Jailhouse already have an opt-out for this behaviour, but blindly using
+the BDA and CMOS on a UEFI or other reduced hardware system isn't clever.
+
+Drop the warm_reset flag from struct x86_legacy_features, and tie the warm
+vector modifications to the integrated-ness of the Local APIC.  This has the
+advantage of compiling the warm reset logic out entirely for 64bit builds.
+
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Borislav Petkov <bp@alien8.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: x86@kernel.org
+CC: Jan Kiszka <jan.kiszka@siemens.com>
+CC: James Morris <jmorris@namei.org>
+CC: David Howells <dhowells@redhat.com>
+CC: Andrew Cooper <andrew.cooper3@citrix.com>
+CC: Matthew Garrett <mjg59@google.com>
+CC: Josh Boyer <jwboyer@redhat.com>
+CC: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+CC: Steve Wahl <steve.wahl@hpe.com>
+CC: Mike Travis <mike.travis@hpe.com>
+CC: Dimitri Sivanich <dimitri.sivanich@hpe.com>
+CC: Arnd Bergmann <arnd@arndb.de>
+CC: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+CC: Giovanni Gherdovich <ggherdovich@suse.cz>
+CC: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+CC: Len Brown <len.brown@intel.com>
+CC: Kees Cook <keescook@chromium.org>
+CC: Martin Molnar <martin.molnar.programming@gmail.com>
+CC: Pingfan Liu <kernelfans@gmail.com>
+CC: linux-kernel@vger.kernel.org
+CC: jailhouse-dev@googlegroups.com
+Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+---
+Thomas: I finally found the reference we were discussing in Portland.  Sorry
+this patch took so long.
+
+I don't have any non-integrated APIC hardware to test with.  Can anyone help
+me out?
+---
+ arch/x86/include/asm/x86_init.h    |  1 -
+ arch/x86/kernel/apic/x2apic_uv_x.c |  1 -
+ arch/x86/kernel/jailhouse.c        |  1 -
+ arch/x86/kernel/platform-quirks.c  |  1 -
+ arch/x86/kernel/smpboot.c          | 21 ++++++++++++---------
+ 5 files changed, 12 insertions(+), 13 deletions(-)
+
+diff --git a/arch/x86/include/asm/x86_init.h b/arch/x86/include/asm/x86_init.h
+index 96d9cd208610..006a5d7fd7eb 100644
+--- a/arch/x86/include/asm/x86_init.h
++++ b/arch/x86/include/asm/x86_init.h
+@@ -229,7 +229,6 @@ enum x86_legacy_i8042_state {
+ struct x86_legacy_features {
+ 	enum x86_legacy_i8042_state i8042;
+ 	int rtc;
+-	int warm_reset;
+ 	int no_vga;
+ 	int reserve_bios_regions;
+ 	struct x86_legacy_devices devices;
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index ad53b2abc859..5afcfd193592 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -343,7 +343,6 @@ static int __init uv_acpi_madt_oem_check(char *_oem_id, char *_oem_table_id)
+ 	} else if (!strcmp(oem_table_id, "UVH")) {
+ 		/* Only UV1 systems: */
+ 		uv_system_type = UV_NON_UNIQUE_APIC;
+-		x86_platform.legacy.warm_reset = 0;
+ 		__this_cpu_write(x2apic_extra_bits, pnodeid << uvh_apicid.s.pnode_shift);
+ 		uv_set_apicid_hibit();
+ 		uv_apic = 1;
+diff --git a/arch/x86/kernel/jailhouse.c b/arch/x86/kernel/jailhouse.c
+index 6eb8b50ea07e..d628fe92d6af 100644
+--- a/arch/x86/kernel/jailhouse.c
++++ b/arch/x86/kernel/jailhouse.c
+@@ -210,7 +210,6 @@ static void __init jailhouse_init_platform(void)
+ 	x86_platform.calibrate_tsc	= jailhouse_get_tsc;
+ 	x86_platform.get_wallclock	= jailhouse_get_wallclock;
+ 	x86_platform.legacy.rtc		= 0;
+-	x86_platform.legacy.warm_reset	= 0;
+ 	x86_platform.legacy.i8042	= X86_LEGACY_I8042_PLATFORM_ABSENT;
+ 
+ 	legacy_pic			= &null_legacy_pic;
+diff --git a/arch/x86/kernel/platform-quirks.c b/arch/x86/kernel/platform-quirks.c
+index b348a672f71d..d922c5e0c678 100644
+--- a/arch/x86/kernel/platform-quirks.c
++++ b/arch/x86/kernel/platform-quirks.c
+@@ -9,7 +9,6 @@ void __init x86_early_init_platform_quirks(void)
+ {
+ 	x86_platform.legacy.i8042 = X86_LEGACY_I8042_EXPECTED_PRESENT;
+ 	x86_platform.legacy.rtc = 1;
+-	x86_platform.legacy.warm_reset = 1;
+ 	x86_platform.legacy.reserve_bios_regions = 0;
+ 	x86_platform.legacy.devices.pnpbios = 1;
+ 
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index d85e91a8aa8c..e2ebb0be2ee3 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -1049,18 +1049,21 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
+ 	 * the targeted processor.
+ 	 */
+ 
+-	if (x86_platform.legacy.warm_reset) {
++	/*
++	 * APs are typically started in one of two ways:
++	 *
++	 * - On 486-era hardware with a non-integrated Local APIC, a single
++	 *   INIT IPI is sent.  When the AP comes out of reset, the BIOS
++	 *   follows the warm reset vector to start_ip.
++	 * - On everything with an integrated Local APIC, the start_ip is
++	 *   provided in the Startup IPI message, sent as part of an
++	 *   INIT-SIPI-SIPI sequence.
++	 */
++	if (!APIC_INTEGRATED(boot_cpu_apic_version)) {
+ 
+ 		pr_debug("Setting warm reset code and vector.\n");
+ 
+ 		smpboot_setup_warm_reset_vector(start_ip);
+-		/*
+-		 * Be paranoid about clearing APIC errors.
+-		*/
+-		if (APIC_INTEGRATED(boot_cpu_apic_version)) {
+-			apic_write(APIC_ESR, 0);
+-			apic_read(APIC_ESR);
+-		}
+ 	}
+ 
+ 	/*
+@@ -1118,7 +1121,7 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
+ 		}
+ 	}
+ 
+-	if (x86_platform.legacy.warm_reset) {
++	if (!APIC_INTEGRATED(boot_cpu_apic_version)) {
+ 		/*
+ 		 * Cleanup possible dangling ends...
+ 		 */
+-- 
+2.11.0
+
