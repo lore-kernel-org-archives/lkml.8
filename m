@@ -2,110 +2,147 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32E1C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59A4C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC59C20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:26:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b+VQXyBH"
+	by mail.kernel.org (Postfix) with ESMTP id 8055A206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgCYQ00 (ORCPT
+        id S1728110AbgCYQ1S convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:26:26 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:46142 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727883AbgCYQ00 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:26:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585153585;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Jq8Dmg84++T9Uwu65Jmp6+JlUIFUs5ji5T/tuboCktU=;
-        b=b+VQXyBHSIXV/lgMLX/RUDpG3r8nQfURXT2j/ZHbg78Ke9qaeL1r/Oz7hWLtjJB0Mx6Nd7
-        7Zdd4uqcqLBDghqZXnpHYamJWeL8oDxFpZrtoHq/kpKu490BvXrb+q4RM0/5VC+AXAgXtQ
-        ejnqGO8HqTrbs1BZhqXPnHeMuu951L0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-NzdTjKxjNIelKsixtew3yg-1; Wed, 25 Mar 2020 12:26:23 -0400
-X-MC-Unique: NzdTjKxjNIelKsixtew3yg-1
-Received: by mail-wr1-f69.google.com with SMTP id w12so1366293wrl.23
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:26:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Jq8Dmg84++T9Uwu65Jmp6+JlUIFUs5ji5T/tuboCktU=;
-        b=tIpY7zp6bgT0URFs/45RgymnHG/Rj5GkTPeLUhe3Cx0+EmAnWx5q3m/lQvkxnEIBoE
-         o8kPtW4wG/MrSky3DPJkDKRevzTURRujN0M7twVLp4Z5f5qjmEXeI4OUi46ExxuhP7O5
-         8x1OJ3TPFWXcPWNr7Xd9new48VGgxaJErSmHpCtcQYa97QeIrl9HGu9sLZOzjpdMCT1A
-         r5dPUWtpEKzhQa7yjOaLBpv4HKgVb+IglIESMKOj1nYSvNXGhPgTUk4l4t+ZSvribA5e
-         GsrKvYDXXITj4DjqmyPPWVythevP2mjzTkyQ/2c7mQxnXuXtHYJ/mtS2e06/0njwEDrJ
-         BmvQ==
-X-Gm-Message-State: ANhLgQ13IAF2yteTVKmxWO0Af8DLZBtHrPyGg3E0vlUscVEU6sXfPN6k
-        fT8oI9YT6KuxJ9MCsiZOOSuebKJqyxKX7RVxcJR2IzjGy5y0E9aD7gbreI3OTazaYn3LOBEOvuB
-        jboFX7Vz5PFGgebPRZWeQSEk/
-X-Received: by 2002:adf:f7cb:: with SMTP id a11mr4174639wrq.79.1585153582609;
-        Wed, 25 Mar 2020 09:26:22 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vszjkz/iylm2IOX6v20+yKn/X1ndP6vMESmczBIbaUPTcqyrif74MHSe2V+EevIro+vcwpMPw==
-X-Received: by 2002:adf:f7cb:: with SMTP id a11mr4174617wrq.79.1585153582400;
-        Wed, 25 Mar 2020 09:26:22 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
-        by smtp.gmail.com with ESMTPSA id h18sm2550204wmm.34.2020.03.25.09.26.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 09:26:21 -0700 (PDT)
-Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200325195350.7300fee9@canb.auug.org.au>
- <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
- <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
- <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
- <85430f7e-93e0-3652-0705-9cf6e948a9d8@redhat.com>
- <20200325161405.GG14294@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <7b71119b-4594-2535-24ba-2c59430e4f30@redhat.com>
-Date:   Wed, 25 Mar 2020 17:26:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200325161405.GG14294@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
+        Wed, 25 Mar 2020 12:27:18 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2605 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727386AbgCYQ1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:27:18 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 7C7B644093CAB3F291D8;
+        Wed, 25 Mar 2020 16:27:16 +0000 (GMT)
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml702-cah.china.huawei.com (10.201.108.43) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 25 Mar 2020 16:27:16 +0000
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 25 Mar 2020 16:27:16 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Wed, 25 Mar 2020 16:27:16 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: RE: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Topic: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Thread-Index: AQHWArk9LTp1thyJ80ifFE8yZh20/KhZdCmQ
+Date:   Wed, 25 Mar 2020 16:27:15 +0000
+Message-ID: <84a30116698a49cda1e8b580ee35ce1f@huawei.com>
+References: <8aa40a48-39c9-ba6b-ea70-bcb60907a733@huawei.com>
+ <20200325152220.GA261586@google.com>
+In-Reply-To: <20200325152220.GA261586@google.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.86.66]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/20 17:14, Sean Christopherson wrote:
->> Doh, right.  I think the only solution for that one is to degrade it to
->> WARN_ON(1).
-> I reproduced the error, give me a bit to play with the code to see if the
-> BUILD_BUG can be preserved.  I'm curious as to why kvm_cpu_cap_mask() is
-> special, and why it only fails with this config.
-> 
+Hi Bjorn,
 
-I could not reproduce it, but I would not be surprised if there are
-other configurations where the compiler cannot constant-propagate from
-the reverse_cpuid struct into __cpuid_entry_get_reg.
+>-----Original Message-----
+>From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>Sent: 25 March 2020 15:22
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; lenb@kernel.org; bp@alien8.de;
+>james.morse@arm.com; tony.luck@intel.com; gregkh@linuxfoundation.org;
+>zhangliguang@linux.alibaba.com; tglx@linutronix.de; Linuxarm
+><linuxarm@huawei.com>; Jonathan Cameron
+><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>yangyicong <yangyicong@huawei.com>
+>Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+>specific HW errors
+>
+>1) If you can post things as a series, i.e., with patch 1/2 and patch
+>2/2 being responses to the 0/2 cover letter, that makes things easier.
+>It looks like you did this for the previous postings.
+I will send the patches as series after fixing the issues in the patch subject lines. 
 
-Paolo
+>
+>2) When applying these, "git am" complained (but they did apply
+>cleanly):
+>
+>  warning: Patch sent with format=flowed; space at the end of lines might be
+>lost.
+>  Applying: APEI: Add support to notify the vendor specific HW errors
+>  warning: Patch sent with format=flowed; space at the end of lines might be
+>lost.
+>  Applying: PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
+>
+>3) drivers/pci/controller/pcie-hisi-error.c should be next to
+>drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
+Our hip PCIe controller doesn't use DWC ip.
 
+>
+>4) Your subject lines don't match the convention.  "git log --oneline
+>drivers/acpi/apei" says:
+>
+>  011077d8fbfe ("APEI: Add support to notify the vendor specific HW errors")
+>  cea79e7e2f24 ("apei/ghes: Do not delay GHES polling")
+>  933ca4e323de ("acpi: Use pr_warn instead of pr_warning")
+>  6abc7622271d ("ACPI / APEI: Release resources if gen_pool_add() fails")
+>  bb100b64763c ("ACPI / APEI: Get rid of NULL_UUID_LE constant")
+>  371b86897d01 ("ACPI / APEI: Remove needless __ghes_check_estatus()
+>calls")
+>
+>and "git log --oneline --follow drivers/pci/controller/dwc/pcie-hisi*"
+>says:
+>
+>  6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
+>  8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate")
+>  5a4751680189 ("PCI: hisi: Constify dw_pcie_host_ops structure")
+>  b379d385bbaa ("PCI: hisi: Remove unused variable driver")
+>  a5f40e8098fe ("PCI: Don't allow unbinding host controllers that aren't
+>prepared")
+>  e313a447e735 ("PCI: hisi: Update PCI config space remap function")
+>  b9c1153f7a9c ("PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)")
+>
+>So your subject lines should be:
+>
+>  ACPI / APEI: ...
+Sure. I will fix this.
+
+>  PCI: hisi: ...
+Can we use PCI: hip because this driver is for the HIP hardware devices. 
+
+[...]
+>> --
+>> 2.17.1
+
+Thanks,
+Shiju
