@@ -2,92 +2,114 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62052C54FD7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CCDC54FD6
 	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 723F020BED
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:06:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BAE820774
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTQF38v8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eDH9ZcoD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726104AbgCYHGv (ORCPT
+        id S1726658AbgCYHDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:06:51 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35423 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbgCYHGv (ORCPT
+        Wed, 25 Mar 2020 03:03:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42381 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbgCYHDm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:06:51 -0400
-Received: by mail-pl1-f195.google.com with SMTP id g6so460943plt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 00:06:50 -0700 (PDT)
+        Wed, 25 Mar 2020 03:03:42 -0400
+Received: by mail-pg1-f194.google.com with SMTP id h8so701416pgs.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 00:03:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6r1fskoo/rPmpewNG6WhrwCKIyAjmrIb2vy6uT5S69U=;
-        b=DTQF38v8YnBWHsl+9ixYzJ0xE5YKQXH3zpAzq2Ik1ShxuiVRINdaYH9dBwijCtOroQ
-         3+bJ2xAPc5VaDA11dqtrpJHkvl2g25DEN/HoP72Zvp4zrPitEaZEO3GgxtbGYcoG66Vu
-         EdnSrhIP4ftAurqTKZZJ7W9HTsvahZYe802K9KgJsM8KaKL0QNEOw5oweg0j4TbdtkCy
-         +KwF+vV9UP+JXfVlwd8BoxCaqfb6ZHiRRlx/KXy3BWAmSeMJW+zTJsfMRhLXHLSY4vsT
-         8fDAFj8kcnfZmc2UtH2/2NoiZ7635e7I2ReOPqJ9sptT10N36AKnETXUWvnCGnd1V+HI
-         6vmQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3zectWcNtEHLyfgTx3MqEvfVsHuSppDOUvlE/pNSxGo=;
+        b=eDH9ZcoDABpzKQNT0W42ZM9EZTxmNCn8VtZHqGhC4DgNYBaIK4lYcelsJYUzDFvL3O
+         SFBcP8ZgJpAwzl7F83Mg140MZtjEsYFktuvzhl/RrkmDRywgy1pvkJbztd5rzmjQu7Ko
+         25CKRpOyUNpcdgjcKCQ8svfd06vdDShg7GQvc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6r1fskoo/rPmpewNG6WhrwCKIyAjmrIb2vy6uT5S69U=;
-        b=nSj2CrFqJW4no8PRSl59M5BmL0AGWQm939DyP9WqFvgcp6WJiacw6u00I2YlDppEJK
-         ydYqlAOZcZc/d0BMK+cMO7rD9QNyJ4hYKQjUBpei5Hx+3nc/b0Bi/RPDy0Kn/fT7rboY
-         AdUsIGwdikCxMuSpZvl6Bsm8YNw/9QMSrSiwWwqQP2JvgHoK5c0w6boGCkJXf5xeUfee
-         0EgAgfBiQouPrThbMiPcB5+19XbY5/+DTHKRH0TEzDfwpUDQLEGCcLPGcoUjziHIC25V
-         7lYYpKzQPvPmb2aw+rQaIyo6CdVJ6z3XJudQVIRK4bE8ls30z7F5d6QsKfamUj7TTTny
-         KLag==
-X-Gm-Message-State: ANhLgQ2B0QLFuzVVzemIbIVH3BPHI2f3Jrp/43QAO4Vh6wr+0K/C99Ln
-        qYYWjcsKC4j9ojQDzZh00N9Esq8O1FE=
-X-Google-Smtp-Source: ADFU+vs3isqopxoifQh7lOOmzhO/2YTv6RkIdXU2LOyuhtT4JCjGoCUyAY7MU+HCk6mc1DTVt8GYWA==
-X-Received: by 2002:a17:902:59dd:: with SMTP id d29mr1876294plj.246.1585120010514;
-        Wed, 25 Mar 2020 00:06:50 -0700 (PDT)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id y207sm18172916pfb.189.2020.03.25.00.06.49
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3zectWcNtEHLyfgTx3MqEvfVsHuSppDOUvlE/pNSxGo=;
+        b=OulkxkjgvtMblAPVVRIv8fe/8YFm6uJFr7sp2TniaTGdVSE6NS85HPxKDFwlfqTs5F
+         IbgO/GTNrCnNb9T77VrAiTPomaXYgZHDLN8Dy7iRuvA4/6selph8eHTnPnI3+E5sSEgl
+         erWATuO89xCdig1MxKLkrRuzdgao4Rso4z9cWhcj6cxQeD7ZGHDR2vpl6xQ1gv2iAW8b
+         zLX+d2RddILzhGkg5UfRXKK4FEUme/e5i1jR895VJSpcY3jwK9Px18gzbrTS8qvXBS1B
+         JrkbOEkjxulOcspT+zFrlG1v37wNwEkQxarTHixkTpOF/zUOdrjgO13Y/Qd8RfC4YWal
+         cB/Q==
+X-Gm-Message-State: ANhLgQ1eFt/L3WWZuPqwojNAqsI79lZ+TnOli+mM6UvgxikBuQKSsDhz
+        12UaWetk1PvI6PybAuCgg9NkgA==
+X-Google-Smtp-Source: ADFU+vs2i23A8PQwyTj/QbXxX6iqtgCkNFZDCp31M6+qiIky3n7aCBt1nI8B0kuo1z2jbOQoc6JmQA==
+X-Received: by 2002:a65:53c5:: with SMTP id z5mr1872714pgr.0.1585119820635;
+        Wed, 25 Mar 2020 00:03:40 -0700 (PDT)
+Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
+        by smtp.gmail.com with ESMTPSA id i34sm566240pgm.83.2020.03.25.00.03.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 00:06:50 -0700 (PDT)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     gregkh@linuxfoundation.org, osdevtc@gmail.com
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] staging: wlan-ng: fix ODEBUG bug in prism2sta_disconnect_usb
-Date:   Wed, 25 Mar 2020 15:06:46 +0800
-Message-Id: <1585120006-30042-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 25 Mar 2020 00:03:39 -0700 (PDT)
+From:   Miao-chen Chou <mcchou@chromium.org>
+To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2 0/2] btusb: Introduce the use of vendor extension(s)
+Date:   Wed, 25 Mar 2020 00:03:34 -0700
+Message-Id: <20200325070336.1097-1-mcchou@chromium.org>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We should cancel hw->usb_work before kfree(hw).
+Hi Marcel and Luiz,
 
-Reported-by: syzbot+6d2e7f6fa90e27be9d62@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- drivers/staging/wlan-ng/prism2usb.c | 1 +
- 1 file changed, 1 insertion(+)
+The standard HCI does not provide commands/events regarding to
+advertisement monitoring with content filter while there are few vendors
+providing this feature. Chrome OS BT would like to introduce the use of
+vendor specific features where Microsoft vendor extension is targeted at
+this moment.
 
-diff --git a/drivers/staging/wlan-ng/prism2usb.c b/drivers/staging/wlan-ng/prism2usb.c
-index 352556f..4689b21 100644
---- a/drivers/staging/wlan-ng/prism2usb.c
-+++ b/drivers/staging/wlan-ng/prism2usb.c
-@@ -180,6 +180,7 @@ static void prism2sta_disconnect_usb(struct usb_interface *interface)
- 
- 		cancel_work_sync(&hw->link_bh);
- 		cancel_work_sync(&hw->commsqual_bh);
-+		cancel_work_sync(&hw->usb_work);
- 
- 		/* Now we complete any outstanding commands
- 		 * and tell everyone who is waiting for their
+Chrome OS BT would like to utilize Microsoft vendor extension's
+advertisement monitoring feature which is not yet a part of standard
+Bluetooth specification. This series introduces the driver information for
+Microsoft vendor extension, and this was verified with kernel 4.4 on Atlas
+Chromebook.
+
+Thanks
+Miao
+
+Changes in v2:
+- Define struct msft_vnd_ext and add a field of this type to struct
+hci_dev to facilitate the support of Microsoft vendor extension.
+- Issue a HCI_VS_MSFT_Read_Supported_Features command with
+__hci_cmd_sync() instead of constructing a request.
+
+Miao-chen Chou (2):
+  Bluetooth: btusb: Indicate Microsoft vendor extension for Intel
+    9460/9560 and 9160/9260
+  Bluetooth: btusb: Read the supported features of Microsoft vendor
+    extension
+
+ drivers/bluetooth/btusb.c          | 17 ++++++-
+ include/net/bluetooth/hci_core.h   | 10 ++++
+ include/net/bluetooth/vendor_hci.h | 51 +++++++++++++++++++
+ net/bluetooth/hci_core.c           | 78 ++++++++++++++++++++++++++++++
+ 4 files changed, 154 insertions(+), 2 deletions(-)
+ create mode 100644 include/net/bluetooth/vendor_hci.h
+
 -- 
-1.8.3.1
+2.24.1
 
