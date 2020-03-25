@@ -2,55 +2,64 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF189C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6974C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC0C72078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7453A2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:28:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jlzPnzl9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727381AbgCYNYm (ORCPT
+        id S1727432AbgCYN2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:24:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38194 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgCYNYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:24:42 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D2CC2077D;
-        Wed, 25 Mar 2020 13:24:41 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 09:24:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     He Zhe <zhe.he@windriver.com>
-Cc:     acme@redhat.com, tstoyanov@vmware.com, hewenliang4@huawei.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tools lib traceevent: Take care of return value of
- asprintf
-Message-ID: <20200325092440.2076128c@gandalf.local.home>
-In-Reply-To: <5f7589c3-323d-1a5c-685c-9becd87a690b@windriver.com>
-References: <1582163930-233692-1-git-send-email-zhe.he@windriver.com>
-        <5f7589c3-323d-1a5c-685c-9becd87a690b@windriver.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 25 Mar 2020 09:28:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33214 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbgCYN2M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:28:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=2NO/n6kduwBIqc4l0ZX8BdD5kNqK6OZFb73WmpZkDbA=; b=jlzPnzl9AXcsu1Q6Jqasiq7vke
+        JBmxbJMAxZOqyMXT/D3NU0q2UJrIJy4nV47kZ3AN1EKqNLCVYGvk9MN1aquTjlc33LvR4aa5/TYdw
+        F8ptj101FjBfXMqdDStSGHSeoQbHaptENbZDhzD4dQQeNJziCAc8Vnq9g5FLUdq6C+95qk1+V/Fud
+        hkRrHmyTF5+egWjVECXrhEkPewed7x+c9fZkiEOX2vWteWLGRlQPpGe5Kjy2YEHOImvuOb4ca+/fa
+        4Q4AA/cbX8sRJWYSXRLRwte4TnCMQP2GgxosW05UPga49CUvuTY9QdfAlca2XhyEG444NIEGoIzzg
+        jJxhfwGA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH64a-00055b-S1; Wed, 25 Mar 2020 13:27:56 +0000
+Date:   Wed, 25 Mar 2020 06:27:56 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xuefeng Li <lixuefeng@loongson.cn>
+Subject: Re: [PATCH v2 2/3] MIPS: Loongson: Add DMA support for 7A1000
+Message-ID: <20200325132756.GA13750@infradead.org>
+References: <1584932355-3642-1-git-send-email-yangtiezhu@loongson.cn>
+ <1584932355-3642-3-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584932355-3642-3-git-send-email-yangtiezhu@loongson.cn>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 21:05:46 +0800
-He Zhe <zhe.he@windriver.com> wrote:
+On Mon, Mar 23, 2020 at 10:59:14AM +0800, Tiezhu Yang wrote:
+> Implement __phys_to_dma() and __dma_to_phys() according to the
+> node id offset in the 7A1000 DMA route config register.
 
-> Can this be considered for the moment?
-> 
-
-Thanks for the reminder. This patch was pushed down in my queue by lots of
-other patches I need to review. I'll try to take a look at it this week.
-
--- Steve
+Can you please try to just use the dma_pfn_offset field in struct device
+for all loongson platforms?  I'm pretty sure I asked for that last time
+around..
