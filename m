@@ -2,136 +2,96 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697DEC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A5C2C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41A2B206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:16:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IyakAjTE"
+	by mail.kernel.org (Postfix) with ESMTP id 58F98206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585120574;
+	bh=rAaMmZCfF2JGaNLQBxQpmYG0YuF1N707UWJZWRwGZWg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0BuiufqTEP5CxV4ytftshACWIIX9Snojg7XvCnmz9BrwSD+/H5Y5thiwow1ZUWvE6
+	 wfm5HHCpaJ6b9KMbdcTaP+DeicXDWWothKnFL5iNmjLcLnt64qCsysrYkFfzB7PAaO
+	 lRGfzUauqfXy7FgCfOTg8sLsfgMliPQxIPberqV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCYHQF (ORCPT
+        id S1727401AbgCYHQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:16:05 -0400
-Received: from ozlabs.org ([203.11.71.1]:58187 "EHLO ozlabs.org"
+        Wed, 25 Mar 2020 03:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725832AbgCYHQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:16:05 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725832AbgCYHQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 03:16:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nKCj3m9qz9sR4;
-        Wed, 25 Mar 2020 18:16:01 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585120561;
-        bh=s1AIt52YFiyujN94KaqbCeEnwYxZ0tmlVApRoETUA44=;
-        h=Date:From:To:Cc:Subject:From;
-        b=IyakAjTEgLDivNXuNfNlFESNiOWDbkhakw0wdaq9VrdJNOsWCgsY88VfG9TocWPrB
-         +z9vNBeJlgQ6ZzZaPbZqEfxm19fSD2sk2gw96rQw1YJcxG1dSjI8SRZYA+AVt99for
-         fQlnGV8SF/BY/Uoha0NjgJuvGs8CgsSxYjeCbFkK7/RSXtEiBFhFZTfB+zq4x7DVai
-         QFB3I5LANjk/eHFZbSuAKkpHLsk8CJfPlTQqJ+B+RBimHBXMGB/MeONTRGIB5c/ZT4
-         tlhynaN6BsUQy7iGE37V8+Q05x9hEnSLrV5gSWRhNiYG2pmHC3qiVdnENBvAWqZDXY
-         OvDKouElsEB0g==
-Date:   Wed, 25 Mar 2020 18:16:00 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>
-Subject: linux-next: build failure after merge of the input tree
-Message-ID: <20200325181600.207eb7ac@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 969C6206F6;
+        Wed, 25 Mar 2020 07:16:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585120571;
+        bh=rAaMmZCfF2JGaNLQBxQpmYG0YuF1N707UWJZWRwGZWg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YPMpc2mobI+Ysg9uSGbcV0ubNoAUuYAcTUU1KuTdXYelkuLrKrHu8qT68KKUX6Kfu
+         0Y0YRw0lpWYt37ipCZnvC4xe3cDa0ojFF68UlSMKOVYfSY4LKSMFBe929xoGzBy0Gj
+         7nUkaoFRd0D3Htxih4RSnD+dwURE9Ip4YSQNNoG8=
+Date:   Wed, 25 Mar 2020 08:16:08 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, rbilovol@cisco.com, ddutile@redhat.com,
+        ruslan.bilovol@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, bodong@mellanox.com
+Subject: Re: [Linux-kernel-mentees] [PATCH] PCI: sysfs: Change bus_rescan and
+ dev_rescan to rescan
+Message-ID: <20200325071608.GA2978943@kroah.com>
+References: <20200324234848.8299-1-skunberg.kelsey@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/aJzUAUv/SLTtPvEts2RhgcO";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324234848.8299-1-skunberg.kelsey@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/aJzUAUv/SLTtPvEts2RhgcO
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, Mar 24, 2020 at 05:48:48PM -0600, Kelsey Skunberg wrote:
+> From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
+> 
+> rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
+> to avoid breaking userspace applications.
+> 
+> The attribute argument names were changed in the following commits:
+> 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+> 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
+> 
+> Revert the names used for attributes back to the names used before the above
+> patches were applied. This also requires to change DEVICE_ATTR_WO() to
+> DEVICE_ATTR() and __ATTR().
+> 
+> Note when using DEVICE_ATTR() the attribute is automatically named
+> dev_attr_<name>.attr. To avoid duplicated names between attributes, use
+> __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
+> dev_rescan.
+> 
+> change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
+> names used before the mentioned patches were applied.
+> 
+> Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
 
-Hi all,
+You should add:
+Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
+Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
 
-After merging the input tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
+to this too, and a
+	Cc: stable <stable@vger.kernel.org>
+to the signed-off-by: area so that it gets properly backported.
 
-drivers/input/touchscreen/goodix.c: In function 'goodix_irq_direction_outpu=
-t':
-drivers/input/touchscreen/goodix.c:624:12: error: implicit declaration of f=
-unction 'acpi_execute_simple_method' [-Werror=3Dimplicit-function-declarati=
-on]
-  624 |   status =3D acpi_execute_simple_method(ACPI_HANDLE(dev),
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
-drivers/input/touchscreen/goodix.c:606:17: warning: unused variable 'dev' [=
--Wunused-variable]
-  606 |  struct device *dev =3D &ts->client->dev;
-      |                 ^~~
-drivers/input/touchscreen/goodix.c: In function 'goodix_irq_direction_input=
-':
-drivers/input/touchscreen/goodix.c:634:17: warning: unused variable 'dev' [=
--Wunused-variable]
-  634 |  struct device *dev =3D &ts->client->dev;
-      |                 ^~~
-cc1: some warnings being treated as errors
+Other than that minor thing, looks good to me, thanks for fixing it so
+quickly:
 
-Caused by commit
-
-  c5fca485320e ("Input: goodix - add support for controlling the IRQ pin th=
-rough ACPI methods")
-
-I have applied the following patch for today:
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 25 Mar 2020 18:04:08 +1100
-Subject: [PATCH] Input: goodix - mark as BROKEN for noe
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/input/touchscreen/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/=
-Kconfig
-index c071f7c407b6..98788fb83917 100644
---- a/drivers/input/touchscreen/Kconfig
-+++ b/drivers/input/touchscreen/Kconfig
-@@ -380,6 +380,7 @@ config TOUCHSCREEN_GOODIX
- 	tristate "Goodix I2C touchscreen"
- 	depends on I2C
- 	depends on GPIOLIB || COMPILE_TEST
-+	depends on BROKEN
- 	help
- 	  Say Y here if you have the Goodix touchscreen (such as one
- 	  installed in Onda v975w tablets) connected to your
---=20
-2.25.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/aJzUAUv/SLTtPvEts2RhgcO
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl57BTAACgkQAVBC80lX
-0GzbJwf9FPn8YZhkFcYdLw5yhxs9g2LGyHBBLUWTu67CCNr1ZO3EIHKzqoo2bUXe
-iISGKB4VY69zuRdXZncTKky4A+HS89i/rdAjtb8Qs5XCzcQXTDaIXQLJNWbdYsUL
-XSG7OY/gXDUKU2DcO7nc8puiPpoYxTn7jGtkgLCkL+rCFQhVaPtgWgwFOslf53G5
-12/lzC8XrR8tcpiBek9l0RkYHIPzvFSUAluCQzgPlsBsIzbnaVdEokrAk2HE2lhU
-F4rUyqKPy6ojWIBAoUHcTbvjmEWykl7UueWW681xI9+ZoNrAQxQWJgFYAyDU8yDt
-BIMn0cv4IAkxCHGZtF0xHg1lMwVDwg==
-=ZLkq
------END PGP SIGNATURE-----
-
---Sig_/aJzUAUv/SLTtPvEts2RhgcO--
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
