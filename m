@@ -2,346 +2,238 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC23C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B39C54FD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EC0206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MJyIpqcA"
+	by mail.kernel.org (Postfix) with ESMTP id ADC4F206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCYIzI (ORCPT
+        id S1727523AbgCYIzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:55:08 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:27837 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727299AbgCYIzI (ORCPT
+        Wed, 25 Mar 2020 04:55:42 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:50324 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727407AbgCYIzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:55:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585126506;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=DxukBkLgxcAXY0WM/4OPDb9cSuXPpn7bjD9YeTKOQcY=;
-        b=MJyIpqcAt9CPzsv8A7J0K0yKNC3AzQol0IiPfdPBrOLnExmaGQ6B0YhatGd75oXMr6pLEa
-        1DLPEb66OebOhnr6wCEk5j3nSkH43OiiK6VvGMd/KpMqllZusRHOK2XGsXa8ZIONglOdxt
-        ndTjdnbuS/RPT2z0JermzYWmE0r5wsk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-25-UKSI2ddSP0iG120Xj_F9zA-1; Wed, 25 Mar 2020 04:55:04 -0400
-X-MC-Unique: UKSI2ddSP0iG120Xj_F9zA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5647D800D4E;
-        Wed, 25 Mar 2020 08:55:03 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-33.pek2.redhat.com [10.72.8.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57C1C1036D00;
-        Wed, 25 Mar 2020 08:54:37 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 16:54:32 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: Re: [PATCH v3 1/3] block/diskstats: more accurate approximation of
- io_ticks for slow disks
-Message-ID: <20200325085432.GA31035@ming.t460p>
-References: <158503038812.1955.7827988255138056389.stgit@buzz>
- <158503198072.1955.16227279292140721351.stgit@buzz>
- <20200324140656.GA23550@ming.t460p>
- <20200325034024.GC6086@ming.t460p>
- <841346dd-95b0-859f-79ec-dfbdedc16628@yandex-team.ru>
- <4f267148-8d6a-e3c8-2518-b2a3bd579454@yandex-team.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <4f267148-8d6a-e3c8-2518-b2a3bd579454@yandex-team.ru>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Mar 2020 04:55:41 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0433585-0.000252064-0.956389;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03302;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
+Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H50xpyL_1585126516)
+          by smtp.aliyun-inc.com(10.147.42.241);
+          Wed, 25 Mar 2020 16:55:33 +0800
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Subject: [PATCH v3 08/11] pstore/zone: skip broken zone for MTD device
+Date:   Wed, 25 Mar 2020 16:55:03 +0800
+Message-Id: <1585126506-18635-9-git-send-email-liaoweixiong@allwinnertech.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:02:39AM +0300, Konstantin Khlebnikov wrote:
->=20
->=20
-> On 25/03/2020 09.28, Konstantin Khlebnikov wrote:
-> >=20
-> >=20
-> > On 25/03/2020 06.40, Ming Lei wrote:
-> > > On Tue, Mar 24, 2020 at 10:06:56PM +0800, Ming Lei wrote:
-> > > > On Tue, Mar 24, 2020 at 09:39:40AM +0300, Konstantin Khlebnikov w=
-rote:
-> > > > > Currently io_ticks is approximated by adding one at each start =
-and end of
-> > > > > requests if jiffies counter has changed. This works perfectly f=
-or requests
-> > > > > shorter than a jiffy or if one of requests starts/ends at each =
-jiffy.
-> > > > >=20
-> > > > > If disk executes just one request at a time and they are longer=
- than two
-> > > > > jiffies then only first and last jiffies will be accounted.
-> > > > >=20
-> > > > > Fix is simple: at the end of request add up into io_ticks jiffi=
-es passed
-> > > > > since last update rather than just one jiffy.
-> > > > >=20
-> > > > > Example: common HDD executes random read 4k requests around 12m=
-s.
-> > > > >=20
-> > > > > fio --name=3Dtest --filename=3D/dev/sdb --rw=3Drandread --direc=
-t=3D1 --runtime=3D30 &
-> > > > > iostat -x 10 sdb
-> > > > >=20
-> > > > > Note changes of iostat's "%util" 8,43% -> 99,99% before/after p=
-atch:
-> > > > >=20
-> > > > > Before:
-> > > > >=20
-> > > > > Device:=A0=A0=A0=A0=A0=A0=A0=A0 rrqm/s=A0=A0 wrqm/s=A0=A0=A0=A0=
- r/s=A0=A0=A0=A0 w/s=A0=A0=A0 rkB/s=A0=A0=A0 wkB/s avgrq-sz avgqu-sz=A0=A0=
- await r_await w_await=A0 svctm=A0 %util
-> > > > > sdb=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 0,00=A0=A0=A0=A0 =
-0,00=A0=A0 82,60=A0=A0=A0 0,00=A0=A0 330,40=A0=A0=A0=A0 0,00=A0=A0=A0=A0 =
-8,00=A0=A0=A0=A0 0,96=A0=A0 12,09=A0=A0 12,09=A0=A0=A0 0,00=A0=A0 1,02=A0=
-=A0 8,43
-> > > > >=20
-> > > > > After:
-> > > > >=20
-> > > > > Device:=A0=A0=A0=A0=A0=A0=A0=A0 rrqm/s=A0=A0 wrqm/s=A0=A0=A0=A0=
- r/s=A0=A0=A0=A0 w/s=A0=A0=A0 rkB/s=A0=A0=A0 wkB/s avgrq-sz avgqu-sz=A0=A0=
- await r_await w_await=A0 svctm=A0 %util
-> > > > > sdb=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 0,00=A0=A0=A0=A0 =
-0,00=A0=A0 82,50=A0=A0=A0 0,00=A0=A0 330,00=A0=A0=A0=A0 0,00=A0=A0=A0=A0 =
-8,00=A0=A0=A0=A0 1,00=A0=A0 12,10=A0=A0 12,10=A0=A0=A0 0,00=A0 12,12=A0 9=
-9,99
-> > > > >=20
-> > > > > For load estimation "%util" is not as useful as average queue l=
-ength,
-> > > > > but it clearly shows how often disk queue is completely empty.
-> > > > >=20
-> > > > > Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch=
- to less precise counting")
-> > > > > Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru=
->
-> > > > > ---
-> > > > > =A0 Documentation/admin-guide/iostats.rst |=A0=A0=A0 5 ++++-
-> > > > > =A0 block/bio.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=A0=A0 8 ++++----
-> > > > > =A0 block/blk-core.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0 |=A0=A0=A0 4 ++--
-> > > > > =A0 include/linux/genhd.h=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0 |=A0=A0=A0 2 +-
-> > > > > =A0 4 files changed, 11 insertions(+), 8 deletions(-)
-> > > > >=20
-> > > > > diff --git a/Documentation/admin-guide/iostats.rst b/Documentat=
-ion/admin-guide/iostats.rst
-> > > > > index df5b8345c41d..9b14b0c2c9c4 100644
-> > > > > --- a/Documentation/admin-guide/iostats.rst
-> > > > > +++ b/Documentation/admin-guide/iostats.rst
-> > > > > @@ -100,7 +100,7 @@ Field 10 -- # of milliseconds spent doing I=
-/Os (unsigned int)
-> > > > > =A0=A0=A0=A0=A0 Since 5.0 this field counts jiffies when at lea=
-st one request was
-> > > > > =A0=A0=A0=A0=A0 started or completed. If request runs more than=
- 2 jiffies then some
-> > > > > -=A0=A0=A0 I/O time will not be accounted unless there are othe=
-r requests.
-> > > > > +=A0=A0=A0 I/O time might be not accounted in case of concurren=
-t requests.
-> > > > > =A0 Field 11 -- weighted # of milliseconds spent doing I/Os (un=
-signed int)
-> > > > > =A0=A0=A0=A0=A0 This field is incremented at each I/O start, I/=
-O completion, I/O
-> > > > > @@ -143,6 +143,9 @@ are summed (possibly overflowing the unsign=
-ed long variable they are
-> > > > > =A0 summed to) and the result given to the user.=A0 There is no=
- convenient
-> > > > > =A0 user interface for accessing the per-CPU counters themselve=
-s.
-> > > > > +Since 4.19 request times are measured with nanoseconds precisi=
-on and
-> > > > > +truncated to milliseconds before showing in this interface.
-> > > > > +
-> > > > > =A0 Disks vs Partitions
-> > > > > =A0 -------------------
-> > > > > diff --git a/block/bio.c b/block/bio.c
-> > > > > index 0985f3422556..b1053eb7af37 100644
-> > > > > --- a/block/bio.c
-> > > > > +++ b/block/bio.c
-> > > > > @@ -1762,14 +1762,14 @@ void bio_check_pages_dirty(struct bio *=
-bio)
-> > > > > =A0=A0=A0=A0=A0 schedule_work(&bio_dirty_work);
-> > > > > =A0 }
-> > > > > -void update_io_ticks(struct hd_struct *part, unsigned long now=
-)
-> > > > > +void update_io_ticks(struct hd_struct *part, unsigned long now=
-, bool end)
-> > > > > =A0 {
-> > > > > =A0=A0=A0=A0=A0 unsigned long stamp;
-> > > > > =A0 again:
-> > > > > =A0=A0=A0=A0=A0 stamp =3D READ_ONCE(part->stamp);
-> > > > > =A0=A0=A0=A0=A0 if (unlikely(stamp !=3D now)) {
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 if (likely(cmpxchg(&part->stamp, st=
-amp, now) =3D=3D stamp)) {
-> > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 __part_stat_add(part, io_tic=
-ks, 1);
-> > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 __part_stat_add(part, io_tic=
-ks, end ? now - stamp : 1);
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 }
-> > > > > =A0=A0=A0=A0=A0 }
-> > > > > =A0=A0=A0=A0=A0 if (part->partno) {
-> > > > > @@ -1785,7 +1785,7 @@ void generic_start_io_acct(struct request=
-_queue *q, int op,
-> > > > > =A0=A0=A0=A0=A0 part_stat_lock();
-> > > > > -=A0=A0=A0 update_io_ticks(part, jiffies);
-> > > > > +=A0=A0=A0 update_io_ticks(part, jiffies, false);
-> > > > > =A0=A0=A0=A0=A0 part_stat_inc(part, ios[sgrp]);
-> > > > > =A0=A0=A0=A0=A0 part_stat_add(part, sectors[sgrp], sectors);
-> > > > > =A0=A0=A0=A0=A0 part_inc_in_flight(q, part, op_is_write(op));
-> > > > > @@ -1803,7 +1803,7 @@ void generic_end_io_acct(struct request_q=
-ueue *q, int req_op,
-> > > > > =A0=A0=A0=A0=A0 part_stat_lock();
-> > > > > -=A0=A0=A0 update_io_ticks(part, now);
-> > > > > +=A0=A0=A0 update_io_ticks(part, now, true);
-> > > > > =A0=A0=A0=A0=A0 part_stat_add(part, nsecs[sgrp], jiffies_to_nse=
-cs(duration));
-> > > > > =A0=A0=A0=A0=A0 part_stat_add(part, time_in_queue, duration);
-> > > > > =A0=A0=A0=A0=A0 part_dec_in_flight(q, part, op_is_write(req_op)=
-);
-> > > > > diff --git a/block/blk-core.c b/block/blk-core.c
-> > > > > index abfdcf81a228..4401b30a1751 100644
-> > > > > --- a/block/blk-core.c
-> > > > > +++ b/block/blk-core.c
-> > > > > @@ -1337,7 +1337,7 @@ void blk_account_io_done(struct request *=
-req, u64 now)
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 part_stat_lock();
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 part =3D req->part;
-> > > > > -=A0=A0=A0=A0=A0=A0=A0 update_io_ticks(part, jiffies);
-> > > > > +=A0=A0=A0=A0=A0=A0=A0 update_io_ticks(part, jiffies, true);
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 part_stat_inc(part, ios[sgrp]);
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 part_stat_add(part, nsecs[sgrp], no=
-w - req->start_time_ns);
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 part_stat_add(part, time_in_queue, =
-nsecs_to_jiffies64(now - req->start_time_ns));
-> > > > > @@ -1379,7 +1379,7 @@ void blk_account_io_start(struct request =
-*rq, bool new_io)
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0 rq->part =3D part;
-> > > > > =A0=A0=A0=A0=A0 }
-> > > > > -=A0=A0=A0 update_io_ticks(part, jiffies);
-> > > > > +=A0=A0=A0 update_io_ticks(part, jiffies, false);
-> > > > > =A0=A0=A0=A0=A0 part_stat_unlock();
-> > > > > =A0 }
-> > > > > diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-> > > > > index d5c75df64bba..f1066f10b062 100644
-> > > > > --- a/include/linux/genhd.h
-> > > > > +++ b/include/linux/genhd.h
-> > > > > @@ -467,7 +467,7 @@ static inline void free_part_info(struct hd=
-_struct *part)
-> > > > > =A0=A0=A0=A0=A0 kfree(part->info);
-> > > > > =A0 }
-> > > > > -void update_io_ticks(struct hd_struct *part, unsigned long now=
-);
-> > > > > +void update_io_ticks(struct hd_struct *part, unsigned long now=
-, bool end);
-> > > > > =A0 /* block/genhd.c */
-> > > > > =A0 extern void device_add_disk(struct device *parent, struct g=
-endisk *disk,
-> > > > >=20
-> > > >=20
-> > > > Looks fine:
-> > > >=20
-> > > > Reviewed-by: Ming Lei <ming.lei@redhat.com>
-> > >=20
-> > > BTW, there is still some gap(%65 vs. 99%) between this fix and the =
-original
-> > > accounting(before applying Mike/Mikulas's 7 patches), and it might =
-be
-> > > one thing to improve in future.
-> > >=20
-> > > 1) test, sda is single queue virtio-scsi, which is emulated by one =
-HDD
-> > > image
-> > >=20
-> > > 2) fio test script:
-> > > fio --direct=3D1 --size=3D128G --bsrange=3D4k-4k \
-> > > =A0=A0=A0=A0=A0=A0=A0 --runtime=3D20 --numjobs=3D1 \
-> > > =A0=A0=A0=A0=A0=A0=A0 --ioengine=3Dlibaio --iodepth=3D16 \
-> > > =A0=A0=A0=A0=A0=A0=A0 --iodepth_batch_submit=3D16 \
-> > > =A0=A0=A0=A0=A0=A0=A0 --iodepth_batch_complete_min=3D16 \
-> > > =A0=A0=A0=A0=A0=A0=A0 --group_reporting=3D1 --filename=3D/dev/sda \
-> > > =A0=A0=A0=A0=A0=A0=A0 --name=3Dseq-test --rw=3Dread
-> > >=20
-> > > 3) result:
-> > > - v5.6-rc with this patch
-> > > Run status group 0 (all jobs):
-> > > =A0=A0=A0 READ: bw=3D79.4MiB/s (83.3MB/s), 79.4MiB/s-79.4MiB/s (83.=
-3MB/s-83.3MB/s), io=3D155
-> > > 88MiB (1665MB), run=3D20001-20001msec
-> > >=20
-> > > Disk stats (read/write):
-> > > =A0=A0 sda: ios=3D25039/0, merge=3D375596/0, ticks=3D18823/0, in_qu=
-eue=3D4330, util=3D99.43%
-> > >=20
-> > >=20
-> > > - commit 112f158f66cb (which is previous commit of 5b18b5a73760)
-> > > Run status group 0 (all jobs):
-> > > =A0=A0=A0 READ: bw=3D81.4MiB/s (85.3MB/s), 81.4MiB/s-81.4MiB/s (85.=
-3MB/s-85.3MB/s), io=3D166
-> > > 28MiB (1707MB), run=3D20001-20001msec
-> > >=20
-> > > Disk stats (read/write):
-> > > =A0=A0 sda: ios=3D25749/0, merge=3D386236/0, ticks=3D17963/0, in_qu=
-eue=3D12976, util=3D65.20%
-> > >=20
->=20
-> Oh, no. Your result is opposite.
->=20
-> Well, 99.43% with this patch is actually more correct result:
-> every millisecond there is at least one request in disk.
->=20
-> Old code sampled in-flight at start and end of each request, not regula=
-rly every jiffy.
+It's one of a series of patches to adapt to MTD device.
 
-It doesn't matter if it is regularly every jiffy, or the sample point.
+It's different with block device, the MTD device will make new broken
+blocks (or bad block) while running. It's necessary for pstore/blk to
+skip the broken block.
 
-It is perfect to just sample at start and end, and not necessary to
-do it in merge.
+The MTD driver should return -ENOMSG if meets a bad block, which tells
+pstore/zone to skip and try next one.
 
-What matters is that only IO time is accounted. And when there isn't
-any IO in-flight, the time shouldn't be accounted into io_ticks.
-That is it, however, the new approach can't do that at all.
+Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+---
+ fs/pstore/pstore_blk.c      | 10 +++++--
+ fs/pstore/pstore_zone.c     | 65 ++++++++++++++++++++++++++++++++++++---------
+ include/linux/pstore_blk.h  |  3 ++-
+ include/linux/pstore_zone.h | 12 ++++++---
+ 4 files changed, 71 insertions(+), 19 deletions(-)
 
-> And accounted whole jiffy as inactive if in-flight currently is zero.
-> This way statistics was biased to samples where queue is empty.
-
-It is just one sequential read test, single job, and there are lots of
-merge, so disk utilization shouldn't be close to 100%, should it?
-
-With your patch, now it is much easy to observe 100% utilization.
-
-More ticks are counted in v5.6-rc with this patch than old kernel, the
-reason is that new approach counts 1 tick for IDLE time(no any IO)
-in blk_account_io_start(). Old approach knows if there is any in-flight
-IO, if there isn't, the period since last stamp is thought as IO idle,
-and that time won't be accounted.
-
-However, the new approach doesn't know IO IDLE period at all, just
-add 1 tick for this period.
-
-
-Thanks,
-Ming
+diff --git a/fs/pstore/pstore_blk.c b/fs/pstore/pstore_blk.c
+index 560e7b3f0945..d6949146135b 100644
+--- a/fs/pstore/pstore_blk.c
++++ b/fs/pstore/pstore_blk.c
+@@ -99,9 +99,12 @@
+  *		means error.
+  * @write:	The same as @read, but the following error number:
+  *		-EBUSY means try to write again later.
++ *		-ENOMSG means to try next zone.
+  * @panic_write:The write operation only used for panic case. It's optional
+- *		if you do not care panic log. The parameters and return value
+- *		are the same as @read.
++ *		if you do not care panic log. The parameters are relative
++ *		value to storage.
++ *		On success, the number of bytes should be returned, others
++ *		excluding -ENOMSG mean error. -ENOMSG means to try next zone.
+  */
+ struct psblk_device {
+ 	unsigned long total_size;
+@@ -314,6 +317,9 @@ static ssize_t psblk_blk_panic_write(const char *buf, size_t size,
+ 	/* size and off must align to SECTOR_SIZE for block device */
+ 	ret = blkdev_panic_write(buf, off >> SECTOR_SHIFT,
+ 			size >> SECTOR_SHIFT);
++	/* try next zone */
++	if (ret == -ENOMSG)
++		return ret;
+ 	return ret ? -EIO : size;
+ }
+ 
+diff --git a/fs/pstore/pstore_zone.c b/fs/pstore/pstore_zone.c
+index 1da4fc760d31..84ff53c1aaae 100644
+--- a/fs/pstore/pstore_zone.c
++++ b/fs/pstore/pstore_zone.c
+@@ -247,6 +247,9 @@ static int psz_zone_write(struct psz_zone *zone,
+ 
+ 	return 0;
+ dirty:
++	/* no need to mark dirty if going to try next zone */
++	if (wcnt == -ENOMSG)
++		return -ENOMSG;
+ 	atomic_set(&zone->dirty, true);
+ 	/* flush dirty zones nicely */
+ 	if (wcnt == -EBUSY && !is_on_panic())
+@@ -382,7 +385,11 @@ static int psz_recover_oops_meta(struct psz_context *cxt)
+ 			return -EINVAL;
+ 
+ 		rcnt = info->read((char *)buf, len, zone->off);
+-		if (rcnt != len) {
++		if (rcnt == -ENOMSG) {
++			pr_debug("%s with id %lu may be broken, skip\n",
++					zone->name, i);
++			continue;
++		} else if (rcnt != len) {
+ 			pr_err("read %s with id %lu failed\n", zone->name, i);
+ 			return (int)rcnt < 0 ? (int)rcnt : -EIO;
+ 		}
+@@ -717,24 +724,58 @@ static void psz_write_kmsg_hdr(struct psz_zone *zone,
+ 		hdr->counter = 0;
+ }
+ 
++/*
++ * In case zone is broken, which may occur to MTD device, we try each zones,
++ * start at cxt->oops_write_cnt.
++ */
+ static inline int notrace psz_oops_write_record(struct psz_context *cxt,
+ 		struct pstore_record *record)
+ {
++	int ret = -EBUSY;
+ 	size_t size, hlen;
+ 	struct psz_zone *zone;
+-	unsigned int zonenum;
++	unsigned int i;
+ 
+-	zonenum = cxt->oops_write_cnt;
+-	zone = cxt->opszs[zonenum];
+-	if (unlikely(!zone))
+-		return -ENOSPC;
+-	cxt->oops_write_cnt = (zonenum + 1) % cxt->oops_max_cnt;
++	for (i = 0; i < cxt->oops_max_cnt; i++) {
++		unsigned int zonenum, len;
++
++		zonenum = (cxt->oops_write_cnt + i) % cxt->oops_max_cnt;
++		zone = cxt->opszs[zonenum];
++		if (unlikely(!zone))
++			return -ENOSPC;
+ 
+-	pr_debug("write %s to zone id %d\n", zone->name, zonenum);
+-	psz_write_kmsg_hdr(zone, record);
+-	hlen = sizeof(struct psz_oops_header);
+-	size = min_t(size_t, record->size, zone->buffer_size - hlen);
+-	return psz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
++		/* avoid destorying old data, allocate a new one */
++		len = zone->buffer_size + sizeof(*zone->buffer);
++		zone->oldbuf = zone->buffer;
++		zone->buffer = kzalloc(len, GFP_KERNEL);
++		if (!zone->buffer) {
++			zone->buffer = zone->oldbuf;
++			return -ENOMEM;
++		}
++		zone->buffer->sig = zone->oldbuf->sig;
++
++		pr_debug("write %s to zone id %d\n", zone->name, zonenum);
++		psz_write_kmsg_hdr(zone, record);
++		hlen = sizeof(struct psz_oops_header);
++		size = min_t(size_t, record->size, zone->buffer_size - hlen);
++		ret = psz_zone_write(zone, FLUSH_ALL, record->buf, size, hlen);
++		if (likely(!ret || ret != -ENOMSG)) {
++			cxt->oops_write_cnt = zonenum + 1;
++			cxt->oops_write_cnt %= cxt->oops_max_cnt;
++			/* no need to try next zone, free last zone buffer */
++			kfree(zone->oldbuf);
++			zone->oldbuf = NULL;
++			return ret;
++		}
++
++		pr_debug("zone %u may be broken, try next dmesg zone\n",
++				zonenum);
++		kfree(zone->buffer);
++		zone->buffer = zone->oldbuf;
++		zone->oldbuf = NULL;
++	}
++
++	return -EBUSY;
+ }
+ 
+ static int notrace psz_oops_write(struct psz_context *cxt,
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+index d8f609e60288..828b0763d477 100644
+--- a/include/linux/pstore_blk.h
++++ b/include/linux/pstore_blk.h
+@@ -14,7 +14,8 @@
+  * @start_sect: start sector to block device
+  * @sects: sectors count on buf
+  *
+- * Return: On success, zero should be returned. Others mean error.
++ * Return: On success, zero should be returned. Others excluding -ENOMSG
++ * mean error. -ENOMSG means to try next zone.
+  *
+  * Panic write to block device must be aligned to SECTOR_SIZE.
+  */
+diff --git a/include/linux/pstore_zone.h b/include/linux/pstore_zone.h
+index a138e8b7dc20..2bfa79bff97b 100644
+--- a/include/linux/pstore_zone.h
++++ b/include/linux/pstore_zone.h
+@@ -23,11 +23,15 @@
+  * @read:	The general read operation. Both of the function parameters
+  *		@size and @offset are relative value to storage.
+  *		On success, the number of bytes should be returned, others
+- *		means error.
+- * @write:	The same as @read, but -EBUSY means try to write again later.
++ *		mean error.
++ * @write:	The same as @read, but the following error number:
++ *		-EBUSY means try to write again later.
++ *		-ENOMSG means to try next zone.
+  * @panic_write:The write operation only used for panic case. It's optional
+- *		if you do not care panic log. The parameters and return value
+- *		are the same as @read.
++ *		if you do not care panic log. The parameters are relative
++ *		value to storage.
++ *		On success, the number of bytes should be returned, others
++ *		excluding -ENOMSG mean error. -ENOMSG means to try next zone.
+  */
+ struct psz_info {
+ 	struct module *owner;
+-- 
+1.9.1
 
