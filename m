@@ -2,189 +2,111 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27765C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FE9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CA520775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:46:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585140379;
-	bh=DPiVu0t8sMc0c3QIhOtlhQ/w+i9viQKaMJRH4mgeN2A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IR+K5V11ZMTePJxVm2HSBbaHpA0hwcefgQUX2hV/PONRuiw2J2FGEEoQh1RzNS4Fp
-	 89nMwCG8ptt+tX5BxlereXLNqj4YSxDn0Dtqq1KE0orKUF1qm658V2j8wUDh4OR5FA
-	 uHjRaDhBD9v1gbuLCkc85EIKIYe0kK+/UR8lT7kQ=
+	by mail.kernel.org (Postfix) with ESMTP id 47D562076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pcd+LU3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbgCYMqR (ORCPT
+        id S1727384AbgCYMuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:46:17 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:39731 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727689AbgCYMqO (ORCPT
+        Wed, 25 Mar 2020 08:50:21 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38217 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgCYMuV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:46:14 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m1so762233pll.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:46:13 -0700 (PDT)
+        Wed, 25 Mar 2020 08:50:21 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l20so2487040wmi.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:50:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WpM0lmi5cvBD21brmsnNLQXs+vFEHjg1A/hdVqoEFN8=;
-        b=T5XW1n1SVYU1iF4/QiBF/6I6dDOziS3mR9WhDoPF+bfmYddX1+/0Y5bp2EYI+A5Ohc
-         wt/QitYVgI5kxQA3Dw3Ueeiz7nfj819oXFNK/JYdLUWaEdzRxFLMzY3JjdK2cGImR+fs
-         +6bwwdT51hlgiHR85OyrY7CFDS628ly90bCnDl+AZi9+laWAMi1M1JU6Lu9cttoYbbmd
-         YTZFhJLZPf0ZfwdOcEKzZiL+fVCo3YpoyvcsyZ7JNdk1egrd7m/xfVn1TIhWW9ckG6FO
-         NwXYMzb5p68HZlb79aeQQR2UlTVjtvUHDffYC9h7yICYsu97YmIaLbpJlEczFt2J6mr+
-         +wKw==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=i3Wlis1DtVgfIXNrnhG2aCoyveLssmu0qcaQ7SUr9Tc=;
+        b=Pcd+LU3VwwB1mLDy6eUddgZJNE3Iu/bHzcCfsgWVDElBTU6sE3PofsWwKuATnuV4fF
+         MOwyplJ5ZNH/YWtjOdmB0zmrIW6Ut+C+Tt7n+cQf5Rhr2kPp/pLc2gnB7c8ryMyOGphU
+         6m+7A9Z7ro/CDi+sjWOBiKGJOFtOdAALNy9uTuC6omX4JFv7yY/diprx0H8UfnbOZ0/l
+         PB4Hhhpkuwm8q2dKp8OvtW7coh95y5IMlMvH4Ri6A5ftGj98t0I9Jm7HPhLk9mdvQApI
+         xWSsQjPfjidzv2m7tJlr0EtE1DJ2H3dPH1cdjPpJTpDcTnSi9HKGYExysAIDsopvy9Yw
+         xiuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=WpM0lmi5cvBD21brmsnNLQXs+vFEHjg1A/hdVqoEFN8=;
-        b=TDTNXtWWFkqiipzPTIX2RsvS4Owp9GqxugubzJYuNPGrhn/qAsJIMHBSFB5U8uFwfo
-         g8zZF1jaVcFQLHC57m4vqZdZRw8mAMdZexw+u8V/0XUBzbYo3XdhVTOneFJ/JAO6BZow
-         91qYy8V/Zyrgxye8m+zy2t/8mQlOu0U5foJ3cCwJiDnAuWu8rLcvlSEZ6SVY2jgCpA75
-         eolj0F+hnZJOGbJ5LCXrpyYsFAVYi9m5UFDr4k51Y2iVkE+5cyhYrYrFO4li65SQ9mOp
-         py8JrXMEQ1XL6z3U8uT7wmtAuo/96CsqLTcf56/lhP/oR8tlkQLJvoN5+74dq23M64Hb
-         5ufQ==
-X-Gm-Message-State: ANhLgQ22WlYCukt+Ln0MgllLVKaN/SxzIjkyvGWqzugrrheN8177zK7S
-        slQRx2BUSev3725t5mgrVlM=
-X-Google-Smtp-Source: ADFU+vv5r7s2fgJnpHVOJsnaMlkeoKfTaZUBYZoIxfYsCfRS5gZ0BE8ampM2w4/W8bRghUF54bbItw==
-X-Received: by 2002:a17:90a:cb87:: with SMTP id a7mr3552742pju.114.1585140373192;
-        Wed, 25 Mar 2020 05:46:13 -0700 (PDT)
-Received: from gaurie.seo.corp.google.com ([2401:fa00:d:1:4eb0:a5ef:3975:7440])
-        by smtp.gmail.com with ESMTPSA id h15sm18244648pfq.10.2020.03.25.05.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 05:46:12 -0700 (PDT)
-From:   Namhyung Kim <namhyung@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: [PATCH 9/9] perf script: Add --show-cgroup-events option
-Date:   Wed, 25 Mar 2020 21:45:36 +0900
-Message-Id: <20200325124536.2800725-10-namhyung@kernel.org>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-In-Reply-To: <20200325124536.2800725-1-namhyung@kernel.org>
-References: <20200325124536.2800725-1-namhyung@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=i3Wlis1DtVgfIXNrnhG2aCoyveLssmu0qcaQ7SUr9Tc=;
+        b=JhjYjQ/fnU8UfH7VYTQbvFteQbPhDLKQizQMx9OUSX4lO0XuiC5EXdEktCQ71y2EI1
+         EGkSKZVVU0jWKugL9ESu79jWq90xnMR52XwCZbTE1ovxRwR5rffJ6QNEknR0WGUPBw7D
+         xintStP644sOL0bYexCpj2y14ZU/qnMkPTJ2jzhEPVslhrY/NAVAu17XNMkgQBTDUyMt
+         ZcJVSVeEci2o0KPeE90r/gNdAqTiGnD8RgP7S7vFG9PZoLU+Md5F9/HavT+dq5hsUUKm
+         V2gQxht0iDGtwfQgxRfqz+gDS8h23Wef5ZGfXqsW7hj97wYAZdxIaDofUP2ACgA3iL6v
+         zmLw==
+X-Gm-Message-State: ANhLgQ2rSQf8moYZs5cG0oCXuHX2qGEZEgONZyXV0/Z3kNgSEuRzKPg8
+        j3q9/3Gcu+0tHB6lQAyW2uf7rQ==
+X-Google-Smtp-Source: ADFU+vvTi5JjSLaq++TK3YKQ73gtL3c467xmoNVDYiw7qIudQrs2ofhGYmZ7EiOwRz3j3NhqGJzl2g==
+X-Received: by 2002:a1c:c257:: with SMTP id s84mr3498183wmf.9.1585140618607;
+        Wed, 25 Mar 2020 05:50:18 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id b202sm9359825wmd.15.2020.03.25.05.50.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 05:50:18 -0700 (PDT)
+Subject: Re: [PATCH v3 2/2] nvmem: core: use is_bin_visible for permissions
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        nicholas.johnson-opensource@outlook.com.au
+References: <20200325122116.15096-1-srinivas.kandagatla@linaro.org>
+ <20200325122116.15096-3-srinivas.kandagatla@linaro.org>
+ <20200325124457.GA3511062@kroah.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <72780483-ce24-849b-978a-ae013c8ace1e@linaro.org>
+Date:   Wed, 25 Mar 2020 12:50:17 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325124457.GA3511062@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The --show-cgroup-events option is to print CGROUP events in the
-output like others.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-script.txt |  3 ++
- tools/perf/builtin-script.c              | 41 ++++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index db6a36aac47e..515ff9f6af30 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -319,6 +319,9 @@ OPTIONS
- --show-bpf-events
- 	Display bpf events i.e. events of type PERF_RECORD_KSYMBOL and PERF_RECORD_BPF_EVENT.
- 
-+--show-cgroup-events
-+	Display cgroup events i.e. events of type PERF_RECORD_CGROUP.
-+
- --demangle::
- 	Demangle symbol names to human readable form. It's enabled by default,
- 	disable with --no-demangle.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 656b347f6dd8..6cc2d1da6ece 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -1685,6 +1685,7 @@ struct perf_script {
- 	bool			show_lost_events;
- 	bool			show_round_events;
- 	bool			show_bpf_events;
-+	bool			show_cgroup_events;
- 	bool			allocated;
- 	bool			per_event_dump;
- 	struct evswitch		evswitch;
-@@ -2203,6 +2204,41 @@ static int process_namespaces_event(struct perf_tool *tool,
- 	return ret;
- }
- 
-+static int process_cgroup_event(struct perf_tool *tool,
-+				union perf_event *event,
-+				struct perf_sample *sample,
-+				struct machine *machine)
-+{
-+	struct thread *thread;
-+	struct perf_script *script = container_of(tool, struct perf_script, tool);
-+	struct perf_session *session = script->session;
-+	struct evsel *evsel = perf_evlist__id2evsel(session->evlist, sample->id);
-+	int ret = -1;
-+
-+	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-+	if (thread == NULL) {
-+		pr_debug("problem processing CGROUP event, skipping it.\n");
-+		return -1;
-+	}
-+
-+	if (perf_event__process_cgroup(tool, event, sample, machine) < 0)
-+		goto out;
-+
-+	if (!evsel->core.attr.sample_id_all) {
-+		sample->cpu = 0;
-+		sample->time = 0;
-+	}
-+	if (!filter_cpu(sample)) {
-+		perf_sample__fprintf_start(sample, thread, evsel,
-+					   PERF_RECORD_CGROUP, stdout);
-+		perf_event__fprintf(event, stdout);
-+	}
-+	ret = 0;
-+out:
-+	thread__put(thread);
-+	return ret;
-+}
-+
- static int process_fork_event(struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample,
-@@ -2542,6 +2578,8 @@ static int __cmd_script(struct perf_script *script)
- 		script->tool.context_switch = process_switch_event;
- 	if (script->show_namespace_events)
- 		script->tool.namespaces = process_namespaces_event;
-+	if (script->show_cgroup_events)
-+		script->tool.cgroup = process_cgroup_event;
- 	if (script->show_lost_events)
- 		script->tool.lost = process_lost_event;
- 	if (script->show_round_events) {
-@@ -3467,6 +3505,7 @@ int cmd_script(int argc, const char **argv)
- 			.mmap2		 = perf_event__process_mmap2,
- 			.comm		 = perf_event__process_comm,
- 			.namespaces	 = perf_event__process_namespaces,
-+			.cgroup		 = perf_event__process_cgroup,
- 			.exit		 = perf_event__process_exit,
- 			.fork		 = perf_event__process_fork,
- 			.attr		 = process_attr,
-@@ -3567,6 +3606,8 @@ int cmd_script(int argc, const char **argv)
- 		    "Show context switch events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-namespace-events", &script.show_namespace_events,
- 		    "Show namespace events (if recorded)"),
-+	OPT_BOOLEAN('\0', "show-cgroup-events", &script.show_cgroup_events,
-+		    "Show cgroup events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-lost-events", &script.show_lost_events,
- 		    "Show lost events (if recorded)"),
- 	OPT_BOOLEAN('\0', "show-round-events", &script.show_round_events,
--- 
-2.25.1.696.g5e7596f4ac-goog
+On 25/03/2020 12:44, Greg KH wrote:
+> On Wed, Mar 25, 2020 at 12:21:16PM +0000, Srinivas Kandagatla wrote:
+>> By using is_bin_visible callback to set permissions will remove a
+>> large list of attribute groups. These group permissions can be
+>> dynamically derived in the callback.
+>>
+>> Also add checks for read/write callbacks and set permissions accordingly.
+>>
+>> As part of this cleanup it does not make sense to have a separate
+>> nvmem-sysfs.c and nvmem.h file anymore, so move all the relevant
+>> data structures and functions to core.c
+> 
+> And because of that move, it's impossible to see the real changes made
+> here :(
 
+Yes, I agree will spit this in to two patches.
+
+> 
+> Can you do this in two steps, one do the code/logic changes, and the
+> other do the "move into one file"?  That way it is actually reviewable,
+> as it is, it's impossible to do so.
+> 
+> I'll go queue up the first patch to make the series smaller :)
+thanks,
+srini
+> 
+> thanks,
+> 
+> greg k-h
+> 
