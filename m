@@ -2,85 +2,182 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B6CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65AA3C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:51:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0D8206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:50:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39487206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:51:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fyDxva++"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbgCYEu1 (ORCPT
+        id S1726105AbgCYEul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:50:27 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:12125 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725263AbgCYEu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:50:27 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C4DF99AFB04254F4AEF3;
-        Wed, 25 Mar 2020 12:50:16 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
- 12:49:47 +0800
-Subject: Re: Re: [RFC PATCH v4 0/6] arm64: tlb: add support for TTL feature
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
-        <linux-mm@kvack.org>, <guohanjun@huawei.com>, <will@kernel.org>,
-        <linux-arch@vger.kernel.org>, <yuzhao@google.com>,
-        <maz@kernel.org>, <steven.price@arm.com>, <arm@kernel.org>,
-        <Dave.Martin@arm.com>, <arnd@arndb.de>, <suzuki.poulose@arm.com>,
-        <npiggin@gmail.com>, <zhangshaokun@hisilicon.com>,
-        <broonie@kernel.org>, <rostedt@goodmis.org>,
-        <prime.zeng@hisilicon.com>, <tglx@linutronix.de>,
-        <linux-arm-kernel@lists.infradead.org>, <xiexiangyou@huawei.com>,
-        <linux-kernel@vger.kernel.org>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
- <20200324150155.GH20713@hirez.programming.kicks-ass.net>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <fb06ba92-a3ce-6925-e914-167a85837f27@huawei.com>
-Date:   Wed, 25 Mar 2020 12:49:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 25 Mar 2020 00:50:41 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35569 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgCYEul (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 00:50:41 -0400
+Received: by mail-lj1-f196.google.com with SMTP id k21so1081380ljh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 21:50:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=qiUPewOd/5czYbVwyunCDVVRVz+6K1hlh+LYVUDWDAI=;
+        b=fyDxva++dKPVmJpMc1UNYixdtpptpLXNP0vne78JJoPfPQ5VqYYES+1hRvKsOBCksd
+         bgm3MFOxlcQ74zK0nkE1O9UATNIaJw8yTnN2Q3WL+TebkfVBRpMTy4wQVto16x/bT0TY
+         8pUOJOn6hOrWSfiWL5ATYD41GifiBkSt5qGoXhvBdONcrIvoqhtrWtOooZigLHFagpk1
+         5GbDOwmzfnj80WxlUibRHU6lwE/d7CyPQ8ptBRyf8hVVDWMhJooZRMFMWnREDBP0+A3Q
+         F1xMwFcwgvx+JB4hZjY7PGL4dKzx60jTmyCvsoMCeKveHom70mch/8TIl2PdORyVM7+F
+         TdDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=qiUPewOd/5czYbVwyunCDVVRVz+6K1hlh+LYVUDWDAI=;
+        b=kDSwfwERPny05OQ3mIhUgnT7N+xC14b5f7GeXjuBSK3fobAB6GwEW1LXrRdN/5ZSRi
+         W0pbyhvsh44ajTaUO2Npeml6WsINepmqBeLVpzaQ0D5Rfa1XDB6qZRoc0YtXSGeIJFOb
+         iXfIkvXTu8kUY7Ucmrxq9BjYw+SE0Q+4KVQfyrRA5Mu8PV+qQv8oKUDrVvFWM1yzYh64
+         ftmVE4sfv3xqLQ8hE+qtf7YfJ9EIYkNraS41cnJg5/vD2H2y5+Zye5Z1Ep0Vl7JxIIP8
+         TjHAXvvOXW7C31qsgIrqQOMw4H+Hdo0NtXzu3wq9hHMl/CXjWLKBt/GfU/wq359Hkp6O
+         Jmhw==
+X-Gm-Message-State: ANhLgQ35wLe29Es7LNBhCO/M2fqiEhCI16JadU5KW0gVvacRsxj5HjSY
+        qnX4IfnRUS15hf5opo84ILB4B7/uKRSGfC+4E0AseQ==
+X-Google-Smtp-Source: APiQypLumcneypmhNRcz5X0RuGTVan1NQ52SOXC/GITbzdZ5rJLcsDvYsWr1tJ1QnfJ17abPLYr/qRtv4JzKd2faAkE=
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr688744ljg.165.1585111837401;
+ Tue, 24 Mar 2020 21:50:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200324150155.GH20713@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+References: <20200324130756.679112147@linuxfoundation.org>
+In-Reply-To: <20200324130756.679112147@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 25 Mar 2020 10:20:26 +0530
+Message-ID: <CA+G9fYv5MoKj6OVmLe=nRZy23sKjiqBMbhoT6MTQ0gj7wCORng@mail.gmail.com>
+Subject: Re: [PATCH 4.19 00/65] 4.19.113-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Tue, 24 Mar 2020 at 18:42, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.19.113 release.
+> There are 65 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 26 Mar 2020 13:06:42 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.113-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On 2020/3/24 23:01, Peter Zijlstra wrote:
-> On Tue, Mar 24, 2020 at 09:45:28PM +0800, Zhenyu Ye wrote:
->> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
->> feature allows TLBs to be issued with a level allowing for quicker
->> invalidation.  This series provide support for this feature. 
->>
->> Patch 1 and Patch 2 was provided by Marc on his NV series[1] patches,
->> which detect the TTL feature and add __tlbi_level interface.
-> 
-> I realy hate how it makes vma->vm_flags more important for tlbi.
-> 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thanks for your review.
+Summary
+------------------------------------------------------------------------
 
-The tlbi interfaces only have two parameters: vma and addr. If we
-try to not use vma->vm_flags, we may should have to add a parameter
-to some of these interfaces(such as flush_tlb_range), which are
-common to all architectures.
-
-I'm not sure if this is feasible, because this feature is only
-supported by ARM64 currently.
+kernel: 4.19.113-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: 69e7137de31c53890ed823aee0818a6a6563c445
+git describe: v4.19.112-66-g69e7137de31c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.112-66-g69e7137de31c
 
 
-Thanks,
-Zhenyu
+No regressions (compared to build v4.19.111-44-gd078cac7a422)
 
+
+No fixes (compared to build v4.19.111-44-gd078cac7a422)
+
+Ran 24703 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* libhugetlbfs
+* linux-log-parser
+* ltp-commands-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* perf
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* v4l2-compliance
+* ltp-fs-tests
+* spectre-meltdown-checker-test
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
