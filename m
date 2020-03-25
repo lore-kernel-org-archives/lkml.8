@@ -2,93 +2,105 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53778C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8916C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:43:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E91208E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1858208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:43:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="YUccMzib"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgCYOml (ORCPT
+        id S1727877AbgCYOnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:42:41 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13450 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbgCYOml (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:42:41 -0400
-IronPort-SDR: aZ42MfS75Pkb1C+d361VhhQ3vxZ6dXhqnPgJacCdpHWc7EZ217OmLTlSzpKdhLAZ/eXKYOYcP6
- gUeeXf41azng==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 07:42:40 -0700
-IronPort-SDR: DOHsqqlJmd7yzNGn4yF4uvvKUqRhx64AwYe/CqKQdx1qSYoELmQVh0DA3KP0s3avq2LHceqkv/
- 2d9B0vMel4ZA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="247198748"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 25 Mar 2020 07:42:38 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jH7Eu-00CqVH-8L; Wed, 25 Mar 2020 16:42:40 +0200
-Date:   Wed, 25 Mar 2020 16:42:40 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Cc:     Lukas Wunner <lukas@wunner.de>, gregkh@linuxfoundation.org,
-        jslaby@suse.com, matwey.kornilov@gmail.com,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/7] serial: 8250: Add rs485 emulation to 8250_dw
-Message-ID: <20200325144240.GF1922688@smile.fi.intel.com>
-References: <20200318142640.982763-1-heiko@sntech.de>
- <20200323131714.vmhjws5xpj6yf536@wunner.de>
- <20200323134106.GL1922688@smile.fi.intel.com>
- <1688171.mLF46rTMEE@diego>
+        Wed, 25 Mar 2020 10:43:15 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:41042 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727731AbgCYOnO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:43:14 -0400
+Received: by mail-io1-f67.google.com with SMTP id y24so2436716ioa.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BYoi0GgKGrZ5Iy05aE5oc1zP5UUaQTjapju/izAR4hI=;
+        b=YUccMzib2IwajwEuyLBHygiEi2x+yWevlxfsequqpaIt/Mza/TxUmFkitS3U4FkfKx
+         P1XwXxBJ8Cx5HEmhYoBLdWFHhmr6xou5YR2utppkELKcqyaDd4EOavtJNBW3boLnPkzx
+         WgZmdQ9YRsyheNZWEZrba/miSYKYdDAaziYyc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BYoi0GgKGrZ5Iy05aE5oc1zP5UUaQTjapju/izAR4hI=;
+        b=eUBhWtAOuHU56c2KyeTB0KfGQ/J7QWRZ0BGZWkExGLNk4MewnZSKaLiOmf8uU8/np1
+         xFfcCvoefzEQ4RtyQf05R1cynqwAQWDPGwvsXHEPLNz8kZOH42C9zf+a0zF+eP98+E32
+         Ih4aVi6mVWXHPAAPvwOwQmzlwxp2OmyTssHdiuNtidiZCdDnZNqhoMx1lmO129GJ/01i
+         CPNUULPFYobz5PSyZ4EmVTwKfrPjOcc0MrHQUTXXSrbnZUeEpb2h5KFzf+edjmjta5XO
+         GrYgBjvonxuocUU3+uhxthsoAAxyCsOrRfCd1sQ6X5tqXk59z2aE/Eiv0H42SAFybVan
+         T0pA==
+X-Gm-Message-State: ANhLgQ1an3p/OZF6o51ekS58s661J9hNtIKFKAqCFIY/thqUvTQKJ1V5
+        maW9B8ta8sorK+wu8x9Vh+LbUqhT9jlCceeNuue01w==
+X-Google-Smtp-Source: ADFU+vsgMMqodCZqPGFNfCT+HdNRTtLLlUdy5AMnDcVBoatxWj+vZY48emoAVNd+HvHliFjTkg/kdF6pmkOGcZxuC6s=
+X-Received: by 2002:a6b:3a07:: with SMTP id h7mr3235359ioa.191.1585147393572;
+ Wed, 25 Mar 2020 07:43:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1688171.mLF46rTMEE@diego>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200323202259.13363-1-willy@infradead.org> <20200323202259.13363-25-willy@infradead.org>
+ <CAJfpegu7EFcWrg3bP+-2BX_kb52RrzBCo_U3QKYzUkZfe4EjDA@mail.gmail.com> <20200325120254.GA22483@bombadil.infradead.org>
+In-Reply-To: <20200325120254.GA22483@bombadil.infradead.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 25 Mar 2020 15:43:02 +0100
+Message-ID: <CAJfpegshssCJiA8PBcq2XvBj3mR8dufHb0zWRFvvKKv82VQYsw@mail.gmail.com>
+Subject: Re: [PATCH v10 24/25] fuse: Convert from readpages to readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 02:41:50PM +0100, Heiko Stübner wrote:
-> Am Montag, 23. März 2020, 14:41:06 CET schrieb Andy Shevchenko:
-> > On Mon, Mar 23, 2020 at 02:17:14PM +0100, Lukas Wunner wrote:
-> > > On Mon, Mar 23, 2020 at 09:25:57AM +0100, Heiko Stübner wrote:
-> > > > Am Donnerstag, 19. März 2020, 06:40:34 CET schrieb Lukas Wunner:
-> > 
-> > > "rs485-re-gpios" seems a bit cryptic, how about "rs485-rx-enable-gpios"
-> > > or "rs485-full-duplex-gpios"?
-> > 
-> > First is in align with well established pin name, second is its elaboration,
-> > I'm for any, but last.
-> 
-> So I guess the intersection of both your preferences
-> is "rs485-rx-enable-gpios" ... and I did go with that ;-)
+On Wed, Mar 25, 2020 at 1:02 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Wed, Mar 25, 2020 at 10:42:56AM +0100, Miklos Szeredi wrote:
+> > > +       while ((page = readahead_page(rac))) {
+> > > +               if (fuse_readpages_fill(&data, page) != 0)
+> >
+> > Shouldn't this unlock + put page on error?
+>
+> We're certainly inconsistent between the two error exits from
+> fuse_readpages_fill().  But I think we can simplify the whole thing
+> ... how does this look to you?
 
+Nice, overall.
 
-> I've now moved my rs485 things over to tty-next + taking
-> 	- "serial: Allow uart_get_rs485_mode() to return errno"
-> 	- "serial: 8250: Support rs485 bus termination GPIO"
-> from Lukas' git-tree + fixing other things according to review comments.
-> 
-> I guess I'll now just sit on things till after the 5.7 merge window for
-> the depending patches to get posted.
+>
+> -       while ((page = readahead_page(rac))) {
+> -               if (fuse_readpages_fill(&data, page) != 0)
+> +               nr_pages = min(readahead_count(rac), fc->max_pages);
 
-Sounds like a plan, thank you!
+Missing fc->max_read clamp.
 
-Or you can post anyway and resend after merge window. People will have a chance
-to look at this.
+> +               ia = fuse_io_alloc(NULL, nr_pages);
+> +               if (!ia)
+>                         return;
+> +               ap = &ia->ap;
+> +               __readahead_batch(rac, ap->pages, nr_pages);
 
--- 
-With Best Regards,
-Andy Shevchenko
+nr_pages = __readahead_batch(...)?
 
+This will give consecutive pages, right?
 
+Thanks,
+Miklos
