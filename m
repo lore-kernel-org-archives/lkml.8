@@ -2,118 +2,101 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE6F8C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571F5C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63F82078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HdIw1VMt"
+	by mail.kernel.org (Postfix) with ESMTP id 3418920774
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585161095;
+	bh=bUVzSI9dzv00tGiSCBQcCwFyz4bKHFbg5OdnpsNxay4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=AgNViL2W03MpCpcVBlzmjjTeicQDcg8kBLIRE6MFFruGMPtNXaYNzJIfmfhTwfNXK
+	 sWxRZzFWj0TxLoAUcMlAG/0CB8Uv8QZmjvrg8K9U5FG2+hJpNaVGyE/yrIEBGotSbG
+	 8pMQKKIBb+xAgqSxgpufzCFttcOcEsCcSeo/gtBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgCYSbc (ORCPT
+        id S1727943AbgCYSbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 25 Mar 2020 14:31:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727027AbgCYSbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Mar 2020 14:31:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41970 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727027AbgCYSbb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:31:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t16so1128767plr.8;
-        Wed, 25 Mar 2020 11:31:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=M66oudythcBmFzgaHHj4NT8FrhMNeWSRLde1HiyDOR8=;
-        b=HdIw1VMtWl2/2v1yXgAGAvreoa07Z20PO0djS3sVwAtLM+I7s5xRzIEe35oeHcvOrG
-         cwFVGXVUQOJJqneRGY67rC3nCMlhstYrxOCNk0weqkxLAfMWJIviyvLxqy0I/2HLvESk
-         44NlcSXlhfC7jowxQIX3LQowQDc9nZyNP4risf6//MlSbccq3ynTm7352WA9eUVpDATC
-         VNVcFYALK9g0a+YKJshkj2j6qvZZMMcbQEZn8FyGqUGQJqxMEjOOMWR2ZVKhmKo2jB/+
-         nBbJJba1GA0gzI0fFguMwUaZAwc7vQJZYUsuEJUD4ugU390rpOwLqqR97Dwl5LVzGmFv
-         SAUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=M66oudythcBmFzgaHHj4NT8FrhMNeWSRLde1HiyDOR8=;
-        b=Oh5nx/KlzV1eGnZowLrn192fpIYPgAq8k2NIkd04Sdu93DN8hMewDnMNK4GdoLIFpm
-         xWLm0IFr7KxWVeTuCMeFRq8gVpwNAEM2mILlAgOCtlF8BhGRlqgSofy1Gj+kn/rety/e
-         erSPKynoGySVkSOef1YH/2+3pi2uIdhji9JXNnkZoPiHX80mtWI/HTOi/V473yDBFroP
-         oHaRTCno8Q6ibcVoj1fp/DwP7EJzKH2DHaAfR0iZdoU+Ay9a8NHJFDkifPx1x59LcN1n
-         VntGTqXcskMmkUx0QCgOKn1PPtvqmUwQnDovaGFVFZ7rLD0Pzs1Q0BaAW59B9IkNAdz9
-         khqA==
-X-Gm-Message-State: ANhLgQ1sPMWVed55N7+M9SN0qI4+TmZ0jpW323lshkamdlm/cOEpH2fa
-        lSvsCHCpNkAFyT3nHyKypRXiRt2r
-X-Google-Smtp-Source: ADFU+vssZ5U0bJU3qIeF4S+sN+yu4Z4W+PRBw9CRTewhGgo1Cmv7BvqExtGeQsOKVqHQSE5cQnk4fw==
-X-Received: by 2002:a17:902:a9cc:: with SMTP id b12mr4365819plr.177.1585161089735;
-        Wed, 25 Mar 2020 11:31:29 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-58.hsd1.ca.comcast.net. [73.241.150.58])
-        by smtp.gmail.com with ESMTPSA id c15sm17083869pgk.66.2020.03.25.11.31.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 11:31:28 -0700 (PDT)
-Subject: Re: [PATCH] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-To:     Qian Cai <cai@lca.pw>, Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <5e2ed86a-23bc-d3e5-05ad-4e7ed147539c@gmail.com>
- <92C7474D-4592-44BF-B0ED-26253196511E@lca.pw>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <8ae16be2-9c64-245e-0997-805f48078432@gmail.com>
-Date:   Wed, 25 Mar 2020 11:31:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C139206F6;
+        Wed, 25 Mar 2020 18:31:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585161091;
+        bh=bUVzSI9dzv00tGiSCBQcCwFyz4bKHFbg5OdnpsNxay4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=h0cTdrgxgbuEC6eoNOaOOybXnUDCfcYCPmFkWZMT5fV+WWIsosBg2gcMRsqPu196e
+         eAq/f8XS+n/3PCkoxNPz3nTxiYdLNZXmrUOdEE9ldsb0mawD2TybHiD4mES7vhrdbF
+         P0Hw2X8id1hiGHCFyR5jyxW/RxrP8s3NBHQWfHpM=
+Date:   Wed, 25 Mar 2020 13:31:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>
+Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200325183129.GA29158@google.com>
 MIME-Version: 1.0
-In-Reply-To: <92C7474D-4592-44BF-B0ED-26253196511E@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <84a30116698a49cda1e8b580ee35ce1f@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 04:27:15PM +0000, Shiju Jose wrote:
+> >-----Original Message-----
+> >From: Bjorn Helgaas [mailto:helgaas@kernel.org]
 
+> >3) drivers/pci/controller/pcie-hisi-error.c should be next to
+> >drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
+>
+> Our hip PCIe controller doesn't use DWC ip.
 
-On 3/25/20 10:34 AM, Qian Cai wrote:
-> 
-> 
->> On Mar 25, 2020, at 12:13 PM, Eric Dumazet <eric.dumazet@gmail.com> wrote:
->>
->> I would prefer :
->>
->> diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
->> index ff0c24371e3309b3068980f46d1ed743337d2a3e..4b98ffb27136d3b43f179d6b1b42fe84586acc06 100644
->> --- a/net/ipv4/fib_trie.c
->> +++ b/net/ipv4/fib_trie.c
->> @@ -2581,6 +2581,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
->>                struct hlist_head *head = &net->ipv4.fib_table_hash[h];
->>                struct fib_table *tb;
->>
->> +               rcu_read_lock();
->>                hlist_for_each_entry_rcu(tb, head, tb_hlist) {
->>                        struct trie *t = (struct trie *) tb->tb_data;
->>                        struct trie_stat stat;
->> @@ -2596,6 +2597,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
->>                        trie_show_usage(seq, t->stats);
->> #endif
->>                }
->> +               rcu_read_unlock();
->>        }
->>
->>        return 0;
-> 
-> I have no strong opinion either way. My initial thought was to save 255 extra lock/unlock with a single lock/unlock, but I am not sure how time-consuming for each iteration of the outer loop could be. If it could take a bit too long, it does make a lot of sense to reduce the critical section.
-> 
+Ah, I was assuming this pcie-hisi-error.c driver was for the same
+device claimed by pcie-hisi.c.
 
+Error drivers like this will have some device-specific knowledge
+(e.g., which registers to dump), but I guess they'll always be
+used with the generic acpi/pci_root.c driver, right?
 
-This file could be quite big in some setups.
+It looks like this driver has little or nothing to do with the PCI
+core directly.  It does include drivers/pci/pci.h, but I'm not sure it
+really needs it.
 
-Alternatively you could use cond_resched_rcu()
+Maybe drivers/pci/controller/ is the best place for it, but I'm not
+sure.  It's a little confusing because it's not really like the other
+things there.
 
+There are some vaguely similar things in drivers/acpi/apei/ and
+drivers/acpi/nfit/.  And of course there are .acpi_match_table uses
+all over the drivers/ tree.  Maybe we need a new subdirectory under
+drivers/pci?  drivers/pci/controller/apei/?
+
+Any thoughts, Rafael?
+
+Bjorn
