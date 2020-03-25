@@ -2,296 +2,174 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02B3FC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A84BDC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEF2A20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814CE20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:38:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727399AbgCYJhH (ORCPT
+        id S1727442AbgCYJi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:37:07 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:42607 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbgCYJhH (ORCPT
+        Wed, 25 Mar 2020 05:38:56 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50022 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727301AbgCYJiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:37:07 -0400
-X-Originating-IP: 86.202.105.35
-Received: from localhost (lfbn-lyo-1-9-35.w86-202.abo.wanadoo.fr [86.202.105.35])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id A0B4720004;
-        Wed, 25 Mar 2020 09:37:03 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 10:37:03 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] clk: at91: optimize pmc data allocation
-Message-ID: <20200325093703.GR5504@piout.net>
-References: <cover.1584825247.git.mirq-linux@rere.qmqm.pl>
- <6bcb44850d9b0068d7ad9de7639c6bd6be509cc8.1584825247.git.mirq-linux@rere.qmqm.pl>
+        Wed, 25 Mar 2020 05:38:55 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02P9YpAW121674
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:38:54 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywd2t1ewq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 05:38:54 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 25 Mar 2020 09:38:49 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 25 Mar 2020 09:38:43 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02P9bglF50790860
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 09:37:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0E794C04E;
+        Wed, 25 Mar 2020 09:38:44 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 846CB4C046;
+        Wed, 25 Mar 2020 09:38:41 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.106.7])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 25 Mar 2020 09:38:41 +0000 (GMT)
+Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
+To:     "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
+        <longpeng2@huawei.com>, Mike Kravetz <mike.kravetz@oracle.com>,
+        Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200318220634.32100-1-mike.kravetz@oracle.com>
+ <20200318220634.32100-2-mike.kravetz@oracle.com>
+ <831a0773-1ba6-4d72-44b9-7472123b8528@intel.com>
+ <5aceea6a-8dc0-a44b-80c6-94511b5c75ca@oracle.com>
+ <5ea6313e-ec4f-a043-632b-ef2901ce2cc9@huawei.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Wed, 25 Mar 2020 10:38:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <5ea6313e-ec4f-a043-632b-ef2901ce2cc9@huawei.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6bcb44850d9b0068d7ad9de7639c6bd6be509cc8.1584825247.git.mirq-linux@rere.qmqm.pl>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20032509-0008-0000-0000-000003638BC7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032509-0009-0000-0000-00004A84FAF9
+Message-Id: <505b3d0a-b754-ba56-0b98-b7551ef414be@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_01:2020-03-23,2020-03-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ lowpriorityscore=0 suspectscore=0 spamscore=0 mlxscore=0 adultscore=0
+ priorityscore=1501 malwarescore=0 phishscore=0 mlxlogscore=848 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003250077
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 21/03/2020 22:18:03+0100, Michał Mirosław wrote:
-> Alloc whole data structure in one block. This makes the code shorter,
-> more efficient and easier to extend in following patch.
+
+On 25.03.20 03:58, Longpeng (Mike, Cloud Infrastructure Service Product Dept.) wrote:
+[...]
+> Hi Mike,
 > 
-> Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl
-
-You are missing a '>'
-
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-
-> ---
-> v2: rebase and update to clk/clk-at91 branch
-> v3: use struct_size() and C99 trailing array
->     as suggested by Stephen Boyd
-> ---
->  drivers/clk/at91/at91rm9200.c  |  2 +-
->  drivers/clk/at91/at91sam9260.c |  2 +-
->  drivers/clk/at91/at91sam9g45.c |  2 +-
->  drivers/clk/at91/at91sam9n12.c |  2 +-
->  drivers/clk/at91/at91sam9rl.c  |  2 +-
->  drivers/clk/at91/at91sam9x5.c  |  2 +-
->  drivers/clk/at91/pmc.c         | 34 ++++++++--------------------------
->  drivers/clk/at91/pmc.h         |  3 ++-
->  drivers/clk/at91/sam9x60.c     |  2 +-
->  drivers/clk/at91/sama5d2.c     |  2 +-
->  drivers/clk/at91/sama5d3.c     |  2 +-
->  drivers/clk/at91/sama5d4.c     |  2 +-
->  12 files changed, 20 insertions(+), 37 deletions(-)
+> Inspired by Dave's opinion, it seems the x86-specific hugepages_supported should
+> also need to use cpu_feature_enabled instead.
 > 
-> diff --git a/drivers/clk/at91/at91rm9200.c b/drivers/clk/at91/at91rm9200.c
-> index c44a431b6c97..6f4e1151553d 100644
-> --- a/drivers/clk/at91/at91rm9200.c
-> +++ b/drivers/clk/at91/at91rm9200.c
-> @@ -187,7 +187,7 @@ static void __init at91rm9200_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91rm9200_pmc);
-> +	kfree(at91rm9200_pmc);
->  }
->  /*
->   * While the TCB can be used as the clocksource, the system timer is most likely
-> diff --git a/drivers/clk/at91/at91sam9260.c b/drivers/clk/at91/at91sam9260.c
-> index a9d4234758d7..946f03a09858 100644
-> --- a/drivers/clk/at91/at91sam9260.c
-> +++ b/drivers/clk/at91/at91sam9260.c
-> @@ -462,7 +462,7 @@ static void __init at91sam926x_pmc_setup(struct device_node *np,
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9260_pmc);
-> +	kfree(at91sam9260_pmc);
->  }
->  
->  static void __init at91sam9260_pmc_setup(struct device_node *np)
-> diff --git a/drivers/clk/at91/at91sam9g45.c b/drivers/clk/at91/at91sam9g45.c
-> index 38a7d2d2df0c..53e8252b8a63 100644
-> --- a/drivers/clk/at91/at91sam9g45.c
-> +++ b/drivers/clk/at91/at91sam9g45.c
-> @@ -210,7 +210,7 @@ static void __init at91sam9g45_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9g45_pmc);
-> +	kfree(at91sam9g45_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/at91sam9n12.c b/drivers/clk/at91/at91sam9n12.c
-> index 8bb39d2ba84b..f3ae1cd3cb8d 100644
-> --- a/drivers/clk/at91/at91sam9n12.c
-> +++ b/drivers/clk/at91/at91sam9n12.c
-> @@ -228,7 +228,7 @@ static void __init at91sam9n12_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9n12_pmc);
-> +	kfree(at91sam9n12_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/at91sam9rl.c b/drivers/clk/at91/at91sam9rl.c
-> index 77fe83a73bf4..cc739d214ae3 100644
-> --- a/drivers/clk/at91/at91sam9rl.c
-> +++ b/drivers/clk/at91/at91sam9rl.c
-> @@ -166,6 +166,6 @@ static void __init at91sam9rl_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9rl_pmc);
-> +	kfree(at91sam9rl_pmc);
->  }
->  CLK_OF_DECLARE_DRIVER(at91sam9rl_pmc, "atmel,at91sam9rl-pmc", at91sam9rl_pmc_setup);
-> diff --git a/drivers/clk/at91/at91sam9x5.c b/drivers/clk/at91/at91sam9x5.c
-> index 086cf0b4955c..aac99d699568 100644
-> --- a/drivers/clk/at91/at91sam9x5.c
-> +++ b/drivers/clk/at91/at91sam9x5.c
-> @@ -278,7 +278,7 @@ static void __init at91sam9x5_pmc_setup(struct device_node *np,
->  	return;
->  
->  err_free:
-> -	pmc_data_free(at91sam9x5_pmc);
-> +	kfree(at91sam9x5_pmc);
->  }
->  
->  static void __init at91sam9g15_pmc_setup(struct device_node *np)
-> diff --git a/drivers/clk/at91/pmc.c b/drivers/clk/at91/pmc.c
-> index b71515acdec1..ac46ea1b9fda 100644
-> --- a/drivers/clk/at91/pmc.c
-> +++ b/drivers/clk/at91/pmc.c
-> @@ -76,48 +76,30 @@ struct clk_hw *of_clk_hw_pmc_get(struct of_phandle_args *clkspec, void *data)
->  	return ERR_PTR(-EINVAL);
->  }
->  
-> -void pmc_data_free(struct pmc_data *pmc_data)
-> -{
-> -	kfree(pmc_data->chws);
-> -	kfree(pmc_data->shws);
-> -	kfree(pmc_data->phws);
-> -	kfree(pmc_data->ghws);
-> -}
-> -
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
->  				   unsigned int nperiph, unsigned int ngck)
->  {
-> -	struct pmc_data *pmc_data = kzalloc(sizeof(*pmc_data), GFP_KERNEL);
-> +	unsigned int num_clks = ncore + nsystem + nperiph + ngck;
-> +	struct pmc_data *pmc_data;
->  
-> +	pmc_data = kzalloc(struct_size(pmc_data, hwtable, num_clks),
-> +			   GFP_KERNEL);
->  	if (!pmc_data)
->  		return NULL;
->  
->  	pmc_data->ncore = ncore;
-> -	pmc_data->chws = kcalloc(ncore, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->chws)
-> -		goto err;
-> +	pmc_data->chws = pmc_data->hwtable;
->  
->  	pmc_data->nsystem = nsystem;
-> -	pmc_data->shws = kcalloc(nsystem, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->shws)
-> -		goto err;
-> +	pmc_data->shws = pmc_data->chws + ncore;
->  
->  	pmc_data->nperiph = nperiph;
-> -	pmc_data->phws = kcalloc(nperiph, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->phws)
-> -		goto err;
-> +	pmc_data->phws = pmc_data->shws + nsystem;
->  
->  	pmc_data->ngck = ngck;
-> -	pmc_data->ghws = kcalloc(ngck, sizeof(struct clk_hw *), GFP_KERNEL);
-> -	if (!pmc_data->ghws)
-> -		goto err;
-> +	pmc_data->ghws = pmc_data->phws + nperiph;
->  
->  	return pmc_data;
-> -
-> -err:
-> -	pmc_data_free(pmc_data);
-> -
-> -	return NULL;
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-> index 9b8db9cdcda5..fc3ef772b9d9 100644
-> --- a/drivers/clk/at91/pmc.h
-> +++ b/drivers/clk/at91/pmc.h
-> @@ -24,6 +24,8 @@ struct pmc_data {
->  	struct clk_hw **phws;
->  	unsigned int ngck;
->  	struct clk_hw **ghws;
-> +
-> +	struct clk_hw *hwtable[];
->  };
->  
->  struct clk_range {
-> @@ -95,7 +97,6 @@ struct clk_pcr_layout {
->  #define nck(a) (a[ARRAY_SIZE(a) - 1].id + 1)
->  struct pmc_data *pmc_data_allocate(unsigned int ncore, unsigned int nsystem,
->  				   unsigned int nperiph, unsigned int ngck);
-> -void pmc_data_free(struct pmc_data *pmc_data);
->  
->  int of_at91_get_clk_range(struct device_node *np, const char *propname,
->  			  struct clk_range *range);
-> diff --git a/drivers/clk/at91/sam9x60.c b/drivers/clk/at91/sam9x60.c
-> index cc19e8fb83be..a7d4f648db26 100644
-> --- a/drivers/clk/at91/sam9x60.c
-> +++ b/drivers/clk/at91/sam9x60.c
-> @@ -299,7 +299,7 @@ static void __init sam9x60_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sam9x60_pmc);
-> +	kfree(sam9x60_pmc);
->  }
->  /* Some clks are used for a clocksource */
->  CLK_OF_DECLARE(sam9x60_pmc, "microchip,sam9x60-pmc", sam9x60_pmc_setup);
-> diff --git a/drivers/clk/at91/sama5d2.c b/drivers/clk/at91/sama5d2.c
-> index ff7e3f727082..b2560670e5af 100644
-> --- a/drivers/clk/at91/sama5d2.c
-> +++ b/drivers/clk/at91/sama5d2.c
-> @@ -350,6 +350,6 @@ static void __init sama5d2_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d2_pmc);
-> +	kfree(sama5d2_pmc);
->  }
->  CLK_OF_DECLARE_DRIVER(sama5d2_pmc, "atmel,sama5d2-pmc", sama5d2_pmc_setup);
-> diff --git a/drivers/clk/at91/sama5d3.c b/drivers/clk/at91/sama5d3.c
-> index 88506f909c08..914e6f225510 100644
-> --- a/drivers/clk/at91/sama5d3.c
-> +++ b/drivers/clk/at91/sama5d3.c
-> @@ -231,7 +231,7 @@ static void __init sama5d3_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d3_pmc);
-> +	kfree(sama5d3_pmc);
->  }
->  /*
->   * The TCB is used as the clocksource so its clock is needed early. This means
-> diff --git a/drivers/clk/at91/sama5d4.c b/drivers/clk/at91/sama5d4.c
-> index a6dee4a3b6e4..4ca9a4619500 100644
-> --- a/drivers/clk/at91/sama5d4.c
-> +++ b/drivers/clk/at91/sama5d4.c
-> @@ -267,6 +267,6 @@ static void __init sama5d4_pmc_setup(struct device_node *np)
->  	return;
->  
->  err_free:
-> -	pmc_data_free(sama5d4_pmc);
-> +	kfree(sama5d4_pmc);
->  }
->  CLK_OF_DECLARE_DRIVER(sama5d4_pmc, "atmel,sama5d4-pmc", sama5d4_pmc_setup);
-> -- 
-> 2.20.1
+> Also, I wonder if the hugepages_supported is correct ? There're two arch
+> specific hugepages_supported:
+> x86:
+> #define hugepages_supported() boot_cpu_has(X86_FEATURE_PSE)
+> and
+> s390:
+> #define hugepages_supported() (MACHINE_HAS_EDAT1)
 > 
+> Is it possible that x86 has X86_FEATURE_GBPAGES but hasn't X86_FEATURE_GBPAGES
+> or s390 has MACHINE_HAS_EDAT2 but hasn't MACHINE_HAS_EDAT1 ?
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The s390 architecture says that 
+
+When EDAT-2 applies, the following function is available in the DAT process:
+ - EDAT-1 applies.
+[..]
+
+So if the machine has EDAT-2 it also has EDAT-1.
+
