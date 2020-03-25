@@ -2,496 +2,269 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4A8C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B08C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7852078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36A2E2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:13:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585145619;
+	bh=qlOAQRMIm0GGFaeho3ziBvwjLtET2PoABAy89OgzKyE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZnvbO0/9JNFroq98dfnK8rlJpd3z+f9Zsu5GXiwlMoL06Q1AkER45sRKFJ0sfnRuo
+	 nqcwSDaEPiWyHw8jvqFb8oguUZgtPwy/uSfTa8zALYCZ8W1wXfEriVfjDl93b8KFch
+	 mmOQKH76NZ41nRZNOx+wZk1xbDg4oH0ZjF9Rkhcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgCYOLY (ORCPT
+        id S1727689AbgCYONi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:11:24 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2599 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727440AbgCYOLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:11:24 -0400
-Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id BF0652F864E1C971B64E;
-        Wed, 25 Mar 2020 14:11:21 +0000 (GMT)
-Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
- lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 25 Mar 2020 14:11:21 +0000
-Received: from [127.0.0.1] (10.47.86.66) by lhreml715-chm.china.huawei.com
- (10.201.108.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 25 Mar
- 2020 14:11:20 +0000
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
-        <james.morse@arm.com>, <tony.luck@intel.com>,
-        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
-        <tglx@linutronix.de>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>
-From:   Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
- controller errors
-Message-ID: <adaa054e-6b14-6959-8e79-4d89fe087d0c@huawei.com>
-Date:   Wed, 25 Mar 2020 14:11:01 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 10:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40788 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727595AbgCYONi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:13:38 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF89020775;
+        Wed, 25 Mar 2020 14:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585145616;
+        bh=qlOAQRMIm0GGFaeho3ziBvwjLtET2PoABAy89OgzKyE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SkrWAIq4H7pJ9y+jlvN4oV22fQbkmHoHKIwDWNuWYUxRxlW07Y3N+34rJaTgnIab5
+         Inq/zbIIU5aU2ETLSgghqV77vrwcY3oxWPrDhboudGzOyz2iUYz5j0hYOUVBdjHEiK
+         VY7RVN5r0uma6A/LZxPJaMBeKAlWr13ZCKUYzWNg=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jH6ml-00Far0-2B; Wed, 25 Mar 2020 14:13:35 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.47.86.66]
-X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
- lhreml715-chm.china.huawei.com (10.201.108.66)
-X-CFilter-Loop: Reflected
+Date:   Wed, 25 Mar 2020 14:13:35 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zhenyu Ye <yezhenyu2@huawei.com>
+Cc:     will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com,
+        aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org,
+        npiggin@gmail.com, peterz@infradead.org, arnd@arndb.de,
+        rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com,
+        broonie@kernel.org, guohanjun@huawei.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org,
+        xiexiangyou@huawei.com, prime.zeng@hisilicon.com,
+        zhangshaokun@hisilicon.com
+Subject: Re: [RFC PATCH v4 5/6] arm64: tlb: Use translation level hint in
+ vm_flags
+In-Reply-To: <986be927-02c6-3cc2-ca39-30ccad60eae0@huawei.com>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+ <20200324134534.1570-6-yezhenyu2@huawei.com> <20200324144514.340c78d9@why>
+ <986be927-02c6-3cc2-ca39-30ccad60eae0@huawei.com>
+Message-ID: <2f4cb3ef52c5589b388225e487651a2b@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yezhenyu2@huawei.com, will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, aneesh.kumar@linux.ibm.com, akpm@linux-foundation.org, npiggin@gmail.com, peterz@infradead.org, arnd@arndb.de, rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de, yuzhao@google.com, Dave.Martin@arm.com, steven.price@arm.com, broonie@kernel.org, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-mm@kvack.org, arm@kernel.org, xiexiangyou@huawei.com, prime.zeng@hisilicon.com, zhangshaokun@hisilicon.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+On 2020-03-25 08:00, Zhenyu Ye wrote:
+> Hi Marc,
+> 
+> Thanks for your review.
+> 
+> On 2020/3/24 22:45, Marc Zyngier wrote:
+>> On Tue, 24 Mar 2020 21:45:33 +0800
+>> Zhenyu Ye <yezhenyu2@huawei.com> wrote:
+>> 
+>>> This patch used the VM_LEVEL flags in vma->vm_flags to set the
+>>> TTL field in tlbi instruction.
+>>> 
+>>> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
+>>> ---
+>>>  arch/arm64/include/asm/mmu.h      |  2 ++
+>>>  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
+>>>  arch/arm64/mm/mmu.c               | 14 ++++++++++++++
+>>>  3 files changed, 24 insertions(+), 6 deletions(-)
+>>> 
+>>> diff --git a/arch/arm64/include/asm/mmu.h 
+>>> b/arch/arm64/include/asm/mmu.h
+>>> index d79ce6df9e12..a8b8824a7405 100644
+>>> --- a/arch/arm64/include/asm/mmu.h
+>>> +++ b/arch/arm64/include/asm/mmu.h
+>>> @@ -86,6 +86,8 @@ extern void create_pgd_mapping(struct mm_struct 
+>>> *mm, phys_addr_t phys,
+>>>  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, 
+>>> pgprot_t prot);
+>>>  extern void mark_linear_text_alias_ro(void);
+>>>  extern bool kaslr_requires_kpti(void);
+>>> +extern unsigned int get_vma_level(struct vm_area_struct *vma);
+>>> +
+>>> 
+>>>  #define INIT_MM_CONTEXT(name)	\
+>>>  	.pgd = init_pg_dir,
+>>> diff --git a/arch/arm64/include/asm/tlbflush.h 
+>>> b/arch/arm64/include/asm/tlbflush.h
+>>> index d141c080e494..93bb09fdfafd 100644
+>>> --- a/arch/arm64/include/asm/tlbflush.h
+>>> +++ b/arch/arm64/include/asm/tlbflush.h
+>>> @@ -218,10 +218,11 @@ static inline void flush_tlb_page_nosync(struct 
+>>> vm_area_struct *vma,
+>>>  					 unsigned long uaddr)
+>>>  {
+>>>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
+>>> +	unsigned int level = get_vma_level(vma);
+>>> 
+>>>  	dsb(ishst);
+>>> -	__tlbi_level(vale1is, addr, 0);
+>>> -	__tlbi_user_level(vale1is, addr, 0);
+>>> +	__tlbi_level(vale1is, addr, level);
+>>> +	__tlbi_user_level(vale1is, addr, level);
+>>>  }
+>>> 
+>>>  static inline void flush_tlb_page(struct vm_area_struct *vma,
+>>> @@ -242,6 +243,7 @@ static inline void __flush_tlb_range(struct 
+>>> vm_area_struct *vma,
+>>>  				     unsigned long stride, bool last_level)
+>>>  {
+>>>  	unsigned long asid = ASID(vma->vm_mm);
+>>> +	unsigned int level = get_vma_level(vma);
+>>>  	unsigned long addr;
+>>> 
+>>>  	start = round_down(start, stride);
+>>> @@ -261,11 +263,11 @@ static inline void __flush_tlb_range(struct 
+>>> vm_area_struct *vma,
+>>>  	dsb(ishst);
+>>>  	for (addr = start; addr < end; addr += stride) {
+>>>  		if (last_level) {
+>>> -			__tlbi_level(vale1is, addr, 0);
+>>> -			__tlbi_user_level(vale1is, addr, 0);
+>>> +			__tlbi_level(vale1is, addr, level);
+>>> +			__tlbi_user_level(vale1is, addr, level);
+>>>  		} else {
+>>> -			__tlbi_level(vae1is, addr, 0);
+>>> -			__tlbi_user_level(vae1is, addr, 0);
+>>> +			__tlbi_level(vae1is, addr, level);
+>>> +			__tlbi_user_level(vae1is, addr, level);
+>>>  		}
+>>>  	}
+>>>  	dsb(ish);
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index 128f70852bf3..e6a1221cd86b 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -60,6 +60,20 @@ static pud_t bm_pud[PTRS_PER_PUD] 
+>>> __page_aligned_bss __maybe_unused;
+>>> 
+>>>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
+>>> 
+>>> +inline unsigned int get_vma_level(struct vm_area_struct *vma)
+>>> +{
+>>> +	unsigned int level = 0;
+>>> +	if (vma->vm_flags & VM_LEVEL_PUD)
+>>> +		level = 1;
+>>> +	else if (vma->vm_flags & VM_LEVEL_PMD)
+>>> +		level = 2;
+>>> +	else if (vma->vm_flags & VM_LEVEL_PTE)
+>>> +		level = 3;
+>>> +
+>>> +	vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PMD | VM_LEVEL_PTE);
+>>> +	return level;
+>>> +}
+>>> +
+>>>  void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
+>>>  {
+>>>  	pgd_t *fixmap_pgdp;
+>> 
+>> 
+>> If feels bizarre a TLBI is now a destructive operation: you've lost 
+>> the
+>> flags by having cleared them. Even if that's not really a problem in
+>> practice (you issue TLBI because you've unmapped the VMA), it remains
+>> that the act of invalidating TLBs isn't expected to change a kernel
+>> structure (and I'm not even thinking about potential races here).
+> 
+> I cleared vm_flags here just out of caution, because every TLBI flush
+> action should set vm_flags themself. As I know, the TLB_LEVEL of an vma
+> will only be changed by transparent hugepage collapse and merge when
+> the page is not mapped, so there may not have potential races.
+> 
+> But you are right that TLBI should't change a kernel structure.
+> I will remove the clear action and add some notices here.
 
-The HiSilicon HIP PCIe controller is capable of handling errors
-on root port and perform port reset separately at each root port.
+More than that. You are changing the VMA flags at TLBI time already,
+when calling get_vma_level(). That is already unacceptable -- I don't
+think (and Peter will certainly correct me if I'm wrong) that you
+are allowed to change the flags on that code path, as you probably
+don't hold the write_lock.
 
-This patch add error handling driver for HIP PCIe controller to log
-and report recoverable errors. Perform root port reset and restore
-link status after the recovery.
+>> If anything, I feel this should be based around the mmu_gather
+>> structure, which already tracks the right level of information and
+>> additionally knows about the P4D level which is missing in your 
+>> patches
+>> (even if arm64 is so far limited to 4 levels).
+>> 
+>> Thanks,
+>> 
+>> 	M.
+>> 
+> 
+> mmu_gather structure has tracked the level information, but we can only
+> use the info in the tlb_flush interface. If we want to use the info in
+> flush_tlb_range, we may should have to add a parameter to this 
+> interface,
+> such as:
+> 
+> 	flush_tlb_range(vma, start, end, flags);
+> 
+> However, the flush_tlb_range is a common interface to all 
+> architectures,
+> I'm not sure if this is feasible because this feature is only supported
+> by ARM64 currently.
 
-Following are some of the PCIe controller's recoverable errors
-1. completion transmission timeout error.
-2. CRS retry counter over the threshold error.
-3. ECC 2 bit errors
-4. AXI bresponse/rresponse errors etc.
+You could always build an on-stack mmu_gather structure and pass it down
+to the TLB invalidation helpers.
 
-Also fix the following Smatch warning:
-warn: should '((((1))) << (9 + i))' be a 64 bit type?
-if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-      ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+And frankly, you are not going to be able to fit such a change in the
+way Linux deals with TLBs by adding hacks at the periphery. You'll need
+to change some of the core abstractions.
 
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
---
-drivers/pci/controller/Kconfig           |   8 +
-drivers/pci/controller/Makefile          |   1 +
-drivers/pci/controller/pcie-hisi-error.c | 336 
-+++++++++++++++++++++++++++++++
-3 files changed, 345 insertions(+)
-create mode 100644 drivers/pci/controller/pcie-hisi-error.c
----
-  drivers/pci/controller/Kconfig           |   8 +
-  drivers/pci/controller/Makefile          |   1 +
-  drivers/pci/controller/pcie-hisi-error.c | 357 +++++++++++++++++++++++
-  3 files changed, 366 insertions(+)
-  create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+Finally, as Peter mentioned separately, there is Power9 which has 
+similar
+instructions, and could make use of it too. So that's yet another reason
+to stop hacking at the arch level.
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 20bf00f587bd..8bc6111480c8 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -268,6 +268,14 @@ config PCI_HYPERV_INTERFACE
-  	  The Hyper-V PCI Interface is a helper driver allows other drivers to
-  	  have a common interface with the Hyper-V PCI frontend driver.
+> 
+> Or can we ignore the flush_tlb_range and only set the TTL field in
+> tlb_flush?  Waiting for your suggestion...
 
-+config PCIE_HISI_ERR
-+	depends on ARM64 || COMPILE_TEST
-+	depends on ACPI
-+	bool "HiSilicon HIP PCIe controller error handling driver"
-+	help
-+	  Say Y here if you want error handling support
-+	  for the PCIe controller's errors on HiSilicon HIP SoCs
-+
-  source "drivers/pci/controller/dwc/Kconfig"
-  source "drivers/pci/controller/cadence/Kconfig"
-  endmenu
-diff --git a/drivers/pci/controller/Makefile 
-b/drivers/pci/controller/Makefile
-index 01b2502a5323..94f37b3d9929 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
-  obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
-  obj-$(CONFIG_VMD) += vmd.o
-  obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
-+obj-$(CONFIG_PCIE_HISI_ERR) += pcie-hisi-error.o
-  # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
-  obj-y				+= dwc/
+You could, but you could also ignore TTL altogether (what's the point
+in only having half of it?). See my suggestion above.
 
-diff --git a/drivers/pci/controller/pcie-hisi-error.c 
-b/drivers/pci/controller/pcie-hisi-error.c
-new file mode 100644
-index 000000000000..73304512af92
---- /dev/null
-+++ b/drivers/pci/controller/pcie-hisi-error.c
-@@ -0,0 +1,357 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Driver for handling the PCIe controller errors on
-+ * HiSilicon HIP SoCs.
-+ *
-+ * Copyright (c) 2018-2019 HiSilicon Limited.
-+ */
-+
-+#include <linux/acpi.h>
-+#include <acpi/ghes.h>
-+#include <linux/delay.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/kfifo.h>
-+#include <linux/spinlock.h>
-+
-+#include "../pci.h"
-+
-+#define HISI_PCIE_ERR_RECOVER_RING_SIZE           16
-+#define	HISI_PCIE_ERR_INFO_SIZE	1024
-+
-+/* HISI PCIe controller error definitions */
-+#define HISI_PCIE_ERR_MISC_REGS	33
-+
-+#define HISI_PCIE_SUB_MODULE_ID_AP	0
-+#define HISI_PCIE_SUB_MODULE_ID_TL	1
-+#define HISI_PCIE_SUB_MODULE_ID_MAC	2
-+#define HISI_PCIE_SUB_MODULE_ID_DL	3
-+#define HISI_PCIE_SUB_MODULE_ID_SDI	4
-+
-+#define HISI_PCIE_LOCAL_VALID_VERSION		BIT(0)
-+#define HISI_PCIE_LOCAL_VALID_SOC_ID		BIT(1)
-+#define HISI_PCIE_LOCAL_VALID_SOCKET_ID		BIT(2)
-+#define HISI_PCIE_LOCAL_VALID_NIMBUS_ID		BIT(3)
-+#define HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID	BIT(4)
-+#define HISI_PCIE_LOCAL_VALID_CORE_ID		BIT(5)
-+#define HISI_PCIE_LOCAL_VALID_PORT_ID		BIT(6)
-+#define HISI_PCIE_LOCAL_VALID_ERR_TYPE		BIT(7)
-+#define HISI_PCIE_LOCAL_VALID_ERR_SEVERITY	BIT(8)
-+#define HISI_PCIE_LOCAL_VALID_ERR_MISC		9
-+
-+#define HISI_ERR_SEV_RECOVERABLE	0
-+#define HISI_ERR_SEV_FATAL		1
-+#define HISI_ERR_SEV_CORRECTED		2
-+#define HISI_ERR_SEV_NONE		3
-+
-+static guid_t hisi_pcie_sec_type = GUID_INIT(0xB2889FC9, 0xE7D7, 0x4F9D,
-+			0xA8, 0x67, 0xAF, 0x42, 0xE9, 0x8B, 0xE7, 0x72);
-+
-+#define HISI_PCIE_CORE_ID(v)             ((v) >> 3)
-+#define HISI_PCIE_PORT_ID(core, v)       (((v) >> 1) + ((core) << 3))
-+#define HISI_PCIE_CORE_PORT_ID(v)        (((v) % 8) << 1)
-+
-+struct hisi_pcie_err_data {
-+	u64   val_bits;
-+	u8    version;
-+	u8    soc_id;
-+	u8    socket_id;
-+	u8    nimbus_id;
-+	u8    sub_module_id;
-+	u8    core_id;
-+	u8    port_id;
-+	u8    err_severity;
-+	u16   err_type;
-+	u8    reserv[2];
-+	u32   err_misc[HISI_PCIE_ERR_MISC_REGS];
-+};
-+
-+struct hisi_pcie_err_info {
-+	struct hisi_pcie_err_data err_data;
-+	struct platform_device *pdev;
-+};
-+
-+struct hisi_pcie_err_private {
-+	struct notifier_block nb;
-+	struct platform_device *pdev;
-+};
-+
-+static char *hisi_pcie_sub_module_name(u8 id)
-+{
-+	switch (id) {
-+	case HISI_PCIE_SUB_MODULE_ID_AP: return "AP Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_TL: return "TL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_MAC: return "MAC Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_DL: return "DL Layer";
-+	case HISI_PCIE_SUB_MODULE_ID_SDI: return "SDI Layer";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static char *hisi_pcie_err_severity(u8 err_sev)
-+{
-+	switch (err_sev) {
-+	case HISI_ERR_SEV_RECOVERABLE: return "recoverable";
-+	case HISI_ERR_SEV_FATAL: return "fatal";
-+	case HISI_ERR_SEV_CORRECTED: return "corrected";
-+	case HISI_ERR_SEV_NONE: return "none";
-+	}
-+
-+	return "unknown";
-+}
-+
-+static int hisi_pcie_port_reset(struct platform_device *pdev,
-+					u32 chip_id, u32 port_id)
-+{
-+	struct device *dev = &pdev->dev;
-+	acpi_handle handle = ACPI_HANDLE(dev);
-+	union acpi_object arg[3];
-+	struct acpi_object_list arg_list;
-+	acpi_status s;
-+	unsigned long long data = 0;
-+
-+	arg[0].type = ACPI_TYPE_INTEGER;
-+	arg[0].integer.value = chip_id;
-+	arg[1].type = ACPI_TYPE_INTEGER;
-+	arg[1].integer.value = HISI_PCIE_CORE_ID(port_id);
-+	arg[2].type = ACPI_TYPE_INTEGER;
-+	arg[2].integer.value = HISI_PCIE_CORE_PORT_ID(port_id);
-+
-+	arg_list.count = 3;
-+	arg_list.pointer = arg;
-+
-+	/* Call the ACPI handle to reset root port */
-+	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
-+	if (ACPI_FAILURE(s)) {
-+		dev_err(dev, "No RST method\n");
-+		return -EIO;
-+	}
-+
-+	if (data) {
-+		dev_err(dev, "Failed to Reset\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_port_do_recovery(struct platform_device *dev,
-+				      u32 chip_id, u32 port_id)
-+{
-+	acpi_status s;
-+	struct device *device = &dev->dev;
-+	acpi_handle root_handle = ACPI_HANDLE(device);
-+	struct acpi_pci_root *pci_root;
-+	struct pci_bus *root_bus;
-+	struct pci_dev *pdev;
-+	u32 domain, busnr, devfn;
-+
-+	s = acpi_get_parent(root_handle, &root_handle);
-+	if (ACPI_FAILURE(s))
-+		return -ENODEV;
-+	pci_root = acpi_pci_find_root(root_handle);
-+	if (!pci_root)
-+		return -ENODEV;
-+	root_bus = pci_root->bus;
-+	domain = pci_root->segment;
-+
-+	busnr = root_bus->number;
-+	devfn = PCI_DEVFN(port_id, 0);
-+	pdev = pci_get_domain_bus_and_slot(domain, busnr, devfn);
-+	if (!pdev) {
-+		dev_warn(device, "Fail to get root port %04x:%02x:%02x.%d device\n",
-+			 domain, busnr, PCI_SLOT(devfn), PCI_FUNC(devfn));
-+		return -ENODEV;
-+	}
-+
-+	pci_stop_and_remove_bus_device_locked(pdev);
-+	pci_dev_put(pdev);
-+
-+	if (hisi_pcie_port_reset(dev, chip_id, port_id))
-+		return -EIO;
-+
-+	/*
-+	 * The initialization time of subordinate devices after
-+	 * hot reset is no more than 1s, which is required by
-+	 * the PCI spec v5.0 sec 6.6.1. The time will shorten
-+	 * if Readiness Notifications mechanisms are used. But
-+	 * wait 1s here to adapt any conditions.
-+	 */
-+	ssleep(1UL);
-+
-+	/* add root port and downstream devices */
-+	pci_lock_rescan_remove();
-+	pci_rescan_bus(root_bus);
-+	pci_unlock_rescan_remove();
-+
-+	return 0;
-+}
-+
-+static void hisi_pcie_handle_one_error(const struct hisi_pcie_err_data 
-*err,
-+				    struct platform_device *pdev)
-+{
-+	char buf[HISI_PCIE_ERR_INFO_SIZE];
-+	char *p = buf, *end = buf + sizeof(buf);
-+	struct device *dev = &pdev->dev;
-+	u32 i;
-+	int rc;
-+
-+	if (err->val_bits == 0) {
-+		dev_warn(dev, "%s: no valid error information\n", __func__);
-+		return;
-+	}
-+
-+	/* Logging */
-+	p += snprintf(p, end - p, "[ Table version=%d ", err->version);
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOC_ID)
-+		p += snprintf(p, end - p, "SOC ID=%d ", err->soc_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SOCKET_ID)
-+		p += snprintf(p, end - p, "socket ID=%d ", err->socket_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_NIMBUS_ID)
-+		p += snprintf(p, end - p, "nimbus ID=%d ", err->nimbus_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_SUB_MODULE_ID)
-+		p += snprintf(p, end - p, "sub module=%s ",
-+			      hisi_pcie_sub_module_name(err->sub_module_id));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_CORE_ID)
-+		p += snprintf(p, end - p, "core ID=core%d ", err->core_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_PORT_ID)
-+		p += snprintf(p, end - p, "port ID=port%d ", err->port_id);
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_SEVERITY)
-+		p += snprintf(p, end - p, "error severity=%s ",
-+			      hisi_pcie_err_severity(err->err_severity));
-+
-+	if (err->val_bits & HISI_PCIE_LOCAL_VALID_ERR_TYPE)
-+		p += snprintf(p, end - p, "error type=0x%x ", err->err_type);
-+
-+	p += snprintf(p, end - p, "]\n");
-+	dev_info(dev, "\nHISI : HIP : PCIe controller error\n");
-+	dev_info(dev, "%s\n", buf);
-+
-+	dev_info(dev, "Reg Dump:\n");
-+	for (i = 0; i < HISI_PCIE_ERR_MISC_REGS; i++) {
-+		if (err->val_bits & BIT_ULL(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
-+			dev_info(dev,
-+				 "ERR_MISC_%d=0x%x\n", i, err->err_misc[i]);
-+	}
-+
-+	/* Recovery for the PCIe controller errors */
-+	if (err->err_severity == HISI_ERR_SEV_RECOVERABLE) {
-+		/* try reset PCI port for the error recovery */
-+		rc = hisi_pcie_port_do_recovery(pdev, err->socket_id,
-+				HISI_PCIE_PORT_ID(err->core_id, err->port_id));
-+		if (rc) {
-+			dev_warn(dev, "fail to do hisi pcie port reset\n");
-+			return;
-+		}
-+	}
-+}
-+
-+static DEFINE_KFIFO(hisi_pcie_err_recover_ring, struct hisi_pcie_err_info,
-+		    HISI_PCIE_ERR_RECOVER_RING_SIZE);
-+static DEFINE_SPINLOCK(hisi_pcie_err_recover_ring_lock);
-+
-+static void hisi_pcie_err_recover_work_func(struct work_struct *work)
-+{
-+	struct hisi_pcie_err_info pcie_err_entry;
-+
-+	while (kfifo_get(&hisi_pcie_err_recover_ring, &pcie_err_entry)) {
-+		hisi_pcie_handle_one_error(&pcie_err_entry.err_data,
-+					pcie_err_entry.pdev);
-+	}
-+}
-+
-+static DECLARE_WORK(hisi_pcie_err_recover_work,
-+		    hisi_pcie_err_recover_work_func);
-+
-+
-+static int hisi_pcie_error_notify(struct notifier_block *nb,
-+				  unsigned long event, void *data)
-+{
-+	struct acpi_hest_generic_data *gdata = data;
-+	const struct hisi_pcie_err_data *err_data =
-+				acpi_hest_get_payload(gdata);
-+	struct hisi_pcie_err_info err_info;
-+	struct hisi_pcie_err_private *priv =
-+			container_of(nb, struct hisi_pcie_err_private, nb);
-+	struct platform_device *pdev = priv->pdev;
-+	struct device *dev = &pdev->dev;
-+	u8 socket;
-+
-+	if (device_property_read_u8(dev, "socket", &socket))
-+		return NOTIFY_DONE;
-+
-+	if (!guid_equal((guid_t *)gdata->section_type, &hisi_pcie_sec_type) ||
-+	    err_data->socket_id != socket)
-+		return NOTIFY_DONE;
-+
-+	memcpy(&err_info.err_data, err_data, sizeof(*err_data));
-+	err_info.pdev = pdev;
-+
-+	if (kfifo_in_spinlocked(&hisi_pcie_err_recover_ring, &err_info, 1,
-+				&hisi_pcie_err_recover_ring_lock))
-+		schedule_work(&hisi_pcie_err_recover_work);
-+	else
-+		dev_warn(dev, "queue full when recovering PCIe controller error\n");
-+
-+	return NOTIFY_STOP;
-+}
-+
-+static int hisi_pcie_err_handler_probe(struct platform_device *pdev)
-+{
-+	struct hisi_pcie_err_private *priv;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->nb.notifier_call = hisi_pcie_error_notify;
-+	priv->pdev = pdev;
-+	ret = ghes_register_event_notifier(&priv->nb);
-+	if (ret) {
-+		dev_err(&pdev->dev, "%s : ghes_register_event_notifier fail\n",
-+			__func__);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+}
-+
-+static int hisi_pcie_err_handler_remove(struct platform_device *pdev)
-+{
-+	struct hisi_pcie_err_private *priv = platform_get_drvdata(pdev);
-+
-+	if (priv)
-+		ghes_unregister_event_notifier(&priv->nb);
-+
-+	kfree(priv);
-+
-+	return 0;
-+}
-+
-+static const struct acpi_device_id hisi_pcie_acpi_match[] = {
-+	{ "HISI0361", 0 },
-+	{ }
-+};
-+
-+static struct platform_driver hisi_pcie_err_handler_driver = {
-+	.driver = {
-+		.name	= "hisi-pcie-err-handler",
-+		.acpi_match_table = hisi_pcie_acpi_match,
-+	},
-+	.probe		= hisi_pcie_err_handler_probe,
-+	.remove		= hisi_pcie_err_handler_remove,
-+};
-+module_platform_driver(hisi_pcie_err_handler_driver);
-+
-+MODULE_DESCRIPTION("HiSilicon HIP PCIe controller error handling driver");
-+MODULE_LICENSE("GPL v2");
+> For P4D level, the TTL field is limited to 4 bit(2 for translation 
+> granule
+> and 2 for page table level), so we can no longer afford more levels :).
+
+You clearly didn't read the bit that said "even if arm64 is so far 
+limited
+to 4 levels". But again, this is Linux, a multi-architecture kernel, and
+not an arm64-special. Changes you make have to work for all 
+architectures,
+and be extensible enough for future changes.
+
+Thanks,
+
+         M.
 -- 
-2.17.1
+Jazz is not dead. It just smells funny...
