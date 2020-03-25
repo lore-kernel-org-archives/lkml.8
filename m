@@ -2,118 +2,201 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 412A3C54FD2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F9CC54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FCCE20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08D020724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:29:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="moskcLMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbgCYD1K (ORCPT
+        id S1727301AbgCYD3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 23:27:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:39340 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727253AbgCYD1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 23:27:08 -0400
-IronPort-SDR: vKhRNizHQhaRl993yZvAV8tGIzLtohcBjIyivbl1Sl8MGj/vPOjw5c+v4PwNKkA8OazxZ5suVh
- fzqJnlOMKFpg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 20:27:08 -0700
-IronPort-SDR: 7I16jIMiWtO8LKycInGLDqLZkstmd2V+72W8N55D6DVRkqRoRYUaMUgMG+8SVfw7uWKIg1uYbF
- Ci9EJ083pPww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
-   d="scan'208";a="240290011"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by fmsmga008.fm.intel.com with ESMTP; 24 Mar 2020 20:27:05 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, luto@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [PATCH v7 2/2] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
-Date:   Wed, 25 Mar 2020 11:09:24 +0800
-Message-Id: <20200325030924.132881-3-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200325030924.132881-1-xiaoyao.li@intel.com>
-References: <20200325030924.132881-1-xiaoyao.li@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 24 Mar 2020 23:29:09 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:34749 "EHLO
+        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYD3J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 23:29:09 -0400
+Received: by mail-qt1-f202.google.com with SMTP id v16so831950qtj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 20:29:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=3sG/aYSJEaUzKJMRBRAlTTV0CAiJQVdbv2pY6xIkFCE=;
+        b=moskcLMdmb9Qa/7ck29Ui1zfgaCFu7+KdQFfLwZYDr7XIt65Qg5w0l00KET3ZKZrzL
+         88SdQL8ZJ7DldVOGvvy/h7cqKbMJVpWzmZ4d8d7iOTPDOamziVbRFXTOZFmkn0vz7+3M
+         6GgqRPbTfSjicW0d27iOuGolNFfXZhnk5DUDjRuwpQfUDDSgGbPhhB3BuTsJ6TRfOnX/
+         gpZxH7epiSA4xXzM3i3hMOmoaxbtxBNvdQkdxBcfaw3pdCXZV+tk34FNrAhKiMPh2aJK
+         2/8jHU/rrhszgNwkRLGxdHYb9uz4VcJUvjDTYVhgkJzX+Xdh+N/p7Uy93cGE4kHGi3F9
+         oBdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=3sG/aYSJEaUzKJMRBRAlTTV0CAiJQVdbv2pY6xIkFCE=;
+        b=p/gdfekoMqalnvDekv13gCmvBb/mm4GBtz49P07AwRhFjImlBGtbS0Gm4HtlbhFF6W
+         5N6vgkV5rKam0i6fAsxWaLC5oD8cjRvXECJ9iHq566gHMS1r8tzOfC5CJ5B4JghWgcwZ
+         Q4HfEijY0ehuRgphAXUgsYZDxsfeaykHpy55Wync9Bd9QcN/3FpJmSOdskGwlg7FMZNB
+         kwldu18L3TUaKBf8xfhlBFFeU7OE/FcR/7dHso7mjjfKqkJpdYYYZ2YdEQF2RnDc0NRJ
+         NpMYvVstEzkIqAjhGH6IOOuTpCdbqsMieGtD8/01NyrFZh0OctEAROdSMVlrPns+vc9X
+         pgbQ==
+X-Gm-Message-State: ANhLgQ18dzdK8uDYBmzlhtyavFeol9zX7CK/82csolFMxCy7chLar7Cs
+        muQ1Gw+uPNYL4OX2tXC6BJbKneJ6bnD9QA4=
+X-Google-Smtp-Source: ADFU+vs09YtOBVWmInTZBXTuKE9xtcY0cCNQnTouUg1jPB/q+0DY8fAzNliY2DcuM6HVHvC05zT9BCUA2MUUbzI=
+X-Received: by 2002:a05:6214:a87:: with SMTP id ev7mr1341422qvb.52.1585106945949;
+ Tue, 24 Mar 2020 20:29:05 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 20:29:01 -0700
+In-Reply-To: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+Message-Id: <20200325032901.29551-1-saravanak@google.com>
+Mime-Version: 1.0
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+From:   Saravana Kannan <saravanak@google.com>
+To:     andriy.shevchenko@linux.intel.com
+Cc:     a.hajda@samsung.com, artem.bityutskiy@linux.intel.com,
+        balbi@kernel.org, broonie@kernel.org, fntoth@gmail.com,
+        grant.likely@arm.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        peter.ujfalusi@ti.com, rafael@kernel.org, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In a context switch from a task that is detecting split locks
-to one that is not (or vice versa) we need to update the TEST_CTRL
-MSR. Currently this is done with the common sequence:
-	read the MSR
-	flip the bit
-	write the MSR
-in order to avoid changing the value of any reserved bits in the MSR.
 
-Cache unused and reserved bits of TEST_CTRL MSR with SPLIT_LOCK_DETECT
-bit cleared during initialization, so we can avoid an expensive RDMSR
-instruction during context switch.
+On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> Consider the following scenario.
+> 
+> The main driver of USB OTG controller (dwc3-pci), which has the following
+> functional dependencies on certain platform:
+> - ULPI (tusb1210)
+> - extcon (tested with extcon-intel-mrfld)
+> 
+> Note, that first driver, tusb1210, is available at the moment of
+> dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> won't appear till user space does something about it.
+> 
+> This is depicted by kernel configuration excerpt:
+> 
+>	CONFIG_PHY_TUSB1210=y
+>	CONFIG_USB_DWC3=y
+>	CONFIG_USB_DWC3_ULPI=y
+>	CONFIG_USB_DWC3_DUAL_ROLE=y
+>	CONFIG_USB_DWC3_PCI=y
+>	CONFIG_EXTCON_INTEL_MRFLD=m
+> 
+> In the Buildroot environment the modules are probed by alphabetical ordering
+> of their modaliases. The latter comes to the case when USB OTG driver will be
+> probed first followed by extcon one.
+> 
+> So, if the platform anticipates extcon device to be appeared, in the above case
+> we will get deferred probe of USB OTG, because of ordering.
+> 
+> Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> deferral race condition fix") counts the amount of triggered deferred probe,
+> we never advance the situation -- the change makes it to be an infinite loop.
+>
 
-Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Originally-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- arch/x86/kernel/cpu/intel.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+Hi Andy,
 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index deb5c42c2089..1f414578899c 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -45,6 +45,7 @@ enum split_lock_detect_state {
-  * split lock detect, unless there is a command line override.
-  */
- static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
-+static u64 msr_test_ctrl_cache __ro_after_init;
- 
- /*
-  * Processors which have self-snooping capability can handle conflicting
-@@ -1037,6 +1038,8 @@ static void __init split_lock_setup(void)
- 		break;
- 	}
- 
-+	rdmsrl(MSR_TEST_CTRL, msr_test_ctrl_cache);
-+
- 	if (!split_lock_verify_msr(true)) {
- 		pr_info("MSR access failed: Disabled\n");
- 		return;
-@@ -1053,14 +1056,10 @@ static void __init split_lock_setup(void)
-  */
- static void sld_update_msr(bool on)
- {
--	u64 test_ctrl_val;
--
--	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
-+	u64 test_ctrl_val = msr_test_ctrl_cache;
- 
- 	if (on)
- 		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
--	else
--		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
- 
- 	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
- }
--- 
-2.20.1
+I'm trying to understand this sequence of steps. Sorry if the questions
+are stupid -- I'm not very familiar with USB/PCI stuff.
 
+> ---8<---8<---
+> 
+> [   22.187127] driver_deferred_probe_trigger <<< 1
+> 
+> ...here is the late initcall triggers deferred probe...
+> 
+> [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> 
+> ...dwc3.0.auto is the only device in the deferred list...
+
+Ok, dwc3.0.auto is the only unprobed device at this point?
+
+> 
+> [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> 
+> ...the counter before mutex is unlocked is kept the same...
+> 
+> [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> 
+> ...mutes has been unlocked, we try to re-probe the driver...
+> 
+> [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> [   22.263723] driver_deferred_probe_trigger <<< 2
+> 
+> ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> 
+> [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+
+So where did this dwc3.0.auto.ulpi come from?
+Looks like the device is created by dwc3_probe() through this call flow:
+dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
+dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register() 
+
+> [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+
+Can you please point me to which code patch actually caused the probe
+deferral?
+
+> ...but extcon driver is still missing...
+> 
+> [   22.283174] platform dwc3.0.auto: Added to deferred list
+> [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+
+I'm not fully aware of all the USB implications, but if extcon is
+needed, why can't that check be done before we add and probe the ulpi
+device? That'll avoid this whole "fake" probing and avoid the counter
+increase. And avoid the need for this patch that's touching the code
+code that's already a bit delicate.
+
+Also, with my limited experience with all the possible drivers in the
+kernel, it's weird that the ulpi device is added and probed before we
+make sure the parent device (dwc3.0.auto) can actually probe
+successfully.
+
+Most of the platform device code I've seen in systems with OF (device
+tree) add the child devices towards the end of the parent's probe
+function.
+
+> ...and since we had a successful probe, we got counter mismatch...
+> 
+> [   22.297490] driver_deferred_probe_trigger <<< 3
+> [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
+> 
+> ...at the end we have a new counter and loop repeats again, see 22.198727...
+> 
+> ---8<---8<---
+> 
+> Revert of the commit helps, but it is probably not helpful for the initially
+> found regression. Artem Bityutskiy suggested to use counter of the successful
+> probes instead. This fixes above mentioned case and shouldn't prevent driver
+> to reprobe deferred ones.
+> 
+> Under "successful probe" we understand the state when a driver of the certain
+> device is being kept bound after deferred probe trigger cycle. For instance,
+> in the above mentioned case probing of tusb1210 is not successful because dwc3
+> driver unbinds device dwc3.0.auto.ulpi. The atomic_dec() call is used to keep
+> track of this. The amount of bindings is always great than or equal to the
+> amount of unbindings as guaranteed by design of the driver binding mechanism.
+
+The unbindings count can increase for other unrelated drivers unbinding
+too. Wouldn't it? Seems a bit fragile and racy in a fashion similar to
+the issue the original patch was trying to fix.
+
+-Saravana
