@@ -2,296 +2,635 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF034C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38607C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC7320714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:56:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="lh5L0X84"
+	by mail.kernel.org (Postfix) with ESMTP id 06F5420714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCYI4u (ORCPT
+        id S1727525AbgCYI5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:56:50 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:55301 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727301AbgCYI4u (ORCPT
+        Wed, 25 Mar 2020 04:57:37 -0400
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:56571 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727504AbgCYI5g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:56:50 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585126609; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=662V76aKosOhR0NwjziZiUV5ztE2ikA4eLXKCXRhr8M=;
- b=lh5L0X84+JJSK7ilyNXPu1fcD40Age3zvwdz9LdTpanmG5LUW8BsuRtVfGADBIFMpSGFIKr4
- XqgNbYLifql9VTwWbqUjvTgNrQkkWQ8NgDXInQsz0WPk5p5R2IldKWRG0nJo8X4TsPz79c6s
- QMH4BBAc18GZ0cDnNgfg1OM3Q/Y=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7b1cc7.7f0ca6e57b58-smtp-out-n02;
- Wed, 25 Mar 2020 08:56:39 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 76B2DC43636; Wed, 25 Mar 2020 08:56:39 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3DDCC433BA;
-        Wed, 25 Mar 2020 08:56:37 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 25 Mar 2020 16:56:37 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] scsi: ufs: Clean up ufshcd_scale_clks() and clock
- scaling error out path
-In-Reply-To: <SN6PR04MB4640E8EF26802A44B1F5D38AFCF70@SN6PR04MB4640.namprd04.prod.outlook.com>
-References: <1584342373-10282-1-git-send-email-cang@codeaurora.org>
- <1584342373-10282-2-git-send-email-cang@codeaurora.org>
- <SN6PR04MB4640E8EF26802A44B1F5D38AFCF70@SN6PR04MB4640.namprd04.prod.outlook.com>
-Message-ID: <d930bd05f2614092e6d8d3ef62017d89@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Wed, 25 Mar 2020 04:57:36 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0347911-0.000129059-0.96508;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16368;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
+Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H50xpyL_1585126516)
+          by smtp.aliyun-inc.com(10.147.42.241);
+          Wed, 25 Mar 2020 16:55:27 +0800
+From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org,
+        WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Subject: [PATCH v3 02/11] pstore/blk: new support logger for block devices
+Date:   Wed, 25 Mar 2020 16:54:57 +0800
+Message-Id: <1585126506-18635-3-git-send-email-liaoweixiong@allwinnertech.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-18 16:19, Avri Altman wrote:
-> Hi,
-> 
->> 
->> From: Subhash Jadavani <subhashj@codeaurora.org>
->> 
->> This change introduces a func ufshcd_set_clk_freq() to explicitly
->> set clock frequency so that it can be used in reset_and_resotre path 
->> and
->> in ufshcd_scale_clks(). Meanwhile, this change cleans up the clock 
->> scaling
->> error out path.
->> 
->> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> 
->> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
->> index 2a2a63b..63aaa88f 100644
->> --- a/drivers/scsi/ufs/ufshcd.c
->> +++ b/drivers/scsi/ufs/ufshcd.c
->> @@ -855,28 +855,29 @@ static bool
->> ufshcd_is_unipro_pa_params_tuning_req(struct ufs_hba *hba)
->>                 return false;
->>  }
->> 
->> -static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
->> +/**
->> + * ufshcd_set_clk_freq - set UFS controller clock frequencies
->> + * @hba: per adapter instance
->> + * @scale_up: If True, set max possible frequency othewise set low
->> frequency
->> + *
->> + * Returns 0 if successful
->> + * Returns < 0 for any other errors
->> + */
->> +static int ufshcd_set_clk_freq(struct ufs_hba *hba, bool scale_up)
-> Personally I prefer using the convention of "__scale_clks" to describe
-> the privet core of scale_clks,
-> But I know that many people are against it.
-> 
->>  {
->>         int ret = 0;
->>         struct ufs_clk_info *clki;
->>         struct list_head *head = &hba->clk_list_head;
->> -       ktime_t start = ktime_get();
->> -       bool clk_state_changed = false;
->> 
->>         if (list_empty(head))
->>                 goto out;
->> 
->> -       ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
->> -       if (ret)
->> -               return ret;
->> -
->>         list_for_each_entry(clki, head, list) {
->>                 if (!IS_ERR_OR_NULL(clki->clk)) {
->>                         if (scale_up && clki->max_freq) {
->>                                 if (clki->curr_freq == clki->max_freq)
->>                                         continue;
->> 
->> -                               clk_state_changed = true;
->>                                 ret = clk_set_rate(clki->clk, 
->> clki->max_freq);
->>                                 if (ret) {
->>                                         dev_err(hba->dev, "%s: %s clk 
->> set rate(%dHz) failed,
->> %d\n",
->> @@ -895,7 +896,6 @@ static int ufshcd_scale_clks(struct ufs_hba *hba,
->> bool scale_up)
->>                                 if (clki->curr_freq == clki->min_freq)
->>                                         continue;
->> 
->> -                               clk_state_changed = true;
->>                                 ret = clk_set_rate(clki->clk, 
->> clki->min_freq);
->>                                 if (ret) {
->>                                         dev_err(hba->dev, "%s: %s clk 
->> set rate(%dHz) failed,
->> %d\n",
->> @@ -914,13 +914,36 @@ static int ufshcd_scale_clks(struct ufs_hba 
->> *hba,
->> bool scale_up)
->>                                 clki->name, clk_get_rate(clki->clk));
->>         }
->> 
->> +out:
->> +       return ret;
->> +}
->> +
->> +/**
->> + * ufshcd_scale_clks - scale up or scale down UFS controller clocks
->> + * @hba: per adapter instance
->> + * @scale_up: True if scaling up and false if scaling down
->> + *
->> + * Returns 0 if successful
->> + * Returns < 0 for any other errors
->> + */
->> +static int ufshcd_scale_clks(struct ufs_hba *hba, bool scale_up)
->> +{
->> +       int ret = 0;
->> +
->> +       ret = ufshcd_vops_clk_scale_notify(hba, scale_up, PRE_CHANGE);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = ufshcd_set_clk_freq(hba, scale_up);
->> +       if (ret)
->> +               return ret;
->> +
->>         ret = ufshcd_vops_clk_scale_notify(hba, scale_up, 
->> POST_CHANGE);
->> +       if (ret) {
->> +               ufshcd_set_clk_freq(hba, !scale_up);
->> +               return ret;
->> +       }
->> 
->> -out:
->> -       if (clk_state_changed)
->> -               trace_ufshcd_profile_clk_scaling(dev_name(hba->dev),
->> -                       (scale_up ? "up" : "down"),
->> -                       ktime_to_us(ktime_sub(ktime_get(), start)), 
->> ret);
-> 
-> Why remove the ufshcd_profile_clk_scaling trace?
-> 
-> 
+pstore/blk is similar to pstore/ram, but dump log to block device
+rather than persistent ram.
 
-Shall add it back, this is just a collection of Subhash's changes.
+Why do we need pstore/blk?
+1. Most embedded intelligent equipment have no persistent ram, which
+increases costs. We perfer to cheaper solutions, like block devices.
+2. Do not any equipment have battery, which means that it lost all data
+on general ram if power failure. Pstore has little to do for these
+equipments.
 
->>         return ret;
->>  }
->> 
->> @@ -1106,35 +1129,36 @@ static int ufshcd_devfreq_scale(struct ufs_hba
->> *hba, bool scale_up)
->> 
->>         ret = ufshcd_clock_scaling_prepare(hba);
->>         if (ret)
->> -               return ret;
->> +               goto out;
-> Are you fixing here a hold without release?
-> Should make note of that.
-> 
+Pstore/blk provides efficient configuration method. It divides all
+configurations into 2 parts, configurations for user and
+configurations for driver.
 
-Yes, true
+Configurations for user detemine how pstore/blk work, such as
+dump_oops and oops_size. They can be set by Kconfig and module
+parameter, but module parameter has priority over Kconfig.
 
->> 
->>         /* scale down the gear before scaling down clocks */
->>         if (!scale_up) {
->>                 ret = ufshcd_scale_gear(hba, false);
->>                 if (ret)
->> -                       goto out;
->> +                       goto clk_scaling_unprepare;
->>         }
->> 
->>         ret = ufshcd_scale_clks(hba, scale_up);
->> -       if (ret) {
->> -               if (!scale_up)
->> -                       ufshcd_scale_gear(hba, true);
->> -               goto out;
->> -       }
->> +       if (ret)
->> +               goto scale_up_gear;
->> 
->>         /* scale up the gear after scaling up clocks */
->>         if (scale_up) {
->>                 ret = ufshcd_scale_gear(hba, true);
->>                 if (ret) {
->>                         ufshcd_scale_clks(hba, false);
->> -                       goto out;
->> +                       goto clk_scaling_unprepare;
->>                 }
->>         }
->> 
->> -       ret = ufshcd_vops_clk_scale_notify(hba, scale_up, 
->> POST_CHANGE);
->> +       goto clk_scaling_unprepare;
-> I think you should find a way to make this function more readable.
-> Adding all those "spaghetti" gotos making it even harder to read.
-> 
-> Thanks,
-> Avri
-> 
+Configurations for driver are all about block device, such as
+total_size of device and read/write operations. They should be provided
+by device drivers, calling psblk_register_blkdev().
 
-This is just a collection of Subhash's changes. I think the 2
-clk_scaling_unprepare and out gotos make sense, but the
-scale_up_gear goto is a bit vague. I will remove the
-scale_up_gear goto.
+If block device do not support panic write, @panic_write can be NULL.
 
-Thanks,
+Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
+---
+ fs/pstore/Kconfig          |  62 +++++++
+ fs/pstore/Makefile         |   2 +
+ fs/pstore/pstore_blk.c     | 425 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/pstore_blk.h |  27 +++
+ 4 files changed, 516 insertions(+)
+ create mode 100644 fs/pstore/pstore_blk.c
+ create mode 100644 include/linux/pstore_blk.h
 
-Can Guo.
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index 5ad4ab68ac4f..590af61019c2 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -160,3 +160,65 @@ config PSTORE_ZONE
+ 	help
+ 	  The common layer for pstore/blk (and pstore/ram in the future)
+ 	  to manager storage as zones.
++
++config PSTORE_BLK
++	tristate "Log panic/oops to a block device"
++	depends on PSTORE
++	depends on BLOCK
++	select PSTORE_ZONE
++	default n
++	help
++	  This enables panic and oops message to be logged to a block dev
++	  where it can be read back at some later point.
++
++	  If unsure, say N.
++
++config PSTORE_BLK_BLKDEV
++	string "block device identifier"
++	depends on PSTORE_BLK
++	default ""
++	help
++	  Which block device should be used for pstore/blk.
++
++	  It accept the following variants:
++	  1) <hex_major><hex_minor> device number in hexadecimal represents
++	     itself no leading 0x, for example b302.
++	  2) /dev/<disk_name> represents the device number of disk
++	  3) /dev/<disk_name><decimal> represents the device number
++	     of partition - device number of disk plus the partition number
++	  4) /dev/<disk_name>p<decimal> - same as the above, this form is
++	     used when disk name of partitioned disk ends with a digit.
++	  5) PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF representing the
++	     unique id of a partition if the partition table provides it.
++	     The UUID may be either an EFI/GPT UUID, or refer to an MSDOS
++	     partition using the format SSSSSSSS-PP, where SSSSSSSS is a zero-
++	     filled hex representation of the 32-bit "NT disk signature", and PP
++	     is a zero-filled hex representation of the 1-based partition number.
++	  6) PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation
++	     to a partition with a known unique id.
++	  7) <major>:<minor> major and minor number of the device separated by
++	     a colon.
++
++	  NOTE that, both Kconfig and module parameters can configure
++	  pstore/blk, but module parameters have priority over Kconfig.
++
++config PSTORE_BLK_OOPS_SIZE
++	int "Size in Kbytes of oops/panic log to store"
++	depends on PSTORE_BLK
++	default 64
++	help
++	  This just sets size of oops/panic log (oops_size) for pstore/blk.
++	  The size is in KB and must be a multiple of 4.
++
++	  NOTE that, both Kconfig and module parameters can configure
++	  pstore/blk, but module parameters have priority over Kconfig.
++
++config PSTORE_BLK_DUMP_OOPS
++	bool "dump oops"
++	depends on PSTORE_BLK
++	default y
++	help
++	  Whether pstore/blk dumps oops or not.
++
++	  NOTE that, both Kconfig and module parameters can configure
++	  pstore/blk, but module parameters have priority over Kconfig.
+diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
+index 94f3631c80ce..0e1c5faf7a0b 100644
+--- a/fs/pstore/Makefile
++++ b/fs/pstore/Makefile
+@@ -14,3 +14,5 @@ ramoops-objs += ram.o ram_core.o
+ obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
+ 
+ obj-$(CONFIG_PSTORE_ZONE)	+= pstore_zone.o
++
++obj-$(CONFIG_PSTORE_BLK)	+= pstore_blk.o
+diff --git a/fs/pstore/pstore_blk.c b/fs/pstore/pstore_blk.c
+new file mode 100644
+index 000000000000..2fbdd4563e5c
+--- /dev/null
++++ b/fs/pstore/pstore_blk.c
+@@ -0,0 +1,425 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#define MODNAME "pstore-blk"
++#define pr_fmt(fmt) MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/blkdev.h>
++#include <linux/string.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/pstore_blk.h>
++#include <linux/mount.h>
++#include <linux/uio.h>
++
++static long oops_size = CONFIG_PSTORE_BLK_OOPS_SIZE;
++module_param(oops_size, long, 0400);
++MODULE_PARM_DESC(oops_size, "oops size in kbytes");
++
++static int dump_oops = CONFIG_PSTORE_BLK_DUMP_OOPS;
++module_param(dump_oops, int, 0400);
++MODULE_PARM_DESC(total_size, "whether dump oops");
++
++/*
++ * blkdev - The block device to use.
++ *
++ * Most of the time, it is a partition of block device.
++ *
++ * blkdev accepts the following variants:
++ * 1) <hex_major><hex_minor> device number in hexadecimal represents itself
++ *    no leading 0x, for example b302.
++ * 2) /dev/<disk_name> represents the device number of disk
++ * 3) /dev/<disk_name><decimal> represents the device number
++ *    of partition - device number of disk plus the partition number
++ * 4) /dev/<disk_name>p<decimal> - same as the above, that form is
++ *    used when disk name of partitioned disk ends on a digit.
++ * 5) PARTUUID=00112233-4455-6677-8899-AABBCCDDEEFF representing the
++ *    unique id of a partition if the partition table provides it.
++ *    The UUID may be either an EFI/GPT UUID, or refer to an MSDOS
++ *    partition using the format SSSSSSSS-PP, where SSSSSSSS is a zero-
++ *    filled hex representation of the 32-bit "NT disk signature", and PP
++ *    is a zero-filled hex representation of the 1-based partition number.
++ * 6) PARTUUID=<UUID>/PARTNROFF=<int> to select a partition in relation to
++ *    a partition with a known unique id.
++ * 7) <major>:<minor> major and minor number of the device separated by
++ *    a colon.
++ */
++static char blkdev[80] = CONFIG_PSTORE_BLK_BLKDEV;
++module_param_string(blkdev, blkdev, 80, 0400);
++MODULE_PARM_DESC(blkdev, "the block device for general read/write");
++
++static DEFINE_MUTEX(psz_lock);
++static struct block_device *psblk_bdev;
++static struct psz_info *psz_info;
++static psblk_panic_write_op blkdev_panic_write;
++static struct bdev_info {
++	dev_t devt;
++	sector_t nr_sects;
++	sector_t start_sect;
++} g_bdev_info;
++
++/**
++ * struct psblk_device - back-end pstore/blk driver structure.
++ *
++ * @total_size: The total size in bytes pstore/blk can use. It must be greater
++ *		than 4096 and be multiple of 4096.
++ * @read:	The general read operation. Both of the function parameters
++ *		@size and @offset are relative value to bock device (not the
++ *		whole disk).
++ *		On success, the number of bytes should be returned, others
++ *		means error.
++ * @write:	The same as @read.
++ * @panic_write:The write operation only used for panic case. It's optional
++ *		if you do not care panic log. The parameters and return value
++ *		are the same as @read.
++ */
++struct psblk_device {
++	unsigned long total_size;
++	psz_read_op read;
++	psz_write_op write;
++	psz_write_op panic_write;
++};
++
++static int psblk_register_do(struct psblk_device *dev)
++{
++	int ret;
++
++	if (!dev || !dev->total_size || !dev->read || !dev->write)
++		return -EINVAL;
++
++	mutex_lock(&psz_lock);
++
++	/* someone already registered before */
++	if (psz_info) {
++		mutex_unlock(&psz_lock);
++		return -EBUSY;
++	}
++	psz_info = kzalloc(sizeof(struct psz_info), GFP_KERNEL);
++	if (!psz_info) {
++		mutex_unlock(&psz_lock);
++		return -ENOMEM;
++	}
++
++#define verify_size(name, alignsize) {					\
++		long _##name_ = (name);					\
++		_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
++		if (_##name_ & ((alignsize) - 1)) {			\
++			pr_info(#name " must align to %d\n",		\
++					(alignsize));			\
++			_##name_ = ALIGN(name, (alignsize));		\
++		}							\
++		name = _##name_ / 1024;					\
++		psz_info->name = _##name_;				\
++	}
++
++	verify_size(oops_size, 4096);
++#undef verify_size
++	dump_oops = dump_oops <= 0 ? 0 : 1;
++
++	psz_info->total_size = dev->total_size;
++	psz_info->dump_oops = dump_oops;
++	psz_info->read = dev->read;
++	psz_info->write = dev->write;
++	psz_info->panic_write = dev->panic_write;
++	psz_info->name = MODNAME;
++	psz_info->owner = THIS_MODULE;
++
++	ret = psz_register(psz_info);
++	if (ret) {
++		kfree(psz_info);
++		psz_info = NULL;
++	}
++	mutex_unlock(&psz_lock);
++	return ret;
++}
++
++static void psblk_unregister_do(struct psblk_device *dev)
++{
++	mutex_lock(&psz_lock);
++	if (psz_info && psz_info->read == dev->read) {
++		psz_unregister(psz_info);
++		kfree(psz_info);
++		psz_info = NULL;
++	}
++	mutex_unlock(&psz_lock);
++}
++
++/**
++ * psblk_get_bdev() - open block device
++ * @holder: exclusive holder identifier
++ *
++ * Return: pointer to block device on success and others on error.
++ *
++ * On success, the returned block_device has reference count of one.
++ */
++static struct block_device *psblk_get_bdev(void *holder)
++{
++	struct block_device *bdev = ERR_PTR(-ENODEV);
++	fmode_t mode = FMODE_READ | FMODE_WRITE;
++
++	if (!blkdev[0])
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&psz_lock);
++	if (psz_info)
++		goto out;
++	if (holder)
++		mode |= FMODE_EXCL;
++	bdev = blkdev_get_by_path(blkdev, mode, holder);
++	if (IS_ERR(bdev)) {
++		dev_t devt;
++
++		devt = name_to_dev_t(blkdev);
++		if (devt == 0) {
++			bdev = ERR_PTR(-ENODEV);
++			goto out;
++		}
++		bdev = blkdev_get_by_dev(devt, mode, holder);
++	}
++out:
++	mutex_unlock(&psz_lock);
++	return bdev;
++}
++
++static void psblk_put_bdev(struct block_device *bdev, void *holder)
++{
++	fmode_t mode = FMODE_READ | FMODE_WRITE;
++
++	if (!bdev)
++		return;
++
++	mutex_lock(&psz_lock);
++	if (holder)
++		mode |= FMODE_EXCL;
++	blkdev_put(bdev, mode);
++	mutex_unlock(&psz_lock);
++}
++
++static ssize_t psblk_generic_blk_read(char *buf, size_t bytes, loff_t pos)
++{
++	struct block_device *bdev = psblk_bdev;
++	struct file file;
++	struct kiocb kiocb;
++	struct iov_iter iter;
++	struct kvec iov = {.iov_base = buf, .iov_len = bytes};
++
++	if (!bdev)
++		return -ENODEV;
++
++	memset(&file, 0, sizeof(struct file));
++	file.f_mapping = bdev->bd_inode->i_mapping;
++	file.f_flags = O_DSYNC | __O_SYNC | O_NOATIME;
++	file.f_inode = bdev->bd_inode;
++	file_ra_state_init(&file.f_ra, file.f_mapping);
++
++	init_sync_kiocb(&kiocb, &file);
++	kiocb.ki_pos = pos;
++	iov_iter_kvec(&iter, READ, &iov, 1, bytes);
++
++	return generic_file_read_iter(&kiocb, &iter);
++}
++
++static ssize_t psblk_generic_blk_write(const char *buf, size_t bytes,
++		loff_t pos)
++{
++	struct block_device *bdev = psblk_bdev;
++	struct iov_iter iter;
++	struct kiocb kiocb;
++	struct file file;
++	ssize_t ret;
++	struct kvec iov = {.iov_base = (void *)buf, .iov_len = bytes};
++
++	if (!bdev)
++		return -ENODEV;
++
++	/* Console/Ftrace recorder may handle buffer until flush dirty zones */
++	if (in_interrupt() || irqs_disabled())
++		return -EBUSY;
++
++	memset(&file, 0, sizeof(struct file));
++	file.f_mapping = bdev->bd_inode->i_mapping;
++	file.f_flags = O_DSYNC | __O_SYNC | O_NOATIME;
++	file.f_inode = bdev->bd_inode;
++
++	init_sync_kiocb(&kiocb, &file);
++	kiocb.ki_pos = pos;
++	iov_iter_kvec(&iter, WRITE, &iov, 1, bytes);
++
++	inode_lock(bdev->bd_inode);
++	ret = generic_write_checks(&kiocb, &iter);
++	if (ret > 0)
++		ret = generic_perform_write(&file, &iter, pos);
++	inode_unlock(bdev->bd_inode);
++
++	if (likely(ret > 0)) {
++		const struct file_operations f_op = {.fsync = blkdev_fsync};
++
++		file.f_op = &f_op;
++		kiocb.ki_pos += ret;
++		ret = generic_write_sync(&kiocb, ret);
++	}
++	return ret;
++}
++
++static inline unsigned long psblk_bdev_size(struct block_device *bdev)
++{
++	return (unsigned long)part_nr_sects_read(bdev->bd_part) << SECTOR_SHIFT;
++}
++
++static ssize_t psblk_blk_panic_write(const char *buf, size_t size,
++		loff_t off)
++{
++	int ret;
++
++	if (!blkdev_panic_write)
++		return -EOPNOTSUPP;
++
++	/* size and off must align to SECTOR_SIZE for block device */
++	ret = blkdev_panic_write(buf, off >> SECTOR_SHIFT,
++			size >> SECTOR_SHIFT);
++	return ret ? -EIO : size;
++}
++
++static struct bdev_info *psblk_get_bdev_info(void)
++{
++	struct bdev_info *info = &g_bdev_info;
++	struct block_device *bdev;
++
++	if (info->devt)
++		return info;
++
++	bdev = psblk_get_bdev(NULL);
++	if (IS_ERR(bdev))
++		return ERR_CAST(bdev);
++
++	info->devt = bdev->bd_dev;
++	info->nr_sects = part_nr_sects_read(bdev->bd_part);
++	info->start_sect = get_start_sect(bdev);
++
++	if (!psblk_bdev_size(bdev)) {
++		pr_err("no enough space to '%s'\n", blkdev);
++		info = ERR_PTR(-ENOSPC);
++	}
++
++	psblk_put_bdev(bdev, NULL);
++	return info;
++}
++
++/**
++ * psblk_register_blkdev() - register block device to pstore/blk
++ *
++ * @major: the major device number of registering device
++ * @panic_write: the interface for panic case.
++ *
++ * Only the matching major to @blkdev can register.
++ *
++ * If block device do not support panic write, @panic_write can be NULL.
++ *
++ * Return:
++ * * 0		- OK
++ * * Others	- something error.
++ */
++int psblk_register_blkdev(unsigned int major, psblk_panic_write_op panic_write)
++{
++	struct block_device *bdev;
++	struct psblk_device dev = {0};
++	struct bdev_info *binfo;
++	int ret = -ENODEV;
++	void *holder = blkdev;
++
++	binfo = psblk_get_bdev_info();
++	if (IS_ERR(binfo))
++		return PTR_ERR(binfo);
++
++	/* only allow driver matching the @blkdev */
++	if (!binfo->devt || MAJOR(binfo->devt) != major) {
++		pr_debug("invalid major %u (expect %u)\n",
++				major, MAJOR(binfo->devt));
++		return -ENODEV;
++	}
++
++	/* hold bdev exclusively */
++	bdev = psblk_get_bdev(holder);
++	if (IS_ERR(bdev)) {
++		pr_err("failed to open '%s'!\n", blkdev);
++		return PTR_ERR(bdev);
++	}
++
++	/* psblk_bdev must be assigned before register to pstore/blk */
++	psblk_bdev = bdev;
++	blkdev_panic_write = panic_write;
++
++	dev.total_size = psblk_bdev_size(bdev);
++	dev.panic_write = panic_write ? psblk_blk_panic_write : NULL;
++	dev.read = psblk_generic_blk_read;
++	dev.write = psblk_generic_blk_write;
++
++	ret = psblk_register_do(&dev);
++	if (ret)
++		goto err_put_bdev;
++
++	pr_info("using '%s'\n", blkdev);
++	return 0;
++
++err_put_bdev:
++	psblk_bdev = NULL;
++	blkdev_panic_write = NULL;
++	psblk_put_bdev(bdev, holder);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(psblk_register_blkdev);
++
++/**
++ * psblk_unregister_blkdev() - unregister block device from pstore/blk
++ *
++ * @major: the major device number of device
++ */
++void psblk_unregister_blkdev(unsigned int major)
++{
++	struct psblk_device dev = {.read = psblk_generic_blk_read};
++	void *holder = blkdev;
++
++	if (psblk_bdev && MAJOR(psblk_bdev->bd_dev) == major) {
++		psblk_unregister_do(&dev);
++		psblk_put_bdev(psblk_bdev, holder);
++		blkdev_panic_write = NULL;
++		psblk_bdev = NULL;
++	}
++}
++EXPORT_SYMBOL_GPL(psblk_unregister_blkdev);
++
++/**
++ * psblk_blkdev_info() - get information of @blkdev
++ *
++ * @devt: the block device num of @blkdev
++ * @nr_sects: the sector count of @blkdev
++ * @start_sect: the start sector of @blkdev
++ *
++ * Block driver needs the follow information for @panic_write.
++ *
++ * Return: 0 on success, others on failure.
++ */
++int psblk_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect)
++{
++	struct bdev_info *binfo;
++
++	binfo = psblk_get_bdev_info();
++	if (IS_ERR(binfo))
++		return PTR_ERR(binfo);
++
++	if (devt)
++		*devt = binfo->devt;
++	if (nr_sects)
++		*nr_sects = binfo->nr_sects;
++	if (start_sect)
++		*start_sect = binfo->start_sect;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(psblk_blkdev_info);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
++MODULE_DESCRIPTION("Block device Oops/Panic logger");
+diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
+new file mode 100644
+index 000000000000..5ff465e3953e
+--- /dev/null
++++ b/include/linux/pstore_blk.h
+@@ -0,0 +1,27 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __PSTORE_BLK_H_
++#define __PSTORE_BLK_H_
++
++#include <linux/types.h>
++#include <linux/pstore_zone.h>
++
++/**
++ * typedef psblk_panic_write_op - panic write operation to block device
++ *
++ * @buf: the data to write
++ * @start_sect: start sector to block device
++ * @sects: sectors count on buf
++ *
++ * Return: On success, zero should be returned. Others mean error.
++ *
++ * Panic write to block device must be aligned to SECTOR_SIZE.
++ */
++typedef int (*psblk_panic_write_op)(const char *buf, sector_t start_sect,
++		sector_t sects);
++
++int  psblk_register_blkdev(unsigned int major, psblk_panic_write_op panic_write);
++void psblk_unregister_blkdev(unsigned int major);
++int  psblk_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect);
++
++#endif
+-- 
+1.9.1
 
->> 
->> -out:
->> +scale_up_gear:
->> +       if (!scale_up)
->> +               ufshcd_scale_gear(hba, true);
->> +clk_scaling_unprepare:
->>         ufshcd_clock_scaling_unprepare(hba);
->> +out:
->>         ufshcd_release(hba);
->>         return ret;
->>  }
->> @@ -6251,7 +6275,7 @@ static int ufshcd_host_reset_and_restore(struct
->> ufs_hba *hba)
->>         spin_unlock_irqrestore(hba->host->host_lock, flags);
->> 
->>         /* scale up clocks to max frequency before full 
->> reinitialization */
->> -       ufshcd_scale_clks(hba, true);
->> +       ufshcd_set_clk_freq(hba, true);
->> 
->>         err = ufshcd_hba_enable(hba);
->>         if (err)
->> --
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a
->> Linux Foundation Collaborative Project.
