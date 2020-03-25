@@ -2,104 +2,138 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69F2C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 528DDC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A962D20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585151416;
-	bh=Qc+lueq98MrFHqfASz6/dsAD2vvazTjCL6wnKN7LNls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JUYYfbmoc9vfw9TZ94ZhN/EMI1qmdCU027i/r9rkNpUdY0qo3hms/GZIPw0/Q5iUZ
-	 NrrzRkymDVSd9TX+YoAfpug8RCdvrUqixvGiJxR3SxINuGMdvxmt6OM9rP6452vkpW
-	 uGWktImGsrvZW8fkIeEjY7zIoj26JjBbHB4oxZvg=
+	by mail.kernel.org (Postfix) with ESMTP id 31A8E20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtpjmpZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgCYPuP (ORCPT
+        id S1727933AbgCYPuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:50:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48458 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727775AbgCYPuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:50:15 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE17620719;
-        Wed, 25 Mar 2020 15:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585151414;
-        bh=Qc+lueq98MrFHqfASz6/dsAD2vvazTjCL6wnKN7LNls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LD8m9jlhLcMakKgtin97JBf2XNfXsnSTrsqZMF/LAlhDAdpi/ITpe5K8r242NJPgV
-         QT0g5P1o+BQe8/+MzOI7ev3bv9TitGtvSFmdQYLobauqmReoNQ9w7hiuSmTsI9yEeA
-         gwEiTsVRCygqBzOgDXJNx2r+hnbyY57pVW+tdEF0=
-Date:   Wed, 25 Mar 2020 08:50:14 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH v2 3/5] f2fs: fix to avoid NULL pointer dereference
-Message-ID: <20200325155014.GB65658@google.com>
-References: <20200325091811.60725-1-yuchao0@huawei.com>
+        Wed, 25 Mar 2020 11:50:21 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41227 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727774AbgCYPuU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:50:20 -0400
+Received: by mail-ua1-f66.google.com with SMTP id f9so906016uaq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:50:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
+        b=XtpjmpZHorFljb0nMx6/72BT6LEyg6Yu3GZqe2zFozULuw0vZvc0DGxN1dv5nyYcCC
+         hHWAbWGSOUvReB9nY4FED4Ar/y5wjn/ZL8FKAYhFCQofbGaikMQxNWYRkq+MvceY2mpy
+         N4Sp0qbxAYASySnf+wDwpkd2kniFgXVKTcZFs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
+        b=oH75PR6S9p4FMhmeT1b6FALNxyTzSSgd0F1HYU932tATA+9O1R2Fem0TX7HfXrQT7l
+         1cp0RPhyuHNeOXJLOCrzcjXijmEmYgOe8QADGmUN0Ns9CnG5Ew0GuciulJr5vefShaFZ
+         1z8ZSKlF7N/qe94F5Vdqp6VFhcP7Hlq5fhmSCTF+kIabKjLxHRReHmHWVdXgl2cye3L3
+         vIzwua7lz6oTTFAUJkRhFxC432GaZlPqG2rt+YUSD0MnW/WrtyOkDaULg+SeQUZUFRVo
+         Ri5nHMPhQKt4LeXVdHydUPLMijwtf3ln7/toBbyQTdX01e6JoC6783LfmtOoB+LwwRDq
+         2VHw==
+X-Gm-Message-State: ANhLgQ2GZtT+F3GZu/I5wjQa7ePPimKQCqb/R+i3H64LNKfQnkBmAMMV
+        BqtWgAVKHa01glZNWNFbnpv7U7gc22I=
+X-Google-Smtp-Source: ADFU+vsn/Gq7+jA1ahH0mmC5pyuCE0VmXofvEgWcHkKqfv7ljtVeDLBwPhQxjjKCKMHptBK7EhQEUA==
+X-Received: by 2002:ab0:45f8:: with SMTP id u111mr3003030uau.50.1585151419230;
+        Wed, 25 Mar 2020 08:50:19 -0700 (PDT)
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
+        by smtp.gmail.com with ESMTPSA id k14sm3109052vke.16.2020.03.25.08.50.18
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
+Received: by mail-vs1-f54.google.com with SMTP id e138so1767027vsc.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
+X-Received: by 2002:a67:694f:: with SMTP id e76mr2833828vsc.73.1585151417831;
+ Wed, 25 Mar 2020 08:50:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325091811.60725-1-yuchao0@huawei.com>
+References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
+ <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com> <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Wed, 25 Mar 2020 08:50:05 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
+Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        mkrishn@codeaurora.org, travitej@codeaurora.org,
+        nganji@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chao,
+Hi,
 
-I don't want to rebase old commit at this moment, so applied on top of the tree.
+On Wed, Mar 25, 2020 at 8:40 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Tue, Mar 24, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> wrote:
+> >
+> > Hi,
+> >
+> > On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+> > >
+> > > "The PM core always increments the runtime usage counter
+> > > before calling the ->suspend() callback and decrements it
+> > > after calling the ->resume() callback"
+> > >
+> > > DPU and DSI are managed as runtime devices. When
+> > > suspend is triggered, PM core adds a refcount on all the
+> > > devices and calls device suspend, since usage count is
+> > > already incremented, runtime suspend was not getting called
+> > > and it kept the clocks on which resulted in target not
+> > > entering into XO shutdown.
+> > >
+> > > Add changes to manage runtime devices during pm sleep.
+> > >
+> > > Changes in v1:
+> > >  - Remove unnecessary checks in the function
+> > >      _dpu_kms_disable_dpu (Rob Clark).
+> >
+> > I'm wondering what happened with my feedback on v1, AKA:
+> >
+> > https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
+> >
+> > Maybe you didn't see it?  ...or if you or Rob think I'm way off base
+> > (always possible) then please tell me so.
+> >
+>
+> At least w/ the current patch, disable_dpu should not be called for
+> screen-off (although I'd hope if all the screens are off the device
+> would suspend).
 
-Thanks,
+OK, that's good.
 
-On 03/25, Chao Yu wrote:
-> Unable to handle kernel NULL pointer dereference at virtual address 00000000
-> PC is at f2fs_free_dic+0x60/0x2c8
-> LR is at f2fs_decompress_pages+0x3c4/0x3e8
-> f2fs_free_dic+0x60/0x2c8
-> f2fs_decompress_pages+0x3c4/0x3e8
-> __read_end_io+0x78/0x19c
-> f2fs_post_read_work+0x6c/0x94
-> process_one_work+0x210/0x48c
-> worker_thread+0x2e8/0x44c
-> kthread+0x110/0x120
-> ret_from_fork+0x10/0x18
-> 
-> In f2fs_free_dic(), we can not use f2fs_put_page(,1) to release dic->tpages[i],
-> as the page's mapping is NULL.
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
-> v2:
-> - fix to skip release tpages[i] if it is NULL in error path.
->  fs/f2fs/compress.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
-> index ef7dd04312fe..6e10800729b6 100644
-> --- a/fs/f2fs/compress.c
-> +++ b/fs/f2fs/compress.c
-> @@ -1137,7 +1137,10 @@ void f2fs_free_dic(struct decompress_io_ctx *dic)
->  		for (i = 0; i < dic->cluster_size; i++) {
->  			if (dic->rpages[i])
->  				continue;
-> -			f2fs_put_page(dic->tpages[i], 1);
-> +			if (!dic->tpages[i])
-> +				continue;
-> +			unlock_page(dic->tpages[i]);
-> +			put_page(dic->tpages[i]);
->  		}
->  		kfree(dic->tpages);
->  	}
-> -- 
-> 2.18.0.rc1
+> But I won't claim to be a pm expert.. so not really
+> sure if this is the best approach or not.  I don't think our
+> arrangement of sub-devices under a parent is completely abnormal, so
+> it does feel like there should be a simpler solution..
+
+I think the other arguments about asymmetry are still valid and I've
+fixed bugs around this type of thing in the past.  For instance, see
+commit f7ccbed656f7 ("drm/rockchip: Suspend DP late").
+
+
+-Doug
