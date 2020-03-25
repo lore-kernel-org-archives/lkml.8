@@ -5,52 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7437AC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BADDC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:47:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B79B206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A626206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:47:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qwO8aTCj"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C1N2Wfsj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgCYUr2 (ORCPT
+        id S1727498AbgCYUr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 25 Mar 2020 16:47:28 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:40914 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYUr1 (ORCPT
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40232 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbgCYUr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:47:27 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02PKl6n0060227;
-        Wed, 25 Mar 2020 15:47:06 -0500
+        Wed, 25 Mar 2020 16:47:28 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02PKl7F2077591;
+        Wed, 25 Mar 2020 15:47:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585169226;
-        bh=GEKRmSESoMDG0lbS4ZyyT2Q80xiJh4SlP+/NplyuYdg=;
+        s=ti-com-17Q1; t=1585169227;
+        bh=yP+/2QQ21dm+k32bJ2x5S+0UixUTNaUZxRajYNPkMK4=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=qwO8aTCjipPXRzfKqo0sUFVKAQ8sXcGXu/NgFXTKZxmX4wBjDc5uERdWtCSGTs6OF
-         FzPC9e+TzR2GP03KFIFATEypLfSA7dbofZg6xYFPNOkesM7xdqKB+89rwoe5Ta8vBj
-         iVMoCrqEoKYBmE7rSe4k2CUu0TJFYF8E0+5KQhF0=
+        b=C1N2WfsjQWsdRUY1SBiJwvpKohYdH6OJaSGMF/Hihj9R06mH3j7btF8NzbZoqLkNE
+         awqvyreE09dCSLa/wK9g9DuTxC/kZR07tGIe63QwK4JZYR5/wpqxDaEDUVYbqauuNy
+         PRz/n56lGLtg9pc/Ty/ynO2z7vcXe143JmTk936E=
 Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02PKl6Bh102565
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02PKl7HP053266
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 25 Mar 2020 15:47:06 -0500
+        Wed, 25 Mar 2020 15:47:07 -0500
 Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE100.ent.ti.com
  (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 25
- Mar 2020 15:47:05 -0500
+ Mar 2020 15:47:07 -0500
 Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE100.ent.ti.com
  (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 25 Mar 2020 15:47:05 -0500
+ Frontend Transport; Wed, 25 Mar 2020 15:47:07 -0500
 Received: from lelv0597.itg.ti.com (lelv0597.itg.ti.com [10.181.64.32])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKl5fA018619;
-        Wed, 25 Mar 2020 15:47:05 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKl7Oo018669;
+        Wed, 25 Mar 2020 15:47:07 -0500
 Received: from localhost ([10.250.35.147])
-        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 02PKl557063372;
-        Wed, 25 Mar 2020 15:47:05 -0500
+        by lelv0597.itg.ti.com (8.14.7/8.14.7) with ESMTP id 02PKl7uP063399;
+        Wed, 25 Mar 2020 15:47:07 -0500
 From:   Suman Anna <s-anna@ti.com>
 To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -62,9 +62,9 @@ CC:     Clement Leger <cleger@kalray.eu>,
         <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
-Subject: [PATCH 1/4] dt-bindings: remoteproc: k3-dsp: Update bindings for C71x DSPs
-Date:   Wed, 25 Mar 2020 15:46:58 -0500
-Message-ID: <20200325204701.16862-2-s-anna@ti.com>
+Subject: [PATCH 3/4] remoteproc: add support for a new 64-bit trace version
+Date:   Wed, 25 Mar 2020 15:47:00 -0500
+Message-ID: <20200325204701.16862-4-s-anna@ti.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200325204701.16862-1-s-anna@ti.com>
 References: <20200325204701.16862-1-s-anna@ti.com>
@@ -77,147 +77,200 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Texas Instruments K3 family of SoCs have one of more newer
-generation TMS320C71x CorePac processor subsystem in addition to
-the existing TMS320C66x CorePac processor subsystems. Update the
-device tree bindings document for the C71x DSP devices.
+Introduce a new trace entry resource structure that accommodates
+a 64-bit device address to support 64-bit processors. This is to
+be used using an overloaded version value of 1 in the upper 32-bits
+of the previous resource type field. The new resource still uses
+32-bits for the length field (followed by a 32-bit reserved field,
+so can be updated in the future), which is a sufficiently large
+trace buffer size. A 32-bit padding field also had to be added
+to align the device address on a 64-bit boundary, and match the
+usage on the firmware side.
 
-The example is also updated to show the single C71 DSP present
-on J721E SoCs.
+The remoteproc debugfs logic also has been adjusted accordingly.
 
 Signed-off-by: Suman Anna <s-anna@ti.com>
 ---
- .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 78 ++++++++++++++++---
- 1 file changed, 69 insertions(+), 9 deletions(-)
+ drivers/remoteproc/remoteproc_core.c    | 40 ++++++++++++++++++++-----
+ drivers/remoteproc/remoteproc_debugfs.c | 37 ++++++++++++++++++-----
+ include/linux/remoteproc.h              | 26 ++++++++++++++++
+ 3 files changed, 87 insertions(+), 16 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-index 416e3abe7937..6b1536509c39 100644
---- a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
-@@ -27,9 +27,12 @@ description: |
- 
- properties:
-   compatible:
--    const: ti,j721e-c66-dsp
-+    enum:
-+      - ti,j721e-c66-dsp
-+      - ti,j721e-c71-dsp
-     description:
-       Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
-+      Use "ti,j721e-c71-dsp" for C71x DSPs on K3 J721E SoCs
- 
-   reg:
-     description: |
-@@ -37,18 +40,11 @@ properties:
-       Each entry should have the memory region's start address
-       and the size of the region, the representation matching
-       the parent node's '#address-cells' and '#size-cells' values.
--    minItems: 3
--    maxItems: 3
- 
-   reg-names:
-     description: |
-       Should contain strings with the names of the specific internal
-       internal memory regions, and should be defined in this order
--    maxItems: 3
--    items:
--      - const: l2sram
--      - const: l1pram
--      - const: l1dram
- 
-   ti,sci:
-     $ref: /schemas/types.yaml#/definitions/phandle
-@@ -117,6 +113,41 @@ properties:
-       should be defined as per the generic bindings in,
-       Documentation/devicetree/bindings/sram/sram.yaml
- 
-+if:
-+  properties:
-+    compatible:
-+      enum:
-+        - ti,j721e-c66-dsp
-+then:
-+  properties:
-+    reg:
-+      minItems: 3
-+      maxItems: 3
-+    reg-names:
-+      minItems: 3
-+      maxItems: 3
-+      items:
-+        - const: l2sram
-+        - const: l1pram
-+        - const: l1dram
-+else:
-+  if:
-+    properties:
-+      compatible:
-+        enum:
-+          - ti,j721e-c71-dsp
-+  then:
-+    properties:
-+      reg:
-+        minItems: 2
-+        maxItems: 2
-+      reg-names:
-+        minItems: 2
-+        maxItems: 2
-+        items:
-+          - const: l2sram
-+          - const: l1dram
+diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+index 53bc37c508c6..b9a097990862 100644
+--- a/drivers/remoteproc/remoteproc_core.c
++++ b/drivers/remoteproc/remoteproc_core.c
+@@ -609,21 +609,45 @@ void rproc_vdev_release(struct kref *ref)
+  *
+  * Returns 0 on success, or an appropriate error code otherwise
+  */
+-static int rproc_handle_trace(struct rproc *rproc, struct fw_rsc_trace *rsc,
++static int rproc_handle_trace(struct rproc *rproc, void *rsc,
+ 			      int offset, int avail, u16 ver)
+ {
+ 	struct rproc_debug_trace *trace;
+ 	struct device *dev = &rproc->dev;
++	struct fw_rsc_trace *rsc1;
++	struct fw_rsc_trace2 *rsc2;
+ 	char name[15];
++	size_t rsc_size;
++	u32 reserved;
++	u64 da;
++	u32 len;
 +
- required:
-  - compatible
-  - reg
-@@ -152,13 +183,26 @@ examples:
-             reg = <0x00 0xa6100000 0x00 0xf00000>;
-             no-map;
-         };
-+
-+        c71_0_dma_memory_region: c71-dma-memory@a8000000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x00 0xa8000000 0x00 0x100000>;
-+            no-map;
-+        };
-+
-+        c71_0_memory_region: c71-memory@a8100000 {
-+            compatible = "shared-dma-pool";
-+            reg = <0x00 0xa8100000 0x00 0xf00000>;
-+            no-map;
-+        };
-     };
++	if (!ver) {
++		rsc1 = (struct fw_rsc_trace *)rsc;
++		rsc_size = sizeof(*rsc1);
++		reserved = rsc1->reserved;
++		da = rsc1->da;
++		len = rsc1->len;
++	} else if (ver == 1) {
++		rsc2 = (struct fw_rsc_trace2 *)rsc;
++		rsc_size = sizeof(*rsc2);
++		reserved = rsc2->reserved;
++		da = rsc2->da;
++		len = rsc2->len;
++	} else {
++		dev_err(dev, "unsupported trace rsc version %d\n", ver);
++		return -EINVAL;
++	}
  
-     cbass_main: interconnect@100000 {
-         compatible = "simple-bus";
-         #address-cells = <2>;
-         #size-cells = <2>;
--        ranges = <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
-+        ranges = <0x00 0x64800000 0x00 0x64800000 0x00 0x00800000>, /* C71_0 */
-+                 <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
-                  <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
+-	if (sizeof(*rsc) > avail) {
++	if (rsc_size > avail) {
+ 		dev_err(dev, "trace rsc is truncated\n");
+ 		return -EINVAL;
+ 	}
  
-         /* J721E C66_0 DSP node */
-@@ -177,4 +221,20 @@ examples:
-                             <&c66_0_memory_region>;
-             mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
-         };
+ 	/* make sure reserved bytes are zeroes */
+-	if (rsc->reserved) {
+-		dev_err(dev, "trace rsc has non zero reserved bytes\n");
++	if (reserved) {
++		dev_err(dev, "trace rsc has non zero reserved bytes, value = 0x%x\n",
++			reserved);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -632,8 +656,8 @@ static int rproc_handle_trace(struct rproc *rproc, struct fw_rsc_trace *rsc,
+ 		return -ENOMEM;
+ 
+ 	/* set the trace buffer dma properties */
+-	trace->trace_mem.len = rsc->len;
+-	trace->trace_mem.da = rsc->da;
++	trace->trace_mem.len = len;
++	trace->trace_mem.da = da;
+ 
+ 	/* set pointer on rproc device */
+ 	trace->rproc = rproc;
+@@ -652,8 +676,8 @@ static int rproc_handle_trace(struct rproc *rproc, struct fw_rsc_trace *rsc,
+ 
+ 	rproc->num_traces++;
+ 
+-	dev_dbg(dev, "%s added: da 0x%x, len 0x%x\n",
+-		name, rsc->da, rsc->len);
++	dev_dbg(dev, "%s added: da 0x%llx, len 0x%x\n",
++		name, da, len);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/remoteproc/remoteproc_debugfs.c b/drivers/remoteproc/remoteproc_debugfs.c
+index 3560eed7a360..ff43736db45a 100644
+--- a/drivers/remoteproc/remoteproc_debugfs.c
++++ b/drivers/remoteproc/remoteproc_debugfs.c
+@@ -192,7 +192,8 @@ static int rproc_rsc_table_show(struct seq_file *seq, void *p)
+ 	struct resource_table *table = rproc->table_ptr;
+ 	struct fw_rsc_carveout *c;
+ 	struct fw_rsc_devmem *d;
+-	struct fw_rsc_trace *t;
++	struct fw_rsc_trace *t1;
++	struct fw_rsc_trace2 *t2;
+ 	struct fw_rsc_vdev *v;
+ 	int i, j;
+ 
+@@ -205,6 +206,7 @@ static int rproc_rsc_table_show(struct seq_file *seq, void *p)
+ 		int offset = table->offset[i];
+ 		struct fw_rsc_hdr *hdr = (void *)table + offset;
+ 		void *rsc = (void *)hdr + sizeof(*hdr);
++		u16 ver = hdr->st.v;
+ 
+ 		switch (hdr->st.t) {
+ 		case RSC_CARVEOUT:
+@@ -230,13 +232,32 @@ static int rproc_rsc_table_show(struct seq_file *seq, void *p)
+ 			seq_printf(seq, "  Name %s\n\n", d->name);
+ 			break;
+ 		case RSC_TRACE:
+-			t = rsc;
+-			seq_printf(seq, "Entry %d is of type %s\n",
+-				   i, types[hdr->st.t]);
+-			seq_printf(seq, "  Device Address 0x%x\n", t->da);
+-			seq_printf(seq, "  Length 0x%x Bytes\n", t->len);
+-			seq_printf(seq, "  Reserved (should be zero) [%d]\n", t->reserved);
+-			seq_printf(seq, "  Name %s\n\n", t->name);
++			if (ver == 0) {
++				t1 = rsc;
++				seq_printf(seq, "Entry %d is version %d of type %s\n",
++					   i, ver, types[hdr->st.t]);
++				seq_printf(seq, "  Device Address 0x%x\n",
++					   t1->da);
++				seq_printf(seq, "  Length 0x%x Bytes\n",
++					   t1->len);
++				seq_printf(seq, "  Reserved (should be zero) [%d]\n",
++					   t1->reserved);
++				seq_printf(seq, "  Name %s\n\n", t1->name);
++			} else if (ver == 1) {
++				t2 = rsc;
++				seq_printf(seq, "Entry %d is version %d of type %s\n",
++					   i, ver, types[hdr->st.t]);
++				seq_printf(seq, "  Device Address 0x%llx\n",
++					   t2->da);
++				seq_printf(seq, "  Length 0x%x Bytes\n",
++					   t2->len);
++				seq_printf(seq, "  Reserved (should be zero) [%d]\n",
++					   t2->reserved);
++				seq_printf(seq, "  Name %s\n\n", t2->name);
++			} else {
++				seq_printf(seq, "Entry %d is an unsupported version %d of type %s\n",
++					   i, ver, types[hdr->st.t]);
++			}
+ 			break;
+ 		case RSC_VDEV:
+ 			v = rsc;
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index 526d3cb45e37..3b3bea42f8b1 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -243,6 +243,32 @@ struct fw_rsc_trace {
+ 	u8 name[32];
+ } __packed;
+ 
++/**
++ * struct fw_rsc_trace2 - trace buffer declaration supporting 64-bits
++ * @padding: initial padding after type field for aligned 64-bit access
++ * @da: device address (64-bit)
++ * @len: length (in bytes)
++ * @reserved: reserved (must be zero)
++ * @name: human-readable name of the trace buffer
++ *
++ * This resource entry is an enhanced version of the fw_rsc_trace resourec entry
++ * and the provides equivalent functionality but designed for 64-bit remote
++ * processors.
++ *
++ * @da specifies the device address of the buffer, @len specifies
++ * its size, and @name may contain a human readable name of the trace buffer.
++ *
++ * After booting the remote processor, the trace buffers are exposed to the
++ * user via debugfs entries (called trace0, trace1, etc..).
++ */
++struct fw_rsc_trace2 {
++	u32 padding;
++	u64 da;
++	u32 len;
++	u32 reserved;
++	u8 name[32];
++} __packed;
 +
-+        /* J721E C71_0 DSP node */
-+        c71_0: dsp@64800000 {
-+            compatible = "ti,j721e-c71-dsp";
-+            reg = <0x00 0x64800000 0x00 0x00080000>,
-+                  <0x00 0x64e00000 0x00 0x0000c000>;
-+            reg-names = "l2sram", "l1dram";
-+            ti,sci = <&dmsc>;
-+            ti,sci-dev-id = <15>;
-+            ti,sci-proc-ids = <0x30 0xFF>;
-+            resets = <&k3_reset 15 1>;
-+            firmware-name = "j7-c71_0-fw";
-+            memory-region = <&c71_0_dma_memory_region>,
-+                            <&c71_0_memory_region>;
-+            mboxes = <&mailbox0_cluster4 &mbox_c71_0>;
-+        };
-     };
+ /**
+  * struct fw_rsc_vdev_vring - vring descriptor entry
+  * @da: device address
 -- 
 2.23.0
 
