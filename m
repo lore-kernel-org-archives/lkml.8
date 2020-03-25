@@ -2,125 +2,299 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB3C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0FFC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0992E2082D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:20:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585171253;
-	bh=5lTuaENgwe+jO4ZXbV3h/ksO3A+z4mLrxl48bAkXc/8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=F0Jv5UFkYfLkXpJ9vHwK+0BzjqhK5nCGWu4Uiwaq2QWQXe5viycZ32Y1xzLPxzglx
-	 7CWyVOZSrgZ8KMt8D33yx9OYeKM5TcV5NMpYKDcQs5Y0RwxwS+UoHG/VNvGIDe8xdY
-	 nX+YgR7Kvs5NW85BD55ucqFN90F2D10jniEPlJ7Q=
+	by mail.kernel.org (Postfix) with ESMTP id 09FF12082D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:21:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DT0+pyA4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgCYVUw (ORCPT
+        id S1727845AbgCYVVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:20:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727351AbgCYVUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:20:51 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81B2C20719;
-        Wed, 25 Mar 2020 21:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585171250;
-        bh=5lTuaENgwe+jO4ZXbV3h/ksO3A+z4mLrxl48bAkXc/8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UuS66/kG5mkaUy0bO6ayqwJMAo9AR2uq3vqcnjv8Y+HgcqJM4627esOHHzOuwCvZ1
-         Gf3x8hT6p29vCTnWTLlx0FDdUrKAXhRcf3RDzONzKo46fRpejoJXscwJ9VP04FN0z1
-         ZVh/jsQVS2DqReiuMzEacuwL7B+3o2RJEjauJpa8=
-Date:   Wed, 25 Mar 2020 16:20:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-pci <linux-pci@vger.kernel.org>
-Subject: Re: mmotm 2020-03-23-21-29 uploaded
- (pci/controller/dwc/pcie-tegra194.c)
-Message-ID: <20200325212048.GA72586@google.com>
+        Wed, 25 Mar 2020 17:21:33 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:33983 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgCYVVc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 17:21:32 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a23so1319671plm.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 14:21:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9liG+PpIPwwDCvgt6E2rUgbegdoZ31C+iCrJNrlhNEc=;
+        b=DT0+pyA47nJ7MK71VSJPumxfG2lqW2oArVgsLTr2rx/5CoQmjuvqd0Rcg7n8rx928n
+         EtgJetc2fThx2g1ofj6fP9cSYkOT2Gd7FYH8N5gJXfP8f7ThrmvHZcGYY24FEEK5dbtL
+         PNCVFzt2UkvKHU56IvQjJsUclB7YmlSNlNPX8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9liG+PpIPwwDCvgt6E2rUgbegdoZ31C+iCrJNrlhNEc=;
+        b=pf2Eho1KIHAXzSktqNJ0OoyAxuYZ3feMGU6elOoWyeJy5RN3Ue+TByET6j02LbGsst
+         lZft/6kuxn5o7CvjeGArJicJ0/ETGHB5JGCZzbNSXV/d48Wc5s3ZGtUOXGfDzMzT6/Kf
+         V5nglcqmz8e00AFWRtI9jQ/tQMdmXoZrMgr5iBCDfkybCtEz4909wbOEFE5NauwXpwx5
+         /urrPE23Cj86FfQuKQOI8bT1uToLzoKMWwS4+gDY3GkdqLVWN3XFxuRST+Ig5FLVbXrv
+         xBWlkrTCyDH65A3Gw+6hkL8zHuYwnp+pct2BHIV/p9Duwndu2seroz+aYR+WLwaxadHU
+         vEJg==
+X-Gm-Message-State: ANhLgQ3JvRqumuXAqiRohkwKnGLYG0jCGnZTab0BnoUBKS6XCK6w+C8v
+        JQSWGUZjWybqu1HGnAmWU8JSyA==
+X-Google-Smtp-Source: ADFU+vsDVJpxz3HF4XTa2rABYMAkOr77hHybFaaHhI5rT7uUiBodZnyi3/yo+Lp3tivLX0SvO/AmhQ==
+X-Received: by 2002:a17:90a:2103:: with SMTP id a3mr5886451pje.181.1585171291242;
+        Wed, 25 Mar 2020 14:21:31 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s61sm153903pjd.33.2020.03.25.14.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 14:21:30 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 14:21:29 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <202003251404.12A69348@keescook>
+References: <20200325120345.12946-1-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200325170122.GA29504@red-moon.cambridge.arm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200325120345.12946-1-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 05:01:43PM +0000, Lorenzo Pieralisi wrote:
-> On Wed, Mar 25, 2020 at 08:43:32PM +0530, Vidya Sagar wrote:
-> > On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
-> > > On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
-> > > > On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
-> > > > > The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
-> > > > > 
-> > > > >     http://www.ozlabs.org/~akpm/mmotm/
-> > > > > 
-> > > > > mmotm-readme.txt says
-> > > > > 
-> > > > > README for mm-of-the-moment:
-> > > > > 
-> > > > > http://www.ozlabs.org/~akpm/mmotm/
-> > > > > 
-> > > > > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
-> > > > > more than once a week.
-> > > > > 
-> > > > > You will need quilt to apply these patches to the latest Linus release (5.x
-> > > > > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
-> > > > > http://ozlabs.org/~akpm/mmotm/series
-> > > > 
-> > > > 
-> > > > on x86_64:
-> > > > 
-> > > > ../drivers/pci/controller/dwc/pcie-tegra194.c: In function ‘tegra_pcie_dw_parse_dt’:
-> > > > ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_phy_get’? [-Werror=implicit-function-declaration]
-> > > >    pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
-> > > >                          ^~~~~~~~~~~~~~
-> > > >                          devm_phy_get
-> > > 
-> > > Thanks a lot for the report!
-> > > 
-> > > This was found on mmotm, but I updated my -next branch with Lorenzo's
-> > > latest pci/endpoint branch (current head 775d9e68f470) and reproduced
-> > > this build failure with the .config you attached.
-> > > 
-> > > I dropped that branch from my -next branch for now and pushed it.
-> > I found that one header file inclusion is missing.
-> > The following patch fixes it.
-> > Also, I wanted to know how can I catch this locally? i.e. How can I
-> > generate the config file attached by Randy locally so that I can get the
-> > source ready without these kind of issues?
-
-Randy attached the config-r1578 file to his initial report.  I saved
-that attachment, then:
-
-  $ git checkout next
-  $ make mrproper
-  $ cp ~/Downloads/config-r1578 .config
-  $ make drivers/pci/controller/
-
-> > Bjorn/Lorenzo, would you be able to apply below change in your trees or
-> > do I need to send a patch for this?
+On Wed, Mar 25, 2020 at 01:03:44PM +0100, Vlastimil Babka wrote:
+> A recently proposed patch to add vm_swappiness command line parameter in
+> addition to existing sysctl [1] made me wonder why we don't have a general
+> support for passing sysctl parameters via command line. Googling found only
+> somebody else wondering the same [2], but I haven't found any prior discussion
+> with reasons why not to do this.
 > 
-> Squashed in and re-pushed out pci/endpoint, it should have fixed this
-> issue.
+> Settings the vm_swappiness issue aside (the underlying issue might be solved in
+> a different way), quick search of kernel-parameters.txt shows there are already
+> some that exist as both sysctl and kernel parameter - hung_task_panic,
+> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
+> would remove the need to add more of those one-offs and might be handy in
+> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
+> Also after 61a47c1ad3a4 ("sysctl: Remove the sysctl system call") the only way
+> to set sysctl is via procfs, so this would eventually allow small systems to be
+> built without CONFIG_PROC_SYSCTL and still be able to change sysctl parameters.
+> 
+> Hence, this patch adds a new parse_args() pass that looks for parameters
+> prefixed by 'sysctl.' and searches for them in the sysctl ctl_tables. When
+> found, the respective proc handler is invoked. The search is just a naive
+> linear one, to avoid using the whole procfs layer. It should be acceptable,
+> as the cost depends on number of sysctl. parameters passed.
+> 
+> The main limitation of avoiding the procfs layer is however that sysctls
+> dynamically registered by register_sysctl_table() or register_sysctl_paths()
+> cannot currently be set by this method.
+> 
+> The processing is hooked right before the init process is loaded, as some
+> handlers might be more complicated than simple setters and might need some
+> subsystems to be initialized. At the moment the init process can be started and
+> eventually execute a process writing to /proc/sys/ then it should be also fine
+> to do that from the kernel.
+> 
+> [1] https://lore.kernel.org/linux-doc/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
+> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+> v2: - handle any nesting level of parameter name
+>  - add Documentation/admin-guide/kernel-parameters.txt blurb
+>  - alias support for legacy one-off parameters, with first conversion (patch 2)
+>  - still no support for dynamically registed sysctls
+> 
+>  .../admin-guide/kernel-parameters.txt         |  9 +++
+>  include/linux/sysctl.h                        |  1 +
+>  init/main.c                                   | 21 +++++++
+>  kernel/sysctl.c                               | 62 +++++++++++++++++++
+>  4 files changed, 93 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..5076e288f93f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4793,6 +4793,15 @@
+>  
+>  	switches=	[HW,M68k]
+>  
+> +	sysctl.*=	[KNL]
+> +			Set a sysctl parameter right before loading the init
+> +			process, as if the value was written to the respective
+> +			/proc/sys/... file. Currently a subset of sysctl
+> +			parameters is supported that is not registered
+> +			dynamically. Unrecognized parameters and invalid values
+> +			are reported in the kernel log.
+> +			Example: sysctl.vm.swappiness=40
+> +
+>  	sysfs.deprecated=0|1 [KNL]
+>  			Enable/disable old style sysfs layout for old udev
+>  			on older distributions. When this option is enabled
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index 02fa84493f23..62ae963a5c0c 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -206,6 +206,7 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
+>  void unregister_sysctl_table(struct ctl_table_header * table);
+>  
+>  extern int sysctl_init(void);
+> +int process_sysctl_arg(char *param, char *val, const char *unused, void *arg);
+>  
+>  extern struct ctl_table sysctl_mount_point[];
+>  
+> diff --git a/init/main.c b/init/main.c
+> index ee4947af823f..74a094c6b8b9 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1345,6 +1345,25 @@ void __weak free_initmem(void)
+>  	free_initmem_default(POISON_FREE_INITMEM);
+>  }
+>  
+> +static void do_sysctl_args(void)
+> +{
+> +#ifdef CONFIG_SYSCTL
+> +	size_t len = strlen(saved_command_line) + 1;
+> +	char *command_line;
+> +
+> +	command_line = kzalloc(len, GFP_KERNEL);
+> +	if (!command_line)
+> +		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
+> +
+> +	strcpy(command_line, saved_command_line);
 
-I updated my -next branch with this, thanks!
+No need to open-code this:
 
-Bjorn
+	char *command_line;
+
+	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+	if (!command_line)
+		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
+
+> +
+> +	parse_args("Setting sysctl args", command_line,
+> +		   NULL, 0, -1, -1, NULL, process_sysctl_arg);
+> +
+> +	kfree(command_line);
+> +#endif
+> +}
+> +
+>  static int __ref kernel_init(void *unused)
+>  {
+>  	int ret;
+> @@ -1367,6 +1386,8 @@ static int __ref kernel_init(void *unused)
+>  
+>  	rcu_end_inkernel_boot();
+>  
+> +	do_sysctl_args();
+> +
+>  	if (ramdisk_execute_command) {
+>  		ret = run_init_process(ramdisk_execute_command);
+>  		if (!ret)
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index ad5b88a53c5a..18c7f5606d55 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1980,6 +1980,68 @@ int __init sysctl_init(void)
+>  	return 0;
+>  }
+>  
+> +/* Set sysctl value passed on kernel command line. */
+> +int process_sysctl_arg(char *param, char *val,
+> +			       const char *unused, void *arg)
+> +{
+> +	size_t count;
+> +	char *remaining;
+> +	int err;
+> +	loff_t ppos = 0;
+> +	struct ctl_table *ctl, *found = NULL;
+> +
+> +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
+> +		return 0;
+> +
+> +	param += sizeof("sysctl.") - 1;
+> +
+> +	remaining = param;
+> +	ctl = &sysctl_base_table[0];
+> +
+> +	while(ctl->procname != 0) {
+> +		int len = strlen(ctl->procname);
+> +		if (strncmp(remaining, ctl->procname, len)) {
+> +			ctl++;
+> +			continue;
+> +		}
+
+I think you need to validate that "len" is within "remaining" here
+first.
+
+> +		if (ctl->child) {
+> +			if (remaining[len] == '.') {
+> +				remaining += len + 1;
+
+And that "len + 1" is still valid.
+
+> +				ctl = ctl->child;
+> +				continue;
+> +			}
+> +		} else {
+> +			if (remaining[len] == '\0') {
+> +				found = ctl;
+> +				break;
+> +			}
+> +		}
+> +		ctl++;
+> +	}
+> +
+> +	if (!found) {
+> +		pr_warn("Unknown sysctl param '%s' on command line", param);
+> +		return 0;
+> +	}
+> +
+> +	if (!(found->mode & 0200)) {
+> +		pr_warn("Cannot set sysctl '%s=%s' from command line - not writable",
+> +			param, val);
+> +		return 0;
+> +	}
+
+Oh yes; good call about this writable mode test.
+
+> +
+> +	count = strlen(val);
+> +	err = found->proc_handler(found, 1, val, &count, &ppos);
+> +
+> +	if (err)
+> +		pr_warn("Error %d setting sysctl '%s=%s' from command line",
+> +			err, param, val);
+> +
+> +	pr_debug("Set sysctl '%s=%s' from command line", param, val);
+> +
+> +	return 0;
+> +}
+> +
+>  #endif /* CONFIG_SYSCTL */
+>  
+>  /*
+> -- 
+> 2.25.1
+> 
+
+Outside of the nits and missing bounds check, I like it! :) 
+
+-- 
+Kees Cook
