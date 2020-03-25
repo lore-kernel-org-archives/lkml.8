@@ -2,126 +2,217 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9CEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E282AC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:42:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82FB20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:38:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B47C42073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:42:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="llI5fbH7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgCYWid (ORCPT
+        id S1727456AbgCYWm0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:38:33 -0400
-Received: from mga11.intel.com ([192.55.52.93]:25610 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727384AbgCYWic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:38:32 -0400
-IronPort-SDR: z3UfsXyymmQ2a3fB8GnyEEHpQ6UKzAwElxvSKDzo4BErteOlwr/d61eClCekm48fTnW3gAkIz5
- RjWA8C4LNOig==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 15:38:31 -0700
-IronPort-SDR: WJpufqhInHMpKaD/eTIsZfNtUgyJCcvJW4kZRhUTVetTqUZXjUkDzT38LDF+dRj4o6UuY8CaI5
- mmBKiCZrsplA==
-X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
-   d="scan'208";a="393774794"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.134.90.138])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 15:38:30 -0700
-Message-ID: <6f90d8fa0301b19ddae3e7558df6408e23f4e04b.camel@linux.intel.com>
-Subject: Re: [PATCH v2] platform: x86: Add ACPI driver for ChromeOS
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, vbendeb@chromium.org,
-        groeck@chromium.org, bleung@chromium.org, dtor@chromium.org,
-        gwendal@chromium.org, andy@infradead.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Ayman Bagabas <ayman.bagabas@gmail.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jeremy Soller <jeremy@system76.com>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Yauhen Kharuzhy <jekhor@gmail.com>,
-        platform-driver-x86@vger.kernel.org
-Date:   Wed, 25 Mar 2020 15:38:28 -0700
-In-Reply-To: <e29d6279-d7e3-8164-3f52-5017bfe79436@collabora.com>
-References: <20200322094334.1872663-1-enric.balletbo@collabora.com>
-         <20200322111022.GA72939@kroah.com>
-         <c480f318-c326-d51c-e757-c65c2526ab4d@collabora.com>
-         <20200324164956.GE2518746@kroah.com>
-         <3444110c-d6c0-16df-9b5d-12578ed442c5@collabora.com>
-         <3166e472e0ef5c0db8da3ab7d846b47795e69057.camel@linux.intel.com>
-         <fbd5e95a-59ab-bb51-892e-ddd220b85215@collabora.com>
-         <51a98cae11de1529bdaa695a0c1eeb2043191b3f.camel@linux.intel.com>
-         <e29d6279-d7e3-8164-3f52-5017bfe79436@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.2 (3.34.2-1.fc31) 
+        Wed, 25 Mar 2020 18:42:26 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40233 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727395AbgCYWm0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 18:42:26 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so1381772plk.7
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:42:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=32blQ6BelWdyKkuvsFFmseYgkxqvrHHDfZ4Jy+npmXg=;
+        b=llI5fbH7jaEnN2aApIM8CfavTiQ8UjVN18ZZoPEMccXPEkh2nRieYPs4beOexWuYHS
+         UM/90F8INodTY70v8DG9jBgXhsp8jegHgt232KmKLtYTSKCdaJIFpDVGFmLdiaYpXWta
+         qy9v83lejzlGM9+bStyyIN0L9/fJmzJ9jP1kk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=32blQ6BelWdyKkuvsFFmseYgkxqvrHHDfZ4Jy+npmXg=;
+        b=r/ruff2XpzQXIoGOa3w1fjFguMO1uT0+8nNY3MBDAuhwrgZz048SWffDoepwoXcIfE
+         o7NS4RjHq0BXzAZ+NXculRnMUXOAaU/2pk+kZH7zTCWj+PtaRFHvfQWmFkHOVdJ4Ny1O
+         p2rmkxa/qefQWxlka+zjnOdZJ4KDtEUEXhcrDOTkt2du5Vq7DySNE/F0Rk/s8var61Gx
+         l4WbOxomTBVxOgeXK/umV53O6sbjjb2vfn8+T9llrT24vdoEjJKjwnR1rMOSnmg/FkUU
+         rZXXAnon57UJLj7a1CvaLOoW2+RG0IRqLBtFPaBbEk/e9S9KZawjHGb46oiSQtRlGu8G
+         y0bA==
+X-Gm-Message-State: ANhLgQ0FEh2wW3AHYup2CLyfCZzcLU5F1SQAX5Fv9CP81Wm/Q9Sx5gfP
+        kqms9lvnfSxzRIcB1QFOzVDsvg==
+X-Google-Smtp-Source: ADFU+vvicQ+leUWBf0Njne8GoiluUkBvqVW1zfb4wNajEaoMEv2V6R3u/c0lURO6sdKariva9/uKVw==
+X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr6089435pjq.5.1585176144350;
+        Wed, 25 Mar 2020 15:42:24 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h15sm158986pfq.10.2020.03.25.15.42.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 15:42:23 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 15:42:22 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v2 2/2] kernel/sysctl: support handling command line aliases
+Message-ID: <202003251423.9138B8C8A9@keescook>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <20200325120345.12946-2-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325120345.12946-2-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-25 at 22:54 +0100, Enric Balletbo i Serra wrote:
-> Hi Srinivas,
+On Wed, Mar 25, 2020 at 01:03:45PM +0100, Vlastimil Babka wrote:
+> We can now handle sysctl parameters on kernel command line, but historically
+> some parameters introduced their own command line equivalent, which we don't
+> want to remove for compatibility reasons. We can however convert them to the
+> generic infrastructure with a table translating the legacy command line
+> parameters to their sysctl names, and removing the one-off param handlers.
 > 
-
-[cut]
-
-> Evaluating \CRHW.HWID
-> 0x1 Outstanding allocations after evaluation of \CRHW.HWID
-> Evaluation of \CRHW.HWID returned object 0x55b9e373fd60, external
-> buffer length 38
->   [Package] Contains 1 Elements:
->     [String] Length 00 = ""
+> This patch adds the support and makes the first conversion to demonstrate it,
+> on the (deprecated) numa_zonelist_order parameter.
 > 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  kernel/sysctl.c | 39 +++++++++++++++++++++++++++++++++++----
+>  mm/page_alloc.c |  9 ---------
+>  2 files changed, 35 insertions(+), 13 deletions(-)
 > 
-> I found that the VBTx are addresses setup in the following file.
-> 
-> src/vendorcode/google/chromeos/acpi/gnvs.asl:
-> 
-> VBT0,   32,     // 0x000 - Boot Reason
-> VBT1,   32,     // 0x004 - Active Main Firmware
-> VBT2,   32,     // 0x008 - Active EC Firmware
-> VBT3,   16,     // 0x00c - CHSW
-> VBT4, 2048,     // 0x00e - HWID
-> VBT5,  512,     // 0x10e - FWID
-> VBT6,  512,     // 0x14e - FRID
-> VBT7,   32,     // 0x18e - active main firmware type
-> VBT8,   32,     // 0x192 - Recovery Reason
-> VBT9,   32,     // 0x196 - FMAP base address
-> CHVD, 24576,    // 0x19a - VDAT space filled by verified boot
-> VBTA,   32,     // 0xd9a - pointer to smbios FWID
-> MEHH,  256,     // 0xd9e - Management Engine Hash
-> RMOB,   32,     // 0xdbe - RAM oops base address
-> RMOL,   32,     // 0xdc2 - RAM oops length
-> ROVP,   32,     // 0xdc6 - pointer to RO_VPD
-> ROVL,   32,     // 0xdca - size of RO_VPD
-> RWVP,   32,     // 0xdce - pointer to RW_VPD
-> RWVL,   32,     // 0xdd2 - size of RW_VPD
->                 // 0xdd6
-> 
-> Can I assume that the info I want is only accessible in runtime and
-> is not
-> exported via the static tables?
-Yes. Basically these are pointing to a memory address. From user space
-you can't read this memory. We are planing to do something for this,
-but it will take sometime.
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index 18c7f5606d55..fd72853396f9 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -1971,6 +1971,22 @@ static struct ctl_table dev_table[] = {
+>  	{ }
+>  };
+>  
+> +struct sysctl_alias {
+> +	char *kernel_param;
 
-Thanks,
-Srinivas
+const char ...
 
+> +	char *sysctl_param;
+> +};
+> +
+> +/*
+> + * Historically some settings had both sysctl and a command line parameter.
+> + * With the generic sysctl. parameter support, we can handle them at a single
+> + * place and only keep the historical name for compatibility. This is not meant
+> + * to add brand new aliases.
+> + */
+> +static struct sysctl_alias sysctl_aliases[] = {
 
+static const ...
 
-> 
-> Thanks,
->  Enric
+> +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+> +	{ }
+> +};
+> +
+>  int __init sysctl_init(void)
+>  {
+>  	struct ctl_table_header *hdr;
+> @@ -1980,6 +1996,18 @@ int __init sysctl_init(void)
+>  	return 0;
+>  }
+>  
+> +char *sysctl_find_alias(char *param)
+> +{
+> +	struct sysctl_alias *alias;
+> +
+> +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
+> +		if (strcmp(alias->kernel_param, param) == 0)
+> +			return alias->sysctl_param;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  /* Set sysctl value passed on kernel command line. */
+>  int process_sysctl_arg(char *param, char *val,
+>  			       const char *unused, void *arg)
+> @@ -1990,10 +2018,13 @@ int process_sysctl_arg(char *param, char *val,
+>  	loff_t ppos = 0;
+>  	struct ctl_table *ctl, *found = NULL;
+>  
+> -	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
+> -		return 0;
+> -
+> -	param += sizeof("sysctl.") - 1;
+> +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1) == 0) {
+> +		param += sizeof("sysctl.") - 1;
+> +	} else {
+> +		param = sysctl_find_alias(param);
+> +		if (!param)
+> +			return 0;
+> +	}
+>  
+>  	remaining = param;
+>  	ctl = &sysctl_base_table[0];
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..de7a134b1b8a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
+>  	return 0;
+>  }
+>  
+> -static __init int setup_numa_zonelist_order(char *s)
+> -{
+> -	if (!s)
+> -		return 0;
+> -
+> -	return __parse_numa_zonelist_order(s);
+> -}
+> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
+> -
+>  char numa_zonelist_order[] = "Node";
 
+Nice. :) Effectively: -9 lines +1 line for the using aliasing. I think
+it would be worth identifying the specific requirements for a sysctl
+alias to be safe to use, and likely in a comment before the alias table:
 
+- boot param parsing must be identical to the sysctl parsing
+- temporal changes must be tolerable: i.e. early_param() runs earlier
+  than when the sysctl-in-boot-param runs -- must the variable be set
+  before the code's other __init functions run?
+- must be for a non-module code (since we don't have the dynamic support
+  yet)
+
+As it turns out, "numa_zonelist_order" has literally no effect on
+anything -- it's a parsed but ignored setting:
+
+static int __parse_numa_zonelist_order(char *s)
+{
+	/*
+	 * We used to support different zonlists modes but they turned
+	 * out to be just not useful. Let's keep the warning in place
+	 * if somebody still use the cmd line parameter so that we do
+	 * not fail it silently
+	 */
+	if (!(*s == 'd' || *s == 'D' || *s == 'n' || *s == 'N')) {
+		pr_warn("Ignoring unsupported numa_zonelist_order value: %s\n", s);
+		return -EINVAL;
+	}
+	return 0;
+}
+
+But anyway, do you have a way to generate a list of potential candidates?
+
+-- 
+Kees Cook
