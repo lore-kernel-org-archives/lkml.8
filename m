@@ -2,142 +2,121 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5D4C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A72CC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEDC20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30CCD20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:51:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585173104;
+	bh=9frJH47f5iN/FIA6vGcLLofwEV7gZc2xR5GYXejNcHo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=UoY5DGA+f4/Q178G81xfzZA1qSgtl0KMFzTzT+pENkWUMjd3wz4UMW5+NljfH3bmM
+	 RBIEFUXhcdMIzAdsQV4W4OSQRkBJTcBWS8GplHSfownNtzFO0YuP6lHZU+yV8wMdis
+	 PWpPJccnrrvpgRnhL4EycRw+qBPZphRa4rp9w1hY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbgCYVvP (ORCPT
+        id S1727486AbgCYVvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:51:15 -0400
-Received: from mga14.intel.com ([192.55.52.115]:65091 "EHLO mga14.intel.com"
+        Wed, 25 Mar 2020 17:51:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:53526 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbgCYVvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:51:14 -0400
-IronPort-SDR: djFS2Wy2Bm0pYdKq90Kv16FTpCEzT3qGacrldRkPofD7BLTfivDxiwADK4KH3gQfJe67tkWQEH
- XYYarTIaPd7A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 14:51:14 -0700
-IronPort-SDR: 6xgudFIjy1CzWRRc48LtFdeAxHVrlYFfTo63YZE4NYbvMjdkFxHVPJPGrO+UNQp0Xr2jTj3nKa
- WTzhXN/fIh5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="238631971"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga007.fm.intel.com with ESMTP; 25 Mar 2020 14:51:14 -0700
-Message-ID: <e1122e1d77dec0d5f0a698c855833050c740a4bc.camel@intel.com>
-Subject: Re: [RFC PATCH v9 25/27] x86/cet/shstk: Handle thread Shadow Stack
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Wed, 25 Mar 2020 14:51:13 -0700
-In-Reply-To: <202002251324.5D515260@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-26-yu-cheng.yu@intel.com>
-         <202002251324.5D515260@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1726081AbgCYVvn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 17:51:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47C281FB;
+        Wed, 25 Mar 2020 14:51:38 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD9993F71E;
+        Wed, 25 Mar 2020 14:51:37 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 21:51:36 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        alsa-devel@alsa-project.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: mchp-i2s-mcc: make signed 1 bit bitfields unsigned" to the asoc tree
+In-Reply-To:  <20200325132913.110115-1-colin.king@canonical.com>
+Message-Id:  <applied-20200325132913.110115-1-colin.king@canonical.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 13:29 -0800, Kees Cook wrote:
-> On Wed, Feb 05, 2020 at 10:19:33AM -0800, Yu-cheng Yu wrote:
-> > [...]
-> > A 64-bit SHSTK has a fixed size of RLIMIT_STACK. A compat-mode thread SHSTK
-> > has a fixed size of 1/4 RLIMIT_STACK.  This allows more threads to share a
-> > 32-bit address space.
-> 
-> I am not understanding this part. :) Entries are sizeof(unsigned long),
-> yes? A 1/2 RLIMIT_STACK would cover 32-bit, but 1/4 is less, so why does
-> that provide for more threads?
+The patch
 
-Each thread has a separate shadow stack.  If each shadow stack is smaller, the
-address space can accommodate more shadow stack allocations.
+   ASoC: mchp-i2s-mcc: make signed 1 bit bitfields unsigned
 
-> >[...]
-> > diff --git a/arch/x86/kernel/cet.c b/arch/x86/kernel/cet.c
-> > index cba5c7656aab..5b45abda80a1 100644
-> > --- a/arch/x86/kernel/cet.c
-> > +++ b/arch/x86/kernel/cet.c
-> > @@ -170,6 +170,47 @@ int cet_setup_shstk(void)
-> >  	return 0;
-> >  }
-> >  
-> > +int cet_setup_thread_shstk(struct task_struct *tsk)
-> > +{
-> > +	unsigned long addr, size;
-> > +	struct cet_user_state *state;
-> > +	struct cet_status *cet = &tsk->thread.cet;
-> > +
-> > +	if (!cet->shstk_enabled)
-> > +		return 0;
-> > +
-> > +	state = get_xsave_addr(&tsk->thread.fpu.state.xsave,
-> > +			       XFEATURE_CET_USER);
-> > +
-> > +	if (!state)
-> > +		return -EINVAL;
-> > +
-> > +	size = rlimit(RLIMIT_STACK);
-> 
-> Is SHSTK incompatible with RLIM_INFINITY stack rlimits?
+has been applied to the asoc tree at
 
-I will change it to:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-	size = min(rlimit(RLIMIT_STACK), 4 GB);
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-> 
-> > +
-> > +	/*
-> > +	 * Compat-mode pthreads share a limited address space.
-> > +	 * If each function call takes an average of four slots
-> > +	 * stack space, we need 1/4 of stack size for shadow stack.
-> > +	 */
-> > +	if (in_compat_syscall())
-> > +		size /= 4;
-> > +
-> > +	addr = alloc_shstk(size);
-> 
-> I assume it'd fail here, but I worry about Stack Clash style attacks.
-> I'd like to see test cases that make sure the SHSTK gap is working
-> correctly.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-I will work on some tests.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Yu-cheng
+Mark
 
+From 633fddee7355e46a5b5ec471abb58d65e1e41012 Mon Sep 17 00:00:00 2001
+From: Colin Ian King <colin.king@canonical.com>
+Date: Wed, 25 Mar 2020 13:29:13 +0000
+Subject: [PATCH] ASoC: mchp-i2s-mcc: make signed 1 bit bitfields unsigned
+
+The signed 1 bit bitfields should be unsigned, so make them unsigned.
+
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20200325132913.110115-1-colin.king@canonical.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/atmel/mchp-i2s-mcc.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/atmel/mchp-i2s-mcc.c b/sound/soc/atmel/mchp-i2s-mcc.c
+index befc2a3a05b0..3cb63886195f 100644
+--- a/sound/soc/atmel/mchp-i2s-mcc.c
++++ b/sound/soc/atmel/mchp-i2s-mcc.c
+@@ -239,10 +239,10 @@ struct mchp_i2s_mcc_dev {
+ 	unsigned int				frame_length;
+ 	int					tdm_slots;
+ 	int					channels;
+-	int					gclk_use:1;
+-	int					gclk_running:1;
+-	int					tx_rdy:1;
+-	int					rx_rdy:1;
++	unsigned int				gclk_use:1;
++	unsigned int				gclk_running:1;
++	unsigned int				tx_rdy:1;
++	unsigned int				rx_rdy:1;
+ };
+ 
+ static irqreturn_t mchp_i2s_mcc_interrupt(int irq, void *dev_id)
+-- 
+2.20.1
 
