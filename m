@@ -2,80 +2,101 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BE7C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1EB4C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A38820775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585140302;
-	bh=qgXKHtmY9kOCICENIGp4XHbWH+aHq+z99hqCOfHAILU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x+pn9KzYfKVR/OoS4z97tOYiY6Xc+CY2CqSwnRfPEARbk138abtLUSdHAorao12xb
-	 iQJpVdLtR6Kny6zCUMgd9yi9rbrRTelOlU8lVUHROk6aYtePNuo2DqM3ynI8e8nNNy
-	 mxNr33uuB2BYF/IiG5MWUjCnhE4p8loHXzDepEEY=
+	by mail.kernel.org (Postfix) with ESMTP id 7292E2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:45:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="E7zSW9me"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727402AbgCYMpB (ORCPT
+        id S1727434AbgCYMpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:45:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727280AbgCYMpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:45:00 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 389F02076A;
-        Wed, 25 Mar 2020 12:44:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585140299;
-        bh=qgXKHtmY9kOCICENIGp4XHbWH+aHq+z99hqCOfHAILU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GL67TANSfKxEIUirrL8/8UplMEO6rupt82NWhq2mineXAYpsugsoqTCxXg1PiOxX2
-         fOUbY3r4QUtvwKa//2yZ0I1yCol8/+7vOuhjhZS1WtdOBhcQ4hQIhhy408z0Lu3SI+
-         /g+QtMlU0qRagpGkqZBsk/DyS/1jkd6G/li9UXY0=
-Date:   Wed, 25 Mar 2020 13:44:57 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        nicholas.johnson-opensource@outlook.com.au
-Subject: Re: [PATCH v3 2/2] nvmem: core: use is_bin_visible for permissions
-Message-ID: <20200325124457.GA3511062@kroah.com>
-References: <20200325122116.15096-1-srinivas.kandagatla@linaro.org>
- <20200325122116.15096-3-srinivas.kandagatla@linaro.org>
+        Wed, 25 Mar 2020 08:45:32 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17411 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727280AbgCYMpb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:45:31 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7b520f0000>; Wed, 25 Mar 2020 05:43:59 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 25 Mar 2020 05:45:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 25 Mar 2020 05:45:30 -0700
+Received: from [10.26.72.231] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 12:45:30 +0000
+Subject: Re: [PATCH] soc/tegra: fuse: Add custom SoC attributes
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200320113716.6105-1-jonathanh@nvidia.com>
+ <20200320151035.GB3706404@ulmo>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d007d8b1-6420-469a-18af-09088b8b8398@nvidia.com>
+Date:   Wed, 25 Mar 2020 12:45:28 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325122116.15096-3-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20200320151035.GB3706404@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585140239; bh=hSYr50g/KiRq7rbDuhfXVHS/4zZ8KNe6DJGXMUcV/1g=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=E7zSW9mev9e5n/EFUeh7kBmqoJtXeYQsS/N3NULZOHF2s8M5LTJkDc5iN6FAqVQ4d
+         iiKnZ3aJNGECdxjhEMEf7Iaf5qsTVMZtuER+lsNbqx7fk4SlCEHxdZVDrdyQj985/A
+         GeDxvWHfz8jkPmN5C5CbOWcBPfxtFp02/01CtP+qm9HvDdMrhJ2QfQkZyNnL4l2SBS
+         UtG87PN+i+NOIjRnvqs+1JRq3/brN+pFpMOvWYqXqJkhfo4NyNj/GQibH90NYlF3ee
+         85xRhba0LQUzpiH1lE/qM0AhbWyYRurLOUKAklPhGThD702dVQNRMR/8GwA/9oN4Bf
+         rrewTQbQWNKTQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:21:16PM +0000, Srinivas Kandagatla wrote:
-> By using is_bin_visible callback to set permissions will remove a
-> large list of attribute groups. These group permissions can be
-> dynamically derived in the callback.
+
+On 20/03/2020 15:10, Thierry Reding wrote:
+> On Fri, Mar 20, 2020 at 11:37:16AM +0000, Jon Hunter wrote:
+>> Add a custom SoC attribute for Tegra to expose the HIDREV register
+>> contents to userspace via the sysfs. This register provides additional
+>> details about the fabrication and versioning of the device. Exposing
+>> this information is useful for identifying the exact device revision and
+>> device type.
+>>
+>> Please note that the fields in this register vary depending on the Tegra
+>> generation and so instead of exposing the individual fields, just expose
+>> the entire contents of the register. Details of the register fields can
+>> be found in the Technical Reference Manual for each Tegra device.
 > 
-> Also add checks for read/write callbacks and set permissions accordingly.
-> 
-> As part of this cleanup it does not make sense to have a separate
-> nvmem-sysfs.c and nvmem.h file anymore, so move all the relevant
-> data structures and functions to core.c
+> That seems a little suboptimal to me. It's pretty trivial for the kernel
+> to distinguish between different SoC generations in order to know what
+> the fields are. It's a lot more difficult for userspace to do so. Is the
+> register completely different between SoC generations or just slightly?
 
-And because of that move, it's impossible to see the real changes made
-here :(
+It looks like only Tegra194 is different which is a shame.
+Unfortunately, does not appear to be documented in the public TRM at the
+moment. Hopefully we can fix that.
 
-Can you do this in two steps, one do the code/logic changes, and the
-other do the "move into one file"?  That way it is actually reviewable,
-as it is, it's impossible to do so.
+> Having individual fields exposed as individual attributes seems like it
+> would make it a lot easier for userspace to get at the needed bits.
 
-I'll go queue up the first patch to make the series smaller :)
+Yes that does make sense.
 
-thanks,
+Jon
 
-greg k-h
+-- 
+nvpublic
