@@ -2,169 +2,163 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5EEC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AC1C54FD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C5C20724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D98C520724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 03:20:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Nlajya1H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCYDTf (ORCPT
+        id S1727368AbgCYDUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 23:19:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62908 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727279AbgCYDTe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 23:19:34 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02P32brF014122;
-        Tue, 24 Mar 2020 23:19:26 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywf2hrjaa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 23:19:26 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02P396qu080221;
-        Tue, 24 Mar 2020 23:19:25 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywf2hrj9y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 24 Mar 2020 23:19:25 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02P3BB4w009210;
-        Wed, 25 Mar 2020 03:19:25 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma03dal.us.ibm.com with ESMTP id 2ywaw9nkw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Mar 2020 03:19:25 +0000
-Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02P3JNND16384596
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 03:19:23 GMT
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B17E3136051;
-        Wed, 25 Mar 2020 03:19:23 +0000 (GMT)
-Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 21DC3136053;
-        Wed, 25 Mar 2020 03:19:21 +0000 (GMT)
-Received: from skywalker.ibmuc.com (unknown [9.199.32.190])
-        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 25 Mar 2020 03:19:20 +0000 (GMT)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     linux-mm@kvack.org, akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>
-Subject: [PATCH] mm/sparse: Fix kernel crash with pfn_section_valid check
-Date:   Wed, 25 Mar 2020 08:49:14 +0530
-Message-Id: <20200325031914.107660-1-aneesh.kumar@linux.ibm.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 24 Mar 2020 23:20:54 -0400
+Received: from mail-am6eur05on2081.outbound.protection.outlook.com ([40.107.22.81]:6199
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727253AbgCYDUy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 23:20:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FUCoxliu59yNxmiKKoAzylpmMbxcsjW4vB4gHa2PHMQwz119i5g9kXPgnik8H1fTqYQZCdEiSuBu60jFGrmtyrOwZlmjaFe6diQz7o21DhZ38vsN6AXSbDJlN78Fzip6wJDKn1Ao/nLBnAIOjyuGxngrzjHLlApkoysaVjrYMAOloX+F9lYDzg05D9byMR/rG655l6eKiYwuHG0KDlVwGNP2jk8lmyhGD6286g9V5NNBOsb57W8l4xDDrXX2vYFKl7T/E0Rp+RVRV3i69qJ8+wISJLNXVm01hBBtqBouGgst1+TosRl/tGAda/Iej/NGtzGxC/ko8crCkxjqHw6t9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7XaG7NhVvGfaxAcVW7QIp4vxdpH7wNG91mqEcuWTh8Y=;
+ b=T1LW/uBTh7O8qMzMsYs7wVVJeK6+rqTWBh3jfqrEWSIe934iOKEsk/0kUa3w+TLqzlKoSbiAkXOabphuxRNSfCZstfHevk3BfSn3zt2ZsSY2BH1OjalWWJxMwjK81iJFZbTcswj50t0USbX4N/sxjyc2H04kOCOexURk6nDdoZQV7V9rjaom4ruZtdpRFffdvEfqCYKMH8922COhTZJPfnTs4K4rpO6jBJMKp4/rks6r1hs6heCTQ9hxFT9KFEbnsqTSrOuETGA376Rhta1Pb0OiSvt5gVZZKbEc0oAf39DqwOQAi28xaKed6g+DW6qFBjnmdB1sC9jfoxkCeLdcaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7XaG7NhVvGfaxAcVW7QIp4vxdpH7wNG91mqEcuWTh8Y=;
+ b=Nlajya1HX5v+s8unPh0ZiYazOCrGYSwuX3f4hZUKev5tmF0tqyOosOv/SvLgAV02lgPW7nvRnI+5ODLCmpOIbtJNFDUs3QdJUH2wRbZ5oMMNE6ogIxn4+/GAs+qeZ4DBh9CEG+ouTnPW7BbQLe/RNCM6ikb1NEiQHpGvXq08wwM=
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (10.141.174.88) by
+ AM7PR04MB7190.eurprd04.prod.outlook.com (52.135.56.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.18; Wed, 25 Mar 2020 03:20:50 +0000
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::dcc0:6a0:c64b:9f94]) by AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::dcc0:6a0:c64b:9f94%2]) with mapi id 15.20.2835.021; Wed, 25 Mar 2020
+ 03:20:50 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+CC:     Vladimir Oltean <olteanv@gmail.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: RE: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Thread-Topic: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Thread-Index: AQHV/qQWBIiKj5A/T0WD8BjMeGVxRqhRd2EAgAW7PoCAAI3mAIAA5+3A
+Date:   Wed, 25 Mar 2020 03:20:50 +0000
+Message-ID: <AM7PR04MB6885C1550F684EA4107F9C75F8CE0@AM7PR04MB6885.eurprd04.prod.outlook.com>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-7-yangbo.lu@nxp.com>
+ <CA+h21hoBwDuWCFbO70u1FAERB8zc5F+H5URBkn=2_bpRRRz1oA@mail.gmail.com>
+ <AM7PR04MB6885A8C98CA60FC435024647F8F10@AM7PR04MB6885.eurprd04.prod.outlook.com>
+ <20200324131952.GB18149@localhost>
+In-Reply-To: <20200324131952.GB18149@localhost>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a3874106-7fc3-4e00-a95b-08d7d06b84fb
+x-ms-traffictypediagnostic: AM7PR04MB7190:|AM7PR04MB7190:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB7190D7069D6416B30C83566CF8CE0@AM7PR04MB7190.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(33656002)(7416002)(5660300002)(966005)(478600001)(8676002)(86362001)(45080400002)(52536014)(66946007)(66476007)(76116006)(66556008)(64756008)(66446008)(6916009)(186003)(2906002)(81166006)(81156014)(7696005)(71200400001)(26005)(9686003)(8936002)(55016002)(54906003)(53546011)(6506007)(316002)(4326008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7190;H:AM7PR04MB6885.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zS0S1VoP+ORWtXp+otEl+NdyDbia37nrjPJ+6FJqNg2HSeCnvtESS5amcqJbmqsUhUaD2iHJQhryrPiZT/ldsgEc0YJgw/8ZBWy0/ZQP7ZMNHd7NEYFa6LVpPiOLY9h8S3JlL6IHprUOB6rzEIq5ZXDJ9Q/YJ5ZVxel39ALOtjZZhZfE7dsKBlfLNpQdbVnLSbv38lrwmC+IXGPeb8L6w0thhltnnl7NxP19UFH5cxg2u3epIoBnM7PmcDY3Id7aeo/cbtYX7bxJego999d+FXBWhsNTGpt1jQDb9Q/gwpC7az/qYyXtW/9BFKLDausDhPsF9c7HznEqKxUz2gjJgKtiJlUH63xsXxtiwMf9boY63PJh3R4N1ARMvAFP8f92/sYMDzoRJjxHQsg5z0BxEZPr4wBywgXQD8ytzish8qs1bc1sJKXjPZq+D2EUIUDVLCq7qtwwVppwW+iMJECSkZcWkPevYtMqO2IKAp3fTvO7X3fa3hdslIbjIql6hG3h+2t38XoyX4OpcC0HwbRRVg==
+x-ms-exchange-antispam-messagedata: +IEAjKmnHlm7VpKHobB4YoIzHzYotv/T6mJwLtL3b5F9TKuvB1M3T3zjeLAyZO4ZIhsG9FWqhykGBQCWH9eXNxoH+ckWH28FnKqGSh2AeMcbtlMjPNTC3ylAZX8c4yr38trudkQzog5ZoZ/9ONqkqw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_10:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- suspectscore=2 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
- malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250021
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3874106-7fc3-4e00-a95b-08d7d06b84fb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 03:20:50.6272
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 7It1/dIMRXRs0UXjQTOIj/u/1i49d+1TVTw/tKG34XH6chnLbCGU+isGoyx55QHcBS8HPerh0OEIIbDM7BzFpg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7190
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the below crash
-
-BUG: Kernel NULL pointer dereference on read at 0x00000000
-Faulting instruction address: 0xc000000000c3447c
-Oops: Kernel access of bad area, sig: 11 [#1]
-LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
-...
-NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
-LR [c000000000088354] vmemmap_free+0x144/0x320
-Call Trace:
- section_deactivate+0x220/0x240
- __remove_pages+0x118/0x170
- arch_remove_memory+0x3c/0x150
- memunmap_pages+0x1cc/0x2f0
- devm_action_release+0x30/0x50
- release_nodes+0x2f8/0x3e0
- device_release_driver_internal+0x168/0x270
- unbind_store+0x130/0x170
- drv_attr_store+0x44/0x60
- sysfs_kf_write+0x68/0x80
- kernfs_fop_write+0x100/0x290
- __vfs_write+0x3c/0x70
- vfs_write+0xcc/0x240
- ksys_write+0x7c/0x140
- system_call+0x5c/0x68
-
-With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-section_mem_map is set to NULL after depopulate_section_mem(). This
-was done so that pfn_page() can work correctly with kernel config that disables
-SPARSEMEM_VMEMMAP. With that config pfn_to_page does
-
-	__section_mem_map_addr(__sec) + __pfn;
-where
-
-static inline struct page *__section_mem_map_addr(struct mem_section *section)
-{
-	unsigned long map = section->section_mem_map;
-	map &= SECTION_MAP_MASK;
-	return (struct page *)map;
-}
-
-Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
-check the pfn validity (pfn_valid()). Since section_deactivate release
-mem_section->usage if a section is fully deactivated, pfn_valid() check after
-a subsection_deactivate cause a kernel crash.
-
-static inline int pfn_valid(unsigned long pfn)
-{
-...
-	return early_section(ms) || pfn_section_valid(ms, pfn);
-}
-
-where
-
-static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
-{
-	int idx = subsection_map_index(pfn);
-
-	return test_bit(idx, ms->usage->subsection_map);
-}
-
-Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
-
-Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-Cc: Baoquan He <bhe@redhat.com>
-Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
----
- mm/sparse.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/sparse.c b/mm/sparse.c
-index aadb7298dcef..3012d1f3771a 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -781,6 +781,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 			ms->usage = NULL;
- 		}
- 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-+		/* Mark the section invalid */
-+		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
- 	}
- 
- 	if (section_is_early && memmap)
--- 
-2.25.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSaWNoYXJkIENvY2hyYW4gPHJp
+Y2hhcmRjb2NocmFuQGdtYWlsLmNvbT4NCj4gU2VudDogVHVlc2RheSwgTWFyY2ggMjQsIDIwMjAg
+OToyMCBQTQ0KPiBUbzogWS5iLiBMdSA8eWFuZ2JvLmx1QG54cC5jb20+DQo+IENjOiBWbGFkaW1p
+ciBPbHRlYW4gPG9sdGVhbnZAZ21haWwuY29tPjsgbGttbA0KPiA8bGludXgta2VybmVsQHZnZXIu
+a2VybmVsLm9yZz47IG5ldGRldiA8bmV0ZGV2QHZnZXIua2VybmVsLm9yZz47IERhdmlkIFMgLg0K
+PiBNaWxsZXIgPGRhdmVtQGRhdmVtbG9mdC5uZXQ+OyBWbGFkaW1pciBPbHRlYW4gPHZsYWRpbWly
+Lm9sdGVhbkBueHAuY29tPjsNCj4gQ2xhdWRpdSBNYW5vaWwgPGNsYXVkaXUubWFub2lsQG54cC5j
+b20+OyBBbmRyZXcgTHVubiA8YW5kcmV3QGx1bm4uY2g+Ow0KPiBWaXZpZW4gRGlkZWxvdCA8dml2
+aWVuLmRpZGVsb3RAZ21haWwuY29tPjsgRmxvcmlhbiBGYWluZWxsaQ0KPiA8Zi5mYWluZWxsaUBn
+bWFpbC5jb20+OyBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5j
+b20+Ow0KPiBNaWNyb2NoaXAgTGludXggRHJpdmVyIFN1cHBvcnQgPFVOR0xpbnV4RHJpdmVyQG1p
+Y3JvY2hpcC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggNi82XSBwdHBfb2NlbG90OiBzdXBw
+b3J0IDQgcHJvZ3JhbW1hYmxlIHBpbnMNCj4gDQo+IE9uIFR1ZSwgTWFyIDI0LCAyMDIwIGF0IDA1
+OjIxOjI3QU0gKzAwMDAsIFkuYi4gTHUgd3JvdGU6DQo+ID4gSW4gbXkgb25lIHByZXZpb3VzIHBh
+dGNoLCBJIHdhcyBzdWdnZXN0ZWQgdG8gaW1wbGVtZW50IFBQUyB3aXRoDQo+IHByb2dyYW1tYWJs
+ZSBwaW4gcGVyaW9kaWMgY2xvY2sgZnVuY3Rpb24uDQo+ID4gQnV0IEkgZGlkbuKAmXQgZmluZCBo
+b3cgc2hvdWxkIFBQUyBiZSBpbXBsZW1lbnRlZCB3aXRoIHBlcmlvZGljIGNsb2NrDQo+IGZ1bmN0
+aW9uIGFmdGVyIGNoZWNraW5nIHB0cCBkcml2ZXIuDQo+ID4NCj4gaHR0cHM6Ly9ldXIwMS5zYWZl
+bGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Y2h3DQo+
+IG9yay5vemxhYnMub3JnJTJGcGF0Y2glMkYxMjE1NDY0JTJGJmFtcDtkYXRhPTAyJTdDMDElN0N5
+YW5nYm8ubHUNCj4gJTQwbnhwLmNvbSU3Q2JmZGJkMjA5YWUwMTRjZDg0ODRiMDhkN2NmZjYwYzEz
+JTdDNjg2ZWExZDNiYzJiNGM2DQo+IGZhOTJjZDk5YzVjMzAxNjM1JTdDMCU3QzAlN0M2MzcyMDY1
+Mjc5ODExOTExNjEmYW1wO3NkYXRhPW95OW0NCj4gVCUyQmw2OUglMkJtcHpNOVQya1BYUU5TTW01
+dyUyRm93TGh6emlVSlgyZ1pjJTNEJmFtcDtyZXNlcnYNCj4gZWQ9MA0KPiANCj4gWWVzLCBmb3Ig
+Z2VuZXJhdGluZyBhIDEtUFBTIG91dHB1dCB3YXZlZm9ybSwgdXNlcnMgY2FsbCBpb2N0bA0KPiBQ
+VFBfQ0xLX1JFUV9QRVJPVVQgd2l0aCBwdHBfcGVyb3V0X3JlcXVlc3QucGVyaW9kPXsxLDB9Lg0K
+PiANCj4gSWYgeW91ciBkZXZpY2UgY2FuJ3QgY29udHJvbCB0aGUgc3RhcnQgdGltZSwgdGhlbiBp
+dCBjYW4gYWNjZXB0IGFuDQo+IHVuc3BlY2lmaWVkIHRpbWUgb2YgcHRwX3Blcm91dF9yZXF1ZXN0
+LnN0YXJ0PXswLDB9Lg0KDQpHZXQgaXQuIFRoYW5rcyBhIGxvdC4NCg0KPiANCj4gPiBWbGFkaW1p
+ciB0YWxrZWQgd2l0aCBtZSwgZm9yIHRoZSBzcGVjaWFsIFBQUyBjYXNlLCB3ZSBtYXkgY29uc2lk
+ZXIsDQo+ID4gaWYgKHJlcS5wZXJvdXQucGVyaW9kLnNlYyA9PTEgJiYgcmVxLnBlcm91dC5wZXJp
+b2QubnNlYyA9PSAwKSBhbmQgY29uZmlndXJlDQo+IFdBVkVGT1JNX0xPVyB0byBiZSBlcXVhbCB0
+byByZXFfcGVyb3V0LnN0YXJ0Lm5zZWMuDQo+ID4NCj4gPiBSaWNoYXJkLCBkbyB5b3UgdGhpbmsg
+aXMgaXQgb2s/DQo+IA0KPiBTb3VuZCBva2F5IHRvIG1lIChidXQgSSBkb24ndCBrbm93IGFib3V0
+IFdBVkVGT1JNX0xPVykuDQoNClNvcnJ5LiBJIHNob3VsZCBoYXZlIGV4cGxhaW4gbW9yZS4gVGhl
+cmUgaXMgYSBTWU5DIGJpdCBpbiBPY2Vsb3QgUFRQIGhhcmR3YXJlIGZvciBQUFMgZ2VuZXJhdGlv
+bi4NCldBRkVGT1JNX0xPVyByZWdpc3RlciBjb3VsZCBiZSB1c2VkIHRvIGFkanVzdCBwaGFzZS4N
+Cg0KUk0gc2F5cywNCiJGb3IgdGhlIENMT0NLIGFjdGlvbiwgdGhlIHN5bmMgb3B0aW9uIG1ha2Vz
+IHRoZSBwaW4gZ2VuZXJhdGUgYSBzaW5nbGUgcHVsc2UsIDxXQUZFRk9STV9MT1c+DQpuYW5vc2Vj
+b25kcyBhZnRlciB0aGUgdGltZSBvZiBkYXkgaGFzIGluY3JlYXNlZCB0aGUgc2Vjb25kcy4gVGhl
+IHB1bHNlIHdpbGwgZ2V0IGEgd2lkdGggb2YNCjxXQVZFRk9STV9ISUdIPiBuYW5vc2Vjb25kcy4i
+DQoNClRoZW4gSSB3aWxsIGFkZCBQUFMgY2FzZSBpbiBuZXh0IHZlcnNpb24gcGF0Y2guDQpUaGFu
+a3MuDQoNCj4gDQo+ID4gQW5kIGFub3RoZXIgcHJvYmxlbSBJIGFtIGZhY2luZyBpcywgaW4gLmVu
+YWJsZSgpIGNhbGxiYWNrDQo+IChQVFBfQ0xLX1JFUV9QRVJPVVQgcmVxdWVzdCkgSSBkZWZpbmVk
+Lg0KPiA+ICAgICAgICAgICAgICAgICAvKg0KPiA+ICAgICAgICAgICAgICAgICAgKiBUT0RPOiBz
+dXBwb3J0IGRpc2FibGluZyBmdW5jdGlvbg0KPiA+ICAgICAgICAgICAgICAgICAgKiBXaGVuIHB0
+cF9kaXNhYmxlX3BpbmZ1bmMoKSBpcyB0byBkaXNhYmxlIGZ1bmN0aW9uLA0KPiA+ICAgICAgICAg
+ICAgICAgICAgKiBpdCBoYXMgYWxyZWFkeSBoZWxkIHBpbmNmZ19tdXguDQo+ID4gICAgICAgICAg
+ICAgICAgICAqIEhvd2V2ZXIgcHRwX2ZpbmRfcGluKCkgaW4gLmVuYWJsZSgpIGNhbGxlZCBhbHNv
+IG5lZWRzDQo+ID4gICAgICAgICAgICAgICAgICAqIHRvIGhvbGQgcGluY2ZnX211eC4NCj4gPiAg
+ICAgICAgICAgICAgICAgICogVGhpcyBjYXVzZXMgZGVhZCBsb2NrLiBTbywganVzdCByZXR1cm4g
+Zm9yIGZ1bmN0aW9uDQo+ID4gICAgICAgICAgICAgICAgICAqIGRpc2FibGluZywgYW5kIHRoaXMg
+bmVlZHMgZml4LXVwLg0KPiA+ICAgICAgICAgICAgICAgICAgKi8NCj4gPiBIb3BlIHNvbWUgc3Vn
+Z2VzdGlvbnMgaGVyZS4NCj4gDQo+IFNlZSBteSByZXBseSB0byB0aGUgcGF0Y2guDQo+IA0KPiBU
+aGFua3MsDQo+IFJpY2hhcmQNCg==
