@@ -2,189 +2,166 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C574EC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:07:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0C56C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F8E020714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:07:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="gXjxI3ux"
+	by mail.kernel.org (Postfix) with ESMTP id 893CB2074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585113044;
+	bh=CEofRKgm4Ye5H1cnbE+nOcxxg32rFb+bxsw6TvF2B1o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=dZbP+hxDaMTGzxPOLaMgQ3qB2Izi68eIgTXp3/YgbKcJka+nR75VcMW/owH1Jutqf
+	 9EtF2ksscq30kL0ZXTo99Vb6TgtEw72+EGfJWUDEf53bwzGrxbWZBt1bZUmCF8M/nd
+	 Q+YBlBp4i+7uKMjdNTx6wWpSAOBpTY8t7i5uDJYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbgCYFHg (ORCPT
+        id S1726098AbgCYFKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:07:36 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:47209 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725263AbgCYFHg (ORCPT
+        Wed, 25 Mar 2020 01:10:43 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:23447 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgCYFKn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:07:36 -0400
-Received: from surfplank2.hierzo ([IPv6:2001:981:a812:0:b62e:99ff:fe92:5264])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id GyGKjJR2RLu1fGyGLjyPua; Wed, 25 Mar 2020 06:07:33 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585112853; bh=sH6rW920hI4EcpzSunVY9nTEHPeYBnJMxTgPAWfNnfk=;
-        h=From:Subject:To:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=gXjxI3uxWgS3Jzp9MnJYFcDjN8riMqDz3O9ngMUI95blow/gpvCCA/uAxI6mu4nB6
-         NF0gcPiqsPTf0F0edQyoqdNq7n9h9uVm/aHxvh8yePTHScZSH0nv0RDaHYYPBqqpq9
-         qOepN6xzrN58I6kPIGNffIJxIeuEpEnLB+zAMX7ZvDAl1qjBS3eK9sfBt4PLGWB7ah
-         qDF/smvxZxgM2aBKmh3SeNbvYwYbTyfP9/rfbqi0acRn55t8heBXyYDX0J29t/gP1r
-         RWKiDorc0ZOYIY38UdA/JWzc45h3SDgv5KlRXLeT+3xwfLEu9XXKAha8Qv/wt/6RKP
-         YbnvGbpOd5/kQ==
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Subject: 5.3.18: general protection fault
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <93308fad-2462-c8f9-99b2-d8c8aab241d3@xs4all.nl>
-Date:   Wed, 25 Mar 2020 06:07:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 01:10:43 -0400
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id 02P5ABfc011337;
+        Wed, 25 Mar 2020 14:10:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 02P5ABfc011337
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585113012;
+        bh=goHEK+Svl1j1CHZ8RGvjblzdAWdDcWxFnIuljEdud0o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=DnT5KzDtk1VZ4bX5jz1F2rsdqsISqFkA3UcZ8xsfhN86oNs2j/XPmD5P0cCs/JhpC
+         4djo10x3J7e7VKuxZ6VaqctGHnlh7v8Y2a60Ld7EPdInTe+DqQnV3Yv2mMRbEtWync
+         MiWlzZhvtXqwbjoutaboaVOvFnOMo0MJcs+5uYk6RNu52LFYtiOci3i1kOmUu1RoBi
+         xhqivkrrBXMFOs8hfcQ/k+Do1CGoUI92UhBVNthIcvYQO4wcMswpJWLXGNNqUdh7Tw
+         n7tev83ZNX9rklVlt+woYh25RkzUKyFRAAw9ucZjUiaVa3CirJ/T2AZaRCO80gKTwU
+         bP6ZfZcCxvw5g==
+X-Nifty-SrcIP: [209.85.217.46]
+Received: by mail-vs1-f46.google.com with SMTP id u11so785408vsg.2;
+        Tue, 24 Mar 2020 22:10:11 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2vNbc2TrzjPxjgBIKbjx7jdeRQw5e6nOYp13rqZwpbzX8EPZmU
+        sPc59FID1rTdNjijqL5feN1mlNAWFqqvWJEvY4M=
+X-Google-Smtp-Source: ADFU+vu+bM6M5+X0alIJHo1ALDGfE82bX+MEHXukXjfTCtMpyx9j4+KKQCB6mj8BRZ3ztAMCXwbRLo3j/oOEZhFBzJo=
+X-Received: by 2002:a67:2d55:: with SMTP id t82mr1251970vst.215.1585113010953;
+ Tue, 24 Mar 2020 22:10:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfIaTaxkFjIbDLGNryBDcVqNsCxPYWRx/CaoaUuZveOEVn6UfhmwZyJektQvuF1iyB/dYTfSEDcGDLm4aANYjZyTFpMTZgrrrb3ME9+oR4aBAhAyNPBv7
- clZjkIpvvbhyusofAaICJwCulVax6GF+qzB9+2Tz1k6YcoHP2C4oTiRL3SxzcIq/M0zGM9SncWyp3zyFzQI13J76VBmM21jm0Vm5Q/ImzXsRTl1Cx/bI4GKr
- UnO3zg2DGM70t/ysFl4ltg==
+References: <20200324084821.29944-1-masahiroy@kernel.org> <20200325045940.GA24974@gmail.com>
+In-Reply-To: <20200325045940.GA24974@gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 14:09:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQvgT=OWVuBVrvgdZ7AAkoaV_K_Y+w9bOFxRPw_1TOSUA@mail.gmail.com>
+Message-ID: <CAK7LNAQvgT=OWVuBVrvgdZ7AAkoaV_K_Y+w9bOFxRPw_1TOSUA@mail.gmail.com>
+Subject: Re: [PATCH 00/16] x86, crypto: remove always-defined CONFIG_AS_* and
+ cosolidate Kconfig/Makefiles
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        intel-gfx@lists.freedesktop.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Ingo,
 
-Due to the unusable 5.4.x and 5.5.x kernels, see
-https://bugzilla.kernel.org/show_bug.cgi?id=206191, I am running 5,3,18.
-This kernel crashes way less.
-It did show the fault below:
-
-[56279.400332] general protection fault: 0000 [#1] PREEMPT SMP NOPTI
-[56279.436856] CPU: 1 PID: 233 Comm: kswapd0 Tainted: G        W
-5.3.18 #25
-[56279.481174] Hardware name: Gigabyte Technology Co., Ltd. X570 AORUS
-PRO/X570 AORUS PRO, BIOS F11 12/06/2019
-[56279.539562] RIP: 0010:queued_spin_lock_slowpath+0x178/0x1d0
-[56279.572948] Code: 8b 45 00 48 85 c0 74 f5 48 89 c2 eb e4 c1 ea 12 83
-e0 03 ff ca 48 c1 e0 04 48 63 d2 48 05 c0 ed 01 00 48 03 04 d5 20 d5 e0
-b1 <48> 89 28 8b 45 08 85 c0 75 09 f3 90 8b 45 08 85 c0 74 f7 48 8b 45
-[56279.685489] RSP: 0018:ffffa85240747a88 EFLAGS: 00010002
-[56279.716787] RAX: 0001812dff56fe58 RBX: ffffa2e9c6690350 RCX:
-0000000000000000
-[56279.759547] RDX: 0000000000003199 RSI: 00000000c6690300 RDI:
-ffffa2e9c6690350
-[56279.802302] RBP: ffffa2ea9f05edc0 R08: 0000000000000238 R09:
-0000000000000002
-[56279.845063] R10: ffffa2e9c6690348 R11: ffffa2ea8b08ed80 R12:
-0000000000080000
-[56279.887823] R13: 0000000000000001 R14: ffffa2e9c6690350 R15:
-ffffddcf0c8ad008
-[56279.930579] FS:  0000000000000000(0000) GS:ffffa2ea9f040000(0000)
-knlGS:0000000000000000
-[56279.979068] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[56280.013491] CR2: 00007f07ef659fe0 CR3: 00000003eaa7e000 CR4:
-00000000003406e0
-[56280.056253] Call Trace:
-[56280.070891]  _raw_spin_lock_irqsave+0x33/0x40
-[56280.096982]  __remove_mapping+0x4a/0x1e0
-[56280.120469]  shrink_page_list+0xb12/0xe60
-[56280.144477]  shrink_inactive_list+0x1ad/0x350
-[56280.170573]  shrink_node_memcg.isra.0+0x46e/0x7b0
-[56280.198747]  shrink_node+0x80/0x2e0
-[56280.219631]  balance_pgdat+0x239/0x4a0
-[56280.242078]  kswapd+0x165/0x2f0
-[56280.260880]  ? wait_woken+0x70/0x70
-[56280.281761]  kthread+0xfb/0x130
-[56280.300562]  ? balance_pgdat+0x4a0/0x4a0
-[56280.324052]  ? kthread_park+0x70/0x70
-[56280.345980]  ret_from_fork+0x22/0x40
-[56280.367383] Modules linked in: fuse mq_deadline ip6t_REJECT
-nf_reject_ipv6 xt_state ip6table_filter ip6_tables
-nf_conntrack_netbios_ns nf_conntrack_broadcast xt_MASQUERADE iptable_nat
-nf_nat ipt_REJECT nf_reject_ipv4 xt_u32 xt_multiport xt_tcpudp
-xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 it87 hwmon_vid
-msr iptable_filter uvcvideo videobuf2_vmalloc videobuf2_memops
-snd_usb_audio videobuf2_v4l2 snd_hwdep snd_usbmidi_lib videodev
-snd_hda_codec_realtek videobuf2_common snd_rawmidi cdc_acm
-snd_hda_codec_generic snd_hda_intel snd_hda_codec snd_hda_core snd_seq
-snd_seq_device snd_pcm i2c_piix4 k10temp snd_timer snd bfq evdev
-acpi_cpufreq binfmt_misc ip_tables x_tables amdgpu hid_generic backlight
-sr_mod gpu_sched aesni_intel ttm cdrom usbhid i2c_dev autofs4
-[56280.442646] [drm] Fence fallback timer expired on ring gfx
-[56280.773148] ---[ end trace 76feac8f53a00048 ]---
-[56280.773152] RIP: 0010:queued_spin_lock_slowpath+0x178/0x1d0
-[56280.773154] Code: 8b 45 00 48 85 c0 74 f5 48 89 c2 eb e4 c1 ea 12 83
-e0 03 ff ca 48 c1 e0 04 48 63 d2 48 05 c0 ed 01 00 48 03 04 d5 20 d5 e0
-b1 <48> 89 28 8b 45 08 85 c0 75 09 f3 90 8b 45 08 85 c0 74 f7 48 8b 45
-[56280.773155] RSP: 0018:ffffa85240747a88 EFLAGS: 00010002
-[56280.773156] RAX: 0001812dff56fe58 RBX: ffffa2e9c6690350 RCX:
-0000000000000000
-[56280.773157] RDX: 0000000000003199 RSI: 00000000c6690300 RDI:
-ffffa2e9c6690350
-[56280.773157] RBP: ffffa2ea9f05edc0 R08: 0000000000000238 R09:
-0000000000000002
-[56280.773158] R10: ffffa2e9c6690348 R11: ffffa2ea8b08ed80 R12:
-0000000000080000
-[56280.773159] R13: 0000000000000001 R14: ffffa2e9c6690350 R15:
-ffffddcf0c8ad008
-[56280.773160] FS:  0000000000000000(0000) GS:ffffa2ea9f040000(0000)
-knlGS:0000000000000000
-[56280.773160] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[56280.773161] CR2: 00007f07ef659fe0 CR3: 00000003eaa7e000 CR4:
-00000000003406e0
-[56280.773163] note: kswapd0[233] exited with preempt_count 1
+On Wed, Mar 25, 2020 at 1:59 PM Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> > This series of cleanups was prompted by Linus:
+> > https://lkml.org/lkml/2020/3/12/726
+> >
+> > First, this series drop always-on CONFIG_AS_* options.
+> > Some of those options were introduced in old days.
+> > For example, the check for CONFIG_AS_CFI dates back to 2006.
+> >
+> > We raise the minimal tool versions from time to time.
+> > Currently, we require binutils 2.21
+> > (and we plan to bump it to 2.23 for v5.7-rc1).
+> >
+> > After cleaning away the old checks,
+> > as-instr calls are moved to Kconfig from Makefiles.
+> > (patch 11)
+> >
+> > This allows more Kconfig / Makefile cleanups.
+> > Patch 12 is complex, but I double-checked it does the equivalent.
+> >
+> > Patch 14 bumps the binutils version to 2.23,
+> > and patch 15 removes more CONFIG_AS_* options.
+> >
+> > I folded all relevanet patches into this series,
+> > as suggested by Jason A. Donenfeld.
+> >
+> > If x86 maintainers take care of this series, that's good.
+> >
+> > If it is OK to queue this up to Kbuild tree,
+> > I will send a pull request to Linus.
+> >
+> > Thank you.
+>
+> LGTM. I've got these four from Jason A. Donenfeld queued up in
+> tip:WIP.x86/asm:
+>
+>  bd5b1283e41c: ("crypto: Curve25519 - do not pollute dispatcher based on assembler")
+>  829f32d78588: ("crypto: X86 - rework configuration, based on Kconfig")
+>  95ef9f80ed63: ("x86/build: Probe assembler from Kconfig instead of Kbuild")
+>  1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
+>
+> I suppose these might interact (maybe even conflict), and are topically
+> related.
+>
+> Would you like to pull these into the kbuild tree? You can find them in:
+>
+>    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/asm
+>
+> Thanks,
+>
+>         Ingo
 
 
+I did not know that these had already landed in tip tree.
 
-What happened here?
-Please let me know.
+They are immature version.
+(In fact CONFIG_AS_CFI and AS_ADX are false-negative
+if GCC that defaults to 32-bit is used.)
 
-Kind regards,
-Udo
+Can you simply discard the WIP.x86/asm branch,
+and only reapply
+1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
+
+?
+
+
+-- 
+Best Regards
+Masahiro Yamada
