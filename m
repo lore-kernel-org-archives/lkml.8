@@ -2,122 +2,146 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B51CC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48741C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:40:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F49208DB
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19840215A4
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:40:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EVhplQiA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qE5Fv4Ps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727821AbgCYOjX (ORCPT
+        id S1727710AbgCYOks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:39:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:42432 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCYOjX (ORCPT
+        Wed, 25 Mar 2020 10:40:48 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33753 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbgCYOks (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:39:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585147162;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=m2AO/S+07mA3ueoNWjFPnrXCdCJ5lsCZjgj8/xbBoqc=;
-        b=EVhplQiAstNgHBVjfYINeUtPiUflh2BiGQsPBTTMwYLg3Z/p1U0sRSxSewvLXeRtgCiKJI
-        gA8efhzXzvAjBIKNawSOUc2w77dXcFTL02sUVM7++72+5HMZgNCnEG2Ei61qA0dUgkKs7h
-        sEFHwleiqkBVeZSpaKSk2usde3sVFxI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-29-DYU2GKhZPZynm3qV-4x2YQ-1; Wed, 25 Mar 2020 10:39:20 -0400
-X-MC-Unique: DYU2GKhZPZynm3qV-4x2YQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E11DB101FC85;
-        Wed, 25 Mar 2020 14:39:18 +0000 (UTC)
-Received: from treble (unknown [10.10.119.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 04B0A5C3F8;
-        Wed, 25 Mar 2020 14:39:17 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 09:39:15 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v3 18/26] objtool: Fix !CFI insn_state propagation
-Message-ID: <20200325143915.kwxsy6dcvx6qa4ip@treble>
-References: <20200324153113.098167666@infradead.org>
- <20200324160924.987489248@infradead.org>
- <20200324214006.tlanaff5q6gkgk2a@treble>
- <20200324221109.GU2452@worktop.programming.kicks-ass.net>
- <20200324230010.GW2452@worktop.programming.kicks-ass.net>
+        Wed, 25 Mar 2020 10:40:48 -0400
+Received: by mail-io1-f68.google.com with SMTP id o127so2483033iof.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:40:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h+jKt9bsyXdUzaMhUnmlr3KTPbgwiELllBZem+05Lcg=;
+        b=qE5Fv4PsuReML5rCkHpkMV03/oHuox48bMzvj8H7upRrKpooGWaFB/moRyV0qbqESR
+         bLsREZaKxPJgaeB7ZJHlu6ZPlQruZ3a0tPwFG0ybn0rod7LFvqXhNCdQSO5/uvgeW78i
+         jKGltVScyifWBmaWO/8vCSAhrnSqwt6XupU6zM6Iznx5+4661kTN2D9JZ03h5G2QJmXN
+         vsH3JYhbKqgOCqInaAr//FNRb59I2PTqxNsBdydqO58U+I0V6Lbz+oS4VjkusPqUMrTb
+         6uZfyZ+9j/6fD7EGPq2FPH2EL1lvUycHX6CJnPYbxsWOcNpMbhHr+vlmCA7NmS5xatwu
+         Ui5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h+jKt9bsyXdUzaMhUnmlr3KTPbgwiELllBZem+05Lcg=;
+        b=RUjvNIofUK54W4WbOg8DAsAJallbw8HQKKx8CxKDEAVqBz2ZoHT+yPYPy710j/YrZc
+         mYYN20nDttc+yCPz9twyCtKBl8VKETOYwgf5SVHgvYgl2FuhwN8wIJoWiNhfWPAAms3j
+         M3CwVGp16TQy4i1B6ncBkTvPfVhN2NqHdi9ydEH8nL7706yyBbW4P4Bd42yQ+a6GwWQg
+         5SejDTQiX6nvWA0TRloNGAYZ1l5CMQATc07ufCV1dYrEep40lMPXEpMt4qiTIu9DC1Oc
+         jDXCvlPlryEZn7zFYlh//dYA4KH/zUw/SAG179iuddKisAXH65DSEcwsTTaVn9mdxT72
+         e17g==
+X-Gm-Message-State: ANhLgQ0SyPFKuBQSmP7HJWg5x/meB412RHFM5J+UdaEIbrE501SiXDn6
+        TaMHCw11u0c/hvfXuFHw1sfgWbZKt0dF7mJq1JA=
+X-Google-Smtp-Source: ADFU+vvd8qcv8B2LbtS+gcC8Re1VhNmCOzEmMj2XvA/byKKBzxNd2jyvfiHcMtrxlYzuTI16fLDxcKoCeOfDQs29Ads=
+X-Received: by 2002:a05:6638:c:: with SMTP id z12mr3167464jao.117.1585147245883;
+ Wed, 25 Mar 2020 07:40:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200324230010.GW2452@worktop.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <1581618066-187262-1-git-send-email-zhe.he@windriver.com>
+ <20200216222148.GA161771@krava> <8cc46abf-208d-4aa4-8d0d-4922106bee6e@windriver.com>
+ <20200325133012.GC14102@kernel.org>
+In-Reply-To: <20200325133012.GC14102@kernel.org>
+From:   Sam Lunt <samueljlunt@gmail.com>
+Date:   Wed, 25 Mar 2020 09:40:34 -0500
+Message-ID: <CAGn10uVQdP32PNqyBm_dCxvRisj5tw4GU1f8j6Rq=Q6bmjmaAw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] perf: Be compatible with all python versions when
+ fetching ldflags
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     He Zhe <zhe.he@windriver.com>, Jiri Olsa <jolsa@redhat.com>,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:00:10AM +0100, Peter Zijlstra wrote:
-> On Tue, Mar 24, 2020 at 11:11:09PM +0100, Peter Zijlstra wrote:
-> > On Tue, Mar 24, 2020 at 04:40:06PM -0500, Josh Poimboeuf wrote:
-> > > On Tue, Mar 24, 2020 at 04:31:31PM +0100, Peter Zijlstra wrote:
-> > 
-> > > > +		if (!save_insn->visited) {
-> > > > +			/*
-> > > > +			 * Oops, no state to copy yet.
-> > > > +			 * Hopefully we can reach this
-> > > > +			 * instruction from another branch
-> > > > +			 * after the save insn has been
-> > > > +			 * visited.
-> > > > +			 */
-> > > > +			if (insn == first)
-> > > > +				return 0; // XXX
-> > > 
-> > > Yeah, moving this code out to apply_insn_hint() seems like a nice idea,
-> > > but it wouldn't be worth it if it breaks this case.  TBH I don't
-> > > remember if this check was for a real-world case.  Might be worth
-> > > looking at...  If this case doesn't exist in reality then we could just
-> > > remove this check altogether.
-> > 
-> > I'll go run a bunch of builds with a print on it, that should tell us I
-> > suppose.
-> 
-> I can a bunch of builds, including an allmodconfig with the below on top
-> and it 'works'.
-> 
-> So I suppose we can remove this special case.
-> 
-> ---
-> --- a/tools/objtool/check.c
-> +++ b/tools/objtool/check.c
-> @@ -2134,11 +2134,13 @@ static int apply_insn_hint(struct objtoo
->  			 * after the save insn has been
->  			 * visited.
->  			 */
-> -			if (insn == first)
-> -				return 0; // XXX
-> 
->  			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
->  					sec, insn->offset);
-> +
-> +			if (insn == first)
-> +				return -1;
-> +
+On Wed, Mar 25, 2020 at 8:30 AM Arnaldo Carvalho de Melo
+<arnaldo.melo@gmail.com> wrote:
+>
+> Em Mon, Feb 17, 2020 at 10:24:27AM +0800, He Zhe escreveu:
+> >
+> >
+> > On 2/17/20 6:22 AM, Jiri Olsa wrote:
+> > > On Fri, Feb 14, 2020 at 02:21:05AM +0800, zhe.he@windriver.com wrote:
+> > >> From: He Zhe <zhe.he@windriver.com>
+> > >>
+> > >> Since Python v3.8.0, with the following commit
+> > >> 0a8e57248b91 ("bpo-36721: Add --embed option to python-config (GH-13500)"),
+> > > we got similar change recently.. might have not been picked up yet
+> > >
+> > >   https://lore.kernel.org/lkml/20200131181123.tmamivhq4b7uqasr@gmail.com/
+> >
+> > Thanks for pointing out.
+>
+> So, just with your patch:
+>
+> [acme@five perf]$ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
+> [acme@five perf]$ make PYTHON=python3 -C tools/perf O=/tmp/build/perf install-bin |& grep python
+> ...                     libpython: [ OFF ]
+> Makefile.config:750: No 'Python.h' (for Python 2.x support) was found: disables Python support - please install python-devel/python-dev
+>   CC       /tmp/build/perf/tests/python-use.o
+> [acme@five perf]$
+>
+> [acme@five perf]$ rpm -q python2-devel python3-devel python-devel
+> package python2-devel is not installed
+> python3-devel-3.7.6-2.fc31.x86_64
+> package python-devel is not installed
+> [acme@five perf]$
+>
+> [acme@five perf]$ cat /tmp/build/perf/feature/test-libpython.make.output
+> /bin/sh: --configdir: command not found
+> [acme@five perf]$ cat /tmp/build/perf/feature/test-libpython
+> test-libpython.make.output          test-libpython-version.make.output
+> [acme@five perf]$ cat /tmp/build/perf/feature/test-libpython-version.make.output
+> /bin/sh: --configdir: command not found
+> [acme@five perf]$
+>
+>
+> Without your patch:
+>
+> [acme@five perf]$ rm -rf /tmp/build/perf ; mkdir -p /tmp/build/perf
+> [acme@five perf]$ make PYTHON=python3 -C tools/perf O=/tmp/build/perf install-bin |& grep python
+> ...                     libpython: [ on  ]
+>   GEN      /tmp/build/perf/python/perf.so
+>   MKDIR    /tmp/build/perf/scripts/python/Perf-Trace-Util/
+>   CC       /tmp/build/perf/scripts/python/Perf-Trace-Util/Context.o
+>   LD       /tmp/build/perf/scripts/python/Perf-Trace-Util/perf-in.o
+>   CC       /tmp/build/perf/tests/python-use.o
+>   CC       /tmp/build/perf/util/scripting-engines/trace-event-python.o
+>   INSTALL  python-scripts
+> [acme@five perf]$
+>
+> [acme@five perf]$ ldd /tmp/build/perf/perf |& grep python
+>         libpython3.7m.so.1.0 => /lib64/libpython3.7m.so.1.0 (0x00007f11dd1ee000)
+> [acme@five perf]$ perf -vv |& grep -i python
+>              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+> [acme@five perf]$
+>
+> What am I missing?
 
-I think all the validate_branch() callers aren't prepared to handle a -1
-return code.
+It looks like you are using python3.7, but the change in behavior for
+python-config happened in version 3.8
 
-We can just be lazy and remove this 'insn == first' check and consider
-it a non-fatal warning.
-
--- 
-Josh
-
+> [acme@five perf]$ cat /etc/redhat-release
+> Fedora release 31 (Thirty One)
+> [acme@five perf]$
+>
+> - Arnaldo
