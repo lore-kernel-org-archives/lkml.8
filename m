@@ -2,147 +2,85 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43509C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2000C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA4320722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:00:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HioPWdnn"
+	by mail.kernel.org (Postfix) with ESMTP id 8FC5B20722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCYOAc (ORCPT
+        id S1727598AbgCYOCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:00:32 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12804 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727394AbgCYOAb (ORCPT
+        Wed, 25 Mar 2020 10:02:10 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:48968 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbgCYOCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:00:31 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7b63a30002>; Wed, 25 Mar 2020 06:58:59 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Wed, 25 Mar 2020 07:00:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Wed, 25 Mar 2020 07:00:30 -0700
-Received: from [10.26.72.231] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 14:00:27 +0000
-Subject: Re: tegra124-jetson-tk1: sata doesnt work since 5.2
-To:     LABBE Corentin <clabbe@baylibre.com>,
-        Nicolas Chauvet <kwizart@gmail.com>
-CC:     Thierry Reding <thierry.reding@gmail.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        <pdeschrijver@nvidia.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <axboe@kernel.dk>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-ide@vger.kernel.org>
-References: <20200319074401.GA4116@Red>
- <CABr+WTnBmJsDZPjUxYkG98dTneDD1p8G=uRftVduTGYbY0ruqQ@mail.gmail.com>
- <20200325134003.GA27961@Red>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <cf63d40c-7b84-60f6-76be-a13255e69c99@nvidia.com>
-Date:   Wed, 25 Mar 2020 14:00:25 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 25 Mar 2020 10:02:10 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH6bf-002WDe-9O; Wed, 25 Mar 2020 14:02:07 +0000
+Date:   Wed, 25 Mar 2020 14:02:07 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
+Message-ID: <20200325140207.GM23230@ZenIV.linux.org.uk>
+References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
+ <20200324214637.GI23230@ZenIV.linux.org.uk>
+ <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
+ <20200325021327.GJ23230@ZenIV.linux.org.uk>
+ <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
+ <20200325040359.GK23230@ZenIV.linux.org.uk>
+ <20200325055830.GL23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200325134003.GA27961@Red>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585144739; bh=EerULfemy2W+M7YTPQPDKXIDApM3m/+qcklquHsA850=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=HioPWdnnu+6z3HdUYuZP9Yfg2iW3zipkeqVa89l7LiyD75kY2jRtJacOcbAaIHYKR
-         AroeGPVnf8Yna6wGjB+4ebS/TJpjIM3xShlEuPOmOhUYrgUeV68iBY+0sAOj0Lglx4
-         GwaOKLz9vZn4bDycD+Q70k2QgQFOq7WmOUVwhT1Wj6WoGAYCeQmwFXdmmZM4k3ldmS
-         mJg9pbpDkGoULAOKsIfLvoib9EqOV7t5grzo0JL+TS1XU9Zq/ExADDCLlSeMYLKOV4
-         mf69jlC87HOjwG77NFw403cMGNzEwA7YbqMr/E6lkwEMdO6wiD++b2t0rofUtLk8Xi
-         YPVdmODECP57g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325055830.GL23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 05:58:30AM +0000, Al Viro wrote:
+> On Wed, Mar 25, 2020 at 04:03:59AM +0000, Al Viro wrote:
+> 
+> > Lovely.  So
+> > 	* we really do get NULL nd->path.dentry there; I've not misread the
+> > trace.
+> > 	* on the entry into link_path_walk() nd->path.dentry is non-NULL.
+> > 	* *ALL* components should've been LAST_NORM ones
+> > 	* not a single symlink in sight, unless the setup is rather unusual
+> > 	* possibly not even a single mountpoint along the way (depending
+> > upon the userland used)
+> 
+> OK, I see one place where that could occur, but I really don't see how that
+> could be triggered on this pathname, short of very odd symlink layout in
+> the filesystem on the testbox.
 
-On 25/03/2020 13:40, LABBE Corentin wrote:
-> On Thu, Mar 19, 2020 at 08:55:38AM +0100, Nicolas Chauvet wrote:
->> Le jeu. 19 mars 2020 =C3=A0 08:44, LABBE Corentin <clabbe@baylibre.com> =
-a =C3=A9crit :
->>>
->>> Hello
->>>
->>> sata doesnt work on tegra124-jetson-tk1 on next and master and at least=
- since 5.2 (but 5.1 works).
->>> [    0.492810] +5V_SATA: supplied by +5V_SYS
->>> [    0.493230] +12V_SATA: supplied by +VDD_MUX
->>> [    2.088675] tegra-ahci 70027000.sata: 70027000.sata supply ahci not =
-found, using dummy regulator
->>> [    2.097643] tegra-ahci 70027000.sata: 70027000.sata supply phy not f=
-ound, using dummy regulator
->>> [    3.314776] tegra-ahci 70027000.sata: 70027000.sata supply ahci not =
-found, using dummy regulator
->>> [    3.323658] tegra-ahci 70027000.sata: 70027000.sata supply phy not f=
-ound, using dummy regulator
->>> [    5.236964] tegra-ahci 70027000.sata: 70027000.sata supply ahci not =
-found, using dummy regulator
->>> [    5.245867] tegra-ahci 70027000.sata: 70027000.sata supply phy not f=
-ound, using dummy regulator
->>> [    5.254706] tegra-ahci 70027000.sata: 70027000.sata supply target no=
-t found, using dummy regulator
->>> [    5.310270] phy phy-sata.6: phy poweron failed --> -110
->>> [    5.315604] tegra-ahci 70027000.sata: failed to power on AHCI contro=
-ller: -110
->>> [    5.323022] tegra-ahci: probe of 70027000.sata failed with error -11=
-0
->>> [   35.694269] +5V_SATA: disabling
->>> [   35.697438] +12V_SATA: disabling
->>
->> It looks strange, because (on same device) , I have sata working as
->> appropriate, but ethernet fails with me.
->> https://bugzilla.kernel.org/show_bug.cgi?id=3D206217
->>
->> It might worth to have another report.
->>
->=20
-> Hello
->=20
-> Mine has ethernet works well. But I hit many problem with it and older ke=
-rnel.
-> Perhaps the 5.1.21, were I am stuck, does not have it.
->=20
-> Anyway, the tegra of kerneci has the same SATA problem.
-> https://storage.kernelci.org/next/master/next-20200325/arm/multi_v7_defco=
-nfig+CONFIG_SMP=3Dn/gcc-8/lab-baylibre/boot-tegra124-jetson-tk1.txt
->=20
-> Maintainers, any idea on this sata issue ?
+... which, apparently, is what you've got there (/var/run -> ../run), so
+stepping into that braino is not implausible.  Could you check if the
+fix below fixes what you've observed?  I am folding it in anyway (into
+"lift all calls of step_into() out of follow_dotdot/follow_dotdot_rcu") -
+it's an obvious braino introduced in the commit in question, but I'd
+like a confirmation that this _is_ what you've caught.
 
-I have checked our bootlogs for v5.6-rc7 and don't see the issue with
-either the tegra_defconfig or the multi_v7_defconfig. I am wondering if
-this could be due a difference in the bootloader version. Currently we
-are testing with a v2019.07 u-boot bootloader. Looks like the kernelci
-board is using an older u-boot. Obviously it should still work, but
-would be good to know if the reason why were are not seeing this is
-because of the bootloader.
 
-Another thing to check would be the pll_e clock frequency on a working
-build and non-working build to see if there is a difference in the pll
-frequency that is causing this.
-
-Cheers
-Jon
-
---=20
-nvpublic
+>  Does the following fix your reproducer?
+> 
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 311e33dbac63..4082b70f32ff 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -1805,6 +1805,8 @@ static const char *handle_dots(struct nameidata *nd, int type)
+>  			error = step_into(nd, WALK_NOFOLLOW,
+>  					 parent, inode, seq);
+>  		}
+> +		if (unlikely(error))
+> +			return ERR_PTR(error);
+>  
+>  		if (unlikely(nd->flags & LOOKUP_IS_SCOPED)) {
+>  			/*
