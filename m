@@ -2,205 +2,192 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77294C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17320C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:58:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5791420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D358520772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:58:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="zbqieNq2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgCYQze (ORCPT
+        id S1727592AbgCYQ6G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:55:34 -0400
-Received: from mail.baikalelectronics.com ([87.245.175.226]:47376 "EHLO
-        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgCYQze (ORCPT
+        Wed, 25 Mar 2020 12:58:06 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18478 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726102AbgCYQ6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:55:34 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mail.baikalelectronics.ru (Postfix) with ESMTP id B4CAD8030776;
-        Wed, 25 Mar 2020 16:55:27 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at baikalelectronics.ru
-Received: from mail.baikalelectronics.ru ([127.0.0.1])
-        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id dzCZCWQMISgm; Wed, 25 Mar 2020 19:55:26 +0300 (MSK)
-Date:   Wed, 25 Mar 2020 19:55:11 +0300
-From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] mfd: Add Baikal-T1 Boot Controller driver
-Message-ID: <20200325165511.tjdaf2l5kkuhbhrr@ubsrv2.baikal.int>
-References: <20200306130528.9973-1-Sergey.Semin@baikalelectronics.ru>
- <20200306130614.696EF8030704@mail.baikalelectronics.ru>
- <20200325100940.GI442973@dell>
+        Wed, 25 Mar 2020 12:58:06 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PGquT7027578;
+        Wed, 25 Mar 2020 17:57:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=765SUSoYfp3NkYF15kCDHOpVCNo5Ahc9UvpYL/PCA/M=;
+ b=zbqieNq2sJ+MTi1bySzVUNs74mUZsYfbjmdlLQiSYqxZV+MhSPgzhG1o3mYW2HgbC7HQ
+ +epC4/SMzj9/qm+moIedwP6F3+I+PpQZplQ3QqED2Pj9V46qCJZd7GyHT6ZDkZ7pscP6
+ Nea5jRdfpG9yq/x8g3HeEZjKPebeQ5okDQqQ+lmBk+D4M+6DyFDPLGWAyERiToCWu445
+ SPsu+ohZqI7ATzaBKgOv6A0OkumloeCC51JF1EuybFteSvfwWpAtn0CZYNdEl6TWL92z
+ t5Rh9Vz2DzYXd0FVx9aSs1g7RRWlgEqPbePIGmlwwGGOwPBQ811TS+M7Jf6XzycToS1y ng== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw9k06txh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Mar 2020 17:57:49 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 120B910002A;
+        Wed, 25 Mar 2020 17:57:45 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node1.st.com [10.75.127.7])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id F40222BEC4A;
+        Wed, 25 Mar 2020 17:57:44 +0100 (CET)
+Received: from lmecxl0889.tpe.st.com (10.75.127.44) by SFHDAG3NODE1.st.com
+ (10.75.127.7) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 17:57:36 +0100
+Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Ohad Ben-Cohen <ohad@wizery.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, <linux-kernel@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        xiang xiao <xiaoxiang781216@gmail.com>
+References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
+ <20200324170407.16470-3-arnaud.pouliquen@st.com>
+ <20200324205210.GE119913@minitux>
+From:   Arnaud POULIQUEN <arnaud.pouliquen@st.com>
+Message-ID: <4f5e6dd0-5deb-8036-0a94-eb7055744f35@st.com>
+Date:   Wed, 25 Mar 2020 17:57:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200324205210.GE119913@minitux>
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200325100940.GI442973@dell>
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE1.st.com
+ (10.75.127.7)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_09:2020-03-24,2020-03-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Lee,
+Hi Bjorn,
 
-On Wed, Mar 25, 2020 at 10:09:40AM +0000, Lee Jones wrote:
-> On Fri, 06 Mar 2020, Sergey.Semin@baikalelectronics.ru wrote:
+On 3/24/20 9:52 PM, Bjorn Andersson wrote:
+> On Tue 24 Mar 10:04 PDT 2020, Arnaud Pouliquen wrote:
+> [..]
+>> diff --git a/drivers/tty/Makefile b/drivers/tty/Makefile
+>> index 020b1cd9294f..c2465e7ebc2a 100644
+>> --- a/drivers/tty/Makefile
+>> +++ b/drivers/tty/Makefile
+>> @@ -34,5 +34,6 @@ obj-$(CONFIG_PPC_EPAPR_HV_BYTECHAN) += ehv_bytechan.o
+>>  obj-$(CONFIG_GOLDFISH_TTY)	+= goldfish.o
+>>  obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += mips_ejtag_fdc.o
+>>  obj-$(CONFIG_VCC)		+= vcc.o
+>> +obj-$(CONFIG_RPMSG_TTY)		+= rpmsg_tty.o
+>>  
+>>  obj-y += ipwireless/
+>> diff --git a/drivers/tty/rpmsg_tty.c b/drivers/tty/rpmsg_tty.c
+> [..]
+>> +static struct rpmsg_device_id rpmsg_driver_tty_id_table[] = {
+>> +	{ .name	= TTY_CH_NAME_RAW },
+>> +	{ .name	= TTY_CH_NAME_WITH_CTS},
 > 
-> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > 
-> > Baikal-T1 Boot Controller is an IP block embedded into the SoC and
-> > responsible for the chip proper pre-initialization and further
-> > booting up from some memory device. From the Linux kernel point of view
-> > it's just a multi-functional device, which exports three physically mapped
-> > ROMs and a single SPI controller.
-> > 
-> > Primarily the ROMs are intended to be used for transparent access of
-> > the memory devices with system bootup code. First ROM device is an
-> > embedded into the SoC firmware, which is supposed to be used just for
-> > the chip debug and tests. Second ROM device provides a MMIO-based
-> > access to an external SPI flash. Third ROM mirrors either the Internal
-> > or SPI ROM region, depending on the state of the external BOOTCFG_{0,1}
-> > chip pins selecting the system boot device.
-> > 
-> > External SPI flash can be also accessed by the DW APB SSI SPI controller
-> > embedded into the Baikal-T1 Boot Controller. In this case the memory mapped
-> > SPI flash region shouldn't be accessed.
-> > 
-> > Taking into account all the peculiarities described above, we created
-> > an MFD-based driver for the Baikal-T1 controller. Aside from ordinary
-> > OF-based sub-device registration it also provides a simple API to
-> > serialize an access to the external SPI flash from either the MMIO-based
-> > SPI interface or embedded SPI controller.
-> 
-> Not sure why this is being classified as an MFD.
-> 
-> This is clearly 'just' a memory device.
-> 
+> I still don't like the idea that the tty devices are tied to channels by
+> fixed names.
 
-Hm, I see this as a normal MFD device. The Boot controller provides a
-set of physically mapped ROMs and a DW APB SSI-based embedded SPI
-controller. Yes, the SPI controller is normally utilized to access an external
-flash device, and at boot stage it is used for it. But still it's a SPI
-controller which driver belongs to the kernel SPI subsystem. Moreover
-nothing prevents a platform designer from using it together with custom
-GPIO-based chip-selects to have additional devices on the SPI bus.
+This point has been discussed with Xiang, he has the same kind of requirement. 
+My proposal here is to do this in two steps. First a fixed name, then
+in a second step we can extend the naming using the implementation proposed
+by Mathieu Poirier:
 
-As I said the problem is that an SPI flash might be accessed either with
-use of a physically mapped ROM or via the normal DW APB SPI controller.
-These two interfaces can't be used simultaneously, because the ROM is
-just an rtl state-machine, which is built to translate MMIO operations
-through the SPI controller registers to an external SPI-nor at CS0 of
-the interface. That's why first I need to make sure the interface is locked,
-then being enabled, then the corresponding driver can use it, then get
-to unlock. That's the point of having the __bt1_bc_spi_lock() and
-bt1_bc_spi_unlock() methods exported from the driver.
+[1]https://lkml.org/lkml/2020/2/12/1083
 
-I've got two drivers for MTD ROM and SPI controller based on that
-methods. But I haven't submitted them yet, because they belong to two
-different subsystems and I need to have this one being accepted first.
+Is this patch could answer to your requirement?
 
-Recently I've sent an RFC regarding a different question, but it
-concerns the Baikal-T1 system controller and the boot controller as being part
-of it:
+if requested i can I can integrate the Mathieu's patch in this patchset.
+ 
+> 
+> This makes the driver unusable for communicating with any firmware out
+> there that provides tty-like data over a channel with a different name -
+> such as modems with channels providing an AT command interface (they are
+> not named "rpmsg-tty-raw").
 
-https://lkml.org/lkml/2020/3/22/393
+I'm not fixed on the naming, any proposal is welcome.
+If we use the patch [1], could be renamed 
+"rpmsg-tty". then for AT command could be something like "rpmsg-tty-at"
 
-Regards,
--Sergey
+But here seems we are speaking about service over TTY and not over RPMsg.
 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> > Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-> > Cc: Paul Burton <paulburton@kernel.org>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > ---
-> >  drivers/mfd/Kconfig              |  13 ++
-> >  drivers/mfd/Makefile             |   1 +
-> >  drivers/mfd/bt1-boot-ctl.c       | 345 +++++++++++++++++++++++++++++++
-> >  include/linux/mfd/bt1-boot-ctl.h |  46 +++++
-> >  4 files changed, 405 insertions(+)
-> >  create mode 100644 drivers/mfd/bt1-boot-ctl.c
-> >  create mode 100644 include/linux/mfd/bt1-boot-ctl.h
 > 
-> [...]
+> I also fail to see how you would distinguish ttys when the firmware
+> provides more than a single tty - e.g. say you have a modem-like device
+> that provides an AT command channel and a NMEA stream.
+
+Today it is a limitation. In fact this limitation is the same for all RPMsg
+devices with multi instance.
+The patch [1] will allow to retrieve the instance by identifying
+the service device name in /sys/class/tty/ttyRPMSG<X>/device/name
+
 > 
-> > diff --git a/drivers/mfd/bt1-boot-ctl.c b/drivers/mfd/bt1-boot-ctl.c
-> > new file mode 100644
-> > index 000000000000..9e3cd47a2e7a
-> > --- /dev/null
-> > +++ b/drivers/mfd/bt1-boot-ctl.c
-> > @@ -0,0 +1,345 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2020 BAIKAL ELECTRONICS, JSC
-> > + *
-> > + * Authors:
-> > + *   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > + *
-> > + * Baikal-T1 Boot Controller driver.
-> > + */
-> > +
-> > +#include <linux/kernel.h>
-> > +#include <linux/module.h>
-> > +#include <linux/types.h>
-> > +#include <linux/device.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/io.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_platform.h>
-> > +#include <linux/clk.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/mfd/core.h>
 > 
-> Despite including the MFD API, I don't see it being used at all.
+> These are the reasons why drivers/rpmsg/rpmsg_char registers a "control
+> device", from which you can spawn new char devices. As I've said before,
+> I really think the same approach should be taken for ttys - perhaps by
+> just extending the rpmsg_char to allow it to create tty devices in
+> addition to the "packet based" char device?
 > 
-> > +#include <linux/mfd/bt1-boot-ctl.h>
+I'm not very familiar with the rpmsg_char so please correct me if i'm wrong:
+
+The rpmsg_char exposes to userland an interface to manage rpmsg channels
+(relying on a char device). This interface offers the  possibility to create
+new channels/endpoints and send/received related messages. 
+ 
+Thus, the application declares the RPMsg channels which is bound if they matches
+with the remote processor channel (similar behavior than a kernel rpmsg driver).
+There is no constrain on the service once same service is advertised by remote
+firmware.
+
+In addition, a limitation of the rpmsg_char device is that it needs to be
+associated with an existing device, as example the implementation in qcom_smd
+driver.
+
+If i try to figure out how to implement TTY using the rpmsg_char:
+I should create a rpmsg_char dev in the rpmsg tty driver. Then application
+will create channels related to its service. But in this case
+how to ensure that channels created are related to the TTY service?  
+
+
+I would also expect to manage RPMsg TTY such as a generic TTY: without
+extra interface and auto mounted as an USB TTY. this means that the
+/dev/ttyRMPSGx are created automatically at remote firmware startup
+(without any application action). For instance a generic application 
+(e.g. minicom) could control an internal remote processor such as
+an external processor through a TTY link. 
+
+Then we have also similar RPMsg driver for I2C and SPI virtual link. So extend
+the rpmsg_char to support TTY seems not a good solution for long terms. 
+
+For these reasons i would prefer to have a specific driver. And found a solution
+to allow user to differentiate the TTY instances.
+
+Anyway I am very interesting in having more details of an implementation relying
+on rpmsg_char if you still thinking that is the good approach here.
+
+Thanks for your comments, 
+Arnaud
+
+> Regards,
+> Bjorn
 > 
-> [...]
-> 
-> > +static inline u32 bc_read(void __iomem *reg)
-> > +{
-> > +	return readl(reg);
-> > +}
-> > +
-> > +static inline void bc_write(void __iomem *reg, u32 data)
-> > +{
-> > +	writel(data, reg);
-> > +}
-> 
-> Abstraction for the sake of abstraction is generally discouraged.
-> 
-> [...]
-> 
-> > +static int bc_register_devices(struct bt1_bc *bc)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = devm_of_platform_populate(bc->dev);
-> > +	if (ret)
-> > +		dev_err(bc->dev, "Failed to add sub-devices\n");
-> > +
-> > +	return ret;
-> > +}
-> 
-> You can call devm_of_platform_populate() from anywhere.
-> 
-> Doesn't have to be an MFD.
-> 
-> [...]
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
