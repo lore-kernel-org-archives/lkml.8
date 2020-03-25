@@ -2,116 +2,70 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DF4C54FD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF2C4C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261E220740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="MGBDxLNR"
+	by mail.kernel.org (Postfix) with ESMTP id 9D38420724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585103630;
+	bh=2yJJvOmfTjEvAcEL5kv6bJT0ZOpWZUNEjyffqitODPQ=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=efhBMIcZjjx2dxrQYHZ6yvLn1MuObbNPzWiOb00MbYmt5Xfaa2lfbWEE9q94TPFMG
+	 niRdNi2NBacSs7sXcj9aVRDOfhq/YakS7c3YWG+7qqi8U9IU5OhT5WiCScOiE/yxlZ
+	 zoI1Nq6Hx4zDcWZ353lS/y2CYrhzA4/k+utlttdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbgCYCdn (ORCPT
+        id S1727466AbgCYCdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:33:43 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17843 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727395AbgCYCdm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:33:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585103479;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=yyST9a4xds2OxHP7d839ZExH6zCAlPz7AHq/7HnkO+0=;
-        b=MGBDxLNRcnw+6qJTvx05eGMOstYRHvSbOhuEdL7taDXptxvfLF8rxsPHnav4P5/Q
-        SBBaP5Qom4Rj2JDEN/p7/3X20BPAT9msWTkvCAPl981eGaAwf4QKTXyCMyiHxBw0Znr
-        fHKyc1f+uskxwMln9lWHOMzalLTXvL57vAlH9D2s=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585103477959328.4875849949635; Wed, 25 Mar 2020 10:31:17 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        John Crispin <john@phrozen.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Allison Randal <allison@lohutok.net>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Matt Redfearn <matt.redfearn@mips.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-ide@vger.kernel.org
-Message-ID: <20200325022916.106641-3-jiaxun.yang@flygoat.com>
-Subject: [PATCH v7 01/12] MIPS: Loongson: Do not initialise statics to 0
-Date:   Wed, 25 Mar 2020 10:28:18 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200325022916.106641-1-jiaxun.yang@flygoat.com>
-References: <20200325022916.106641-1-jiaxun.yang@flygoat.com>
+        Tue, 24 Mar 2020 22:33:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727395AbgCYCdt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:33:49 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BE7D20714;
+        Wed, 25 Mar 2020 02:33:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585103628;
+        bh=2yJJvOmfTjEvAcEL5kv6bJT0ZOpWZUNEjyffqitODPQ=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=L+cY5BN9ty3VRUkqVHcTZHowB8Urq1Rj7pzhiF+cWAl6TSNy4nDWYG26nTULJobcf
+         ZxqBGKScg565aURtRCR7phxmH8OjRsIu2jA7X1QQAuGqj2x6o/6Py0gH5fNh4jnXf+
+         qECBbvkeV36G+/3Q+h/FBtize0mO3S4+QyFhRg0U=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+In-Reply-To: <20200309221232.145630-2-sboyd@kernel.org>
+References: <20200309221232.145630-1-sboyd@kernel.org> <20200309221232.145630-2-sboyd@kernel.org>
+Subject: Re: [PATCH 1/2] clk: qcom: rpmh: Simplify clk_rpmh_bcm_send_cmd()
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Taniya Das <tdas@codeaurora.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Date:   Tue, 24 Mar 2020 19:33:47 -0700
+Message-ID: <158510362776.125146.11065115657793883744@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Quoting Stephen Boyd (2020-03-09 15:12:31)
+> This function has some duplication in unlocking a mutex and returns in a
+> few different places. Let's use some if statements to consolidate code
+> and make this a bit easier to read.
+>=20
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> CC: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> ---
 
-Fix the following checkpatch error:
-
-ERROR: do not initialise statics to 0
-#125: FILE: loongson64/numa.c:125:
-+=09static unsigned long num_physpages =3D 0;
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
----
- arch/mips/loongson64/numa.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/mips/loongson64/numa.c b/arch/mips/loongson64/numa.c
-index e5b40c5e3296..1ae072df4831 100644
---- a/arch/mips/loongson64/numa.c
-+++ b/arch/mips/loongson64/numa.c
-@@ -122,7 +122,7 @@ static unsigned long nid_to_addroffset(unsigned int nid=
-)
- static void __init szmem(unsigned int node)
- {
- =09u32 i, mem_type;
--=09static unsigned long num_physpages =3D 0;
-+=09static unsigned long num_physpages;
- =09u64 node_id, node_psize, start_pfn, end_pfn, mem_start, mem_size;
-=20
- =09/* Parse memory information and activate */
---=20
-2.26.0.rc2
-
-
+Applied to clk-next
