@@ -2,143 +2,199 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D07C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:49:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 893AEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E152073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F4432073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gZc4nvnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgCYPtN (ORCPT
+        id S1728020AbgCYPtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:49:13 -0400
-Received: from mx3.molgen.mpg.de ([141.14.17.11]:36069 "EHLO mx1.molgen.mpg.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727840AbgCYPtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:49:09 -0400
-Received: from [192.168.0.2] (ip5f5af719.dynamic.kabel-deutschland.de [95.90.247.25])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 16137202254DE;
-        Wed, 25 Mar 2020 16:49:06 +0100 (CET)
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: bump up timeout to wait when ME
- un-configure ULP mode
-To:     Sasha Neftin <sasha.neftin@intel.com>,
-        Aaron Ma <aaron.ma@canonical.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org,
-        David Miller <davem@davemloft.net>,
-        Rex Tsai <rex.tsai@intel.com>
-References: <20200323191639.48826-1-aaron.ma@canonical.com>
- <EC4F7F0B-90F8-4325-B170-84C65D8BBBB8@canonical.com>
- <2c765c59-556e-266b-4d0d-a4602db94476@intel.com>
- <899895bc-fb88-a97d-a629-b514ceda296d@canonical.com>
- <750ad0ad-816a-5896-de2f-7e034d2a2508@intel.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-Message-ID: <f9dc1980-fa8b-7df9-6460-b0944c7ebc43@molgen.mpg.de>
-Date:   Wed, 25 Mar 2020 16:49:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 11:49:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48684 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbgCYPtA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:49:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description;
+        bh=7h7Vfxjyhdggp3Bds0/FcKA873p19DC35MTxQoqiTpo=; b=gZc4nvnDbcEMrcLvbOQBgChxf6
+        lG3GRZQ1FIAM32KbKfyW/Ww5Tx79ohBMwQ0pZkkqVMs/5Yl8PPbm8yyw4zLcdUWucDoUjLCQGmWum
+        3Ou7x0uR9CkpH0CwDjqeCiSisgPZ9Jcnv8Fn7+hi2VbR1rJ8VVoisJjjJKPfyho+/Q6CeGGgD9/HO
+        huvqRj7gEn94hVG1UXt6o2ILyYn94SvNDdsjZdph37Gwk29hM6hCdz5CQRWaX/ngMSt8p4JDtBK1J
+        KCV0iGNBW/AJ+ZEtxsHLR8+nnRARIXeOQp+Dg6RDoIiRGbO+M/wsLUOwZw6tEyt4ccuMgnCQdwn3X
+        N2ceivPg==;
+Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH8H6-0005IZ-5Z; Wed, 25 Mar 2020 15:49:00 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 6/9] block: move guard_bio_eod to bio.c
+Date:   Wed, 25 Mar 2020 16:48:40 +0100
+Message-Id: <20200325154843.1349040-7-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200325154843.1349040-1-hch@lst.de>
+References: <20200325154843.1349040-1-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <750ad0ad-816a-5896-de2f-7e034d2a2508@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Linux folks,
+This is bio layer functionality and not related to buffer heads.
 
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ block/bio.c         | 43 +++++++++++++++++++++++++++++++++++++++++++
+ fs/buffer.c         | 43 -------------------------------------------
+ fs/internal.h       |  1 -
+ include/linux/bio.h |  1 +
+ 4 files changed, 44 insertions(+), 44 deletions(-)
 
-Am 25.03.20 um 14:58 schrieb Neftin, Sasha:
-> On 3/25/2020 08:43, Aaron Ma wrote:
-
->> On 3/25/20 2:36 PM, Neftin, Sasha wrote:
->>> On 3/25/2020 06:17, Kai-Heng Feng wrote:
-
->>>>> On Mar 24, 2020, at 03:16, Aaron Ma <aaron.ma@canonical.com> wrote:
->>>>>
->>>>> ME takes 2+ seconds to un-configure ULP mode done after resume
->>>>> from s2idle on some ThinkPad laptops.
->>>>> Without enough wait, reset and re-init will fail with error.
->>>>
->>>> Thanks, this patch solves the issue. We can drop the DMI quirk in
->>>> favor of this patch.
->>>>
->>>>> Fixes: f15bb6dde738cc8fa0 ("e1000e: Add support for S0ix")
->>>>> BugLink: https://bugs.launchpad.net/bugs/1865570
->>>>> Signed-off-by: Aaron Ma <aaron.ma@canonical.com>
->>>>> ---
->>>>> drivers/net/ethernet/intel/e1000e/ich8lan.c | 4 ++--
->>>>> 1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>> b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>> index b4135c50e905..147b15a2f8b3 100644
->>>>> --- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>> +++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
->>>>> @@ -1240,9 +1240,9 @@ static s32 e1000_disable_ulp_lpt_lp(struct
->>>>> e1000_hw *hw, bool force)
->>>>>              ew32(H2ME, mac_reg);
->>>>>          }
->>>>>
->>>>> -        /* Poll up to 300msec for ME to clear ULP_CFG_DONE. */
->>>>> +        /* Poll up to 2.5sec for ME to clear ULP_CFG_DONE. */
->>>>>          while (er32(FWSM) & E1000_FWSM_ULP_CFG_DONE) {
->>>>> -            if (i++ == 30) {
->>>>> +            if (i++ == 250) {
->>>>>                  ret_val = -E1000_ERR_PHY;
->>>>>                  goto out;
->>>>>              }
->>>>
->>>> The return value was not caught by the caller, so the error ends up
->>>> unnoticed.
->>>> Maybe let the caller check the return value of
->>>> e1000_disable_ulp_lpt_lp()?
-
->>> I a bit confused. In our previous conversation you told ME not running.
->>> let me shimming in. Increasing delay won't be solve the problem and just
->>> mask it. We need to understand why ME take too much time. What is
->>> problem with this specific system?
->>> So, basically no ME system should works for you.
->>
->> Some laptops ME work that's why only reproduce issue on some laptops.
->> In this issue i219 is controlled by ME.
->
-> Who can explain - why ME required too much time on this system?
-> Probably need work with ME/BIOS vendor and understand it.
-> Delay will just mask the real problem - we need to find root cause.
->> Quirk is only for 1 model type. But issue is reproduced by more models.
->> So it won't work.
-
-(Where is Aaron’s reply? It wasn’t delivered to me yet.)
-
-As this is clearly a regression, please revert the commit for now, and 
-then find a way to correctly implement S0ix support. Linux’ regression 
-policy demands that as no fix has been found since v5.5-rc1. Changing 
-Intel ME settings, even if it would work around the issue, is not an 
-acceptable solution. Delaying the resume time is also not a solution.
-
-Regarding Intel Management Engine, only Intel knows what it does and 
-what the error is, as the ME firmware is proprietary and closed.
-
-Lastly, there is no way to fully disable the Intel Management Engine. 
-The HAP stuff claims to stop the Intel ME execution, but nobody knows, 
-if it’s successful.
-
-Aaron, Kai-Hang, can you send the revert?
-
-
-Kind regards,
-
-Paul
-
+diff --git a/block/bio.c b/block/bio.c
+index bc9152977bf0..11e6aac35092 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -588,6 +588,49 @@ void bio_truncate(struct bio *bio, unsigned new_size)
+ 	bio->bi_iter.bi_size = new_size;
+ }
+ 
++/**
++ * guard_bio_eod - truncate a BIO to fit the block device
++ * @bio:	bio to truncate
++ *
++ * This allows us to do IO even on the odd last sectors of a device, even if the
++ * block size is some multiple of the physical sector size.
++ *
++ * We'll just truncate the bio to the size of the device, and clear the end of
++ * the buffer head manually.  Truly out-of-range accesses will turn into actual
++ * I/O errors, this only handles the "we need to be able to do I/O at the final
++ * sector" case.
++ */
++void guard_bio_eod(struct bio *bio)
++{
++	sector_t maxsector;
++	struct hd_struct *part;
++
++	rcu_read_lock();
++	part = __disk_get_part(bio->bi_disk, bio->bi_partno);
++	if (part)
++		maxsector = part_nr_sects_read(part);
++	else
++		maxsector = get_capacity(bio->bi_disk);
++	rcu_read_unlock();
++
++	if (!maxsector)
++		return;
++
++	/*
++	 * If the *whole* IO is past the end of the device,
++	 * let it through, and the IO layer will turn it into
++	 * an EIO.
++	 */
++	if (unlikely(bio->bi_iter.bi_sector >= maxsector))
++		return;
++
++	maxsector -= bio->bi_iter.bi_sector;
++	if (likely((bio->bi_iter.bi_size >> 9) <= maxsector))
++		return;
++
++	bio_truncate(bio, maxsector << 9);
++}
++
+ /**
+  * bio_put - release a reference to a bio
+  * @bio:   bio to release reference to
+diff --git a/fs/buffer.c b/fs/buffer.c
+index b8d28370cfd7..3f5758e01e40 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -3019,49 +3019,6 @@ static void end_bio_bh_io_sync(struct bio *bio)
+ 	bio_put(bio);
+ }
+ 
+-/*
+- * This allows us to do IO even on the odd last sectors
+- * of a device, even if the block size is some multiple
+- * of the physical sector size.
+- *
+- * We'll just truncate the bio to the size of the device,
+- * and clear the end of the buffer head manually.
+- *
+- * Truly out-of-range accesses will turn into actual IO
+- * errors, this only handles the "we need to be able to
+- * do IO at the final sector" case.
+- */
+-void guard_bio_eod(struct bio *bio)
+-{
+-	sector_t maxsector;
+-	struct hd_struct *part;
+-
+-	rcu_read_lock();
+-	part = __disk_get_part(bio->bi_disk, bio->bi_partno);
+-	if (part)
+-		maxsector = part_nr_sects_read(part);
+-	else
+-		maxsector = get_capacity(bio->bi_disk);
+-	rcu_read_unlock();
+-
+-	if (!maxsector)
+-		return;
+-
+-	/*
+-	 * If the *whole* IO is past the end of the device,
+-	 * let it through, and the IO layer will turn it into
+-	 * an EIO.
+-	 */
+-	if (unlikely(bio->bi_iter.bi_sector >= maxsector))
+-		return;
+-
+-	maxsector -= bio->bi_iter.bi_sector;
+-	if (likely((bio->bi_iter.bi_size >> 9) <= maxsector))
+-		return;
+-
+-	bio_truncate(bio, maxsector << 9);
+-}
+-
+ static int submit_bh_wbc(int op, int op_flags, struct buffer_head *bh,
+ 			 enum rw_hint write_hint, struct writeback_control *wbc)
+ {
+diff --git a/fs/internal.h b/fs/internal.h
+index f3f280b952a3..4d37912a5587 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -38,7 +38,6 @@ static inline int __sync_blockdev(struct block_device *bdev, int wait)
+ /*
+  * buffer.c
+  */
+-extern void guard_bio_eod(struct bio *bio);
+ extern int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
+ 		get_block_t *get_block, struct iomap *iomap);
+ 
+diff --git a/include/linux/bio.h b/include/linux/bio.h
+index 853d92ceee64..a430e9c1c2d2 100644
+--- a/include/linux/bio.h
++++ b/include/linux/bio.h
+@@ -471,6 +471,7 @@ extern struct bio *bio_copy_user_iov(struct request_queue *,
+ extern int bio_uncopy_user(struct bio *);
+ void zero_fill_bio_iter(struct bio *bio, struct bvec_iter iter);
+ void bio_truncate(struct bio *bio, unsigned new_size);
++void guard_bio_eod(struct bio *bio);
+ 
+ static inline void zero_fill_bio(struct bio *bio)
+ {
+-- 
+2.25.1
 
