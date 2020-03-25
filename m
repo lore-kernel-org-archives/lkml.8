@@ -2,160 +2,122 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D11F0C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6480CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD69120777
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43A662070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726842AbgCYIK1 convert rfc822-to-8bit (ORCPT
+        id S1727265AbgCYIKc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:10:27 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:60677 "EHLO
-        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbgCYIK1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:10:27 -0400
-Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
-        by mail.holtmann.org (Postfix) with ESMTPSA id A34E9CECCA;
-        Wed, 25 Mar 2020 09:19:56 +0100 (CET)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH v2 1/2] Bluetooth: btusb: Indicate Microsoft vendor
- extension for Intel 9460/9560 and 9160/9260
-From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200325000332.v2.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+        Wed, 25 Mar 2020 04:10:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47664 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbgCYIKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 04:10:30 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9D970ADD7;
+        Wed, 25 Mar 2020 08:10:25 +0000 (UTC)
+Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        xiang xiao <xiaoxiang781216@gmail.com>
+References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
+ <20200324170407.16470-3-arnaud.pouliquen@st.com>
+ <8821448b-3c6e-6277-06d2-9be7f81de9e9@infradead.org>
+From:   Jiri Slaby <jslaby@suse.com>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4784b95f-0023-5250-ba9e-23b70b66611c@suse.com>
 Date:   Wed, 25 Mar 2020 09:10:24 +0100
-Cc:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>,
-        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
-        Alain Michaud <alainm@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <72699110-843A-4382-8FF1-20C5D4D557A2@holtmann.org>
-References: <20200325070336.1097-1-mcchou@chromium.org>
- <20200325000332.v2.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
-To:     Miao-chen Chou <mcchou@chromium.org>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <8821448b-3c6e-6277-06d2-9be7f81de9e9@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Miao-chen,
+Hi,
 
-> This adds a bit mask of driver_info for Microsoft vendor extension and
-> indicates the support for Intel 9460/9560 and 9160/9260. See
-> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
-> microsoft-defined-bluetooth-hci-commands-and-events for more information
-> about the extension. This was verified with Intel ThunderPeak BT controller
-> where msft_vnd_ext_opcode is 0xFC1E.
+On 24. 03. 20, 18:44, Randy Dunlap wrote:
+>> +  could be lost.
+>> +- It can pause/resume reception by sending a control message (rely on CTS state).
+>> +
+>> +Control message structure:
+>> +struct rpmsg_tty_ctrl {
+>> +	u8 cts;			/* remote reception status */
+>> +	u16 d_ept_addr;		/* data endpoint address */
+>> +};
 > 
-> Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
-> ---
-> 
-> Changes in v2:
-> - Define struct msft_vnd_ext and add a field of this type to struct
-> hci_dev to facilitate the support of Microsoft vendor extension.
-> 
-> drivers/bluetooth/btusb.c        | 14 ++++++++++++--
-> include/net/bluetooth/hci_core.h |  6 ++++++
-> 2 files changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
-> index 3bdec42c9612..4c49f394f174 100644
-> --- a/drivers/bluetooth/btusb.c
-> +++ b/drivers/bluetooth/btusb.c
-> @@ -58,6 +58,7 @@ static struct usb_driver btusb_driver;
-> #define BTUSB_CW6622		0x100000
-> #define BTUSB_MEDIATEK		0x200000
-> #define BTUSB_WIDEBAND_SPEECH	0x400000
-> +#define BTUSB_MSFT_VND_EXT	0x800000
-> 
-> static const struct usb_device_id btusb_table[] = {
-> 	/* Generic Bluetooth USB device */
-> @@ -335,7 +336,8 @@ static const struct usb_device_id blacklist_table[] = {
-> 
-> 	/* Intel Bluetooth devices */
-> 	{ USB_DEVICE(0x8087, 0x0025), .driver_info = BTUSB_INTEL_NEW |
-> -						     BTUSB_WIDEBAND_SPEECH },
-> +						     BTUSB_WIDEBAND_SPEECH |
-> +						     BTUSB_MSFT_VND_EXT },
-> 	{ USB_DEVICE(0x8087, 0x0026), .driver_info = BTUSB_INTEL_NEW |
-> 						     BTUSB_WIDEBAND_SPEECH },
-> 	{ USB_DEVICE(0x8087, 0x0029), .driver_info = BTUSB_INTEL_NEW |
-> @@ -348,7 +350,8 @@ static const struct usb_device_id blacklist_table[] = {
-> 	{ USB_DEVICE(0x8087, 0x0aa7), .driver_info = BTUSB_INTEL |
-> 						     BTUSB_WIDEBAND_SPEECH },
-> 	{ USB_DEVICE(0x8087, 0x0aaa), .driver_info = BTUSB_INTEL_NEW |
-> -						     BTUSB_WIDEBAND_SPEECH },
-> +						     BTUSB_WIDEBAND_SPEECH |
-> +						     BTUSB_MSFT_VND_EXT },
-> 
-> 	/* Other Intel Bluetooth devices */
-> 	{ USB_VENDOR_AND_INTERFACE_INFO(0x8087, 0xe0, 0x01, 0x01),
-> @@ -3734,6 +3737,8 @@ static int btusb_probe(struct usb_interface *intf,
-> 	hdev->send   = btusb_send_frame;
-> 	hdev->notify = btusb_notify;
-> 
-> +	hdev->msft_ext.opcode = HCI_OP_NOP;
-> +
+> Is that struct packed or padded?
 
-do this in the hci_alloc_dev procedure for every driver. This doesn’t belong in the driver.
+As it seems, this documentation is in contradiction with code, anyway:
 
-> #ifdef CONFIG_PM
-> 	err = btusb_config_oob_wake(hdev);
-> 	if (err)
-> @@ -3800,6 +3805,11 @@ static int btusb_probe(struct usb_interface *intf,
-> 		set_bit(HCI_QUIRK_STRICT_DUPLICATE_FILTER, &hdev->quirks);
-> 		set_bit(HCI_QUIRK_SIMULTANEOUS_DISCOVERY, &hdev->quirks);
-> 		set_bit(HCI_QUIRK_NON_PERSISTENT_DIAG, &hdev->quirks);
-> +
-> +		if (id->driver_info & BTUSB_MSFT_VND_EXT &&
-> +			(id->idProduct == 0x0025 || id->idProduct == 0x0aaa)) {
++struct rpmsg_tty_ctrl {
++	u16 d_ept_addr;		/* data endpoint address */
++	u8 cts;			/* remote reception status */
++} __packed;
 
-Please scrap this extra check. You already selected out the PID with the blacklist_table. In addition, I do not want to add a PID in two places in the driver.
-
-An alternative is to not use BTUSB_MSFT_VND_EXT and let the Intel code set it based on the hardware / firmware revision it finds. We might need to discuss which is the better approach for the Intel hardware since not all PIDs are unique.
-
-> +			hdev->msft_ext.opcode = 0xFC1E;
-> +		}
-> 	}
-> 
-> 	if (id->driver_info & BTUSB_MARVELL)
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index d4e28773d378..0ec3d9b41d81 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -244,6 +244,10 @@ struct amp_assoc {
-> 
-> #define HCI_MAX_PAGES	3
-> 
-> +struct msft_vnd_ext {
-> +	__u16	opcode;
-> +};
-> +
-> struct hci_dev {
-> 	struct list_head list;
-> 	struct mutex	lock;
-> @@ -343,6 +347,8 @@ struct hci_dev {
-> 
-> 	struct amp_assoc	loc_assoc;
-> 
-> +	struct msft_vnd_ext	msft_ext;
-> +
-> 	__u8		flow_ctl_mode;
-> 
-> 	unsigned int	auto_accept_delay;
-
-Regards
-
-Marcel
-
+thanks,
+-- 
+js
+suse labs
