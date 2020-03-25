@@ -2,159 +2,166 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AB9C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BF66C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:02:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 139D920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52A1220771
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:02:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QvbtCWiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCYLzt (ORCPT
+        id S1727376AbgCYMC4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:55:49 -0400
-Received: from wp530.webpack.hosteurope.de ([80.237.130.52]:50560 "EHLO
-        wp530.webpack.hosteurope.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726276AbgCYLzs (ORCPT
+        Wed, 25 Mar 2020 08:02:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43092 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgCYMCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:55:48 -0400
-X-Greylist: delayed 1937 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 07:55:46 EDT
-Received: from ip4d14845d.dynamic.kabel-deutschland.de ([77.20.132.93] helo=[192.168.66.131]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1jH486-0001Lm-MW; Wed, 25 Mar 2020 12:23:26 +0100
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>, rdunlap@infradead.org,
-        joe@perches.com
-Cc:     linux-kernel@vger.kernel.org
-References: <20200324225917.26104-1-unixbhaskar@gmail.com>
-From:   Thorsten Leemhuis <linux@leemhuis.info>
-Autocrypt: addr=linux@leemhuis.info; prefer-encrypt=mutual; keydata=
- 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
- 5iv6NKaV29GWHbY=
-Subject: Re: [PATCH V2] : kernel-chktaint : Fixed space ,cosmetic change
-Message-ID: <3ca78f7a-4431-b345-85e4-eb07fa8a4038@leemhuis.info>
-Date:   Wed, 25 Mar 2020 12:23:25 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 08:02:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=547A7ZAoUu2JDJ2ptSJ8vxecAwOtjI/NDzIFsvFTzXo=; b=QvbtCWiIh5Xi5+8xr7F3LHchs/
+        /enb5Ja0xjCQg6d/l+MMlIiwXqB1vmDvW34OsfyaSVHmfQx5kxyhZIn0FH5/13KsLe0hUWrGWbB2g
+        sxNran2m7QzQfFcu/qurUajS+kK4kEiY6Nojd22Yoyfhsr09GRoJw/fKvlcE/cgG6L+etNC0U3vkq
+        0DIgu/p6cickFzYi2VQqX4rMn0g6k0JEQQFCQ8RoqdCtQshCfS8K0j4G2044VrBkohrju2ToJ8dze
+        6LtjdH/dgtWCSE8hybN/l8eLj9N52oB+rKd+z7jbkSCM2Y9hSv9O3RaK4nV1mItf8R8C4rGnL9moV
+        mHDZZ7Cg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH4kI-0002HH-Er; Wed, 25 Mar 2020 12:02:54 +0000
+Date:   Wed, 25 Mar 2020 05:02:54 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Subject: Re: [PATCH v10 24/25] fuse: Convert from readpages to readahead
+Message-ID: <20200325120254.GA22483@bombadil.infradead.org>
+References: <20200323202259.13363-1-willy@infradead.org>
+ <20200323202259.13363-25-willy@infradead.org>
+ <CAJfpegu7EFcWrg3bP+-2BX_kb52RrzBCo_U3QKYzUkZfe4EjDA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200324225917.26104-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1585137347;e6db0448;
-X-HE-SMSGID: 1jH486-0001Lm-MW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJfpegu7EFcWrg3bP+-2BX_kb52RrzBCo_U3QKYzUkZfe4EjDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lo! Thx for taking a look at this, but it seems a few small details need
-to be improved before this can be applied. A few general issues first:
-
-* your patch v2 is afaics on top of the first patch; when doing further
-revisions please merge all your changes into one patch so everything you
-want to do can be done in one commit (and people that see this mail
-out-of-context can easily gasp what this is all about).
-
-* tools/debugging/kernel-chktaint was added via the docs tree, thus I
-think it's best if this change takes the same route, so please CC the
-docs maintainer Jonathan Corbet <corbet@lwn.net>
- and linux-doc@vger.kernel.org
- – I might be wrong with that line of thought, but Jonathan will know
-for sure.
-
-Am 24.03.20 um 23:59 schrieb Bhaskar Chowdhury:
-> Space bwtween
-
-Typo
-
-> the words is fixed at the bottom of the file,sentence
-
-Missing space after the comma.
-
-> starting with "Documentation....."
+On Wed, Mar 25, 2020 at 10:42:56AM +0100, Miklos Szeredi wrote:
+> > +       while ((page = readahead_page(rac))) {
+> > +               if (fuse_readpages_fill(&data, page) != 0)
 > 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
->  tools/debugging/kernel-chktaint | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/debugging/kernel-chktaint b/tools/debugging/kernel-chktaint
-> index 74fd3282aa1b..1af06bc0e667 100755
-> --- a/tools/debugging/kernel-chktaint
-> +++ b/tools/debugging/kernel-chktaint
-> @@ -198,6 +198,6 @@ fi
->  echo "Raw taint value as int/string: $taint/'$out'"
+> Shouldn't this unlock + put page on error?
 
-This used to be the last time. Did you move it upwards on purpose?
+We're certainly inconsistent between the two error exits from
+fuse_readpages_fill().  But I think we can simplify the whole thing
+... how does this look to you?
 
->  echo
-
-If you add a blank line here you IMHO might want to add one above the
-""Raw taint value" as well.
-
->  echo "For a more detailed explanation of the various taint flags see below pointers:"
-> -echo "1) Documentation/admin-guide/tainted-kernels.rst in  the Linux kernel sources"
-> +echo "1) Documentation/admin-guide/tainted-kernels.rst in the Linux kernel sources"
->  echo "2)  https://kernel.org/doc/html/latest/admin-guide/tainted-kernels.html"
-There are two spaces here as well: "2)  https".
-
-And I for one dislike the "1)" "2)" style, as in the end it's the same
-file in different locations. How about a text like this instead:
-
-```
-For a more detailed explanation of the various taint flags see
-Documentation/admin-guide/tainted-kernels.rst in the Linux sources which
-is also available online as rendered webpage at
-https://kernel.org/doc/html/latest/admin-guide/tainted-kernels.html"
-```
-
-Feel free to improve on that, it's just a suggestion. I for one wonder
-if this cosmetic change is worth all of this, but no worries.
-
-Note, you also want to change tainted-kernels.rst, as in once place it
-shows the output of this tool (which is one more reason to route this
-via the docs tree).
-
-Ciao, Thorsten
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 5749505bcff6..57ea9a364e62 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -915,76 +915,32 @@ static void fuse_send_readpages(struct fuse_io_args *ia, struct file *file)
+ 	fuse_readpages_end(fc, &ap->args, err);
+ }
+ 
+-struct fuse_fill_data {
+-	struct fuse_io_args *ia;
+-	struct file *file;
+-	struct inode *inode;
+-	unsigned int nr_pages;
+-	unsigned int max_pages;
+-};
+-
+-static int fuse_readpages_fill(struct fuse_fill_data *data, struct page *page)
+-{
+-	struct fuse_io_args *ia = data->ia;
+-	struct fuse_args_pages *ap = &ia->ap;
+-	struct inode *inode = data->inode;
+-	struct fuse_conn *fc = get_fuse_conn(inode);
+-
+-	fuse_wait_on_page_writeback(inode, page->index);
+-
+-	if (ap->num_pages &&
+-	    (ap->num_pages == fc->max_pages ||
+-	     (ap->num_pages + 1) * PAGE_SIZE > fc->max_read ||
+-	     ap->pages[ap->num_pages - 1]->index + 1 != page->index)) {
+-		data->max_pages = min_t(unsigned int, data->nr_pages,
+-					fc->max_pages);
+-		fuse_send_readpages(ia, data->file);
+-		data->ia = ia = fuse_io_alloc(NULL, data->max_pages);
+-		if (!ia)
+-			return -ENOMEM;
+-		ap = &ia->ap;
+-	}
+-
+-	if (WARN_ON(ap->num_pages >= data->max_pages)) {
+-		unlock_page(page);
+-		fuse_io_free(ia);
+-		return -EIO;
+-	}
+-
+-	ap->pages[ap->num_pages] = page;
+-	ap->descs[ap->num_pages].length = PAGE_SIZE;
+-	ap->num_pages++;
+-	data->nr_pages--;
+-	return 0;
+-}
+-
+ static void fuse_readahead(struct readahead_control *rac)
+ {
+ 	struct inode *inode = rac->mapping->host;
+ 	struct fuse_conn *fc = get_fuse_conn(inode);
+-	struct fuse_fill_data data;
+-	struct page *page;
+ 
+ 	if (is_bad_inode(inode))
+ 		return;
+ 
+-	data.file = rac->file;
+-	data.inode = inode;
+-	data.nr_pages = readahead_count(rac);
+-	data.max_pages = min_t(unsigned int, data.nr_pages, fc->max_pages);
+-	data.ia = fuse_io_alloc(NULL, data.max_pages);
+-	if (!data.ia)
+-		return;
++	while (readahead_count(rac)) {
++		struct fuse_io_args *ia;
++		struct fuse_args_pages *ap;
++		unsigned int i, nr_pages;
+ 
+-	while ((page = readahead_page(rac))) {
+-		if (fuse_readpages_fill(&data, page) != 0)
++		nr_pages = min(readahead_count(rac), fc->max_pages);
++		ia = fuse_io_alloc(NULL, nr_pages);
++		if (!ia)
+ 			return;
++		ap = &ia->ap;
++		__readahead_batch(rac, ap->pages, nr_pages);
++		for (i = 0; i < nr_pages; i++) {
++			fuse_wait_on_page_writeback(inode, ap->pages[i]->index);
++			ap->descs[i].length = PAGE_SIZE;
++		}
++		ap->num_pages = nr_pages;
++		fuse_send_readpages(ia, rac->file);
+ 	}
+-
+-	if (data.ia->ap.num_pages)
+-		fuse_send_readpages(data.ia, rac->file);
+-	else
+-		fuse_io_free(data.ia);
+ }
+ 
+ static ssize_t fuse_cache_read_iter(struct kiocb *iocb, struct iov_iter *to)
