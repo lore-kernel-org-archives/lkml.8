@@ -2,119 +2,124 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3257C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF3FC2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB85206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:42:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8FAE206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:43:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="netoBFLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCYSm0 (ORCPT
+        id S1727539AbgCYSnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:42:26 -0400
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:58180 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727006AbgCYSm0 (ORCPT
+        Wed, 25 Mar 2020 14:43:22 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36091 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgCYSnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:42:26 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TtcrnzA_1585161726;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TtcrnzA_1585161726)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 26 Mar 2020 02:42:22 +0800
-Subject: Re: [PATCH] mm: khugepaged: fix potential page state corruption
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     kirill.shutemov@linux.intel.com, hughd@google.com,
-        aarcange@redhat.com, akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <1584573582-116702-1-git-send-email-yang.shi@linux.alibaba.com>
- <20200319001258.creziw6ffw4jvwl3@box>
- <2cdc734c-c222-4b9d-9114-1762b29dafb4@linux.alibaba.com>
- <db660bef-c927-b793-7a79-a88df197a756@linux.alibaba.com>
- <20200319104938.vphyajoyz6ob6jtl@box>
- <99b78cdb-5a4d-e28b-4464-d34ee39e5501@linux.alibaba.com>
- <20200325112623.ur4owwbnow5c5mng@box>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <2c5277bb-69cb-5395-cf35-596e94aa39ff@linux.alibaba.com>
-Date:   Wed, 25 Mar 2020 11:42:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 25 Mar 2020 14:43:22 -0400
+Received: by mail-wr1-f68.google.com with SMTP id 31so4552587wrs.3;
+        Wed, 25 Mar 2020 11:43:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7O9ynMa/XszSiQjU9DnfA69BL3KK4uFcPsr5Zfru8hM=;
+        b=netoBFLdadXAoh2L96ovXCkEk9G7QhSid9/SVDV3erhTy8xriUACPmZRHgkMG0RerT
+         yvbw5JE2FdbT84nNaEJ4UUbVyG6oUJCNswSMmPCPULNvUEdTCBzgjSSjE0ZgoXVYirEz
+         QKZ9EGgzvtMlwNvW7i2i9UfbsJnNiZFehh0dSVh6v+FPP1vATUI0TLMyRLgdPndYccR/
+         c9TdR1IRgjrObZmVXmRehXBU901ho2hT+LPwzuNvk1MKogbTpulFyl2eGa3Y6PSBxpx+
+         OtL2Hn/Js5qUH09Z/cA0fylwu7cUvnNnB29QjMh6qmRG2AXHlwTJT1ynVzmn99lh9qn+
+         RPYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7O9ynMa/XszSiQjU9DnfA69BL3KK4uFcPsr5Zfru8hM=;
+        b=SECqYR7KsCpHaZdHdIGjJwvbZG1bpM9qjW4ojM1XlRYg2qvaDODNXbIr8abspUgEtL
+         6iV08l/LuePK7Exsatz6LT8csIlf90BJ+34de4iMMBFi7aeObeAv5IGt5Zatxuk4F1+s
+         VF8xJO08MCCgCfq2T1FCfAIA0cVL3JSwDkfKS7fAVKkW1fbqsVbv7Lir2LnIkFX9HJx/
+         P97hd4X0jD3D7pbwWLcSjlH2giANrq00GRH7C1YEfE+9asGDnuuDqfGLg4lI1mmhCMAF
+         gem+KDZK1xAiET+hIPSXHLU+Rzfg9rqCeGTD7aojijYO8SRG9OxViqWgT8GLXjWYq3Tv
+         4kJQ==
+X-Gm-Message-State: ANhLgQ1fH84z0ZNBZCXOXjeFe2nsl0VIBAOVrLIXaPnA+GbqOaof9/99
+        6tVGaKjAVHLPH7ESVpfEH465tvT+f4UieglswoW8xg==
+X-Google-Smtp-Source: ADFU+vtotW0hSWfsINdHPqKmskY8pGIuk5Gng3pWSqBKe0+phrdgl8o1zuoQd71BKYd/PsX6PY7UPK+NTvuaTbvqFCE=
+X-Received: by 2002:a5d:6187:: with SMTP id j7mr5053880wru.419.1585161798469;
+ Wed, 25 Mar 2020 11:43:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200325112623.ur4owwbnow5c5mng@box>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <20200324125442.21983-1-geert+renesas@glider.be>
+In-Reply-To: <20200324125442.21983-1-geert+renesas@glider.be>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 25 Mar 2020 14:43:07 -0400
+Message-ID: <CADnq5_M+2afonwdY2-8kdzx-_aidWPZ4OxwxRY31odPOJ8togg@mail.gmail.com>
+Subject: Re: [PATCH] dma-buf: Improve CONFIG_DMABUF_MOVE_NOTIFY help text
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-media <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/25/20 4:26 AM, Kirill A. Shutemov wrote:
-> On Tue, Mar 24, 2020 at 10:17:13AM -0700, Yang Shi wrote:
->>
->> On 3/19/20 3:49 AM, Kirill A. Shutemov wrote:
->>> On Wed, Mar 18, 2020 at 10:39:21PM -0700, Yang Shi wrote:
->>>> On 3/18/20 5:55 PM, Yang Shi wrote:
->>>>> On 3/18/20 5:12 PM, Kirill A. Shutemov wrote:
->>>>>> On Thu, Mar 19, 2020 at 07:19:42AM +0800, Yang Shi wrote:
->>>>>>> When khugepaged collapses anonymous pages, the base pages would
->>>>>>> be freed
->>>>>>> via pagevec or free_page_and_swap_cache().  But, the anonymous page may
->>>>>>> be added back to LRU, then it might result in the below race:
->>>>>>>
->>>>>>>       CPU A                CPU B
->>>>>>> khugepaged:
->>>>>>>      unlock page
->>>>>>>      putback_lru_page
->>>>>>>        add to lru
->>>>>>>                   page reclaim:
->>>>>>>                     isolate this page
->>>>>>>                     try_to_unmap
->>>>>>>      page_remove_rmap <-- corrupt _mapcount
->>>>>>>
->>>>>>> It looks nothing would prevent the pages from isolating by reclaimer.
->>>>>> Hm. Why should it?
->>>>>>
->>>>>> try_to_unmap() doesn't exclude parallel page unmapping. _mapcount is
->>>>>> protected by ptl. And this particular _mapcount pin is reachable for
->>>>>> reclaim as it's not part of usual page table tree. Basically
->>>>>> try_to_unmap() will never succeeds until we give up the _mapcount on
->>>>>> khugepaged side.
->>>>> I don't quite get. What does "not part of usual page table tree" means?
->>>>>
->>>>> How's about try_to_unmap() acquires ptl before khugepaged?
->>> The page table we are dealing with was detached from the process' page
->>> table tree: see pmdp_collapse_flush(). try_to_unmap() will not see the
->>> pte.
->> A follow-up question here. pmdp_collapse_flush() clears pmd entry and does
->> TLB shootdown on x86. I'm supposed the main purpose is to serialize fast gup
->> since it doesn't acquire any lock (mmap_sem, ptl ,etc), but disable
->> interrupt so the TLB shootdown IPI would get blocked. This could guarantee
->> synchronization on x86, but it looks not all architectures do TLB shootdown
->> or implement it via IPI, so how they could serialize with fast gup?
-> The main purpose of pmdp_collapse_flush() is to block access to pages
-> under collapse, including access via GUP (and its variants).
+On Tue, Mar 24, 2020 at 8:54 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 >
-> It's up to architecture to implement it correctly, including TLB flush vs.
-> GUP_fast serialization. Genetic way works fine for most architectures.
-> Notable exceptions are Power and S390.
-
-Thanks. I was wondering how Power and S390 serialized it. It looks they 
-didn't deal with it at all.
-
->> In addition it looks acquiring pmd lock is not necessary. Before both write
->> mmap_sem and write anon_vma lock are acquired which could serialize page
->> fault and rmap walk, so it looks fast gup is the only one which could run
->> concurrently, but fast gup doesn't acquire ptl at all. It seems the
->> pmd_lock/unlock could be removed.
-> This is likely true. And we have a comment there. But taking uncontended
-> lock is check, so why not.
-
-Yes, it sounds not harmful.
-
+> Improve the help text for the CONFIG_DMABUF_MOVE_NOTIFY symbol by:
+>   1. Removing duplicated single quotes,
+>   2. Adding a missing subject,
+>   3. Fixing a misspelling of "yet",
+>   4. Wrapping long lines.
 >
+> Fixes: bb42df4662a44765 ("dma-buf: add dynamic DMA-buf handling v15")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Applied.  Thanks!
+
+Alex
+
+> ---
+>  drivers/dma-buf/Kconfig | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/dma-buf/Kconfig b/drivers/dma-buf/Kconfig
+> index ef73b678419c6d86..9626673f1d83ae64 100644
+> --- a/drivers/dma-buf/Kconfig
+> +++ b/drivers/dma-buf/Kconfig
+> @@ -43,11 +43,12 @@ config DMABUF_MOVE_NOTIFY
+>         bool "Move notify between drivers (EXPERIMENTAL)"
+>         default n
+>         help
+> -         Don''t pin buffers if the dynamic DMA-buf interface is available on both the
+> -         exporter as well as the importer. This fixes a security problem where
+> -         userspace is able to pin unrestricted amounts of memory through DMA-buf.
+> -         But marked experimental because we don''t jet have a consistent execution
+> -         context and memory management between drivers.
+> +         Don't pin buffers if the dynamic DMA-buf interface is available on
+> +         both the exporter as well as the importer. This fixes a security
+> +         problem where userspace is able to pin unrestricted amounts of memory
+> +         through DMA-buf.
+> +         This is marked experimental because we don't yet have a consistent
+> +         execution context and memory management between drivers.
+>
+>  config DMABUF_SELFTESTS
+>         tristate "Selftests for the dma-buf interfaces"
+> --
+> 2.17.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
