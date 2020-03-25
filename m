@@ -2,182 +2,95 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D989C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AE4C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F52A2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:53:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A2CC2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:54:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GrcaqC4A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbgCYWx2 (ORCPT
+        id S1727505AbgCYWyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:53:28 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54188 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727399AbgCYWx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:53:28 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id E7F1AAD88;
-        Wed, 25 Mar 2020 22:53:25 +0000 (UTC)
-From:   NeilBrown <neilb@suse.de>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 26 Mar 2020 09:53:19 +1100
-Cc:     linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-In-Reply-To: <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr> <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com> <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
-Message-ID: <87wo786o80.fsf@notabene.neil.brown.name>
+        Wed, 25 Mar 2020 18:54:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36579 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCYWyM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 18:54:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i13so1801647pfe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=zWrlA6w6KYYZ/OQNIhCJ+kzEqHzJfgJzyL3tKc0pOFY=;
+        b=GrcaqC4AWSa41GjxW25/ttATFM2cptZf/vbSCIUyFim8YoRmejCkibyIkocjqgOtk7
+         gQi2rf3Jr4vTpigiIKR03omj8m8g4PSS1/hWBn+1P66ftzknSJmfc7QPDRWJWr5fxOPH
+         1tgLDDziQjRk/dNQg7ElbWcilrplyXjDewFbM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zWrlA6w6KYYZ/OQNIhCJ+kzEqHzJfgJzyL3tKc0pOFY=;
+        b=U1Ji4T7TIUlP3lMAx/W7JLSSReA/Gv84VwWAyEh++oI9nHblvBh9VsGnzq8QTH9I8r
+         uQ7tPKQ0x1lfjRtsdsOSzYPvVdTkski9u/vrnYOA4MIEVh5CXcp16AGz5j42wcTu40vm
+         fIwzoyP8S2YS+hNCiZuZRjbEoS8o+CicKo3n8JkRnq9/lWE1unUIV5X2ZDCPlrgoRG2t
+         bXfQI6HHiUyM0DBavWX67qUnw5XUYvbBEMDzMq460Jje4N6d0vvsU19PYRsYIZIB039K
+         V8oesihen7PvrXw+Z+/aWvcVaH0t/eayUt2ltNcKqm4cxCDZZB67cHhrEDDI3R0QPOlg
+         K4zw==
+X-Gm-Message-State: ANhLgQ0o2QHMKTYytobhjcSxci826ZHBzRdP56GHuTsFV7fXjmRAeHpb
+        quzKNTL6J+C89AGUuNGQs2lTGw==
+X-Google-Smtp-Source: ADFU+vsY3wfDo2Gy2J9cIPa/hwVB5bzrF7RpYHjEgTaZRdPrm7yugsdq0Qkl+UrqzZzltSS9IKTavw==
+X-Received: by 2002:a63:6d02:: with SMTP id i2mr5218276pgc.267.1585176850880;
+        Wed, 25 Mar 2020 15:54:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id p70sm226890pjp.47.2020.03.25.15.54.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 15:54:10 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 15:54:09 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <202003251544.7ECB392A7@keescook>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <874kuc5b5z.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874kuc5b5z.fsf@x220.int.ebiederm.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 25, 2020 at 05:20:40PM -0500, Eric W. Biederman wrote:
+> Hmm.  There is a big gotcha in here and I think it should be mentioned.
+> This code only works because no one has done set_fs(KERNEL_DS).  Which
+> means this only works with strings that are kernel addresses essentially
+> by mistake.  A big fat comment documenting why it is safe to pass in
+> kernel addresses to a function that takes a "char __user*" pointer
+> would be very good.
 
-On Wed, Mar 25 2020, Christophe JAILLET wrote:
+Yeah, I was going to mention this too just now as I went looking through
+one of the handlers and was reminded that the args are marked __user. :P
 
-> Le 25/03/2020 =C3=A0 15:52, Chuck Lever a =C3=A9crit=C2=A0:
->> Hi Christophe,
->>
->>
->>> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET <christophe.jaillet@wan=
-adoo.fr> wrote:
->>>
->>> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
->>> overflow.
->> That's true as a general statement, but how likely is such an
->> overflow to occur here?
->>
-> I guess, that it us unlikely and that the 80 chars buffer is big enough.
-> That is the exact reason of why I've proposed 2 patches. The first one=20
-> could happen in RL. The 2nd is more like a clean-up and is less=20
-> relevant, IMHO.
->>
->>> The return value can also be used to avoid a strlen a call.
->> That's also true of sprintf, isn't it?
->
-> Sure.
->
->
->>
->>> Finally, we know where we need to copy and the length to copy, so, we
->>> can save a few cycles by rearraging the code and using a memcpy instead=
- of
->>> a strcat.
->> I would be OK with squashing these two patches together. I don't
->> see the need to keep the two changes separated.
->
-> NP, I can resend as a V2 with your comments.
-> As said above, the first fixes something that could, IMHO, happen and=20
-> the 2nd is more a matter of taste and a clean-up.
->
->
->>
->>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->>> ---
->>> This patch should have no functionnal change.
->>> We could go further, use scnprintf and write directly in the destination
->>> buffer. However, this could lead to a truncated last line.
->> That's exactly what this function is trying to avoid. As part of any
->> change in this area, it would be good to replace the current block
->> comment before this function with a Doxygen-format comment that
->> documents that goal.
->
-> I'll take care of it.
->
->
->>> ---
->>> net/sunrpc/svc_xprt.c | 8 ++++----
->>> 1 file changed, 4 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>> index df39e7b8b06c..6df861650040 100644
->>> --- a/net/sunrpc/svc_xprt.c
->>> +++ b/net/sunrpc/svc_xprt.c
->>> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
->>> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
->>> 		int slen;
->>>
->>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
->>> -		slen =3D strlen(tmpstr);
->>> -		if (len + slen >=3D maxlen)
->>> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
->>> +				xcl->xcl_name, xcl->xcl_max_payload);
->>> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
->>> 			break;
->>> +		memcpy(buf + len, tmpstr, slen + 1);
->>> 		len +=3D slen;
->>> -		strcat(buf, tmpstr);
->> IMO replacing the strcat makes the code harder to read, and this
->> is certainly not a performance path. Can you drop that part of the
->> patch?
->
-> Ok
->
->
->>
->>> 	}
->>> 	spin_unlock(&svc_xprt_class_lock);
->>>
->>> --=20
+I suspect we might need to add some __force __user markings or something
+(with a comment as you say above), to keep sparse from going crazy. :)
 
-Can I suggest something more like this:
-
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index de3c077733a7..0292f45b70f6 100644
-=2D-- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -115,16 +115,9 @@ int svc_print_xprts(char *buf, int maxlen)
- 	buf[0] =3D '\0';
-=20
- 	spin_lock(&svc_xprt_class_lock);
-=2D	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-=2D		int slen;
-=2D
-=2D		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
-=2D		slen =3D strlen(tmpstr);
-=2D		if (len + slen > maxlen)
-=2D			break;
-=2D		len +=3D slen;
-=2D		strcat(buf, tmpstr);
-=2D	}
-+	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list)
-+		len +=3D scnprintf(buf + len, maxlen - len, "%s %d\n",
-+				 xcl->xcl_name, xcl->xcl_max_payload);
- 	spin_unlock(&svc_xprt_class_lock);
-=20
- 	return len;
-
-NeilBrown
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl574N8ACgkQOeye3VZi
-gblt1g/9HiVqAgfOAczPAHMlZ3fEpsGid1IWxmMW6KeiZkcNztY76eVboisWNlPs
-ZZK88kbrsOAKqagKDyKbRc1qbEFBfMQd0EGzQm4J562fO0YQgF7MwGVhBfxXGEeL
-ca9GPo2ZqG2p9/9FjFIk+/kOYk/8WMpK9noKlKR4Nqk/C+jW2jqNtZf/f6BE1OU/
-js7FCd0iK4KQSLGXSKT4i9puHiJoZMi0d+7bAxWDxub9UFrQk5yk1HQDQK6EuQj0
-hhalu5Pz3KoBih6gzlVLR0O2rUGr8abLRM/L0Cwa3p2113gymBmsEVPJyAQ2O5E/
-ohyRZCeGKMs9RXAcsAjFUr6CVmeJFvT+P35wbDT29V5wbnOja0R8UubAVxg8PPnm
-ZPrGeDVzOrKvRWoydX1mPffpj8PexJvJSZaXvDugmqY30WKDgDsjg7vsHox7oRC7
-R0MY26ilBwsvdrsegZlr3J7jRIcDj+ItkLoKYubhu0VUMQSyGZlP++Cz43PdQD21
-dujfjUKOVQvZ3h3IKO8L7Zo8hcetaKwDqCtrigO0O0IrClfSX7Jtrojnyj8jUobB
-67x/pEkRB8WVXI6ldungASWirIir5COofkJCVRNPeQDk6tFKb4blb5jqA8Xxi/Xt
-gua4apqXIK9M1nmXvriKSzVmiB+RRJG6Tjx+jfqNaDi8WRZKcyI=
-=aTlo
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Kees Cook
