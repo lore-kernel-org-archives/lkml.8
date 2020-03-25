@@ -2,157 +2,151 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE83DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E74C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA572073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF5F2073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z/NtPChq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aD/rHugi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgCYP5w (ORCPT
+        id S1727909AbgCYP6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:57:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51790 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbgCYP5v (ORCPT
+        Wed, 25 Mar 2020 11:58:00 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34464 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727448AbgCYP57 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:57:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=0Nq4yxa20BJ37D0s9zLhKVxO/JAu1Z42ScKUYri07QE=; b=Z/NtPChqiONDSQ1rBH5Zm0gRDL
-        fJ27q2PwIEazs4iALNhvZqw0guyErk+s5SN9N1OTzDukEAwKlvvAGObBeZh96TXJujzhaBs2hjg6h
-        UtBvh3Irht1oTEwVXwZnrF8Nm5JvyUQbG27ZzZchwXrVcx0aMtxkmVZHKls3U990Q8CEgbnPtanli
-        k03nHr1rNW43oAke4lBo8U16gihxsyqTy0cbJvPq9a/Ffi+GEje+uCqYT4Bjj09y7Gm2UeaqGgBPb
-        OimelX9k2iqf78qNic+/dkvBoawQ2RaKZGnYCmisjVjuwrX6ZsjQ370U1u3NOrj0LS+4v1V0fWNFF
-        ADbH30MA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH8PJ-0000jp-Ru; Wed, 25 Mar 2020 15:57:29 +0000
-Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200325195350.7300fee9@canb.auug.org.au>
- <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
- <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
-Date:   Wed, 25 Mar 2020 08:57:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 11:57:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id d37so830695pgl.1;
+        Wed, 25 Mar 2020 08:57:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W1gJ2xQm9pLhyl3IpAZgE4PmhJL0YaJ4OHDS3ohcGvQ=;
+        b=aD/rHuginT6Lh5StzDcokjsw7RapYazNrnsuzEKngjxu9i98RQ+5pE6XvLHWPJc8c/
+         1sdiyp39z6xbB0FXTmUqHCc7lH/F5EAE3Hzvws+ORcsksW20imt5SLSOUxdCFwe3apJV
+         cnLR9TyiHGeoDUmkVBiRLXXHLSrpgcJjsYtRwIW6xctSawWL3GoIlOGAaEdnPjmVCGvv
+         2iRPPbJ/8JX6oeg/MSac0MJAstNcxsMRQTb9Pml7fVjDaZpimWV0SX1jQzlEXbnNhFoL
+         fgnqNdi/nf4HFqKs1ee3Ee/yc5Vy58QpNb2htCOYhhzIL2EPlU+BDcJy4iAZv9IHnI/Y
+         n+ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W1gJ2xQm9pLhyl3IpAZgE4PmhJL0YaJ4OHDS3ohcGvQ=;
+        b=Jwe7XHMaonmP53OdfoZLYPz6ds3Ou9xnFyByvUaj91xxLms2EF97r7Iq/nShQJGm/6
+         6kQtYPqVIrzCYVX7bpTTEtx3k956mw1gCiWV23l4nKRP2fBBbKi3feeIaoCZJS6YoysD
+         k66ZW+ub8LDDoZQ3bNC/iPJa79dZ5OqU+DqTRJmYTN9tcuyAmFzfuV+A/u3rElEVEQQl
+         whPqPCwmeYGuzuBbSsAT3hKSF8pMnwS/IDuDtPP7dOzDJjAXscR0IZnVjk7hrrYafAX5
+         eRV4DdiMJWKLPh7PvmPKMWP9+k/Fhe2UciJo3FWFmCK2qKhMfvjXx3/DFCpfAmn02/j+
+         j/Hw==
+X-Gm-Message-State: ANhLgQ26n6g6Hy+q+Eox5TARkGhbTI6aGPH5ikTKzA55Ub4CWym5XcyF
+        rtx0l1r0AAXKWPwtkbTVm2lqfLVNx35YR/0b79s=
+X-Google-Smtp-Source: ADFU+vsTJnfH3AnZqp3Nc1xcphC1UlOK9BOcoOfM8HM3keeSZptNHrLX7pTNZTz166n2F16IaoaMUP1pITmTjjqgey0=
+X-Received: by 2002:a63:5859:: with SMTP id i25mr3671432pgm.74.1585151878262;
+ Wed, 25 Mar 2020 08:57:58 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200320104031.31701-1-alexandru.ardelean@analog.com> <20200325100112.85107-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200325100112.85107-1-alexandru.ardelean@analog.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Mar 2020 17:57:50 +0200
+Message-ID: <CAHp75VfVggWZ6WhOa=nUrxyd0dJrTbZd9NnUMhQ_S=kncrAhOw@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: buffer: Don't allow buffers without any channels
+ enabled to be activated
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald <pmeerw@pmeerw.ne>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 8:46 AM, Paolo Bonzini wrote:
-> On 25/03/20 16:30, Randy Dunlap wrote:
->> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
->> function __cpuid_entry_get_reg(), for the default: case.
->>
->>
->>   CC      arch/x86/kvm/cpuid.o
->> In file included from ../include/linux/export.h:43:0,
->>                  from ../include/linux/linkage.h:7,
->>                  from ../include/linux/preempt.h:10,
->>                  from ../include/linux/hardirq.h:5,
->>                  from ../include/linux/kvm_host.h:7,
->>                  from ../arch/x86/kvm/cpuid.c:12:
->> In function ‘__cpuid_entry_get_reg’,
->>     inlined from ‘kvm_cpu_cap_mask’ at ../arch/x86/kvm/cpuid.c:272:25,
->>     inlined from ‘kvm_set_cpu_caps’ at ../arch/x86/kvm/cpuid.c:292:2:
->> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_114’ declared with attribute error: BUILD_BUG failed
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->>                                       ^
->> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
->>     prefix ## suffix();    \
->>     ^~~~~~
->> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
->>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
->>   ^~~~~~~~~~~~~~~~~~~
->> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
->>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
->>                                      ^~~~~~~~~~~~~~~~~~
->> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
->>  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
->>                      ^~~~~~~~~~~~~~~~
->> ../arch/x86/kvm/cpuid.h:114:3: note: in expansion of macro ‘BUILD_BUG’
->>    BUILD_BUG();
->>    ^~~~~~~~~
->>
-> 
-> Looks like the compiler is not smart enough to figure out the constant 
-> expressions in BUILD_BUG.  I think we need to do something like this:
-> 
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index 23b4cd1ad986..8f711b0cdec0 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -40,6 +40,7 @@ struct cpuid_reg {
->  	int reg;
->  };
->  
-> +/* Update reverse_cpuid_check as well when adding an entry.  */
->  static const struct cpuid_reg reverse_cpuid[] = {
->  	[CPUID_1_EDX]         = {         1, 0, CPUID_EDX},
->  	[CPUID_8000_0001_EDX] = {0x80000001, 0, CPUID_EDX},
-> @@ -68,12 +69,21 @@ static const struct cpuid_reg reverse_cpuid[] = {
->   */
->  static __always_inline void reverse_cpuid_check(unsigned int x86_leaf)
->  {
-> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_1);
-> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_2);
-> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_3);
-> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_4);
-> -	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
-> -	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
-> +	BUILD_BUG_ON(x86_leaf != CPUID_1_EDX &&
-> +	             x86_leaf != CPUID_8000_0001_EDX &&
-> +	             x86_leaf != CPUID_8086_0001_EDX &&
-> +	             x86_leaf != CPUID_1_ECX &&
-> +	             x86_leaf != CPUID_C000_0001_EDX &&
-> +	             x86_leaf != CPUID_8000_0001_ECX &&
-> +	             x86_leaf != CPUID_7_0_EBX &&
-> +	             x86_leaf != CPUID_D_1_EAX &&
-> +	             x86_leaf != CPUID_8000_0008_EBX &&
-> +	             x86_leaf != CPUID_6_EAX &&
-> +	             x86_leaf != CPUID_8000_000A_EDX &&
-> +	             x86_leaf != CPUID_7_ECX &&
-> +	             x86_leaf != CPUID_8000_0007_EBX &&
-> +	             x86_leaf != CPUID_7_EDX &&
-> +	             x86_leaf != CPUID_7_1_EAX);
->  }
->  
->  /*
-> 
-> Randy, can you test it with your compiler?
+On Wed, Mar 25, 2020 at 12:02 PM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> From: Lars-Peter Clausen <lars@metafoo.de>
+>
+> Before activating a buffer make sure that at least one channel is enabled.
+> Activating a buffer with 0 channels enabled doesn't make too much sense and
+> disallowing this case makes sure that individual driver don't have to add
+> special case code to handle it.
+>
+> Currently, without this patch enabling a buffer is possible and no error is
+> produced. With this patch -EINVAL is returned.
+>
+> An example of execution with this patch and some instrumented print-code:
+>    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+>    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+>    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
+>    1: iio_verify_update 753
+>    2:__iio_update_buffers 1115 ret -22
+>    3: iio_buffer_store_enable 1241 ret -22
+>    -bash: echo: write error: Invalid argument
+> 1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
+> rergardless of error path.
+>
+> Without this patch (and same instrumented print-code):
+>    root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+>    root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+>    0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer->scan_mask 00000000
+>    root@analog:/sys/bus/iio/devices/iio:device3/buffer#
+> Buffer is enabled with no error.
+>
+> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
+>
+> Changelog v1 -> v2:
+> * moved check in iio_verify_update()
+> * added dev_dbg() message; should help some folks understand the message
+> * documented steps to reproduce
 
-Nope, no help.  That's the wrong location.
-Need a patch for this:
->> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
->> function __cpuid_entry_get_reg(), for the default: case.
+> * added Fixes tag; hopefully the tag is the good one; if needed, it can be
+>   dropped; this has been around for ~8 years; no idea if it's worth
+>   backporting
+
+Where?
+
+>
+>  drivers/iio/industrialio-buffer.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+> index 5ff34ce8b6a2..e6fa1a4e135d 100644
+> --- a/drivers/iio/industrialio-buffer.c
+> +++ b/drivers/iio/industrialio-buffer.c
+> @@ -686,6 +686,13 @@ static int iio_verify_update(struct iio_dev *indio_dev,
+>         bool scan_timestamp;
+>         unsigned int modes;
+>
+> +       if (insert_buffer &&
+> +           bitmap_empty(insert_buffer->scan_mask, indio_dev->masklength)) {
+> +               dev_dbg(&indio_dev->dev,
+> +                       "At least one scan element must be enabled first\n");
+> +               return -EINVAL;
+> +       }
+> +
+>         memset(config, 0, sizeof(*config));
+>         config->watermark = ~0;
+>
+> --
+> 2.17.1
+>
 
 
 -- 
-~Randy
-
+With Best Regards,
+Andy Shevchenko
