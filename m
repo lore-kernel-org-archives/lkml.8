@@ -2,204 +2,153 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7798C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B05FC54FD6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:09:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3F352078D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F712078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="WpSOhmSV"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="NeBLHqiI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727621AbgCYNHW (ORCPT
+        id S1727402AbgCYNJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:07:22 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:53690 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727470AbgCYNHH (ORCPT
+        Wed, 25 Mar 2020 09:09:17 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17812 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727046AbgCYNJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:07:07 -0400
-Received: from mxbackcorp2j.mail.yandex.net (mxbackcorp2j.mail.yandex.net [IPv6:2a02:6b8:0:1619::119])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id EFB5C2E1655;
-        Wed, 25 Mar 2020 16:07:04 +0300 (MSK)
-Received: from myt4-18a966dbd9be.qloud-c.yandex.net (myt4-18a966dbd9be.qloud-c.yandex.net [2a02:6b8:c00:12ad:0:640:18a9:66db])
-        by mxbackcorp2j.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id zYEwKna8fE-74tGC8Q9;
-        Wed, 25 Mar 2020 16:07:04 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1585141624; bh=AG1RfzU6IsBKlhj7NXKRSSMiAB387dPpuEky4QpipuI=;
-        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=WpSOhmSVOqAtdBEgY/wy82uISPT9EaPjjgWb1e2pCBofd3W165pDXqCjfFcu+UQnB
-         R2IDYz0WVbx6apQhmu80vBwBo7k2BYz5DkYf3RHv4N0CxbKMxbdZ9dpKUFvxk5nLlr
-         ngm7vXQbHdDiTwTwsmL5w5gEhz8ggYJ62XJZ7MaI=
-Authentication-Results: mxbackcorp2j.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from unknown (unknown [2a02:6b8:b080:8204::1:e])
-        by myt4-18a966dbd9be.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id w7gREjCitJ-74cqdsqn;
-        Wed, 25 Mar 2020 16:07:04 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH v4 1/3] block/diskstats: more accurate approximation of
- io_ticks for slow disks
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-kernel@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>
-Date:   Wed, 25 Mar 2020 16:07:04 +0300
-Message-ID: <158514162422.7009.10103628072965195890.stgit@buzz>
-In-Reply-To: <158514148436.7009.1234367408038809210.stgit@buzz>
-References: <158514148436.7009.1234367408038809210.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 25 Mar 2020 09:09:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585141636;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=iuTIotTHRiD5t5xclM0klY4anxFqXzV0is5UKGCU0Kk=;
+        b=NeBLHqiI7qV0woiMnt3N1Yutj8NPaQCpNhLh+5yayjbVibXolp1EhBbIzZ/7q89n
+        mI53omrN4/iEoE+rBQqldx8ic9iLIurLQU/CE2WYC9RdvvnwteOvoOYxuPqFXj/RMtQ
+        Dia88FCxHspMUvKRM1RCRWXdl2Q5vANqogbdGlMM=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585141633736867.4293564995277; Wed, 25 Mar 2020 21:07:13 +0800 (CST)
+Date:   Wed, 25 Mar 2020 21:07:04 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <a69f727d37daac6e20ac08de022245b1@kernel.org>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+To:     Marc Zyngier <maz@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently io_ticks is approximated by adding one at each start and end of
-requests if jiffies counter has changed. This works perfectly for requests
-shorter than a jiffy or if one of requests starts/ends at each jiffy.
 
-If disk executes just one request at a time and they are longer than two
-jiffies then only first and last jiffies will be accounted.
 
-Fix is simple: at the end of request add up into io_ticks jiffies passed
-since last update rather than just one jiffy.
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=889=
+:00:01, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>On 2020-03-25 12:37, Thomas Bogendoerfer wrote:
+>> On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
+>>> The old code is using legacy domain to setup irq_domain for CPU=20
+>>> interrupts
+>>> which requires irq_desc to be preallocated=2E
+>>>=20
+>>> However, when MIPS_CPU_IRQ_BASE >=3D 16, irq_desc for CPU IRQs may end
+>
+>>> up
+>>> unallocated and lead to incorrect behavior=2E
+>>>=20
+>>> Thus we convert the legacy domain to simple domain which can
+>allocate
+>>> irq_desc during initialization=2E
+>>>=20
+>>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>>> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
+>>> Signed-off-by: Huacai Chen <chenhc@lemote=2Ecom>
+>>> Reviewed-by: Marc Zyngier <maz@kernel=2Eorg>
+>>> ---
+>>>  drivers/irqchip/irq-mips-cpu=2Ec | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/drivers/irqchip/irq-mips-cpu=2Ec=20
+>>> b/drivers/irqchip/irq-mips-cpu=2Ec
+>>> index 95d4fd8f7a96=2E=2Ec3cf7fa76424 100644
+>>> --- a/drivers/irqchip/irq-mips-cpu=2Ec
+>>> +++ b/drivers/irqchip/irq-mips-cpu=2Ec
+>>> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct=20
+>>> device_node *of_node)
+>>>  	clear_c0_status(ST0_IM);
+>>>  	clear_c0_cause(CAUSEF_IP);
+>>>=20
+>>> -	irq_domain =3D irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE,
+>0,
+>>> +	irq_domain =3D irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+>>>  					   &mips_cpu_intc_irq_domain_ops,
+>>>  					   NULL);
+>>=20
+>> this breaks at least IP30 and guess it will break every platform
+>where
+>> MIPS_CPU_IRQ_BASE =3D=3D 0=2E add_legacy will always do=20
+>> irq_domain_associate_many(),
+>> while add_simple doesn't do it, if first_irq =3D=3D 0=2E
+>>=20
+>> Marc, what is the reason not doing it all the time ? What's the
+>correct
+>> way here to work with irq_domain_add_simple() in this case ?
+>
+>On a fully DT-ified platform, using non-legacy irqdomains, virtual=20
+>interrupts
+>are allocated as a "random" number, depending on the order of=20
+>allocation,
+>and on demand=2E
+>
+>The first_irq hack in irq_domain_add_simple() is just a way to still=20
+>allocate
+>descriptors upfront (and I wish we could drop it=2E=2E=2E)=2E
+>
+>If you have legacy code that "knows" about the relationship between=20
+>Linux's
+>virtual interrupt and the hwirq (that is only meaningful to the=20
+>interrupt
+>controller), you're screwed, and need to stick to the legacy irqdomain=2E
+>
+>It feels like the MIPS code is squarely in the latter case, so I guess=20
+>this
+>patch is probably the wrong thing to do for this architecture=2E
 
-Example: common HDD executes random read 4k requests around 12ms.
+So probably we can use legacy domain when  MIPS IRQ BASE is in the range o=
+f legacy IRQ
+and switch to simple domain when it's not in that range?
 
-fio --name=test --filename=/dev/sdb --rw=randread --direct=1 --runtime=30 &
-iostat -x 10 sdb
+Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did this hack=
+=2E
 
-Note changes of iostat's "%util" 8,43% -> 99,99% before/after patch:
+Thanks=2E
 
-Before:
-
-Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-sdb               0,00     0,00   82,60    0,00   330,40     0,00     8,00     0,96   12,09   12,09    0,00   1,02   8,43
-
-After:
-
-Device:         rrqm/s   wrqm/s     r/s     w/s    rkB/s    wkB/s avgrq-sz avgqu-sz   await r_await w_await  svctm  %util
-sdb               0,00     0,00   82,50    0,00   330,00     0,00     8,00     1,00   12,10   12,10    0,00  12,12  99,99
-
-Now io_ticks does not loose time between start and end of requests, but
-for queue-depth > 1 some I/O time between adjacent starts might be lost.
-
-For load estimation "%util" is not as useful as average queue length,
-but it clearly shows how often disk queue is completely empty.
-
-Fixes: 5b18b5a73760 ("block: delete part_round_stats and switch to less precise counting")
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
- Documentation/admin-guide/iostats.rst |    5 ++++-
- block/bio.c                           |    8 ++++----
- block/blk-core.c                      |    4 ++--
- include/linux/genhd.h                 |    2 +-
- 4 files changed, 11 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/admin-guide/iostats.rst b/Documentation/admin-guide/iostats.rst
-index df5b8345c41d..9b14b0c2c9c4 100644
---- a/Documentation/admin-guide/iostats.rst
-+++ b/Documentation/admin-guide/iostats.rst
-@@ -100,7 +100,7 @@ Field 10 -- # of milliseconds spent doing I/Os (unsigned int)
- 
-     Since 5.0 this field counts jiffies when at least one request was
-     started or completed. If request runs more than 2 jiffies then some
--    I/O time will not be accounted unless there are other requests.
-+    I/O time might be not accounted in case of concurrent requests.
- 
- Field 11 -- weighted # of milliseconds spent doing I/Os (unsigned int)
-     This field is incremented at each I/O start, I/O completion, I/O
-@@ -143,6 +143,9 @@ are summed (possibly overflowing the unsigned long variable they are
- summed to) and the result given to the user.  There is no convenient
- user interface for accessing the per-CPU counters themselves.
- 
-+Since 4.19 request times are measured with nanoseconds precision and
-+truncated to milliseconds before showing in this interface.
-+
- Disks vs Partitions
- -------------------
- 
-diff --git a/block/bio.c b/block/bio.c
-index 209715765a7a..68f65ef2ceba 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1768,14 +1768,14 @@ void bio_check_pages_dirty(struct bio *bio)
- 	schedule_work(&bio_dirty_work);
- }
- 
--void update_io_ticks(struct hd_struct *part, unsigned long now)
-+void update_io_ticks(struct hd_struct *part, unsigned long now, bool end)
- {
- 	unsigned long stamp;
- again:
- 	stamp = READ_ONCE(part->stamp);
- 	if (unlikely(stamp != now)) {
- 		if (likely(cmpxchg(&part->stamp, stamp, now) == stamp)) {
--			__part_stat_add(part, io_ticks, 1);
-+			__part_stat_add(part, io_ticks, end ? now - stamp : 1);
- 		}
- 	}
- 	if (part->partno) {
-@@ -1791,7 +1791,7 @@ void generic_start_io_acct(struct request_queue *q, int op,
- 
- 	part_stat_lock();
- 
--	update_io_ticks(part, jiffies);
-+	update_io_ticks(part, jiffies, false);
- 	part_stat_inc(part, ios[sgrp]);
- 	part_stat_add(part, sectors[sgrp], sectors);
- 	part_inc_in_flight(q, part, op_is_write(op));
-@@ -1809,7 +1809,7 @@ void generic_end_io_acct(struct request_queue *q, int req_op,
- 
- 	part_stat_lock();
- 
--	update_io_ticks(part, now);
-+	update_io_ticks(part, now, true);
- 	part_stat_add(part, nsecs[sgrp], jiffies_to_nsecs(duration));
- 	part_stat_add(part, time_in_queue, duration);
- 	part_dec_in_flight(q, part, op_is_write(req_op));
-diff --git a/block/blk-core.c b/block/blk-core.c
-index abfdcf81a228..4401b30a1751 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1337,7 +1337,7 @@ void blk_account_io_done(struct request *req, u64 now)
- 		part_stat_lock();
- 		part = req->part;
- 
--		update_io_ticks(part, jiffies);
-+		update_io_ticks(part, jiffies, true);
- 		part_stat_inc(part, ios[sgrp]);
- 		part_stat_add(part, nsecs[sgrp], now - req->start_time_ns);
- 		part_stat_add(part, time_in_queue, nsecs_to_jiffies64(now - req->start_time_ns));
-@@ -1379,7 +1379,7 @@ void blk_account_io_start(struct request *rq, bool new_io)
- 		rq->part = part;
- 	}
- 
--	update_io_ticks(part, jiffies);
-+	update_io_ticks(part, jiffies, false);
- 
- 	part_stat_unlock();
- }
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index da62b44b15be..13bb51f37b3f 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -422,7 +422,7 @@ void part_dec_in_flight(struct request_queue *q, struct hd_struct *part,
- void part_inc_in_flight(struct request_queue *q, struct hd_struct *part,
- 			int rw);
- 
--void update_io_ticks(struct hd_struct *part, unsigned long now);
-+void update_io_ticks(struct hd_struct *part, unsigned long now, bool end);
- 
- /* block/genhd.c */
- extern void device_add_disk(struct device *parent, struct gendisk *disk,
-
+>
+>Thanks,
+>
+>         M=2E
+=20
+--=20
+Jiaxun Yang
