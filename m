@@ -2,157 +2,189 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBC6C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C574EC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:07:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603B220714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8E020714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:07:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OU+2ldMX"
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="gXjxI3ux"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726043AbgCYFEM (ORCPT
+        id S1726072AbgCYFHg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:04:12 -0400
-Received: from ozlabs.org ([203.11.71.1]:52563 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725781AbgCYFEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:04:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nGHW5RMGz9sRR;
-        Wed, 25 Mar 2020 16:04:07 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585112648;
-        bh=i9dSl2qAEPu3EzgQBUnMt3Sf1NJKja+VfJFSWRaF0IM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=OU+2ldMXUvuKHgBaKhKd6YTwQqy01rnUeXM28SS6r94ltMv0Vpyopj7HhgW36cXxG
-         mjO/RxVYMupmeYfFi8CN1NlVzCFCK+RtBRwY3h0drK5uDtRS0ndI52f42bKNgebcQK
-         +8G4a8H2mn0Fvfm1LA64pbkDVvUv3ED6vQ4ptXvby+CbdKJxTvghyey0NgLsVZJNlA
-         rqwzvYQiGmFlBV4wjhyBYUaECLw/DYXN3fVRFGRR0zC7d45M1W9ZB0mSYv8DgcdIxw
-         1mNAkCWtAYAp2VBoA5CFyg6u4eyoJGwtAecBL4M3dYhO1gecgO5UT8ezT3M6eo+9at
-         dQZHm7s2wBpxQ==
-Date:   Wed, 25 Mar 2020 16:04:05 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: linux-next: manual merge of the scsi tree with the block tree
-Message-ID: <20200325160405.2f0f0490@canb.auug.org.au>
+        Wed, 25 Mar 2020 01:07:36 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:47209 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725263AbgCYFHg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 01:07:36 -0400
+Received: from surfplank2.hierzo ([IPv6:2001:981:a812:0:b62e:99ff:fe92:5264])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id GyGKjJR2RLu1fGyGLjyPua; Wed, 25 Mar 2020 06:07:33 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585112853; bh=sH6rW920hI4EcpzSunVY9nTEHPeYBnJMxTgPAWfNnfk=;
+        h=From:Subject:To:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=gXjxI3uxWgS3Jzp9MnJYFcDjN8riMqDz3O9ngMUI95blow/gpvCCA/uAxI6mu4nB6
+         NF0gcPiqsPTf0F0edQyoqdNq7n9h9uVm/aHxvh8yePTHScZSH0nv0RDaHYYPBqqpq9
+         qOepN6xzrN58I6kPIGNffIJxIeuEpEnLB+zAMX7ZvDAl1qjBS3eK9sfBt4PLGWB7ah
+         qDF/smvxZxgM2aBKmh3SeNbvYwYbTyfP9/rfbqi0acRn55t8heBXyYDX0J29t/gP1r
+         RWKiDorc0ZOYIY38UdA/JWzc45h3SDgv5KlRXLeT+3xwfLEu9XXKAha8Qv/wt/6RKP
+         YbnvGbpOd5/kQ==
+From:   Udo van den Heuvel <udovdh@xs4all.nl>
+Subject: 5.3.18: general protection fault
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
+ 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
+ JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
+Organization: hierzo
+Message-ID: <93308fad-2462-c8f9-99b2-d8c8aab241d3@xs4all.nl>
+Date:   Wed, 25 Mar 2020 06:07:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/yVW5gJNP2PoUA=wSi1nV+++";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfIaTaxkFjIbDLGNryBDcVqNsCxPYWRx/CaoaUuZveOEVn6UfhmwZyJektQvuF1iyB/dYTfSEDcGDLm4aANYjZyTFpMTZgrrrb3ME9+oR4aBAhAyNPBv7
+ clZjkIpvvbhyusofAaICJwCulVax6GF+qzB9+2Tz1k6YcoHP2C4oTiRL3SxzcIq/M0zGM9SncWyp3zyFzQI13J76VBmM21jm0Vm5Q/ImzXsRTl1Cx/bI4GKr
+ UnO3zg2DGM70t/ysFl4ltg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/yVW5gJNP2PoUA=wSi1nV+++
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+Due to the unusable 5.4.x and 5.5.x kernels, see
+https://bugzilla.kernel.org/show_bug.cgi?id=206191, I am running 5,3,18.
+This kernel crashes way less.
+It did show the fault below:
 
-Today's linux-next merge of the scsi tree got a conflict in:
+[56279.400332] general protection fault: 0000 [#1] PREEMPT SMP NOPTI
+[56279.436856] CPU: 1 PID: 233 Comm: kswapd0 Tainted: G        W
+5.3.18 #25
+[56279.481174] Hardware name: Gigabyte Technology Co., Ltd. X570 AORUS
+PRO/X570 AORUS PRO, BIOS F11 12/06/2019
+[56279.539562] RIP: 0010:queued_spin_lock_slowpath+0x178/0x1d0
+[56279.572948] Code: 8b 45 00 48 85 c0 74 f5 48 89 c2 eb e4 c1 ea 12 83
+e0 03 ff ca 48 c1 e0 04 48 63 d2 48 05 c0 ed 01 00 48 03 04 d5 20 d5 e0
+b1 <48> 89 28 8b 45 08 85 c0 75 09 f3 90 8b 45 08 85 c0 74 f7 48 8b 45
+[56279.685489] RSP: 0018:ffffa85240747a88 EFLAGS: 00010002
+[56279.716787] RAX: 0001812dff56fe58 RBX: ffffa2e9c6690350 RCX:
+0000000000000000
+[56279.759547] RDX: 0000000000003199 RSI: 00000000c6690300 RDI:
+ffffa2e9c6690350
+[56279.802302] RBP: ffffa2ea9f05edc0 R08: 0000000000000238 R09:
+0000000000000002
+[56279.845063] R10: ffffa2e9c6690348 R11: ffffa2ea8b08ed80 R12:
+0000000000080000
+[56279.887823] R13: 0000000000000001 R14: ffffa2e9c6690350 R15:
+ffffddcf0c8ad008
+[56279.930579] FS:  0000000000000000(0000) GS:ffffa2ea9f040000(0000)
+knlGS:0000000000000000
+[56279.979068] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[56280.013491] CR2: 00007f07ef659fe0 CR3: 00000003eaa7e000 CR4:
+00000000003406e0
+[56280.056253] Call Trace:
+[56280.070891]  _raw_spin_lock_irqsave+0x33/0x40
+[56280.096982]  __remove_mapping+0x4a/0x1e0
+[56280.120469]  shrink_page_list+0xb12/0xe60
+[56280.144477]  shrink_inactive_list+0x1ad/0x350
+[56280.170573]  shrink_node_memcg.isra.0+0x46e/0x7b0
+[56280.198747]  shrink_node+0x80/0x2e0
+[56280.219631]  balance_pgdat+0x239/0x4a0
+[56280.242078]  kswapd+0x165/0x2f0
+[56280.260880]  ? wait_woken+0x70/0x70
+[56280.281761]  kthread+0xfb/0x130
+[56280.300562]  ? balance_pgdat+0x4a0/0x4a0
+[56280.324052]  ? kthread_park+0x70/0x70
+[56280.345980]  ret_from_fork+0x22/0x40
+[56280.367383] Modules linked in: fuse mq_deadline ip6t_REJECT
+nf_reject_ipv6 xt_state ip6table_filter ip6_tables
+nf_conntrack_netbios_ns nf_conntrack_broadcast xt_MASQUERADE iptable_nat
+nf_nat ipt_REJECT nf_reject_ipv4 xt_u32 xt_multiport xt_tcpudp
+xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 it87 hwmon_vid
+msr iptable_filter uvcvideo videobuf2_vmalloc videobuf2_memops
+snd_usb_audio videobuf2_v4l2 snd_hwdep snd_usbmidi_lib videodev
+snd_hda_codec_realtek videobuf2_common snd_rawmidi cdc_acm
+snd_hda_codec_generic snd_hda_intel snd_hda_codec snd_hda_core snd_seq
+snd_seq_device snd_pcm i2c_piix4 k10temp snd_timer snd bfq evdev
+acpi_cpufreq binfmt_misc ip_tables x_tables amdgpu hid_generic backlight
+sr_mod gpu_sched aesni_intel ttm cdrom usbhid i2c_dev autofs4
+[56280.442646] [drm] Fence fallback timer expired on ring gfx
+[56280.773148] ---[ end trace 76feac8f53a00048 ]---
+[56280.773152] RIP: 0010:queued_spin_lock_slowpath+0x178/0x1d0
+[56280.773154] Code: 8b 45 00 48 85 c0 74 f5 48 89 c2 eb e4 c1 ea 12 83
+e0 03 ff ca 48 c1 e0 04 48 63 d2 48 05 c0 ed 01 00 48 03 04 d5 20 d5 e0
+b1 <48> 89 28 8b 45 08 85 c0 75 09 f3 90 8b 45 08 85 c0 74 f7 48 8b 45
+[56280.773155] RSP: 0018:ffffa85240747a88 EFLAGS: 00010002
+[56280.773156] RAX: 0001812dff56fe58 RBX: ffffa2e9c6690350 RCX:
+0000000000000000
+[56280.773157] RDX: 0000000000003199 RSI: 00000000c6690300 RDI:
+ffffa2e9c6690350
+[56280.773157] RBP: ffffa2ea9f05edc0 R08: 0000000000000238 R09:
+0000000000000002
+[56280.773158] R10: ffffa2e9c6690348 R11: ffffa2ea8b08ed80 R12:
+0000000000080000
+[56280.773159] R13: 0000000000000001 R14: ffffa2e9c6690350 R15:
+ffffddcf0c8ad008
+[56280.773160] FS:  0000000000000000(0000) GS:ffffa2ea9f040000(0000)
+knlGS:0000000000000000
+[56280.773160] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[56280.773161] CR2: 00007f07ef659fe0 CR3: 00000003eaa7e000 CR4:
+00000000003406e0
+[56280.773163] note: kswapd0[233] exited with preempt_count 1
 
-  Documentation/scsi/scsi_mid_low_api.txt
 
-between commit:
 
-  a10183d744fb ("scsi: simplify scsi_partsize")
+What happened here?
+Please let me know.
 
-from the block tree and commit:
-
-  ce5c5d6503c9 ("scsi: docs: convert scsi_mid_low_api.txt to ReST")
-
-from the scsi tree.
-
-I fixed it up (I deleted that file and added the following merge fix
-patch) and can carry the fix as necessary. This is now fixed as far as
-linux-next is concerned, but any non trivial conflicts should be
-mentioned to your upstream maintainer when your tree is submitted for
-merging.  You may also want to consider cooperating with the maintainer
-of the conflicting tree to minimise any particularly complex conflicts.
-
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Wed, 25 Mar 2020 16:00:39 +1100
-Subject: [PATCH] scsi: fix up for "scsi: simplify scsi_partsize"
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- Documentation/scsi/scsi_mid_low_api.rst | 21 ---------------------
- 1 file changed, 21 deletions(-)
-
-diff --git a/Documentation/scsi/scsi_mid_low_api.rst b/Documentation/scsi/s=
-csi_mid_low_api.rst
-index 37ee63b147e9..5358bc10689e 100644
---- a/Documentation/scsi/scsi_mid_low_api.rst
-+++ b/Documentation/scsi/scsi_mid_low_api.rst
-@@ -308,7 +308,6 @@ Summary:
-   - scsi_host_alloc - return a new scsi_host instance whose refcount=3D=3D1
-   - scsi_host_get - increments Scsi_Host instance's refcount
-   - scsi_host_put - decrements Scsi_Host instance's refcount (free if 0)
--  - scsi_partsize - parse partition table into cylinders, heads + sectors
-   - scsi_register - create and register a scsi host adapter instance.
-   - scsi_remove_device - detach and remove a SCSI device
-   - scsi_remove_host - detach and remove all SCSI devices owned by host
-@@ -481,26 +480,6 @@ Details::
-     void scsi_host_put(struct Scsi_Host *shost)
-=20
-=20
--    /**
--    * scsi_partsize - parse partition table into cylinders, heads + sectors
--    * @buf: pointer to partition table
--    * @capacity: size of (total) disk in 512 byte sectors
--    * @cyls: outputs number of cylinders calculated via this pointer
--    * @hds: outputs number of heads calculated via this pointer
--    * @secs: outputs number of sectors calculated via this pointer
--    *
--    *      Returns 0 on success, -1 on failure
--    *
--    *      Might block: no
--    *
--    *      Notes: Caller owns memory returned (free with kfree() )
--    *
--    *      Defined in: drivers/scsi/scsicam.c
--    **/
--    int scsi_partsize(unsigned char *buf, unsigned long capacity,
--		    unsigned int *cyls, unsigned int *hds, unsigned int *secs)
--
--
-     /**
-     * scsi_register - create and register a scsi host adapter instance.
-     * @sht:        pointer to scsi host template
---=20
-2.25.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/yVW5gJNP2PoUA=wSi1nV+++
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl565kUACgkQAVBC80lX
-0GxXGQf/c2iTz7TsGPXAjM6kZE99AxhPfbBb4R2FQ2KUBwaj+NRFEUczyrYbVZWL
-J5N8fRK+FudTF2hFE0WtLS5E8q881R9jUFbGFQbguELa7+bDPX2jiEMHXZCFMPW/
-oiIIiEj5H8nYzNXaOcApOSPxwpLRM3LBXpdHePe7EOaEob13NF1/+tc3HR/FeIpL
-fAaOvaRogC/QScQInGhvWAZgQ2MwKdGKI6oQJUJIA00dpHHveJiBkM8jNqeFS3Nk
-6vgD1soqcQyf/qBtEajgCQM/v+cACt0cDNmUGj0Tca0JoHL6ixoQWFqXaBZPqn+C
-vDzwR3CtVWReQNsXMO6gA1L4TzTQDw==
-=dM/m
------END PGP SIGNATURE-----
-
---Sig_/yVW5gJNP2PoUA=wSi1nV+++--
+Kind regards,
+Udo
