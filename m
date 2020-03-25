@@ -2,94 +2,125 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA07BC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:34:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED91EC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC8542073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:34:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="oaUcwdnp"
+	by mail.kernel.org (Postfix) with ESMTP id C45C12073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585179398;
+	bh=ukXAg6nYJ1E268DR5bTQMqn2OedkLGJ7YazVsubImkw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E/aRBVxvW8rn/Wau2SF9pRNyO6h5ufEz2b4JSPKcrbGyBNi+Wuu6oxbqlyewB/c7X
+	 TZc9uGlXNLBDQDPwgEgq8rLdcgx/n7q7plafECE4ZJVvmKa9v5UzQYkilEP1aBkt3B
+	 bt7izHwmGh3iL4vi0AGhosiHL5GinOgaGgtbEwZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbgCYXet (ORCPT
+        id S1727539AbgCYXgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 19:34:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:52653 "EHLO ozlabs.org"
+        Wed, 25 Mar 2020 19:36:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727395AbgCYXet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 19:34:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726970AbgCYXgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 19:36:37 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nkx264C1z9sPk;
-        Thu, 26 Mar 2020 10:34:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585179287;
-        bh=2qT6Jbv2ojF384qMcI/I7l2UauIgXvUDKtuCjeKVD10=;
-        h=Date:From:To:Cc:Subject:From;
-        b=oaUcwdnpxrD71muXG8iojgn9T/KL59Y8KLilYvPr2Ds0r3u/VtwIWRd5ybnC16QRq
-         KZFsC+LoSQq9jOGLbjnsfX3Q3uqreGciRWL3hmk9sBiNxRrm/mzp89XxGk1xvaDGoX
-         nvnih65Z+x5vXd3rFLdNKQVwtgHQGySmVuQMjiQqIlh/AjU0/TCydztiYl9tdNJt+c
-         8zZtJczqsJaAoZv9Gc8rdCOAIShy5Zn4awxkryJ6gxqJCw0hetPpyzIno9TUH02KWU
-         oFCla6Z4MhO1tHKyOzmCobvNHOUPCazOyV3Pzr6Kx3vOxqf9r7tQ66/9MKszQpGQsN
-         HE7R3jtbRIvmA==
-Date:   Thu, 26 Mar 2020 10:34:36 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Israel Rukshin <israelr@mellanox.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>
-Subject: linux-next: Signed-off-by missing for commits in the block tree
-Message-ID: <20200326103436.0fd71727@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD8D2073E;
+        Wed, 25 Mar 2020 23:36:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585179396;
+        bh=ukXAg6nYJ1E268DR5bTQMqn2OedkLGJ7YazVsubImkw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jWDzNsH6Tk+blCQ8Em7ZZvBdcbpw1zDwZ6XgEQSajuLvr6mSMsBblvlaKcTqhNqs+
+         +q9VwwfGKIERVzPW9hEQvcR/X2L1YaR9TK1a+B9nrrIA0usmLKNU45NhxXvJSpsbYN
+         MQ9zBTb//9FmRJvFn8vtNHFvUUNLU1Tan8XKFqcE=
+Received: by mail-io1-f52.google.com with SMTP id o127so4236630iof.0;
+        Wed, 25 Mar 2020 16:36:36 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ0Xn5if8iNxiI61TtFQXcjwLzos5eQD9Gt/Lv8q8AGv3e3Z4Z+b
+        5/i1Au/RMLnwBgVjX2Eq+Al4xm2xypXTtcdvKYA=
+X-Google-Smtp-Source: ADFU+vt7JfYewC9XJVSMC7wWqtWpaf5vW35mzoPxpsZefDzyM9nlC1FlxzDmuShI3Sp3HeUAF2XUO6LnlRNygsoiOaY=
+X-Received: by 2002:a5d:980f:: with SMTP id a15mr5262315iol.203.1585179395943;
+ Wed, 25 Mar 2020 16:36:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kRpAp63FXvKcTDgJpYjl8n1";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200319192855.29876-1-nivedita@alum.mit.edu> <20200320020028.1936003-1-nivedita@alum.mit.edu>
+ <CAKv+Gu8-iK-FQrgCY6YGXyg155chMPJQZeQr-i_xQbqoQ57F0g@mail.gmail.com> <20200325221007.GA290267@rani.riverdale.lan>
+In-Reply-To: <20200325221007.GA290267@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Thu, 26 Mar 2020 00:36:25 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXHPmtYgoUViF4baVHfy178ef8u57wJgqcZVagGTAuP3iQ@mail.gmail.com>
+Message-ID: <CAMj1kXHPmtYgoUViF4baVHfy178ef8u57wJgqcZVagGTAuP3iQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/kRpAp63FXvKcTDgJpYjl8n1
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 25 Mar 2020 at 23:10, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Wed, Mar 25, 2020 at 05:41:43PM +0100, Ard Biesheuvel wrote:
+> > On Fri, 20 Mar 2020 at 03:00, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > >
+> > > This series is against tip:efi/core.
+> > >
+> > > Patches 1-9 are small cleanups and refactoring of the code in
+> > > libstub/gop.c.
+> > >
+> > > The rest of the patches add the ability to use a command-line option to
+> > > switch the gop's display mode.
+> > >
+> > > The options supported are:
+> > > video=efifb:mode=n
+> > >         Choose a specific mode number
+> > > video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
+> > >         Specify mode by resolution and optionally color depth
+> > > video=efifb:auto
+> > >         Let the EFI stub choose the highest resolution mode available.
+> > >
+> > > The mode-setting additions increase code size of gop.o by about 3k on
+> > > x86-64 with EFI_MIXED enabled.
+> > >
+> > > Changes in v2 (HT lkp@intel.com):
+> > > - Fix __efistub_global attribute to be after the variable.
+> > >   (NB: bunch of other places should ideally be fixed, those I guess
+> > >   don't matter as they are scalars?)
+> > > - Silence -Wmaybe-uninitialized warning in set_mode function.
+> > >
+> >
+> > These look good to me. The only question I have is whether it would be
+> > possible to use the existing next_arg() and parse_option_str()
+> > functions to replace some of the open code parsing that goes on in
+> > patches 11 - 14.
+> >
+>
+> I don't think so -- next_arg is for parsing space-separated param=value
+> pairs, so efi_parse_options can use it, but it doesn't work for the
+> comma-separated options we'll have within the value.
+>
+> parse_option_str would only work for the "auto" option, but it scans the
+> entire option string and just returns whether it was there or not, so it
+> wouldn't be too useful either, since we have to check for the other
+> possibilities anyway.
+>
+> It would be nice to have a more generic library for cmdline parsing,
+> there are a lot of places that have to open-code option parsing like
+> this.
+>
+> There's one thing I noticed while working at this, btw. The Makefile
+> specifies -ffreestanding, but at least x86 builds without having to
+> specify that. With -ffreestanding, the compiler doesn't optimize string
+> functions -- strlen(string literal) into a compile-time constant, for
+> eg. A couple hundred bytes or so can be saved by removing that option,
+> if it also works for ARM.
 
-Hi all,
-
-Commits
-
-  c363f249e7e6 ("nvmet-rdma: allocate RW ctxs according to mdts")
-  ec6d20e16c2d ("nvmet-rdma: Implement get_mdts controller op")
-  02cb00e233ad ("nvmet: Add get_mdts op for controllers")
-  2db24e4a22bc ("nvme-pci: properly print controller address")
-  e2a366a4b0fe ("nvme-pci: slimmer CQ head update")
-
-are missing a Signed-off-by from their committer.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kRpAp63FXvKcTDgJpYjl8n1
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl576owACgkQAVBC80lX
-0Gzu5gf/cSocBVOgOLbeGy5pP4hnBAhIJZI2U0/kKZiPthXod2eyYPij2UmwHowe
-AK6iqm/xLhz+dcy9WgPXJDRPNEE/i+7x0YndOiRpbkJMfByuy+yBN2i+Qb7tM5jM
-oDjnFX/7JR50ty2rUjJyKTBmqQZGuYYm/KwOOYiCXraoYU6+VEBaM9yeGf+GVJY3
-+SBy7vASK51QJcHlbSUxKcn85IG8U5njgLHxFLM1WlDNuEoY7wqHXZHIacEjP6Bo
-CY3Ef4fEX7KZpO2LPcqmQdczZpVjDyMiMmRN5gFfN13tRmab2xS/0DmiwA53qubP
-gio96wMgVwt1jXMhFrf8B2jyL35hYw==
-=kX13
------END PGP SIGNATURE-----
-
---Sig_/kRpAp63FXvKcTDgJpYjl8n1--
+Yes, -ffreestanding implies -fno-builtin, which means that the
+compiler cannot assume it knows (and can optimize away) the behavior
+of strlen(), memset(), etc.
