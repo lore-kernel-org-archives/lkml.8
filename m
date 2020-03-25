@@ -4,23 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34886C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495CEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3432206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E50F20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RfCHxS98"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VzDFICY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbgCYIm2 (ORCPT
+        id S1727554AbgCYIma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:42:28 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:41951 "EHLO
+        Wed, 25 Mar 2020 04:42:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:21017 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727517AbgCYIm0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727493AbgCYIm0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Mar 2020 04:42:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,46 +29,46 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vPsu4xaDtC0cUQ8z//AAcrwJiPkiyYA4xb7Uk0+4OmQ=;
-        b=RfCHxS98av0JEijMt7YBI2RERkFK3MqcXamf12o6EtspnU//ufMa8KxefLFPhYNs21TXzE
-        eN2rf6y+4k+ekNt6f6V4LQczF1em0ZrYLE1YHpskGGcIRkQ3HmY5WbZELzGpM0KcraXlgn
-        xRXSu7QF61Hj8J3ITq2xZWD6R7iF71k=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-200-4dhY0Bh0P7KPK8Sy6CWI-w-1; Wed, 25 Mar 2020 04:42:23 -0400
-X-MC-Unique: 4dhY0Bh0P7KPK8Sy6CWI-w-1
-Received: by mail-wr1-f70.google.com with SMTP id y1so801603wrn.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:23 -0700 (PDT)
+        bh=G7/+bLFXtT6ev3ED5VLu2ChKS4wBGYCBXGKeOZ0dsd4=;
+        b=VzDFICY0cVN9duvRB9LAsErxwc5GTPPSfNCHOewUr01NkGP01f6qASn/4v/rPllSJgk0v8
+        FVdoz9XXdVXIs+3s0bSLoi3JQdVs+kRLragkkZuyMjwjXv+jm7/SNeUs+7v1gf9hmXnHwz
+        azz9Sds1tXwwA5yfzXZ/2qcfAIXoTeE=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-Fr1GzrUDO3GGBou986RCNg-1; Wed, 25 Mar 2020 04:42:24 -0400
+X-MC-Unique: Fr1GzrUDO3GGBou986RCNg-1
+Received: by mail-wm1-f69.google.com with SMTP id p18so601020wmk.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vPsu4xaDtC0cUQ8z//AAcrwJiPkiyYA4xb7Uk0+4OmQ=;
-        b=t2/yPmNKYzh+zJi38ZwqoDpx57g8UVm7dUiLFPOO0/NmZZpFCOpclfE8zfdwCxnHKk
-         QdZs0W8tagjlhOexhe3Tt5BYtJVXHZesQ6jtqzcvrIRbUX5YUYL2go3MdyU3jOMqe4hY
-         PufWm2tK4JZQ3qwwNofvOTd1J8tzhUd3Nboi0xkMyobw3PDQ/gCb/5uTGt4Ch9XhSjme
-         siRWOqtE5GFkWcLJmmcjbninVg5vG+pdQjlrVqkAROM3ZH/snwETFbj4GGejJXXZcFEa
-         zoi6cu50p05bK4sKjEYPQZFOkTc9RVzwrxKSTdRQxj+UPS8vEFarfOqochfvMM5g6hBu
-         qmhQ==
-X-Gm-Message-State: ANhLgQ105R/fjKQMPzGv0fQ2dlZHhmAUAq6nEqMJY1Is/09gZeXbK/4N
-        cFZsecP8XSWLVdj2Pa4tmecirnWm0wXiEK1l5TgDRhhKGWg1MaXAxAh//3DVXC2V5NTsEukByKM
-        oJ2X/KVadMeU5mvT7gH7Losdw
-X-Received: by 2002:a05:600c:2904:: with SMTP id i4mr2375027wmd.41.1585125741635;
-        Wed, 25 Mar 2020 01:42:21 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvToij3LAH7vsJcKSDmwLhIJ7G54oxAzIJnZfjCsg9NarWuID83kbDutfq980asRdgv9/TJXQ==
-X-Received: by 2002:a05:600c:2904:: with SMTP id i4mr2375009wmd.41.1585125741333;
-        Wed, 25 Mar 2020 01:42:21 -0700 (PDT)
+        bh=G7/+bLFXtT6ev3ED5VLu2ChKS4wBGYCBXGKeOZ0dsd4=;
+        b=p3jyp18mFTZIgVTV5ocpH5KdEeSa1Oxdh8vLT304Yd2SMyFKR2RH+F/gxJBhgncoCl
+         iCaT4xrL32phfwy8E5amGqhRE3NdvdvPm85AH3M7WxCPqo7S2w3R7XXyMA5DkOhhYLJF
+         Ae67xIxnTUYTULpTZ+WKa7sXHkEquC7B1ZR1XY0uasC3w6lPd+ENZot4XvAgyVT/4l4z
+         kw70qE6IiGweFMYg4L4AZQOy0A6d9F7emzZbBjgE7Vs5ijo4j/nTwTlpUy6FeqOuqBt3
+         e0qZunNeD0e/j6VMVtDkkhInSy7K8JSbwKc289cEGAZDZ6QuQxATGfrhe5a3u4Ba8fBC
+         Xv9w==
+X-Gm-Message-State: ANhLgQ3XNt6AiEDzVMdPm5JoiuaPs+b7F2EvID1VsEWDABD9000t3Hy5
+        J9S+oAjLpk/3U3rzsNEZrBTDCGdh8NNiPRpnF27GLsNUKDgt8L6wfGfgAHCvKAbfjDxX5qx2gqR
+        5Bkt+2ifIjxzOdjdj9XSNMCsd
+X-Received: by 2002:a05:600c:20a:: with SMTP id 10mr2375141wmi.135.1585125742495;
+        Wed, 25 Mar 2020 01:42:22 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtVxx31FwZ8MQUGpxo9ek7HhwUArJgOrGlEdxFBryGP+8MN0MNubO8lFlbH6LRAUlKJegVUBQ==
+X-Received: by 2002:a05:600c:20a:: with SMTP id 10mr2375123wmi.135.1585125742272;
+        Wed, 25 Mar 2020 01:42:22 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.20
+        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 01:42:20 -0700 (PDT)
+        Wed, 25 Mar 2020 01:42:21 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 08/10] objtool: Add abstraction for computation of symbols offsets
-Date:   Wed, 25 Mar 2020 08:42:01 +0000
-Message-Id: <20200325084203.17005-9-jthierry@redhat.com>
+Subject: [PATCH 09/10] objtool: Split generic and arch specific CFI definitions
+Date:   Wed, 25 Mar 2020 08:42:02 +0000
+Message-Id: <20200325084203.17005-10-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200325084203.17005-1-jthierry@redhat.com>
 References: <20200325084203.17005-1-jthierry@redhat.com>
@@ -79,131 +79,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raphael Gault <raphael.gault@arm.com>
+Some CFI definitions used by generic objtool code have no reason to vary
+from one architecture to another. Move those definition to generic code
+and keep a separate per arch header to provide architecture specific CFI
+definitions.
 
-The jump destination and relocation offset used previously are only
-reliable on x86_64 architecture. We abstract these computations by calling
-arch-dependent implementations.
-
-Signed-off-by: Raphael Gault <raphael.gault@arm.com>
-[J.T. Remove superfluous comment, replace other addend offsets
-      with arch_dest_rela_offset]
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/arch.h            |  6 ++++++
- tools/objtool/arch/x86/decode.c | 11 +++++++++++
- tools/objtool/check.c           | 18 ++++++++++--------
- 3 files changed, 27 insertions(+), 8 deletions(-)
+ tools/objtool/Makefile                    |  3 ++-
+ tools/objtool/arch/x86/include/cfi_regs.h | 25 +++++++++++++++++++++++
+ tools/objtool/cfi.h                       | 21 ++-----------------
+ 3 files changed, 29 insertions(+), 20 deletions(-)
+ create mode 100644 tools/objtool/arch/x86/include/cfi_regs.h
 
-diff --git a/tools/objtool/arch.h b/tools/objtool/arch.h
-index ced3765c4f44..a9a50a25ca66 100644
---- a/tools/objtool/arch.h
-+++ b/tools/objtool/arch.h
-@@ -66,6 +66,8 @@ struct stack_op {
- 	struct op_src src;
- };
+diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
+index 519af6ec4eee..11b7dc5d18fe 100644
+--- a/tools/objtool/Makefile
++++ b/tools/objtool/Makefile
+@@ -29,7 +29,8 @@ all: $(OBJTOOL)
  
-+struct instruction;
+ INCLUDES := -I$(srctree)/tools/include \
+ 	    -I$(srctree)/tools/arch/$(HOSTARCH)/include/uapi \
+-	    -I$(srctree)/tools/arch/$(SRCARCH)/include
++	    -I$(srctree)/tools/arch/$(SRCARCH)/include	\
++	    -I$(srctree)/tools/objtool/arch/$(SRCARCH)/include
+ WARNINGS := $(EXTRA_WARNINGS) -Wno-switch-default -Wno-switch-enum -Wno-packed
+ CFLAGS   := -Werror $(WARNINGS) $(KBUILD_HOSTCFLAGS) -g $(INCLUDES) $(LIBELF_FLAGS)
+ LDFLAGS  += $(LIBELF_LIBS) $(LIBSUBCMD) $(KBUILD_HOSTLDFLAGS)
+diff --git a/tools/objtool/arch/x86/include/cfi_regs.h b/tools/objtool/arch/x86/include/cfi_regs.h
+new file mode 100644
+index 000000000000..79bc517efba8
+--- /dev/null
++++ b/tools/objtool/arch/x86/include/cfi_regs.h
+@@ -0,0 +1,25 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
 +
- void arch_initial_func_cfi_state(struct cfi_state *state);
- 
- int arch_decode_instruction(struct elf *elf, struct section *sec,
-@@ -75,4 +77,8 @@ int arch_decode_instruction(struct elf *elf, struct section *sec,
- 
- bool arch_callee_saved_reg(unsigned char reg);
- 
-+unsigned long arch_jump_destination(struct instruction *insn);
++#ifndef _OBJTOOL_CFI_REGS_H
++#define _OBJTOOL_CFI_REGS_H
 +
-+unsigned long arch_dest_rela_offset(int addend);
++#define CFI_AX			0
++#define CFI_DX			1
++#define CFI_CX			2
++#define CFI_BX			3
++#define CFI_SI			4
++#define CFI_DI			5
++#define CFI_BP			6
++#define CFI_SP			7
++#define CFI_R8			8
++#define CFI_R9			9
++#define CFI_R10			10
++#define CFI_R11			11
++#define CFI_R12			12
++#define CFI_R13			13
++#define CFI_R14			14
++#define CFI_R15			15
++#define CFI_RA			16
++#define CFI_NUM_REGS		17
 +
- #endif /* _ARCH_H */
-diff --git a/tools/objtool/arch/x86/decode.c b/tools/objtool/arch/x86/decode.c
-index a62e032863a8..7ce8650cf085 100644
---- a/tools/objtool/arch/x86/decode.c
-+++ b/tools/objtool/arch/x86/decode.c
-@@ -11,6 +11,7 @@
- #include "../../../arch/x86/lib/inat.c"
- #include "../../../arch/x86/lib/insn.c"
++#endif /* _OBJTOOL_CFI_REGS_H */
+diff --git a/tools/objtool/cfi.h b/tools/objtool/cfi.h
+index 4427bf8ed686..1a3e7b807994 100644
+--- a/tools/objtool/cfi.h
++++ b/tools/objtool/cfi.h
+@@ -6,30 +6,13 @@
+ #ifndef _OBJTOOL_CFI_H
+ #define _OBJTOOL_CFI_H
  
-+#include "../../check.h"
- #include "../../elf.h"
- #include "../../arch.h"
- #include "../../warn.h"
-@@ -66,6 +67,16 @@ bool arch_callee_saved_reg(unsigned char reg)
- 	}
- }
- 
-+unsigned long arch_dest_rela_offset(int addend)
-+{
-+	return addend + 4;
-+}
++#include "cfi_regs.h"
 +
-+unsigned long arch_jump_destination(struct instruction *insn)
-+{
-+	return insn->offset + insn->len + insn->immediate;
-+}
-+
- int arch_decode_instruction(struct elf *elf, struct section *sec,
- 			    unsigned long offset, unsigned int maxlen,
- 			    unsigned int *len, enum insn_type *type,
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 90d3db00352d..7b80a4a6e53d 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -590,13 +590,14 @@ static int add_jump_destinations(struct objtool_file *file)
- 					       insn->len);
- 		if (!rela) {
- 			dest_sec = insn->sec;
--			dest_off = insn->offset + insn->len + insn->immediate;
-+			dest_off = arch_jump_destination(insn);
- 		} else if (rela->sym->type == STT_SECTION) {
- 			dest_sec = rela->sym->sec;
--			dest_off = rela->addend + 4;
-+			dest_off = arch_dest_rela_offset(rela->addend);
- 		} else if (rela->sym->sec->idx) {
- 			dest_sec = rela->sym->sec;
--			dest_off = rela->sym->sym.st_value + rela->addend + 4;
-+			dest_off = rela->sym->sym.st_value +
-+				   arch_dest_rela_offset(rela->addend);
- 		} else if (strstr(rela->sym->name, "_indirect_thunk_")) {
- 			/*
- 			 * Retpoline jumps are really dynamic jumps in
-@@ -686,7 +687,7 @@ static int add_call_destinations(struct objtool_file *file)
- 		rela = find_rela_by_dest_range(insn->sec, insn->offset,
- 					       insn->len);
- 		if (!rela) {
--			dest_off = insn->offset + insn->len + insn->immediate;
-+			dest_off = arch_jump_destination(insn);
- 			insn->call_dest = find_func_by_offset(insn->sec, dest_off);
- 			if (!insn->call_dest)
- 				insn->call_dest = find_symbol_by_offset(insn->sec, dest_off);
-@@ -709,13 +710,14 @@ static int add_call_destinations(struct objtool_file *file)
- 			}
+ #define CFI_UNDEFINED		-1
+ #define CFI_CFA			-2
+ #define CFI_SP_INDIRECT		-3
+ #define CFI_BP_INDIRECT		-4
  
- 		} else if (rela->sym->type == STT_SECTION) {
-+			dest_off = arch_dest_rela_offset(rela->addend);
- 			insn->call_dest = find_func_by_offset(rela->sym->sec,
--							      rela->addend+4);
-+							      dest_off);
- 			if (!insn->call_dest) {
--				WARN_FUNC("can't find call dest symbol at %s+0x%x",
-+				WARN_FUNC("can't find call dest symbol at %s+0x%lx",
- 					  insn->sec, insn->offset,
- 					  rela->sym->sec->name,
--					  rela->addend + 4);
-+					  dest_off);
- 				return -1;
- 			}
- 		} else
-@@ -827,7 +829,7 @@ static int handle_group_alt(struct objtool_file *file,
- 		if (!insn->immediate)
- 			continue;
- 
--		dest_off = insn->offset + insn->len + insn->immediate;
-+		dest_off = arch_jump_destination(insn);
- 		if (dest_off == special_alt->new_off + special_alt->new_len) {
- 			if (!fake_jump) {
- 				WARN("%s: alternative jump to end of section",
+-#define CFI_AX			0
+-#define CFI_DX			1
+-#define CFI_CX			2
+-#define CFI_BX			3
+-#define CFI_SI			4
+-#define CFI_DI			5
+-#define CFI_BP			6
+-#define CFI_SP			7
+-#define CFI_R8			8
+-#define CFI_R9			9
+-#define CFI_R10			10
+-#define CFI_R11			11
+-#define CFI_R12			12
+-#define CFI_R13			13
+-#define CFI_R14			14
+-#define CFI_R15			15
+-#define CFI_RA			16
+-#define CFI_NUM_REGS		17
+-
+ struct cfi_reg {
+ 	int base;
+ 	int offset;
 -- 
 2.21.1
 
