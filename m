@@ -2,82 +2,99 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54369C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E49FC54FCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C18720870
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 679242073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rqWZy+mx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbgCYABD (ORCPT
+        id S1727299AbgCYABM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:01:03 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46608 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbgCYABC (ORCPT
+        Tue, 24 Mar 2020 20:01:12 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:15473 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727262AbgCYABM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 20:01:02 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGtTR-0008It-QH; Wed, 25 Mar 2020 01:00:46 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 1EF2B100C51; Wed, 25 Mar 2020 01:00:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v6 4/8] kvm: x86: Emulate split-lock access as a write in emulator
-In-Reply-To: <20200324151859.31068-5-xiaoyao.li@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-5-xiaoyao.li@intel.com>
-Date:   Wed, 25 Mar 2020 01:00:45 +0100
-Message-ID: <87lfnpz4k2.fsf@nanos.tec.linutronix.de>
+        Tue, 24 Mar 2020 20:01:12 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7a9eec0000>; Tue, 24 Mar 2020 16:59:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 24 Mar 2020 17:01:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 17:01:11 -0700
+Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 00:01:10 +0000
+Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
+ device tree
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
+ <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
+ <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
+ <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+Date:   Tue, 24 Mar 2020 17:01:11 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585094380; bh=UlxBKHdiYfVf84pWue7S26iqlGChyU/5RVRLZidgwwY=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=rqWZy+mxTmPdOwYibjStZKZSubndUNS8+XhlzGnz5s3ZA4tZUoYEr+KvptK6GAJ3j
+         14LqB77/IfcA2rtKMXyg2Nqz14NIMP901W8KCMnYTotoYx4aHKQxUlxowFE2WQBxbG
+         l+dEM7XVgtK1PROmxIWXax9ZtjzWUVAdq8saJSs9QeN6se6VAFjALh9nXgEvB0FFW/
+         TMqVp9DsOuv8ML6ZpsYlCTw6tRwTfWmMPEjCRN9CBVHgv9Q5RuuDe/9ljx2/cKQL8S
+         oVdsIHp1lmY/f+YsU+eiUZ2k1Bnx+Isi8/wfeuQ+BloO/7BYBPgdUPCXms2YHlUnuJ
+         hL/lDjN/OPDjA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
->  
-> +bool split_lock_detect_on(void)
-> +{
-> +	return sld_state != sld_off;
-> +}
-> +EXPORT_SYMBOL_GPL(split_lock_detect_on);
 
-1) You export this function here
-
-2) You change that in one of the next patches to something else
-
-3) According to patch 1/8 X86_FEATURE_SPLIT_LOCK_DETECT is not set when
-   sld_state == sld_off. FYI, I did that on purpose.
-
-AFAICT #1 and #2 are just historical leftovers of your previous patch
-series and the extra step was just adding more changed lines per patch
-for no value.
-
-#3 changed the detection mechanism and at the same time the semantics of
-the feature flag.
-
-So what's the point of this exercise? 
-
-Thanks,
-
-        tglx
+On 3/24/20 3:48 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 25.03.2020 00:04, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>> ...
+>>>> +                     pd_venc: venc {
+>>>> +                             clocks =3D <&tegra_car TEGRA210_CLK_VI>,
+>>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
+>>>> +                             resets =3D <&mc TEGRA210_MC_RESET_VI>,
+>>> The MC resetting should be needed only for a hardware hot-resetting. It
+>>> should be wrong to add it to the power domain.
+>> TRM recommends to do MC client hot-reset during VE power gate and ungate=
+.
+> Could you please tell what TRM it is and what's the page#?
+Tegra TX1 TRM Page 425, Section 12.2.7.14 Procedures for VE Power Domains
