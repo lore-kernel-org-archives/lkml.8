@@ -2,150 +2,116 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EE2C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA0CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA1722076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0612206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:55:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585126547;
+	bh=9clGNzS6IpvWJjMCHdTXabts4XuLn+Vaf1OgCvL6CO8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aEz3OxlZUfw1lf7WIoyuRNUtcSKTi+mn+c1v3QGPD+4Kt9taaTapylVRgTanX7SOI
+	 VwBoMGSKG7JT55SHFUlcGe1NLkCqfq5xPui3YXFZ/rkoOQJ2bAS2X0gb2d/QSU41SI
+	 +/jBVOmHsBdD4ImQ+NLgvj3XRviFX8iLnKqPLBTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgCYIzl (ORCPT
+        id S1727564AbgCYIzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:55:41 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:60731 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727460AbgCYIzl (ORCPT
+        Wed, 25 Mar 2020 04:55:45 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33512 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbgCYIzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:55:41 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07439015|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0260262-0.000154574-0.973819;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.H50xpyL_1585126516;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.H50xpyL_1585126516)
-          by smtp.aliyun-inc.com(10.147.42.241);
-          Wed, 25 Mar 2020 16:55:34 +0800
-From:   WeiXiong Liao <liaoweixiong@allwinnertech.com>
-To:     Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org,
-        WeiXiong Liao <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v3 09/11] pstore/blk: a way to get user configure about pstore front-ends.
-Date:   Wed, 25 Mar 2020 16:55:04 +0800
-Message-Id: <1585126506-18635-10-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
-References: <1585126506-18635-1-git-send-email-liaoweixiong@allwinnertech.com>
+        Wed, 25 Mar 2020 04:55:42 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w25so1577915wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:55:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=A0OMbVybEpaW+w1C0n6/qu2u7s7M3HMJ+OsMULSR4sI=;
+        b=INatbJ1zpjx/upydrHaGJRlTY0MoG/t1dP7z2pQMcKrRZpC2FoULfdiepFwso432T3
+         pKsYilMPbVAQiksfTNVTwIm1mYyzzjNwDNw5cUARtWf0AcdpdK1bh525ghcxI6MAcwRp
+         /OAEGnvOoyl0U8dV82Sq2K3N9nTYYoXK2KdosKfjqev9FEZRA6BvPiEzSa1O+wC9n5AU
+         Oj7AXgr1SDdlQ71TJLL/obmZOrFzd4+cUm5u1z0VP9r4Ol+4racqqNYU9KlKZ7zDzYEc
+         geXhCCuOgPyI1wJtm79qRy/qtQVbYBdAF/tfN38S70nj4/Dsedr/I623Z6bKOzWtJmu/
+         XHng==
+X-Gm-Message-State: ANhLgQ3E6kRyB7WOd2f1l4RDrfn7twD+bs+UZQpzyF2UQXdBySF5LUJ/
+        j6o30Wz66Smb/rWPQnR8Dqo=
+X-Google-Smtp-Source: ADFU+vuA/5ocaWVVNlpCYn5BnzvuJ6qnAuLXSyHHVlX4ChU1l/XeQ0Gm6/esgK8FoNtoa2aiIXY24w==
+X-Received: by 2002:a1c:2e92:: with SMTP id u140mr2384030wmu.84.1585126540155;
+        Wed, 25 Mar 2020 01:55:40 -0700 (PDT)
+Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
+        by smtp.gmail.com with ESMTPSA id t193sm8428993wmt.14.2020.03.25.01.55.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 01:55:39 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 09:55:37 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     David Rientjes <rientjes@google.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, hannes@cmpxchg.org, vbabka@suse.cz
+Subject: Re: [PATCH 4/5] mm/vmstat.c: move the per-node stats to the front of
+ /proc/zoneinfo
+Message-ID: <20200325085537.GZ19542@dhcp22.suse.cz>
+References: <20200324142229.12028-1-bhe@redhat.com>
+ <20200324142229.12028-5-bhe@redhat.com>
+ <alpine.DEB.2.21.2003241220360.34058@chino.kir.corp.google.com>
+ <20200325055331.GB9942@MiWiFi-R3L-srv>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325055331.GB9942@MiWiFi-R3L-srv>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's one of a series of patches to adapt to MTD device.
+On Wed 25-03-20 13:53:31, Baoquan He wrote:
+> On 03/24/20 at 12:25pm, David Rientjes wrote:
+> > On Tue, 24 Mar 2020, Baoquan He wrote:
+> > 
+> > > This moving makes the layout of /proc/zoneinfo more sensible. And there
+> > > are 4 zones at most currently, it doesn't need to scroll down much to get
+> > > to the 1st populated zone, even though the 1st populated zone is MOVABLE
+> > > zone.
+> > > 
+> > 
+> > Doesn't this introduce risk that it will break existing parsers of 
+> > /proc/zoneinfo in subtle ways?
+> > 
+> > In some cases /proc/zoneinfo is a tricky file to correctly parse because 
+> > you have to rely on the existing order in which it is printed to determine 
+> > which zone is being described.  We need to print zones even with unmanaged 
+> > pages, for instance, otherwise userspace may be unaware of which zones are 
+> > supported and what order they are in.  That's important to be able to 
+> > construct the proper string to use when writing vm.lowmem_reserve_ratio.
+> > 
+> > I'd prefer not changing the order of /proc/zoneinfo if it can be avoided 
+> > just because the risk outweighs the reward that we may break some 
+> > initscript parsers.
+> 
+> Oh, I may not describe the change and result clearly. This patch doesn't
+> change zone order at all.  I only move the per-node stats to the front of
+> each node, the zone order is completely kept the same, still DMA, DMA32,
+> NORMAL, MOVABLE.
 
-It's different to block driver, MTD driver should check zone size
-and get identifier to MTD device. To make it, psblk_usr_info() is
-created.
+Even this can break existing parsers. Fixing that up is likely not hard
+and existing parsers would be mostly debugging hacks here and there but
+I do miss any actual justification except for you considering it more
+sensible. I do not remember this would be a common pain point for people
+parsing this file. If anything the overal structure of the file makes it
+hard to parse and your patches do not really address that. We are likely
+too late to make the output much more sensible TBH.
 
-Signed-off-by: WeiXiong Liao <liaoweixiong@allwinnertech.com>
----
- fs/pstore/pstore_blk.c     | 37 ++++++++++++++++++++++++++++++-------
- include/linux/pstore_blk.h | 10 ++++++++++
- 2 files changed, 40 insertions(+), 7 deletions(-)
-
-diff --git a/fs/pstore/pstore_blk.c b/fs/pstore/pstore_blk.c
-index d6949146135b..061609b66d8a 100644
---- a/fs/pstore/pstore_blk.c
-+++ b/fs/pstore/pstore_blk.c
-@@ -84,6 +84,17 @@
- 	sector_t start_sect;
- } g_bdev_info;
- 
-+#define check_size(name, alignsize) ({				\
-+	long _##name_ = (name);					\
-+	_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
-+	if (_##name_ & ((alignsize) - 1)) {			\
-+		pr_info(#name " must align to %d\n",		\
-+				(alignsize));			\
-+		_##name_ = ALIGN(name, (alignsize));		\
-+	}							\
-+	_##name_;						\
-+})
-+
- /**
-  * struct psblk_device - back-end pstore/blk driver structure.
-  *
-@@ -138,13 +149,11 @@ static int psblk_register_do(struct psblk_device *dev)
- 	if (!dev->flags)
- 		dev->flags = UINT_MAX;
- #define verify_size(name, alignsize, enable) {				\
--		long _##name_ = (enable) ? (name) : 0;			\
--		_##name_ = _##name_ <= 0 ? 0 : (_##name_ * 1024);	\
--		if (_##name_ & ((alignsize) - 1)) {			\
--			pr_info(#name " must align to %d\n",		\
--					(alignsize));			\
--			_##name_ = ALIGN(name, (alignsize));		\
--		}							\
-+		long _##name_;						\
-+		if (enable)						\
-+			_##name_ = check_size(name, alignsize);		\
-+		else							\
-+			_##name_ = 0;					\
- 		name = _##name_ / 1024;					\
- 		psz_info->name = _##name_;				\
- 	}
-@@ -464,6 +473,20 @@ int psblk_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect)
- }
- EXPORT_SYMBOL_GPL(psblk_blkdev_info);
- 
-+/* get information of pstore/blk */
-+int psblk_usr_info(struct psblk_info *info)
-+{
-+	strncpy(info->device, blkdev, 80);
-+	info->dump_oops = dump_oops <= 0 ? 0 : 1;
-+	info->oops_size = check_size(oops_size, 4096);
-+	info->pmsg_size = check_size(pmsg_size, 4096);
-+	info->ftrace_size = check_size(ftrace_size, 4096);
-+	info->console_size = check_size(console_size, 4096);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(psblk_usr_info);
-+
- MODULE_LICENSE("GPL");
- MODULE_AUTHOR("WeiXiong Liao <liaoweixiong@allwinnertech.com>");
- MODULE_DESCRIPTION("Block device Oops/Panic logger");
-diff --git a/include/linux/pstore_blk.h b/include/linux/pstore_blk.h
-index 828b0763d477..d2ea1733b51a 100644
---- a/include/linux/pstore_blk.h
-+++ b/include/linux/pstore_blk.h
-@@ -27,4 +27,14 @@ int  psblk_register_blkdev(unsigned int major, unsigned int flags,
- void psblk_unregister_blkdev(unsigned int major);
- int  psblk_blkdev_info(dev_t *devt, sector_t *nr_sects, sector_t *start_sect);
- 
-+struct psblk_info {
-+	int dump_oops;
-+	char device[80];
-+	unsigned long oops_size;
-+	unsigned long pmsg_size;
-+	unsigned long console_size;
-+	unsigned long ftrace_size;
-+};
-+int psblk_usr_info(struct psblk_info *info);
-+
- #endif
+That being said, I haven't looked more closely on your patches because I
+do not have spare cycles for that. Your justification for touching the
+code which seems to be working relatively well is quite weak IMHO, yet
+it adds a non zero risk for breaking existing parsers.
 -- 
-1.9.1
-
+Michal Hocko
+SUSE Labs
