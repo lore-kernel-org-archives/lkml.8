@@ -2,174 +2,132 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E82FEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BE0C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7CB820719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E31D20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:54:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1vLle3i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I6hHy5wH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgCYPyG (ORCPT
+        id S1727895AbgCYPyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:54:06 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:33249 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726264AbgCYPyG (ORCPT
+        Wed, 25 Mar 2020 11:54:46 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:47078 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726264AbgCYPyp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:54:06 -0400
-Received: by mail-pj1-f67.google.com with SMTP id jz1so2395405pjb.0;
-        Wed, 25 Mar 2020 08:54:05 -0700 (PDT)
+        Wed, 25 Mar 2020 11:54:45 -0400
+Received: by mail-il1-f194.google.com with SMTP id e8so2291273ilc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:54:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=m2KTzbKyqjKYw4vr9/LcS8DzT4Q8P/nBfhkd8Raxax0=;
-        b=J1vLle3i29D1ETVntQbTdDTo7RbhoAw4biGBEDwG+xA9B4DG3sbgqMKgP3pTvAKQT4
-         bapLIr0OOYwFQPfPRaIfl7yokOqbx+ItAiIhLj667sdoKkZkf5GekVnBYl4tZ2G6GCcJ
-         iRJNaGGoWZ5Yleyvy0DQJLYJUBxfc6sL9KG9zdAN3s3ZX9g33lrIvZhuRddMvSKtX7MC
-         wy1hIfDzWHbcAOVE8fi19Da+UBBOV2+LZtRjFvY+itZJJd+tPnEgWkji64tWIK7kXjlP
-         ZUBeNugEChi6JH16CzF2ti+g8kUB6s4Lz0lddmdx3bcwrdvXSfmTGGDcLZ+82bZwOfgb
-         6Dng==
+        bh=XgFZGosUzS1oRzHI3pEsbboLFH1t4gask+/mwdj4L+I=;
+        b=I6hHy5wHrSUflD+HabqizxDRQpER6XZk3XdQ5yVAq2IDa5d2gkKDpanLanQ+WKLJaE
+         akCkkmoSQxm4KaKw/AFFZjYla0EnxMDxzNWlogb8m4l8KqXJZqDOWqL/ZB5vyaR7FcJY
+         SBqMVn7GTQwtqkvkowNDvB+91Z6qymjyneLUkE63g+5ljRVkfXGeLE9UiCKHmu9a+glt
+         Y5cXSP9Rt2dbWNp08O4TqYj54JltA4a40YrRjlhBSLVRwuf9M/D14/gJ1qENE1TNSIxR
+         nCXAt3EtgxioDibapL20nokFrQf0FBmcXrFsO2zo8vpVKukYi2hqCWFbkiOCAm5zKaLk
+         k5+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=m2KTzbKyqjKYw4vr9/LcS8DzT4Q8P/nBfhkd8Raxax0=;
-        b=AOifu5JN5pkSuDXtL2AkhEeDtsTRkZHxarGCDNz1E2snZ9NUtQtldqOJ+2l1D3WIjw
-         iElxBn5iz0mqTr5U8ngei4WQlVMTUIP+uG6ZKqNtxe+cbNsdCF931dUOFEUtxHOtcu6T
-         NCdOo/fbbmMjFVlty7Np189uYjg53//vgkap51b4BBKkDdEGZE/xJ8nK9yRWQRClPrrD
-         gIvWSNYhG9on/rUPBvC7rGt7ZKrhQyIcn9Af+Ng8hEb0br77xu3PntnD5pUSNferTOvv
-         f/MBfC1/PGYZqYUW/1J7Wa5sdo1fOWPwyA6CBbf61i2hTDbHg7ELGpX02RAsZhF5Absj
-         X3Qw==
-X-Gm-Message-State: ANhLgQ00oaPdqAMAhEC6PZGNb3telphfF8miBms/dtCULvMYHwI6UahT
-        TIpvBpv9WrTRQC6VZQZdSXzhADg1Dd7p96AOhY0=
-X-Google-Smtp-Source: ADFU+vs1t1sRby5FeNyrAmPWma3Y7Ur7v+64WoOhzdYpplXZSsXcLF5yer3YjgSOIvPcvdhBWolXsHmRB3zEkOiP0sQ=
-X-Received: by 2002:a17:90a:8403:: with SMTP id j3mr4520249pjn.8.1585151644817;
- Wed, 25 Mar 2020 08:54:04 -0700 (PDT)
+        bh=XgFZGosUzS1oRzHI3pEsbboLFH1t4gask+/mwdj4L+I=;
+        b=Ht9/DOlYIzRVum8vVL+rCDcvf0qbJoeT9JIRZGhj3d2XDmN3MykxyN3gLF7BNixXcd
+         KX8g5scdFosNz6GYfehuC1tyCDAvdi/H/HF/vBlEqhjsAuZC4DU6n0nJHMtdRcTCM6TS
+         DT6BviwIL0kjE9rrevGjj1ZqAxpwLhxbkVy6UtYIiVBghv9mue/n1ZJb07onEwS+UL25
+         17hyeVRef72BW1fAZQSCGacoWIvgEREz2CCivML0Xp4mbTvHCiwkO7vWPiTlMiWm81yh
+         LIrKFLBMgRF1LxiJ+SYDjBDsMhqEYCXUCyZHekbj/CKDDo6vS7m/R1KyjjAZu2C80qkZ
+         CObw==
+X-Gm-Message-State: ANhLgQ1W/jkgl6LNdd+MzaIeFaO4WtgqTz5QRUqQetAZLvVuPP1RkI6A
+        Q3c4wlYWWVaImlDHlFsGWkwU8EXDxT8MOJi3WpM=
+X-Google-Smtp-Source: ADFU+vtvtw4AQGOn9J2uCj7jrI/UUoKGmw88Il70Pyfg1OV8qDvGwy2+dBYFXBNoSyFlQetEKWD8GMqIB692DvzdovE=
+X-Received: by 2002:a92:c14a:: with SMTP id b10mr4275397ilh.139.1585151684694;
+ Wed, 25 Mar 2020 08:54:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325151211.19949-1-i.mikhaylov@yadro.com> <20200325151211.19949-3-i.mikhaylov@yadro.com>
-In-Reply-To: <20200325151211.19949-3-i.mikhaylov@yadro.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 25 Mar 2020 17:53:57 +0200
-Message-ID: <CAHp75VfjqtAtS-iXS6vz452m-EUtPcNt7EPm1JvQwC4VeX-k1A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] iio: proximity: Add driver support for vcnl3020
- proximity sensor
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
+References: <20200325090741.21957-1-bigbeeshane@gmail.com> <20200325090741.21957-4-bigbeeshane@gmail.com>
+ <14063C7AD467DE4B82DEDB5C278E8663FFFBD48B@fmsmsx107.amr.corp.intel.com>
+In-Reply-To: <14063C7AD467DE4B82DEDB5C278E8663FFFBD48B@fmsmsx107.amr.corp.intel.com>
+From:   Shane Francis <bigbeeshane@gmail.com>
+Date:   Wed, 25 Mar 2020 15:54:33 +0000
+Message-ID: <CABnpCuD-A20o3cQrPb+LwbsSRTGPwwdCAYYsSjeCdmimNMYyYA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] drm/radeon: fix scatter-gather mapping with user pages
+To:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>
+Cc:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx-request@lists.freedesktop.org" 
+        <amd-gfx-request@lists.freedesktop.org>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 5:14 PM Ivan Mikhaylov <i.mikhaylov@yadro.com> wrote:
+> >-----Original Message-----
+> >From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+> >Shane Francis
+> >Sent: Wednesday, March 25, 2020 5:08 AM
+> >To: dri-devel@lists.freedesktop.org
+> >Cc: airlied@linux.ie; linux-kernel@vger.kernel.org; bigbeeshane@gmail.com;
+> >amd-gfx-request@lists.freedesktop.org; alexander.deucher@amd.com;
+> >christian.koenig@amd.com
+> >Subject: [PATCH v4 3/3] drm/radeon: fix scatter-gather mapping with user
+> >pages
+> >
+> >Calls to dma_map_sg may return segments / entries than requested
 >
-> Proximity sensor driver based on light/vcnl4000.c code.
-> For now supports only the single on-demand measurement.
+> "may return less segment..." ?
+>                        ^^^
+
+I will reword / fix the highlighted issues with the text and send a updated
+patch set later today.
+
 >
-> The VCNL3020 is a fully integrated proximity sensor. Fully
-> integrated means that the infrared emitter is included in the
-> package. It has 16-bit resolution. It includes a signal
-> processing IC and features standard I2C communication
-> interface. It features an interrupt function.
-
-Thank you for an update, my comments below.
-
-...
-
-> +config VCNL3020
-> +       tristate "VCNL3020 proximity sensor"
-
-> +       depends on I2C
-
-REGMAP_I2C
-
-...
-
-> +struct vcnl3020_data {
-> +       struct regmap *regmap;
-
-> +       struct i2c_client *client;
-
-Since you have switched to regmap I2C API, do you really need client
-here, perhaps struct device *dev would be enough?
-
-> +       u8 rev;
-> +       struct mutex lock;
-> +};
-
-...
-
-> +       rc = regmap_read(data->regmap, VCNL_PROD_REV, &reg);
-
-> +       if (rc < 0) {
-
-I think you may drop all these ' < 0' checks for regmap, otherwise can
-you elaborate what positive return code, if any, means?
-
-> +               dev_err(&data->client->dev,
-> +                       "Error (%d) reading product revision", rc);
-> +               return rc;
-> +       }
-
-...
-
-> +       rc = regmap_write(data->regmap, VCNL_LED_CURRENT, led_current);
-> +       if (rc < 0) {
-
-...after above change...
-
-> +               dev_err(&data->client->dev, "Error (%d) setting LED current",
-> +                       rc);
-
-> +               return rc;
-> +       }
-> +
-> +       return 0;
-
-...simple return rc; here.
-
-...
-
-> +       /* wait for data to become ready */
-> +       do {
-> +               rc = regmap_read(data->regmap, VCNL_COMMAND, &reg);
-> +               if (rc < 0)
-> +                       goto err_unlock;
-> +               if (reg & VCNL_PS_RDY)
-> +                       break;
-> +               msleep(20); /* measurement takes up to 100 ms */
-> +       } while (--tries);
-
-regmap_read_poll_timeput()
-
-...
-
-> +static const struct iio_chan_spec vcnl3020_channels[] = {
-> +       {
-> +               .type = IIO_PROXIMITY,
-> +               .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-
-> +       }
-
-Leave comma here.
-
-> +};
-
--- 
-With Best Regards,
-Andy Shevchenko
+> >if they fall on page bounderies. The old implementation did not
+> >support this use case.
+> >
+> >Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
+> >---
+> > drivers/gpu/drm/radeon/radeon_ttm.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c
+> >b/drivers/gpu/drm/radeon/radeon_ttm.c
+> >index 3b92311d30b9..b3380ffab4c2 100644
+> >--- a/drivers/gpu/drm/radeon/radeon_ttm.c
+> >+++ b/drivers/gpu/drm/radeon/radeon_ttm.c
+> >@@ -528,7 +528,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt
+> >*ttm)
+> >
+> >       r = -ENOMEM;
+> >       nents = dma_map_sg(rdev->dev, ttm->sg->sgl, ttm->sg->nents,
+> >direction);
+> >-      if (nents != ttm->sg->nents)
+> >+      if (nents == 0)
+> >               goto release_sg;
+>
+> This looks correct to me.
+>
+> Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+>
+> M
+> >       drm_prime_sg_to_page_addr_arrays(ttm->sg, ttm->pages,
+> >--
+> >2.26.0
+> >
+> >_______________________________________________
+> >dri-devel mailing list
+> >dri-devel@lists.freedesktop.org
+> >https://lists.freedesktop.org/mailman/listinfo/dri-devel
