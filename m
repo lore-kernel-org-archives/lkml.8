@@ -6,60 +6,76 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1B2C2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE54C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FE32074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C66206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727755AbgCYSUM (ORCPT
+        id S1727800AbgCYSVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:20:12 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:46116 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727547AbgCYSUK (ORCPT
+        Wed, 25 Mar 2020 14:21:18 -0400
+Received: from mail.baikalelectronics.com ([87.245.175.226]:47894 "EHLO
+        mail.baikalelectronics.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgCYSVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:20:10 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id B9F0E159FFC28;
-        Wed, 25 Mar 2020 11:20:08 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 11:20:05 -0700 (PDT)
-Message-Id: <20200325.112005.1488571669011858526.davem@davemloft.net>
-To:     yuehaibing@huawei.com
-Cc:     vishal@chelsio.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, rahul.lakkireddy@chelsio.com
-Subject: Re: [PATCH v2 net-next] cxgb4: remove set but not used variable
- 'tab'
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200325011750.53008-1-yuehaibing@huawei.com>
-References: <20200324062614.29644-1-yuehaibing@huawei.com>
-        <20200325011750.53008-1-yuehaibing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 25 Mar 2020 11:20:09 -0700 (PDT)
+        Wed, 25 Mar 2020 14:21:18 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mail.baikalelectronics.ru (Postfix) with ESMTP id C62C28030779;
+        Wed, 25 Mar 2020 18:21:10 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at baikalelectronics.ru
+Received: from mail.baikalelectronics.ru ([127.0.0.1])
+        by localhost (mail.baikalelectronics.ru [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id yubzH7thvEhz; Wed, 25 Mar 2020 21:21:10 +0300 (MSK)
+Date:   Wed, 25 Mar 2020 21:21:01 +0300
+From:   Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        <linux-i2c@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 6/6] i2c: designware: Add Baikal-T1 SoC I2C controller
+ support
+Message-ID: <20200325182101.k47u4cjnbv6knsag@ubsrv2.baikal.int>
+References: <20200306131955.12806-1-Sergey.Semin@baikalelectronics.ru>
+ <20200306132348.71E638030793@mail.baikalelectronics.ru>
+ <20200321183349.GC5632@ninjato>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200321183349.GC5632@ninjato>
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
-Date: Wed, 25 Mar 2020 09:17:50 +0800
-
-> drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c: In function cxgb4_get_free_ftid:
-> drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c:547:23:
->  warning: variable tab set but not used [-Wunused-but-set-variable]
+On Sat, Mar 21, 2020 at 07:33:49PM +0100, Wolfram Sang wrote:
+> On Fri, Mar 06, 2020 at 04:19:58PM +0300, Sergey.Semin@baikalelectronics.ru wrote:
+> > From: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > 
+> > A third I2C controller embedded into the Baikal-T1 SoC is also fully
+> > based on the DW APB I2C core, but its registers are indirectly
+> > accessible via "command/data in/data out" trio. There is no difference
+> > other than that. So in order to have that controller supported by the
+> > common DW APB I2C driver we only need to introduce a new flag
+> > ACCESS_INDIRECT and use the access-registers to reach the I2C controller
+> > normal registers space in the dw_readl/dw_writel methods. Currently this
+> > flag is only enabled for the controllers with "be,bt1-i2c" compatible
+> > string.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > Signed-off-by: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
 > 
-> commit 8d174351f285 ("cxgb4: rework TC filter rule insertion across regions")
-> involved this, remove it.
+> Patches 2,3, and 6 have comments which should be addressed. Patches 4+5
+> can be dropped when sending next version.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: keep christmas tree ordering
 
-Applied, thank you.
+Great! Thanks. I'll have respond on the requests very soon.
+
+Regards,
+-Sergey
