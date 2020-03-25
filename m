@@ -2,141 +2,107 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9586C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C80C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814E720722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585127204;
-	bh=LuxmRBQBUF21r7dMi2L88Id1prbbBcYaTj1wh5mBdp8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Nyp4V7+tA5PSYHqe2PV1QwV8WbizGiiv1PfDDGxZEs4HzoLO0rgI0wM4D6RdoiMpX
-	 0B6vbEwRnJlBBpTpZiHge0hMArTn3vDH2IJF/5E7idtp8ew3u/GJhf44b/ox3fPrPK
-	 YAU9CIa5uwiSiu0axUUP21AaKk6Kh8Jqcpu8qqR4=
+	by mail.kernel.org (Postfix) with ESMTP id 3A0B42076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:07:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Eo0/7uAT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCYJGn (ORCPT
+        id S1727508AbgCYJHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:06:43 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:16700 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgCYJGm (ORCPT
+        Wed, 25 Mar 2020 05:07:11 -0400
+Received: from ssl.serverraum.org ([176.9.125.105]:40739 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726103AbgCYJHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:06:42 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 02P96ZbM027674;
-        Wed, 25 Mar 2020 18:06:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02P96ZbM027674
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585127196;
-        bh=jQcvOgKqTGSzHXwDHncWQg6w6pf0v6SEzzk1QrsBys8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CMKxaS/UhOBp5QlmO8Ozw/yJ+COqMcOMUEkDDeVpiRe3S+QsviZwQGNCob05lcdoH
-         U2JjEB5E9LvP6ep/wAU7PV0nq5l2CoiociIscD4feY9qrLxDV+jso8D31spvbpHkhs
-         9W2OQVx5qOCF/kEJOa/AEm0dAaFwj+ZOMS2XsTBmhZcz7OxmNJ7E/v4K4P1TR2EumA
-         g23ng5yhxKv40xT3wZwpYQ1Xi3X8qTHXO1MvenNEXtPYuCg8Kg4B4vyq0vzg1ChV89
-         IoJbSOLCngwQ8nd1s/jJf/YbPB1OKOvzPv35HQNumb9mwwAi4H3uhdqo0X2mdfHk2y
-         LBROyPOCN1Cdg==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id v24so473570uak.0;
-        Wed, 25 Mar 2020 02:06:36 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3maYwOtLMk73jjJKqnVVnWwMGI0TAGIuMqZdx5KNWObcQMeylm
-        RgwIl6z8hzbJFCcJJvzd4xwUjUb95CUUC2P7bJw=
-X-Google-Smtp-Source: ADFU+vt/Lpfs/eZV6L7RPsd8+/+xb6x93eEITtXtqxGfFjCg699gz7SVs829mVoswfcp1CZNlUKl42nEbHZjhnywqQA=
-X-Received: by 2002:ab0:3485:: with SMTP id c5mr1479980uar.109.1585127195169;
- Wed, 25 Mar 2020 02:06:35 -0700 (PDT)
+        Wed, 25 Mar 2020 05:07:10 -0400
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id ACD9223D18;
+        Wed, 25 Mar 2020 10:07:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1585127228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zSw5htA3zFKuEj3IkQe1+1H4Y07G8jg2OZJczsY68JI=;
+        b=Eo0/7uATpaLMl2SHqmmcLT0+Vz2JXDMjZrMHUpgx7pVps5CVU4NhV2DZdarbSXa0Zed0Gm
+        7fVU88+Wpd4PhnjdWJsE6qW/TxPiHkMqMORH5CcGf1eeEgzRpyU2a9iipbq8QdUH6pwlA1
+        2JkJbmSDGBu6E6li3HNGLQu7Moi//WI=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jiri Slaby <jslaby@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Michael Walle <michael@walle.cc>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: [PATCH v2 2/2] tty: serial: fsl_lpuart: fix return value checking
+Date:   Wed, 25 Mar 2020 10:06:58 +0100
+Message-Id: <20200325090658.25967-2-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200325090658.25967-1-michael@walle.cc>
+References: <20200325090658.25967-1-michael@walle.cc>
 MIME-Version: 1.0
-References: <20200324161539.7538-1-masahiroy@kernel.org> <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
- <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com> <CAMuHMdXeOUu_zxKHXnNoLwyExy1GTp6N5UP2Neqyc8M3w2B8KQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdXeOUu_zxKHXnNoLwyExy1GTp6N5UP2Neqyc8M3w2B8KQ@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 25 Mar 2020 18:05:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAST-ygeLAAneKRhr-uMdSW0V_V1s9AvN6VJSqfWfN4Otg@mail.gmail.com>
-Message-ID: <CAK7LNAST-ygeLAAneKRhr-uMdSW0V_V1s9AvN6VJSqfWfN4Otg@mail.gmail.com>
-Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
- rebuilding firmware
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: ACD9223D18
+X-Spamd-Result: default: False [4.90 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         NEURAL_SPAM(0.00)[0.200];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         DKIM_SIGNED(0.00)[];
+         RCPT_COUNT_SEVEN(0.00)[7];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
+The return value of lpuart_dma_tx_request() is an negative errno on
+failure and zero on success.
 
-On Wed, Mar 25, 2020 at 4:53 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Yamada-san,
->
-> On Wed, Mar 25, 2020 at 4:50 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > On Wed, Mar 25, 2020 at 2:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > > > As far as I understood from the Kconfig help text, this build rule is
-> > > > used to rebuild the driver firmware, which runs on the QUICC, m68k-based
-> > > > Motorola 68360.
-> > > >
-> > > > The firmware source, wanxlfw.S, is currently compiled by the combo of
-> > > > $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
-> > > > files. In fact, this is the only user of $(AS) in the kernel build.
-> > > >
-> > > > Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
-> > > > PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
-> > > > Instead of combining $(CPP) and (AS) from different tool sets, using
-> > > > single $(CC68K) seems simpler, and saner.
-> > > >
-> > > > After this commit, the firmware rebuild will require cc68k instead of
-> > > > as68k. I do not know how many people care about this, though.
-> > > >
-> > > > I do not have cc68k/ld68k in hand, but I was able to build it by using
-> > > > the kernel.org m68k toolchain. [1]
-> > >
-> > > Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
-> > > provided by Debian/Ubuntu, too?
-> > >
-> >
-> > Yes, I did 'sudo apt install gcc-8-m68k-linux-gnu'
-> > It successfully compiled this firmware.
->
-> Thanks for checking!
->
-> > In my understanding, the difference is that
-> > the kernel.org ones lack libc,
-> > so cannot link userspace programs.
-> >
-> > They do not make much difference for this case.
->
-> Indeed.
->
-> So perhaps it makes sense to replace cc68k and ld68k in the Makefile by
-> m68k-linux-gnu-gcc and m68k-linux-gnu-ld, as these are easier to get hold
-> of on a modern system?
->
-> What do you think?
-> Thanks!
->
+Fixes: 159381df1442f ("tty: serial: fsl_lpuart: fix DMA operation when using IOMMU")
+Reported-by: Leonard Crestez <leonard.crestez@nxp.com>
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+changes since v1:
+ - none
 
+ drivers/tty/serial/fsl_lpuart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If desired, I can do like this:
-
-
-ifeq ($(ARCH),m68k)
-  CC_M68K = $(CC)
-  LD_M68K = $(LD)
-else
-  CC_M68K = $(CROSS_COMPILE_M68K)gcc
-  LD_M68K = $(CROSS_COMPILE_M68K)ld
-endif
-
-
-
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 131018979b77..5d41075964f2 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -1538,7 +1538,7 @@ static void lpuart_tx_dma_startup(struct lpuart_port *sport)
+ 		goto err;
+ 
+ 	ret = lpuart_dma_tx_request(&sport->port);
+-	if (!ret)
++	if (ret)
+ 		goto err;
+ 
+ 	init_waitqueue_head(&sport->dma_wait);
 -- 
-Best Regards
-Masahiro Yamada
+2.20.1
+
