@@ -2,122 +2,101 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E71C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ED7DC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0663B215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F101208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:41:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JsT1H23T"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1y4th5zB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgCYOlm (ORCPT
+        id S1727837AbgCYOly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:41:42 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37292 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgCYOll (ORCPT
+        Wed, 25 Mar 2020 10:41:54 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34689 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgCYOlx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:41:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=z2El5lP1Z4FdN97HIoVekE575/AVIuxZqJUH0mgI10s=; b=JsT1H23TjVkq1RpIUnRa/AU8FB
-        5IVNLlKC2fIh1VHPjc3Z5egxhLWyyAhnis0Df0Xb98jeRJhs/ia4IliZAo+evVTiyPWY0YbAmGQbL
-        poDk+sNO5CC8F6jf/HSkQfl9uQHS1qlrSa2eZvYxvv8ixWnAMWbTrbgw5D2L2434hUXip2BwP7ho7
-        LROS28mxK0wYxmxF6q1ng8z3JJ3XHry7zwQbu25LuaCfDGmFRaCCdrI5L8gek2DWKTrs62kZ5UFXT
-        B4ymejXHUz+RZKzuR54yKc3RWfNkNV9cnYyENmjWyLn32L6JEQ3PONz9AfDChCMQrvar0G+YQijWr
-        m4/CrLug==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH7Ds-00084u-DQ; Wed, 25 Mar 2020 14:41:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7F9633010C1;
-        Wed, 25 Mar 2020 15:41:33 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 70E2A29A8F430; Wed, 25 Mar 2020 15:41:33 +0100 (CET)
-Date:   Wed, 25 Mar 2020 15:41:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     tglx@linutronix.de, jpoimboe@redhat.com
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        mbenes@suse.cz, brgerst@gmail.com
-Subject: [PATCH v3.1 18a/26] objtool: Remove CFI save/restore special case
-Message-ID: <20200325144133.GV20696@hirez.programming.kicks-ass.net>
-References: <20200324153113.098167666@infradead.org>
- <20200324160924.987489248@infradead.org>
+        Wed, 25 Mar 2020 10:41:53 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 23so1148924pfj.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:41:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XCINa/bqSDUlqZD8AeDZCCs9KQApmzJ+EcZpMaMnQiE=;
+        b=1y4th5zBJLAPdinDNsQAcPCnP07KOhdoUwWMiLuJy3AnWXSs87PyhBJVRJOWhdDEwM
+         VI8UIkGRgodl0kURsdq28TpG4tvJiZYoUpX3sbQ13F2cWFaiMA9zpRByORW/kD3lQmd5
+         HCND+yoyVa6cGABwLtFEZ7Xge6/BR6sPuLuV+9r3uHLOJ21imyaxvuqROpeDze2k1GYW
+         7XpnLfSi35tZsLpWrqOIbwMeg4VdaeQBkEB2V7HMGkGYiYFfb2S4IAsm4eb6Aw8kj4go
+         2n8voRavhgEMowTT4yKTn1nx0TfBmnPNWliyhA9S4UtZBN24HqzMkUalaevIzeIlqLCY
+         kp9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XCINa/bqSDUlqZD8AeDZCCs9KQApmzJ+EcZpMaMnQiE=;
+        b=WN6xOum6E9ykJ0p1NJD+gFtP60K0B61OHtpaYtMKlS1p6wttYyteCDMQa8iApIxW1V
+         yyH5PAmKmMFMb+XnqHn0M2sGwdqxU8CZZogkO1wQ5Z6QiQvA757bqMRar7EHx0c9/Yo+
+         GR7EdyEjQW2kGKH+QX183S8L5yYTT88YzQe4kcZ63aRcWwe/2I0TrN2IWgmYSoZMWkcG
+         jEPpS8T2rguI4jTAwYlbDDaRKIGEZlyXD6DgGF1jp6H2rb7qT2sYtwqANV+NAWgo/lqO
+         He36nuBiKenpdDpL5EDCtJbftUw8K0X9mSsD6bBQv+z62wGC1utpHOaI6nm0JIZjGoqo
+         lbiA==
+X-Gm-Message-State: ANhLgQ3qSzog989vWOw+DgxNUsMxEbimmE9UqLGpd1lAs9/qSUC4vmkT
+        fm4Z2xmdeV3MfT9WjhGvlUQDIA==
+X-Google-Smtp-Source: ADFU+vsylQYqAZKy5Es0twsf9ymu9IpbEgQlJ6+DrsNkH7/GdDMgZpHpjf4lMyTBpW2WLfcpVjSULQ==
+X-Received: by 2002:a63:2948:: with SMTP id p69mr3644131pgp.238.1585147312228;
+        Wed, 25 Mar 2020 07:41:52 -0700 (PDT)
+Received: from [192.168.1.188] ([66.219.217.145])
+        by smtp.gmail.com with ESMTPSA id d3sm18690858pfq.126.2020.03.25.07.41.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 07:41:51 -0700 (PDT)
+Subject: Re: [PATCH liburing] Add test/splice to .gitignore
+To:     Stefano Garzarella <sgarzare@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
+References: <20200325083321.16826-1-sgarzare@redhat.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <d2c5888d-0acc-248f-833d-b60f9960a37c@kernel.dk>
+Date:   Wed, 25 Mar 2020 08:41:49 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324160924.987489248@infradead.org>
+In-Reply-To: <20200325083321.16826-1-sgarzare@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject: objtool: Remove CFI save/restore special case
-From: Peter Zijlstra <peterz@infradead.org>
-Date: Wed Mar 25 12:58:16 CET 2020
+On 3/25/20 2:33 AM, Stefano Garzarella wrote:
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  .gitignore | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/.gitignore b/.gitignore
+> index 9f85a5f..db163b4 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -74,6 +74,7 @@
+>  /test/shared-wq
+>  /test/short-read
+>  /test/socket-rw
+> +/test/splice
+>  /test/sq-full
+>  /test/sq-poll-kthread
+>  /test/sq-space_left
 
-There is a special case in the UNWIND_HINT_RESTORE code. When, upon
-looking for the UNWIND_HINT_SAVE instruction to restore from, it finds
-the instruction hasn't been visited yet, it normally issues a WARN,
-except when this HINT_SAVE instruction is the first instruction of
-this branch.
+Applied, thanks.
 
-This special case is of dubious correctness and is certainly unused
-(verified with an allmodconfig build), the two sites that employ
-UNWIND_HINT_SAVE/RESTORE (sync_core() and ftrace_regs_caller()) have
-the SAVE on unconditional instructions at the start of the function.
-It is therefore impossible for the save_insn not to have been visited
-when we do hit the RESTORE.
+-- 
+Jens Axboe
 
-Remove this.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- tools/objtool/check.c |   15 ++-------------
- 1 file changed, 2 insertions(+), 13 deletions(-)
-
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2040,15 +2040,14 @@ static int validate_return(struct symbol
-  * tools/objtool/Documentation/stack-validation.txt.
-  */
- static int validate_branch(struct objtool_file *file, struct symbol *func,
--			   struct instruction *first, struct insn_state state)
-+			   struct instruction *insn, struct insn_state state)
- {
-+	struct instruction *next_insn;
- 	struct alternative *alt;
--	struct instruction *insn, *next_insn;
- 	struct section *sec;
- 	u8 visited;
- 	int ret;
- 
--	insn = first;
- 	sec = insn->sec;
- 
- 	if (insn->alt_group && list_empty(&insn->alts)) {
-@@ -2101,16 +2100,6 @@ static int validate_branch(struct objtoo
- 				}
- 
- 				if (!save_insn->visited) {
--					/*
--					 * Oops, no state to copy yet.
--					 * Hopefully we can reach this
--					 * instruction from another branch
--					 * after the save insn has been
--					 * visited.
--					 */
--					if (insn == first)
--						return 0;
--
- 					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
- 						  sec, insn->offset);
- 					return 1;
