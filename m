@@ -2,82 +2,86 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 963B2C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAFDC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF9D206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A973F20789
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585158854;
+	bh=QGZiEA0zGV399sVDZaF9qMxI6xRLw4myU7zc9I2WKLY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kQYpMR3ItNvh7Kf+TcuQoc1TDfc38UxGeCwrUFtJ3h1Ce8hAhIeXKOxAgMfQmUF+C
+	 1DrNy/CIkqJy8odPPm5BqGFQwBodEZ40CoFw/wHrhe27bhnrUHhS0nJ4bg8cNOLFYI
+	 eok2vfCXfemF+kaFndja0z6pgyJiotq/yV4yDm+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgCYRyG (ORCPT
+        id S1727903AbgCYRyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:54:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:51654 "EHLO foss.arm.com"
+        Wed, 25 Mar 2020 13:54:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727006AbgCYRyG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:54:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AF43930E;
-        Wed, 25 Mar 2020 10:54:05 -0700 (PDT)
-Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AEAF03F52E;
-        Wed, 25 Mar 2020 10:54:04 -0700 (PDT)
-References: <20200324125533.17447-1-valentin.schneider@arm.com>
-User-agent: mu4e 0.9.17; emacs 26.3
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        mgorman@techsingularity.net
-Subject: Re: [PATCH] sched/topology: Fix overlapping sched_group build
-Message-ID: <jhjeetgiamv.mognet@arm.com>
-In-reply-to: <20200324125533.17447-1-valentin.schneider@arm.com>
-Date:   Wed, 25 Mar 2020 17:53:56 +0000
+        id S1727006AbgCYRyN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:54:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39BE1206F6;
+        Wed, 25 Mar 2020 17:54:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585158852;
+        bh=QGZiEA0zGV399sVDZaF9qMxI6xRLw4myU7zc9I2WKLY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=d8tneQWCwjJBW71SGwMWSnCEptBeFTvfaBi80lM7p0D0DBLoPsenZNQm98WEl6XPF
+         4UMXrXE+wszvRm4Qwe6NrjNgNeEx1u+vfnwtY469pJDMiccYcAeyQBJzWWw7Dc5K3o
+         LeYwn1pFeh4rJ4vGN+ULxRbIdgNyJ9UvRpoGGc+Y=
+Date:   Wed, 25 Mar 2020 18:54:08 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     shuah <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/119] 5.5.12-rc1 review
+Message-ID: <20200325175408.GB3765240@kroah.com>
+References: <20200324130808.041360967@linuxfoundation.org>
+ <ec5380ae-add2-09af-1690-4edf509dd908@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ec5380ae-add2-09af-1690-4edf509dd908@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 01:45:06PM -0600, shuah wrote:
+> On 3/24/20 7:09 AM, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 5.5.12 release.
+> > There are 119 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> > 
+> > Responses should be made by Thu, 26 Mar 2020 13:06:42 +0000.
+> > Anything received after that time might be too late.
+> > 
+> > The whole patch series can be found in one patch at:
+> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.12-rc1.gz
+> > or in the git tree and branch at:
+> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> 
+> Compiled and booted on my test system. No dmesg regressions.
 
-On Tue, Mar 24 2020, Valentin Schneider wrote:
->  kernel/sched/topology.c | 23 ++++++++++++++++++++---
->  1 file changed, 20 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
-> index 8344757bba6e..7033b27e5162 100644
-> --- a/kernel/sched/topology.c
-> +++ b/kernel/sched/topology.c
-> @@ -866,7 +866,7 @@ build_balance_mask(struct sched_domain *sd, struct sched_group *sg, struct cpuma
->                       continue;
->
->               /* If we would not end up here, we can't continue from here */
-> -		if (!cpumask_equal(sg_span, sched_domain_span(sibling->child)))
-> +		if (!cpumask_subset(sg_span, sched_domain_span(sibling->child)))
+Thanks for testing these and letting me know.
 
-So this is one source of issues; what I've done here is a bit stupid
-since we include CPUs that *cannot* end up there. What I should've done
-is something like:
-
-  cpumask_and(tmp, sched_domain_span(sibling->child), sched_domain_span(sd));
-  if (!cpumask_equal(sg_span, tmp))
-      ...
-
-But even with that I just unfold even more horrors: this breaks the
-overlapping sched_group_capacity (see 1676330ecfa8 ("sched/topology: Fix
-overlapping sched_group_capacity")).
-
-For instance, here I would have
-
-  CPU0-domain2-group4: span=4-5
-  CPU4-domain2-group4: span=4-7 mask=4-5
-
-Both groups are at the same topology level and have the same first CPU,
-so they point to the same sched_group_capacity structure - but they
-don't have the same span. They would without my "fix", but then the
-group spans are back to being wrong. I'm starting to think this is
-doomed, at least in the current state of things :/
+greg k-h
