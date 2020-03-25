@@ -2,99 +2,146 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_HDRS_LCASE,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A77FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D30DC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:04:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E15920719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E86FF20737
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8hwkqNq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lO8+ptMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCYWDd (ORCPT
+        id S1727576AbgCYWEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:03:33 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46319 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCYWDc (ORCPT
+        Wed, 25 Mar 2020 18:04:10 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:37042 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgCYWEJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:03:32 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j17so5350631wru.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:03:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=R49ssuqQGRjTcbw9XYqjygG4biZpQtMbehigwtsfjOM=;
-        b=b8hwkqNqX/+hIC58/+o/jd+0hEIUCn6eGgDrCSTUGUo6c4fzZOYMEj37Roe2WBsIq2
-         zPqtqniduYl+UvmFPdYuneOUTIEcUghd16bL9IJqmhH7XZTTrtZuQfFuLW/rgoeJOIZi
-         KioKbDKUOjj1HE5tnVJk5cA1RODuS8ThgUlXbJzegQlwTT2tHHyq166tWty1RcqiWiOA
-         4iVYzWAU/BjXIhlpyTreOQLqfAVOdvZkQrU15XbQbZof9bm3wZaUN34MCo6SojmQ5pSx
-         U5iDZ6m7UARO56gdtaY4WIPX4f/p/P58rJaGF8PR5pXxxx/DuKqPmOlSyUprBt78MJkD
-         zVAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=R49ssuqQGRjTcbw9XYqjygG4biZpQtMbehigwtsfjOM=;
-        b=FjfmCHuHZm6CAl1dQOaENAaiDgx7h+FiuL5GIICsguo2nMuMvxfluol2XsIiwzng7x
-         bHFxiDp6EsJhMIa7g9bnsqyOsznec8Zvt8Sqbl7sSu6Gr5U+4/ThCLqdjl5PiGNWJohA
-         RQmfH2n8t80Td2eiaIAt8xH/1ClSjbYdD8b6KP+amZL9dgRAwFIeiAlPqgGBFQDo9CA5
-         5RBRDin9w8omK1cUujWvhmtS4knWTGQddkEWQxL4Q716ZZWPF7lt2OtX0y50ppnwqG2r
-         pNOYPGDPeXujPXhqpGA53ceC6yOThXLD0VTNZtPW//A9PJj880M2OYIvxc2+XVa6htVC
-         wviw==
-X-Gm-Message-State: ANhLgQ2Vfj4LRJNNrCbuThEdVRI266LG/s/RT4g7MVlS4jyNHI/B4iNV
-        EeZ8HkfzqKuW4X6lFqswZwhebXPt
-X-Google-Smtp-Source: ADFU+vts1LWIKOZxKckKm7jY1vK/lIgif1ns7ncn3MUnWWG+0Lwvm1lfxOUZoRF5sAbRYiKZPWNlrg==
-X-Received: by 2002:a05:6000:10d1:: with SMTP id b17mr5907386wrx.360.1585173810581;
-        Wed, 25 Mar 2020 15:03:30 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id u8sm408952wrn.69.2020.03.25.15.03.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Mar 2020 15:03:29 -0700 (PDT)
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH 2/2] mm/swapfile.c: remove the extra check in scan_swap_map_slots()
-Date:   Wed, 25 Mar 2020 22:03:09 +0000
-Message-Id: <20200325220309.9803-2-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200325220309.9803-1-richard.weiyang@gmail.com>
-References: <20200325220309.9803-1-richard.weiyang@gmail.com>
+        Wed, 25 Mar 2020 18:04:09 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PM35m1109673;
+        Wed, 25 Mar 2020 22:04:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=gaA4GEcqi9j2CQxBte6tshCMih51XWIGLpE+4um3dyI=;
+ b=lO8+ptMyy3Hd+wTBQDCZqwarI3fgPTqvuHWVbdeNyohJt26hR4ulc9MUPu7IcDI8nSNp
+ koJ2natxAHqFLij/14heAIuQW7bJwANaNv8B8kjVxDQWUbaqxg6JAl3V6jGKV0QEMCAP
+ 6DRDvi0LQbO2MEoTvAX4a+Dtv4DkkBGOR2T8IGvjtUIbIj8XFyApNr+Qu8ZS+JJXSwHj
+ Q/87pahcU4dZ4nb5aVUeZSPd7NgQwaDOV+eGvztomrodhHSsmGCn5VMMEVtZWztBdI6z
+ nRqL15OWqG5KdTCTTFt2rNfei+0hg+oMJeVqj43a+pl4Yak848lZX/CncG7sq8t/gBvD 0g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2ywavmcc91-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 22:04:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PM1p0a021401;
+        Wed, 25 Mar 2020 22:04:01 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 3006r7b4nj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 22:04:01 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02PM40ll008484;
+        Wed, 25 Mar 2020 22:04:00 GMT
+Received: from dhcp-10-175-163-133.vpn.oracle.com (/10.175.163.133)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Mar 2020 15:03:59 -0700
+Date:   Wed, 25 Mar 2020 22:03:52 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@localhost
+To:     shuah <shuah@kernel.org>
+cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org, corbet@lwn.net,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v7 kunit-next 3/4] kunit: subtests should be indented 4
+ spaces according to TAP
+In-Reply-To: <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
+Message-ID: <alpine.LRH.2.21.2003252202360.25268@localhost>
+References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com> <1584110682-3837-4-git-send-email-alan.maguire@oracle.com> <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=4
+ phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003250168
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 suspectscore=4 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003250168
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scan_swap_map_slots() is only called by scan_swap_map() and
-get_swap_pages(). Both ensure nr would not exceed SWAP_BATCH.
+On Wed, 25 Mar 2020, shuah wrote:
 
-Just remove it.
+> On 3/13/20 8:44 AM, Alan Maguire wrote:
+> > Introduce KUNIT_INDENT macro which corresponds to 4-space indentation,
+> > and use it to modify indentation from tab to 4 spaces.
+> > 
+> > Suggested-by: Frank Rowand <frowand.list@gmail.com>
+> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+> > ---
+> >   include/kunit/test.h                |  7 +++-
+> >   lib/kunit/assert.c                  | 79
+> >   +++++++++++++++++++------------------
+> >   lib/kunit/test.c                    |  6 +--
+> >   tools/testing/kunit/kunit_parser.py | 10 ++---
+> >   4 files changed, 54 insertions(+), 48 deletions(-)
+> > 
+> > diff --git a/include/kunit/test.h b/include/kunit/test.h
+> > index f7b2ed4c..d49cdb4 100644
+> > --- a/include/kunit/test.h
+> > +++ b/include/kunit/test.h
+> > @@ -84,6 +84,10 @@ struct kunit_resource {
+> >   /* Size of log associated with test. */
+> >   #define KUNIT_LOG_SIZE	512
+> >   
+> > +/* TAP specifies subtest indentation of 4 spaces. */
+> > +#define KUNIT_INDENT	"    "
+> > +#define KUNIT_INDENT2	KUNIT_INDENT KUNIT_INDENT
+> 
+> Sorry for a late comment on this.
+> 
+> What's the reason to do it this way? Why wouldn't you define
+> it as 8 spaces long string?
+>
 
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- mm/swapfile.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 85b151d73128..6b6e41967bf3 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -740,9 +740,6 @@ static int scan_swap_map_slots(struct swap_info_struct *si,
- 	int latency_ration = LATENCY_LIMIT;
- 	int n_ret = 0;
+I could have I suppose; I thought it makes it a bit easier
+to read as above (though it did generate a checkpatch
+warning; I thought readability was more important in this   
+case, but I can alter if needed).
  
--	if (nr > SWAP_BATCH)
--		nr = SWAP_BATCH;
--
- 	/*
- 	 * We try to cluster swap pages by allocating them sequentially
- 	 * in swap.  Once we've allocated SWAPFILE_CLUSTER pages this
--- 
-2.23.0
+> Also can you please make sure to run checkpatch --strict on the
+> patches you send?
+>
 
+Sure! There were also some other line-too-long warnings
+generated as a result of this patch, but when I fixed those
+checkpatch complained about splitting strings across multiple
+lines.  The only way out was to reduce the amount of information
+in the log messages, which I didn't want to do.  In future I can
+note checkpatch warnings that I couldn't find a way to fix in the
+commit message if that would help?
+
+Thanks for taking a look!
+
+Alan
+ 
+> thanks,
+> -- Shuah
+> 
+> 
