@@ -2,69 +2,145 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8CF5C54FD2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3668C54FD5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:34:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCC4820714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:33:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585103634;
-	bh=AvA8oO+nGO+Fqj87/wMvXZnjbd/focwYI0y4gQoIMQY=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=h20o8zzY1lj8Iy3w2u/NBIUNDUGjZme/NsAlXTlqMwa4xFbcezev9ebEv3g0uwcDb
-	 v6RTk0Ul6iW2TJ91PyUqZXbTmLplrS2s/m6rG+/UtC9WHQREXdLnA8pBqI8bmCLQXu
-	 n5jv/pSdUQBxYWg0tj/d7A+88lWOsCFlRTRUgFMI=
+	by mail.kernel.org (Postfix) with ESMTP id 8B92D20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:34:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="U3fLccN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgCYCdx (ORCPT
+        id S1727399AbgCYCem (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:33:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42074 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727451AbgCYCdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:33:52 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F79C20724;
-        Wed, 25 Mar 2020 02:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585103632;
-        bh=AvA8oO+nGO+Fqj87/wMvXZnjbd/focwYI0y4gQoIMQY=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=2M8zExUiDz1eH1VoOlxZbWnIP0FDsiEqv2m4PihQUNYsLv8FBzbKFFTXvBwMoyKAv
-         M+KjgBzqXJZIvwVGy/OC+wcuNN+Xtci6OvoASZJ72h/hyq84NSBOQKfukABY/fmzn/
-         frDOO7HB5VdXRXJeMIQ55/LsHK+faL+l+MRLpTTc=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 24 Mar 2020 22:34:42 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17873 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727268AbgCYCel (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:34:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585103520;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
+        bh=ptczmo4zdH5SitmdgLb31uq0UnwEPiyg4NeT2CVppvU=;
+        b=U3fLccN5PpEN49FIfATzRjJH80dFiWVFbyS9eIHRHxNtbZ3rggAtvKp3FwKs8mAG
+        q94WljlhqdA05aYmCnLeye4R9VeNNfC8rIUJCz1DVLO3TjEnKUr+4lqC1fmktHctRVd
+        uDRtf6qVragd+LeKaRrQvbOMick44tJkpo0Qj5Yk=
+Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
+        with SMTPS id 1585103517027656.9551692102889; Wed, 25 Mar 2020 10:31:57 +0800 (CST)
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+To:     linux-mips@vger.kernel.org
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>, Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Paul Cercueil <paul@crapouillou.net>,
+        John Crispin <john@phrozen.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jean Delvare <jdelvare@suse.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Kees Cook <keescook@chromium.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Yinglu Yang <yangyinglu@loongson.cn>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Allison Randal <allison@lohutok.net>,
+        Paul Burton <paulburton@kernel.org>,
+        Manuel Lauss <manuel.lauss@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Matt Redfearn <matt.redfearn@mips.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-ide@vger.kernel.org
+Message-ID: <20200325022916.106641-4-jiaxun.yang@flygoat.com>
+Subject: [PATCH v7 02/12] irqchip: loongson-liointc: Workaround LPC IRQ Errata
+Date:   Wed, 25 Mar 2020 10:28:19 +0800
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200325022916.106641-1-jiaxun.yang@flygoat.com>
+References: <20200325022916.106641-1-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200309221232.145630-3-sboyd@kernel.org>
-References: <20200309221232.145630-1-sboyd@kernel.org> <20200309221232.145630-3-sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: rpmh: Drop unnecessary semicolons
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Taniya Das <tdas@codeaurora.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Date:   Tue, 24 Mar 2020 19:33:51 -0700
-Message-ID: <158510363123.125146.1108786142813393278@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+X-ZohoCNMailClient: External
+Content-Type: text/plain; charset=utf8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Stephen Boyd (2020-03-09 15:12:32)
-> Some functions end in }; which is just bad style. Remove the extra
-> semicolon.
->=20
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Taniya Das <tdas@codeaurora.org>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
+The 1.0 version of that controller has a bug that status bit
+of LPC IRQ sometimes doesn't get set correctly.
 
-Applied to clk-next
+So we can always blame LPC IRQ when spurious interrupt happens
+at the parent interrupt line which LPC IRQ supposed to route
+to.
+
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Co-developed-by: Huacai Chen <chenhc@lemote.com>
+Signed-off-by: Huacai Chen <chenhc@lemote.com>
+Reviewed-by: Marc Zyngier <maz@kernel.org>
+---
+ drivers/irqchip/irq-loongson-liointc.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-l=
+oongson-liointc.c
+index 18de2c09ece4..7d2339e638db 100644
+--- a/drivers/irqchip/irq-loongson-liointc.c
++++ b/drivers/irqchip/irq-loongson-liointc.c
+@@ -32,6 +32,8 @@
+=20
+ #define LIOINTC_SHIFT_INTx=094
+=20
++#define LIOINTC_ERRATA_IRQ=0910
++
+ struct liointc_handler_data {
+ =09struct liointc_priv=09*priv;
+ =09u32=09=09=09parent_int_map;
+@@ -41,6 +43,7 @@ struct liointc_priv {
+ =09struct irq_chip_generic=09=09*gc;
+ =09struct liointc_handler_data=09handler[LIOINTC_NUM_PARENT];
+ =09u8=09=09=09=09map_cache[LIOINTC_CHIP_IRQ];
++=09bool=09=09=09=09have_lpc_irq_errata;
+ };
+=20
+ static void liointc_chained_handle_irq(struct irq_desc *desc)
+@@ -54,8 +57,15 @@ static void liointc_chained_handle_irq(struct irq_desc *=
+desc)
+=20
+ =09pending =3D readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
+=20
+-=09if (!pending)
+-=09=09spurious_interrupt();
++=09if (!pending) {
++=09=09/* Always blame LPC IRQ if we have that bug */
++=09=09if (handler->priv->have_lpc_irq_errata &&
++=09=09=09(handler->parent_int_map & ~gc->mask_cache &
++=09=09=09BIT(LIOINTC_ERRATA_IRQ)))
++=09=09=09pending =3D BIT(LIOINTC_ERRATA_IRQ);
++=09=09else
++=09=09=09spurious_interrupt();
++=09}
+=20
+ =09while (pending) {
+ =09=09int bit =3D __ffs(pending);
+--=20
+2.26.0.rc2
+
+
