@@ -2,59 +2,136 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8F1C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:01:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EBBC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:02:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D87A2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:01:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E0C2074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:02:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585148528;
+	bh=fF2rB54wTZiOsnEHo8QWt/isK5kp8gXGqoDOYM1FIdk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JLKnpzwd14zsaAHUFjwtM6Got7K8ZnOd+ltP7cUWfGGJLfjJzgZh5AdcjO998yMNt
+	 wRMJZ84vARrzq3rKBPOXTjSLzdGI24t3k9wmhPuBCCBP3IqsDSAW/JqGp46uaDyv6F
+	 8TYzu0r6oHllPmuzEihJJmED8Gf2yDoM6qBpRbrQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgCYPBN (ORCPT
+        id S1727653AbgCYPCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:01:13 -0400
-Received: from verein.lst.de ([213.95.11.211]:41195 "EHLO verein.lst.de"
+        Wed, 25 Mar 2020 11:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbgCYPBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:01:12 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 6EDE168B05; Wed, 25 Mar 2020 16:01:08 +0100 (CET)
-Date:   Wed, 25 Mar 2020 16:01:08 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>, linux-xfs@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] fs: avoid double-writing the inode on a lazytime
- expiration
-Message-ID: <20200325150108.GA14435@lst.de>
-References: <20200325122825.1086872-1-hch@lst.de> <20200325122825.1086872-3-hch@lst.de>
+        id S1727439AbgCYPCH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:02:07 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB3EF20714;
+        Wed, 25 Mar 2020 15:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585148526;
+        bh=fF2rB54wTZiOsnEHo8QWt/isK5kp8gXGqoDOYM1FIdk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nnZ+wUAJV5/U3z/5HD13lRbXV/I4c5wu6z7Un5NNvcWBKTGfH7Jb4d6zRIAhYFT4t
+         9hVEpLNoEoZrF4f77uWM0uwiJYoZ1PfqIu6kDLIF7NTeXzd7B/u8gTL27xjUoom4PK
+         GE9sFJ3e7s4ncrfSPZrjI+iblUnny6FIhroMdNaU=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jH7Xg-00FbN6-6K; Wed, 25 Mar 2020 15:02:04 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325122825.1086872-3-hch@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 25 Mar 2020 15:02:04 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+In-Reply-To: <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
+ <20200325035537.156911-7-jiaxun.yang@flygoat.com>
+ <20200325123742.GA9911@alpha.franken.de>
+ <a69f727d37daac6e20ac08de022245b1@kernel.org>
+ <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com>
+ <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org>
+ <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com>
+ <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org>
+ <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com>
+Message-ID: <0dcdeef75048c7dfdc72554c41714673@kernel.org>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/1.3.10
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: jiaxun.yang@flygoat.com, tsbogend@alpha.franken.de, linux-mips@vger.kernel.org, chenhc@lemote.com, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, Jonathan.Cameron@huawei.com, andriy.shevchenko@linux.intel.com, allison@lohutok.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 01:28:23PM +0100, Christoph Hellwig wrote:
-> --- a/fs/ext4/super.c
-> +++ b/fs/ext4/super.c
-> @@ -1448,6 +1448,11 @@ static struct dquot **ext4_get_dquots(struct inode *inode)
->  	return EXT4_I(inode)->i_dquot;
->  }
->  
-> +static void ext4_lazytime_expired(struct inode *inode)
-> +{
-> +	return ext4_dirty_inode(inode, I_DIRTY_SYNC);
-> +}
+On 2020-03-25 14:31, Jiaxun Yang wrote:
+> 于 2020年3月25日 GMT+08:00 下午10:15:16, Marc Zyngier <maz@kernel.org> 写到:
+>> On 2020-03-25 13:59, Jiaxun Yang wrote:
+>> 
+>> [...]
+>> 
+>>>>> So probably we can use legacy domain when  MIPS IRQ BASE is in the
+>>>>> range of legacy IRQ
+>>>>> and switch to simple domain when it's not in that range?
+>>>> 
+>>>> No, see below.
+>>>> 
+>>>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did
+>> this
+>>>>> hack.
+>>>> 
+>>>> Well, if you have to consider which Linux IRQ gets assigned,
+>>>> then your platform is definitely not ready for non-legacy
+>>>> irqdomains. Just stick to legacy for now until you have removed
+>>>> all the code that knows the hwirq mapping.
+>>> 
+>>> Thanks.
+>>> 
+>>> So I have to allocate irq_desc here in driver manually?
+>> 
+>> No, you are probably better off just dropping this patch, as MIPS
+>> doesn't seem to be ready for a wholesale switch to virtual interrupts.
+> 
+> It can't work without this patch.
+> 
+> Legacy domain require IRQ number within 0-15
+> however it's already occupied by i8259 or "HTPIC" driver.
+> 
+> Previously Loongson even didn't enable IRQ domain so it's not a 
+> problem.
 
-FYI: this is inside an #ifdef CONFIG_QUOTA, so I'll have to respin even
-if the overall approach looks good.
+Then your platform is breaking some fundamental assumption that the rest
+of the MIPS architecture seem to rely on. You could test for the base
+IRQ being 0 and create a legacy domain in this case, but that's really
+a horrible hack.
+
+I'm pretty worried about having to address this just 4 days away from
+the merge window TBH, as this code hasn't been in -next at all.
+
+That's really Thomas' call, but I'm not very enthusiastic.
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
