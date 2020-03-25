@@ -2,82 +2,93 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5961C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D67C54FCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0E520724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:23:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97A4D206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:27:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzYV6AXB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gur2Fdx5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727229AbgCYAXD (ORCPT
+        id S1727190AbgCYA1S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:23:03 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43261 "EHLO
+        Tue, 24 Mar 2020 20:27:18 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:32882 "EHLO
         mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgCYAXD (ORCPT
+        with ESMTP id S1727099AbgCYA1S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 20:23:03 -0400
-Received: by mail-lj1-f193.google.com with SMTP id g27so604580ljn.10;
-        Tue, 24 Mar 2020 17:23:00 -0700 (PDT)
+        Tue, 24 Mar 2020 20:27:18 -0400
+Received: by mail-lj1-f193.google.com with SMTP id f20so683970ljm.0;
+        Tue, 24 Mar 2020 17:27:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Ct/V5EnftFkGN3WYxrNnLQpcXQ4Aalb0V9/m+SiHKIE=;
-        b=tzYV6AXBdVjWcAGYDlnJbhS//oa5DHQFSKfMASl7NuXw4AodL//Be/sLiLinQD85bS
-         ahhnozUcmu+Nrq6aF8Tu0p/pQLjLRUJSabIldxD3GSQow9Dp7gypCVeF4c/ao9g9/eAp
-         wVrSanIWv8FY0fzHgb9P2L7cIBBG6rD+vzRR0TbLx+FPb92+rSXg+de/7fcSTuIoEMNS
-         TeQNWpUtHBRvwcCKVUsznod8o7S6/PUSGePKAm6tyDl05pFp5HYn52dlMmYJO/aNCuGN
-         xF46CZ2mdmP2nd7dN0xnga1k4FACvHm6+SF04shzuOqUyLZCC1ygbWpSWQ5gl9et0f21
-         DKOA==
+        bh=s6zd3UYK29fUCTxRSVX6khNgXQZ1S35CUyUqP1O3zvE=;
+        b=gur2Fdx5A5vxUD7xHXM9nA5NKXDKZWV4LJT8DOy8AWi/ydU8KTFOr9qgD8hhgm4bEC
+         eoL5AiS+D4+7TTAHrsOqi/uuFl9x0EMqwFp5elv8myIDxM6hkxzaOeMMZgEp+ByydTHe
+         wtIS1nLntpk5Vcc5W48qtDmmSrhF+PJSzXQAu5FB64kb9KoZvuJWUiR+IFNhO6wecKG0
+         BiKdzv8LCfzeKSFyPKHPO1EM4yoYwWUZc2/sQd9LYh9pWWEkR3YTmbMxXiFSM5tzbc9Q
+         5AlLDahImkswVRWHDQ8ElKy+gu61IY1uNr9veNoHwa4b3GeoIVejy14udFtH3X51254s
+         O+0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Ct/V5EnftFkGN3WYxrNnLQpcXQ4Aalb0V9/m+SiHKIE=;
-        b=tG5Cphfaa9MFI0maj3d2a5wz3eGqjEabV2EPMwrNx/n5mKfA3URpuvBkLleOiwOzbc
-         KA9xFixcAAkvtd1PRV2aOWi/UCmzsf8Xl9eyVEF440kLlKPq8BgJuW0+UolNrPh3cMak
-         XjS3viB8y4B7PHLa/k12OfgoJHSf55RBgweomvtejspsQ7k8Tzid8HKZCtFZBfE46RF0
-         SdVwipTOcNAeuR1VhIDLRJ/oFXGadAcQ+DKS/KzuxWFyrXW8grfaTvYWtSCE9p25suNj
-         EJask+kII4fUs/mSAi623IC2VQWEGxBbV03WRVDwanm4eRJrSANibIXvEAM7TViz7YQD
-         1/wA==
-X-Gm-Message-State: ANhLgQ0KSc1sfWe57fhsvMINFZ7lXNFksuH9vG6pHZTSsDXEbFWwWumj
-        UpoAHzFl7p1XbK1ni5X+MhWPo/e/
-X-Google-Smtp-Source: APiQypKH2RBu/eqHvdIujKLPytbWL/hPORDcJLKVesrNFS6S7uug4Yi0HP/L1SteXLoI4lcvrq4r6g==
-X-Received: by 2002:a2e:330e:: with SMTP id d14mr193463ljc.153.1585095779507;
-        Tue, 24 Mar 2020 17:22:59 -0700 (PDT)
+        bh=s6zd3UYK29fUCTxRSVX6khNgXQZ1S35CUyUqP1O3zvE=;
+        b=BGFnt6OJVd6SsbA0NvR/rndhrqOatgAJHwiAmic0XAYMYveo1cP4eE1XDf43yq/61I
+         daop9BLs6KJN3s46qhXI8DxgtuTgomCsaPUUDIQUSeCo8+hYvzKUgLEH7A/VsO1Q31Ws
+         dZ0+LTwTDLiCC4xlBQV+hvXDJhy0MIt/uUR4gIP7TcGr21l+2/avG77d9jMvSWzAGwNa
+         4Hw/GD9AFW+6GYhS8y2XHcBH1yQAHxSyA6gNBN3dRkC3qVhmJDqoR/hwmRuyIsDjVzmL
+         GON0WyD4xjrr4bPGqvLSL6ZmI4ZgKkZ2OUQXLlf5/izkctf2YS97Y4sQBAIT4lA4BUMs
+         bccA==
+X-Gm-Message-State: ANhLgQ2Ap5qS86/ZWe1hp2sWVRvDmqB7t3o/1KVviHDFDek2oabdGZE9
+        S9q2Hy67aZ+L1aVni3a7NRCSzUxt
+X-Google-Smtp-Source: ADFU+vuFH8ehvnD/bp7hBKOSsNdH56QLACFEQ8Wn3FPYQpSL/WypuWGDsvM84fT8v/EWl8Jy9atQFQ==
+X-Received: by 2002:a2e:8612:: with SMTP id a18mr195633lji.250.1585096035316;
+        Tue, 24 Mar 2020 17:27:15 -0700 (PDT)
 Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
-        by smtp.googlemail.com with ESMTPSA id k18sm10757172ljc.92.2020.03.24.17.22.57
+        by smtp.googlemail.com with ESMTPSA id n17sm4889281ljc.76.2020.03.24.17.27.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Mar 2020 17:22:58 -0700 (PDT)
-Subject: Re: [RFC PATCH v5 9/9] arm64: tegra: Add Tegra VI CSI support in
- device tree
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
-        hverkuil@xs4all.nl, helen.koike@collabora.com
-Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-10-git-send-email-skomatineni@nvidia.com>
- <672819ea-01d3-2eca-8bb7-84ffd64256d4@gmail.com>
- <a218142f-295e-6bd5-b1d7-47d9ab8eba3e@nvidia.com>
- <fee09e1e-48a3-e0a0-12dc-9aeeb3438ded@gmail.com>
- <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+        Tue, 24 Mar 2020 17:27:14 -0700 (PDT)
+Subject: Re: [PATCH v3 03/10] partitions: Introduce NVIDIA Tegra Partition
+ Table
+To:     =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Stephen Warren <swarren@wwwdotorg.org>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>, linux-tegra@vger.kernel.org,
+        linux-block@vger.kernel.org, Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200323163431.7678-1-digetx@gmail.com>
+ <20200323163431.7678-4-digetx@gmail.com>
+ <20200323191748.GB30585@qmqm.qmqm.pl>
+ <67140755-c829-5c58-3fbf-efd496e225df@gmail.com>
+ <20200323213520.GA16587@qmqm.qmqm.pl>
+ <c31a0335-a174-0f45-af03-3267710a8205@gmail.com>
+ <20200324205221.GA22063@qmqm.qmqm.pl>
 From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b757b06f-3ee1-1c8b-ae47-38211da667bc@gmail.com>
-Date:   Wed, 25 Mar 2020 03:22:57 +0300
+Message-ID: <ff2b5121-0ff7-1494-9184-31ec7f6d2e1a@gmail.com>
+Date:   Wed, 25 Mar 2020 03:27:13 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <7d7c982e-7755-5f3d-cb90-9622f87df283@nvidia.com>
+In-Reply-To: <20200324205221.GA22063@qmqm.qmqm.pl>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -86,28 +97,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-25.03.2020 03:01, Sowjanya Komatineni пишет:
+24.03.2020 23:52, Michał Mirosław пишет:
+> On Tue, Mar 24, 2020 at 02:22:34AM +0300, Dmitry Osipenko wrote:
+>> 24.03.2020 00:35, Michał Mirosław пишет:
+>>> On Mon, Mar 23, 2020 at 10:59:52PM +0300, Dmitry Osipenko wrote:
+>>>> 23.03.2020 22:17, Michał Mirosław пишет:
+>>>>> On Mon, Mar 23, 2020 at 07:34:24PM +0300, Dmitry Osipenko wrote:
+>>>>>> All NVIDIA Tegra devices use a special partition table format for the
+>>>>>> internal storage partitioning. Most of Tegra devices have GPT partition
+>>>>>> in addition to TegraPT, but some older Android consumer-grade devices do
+>>>>>> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
+>>>>>> in order to support these devices properly in the upstream kernel. This
+>>>>>> patch adds support for NVIDIA Tegra Partition Table format that is used
+>>>>>> at least by all NVIDIA Tegra20 and Tegra30 devices.
+>>>>>>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>>>>  arch/arm/mach-tegra/tegra.c   |  54 ++++
+>>>>> [...]
+>>>>>
+>>>>> Please split off this part and make the information available to
+>>>>> userspace (pt_addr + pt_size) if found. This would make it easier
+>>>>> to support use the partition table later in initrd instead.
+>>>>
+>>>> Please clarify what do you mean by "use the partition table later in
+>>>> initrd instead".
+>>>
+>>> Configure device-mapper to span eMMC boot+data partitions and then ask
+>>> (modified) kpartx to partition the resulting device. All before rootfs
+>>> is mounted and switched to in initrd.
+>>
+>> The whole point of this series is to make partition handling generic in
+>> the kernel, avoiding the need to customize anything.
 > 
-> On 3/24/20 3:48 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 25.03.2020 00:04, Sowjanya Komatineni пишет:
->>> On 3/24/20 12:19 PM, Dmitry Osipenko wrote:
->>>> External email: Use caution opening links or attachments
->>>>
->>>>
->>>> 23.03.2020 20:52, Sowjanya Komatineni пишет:
->>>> ...
->>>>> +                     pd_venc: venc {
->>>>> +                             clocks = <&tegra_car TEGRA210_CLK_VI>,
->>>>> +                                      <&tegra_car TEGRA210_CLK_CSI>;
->>>>> +                             resets = <&mc TEGRA210_MC_RESET_VI>,
->>>> The MC resetting should be needed only for a hardware hot-resetting. It
->>>> should be wrong to add it to the power domain.
->>> TRM recommends to do MC client hot-reset during VE power gate and
->>> ungate.
->> Could you please tell what TRM it is and what's the page#?
-> Tegra TX1 TRM Page 425, Section 12.2.7.14 Procedures for VE Power Domains
+> Yes, but at least for diagnostic purposes, it would be nice to have the
+> values from BCT exposed somewhere in /sys.
 
-Okay, thanks.
+It could be useful indeed, but for now I'm not sure that it should be a
+part of this patchset. I'll keep it mind, thank you for the suggestion.
