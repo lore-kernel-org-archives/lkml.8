@@ -2,149 +2,133 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 254BEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C034C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B90208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7A7B208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4lv2ExY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TF2wKrnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727749AbgCYOX2 (ORCPT
+        id S1727772AbgCYOXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:23:28 -0400
-Received: from mail-qt1-f170.google.com ([209.85.160.170]:43790 "EHLO
-        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbgCYOX1 (ORCPT
+        Wed, 25 Mar 2020 10:23:30 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:28274 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727566AbgCYOX3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:23:27 -0400
-Received: by mail-qt1-f170.google.com with SMTP id a5so2232633qtw.10;
-        Wed, 25 Mar 2020 07:23:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Yht3Hr3Z2LR8imhVwniUokEOhf9PD9ShQzB5wpJUp7I=;
-        b=H4lv2ExY8zdsjjNslKgsEZs5uBONVSrNzo4qFhyqpJ4gkzc7OE9h7h2vLWGo7kQPbJ
-         jxOgg9iEpsjuRz+5z4ccDxXFeEplNff6AfPcLRs0ncAP5DvGIgt0IYMDXmgj6Minj4G7
-         L41nOxQLMzv3m7mwyJDhUjddy1G7A4bLk00kiylxKwj1l67myofaGxUfY/w1A9E1LKZp
-         M1lzA71O8TlVjyC520n/t/m16TB85yBdVlZJssuGz0cK92oiBIN4B3d9Hb1Zz+VTkkEd
-         svuSvEmkC56fGl+o6iltUJEeiiAS7t5h5HSLZpG4dk85zTCkSOlK1c44pajmzCT4Lv9z
-         EG8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Yht3Hr3Z2LR8imhVwniUokEOhf9PD9ShQzB5wpJUp7I=;
-        b=uclPqd4bPrjJUgtEO40iQQCtiMLZ2yN70NI+qvnZY9OUOEG99nEq0CQi3tWZHxQ/dI
-         c1IMvZQ+YbM+KwSvgOr3RyjJ5ANqP0NRTnukJmKIiTMVHBqzulJjjXsi3ymz0bL6Xwpq
-         eNMG1oGElb2bupBWJn3gKiG3Ty8ShpZSZC66IMmcuvDSZ58DZSoHsbtExFU1fx8TaG1V
-         IZ0IVbJyqnf4y+wG3OQZ8/KsFTxWlO++Q0BGzGfQX/MENaAbRgM3zytgBY6W6D0os6nH
-         nT6dFxv6ejY+joW9vVLK6/BFJFhVoPm1AmLeEV1aAiJZ0e/frEcZjT88kwOJR5J78DYE
-         XyJQ==
-X-Gm-Message-State: ANhLgQ3jmU+8C7rJnr6aEHiR/AbU7xmCLlR291F2DJIBCF613iwdgthX
-        fk87R93lw1RgcAa7r4NHrWU=
-X-Google-Smtp-Source: ADFU+vtnZ6zSN/9XvmD840B39Naz3Lc3yVMoWy3y6qVl/TRldW/Upvc3wcLPCgltAV2ybJ+oEWpWWQ==
-X-Received: by 2002:aed:3988:: with SMTP id m8mr3227568qte.9.1585146206535;
-        Wed, 25 Mar 2020 07:23:26 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id q142sm15895019qke.45.2020.03.25.07.23.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 07:23:25 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 0B0B240F77; Wed, 25 Mar 2020 11:23:24 -0300 (-03)
-Date:   Wed, 25 Mar 2020 11:23:23 -0300
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        jolsa@redhat.com, Namhyung Kim <namhyung@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Leo Yan <leo.yan@linaro.org>
-Subject: Re: tools: Perf: build failed on linux next
-Message-ID: <20200325142323.GE14102@kernel.org>
-References: <CA+G9fYtiroQnpwGu4oLA=ChmS==XGpmAAqB_Oa9nrXC3vQ0xsQ@mail.gmail.com>
+        Wed, 25 Mar 2020 10:23:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585146207;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GSFdRidEnIhtkPZ+oc94MfcptNw43s+nSxOUqCIguho=;
+        b=TF2wKrnB46Sxgc5gAFmuqrqxltOKPkkT0EA0wtCnTFKZYzx4+Tr1kwrhOMJo3wfLrTKFWA
+        mkoYWG72fc09isJwb0Qm905ugOzveTY/Gk93/Nph2xiIo5ZCu8QQaQ8jx2dL/tFE9syrQw
+        z0eY9l/tNvaSQgGUB8S5E5SOIxvIEZA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-TMqCBrEgNSy-dYZve-7NeQ-1; Wed, 25 Mar 2020 10:23:23 -0400
+X-MC-Unique: TMqCBrEgNSy-dYZve-7NeQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B966418A8C88;
+        Wed, 25 Mar 2020 14:23:20 +0000 (UTC)
+Received: from localhost (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 154C291293;
+        Wed, 25 Mar 2020 14:23:18 +0000 (UTC)
+Date:   Wed, 25 Mar 2020 22:23:15 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, hannes@cmpxchg.org, vbabka@suse.cz,
+        mgorman@techsingularity.net
+Subject: Re: [PATCH 4/5] mm/vmstat.c: move the per-node stats to the front of
+ /proc/zoneinfo
+Message-ID: <20200325142315.GC9942@MiWiFi-R3L-srv>
+References: <20200324142229.12028-1-bhe@redhat.com>
+ <20200324142229.12028-5-bhe@redhat.com>
+ <alpine.DEB.2.21.2003241220360.34058@chino.kir.corp.google.com>
+ <20200325055331.GB9942@MiWiFi-R3L-srv>
+ <20200325085537.GZ19542@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CA+G9fYtiroQnpwGu4oLA=ChmS==XGpmAAqB_Oa9nrXC3vQ0xsQ@mail.gmail.com>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200325085537.GZ19542@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Mar 25, 2020 at 07:37:10PM +0530, Naresh Kamboju escreveu:
-> Perf build broken on Linux next and mainline on x86_64.
+On 03/25/20 at 09:55am, Michal Hocko wrote:
+> On Wed 25-03-20 13:53:31, Baoquan He wrote:
+> > On 03/24/20 at 12:25pm, David Rientjes wrote:
+> > > On Tue, 24 Mar 2020, Baoquan He wrote:
+> > > 
+> > > > This moving makes the layout of /proc/zoneinfo more sensible. And there
+> > > > are 4 zones at most currently, it doesn't need to scroll down much to get
+> > > > to the 1st populated zone, even though the 1st populated zone is MOVABLE
+> > > > zone.
+> > > > 
+> > > 
+> > > Doesn't this introduce risk that it will break existing parsers of 
+> > > /proc/zoneinfo in subtle ways?
+> > > 
+> > > In some cases /proc/zoneinfo is a tricky file to correctly parse because 
+> > > you have to rely on the existing order in which it is printed to determine 
+> > > which zone is being described.  We need to print zones even with unmanaged 
+> > > pages, for instance, otherwise userspace may be unaware of which zones are 
+> > > supported and what order they are in.  That's important to be able to 
+> > > construct the proper string to use when writing vm.lowmem_reserve_ratio.
+> > > 
+> > > I'd prefer not changing the order of /proc/zoneinfo if it can be avoided 
+> > > just because the risk outweighs the reward that we may break some 
+> > > initscript parsers.
+> > 
+> > Oh, I may not describe the change and result clearly. This patch doesn't
+> > change zone order at all.  I only move the per-node stats to the front of
+> > each node, the zone order is completely kept the same, still DMA, DMA32,
+> > NORMAL, MOVABLE.
 > 
-> find: unknown predicate `-m64/arch'
-> Try 'find --help' for more information.
->   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/json.o
->   LD       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/libperf-in.o
-> x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
->   GEN      perf-archive
->   AR       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/libperf.a
->   GEN      perf-with-kcore
-> x86_64-linaro-linux-gcc: error: unrecognized command line option
-> '-m64/include/uapi/asm-generic/errno.h'
-> x86_64-linaro-linux-gcc: fatal error: no input files
-> compilation terminated.
->   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jevents.o
->   MKDIR    /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/
-> x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
->   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jsmn.o
-> x86_64-linaro-linux-gcc: error: unrecognized command line option
-
-Right, there is some patch handling this, which we're trying to process
-but has some issues.
-
-- Arnaldo
-
-> '-m64/include/uapi/asm-generic/errno.h'
-> x86_64-linaro-linux-gcc: fatal error: no input files
-> compilation terminated.
-> make[3]: Nothing to be done for
-> '/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/plugins/libtraceevent-dynamic-list'.
->   GEN      /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so
-> Traceback (most recent call last):
->   File "util/setup.py", line 6, in <module>
->     cc_is_clang = b"clang version" in Popen([cc, "-v"],
-> stderr=PIPE).stderr.readline()
->   File "/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
-> line 394, in __init__
->     errread, errwrite)
->   File "/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
-> line 1047, in _execute_child
->     raise child_exception
-> OSError: [Errno 2] No such file or directory
-> cp: cannot stat
-> '/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python_ext_build/lib/perf*.so':
-> No such file or directory
-> Makefile.perf:590: recipe for target
-> '/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so'
-> failed
-> make[2]: *** [/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so]
-> Error 1
-> make[2]: *** Waiting for unfinished jobs....
+> Even this can break existing parsers. Fixing that up is likely not hard
+> and existing parsers would be mostly debugging hacks here and there but
+> I do miss any actual justification except for you considering it more
+> sensible. I do not remember this would be a common pain point for people
+> parsing this file. If anything the overal structure of the file makes it
+> hard to parse and your patches do not really address that. We are likely
+> too late to make the output much more sensible TBH.
 > 
-> ref:
-> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/733/consoleText
-> 
-> -- 
-> Linaro LKFT
-> https://lkft.linaro.org
+> That being said, I haven't looked more closely on your patches because I
+> do not have spare cycles for that. Your justification for touching the
+> code which seems to be working relatively well is quite weak IMHO, yet
+> it adds a non zero risk for breaking existing parsers.
 
--- 
+I would take the saying of non zero risk for breaking existing parsers.
+When considering this change, I thought about the possible risk. However,
+found out the per-node stats was added in 2016 which is not so late, and
+assume nobody will rely on the order of per-node stats embeded into a
+zone. But I have to admit any concern or worry of risk is worth being
+considerred carefully since /proc/zoneinfo is a classic interface.
 
-- Arnaldo
+So, in view of objections from you and David, I would like to drop this
+patch and patch 5. It's a small improvement, not worth taking any risk.
+But if it goes back to this time of 2017, I would like to spend some
+time to defend it :-)
+
+commit e2ecc8a79ed49f7838b4fdf352c4c48cec9424ac
+Author: Mel Gorman <mgorman@techsingularity.net>
+Date:   Thu Jul 28 15:47:02 2016 -0700
+
+    mm, vmstat: print node-based stats in zoneinfo file
+
+
