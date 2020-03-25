@@ -2,173 +2,85 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7942FC54FD5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B6CC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529ED20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0D8206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbgCYE05 (ORCPT
+        id S1726017AbgCYEu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:26:57 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12191 "EHLO huawei.com"
+        Wed, 25 Mar 2020 00:50:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:12125 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726262AbgCYE0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:26:55 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 335E1B1CCF7EE3EE6D95;
-        Wed, 25 Mar 2020 12:26:44 +0800 (CST)
-Received: from linux-kDCJWP.huawei.com (10.175.104.212) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.487.0; Wed, 25 Mar 2020 12:26:35 +0800
-From:   Keqian Zhu <zhukeqian1@huawei.com>
-To:     <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <kvmarm@lists.cs.columbia.edu>
-CC:     Marc Zyngier <maz@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jay Zhou <jianjay.zhou@huawei.com>,
-        <wanghaibin.wang@huawei.com>, Keqian Zhu <zhukeqian1@huawei.com>
-Subject: [PATCH 2/3] KVM/arm64: Support enabling dirty log gradually in small chunks
-Date:   Wed, 25 Mar 2020 12:24:22 +0800
-Message-ID: <20200325042423.12181-3-zhukeqian1@huawei.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200325042423.12181-1-zhukeqian1@huawei.com>
-References: <20200325042423.12181-1-zhukeqian1@huawei.com>
+        id S1725263AbgCYEu1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 00:50:27 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id C4DF99AFB04254F4AEF3;
+        Wed, 25 Mar 2020 12:50:16 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.25) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
+ 12:49:47 +0800
+Subject: Re: Re: [RFC PATCH v4 0/6] arm64: tlb: add support for TTL feature
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <mark.rutland@arm.com>, <catalin.marinas@arm.com>,
+        <linux-mm@kvack.org>, <guohanjun@huawei.com>, <will@kernel.org>,
+        <linux-arch@vger.kernel.org>, <yuzhao@google.com>,
+        <maz@kernel.org>, <steven.price@arm.com>, <arm@kernel.org>,
+        <Dave.Martin@arm.com>, <arnd@arndb.de>, <suzuki.poulose@arm.com>,
+        <npiggin@gmail.com>, <zhangshaokun@hisilicon.com>,
+        <broonie@kernel.org>, <rostedt@goodmis.org>,
+        <prime.zeng@hisilicon.com>, <tglx@linutronix.de>,
+        <linux-arm-kernel@lists.infradead.org>, <xiexiangyou@huawei.com>,
+        <linux-kernel@vger.kernel.org>, <aneesh.kumar@linux.ibm.com>,
+        <akpm@linux-foundation.org>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+ <20200324150155.GH20713@hirez.programming.kicks-ass.net>
+From:   Zhenyu Ye <yezhenyu2@huawei.com>
+Message-ID: <fb06ba92-a3ce-6925-e914-167a85837f27@huawei.com>
+Date:   Wed, 25 Mar 2020 12:49:45 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.212]
+In-Reply-To: <20200324150155.GH20713@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.25]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is already support of enabling dirty log gradually in small chunks
-for x86. This adds support for arm64. However, unlike x86, all pages,
-including huge pages and normal pages, don't need to be write protected
-when enabling dirty log if KVM_DIRTY_LOG_INITIALLY_SET is eanbled. For
-that both huge pages and normal pages can be write protected later by
-userspace manually.
+Hi Peter,
 
-Under the Huawei Kunpeng 920 2.6GHz platform, I did some tests on 128G
-Linux VMs with different page size. The memory pressure is 127G in each
-case. The time taken of memory_global_dirty_log_start in QEMU is listed
-below:
+On 2020/3/24 23:01, Peter Zijlstra wrote:
+> On Tue, Mar 24, 2020 at 09:45:28PM +0800, Zhenyu Ye wrote:
+>> In order to reduce the cost of TLB invalidation, the ARMv8.4 TTL
+>> feature allows TLBs to be issued with a level allowing for quicker
+>> invalidation.  This series provide support for this feature. 
+>>
+>> Patch 1 and Patch 2 was provided by Marc on his NV series[1] patches,
+>> which detect the TTL feature and add __tlbi_level interface.
+> 
+> I realy hate how it makes vma->vm_flags more important for tlbi.
+> 
 
-Page Size      Before    After Optimization
-  4K            650ms         1.8ms
-  2M             4ms          1.8ms
-  1G             2ms          1.8ms
+Thanks for your review.
 
-Signed-off-by: Keqian Zhu <zhukeqian1@huawei.com>
----
- Documentation/virt/kvm/api.rst    |  2 +-
- arch/arm/include/asm/kvm_host.h   |  2 --
- arch/arm64/include/asm/kvm_host.h |  5 ++++-
- virt/kvm/arm/mmu.c                | 16 +++++++++++++---
- 4 files changed, 18 insertions(+), 7 deletions(-)
+The tlbi interfaces only have two parameters: vma and addr. If we
+try to not use vma->vm_flags, we may should have to add a parameter
+to some of these interfaces(such as flush_tlb_range), which are
+common to all architectures.
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 158d1186d103..8bfe86d86363 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -5771,7 +5771,7 @@ will be initialized to 1 when created.  This also improves performance because
- dirty logging can be enabled gradually in small chunks on the first call
- to KVM_CLEAR_DIRTY_LOG.  KVM_DIRTY_LOG_INITIALLY_SET depends on
- KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE (it is also only available on
--x86 for now).
-+x86 and arm64 for now).
- 
- KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2 was previously available under the name
- KVM_CAP_MANUAL_DIRTY_LOG_PROTECT, but the implementation had bugs that make
-diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-index c3314b286a61..ffa815800de0 100644
---- a/arch/arm/include/asm/kvm_host.h
-+++ b/arch/arm/include/asm/kvm_host.h
-@@ -358,8 +358,6 @@ static inline bool kvm_arm_is_pvtime_enabled(struct kvm_vcpu_arch *vcpu_arch)
- 	return false;
- }
- 
--void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
--
- struct kvm_vcpu *kvm_mpidr_to_vcpu(struct kvm *kvm, unsigned long mpidr);
- 
- static inline bool kvm_arch_requires_vhe(void) { return false; }
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index d87aa609d2b6..67d372e0c75a 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -16,6 +16,7 @@
- #include <linux/jump_label.h>
- #include <linux/kvm_types.h>
- #include <linux/percpu.h>
-+#include <linux/kvm.h>
- #include <asm/arch_gicv3.h>
- #include <asm/barrier.h>
- #include <asm/cpufeature.h>
-@@ -45,6 +46,9 @@
- #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
- #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
- 
-+#define KVM_DIRTY_LOG_MANUAL_CAPS   (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE | \
-+					KVM_DIRTY_LOG_INITIALLY_SET)
-+
- DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
- 
- extern unsigned int kvm_sve_max_vl;
-@@ -478,7 +482,6 @@ u64 __kvm_call_hyp(void *hypfn, ...);
- 	})
- 
- void force_vm_exit(const cpumask_t *mask);
--void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot);
- 
- int handle_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 		int exception_index);
-diff --git a/virt/kvm/arm/mmu.c b/virt/kvm/arm/mmu.c
-index e3b9ee268823..6c84de442a0e 100644
---- a/virt/kvm/arm/mmu.c
-+++ b/virt/kvm/arm/mmu.c
-@@ -1530,7 +1530,7 @@ static void stage2_wp_range(struct kvm *kvm, phys_addr_t addr, phys_addr_t end)
-  * Acquires kvm_mmu_lock. Called with kvm->slots_lock mutex acquired,
-  * serializing operations for VM memory regions.
-  */
--void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot)
-+static void kvm_mmu_wp_memory_region(struct kvm *kvm, int slot)
- {
- 	struct kvm_memslots *slots = kvm_memslots(kvm);
- 	struct kvm_memory_slot *memslot = id_to_memslot(slots, slot);
-@@ -2265,8 +2265,18 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	 * allocated dirty_bitmap[], dirty pages will be be tracked while the
- 	 * memory slot is write protected.
- 	 */
--	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
--		kvm_mmu_wp_memory_region(kvm, mem->slot);
-+	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES) {
-+		if (!kvm_dirty_log_manual_protect_and_init_set(kvm)) {
-+			kvm_mmu_wp_memory_region(kvm, mem->slot);
-+		} else {
-+			/*
-+			 * If we're with initial-all-set, we don't need to
-+			 * write protect any pages because they're reported
-+			 * as dirty here.
-+			 */
-+			bitmap_set(new->dirty_bitmap, 0, new->npages);
-+		}
-+	}
- }
- 
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
--- 
-2.19.1
+I'm not sure if this is feasible, because this feature is only
+supported by ARM64 currently.
+
+
+Thanks,
+Zhenyu
 
