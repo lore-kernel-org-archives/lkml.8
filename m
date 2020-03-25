@@ -2,71 +2,125 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA560C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EB3C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:20:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E292082D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:20:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0992E2082D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585171215;
-	bh=5ae2p5Y7Ug8W5ccwV++cNZifFhzHxGzvm+S0AmteZSo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=WwONL+ssyD4DFrUtQFJb0LvrLwGQAdia3Jb5Ira4Q24uDcqmDjQmgmt0waPL9QKZW
-	 hGFWCq3qNv7v645AguIToXJ2pmWvwQeLZjNawMNfW0PJi59s6frCucL9YZT1/2wP1b
-	 Q8ahdOg2XTPfLzzujyZWcN765tvaXLccVZGfaH/w=
+	s=default; t=1585171253;
+	bh=5lTuaENgwe+jO4ZXbV3h/ksO3A+z4mLrxl48bAkXc/8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=F0Jv5UFkYfLkXpJ9vHwK+0BzjqhK5nCGWu4Uiwaq2QWQXe5viycZ32Y1xzLPxzglx
+	 7CWyVOZSrgZ8KMt8D33yx9OYeKM5TcV5NMpYKDcQs5Y0RwxwS+UoHG/VNvGIDe8xdY
+	 nX+YgR7Kvs5NW85BD55ucqFN90F2D10jniEPlJ7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgCYVUI (ORCPT
+        id S1727833AbgCYVUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:20:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57858 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 17:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbgCYVUH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:20:07 -0400
-Subject: Re: [GIT PULL] GPIO fixes for v5.6
+        id S1727351AbgCYVUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 17:20:51 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81B2C20719;
+        Wed, 25 Mar 2020 21:20:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585171207;
-        bh=5ae2p5Y7Ug8W5ccwV++cNZifFhzHxGzvm+S0AmteZSo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=HMTOXZLr0EfwJ8KN7s0fv529J1Ni7zZZM5bE9zAbo9E8McfAAMmEYJ2tJhoZ136JC
-         AoZkCvderrsEBuFt3EJ9DaphhT1BqY4m9U/CFbvmQGsBFiCOPCAsV2OfNqTG/7NVRv
-         7N497u4wSRGisBAGJNBGWH7NpR2BRcqqw8d1Ccw4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdY8d=zG-z0Ju7k3Suj+seiexAdyQezcMxWV5rKHJhE3+Q@mail.gmail.com>
-References: <CACRpkdY8d=zG-z0Ju7k3Suj+seiexAdyQezcMxWV5rKHJhE3+Q@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdY8d=zG-z0Ju7k3Suj+seiexAdyQezcMxWV5rKHJhE3+Q@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
- tags/gpio-v5.6-3
-X-PR-Tracked-Commit-Id: 0c625ccfe6f754d0896b8881f5c85bcb81699f1f
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1dfb642b10158b45068102402decc3bcf853cb76
-Message-Id: <158517120696.13294.16689977262821746392.pr-tracker-bot@kernel.org>
-Date:   Wed, 25 Mar 2020 21:20:06 +0000
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Hans de Goede <hdegoede@redhat.com>
+        s=default; t=1585171250;
+        bh=5lTuaENgwe+jO4ZXbV3h/ksO3A+z4mLrxl48bAkXc/8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UuS66/kG5mkaUy0bO6ayqwJMAo9AR2uq3vqcnjv8Y+HgcqJM4627esOHHzOuwCvZ1
+         Gf3x8hT6p29vCTnWTLlx0FDdUrKAXhRcf3RDzONzKo46fRpejoJXscwJ9VP04FN0z1
+         ZVh/jsQVS2DqReiuMzEacuwL7B+3o2RJEjauJpa8=
+Date:   Wed, 25 Mar 2020 16:20:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        linux-pci <linux-pci@vger.kernel.org>
+Subject: Re: mmotm 2020-03-23-21-29 uploaded
+ (pci/controller/dwc/pcie-tegra194.c)
+Message-ID: <20200325212048.GA72586@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325170122.GA29504@red-moon.cambridge.arm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 25 Mar 2020 20:00:14 +0100:
+On Wed, Mar 25, 2020 at 05:01:43PM +0000, Lorenzo Pieralisi wrote:
+> On Wed, Mar 25, 2020 at 08:43:32PM +0530, Vidya Sagar wrote:
+> > On 3/24/2020 9:48 PM, Bjorn Helgaas wrote:
+> > > On Tue, Mar 24, 2020 at 08:16:34AM -0700, Randy Dunlap wrote:
+> > > > On 3/23/20 9:30 PM, akpm@linux-foundation.org wrote:
+> > > > > The mm-of-the-moment snapshot 2020-03-23-21-29 has been uploaded to
+> > > > > 
+> > > > >     http://www.ozlabs.org/~akpm/mmotm/
+> > > > > 
+> > > > > mmotm-readme.txt says
+> > > > > 
+> > > > > README for mm-of-the-moment:
+> > > > > 
+> > > > > http://www.ozlabs.org/~akpm/mmotm/
+> > > > > 
+> > > > > This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> > > > > more than once a week.
+> > > > > 
+> > > > > You will need quilt to apply these patches to the latest Linus release (5.x
+> > > > > or 5.x-rcY).  The series file is in broken-out.tar.gz and is duplicated in
+> > > > > http://ozlabs.org/~akpm/mmotm/series
+> > > > 
+> > > > 
+> > > > on x86_64:
+> > > > 
+> > > > ../drivers/pci/controller/dwc/pcie-tegra194.c: In function ‘tegra_pcie_dw_parse_dt’:
+> > > > ../drivers/pci/controller/dwc/pcie-tegra194.c:1160:24: error: implicit declaration of function ‘devm_gpiod_get’; did you mean ‘devm_phy_get’? [-Werror=implicit-function-declaration]
+> > > >    pcie->pex_rst_gpiod = devm_gpiod_get(pcie->dev, "reset", GPIOD_IN);
+> > > >                          ^~~~~~~~~~~~~~
+> > > >                          devm_phy_get
+> > > 
+> > > Thanks a lot for the report!
+> > > 
+> > > This was found on mmotm, but I updated my -next branch with Lorenzo's
+> > > latest pci/endpoint branch (current head 775d9e68f470) and reproduced
+> > > this build failure with the .config you attached.
+> > > 
+> > > I dropped that branch from my -next branch for now and pushed it.
+> > I found that one header file inclusion is missing.
+> > The following patch fixes it.
+> > Also, I wanted to know how can I catch this locally? i.e. How can I
+> > generate the config file attached by Randy locally so that I can get the
+> > source ready without these kind of issues?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git tags/gpio-v5.6-3
+Randy attached the config-r1578 file to his initial report.  I saved
+that attachment, then:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1dfb642b10158b45068102402decc3bcf853cb76
+  $ git checkout next
+  $ make mrproper
+  $ cp ~/Downloads/config-r1578 .config
+  $ make drivers/pci/controller/
 
-Thank you!
+> > Bjorn/Lorenzo, would you be able to apply below change in your trees or
+> > do I need to send a patch for this?
+> 
+> Squashed in and re-pushed out pci/endpoint, it should have fixed this
+> issue.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+I updated my -next branch with this, thanks!
+
+Bjorn
