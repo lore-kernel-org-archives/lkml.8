@@ -2,200 +2,74 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C325AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AE1C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 903C820772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:36:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XMEATyzn"
+	by mail.kernel.org (Postfix) with ESMTP id B4ADA20775
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:37:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgCYKgt (ORCPT
+        id S1727565AbgCYKhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:36:49 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:49046 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgCYKgt (ORCPT
+        Wed, 25 Mar 2020 06:37:52 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55216 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgCYKhv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:36:49 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PAUK8v127788;
-        Wed, 25 Mar 2020 10:35:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
- cc : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=dMcGhyuBIpMkIVciHn7P0KLhi6muieWQFAZAm0xpZM0=;
- b=XMEATyznVn1SJE+yJwdesCzWq6veWdcDxKm5rB//TsEiA4JKRsmVUMNvFx9uFKw68ejZ
- oPYtiGaOj8z/MCv/1GyAryBo1t1dzV3/vljcH2Fpv9/U2mtf80YrEnI25Fbe1w5nX4La
- RDNVMRRUnswjTDPpBbnjkw49DHi/9vzsXvzh0EsYjkBh+gN3ITQqRfdJBNKY8mdtxeT9
- O0gziAZY2UuPOgwN0xD1n8WjceVpEBLcNZDDWhnMiwoEnZXBLZe7GFbF7gGGhTii17ud
- eYlhfXV7o0TGDZsS1sPWwEgiK4va+UDjRiZq0cVY8+xWcwO4ylqJtTNka/sneDLE5UZm Ww== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 3005kv80k5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 10:35:37 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PAQZkc054609;
-        Wed, 25 Mar 2020 10:35:36 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 3003q01df5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 10:35:36 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02PAZZ1p020169;
-        Wed, 25 Mar 2020 10:35:35 GMT
-Received: from [10.175.203.78] (/10.175.203.78)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 03:35:35 -0700
-Subject: Re: [PATCH 11/12] device-dax: Add dis-contiguous resource support
-From:   Joao Martins <joao.m.martins@oracle.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-mm@kvack.org, dave.hansen@linux.intel.com, hch@lst.de,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <158500767138.2088294.17131646259803932461.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158500773552.2088294.8756587190550753100.stgit@dwillia2-desk3.amr.corp.intel.com>
- <9a6ff83f-095c-0689-d6d1-693a6e9c07e6@oracle.com>
-Message-ID: <c673cba2-8749-d63e-f0b2-592ed753481d@oracle.com>
-Date:   Wed, 25 Mar 2020 10:35:31 +0000
+        Wed, 25 Mar 2020 06:37:51 -0400
+Received: from 185.80.35.16 (185.80.35.16) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 9e7838f87465dcf7; Wed, 25 Mar 2020 11:37:49 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>
+Cc:     pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
+        swboyd@chromium.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, irgeorgiev@codeaurora.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] PM / wakeup: Skip wakeup_source_sysfs_remove if device is not added
+Date:   Wed, 25 Mar 2020 11:37:49 +0100
+Message-ID: <45310800.nJ51lTlq64@kreacher>
+In-Reply-To: <1584940131-1591-1-git-send-email-neeraju@codeaurora.org>
+References: <1584940131-1591-1-git-send-email-neeraju@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <9a6ff83f-095c-0689-d6d1-693a6e9c07e6@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 suspectscore=5
- spamscore=0 phishscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250090
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
- suspectscore=5 impostorscore=0 spamscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250090
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 4:12 PM, Joao Martins wrote:
-> On 3/23/20 11:55 PM, Dan Williams wrote:
->>  static ssize_t dev_dax_resize(struct dax_region *dax_region,
->>  		struct dev_dax *dev_dax, resource_size_t size)
->>  {
->>  	resource_size_t avail = dax_region_avail_size(dax_region), to_alloc;
->> -	resource_size_t dev_size = range_len(&dev_dax->range);
->> +	resource_size_t dev_size = dev_dax_size(dev_dax);
->>  	struct resource *region_res = &dax_region->res;
->>  	struct device *dev = &dev_dax->dev;
->> -	const char *name = dev_name(dev);
->>  	struct resource *res, *first;
->> +	resource_size_t alloc = 0;
->> +	int rc;
->>  
->>  	if (dev->driver)
->>  		return -EBUSY;
->> @@ -684,38 +766,47 @@ static ssize_t dev_dax_resize(struct dax_region *dax_region,
->>  	 * allocating a new resource.
->>  	 */
->>  	first = region_res->child;
->> -	if (!first)
->> -		return __alloc_dev_dax_range(dev_dax, dax_region->res.start,
->> -				to_alloc);
+On Monday, March 23, 2020 6:08:51 AM CET Neeraj Upadhyay wrote:
+> Skip wakeup_source_sysfs_remove(), to fix null pinter access of
+> ws->dev, if wakeup source is unregistered before wakeup class
+> is registered from device_add().
 > 
-> You probably want to retain the condition above?
+> Fixes: 2ca3d1ecb8c4 ("PM / wakeup: Register wakeup class kobj after device is added")
+> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> ---
+>  drivers/base/power/wakeup.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Otherwise it removes the ability to create new devices or resizing it , once we
-> have zero-ed the last one.
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 27f3e60..f8f8c0a 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -241,7 +241,8 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  {
+>  	if (ws) {
+>  		wakeup_source_remove(ws);
+> -		wakeup_source_sysfs_remove(ws);
+> +		if (ws->dev)
+> +			wakeup_source_sysfs_remove(ws);
+>  		wakeup_source_destroy(ws);
+>  	}
+>  }
 > 
 
-A quick unit test that I had stashed here to help explain what I mean:
+Applied (with some minor changes) as 5.7 material, thanks!
 
-	cd /sys/bus/dax/devices
-	# dax0.0 is the only dax device in the corresponding dax_region
-	echo dax0.0 > dax0.0/driver/unbind
-	echo 0 > dax0.0/size
-	# Shouldn't fail but returns -ENOSPC despite having
-	# the full region available
-	cat $(readlink -f dax0.0/../dax_region/available_size) > dax0.0/size
 
->> -	for (res = first; to_alloc && res; res = res->sibling) {
->> +retry:
->> +	rc = -ENOSPC;
->> +	for (res = first; res; res = res->sibling) {
->>  		struct resource *next = res->sibling;
->> -		resource_size_t free;
->>  
->>  		/* space at the beginning of the region */
->> -		free = 0;
->> -		if (res == first && res->start > dax_region->res.start)
->> -			free = res->start - dax_region->res.start;
->> -		if (free >= to_alloc && dev_size == 0)
->> -			return __alloc_dev_dax_range(dev_dax,
->> -					dax_region->res.start, to_alloc);
->> -
->> -		free = 0;
->> +		if (res == first && res->start > dax_region->res.start) {
->> +			alloc = min(res->start - dax_region->res.start,
->> +					to_alloc);
->> +			rc = __alloc_dev_dax_range(dev_dax,
->> +					dax_region->res.start, alloc);
->> +			break;
->> +		}
->> +
->> +		alloc = 0;
->>  		/* space between allocations */
->>  		if (next && next->start > res->end + 1)
->> -			free = next->start - res->end + 1;
->> +			alloc = min(next->start - (res->end + 1), to_alloc);
->>  
->>  		/* space at the end of the region */
->> -		if (free < to_alloc && !next && res->end < region_res->end)
->> -			free = region_res->end - res->end;
->> -
->> -		if (free >= to_alloc && strcmp(name, res->name) == 0)
->> -			return __adjust_dev_dax_range(dev_dax, res,
->> -					resource_size(res) + to_alloc);
->> -		else if (free >= to_alloc && dev_size == 0)
->> -			return __alloc_dev_dax_range(dev_dax, res->end + 1,
->> -					to_alloc);
->> +		if (!alloc && !next && res->end < region_res->end)
->> +			alloc = min(region_res->end - res->end, to_alloc);
->> +
->> +		if (!alloc)
->> +			continue;
->> +
->> +		if (adjust_ok(dev_dax, res)) {
->> +			rc = __adjust_dev_dax_range(dev_dax, res,
->> +					resource_size(res) + alloc);
->> +			break;
->> +		}
->> +		rc = __alloc_dev_dax_range(dev_dax, res->end + 1,
->> +				alloc);
-> 
-> I am wondering if we should switch to:
-> 
-> 	if (adjust_ok(...))
-> 		rc = __adjust_dev_dax_range(...);
-> 	else
-> 		rc = __alloc_dev_dax_range(...);
-> 
-> And then a debug print at the end depicting whether and how did we grabbed
-> space? Something like:
-> 
-> 	dev_dbg(&dev_dax->dev, "%s(%d) %d", action, location, rc);
-> 
-> Assuming we set @location to its values when we allocate space at the end,
-> beginning or middle; and @action to whether we adjusted up/down or allocated new
-> range.
-> 
-> Essentially, something similar to namespaces scan_allocate() just to help
-> troubleshoot?
-> 
-> Regards,
->  Joao
-> 
+
