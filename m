@@ -2,72 +2,77 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 550FEC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:33:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13344C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DA420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:33:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD64020714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:33:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgCYJdS (ORCPT
+        id S1727537AbgCYJd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:33:18 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58424 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727158AbgCYJdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:33:18 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7C6CEAAFD;
-        Wed, 25 Mar 2020 09:33:15 +0000 (UTC)
-Subject: Re: [PATCH V2] kernel/hung_task.c: Introduce sysctl to print all
- traces when a hung task is detected
-To:     Kees Cook <keescook@chromium.org>,
-        "Guilherme G. Piccoli" <gpiccoli@canonical.com>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-doc@vger.kernel.org, mcgrof@kernel.org, yzaikin@google.com,
-        tglx@linutronix.de, penguin-kernel@I-love.SAKURA.ne.jp,
-        akpm@linux-foundation.org, cocci@systeme.lip6.fr,
-        linux-api@vger.kernel.org, kernel@gpiccoli.net,
-        randy Dunlap <rdunlap@infradead.org>
-References: <20200323214618.28429-1-gpiccoli@canonical.com>
- <b73a6519-0529-e36f-fac5-e4b638ceb3cf@suse.cz>
- <eee335a2-e673-39bf-ae64-e49c66f74255@canonical.com>
- <202003241119.A666E1C694@keescook>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <9eab7f80-bad4-bcb1-7ec7-b6b90839b13a@suse.cz>
-Date:   Wed, 25 Mar 2020 10:33:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 05:33:29 -0400
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:4530 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727158AbgCYJd3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 05:33:29 -0400
+X-Greylist: delayed 519 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 05:33:28 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 67D863F5CD;
+        Wed, 25 Mar 2020 10:24:48 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id TBJjejvUvc7c; Wed, 25 Mar 2020 10:24:47 +0100 (CET)
+Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
+        (Authenticated sender: mb547485)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id D5C313F4D8;
+        Wed, 25 Mar 2020 10:24:46 +0100 (CET)
+Date:   Wed, 25 Mar 2020 10:24:46 +0100
+From:   Fredrik Noring <noring@nocrew.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] MIPS: remove cpu_has_64bit_gp_regs and
+ cpu_has_64bit_addresses
+Message-ID: <20200325092446.GB28706@sx9>
+References: <20200324161525.754181-1-hch@lst.de>
+ <20200324161525.754181-2-hch@lst.de>
+ <alpine.LFD.2.21.2003250226450.2689954@eddie.linux-mips.org>
+ <20200325083012.GA21605@lst.de>
+ <20200325085524.GA28706@sx9>
+ <20200325085852.GA23786@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <202003241119.A666E1C694@keescook>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200325085852.GA23786@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/24/20 7:20 PM, Kees Cook wrote:
-> On Tue, Mar 24, 2020 at 09:45:40AM -0300, Guilherme G. Piccoli wrote:
->> Thanks Randy and Vlastimil for the comments. I really liked your
->> approach Vlastimil, I agree that we have no reason to not have a generic
->> sysctl setting via cmdline mechanism - I'll rework this patch removing
->> the kernel parameter (same for other patch I just submitted).
+> > The (slightly outdated) patch series under review
+> > is available here:
+> > 
+> > https://lore.kernel.org/linux-mips/cover.1567326213.git.noring@nocrew.org/T/
 > 
-> I've been thinking we'll likely want to have a big patch series that
-> removes all the old "duplicate" boot params and adds some kind of
-> "alias" mechanism.
-> 
-> Vlastimil, have you happened to keep a list of other "redundant" boot
-> params you've noticed in the kernel? I bet there are a lot. :)
+> You don't happen to have a git tree available somewhere?
 
-Well, I found about 4 that mentioned sysctl in
-Documentation/admin-guide/kernel-parameters.txt
-I suspect there will be more, but won't be trivial to identify them.
+https://github.com/frno7/linux/tree/ps2-v5.4
 
+is stable at v5.4,
 
+https://github.com/frno7/linux/tree/ps2-master
+
+has more experimental stuff (also at v5.4 at the moment). There are some
+(work-in-progress) notes on the R5900 psABI, that may be of interest, here:
+
+https://github.com/frno7/linux/wiki/R5900-processor-specific-ABI-(psABI)
+
+Fredrik
