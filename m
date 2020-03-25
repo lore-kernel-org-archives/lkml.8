@@ -3,175 +3,136 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B7BC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E1AC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E5D20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC0EA20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWx3uxsI"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xUFx7a3p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbgCYPYK (ORCPT
+        id S1727876AbgCYPYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:24:10 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33557 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgCYPYJ (ORCPT
+        Wed, 25 Mar 2020 11:24:21 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:64376 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727505AbgCYPYV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:24:09 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w25so2383185wmi.0;
-        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
-        b=BWx3uxsIk3pmb2jYX66+b2iKsIcsASs+LIcGSs6TBhRMhO4d47dl5rADijn3UGRvhG
-         8SbW3uZcnKsVSII2ZWj3H0gpUbkVkXH5erKpe37NtGfwZgfStOHNHEfhnGACSkzQgyEz
-         +B0zcyCDoE2S2hxXdvLrgOFeE5LRidNP56uniTd4uImISpjt/58IUPOpu/uh6ENksJQg
-         Tl0ndJnxVQbDI4e1ab/e0zr7Y5Bx/dnfRn2UXDSjAbFh3DI1nmLWOsMA4t+ulkynzqRK
-         JR5qnSmRrbE+4C++d7xOu4FP/98FEZ3n24yXMUfIQFf+bL407buCybsBVsB33auHrnMn
-         jiHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
-        b=q3e7scXMd05fIngk1zLlrX1u5BJ4yJBrnLfZkAhOvdMsGcBelohGZuv/UGp+BhKwy4
-         ENcCIXQ1ZSm+vo114BWA7OIR7WyOolK85q4+Udy2555H8s62QSKfCSdFp+eHLzIZStTm
-         dF3M73MnotW0XInKVvWH57T+6HugUnGdeqkC2sEMX0g3+Svus31XkWsxyW/dKvKwUJv5
-         fNFcT/ZADaeYZLF3awsefIqiKAHIvhpuvdAVM71i9HjMHXxaxrsKOSbSo1mC4n/wC+0N
-         iK1y+vOEB1j3CPPRpOvFRY3/t6gH1VNyiwJKeDLoXdCOJ9/tvdRspUb1jeP6ajLH50+W
-         +fKA==
-X-Gm-Message-State: ANhLgQ1BbprszxZjM/uomUZFfryR7UZWAPMwRiVI55+ioxs5w2v0zIBs
-        PC7PLn2j62P+9udQjilCf24=
-X-Google-Smtp-Source: ADFU+vsWlzfyvxWYK0fqQ9xx/KR19mVEHdF1RmHNZrFAbD14EJSxOKx23xH5kcAD+ENM2oOknweSgw==
-X-Received: by 2002:a1c:4d7:: with SMTP id 206mr3847830wme.5.1585149847168;
-        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:f4a0:1b38:2faf:56e9? (p200300EA8F296000F4A01B382FAF56E9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f4a0:1b38:2faf:56e9])
-        by smtp.googlemail.com with ESMTPSA id o16sm35397700wrs.44.2020.03.25.08.24.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:24:06 -0700 (PDT)
-Subject: Re: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay
- possibility to ksz9131
-To:     Philippe Schenker <philippe.schenker@toradex.com>, andrew@lunn.ch,
-        f.fainelli@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com
-Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
-        silvan.murer@gmail.com, s.hauer@pengutronix.de,
-        a.fatoum@pengutronix.de, "David S. Miller" <davem@davemloft.net>
-References: <20200325150329.228329-1-philippe.schenker@toradex.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <d1067087-2cb8-f7c7-7929-2c4c9d2a4cb3@gmail.com>
-Date:   Wed, 25 Mar 2020 16:24:00 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 25 Mar 2020 11:24:21 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PFDlLC004627;
+        Wed, 25 Mar 2020 16:23:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=+JxsGMD/HKpVKs1dQBQK8ygKLAo12R6x7cJ4kdNJpoY=;
+ b=xUFx7a3pQOkxiDSq2J6BidiHMoZH0DtRUrMcypx4CppI5NKTKD3wy91Azg9nRqmN2hmE
+ 9HoeknXJEi2L8XvYLo1rzw6W3ijYD/2Jj7Utp7/ws3OaSVAKV7+knBoj1ifNWWQ8q2CA
+ cIGy9XoSWSrSAvcu2cPVuSZ8tJZqimSwi+3f/wBUTrMNPOMHcPLZZE/NfPv6HcaZiNiQ
+ mdtvcroqOlKKjQjPZrDIQSSrMiYDAZ/psPG8lTzsn75FiAmwENHU52BNSwR5wqvjQUN6
+ 5mcBiTcGF+YrTU7kN52Hs/bUq6wJOUAiTmMYWNHTYWyrd+dArbdZSan3MSU8h3QkQZRd bA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw995pgfk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Mar 2020 16:23:49 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 67B6110002A;
+        Wed, 25 Mar 2020 16:23:48 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3A8062B5D06;
+        Wed, 25 Mar 2020 16:23:48 +0100 (CET)
+Received: from lmecxl0923.lme.st.com (10.75.127.51) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 16:23:46 +0100
+Subject: Re: [PATCH 1/2] driver core: platform: Initialize dma_parms for
+ platform devices
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dmaengine@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20200325113407.26996-1-ulf.hansson@linaro.org>
+ <20200325113407.26996-2-ulf.hansson@linaro.org>
+From:   Ludovic BARRE <ludovic.barre@st.com>
+Message-ID: <598b3a55-0321-d7ea-8758-edaba5d5cb2c@st.com>
+Date:   Wed, 25 Mar 2020 16:23:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200325150329.228329-1-philippe.schenker@toradex.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200325113407.26996-2-ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_07:2020-03-24,2020-03-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.03.2020 16:03, Philippe Schenker wrote:
-> The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
-> patch makes use of those delays. The information which delays should
-> be enabled or disabled comes from the interface names, documented in
-> ethernet-controller.yaml:
+
+
+Le 3/25/20 à 12:34 PM, Ulf Hansson a écrit :
+> It's currently the platform driver's responsibility to initialize the
+> pointer, dma_parms, for its corresponding struct device. The benefit with
+> this approach allows us to avoid the initialization and to not waste memory
+> for the struct device_dma_parameters, as this can be decided on a case by
+> case basis.
 > 
-> rgmii:      Disable RXC and TXC delays
-> rgmii-id:   Enable RXC and TXC delays
-> rgmii-txid: Enable only TXC delay, disable RXC delay
-> rgmii-rxid: Enable onlx RXC delay, disable TXC delay
+> However, it has turned out that this approach is not very practical.  Not
+> only does it lead to open coding, but also to real errors. In principle
+> callers of dma_set_max_seg_size() doesn't check the error code, but just
+> assumes it succeeds.
 > 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> For these reasons, let's do the initialization from the common platform bus
+> at the device registration point. This also follows the way the PCI devices
+> are being managed, see pci_device_add().
+
+tested with mmc: mmci_sdmmc fix
+Tested-by: Ludovic Barre <ludovic.barre@st.com>
+
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
+>   drivers/base/platform.c         | 1 +
+>   include/linux/platform_device.h | 1 +
+>   2 files changed, 2 insertions(+)
 > 
->  drivers/net/phy/micrel.c | 45 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index b5ce7b085795..46abbfb52655 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -512,6 +512,7 @@ int platform_device_add(struct platform_device *pdev)
+>   		pdev->dev.parent = &platform_bus;
+>   
+>   	pdev->dev.bus = &platform_bus_type;
+> +	pdev->dev.dma_parms = &pdev->dma_parms;
+>   
+>   	switch (pdev->id) {
+>   	default:
+> diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+> index 041bfa412aa0..81900b3cbe37 100644
+> --- a/include/linux/platform_device.h
+> +++ b/include/linux/platform_device.h
+> @@ -25,6 +25,7 @@ struct platform_device {
+>   	bool		id_auto;
+>   	struct device	dev;
+>   	u64		platform_dma_mask;
+> +	struct device_dma_parameters dma_parms;
+>   	u32		num_resources;
+>   	struct resource	*resource;
+>   
 > 
-> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-> index 63dedec0433d..d3ad09774847 100644
-> --- a/drivers/net/phy/micrel.c
-> +++ b/drivers/net/phy/micrel.c
-> @@ -704,6 +704,48 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
->  	return phy_write_mmd(phydev, 2, reg, newval);
->  }
->  
-> +/* MMD Address 0x2 */
-> +#define KSZ9131RN_RXC_DLL_CTRL		76
-> +#define KSZ9131RN_TXC_DLL_CTRL		77
-> +#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
-> +#define KSZ9131RN_DLL_ENABLE_DELAY	0
-> +#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
-> +
-> +static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +	u16 rxcdll_val, txcdll_val;
-> +
-
-Reverse xmas tree order please.
-
-> +	switch (phydev->interface) {
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII_ID:
-> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII_TXID:
-> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
-> +				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
-> +				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
-
-phy_modify_mmd_changed() returns 1 if the register value was changed,
-and that's not what you want here. Simply use phy_modify_mmd() in both
-occurrences. And your function has a return value, but it's not used by
-the caller.
-
-> +}
-> +
->  static int ksz9131_config_init(struct phy_device *phydev)
->  {
->  	const struct device *dev = &phydev->mdio.dev;
-> @@ -730,6 +772,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
->  	if (!of_node)
->  		return 0;
->  
-> +	if (phy_interface_is_rgmii(phydev))
-> +		ksz9131_config_rgmii_delay(phydev);
-> +
->  	ret = ksz9131_of_load_skew_values(phydev, of_node,
->  					  MII_KSZ9031RN_CLK_PAD_SKEW, 5,
->  					  clk_skews, 2);
-> 
-
