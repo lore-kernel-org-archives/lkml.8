@@ -2,106 +2,144 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C480DC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BE8AC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A477C2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A2B320409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VKNLFdBy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ov3F0xX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbgCYQIJ (ORCPT
+        id S1727983AbgCYQIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:08:09 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:21739 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725812AbgCYQIJ (ORCPT
+        Wed, 25 Mar 2020 12:08:14 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39883 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727953AbgCYQIM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:08:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585152487;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KQO5Ewg01ixtL/pUvCaQWy2hwzdcfLmoIS7TRCLSyP4=;
-        b=VKNLFdByTUBLL29Z27PGJzOciSuW43SphXMteyWoGePZvjvzqf+CImIcsUiw6YDCQ6OIq2
-        jpmDvExk+oJ/6jUGaRKB0OKW+smOnikMMjUOu8u0lluT1B/kK5LoYsIuh4V6JqtnOroSq+
-        KRo9AuQC4AChJoiyNsPbKQ1b8UiG8I4=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-300-6xv-odLeMwWEDgEDT66WBw-1; Wed, 25 Mar 2020 12:08:06 -0400
-X-MC-Unique: 6xv-odLeMwWEDgEDT66WBw-1
-Received: by mail-wr1-f70.google.com with SMTP id d1so1351170wru.15
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:08:06 -0700 (PDT)
+        Wed, 25 Mar 2020 12:08:12 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a9so3345957wmj.4
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:08:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ixbROLOmeLq0mO6PeYIhR3XCaB7opkScZZtzUhky/AU=;
+        b=Ov3F0xX7WSaaviMCXK0Dc2jrJMmWPM2VVdqHBzQZJGmP6HtdrGenkjnmRVyigWy17E
+         HXPW/SLWbeXv4klht679yeL3jmXHl15tKHIGwN5hWbrY+TkDUX7dpGG1n9mLD5tI0Vrs
+         6eX19Y8vn/EeDYvEJpevNchth9OA1mwqPdvYVQ1fgF5hgFpUTiZF0EwZCkGlHga8qD+F
+         QecnjvDt1IFv5iNA15MRo0FBW7GDAudi+PHFdwjogaeGVb5/4wcV+IhiGpNq7P01ie98
+         kDHnVp5Am0xQtI8ieiift6CbcLHmPAgMwyNwhFWkHrO+anFH7o/TlkF0l6OgtsOHpX8X
+         VkKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KQO5Ewg01ixtL/pUvCaQWy2hwzdcfLmoIS7TRCLSyP4=;
-        b=TtIqiqTgiSblqMBJb+vnBJKB2YBxzPTdtP9x6bWc2hVF3PD4jYz/upP6J4X2wLfvI4
-         Fw9OJJgwNPy8p9NSCUXBibIgz/wLsuk6BhdSq+H+Ss2jWWXWLlKt0DpgncPby6D4Uz7V
-         ZeeLdfJ5vhXICHwN7kNPvFdBmhccWEi1XCi80bgpY4rlYRVs+D3P3vqhOkOM+NPicmlg
-         kDFYwXrihvl4cH6oaWbafYKVgq8xTtN7YT+YsFghP52gdDOfbAY6EQFbWaewMhAB10dX
-         MWJIB6unhqhYYLVRlA2oaGXXOv5CmatfnlPfQSrGvK6aUMfkCHzeipYpVg54QEIH/Xy0
-         5LFQ==
-X-Gm-Message-State: ANhLgQ1ct55eTUsKLy18SHycV0I/GTusI6z4Vg+vyGOE6H9y0uYpuxob
-        kBrvoxo46ad9Y+5blhm1ron8OSRm5hvAN6/Co3KBwFbyqAAKR8Efs661/JZydWOvIKggcx71DQh
-        l0ZFlIlufYymXuVBn0nIp7Bln
-X-Received: by 2002:adf:f386:: with SMTP id m6mr4273260wro.107.1585152485053;
-        Wed, 25 Mar 2020 09:08:05 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs2RbBSSENYa1saW4WvfsxYiIaG52scS5B1XDE46lVvH86KlHN01LnBRy1sc44INfcBCW6dIA==
-X-Received: by 2002:adf:f386:: with SMTP id m6mr4273243wro.107.1585152484873;
-        Wed, 25 Mar 2020 09:08:04 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
-        by smtp.gmail.com with ESMTPSA id k185sm9788103wmb.7.2020.03.25.09.08.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 09:08:04 -0700 (PDT)
-Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        KVM <kvm@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <20200325195350.7300fee9@canb.auug.org.au>
- <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
- <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
- <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <85430f7e-93e0-3652-0705-9cf6e948a9d8@redhat.com>
-Date:   Wed, 25 Mar 2020 17:08:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ixbROLOmeLq0mO6PeYIhR3XCaB7opkScZZtzUhky/AU=;
+        b=i9D7wT3NcJ5r5vl+5C2eT+AbeRawYsUTXYFCuJPDLE5MMoLu4a0DQU7v3/WUlgQLbg
+         QuwzPRbpQOUAvOPUyYeKoi96OsO99hRyFPieUl3T6DGqD7GwxE14lAI5+UCsNlMbbI4Z
+         zsVUaheGnxNnnSgH0/7Fh9rQBQvFNBe0/ELy5jerKO3ugDRVU/I84r2oy4empeviKiEL
+         MzrIHR2SyigYgwvJTtGwXjCkyZ+Wbz9XMxNDNEuZWqNrc6im04rliCTondOeb8kami4y
+         wzUahRB/K32LQJBY1m5zD99A1dI+unMmBRGQddMlFA6URI/PXDnoFe4DVKhIUDdXXmNd
+         YgFg==
+X-Gm-Message-State: ANhLgQ32FHKPGKx5RSuaXHUQSS37psZ9X48r8oPupxfgWzrQCb4Xe4+3
+        eb19Tlj/TYddQQgJyLFdNy5cmk3L+bBEjWNgNNg=
+X-Google-Smtp-Source: ADFU+vttpgaM6WIjzO6/7c2r+BmhO3Fd/fDVy8h/NTwzqh3BMyNi1q8/25wBGAqNuGumuiOmNyPz8YdSkWE1Gr4REvc=
+X-Received: by 2002:a1c:cc11:: with SMTP id h17mr4136098wmb.39.1585152491439;
+ Wed, 25 Mar 2020 09:08:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200325090741.21957-1-bigbeeshane@gmail.com> <20200325090741.21957-4-bigbeeshane@gmail.com>
+ <14063C7AD467DE4B82DEDB5C278E8663FFFBD48B@fmsmsx107.amr.corp.intel.com> <CABnpCuD-A20o3cQrPb+LwbsSRTGPwwdCAYYsSjeCdmimNMYyYA@mail.gmail.com>
+In-Reply-To: <CABnpCuD-A20o3cQrPb+LwbsSRTGPwwdCAYYsSjeCdmimNMYyYA@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 25 Mar 2020 12:08:00 -0400
+Message-ID: <CADnq5_Op0Yn9vtWkYdzhr8rz3FFJwVbhiBKBprvqSosVx8fmyA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] drm/radeon: fix scatter-gather mapping with user pages
+To:     Shane Francis <bigbeeshane@gmail.com>
+Cc:     "Ruhl, Michael J" <michael.j.ruhl@intel.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "amd-gfx-request@lists.freedesktop.org" 
+        <amd-gfx-request@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
+        "christian.koenig@amd.com" <christian.koenig@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/20 16:57, Randy Dunlap wrote:
->> Randy, can you test it with your compiler?
-> Nope, no help.  That's the wrong location.
-> Need a patch for this:
->>> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
->>> function __cpuid_entry_get_reg(), for the default: case.
+On Wed, Mar 25, 2020 at 11:54 AM Shane Francis <bigbeeshane@gmail.com> wrote:
+>
+> > >-----Original Message-----
+> > >From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
+> > >Shane Francis
+> > >Sent: Wednesday, March 25, 2020 5:08 AM
+> > >To: dri-devel@lists.freedesktop.org
+> > >Cc: airlied@linux.ie; linux-kernel@vger.kernel.org; bigbeeshane@gmail.com;
+> > >amd-gfx-request@lists.freedesktop.org; alexander.deucher@amd.com;
+> > >christian.koenig@amd.com
+> > >Subject: [PATCH v4 3/3] drm/radeon: fix scatter-gather mapping with user
+> > >pages
+> > >
+> > >Calls to dma_map_sg may return segments / entries than requested
+> >
+> > "may return less segment..." ?
+> >                        ^^^
+>
+> I will reword / fix the highlighted issues with the text and send a updated
+> patch set later today.
 
-Doh, right.  I think the only solution for that one is to degrade it to
-WARN_ON(1).
+I'll fix it up locally when I apply it.  Thanks!
 
-Paolo
+Alex
 
+>
+> >
+> > >if they fall on page bounderies. The old implementation did not
+> > >support this use case.
+> > >
+> > >Signed-off-by: Shane Francis <bigbeeshane@gmail.com>
+> > >---
+> > > drivers/gpu/drm/radeon/radeon_ttm.c | 2 +-
+> > > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > >diff --git a/drivers/gpu/drm/radeon/radeon_ttm.c
+> > >b/drivers/gpu/drm/radeon/radeon_ttm.c
+> > >index 3b92311d30b9..b3380ffab4c2 100644
+> > >--- a/drivers/gpu/drm/radeon/radeon_ttm.c
+> > >+++ b/drivers/gpu/drm/radeon/radeon_ttm.c
+> > >@@ -528,7 +528,7 @@ static int radeon_ttm_tt_pin_userptr(struct ttm_tt
+> > >*ttm)
+> > >
+> > >       r = -ENOMEM;
+> > >       nents = dma_map_sg(rdev->dev, ttm->sg->sgl, ttm->sg->nents,
+> > >direction);
+> > >-      if (nents != ttm->sg->nents)
+> > >+      if (nents == 0)
+> > >               goto release_sg;
+> >
+> > This looks correct to me.
+> >
+> > Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+> >
+> > M
+> > >       drm_prime_sg_to_page_addr_arrays(ttm->sg, ttm->pages,
+> > >--
+> > >2.26.0
+> > >
+> > >_______________________________________________
+> > >dri-devel mailing list
+> > >dri-devel@lists.freedesktop.org
+> > >https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
