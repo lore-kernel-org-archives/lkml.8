@@ -2,220 +2,111 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45965C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 477B7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C22C2070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CFDC2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZxKKEZdm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K6CccuvD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgCYVmY (ORCPT
+        id S1727485AbgCYVnT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:42:24 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41717 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgCYVmY (ORCPT
+        Wed, 25 Mar 2020 17:43:19 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40400 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgCYVnT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:42:24 -0400
-Received: by mail-io1-f67.google.com with SMTP id y24so3918491ioa.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 14:42:23 -0700 (PDT)
+        Wed, 25 Mar 2020 17:43:19 -0400
+Received: by mail-pf1-f193.google.com with SMTP id l184so1710493pfl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 14:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=buU5ko9WYyQLxe4W65aArJ2mzLoua7+RSvDwL1OmNEg=;
-        b=ZxKKEZdmuoacpoKH0XbpR+refRSDkns4jbDBtRk3JBWdJYvtlvzH6zeRmYxRLnwPbi
-         T/4W8v5h5MF9MulUBGCkY2+MwNYQjo8TfX2xlOniViVAQb0jIWN+mAdHMumMG5HeUR7H
-         zjNLM/E84YwbKbrbKsC9VXmfZbDz1PBdA+pJH83LVHFtMeDAfzI+/LahfbYioLaq2JEI
-         7PS3spkJriaL0il5nrd72TkAuqckgC3/sFB5nIsMQiuO+ad0T8cYZPG/frekt36Rtnm4
-         KiUUiigbVxzt/Ok/p0Vv1tttxwvpzs4lbm69D/UyZ+2o+1a14+oC3DEgDQrkasMx/SI2
-         x7XA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=h0hI1ctK7evRWi0Tx3F+lFEp/ylOEoUVzXunsODTLdY=;
+        b=K6CccuvDhDFg4uDguK3OiesQSTy4fN0R7L2ZKiBbN6KUB5W5JGjUjBeE8sAHEWaPX2
+         w/HSgNcZUtbTEQ28K1Q8MlNo5DaOd8AscgJK5B3m5OeehiuaHg1US+Hapq413+gXZgxD
+         pC/tsiWBNJEFkVFyevTpcfH7QZijl90PLmgGflSa8Fy7sXpNJtnKbfG++5ArAO6Rdaj+
+         gDFnjrinuJIrGqgR5G4NygPWvjK7+oq7x6gE9H1UhL0UfjtPwT5biCQ+bEhxPvjmMzzS
+         ZgkB+HD5/RSOurcjFBSUuP1KD5/ocn9MzxOEE4CNq1jVf5ZbdVHr3IrFWx1V8RBeCj3p
+         fpMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=buU5ko9WYyQLxe4W65aArJ2mzLoua7+RSvDwL1OmNEg=;
-        b=a0fiep8bFj0NfMqkgoNcl9AMNsHqoW1G9aJuOs84o1M9jnlvfS/ecRsgDCTjpEVIA5
-         zX2coqYzYgc6BNo8Xyf149q4Pis4YG++LWQaKCi6TU7in8UrrOqMPYRZ52KV2fvi/lf+
-         wdJqT/SxHjk01GiiY9gQgpdLHS84M5f2dlmkO/sRamgYZnyARWmxLXUIciy35q1fXA/c
-         VINCEBCCsxOOtA+h9fb7VZ9COPGlbbGmYf4L+d6AhRRgiewwz46LUysWqSGnWKXGCiB/
-         6w4RQnWsW5/SaqVuaDUdcXLW27Hve2UAfV0WzGIKzug1FuiFHpWRBePpm1DxIQBMH12l
-         0XBA==
-X-Gm-Message-State: ANhLgQ1S0OcPgKRqg0kPzKQS4l1RpIDYhICPBwoljiHIBXb45Y9wcOGu
-        GF4LP9dwxUE2/gckR/dAVtofHz7HqA5zZnY59R+exw==
-X-Google-Smtp-Source: ADFU+vt03WS4BPLmvug6jXuKwDLorGSYjYXta09fqhNCu8gA1XPd34yufhSVjMQhRmWDUWIsP5tpTpqujEWgIhFdPJM=
-X-Received: by 2002:a02:8405:: with SMTP id k5mr5081184jah.52.1585172541443;
- Wed, 25 Mar 2020 14:42:21 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=h0hI1ctK7evRWi0Tx3F+lFEp/ylOEoUVzXunsODTLdY=;
+        b=d0j811x1uAEi6MdMjDvAIZpNpqajsNfgn09+jGXPX6HyLC5/5blc1GnGzttjvhk3xB
+         gbiBCOrZTWJcZWF/jOsLNPDnWLU6uD6tSx/ebUhuS1eGsu1WOVP+W6sNfptdVsg7yfQM
+         C6yP7pXTfYXtaOE37ZOL3QCMORYPTpfFd0oHyx93vsfa/0XXK5JkOhFw1aWlGpvLbx4Y
+         ft0fzPERxbRlZxgkJVIKrCQ4J69JdqV+/nln8TDUqHfQ91E7pu46yW2oYo31Dilzc5PM
+         JsoeqC9EiGNG1aZTLpw88qQr7PTHJKPQL5Q4+Y/CF3rXbQbuEKX/rIK5aeVb6j8+3xDh
+         VjzA==
+X-Gm-Message-State: ANhLgQ1ws/ERxUqDd4odxYXGNQzNx0PiNySAlHxA5daOlzlL2OcnQSPV
+        m+7EQRlo/xGBk5hDciilMUw=
+X-Google-Smtp-Source: ADFU+vswKqbNWwboFJ5F9a2l/B9QXa6IvqAjyDmNjtLiyGK2ZPZ2k32SjAAvPZlNAiOyyLKTauRU9g==
+X-Received: by 2002:aa7:828e:: with SMTP id s14mr5336751pfm.15.1585172598186;
+        Wed, 25 Mar 2020 14:43:18 -0700 (PDT)
+Received: from simran-Inspiron-5558 ([2409:4052:78f:bb47:8124:5e4b:ea06:7595])
+        by smtp.gmail.com with ESMTPSA id a19sm87724pfk.110.2020.03.25.14.43.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 14:43:17 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 03:13:12 +0530
+From:   Simran Singhal <singhalsimran0@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+Subject: [PATCH] staging: rtl8723bs: hal: Compress return logic
+Message-ID: <20200325214312.GA1936@simran-Inspiron-5558>
 MIME-Version: 1.0
-References: <1583924072-20648-1-git-send-email-loic.pallardy@st.com>
- <1583924072-20648-2-git-send-email-loic.pallardy@st.com> <20200325175746.GA6227@xps15>
- <9a089cba07f7454ea0fc0f2d09bd9bf0@SFHDAG7NODE2.st.com>
-In-Reply-To: <9a089cba07f7454ea0fc0f2d09bd9bf0@SFHDAG7NODE2.st.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 25 Mar 2020 15:42:10 -0600
-Message-ID: <CANLsYkwMOD-AY5WXkUkNz_A1ZeQRdNC4WAV3PHLxXUq5Rg5Yvg@mail.gmail.com>
-Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
- is crashed
-To:     Loic PALLARDY <loic.pallardy@st.com>
-Cc:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "ohad@wizery.com" <ohad@wizery.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
-        "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>,
-        Fabien DESSENNE <fabien.dessenne@st.com>,
-        "s-anna@ti.com" <s-anna@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020 at 12:30, Loic PALLARDY <loic.pallardy@st.com> wrote:
->
-> Hi Mathieu,
->
-> > -----Original Message-----
-> > From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Sent: mercredi 25 mars 2020 18:58
-> > To: Loic PALLARDY <loic.pallardy@st.com>
-> > Cc: bjorn.andersson@linaro.org; ohad@wizery.com; linux-
-> > remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; Arnaud
-> > POULIQUEN <arnaud.pouliquen@st.com>; benjamin.gaignard@linaro.org;
-> > Fabien DESSENNE <fabien.dessenne@st.com>; s-anna@ti.com
-> > Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when
-> > rproc is crashed
-> >
-> > Hi Loic,
-> >
-> > On Wed, Mar 11, 2020 at 11:54:31AM +0100, Loic Pallardy wrote:
-> > > When remoteproc recovery is disabled and rproc crashed, user space
-> > > client has no way to reboot co-processor except by a complete platform
-> > > reboot.
-> > > Indeed rproc_shutdown() is called by sysfs state_store() only is rproc
-> > > state is RPROC_RUNNING.
-> > >
-> > > This patch offers the possibility to shutdown the co-processor if
-> > > it is in RPROC_CRASHED state and so to restart properly co-processor
-> > > from sysfs interface.
-> >
-> > If recovery is disabled on an rproc the platform likely intended to have a hard
-> > reboot and as such we should not be concerned about this case.
-> I disagree with your view. In fact, we can have a configuration for which
-> we don't want a silent recovery. Application layer can be involved to stop and
-> restart some services because it is the simplest way to resync with the coprocessor.
-> What's missing today is an event to notify user space application that coprocessor state
-> has changed. (even if we can rely on rpmsg services closure)
+Simplify function returns by merging assignment and return into
+one command line.
+Found with Coccinelle
 
-I have a better understanding of the scenario now.
+@@
+local idexpression ret;
+expression e;
+@@
 
->
-> >
-> > Where I think we have a problem, something that is asserted by looking at
-> > your 2
-> > patches, is cases where rproc_trigger_recovery() fails.  That leaves the
-> > system
-> > in a state where it can't be recovered, something the remoteproc core
-> > should not
-> > allow.
-> >
-> Right this is a second use case we faced when user space application which provided
-> firmware file crashed before coprocessor. In that case firmware file may be removed
-> from /lib/firmware directory and coprocessor recovery failed.
-> Application, when restarting, can't anymore control coprocessor.
+-ret =
++return
+     e;
+-return ret;
 
-This is a very specific use case.  It seems to me that fixing the
-problem with the availability of files under /lib/firmware is where
-the solution really lies.
+Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/hal_com_phycfg.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
->
-> Regards,
-> Loic
->
-> > >
-> > > Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
-> > > ---
-> > >  drivers/remoteproc/remoteproc_core.c  | 2 +-
-> > >  drivers/remoteproc/remoteproc_sysfs.c | 2 +-
-> > >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/drivers/remoteproc/remoteproc_core.c
-> > b/drivers/remoteproc/remoteproc_core.c
-> > > index 097f33e4f1f3..7ac87a75cd1b 100644
-> > > --- a/drivers/remoteproc/remoteproc_core.c
-> > > +++ b/drivers/remoteproc/remoteproc_core.c
-> > > @@ -1812,7 +1812,7 @@ void rproc_shutdown(struct rproc *rproc)
-> > >     if (!atomic_dec_and_test(&rproc->power))
-> > >             goto out;
-> > >
-> > > -   ret = rproc_stop(rproc, false);
-> > > +   ret = rproc_stop(rproc, rproc->state == RPROC_CRASHED);
-> >
-> > Please add a comment that explains how we can be in rproc_shutdown()
-> > when the
-> > processor has crashed and point to rproc_trigger_recovery().  See below for
-> > more
-> > details.
-> >
-> > >     if (ret) {
-> > >             atomic_inc(&rproc->power);
-> > >             goto out;
-> > > diff --git a/drivers/remoteproc/remoteproc_sysfs.c
-> > b/drivers/remoteproc/remoteproc_sysfs.c
-> > > index 7f8536b73295..1029458a4678 100644
-> > > --- a/drivers/remoteproc/remoteproc_sysfs.c
-> > > +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> > > @@ -101,7 +101,7 @@ static ssize_t state_store(struct device *dev,
-> > >             if (ret)
-> > >                     dev_err(&rproc->dev, "Boot failed: %d\n", ret);
-> > >     } else if (sysfs_streq(buf, "stop")) {
-> > > -           if (rproc->state != RPROC_RUNNING)
-> > > +           if (rproc->state != RPROC_RUNNING && rproc->state !=
-> > RPROC_CRASHED)
-> > >                     return -EINVAL;
-> >
-> > Wouldn't it be better to just prevent the MCU to stay in a crashed state
-> > (when
-> > recovery is not disabled)?
-> >
-> > I like what you did in the next patch where the state of the MCU is set to
-> > RPROC_CRASHED in case of failure, so that we keep.  I also think the hunk
-> > above is correct.  All that is left is to call rproc_shutdown() directly in
-> > rproc_trigger_recovery() when something goes wrong.  I would also add a
-> > dev_err() so that users have a clue of what happened.
-> >
-> > That would leave the system in a stable state without having to add
-> > intelligence
-> > to state_store().
-> It is a solution we debate internally. Should rproc_shutdown() called directly in
-> rproc_trigger_recovery() or not? If we go in such direction, that clearly simplify
-> coprocessor control as it will always be in a "stable" state. But that means user
-> will lost information that coprocessor crashed (mainly when recovery is disabled).
-> We just know that coprocessor is stopped but not why? Crashed or client action?
-> For debug purpose, it could be an issue from my pov.
+diff --git a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+index eb7de3617d83..767e2a784f78 100644
+--- a/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
++++ b/drivers/staging/rtl8723bs/hal/hal_com_phycfg.c
+@@ -1498,9 +1498,7 @@ s8 PHY_GetTxPowerByRate(
+ 		return value;
+ 	}
+ 
+-	value = pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex];
+-
+-	return value;
++	return pHalData->TxPwrByRateOffset[Band][RFPath][TxNum][rateIndex];
+ 
+ }
+ 
+-- 
+2.17.1
 
-That is why I suggested to add a dev_err() so that users know recovery
-of the MCU has failed.  Moreover I expect users to be aware of what is
-happening on their platform, i.e if application did not switch off the
-MCU and it is in the offline state, then it is fair to assume it
-crashed.
-
->
-> Regards,
-> Loic
-> >
-> > Let me know that you think...
-> >
-> > Mathieu
-> >
-> > >
-> > >             rproc_shutdown(rproc);
-> > > --
-> > > 2.7.4
-> > >
