@@ -2,386 +2,125 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFD6C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0241C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B0CA2076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC1020777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:13:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=flowbird.group header.i=@flowbird.group header.b="bxLcTHqu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1+oS4Jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgCYSMT (ORCPT
+        id S1728078AbgCYSNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:12:19 -0400
-Received: from mail-ed1-f97.google.com ([209.85.208.97]:44928 "EHLO
-        mail-ed1-f97.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbgCYSMC (ORCPT
+        Wed, 25 Mar 2020 14:13:00 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34674 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727253AbgCYSNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:12:02 -0400
-Received: by mail-ed1-f97.google.com with SMTP id i16so2772074edy.11
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:12:00 -0700 (PDT)
+        Wed, 25 Mar 2020 14:13:00 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 65so4450143wrl.1;
+        Wed, 25 Mar 2020 11:12:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=flowbird.group; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SuDRidi899yKOqtqrOSIVDZrVwIsv8//2ku9t3taYYw=;
-        b=bxLcTHqu65jbEfJcmFVf/k5qn5rrnssRpOu7m1fkUwQ+hMbGNP1ieh1DX43BjNs++y
-         0WAOHiHl8yvEgLRnKoYOvHhoVr1bItOeD7Sj4Aa/KqqXEltj5XuuGT0HVEQuDUJYuCQY
-         8LElCA9N3mtDetiBAzhWVeyoBLTWn7E6IcTCf2CZPv95KivKWS3Degd8VJaN+rtkn0eH
-         NpDmDFN1ElSJ+9gpws//7dGBIswIutaYfnz5zTbShfQBaXMrVWNXrzoAyi8UZw8meqJt
-         9o9aXDulyDUsEZ/ABe0Tuw4yk0CfMmnp7jn1XOi7jEig72HUmj2NVd+vU63oaJorNUK/
-         GjYw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3QYyaGrQpYyWaZ6oYwhc56xJCsI+0fcYVeC22HIA+uc=;
+        b=B1+oS4JxxUkN8An2JMtn4rbpXDh5oak3Nhzbu26gmN2zse3nygc/IXtxty0D4nLuej
+         0QeZ4DLTCdNKczDxfBsuNLSD9qClbxxsLJ5aHJFscskDE1Y1ZmJdmpW/+2qSVRRZaicv
+         S/Ih42cnymRQVZ6yU4OgBPZEtJhLI4bcqazrqrAKM/iM0WRDxdv+Ee2dxeCnq7AFFl7L
+         037C5Y9HAQrMHdOxljt1hxOfO7i/ibEOeqGYj8vVWxWet88MhSoJPyg+XEQc8buXlpGN
+         i8Ikon8CS3BDacMg4/IMbR5WHwfq72PeM9yhKAKXqCMvylgC/5JkvIBZQR1Y7SxraOMn
+         rdeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=SuDRidi899yKOqtqrOSIVDZrVwIsv8//2ku9t3taYYw=;
-        b=B/GDULY8vk/fLq/0z5hB+XnAcnRDgaGwvpk9frFHTPH/4harzqmtNR6Y1m9eenLhmf
-         RIVirNvkfmV33ad8tZ8vinyb1E50+u8gGaEQA+ULZYyPqCqPNCw5W2OLaOSEGgHZJvzI
-         pPGK1eAhRa44VZm4NRScZCKgXLCNOQFbJDAIuEydPLGXUFqVrRBQxgxzwETnSXrcgytT
-         QRDNTMkL1Z8B9mGcGoPoOQ8ZyDl8wlIciA9Nkkf78KbuimDDC8ZqjdDB5YbePUPrPIG1
-         Wop6R7VcBsEqTAPEmBbFig94WPiYImMyUSx0GiYD118ZVseQdm27ZnNnsYFCbGB/RPse
-         iJ6w==
-X-Gm-Message-State: ANhLgQ34rNzmxBe0GFZR0s172jmHy9g/OscNoiKQ+GKfKO2QK8xCtfKh
-        QfpwIBPZYkNyRqGPWXLvhVsz7edOfCZMuowrl8ck78zRcpxO
-X-Google-Smtp-Source: ADFU+vsP1VGrqe0bH9yBDhQTiDwm45P/c/NITFyxt4w4soNr9lVu8TUlPlK7dRfw0H6X0rwjrixmvkNsBr9B
-X-Received: by 2002:a17:906:33d3:: with SMTP id w19mr4251998eja.134.1585159919820;
-        Wed, 25 Mar 2020 11:11:59 -0700 (PDT)
-Received: from mail.besancon.parkeon.com ([185.149.63.251])
-        by smtp-relay.gmail.com with ESMTPS id r12sm12457ejr.8.2020.03.25.11.11.58
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Wed, 25 Mar 2020 11:11:59 -0700 (PDT)
-X-Relaying-Domain: flowbird.group
-Received: from [172.16.13.190] (port=39524 helo=PC12445-BES.dynamic.besancon.parkeon.com)
-        by mail.besancon.parkeon.com with esmtp (Exim 4.71)
-        (envelope-from <martin.fuzzey@flowbird.group>)
-        id 1jHAVS-0003Oy-Es; Wed, 25 Mar 2020 19:11:58 +0100
-From:   Martin Fuzzey <martin.fuzzey@flowbird.group>
-To:     Fugang Duan <fugang.duan@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
-Subject: [PATCH v2 1/4] net: fec: set GPR bit on suspend by DT configuration.
-Date:   Wed, 25 Mar 2020 19:11:56 +0100
-Message-Id: <1585159919-11491-2-git-send-email-martin.fuzzey@flowbird.group>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1585159919-11491-1-git-send-email-martin.fuzzey@flowbird.group>
-References: <1585159919-11491-1-git-send-email-martin.fuzzey@flowbird.group>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3QYyaGrQpYyWaZ6oYwhc56xJCsI+0fcYVeC22HIA+uc=;
+        b=bOkj+jLUCCCq6eaLz9Ap3KRlNhcqaIxIpKKWrOTBvbXMlX8Y4UgWVKgeJuN7VchZDg
+         bqgDWrCQ/rqlGbcToY+4VhJ2WgHp3kChWrgF2Vngh2TSPba5R4h5zUi73EfUeP4n3+O5
+         Bg2AQAyPtmRxgtftImwslhayoa3z4dS9lxiOF5X3KS4AS0/Nbbtqaqmf6jzSV/65T5ER
+         bJ+On1Ade11CwWPhjnj/VHP138oZohJYAXOcTnJpNTXp7vyzHw9AzNXKmZcG2FawrCob
+         5XENeeMZeiCNSM0Y7V0GVM+85myHI+2cuia/dsZ9RSjE1OPVXo/qdDfjoyrF93+geZ26
+         GdZg==
+X-Gm-Message-State: ANhLgQ1J1oRjzEQwoAM9rt3d1jHIvo0vBJxfLU3uyeFrm7J5J2bq7z+Q
+        /gGOMQSMJ24kKLkihB573g==
+X-Google-Smtp-Source: ADFU+vsK87vWZ86CZbSOPvStWKiJYDwyDfB/k0nWBadKFPEKNE8HclBtYUpqZ807F5qMdQXCmPxW5Q==
+X-Received: by 2002:adf:f6c8:: with SMTP id y8mr5033937wrp.403.1585159978286;
+        Wed, 25 Mar 2020 11:12:58 -0700 (PDT)
+Received: from avx2 ([46.53.251.45])
+        by smtp.gmail.com with ESMTPSA id 71sm20166150wrc.53.2020.03.25.11.12.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 11:12:57 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 21:12:55 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Jaewon Kim <jaewon31.kim@samsung.com>
+Cc:     gregkh@linuxfoundation.org, leon@kernel.org, vbabka@suse.cz,
+        akpm@linux-foundation.org, labbott@redhat.com,
+        sumit.semwal@linaro.org, minchan@kernel.org, ngupta@vflare.org,
+        sergey.senozhatsky.work@gmail.com, kasong@redhat.com,
+        bhe@redhat.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        jaewon31.kim@gmail.com, linux-api@vger.kernel.org,
+        kexec@lists.infradead.org
+Subject: Re: [RFC PATCH v2 0/3] meminfo_extra: introduce meminfo extra
+Message-ID: <20200325181255.GB18706@avx2>
+References: <CGME20200323080507epcas1p44cdb9ecb70a7a7395b3acddeda3cfd89@epcas1p4.samsung.com>
+ <20200323080503.6224-1-jaewon31.kim@samsung.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200323080503.6224-1-jaewon31.kim@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some SoCs, such as the i.MX6, it is necessary to set a bit
-in the SoC level GPR register before suspending for wake on lan
-to work.
+On Mon, Mar 23, 2020 at 05:05:00PM +0900, Jaewon Kim wrote:
+> /proc/meminfo or show_free_areas does not show full system wide memory
+> usage status because memory stats do not track all memory allocations.
+> There seems to be huge hidden memory especially on embedded system. It
+> is because some HW IPs in the system use common DRAM memory instead of
+> internal memory. Device drivers directly request huge pages from the
+> page allocator with alloc_pages.
+> 
+> In Android system, most of those hidden memory seems to be vmalloc
+> pages, ion system heap memory, graphics memory, and memory for DRAM
+> based compressed swap storage. They may be shown in other node but it
+> seems to be useful if /proc/meminfo_extra shows all those extra memory
+> information. And show_mem also need to print the info in oom situation.
+> 
+> Fortunately vmalloc pages is already shown by commit 97105f0ab7b8
+> ("mm: vmalloc: show number of vmalloc pages in /proc/meminfo"). Swap
+> memory using zsmalloc can be seen through vmstat by commit 91537fee0013
+> ("mm: add NR_ZSMALLOC to vmstat") but not on /proc/meminfo.
+> 
+> Memory usage of specific driver can be various so that showing the usage
+> through upstream meminfo.c is not easy. To print the extra memory usage
+> of a driver, introduce following APIs. Each driver needs to count as
+> atomic_long_t.
+> 
+> int register_meminfo_extra(atomic_long_t *val, int shift,
+> 			   const char *name);
+> int unregister_meminfo_extra(atomic_long_t *val);
+> 
+> Currently register ION system heap allocator and zsmalloc pages.
+> Additionally tested on local graphics driver.
+> 
+> i.e) cat /proc/meminfo_extra | tail -3
+> IonSystemHeap:    242620 kB
+> ZsPages:          203860 kB
+> GraphicDriver:    196576 kB
 
-The fec platform callback sleep_mode_enable was intended to allow this
-but the platform implementation was NAK'd back in 2015 [1]
+In that case definitely delete ':', spaces and KB.
+They only slowdown generation and parsing in userspace.
+Values should be printed /proc/vmstat does it, maybe with tab instead of
+space.
 
-This means that, currently, wake on lan is broken on mainline for
-the i.MX6 at least.
-
-So implement the required bit setting in the fec driver by itself
-by adding a new optional DT property indicating the GPR register
-and adding the offset and bit information to the driver.
-
-[1] https://www.spinics.net/lists/netdev/msg310922.html
-
-Signed-off-by: Martin Fuzzey <martin.fuzzey@flowbird.group>
-Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
----
- drivers/net/ethernet/freescale/fec.h      |   7 ++
- drivers/net/ethernet/freescale/fec_main.c | 149 ++++++++++++++++++++++++------
- 2 files changed, 127 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
-index f79e57f..d89568f 100644
---- a/drivers/net/ethernet/freescale/fec.h
-+++ b/drivers/net/ethernet/freescale/fec.h
-@@ -488,6 +488,12 @@ struct fec_enet_priv_rx_q {
- 	struct  sk_buff *rx_skbuff[RX_RING_SIZE];
- };
- 
-+struct fec_stop_mode_gpr {
-+	struct regmap *gpr;
-+	u8 reg;
-+	u8 bit;
-+};
-+
- /* The FEC buffer descriptors track the ring buffers.  The rx_bd_base and
-  * tx_bd_base always point to the base of the buffer descriptors.  The
-  * cur_rx and cur_tx point to the currently available buffer.
-@@ -562,6 +568,7 @@ struct fec_enet_private {
- 	int hwts_tx_en;
- 	struct delayed_work time_keep;
- 	struct regulator *reg_phy;
-+	struct fec_stop_mode_gpr stop_gpr;
- 
- 	unsigned int tx_align;
- 	unsigned int rx_align;
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index 23c5fef..69cab0b 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -62,6 +62,8 @@
- #include <linux/if_vlan.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/prefetch.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- #include <soc/imx/cpuidle.h>
- 
- #include <asm/cacheflush.h>
-@@ -84,6 +86,56 @@
- #define FEC_ENET_OPD_V	0xFFF0
- #define FEC_MDIO_PM_TIMEOUT  100 /* ms */
- 
-+struct fec_devinfo {
-+	u32 quirks;
-+	u8 stop_gpr_reg;
-+	u8 stop_gpr_bit;
-+};
-+
-+static const struct fec_devinfo fec_imx25_info = {
-+	.quirks = FEC_QUIRK_USE_GASKET | FEC_QUIRK_MIB_CLEAR |
-+		  FEC_QUIRK_HAS_FRREG,
-+};
-+
-+static const struct fec_devinfo fec_imx27_info = {
-+	.quirks = FEC_QUIRK_MIB_CLEAR | FEC_QUIRK_HAS_FRREG,
-+};
-+
-+static const struct fec_devinfo fec_imx28_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME |
-+		  FEC_QUIRK_SINGLE_MDIO | FEC_QUIRK_HAS_RACC |
-+		  FEC_QUIRK_HAS_FRREG,
-+};
-+
-+static const struct fec_devinfo fec_imx6q_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
-+		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
-+		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
-+		  FEC_QUIRK_HAS_RACC,
-+	.stop_gpr_reg = 0x34,
-+	.stop_gpr_bit = 27,
-+};
-+
-+static const struct fec_devinfo fec_mvf600_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_RACC,
-+};
-+
-+static const struct fec_devinfo fec_imx6x_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
-+		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
-+		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_HAS_AVB |
-+		  FEC_QUIRK_ERR007885 | FEC_QUIRK_BUG_CAPTURE |
-+		  FEC_QUIRK_HAS_RACC | FEC_QUIRK_HAS_COALESCE,
-+};
-+
-+static const struct fec_devinfo fec_imx6ul_info = {
-+	.quirks = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
-+		  FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
-+		  FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR007885 |
-+		  FEC_QUIRK_BUG_CAPTURE | FEC_QUIRK_HAS_RACC |
-+		  FEC_QUIRK_HAS_COALESCE,
-+};
-+
- static struct platform_device_id fec_devtype[] = {
- 	{
- 		/* keep it for coldfire */
-@@ -91,39 +143,25 @@
- 		.driver_data = 0,
- 	}, {
- 		.name = "imx25-fec",
--		.driver_data = FEC_QUIRK_USE_GASKET | FEC_QUIRK_MIB_CLEAR |
--			       FEC_QUIRK_HAS_FRREG,
-+		.driver_data = (kernel_ulong_t)&fec_imx25_info,
- 	}, {
- 		.name = "imx27-fec",
--		.driver_data = FEC_QUIRK_MIB_CLEAR | FEC_QUIRK_HAS_FRREG,
-+		.driver_data = (kernel_ulong_t)&fec_imx27_info,
- 	}, {
- 		.name = "imx28-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_SWAP_FRAME |
--				FEC_QUIRK_SINGLE_MDIO | FEC_QUIRK_HAS_RACC |
--				FEC_QUIRK_HAS_FRREG,
-+		.driver_data = (kernel_ulong_t)&fec_imx28_info,
- 	}, {
- 		.name = "imx6q-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
--				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
--				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR006358 |
--				FEC_QUIRK_HAS_RACC,
-+		.driver_data = (kernel_ulong_t)&fec_imx6q_info,
- 	}, {
- 		.name = "mvf600-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_RACC,
-+		.driver_data = (kernel_ulong_t)&fec_mvf600_info,
- 	}, {
- 		.name = "imx6sx-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
--				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
--				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_HAS_AVB |
--				FEC_QUIRK_ERR007885 | FEC_QUIRK_BUG_CAPTURE |
--				FEC_QUIRK_HAS_RACC | FEC_QUIRK_HAS_COALESCE,
-+		.driver_data = (kernel_ulong_t)&fec_imx6x_info,
- 	}, {
- 		.name = "imx6ul-fec",
--		.driver_data = FEC_QUIRK_ENET_MAC | FEC_QUIRK_HAS_GBIT |
--				FEC_QUIRK_HAS_BUFDESC_EX | FEC_QUIRK_HAS_CSUM |
--				FEC_QUIRK_HAS_VLAN | FEC_QUIRK_ERR007885 |
--				FEC_QUIRK_BUG_CAPTURE | FEC_QUIRK_HAS_RACC |
--				FEC_QUIRK_HAS_COALESCE,
-+		.driver_data = (kernel_ulong_t)&fec_imx6ul_info,
- 	}, {
- 		/* sentinel */
- 	}
-@@ -1092,11 +1130,28 @@ static void fec_enet_reset_skb(struct net_device *ndev)
- 
- }
- 
-+static void fec_enet_stop_mode(struct fec_enet_private *fep, bool enabled)
-+{
-+	struct fec_platform_data *pdata = fep->pdev->dev.platform_data;
-+	struct fec_stop_mode_gpr *stop_gpr = &fep->stop_gpr;
-+
-+	if (stop_gpr->gpr) {
-+		if (enabled)
-+			regmap_update_bits(stop_gpr->gpr, stop_gpr->reg,
-+					   BIT(stop_gpr->bit),
-+					   BIT(stop_gpr->bit));
-+		else
-+			regmap_update_bits(stop_gpr->gpr, stop_gpr->reg,
-+					   BIT(stop_gpr->bit), 0);
-+	} else if (pdata && pdata->sleep_mode_enable) {
-+		pdata->sleep_mode_enable(enabled);
-+	}
-+}
-+
- static void
- fec_stop(struct net_device *ndev)
- {
- 	struct fec_enet_private *fep = netdev_priv(ndev);
--	struct fec_platform_data *pdata = fep->pdev->dev.platform_data;
- 	u32 rmii_mode = readl(fep->hwp + FEC_R_CNTRL) & (1 << 8);
- 	u32 val;
- 
-@@ -1125,9 +1180,7 @@ static void fec_enet_reset_skb(struct net_device *ndev)
- 		val = readl(fep->hwp + FEC_ECNTRL);
- 		val |= (FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
- 		writel(val, fep->hwp + FEC_ECNTRL);
--
--		if (pdata && pdata->sleep_mode_enable)
--			pdata->sleep_mode_enable(true);
-+		fec_enet_stop_mode(fep, true);
- 	}
- 	writel(fep->phy_speed, fep->hwp + FEC_MII_SPEED);
- 
-@@ -3397,6 +3450,37 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- 	return irq_cnt;
- }
- 
-+static int fec_enet_init_stop_mode(struct fec_enet_private *fep,
-+				   struct fec_devinfo *dev_info,
-+				   struct device_node *np)
-+{
-+	struct device_node *gpr_np;
-+	int ret;
-+
-+	if (!dev_info)
-+		return 0;
-+
-+	gpr_np = of_parse_phandle(np, "gpr", 0);
-+	if (!gpr_np)
-+		return 0;
-+
-+	fep->stop_gpr.gpr = syscon_node_to_regmap(gpr_np);
-+	if (IS_ERR(fep->stop_gpr.gpr)) {
-+		dev_err(&fep->pdev->dev, "could not find gpr regmap\n");
-+		ret = PTR_ERR(fep->stop_gpr.gpr);
-+		fep->stop_gpr.gpr = NULL;
-+		goto out;
-+	}
-+
-+	fep->stop_gpr.reg = dev_info->stop_gpr_reg;
-+	fep->stop_gpr.bit = dev_info->stop_gpr_bit;
-+
-+out:
-+	of_node_put(gpr_np);
-+
-+	return ret;
-+}
-+
- static int
- fec_probe(struct platform_device *pdev)
- {
-@@ -3412,6 +3496,7 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- 	int num_rx_qs;
- 	char irq_name[8];
- 	int irq_cnt;
-+	struct fec_devinfo *dev_info;
- 
- 	fec_enet_get_queue_num(pdev, &num_tx_qs, &num_rx_qs);
- 
-@@ -3429,7 +3514,9 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- 	of_id = of_match_device(fec_dt_ids, &pdev->dev);
- 	if (of_id)
- 		pdev->id_entry = of_id->data;
--	fep->quirks = pdev->id_entry->driver_data;
-+	dev_info = (struct fec_devinfo *)pdev->id_entry->driver_data;
-+	if (dev_info)
-+		fep->quirks = dev_info->quirks;
- 
- 	fep->netdev = ndev;
- 	fep->num_rx_queues = num_rx_qs;
-@@ -3463,6 +3550,10 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- 	if (of_get_property(np, "fsl,magic-packet", NULL))
- 		fep->wol_flag |= FEC_WOL_HAS_MAGIC_PACKET;
- 
-+	ret = fec_enet_init_stop_mode(fep, dev_info, np);
-+	if (ret)
-+		goto failed_stop_mode;
-+
- 	phy_node = of_parse_phandle(np, "phy-handle", 0);
- 	if (!phy_node && of_phy_is_fixed_link(np)) {
- 		ret = of_phy_register_fixed_link(np);
-@@ -3631,6 +3722,7 @@ static int fec_enet_get_irq_cnt(struct platform_device *pdev)
- 	if (of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
- 	of_node_put(phy_node);
-+failed_stop_mode:
- failed_phy:
- 	dev_id--;
- failed_ioremap:
-@@ -3708,7 +3800,6 @@ static int __maybe_unused fec_resume(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct fec_enet_private *fep = netdev_priv(ndev);
--	struct fec_platform_data *pdata = fep->pdev->dev.platform_data;
- 	int ret;
- 	int val;
- 
-@@ -3726,8 +3817,8 @@ static int __maybe_unused fec_resume(struct device *dev)
- 			goto failed_clk;
- 		}
- 		if (fep->wol_flag & FEC_WOL_FLAG_ENABLE) {
--			if (pdata && pdata->sleep_mode_enable)
--				pdata->sleep_mode_enable(false);
-+			fec_enet_stop_mode(fep, false);
-+
- 			val = readl(fep->hwp + FEC_ECNTRL);
- 			val &= ~(FEC_ECR_MAGICEN | FEC_ECR_SLEEP);
- 			writel(val, fep->hwp + FEC_ECNTRL);
--- 
-1.9.1
-
+	foo	1234
+	bar	0
+	zot	111
