@@ -2,118 +2,112 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2671DC54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 233A1C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0519320772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:24:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SsLqtwNs"
+	by mail.kernel.org (Postfix) with ESMTP id F1EB020774
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:26:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585157162;
+	bh=D5O2CJoTiuJfdLrYvR2mjTQW0GHmak//e/GmdO9cvQo=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=oRw1yfZnHGPWOJ8oxT8CyWgAZr7HuFNBIhBnPhow2DuMeCbYljGei/ebzy7fEXvlx
+	 KqgiKqP0bbCocvCx5L0TAb7Zsial3y9dHbP933VjSPw8knEyvSLRMgVqZ5N8YqO9RH
+	 3/DjKL04kjK2XI5hAccsSGFrzWTjHIYu26B06PPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgCYRYh (ORCPT
+        id S1727751AbgCYR0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:24:37 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55392 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727320AbgCYRYg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:24:36 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PHIUu9063725;
-        Wed, 25 Mar 2020 17:23:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=BVLD2DnNfc3hv/pKnHW3xvm86ovl8foR84Cu3jjRluI=;
- b=SsLqtwNsiMxQfXKTjwpsTimV5kVfZurxza6rlE6nubcGWAuwfTQLsLzfoqG0Stq9ih08
- JPc3GVkauUN9Cml8EKZvjx69mZwbc+VFBo0XITYoEyIu99jyzN2TJm/F2sx57xWqNmOh
- zf792px6wXY0CY6mrHRCF2ct3trMMgap/0VufstShpXG/ZafG3BTY0QKhfGEra51fy1s
- bVcRlQFVCNRwWWIGQ8CXRaRPqg/kGM6NAgfMca09okEe2kHd280CipW0AqoOSFCv+deO
- 6GesVjacIeNC6T/w8+zLlG+Fz5PlAFNc1I53QbM4qMrLiNxiF65nF5uiIX0kBdvOmngY gQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 3005kva3e8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 17:23:45 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PHMVh7021581;
-        Wed, 25 Mar 2020 17:23:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2yxw4rvfvw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 17:23:44 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02PHNepp026829;
-        Wed, 25 Mar 2020 17:23:40 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 10:23:40 -0700
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>, axboe@kernel.dk,
-        bob.liu@oracle.com, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, song@kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/6] block: Introduce REQ_ALLOCATE flag for REQ_OP_WRITE_ZEROES
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
-        <e2b7cbab-d91f-fd7b-de6f-a671caa6f5eb@virtuozzo.com>
-        <69c0b8a4-656f-98c4-eb55-2fd1184f5fc9@virtuozzo.com>
-        <67d63190-c16f-cd26-6b67-641c8943dc3d@virtuozzo.com>
-        <20200319102819.GA26418@infradead.org> <yq1tv2k8pjn.fsf@oracle.com>
-        <20200325162656.GJ29351@magnolia>
-        <20200325163223.GA27156@infradead.org>
-Date:   Wed, 25 Mar 2020 13:23:33 -0400
-In-Reply-To: <20200325163223.GA27156@infradead.org> (Christoph Hellwig's
-        message of "Wed, 25 Mar 2020 09:32:23 -0700")
-Message-ID: <yq1d090jqlm.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Wed, 25 Mar 2020 13:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727554AbgCYR0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:26:00 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABBB120772;
+        Wed, 25 Mar 2020 17:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585157160;
+        bh=D5O2CJoTiuJfdLrYvR2mjTQW0GHmak//e/GmdO9cvQo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ySj+c2th9HWiV2fXJqiJOATW6zw9WCMd3NugaLOGLYB3DuaBDUhjKud/KFVa4jPNv
+         phnbnv8dEE3GERDnaMN0g2OFEzjgzfo/z3ovm/0znYDhkWy30seOftD3Hy/YmsmGUi
+         2lUiqS7hc0V8DoKmSRBCyed2Qmu6Z72uHwz/RQpE=
+Subject: Re: [PATCH kselftest/test] kunit: Always print actual pointer values
+ in asserts
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        shuah <shuah@kernel.org>
+References: <20191121235058.21653-1-davidgow@google.com>
+ <CAFd5g46Z_vVb92Y-sfWi68=HFy5+kukZXvT9usEEnhBUvPg3AQ@mail.gmail.com>
+ <CABVgOSn1azUN4XujHLsc3NY9fOUPB4Vw6930zc4oR26kxqrwOg@mail.gmail.com>
+ <CAFd5g44ZNv-BP_t6M1EWQjXbgBYsA0+oBZ_-nTAmZbE4GNWgpQ@mail.gmail.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2246e35f-b8c4-0152-91f5-5f01d52cd414@kernel.org>
+Date:   Wed, 25 Mar 2020 11:25:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=786 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003250140
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
- suspectscore=0 impostorscore=0 spamscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=841 lowpriorityscore=0 mlxscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250139
+In-Reply-To: <CAFd5g44ZNv-BP_t6M1EWQjXbgBYsA0+oBZ_-nTAmZbE4GNWgpQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/25/20 10:33 AM, Brendan Higgins wrote:
+> On Tue, Mar 24, 2020 at 8:33 PM David Gow <davidgow@google.com> wrote:
+>>
+>> On Tue, Dec 3, 2019 at 3:44 PM Brendan Higgins
+>> <brendanhiggins@google.com> wrote:
+>>>
+>>> On Thu, Nov 21, 2019 at 3:51 PM David Gow <davidgow@google.com> wrote:
+>>>>
+>>>> KUnit assertions and expectations will print the values being tested. If
+>>>> these are pointers (e.g., KUNIT_EXPECT_PTR_EQ(test, a, b)), these
+>>>> pointers are currently printed with the %pK format specifier, which -- to
+>>>> prevent information leaks which may compromise, e.g., ASLR -- are often
+>>>> either hashed or replaced with ____ptrval____ or similar, making debugging
+>>>> tests difficult.
+>>>>
+>>>> By replacing %pK with %px as Documentation/core-api/printk-formats.rst
+>>>> suggests, we disable this security feature for KUnit assertions and
+>>>> expectations, allowing the actual pointer values to be printed. Given
+>>>> that KUnit is not intended for use in production kernels, and the
+>>>> pointers are only printed on failing tests, this seems like a worthwhile
+>>>> tradeoff.
+>>>
+>>> I agree. However, I also remember that others in the past yelled at me
+>>> for assuming that KUnit would not be built into production kernels.
+>>>
+>>> I feel like +Kees Cook would have a good opinion on this (or will at
+>>> least CC the right people).
+>>>
+>>
+>> I'm tempted to take the silence as a sign that no-one is upset by
+>> this. Otherwise, consider this a gentle reminder to file any
+>> objections you may have. :-)
+>>
+>> Otherwise, I've confirmed that this still applies cleanly to the
+>> latest linux-kselftest/kunit branch, so -- assuming there are no
+>> last-minute objections -- this ought to be ready to go.
+> 
+> Shuah, can you pick this up for 5.7?
+> 
 
-Christoph,
+Yes. I will pick this up.
 
-> I am very much against that for the following reason:
->
->  - the current REQ_OP_DISCARD is purely a hint, and implementations can
->    (and do) choose to ignore it
->
->  - REQ_OP_WRITE_ZEROES is an actual data integrity operation with
->    everything that entails
-
-If you want to keep emphasis on the "integrity operation" instead of the
-provisioning aspect, would you expect REQ_ALLOCATE (which may or may not
-zero blocks) to be considered a deterministic operation or a
-non-deterministic one? Should this depend on whether the device
-guarantees zeroing when provisioning blocks or not?
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+thanks,
+-- Shuah
