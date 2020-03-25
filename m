@@ -2,106 +2,97 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87100C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F47DC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E9FF2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:15:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="baso6vXv"
+	by mail.kernel.org (Postfix) with ESMTP id 107822073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727384AbgCYBPE (ORCPT
+        id S1727239AbgCYBRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:15:04 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:13029 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727152AbgCYBPE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:15:04 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7ab03c0000>; Tue, 24 Mar 2020 18:13:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 24 Mar 2020 18:15:03 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 18:15:03 -0700
-Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
- 2020 01:15:02 +0000
-Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
-        <helen.koike@collabora.com>
-CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
- <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
- <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
- <5695fc27-6839-dda3-9d06-77ef36ecfd43@nvidia.com>
-Message-ID: <f59eb7fa-5b26-60e4-771f-f6f9ecfa0b5f@nvidia.com>
-Date:   Tue, 24 Mar 2020 18:15:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 24 Mar 2020 21:17:46 -0400
+Received: from mga04.intel.com ([192.55.52.120]:63498 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727102AbgCYBRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 21:17:45 -0400
+IronPort-SDR: QXzpPXbxaPpPJryQvXagFSmUyif5iRMs77RQhaTLJivW2cC1Fzgi9LAEfC2hBBZe4OtKY1xNYX
+ HLY8/0T6UuTQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 18:17:45 -0700
+IronPort-SDR: kxzbOiJ4c7MKljyC35eszgw9oLZcg/hkKSPkEMFCGkM+EqZIi88KJ2Wh0Mp0P2RgkGVK2zxPSM
+ ugAHk/cjthVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
+   d="scan'208";a="265371309"
+Received: from hmendezc-mobl1.amr.corp.intel.com (HELO [10.254.108.97]) ([10.254.108.97])
+  by orsmga002.jf.intel.com with ESMTP; 24 Mar 2020 18:17:44 -0700
+Subject: Re: [PATCH v18 03/11] PCI/DPC: Fix DPC recovery issue in non hotplug
+ case
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200324234944.GA73526@google.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <e5af8e6e-ce37-eba4-330e-94b43bd0adb7@linux.intel.com>
+Date:   Tue, 24 Mar 2020 18:17:44 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <5695fc27-6839-dda3-9d06-77ef36ecfd43@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200324234944.GA73526@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585098812; bh=bU2HFAYyjlSHy3XCNC4Et16uw6jnRXPLo6YbsCijPUg=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=baso6vXvWWdYt8HlMNp87qBzGMKSRA7WE17d7TZx5MfKoYWkttsuOK36Eep8zaeiU
-         3yn4nNzyIub8gBdIgJa8pwZL/Cw66sTn1Mgly+KMhLfsMzoVeCOX+XgOrsbxtTsFxD
-         MFNxBDvEUZmWt3GYie1uWsCwuHp4GCGBkwxCanW6w05FbY6ldPS2VIGF1sJnFwK2+y
-         e+SIYGlBoBaTGfMNchwJMusvSOUNO6vQK5Oobjw+zXmCEmBvbC3Yo8MqfN5EjR1yEA
-         mTI8ZQE3e0mropzJJ5fPJQLkB8IZS1PsxKMl3afZeppilYCmlo/EZZGn6cW0i0VjCx
-         /eZdAC+VhgcIQ==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bjorn,
 
-On 3/24/20 6:08 PM, Sowjanya Komatineni wrote:
->
-> On 3/24/20 5:34 PM, Dmitry Osipenko wrote:
->> External email: Use caution opening links or attachments
->>
->>
->> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>> +static void tegra_channel_vi_soft_reset(struct tegra_vi_channel *chan)
->>> +{
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 /* disable clock gating to enable continuous =
-clock */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0)=
-;
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Soft reset memory client interface, p=
-ixel format logic, sensor
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * control logic, and a shadow copy logi=
-c to bring VI to clean=20
->>> state.
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xf=
-);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 usleep_range(100, 200);
->>> +=C2=A0=C2=A0=C2=A0=C2=A0 vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0=
-);
->> Is it safe to reset MCCIF without blocking and flushing memory requests
->> at first?
-> Yes to bring VI to clean state on errors its recommended by HW design=20
-> team.
-BTW, just to be clear this is Software reset.
+On 3/24/20 4:49 PM, Bjorn Helgaas wrote:
+> I don't understand why hotplug is relevant here.  This path
+> (dpc_reset_link()) is only used for downstream ports that support DPC.
+> DPC has already disabled the link, which resets everything below the
+> port, regardless of whether the port supports hotplug.
+> 
+> I do see that PCI_ERS_RESULT_NEED_RESET seems to promise a lot more
+> than it actually*does*.  The doc (pci-error-recovery.rst) says
+> .error_detected() can return PCI_ERS_RESULT_NEED_RESET to*request*  a
+> slot reset.  But if that happens, pcie_do_recovery() doesn't do a
+> reset at all.  It calls the driver's .slot_reset() method, which tells
+> the driver "we've reset your device; please re-initialize the
+> hardware."
+> 
+> I guess this abuses PCI_ERS_RESULT_NEED_RESET by taking advantage of
+> that implementation deficiency in pcie_do_recovery(): we know the
+> downstream devices have already been reset via DPC, and returning
+> PCI_ERS_RESULT_NEED_RESET means we'll call .slot_reset() to tell the
+> driver about that reset.
+> 
+> I can see how this achieves the desired result, but if/when we fix
+> pcie_do_recovery() to actually*do*  the reset promised by
+> PCI_ERS_RESULT_NEED_RESET, we will be doing*two*  resets: the first
+> via DPC and a second via whatever slot reset mechanism
+> pcie_do_recovery() would use.
+When we fix this issue, if we make sure the reset logic is
+implemented before we call .reset_link callback we should be
+able to avoid resetting the device twice. Before we call DPC
+.reset_link callback, the device link will not up and hence we
+should not able to reset it.
+> 
+> So I guess the real issue (as you allude to in the commit log) is that
+> we rely on hotplug to unbind/rebind the driver, and without hotplug we
+> need to at least tell the driver the device was reset.
+Agree
+> 
+> I'll try to expand the comment here so it reminds me what's going on
+> when we have to look at this again:)   Let me know if I'm on the right
+> track.
+Yes, your understanding is correct.
