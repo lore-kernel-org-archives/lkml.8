@@ -2,94 +2,93 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6770C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D36C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 892E62073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:18:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E637B20719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:26:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCYBSs (ORCPT
+        id S1727277AbgCYB0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:18:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:49570 "EHLO huawei.com"
+        Tue, 24 Mar 2020 21:26:12 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:57524 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727102AbgCYBSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:18:48 -0400
+        id S1727196AbgCYB0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 21:26:12 -0400
 Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DE254EDA07573CE7D228;
-        Wed, 25 Mar 2020 09:18:36 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
- 09:18:29 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <vishal@chelsio.com>, <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <rahul.lakkireddy@chelsio.com>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 net-next] cxgb4: remove set but not used variable 'tab'
-Date:   Wed, 25 Mar 2020 09:17:50 +0800
-Message-ID: <20200325011750.53008-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200324062614.29644-1-yuehaibing@huawei.com>
-References: <20200324062614.29644-1-yuehaibing@huawei.com>
+        by Forcepoint Email with ESMTP id 29D1D445602345D482B4;
+        Wed, 25 Mar 2020 09:26:08 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 25 Mar
+ 2020 09:26:06 +0800
+Subject: Re: [PATCH] f2fs: remove redundant compress inode check
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20200229104906.12061-1-yuchao0@huawei.com>
+ <6aab59b9-6e33-5b01-acf8-ccbacd9318e3@huawei.com>
+ <20200324154322.GB198420@google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b0306fcf-27f2-20ab-9e5b-e54a924d4a61@huawei.com>
+Date:   Wed, 25 Mar 2020 09:26:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
+In-Reply-To: <20200324154322.GB198420@google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c: In function cxgb4_get_free_ftid:
-drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c:547:23:
- warning: variable tab set but not used [-Wunused-but-set-variable]
+On 2020/3/24 23:43, Jaegeuk Kim wrote:
+> On 03/24, Chao Yu wrote:
+>> Jaegeuk,
+>>
+>> Missed to apply this patch?
+>>
+>> On 2020/2/29 18:49, Chao Yu wrote:
+>>> due to f2fs_post_read_required() has did that.
+>>>
+>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>>> ---
+>>>  fs/f2fs/f2fs.h | 2 --
+>>>  1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>> index f4bcbbd5e9ed..882f9ad3445b 100644
+>>> --- a/fs/f2fs/f2fs.h
+>>> +++ b/fs/f2fs/f2fs.h
+>>> @@ -4006,8 +4006,6 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
+>>>  		return true;
+>>>  	if (f2fs_is_multi_device(sbi))
+>>>  		return true;
+>>> -	if (f2fs_compressed_file(inode))
+>>> -		return true;
+> 
+> I thought that we can keep this to avoid any confusion when porting to old
+> production kernel which uses ICE.
 
-commit 8d174351f285 ("cxgb4: rework TC filter rule insertion across regions")
-involved this, remove it.
+That old kernel w/ ICE doesn't have f2fs_post_read_required(), right?
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: keep christmas tree ordering
----
- drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I thought we backport features with order of the time fsverity/compression
+feature was introduced, then f2fs_post_read_required() should be there
+when we backport compression feature.
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-index e8852dfcc1f1..4490042b5a95 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_filter.c
-@@ -544,8 +544,8 @@ int cxgb4_get_free_ftid(struct net_device *dev, u8 family, bool hash_en,
- {
- 	struct adapter *adap = netdev2adap(dev);
- 	struct tid_info *t = &adap->tids;
--	struct filter_entry *tab, *f;
- 	u32 bmap_ftid, max_ftid;
-+	struct filter_entry *f;
- 	unsigned long *bmap;
- 	bool found = false;
- 	u8 i, cnt, n;
-@@ -617,7 +617,6 @@ int cxgb4_get_free_ftid(struct net_device *dev, u8 family, bool hash_en,
- 
- 			bmap = t->hpftid_bmap;
- 			bmap_ftid = ftid;
--			tab = t->hpftid_tab;
- 		} else if (hash_en) {
- 			/* Ensure priority is >= last rule in HPFILTER
- 			 * region.
-@@ -657,7 +656,6 @@ int cxgb4_get_free_ftid(struct net_device *dev, u8 family, bool hash_en,
- 
- 			bmap = t->ftid_bmap;
- 			bmap_ftid = ftid - t->nhpftids;
--			tab = t->ftid_tab;
- 		}
- 
- 		cnt = 0;
--- 
-2.17.1
+Thanks,
 
-
+> 
+>>>  	/*
+>>>  	 * for blkzoned device, fallback direct IO to buffered IO, so
+>>>  	 * all IOs can be serialized by log-structured write.
+>>>
+> .
+> 
