@@ -2,111 +2,114 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F80C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CACC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350582074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB07D20777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585158265;
-	bh=f0GHT+VwKPXcpLO2tFDzBlY3ksBNxm1eV2wCt/Syk70=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=fqUxcRpoNSPZ7S80CZErJ2jmJE+/dc5wHHPMSd4tFmFJqHeF1jncKXJyr9CZQeISa
-	 ePppRzj43ZyFCgjL5Qoe0970mAPDOJUzkHrjIw1vVgze2OARYwzk9d2jI4PesVWEmm
-	 86P/c0d3nd1BfpHiJZPltRVxaoZd0CDKqA/Nn0bs=
+	s=default; t=1585158271;
+	bh=mISHSjoMsIZ+fxJ0QKRj3gwZ7fgFWGgkHXQgCsKxo5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AjAFCx0un43VL4rxWaTRmSj1tp3yjA+eBQAVETtqSmNsBBj1yy+FYG5QtzLxkUDmF
+	 Oh7SnUYCuZGuwzQJ09/GI/9nQwMsXC+HU5z+03ia+T6/IoaVdxaPr5ud60qrAECIew
+	 980BpsXAz1MIWm9yS8BMIcTtbwoOenOG7PMqy11E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbgCYRoY (ORCPT
+        id S1728158AbgCYRoa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:44:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 13:44:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727541AbgCYRoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:44:24 -0400
+        id S1727843AbgCYRoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:44:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C74BB2074D;
-        Wed, 25 Mar 2020 17:44:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67F8A20777;
+        Wed, 25 Mar 2020 17:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585158263;
-        bh=f0GHT+VwKPXcpLO2tFDzBlY3ksBNxm1eV2wCt/Syk70=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jPNJ0wVBIYofWK3hgRw1X36T1a+dqRxWmQGXKjafBU9cKOo18+T/m7Q6mL4Pbp824
-         zNa4v3tlA0fJpZ3Qk+YqSJdMyhMYsvEKq4dFl8buyzVrjlsCMNCOXQwzAtxN2UmTPy
-         eJ4b9FeB8Tb7eLSnJsa2xZMXXYHlQHj7xPlcnNmM=
-Date:   Wed, 25 Mar 2020 18:44:21 +0100
+        s=default; t=1585158269;
+        bh=mISHSjoMsIZ+fxJ0QKRj3gwZ7fgFWGgkHXQgCsKxo5o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I3Ea4zUMbkESFEf7+hBBwqkHO8YVxddfJ+/IOi7LkWOVyoD2XzKkGj1dI4WIp1DHA
+         z5aM03RnyzWLZbNJGadWBpM/DM4TtqaGKfS0z2DQjZt/QuJ/7+d3hQpN8xz8pcvCc3
+         sR5dtKZkddb26d7cszp/nMnrd8Pn3mkn0yzeRZL4=
+Date:   Wed, 25 Mar 2020 18:44:27 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         torvalds@linux-foundation.org, stable@vger.kernel.org
 Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 5.5.13
-Message-ID: <20200325174421.GA3764758@kroah.com>
+Subject: Re: Linux 5.5.13
+Message-ID: <20200325174427.GB3764758@kroah.com>
+References: <20200325174421.GA3764758@kroah.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200325174421.GA3764758@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-I'm announcing the release of the 5.5.13 kernel.
-
-All users of the 5.5 kernel series must upgrade.
-
-The updated 5.5.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-5.5.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile               |    2 +-
- drivers/base/core.c    |    4 +++-
- include/linux/device.h |   11 +++++++++++
- 3 files changed, 15 insertions(+), 2 deletions(-)
-
-Greg Kroah-Hartman (1):
-      Linux 5.5.13
-
-Saravana Kannan (2):
-      driver core: Add dev_has_sync_state()
-      driver core: Skip unnecessary work when device doesn't have sync_state()
-
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl57mHQACgkQONu9yGCS
-aT7NVw/+Kgw+jvFiLGLUEjg/AF3tWGmGiOapqLI5t48LpSwgnPx3nN+4oR9CNKNu
-zXd9uoOlGxmrJlxhQHpAqiT6eYbSTfcksTfKuxHnGB1jW81M9vzvIJ3p2W7osouB
-Ia1A0ZzPP49XWRwSelhDVWC3JCeBcyL9QSgRPsuJDMK8lTj+btWbYCmL9kYrb2GS
-ncVoxwpuKNDpHQTunUb8lueHbqpzMUo9Idd1M2EYqCzyxpOt2TOOSazGpWQ4Cy3y
-LIIi6Ktvb3TmTWXrpNb0xwY4H/TJrZNyTo4DMMgBUDo7D/Udz5nLIXbMe6gRLsYS
-MUKqF+8aA+x6eeK2wFalfkZ6baVIuTSQhITRFbAEB0FNa5ReHQuVQEIx81zJzixb
-sM52MWxvAlWmSkxKFhGuxUHqcR2PbHZXwgVyBgNNIJLGmsAX35y82dpJqteRc3Dd
-GTYk8xUVCMyIvRj6vIkQ53CHZ3q5LmJGY8HPUoOjrM7kWiZ/mOVZHAMZXKprS3w/
-q6aNGyyUE/+qSwKo1CYEG+KWXx0Xv6FtStaBWni7k2oe53o5WdF8tQwrdopueNdc
-pir5792+kg8TfcbtiwSCQxqFordlPNt3+pJGJQMd0HSNiht+Y2U8zttyMb0O++Z6
-iy+BL6KlK1kGPwNffr5V2jFM2vRc0Z7WkNH8/RXagbt5ccA6iyo=
-=vhks
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+diff --git a/Makefile b/Makefile
+index d962fe0f26ce..d1574c99f83c 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 5
+ PATCHLEVEL = 5
+-SUBLEVEL = 12
++SUBLEVEL = 13
+ EXTRAVERSION =
+ NAME = Kleptomaniac Octopus
+ 
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index 3306d5ae92a6..dbb0f9130f42 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -718,6 +718,8 @@ static void __device_links_queue_sync_state(struct device *dev,
+ {
+ 	struct device_link *link;
+ 
++	if (!dev_has_sync_state(dev))
++		return;
+ 	if (dev->state_synced)
+ 		return;
+ 
+@@ -819,7 +821,7 @@ late_initcall(sync_state_resume_initcall);
+ 
+ static void __device_links_supplier_defer_sync(struct device *sup)
+ {
+-	if (list_empty(&sup->links.defer_sync))
++	if (list_empty(&sup->links.defer_sync) && dev_has_sync_state(sup))
+ 		list_add_tail(&sup->links.defer_sync, &deferred_sync);
+ }
+ 
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 96ff76731e93..50d97767d8d6 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1522,6 +1522,17 @@ static inline struct device_node *dev_of_node(struct device *dev)
+ 
+ void driver_init(void);
+ 
++static inline bool dev_has_sync_state(struct device *dev)
++{
++	if (!dev)
++		return false;
++	if (dev->driver && dev->driver->sync_state)
++		return true;
++	if (dev->bus && dev->bus->sync_state)
++		return true;
++	return false;
++}
++
+ /*
+  * High level routines for use by the bus drivers
+  */
