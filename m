@@ -2,208 +2,137 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B4CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:00:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254CEC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDA9B206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F9B206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:02:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727279AbgCYIAl (ORCPT
+        id S1727299AbgCYICR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:00:41 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34996 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725903AbgCYIAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:00:40 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 47CDD2D11161DABE2D8E;
-        Wed, 25 Mar 2020 16:00:28 +0800 (CST)
-Received: from [127.0.0.1] (10.173.220.25) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
- 16:00:21 +0800
-Subject: Re: [RFC PATCH v4 5/6] arm64: tlb: Use translation level hint in
- vm_flags
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <will@kernel.org>, <mark.rutland@arm.com>,
-        <catalin.marinas@arm.com>, <aneesh.kumar@linux.ibm.com>,
-        <akpm@linux-foundation.org>, <npiggin@gmail.com>,
-        <peterz@infradead.org>, <arnd@arndb.de>, <rostedt@goodmis.org>,
-        <suzuki.poulose@arm.com>, <tglx@linutronix.de>,
-        <yuzhao@google.com>, <Dave.Martin@arm.com>, <steven.price@arm.com>,
-        <broonie@kernel.org>, <guohanjun@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-mm@kvack.org>, <arm@kernel.org>, <xiexiangyou@huawei.com>,
-        <prime.zeng@hisilicon.com>, <zhangshaokun@hisilicon.com>
-References: <20200324134534.1570-1-yezhenyu2@huawei.com>
- <20200324134534.1570-6-yezhenyu2@huawei.com> <20200324144514.340c78d9@why>
-From:   Zhenyu Ye <yezhenyu2@huawei.com>
-Message-ID: <986be927-02c6-3cc2-ca39-30ccad60eae0@huawei.com>
-Date:   Wed, 25 Mar 2020 16:00:19 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200324144514.340c78d9@why>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.220.25]
-X-CFilter-Loop: Reflected
+        Wed, 25 Mar 2020 04:02:17 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:42593 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726073AbgCYICR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 04:02:17 -0400
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 63C44CECCA;
+        Wed, 25 Mar 2020 09:11:47 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
+ extension for Intel 9460/9560 and 9160/9260
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <CALWDO_Uc6brpXmVfoUd+jgyy_F0-WSrYb1+hXtXm498dGzCOSg@mail.gmail.com>
+Date:   Wed, 25 Mar 2020 09:02:15 +0100
+Cc:     Joe Perches <joe@perches.com>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Alain Michaud <alainm@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <432CCFCD-50AD-4678-A002-37D81A3B5E8F@holtmann.org>
+References: <20200323072824.254495-1-mcchou@chromium.org>
+ <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+ <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org>
+ <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
+ <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org>
+ <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
+ <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
+ <643C6020-2FC5-4EEA-8F64-5D4B7F9258A4@holtmann.org>
+ <CALWDO_Uc6brpXmVfoUd+jgyy_F0-WSrYb1+hXtXm498dGzCOSg@mail.gmail.com>
+To:     Alain Michaud <alainmichaud@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Alain,
 
-Thanks for your review.
+>>>>>>>> This adds a bit mask of driver_info for Microsoft vendor extension and
+>>>>>>>> indicates the support for Intel 9460/9560 and 9160/9260. See
+>>>>>>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+>>>>>>>> microsoft-defined-bluetooth-hci-commands-and-events for more information
+>>>>>>>> about the extension. This was verified with Intel ThunderPeak BT controller
+>>>>>>>> where msft_vnd_ext_opcode is 0xFC1E.
+>>>>>> []
+>>>>>>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+>>>>>> []
+>>>>>>>> @@ -315,6 +315,10 @@ struct hci_dev {
+>>>>>>>>       __u8            ssp_debug_mode;
+>>>>>>>>       __u8            hw_error_code;
+>>>>>>>>       __u32           clock;
+>>>>>>>> +       __u16           msft_vnd_ext_opcode;
+>>>>>>>> +       __u64           msft_vnd_ext_features;
+>>>>>>>> +       __u8            msft_vnd_ext_evt_prefix_len;
+>>>>>>>> +       void            *msft_vnd_ext_evt_prefix;
+>>>>>> 
+>>>>>> msft is just another vendor.
+>>>>>> 
+>>>>>> If there are to be vendor extensions, this should
+>>>>>> likely use a blank line above and below and not
+>>>>>> be prefixed with msft_
+>>>>> 
+>>>>> there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
+>>>> 
+>>>> So struct hci_dev should become a clutter
+>>>> of random vendor extensions?
+>>>> 
+>>>> Perhaps there should instead be something like
+>>>> an array of char at the end of the struct and
+>>>> various vendor specific extensions could be
+>>>> overlaid on that array or just add a void *
+>>>> to whatever info that vendors require.
+>>> I don't particularly like trailing buffers, but I agree we could
+>>> possibly organize this a little better by with a struct.  something
+>>> like:
+>>> 
+>>> struct msft_vnd_ext {
+>>>   bool              supported; // <-- Clearly calls out if the
+>>> extension is supported.
+>>>   __u16           msft_vnd_ext_opcode; // <-- Note that this also
+>>> needs to be provided by the driver.  I don't recommend we have this
+>>> read from the hardware since we just cause an extra redirection that
+>>> isn't necessary.  Ideally, this should come from the usb_table const.
+>> 
+>> Actually supported == false is the same as opcode == 0x0000. And supported == true is opcode != 0x0000.
+> I was thinking of a more generic way to check if the extension is
+> supported so the higher level doesn't need to understand that
+> opcode==0 means it's not supported.  For the android extension for
+> example, this would be a simple boolean (there isn't any opcodes).
 
-On 2020/3/24 22:45, Marc Zyngier wrote:
-> On Tue, 24 Mar 2020 21:45:33 +0800
-> Zhenyu Ye <yezhenyu2@huawei.com> wrote:
-> 
->> This patch used the VM_LEVEL flags in vma->vm_flags to set the
->> TTL field in tlbi instruction.
->>
->> Signed-off-by: Zhenyu Ye <yezhenyu2@huawei.com>
->> ---
->>  arch/arm64/include/asm/mmu.h      |  2 ++
->>  arch/arm64/include/asm/tlbflush.h | 14 ++++++++------
->>  arch/arm64/mm/mmu.c               | 14 ++++++++++++++
->>  3 files changed, 24 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm64/include/asm/mmu.h b/arch/arm64/include/asm/mmu.h
->> index d79ce6df9e12..a8b8824a7405 100644
->> --- a/arch/arm64/include/asm/mmu.h
->> +++ b/arch/arm64/include/asm/mmu.h
->> @@ -86,6 +86,8 @@ extern void create_pgd_mapping(struct mm_struct *mm, phys_addr_t phys,
->>  extern void *fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot);
->>  extern void mark_linear_text_alias_ro(void);
->>  extern bool kaslr_requires_kpti(void);
->> +extern unsigned int get_vma_level(struct vm_area_struct *vma);
->> +
->>  
->>  #define INIT_MM_CONTEXT(name)	\
->>  	.pgd = init_pg_dir,
->> diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
->> index d141c080e494..93bb09fdfafd 100644
->> --- a/arch/arm64/include/asm/tlbflush.h
->> +++ b/arch/arm64/include/asm/tlbflush.h
->> @@ -218,10 +218,11 @@ static inline void flush_tlb_page_nosync(struct vm_area_struct *vma,
->>  					 unsigned long uaddr)
->>  {
->>  	unsigned long addr = __TLBI_VADDR(uaddr, ASID(vma->vm_mm));
->> +	unsigned int level = get_vma_level(vma);
->>  
->>  	dsb(ishst);
->> -	__tlbi_level(vale1is, addr, 0);
->> -	__tlbi_user_level(vale1is, addr, 0);
->> +	__tlbi_level(vale1is, addr, level);
->> +	__tlbi_user_level(vale1is, addr, level);
->>  }
->>  
->>  static inline void flush_tlb_page(struct vm_area_struct *vma,
->> @@ -242,6 +243,7 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
->>  				     unsigned long stride, bool last_level)
->>  {
->>  	unsigned long asid = ASID(vma->vm_mm);
->> +	unsigned int level = get_vma_level(vma);
->>  	unsigned long addr;
->>  
->>  	start = round_down(start, stride);
->> @@ -261,11 +263,11 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
->>  	dsb(ishst);
->>  	for (addr = start; addr < end; addr += stride) {
->>  		if (last_level) {
->> -			__tlbi_level(vale1is, addr, 0);
->> -			__tlbi_user_level(vale1is, addr, 0);
->> +			__tlbi_level(vale1is, addr, level);
->> +			__tlbi_user_level(vale1is, addr, level);
->>  		} else {
->> -			__tlbi_level(vae1is, addr, 0);
->> -			__tlbi_user_level(vae1is, addr, 0);
->> +			__tlbi_level(vae1is, addr, level);
->> +			__tlbi_user_level(vae1is, addr, level);
->>  		}
->>  	}
->>  	dsb(ish);
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index 128f70852bf3..e6a1221cd86b 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -60,6 +60,20 @@ static pud_t bm_pud[PTRS_PER_PUD] __page_aligned_bss __maybe_unused;
->>  
->>  static DEFINE_SPINLOCK(swapper_pgdir_lock);
->>  
->> +inline unsigned int get_vma_level(struct vm_area_struct *vma)
->> +{
->> +	unsigned int level = 0;
->> +	if (vma->vm_flags & VM_LEVEL_PUD)
->> +		level = 1;
->> +	else if (vma->vm_flags & VM_LEVEL_PMD)
->> +		level = 2;
->> +	else if (vma->vm_flags & VM_LEVEL_PTE)
->> +		level = 3;
->> +
->> +	vma->vm_flags &= ~(VM_LEVEL_PUD | VM_LEVEL_PMD | VM_LEVEL_PTE);
->> +	return level;
->> +}
->> +
->>  void set_swapper_pgd(pgd_t *pgdp, pgd_t pgd)
->>  {
->>  	pgd_t *fixmap_pgdp;
-> 
-> 
-> If feels bizarre a TLBI is now a destructive operation: you've lost the
-> flags by having cleared them. Even if that's not really a problem in
-> practice (you issue TLBI because you've unmapped the VMA), it remains
-> that the act of invalidating TLBs isn't expected to change a kernel
-> structure (and I'm not even thinking about potential races here).
+since the extensions are not equal, I think there is no point in trying to generalize it in hci_dev. Here we have to do the heavy lifting anyway to make this fly. Then again, lets focus on the msft ones first. Keep it simple. And then we look at how we extend this to other extensions.
 
-I cleared vm_flags here just out of caution, because every TLBI flush
-action should set vm_flags themself. As I know, the TLB_LEVEL of an vma
-will only be changed by transparent hugepage collapse and merge when
-the page is not mapped, so there may not have potential races.
+>> 
+>>>   __u64           msft_vnd_ext_features;
+>>>   __u8             msft_vnd_ext_evt_prefix_len;
+>>>   void             *msft_vnd_ext_evt_prefix;
+>>> };
+>>> 
+>>> And then simply add the struct msft_vnd_ext (and any others) to hci_dev.
+>> 
+>> Anyway, Lets keep these for now as hci_dev->msft_vnd_ext_*. We can fix this up later without any impact.
+> I agree, this doesn't have a whole lot of long term consequences,
+> although some will want to cherry-pick this to older kernels so if
+> there is something we can do now, it will reduce burden on some
+> products.
 
-But you are right that TLBI should't change a kernel structure.
-I will remove the clear action and add some notices here.
+You end up having to pick up everything anyway. So I doubt it will make a huge difference. We can always evolve the patches before applying parts of it. Personally I like to get things that look sane and clean applied to we widen the audience of testers.
 
-> 
-> If anything, I feel this should be based around the mmu_gather
-> structure, which already tracks the right level of information and
-> additionally knows about the P4D level which is missing in your patches
-> (even if arm64 is so far limited to 4 levels).
-> 
-> Thanks,
-> 
-> 	M.
-> 
+Regards
 
-mmu_gather structure has tracked the level information, but we can only
-use the info in the tlb_flush interface. If we want to use the info in
-flush_tlb_range, we may should have to add a parameter to this interface,
-such as:
-
-	flush_tlb_range(vma, start, end, flags);
-
-However, the flush_tlb_range is a common interface to all architectures,
-I'm not sure if this is feasible because this feature is only supported
-by ARM64 currently.
-
-Or can we ignore the flush_tlb_range and only set the TTL field in
-tlb_flush?  Waiting for your suggestion...
-
-
-For P4D level, the TTL field is limited to 4 bit(2 for translation granule
-and 2 for page table level), so we can no longer afford more levels :).
-
-
-
-
-
-
+Marcel
 
