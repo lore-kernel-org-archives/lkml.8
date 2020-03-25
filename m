@@ -2,138 +2,228 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F093C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:30:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32644C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D87A206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:30:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0191620789
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:30:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Y7QbCmV1"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="JvzCXlBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgCYSaM (ORCPT
+        id S1727934AbgCYSai (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:30:12 -0400
-Received: from mail-bn7nam10on2131.outbound.protection.outlook.com ([40.107.92.131]:34401
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727027AbgCYSaL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:30:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iIwc6gJE5J4Pt/xBbAlXtlsPWq/WWxugPAzsByqXmfC935gp2DsAF8KCMX5lv8sDZU3Ng6jP2LA8EMsqSH6qhBqsgv5FuluDmZClJTP7o0Ls8L2kDmHGkBYe6T9v9PHdAXMHWOeLP5ved1/7X6beE2d7rXaNX63HK2NXaACYIN+oQb1sRVh9XXeqec3TKWRYNxrKXN7Aasb/AFTj8xbcKWKmdY6QnQXxEoFcFmTHLYwnptm8mJEHyk0k8ygh0CE0/fVCFoN3apc7RyWp7K4WJ//6qOYCx/cOLM1dw2qyrjg2YmOps2Vp0aUkknmfRJguDxD0ZS8Vkyx9xEZ1d6TvJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nJLHigURkuRfgwUJajZqmVZY0mG3GPcQa8qTsnLDFHY=;
- b=Gtz2sOc/X3Xil4cUl/IcTTa75c9AFotk0Ss+jwROcyp81MEvc+sWOMJmGYSHrUjRxcemFjAptHSTMN2zXGADceckHbRFdrIyxLisB0sFImE4sZTqIZCKZpODWwfcznMZMsdbNmUswFi1XPvz4UyE6dtf731X9rFh2bBhjO0YW1M2OP5gSFIqc7W/WQPT4AkgSME8D6dlhwTIEMb0FMCyeFBQnjBcxXfPpxweDU9xdFFOZw0yQT82lzUj9GUETzPxCHtfSRjMZDw7hPY87NhLpDhxDLT4VUygjpWEWMJNn5oheWwPTSwHxwFIxD4+Cl5HBoz3MSwaPJBZgHQgYlyx7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nJLHigURkuRfgwUJajZqmVZY0mG3GPcQa8qTsnLDFHY=;
- b=Y7QbCmV10ab3d1CFpK1W5IZhVtyVuuF5sITAEnegg0MLRj3c1VPRuDb7z9m9ROYPobhsnvffg+hFDF6/Yf7YDPBC5BF51lPZqecteAeuV2mzf2Ti6Dmxw7igsBquScekeGDl2RnN27n6pXZwrtdUI9fu6Zf05j7y6AiN46ypygs=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Wed, 25 Mar
- 2020 18:30:03 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.007; Wed, 25 Mar 2020
- 18:30:03 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        Wed, 25 Mar 2020 14:30:38 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:55300 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727027AbgCYSai (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:30:38 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PINxeb028143;
+        Wed, 25 Mar 2020 19:30:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=zpllj8praaLPPLYV2yYmSw2+242E3/2OF9GtQEZE5YY=;
+ b=JvzCXlBsGQXc4SSlLAxkL6bmmKQgc47b9xbhwwYS7zZYoVjhDILewgVOMfuYKyzQqjTf
+ LsYh1pBE8IhBna3CmKExxoEs5UHXN7H1fmy5cbiPkDUugk4V4faR+xBiVrCiqAUeqsYh
+ 8jWvEOnFAqYHc3dBEJNRkcALkLPF+DpGl1RnJsDt5yf7ByGaSLovJALaT/KWr5PFr6wr
+ 8/O5jmoaHCGd2PHktFdLsEUYMhYaKXBkCmFay1K0mg+U3MlAbFSXyTEjX0UNlnzk/1d6
+ jYVVpz0NMsoMPChB1kEo7fEo/GRplxZdY3ng8fmvgtyWfUBMY9kRV0GHB+jMX1oNL3Su QA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ywapp71y6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Mar 2020 19:30:29 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 586D610002A;
+        Wed, 25 Mar 2020 19:30:29 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4971E2ABE3A;
+        Wed, 25 Mar 2020 19:30:29 +0100 (CET)
+Received: from SFHDAG7NODE2.st.com (10.75.127.20) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 19:30:28 +0100
+Received: from SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090]) by
+ SFHDAG7NODE2.st.com ([fe80::d548:6a8f:2ca4:2090%20]) with mapi id
+ 15.00.1473.003; Wed, 25 Mar 2020 19:30:28 +0100
+From:   Loic PALLARDY <loic.pallardy@st.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "ohad@wizery.com" <ohad@wizery.com>,
+        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH V3 2/6] x86/Hyper-V: Free hv_panic_page when fail to
- register kmsg dump
-Thread-Topic: [PATCH V3 2/6] x86/Hyper-V: Free hv_panic_page when fail to
- register kmsg dump
-Thread-Index: AQHWAbHhbluCcqaaq0eRaVhLKSlxeKhZoxQg
-Date:   Wed, 25 Mar 2020 18:30:03 +0000
-Message-ID: <MW2PR2101MB105203D3A3C76D5E93664794D7CE0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
- <20200324075720.9462-3-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200324075720.9462-3-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
+        Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>,
+        "Fabien DESSENNE" <fabien.dessenne@st.com>,
+        "s-anna@ti.com" <s-anna@ti.com>
+Subject: RE: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
+ is crashed
+Thread-Topic: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
+ is crashed
+Thread-Index: AQHV95N1/mW6m1ZqkUyhqMT4RCAmr6hZndwAgAATJNA=
+Date:   Wed, 25 Mar 2020 18:30:28 +0000
+Message-ID: <9a089cba07f7454ea0fc0f2d09bd9bf0@SFHDAG7NODE2.st.com>
+References: <1583924072-20648-1-git-send-email-loic.pallardy@st.com>
+ <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
+ <20200325175746.GA6227@xps15>
+In-Reply-To: <20200325175746.GA6227@xps15>
+Accept-Language: fr-FR, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:30:01.4294170Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4309bb33-f38b-4703-8a1a-a6baa210580b;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: f624c053-8a3e-4092-6e3c-08d7d0ea88e3
-x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB0938C7C6063EDD91D2FFF086D7CE0@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:156;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(110136005)(66446008)(64756008)(6506007)(8676002)(66946007)(66556008)(66476007)(2906002)(54906003)(478600001)(33656002)(81156014)(81166006)(26005)(4744005)(8990500004)(10290500003)(186003)(55016002)(71200400001)(7696005)(76116006)(8936002)(5660300002)(86362001)(316002)(4326008)(52536014)(9686003)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yvlxRZj1Sk8mgOA2kyBejGkwrDkGkV2W8TAiqKxGf6wf96LyQD4bqMU4AnLsUcud7P9tyFMswxx/3RfsF9ZuqAzsmiz0BrJBukSbQHxhbfCglE788PFOhBHH2RnCf7lN+1jubkcnfkZuz/nOsWXo4e1AMQ+7V0z2fs3r1DRVvcJOcs+aVVPGUg7xGkRl1iExizI3dIgM5eWGtFzcZowv8YaUU2oTFEvt5q6GpP9Sxaeb8RKuIMVI6lFWY24kmxOhYOS2f1JE3br1hUwOtmR+fMYtkC1lgQO5tFMWZQ9K/vaBOfdLo+mM7P89JI4skthIjX8C0XOH5LsyOx7MLggnnETaIBDdg0S0Lb+KUQYxjWdK7CONOROPF4Sw0DzkelZ1R0y9I1/JWkpJR6+9w7+0dD1VFGTMyTsxNvZKNT7ZgKUANH0RlqnwwTh2Tl9vMd/eZdd6Ht3XIZAO3Z7/VOZMsKsPE5ZXSXudgjdZPq/289crycQXb9FK3+egOJa+Hswk
-x-ms-exchange-antispam-messagedata: ClWpcAaykQp4V5ESHh5+7qZOVN/kVJrM6Yh9Rp4uiSz9AUK6TghST4GeoWEyVRtn4qArPFU44sE3AvHh/shQwCuOe5H6oPOAzikAaU9DeHPlclmvfzSzkD1VJGg6I2AXCPpcyWY8QmtKaAx7DmzP3A==
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.49]
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f624c053-8a3e-4092-6e3c-08d7d0ea88e3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:30:03.2696
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ax5yQmFpomIRx31PJva/kRVhu7v9WBGfWqZg5ix/y93u9AbgvWDfMDLoUdJwZWdtI9BiLYlAjo6bSpoxZQ2FLhsT59+0ExRF/VyEScT8lAg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-25_09:2020-03-24,2020-03-25 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 24, 2020 1=
-2:57 AM
->
-> If kmsg_dump_register() fails, hv_panic_page will not be used
-> anywhere.  So free and reset it.
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> Change since v1:
-> 	- Update commit log
-> 	- Remove hv_free_hyperv_page() in the error path
-> ---
->  drivers/hv/vmbus_drv.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
->=20
+Hi Mathieu,
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+> -----Original Message-----
+> From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Sent: mercredi 25 mars 2020 18:58
+> To: Loic PALLARDY <loic.pallardy@st.com>
+> Cc: bjorn.andersson@linaro.org; ohad@wizery.com; linux-
+> remoteproc@vger.kernel.org; linux-kernel@vger.kernel.org; Arnaud
+> POULIQUEN <arnaud.pouliquen@st.com>; benjamin.gaignard@linaro.org;
+> Fabien DESSENNE <fabien.dessenne@st.com>; s-anna@ti.com
+> Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when
+> rproc is crashed
+>=20
+> Hi Loic,
+>=20
+> On Wed, Mar 11, 2020 at 11:54:31AM +0100, Loic Pallardy wrote:
+> > When remoteproc recovery is disabled and rproc crashed, user space
+> > client has no way to reboot co-processor except by a complete platform
+> > reboot.
+> > Indeed rproc_shutdown() is called by sysfs state_store() only is rproc
+> > state is RPROC_RUNNING.
+> >
+> > This patch offers the possibility to shutdown the co-processor if
+> > it is in RPROC_CRASHED state and so to restart properly co-processor
+> > from sysfs interface.
+>=20
+> If recovery is disabled on an rproc the platform likely intended to have =
+a hard
+> reboot and as such we should not be concerned about this case.
+I disagree with your view. In fact, we can have a configuration for which
+we don't want a silent recovery. Application layer can be involved to stop =
+and
+restart some services because it is the simplest way to resync with the cop=
+rocessor.
+What's missing today is an event to notify user space application that copr=
+ocessor state
+has changed. (even if we can rely on rpmsg services closure)
+
+>=20
+> Where I think we have a problem, something that is asserted by looking at
+> your 2
+> patches, is cases where rproc_trigger_recovery() fails.  That leaves the
+> system
+> in a state where it can't be recovered, something the remoteproc core
+> should not
+> allow.
+>=20
+Right this is a second use case we faced when user space application which =
+provided
+firmware file crashed before coprocessor. In that case firmware file may be=
+ removed
+from /lib/firmware directory and coprocessor recovery failed.
+Application, when restarting, can't anymore control coprocessor.
+
+Regards,
+Loic
+
+> >
+> > Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
+> > ---
+> >  drivers/remoteproc/remoteproc_core.c  | 2 +-
+> >  drivers/remoteproc/remoteproc_sysfs.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/remoteproc/remoteproc_core.c
+> b/drivers/remoteproc/remoteproc_core.c
+> > index 097f33e4f1f3..7ac87a75cd1b 100644
+> > --- a/drivers/remoteproc/remoteproc_core.c
+> > +++ b/drivers/remoteproc/remoteproc_core.c
+> > @@ -1812,7 +1812,7 @@ void rproc_shutdown(struct rproc *rproc)
+> >  	if (!atomic_dec_and_test(&rproc->power))
+> >  		goto out;
+> >
+> > -	ret =3D rproc_stop(rproc, false);
+> > +	ret =3D rproc_stop(rproc, rproc->state =3D=3D RPROC_CRASHED);
+>=20
+> Please add a comment that explains how we can be in rproc_shutdown()
+> when the
+> processor has crashed and point to rproc_trigger_recovery().  See below f=
+or
+> more
+> details.
+>=20
+> >  	if (ret) {
+> >  		atomic_inc(&rproc->power);
+> >  		goto out;
+> > diff --git a/drivers/remoteproc/remoteproc_sysfs.c
+> b/drivers/remoteproc/remoteproc_sysfs.c
+> > index 7f8536b73295..1029458a4678 100644
+> > --- a/drivers/remoteproc/remoteproc_sysfs.c
+> > +++ b/drivers/remoteproc/remoteproc_sysfs.c
+> > @@ -101,7 +101,7 @@ static ssize_t state_store(struct device *dev,
+> >  		if (ret)
+> >  			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
+> >  	} else if (sysfs_streq(buf, "stop")) {
+> > -		if (rproc->state !=3D RPROC_RUNNING)
+> > +		if (rproc->state !=3D RPROC_RUNNING && rproc->state !=3D
+> RPROC_CRASHED)
+> >  			return -EINVAL;
+>=20
+> Wouldn't it be better to just prevent the MCU to stay in a crashed state
+> (when
+> recovery is not disabled)?
+>=20
+> I like what you did in the next patch where the state of the MCU is set t=
+o
+> RPROC_CRASHED in case of failure, so that we keep.  I also think the hunk
+> above is correct.  All that is left is to call rproc_shutdown() directly =
+in
+> rproc_trigger_recovery() when something goes wrong.  I would also add a
+> dev_err() so that users have a clue of what happened.
+>=20
+> That would leave the system in a stable state without having to add
+> intelligence
+> to state_store().
+It is a solution we debate internally. Should rproc_shutdown() called direc=
+tly in
+rproc_trigger_recovery() or not? If we go in such direction, that clearly s=
+implify=20
+coprocessor control as it will always be in a "stable" state. But that mean=
+s user
+will lost information that coprocessor crashed (mainly when recovery is dis=
+abled).
+We just know that coprocessor is stopped but not why? Crashed or client act=
+ion?=20
+For debug purpose, it could be an issue from my pov.
+
+Regards,
+Loic
+>=20
+> Let me know that you think...
+>=20
+> Mathieu
+>=20
+> >
+> >  		rproc_shutdown(rproc);
+> > --
+> > 2.7.4
+> >
