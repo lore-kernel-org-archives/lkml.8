@@ -2,308 +2,86 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3543C54FD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F04C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70FA720775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:38:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsGdMY8I"
+	by mail.kernel.org (Postfix) with ESMTP id A5EF120775
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585132730;
+	bh=lLPYj3tstQ31DLYlKDDc8Fji8FRm44KGvzvTsDQLLaI=;
+	h=Date:From:List-Id:To:Cc:Subject:References:In-Reply-To:List-ID:
+	 From;
+	b=yZvE8GXDQYYEkzfNwP9yRLEQIxqIqezij+NMCuKETUj5nyaYxc9paeH7K3laq8Vlx
+	 3Eu0nNgyGdzAM/daI18BiRp+UTGEn1iUWt1Gm0cm80jwch9RInjE716lX4rQF3KF+U
+	 78pzNI6MLAZwE9nCV3OY1gl7kiD2ODxmsER7x/3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbgCYKij (ORCPT
+        id S1727689AbgCYKit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:38:39 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36706 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgCYKij (ORCPT
+        Wed, 25 Mar 2020 06:38:49 -0400
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:33375 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgCYKit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:38:39 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g62so1978784wme.1;
-        Wed, 25 Mar 2020 03:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=EzOA88IPnqtfpe/48GPuflQNR0kYjwA+VSvKhhJrxps=;
-        b=RsGdMY8IvlSnAyG0MzIkhchfOXRHnz2dyXPRTkAmdwR5Sa9twAHcAGWe9qyGKH7sFo
-         mxxkmrp3kY9sgPF9DXmJNhevLM4IHDd3xR7Drk0z6tK17xIIwmWpONvnx6msWUP/YJkH
-         wiRxrnH/pQG8F4aUsOiA/SlkA72KVr9g/YULwRFtQQVECRj71W8OVYA1WHURheRC1svq
-         +9YHK6ESY5j8KbqcOZ9fHdSwZ/1han8PUzEYbVwGNk8MATWwv+wrjd17c5jM56zOSw9h
-         PMu/51uwxJ425YHNf9Iy5g7FwAuIVBDpXRz7uE5ZMg2comkxccRQzi3cQ92sZffi8rpP
-         Jfrg==
+        Wed, 25 Mar 2020 06:38:49 -0400
+Received: by mail-ed1-f49.google.com with SMTP id z65so1747529ede.0;
+        Wed, 25 Mar 2020 03:38:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=EzOA88IPnqtfpe/48GPuflQNR0kYjwA+VSvKhhJrxps=;
-        b=dYpEBaYt8e9nc494OTGnxN681FIOidp2z/p8fQozw0Ua+qhuKoGrsnsTTenpRfTg7F
-         z4KHThh5GZabVdzuLyZ9sBMsF0QB3vWZ46pU7XXfxfkcxfZ3pcIdMcGkJcGztb2ZQSJJ
-         YjqdFTAWXv/TSTG5o3zjGbFC814abBBtJ1ZGsyGAUuuxvS4pxrotYceU12W6zlB4OIPV
-         u51TIyYjGuPy1VJGwy1cw4Ui8czyhOxxIw4M8+IKbfKk1x5uCtyDWct7Nk2wGCnMvSzP
-         ZkjRa1GKVYkWz6JCuB0WRU/+EiTOdOVKR8DZI9FC+uJqPObbgNaIoIRa+TU2mDdEwc1V
-         /uYw==
-X-Gm-Message-State: ANhLgQ3Llwlery1A7kI3SUEcGiuCaUQKXRG0JkIlhVDPk2M6hbYoH4fC
-        Y/Wyux/fM9bufL0JLRwukSM=
-X-Google-Smtp-Source: ADFU+vuLT8aCFByvpsLDF8ub9Jibc1JcFf94p8oOJbCJ7SMUFWAVz+SXA2LWU40cK+9fXNGYdVX9NQ==
-X-Received: by 2002:a1c:2e04:: with SMTP id u4mr2936248wmu.185.1585132715841;
-        Wed, 25 Mar 2020 03:38:35 -0700 (PDT)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id i21sm9163108wmb.23.2020.03.25.03.38.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 03:38:35 -0700 (PDT)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     heiko@sntech.de
-Cc:     hjc@rock-chips.com, airlied@linux.ie, daniel@ffwll.ch,
-        robh+dt@kernel.org, dri-devel@lists.freedesktop.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] dt-bindings: display: convert rockchip vop bindings to yaml
-Date:   Wed, 25 Mar 2020 11:38:27 +0100
-Message-Id: <20200325103828.5422-1-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rChnKt/buGlg4oMgDuHolFkSTfOBDmB/aUQmKVJ+Bu8=;
+        b=HhzmmvPuo5WJNnfepT5Eqp4epSpOdFhdzED5w1oFTf0ml4B6wMvxyaaTFCjlQCKq2Y
+         1O1iXBJvBTMtdrp6WvI3UFDr2Y0k3VJ3EO7tcipi6Uw/MFkM3+gxf0i74927eNksgYZW
+         ljm+esdiul2QmTNABfQhrsijs5kZ95J5n+5RGbq+Dw1wjwPChmZE57ZwpR58xMcaeT9r
+         QQp4F4b4FjR14709P6C4ep0HaWcalAZWpO+qAgBvRAG9sMcJXxzmEi2l/0IODn6IAUrq
+         FSYRpIqVHeJaEmehDzmzz+pzJRK9HWnJYsbCLYE3lr5VTT85EdYnTxzgp2oSzQ93Lwun
+         TzOw==
+X-Gm-Message-State: ANhLgQ01Vk8lmGZR0mROPMGnqBqe+ZSu+zS8VdxOuvYP7bxTPF5AhiH/
+        UfWKO2W89JWZuAt928KdQbs=
+X-Google-Smtp-Source: ADFU+vu6wOHo0Oo5RedHizV/zMZxQCP2qEaIJff3a9ZAD1Wu4ZYA7zr+gdDKh5A2BskBFG1jRYSWGw==
+X-Received: by 2002:aa7:c610:: with SMTP id h16mr2228662edq.348.1585132727057;
+        Wed, 25 Mar 2020 03:38:47 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id s7sm1458659edr.15.2020.03.25.03.38.45
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 25 Mar 2020 03:38:46 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 11:38:43 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+List-Id: <soc.lore.kernel.org>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL 0/3] ARM: exynos: Pull for v5.7
+Message-ID: <20200325103843.GA17099@kozik-lap>
+References: <20200316175652.5604-1-krzk@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200316175652.5604-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current dts files with 'vop' nodes are manually verified.
-In order to automate this process rockchip-vop.txt
-has to be converted to yaml.
+On Mon, Mar 16, 2020 at 06:56:49PM +0100, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> One patch for drivers at the end of these series. I also sent a fixes patch separately.
+> 
+> As you asked, I updated the Google Docs with Exynos entries.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
-Changes v4:
-  Change description
-  Replace compatible oneOf by enum
-  Change interrupts description
-  Remove resets minItems
+Hi Arnd and Olof,
 
-Changes v3:
-  Change description
+Any comments on this pull request?
 
-Changes v2:
-  No new properties
----
- .../bindings/display/rockchip/rockchip-vop.txt     |  74 ------------
- .../bindings/display/rockchip/rockchip-vop.yaml    | 124 +++++++++++++++++++++
- 2 files changed, 124 insertions(+), 74 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
- create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-deleted file mode 100644
-index 8b3a5f514..000000000
---- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
-+++ /dev/null
-@@ -1,74 +0,0 @@
--device-tree bindings for rockchip soc display controller (vop)
--
--VOP (Visual Output Processor) is the Display Controller for the Rockchip
--series of SoCs which transfers the image data from a video memory
--buffer to an external LCD interface.
--
--Required properties:
--- compatible: value should be one of the following
--		"rockchip,rk3036-vop";
--		"rockchip,rk3126-vop";
--		"rockchip,px30-vop-lit";
--		"rockchip,px30-vop-big";
--		"rockchip,rk3066-vop";
--		"rockchip,rk3188-vop";
--		"rockchip,rk3288-vop";
--		"rockchip,rk3368-vop";
--		"rockchip,rk3366-vop";
--		"rockchip,rk3399-vop-big";
--		"rockchip,rk3399-vop-lit";
--		"rockchip,rk3228-vop";
--		"rockchip,rk3328-vop";
--
--- reg: Must contain one entry corresponding to the base address and length
--	of the register space. Can optionally contain a second entry
--	corresponding to the CRTC gamma LUT address.
--
--- interrupts: should contain a list of all VOP IP block interrupts in the
--		 order: VSYNC, LCD_SYSTEM. The interrupt specifier
--		 format depends on the interrupt controller used.
--
--- clocks: must include clock specifiers corresponding to entries in the
--		clock-names property.
--
--- clock-names: Must contain
--		aclk_vop: for ddr buffer transfer.
--		hclk_vop: for ahb bus to R/W the phy regs.
--		dclk_vop: pixel clock.
--
--- resets: Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names: Must include the following entries:
--  - axi
--  - ahb
--  - dclk
--
--- iommus: required a iommu node
--
--- port: A port node with endpoint definitions as defined in
--  Documentation/devicetree/bindings/media/video-interfaces.txt.
--
--Example:
--SoC specific DT entry:
--	vopb: vopb@ff930000 {
--		compatible = "rockchip,rk3288-vop";
--		reg = <0x0 0xff930000 0x0 0x19c>, <0x0 0xff931000 0x0 0x1000>;
--		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>;
--		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
--		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
--		reset-names = "axi", "ahb", "dclk";
--		iommus = <&vopb_mmu>;
--		vopb_out: port {
--			#address-cells = <1>;
--			#size-cells = <0>;
--			vopb_out_edp: endpoint@0 {
--				reg = <0>;
--				remote-endpoint=<&edp_in_vopb>;
--			};
--			vopb_out_hdmi: endpoint@1 {
--				reg = <1>;
--				remote-endpoint=<&hdmi_in_vopb>;
--			};
--		};
--	};
-diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-new file mode 100644
-index 000000000..bc58c5132
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.yaml
-@@ -0,0 +1,124 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/display/rockchip/rockchip-vop.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Rockchip SoC display controller (VOP)
-+
-+description:
-+  VOP (Video Output Processor) is the display controller for the Rockchip
-+  series of SoCs which transfers the image data from a video memory
-+  buffer to an external LCD interface.
-+
-+maintainers:
-+  - Sandy Huang <hjc@rock-chips.com>
-+  - Heiko Stuebner <heiko@sntech.de>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,px30-vop-big
-+      - rockchip,px30-vop-lit
-+      - rockchip,rk3036-vop
-+      - rockchip,rk3066-vop
-+      - rockchip,rk3126-vop
-+      - rockchip,rk3188-vop
-+      - rockchip,rk3228-vop
-+      - rockchip,rk3288-vop
-+      - rockchip,rk3328-vop
-+      - rockchip,rk3366-vop
-+      - rockchip,rk3368-vop
-+      - rockchip,rk3399-vop-big
-+      - rockchip,rk3399-vop-lit
-+
-+  reg:
-+    minItems: 1
-+    items:
-+      - description:
-+          Must contain one entry corresponding to the base address and length
-+          of the register space.
-+      - description:
-+          Can optionally contain a second entry corresponding to
-+          the CRTC gamma LUT address.
-+
-+  interrupts:
-+    maxItems: 1
-+    description:
-+      The VOP interrupt is shared by several interrupt sources, such as
-+      frame start (VSYNC), line flag and other status interrupts.
-+
-+  clocks:
-+    items:
-+      - description: Clock for ddr buffer transfer.
-+      - description: Pixel clock.
-+      - description: Clock for the ahb bus to R/W the phy regs.
-+
-+  clock-names:
-+    items:
-+      - const: aclk_vop
-+      - const: dclk_vop
-+      - const: hclk_vop
-+
-+  resets:
-+    maxItems: 3
-+
-+  reset-names:
-+    items:
-+      - const: axi
-+      - const: ahb
-+      - const: dclk
-+
-+  port:
-+    type: object
-+    description:
-+      A port node with endpoint definitions as defined in
-+      Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+  iommus:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - port
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/rk3288-cru.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    vopb: vopb@ff930000 {
-+      compatible = "rockchip,rk3288-vop";
-+      reg = <0x0 0xff930000 0x0 0x19c>,
-+            <0x0 0xff931000 0x0 0x1000>;
-+      interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+      clocks = <&cru ACLK_VOP0>,
-+               <&cru DCLK_VOP0>,
-+               <&cru HCLK_VOP0>;
-+      clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+      resets = <&cru SRST_LCDC1_AXI>,
-+               <&cru SRST_LCDC1_AHB>,
-+               <&cru SRST_LCDC1_DCLK>;
-+      reset-names = "axi", "ahb", "dclk";
-+      iommus = <&vopb_mmu>;
-+      vopb_out: port {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        vopb_out_edp: endpoint@0 {
-+          reg = <0>;
-+          remote-endpoint=<&edp_in_vopb>;
-+        };
-+        vopb_out_hdmi: endpoint@1 {
-+          reg = <1>;
-+          remote-endpoint=<&hdmi_in_vopb>;
-+        };
-+      };
-+    };
--- 
-2.11.0
+Best regards,
+Krzysztof
 
