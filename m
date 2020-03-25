@@ -2,91 +2,283 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB392C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E67D5C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83C7620722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:53:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585133590;
-	bh=eNKDrjGeRGne237ucRqN4fyF1o7W5vC1y21j05IKCoQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OtTJZGWR64enZoxZqB9u53kBNMChm4AQv6eVJU82OqVWs9ISGOO8MmUrttiEOf+4v
-	 kxQ3Sv1fzjDSvJeX18tTyMIzWU3/gVF4JaEzCKTgoDrEVOkkNGGbApEaK4u9iawaSy
-	 YQJbd0dDOqJntmgxkOKQl1hMnRAMzkjKEKv8XBgw=
+	by mail.kernel.org (Postfix) with ESMTP id BEF2320775
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbgCYKxJ (ORCPT
+        id S1727281AbgCYKzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726139AbgCYKxJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:53:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49281206F6;
-        Wed, 25 Mar 2020 10:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585133588;
-        bh=eNKDrjGeRGne237ucRqN4fyF1o7W5vC1y21j05IKCoQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=rpPjSn4K2bsf84MmozkpghLYzNp8h8gDbY98Z07aLrxqEyvXb2rOPIHAKf7axiiwn
-         DBFYQCvvt8EQb0+if8SdAd0tcdiBEE2lhGCFzuCzQGr1/JMx2Zz6gUay9CqQSRrmWl
-         QGcA9nSvocsu1PN8A+KcukKYw3wZ8Tp8ugDImy28=
-Date:   Wed, 25 Mar 2020 11:53:06 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     linux-kernel@vger.kernel.org,
-        nicholas.johnson-opensource@outlook.com.au
-Subject: Re: [PATCH v2 2/2] nvmem: core: use is_bin_visible for permissions
-Message-ID: <20200325105306.GA3146321@kroah.com>
-References: <20200325100138.17854-1-srinivas.kandagatla@linaro.org>
- <20200325100138.17854-3-srinivas.kandagatla@linaro.org>
- <20200325102134.GA3084470@kroah.com>
- <e1e768dd-7e6f-b917-dfb6-cf2e1fc6114a@linaro.org>
+        Wed, 25 Mar 2020 06:55:08 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2592 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726139AbgCYKzI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:55:08 -0400
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 34CB0544EB9BE59D97D0;
+        Wed, 25 Mar 2020 10:55:06 +0000 (GMT)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by smtpsuk.huawei.com (10.201.108.34) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 25 Mar 2020 10:54:59 +0000
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <James.Bottomley@HansenPartnership.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v4 5/7] ima: Allocate and initialize tfm for each PCR bank
+Date:   Wed, 25 Mar 2020 11:52:48 +0100
+Message-ID: <20200325105248.26388-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200325104712.25694-1-roberto.sassu@huawei.com>
+References: <20200325104712.25694-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e1e768dd-7e6f-b917-dfb6-cf2e1fc6114a@linaro.org>
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 10:40:10AM +0000, Srinivas Kandagatla wrote:
-> 
-> 
-> On 25/03/2020 10:21, Greg KH wrote:
-> > > -
-> > >   const struct attribute_group **nvmem_sysfs_get_groups(
-> > >   					struct nvmem_device *nvmem,
-> > >   					const struct nvmem_config *config)
-> > You no longer need any parameters for this function, right?
-> no we do not need that, I can update that in next version.
+This patch creates a crypto_shash structure for each allocated PCR bank and
+for SHA1 if a bank with that algorithm is not currently allocated.
 
-Ok.
+Changelog
 
-> > Also, you really don't even need the function, just point to the
-> > variable instead.
-> We have a use case where in the user can chose to not have sysfs entry,
-> specially if we have hypervisor trapping access to some range of entries in
-> nvmem. This is enforced using CONFIG_NVMEM_SYSFS option.
-> 
-> Currently in upstream we have a stub function when CONFIG_NVMEM_SYSFS is not
-> selected returning NULL.
-> 
-> If we want to remove this function and subsequently the nvmem-sysfs.c file
-> then we have to have #ifdef in the code which am okay to do if that is
-> something that you are keen on.
+v2:
+- declare ima_init_ima_crypto() as static
+- replace ima_num_template_digests with
+  NR_BANKS(ima_tpm_chip) + ima_extra_slots (suggested by Mimi)
+- use ima_sha1_idx to access ima_algo_array elements in ima_init_crypto()
 
-You can still do it in the .h file, defining the variable as NULL if
-that config option is not enabled.
+v1:
+- determine ima_num_template_digests before allocating ima_algo_array
+  (suggested by Mimi)
+- replace kmalloc_array() with kcalloc() in ima_init_crypto() (suggested by
+  Mimi)
+- check tfm first in ima_alloc_tfm()
+- check if ima_tpm_chip is NULL
 
-thanks,
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/ima/ima_crypto.c | 145 +++++++++++++++++++++++-----
+ 1 file changed, 119 insertions(+), 26 deletions(-)
 
-greg k-h
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index fe02eb28b32b..ab1c05ad1314 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -57,14 +57,21 @@ MODULE_PARM_DESC(ahash_bufsize, "Maximum ahash buffer size");
+ static struct crypto_shash *ima_shash_tfm;
+ static struct crypto_ahash *ima_ahash_tfm;
+ 
++struct ima_algo_desc {
++	struct crypto_shash *tfm;
++	enum hash_algo algo;
++};
++
+ int ima_sha1_idx __ro_after_init;
+ /*
+  * Additional number of slots reserved, as needed, for SHA1
+  * and IMA default algo.
+  */
+-int ima_extra_slots __ro_after_init = 1;
++int ima_extra_slots __ro_after_init;
+ 
+-int __init ima_init_crypto(void)
++static struct ima_algo_desc *ima_algo_array;
++
++static int __init ima_init_ima_crypto(void)
+ {
+ 	long rc;
+ 
+@@ -83,26 +90,121 @@ int __init ima_init_crypto(void)
+ static struct crypto_shash *ima_alloc_tfm(enum hash_algo algo)
+ {
+ 	struct crypto_shash *tfm = ima_shash_tfm;
+-	int rc;
++	int rc, i;
+ 
+ 	if (algo < 0 || algo >= HASH_ALGO__LAST)
+ 		algo = ima_hash_algo;
+ 
+-	if (algo != ima_hash_algo) {
+-		tfm = crypto_alloc_shash(hash_algo_name[algo], 0, 0);
+-		if (IS_ERR(tfm)) {
+-			rc = PTR_ERR(tfm);
+-			pr_err("Can not allocate %s (reason: %d)\n",
+-			       hash_algo_name[algo], rc);
+-		}
++	if (algo == ima_hash_algo)
++		return tfm;
++
++	for (i = 0; i < NR_BANKS(ima_tpm_chip) + ima_extra_slots; i++)
++		if (ima_algo_array[i].tfm && ima_algo_array[i].algo == algo)
++			return ima_algo_array[i].tfm;
++
++	tfm = crypto_alloc_shash(hash_algo_name[algo], 0, 0);
++	if (IS_ERR(tfm)) {
++		rc = PTR_ERR(tfm);
++		pr_err("Can not allocate %s (reason: %d)\n",
++		       hash_algo_name[algo], rc);
+ 	}
+ 	return tfm;
+ }
+ 
++int __init ima_init_crypto(void)
++{
++	enum hash_algo algo;
++	long rc;
++	int i;
++
++	rc = ima_init_ima_crypto();
++	if (rc)
++		return rc;
++
++	ima_sha1_idx = -1;
++
++	for (i = 0; i < NR_BANKS(ima_tpm_chip); i++) {
++		algo = ima_tpm_chip->allocated_banks[i].crypto_id;
++		if (algo == HASH_ALGO_SHA1)
++			ima_sha1_idx = i;
++	}
++
++	if (ima_sha1_idx < 0)
++		ima_sha1_idx = NR_BANKS(ima_tpm_chip) + ima_extra_slots++;
++
++	ima_algo_array = kcalloc(NR_BANKS(ima_tpm_chip) + ima_extra_slots,
++				 sizeof(*ima_algo_array), GFP_KERNEL);
++	if (!ima_algo_array) {
++		rc = -ENOMEM;
++		goto out;
++	}
++
++	for (i = 0; i < NR_BANKS(ima_tpm_chip); i++) {
++		algo = ima_tpm_chip->allocated_banks[i].crypto_id;
++		ima_algo_array[i].algo = algo;
++
++		/* unknown TPM algorithm */
++		if (algo == HASH_ALGO__LAST)
++			continue;
++
++		if (algo == ima_hash_algo) {
++			ima_algo_array[i].tfm = ima_shash_tfm;
++			continue;
++		}
++
++		ima_algo_array[i].tfm = ima_alloc_tfm(algo);
++		if (IS_ERR(ima_algo_array[i].tfm)) {
++			if (algo == HASH_ALGO_SHA1) {
++				rc = PTR_ERR(ima_algo_array[i].tfm);
++				ima_algo_array[i].tfm = NULL;
++				goto out_array;
++			}
++
++			ima_algo_array[i].tfm = NULL;
++		}
++	}
++
++	if (ima_sha1_idx >= NR_BANKS(ima_tpm_chip)) {
++		if (ima_hash_algo == HASH_ALGO_SHA1) {
++			ima_algo_array[ima_sha1_idx].tfm = ima_shash_tfm;
++		} else {
++			ima_algo_array[ima_sha1_idx].tfm =
++						ima_alloc_tfm(HASH_ALGO_SHA1);
++			if (IS_ERR(ima_algo_array[ima_sha1_idx].tfm)) {
++				rc = PTR_ERR(ima_algo_array[ima_sha1_idx].tfm);
++				goto out_array;
++			}
++		}
++
++		ima_algo_array[ima_sha1_idx].algo = HASH_ALGO_SHA1;
++	}
++
++	return 0;
++out_array:
++	for (i = 0; i < NR_BANKS(ima_tpm_chip) + ima_extra_slots; i++) {
++		if (!ima_algo_array[i].tfm ||
++		    ima_algo_array[i].tfm == ima_shash_tfm)
++			continue;
++
++		crypto_free_shash(ima_algo_array[i].tfm);
++	}
++out:
++	crypto_free_shash(ima_shash_tfm);
++	return rc;
++}
++
+ static void ima_free_tfm(struct crypto_shash *tfm)
+ {
+-	if (tfm != ima_shash_tfm)
+-		crypto_free_shash(tfm);
++	int i;
++
++	if (tfm == ima_shash_tfm)
++		return;
++
++	for (i = 0; i < NR_BANKS(ima_tpm_chip) + ima_extra_slots; i++)
++		if (ima_algo_array[i].tfm == tfm)
++			return;
++
++	crypto_free_shash(tfm);
+ }
+ 
+ /**
+@@ -472,14 +574,14 @@ int ima_calc_file_hash(struct file *file, struct ima_digest_data *hash)
+  */
+ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ 					 struct ima_template_entry *entry,
+-					 struct crypto_shash *tfm)
++					 int tfm_idx)
+ {
+-	SHASH_DESC_ON_STACK(shash, tfm);
++	SHASH_DESC_ON_STACK(shash, ima_algo_array[tfm_idx].tfm);
+ 	struct ima_template_desc *td = entry->template_desc;
+ 	int num_fields = entry->template_desc->num_fields;
+ 	int rc, i;
+ 
+-	shash->tfm = tfm;
++	shash->tfm = ima_algo_array[tfm_idx].tfm;
+ 
+ 	rc = crypto_shash_init(shash);
+ 	if (rc != 0)
+@@ -509,8 +611,7 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ 	}
+ 
+ 	if (!rc)
+-		rc = crypto_shash_final(shash,
+-					entry->digests[ima_sha1_idx].digest);
++		rc = crypto_shash_final(shash, entry->digests[tfm_idx].digest);
+ 
+ 	return rc;
+ }
+@@ -518,17 +619,9 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 			      struct ima_template_entry *entry)
+ {
+-	struct crypto_shash *tfm;
+ 	int rc;
+ 
+-	tfm = ima_alloc_tfm(HASH_ALGO_SHA1);
+-	if (IS_ERR(tfm))
+-		return PTR_ERR(tfm);
+-
+-	rc = ima_calc_field_array_hash_tfm(field_data, entry, tfm);
+-
+-	ima_free_tfm(tfm);
+-
++	rc = ima_calc_field_array_hash_tfm(field_data, entry, ima_sha1_idx);
+ 	return rc;
+ }
+ 
+-- 
+2.17.1
+
