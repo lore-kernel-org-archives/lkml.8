@@ -2,95 +2,140 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AE4C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:54:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA30C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2CC2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:54:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FE720719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GrcaqC4A"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uuSbknCf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgCYWyM (ORCPT
+        id S1727460AbgCYW4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:54:12 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36579 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727384AbgCYWyM (ORCPT
+        Wed, 25 Mar 2020 18:56:08 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51136 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgCYW4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:54:12 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i13so1801647pfe.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:54:11 -0700 (PDT)
+        Wed, 25 Mar 2020 18:56:07 -0400
+Received: by mail-wm1-f66.google.com with SMTP id d198so4657049wmd.0;
+        Wed, 25 Mar 2020 15:56:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=zWrlA6w6KYYZ/OQNIhCJ+kzEqHzJfgJzyL3tKc0pOFY=;
-        b=GrcaqC4AWSa41GjxW25/ttATFM2cptZf/vbSCIUyFim8YoRmejCkibyIkocjqgOtk7
-         gQi2rf3Jr4vTpigiIKR03omj8m8g4PSS1/hWBn+1P66ftzknSJmfc7QPDRWJWr5fxOPH
-         1tgLDDziQjRk/dNQg7ElbWcilrplyXjDewFbM=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IBkDa1/hytZETbuj2tpOYG47B7NXMEkPeVfxoKj2RlY=;
+        b=uuSbknCfLrcZSlYqiz4zbn8lx14lTu2O528nDK6f51AC1drW+VdTAOlqZyDNBfpEW6
+         /mqohFO5tpQRKEkxE3rbaAxj1xahstEi/dulrBfheWseEp/ec/GB9p8C+lkOTaY6krH8
+         8tTG8ba3ewNf5VRdFwcfBaa5LYX5Qq1iEXJnRgOkvgeukcWg9lEOLxhTOKrZeWtrBO5l
+         ZQZE9JnbmslODv7XoBc8mt3JQlmbp58rTgAkX3u5/T6BPdnuvjtzTDPwFVV2zH9L2R9s
+         JGcq9aKiiP2l9zjd0gmGWmobOhhZpmu/wQjDBjxR8ZktMqKwoDhqQ4XRoUaDbiXbzeAh
+         4kMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=zWrlA6w6KYYZ/OQNIhCJ+kzEqHzJfgJzyL3tKc0pOFY=;
-        b=U1Ji4T7TIUlP3lMAx/W7JLSSReA/Gv84VwWAyEh++oI9nHblvBh9VsGnzq8QTH9I8r
-         uQ7tPKQ0x1lfjRtsdsOSzYPvVdTkski9u/vrnYOA4MIEVh5CXcp16AGz5j42wcTu40vm
-         fIwzoyP8S2YS+hNCiZuZRjbEoS8o+CicKo3n8JkRnq9/lWE1unUIV5X2ZDCPlrgoRG2t
-         bXfQI6HHiUyM0DBavWX67qUnw5XUYvbBEMDzMq460Jje4N6d0vvsU19PYRsYIZIB039K
-         V8oesihen7PvrXw+Z+/aWvcVaH0t/eayUt2ltNcKqm4cxCDZZB67cHhrEDDI3R0QPOlg
-         K4zw==
-X-Gm-Message-State: ANhLgQ0o2QHMKTYytobhjcSxci826ZHBzRdP56GHuTsFV7fXjmRAeHpb
-        quzKNTL6J+C89AGUuNGQs2lTGw==
-X-Google-Smtp-Source: ADFU+vsY3wfDo2Gy2J9cIPa/hwVB5bzrF7RpYHjEgTaZRdPrm7yugsdq0Qkl+UrqzZzltSS9IKTavw==
-X-Received: by 2002:a63:6d02:: with SMTP id i2mr5218276pgc.267.1585176850880;
-        Wed, 25 Mar 2020 15:54:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id p70sm226890pjp.47.2020.03.25.15.54.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IBkDa1/hytZETbuj2tpOYG47B7NXMEkPeVfxoKj2RlY=;
+        b=ORe0+IbeLJesUrjRTarzWaiXPtaAgsHQYDzHYsxzHk2BYmxHcQr4TAMFvIknI2iBMW
+         49fkaUR6euN0c8hjVMGa9ZZKy4URRWhpXbXvpQGB/1sZynwKSmNyZ4gz14xJCx2gPgLo
+         CI2UKA0ALqo2U6EbT66p7kf0TtRcDEPP5PduorxWtN34nnpTAojbmVUYctXwX7oBMLzk
+         hkL8m76dHDYdQeD5PIWSfzGTqnGpeCaMFgKmofX3nytZ4FJEvsIKPbOutnnjKIcRpeK/
+         vTcj7Az85OrMt8ckuCA9eFTVyXHrBkPs29XH13S9WasUwJAcBZCQjqByBVqkpOqkXySb
+         uxEQ==
+X-Gm-Message-State: ANhLgQ1bQp5y2XEt3x1cjd5PdcOnBIwKb5Ss9+Oxq3eM0Nud+AxDjIYA
+        unc5rFn28AU0D75LjDFIB2SxHzKi4zs8Nm93
+X-Google-Smtp-Source: ADFU+vvb7A9NN8O1weYx+G42hUC4sy4eKcaEFppZbW4ak83J8Jf/EacvhO7dvt9+oP8kY+h4Aiwjrw==
+X-Received: by 2002:a1c:2c8a:: with SMTP id s132mr5661043wms.22.1585176965234;
+        Wed, 25 Mar 2020 15:56:05 -0700 (PDT)
+Received: from andrea.corp.microsoft.com ([86.61.236.197])
+        by smtp.gmail.com with ESMTPSA id q72sm790278wme.31.2020.03.25.15.56.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 15:54:10 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 15:54:09 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <202003251544.7ECB392A7@keescook>
-References: <20200325120345.12946-1-vbabka@suse.cz>
- <874kuc5b5z.fsf@x220.int.ebiederm.org>
+        Wed, 25 Mar 2020 15:56:04 -0700 (PDT)
+From:   "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "Andrea Parri (Microsoft)" <parri.andrea@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [RFC PATCH 00/11] VMBus channel interrupt reassignment
+Date:   Wed, 25 Mar 2020 23:54:54 +0100
+Message-Id: <20200325225505.23998-1-parri.andrea@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kuc5b5z.fsf@x220.int.ebiederm.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 05:20:40PM -0500, Eric W. Biederman wrote:
-> Hmm.  There is a big gotcha in here and I think it should be mentioned.
-> This code only works because no one has done set_fs(KERNEL_DS).  Which
-> means this only works with strings that are kernel addresses essentially
-> by mistake.  A big fat comment documenting why it is safe to pass in
-> kernel addresses to a function that takes a "char __user*" pointer
-> would be very good.
+Hi all,
 
-Yeah, I was going to mention this too just now as I went looking through
-one of the handlers and was reminded that the args are marked __user. :P
+This series introduces changes in the VMBus drivers to reassign (at
+runtime) the CPU that a VMbus channel will interrupt.  This feature
+can be used for load balancing or other purposes, e.g. to offline a
+given vCPU (vCPUs with no interrupts assigned can be taken offline).
 
-I suspect we might need to add some __force __user markings or something
-(with a comment as you say above), to keep sparse from going crazy. :)
+Thanks,
+  Andrea
+
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+
+Andrea Parri (Microsoft) (11):
+  Drivers: hv: vmbus: Always handle the VMBus messages on CPU0
+  Drivers: hv: vmbus: Don't bind the offer&rescind works to a specific
+    CPU
+  Drivers: hv: vmbus: Replace the per-CPU channel lists with a global
+    array of channels
+  hv_netvsc: Disable NAPI before closing the VMBus channel
+  hv_utils: Always execute the fcopy and vss callbacks in a tasklet
+  Drivers: hv: vmbus: Use a spin lock for synchronizing channel
+    scheduling vs. channel removal
+  PCI: hv: Prepare hv_compose_msi_msg() for the
+    VMBus-channel-interrupt-to-vCPU reassignment functionality
+  Drivers: hv: vmbus: Remove the unused HV_LOCALIZED channel affinity
+    logic
+  Drivers: hv: vmbus: Synchronize init_vp_index() vs. CPU hotplug
+  Drivers: hv: vmbus: Introduce the CHANNELMSG_MODIFYCHANNEL message
+    type
+  scsi: storvsc: Re-init stor_chns when a channel interrupt is
+    re-assigned
+
+ drivers/hv/channel.c                |  58 +++--
+ drivers/hv/channel_mgmt.c           | 326 ++++++++++++++--------------
+ drivers/hv/connection.c             |  58 +----
+ drivers/hv/hv.c                     |  16 +-
+ drivers/hv/hv_fcopy.c               |   2 +-
+ drivers/hv/hv_snapshot.c            |   2 +-
+ drivers/hv/hv_trace.h               |  19 ++
+ drivers/hv/hyperv_vmbus.h           |  32 ++-
+ drivers/hv/vmbus_drv.c              | 241 ++++++++++++++++----
+ drivers/net/hyperv/netvsc.c         |   7 +-
+ drivers/pci/controller/pci-hyperv.c |  44 ++--
+ drivers/scsi/storvsc_drv.c          |  95 +++++++-
+ include/linux/hyperv.h              |  51 ++---
+ 13 files changed, 599 insertions(+), 352 deletions(-)
 
 -- 
-Kees Cook
+2.24.0
+
