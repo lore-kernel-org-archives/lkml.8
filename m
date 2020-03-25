@@ -2,152 +2,157 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CB9C54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBC6C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:04:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33D820775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:59:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585112389;
-	bh=/Mk0dFPHDHocDZ62/2NyoV/qX/dQ7B2yj/zQUSNm3Ug=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=18b4V9KLhXLNvsb+Kz3gPXCcbIRxqjduDVqYPUZTQ1ieNMrc+TyRonnz3Wysiv+dk
-	 WOF0oiMfaS5/IahgMyhL0CYGGIzjP17n35kkOJ8TnludbKeqeNMTEjRmmlI+csGu1/
-	 po8tkxrrDwU5Mcj+2wmrdDtHBNDOqZuMsCptpLpw=
+	by mail.kernel.org (Postfix) with ESMTP id 603B220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:04:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OU+2ldMX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726074AbgCYE7s (ORCPT
+        id S1726043AbgCYFEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:59:48 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45995 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725781AbgCYE7r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:59:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t7so1225604wrw.12;
-        Tue, 24 Mar 2020 21:59:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h4KOauMe4v1I9pCuRQdOG97Qu/heRc/6J7SU7o8yNwE=;
-        b=eym7r4h8AfIsMrgo04iccRS6vIxpRq/GGv4kov4LTgdKGrwEQ7NH5p96msOECxq/Km
-         PFH2vIUzNv06GEqB6wtynYt0kuEoT8qZihcaMl24tj6Tk2AOfzlAwPrvl42qfw4f+4BA
-         mwcxhRe6qd2i16ficvpLPTPPUAmI6dbtwnpkduuMnFQJMWXpnkJIG2YpPdAjQzG+7JD2
-         /LEVW3fOt4bpK1vkzUH2I7xJO0pGRlO83VAENk6A01kvSi5QthsmEOPPw1IAF2Pn84tP
-         Nn4vjTJJXt8B1LyLl6/HuK93OxneZMzcfL27zwzGfymxQnQYiRkIQ5350pLXWmGqam49
-         sR4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h4KOauMe4v1I9pCuRQdOG97Qu/heRc/6J7SU7o8yNwE=;
-        b=M9403Qg7/9u+WJ0e36iclVCRaE/wtgRqwkpwC5N1FgkC9FdqsP0Gv4JrHHGgoFJ+/h
-         vdcY8fXznlCSR939a65fVCwvX4PVFL42PXnzD79ge37sx+F5xK/0UT06DLEA138LNqDa
-         gGdvxI3JJSG9UWezvXts3TdqJtS0BQBUpNWRLiY4Wt680XUaQkc+mBfx+AIajSpxolRS
-         +OVJrhOjTkij9WjNoqqGzrkU3mlEoWvFyvbmSvCegFYWW5rMxCZ2El4WB0THwRC7IM9A
-         2lGBTPoXAdIIp4I7225+wydWEx9aPwZbH/6zEyZQl6X6z3nm+zW4gMzZ0+rRoGANVqR+
-         ctQQ==
-X-Gm-Message-State: ANhLgQ3zxtqAF+vn5GLpxl5IlsJUs6pyFdMCtanvD/+lfAiS5Iy6/O2i
-        jnIxdJAHr6HlyVdjkhDAoq4=
-X-Google-Smtp-Source: ADFU+vsMr8RTd3Hle0zy0eB1BsZBBUecnZChYZPKh6yx0k9aeumjW3wG1yR68IBbypixPwr4XlixZw==
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr1225073wrs.4.1585112383933;
-        Tue, 24 Mar 2020 21:59:43 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id p16sm7149295wmi.40.2020.03.24.21.59.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 21:59:43 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 05:59:40 +0100
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux@googlegroups.com,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kbuild@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-doc@vger.kernel.org, Peter Zijlstra <a.p.zijlstra@chello.nl>
-Subject: Re: [PATCH 00/16] x86, crypto: remove always-defined CONFIG_AS_* and
- cosolidate Kconfig/Makefiles
-Message-ID: <20200325045940.GA24974@gmail.com>
-References: <20200324084821.29944-1-masahiroy@kernel.org>
+        Wed, 25 Mar 2020 01:04:12 -0400
+Received: from ozlabs.org ([203.11.71.1]:52563 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725781AbgCYFEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 01:04:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nGHW5RMGz9sRR;
+        Wed, 25 Mar 2020 16:04:07 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585112648;
+        bh=i9dSl2qAEPu3EzgQBUnMt3Sf1NJKja+VfJFSWRaF0IM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=OU+2ldMXUvuKHgBaKhKd6YTwQqy01rnUeXM28SS6r94ltMv0Vpyopj7HhgW36cXxG
+         mjO/RxVYMupmeYfFi8CN1NlVzCFCK+RtBRwY3h0drK5uDtRS0ndI52f42bKNgebcQK
+         +8G4a8H2mn0Fvfm1LA64pbkDVvUv3ED6vQ4ptXvby+CbdKJxTvghyey0NgLsVZJNlA
+         rqwzvYQiGmFlBV4wjhyBYUaECLw/DYXN3fVRFGRR0zC7d45M1W9ZB0mSYv8DgcdIxw
+         1mNAkCWtAYAp2VBoA5CFyg6u4eyoJGwtAecBL4M3dYhO1gecgO5UT8ezT3M6eo+9at
+         dQZHm7s2wBpxQ==
+Date:   Wed, 25 Mar 2020 16:04:05 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: linux-next: manual merge of the scsi tree with the block tree
+Message-ID: <20200325160405.2f0f0490@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324084821.29944-1-masahiroy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; boundary="Sig_/yVW5gJNP2PoUA=wSi1nV+++";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/yVW5gJNP2PoUA=wSi1nV+++
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-* Masahiro Yamada <masahiroy@kernel.org> wrote:
+Hi all,
 
-> This series of cleanups was prompted by Linus:
-> https://lkml.org/lkml/2020/3/12/726
-> 
-> First, this series drop always-on CONFIG_AS_* options.
-> Some of those options were introduced in old days.
-> For example, the check for CONFIG_AS_CFI dates back to 2006.
-> 
-> We raise the minimal tool versions from time to time.
-> Currently, we require binutils 2.21
-> (and we plan to bump it to 2.23 for v5.7-rc1).
-> 
-> After cleaning away the old checks,
-> as-instr calls are moved to Kconfig from Makefiles.
-> (patch 11)
-> 
-> This allows more Kconfig / Makefile cleanups.
-> Patch 12 is complex, but I double-checked it does the equivalent.
-> 
-> Patch 14 bumps the binutils version to 2.23,
-> and patch 15 removes more CONFIG_AS_* options.
-> 
-> I folded all relevanet patches into this series,
-> as suggested by Jason A. Donenfeld.
-> 
-> If x86 maintainers take care of this series, that's good.
-> 
-> If it is OK to queue this up to Kbuild tree,
-> I will send a pull request to Linus.
-> 
-> Thank you.
+Today's linux-next merge of the scsi tree got a conflict in:
 
-LGTM. I've got these four from Jason A. Donenfeld queued up in 
-tip:WIP.x86/asm:
+  Documentation/scsi/scsi_mid_low_api.txt
 
- bd5b1283e41c: ("crypto: Curve25519 - do not pollute dispatcher based on assembler")
- 829f32d78588: ("crypto: X86 - rework configuration, based on Kconfig")
- 95ef9f80ed63: ("x86/build: Probe assembler from Kconfig instead of Kbuild")
- 1651e700664b: ("x86: Fix bitops.h warning with a moved cast")
+between commit:
 
-I suppose these might interact (maybe even conflict), and are topically 
-related.
+  a10183d744fb ("scsi: simplify scsi_partsize")
 
-Would you like to pull these into the kbuild tree? You can find them in:
+from the block tree and commit:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/asm
+  ce5c5d6503c9 ("scsi: docs: convert scsi_mid_low_api.txt to ReST")
 
-Thanks,
+from the scsi tree.
 
-	Ingo
+I fixed it up (I deleted that file and added the following merge fix
+patch) and can carry the fix as necessary. This is now fixed as far as
+linux-next is concerned, but any non trivial conflicts should be
+mentioned to your upstream maintainer when your tree is submitted for
+merging.  You may also want to consider cooperating with the maintainer
+of the conflicting tree to minimise any particularly complex conflicts.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 25 Mar 2020 16:00:39 +1100
+Subject: [PATCH] scsi: fix up for "scsi: simplify scsi_partsize"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ Documentation/scsi/scsi_mid_low_api.rst | 21 ---------------------
+ 1 file changed, 21 deletions(-)
+
+diff --git a/Documentation/scsi/scsi_mid_low_api.rst b/Documentation/scsi/s=
+csi_mid_low_api.rst
+index 37ee63b147e9..5358bc10689e 100644
+--- a/Documentation/scsi/scsi_mid_low_api.rst
++++ b/Documentation/scsi/scsi_mid_low_api.rst
+@@ -308,7 +308,6 @@ Summary:
+   - scsi_host_alloc - return a new scsi_host instance whose refcount=3D=3D1
+   - scsi_host_get - increments Scsi_Host instance's refcount
+   - scsi_host_put - decrements Scsi_Host instance's refcount (free if 0)
+-  - scsi_partsize - parse partition table into cylinders, heads + sectors
+   - scsi_register - create and register a scsi host adapter instance.
+   - scsi_remove_device - detach and remove a SCSI device
+   - scsi_remove_host - detach and remove all SCSI devices owned by host
+@@ -481,26 +480,6 @@ Details::
+     void scsi_host_put(struct Scsi_Host *shost)
+=20
+=20
+-    /**
+-    * scsi_partsize - parse partition table into cylinders, heads + sectors
+-    * @buf: pointer to partition table
+-    * @capacity: size of (total) disk in 512 byte sectors
+-    * @cyls: outputs number of cylinders calculated via this pointer
+-    * @hds: outputs number of heads calculated via this pointer
+-    * @secs: outputs number of sectors calculated via this pointer
+-    *
+-    *      Returns 0 on success, -1 on failure
+-    *
+-    *      Might block: no
+-    *
+-    *      Notes: Caller owns memory returned (free with kfree() )
+-    *
+-    *      Defined in: drivers/scsi/scsicam.c
+-    **/
+-    int scsi_partsize(unsigned char *buf, unsigned long capacity,
+-		    unsigned int *cyls, unsigned int *hds, unsigned int *secs)
+-
+-
+     /**
+     * scsi_register - create and register a scsi host adapter instance.
+     * @sht:        pointer to scsi host template
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/yVW5gJNP2PoUA=wSi1nV+++
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl565kUACgkQAVBC80lX
+0GxXGQf/c2iTz7TsGPXAjM6kZE99AxhPfbBb4R2FQ2KUBwaj+NRFEUczyrYbVZWL
+J5N8fRK+FudTF2hFE0WtLS5E8q881R9jUFbGFQbguELa7+bDPX2jiEMHXZCFMPW/
+oiIIiEj5H8nYzNXaOcApOSPxwpLRM3LBXpdHePe7EOaEob13NF1/+tc3HR/FeIpL
+fAaOvaRogC/QScQInGhvWAZgQ2MwKdGKI6oQJUJIA00dpHHveJiBkM8jNqeFS3Nk
+6vgD1soqcQyf/qBtEajgCQM/v+cACt0cDNmUGj0Tca0JoHL6ixoQWFqXaBZPqn+C
+vDzwR3CtVWReQNsXMO6gA1L4TzTQDw==
+=dM/m
+-----END PGP SIGNATURE-----
+
+--Sig_/yVW5gJNP2PoUA=wSi1nV+++--
