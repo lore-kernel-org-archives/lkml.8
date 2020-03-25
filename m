@@ -2,158 +2,141 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CA49C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79431C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 083CA206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5771320774
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:00:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xxOLDXKq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pcB8/P4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727634AbgCYR5w (ORCPT
+        id S1727706AbgCYSAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:57:52 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:45861 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgCYR5w (ORCPT
+        Wed, 25 Mar 2020 14:00:23 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38751 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbgCYSAW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:57:52 -0400
-Received: by mail-pg1-f194.google.com with SMTP id o26so1497457pgc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 10:57:50 -0700 (PDT)
+        Wed, 25 Mar 2020 14:00:22 -0400
+Received: by mail-wm1-f66.google.com with SMTP id l20so3818965wmi.3;
+        Wed, 25 Mar 2020 11:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=v8BBQ/NBtZ7/svHHcq03U0gLUqYdrhj6Lz0G3zU1PZk=;
-        b=xxOLDXKqmlAPgVZPURyhUio7imVBwD48q3OcN7j2P85LUP3lxGm5Mk/Tm8pPHw10eI
-         vbE5+pkVsEppVEfULBlRPczZdcqip6pa+PKdUp9igsoq+5a+x9Vg7AF8uwSzEMV9WIuu
-         bzxDrrftAq5zBAsmX1uNJQhCv0KtcyQeFMNx9gWi0itxl3d+EURtNZ6qixJHcW5ryHVg
-         HKqdhtMKs6j5MZMeplB52sstUwEhrd9cHd2ul0nwwq51EQVcasu1PUNSVT++oIcUnFy6
-         2ajhKjYZHCUqtKf5CQw6slx2CA8ilZPX6MWLIPYZ5InxiQEidt7990CHj9B1wf/jADud
-         1Ldg==
+        bh=H2vECe2orURQBDgSGUswq0Em3Lt1cG8LhmyDWMenie4=;
+        b=pcB8/P4NNmGc9jdx2cKv4xLm0LYKUe/enar+zNO7y4vivuI8tC96COsdPMsSERrJYl
+         8PVqD0Ryt1WAvO9bHnakhvnUfsIgChkC7qbdx86g7WKZuyOUA3mnnQ+he6x9gSy+4cpx
+         c6Q6vhS8Mm4rJylbtRie9w3bHOiCVzrhIRvJEdtRumQ5g7sTuldciIcsSt+D//krTaVi
+         VwHm1SINNqM+sRZows4xI9xhUJ9uh1lwV4NKyK/Ng5sr3WIS2jMszdmOFH+lEufdeQxy
+         yKgiUcMYDK6gAYDYTJBA3p14X99t6sm/bK7aD6+jXW/YVjBnPSxkU4iCFIq5tDotccO5
+         IGwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v8BBQ/NBtZ7/svHHcq03U0gLUqYdrhj6Lz0G3zU1PZk=;
-        b=YfBiXNfXV4WiAKO/8PUq73YGN0R/dtrBo581U6cumroe6nwkMq15V+Hk2YRuwSvpsm
-         svX+P8tfDti5meMCUr7vFnils0WuJq+aMLG+LIZOA8NkSQ+eqRGGNJWQQbMmo+wFgUxC
-         H0jYziMcFQCKwWoPUjPr+mPterZzrqQGAHc+xL9cHJd9V89E+fEBbIJg13gjpfkOKv0/
-         dVmYr50YcOishqnF8yAOkdyMpN9cf7jRKpXXl9PShWkOliPSg3MJe3XJJh0CltTIkjS4
-         EZ1mjyQVPQA1Kyl/9Jro3Prls7aA+g/+iIN7ChV22LLq11O+OrZQkQb9bg1kyWfUroOJ
-         Hu2w==
-X-Gm-Message-State: ANhLgQ19Z9xxZkJ5TGqIrA9+iLltjGbGDkeui/xULAnn4B+jKRKCWAKM
-        uZgRQmzjbr50SrSbHqB2jtvftw==
-X-Google-Smtp-Source: ADFU+vtV4WUFtlIPFuBfmrUAdAu0jGk7d8jlvipZz8y0G5/pXyJQR3Ta7TXq2tr5swRu+s2P+IRGSg==
-X-Received: by 2002:a63:3d06:: with SMTP id k6mr4118268pga.418.1585159069695;
-        Wed, 25 Mar 2020 10:57:49 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id l15sm7213709pgk.59.2020.03.25.10.57.47
+        bh=H2vECe2orURQBDgSGUswq0Em3Lt1cG8LhmyDWMenie4=;
+        b=TcSH5A6/97JRlRPCmaJ8jynyv8j2g2TLuWBBso7yKok0vJP78KyUSTEqFiux4JFbhY
+         4/QhAG2jk6jrP7MSU6nhIi99yACOwjf+Hv+5GFq2zWj6m+/9dacjtq18qGB8dOvWtinh
+         Uzkq5xtkzBrlAHV798RS6U6xSGzv7Aeh1xFzdbNHb6j8X9eZAFmKXeXQGNbMA8JDXEPt
+         R10oF7J1yHPcpaTBgZO6F9VQcH3G1MQ1T4JHbSV1t7Sfr5mftvbLrjQ5+9Q2cNoAi9Ya
+         0Q89jUb5Oh571kbQ+2I7whLueIj/8lmDTBaWw9ruoPsme7QLvo6P2yvvdvvXe7WG81Uv
+         P7pA==
+X-Gm-Message-State: ANhLgQ0GgDWwQd2V+OTfVWeaHQsJEIagg3y7FNXzjMtPxvXKrcLzF2Bu
+        EIf+wl/VrXToP88imKr9PQ==
+X-Google-Smtp-Source: ADFU+vskQBpU1fwag571AUWx4l8lwesSLXv4/Nn4D9x3DELZa5yjkr7FUq1vp/cSRcIq8i0IZhnnuQ==
+X-Received: by 2002:a7b:cb42:: with SMTP id v2mr4697972wmj.170.1585159219122;
+        Wed, 25 Mar 2020 11:00:19 -0700 (PDT)
+Received: from avx2 ([46.53.251.45])
+        by smtp.gmail.com with ESMTPSA id y200sm10085730wmc.20.2020.03.25.11.00.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 10:57:48 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 11:57:46 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Loic Pallardy <loic.pallardy@st.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arnaud.pouliquen@st.com, benjamin.gaignard@linaro.org,
-        fabien.dessenne@st.com, s-anna@ti.com
-Subject: Re: [RFC 1/2] remoteproc: sysfs: authorize rproc shutdown when rproc
- is crashed
-Message-ID: <20200325175746.GA6227@xps15>
-References: <1583924072-20648-1-git-send-email-loic.pallardy@st.com>
- <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
+        Wed, 25 Mar 2020 11:00:18 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 21:00:15 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexey Gladkov <gladkov.alexey@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH RESEND v9 3/8] proc: move hide_pid, pid_gid from
+ pid_namespace to proc_fs_info
+Message-ID: <20200325180015.GA18706@avx2>
+References: <20200324204449.7263-1-gladkov.alexey@gmail.com>
+ <20200324204449.7263-4-gladkov.alexey@gmail.com>
+ <CAHk-=whXbgW7-FYL4Rkaoh8qX+CkS5saVGP2hsJPV0c+EZ6K7A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1583924072-20648-2-git-send-email-loic.pallardy@st.com>
+In-Reply-To: <CAHk-=whXbgW7-FYL4Rkaoh8qX+CkS5saVGP2hsJPV0c+EZ6K7A@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Loic,
-
-On Wed, Mar 11, 2020 at 11:54:31AM +0100, Loic Pallardy wrote:
-> When remoteproc recovery is disabled and rproc crashed, user space
-> client has no way to reboot co-processor except by a complete platform
-> reboot.
-> Indeed rproc_shutdown() is called by sysfs state_store() only is rproc
-> state is RPROC_RUNNING.
+On Tue, Mar 24, 2020 at 02:21:59PM -0700, Linus Torvalds wrote:
+> On Tue, Mar 24, 2020 at 1:46 PM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
+> >
+> > +/* definitions for hide_pid field */
+> > +enum {
+> > +       HIDEPID_OFF       = 0,
+> > +       HIDEPID_NO_ACCESS = 1,
+> > +       HIDEPID_INVISIBLE = 2,
+> > +};
 > 
-> This patch offers the possibility to shutdown the co-processor if
-> it is in RPROC_CRASHED state and so to restart properly co-processor
-> from sysfs interface.
-
-If recovery is disabled on an rproc the platform likely intended to have a hard
-reboot and as such we should not be concerned about this case.
-
-Where I think we have a problem, something that is asserted by looking at your 2
-patches, is cases where rproc_trigger_recovery() fails.  That leaves the system
-in a state where it can't be recovered, something the remoteproc core should not
-allow. 
-
+> Should this enum be named...
 > 
-> Signed-off-by: Loic Pallardy <loic.pallardy@st.com>
-> ---
->  drivers/remoteproc/remoteproc_core.c  | 2 +-
->  drivers/remoteproc/remoteproc_sysfs.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> >  struct proc_fs_info {
+> >         struct pid_namespace *pid_ns;
+> >         struct dentry *proc_self;        /* For /proc/self */
+> >         struct dentry *proc_thread_self; /* For /proc/thread-self */
+> > +       kgid_t pid_gid;
+> > +       int hide_pid;
+> >  };
 > 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index 097f33e4f1f3..7ac87a75cd1b 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1812,7 +1812,7 @@ void rproc_shutdown(struct rproc *rproc)
->  	if (!atomic_dec_and_test(&rproc->power))
->  		goto out;
->  
-> -	ret = rproc_stop(rproc, false);
-> +	ret = rproc_stop(rproc, rproc->state == RPROC_CRASHED);
-
-Please add a comment that explains how we can be in rproc_shutdown() when the
-processor has crashed and point to rproc_trigger_recovery().  See below for more
-details. 
-
->  	if (ret) {
->  		atomic_inc(&rproc->power);
->  		goto out;
-> diff --git a/drivers/remoteproc/remoteproc_sysfs.c b/drivers/remoteproc/remoteproc_sysfs.c
-> index 7f8536b73295..1029458a4678 100644
-> --- a/drivers/remoteproc/remoteproc_sysfs.c
-> +++ b/drivers/remoteproc/remoteproc_sysfs.c
-> @@ -101,7 +101,7 @@ static ssize_t state_store(struct device *dev,
->  		if (ret)
->  			dev_err(&rproc->dev, "Boot failed: %d\n", ret);
->  	} else if (sysfs_streq(buf, "stop")) {
-> -		if (rproc->state != RPROC_RUNNING)
-> +		if (rproc->state != RPROC_RUNNING && rproc->state != RPROC_CRASHED)
->  			return -EINVAL;
-
-Wouldn't it be better to just prevent the MCU to stay in a crashed state (when
-recovery is not disabled)?
-
-I like what you did in the next patch where the state of the MCU is set to
-RPROC_CRASHED in case of failure, so that we keep.  I also think the hunk
-above is correct.  All that is left is to call rproc_shutdown() directly in
-rproc_trigger_recovery() when something goes wrong.  I would also add a
-dev_err() so that users have a clue of what happened.
-
-That would leave the system in a stable state without having to add intelligence
-to state_store().
-
-Let me know that you think...
-
-Mathieu
-
->  
->  		rproc_shutdown(rproc);
-> -- 
-> 2.7.4
+> .. and then used here instead of "int"?
 > 
+> Same goes for 'struct proc_fs_context' too, for that matter?
+> 
+> And maybe in the function declarations and definitions too? In things
+> like 'has_pid_permissions()' (the series adds some other cases later,
+> like hidepid2str() etc)
+> 
+> Yeah, enums and ints are kind of interchangeable in C, but even if it
+> wouldn't give us any more typechecking (except perhaps with sparse if
+> you mark it so), it would be documenting the use.
+> 
+> Or am I missing something?
+> 
+> Anyway, I continue to think the series looks fine, bnut would love to
+> see it in -next and perhaps comments from Al and Alexey Dobriyan..
+
+Patches are OK, except the part where "pid" is named "pidfs" and
+the suffix doesn't convey any information.
+
+	mount -t proc -o subset=pid,sysctl,misc
+
+Reviewed-by: Alexey Dobriyan <adobriyan@gmail.com>
