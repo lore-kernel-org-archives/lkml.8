@@ -2,183 +2,153 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC5AC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DAB7C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98C0E20719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 290A720719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Azmg9Eu8"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HV62cuaH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbgCYFP6 (ORCPT
+        id S1726116AbgCYFSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:15:58 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46563 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725263AbgCYFP6 (ORCPT
+        Wed, 25 Mar 2020 01:18:46 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36412 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgCYFSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:15:58 -0400
-Received: by mail-lf1-f66.google.com with SMTP id q5so685253lfb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 22:15:55 -0700 (PDT)
+        Wed, 25 Mar 2020 01:18:45 -0400
+Received: by mail-lj1-f195.google.com with SMTP id g12so1121282ljj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 22:18:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=u3sxRhWQUyC52T2bD+6qS7G0Nu9lQIcnTtKEQUjYFy0=;
-        b=Azmg9Eu8MTFmU6YNB/REW+8MtWCCV5cSg1DQ8g2Y7Mn7ntbUlIVVaLVNG5+yAA0Wpa
-         e0IYaR3esQQVJbgSTRbQNEvyuBu5j0oTCKY2DEfPqnc6rBV7tYUOEal5fXiFQDYDWQ7g
-         /dRYg9yzmn9/yxGu7qDfVUiiyT0P+Y7A7mzSL53v6fPFLZt6HXs80lRmK1W3m2IaCd4s
-         +DHtHWzERL5nSQZoi9mmZnXDyikJktU1qrLbtt2HOjWduvNpkyguANZuaWM/vHp1S0Xe
-         Omz8E+1AQAJxJXpw4iQB4mKwhinv+JwG/mxpCNIH7q/wvhpOcyvOJKDA4crSoB9SFdIB
-         4wJQ==
+         :cc;
+        bh=ZPdsfolAYBymNTtjFbWm1sGcSl3euUAzGo5gu/sysho=;
+        b=HV62cuaHNm0sLpPBqbW77tm1j9IRBrwfwZQ4V4KalwZ9pz83sNLLlOl3wYB9F2NPq1
+         /AthsNfbxYNA4nrE4JWW/CpN92ffFxD4pd1T5KrGlDua3N7tZB7vVnbvlrENLcqEpdxk
+         ksjMcj8hQuXbDYbzP0/lFfLqTvRT3epWfBpN4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=u3sxRhWQUyC52T2bD+6qS7G0Nu9lQIcnTtKEQUjYFy0=;
-        b=gGOjwEnTNJm+kUpn0kFX9sxXjLXvdbWvShj4CaPXYI+5NMeEOeh/oXJ3pi/MJ3iiqW
-         9Wr8tkoEKiuteCYwFXYfbhynxcMh+5mIpa9axIXfCtbcvpIPL3ctvE1raIQ7IWooNYJn
-         3LGsYPDYq8Up+1TSlW4HTxdIYd3/UhEd40x1NwmlHgIqYVw2FNpfb1o5qVKn4YBOiy21
-         s8Ql3YxS5tG9sZ6VdKlxrDr9ym3WDA6vtBBvN+GnbfimR8u9KzD/d27d5CK6/W4wzmT+
-         CXMhD5OFTrmB1v9r1NfBw1Oh+iQ4doVA0YwNtmlfFZsjYesvYFHp7rZ800KIFO4joaGA
-         izrw==
-X-Gm-Message-State: ANhLgQ2uN34JJsU12ya1aoyqEAeApfb/3D453+nYYO8LHW/RIU/EHJCb
-        MJNzxGGc1AONs9YfY02AtIIzCC1FNIAexT1BPb6Myw==
-X-Google-Smtp-Source: ADFU+vsd8UcCRfMVthnR1HjdgyeQtvnn3T9U+pcFRwM3ZItacZeerqQ4BqTc2Z4F9ym9+02KGIdee6ObxCLb5mk8/QY=
-X-Received: by 2002:a05:6512:3188:: with SMTP id i8mr1116301lfe.26.1585113354323;
- Tue, 24 Mar 2020 22:15:54 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=ZPdsfolAYBymNTtjFbWm1sGcSl3euUAzGo5gu/sysho=;
+        b=KbBgGMzPD7O3Eo2f1SSQAWXhBmyiKsUd2Ixp9K1wZvBd2kO+vD2dP4rvNnCAyBY0Q4
+         iNywvPrHC8gdkid6oTLHqtga+3dqMNYDy0YXPZDVoEVWxlJT3CiJrtwNMMLOCb7byO8L
+         DgeNSaWcuGZ9/pvw7EAhCT2RF9dSnhn6wXEC2izdLPYdZ0s6UomDNiouL3BTekgYXYrB
+         RxJSmhJ90zkO1qpNxk6Fcj9vYRxsgP+BNqTIoD6OZvi7HMxIj6N5KuE1nu2S83BpGNXd
+         jfHubgMrWsU489vWIU7NB+1Ai8IA12/0kDeZjAHw7bhJdGJ8UfJQSPc8+dQpcM0vzuWq
+         XjPg==
+X-Gm-Message-State: AGi0PubovaEo7U1rwZo/NypzQ0ek1AZAVjitLLzE2reLGk7xmhGdyr3P
+        XYKTDYkoWHF2V0VxJiEQrAF45Llcqh3ppRtWksKMkg==
+X-Google-Smtp-Source: ADFU+vtZD1HGvN+DQ13pTWzYdoo8gG5ct+mgTQBTtLRVyqiOPrMAUEgQcPZ2Lj1ENhxI54Gu7sGwUdrwP8XwGF26SXE=
+X-Received: by 2002:a2e:a551:: with SMTP id e17mr822190ljn.86.1585113522357;
+ Tue, 24 Mar 2020 22:18:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200324130806.544601211@linuxfoundation.org>
-In-Reply-To: <20200324130806.544601211@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 25 Mar 2020 10:45:43 +0530
-Message-ID: <CA+G9fYtfn=F8zof9nakvt6jae=cO+0FMA9O3gJq+1Fz9uCo-bQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/102] 5.4.28-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+References: <20200323072824.254495-1-mcchou@chromium.org> <20200323002820.v1.1.I0e975833a6789e8acc74be7756cd54afde6ba98c@changeid>
+ <04021BE3-63F7-4B19-9F0E-145785594E8C@holtmann.org> <421d27670f2736c88e8c0693e3ff7c0dcfceb40b.camel@perches.com>
+ <57C56801-7F3B-478A-83E9-1D2376C60666@holtmann.org> <03547be94c4944ca672c7aef2dd38b0fb1eedc84.camel@perches.com>
+ <CALWDO_U5Cnt3_Ss2QQNhtuKS_8qq7oyNH4d97J68pmbmQMe=3w@mail.gmail.com>
+ <643C6020-2FC5-4EEA-8F64-5D4B7F9258A4@holtmann.org> <CALWDO_Uc6brpXmVfoUd+jgyy_F0-WSrYb1+hXtXm498dGzCOSg@mail.gmail.com>
+In-Reply-To: <CALWDO_Uc6brpXmVfoUd+jgyy_F0-WSrYb1+hXtXm498dGzCOSg@mail.gmail.com>
+From:   Miao-chen Chou <mcchou@chromium.org>
+Date:   Tue, 24 Mar 2020 22:18:31 -0700
+Message-ID: <CABmPvSF7xLihcnk9bd3ZeK6Nr_DsQq2ypXV7wn8bU4UnQ0sKUg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] Bluetooth: btusb: Indicate Microsoft vendor
+ extension for Intel 9460/9560 and 9160/9260
+To:     Alain Michaud <alainmichaud@google.com>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Joe Perches <joe@perches.com>,
+        Bluetooth Kernel Mailing List 
+        <linux-bluetooth@vger.kernel.org>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Alain Michaud <alainm@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 at 18:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, Mar 24, 2020 at 12:32 PM Alain Michaud <alainmichaud@google.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.4.28 release.
-> There are 102 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 26 Mar 2020 13:06:42 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.28-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.4.28-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: 14bb11f6495febf1ba14babcf03935cc83827808
-git describe: v5.4.27-103-g14bb11f6495f
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.27-103-g14bb11f6495f
-
-
-No regressions (compared to build v5.4.26-51-ge72abf1f11a9)
-
-
-No fixes (compared to build v5.4.26-51-ge72abf1f11a9)
-
-Ran 27616 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* libgpiod
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* kselftest
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-io-tests
-* ltp-math-tests
-* network-basic-tests
-* v4l2-compliance
-* ltp-fs-tests
-* spectre-meltdown-checker-test
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> On Tue, Mar 24, 2020 at 2:35 PM Marcel Holtmann <marcel@holtmann.org> wrote:
+> >
+> > Hi Alain,
+> >
+> > >>>>>> This adds a bit mask of driver_info for Microsoft vendor extension and
+> > >>>>>> indicates the support for Intel 9460/9560 and 9160/9260. See
+> > >>>>>> https://docs.microsoft.com/en-us/windows-hardware/drivers/bluetooth/
+> > >>>>>> microsoft-defined-bluetooth-hci-commands-and-events for more information
+> > >>>>>> about the extension. This was verified with Intel ThunderPeak BT controller
+> > >>>>>> where msft_vnd_ext_opcode is 0xFC1E.
+> > >>>> []
+> > >>>>>> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> > >>>> []
+> > >>>>>> @@ -315,6 +315,10 @@ struct hci_dev {
+> > >>>>>>        __u8            ssp_debug_mode;
+> > >>>>>>        __u8            hw_error_code;
+> > >>>>>>        __u32           clock;
+> > >>>>>> +       __u16           msft_vnd_ext_opcode;
+> > >>>>>> +       __u64           msft_vnd_ext_features;
+> > >>>>>> +       __u8            msft_vnd_ext_evt_prefix_len;
+> > >>>>>> +       void            *msft_vnd_ext_evt_prefix;
+> > >>>>
+> > >>>> msft is just another vendor.
+> > >>>>
+> > >>>> If there are to be vendor extensions, this should
+> > >>>> likely use a blank line above and below and not
+> > >>>> be prefixed with msft_
+> > >>>
+> > >>> there are other vendors, but all of them are different. So this needs to be prefixed with msft_ actually. But I agree that having empty lines above and below makes it more readable.
+> > >>
+> > >> So struct hci_dev should become a clutter
+> > >> of random vendor extensions?
+> > >>
+> > >> Perhaps there should instead be something like
+> > >> an array of char at the end of the struct and
+> > >> various vendor specific extensions could be
+> > >> overlaid on that array or just add a void *
+> > >> to whatever info that vendors require.
+> > > I don't particularly like trailing buffers, but I agree we could
+> > > possibly organize this a little better by with a struct.  something
+> > > like:
+> > >
+> > > struct msft_vnd_ext {
+> > >    bool              supported; // <-- Clearly calls out if the
+> > > extension is supported.
+> > >    __u16           msft_vnd_ext_opcode; // <-- Note that this also
+> > > needs to be provided by the driver.  I don't recommend we have this
+> > > read from the hardware since we just cause an extra redirection that
+> > > isn't necessary.  Ideally, this should come from the usb_table const.
+> >
+> > Actually supported == false is the same as opcode == 0x0000. And supported == true is opcode != 0x0000.
+> I was thinking of a more generic way to check if the extension is
+> supported so the higher level doesn't need to understand that
+> opcode==0 means it's not supported.  For the android extension for
+> example, this would be a simple boolean (there isn't any opcodes).
+> >
+> > >    __u64           msft_vnd_ext_features;
+> > >    __u8             msft_vnd_ext_evt_prefix_len;
+> > >    void             *msft_vnd_ext_evt_prefix;
+> > > };
+> > >
+> > > And then simply add the struct msft_vnd_ext (and any others) to hci_dev.
+> >
+> > Anyway, Lets keep these for now as hci_dev->msft_vnd_ext_*. We can fix this up later without any impact.
+> I agree, this doesn't have a whole lot of long term consequences,
+> although some will want to cherry-pick this to older kernels so if
+> there is something we can do now, it will reduce burden on some
+> products.
+Thanks for all your inputs. I will group these msft_vnd_ext_* into a
+struct msft_vnd_ext with future refactoring in mind if new extensions
+are introduced.
