@@ -2,174 +2,181 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A9CC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0172AC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BC420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C209F20409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsqRu3Vf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aDW1feaQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgCYP2b (ORCPT
+        id S1727867AbgCYP2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:28:31 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40581 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727439AbgCYP2b (ORCPT
+        Wed, 25 Mar 2020 11:28:39 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36816 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbgCYP2j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:28:31 -0400
-Received: by mail-wr1-f66.google.com with SMTP id u10so3646333wro.7;
-        Wed, 25 Mar 2020 08:28:29 -0700 (PDT)
+        Wed, 25 Mar 2020 11:28:39 -0400
+Received: by mail-lf1-f66.google.com with SMTP id s1so2149600lfd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:28:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+TuwiFh6ptZG2bbIYvP+HL4r312J6Ae1r0580dUYeiw=;
-        b=SsqRu3VfcjXQUd9sQY1p9+YtlAipWWtLkXyxyN+z5kEmeY6VzKak39ao6cznTfg2NT
-         JGvYzxeRy82Skqt0L0EeJ7KyEtEAJa4GelLcPLwZBSfUIxv8GEsZ8y71GTFSz+6JYZc0
-         mbPMZscQZSFuAK4K9ov0Cg0S3QfQrec8EP2g8u26qflS20jrXCrfd10JfFWdIktqPBow
-         bq8CuQtwRSDDab3bGWNndTVDVDFa41Rzh0N2INsWTeH4TJh/LawHbmORV9q4nKu1eEOk
-         b1JumXhAYajXIY5ZDjfQy/g+N96lmcjadnjE07w4JCA++a0mStooP3PiMSZwDRR9yyLX
-         F4Vw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MAfXLeK4jv3GCXZEXdtxljvjsSAfg9wpjX0t8Ep/xn0=;
+        b=aDW1feaQrj/vQbwncf35ZAbIJQv6QoVYZCbKz9TCT9fUH98JKwEEaGp+U3VA4/RSxj
+         M2U1pJCxnd/u57YPJBO93DEX2pyVd5yTcvNeo3knsXJMSZXsjuSwyZbLvyiU1biwWm6p
+         CGrF1GW7glPm10woi2K7MCSpOd6gPGxgfI5wUW4egp3qRlpv0tElS6C3iexVg400nWrW
+         jFLalqO3PixJa/k6GxgaWExvLfeARawYBJhoYg6e2BCtnChUG8KMqaG1szJeWQ2KoZpY
+         BHHVvBAmrzGU9sAO4d+K7uYZ0ONthZXN1RMD0zzJ5xLy4buThs8hGRL8hQeUor+yr0S0
+         i15A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+TuwiFh6ptZG2bbIYvP+HL4r312J6Ae1r0580dUYeiw=;
-        b=S8QAMXCC7Yl3HIHqDRuoejOOR5Hqmvq+gBoIpZAa8772X9XvwohY+a7No3UDouL/9p
-         LfdiBehuW/oAQMWTiZyFIMhQeY46PVG350oS2H2/NT88I5gqRwmTV0/V/0RkIAeepkZ9
-         /FHh6c6pT36mqUjRFPqZ49f6PF6L5yzf3n5Yqpw+ony3bgcLCfQ5Q49pOu7vFTiRYzTH
-         VufRC3BsG4Da6vioSDe//UB1dwwG8kGwHrt2mT6y0fXM+KtCX4D0llPvVt3DJOWBvNLi
-         5YcHCSFZBhUocEXnW4W/qxddpNHTc8HOgeikFp106/vrYGkW8XGGdpJrW9Fl8eWLSMiU
-         88ug==
-X-Gm-Message-State: ANhLgQ3BiEHFQwFCCiekpErRGmFCh2Hg5lPO5ktnRAjcnZz8p202clLU
-        7HpG0d1Q/b/aZ1xkJYNY5tY=
-X-Google-Smtp-Source: ADFU+vv2WmXZviwL1prI7g4XxxAMgN1uOZn5i5kh4PmLtj27KlvZBV9mmlfSXaQ1afOTdfZN0W2zpA==
-X-Received: by 2002:adf:fdc6:: with SMTP id i6mr4134003wrs.252.1585150108315;
-        Wed, 25 Mar 2020 08:28:28 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f29:6000:f4a0:1b38:2faf:56e9? (p200300EA8F296000F4A01B382FAF56E9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f4a0:1b38:2faf:56e9])
-        by smtp.googlemail.com with ESMTPSA id b6sm18851817wrp.59.2020.03.25.08.28.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:28:27 -0700 (PDT)
-Subject: Re: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay
- possibility to ksz9131
-To:     Philippe Schenker <philippe.schenker@toradex.com>, andrew@lunn.ch,
-        f.fainelli@gmail.com, linux@armlinux.org.uk,
-        netdev@vger.kernel.org, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, shawnguo@kernel.org,
-        mark.rutland@arm.com
-Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
-        silvan.murer@gmail.com, s.hauer@pengutronix.de,
-        a.fatoum@pengutronix.de, "David S. Miller" <davem@davemloft.net>
-References: <20200325150329.228329-1-philippe.schenker@toradex.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <7948ffaa-e530-f82e-0f58-39fa7e8f082f@gmail.com>
-Date:   Wed, 25 Mar 2020 16:28:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MAfXLeK4jv3GCXZEXdtxljvjsSAfg9wpjX0t8Ep/xn0=;
+        b=Re2EFhcPg9yVMMj2hGGH4FKFIIu1PaKMUDEFGhlV9EUDXgMPjfxq9GDcWlrUJnRxFz
+         4bdAOkMsvHi5X9wQqAqFRlZB07uLKxDf3KR7zX3dbs6hwJZPhEadEiUR/5pBelotuAjG
+         tzuogVfQ7u0rtfak/fo6V3hYaAHVArk0f1jQf6x1w+lLYLwxonsfQCYi+hAq/XwS/KbW
+         QR1vsSb2YtqLEy5p3nMSdmT8xpDix3H2NsaIIaGCw2/BfcgKvKccFIk4w3AKeaXKqMNI
+         /br+KwBXISMoTj7xsSSpyXYFXqyC+tMBkQa2FZgtTrGRLgeEzFgnBVND3Pmz8wNx2bR2
+         Wr8w==
+X-Gm-Message-State: ANhLgQ38WzH9lyG8wWrSmANES/SFRaZmIfF3WpSQJa8XMJl/fLY5lQYQ
+        UbgreHoumA7Apj6KBZJOz6tFcJVGGJSeJZm9Y1mhLQ==
+X-Google-Smtp-Source: ADFU+vvPsxfhLZkuw1zm3DaRk4jDzbr+V6wKm8OS63ckoV6lXpkrggY1jnKk/LQr1ujMiOa33DUQuJWItnCXDLsD8jE=
+X-Received: by 2002:ac2:43a8:: with SMTP id t8mr2721177lfl.82.1585150114380;
+ Wed, 25 Mar 2020 08:28:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200325150329.228329-1-philippe.schenker@toradex.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1585117436.git.amit.kucheria@linaro.org>
+ <1ee4240e29edefc36b5d410d4792971c2bb4c5d5.1585117436.git.amit.kucheria@linaro.org>
+ <a89df770-eeb9-e4f2-2a46-ee4389720597@arm.com>
+In-Reply-To: <a89df770-eeb9-e4f2-2a46-ee4389720597@arm.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 25 Mar 2020 20:58:23 +0530
+Message-ID: <CAP245DX04zTMhNep46MNB7yhxnBshX0bb7sQmaSq_6KScvH2jg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] dt-bindings: thermal: Add yaml bindings for
+ thermal cooling-devices
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25.03.2020 16:03, Philippe Schenker wrote:
-> The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
-> patch makes use of those delays. The information which delays should
-> be enabled or disabled comes from the interface names, documented in
-> ethernet-controller.yaml:
-> 
-> rgmii:      Disable RXC and TXC delays
-> rgmii-id:   Enable RXC and TXC delays
-> rgmii-txid: Enable only TXC delay, disable RXC delay
-> rgmii-rxid: Enable onlx RXC delay, disable TXC delay
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
-> 
->  drivers/net/phy/micrel.c | 45 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-> index 63dedec0433d..d3ad09774847 100644
-> --- a/drivers/net/phy/micrel.c
-> +++ b/drivers/net/phy/micrel.c
-> @@ -704,6 +704,48 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
->  	return phy_write_mmd(phydev, 2, reg, newval);
->  }
->  
-> +/* MMD Address 0x2 */
-> +#define KSZ9131RN_RXC_DLL_CTRL		76
-> +#define KSZ9131RN_TXC_DLL_CTRL		77
-> +#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
-> +#define KSZ9131RN_DLL_ENABLE_DELAY	0
-> +#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
-> +
-> +static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
-> +{
-> +	int ret;
-> +	u16 rxcdll_val, txcdll_val;
-> +
-> +	switch (phydev->interface) {
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII_ID:
-> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII_RXID:
-> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		break;
-> +	case PHY_INTERFACE_MODE_RGMII_TXID:
-> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
-> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
+On Wed, Mar 25, 2020 at 3:51 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
+>
+> Hi Amit,
+>
+> On 3/25/20 6:34 AM, Amit Kucheria wrote:
+> > As part of moving the thermal bindings to YAML, split it up into 3
+> > bindings: thermal sensors, cooling devices and thermal zones.
+> >
+> > The property #cooling-cells is required in each device that acts as a
+> > cooling device - whether active or passive. So any device that can
+> > throttle its performance to passively reduce heat dissipation (e.g.
+> > cpus, gpus) and any device that can actively dissipate heat at different
+> > levels (e.g. fans) will contain this property.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > ---
+> >   .../thermal/thermal-cooling-devices.yaml      | 116 ++++++++++++++++++
+> >   1 file changed, 116 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> > new file mode 100644
+> > index 000000000000..b5599f7859f8
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/thermal/thermal-cooling-devices.yaml
+> > @@ -0,0 +1,116 @@
+> > +# SPDX-License-Identifier: (GPL-2.0)
+> > +# Copyright 2020 Linaro Ltd.
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/thermal/thermal-cooling-devices.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Thermal cooling device binding
+> > +
+> > +maintainers:
+> > +  - Amit Kucheria <amitk@kernel.org>
+> > +
+> > +description: |
+> > +  Thermal management is achieved in devicetree by describing the sensor hardware
+> > +  and the software abstraction of cooling devices and thermal zones required to
+> > +  take appropriate action to mitigate thermal overload.
+> > +
+> > +  The following node types are used to completely describe a thermal management
+> > +  system in devicetree:
+> > +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> > +   - cooling-device: device used to dissipate heat either passively or artively
+> > +   - thermal-zones: a container of the following node types used to describe all
+> > +     thermal data for the platform
+> > +
+> > +  This binding describes the cooling devices.
+> > +
+> > +  There are essentially two ways to provide control on power dissipation:
+> > +    - Passive cooling: by means of regulating device performance. A typical
+> > +      passive cooling mechanism is a CPU that has dynamic voltage and frequency
+> > +      scaling (DVFS), and uses lower frequencies as cooling states.
+> > +    - Active cooling: by means of activating devices in order to remove the
+> > +      dissipated heat, e.g. regulating fan speeds.
+> > +
+> > +  Any cooling device has a range of cooling states (i.e. different levels of
+> > +  heat dissipation). They also have a way to determine the state of cooling in
+> > +  which the device is. For example, a fan's cooling states correspond to the
+> > +  different fan speeds possible. Cooling states are referred to by single
+> > +  unsigned integers, where larger numbers mean greater heat dissipation. The
+> > +  precise set of cooling states associated with a device should be defined in
+> > +  a particular device's binding.
+>
+> [snip]
+>
+> > +
+> > +    thermal-zones {
+> > +            cpu0-thermal {
+> > +                    polling-delay-passive = <250>;
+> > +                    polling-delay = <1000>;
+> > +
+> > +                    thermal-sensors = <&tsens0 1>;
+> > +
+> > +                    trips {
+> > +                            cpu0_alert0: trip-point0 {
+> > +                                    temperature = <90000>;
+> > +                                    hysteresis = <2000>;
+> > +                                    type = "passive";
+> > +                            };
+> > +                    };
+> > +
+> > +                    cooling-maps {
+> > +                            map0 {
+> > +                                    trip = <&cpu0_alert0>;
+> > +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> > +                                                            THERMAL_NO_LIMIT>;
+>
+> Maybe add something like this, to better reflect the description:
+>
+>                         trip = <&cpu0_alert0>;
+>                         /* Corresponds to 1000MHz in OPP table */
+>                         cooling-device = <&CPU0 5 5>;
+>
+> This is less confusing than THERMAL_NO_LIMIT.
 
-Using a constant for the device address would be good.
+Thanks for the review.
 
-Last but not least your patch misses the net-next annotation
-(except you consider it a fix, then the net annotation and
-a Fixes tag would be needed).
-
-> +				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
-> +				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
-> +}
-> +
->  static int ksz9131_config_init(struct phy_device *phydev)
->  {
->  	const struct device *dev = &phydev->mdio.dev;
-> @@ -730,6 +772,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
->  	if (!of_node)
->  		return 0;
->  
-> +	if (phy_interface_is_rgmii(phydev))
-> +		ksz9131_config_rgmii_delay(phydev);
-> +
->  	ret = ksz9131_of_load_skew_values(phydev, of_node,
->  					  MII_KSZ9031RN_CLK_PAD_SKEW, 5,
->  					  clk_skews, 2);
-> 
-
+Will fix.
