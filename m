@@ -2,360 +2,113 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C831C54FD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:09:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB64C54FD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06CFD2073C
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:09:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="e30yOhFM"
+	by mail.kernel.org (Postfix) with ESMTP id 28A2B2073C
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:10:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgCYCJo (ORCPT
+        id S1727301AbgCYCKv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:09:44 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17815 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727212AbgCYCJo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:09:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585102110;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
-        bh=SKr6ILJ7x7CdTNGu98Mhj3KZx5bIO0x3oUWoAsnJIbM=;
-        b=e30yOhFMTAIB0cMIGU2OElCzuNfAUT2U5oUf8EPEb4gSmj62XAGDmmP2yEtLf5d4
-        XySg1ebxbTKp6eJEndJWQ7qk9RkGRR7wwAROdN65WhTBlC8i8Y0ajS1eeWmrAlUOeu0
-        FEnMmlyUjkWQtND2Y66eTgV+qCxSd9N/sq1bm+Cs=
-Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
-        with SMTPS id 1585102109206108.44346982451668; Wed, 25 Mar 2020 10:08:29 +0800 (CST)
-Date:   Wed, 25 Mar 2020 10:08:25 +0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAhV-H57na90xg0+cXeGC_rih9wiZBEZcVm+3AnY90To19wqbw@mail.gmail.com>
-References: <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324153624.23109-10-jiaxun.yang@flygoat.com> <CAAhV-H57na90xg0+cXeGC_rih9wiZBEZcVm+3AnY90To19wqbw@mail.gmail.com>
+        Tue, 24 Mar 2020 22:10:51 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:3045 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727212AbgCYCKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:10:50 -0400
+Received: from dggeml405-hub.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id F278CAC235422688F1C5;
+        Wed, 25 Mar 2020 10:10:47 +0800 (CST)
+Received: from DGGEML421-HUB.china.huawei.com (10.1.199.38) by
+ dggeml405-hub.china.huawei.com (10.3.17.49) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Wed, 25 Mar 2020 10:10:47 +0800
+Received: from DGGEML533-MBS.china.huawei.com ([169.254.10.196]) by
+ dggeml421-hub.china.huawei.com ([10.1.199.38]) with mapi id 14.03.0487.000;
+ Wed, 25 Mar 2020 10:10:40 +0800
+From:   "yezhenyu (A)" <yezhenyu2@huawei.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "aneesh.kumar@linux.ibm.com" <aneesh.kumar@linux.ibm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "npiggin@gmail.com" <npiggin@gmail.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "maz@kernel.org" <maz@kernel.org>,
+        "suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "yuzhao@google.com" <yuzhao@google.com>,
+        "Dave.Martin@arm.com" <Dave.Martin@arm.com>,
+        "steven.price@arm.com" <steven.price@arm.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "arm@kernel.org" <arm@kernel.org>,
+        Xiexiangyou <xiexiangyou@huawei.com>,
+        "Zengtao (B)" <prime.zeng@hisilicon.com>,
+        Zhangshaokun <zhangshaokun@hisilicon.com>
+Subject: RE: [RFC PATCH v4 4/6] mm: Add page table level flags to vm_flags
+Thread-Topic: [RFC PATCH v4 4/6] mm: Add page table level flags to vm_flags
+Thread-Index: AQHWAeKVXiq19lnJ+0q/54z19KSbo6hXjqYAgAD+HPA=
+Date:   Wed, 25 Mar 2020 02:10:40 +0000
+Message-ID: <10338CF38D9A684EA38E1CF7D8D3411B045BA207@dggeml533-mbs.china.huawei.com>
+References: <20200324134534.1570-1-yezhenyu2@huawei.com>
+        <20200324134534.1570-5-yezhenyu2@huawei.com>
+ <20200324144436.043659c2@gandalf.local.home>
+In-Reply-To: <20200324144436.043659c2@gandalf.local.home>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.220.25]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v6 09/11] MIPS: Loongson64: Add generic dts
-To:     Huacai Chen <chenhc@lemote.com>
-CC:     "open list:MIPS" <linux-mips@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Allison Randal <allison@lohutok.net>,
-        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <5234EAAC-126F-402B-84A8-494C1AF5A912@flygoat.com>
-X-ZohoCNMailClient: External
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
-0:11:05, Huacai Chen <chenhc@lemote=2Ecom> =E5=86=99=E5=88=B0:
->Hi, Jiaxun,
->
->On Tue, Mar 24, 2020 at 11:40 PM Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom=
->
->wrote:
->>
->> Add generic device dts for Loongson-3 devices=2E
->> They are currently almost identical but will be different later=2E
->> Some PCH devices like PCI Host Bridge is still enabled by platform
->> code for now=2E
->>
->> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
->> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> ---
->>  arch/mips/Kconfig                             |  6 +-
->>  arch/mips/boot/dts/Makefile                   |  1 +
->>  arch/mips/boot/dts/loongson/Makefile          |  4 ++
->>  =2E=2E=2E/boot/dts/loongson/loongson3-package=2Edtsi  | 62
->+++++++++++++++++++
->>  =2E=2E=2E/dts/loongson/loongson3_4core_rs780e=2Edts   | 25 ++++++++
->>  =2E=2E=2E/dts/loongson/loongson3_8core_rs780e=2Edts   | 25 ++++++++
->>  arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi   | 26 ++++++++
->>  7 files changed, 147 insertions(+), 2 deletions(-)
->>  create mode 100644 arch/mips/boot/dts/loongson/Makefile
->>  create mode 100644
->arch/mips/boot/dts/loongson/loongson3-package=2Edtsi
->>  create mode 100644
->arch/mips/boot/dts/loongson/loongson3_4core_rs780e=2Edts
->>  create mode 100644
->arch/mips/boot/dts/loongson/loongson3_8core_rs780e=2Edts
->>  create mode 100644 arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->>
->> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->> index ca3045b2a2d9=2E=2E4a0b2f494d79 100644
->> --- a/arch/mips/Kconfig
->> +++ b/arch/mips/Kconfig
->> @@ -486,9 +486,11 @@ config MACH_LOONGSON64
->>         select SYS_SUPPORTS_HIGHMEM
->>         select SYS_SUPPORTS_LITTLE_ENDIAN
->>         select SYS_SUPPORTS_ZBOOT
->> -       select LOONGSON_MC146818
->>         select ZONE_DMA32
->>         select NUMA
->> +       select COMMON_CLK
->> +       select USE_OF
->> +       select BUILTIN_DTB
->>         help
->>           This enables the support of Loongson-2/3 family of
->machines=2E
->>
->> @@ -3081,7 +3083,7 @@ endchoice
->>  choice
->>         prompt "Kernel command line type" if !CMDLINE_OVERRIDE
->>         default MIPS_CMDLINE_FROM_DTB if USE_OF && !ATH79 &&
->!MACH_INGENIC && \
->> -                                        !MIPS_MALTA && \
->> +                                        !MACH_LOONGSON64 &&
->!MIPS_MALTA && \
->>                                          !CAVIUM_OCTEON_SOC
->>         default MIPS_CMDLINE_FROM_BOOTLOADER
->>
->> diff --git a/arch/mips/boot/dts/Makefile
->b/arch/mips/boot/dts/Makefile
->> index 1e79cab8e269=2E=2Ed429a69bfe30 100644
->> --- a/arch/mips/boot/dts/Makefile
->> +++ b/arch/mips/boot/dts/Makefile
->> @@ -4,6 +4,7 @@ subdir-y        +=3D cavium-octeon
->>  subdir-y       +=3D img
->>  subdir-y       +=3D ingenic
->>  subdir-y       +=3D lantiq
->> +subdir-y       +=3D loongson
->>  subdir-y       +=3D mscc
->>  subdir-y       +=3D mti
->>  subdir-y       +=3D netlogic
->> diff --git a/arch/mips/boot/dts/loongson/Makefile
->b/arch/mips/boot/dts/loongson/Makefile
->> new file mode 100644
->> index 000000000000=2E=2E56d379471262
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/loongson/Makefile
->> @@ -0,0 +1,4 @@
->> +# SPDX_License_Identifier: GPL_2=2E0
->> +dtb-$(CONFIG_MACH_LOONGSON64)  +=3D loongson3_4core_rs780e=2Edtb
->loongson3_8core_rs780e=2Edtb
->> +
->> +obj-$(CONFIG_BUILTIN_DTB)      +=3D $(addsuffix =2Eo, $(dtb-y))
->> diff --git a/arch/mips/boot/dts/loongson/loongson3-package=2Edtsi
->b/arch/mips/boot/dts/loongson/loongson3-package=2Edtsi
->> new file mode 100644
->> index 000000000000=2E=2Ed09c313603f1
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/loongson/loongson3-package=2Edtsi
->> @@ -0,0 +1,62 @@
->> +// SPDX-License-Identifier: GPL-2=2E0
->> +
->> +#include <dt-bindings/interrupt-controller/irq=2Eh>
->> +
->> +/ {
->> +       #address-cells =3D <2>;
->> +       #size-cells =3D <2>;
->> +
->I still add something like this here:
->
->                cpu@0 {
->                        compatible =3D "loongson,loongson3";
->                        device_type =3D "cpu";
->                        reg =3D <0x0>;
->                        next-level-cache =3D <&scache0>;
->                };
->
->Because it at least solve the problem of cache hierarchy, which cause
->"lscpu" crash=2E
-
-That's another problem=2E
-Previous discussion with rob and Paul all suggested that we shouldn't add =
-cpu node=2E
-At least for now=2E
-
->
->> +       cpuintc: interrupt-controller {
->> +               #address-cells =3D <0>;
->> +               #interrupt-cells =3D <1>;
->> +               interrupt-controller;
->> +               compatible =3D "mti,cpu-interrupt-controller";
->> +       };
->> +
->> +       package0: bus@1fe00000 {
->> +               compatible =3D "simple-bus";
->> +               #address-cells =3D <2>;
->> +               #size-cells =3D <1>;
->> +               ranges =3D <0 0x1fe00000 0 0x1fe00000 0x100000
->> +                       0 0x3ff00000 0 0x3ff00000 0x100000
->> +                       0xefd 0xfb000000 0xefd 0xfb000000 0x10000000
->/* 3A HT Config Space */
->> +                       0x1efd 0xfb000000 0x1efd 0xfb000000
->0x10000000 /* 3B HT Config Space */>;
->> +
->> +               liointc: interrupt-controller@3ff01400 {
->> +                       compatible =3D "loongson,liointc-1=2E0";
->> +                       reg =3D <0 0x3ff01400 0x64>;
->> +
->> +                       interrupt-controller;
->> +                       #interrupt-cells =3D <2>;
->> +
->> +                       interrupt-parent =3D <&cpuintc>;
->> +                       interrupts =3D <2>, <3>;
->> +                       interrupt-names =3D "int0", "int1";
->> +
->> +                       loongson,parent_int_map =3D <0xf0ffffff>, /*
->int0 */
->> +                                               <0x0f000000>, /* int1
->*/
->> +                                               <0x00000000>, /* int2
->*/
->> +                                               <0x00000000>; /* int3
->*/
->> +
->> +               };
->> +
->> +               cpu_uart0: serial@1fe001e0 {
->> +                       compatible =3D "ns16550a";
->> +                       reg =3D <0 0x1fe001e0 0x8>;
->> +                       clock-frequency =3D <33000000>;
->> +                       interrupt-parent =3D <&liointc>;
->> +                       interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
->> +                       no-loopback-test;
->> +               };
->> +
->> +               cpu_uart1: serial@1fe001e8 {
->> +                       status =3D "disabled";
->Why disable UART1 by default, is it cause problems?
-
-Yes=2E It would cause endless suprious interrupt=2E
-And most machine didn't exposed that port=2E
-So I'd prefer disable it=2E
-
->
->> +                       compatible =3D "ns16550a";
->> +                       reg =3D <0 0x1fe001e8 0x8>;
->> +                       clock-frequency =3D <33000000>;
->> +                       interrupts =3D <10 IRQ_TYPE_LEVEL_HIGH>;
->> +                       interrupt-parent =3D <&liointc>;
->> +                       no-loopback-test;
->> +               };
->> +       };
->> +};
->> diff --git a/arch/mips/boot/dts/loongson/loongson3_4core_rs780e=2Edts
->b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e=2Edts
->> new file mode 100644
->> index 000000000000=2E=2E6b5694ca0f95
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/loongson/loongson3_4core_rs780e=2Edts
->> @@ -0,0 +1,25 @@
->> +// SPDX-License-Identifier: GPL-2=2E0
->> +
->> +/dts-v1/;
->> +
->> +#include "loongson3-package=2Edtsi"
->> +#include "rs780e-pch=2Edtsi"
->> +
->> +/ {
->> +       compatible =3D "loongson,loongson3-4core-rs780e";
->> +};
->> +
->> +&package0 {
->> +       htpic: interrupt-controller@efdfb000080 {
->> +               compatible =3D "loongson,htpic-1=2E0";
->> +               reg =3D <0xefd 0xfb000080 0x40>;
->> +               interrupt-controller;
->> +               #interrupt-cells =3D <1>;
->> +
->> +               interrupt-parent =3D <&liointc>;
->> +               interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
->> +                               <25 IRQ_TYPE_LEVEL_HIGH>,
->> +                               <26 IRQ_TYPE_LEVEL_HIGH>,
->> +                               <27 IRQ_TYPE_LEVEL_HIGH>;
->> +       };
->> +};
->> diff --git a/arch/mips/boot/dts/loongson/loongson3_8core_rs780e=2Edts
->b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e=2Edts
->> new file mode 100644
->> index 000000000000=2E=2Effefa2f829b0
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/loongson/loongson3_8core_rs780e=2Edts
->> @@ -0,0 +1,25 @@
->> +// SPDX-License-Identifier: GPL-2=2E0
->> +
->> +/dts-v1/;
->> +
->> +#include "loongson3-package=2Edtsi"
->> +#include "rs780e-pch=2Edtsi"
->> +
->> +/ {
->> +       compatible =3D "loongson,loongson3-8core-rs780e";
->> +};
->> +
->> +&package0 {
->> +       htpic: interrupt-controller@1efdfb000080 {
->> +               compatible =3D "loongson,htpic-1=2E0";
->> +               reg =3D <0x1efd 0xfb000080 0x40>;
->> +               interrupt-controller;
->> +               #interrupt-cells =3D <1>;
->> +
->> +               interrupt-parent =3D <&liointc>;
->> +               interrupts =3D <24 IRQ_TYPE_LEVEL_HIGH>,
->> +                               <25 IRQ_TYPE_LEVEL_HIGH>,
->> +                               <26 IRQ_TYPE_LEVEL_HIGH>,
->> +                               <27 IRQ_TYPE_LEVEL_HIGH>;
->> +       };
->> +};
->> diff --git a/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->> new file mode 100644
->> index 000000000000=2E=2E45c54d555fa4
->> --- /dev/null
->> +++ b/arch/mips/boot/dts/loongson/rs780e-pch=2Edtsi
->> @@ -0,0 +1,26 @@
->> +// SPDX-License-Identifier: GPL-2=2E0
->> +
->> +/ {
->> +       bus@10000000 {
->> +               compatible =3D "simple-bus";
->> +               #address-cells =3D <2>;
->> +               #size-cells =3D <2>;
->> +               ranges =3D <0 0x10000000 0 0x10000000 0 0x10000000
->> +                               0 0x40000000 0 0x40000000 0
->0x40000000
->> +                               0xfd 0xfe000000 0xfd 0xfe000000  0
->0x2000000 /* PCI Config Space */>;
->> +
->> +               isa {
->> +                       compatible =3D "isa";
->> +                       #address-cells =3D <2>;
->> +                       #size-cells =3D <1>;
->> +                       ranges =3D <1 0 0 0 0x1000>;
->> +
->> +                       rtc0: rtc@70 {
->> +                               compatible =3D "motorola,mc146818";
->> +                               reg =3D <1 0x70 0x8>;
->> +                               interrupts =3D <8>;
->> +                               interrupt-parent =3D <&htpic>;
->> +                       };
->> +               };
->> +       };
->> +};
->> --
->> 2=2E26=2E0=2Erc2
->>
->>
->
->Regards,
->Huacai
-
---=20
-Jiaxun Yang
+SGkgU3RldmUsDQoNCk9uIFdlZCwgMjUgTWFyIDIwMjAgMjo0NSwgU3RldmUgd3JvdGU6DQo+IE9u
+IFR1ZSwgMjQgTWFyIDIwMjAgMjE6NDU6MzIgKzA4MDANCj4gWmhlbnl1IFllIDx5ZXpoZW55dTJA
+aHVhd2VpLmNvbT4gd3JvdGU6DQo+IA0KPiA+IC0tLSBhL2luY2x1ZGUvdHJhY2UvZXZlbnRzL21t
+ZmxhZ3MuaA0KPiA+ICsrKyBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL21tZmxhZ3MuaA0KPiA+IEBA
+IC0xMzAsNiArMTMwLDE2IEBAIElGX0hBVkVfUEdfSURMRShQR19pZGxlLAkJImlkbGUiCQkpDQo+
+ID4gICNkZWZpbmUgSUZfSEFWRV9WTV9TT0ZURElSVFkoZmxhZyxuYW1lKQ0KPiA+ICAjZW5kaWYN
+Cj4gPg0KPiA+ICsjaWZkZWYgQ09ORklHXzY0QklUDQo+ID4gKyNkZWZpbmUgSUZfSEFWRV9WTV9M
+RVZFTF9QVUQoZmxhZyxuYW1lKQl7ZmxhZywgbmFtZX0NCj4gPiArI2RlZmluZSBJRl9IQVZFX1ZN
+X0xFVkVMX1BNRChmbGFnLG5hbWUpCXtmbGFnLCBuYW1lfQ0KPiA+ICsjZGVmaW5lIElGX0hBVkVf
+Vk1fTEVWRUxfUFRFKGZsYWcsbmFtZSkJe2ZsYWcsIG5hbWV9DQo+ID4gKyNlbHNlDQo+ID4gKyNk
+ZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QVUQoZmxhZyxuYW1lKQ0KPiA+ICsjZGVmaW5lIElGX0hB
+VkVfVk1fTEVWRUxfUE1EKGZsYWcsbmFtZSkNCj4gPiArI2RlZmluZSBJRl9IQVZFX1ZNX0xFVkVM
+X1BURShmbGFnLG5hbWUpDQo+ID4gKyNlbmRpZg0KPiA+ICsNCj4gPiAgI2RlZmluZSBfX2RlZl92
+bWFmbGFnX25hbWVzCQkJCQkJXA0KPiA+ICAJe1ZNX1JFQUQsCQkJInJlYWQiCQl9LAkJXA0KPiA+
+ICAJe1ZNX1dSSVRFLAkJCSJ3cml0ZSIJCX0sCQlcDQo+ID4gQEAgLTE2MSw3ICsxNzEsMTAgQEAg
+SUZfSEFWRV9WTV9TT0ZURElSVFkoVk1fU09GVERJUlRZLA0KPiAJInNvZnRkaXJ0eSIJKQkJXA0K
+PiA+ICAJe1ZNX01JWEVETUFQLAkJCSJtaXhlZG1hcCIJfSwJCVwNCj4gPiAgCXtWTV9IVUdFUEFH
+RSwJCQkiaHVnZXBhZ2UiCX0sCQlcDQo+ID4gIAl7Vk1fTk9IVUdFUEFHRSwJCQkibm9odWdlcGFn
+ZSIJfSwJCVwNCj4gPiAtCXtWTV9NRVJHRUFCTEUsCQkJIm1lcmdlYWJsZSIJfQkJXA0KPiA+ICsJ
+e1ZNX01FUkdFQUJMRSwJCQkibWVyZ2VhYmxlIgl9LAkJXA0KPiA+ICtJRl9IQVZFX1ZNX0xFVkVM
+X1BVRChWTV9MRVZFTF9QVUQsCSJwdWQtbGV2ZWwiCSksCQlcDQo+ID4gK0lGX0hBVkVfVk1fTEVW
+RUxfUE1EKFZNX0xFVkVMX1BNRCwJInBtZC1sZXZlbCIJKSwJCVwNCj4gPiArSUZfSEFWRV9WTV9M
+RVZFTF9QVEUoVk1fTEVWRUxfUFRFLAkicHRlLWxldmVsIgkpCQlcDQo+ID4NCj4gDQo+IEhhdmUg
+eW91IHRlc3RlZCB0aGlzIG9uIDMyYml0PyBJdCBsb29rcyBsaWtlIHlvdSdsbCBnZXQgZW1wdHkg
+Y29tbWFzIHRoZXJlLg0KPiBQZXJoYXBzIHRoZSBkZWZpbmVzIG5lZWQgdG8gYmU6DQo+IA0KPiAj
+aWZkZWYgQ09ORklHXzY0QklUDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QVUQoZmxhZyxu
+YW1lKQl7ZmxhZywgbmFtZX0sDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QTUQoZmxhZyxu
+YW1lKQl7ZmxhZywgbmFtZX0sDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QVEUoZmxhZyxu
+YW1lKQl7ZmxhZywgbmFtZX0NCj4gI2Vsc2UNCj4gI2RlZmluZSBJRl9IQVZFX1ZNX0xFVkVMX1BV
+RChmbGFnLG5hbWUpDQo+ICNkZWZpbmUgSUZfSEFWRV9WTV9MRVZFTF9QTUQoZmxhZyxuYW1lKQ0K
+PiAjZGVmaW5lIElGX0hBVkVfVk1fTEVWRUxfUFRFKGZsYWcsbmFtZSkNCj4gI2VuZGlmDQo+IA0K
+PiBBbmQgbGVhdmUgb3V0IHRoZSBjb21tYXMgaW4gdGhlIGxpc3QuDQo+IA0KPiAtLSBTdGV2ZQ0K
+DQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3LiBJIHdpbGwgZml4IHRoaXMgaW4gbmV4dCB2ZXJzaW9u
+LCBpZiBJIGNvdWxkIHN0aWxsIHVzZSB2bV9mbGFncw0KYXQgdGhhdCB0aW1lIDopLg0KDQpaaGVu
+eXUNCg0K
