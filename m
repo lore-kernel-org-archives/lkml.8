@@ -2,231 +2,89 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 071AAC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F76C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D01112077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YKro6Bqi"
+	by mail.kernel.org (Postfix) with ESMTP id 257D2208D6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:40:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgCYPj4 (ORCPT
+        id S1727980AbgCYPjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:39:56 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52226 "EHLO mail.skyhub.de"
+        Wed, 25 Mar 2020 11:39:46 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52892 "EHLO inva020.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbgCYPjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:39:53 -0400
-Received: from zn.tnic (p200300EC2F0B0600F597EAD9BBACC1F1.dip0.t-ipconnect.de [IPv6:2003:ec:2f0b:600:f597:ead9:bbac:c1f1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8D21B1EC0CED;
-        Wed, 25 Mar 2020 16:39:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1585150791;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=YLgTI2CpRGQHZGrpCofrJEh8+eMyo8By5x3TJ6MG1PY=;
-        b=YKro6Bqi33g4OHFZ5pL3ZedugLCCMsqNc56KydrYYPmTZwI5yzA29xDRUlbxZ71yRHbxhJ
-        O8WCiyRUuE7ZmsnnidZSJYCLqpT1bK659/zS0D4NGl8ZKvcUgKbNbKczkekYXN5birVDUi
-        /hoEo8RwhFmXVb2/Y8AGlyzFItQ9C1M=
-Date:   Wed, 25 Mar 2020 16:39:45 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 05/70] x86/insn: Make inat-tables.c suitable for
- pre-decompression code
-Message-ID: <20200325153945.GD27261@zn.tnic>
-References: <20200319091407.1481-1-joro@8bytes.org>
- <20200319091407.1481-6-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200319091407.1481-6-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727915AbgCYPjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:39:33 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 04D271A04EA;
+        Wed, 25 Mar 2020 16:39:32 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EB4781A00F9;
+        Wed, 25 Mar 2020 16:39:31 +0100 (CET)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 3928E203CE;
+        Wed, 25 Mar 2020 16:39:31 +0100 (CET)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v2 11/13] dt-bindings: reset: imx8mp: Add ids for audiomix reset
+Date:   Wed, 25 Mar 2020 17:38:49 +0200
+Message-Id: <1585150731-3354-12-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
+References: <1585150731-3354-1-git-send-email-abel.vesa@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Masami.
+Add all the reset ids for the audiomix reset.
 
-On Thu, Mar 19, 2020 at 10:13:02AM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> The inat-tables.c file has some arrays in it that contain pointers to
-> other arrays. These pointers need to be relocated when the kernel
-> image is moved to a different location.
-> 
-> The pre-decompression boot-code has no support for applying ELF
-> relocations, so initialize these arrays at runtime in the
-> pre-decompression code to make sure all pointers are correctly
-> initialized.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/tools/gen-insn-attr-x86.awk       | 50 +++++++++++++++++++++-
->  tools/arch/x86/tools/gen-insn-attr-x86.awk | 50 +++++++++++++++++++++-
->  2 files changed, 98 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/tools/gen-insn-attr-x86.awk b/arch/x86/tools/gen-insn-attr-x86.awk
-> index a42015b305f4..af38469afd14 100644
-> --- a/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -362,6 +362,9 @@ function convert_operands(count,opnd,       i,j,imm,mod)
->  END {
->  	if (awkchecked != "")
->  		exit 1
-> +
-> +	print "#ifndef __BOOT_COMPRESSED\n"
-> +
->  	# print escape opcode map's array
->  	print "/* Escape opcode map array */"
->  	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
-> @@ -388,6 +391,51 @@ END {
->  		for (j = 0; j < max_lprefix; j++)
->  			if (atable[i,j])
->  				print "	["i"]["j"] = "atable[i,j]","
-> -	print "};"
-> +	print "};\n"
-> +
-> +	print "#else /* !__BOOT_COMPRESSED */\n"
-> +
-> +	print "/* Escape opcode map array */"
-> +	print "static const insn_attr_t *inat_escape_tables[INAT_ESC_MAX + 1]" \
-> +	      "[INAT_LSTPFX_MAX + 1];"
-> +	print ""
-> +
-> +	print "/* Group opcode map array */"
-> +	print "static const insn_attr_t *inat_group_tables[INAT_GRP_MAX + 1]"\
-> +	      "[INAT_LSTPFX_MAX + 1];"
-> +	print ""
-> +
-> +	print "/* AVX opcode map array */"
-> +	print "static const insn_attr_t *inat_avx_tables[X86_VEX_M_MAX + 1]"\
-> +	      "[INAT_LSTPFX_MAX + 1];"
-> +	print ""
-> +
-> +	print "static void inat_init_tables(void)"
-> +	print "{"
-> +
-> +	# print escape opcode map's array
-> +	print "\t/* Print Escape opcode map array */"
-> +	for (i = 0; i < geid; i++)
-> +		for (j = 0; j < max_lprefix; j++)
-> +			if (etable[i,j])
-> +				print "\tinat_escape_tables["i"]["j"] = "etable[i,j]";"
-> +	print ""
-> +
-> +	# print group opcode map's array
-> +	print "\t/* Print Group opcode map array */"
-> +	for (i = 0; i < ggid; i++)
-> +		for (j = 0; j < max_lprefix; j++)
-> +			if (gtable[i,j])
-> +				print "\tinat_group_tables["i"]["j"] = "gtable[i,j]";"
-> +	print ""
-> +	# print AVX opcode map's array
-> +	print "\t/* Print AVX opcode map array */"
-> +	for (i = 0; i < gaid; i++)
-> +		for (j = 0; j < max_lprefix; j++)
-> +			if (atable[i,j])
-> +				print "\tinat_avx_tables["i"]["j"] = "atable[i,j]";"
-> +
-> +	print "}"
-> +	print "#endif"
->  }
->  
-> diff --git a/tools/arch/x86/tools/gen-insn-attr-x86.awk b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> index a42015b305f4..af38469afd14 100644
-> --- a/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> +++ b/tools/arch/x86/tools/gen-insn-attr-x86.awk
-> @@ -362,6 +362,9 @@ function convert_operands(count,opnd,       i,j,imm,mod)
->  END {
->  	if (awkchecked != "")
->  		exit 1
-> +
-> +	print "#ifndef __BOOT_COMPRESSED\n"
-> +
->  	# print escape opcode map's array
->  	print "/* Escape opcode map array */"
->  	print "const insn_attr_t * const inat_escape_tables[INAT_ESC_MAX + 1]" \
-> @@ -388,6 +391,51 @@ END {
->  		for (j = 0; j < max_lprefix; j++)
->  			if (atable[i,j])
->  				print "	["i"]["j"] = "atable[i,j]","
-> -	print "};"
-> +	print "};\n"
-> +
-> +	print "#else /* !__BOOT_COMPRESSED */\n"
-> +
-> +	print "/* Escape opcode map array */"
-> +	print "static const insn_attr_t *inat_escape_tables[INAT_ESC_MAX + 1]" \
-> +	      "[INAT_LSTPFX_MAX + 1];"
-> +	print ""
-> +
-> +	print "/* Group opcode map array */"
-> +	print "static const insn_attr_t *inat_group_tables[INAT_GRP_MAX + 1]"\
-> +	      "[INAT_LSTPFX_MAX + 1];"
-> +	print ""
-> +
-> +	print "/* AVX opcode map array */"
-> +	print "static const insn_attr_t *inat_avx_tables[X86_VEX_M_MAX + 1]"\
-> +	      "[INAT_LSTPFX_MAX + 1];"
-> +	print ""
-> +
-> +	print "static void inat_init_tables(void)"
-> +	print "{"
-> +
-> +	# print escape opcode map's array
-> +	print "\t/* Print Escape opcode map array */"
-> +	for (i = 0; i < geid; i++)
-> +		for (j = 0; j < max_lprefix; j++)
-> +			if (etable[i,j])
-> +				print "\tinat_escape_tables["i"]["j"] = "etable[i,j]";"
-> +	print ""
-> +
-> +	# print group opcode map's array
-> +	print "\t/* Print Group opcode map array */"
-> +	for (i = 0; i < ggid; i++)
-> +		for (j = 0; j < max_lprefix; j++)
-> +			if (gtable[i,j])
-> +				print "\tinat_group_tables["i"]["j"] = "gtable[i,j]";"
-> +	print ""
-> +	# print AVX opcode map's array
-> +	print "\t/* Print AVX opcode map array */"
-> +	for (i = 0; i < gaid; i++)
-> +		for (j = 0; j < max_lprefix; j++)
-> +			if (atable[i,j])
-> +				print "\tinat_avx_tables["i"]["j"] = "atable[i,j]";"
-> +
-> +	print "}"
-> +	print "#endif"
->  }
->  
-> -- 
-> 2.17.1
-> 
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+---
+ include/dt-bindings/reset/imx-audiomix-reset.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
 
+diff --git a/include/dt-bindings/reset/imx-audiomix-reset.h b/include/dt-bindings/reset/imx-audiomix-reset.h
+new file mode 100644
+index 00000000..571cacf
+--- /dev/null
++++ b/include/dt-bindings/reset/imx-audiomix-reset.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2019 NXP.
++ */
++
++#ifndef DT_BINDING_RESET_IMX_AUDIOMIX_H
++#define DT_BINDING_RESET_IMX_AUDIOMIX_H
++
++#define IMX_AUDIOMIX_EARC_RESET		0x0
++#define IMX_AUDIOMIX_EARC_PHY_RESET	0x1
++
++#define IMX_AUDIOMIX_RESET_NUM		2
++
++#endif
++
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-https://people.kernel.org/tglx/notes-about-netiquette
