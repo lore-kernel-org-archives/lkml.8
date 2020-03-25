@@ -2,116 +2,194 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 369C5C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E59C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D69220658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:13:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89EB206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YdgTKJCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgCYTNB (ORCPT
+        id S1727561AbgCYTQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:13:01 -0400
-Received: from mga17.intel.com ([192.55.52.151]:19925 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbgCYTNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:13:00 -0400
-IronPort-SDR: 8UlUOX3Q1KxquXMkk7WywKVPP2/PAa0BMP7JaVNFaubPQwGnTyucWhxe2HyisQiSCQFGDOfC3Q
- 8Mqc0KIuq/Gw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 12:13:00 -0700
-IronPort-SDR: bQeRBDjYsYwoIzI4XP0Iyc8k6ExUzw5Fb7NEfqduEHTmrXqzi1+unrBqE9U+ap/POV/I74TBMc
- zeoLXjwt43Rw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="357902461"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2020 12:13:00 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] KVM: x86: Fix BUILD_BUG() in __cpuid_entry_get_reg() w/ CONFIG_UBSAN=y
-Date:   Wed, 25 Mar 2020 12:12:59 -0700
-Message-Id: <20200325191259.23559-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
+        Wed, 25 Mar 2020 15:16:22 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46614 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727281AbgCYTQV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:16:21 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k191so1605622pgc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 12:16:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=/CSnYJ72yMBY5GskbXfCv8g/G/mmEEpCrCFQo2L0Aws=;
+        b=YdgTKJCIKwSBYuNKrvm+Yt8937ehN0RPqPBaX9M9Q14Ku0AZPia/hqQDs58KLJaWqN
+         BCJYs12445mr3vOefmZ1wZ1vBbhdQRVsbxjZFE/ES2F0BKD2p7LwqyVuo+e8WYYbpjW/
+         HtnNRacXs+AIqCrCJGVmVZJ1pHSbWBrGZ7boE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=/CSnYJ72yMBY5GskbXfCv8g/G/mmEEpCrCFQo2L0Aws=;
+        b=MGx2UB++I/cwLtBCO1rT3emsbWVCoC0Nb9vduUeed6PZFjUt7q5DYyoSD3GsW5xRsO
+         lIIDZRt/M+inRsADzwQNyrO6R2NL5KP58yxloXqKSocZScx9EqL511aSdxnwKhTWkmdH
+         E3fTFrzZxoLiSWLOVTO6avnhssh0WPJOwPQQ5YrWd0hRwkstUM31l4MftfNSiVvO0im2
+         N8S3WSqmlCQpKRCwu0vcmPt+uaUYiBW0rE+El/8GoDWyUfJPCMt/COGdJTvUujMxhvxw
+         R1dW9XuSSc7/YfIPHJSnV7pFtTemMkAKZWVTWqVvXO150OIQ4VmeiwVe7ZzSgDUJIRAi
+         QgAA==
+X-Gm-Message-State: ANhLgQ0r6qnM9Fv4sfnwJShHNIoKXnGm3ZaLZdizeP3bkgZeGlTLPfYb
+        ZIcS6TZtlWp/QMkqkRXIS9xGng==
+X-Google-Smtp-Source: ADFU+vts8MQmEy0Le/cZw5nvgMjV7AYmKwKdII/bapz+8OLjmUP6QyQ5BjIOyAlngVJq2+M5nE3q1w==
+X-Received: by 2002:a63:778e:: with SMTP id s136mr4408159pgc.155.1585163780203;
+        Wed, 25 Mar 2020 12:16:20 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 144sm19093396pfx.184.2020.03.25.12.16.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 12:16:18 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 12:16:17 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Alexey Gladkov <gladkov.alexey@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        Linux Security Module <linux-security-module@vger.kernel.org>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Daniel Micay <danielmicay@gmail.com>,
+        Djalal Harouni <tixxdz@gmail.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Jeff Layton <jlayton@poochiereds.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>
+Subject: Re: [PATCH v9 9/8] proc: use named enums for better readability
+Message-ID: <202003251216.FD5E296@keescook>
+References: <CAHk-=whXbgW7-FYL4Rkaoh8qX+CkS5saVGP2hsJPV0c+EZ6K7A@mail.gmail.com>
+ <20200325174245.298009-1-gladkov.alexey@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325174245.298009-1-gladkov.alexey@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Take the target reg in __cpuid_entry_get_reg() instead of a pointer to a
-struct cpuid_reg.  When building with -fsanitize=alignment (enabled by
-CONFIG_UBSAN=y), some versions of gcc get tripped up on the pointer and
-trigger the BUILD_BUG().
+On Wed, Mar 25, 2020 at 06:42:45PM +0100, Alexey Gladkov wrote:
+> Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Fixes: d8577a4c238f8 ("KVM: x86: Do host CPUID at load time to mask KVM cpu caps")
-Fixes: 4c61534aaae2a ("KVM: x86: Introduce cpuid_entry_{get,has}() accessors")
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
- arch/x86/kvm/cpuid.c | 2 +-
- arch/x86/kvm/cpuid.h | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+I love these kinds of cleanups. :)
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 08280d8a2ac9..16d3ae432420 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -269,7 +269,7 @@ static __always_inline void kvm_cpu_cap_mask(enum cpuid_leafs leaf, u32 mask)
- 	cpuid_count(cpuid.function, cpuid.index,
- 		    &entry.eax, &entry.ebx, &entry.ecx, &entry.edx);
- 
--	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, &cpuid);
-+	kvm_cpu_caps[leaf] &= *__cpuid_entry_get_reg(&entry, cpuid.reg);
- }
- 
- void kvm_set_cpu_caps(void)
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 23b4cd1ad986..63a70f6a3df3 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -99,9 +99,9 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned int x86_featu
- }
- 
- static __always_inline u32 *__cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
--						  const struct cpuid_reg *cpuid)
-+						  u32 reg)
- {
--	switch (cpuid->reg) {
-+	switch (reg) {
- 	case CPUID_EAX:
- 		return &entry->eax;
- 	case CPUID_EBX:
-@@ -121,7 +121,7 @@ static __always_inline u32 *cpuid_entry_get_reg(struct kvm_cpuid_entry2 *entry,
- {
- 	const struct cpuid_reg cpuid = x86_feature_cpuid(x86_feature);
- 
--	return __cpuid_entry_get_reg(entry, &cpuid);
-+	return __cpuid_entry_get_reg(entry, cpuid.reg);
- }
- 
- static __always_inline u32 cpuid_entry_get(struct kvm_cpuid_entry2 *entry,
-@@ -189,7 +189,7 @@ static __always_inline u32 *guest_cpuid_get_register(struct kvm_vcpu *vcpu,
- 	if (!entry)
- 		return NULL;
- 
--	return __cpuid_entry_get_reg(entry, &cpuid);
-+	return __cpuid_entry_get_reg(entry, cpuid.reg);
- }
- 
- static __always_inline bool guest_cpuid_has(struct kvm_vcpu *vcpu,
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  fs/proc/base.c               | 2 +-
+>  fs/proc/inode.c              | 2 +-
+>  fs/proc/root.c               | 4 ++--
+>  include/linux/proc_fs.h      | 6 +++---
+>  include/uapi/linux/proc_fs.h | 2 +-
+>  5 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index a836979e42fe..608d60fb79fb 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -699,7 +699,7 @@ int proc_setattr(struct dentry *dentry, struct iattr *attr)
+>   */
+>  static bool has_pid_permissions(struct proc_fs_info *fs_info,
+>  				 struct task_struct *task,
+> -				 int hide_pid_min)
+> +				 enum proc_hidepid hide_pid_min)
+>  {
+>  	/*
+>  	 * If 'hidpid' mount option is set force a ptrace check,
+> diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+> index a462fd111719..7870e0be0a1f 100644
+> --- a/fs/proc/inode.c
+> +++ b/fs/proc/inode.c
+> @@ -165,7 +165,7 @@ void proc_invalidate_siblings_dcache(struct hlist_head *inodes, spinlock_t *lock
+>  		deactivate_super(old_sb);
+>  }
+>  
+> -static inline const char *hidepid2str(int v)
+> +static inline const char *hidepid2str(enum proc_hidepid v)
+>  {
+>  	switch (v) {
+>  		case HIDEPID_OFF: return "off";
+> diff --git a/fs/proc/root.c b/fs/proc/root.c
+> index 42f3ee05c584..de7cee435621 100644
+> --- a/fs/proc/root.c
+> +++ b/fs/proc/root.c
+> @@ -32,9 +32,9 @@
+>  struct proc_fs_context {
+>  	struct proc_fs_info	*fs_info;
+>  	unsigned int		mask;
+> -	int			hidepid;
+> +	enum proc_hidepid	hidepid;
+>  	int			gid;
+> -	int			pidonly;
+> +	enum proc_pidonly	pidonly;
+>  };
+>  
+>  enum proc_param {
+> diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
+> index d259817ec913..b9f7ecd7f61f 100644
+> --- a/include/linux/proc_fs.h
+> +++ b/include/linux/proc_fs.h
+> @@ -29,7 +29,7 @@ struct proc_ops {
+>  };
+>  
+>  /* definitions for proc mount option pidonly */
+> -enum {
+> +enum proc_pidonly {
+>  	PROC_PIDONLY_OFF = 0,
+>  	PROC_PIDONLY_ON  = 1,
+>  };
+> @@ -39,8 +39,8 @@ struct proc_fs_info {
+>  	struct dentry *proc_self;        /* For /proc/self */
+>  	struct dentry *proc_thread_self; /* For /proc/thread-self */
+>  	kgid_t pid_gid;
+> -	int hide_pid;
+> -	int pidonly;
+> +	enum proc_hidepid hide_pid;
+> +	enum proc_pidonly pidonly;
+>  };
+>  
+>  static inline struct proc_fs_info *proc_sb_info(struct super_block *sb)
+> diff --git a/include/uapi/linux/proc_fs.h b/include/uapi/linux/proc_fs.h
+> index dc6d717aa6ec..f5fe0e8dcfe4 100644
+> --- a/include/uapi/linux/proc_fs.h
+> +++ b/include/uapi/linux/proc_fs.h
+> @@ -3,7 +3,7 @@
+>  #define _UAPI_PROC_FS_H
+>  
+>  /* definitions for hide_pid field */
+> -enum {
+> +enum proc_hidepid {
+>  	HIDEPID_OFF            = 0,
+>  	HIDEPID_NO_ACCESS      = 1,
+>  	HIDEPID_INVISIBLE      = 2,
+> -- 
+> 2.25.2
+> 
+
 -- 
-2.24.1
-
+Kees Cook
