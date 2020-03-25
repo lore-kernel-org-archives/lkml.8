@@ -2,105 +2,105 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EDCC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DEBC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4BA208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DwAtTY5F"
+	by mail.kernel.org (Postfix) with ESMTP id BBCC6208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585146581;
+	bh=2C1QsaaiWpBA3Wn8aohX1btAgjWHJCAhLV1Fs4u+LRc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OvI93lhdLJ4Aa2L/Yb8/jQ8M4lpN/p3Ox+Gug0+ESjNjBkzR3DME5OWeYPpYu1zGb
+	 bt1RuMKonmdbD0sIrFiQklU9DfkM8+TY28cYe8HZQdmXXAZdguw+dn+UDU+1x0y9wb
+	 yUAsGpVj0tCpjL/9fVVRnduhYA2QC/9LbQPy+Z5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgCYO2w (ORCPT
+        id S1727740AbgCYO3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:28:52 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:20735 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCYO2v (ORCPT
+        Wed, 25 Mar 2020 10:29:41 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44748 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbgCYO3k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:28:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585146530;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JqpwltFL/SwS1UhlcIi0MOoODF8Cpbq1cMt7ik4CiTE=;
-        b=DwAtTY5FeL0l8g+pWuXvopKrrWYucGwQwduc1nrTtQ7hq6MspeALe2jGt6nVSw8qaYyb9K
-        ynUd0CYmDS2h3vCjpFRhJeOex/BfNvmOWD6bkl/6GbbKsREAF1yXrgHu0AK2BRWP1/GPvY
-        QPCJc3XcoxB2PUzEq+tApe7GKI40wDE=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-237-uVxAjFQpP_WWUCQ3W7g2FQ-1; Wed, 25 Mar 2020 10:28:49 -0400
-X-MC-Unique: uVxAjFQpP_WWUCQ3W7g2FQ-1
-Received: by mail-wm1-f70.google.com with SMTP id n25so746929wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:28:48 -0700 (PDT)
+        Wed, 25 Mar 2020 10:29:40 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m17so3324034wrw.11;
+        Wed, 25 Mar 2020 07:29:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=JqpwltFL/SwS1UhlcIi0MOoODF8Cpbq1cMt7ik4CiTE=;
-        b=fFkhm0ocB0Yb0aaQwz5OHaORb52pyWMT4U1xP7eWBjknaKAyua7Zs1VqZDpxk6g1x7
-         4ShUNuxLvN+Fvj70kLtNdQPmLpIlTm9dUGi3QNYXLYz6nI6SvshcJTC0eebFhzctMhCR
-         RUXZLeKgPcFdHSvFAiIo90qVZGKGZ4gPoq4DELolMjOL7lgRGAHBEznxj8X3/ZhryIlD
-         3FwUB7ATWLqfuncngsQp3yKBpFziOPOMW7Q/whhh7wRrQcY4VER36JUNqlXuD/RWLi5Z
-         9ZXdjrTWK01ex6ZRtKIPAcDSGQ+nKdVvaqb+vmp7dIv0Se4T03h+BMC/qPd1x6hMAODe
-         Zu0Q==
-X-Gm-Message-State: ANhLgQ1wokMX+VS9Y7GPufOV5ucI/DdX8HhwjcNxE3l7cUU2T8e5frOm
-        R94IkpbM+vWpxj5YA2LqzhwQxYz6oIoB65ueSE4lnSmGLA+UFkeAyYOM745sPspD8C8Ci8QGL4b
-        5KcgBzZCpMf5aIsy7wu9ixBpY
-X-Received: by 2002:a7b:c050:: with SMTP id u16mr4024611wmc.68.1585146527995;
-        Wed, 25 Mar 2020 07:28:47 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtps1lqlEjeVqhmoxqx06a7QnIYlVTNWJazZkk/ssQW3dTzHNkG7M+s2wksPvvsb7XCMHkt2A==
-X-Received: by 2002:a7b:c050:: with SMTP id u16mr4024590wmc.68.1585146527811;
-        Wed, 25 Mar 2020 07:28:47 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id v7sm9590018wml.18.2020.03.25.07.28.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xK7fLCOSSVH8HJsoEd66t540+DpWVzc878w2lJBoIek=;
+        b=dnhA39pPS/8f9/GN4xySx8k7TPWXzL46VPbs9cs2YTPSOW0TMM0Zc5RAKWpi8ubbjS
+         J3/VtH4BlMyBK0F0QCM7VU2icxTHO95RG7tBOvggCI5ezG16ZL49l5G2tajqAADKWOrv
+         3mm+gOaLKO3JqTMfaFKI09BS4HZHdH9pdXocjwW/gcxOi8JnXRa11h4S/ol7SQP9hpbG
+         6JS2AK0mk9GTLZVzdSzP9l3RnJ3EjlHvbHoEA5JH5k9clj05VAbuKM2PkrM9hghA5ewb
+         Mu4yn8kwqFpihtHmp36JejyF+OoF2dVzXbAT5BdU57MMuF46eg8GexqwoDh6n7EeDmIk
+         gK7A==
+X-Gm-Message-State: ANhLgQ2jmk2HTGh6qtsi7cSYi9Sl+5jIPvi/BkoVyr6S/RQymBTesLiv
+        W75uidHapuogiyVDAmRfY8RGNjUR
+X-Google-Smtp-Source: ADFU+vvV+iXXv1GpZUfxs9nW5CvCN4kTMNBy1SnvAwfCo+uprHM46YrQo6ZhbZ/Dwea7ETji/N05WQ==
+X-Received: by 2002:a5d:4683:: with SMTP id u3mr3723218wrq.248.1585146578476;
+        Wed, 25 Mar 2020 07:29:38 -0700 (PDT)
+Received: from localhost (ip-37-188-135-150.eurotel.cz. [37.188.135.150])
+        by smtp.gmail.com with ESMTPSA id b15sm33619364wru.70.2020.03.25.07.29.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 07:28:47 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Tianyu Lan <ltykernel@gmail.com>
-Cc:     Yubo Xie <yuboxie@microsoft.com>, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>, kys@microsoft.com,
-        haiyangz@microsoft.com, sthemmin@microsoft.com,
-        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
-        michael.h.kelley@microsoft.com
-Subject: Re: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong time unit
-In-Reply-To: <039e126f-f00d-d7e1-aa92-c049c9e3333b@gmail.com>
-References: <20200324151935.15814-1-yuboxie@microsoft.com> <87ftdx7nxv.fsf@vitty.brq.redhat.com> <039e126f-f00d-d7e1-aa92-c049c9e3333b@gmail.com>
-Date:   Wed, 25 Mar 2020 15:28:45 +0100
-Message-ID: <87lfno5x0i.fsf@vitty.brq.redhat.com>
+        Wed, 25 Mar 2020 07:29:37 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 15:29:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v2 2/2] kernel/sysctl: support handling command line aliases
+Message-ID: <20200325142936.GC19542@dhcp22.suse.cz>
+References: <20200325120345.12946-1-vbabka@suse.cz>
+ <20200325120345.12946-2-vbabka@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325120345.12946-2-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tianyu Lan <ltykernel@gmail.com> writes:
+Both patches look really great to me. I haven't really checked all the
+details but from a quick glance they both seem ok.
 
->>> @@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
->>>   
->>>   static u64 read_hv_sched_clock_msr(void)
->>>   {
->>> -	return read_hv_clock_msr() - hv_sched_clock_offset;
->>> +	return (read_hv_clock_msr() - hv_sched_clock_offset)
->>> +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
->>>   }
->> 
->> kvmclock seems to have the same (pre-patch) code ...
->
->
-> kvm sched clock gets time from pvclock_clocksource_read() and
-> the time unit is nanosecond. So there is such issue in KVM code.
->
+I would just add a small clarification here. Unless I am mistaken
+early_param is called earlier than it would be now. But that shouldn't
+cause any problems because the underlying implementation is just a noop
+for backward compatibility.
 
-Ah, true, kvmclock is always 1Ghz so it's reading 'naturally' converts
-to ns.
+Thanks a lot this looks like a very nice improvement.
+
+On Wed 25-03-20 13:03:45, Vlastimil Babka wrote:
+[...]
+> -static __init int setup_numa_zonelist_order(char *s)
+> -{
+> -	if (!s)
+> -		return 0;
+> -
+> -	return __parse_numa_zonelist_order(s);
+> -}
+> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
+> -
+>  char numa_zonelist_order[] = "Node";
+>  
+>  /*
+> -- 
+> 2.25.1
 
 -- 
-Vitaly
-
+Michal Hocko
+SUSE Labs
