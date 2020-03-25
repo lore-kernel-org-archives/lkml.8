@@ -2,116 +2,106 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EEBC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B560EC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEDA20719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 935722073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:52:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nAUDnzmQ"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="uicKA8wI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727947AbgCYPvT (ORCPT
+        id S1727940AbgCYPwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:51:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48808 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727592AbgCYPvS (ORCPT
+        Wed, 25 Mar 2020 11:52:05 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36289 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727501AbgCYPwF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:51:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=dVvUUl4brKfhB22qok93RMhMjOzy6dfQt+DTKwqJrMw=; b=nAUDnzmQvv3kmqdvZEBq9kL07J
-        DEyyXrjEe/4Y5uFUwS9NjRvRhtTPHO7PS/1Zd1eaxBWKrCF6jHv4BDjs4hEvcaWC48L5YvESUC3lK
-        Nfe57ZwQ0esyrKhkpbj37eg4Ta53z6VnmXNmiZLXSCzbtV4osxyOgjTkJHx/8MX+Gw+6lvzI9UD1/
-        YCO7rnDfvdQw9sOH+9+4L2v4MffkSNqEm2LJS6fIGuUojJbV+7+Q/OlsLI/iUSHTd5G+ftJR8MnI/
-        JoCUIwesO2PBF7F4hX49bf3OvW1wQwWHokhpBTYwMvEJ8VYYoYT7eTNLH5LJXvRUNxWW3tPDs7Mq4
-        Du0XnDLg==;
-Received: from 213-225-10-87.nat.highway.a1.net ([213.225.10.87] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH8JK-0006ke-8N; Wed, 25 Mar 2020 15:51:18 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 9/9] block: make the init_part_stats return value more logical
-Date:   Wed, 25 Mar 2020 16:48:43 +0100
-Message-Id: <20200325154843.1349040-10-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200325154843.1349040-1-hch@lst.de>
-References: <20200325154843.1349040-1-hch@lst.de>
+        Wed, 25 Mar 2020 11:52:05 -0400
+Received: by mail-lj1-f194.google.com with SMTP id g12so3026691ljj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FFKgDeHvhTCS00AQN8L5xpmPeeM6E1oKLK7azqnWDiE=;
+        b=uicKA8wIvWFlXoj/N3LEYBm1C4A3V4P9iw9tec/gYSHrhStzUBQCHg9572Xte1kjgR
+         ThMBTvZUPKiWKz7FpDL5FpZdKIk2YCmk4xT9mv8vXzDYbG7BnewAeqmTmjbMblvWal3H
+         mWL8hgD8rxlqA3cc+cD7G6ybnkogU1aJ7AGejI0PI8JR5OHaQ8Yinse9H4h+GK2Hb1A4
+         AO25iODgSANaemv90W5sSFYFQjzOpxBoKLIe96Vf8WjB/zrqJX1NEJY7yq750pQkaqOk
+         1+9OYeGLNZxl0e6F3esYfat8n9CQbuKfwTbzDvu3Chf0eeKLqiEo59Jx1mNdOEbnZcqK
+         7RZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=FFKgDeHvhTCS00AQN8L5xpmPeeM6E1oKLK7azqnWDiE=;
+        b=C6sBNnfxyzMepl+HITtSOc0CZnOM10uDzxkz6PcMdOnCBq0g5qMcN5BaUZdxwxw+2A
+         eK1rpN3TnH1gAamgb43XDi8g4awDL/6DQKkSrYFQQtGj1LHoO4qtSBGu+k+OAnGbrzG4
+         OBB2a7QNluQuLa7q5/GOroNw5wZETqnABcTBRPV+fmcrNqkc2OMs/bnP16IYlat9Tb0B
+         bLFjN46WiBMOXZV9yTdjb0/e0qF7nwV/OQSwuEh47Ek5WH3YGSGw2Bfc6T4yFpbbI5yv
+         Gl39gqvcA7kzlp6hEe5jxLse3TKf9QRbqy43OItH1ibx0ThSwE7vEZ8m5FZWGcNQG7eN
+         Hp2Q==
+X-Gm-Message-State: AGi0PuYNElIjruLWX5L5yqzD/AkyuACMTnZdN6nwImHOs1woQFhD9/tE
+        T8RSPVCpaxw5Iha145N82z2bbQ==
+X-Google-Smtp-Source: ADFU+vv75ZUwXg2vEi4sa3vjU/XvBmaxBeQGnk0gRxgFefclx3FSltiYeD1SYorsoysNlfqIA2nFcA==
+X-Received: by 2002:a2e:964e:: with SMTP id z14mr2510095ljh.44.1585151522265;
+        Wed, 25 Mar 2020 08:52:02 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([2a00:1fa0:4678:2dac:733f:487d:7a84:7bac])
+        by smtp.gmail.com with ESMTPSA id l21sm275175lfh.63.2020.03.25.08.52.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:52:01 -0700 (PDT)
+Subject: Re: [PATCH 1/4] ubifs: remove broken lazytime support
+To:     Christoph Hellwig <hch@lst.de>, Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>, linux-xfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-mtd@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org
+References: <20200325122825.1086872-1-hch@lst.de>
+ <20200325122825.1086872-2-hch@lst.de>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <3771d2fd-b563-b74d-491b-e2bab9242126@cogentembedded.com>
+Date:   Wed, 25 Mar 2020 18:51:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200325122825.1086872-2-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return 0 / -ENOMEM instead of a boolean dressed up as int.
+Hello!
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/genhd.c             | 2 +-
- block/partitions/core.c   | 2 +-
- include/linux/part_stat.h | 6 +++---
- 3 files changed, 5 insertions(+), 5 deletions(-)
+On 03/25/2020 03:28 PM, Christoph Hellwig wrote:
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 6323cc789efa..95aef19ca8ed 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -1644,7 +1644,7 @@ struct gendisk *__alloc_disk_node(int minors, int node_id)
- 
- 	disk = kzalloc_node(sizeof(struct gendisk), GFP_KERNEL, node_id);
- 	if (disk) {
--		if (!init_part_stats(&disk->part0)) {
-+		if (init_part_stats(&disk->part0)) {
- 			kfree(disk);
- 			return NULL;
- 		}
-diff --git a/block/partitions/core.c b/block/partitions/core.c
-index b79c4513629b..6509351cb9d3 100644
---- a/block/partitions/core.c
-+++ b/block/partitions/core.c
-@@ -377,7 +377,7 @@ struct hd_struct *add_partition(struct gendisk *disk, int partno,
- 	if (!p)
- 		return ERR_PTR(-EBUSY);
- 
--	if (!init_part_stats(p)) {
-+	if (init_part_stats(p)) {
- 		err = -ENOMEM;
- 		goto out_free;
- 	}
-diff --git a/include/linux/part_stat.h b/include/linux/part_stat.h
-index ece607607a86..521ad787b0ec 100644
---- a/include/linux/part_stat.h
-+++ b/include/linux/part_stat.h
-@@ -48,8 +48,8 @@ static inline int init_part_stats(struct hd_struct *part)
- {
- 	part->dkstats = alloc_percpu(struct disk_stats);
- 	if (!part->dkstats)
--		return 0;
--	return 1;
-+		return -ENOMEM;
-+	return 0;
- }
- 
- static inline void free_part_stats(struct hd_struct *part)
-@@ -72,7 +72,7 @@ static inline void part_stat_set_all(struct hd_struct *part, int value)
- 
- static inline int init_part_stats(struct hd_struct *part)
- {
--	return 1;
-+	return 0;
- }
- 
- static inline void free_part_stats(struct hd_struct *part)
--- 
-2.25.1
+> When "ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs" introduces atime
+> support to ubifs, it also lazytime support, but that support is
+                           ^ includes?
 
+> terminally broken, as it causes mark_inode_dirty_sync to be called from
+> __writeback_single_inode, which will then trigger the locking assert
+> in ubifs_dirty_inode.  Just remove this broken support for now, it can
+> be readded later, especially as some infrastructure changes should
+> make that easier soon.
+> 
+> Fixes: 8c1c5f263833 ("ubifs: introduce UBIFS_ATIME_SUPPORT to ubifs")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+[...]
+
+MBR, Sergei
