@@ -2,150 +2,113 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80ACCC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA56C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59CBC2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:26:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YLQ5jdqM"
+	by mail.kernel.org (Postfix) with ESMTP id 563F020740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585160823;
+	bh=8eot++bwcSHkvtf7ImsGmY9q1r5X5Yt6dA3yoI7A5dM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PHGlWV8yUodXXLiOYeJDwuF0Ck+dpMGpjShV58bziJZTx/ls9o6l0tQ0rtVQetku1
+	 zgIOuWnIMraXwja93cOvnyLv4JqrC4v/r2oxbeAjiU9dp6FS99mhAwgPwcdJLU5Yw+
+	 TWtK5I0ey+VRkVaHM5Hwup0wo/ySzGlqrZxooETQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbgCYS01 (ORCPT
+        id S1727729AbgCYS1C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:26:27 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40519 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbgCYS00 (ORCPT
+        Wed, 25 Mar 2020 14:27:02 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45211 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgCYS1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:26:26 -0400
-Received: by mail-pf1-f195.google.com with SMTP id l184so1453372pfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:26:26 -0700 (PDT)
+        Wed, 25 Mar 2020 14:27:01 -0400
+Received: by mail-lj1-f193.google.com with SMTP id t17so3561845ljc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=rdOwQ11n3cpKxP1BnmbKbCp9D6XytaUHGx7F/xFAJIw=;
-        b=YLQ5jdqMUqkf5nUdhOeIqGBUKQMvKSU5dOE/f/on/yy1ZjkRYbO+QC0yH3loc1RBrI
-         8vq2BARKAuVLS4B4rkewceFxkPUnbVuNcwx2TvXQGBJ/uyM5cua7oqCYDdFD4x3Qcf0P
-         MVGIUCA8QeCEVWeuBNNruftZGmJfbxGwCw+w6rJpBshpXXluQcFANXQ3c0FkhgzZYold
-         xF/N7snIgVzB7mPP3fxPlFSbTWs4Ln5Y9VO1dBgN8ri9Gy0O8IL1IC2rNKJS/Tcc0JBW
-         Dr8qmOckxGoJMz/fdhJbasckqIEXNxe2IeItDFu9BvwmDJi8TL9a7Dqris43Fi0Ru1AX
-         TkGg==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5X6cqBMAIN38Vpa0k6I9LJbV/IM/WQtUqFEnNCnTPNY=;
+        b=TlWPo6jnLSxn8p8IHTlkVwEwL3/bAuCByG1NNq6gwkhFHy+98AmzLxQujgt6EH9gbF
+         VcqyVwF6ZKpy9+4bUUmP4yT6mL6eVT3nwrrQriNR3oKU9S/kvgiCbtQV77gvaeTWDbpA
+         CTniS/587iNKbgs/L/iiHAANJVJIvMl/L1U5M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=rdOwQ11n3cpKxP1BnmbKbCp9D6XytaUHGx7F/xFAJIw=;
-        b=oVb91LojawCMIXlEIxhm5RQ/DwQbREWJ1lyBULCCDd4siKHtgKeWPwdM3KVDeDpphR
-         9AecPUnS+vwt1HB+7V+lv2aP+zx0gVtYgiE/Fp4fCbjdxgklxz+uIgl0Ra+EIOxqxM2P
-         OFdmU1NbDk+hocnINjCoH6cincZdd4ivmjwSuMVSkLll1L3/oWLkqzOaps1r4O0JpFel
-         AE/2u0xfJwgmMVO/gP6AS5tm2URo/nDjmlTi25B9qvaQBPpLapvpD1Asvgvgw61oHu78
-         Ipg1elZGMejUGsZE+7QPdZt87Omy9M8R3Iwuh1Ard3VBs4g+2OOQoiQGDvFO+QlxPAmz
-         8oMg==
-X-Gm-Message-State: ANhLgQ0NmthtUbnF3VEteBaiGe/7OQcPShPbnBH+pIkDKNcMyKxl0GCp
-        Om+RLMQm+UEJCc3S6Ukmd8w=
-X-Google-Smtp-Source: ADFU+vsM45qbZaWKmVwyap6q+4eaKiz8s3B6hIo9eHBtONe002wIdWM4MSOoHZzu9/ZTnRrNQxFHIA==
-X-Received: by 2002:a63:df15:: with SMTP id u21mr4022987pgg.95.1585160785420;
-        Wed, 25 Mar 2020 11:26:25 -0700 (PDT)
-Received: from simran-Inspiron-5558 ([2409:4052:78f:bb47:8124:5e4b:ea06:7595])
-        by smtp.gmail.com with ESMTPSA id k6sm4160953pfa.214.2020.03.25.11.26.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 11:26:24 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 23:56:17 +0530
-From:   Simran Singhal <singhalsimran0@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        outreachy-kernel@googlegroups.com
-Subject: [PATCH] staging: rtl8723bs: Remove blank line before '}' brace
-Message-ID: <20200325182617.GA9411@simran-Inspiron-5558>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5X6cqBMAIN38Vpa0k6I9LJbV/IM/WQtUqFEnNCnTPNY=;
+        b=N4F4i1lPWJdqK9jWWswLLbCj/H8Pl6hr1FG3TtJQZCiidvqGth/IZSThWnO2Q/+VS+
+         uWFcW9/HEQTAnOWtOFR1Ut1Q/yIAiwsOfPgNySpNYySLxHfAc1ZRLvv6cg7oYTFMifv0
+         VDNJBhKKGnsYmJWf423Owl6gKcYI0V+Ri0KDA3U/wTQjcXDYoPu6wNzK7VeMQ14TEsrh
+         MF2VSWds+EUPV9BlyULDM2NOghbs5Eulgg/smVp7vTVMkQL5FB1V/8HCIVdBIDFZmiYR
+         PSGYmJ3qLmWo/s/jG4eVGG0nQwRr5bi8/XRNYh0+2nJRIbn1ZIeAsu02oQ91ceNIMHYg
+         WXiA==
+X-Gm-Message-State: AGi0Puap0s+2mlVET1D7rQfG1L3JwKygSNIChmVpP8Qm5PNbmA2iWPP1
+        CV1CKYHqz1ulBHqZ65WY+Bq5uA7o7BQ=
+X-Google-Smtp-Source: ADFU+vseBkaIJIVhSK+ZTnZutvzpSsafoA1rkWdaVT6RBlUrq/P29S5nACS2/F0EoN5pFX/fcyY5EQ==
+X-Received: by 2002:a2e:7401:: with SMTP id p1mr2778448ljc.279.1585160816316;
+        Wed, 25 Mar 2020 11:26:56 -0700 (PDT)
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com. [209.85.208.178])
+        by smtp.gmail.com with ESMTPSA id i2sm846999lfg.23.2020.03.25.11.26.54
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 11:26:55 -0700 (PDT)
+Received: by mail-lj1-f178.google.com with SMTP id q19so3564071ljp.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 11:26:54 -0700 (PDT)
+X-Received: by 2002:a2e:b4cb:: with SMTP id r11mr2853613ljm.201.1585160814464;
+ Wed, 25 Mar 2020 11:26:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <CAHk-=wiumU4QxAkT+GqhBt5f-iUsoLNC0sqVfRKp0xypA6aNYg@mail.gmail.com>
+ <86D80EA7-9087-4042-8119-12DD5FCEAA87@amacapital.net> <CAHk-=wim-2aaFi_GNs5KmX4ykkgQjnRo5D4B9ZK+1Oz=kpp_2A@mail.gmail.com>
+ <20200324170306.GU20696@hirez.programming.kicks-ass.net> <20200325181339.GK20713@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200325181339.GK20713@hirez.programming.kicks-ass.net>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 25 Mar 2020 11:26:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wiPrOd_yM5NGHQDE3AFtNWqV=MDFno2xgZOYV3jwGQU4w@mail.gmail.com>
+Message-ID: <CAHk-=wiPrOd_yM5NGHQDE3AFtNWqV=MDFno2xgZOYV3jwGQU4w@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v3 14/17] static_call: Add static_cond_call()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Jason Baron <jbaron@akamai.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Nadav Amit <namit@vmware.com>,
+        Peter Anvin <hpa@zytor.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove unneeded blank line before a close brace '}'.
-Issue found by checkpatch.pl:
-CHECK: Blank lines aren't necessary before a close brace '}'
+On Wed, Mar 25, 2020 at 11:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> To clarify; the problem is a task getting preempted with its RIP at the
+> RET. Then when we rewrite the text to be a CALL/JMP.d32 it will read
+> garbage (1 byte into the displacement of the instruction) instead of a
+> RET when it resumes.
 
-Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
----
- drivers/staging/rtl8723bs/core/rtw_security.c | 8 --------
- 1 file changed, 8 deletions(-)
+Yeah, I realized it when you mentioned it. I was trying to come up
+with some clever way to avoid it, but can't see anything.
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_security.c b/drivers/staging/rtl8723bs/core/rtw_security.c
-index 9c4607114cea..5ebf691bd743 100644
---- a/drivers/staging/rtl8723bs/core/rtw_security.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_security.c
-@@ -434,7 +434,6 @@ void rtw_seccalctkipmic(u8 *key, u8 *header, u8 *data, u32 data_len, u8 *mic_cod
- 			rtw_secmicappend(&micdata, &header[16], 6);
- 		else
- 			rtw_secmicappend(&micdata, &header[10], 6);
--
- 	}
- 	rtw_secmicappend(&micdata, &priority[0], 4);
- 
-@@ -723,7 +722,6 @@ u32 rtw_tkip_encrypt(struct adapter *padapter, u8 *pxmitframe)
- 
- 			TKIP_SW_ENC_CNT_INC(psecuritypriv, pattrib->ra);
- 		}
--
- 	}
- 	return res;
- }
-@@ -829,11 +827,9 @@ u32 rtw_tkip_decrypt(struct adapter *padapter, u8 *precvframe)
- 			RT_TRACE(_module_rtl871x_security_c_, _drv_err_, ("%s: stainfo == NULL!!!\n", __func__));
- 			res = _FAIL;
- 		}
--
- 	}
- exit:
- 	return res;
--
- }
- 
- 
-@@ -1219,7 +1215,6 @@ static void construct_mic_header2(
- 		if (!qc_exists && a4_exists) {
- 			for (i = 0; i < 6; i++)
- 				mic_header2[8+i] = mpdu[24+i];   /* A4 */
--
- 		}
- 
- 		if (qc_exists && !a4_exists) {
-@@ -1234,7 +1229,6 @@ static void construct_mic_header2(
- 			mic_header2[14] = mpdu[30] & 0x0f;
- 			mic_header2[15] = mpdu[31] & 0x00;
- 		}
--
- }
- 
- /************************************************/
-@@ -1413,7 +1407,6 @@ static sint aes_cipher(u8 *key, uint	hdrlen,
- 		}
- 		bitwise_xor(aes_out, padded_buffer, chain_buffer);
- 		aes128k128d(key, chain_buffer, aes_out);
--
- 	}
- 
- 	for (j = 0 ; j < 8; j++)
-@@ -1719,7 +1712,6 @@ static sint aes_decipher(u8 *key, uint	hdrlen,
- 		}
- 		bitwise_xor(aes_out, padded_buffer, chain_buffer);
- 		aes128k128d(key, chain_buffer, aes_out);
--
- 	}
- 
- 	for (j = 0; j < 8; j++)
--- 
-2.17.1
+I can come up with insane models - you could replace the xor;ret
+sequence with a jump to a trampoline where you've aligned the target
+trampoline so that the third byte in the "jmp xxx" remains a 'ret'
+instruction. Then replace _that_ one with a "call_rcu()" callback.
+Wild handwaving of "I'm sure this could be made to work".
 
+But nothing remotely sane comes to mind.
+
+              Linus
