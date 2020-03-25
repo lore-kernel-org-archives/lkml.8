@@ -2,129 +2,115 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7FE9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A210FC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A13920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76D4220714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:09:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="tzGy0N9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727539AbgCYLJ1 (ORCPT
+        id S1727557AbgCYLJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:09:27 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:37706 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbgCYLJP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:09:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id 14FEAFB04;
-        Wed, 25 Mar 2020 12:09:14 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id hVX3jahIkFCv; Wed, 25 Mar 2020 12:09:11 +0100 (CET)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 711F0401F8; Wed, 25 Mar 2020 12:09:08 +0100 (CET)
-From:   =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-To:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Nishant Malpani <nish.malpani25@gmail.com>
-Subject: [PATCH v3 3/4] iio: vcnl4000: Export near level property for proximity sensor
-Date:   Wed, 25 Mar 2020 12:09:07 +0100
-Message-Id: <af2ce35478a5720e5325645b334f61d3c745fadd.1585134362.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <cover.1585134362.git.agx@sigxcpu.org>
-References: <cover.1585134362.git.agx@sigxcpu.org>
+        Wed, 25 Mar 2020 07:09:47 -0400
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:43879 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726043AbgCYLJr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 07:09:47 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id H3umjbcsrfHuvH3upjwsDV; Wed, 25 Mar 2020 12:09:44 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585134584; bh=aeOdGZ6OgFt69qgvqx7eLLn3NGTxKw+2xezfTroXWTA=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=tzGy0N9y8M4l52nouIG4+WU6Z4gkn/Mdp1HQBA9tAkgNVOaG8GPhh1aetpvt4kiks
+         /YQCaHbme2Sc6/8N+gXYTd3b0XVe6ZPOP3K7+71sUKaUGWlpAgg+6dL94jRqcBweed
+         Sq9ci3BsuGd3kycMJhAEuo3pxnjBGoXZ1RE/d0z/5Y9V4QFB7ywXSHKd+34alM31a2
+         dw7rWlK1pBcy8D2hsO+j+Gabu1ZZS60UJ+DPRCqLzIHk20AG9GlRbS+KJvUxMxyt82
+         mmfrNDYqpG3Jasx3wFv1sOJctAaKM5vitwzRNo8Uk41bieJCCmlmRf/E86bJlF+nDP
+         Ea9T3arrgpYsA==
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        helen.koike@collabora.com, digetx@gmail.com, sboyd@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <af710b95-55a5-8f20-6617-c1e6f9a3fe79@xs4all.nl>
+Date:   Wed, 25 Mar 2020 12:09:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325110358.GB853@valkosipuli.retiisi.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfASr57v1HrYBEDdTrXofqBhy5OyWTJt9e1V2D9AsPGRLMdFLfrHk4JYIO/wJ8mCWc1kRrmVkRa3VMq/uRJjL99iLl7N3BQCHPjDmyAQvJl8GwbmviRpJ
+ 2kUGLaETo3kWiJv6ySSmQWBpkKYrmuwcB2EMoZ1mW0Qm292OoTclC422cdpsXmO/WqAkjyyS0k4XkBHIHL0HAip25nzPrTG0jiH+FxVB68S0kpJOKPet4AX4
+ cKqSYUcpP8ilU8Y6A+FI0PYh2Kfa2Rntk2bTiDE6vyD164N4lGNuSCoxAMD3m3aI2c0Y8yVM1DzRtpfaJZRdKVJpXnzGUWe8hxruHe3nC1G78tAB4xuyXFCs
+ LZEvgsPZFojuOcunPRJllbqYEwItiTzawgSVgy7f5W4JzIeI9hwNjCexX/E3bRrMAia56iDlLuWNvv3GdagGtJvjLr3cCaWJGyT7YK64pilWc8V8d9L8GTx0
+ XMEjizaV/E3frWDaNwoQVml+qXb9HziBMu4vg6K7qXG1i7HwcEFNO+MrZ4b+IBRCHv2lQWTR6xAoUmdTTWDWTZwki51tM9JQdsORcSH7huS5XfzcBKp5ZDnD
+ XGk=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When an object can be considered close to the sensor is hardware
-dependent. Allowing to configure the property via device tree
-allows to configure this device specific value.
+On 3/25/20 12:03 PM, Sakari Ailus wrote:
+> Hi Sowjanya,
+> 
+> Thanks for the patchset.
+> 
+> On Mon, Mar 23, 2020 at 10:52:32AM -0700, Sowjanya Komatineni wrote:
+>> Tegra210 contains a powerful Video Input (VI) hardware controller
+>> which can support up to 6 MIPI CSI camera sensors.
+>>
+>> Each Tegra CSI port can be one-to-one mapped to VI channel and can
+>> capture from an external camera sensor connected to CSI or from
+>> built-in test pattern generator.
+>>
+>> Tegra210 supports built-in test pattern generator from CSI to VI.
+>>
+>> This patch adds a V4L2 media controller and capture driver support
+>> for Tegra210 built-in CSI to VI test pattern generator.
+>>
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  drivers/staging/media/Kconfig              |    2 +
+>>  drivers/staging/media/Makefile             |    1 +
+>>  drivers/staging/media/tegra/Kconfig        |   10 +
+>>  drivers/staging/media/tegra/Makefile       |    8 +
+>>  drivers/staging/media/tegra/TODO           |   10 +
+>>  drivers/staging/media/tegra/tegra-common.h |  263 +++++++
+>>  drivers/staging/media/tegra/tegra-csi.c    |  522 ++++++++++++++
+>>  drivers/staging/media/tegra/tegra-csi.h    |  118 ++++
+>>  drivers/staging/media/tegra/tegra-vi.c     | 1058 ++++++++++++++++++++++++++++
+>>  drivers/staging/media/tegra/tegra-vi.h     |   83 +++
+>>  drivers/staging/media/tegra/tegra-video.c  |  129 ++++
+>>  drivers/staging/media/tegra/tegra-video.h  |   32 +
+>>  drivers/staging/media/tegra/tegra210.c     |  754 ++++++++++++++++++++
+>>  drivers/staging/media/tegra/tegra210.h     |  192 +++++
+> 
+> Why staging? Are there reasons not to aim this to the kernel proper right
+> away? If you only support TPG, the driver may not have too many (if any)
+> real users anyway.
 
-This is useful for e.g. iio-sensor-proxy to indicate to userspace
-if an object is close to the sensor.
+A TPG-only driver is not very useful, and I do not believe that belongs in
+the kernel proper. The next phase will add sensor support, and that's a good
+time to move it in the kernel itself.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
----
- drivers/iio/light/vcnl4000.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Regards,
 
-diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-index ec803c1e81df..a4bac101549e 100644
---- a/drivers/iio/light/vcnl4000.c
-+++ b/drivers/iio/light/vcnl4000.c
-@@ -83,6 +83,7 @@ struct vcnl4000_data {
- 	struct mutex vcnl4000_lock;
- 	struct vcnl4200_channel vcnl4200_al;
- 	struct vcnl4200_channel vcnl4200_ps;
-+	uint32_t near_level;
- };
- 
- struct vcnl4000_chip_spec {
-@@ -343,6 +344,25 @@ static const struct vcnl4000_chip_spec vcnl4000_chip_spec_cfg[] = {
- 	},
- };
- 
-+static ssize_t vcnl4000_read_near_level(struct iio_dev *indio_dev,
-+					uintptr_t priv,
-+					const struct iio_chan_spec *chan,
-+					char *buf)
-+{
-+	struct vcnl4000_data *data = iio_priv(indio_dev);
-+
-+	return sprintf(buf, "%u\n", data->near_level);
-+}
-+
-+static const struct iio_chan_spec_ext_info vcnl4000_ext_info[] = {
-+	{
-+		.name = "nearlevel",
-+		.shared = IIO_SEPARATE,
-+		.read = vcnl4000_read_near_level,
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static const struct iio_chan_spec vcnl4000_channels[] = {
- 	{
- 		.type = IIO_LIGHT,
-@@ -351,6 +371,7 @@ static const struct iio_chan_spec vcnl4000_channels[] = {
- 	}, {
- 		.type = IIO_PROXIMITY,
- 		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+		.ext_info = vcnl4000_ext_info,
- 	}
- };
- 
-@@ -440,6 +461,10 @@ static int vcnl4000_probe(struct i2c_client *client,
- 	dev_dbg(&client->dev, "%s Ambient light/proximity sensor, Rev: %02x\n",
- 		data->chip_spec->prod, data->rev);
- 
-+	if (device_property_read_u32(&client->dev, "near-level",
-+				     &data->near_level))
-+		data->near_level = 0;
-+
- 	indio_dev->dev.parent = &client->dev;
- 	indio_dev->info = &vcnl4000_info;
- 	indio_dev->channels = vcnl4000_channels;
--- 
-2.23.0
-
+	Hans
