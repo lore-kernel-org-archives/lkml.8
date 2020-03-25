@@ -2,105 +2,92 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDD1C54FD2
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43242C54FD2
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:22:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1E02072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 129DD2072E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 02:22:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727302AbgCYCVC (ORCPT
+        id S1727297AbgCYCW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 22:21:02 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:48586 "EHLO huawei.com"
+        Tue, 24 Mar 2020 22:22:26 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:49904 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727249AbgCYCVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 22:21:01 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 79E47D1081DD791063F5;
-        Wed, 25 Mar 2020 10:20:57 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.207) with Microsoft SMTP Server (TLS) id 14.3.487.0; Wed, 25 Mar
- 2020 10:20:52 +0800
-Subject: Re: [PATCH] f2fs: remove redundant compress inode check
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200229104906.12061-1-yuchao0@huawei.com>
- <6aab59b9-6e33-5b01-acf8-ccbacd9318e3@huawei.com>
- <20200324154322.GB198420@google.com>
- <b0306fcf-27f2-20ab-9e5b-e54a924d4a61@huawei.com>
- <20200325021702.GC198420@google.com>
+        id S1727253AbgCYCWZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 22:22:25 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2423E8143BBFC871EF9E;
+        Wed, 25 Mar 2020 10:22:22 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS410-HUB.china.huawei.com (10.3.19.210) with Microsoft SMTP Server id
+ 14.3.487.0; Wed, 25 Mar 2020 10:22:13 +0800
 From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <f25a42bd-6d59-6b5c-5e32-8c7d73161373@huawei.com>
-Date:   Wed, 25 Mar 2020 10:20:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: show compression in statx
+Date:   Wed, 25 Mar 2020 10:22:09 +0800
+Message-ID: <20200325022209.66156-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-In-Reply-To: <20200325021702.GC198420@google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/25 10:17, Jaegeuk Kim wrote:
-> On 03/25, Chao Yu wrote:
->> On 2020/3/24 23:43, Jaegeuk Kim wrote:
->>> On 03/24, Chao Yu wrote:
->>>> Jaegeuk,
->>>>
->>>> Missed to apply this patch?
->>>>
->>>> On 2020/2/29 18:49, Chao Yu wrote:
->>>>> due to f2fs_post_read_required() has did that.
->>>>>
->>>>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->>>>> ---
->>>>>  fs/f2fs/f2fs.h | 2 --
->>>>>  1 file changed, 2 deletions(-)
->>>>>
->>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>> index f4bcbbd5e9ed..882f9ad3445b 100644
->>>>> --- a/fs/f2fs/f2fs.h
->>>>> +++ b/fs/f2fs/f2fs.h
->>>>> @@ -4006,8 +4006,6 @@ static inline bool f2fs_force_buffered_io(struct inode *inode,
->>>>>  		return true;
->>>>>  	if (f2fs_is_multi_device(sbi))
->>>>>  		return true;
->>>>> -	if (f2fs_compressed_file(inode))
->>>>> -		return true;
->>>
->>> I thought that we can keep this to avoid any confusion when porting to old
->>> production kernel which uses ICE.
->>
->> That old kernel w/ ICE doesn't have f2fs_post_read_required(), right?
-> 
-> We do have.
+fstest reports below message when compression is on:
 
-Well, so I didn't catch your point why we will confuse. :P
+generic/424 1s ... - output mismatch
+    --- tests/generic/424.out
+    +++ results/generic/424.out.bad
+    @@ -1,2 +1,26 @@
+     QA output created by 424
+    +[!] Attribute compressed should be set
+    +Failed
+    +stat_test failed
+    +[!] Attribute compressed should be set
+    +Failed
+    +stat_test failed
 
-> 
->>
->> I thought we backport features with order of the time fsverity/compression
->> feature was introduced, then f2fs_post_read_required() should be there
->> when we backport compression feature.
->>
->> Thanks,
->>
->>>
->>>>>  	/*
->>>>>  	 * for blkzoned device, fallback direct IO to buffered IO, so
->>>>>  	 * all IOs can be serialized by log-structured write.
->>>>>
->>> .
->>>
-> .
-> 
+We missed to set STATX_ATTR_COMPRESSED on compressed inode in getattr(),
+fix it.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/file.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 1cc6919e1c5e..5c24f2ca3465 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -818,6 +818,8 @@ int f2fs_getattr(const struct path *path, struct kstat *stat,
+ 	}
+ 
+ 	flags = fi->i_flags;
++	if (flags & F2FS_COMPR_FL)
++		stat->attributes |= STATX_ATTR_COMPRESSED;
+ 	if (flags & F2FS_APPEND_FL)
+ 		stat->attributes |= STATX_ATTR_APPEND;
+ 	if (IS_ENCRYPTED(inode))
+@@ -829,7 +831,8 @@ int f2fs_getattr(const struct path *path, struct kstat *stat,
+ 	if (IS_VERITY(inode))
+ 		stat->attributes |= STATX_ATTR_VERITY;
+ 
+-	stat->attributes_mask |= (STATX_ATTR_APPEND |
++	stat->attributes_mask |= (STATX_ATTR_COMPRESSED |
++				  STATX_ATTR_APPEND |
+ 				  STATX_ATTR_ENCRYPTED |
+ 				  STATX_ATTR_IMMUTABLE |
+ 				  STATX_ATTR_NODUMP |
+-- 
+2.18.0.rc1
+
