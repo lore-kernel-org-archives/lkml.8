@@ -1,122 +1,83 @@
-Return-Path: <SRS0=tn8d=5J=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECDE5C18E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:58:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54369C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFCB02072E
-	for <linux-kernel@archiver.kernel.org>; Tue, 24 Mar 2020 23:58:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dE2Mu/As"
+	by mail.kernel.org (Postfix) with ESMTP id 2C18720870
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727205AbgCXX6H (ORCPT
+        id S1727253AbgCYABD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 19:58:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:45161 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727102AbgCXX6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 19:58:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48n7VM5VrYz9sPR;
-        Wed, 25 Mar 2020 10:58:03 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585094285;
-        bh=iTrfw4pZsF5SHP+vx5dIJNtqfgY/gSyiWePmLr2G+mY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dE2Mu/Aseg5reZ4nL6SuoO2U5kTjzOApduDtpVpZ1W0rW2I3AwAVEgGWYmAud/b+k
-         ZZOEdUmbXsNvORdhZksJrNgC524kwcLh5nEDRzuaUGEwh8qVpfUoYqtV/ttpgDAB1E
-         LebFmlqJASCaOlCIoP56Fwq5euYKExcVYNeSFFmUFsbg5cOLWGswEikgwcFVlt4XG6
-         ty4+X83qHUZqGl7r8hfBOlGN2tHyp/Ci87sYaRDB8I8cIgahD4vKupq8awso51LK7n
-         pHTH5QY9Z6L9f/l9K0BKjIyvgwd5ihpL+oJyL+Rs0TxRKRZcP4FJulGy3XORRO+/wf
-         RTUj+Aczs4Nlg==
-Date:   Wed, 25 Mar 2020 10:58:00 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: linux-next: manual merge of the pci tree with Linus' tree
-Message-ID: <20200325105800.12716fcf@canb.auug.org.au>
+        Tue, 24 Mar 2020 20:01:03 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:46608 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726943AbgCYABC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 20:01:02 -0400
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1jGtTR-0008It-QH; Wed, 25 Mar 2020 01:00:46 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id 1EF2B100C51; Wed, 25 Mar 2020 01:00:45 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v6 4/8] kvm: x86: Emulate split-lock access as a write in emulator
+In-Reply-To: <20200324151859.31068-5-xiaoyao.li@intel.com>
+References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-5-xiaoyao.li@intel.com>
+Date:   Wed, 25 Mar 2020 01:00:45 +0100
+Message-ID: <87lfnpz4k2.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/cQFlObfw3Gf7xl2wq2+UTuA";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cQFlObfw3Gf7xl2wq2+UTuA
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Xiaoyao Li <xiaoyao.li@intel.com> writes:
+>  
+> +bool split_lock_detect_on(void)
+> +{
+> +	return sld_state != sld_off;
+> +}
+> +EXPORT_SYMBOL_GPL(split_lock_detect_on);
 
-Hi all,
+1) You export this function here
 
-Today's linux-next merge of the pci tree got a conflict in:
+2) You change that in one of the next patches to something else
 
-  MAINTAINERS
+3) According to patch 1/8 X86_FEATURE_SPLIT_LOCK_DETECT is not set when
+   sld_state == sld_off. FYI, I did that on purpose.
 
-between commit:
+AFAICT #1 and #2 are just historical leftovers of your previous patch
+series and the extra step was just adding more changed lines per patch
+for no value.
 
-  5901b51f3e5d ("MAINTAINERS: Correct Cadence PCI driver path")
+#3 changed the detection mechanism and at the same time the semantics of
+the feature flag.
 
-from Linus' tree and commit:
+So what's the point of this exercise? 
 
-  11be8af70d86 ("dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence pl=
-atform to DT schema")
+Thanks,
 
-from the pci tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index d8fc7bb5f784,fc2fc22dbc8b..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -12754,8 -12739,8 +12754,8 @@@ PCI DRIVER FOR CADENCE PCIE I
-  M:	Tom Joseph <tjoseph@cadence.com>
-  L:	linux-pci@vger.kernel.org
-  S:	Maintained
-- F:	Documentation/devicetree/bindings/pci/cdns,*.txt
-+ F:	Documentation/devicetree/bindings/pci/cdns,*
- -F:	drivers/pci/controller/pcie-cadence*
- +F:	drivers/pci/controller/cadence/
- =20
-  PCI DRIVER FOR FREESCALE LAYERSCAPE
-  M:	Minghuan Lian <minghuan.Lian@nxp.com>
-
---Sig_/cQFlObfw3Gf7xl2wq2+UTuA
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl56nogACgkQAVBC80lX
-0Gw/OAgAo/nKNkKB+KUEaemL/UG1iRjAFPAFtEKeknMmnLc6Jd+9mSU+jPKbrHhW
-q6H3Hw650VqVKuezPDmTUuCEKwU0TZZF6qbnbyFGDA4SU36qhlt4XW7qkFaf/2fh
-g7xZH7EoD9DsknBNYfMYny0Q4eYRoJJIj2tXUEN0OCRJTEreMUi72WYpX7AtU68K
-r+XQ/LH2LgJ0DJUVLG3kK79textsjNrTLstkkklIvn4v0bDGvRlG9x+0P+IF/dpr
-hB4zSBkf2BgQ4W8Rc2VXmxkHyDSE3PPJbBVBnjWWj08QFwVrXCEUXjLmBMOlBXDc
-UfmkJ7J8TqNlMTeEoTaak0bgUIp9Vg==
-=Nzob
------END PGP SIGNATURE-----
-
---Sig_/cQFlObfw3Gf7xl2wq2+UTuA--
+        tglx
