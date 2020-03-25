@@ -2,116 +2,105 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F3EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:25:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EDCC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC79208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:25:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A4BA208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:28:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DwAtTY5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCYOZn (ORCPT
+        id S1727722AbgCYO2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:25:43 -0400
-Received: from mga04.intel.com ([192.55.52.120]:42723 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727620AbgCYOZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:25:43 -0400
-IronPort-SDR: 0aLkYhUQi+VwFxxj0HxjaG3zk891wjJw2ojjykEDDhXJnU6uB3X+AUUGeiusx0+SJoPiNDjDFi
- V4LctI9L4cWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 07:25:42 -0700
-IronPort-SDR: htzfHXoUNkSPBbUSnLZHWBq9wNDEgBuzYWwWMQXGZksyQ0Thixhmdz5iYDavm1+rJ+cLyTgv8g
- 0/tVzvrEYiLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="240631483"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
-  by orsmga008.jf.intel.com with ESMTP; 25 Mar 2020 07:25:40 -0700
-Subject: Re: [PATCH] perf tools: Add missing Intel CPU events to parser
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200324150443.28832-1-adrian.hunter@intel.com>
- <20200325103345.GA1856035@krava> <20200325131549.GB14102@kernel.org>
- <20200325135350.GA1888042@krava> <20200325142214.GD14102@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <ea516b26-6249-e870-20bf-819ea1a2d2c2@intel.com>
-Date:   Wed, 25 Mar 2020 16:24:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 10:28:52 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:20735 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727566AbgCYO2v (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:28:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585146530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=JqpwltFL/SwS1UhlcIi0MOoODF8Cpbq1cMt7ik4CiTE=;
+        b=DwAtTY5FeL0l8g+pWuXvopKrrWYucGwQwduc1nrTtQ7hq6MspeALe2jGt6nVSw8qaYyb9K
+        ynUd0CYmDS2h3vCjpFRhJeOex/BfNvmOWD6bkl/6GbbKsREAF1yXrgHu0AK2BRWP1/GPvY
+        QPCJc3XcoxB2PUzEq+tApe7GKI40wDE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-237-uVxAjFQpP_WWUCQ3W7g2FQ-1; Wed, 25 Mar 2020 10:28:49 -0400
+X-MC-Unique: uVxAjFQpP_WWUCQ3W7g2FQ-1
+Received: by mail-wm1-f70.google.com with SMTP id n25so746929wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:28:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=JqpwltFL/SwS1UhlcIi0MOoODF8Cpbq1cMt7ik4CiTE=;
+        b=fFkhm0ocB0Yb0aaQwz5OHaORb52pyWMT4U1xP7eWBjknaKAyua7Zs1VqZDpxk6g1x7
+         4ShUNuxLvN+Fvj70kLtNdQPmLpIlTm9dUGi3QNYXLYz6nI6SvshcJTC0eebFhzctMhCR
+         RUXZLeKgPcFdHSvFAiIo90qVZGKGZ4gPoq4DELolMjOL7lgRGAHBEznxj8X3/ZhryIlD
+         3FwUB7ATWLqfuncngsQp3yKBpFziOPOMW7Q/whhh7wRrQcY4VER36JUNqlXuD/RWLi5Z
+         9ZXdjrTWK01ex6ZRtKIPAcDSGQ+nKdVvaqb+vmp7dIv0Se4T03h+BMC/qPd1x6hMAODe
+         Zu0Q==
+X-Gm-Message-State: ANhLgQ1wokMX+VS9Y7GPufOV5ucI/DdX8HhwjcNxE3l7cUU2T8e5frOm
+        R94IkpbM+vWpxj5YA2LqzhwQxYz6oIoB65ueSE4lnSmGLA+UFkeAyYOM745sPspD8C8Ci8QGL4b
+        5KcgBzZCpMf5aIsy7wu9ixBpY
+X-Received: by 2002:a7b:c050:: with SMTP id u16mr4024611wmc.68.1585146527995;
+        Wed, 25 Mar 2020 07:28:47 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtps1lqlEjeVqhmoxqx06a7QnIYlVTNWJazZkk/ssQW3dTzHNkG7M+s2wksPvvsb7XCMHkt2A==
+X-Received: by 2002:a7b:c050:: with SMTP id u16mr4024590wmc.68.1585146527811;
+        Wed, 25 Mar 2020 07:28:47 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id v7sm9590018wml.18.2020.03.25.07.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 07:28:47 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Tianyu Lan <ltykernel@gmail.com>
+Cc:     Yubo Xie <yuboxie@microsoft.com>, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        liuwe@microsoft.com, daniel.lezcano@linaro.org, tglx@linutronix.de,
+        michael.h.kelley@microsoft.com
+Subject: Re: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong time unit
+In-Reply-To: <039e126f-f00d-d7e1-aa92-c049c9e3333b@gmail.com>
+References: <20200324151935.15814-1-yuboxie@microsoft.com> <87ftdx7nxv.fsf@vitty.brq.redhat.com> <039e126f-f00d-d7e1-aa92-c049c9e3333b@gmail.com>
+Date:   Wed, 25 Mar 2020 15:28:45 +0100
+Message-ID: <87lfno5x0i.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200325142214.GD14102@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/03/20 4:22 pm, Arnaldo Carvalho de Melo wrote:
-> Em Wed, Mar 25, 2020 at 02:53:50PM +0100, Jiri Olsa escreveu:
->> On Wed, Mar 25, 2020 at 10:15:49AM -0300, Arnaldo Carvalho de Melo wrote:
->>> Em Wed, Mar 25, 2020 at 11:33:45AM +0100, Jiri Olsa escreveu:
->>>> On Tue, Mar 24, 2020 at 05:04:43PM +0200, Adrian Hunter wrote:
->>>>> perf list expects CPU events to be parseable by name, e.g.
->>>
->>>>>     # perf list | grep el-capacity-read
->>>>>       el-capacity-read OR cpu/el-capacity-read/          [Kernel PMU event]
->>>
->>>>> But the event parser does not recognize them that way, e.g.
->>>
->>>>>     # perf test -v "Parse event"
->>>>>     <SNIP>
->>>>>     running test 54 'cycles//u'
->>>>>     running test 55 'cycles:k'
->>>>>     running test 0 'cpu/config=10,config1,config2=3,period=1000/u'
->>>>>     running test 1 'cpu/config=1,name=krava/u,cpu/config=2/u'
->>>>>     running test 2 'cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/'
->>>>>     running test 3 'cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp'
->>>>>     -> cpu/event=0,umask=0x11/
->>>>>     -> cpu/event=0,umask=0x13/
->>>>>     -> cpu/event=0x54,umask=0x1/
->>>>>     failed to parse event 'el-capacity-read:u,cpu/event=el-capacity-read/u', err 1, str 'parser error'
->>>>>     event syntax error: 'el-capacity-read:u,cpu/event=el-capacity-read/u'
->>>>>                            \___ parser error test child finished with 1
->>>>>     ---- end ----
->>>>>     Parse event definition strings: FAILED!
->>>
->>>>> Fix by adding missing Intel CPU events to the event parser.
->>>>> Missing events were found by using:
->>>
->>>>>     grep -r EVENT_ATTR_STR arch/x86/events/intel/core.c
->>>>>
->>>>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
->>>>
->>>> Acked-by: Jiri Olsa <jolsa@redhat.com>
->>>
->>> So, I'm not being able to reproduce this, what an I missing?
->>
->> I think you need to be on some really recent intel
->> which defines events which we did not covered yet
->> like el-capacity-write in icelake
-> 
-> That is why I tried with el-capacity, which is moved to the parser as
-> well, I've replaced el-capacity-read, which I don't have in this Kaby
-> Lake machine, with el-capacity, that is present:
-> 
-> [root@seventh ~]# perf list | grep el-capacity
->   el-capacity OR cpu/el-capacity/                    [Kernel PMU event]
-> [root@seventh ~]#
+Tianyu Lan <ltykernel@gmail.com> writes:
 
-I just checked that and it seems to be a "feature" of the parser that it
-gets confused between el-capacity and el-capacity-read.
+>>> @@ -398,7 +399,8 @@ static u64 notrace read_hv_clock_msr_cs(struct clocksource *arg)
+>>>   
+>>>   static u64 read_hv_sched_clock_msr(void)
+>>>   {
+>>> -	return read_hv_clock_msr() - hv_sched_clock_offset;
+>>> +	return (read_hv_clock_msr() - hv_sched_clock_offset)
+>>> +		* (NSEC_PER_SEC / HV_CLOCK_HZ);
+>>>   }
+>> 
+>> kvmclock seems to have the same (pre-patch) code ...
+>
+>
+> kvm sched clock gets time from pvclock_clocksource_read() and
+> the time unit is nanosecond. So there is such issue in KVM code.
+>
 
-Making them explicit in parse-events.l makes the problem go away, but I
-wonder now if the parser could be better in this regard.
+Ah, true, kvmclock is always 1Ghz so it's reading 'naturally' converts
+to ns.
 
-Any ideas?
+-- 
+Vitaly
+
