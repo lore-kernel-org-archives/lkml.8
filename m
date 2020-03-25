@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 760D6C18E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDA5C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F4F2206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F34E4206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="arcA/iPT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SPVlsj1z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCYImT (ORCPT
+        id S1727389AbgCYImX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:42:19 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:55993 "EHLO
+        Wed, 25 Mar 2020 04:42:23 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:57187 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727439AbgCYImR (ORCPT
+        by vger.kernel.org with ESMTP id S1727450AbgCYImT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:42:17 -0400
+        Wed, 25 Mar 2020 04:42:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585125736;
+        s=mimecast20190719; t=1585125738;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=51rxB8X3LKaSO6kBzN9NJ6oqx+pGV1s+xW9wpseYzBI=;
-        b=arcA/iPT1FPkLTTjcGDbX8/SCCJwrysFvCO1z7uLW9QFHpWVxUMz9uHFWwLajxzME3mKUa
-        6yGEHZGVx7AQjLEDWE3FjaGytdwGDkGB5+KmcW1doJwUusGfLdS0+DoidjfedRksaCr3Lw
-        Y7vDryxmSKrjwLFw4zGNGQOB2/X3abs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-i-P3sYwcMYGVdpeI8y2huw-1; Wed, 25 Mar 2020 04:42:15 -0400
-X-MC-Unique: i-P3sYwcMYGVdpeI8y2huw-1
-Received: by mail-wm1-f70.google.com with SMTP id s15so414388wmc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:14 -0700 (PDT)
+        bh=2qAIsNPbUeit8zA2dMkgRwMCGJOGJ4HMvWIxREwTod4=;
+        b=SPVlsj1zziItwSKv4Qv6mE7x11oZ0XAeeGh43OzAZpACYAZIMXPD3TWtjCLDZDm+W8lpjb
+        qGl4JRedah/yv35esgr6GM+Qeyw2D5udQlDnXPILVlRqJfeizm8OUNsT2kXe6x/MEjC6Ux
+        vZKNwTda2OqrNP1bCQQeOMV0bgnBZ28=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-YwZYQbwPOI-PM0bvfXVXag-1; Wed, 25 Mar 2020 04:42:15 -0400
+X-MC-Unique: YwZYQbwPOI-PM0bvfXVXag-1
+Received: by mail-wm1-f69.google.com with SMTP id g9so2222620wmh.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=51rxB8X3LKaSO6kBzN9NJ6oqx+pGV1s+xW9wpseYzBI=;
-        b=Dr2X1bTS5BY65X7y+umTZgMypnsVVmS1LdgysUvfohrW32Vl/R6BpAyExoD+nawbIc
-         kQkak4Ky5Ibn9xl1lQQduB2j5CNZmZ/49zZpWJejQHaA3FLROoMj+ff4ITNhvOWn4NGo
-         3S/Me27+VtlYjfhScYm7n5aOuPazjd5E5scgcBs9elX8pwfGglnE2lFBtBOdvIc61j2c
-         C8B8SQ2+RLPbvz4HK2g2yIe+l2+g3f0+5yP1osDCsnhYYiXcTttt9nJvhw2ARlbHbL34
-         KMfDtjZtLPIonGkh7ndzptS0JmgwrIx1X14avtbEGRBhFClWcNauyDCprJPwXTbNZkFC
-         DHLA==
-X-Gm-Message-State: ANhLgQ0p7gds+BFmBHRRisF+UbrdGPX2jjVHAHzrDn1Np1w2EbB3+lbf
-        DrFAyYJx1Me0m57NDaEZHp0HN+/JDCTdX9z4Jn5k8rBDLGe1GwVqJVIMR1UBVedB2UohnkS4uSH
-        aaKjDVHOhkjOstUB7T5fZiLZZ
-X-Received: by 2002:a1c:cc11:: with SMTP id h17mr2294031wmb.39.1585125733289;
+        bh=2qAIsNPbUeit8zA2dMkgRwMCGJOGJ4HMvWIxREwTod4=;
+        b=K1E8N8C+/AF3nPmh2di8es0HM7TnYZwKj2OzCBtXGTjIBdmIafDH+ge1aba/RStAT/
+         xz32/ur5h/98SQMY5Cf3oVTH1+iWZatkYtMHc5FL9x9h4Yl3sA9c6SZ93HsE89SYvK1K
+         VUpwZGDUJ9/Q4toPAMkYBNcuG1APBboDhMzOcSW0to0addK14sMxr6PcMm/hMd4OMbTJ
+         rpymVNJwV/dZTqoMA4B72zNNbxgi0AlkTD0lunpglx33Jujn7fjFNiHKdnrApebMwo2k
+         nI8YjmaaW+O8WNvVtjZl678Oq19pOEUEzHln5avHOKalnTbCJLjjTo3meFF9m0Yr2wwL
+         v13w==
+X-Gm-Message-State: ANhLgQ1klI5RMtf05KQrUm2qdHOTjjVbHfyUerPQW2ygj9Yr3YVSUhXV
+        tnUFTq0QglXaUq0QuyHjSgsbI+jPGPL9yszL1kHRMnUwwdhDXOyg1mYEF7N1yIyi/v79LpvVMpm
+        aHq+GQOQBi6BnOwJuToLN3bX7
+X-Received: by 2002:a5d:5386:: with SMTP id d6mr2284685wrv.92.1585125733931;
         Wed, 25 Mar 2020 01:42:13 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vunehZfMGxMtiujBipZmQcbXxqUR5oj9EJKFM3KDdVL1gHpq0KQEHuRUPgVUODbCAiYcbc85g==
-X-Received: by 2002:a1c:cc11:: with SMTP id h17mr2293985wmb.39.1585125732758;
-        Wed, 25 Mar 2020 01:42:12 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vt7S1Bk6wjwuZycIOSbbEksE/h4lCPt6PRAvCOxIrre14/mA55s9ob1RIVLqShpjIy99dQSZg==
+X-Received: by 2002:a5d:5386:: with SMTP id d6mr2284677wrv.92.1585125733796;
+        Wed, 25 Mar 2020 01:42:13 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.11
+        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 01:42:11 -0700 (PDT)
+        Wed, 25 Mar 2020 01:42:13 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 02/10] objtool: check: Remove redundant checks on operand type
-Date:   Wed, 25 Mar 2020 08:41:55 +0000
-Message-Id: <20200325084203.17005-3-jthierry@redhat.com>
+Subject: [PATCH 03/10] objtool: check: Clean instruction state before each function validation
+Date:   Wed, 25 Mar 2020 08:41:56 +0000
+Message-Id: <20200325084203.17005-4-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200325084203.17005-1-jthierry@redhat.com>
 References: <20200325084203.17005-1-jthierry@redhat.com>
@@ -79,35 +79,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-POP operations are already in code path where destination operand
-is OP_DEST_REG. There is no need to check the operand type again.
+When a function fails its validation, it might leave a stale state
+that will be used for the validation of other functions. That would
+cause false warnings on potentially valid functions.
+
+Reset the instruction state before the validation of each individual
+function.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/check.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ tools/objtool/check.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index a2c62bc82907..44a3abbb0b0b 100644
+index 44a3abbb0b0b..0ccf6882d8ce 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -1730,15 +1730,13 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
+@@ -2406,13 +2406,6 @@ static int validate_functions(struct objtool_file *file)
+ 	struct insn_state state;
+ 	int ret, warnings = 0;
  
- 		case OP_SRC_POP:
- 		case OP_SRC_POPF:
--			if (!state->drap && op->dest.type == OP_DEST_REG &&
--			    op->dest.reg == cfa->base) {
-+			if (!state->drap && op->dest.reg == cfa->base) {
+-	clear_insn_state(&state);
+-
+-	state.cfa = initial_func_cfi.cfa;
+-	memcpy(&state.regs, &initial_func_cfi.regs,
+-	       CFI_NUM_REGS * sizeof(struct cfi_reg));
+-	state.stack_size = initial_func_cfi.cfa.offset;
+-
+ 	for_each_sec(file, sec) {
+ 		list_for_each_entry(func, &sec->symbol_list, list) {
+ 			if (func->type != STT_FUNC)
+@@ -2431,6 +2424,12 @@ static int validate_functions(struct objtool_file *file)
+ 			if (!insn || insn->ignore || insn->visited)
+ 				continue;
  
- 				/* pop %rbp */
- 				cfa->base = CFI_SP;
- 			}
++			clear_insn_state(&state);
++			state.cfa = initial_func_cfi.cfa;
++			memcpy(&state.regs, &initial_func_cfi.regs,
++			       CFI_NUM_REGS * sizeof(struct cfi_reg));
++			state.stack_size = initial_func_cfi.cfa.offset;
++
+ 			state.uaccess = func->uaccess_safe;
  
- 			if (state->drap && cfa->base == CFI_BP_INDIRECT &&
--			    op->dest.type == OP_DEST_REG &&
- 			    op->dest.reg == state->drap_reg &&
- 			    state->drap_offset == -state->stack_size) {
- 
+ 			ret = validate_branch(file, func, insn, state);
 -- 
 2.21.1
 
