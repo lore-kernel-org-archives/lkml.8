@@ -2,530 +2,130 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79F7C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D4CC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96E512073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB8022073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SK+bifKq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZIVMvQHZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbgCYIdm (ORCPT
+        id S1727400AbgCYId5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:33:42 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:51213 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726116AbgCYIdm (ORCPT
+        Wed, 25 Mar 2020 04:33:57 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:46706 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbgCYId5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:33:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585125220;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0A80/fZ+pkCQYcnkCKyC43WtTpczDhthy4abNtOjSew=;
-        b=SK+bifKqG3tsDPyGgRL94UPPTOt1g/EDQYLtZb3rP4ckn0xh99m36WRLkAqgGZlfDRVgtG
-        twHRTVy7Si3m3QmFzIfEv1tRWuuO6xV1lFV0TS+KdyQDN3nu32j/Q/nNwEoP+YCWl0wXAB
-        Mve3ra+IIQCLujjEML/UMLO5igy2Y3I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-251-OfykapGDMz-MbVAkmQv38Q-1; Wed, 25 Mar 2020 04:33:35 -0400
-X-MC-Unique: OfykapGDMz-MbVAkmQv38Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93930100550D;
-        Wed, 25 Mar 2020 08:33:32 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-14-13.pek2.redhat.com [10.72.14.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 16B39A7F1;
-        Wed, 25 Mar 2020 08:32:50 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V8 6/9] virtio: introduce a vDPA based transport
-Date:   Wed, 25 Mar 2020 16:27:08 +0800
-Message-Id: <20200325082711.1107-7-jasowang@redhat.com>
-In-Reply-To: <20200325082711.1107-1-jasowang@redhat.com>
-References: <20200325082711.1107-1-jasowang@redhat.com>
+        Wed, 25 Mar 2020 04:33:57 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 111so1135512oth.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:33:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FJHGef/EtWaLVVnexBqS74xlLLuhu+RMGQ/OYQ44duc=;
+        b=ZIVMvQHZp99+uoK7d0Yrzn17aHwV6NxDZb+iYTATVwKWxDA5yAwJT88cp1cL3iX/Qa
+         8XTG1ENI+AOcD8u/CLP64CGmgx9O4b2XEatQLIv5dejkD/1FdZlG9rrYj8smRXvH4sqS
+         W+l4GeZqVew7FN7xichaimos8sawJFAu089MSEm92s2dl7H67gE3qJujxC2IFzDLp3js
+         wMo+Hylrv+3KwaMxf0uBfRtOAUSbthJZltu5jZSJD+GLMKhoEuL3juAe3LgRubJfv8o7
+         OhFPjQMwqZbpD2dbgq9qTYrfJ7FKykJeHJ9K7ejTCrEr272elgxoYFgCW8C99LcmTHzI
+         Km0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FJHGef/EtWaLVVnexBqS74xlLLuhu+RMGQ/OYQ44duc=;
+        b=BzPiBuLCy+B1SkvmMikPQSsbhXv9stCxkhu3ZbJNVAQIkxtdma+siyzrjll9ZdieSL
+         fktP9VBVuCuP6fSXIoaDQ9+Zq/jt3w7iLZWN72pWlFBH4FceEuPgflfoDdEANx2YYXK3
+         Eql/RJmdttBYnoIQTsXdpdHkS3HSWhOtlhyRT2tUOFnW1IPhtFbnKyAIg5xn5XZy1LsU
+         xWpO1/pIF2yN5AIA4/UIRzBXoBJlRGsZqJt03+JzxjL9Yrqy6S8COhECg2ymc8js2eec
+         acHU8n3jxlK8ApKeXxkd28mpxIqCV6KMN5Hqp0RaPRkdHziwU75E8Op9oQGIhX4NJWUk
+         2Z/g==
+X-Gm-Message-State: ANhLgQ36gEcLoOrWJ32+/eS6pDpVdMRCKVWN+2zfN1Q36nk53SILIVQQ
+        Aavjyypa+bVw2QwLZvJJQo1/J57mvERw1yP2z37wQw==
+X-Google-Smtp-Source: ADFU+vsyet6PJwmelZB0kHEg09F8xbMLitmgUquIPYDgBQdp5+jzN/ZP9IYr0DU5P2Q+gOGVZ08bxzsAMym9vqLXfV0=
+X-Received: by 2002:a9d:6945:: with SMTP id p5mr1669394oto.268.1585125236058;
+ Wed, 25 Mar 2020 01:33:56 -0700 (PDT)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+References: <1584965910-19068-1-git-send-email-sumit.garg@linaro.org> <1584965910-19068-3-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1584965910-19068-3-git-send-email-sumit.garg@linaro.org>
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+Date:   Wed, 25 Mar 2020 09:33:45 +0100
+Message-ID: <CAHUa44Fd3ujQY8ev9sZOMya7wrTmHnvda_05XhQA7X3knB3auA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] tee: add private login method for kernel clients
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stuart Yoder <stuart.yoder@arm.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces a vDPA transport for virtio. This is used to
-use kernel virtio driver to drive the vDPA device that is capable
-of populating virtqueue directly.
+On Mon, Mar 23, 2020 at 1:19 PM Sumit Garg <sumit.garg@linaro.org> wrote:
+>
+> There are use-cases where user-space shouldn't be allowed to communicate
+> directly with a TEE device which is dedicated to provide a specific
+> service for a kernel client. So add a private login method for kernel
+> clients and disallow user-space to open-session using GP implementation
+> defined login method range: (0x80000000 - 0xFFFFFFFF).
+>
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  drivers/tee/tee_core.c   | 6 ++++++
+>  include/uapi/linux/tee.h | 8 ++++++++
+>  2 files changed, 14 insertions(+)
 
-A new virtio-vdpa driver will be registered to the vDPA bus, when a
-new virtio-vdpa device is probed, it will register the device with
-vdpa based config ops. This means it is a software transport between
-vDPA driver and vDPA device. The transport was implemented through
-bus_ops of vDPA parent.
+Looks good.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/virtio/Kconfig       |  13 ++
- drivers/virtio/Makefile      |   1 +
- drivers/virtio/virtio_vdpa.c | 396 +++++++++++++++++++++++++++++++++++
- 3 files changed, 410 insertions(+)
- create mode 100644 drivers/virtio/virtio_vdpa.c
+Thanks,
+Jens
 
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 9c4fdb64d9ac..99e424570644 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
-=20
- 	  If unsure, say Y.
-=20
-+config VIRTIO_VDPA
-+	tristate "vDPA driver for virtio devices"
-+	select VDPA
-+	select VIRTIO
-+	help
-+	  This driver provides support for virtio based paravirtual
-+	  device driver over vDPA bus. For this to be useful, you need
-+	  an appropriate vDPA device implementation that operates on a
-+	  physical device to allow the datapath of virtio to be
-+	  offloaded to hardware.
-+
-+	  If unsure, say M.
-+
- config VIRTIO_PMEM
- 	tristate "Support for virtio pmem driver"
- 	depends on VIRTIO
-diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-index fdf5eacd0d0a..3407ac03fe60 100644
---- a/drivers/virtio/Makefile
-+++ b/drivers/virtio/Makefile
-@@ -6,4 +6,5 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
- virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
- obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
- obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
-+obj-$(CONFIG_VIRTIO_VDPA) +=3D virtio_vdpa.o
- obj-$(CONFIG_VDPA) +=3D vdpa/
-diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
-new file mode 100644
-index 000000000000..c30eb55030be
---- /dev/null
-+++ b/drivers/virtio/virtio_vdpa.c
-@@ -0,0 +1,396 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * VIRTIO based driver for vDPA device
-+ *
-+ * Copyright (c) 2020, Red Hat. All rights reserved.
-+ *     Author: Jason Wang <jasowang@redhat.com>
-+ *
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/uuid.h>
-+#include <linux/virtio.h>
-+#include <linux/vdpa.h>
-+#include <linux/virtio_config.h>
-+#include <linux/virtio_ring.h>
-+
-+#define MOD_VERSION  "0.1"
-+#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
-+#define MOD_DESC     "vDPA bus driver for virtio devices"
-+#define MOD_LICENSE  "GPL v2"
-+
-+struct virtio_vdpa_device {
-+	struct virtio_device vdev;
-+	struct vdpa_device *vdpa;
-+	u64 features;
-+
-+	/* The lock to protect virtqueue list */
-+	spinlock_t lock;
-+	/* List of virtio_vdpa_vq_info */
-+	struct list_head virtqueues;
-+};
-+
-+struct virtio_vdpa_vq_info {
-+	/* the actual virtqueue */
-+	struct virtqueue *vq;
-+
-+	/* the list node for the virtqueues list */
-+	struct list_head node;
-+};
-+
-+static inline struct virtio_vdpa_device *
-+to_virtio_vdpa_device(struct virtio_device *dev)
-+{
-+	return container_of(dev, struct virtio_vdpa_device, vdev);
-+}
-+
-+static struct vdpa_device *vd_get_vdpa(struct virtio_device *vdev)
-+{
-+	return to_virtio_vdpa_device(vdev)->vdpa;
-+}
-+
-+static void virtio_vdpa_get(struct virtio_device *vdev, unsigned offset,
-+			    void *buf, unsigned len)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	ops->get_config(vdpa, offset, buf, len);
-+}
-+
-+static void virtio_vdpa_set(struct virtio_device *vdev, unsigned offset,
-+			    const void *buf, unsigned len)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	ops->set_config(vdpa, offset, buf, len);
-+}
-+
-+static u32 virtio_vdpa_generation(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	if (ops->get_generation)
-+		return ops->get_generation(vdpa);
-+
-+	return 0;
-+}
-+
-+static u8 virtio_vdpa_get_status(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->get_status(vdpa);
-+}
-+
-+static void virtio_vdpa_set_status(struct virtio_device *vdev, u8 status=
-)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->set_status(vdpa, status);
-+}
-+
-+static void virtio_vdpa_reset(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->set_status(vdpa, 0);
-+}
-+
-+static bool virtio_vdpa_notify(struct virtqueue *vq)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vq->vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	ops->kick_vq(vdpa, vq->index);
-+
-+	return true;
-+}
-+
-+static irqreturn_t virtio_vdpa_config_cb(void *private)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D private;
-+
-+	virtio_config_changed(&vd_dev->vdev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t virtio_vdpa_virtqueue_cb(void *private)
-+{
-+	struct virtio_vdpa_vq_info *info =3D private;
-+
-+	return vring_interrupt(0, info->vq);
-+}
-+
-+static struct virtqueue *
-+virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
-+		     void (*callback)(struct virtqueue *vq),
-+		     const char *name, bool ctx)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct virtio_vdpa_vq_info *info;
-+	struct vdpa_callback cb;
-+	struct virtqueue *vq;
-+	u64 desc_addr, driver_addr, device_addr;
-+	unsigned long flags;
-+	u32 align, num;
-+	int err;
-+
-+	if (!name)
-+		return NULL;
-+
-+	/* Queue shouldn't already be set up. */
-+	if (ops->get_vq_ready(vdpa, index))
-+		return ERR_PTR(-ENOENT);
-+
-+	/* Allocate and fill out our active queue description */
-+	info =3D kmalloc(sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return ERR_PTR(-ENOMEM);
-+
-+	num =3D ops->get_vq_num_max(vdpa);
-+	if (num =3D=3D 0) {
-+		err =3D -ENOENT;
-+		goto error_new_virtqueue;
-+	}
-+
-+	/* Create the vring */
-+	align =3D ops->get_vq_align(vdpa);
-+	vq =3D vring_create_virtqueue(index, num, align, vdev,
-+				    true, true, ctx,
-+				    virtio_vdpa_notify, callback, name);
-+	if (!vq) {
-+		err =3D -ENOMEM;
-+		goto error_new_virtqueue;
-+	}
-+
-+	/* Setup virtqueue callback */
-+	cb.callback =3D virtio_vdpa_virtqueue_cb;
-+	cb.private =3D info;
-+	ops->set_vq_cb(vdpa, index, &cb);
-+	ops->set_vq_num(vdpa, index, virtqueue_get_vring_size(vq));
-+
-+	desc_addr =3D virtqueue_get_desc_addr(vq);
-+	driver_addr =3D virtqueue_get_avail_addr(vq);
-+	device_addr =3D virtqueue_get_used_addr(vq);
-+
-+	if (ops->set_vq_address(vdpa, index,
-+				desc_addr, driver_addr,
-+				device_addr)) {
-+		err =3D -EINVAL;
-+		goto err_vq;
-+	}
-+
-+	ops->set_vq_ready(vdpa, index, 1);
-+
-+	vq->priv =3D info;
-+	info->vq =3D vq;
-+
-+	spin_lock_irqsave(&vd_dev->lock, flags);
-+	list_add(&info->node, &vd_dev->virtqueues);
-+	spin_unlock_irqrestore(&vd_dev->lock, flags);
-+
-+	return vq;
-+
-+err_vq:
-+	vring_del_virtqueue(vq);
-+error_new_virtqueue:
-+	ops->set_vq_ready(vdpa, index, 0);
-+	/* VDPA driver should make sure vq is stopeed here */
-+	WARN_ON(ops->get_vq_ready(vdpa, index));
-+	kfree(info);
-+	return ERR_PTR(err);
-+}
-+
-+static void virtio_vdpa_del_vq(struct virtqueue *vq)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vq->vdev);
-+	struct vdpa_device *vdpa =3D vd_dev->vdpa;
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct virtio_vdpa_vq_info *info =3D vq->priv;
-+	unsigned int index =3D vq->index;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&vd_dev->lock, flags);
-+	list_del(&info->node);
-+	spin_unlock_irqrestore(&vd_dev->lock, flags);
-+
-+	/* Select and deactivate the queue */
-+	ops->set_vq_ready(vdpa, index, 0);
-+	WARN_ON(ops->get_vq_ready(vdpa, index));
-+
-+	vring_del_virtqueue(vq);
-+
-+	kfree(info);
-+}
-+
-+static void virtio_vdpa_del_vqs(struct virtio_device *vdev)
-+{
-+	struct virtqueue *vq, *n;
-+
-+	list_for_each_entry_safe(vq, n, &vdev->vqs, list)
-+		virtio_vdpa_del_vq(vq);
-+}
-+
-+static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned nvq=
-s,
-+				struct virtqueue *vqs[],
-+				vq_callback_t *callbacks[],
-+				const char * const names[],
-+				const bool *ctx,
-+				struct irq_affinity *desc)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct vdpa_callback cb;
-+	int i, err, queue_idx =3D 0;
-+
-+	for (i =3D 0; i < nvqs; ++i) {
-+		if (!names[i]) {
-+			vqs[i] =3D NULL;
-+			continue;
-+		}
-+
-+		vqs[i] =3D virtio_vdpa_setup_vq(vdev, queue_idx++,
-+					      callbacks[i], names[i], ctx ?
-+					      ctx[i] : false);
-+		if (IS_ERR(vqs[i])) {
-+			err =3D PTR_ERR(vqs[i]);
-+			goto err_setup_vq;
-+		}
-+	}
-+
-+	cb.callback =3D virtio_vdpa_config_cb;
-+	cb.private =3D vd_dev;
-+	ops->set_config_cb(vdpa, &cb);
-+
-+	return 0;
-+
-+err_setup_vq:
-+	virtio_vdpa_del_vqs(vdev);
-+	return err;
-+}
-+
-+static u64 virtio_vdpa_get_features(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	return ops->get_features(vdpa);
-+}
-+
-+static int virtio_vdpa_finalize_features(struct virtio_device *vdev)
-+{
-+	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+
-+	/* Give virtio_ring a chance to accept features. */
-+	vring_transport_features(vdev);
-+
-+	return ops->set_features(vdpa, vdev->features);
-+}
-+
-+static const char *virtio_vdpa_bus_name(struct virtio_device *vdev)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
-+	struct vdpa_device *vdpa =3D vd_dev->vdpa;
-+
-+	return dev_name(&vdpa->dev);
-+}
-+
-+static const struct virtio_config_ops virtio_vdpa_config_ops =3D {
-+	.get		=3D virtio_vdpa_get,
-+	.set		=3D virtio_vdpa_set,
-+	.generation	=3D virtio_vdpa_generation,
-+	.get_status	=3D virtio_vdpa_get_status,
-+	.set_status	=3D virtio_vdpa_set_status,
-+	.reset		=3D virtio_vdpa_reset,
-+	.find_vqs	=3D virtio_vdpa_find_vqs,
-+	.del_vqs	=3D virtio_vdpa_del_vqs,
-+	.get_features	=3D virtio_vdpa_get_features,
-+	.finalize_features =3D virtio_vdpa_finalize_features,
-+	.bus_name	=3D virtio_vdpa_bus_name,
-+};
-+
-+static void virtio_vdpa_release_dev(struct device *_d)
-+{
-+	struct virtio_device *vdev =3D
-+	       container_of(_d, struct virtio_device, dev);
-+	struct virtio_vdpa_device *vd_dev =3D
-+	       container_of(vdev, struct virtio_vdpa_device, vdev);
-+
-+	kfree(vd_dev);
-+}
-+
-+static int virtio_vdpa_probe(struct vdpa_device *vdpa)
-+{
-+	const struct vdpa_config_ops *ops =3D vdpa->config;
-+	struct virtio_vdpa_device *vd_dev, *reg_dev =3D NULL;
-+	int ret =3D -EINVAL;
-+
-+	vd_dev =3D kzalloc(sizeof(*vd_dev), GFP_KERNEL);
-+	if (!vd_dev)
-+		return -ENOMEM;
-+
-+	vd_dev->vdev.dev.parent =3D vdpa_get_dma_dev(vdpa);
-+	vd_dev->vdev.dev.release =3D virtio_vdpa_release_dev;
-+	vd_dev->vdev.config =3D &virtio_vdpa_config_ops;
-+	vd_dev->vdpa =3D vdpa;
-+	INIT_LIST_HEAD(&vd_dev->virtqueues);
-+	spin_lock_init(&vd_dev->lock);
-+
-+	vd_dev->vdev.id.device =3D ops->get_device_id(vdpa);
-+	if (vd_dev->vdev.id.device =3D=3D 0)
-+		goto err;
-+
-+	vd_dev->vdev.id.vendor =3D ops->get_vendor_id(vdpa);
-+	ret =3D register_virtio_device(&vd_dev->vdev);
-+	reg_dev =3D vd_dev;
-+	if (ret)
-+		goto err;
-+
-+	vdpa_set_drvdata(vdpa, vd_dev);
-+
-+	return 0;
-+
-+err:
-+	if (reg_dev)
-+		put_device(&vd_dev->vdev.dev);
-+	else
-+		kfree(vd_dev);
-+	return ret;
-+}
-+
-+static void virtio_vdpa_remove(struct vdpa_device *vdpa)
-+{
-+	struct virtio_vdpa_device *vd_dev =3D vdpa_get_drvdata(vdpa);
-+
-+	unregister_virtio_device(&vd_dev->vdev);
-+}
-+
-+static struct vdpa_driver virtio_vdpa_driver =3D {
-+	.driver =3D {
-+		.name	=3D "virtio_vdpa",
-+	},
-+	.probe	=3D virtio_vdpa_probe,
-+	.remove =3D virtio_vdpa_remove,
-+};
-+
-+module_vdpa_driver(virtio_vdpa_driver);
-+
-+MODULE_VERSION(MOD_VERSION);
-+MODULE_LICENSE(MOD_LICENSE);
-+MODULE_AUTHOR(MOD_AUTHOR);
-+MODULE_DESCRIPTION(MOD_DESC);
---=20
-2.20.1
-
+>
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index 37d22e3..533e7a8 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
+>                         goto out;
+>         }
+>
+> +       if (arg.clnt_login & TEE_IOCTL_LOGIN_MASK) {
+> +               pr_debug("login method not allowed for user-space client\n");
+> +               rc = -EPERM;
+> +               goto out;
+> +       }
+> +
+>         rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
+>         if (rc)
+>                 goto out;
+> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
+> index 6596f3a..19172a2 100644
+> --- a/include/uapi/linux/tee.h
+> +++ b/include/uapi/linux/tee.h
+> @@ -173,6 +173,14 @@ struct tee_ioctl_buf_data {
+>  #define TEE_IOCTL_LOGIN_APPLICATION            4
+>  #define TEE_IOCTL_LOGIN_USER_APPLICATION       5
+>  #define TEE_IOCTL_LOGIN_GROUP_APPLICATION      6
+> +/*
+> + * Disallow user-space to use GP implementation specific login
+> + * method range (0x80000000 - 0xFFFFFFFF). This range is rather
+> + * being reserved for REE kernel clients or TEE implementation.
+> + */
+> +#define TEE_IOCTL_LOGIN_MASK                   0x80000000
+> +/* Private login method for REE kernel clients */
+> +#define TEE_IOCTL_LOGIN_REE_KERNEL             0x80000000
+>
+>  /**
+>   * struct tee_ioctl_param - parameter
+> --
+> 2.7.4
+>
