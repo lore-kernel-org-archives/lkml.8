@@ -2,92 +2,168 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C2BBC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A446C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5009520740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585151889;
-	bh=yuKPw9zHwSe4jPNUbVFEbNmFqcIFFFDut0JgQS3oKmM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ud0/+4ZdhxdcHPu0SYjnUgCa8SyNipEwCR6wDEDu3YD/P7/h/bXoFc32DXFweVJ8C
-	 R5/8iEM82SkOWvkW+WLD6/qWnNouSubRzs3IuZJPEnedkQwdcNMFsmZai5Wb67Phk3
-	 gKsF+MOStAe/Zgxf7JufhEiGmuV4ea1JciAL44ds=
+	by mail.kernel.org (Postfix) with ESMTP id E4AF420772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:59:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lxh5Mm2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727965AbgCYP6I (ORCPT
+        id S1727924AbgCYP7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:58:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727448AbgCYP6H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:58:07 -0400
-Received: from localhost (unknown [104.132.1.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F0202073E;
-        Wed, 25 Mar 2020 15:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585151887;
-        bh=yuKPw9zHwSe4jPNUbVFEbNmFqcIFFFDut0JgQS3oKmM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V+62TTJEnnakM8FVs3+TfAH+O1aXF1HvMmeMiJl/SqXlqkbVYSu62irvYLvhOUN74
-         9ev7B2Xcdw4Owa+w+k2grU+BoD5RMypGl7iUXrhiOEp6YankzEDZfP3nlJ56BPJpPl
-         /sEtWZSo85MnjUDhIvS/bwuNA1k8K0yE3Prk7BcM=
-Date:   Wed, 25 Mar 2020 08:58:06 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, chao@kernel.org
-Subject: Re: [PATCH RFC] f2fs: don't inline compressed inode
-Message-ID: <20200325155806.GC65658@google.com>
-References: <20200325092754.63411-1-yuchao0@huawei.com>
+        Wed, 25 Mar 2020 11:59:09 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43420 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727574AbgCYP7J (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:59:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so1327559pgb.10;
+        Wed, 25 Mar 2020 08:59:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YohqWyS95zI3u9ADg0DbKTTWF+VZopIxmoai3opFyUY=;
+        b=lxh5Mm2n9Gg4euwPgph8MImlNpPHw7fqQmicCVmu+l+N4bOwQVTqgrcQrwMRPAKYIn
+         8fvX43u4lyNRsyUhfULceLgQVax2AeYYyr2oJIohOcIwOiAto6CiFCMeMlaseviC/5E4
+         AwD7OKI+DGyF27pNwPsITzkoTJAXGbSQMuwQsuZWL+vYWimMbqR7xZTAVWcvRvK2VjlH
+         vBhT5988RMVKucELB2glYYcTdHbOa6dE816JvEf47gLNLaxRfoUJwRy2lrDIzto3Qj9B
+         iV8FR9RQ+V8lNffTZJcvq3A4lICJHd7wUq0JywvABv+PokegyHQ4Cr/8gGv/TPPmCsBj
+         M7GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YohqWyS95zI3u9ADg0DbKTTWF+VZopIxmoai3opFyUY=;
+        b=IeuiscT+1P6VY1dtDEKvwae+sc9RvheGIES/fex18tTvta99QUY5gUvbofQAEjgESZ
+         KWXbu8PoB+/6cw1qRD+TZw+N0Q4yEDjcXeOP4yKZwlGTlUCbMJAWyEmff3D5dcPpndkm
+         sqwnrxKX1EdFCotYz/Te7OOhR0lUVS/oWd1g8Y3Vz45hv4vYbIAnOLw8rIel9gc6RFw9
+         1arnwrxu86OS0WNnlKBmQB/p4Tk+2yXuUh7vvUnjJnag/12ocZGBaYWOV8f0wFz0tqNA
+         HfL1n7rYMPEA+np4B0BFGl5/jjU4ZSx7DpuWPYc/sZ8/yk+gIwfZvo9Dq9ECQ6wnHm/l
+         h/vg==
+X-Gm-Message-State: ANhLgQ1mQ5BSsSLLOleFQVpXLmd5zf44cslPo1FCX847bPhuVFOwwzos
+        i3gjRGVf3l6nywsloe/FpgVV3RdGPB+B3YpqgT8=
+X-Google-Smtp-Source: ADFU+vtqMoCme/CUqCBk/NS4st8CIubR3xs2p/NvbiTghhiFdYIWBwQkwkAGk4E+lb7CaFgnv4dDyd3LBrRrtZ0FSNY=
+X-Received: by 2002:a63:1c4d:: with SMTP id c13mr3730420pgm.4.1585151947591;
+ Wed, 25 Mar 2020 08:59:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325092754.63411-1-yuchao0@huawei.com>
+References: <20200324202736.243314-1-gwendal@chromium.org>
+In-Reply-To: <20200324202736.243314-1-gwendal@chromium.org>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 25 Mar 2020 17:59:00 +0200
+Message-ID: <CAHp75Vd+46fdKZXuFj0sAhXw9cfN+5SFW3dFZh+YsLFNiiGDWQ@mail.gmail.com>
+Subject: Re: [PATCH v6 00/11] Cros EC sensor hub FIFO support
+To:     Gwendal Grignou <gwendal@chromium.org>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/25, Chao Yu wrote:
-> f2fs_may_inline_data() only check compressed flag on current inode
-> rather than on parent inode, however at this time compressed flag
-> has not been inherited yet.
+On Tue, Mar 24, 2020 at 10:28 PM Gwendal Grignou <gwendal@chromium.org> wrote:
+>
+> This patchset adds a sensorhub driver for spreading sensor
+> events coming from the Embedded controller sensor FIFO:
+>
+>        +---------------+ +--------------+ +----
+>        | cros_ec_accel | | cros_ec_gyro | | ...
+>        +---------------+ +--------------+ +----
+>            id:0       \        id:1 |       / id:..
+>                  +------------------------------+
+>                  |       cros-ec-sensorhub      |
+>                  +------------------------------+
+>                  |           cros_ec_dev        |
+>                  +------------------------------+
+>                  | cros_ec_i2c, cros_ec_lpc, .. |
+>                  +------------------------------+
+>                                  |
+>                                  EC
+>
+> When new sensors events are present, the EC raises and interrupt,
+> sensorhub reads the FIFO and uses the 'id' field to spread the event to
+> the proper IIO sensors. This stack is similar to the HID sensor input
+> stack.
+>
+> The patch set allows the host to receive MEMS sensor sample
+> asynchronously from ChromeOS Emebedded Controller (EC).
+>
+> Given the EC and the host are not synchronized, the timestamp generated
+> by the EC drifts and the AP interrupt latency adds variable delay.
+>
+> When events arrive, the driver stores the time of the interrupt and use
+> that information to convert the timestamp from the EC time domain to the
+> AP time domain. To prevent the errors from the interrupt time variation,
+> a median filter smooth the timestamp generation and prevents timestamps
+> to go in the past.
+>
+> When a batch of sensor events arrives, the sensor hub ring code spreads
+> the timestamps.
+>
+> The buffer interaface is presentid through the IIO ABI.
+> And extra parameter - flush - (presents on HID and ST sensor hub
+> implementation) force the EC to send accumulated events in its queue,
+> without waiting for buffer hwfifo_timeout to expire.
+>
+> To access sensor data, we can use iio_readdev like:
+>  iio_readdev -T 10000 -s 4 -b 2 iio:device4
+>
+> When FIFO is not supported by the EC, a trigger is present in the
+> directory. After registering a trigger, setting sampling_frequency,
+> the latest data collected by the sensor will be retrieved by the host
+> when the trigger expires.
+>
+> When cros_ec_accel_legacy driver is used, no FIFO is supported and the
+> sampling frequency for the accelerometers is hard coded at 10Hz.
+>
 
-When write() or other allocation happens, it'll be reset.
+Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com> # for
+drivers/platform/chrome bits
 
-> 
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
-> 
-> Jaegeuk,
-> 
-> I'm not sure about this, whether inline_data flag can be compatible with
-> compress flag, thoughts?
-> 
->  fs/f2fs/namei.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
-> index f54119da2217..3807d1b4c4bc 100644
-> --- a/fs/f2fs/namei.c
-> +++ b/fs/f2fs/namei.c
-> @@ -86,7 +86,8 @@ static struct inode *f2fs_new_inode(struct inode *dir, umode_t mode)
->  	if (test_opt(sbi, INLINE_XATTR))
->  		set_inode_flag(inode, FI_INLINE_XATTR);
->  
-> -	if (test_opt(sbi, INLINE_DATA) && f2fs_may_inline_data(inode))
-> +	if (test_opt(sbi, INLINE_DATA) && f2fs_may_inline_data(inode) &&
-> +					!f2fs_compressed_file(dir))
->  		set_inode_flag(inode, FI_INLINE_DATA);
->  	if (f2fs_may_inline_dentry(inode))
->  		set_inode_flag(inode, FI_INLINE_DENTRY);
-> -- 
-> 2.18.0.rc1
+> Gwendal Grignou (11):
+>   platform: chrome: sensorhub: Add FIFO support
+>   platform: chrome: sensorhub: Add code to spread timestmap
+>   platform: chrome: sensorhub: Add median filter
+>   iio: cros_ec: Move function description to .c file
+>   iio: expose iio_device_set_clock
+>   iio: cros_ec: Register to cros_ec_sensorhub when EC supports FIFO
+>   iio: cros_ec: Remove pm function
+>   iio: cros_ec: Expose hwfifo_timeout
+>   iio: cros_ec: Report hwfifo_watermark_max
+>   iio: cros_ec: Use Hertz as unit for sampling frequency
+>   iio: cros_ec: flush as hwfifo attribute
+>
+>  drivers/iio/accel/cros_ec_accel_legacy.c      |    8 +-
+>  .../cros_ec_sensors/cros_ec_lid_angle.c       |    3 +-
+>  .../common/cros_ec_sensors/cros_ec_sensors.c  |   13 +-
+>  .../cros_ec_sensors/cros_ec_sensors_core.c    |  404 +++++--
+>  drivers/iio/industrialio-core.c               |    8 +-
+>  drivers/iio/light/cros_ec_light_prox.c        |   15 +-
+>  drivers/iio/pressure/cros_ec_baro.c           |   14 +-
+>  drivers/platform/chrome/Makefile              |    4 +-
+>  drivers/platform/chrome/cros_ec_sensorhub.c   |  107 +-
+>  .../platform/chrome/cros_ec_sensorhub_ring.c  | 1002 +++++++++++++++++
+>  .../linux/iio/common/cros_ec_sensors_core.h   |  104 +-
+>  include/linux/iio/iio.h                       |    2 +
+>  .../linux/platform_data/cros_ec_sensorhub.h   |  166 +++
+>  13 files changed, 1612 insertions(+), 238 deletions(-)
+>  create mode 100644 drivers/platform/chrome/cros_ec_sensorhub_ring.c
+>
+> --
+> 2.25.1.696.g5e7596f4ac-goog
+>
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
