@@ -2,119 +2,176 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED12C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B7BC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49EB20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E5D20772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:24:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="autKwVYx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BWx3uxsI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgCYPX4 (ORCPT
+        id S1727868AbgCYPYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:23:56 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:45444 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgCYPX4 (ORCPT
+        Wed, 25 Mar 2020 11:24:10 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33557 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgCYPYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:23:56 -0400
-Received: by mail-qt1-f193.google.com with SMTP id t17so2427577qtn.12;
-        Wed, 25 Mar 2020 08:23:54 -0700 (PDT)
+        Wed, 25 Mar 2020 11:24:09 -0400
+Received: by mail-wm1-f65.google.com with SMTP id w25so2383185wmi.0;
+        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q0JYEoigZWM1yeX7JgpaphNd8KXCrioPAqCpQizqggg=;
-        b=autKwVYxtzoLq5oAA+Cci6u6EukRb+k57IlORCbtMZ0TIBF8bAkJ2aWzN09JD3jY4B
-         uX9DgK8r+QQPBwITxqt2ZZQoKHUHqBCpkMmvWkA1z0abhtfF8M67nOJz4OuilrmgUScU
-         BzGSp7by7/dT7FPbNXuVD9bCLxLI/X4tWQDdx1TCa5Z0iUHvBXBOgZUyNJdDnq+EUYZ6
-         gElffKRGxJ2Y26EvL0manWdox2JU8feN/5NnARGCVJluMpYTXuK+jvm7QE3ttRoDbm+J
-         RuEvKykfq0Cxxwjg/NKtL50Jtz4PHGJwcH3R8oaV0cyVZGnSagzyIaZks55v3jJK1X3K
-         QIvg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
+        b=BWx3uxsIk3pmb2jYX66+b2iKsIcsASs+LIcGSs6TBhRMhO4d47dl5rADijn3UGRvhG
+         8SbW3uZcnKsVSII2ZWj3H0gpUbkVkXH5erKpe37NtGfwZgfStOHNHEfhnGACSkzQgyEz
+         +B0zcyCDoE2S2hxXdvLrgOFeE5LRidNP56uniTd4uImISpjt/58IUPOpu/uh6ENksJQg
+         Tl0ndJnxVQbDI4e1ab/e0zr7Y5Bx/dnfRn2UXDSjAbFh3DI1nmLWOsMA4t+ulkynzqRK
+         JR5qnSmRrbE+4C++d7xOu4FP/98FEZ3n24yXMUfIQFf+bL407buCybsBVsB33auHrnMn
+         jiHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q0JYEoigZWM1yeX7JgpaphNd8KXCrioPAqCpQizqggg=;
-        b=riy6ytZgkFx8wPL4RbpF3EVlJBzmZf+i9lZ8NkL75qDd/vrgGx8wLIw88TzwCQl/Qv
-         FGyUPIuI8LyiClx1WYPdTKnCVwU0IxD3zGvc2EKYhg13U1mxtyD/fhOb3jpCpGnSevrv
-         2KyNtV16n7hxcFM/R8q7JGXqLMb1/f0Qwo7kOTfyAKwR8xME9XUaGuzZYw3GDE4yMMYB
-         WQHA//A8LQGByT3B92QN/4S5LujQQdyzYXV93YLCFMUZRAVXf9phL8UJj+V1Q+eTxALu
-         UKG2Gvu4TT0pAwm/sIDZS+FhT04Rjm7FKDcNF2gEcrILZVHKqrFdA9qNfsfx44InJ84L
-         /wuQ==
-X-Gm-Message-State: ANhLgQ3b5+lX0+ncVrL63fFD3SnIdadBNHfOmOqoRBDV5xGbxVuej/br
-        1hPgdq7uS5jLC7E8tgA1kDkg+WbZFocjTbBL8yY=
-X-Google-Smtp-Source: ADFU+vtX1EZKWaDVmE6LIswsBe1CfdqTF6SPmg7IMajB6dCadIJAq80gEr8/yesNu0odN314yF5sUBfDtGnycyv+wqU=
-X-Received: by 2002:ac8:38cc:: with SMTP id g12mr3541264qtc.186.1585149833875;
- Wed, 25 Mar 2020 08:23:53 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZMzufbtndIxfQmBLHm23V9WfnXjvY8mO2yqPIZB5gDU=;
+        b=q3e7scXMd05fIngk1zLlrX1u5BJ4yJBrnLfZkAhOvdMsGcBelohGZuv/UGp+BhKwy4
+         ENcCIXQ1ZSm+vo114BWA7OIR7WyOolK85q4+Udy2555H8s62QSKfCSdFp+eHLzIZStTm
+         dF3M73MnotW0XInKVvWH57T+6HugUnGdeqkC2sEMX0g3+Svus31XkWsxyW/dKvKwUJv5
+         fNFcT/ZADaeYZLF3awsefIqiKAHIvhpuvdAVM71i9HjMHXxaxrsKOSbSo1mC4n/wC+0N
+         iK1y+vOEB1j3CPPRpOvFRY3/t6gH1VNyiwJKeDLoXdCOJ9/tvdRspUb1jeP6ajLH50+W
+         +fKA==
+X-Gm-Message-State: ANhLgQ1BbprszxZjM/uomUZFfryR7UZWAPMwRiVI55+ioxs5w2v0zIBs
+        PC7PLn2j62P+9udQjilCf24=
+X-Google-Smtp-Source: ADFU+vsWlzfyvxWYK0fqQ9xx/KR19mVEHdF1RmHNZrFAbD14EJSxOKx23xH5kcAD+ENM2oOknweSgw==
+X-Received: by 2002:a1c:4d7:: with SMTP id 206mr3847830wme.5.1585149847168;
+        Wed, 25 Mar 2020 08:24:07 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:f4a0:1b38:2faf:56e9? (p200300EA8F296000F4A01B382FAF56E9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f4a0:1b38:2faf:56e9])
+        by smtp.googlemail.com with ESMTPSA id o16sm35397700wrs.44.2020.03.25.08.24.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:24:06 -0700 (PDT)
+Subject: Re: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay
+ possibility to ksz9131
+To:     Philippe Schenker <philippe.schenker@toradex.com>, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com
+Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
+        silvan.murer@gmail.com, s.hauer@pengutronix.de,
+        a.fatoum@pengutronix.de, "David S. Miller" <davem@davemloft.net>
+References: <20200325150329.228329-1-philippe.schenker@toradex.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <d1067087-2cb8-f7c7-7929-2c4c9d2a4cb3@gmail.com>
+Date:   Wed, 25 Mar 2020 16:24:00 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-References: <20200324234848.8299-1-skunberg.kelsey@gmail.com> <20200325071608.GA2978943@kroah.com>
-In-Reply-To: <20200325071608.GA2978943@kroah.com>
-From:   Kelsey <skunberg.kelsey@gmail.com>
-Date:   Wed, 25 Mar 2020 09:23:42 -0600
-Message-ID: <CAFVqi1R7gHCAMSKw5SSns0jq0++60vyoao6w_g_proC6dYD2_Q@mail.gmail.com>
-Subject: Re: [Linux-kernel-mentees] [PATCH] PCI: sysfs: Change bus_rescan and
- dev_rescan to rescan
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        rbilovol@cisco.com, Don Dutile <ddutile@redhat.com>,
-        Ruslan Bilovol <ruslan.bilovol@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Bodong Wang <bodong@mellanox.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200325150329.228329-1-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 1:16 AM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Mar 24, 2020 at 05:48:48PM -0600, Kelsey Skunberg wrote:
-> > From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> >
-> > rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-> > to avoid breaking userspace applications.
-> >
-> > The attribute argument names were changed in the following commits:
-> > 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> > 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> >
-> > Revert the names used for attributes back to the names used before the above
-> > patches were applied. This also requires to change DEVICE_ATTR_WO() to
-> > DEVICE_ATTR() and __ATTR().
-> >
-> > Note when using DEVICE_ATTR() the attribute is automatically named
-> > dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-> > __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-> > dev_rescan.
-> >
-> > change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-> > names used before the mentioned patches were applied.
-> >
-> > Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
->
-> You should add:
-> Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
->
-> to this too, and a
->         Cc: stable <stable@vger.kernel.org>
-> to the signed-off-by: area so that it gets properly backported.
->
-> Other than that minor thing, looks good to me, thanks for fixing it so
-> quickly:
->
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+On 25.03.2020 16:03, Philippe Schenker wrote:
+> The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
+> patch makes use of those delays. The information which delays should
+> be enabled or disabled comes from the interface names, documented in
+> ethernet-controller.yaml:
+> 
+> rgmii:      Disable RXC and TXC delays
+> rgmii-id:   Enable RXC and TXC delays
+> rgmii-txid: Enable only TXC delay, disable RXC delay
+> rgmii-rxid: Enable onlx RXC delay, disable TXC delay
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+>  drivers/net/phy/micrel.c | 45 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+> index 63dedec0433d..d3ad09774847 100644
+> --- a/drivers/net/phy/micrel.c
+> +++ b/drivers/net/phy/micrel.c
+> @@ -704,6 +704,48 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
+>  	return phy_write_mmd(phydev, 2, reg, newval);
+>  }
+>  
+> +/* MMD Address 0x2 */
+> +#define KSZ9131RN_RXC_DLL_CTRL		76
+> +#define KSZ9131RN_TXC_DLL_CTRL		77
+> +#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
+> +#define KSZ9131RN_DLL_ENABLE_DELAY	0
+> +#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
+> +
+> +static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +	u16 rxcdll_val, txcdll_val;
+> +
 
-Done! I appreciate the review and help, Greg. :)
+Reverse xmas tree order please.
 
-link to v2:
-https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
+> +	switch (phydev->interface) {
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		break;
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
+> +				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
+> +				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
 
-- Kelsey
+phy_modify_mmd_changed() returns 1 if the register value was changed,
+and that's not what you want here. Simply use phy_modify_mmd() in both
+occurrences. And your function has a return value, but it's not used by
+the caller.
+
+> +}
+> +
+>  static int ksz9131_config_init(struct phy_device *phydev)
+>  {
+>  	const struct device *dev = &phydev->mdio.dev;
+> @@ -730,6 +772,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
+>  	if (!of_node)
+>  		return 0;
+>  
+> +	if (phy_interface_is_rgmii(phydev))
+> +		ksz9131_config_rgmii_delay(phydev);
+> +
+>  	ret = ksz9131_of_load_skew_values(phydev, of_node,
+>  					  MII_KSZ9031RN_CLK_PAD_SKEW, 5,
+>  					  clk_skews, 2);
+> 
+
