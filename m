@@ -2,299 +2,171 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA5CC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:42:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B98C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB55120772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:42:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B8320714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QDwl2z2Z"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="DMyiJnaz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgCYJmn (ORCPT
+        id S1727522AbgCYJnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:42:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43115 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgCYJml (ORCPT
+        Wed, 25 Mar 2020 05:43:10 -0400
+Received: from mail-il1-f194.google.com ([209.85.166.194]:45045 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727487AbgCYJnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:42:41 -0400
-Received: by mail-wr1-f66.google.com with SMTP id b2so1999355wrj.10
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 02:42:38 -0700 (PDT)
+        Wed, 25 Mar 2020 05:43:09 -0400
+Received: by mail-il1-f194.google.com with SMTP id j69so1198585ila.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 02:43:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=vRDeYiMCG4XXoUnQTgsGkl8d/lvzN+sIbey00XaX5XM=;
-        b=QDwl2z2ZAKFLg9mCSI/yr6ImooOPb5Fbs+CphasVocI/0SI+R5F+v5p7dMsBsVu/sm
-         nj+rxcBs7M7oOB3To5sLYPfUhGzDtzeVXP9I08hkoRRQAkp32UihUKBCYgPVs1vtS3Qa
-         PbO0r02L+BfDBd7P4MzuC1Sn0jbIB5gVhiw43nLmKg98NPo4pxshHKRNPWtb3wumxT17
-         oFXTCCi/KZpHwm0F5Sph+oQIeujRyngu1j6ae4xUSS6A9TaRjEBRg3kxWAeWar/0cYej
-         he5RWQlC0Ib8sddoq57miNpslYhx9gGXdmjZHuLocgjCeR7MQWMSKw9nt5HCA9DMMftx
-         gBbg==
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WJC80u+Ifj4HCTJaBhCcmeQxlknM9aDMikhj5e78Hk4=;
+        b=DMyiJnazMqjl2qfzafo7tIFEtefoZjrSvPvqu5sHfAPRBEZ/A1uRJU7icYztbxoEQB
+         g5CF3/s4HPa6oNzbsswDGOeOH6b8cPtSAM9SODfnMoawOYaqGUMD64MMEV4CyYGxaNCK
+         u3cNVaqIoy9X6Y4p8jTdkYJcnnoetQuPBsAYU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=vRDeYiMCG4XXoUnQTgsGkl8d/lvzN+sIbey00XaX5XM=;
-        b=iCq7GbShVXVDspnrPWnqKfvTHuTKGwjUeddC9A3GcMFxbkP5JbBVJrNdsGJb9rEaGk
-         MBAn8GsVU3QkhIePJe680s5tBdUhvPIrRDDEZaxF5pdGUqcMVroOFkG+IDmU8CAok/QE
-         /m1Z0dNe+v83CNWyKmoSdtuPDsJuBwbL2idbOzh2PBEgim9brD7yUekI/BM9Gx+xN4GL
-         ArODTK1bOx9AmPCn8ZJN0K7oo9a7jPGsG7+6T8NHKlErfASOxgXbwNIyKom27XHrASKX
-         2i+hgKIp7P9FV34VFn0id1hFO4VOtLxK1sfMI0HhYmg63V8D123/E07rVKk8whpMHjP+
-         i9UQ==
-X-Gm-Message-State: ANhLgQ3rJdZhuLCFj2v71mOjQKMSjuXpXYVjx2Xh9oZG/g3OLVAsUhvf
-        Py+oeJTnVH17BcvYtuIlDfn70Q==
-X-Google-Smtp-Source: ADFU+vur7iuRbEAFb8kp1fAHSb42z9lGv7s7JibA/ubrGXmJU2SV6uYfUAdsdWWve6Y7oB1Tmo891A==
-X-Received: by 2002:adf:9ccb:: with SMTP id h11mr2382792wre.22.1585129358113;
-        Wed, 25 Mar 2020 02:42:38 -0700 (PDT)
-Received: from dell ([2.27.35.213])
-        by smtp.gmail.com with ESMTPSA id h26sm8323017wmb.19.2020.03.25.02.42.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 02:42:37 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 09:43:26 +0000
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Richard Fontana <rfontana@redhat.com>,
-        Josef Friedl <josef.friedl@speed.at>,
-        Ran Bi <ran.bi@mediatek.com>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream@mediatek.com
-Subject: Re: [PATCH v10 3/5] mfd: Add support for the MediaTek MT6358 PMIC
-Message-ID: <20200325094326.GH442973@dell>
-References: <1583918223-22506-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1583918223-22506-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WJC80u+Ifj4HCTJaBhCcmeQxlknM9aDMikhj5e78Hk4=;
+        b=dvreXsW4Ei3zfNjii+v+DEixCaYeMDJOviHsMki66b2kGFYFRwFiZlN+/6W4RrF+bb
+         Y1VABst+ZQbb+cOeRQSwO7549tBEf2GbTNjFDcKIyJ8JlrcL8JhOidFI5y0JO1vHm0jS
+         wxjSAcDu+bFEBU5X0jucmYtZ4K9nuXb0636OzZWIb+7DzZp7rdIg7Zi9/VUw5V2t8iiW
+         owRncvdu+PrJj9jA3infBaDHJmXltdZJSZCPJiLVxVACbg2lO/c9JkjSIsUw1SdK3Ua3
+         KvP0hEEVa9BqyGTneoIABJkIchtqDvtePsjZmtJms9k0vDJ9RdXngcjXrQ6oHEG2UlRO
+         578Q==
+X-Gm-Message-State: ANhLgQ0oNhTwEadx03eooyLiA2ORHRVzbSzFAsPDoJjlOhGe3CqR63yg
+        8eUZGISBKC0Wr2PdDyV93xQDqM9xaa6lIlATu9Zdsg==
+X-Google-Smtp-Source: ADFU+vsgfIWqTVfFvZZGiDAww03tclKMezpcFsmTHkThxRNJbwZiwKmblFARFxQj+PxAwoovscn7WyTAXThKOCyBwVE=
+X-Received: by 2002:a92:9fd0:: with SMTP id z77mr2593848ilk.257.1585129387289;
+ Wed, 25 Mar 2020 02:43:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1583918223-22506-4-git-send-email-hsin-hsiung.wang@mediatek.com>
+References: <20200323202259.13363-1-willy@infradead.org> <20200323202259.13363-25-willy@infradead.org>
+In-Reply-To: <20200323202259.13363-25-willy@infradead.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Wed, 25 Mar 2020 10:42:56 +0100
+Message-ID: <CAJfpegu7EFcWrg3bP+-2BX_kb52RrzBCo_U3QKYzUkZfe4EjDA@mail.gmail.com>
+Subject: Re: [PATCH v10 24/25] fuse: Convert from readpages to readahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        William Kucharski <william.kucharski@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 11 Mar 2020, Hsin-Hsiung Wang wrote:
-
-> This adds support for the MediaTek MT6358 PMIC. This is a
-> multifunction device with the following sub modules:
-> 
-> - Regulator
-> - RTC
-> - Codec
-> - Interrupt
-> 
-> It is interfaced to the host controller using SPI interface
-> by a proprietary hardware called PMIC wrapper or pwrap.
-> MT6358 MFD is a child device of the pwrap.
-> 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+On Mon, Mar 23, 2020 at 9:23 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+>
+> Use the new readahead operation in fuse.  Switching away from the
+> read_cache_pages() helper gets rid of an implicit call to put_page(),
+> so we can get rid of the get_page() call in fuse_readpages_fill().
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: William Kucharski <william.kucharski@oracle.com>
 > ---
->  drivers/mfd/Makefile                 |   2 +-
->  drivers/mfd/mt6358-irq.c             | 236 +++++++++++++++++++++++++++++
->  drivers/mfd/mt6397-core.c            |  55 ++++++-
->  include/linux/mfd/mt6358/core.h      | 158 ++++++++++++++++++++
->  include/linux/mfd/mt6358/registers.h | 282 +++++++++++++++++++++++++++++++++++
->  include/linux/mfd/mt6397/core.h      |   3 +
->  6 files changed, 731 insertions(+), 5 deletions(-)
->  create mode 100644 drivers/mfd/mt6358-irq.c
->  create mode 100644 include/linux/mfd/mt6358/core.h
->  create mode 100644 include/linux/mfd/mt6358/registers.h
-> 
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index b83f172..9af1414 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -238,7 +238,7 @@ obj-$(CONFIG_INTEL_SOC_PMIC)	+= intel-soc-pmic.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_BXTWC)	+= intel_soc_pmic_bxtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTWC)	+= intel_soc_pmic_chtwc.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_CHTDC_TI)	+= intel_soc_pmic_chtdc_ti.o
-> -mt6397-objs	:= mt6397-core.o mt6397-irq.o
-> +mt6397-objs			:= mt6397-core.o mt6397-irq.o mt6358-irq.o
->  obj-$(CONFIG_MFD_MT6397)	+= mt6397.o
->  obj-$(CONFIG_INTEL_SOC_PMIC_MRFLD)	+= intel_soc_pmic_mrfld.o
->  
-> diff --git a/drivers/mfd/mt6358-irq.c b/drivers/mfd/mt6358-irq.c
-> new file mode 100644
-> index 0000000..022e5f5
-> --- /dev/null
-> +++ b/drivers/mfd/mt6358-irq.c
-> @@ -0,0 +1,236 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2019 MediaTek Inc.
+>  fs/fuse/file.c | 46 +++++++++++++++++++---------------------------
+>  1 file changed, 19 insertions(+), 27 deletions(-)
+>
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 9d67b830fb7a..5749505bcff6 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -923,9 +923,8 @@ struct fuse_fill_data {
+>         unsigned int max_pages;
+>  };
+>
+> -static int fuse_readpages_fill(void *_data, struct page *page)
+> +static int fuse_readpages_fill(struct fuse_fill_data *data, struct page *page)
+>  {
+> -       struct fuse_fill_data *data = _data;
+>         struct fuse_io_args *ia = data->ia;
+>         struct fuse_args_pages *ap = &ia->ap;
+>         struct inode *inode = data->inode;
+> @@ -941,10 +940,8 @@ static int fuse_readpages_fill(void *_data, struct page *page)
+>                                         fc->max_pages);
+>                 fuse_send_readpages(ia, data->file);
+>                 data->ia = ia = fuse_io_alloc(NULL, data->max_pages);
+> -               if (!ia) {
+> -                       unlock_page(page);
+> +               if (!ia)
+>                         return -ENOMEM;
+> -               }
+>                 ap = &ia->ap;
+>         }
+>
+> @@ -954,7 +951,6 @@ static int fuse_readpages_fill(void *_data, struct page *page)
+>                 return -EIO;
+>         }
+>
+> -       get_page(page);
+>         ap->pages[ap->num_pages] = page;
+>         ap->descs[ap->num_pages].length = PAGE_SIZE;
+>         ap->num_pages++;
+> @@ -962,37 +958,33 @@ static int fuse_readpages_fill(void *_data, struct page *page)
+>         return 0;
+>  }
+>
+> -static int fuse_readpages(struct file *file, struct address_space *mapping,
+> -                         struct list_head *pages, unsigned nr_pages)
+> +static void fuse_readahead(struct readahead_control *rac)
+>  {
+> -       struct inode *inode = mapping->host;
+> +       struct inode *inode = rac->mapping->host;
+>         struct fuse_conn *fc = get_fuse_conn(inode);
+>         struct fuse_fill_data data;
+> -       int err;
+> +       struct page *page;
+>
+> -       err = -EIO;
+>         if (is_bad_inode(inode))
+> -               goto out;
+> +               return;
+>
+> -       data.file = file;
+> +       data.file = rac->file;
+>         data.inode = inode;
+> -       data.nr_pages = nr_pages;
+> -       data.max_pages = min_t(unsigned int, nr_pages, fc->max_pages);
+> -;
+> +       data.nr_pages = readahead_count(rac);
+> +       data.max_pages = min_t(unsigned int, data.nr_pages, fc->max_pages);
+>         data.ia = fuse_io_alloc(NULL, data.max_pages);
+> -       err = -ENOMEM;
+>         if (!data.ia)
+> -               goto out;
+> +               return;
+>
+> -       err = read_cache_pages(mapping, pages, fuse_readpages_fill, &data);
+> -       if (!err) {
+> -               if (data.ia->ap.num_pages)
+> -                       fuse_send_readpages(data.ia, file);
+> -               else
+> -                       fuse_io_free(data.ia);
+> +       while ((page = readahead_page(rac))) {
+> +               if (fuse_readpages_fill(&data, page) != 0)
 
-This is out of date.
+Shouldn't this unlock + put page on error?
 
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/mt6358/core.h>
-> +#include <linux/mfd/mt6358/registers.h>
-> +#include <linux/mfd/mt6397/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +static struct irq_top_t mt6358_ints[] = {
-> +	MT6358_TOP_GEN(BUCK),
-> +	MT6358_TOP_GEN(LDO),
-> +	MT6358_TOP_GEN(PSC),
-> +	MT6358_TOP_GEN(SCK),
-> +	MT6358_TOP_GEN(BM),
-> +	MT6358_TOP_GEN(HK),
-> +	MT6358_TOP_GEN(AUD),
-> +	MT6358_TOP_GEN(MISC),
-> +};
-> +
-> +static void pmic_irq_enable(struct irq_data *data)
-> +{
-> +	unsigned int hwirq = irqd_to_hwirq(data);
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
+Otherwise looks good.
 
-6397?
-
-This does make me wonder how different this file is to the existing
-support for the MT6397.  What is the justification for not extending
-that instead of creating a brand new file?
-
-> +	struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +	irqd->enable_hwirq[hwirq] = true;
-> +}
-> +
-> +static void pmic_irq_disable(struct irq_data *data)
-> +{
-> +	unsigned int hwirq = irqd_to_hwirq(data);
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +	irqd->enable_hwirq[hwirq] = false;
-> +}
-> +
-> +static void pmic_irq_lock(struct irq_data *data)
-> +{
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +
-> +	mutex_lock(&chip->irqlock);
-> +}
-> +
-> +static void pmic_irq_sync_unlock(struct irq_data *data)
-> +{
-> +	unsigned int i, top_gp, gp_offset, en_reg, int_regs, shift;
-> +	struct mt6397_chip *chip = irq_data_get_irq_chip_data(data);
-> +	struct pmic_irq_data *irqd = chip->irq_data;
-> +
-> +	for (i = 0; i < irqd->num_pmic_irqs; i++) {
-> +		if (irqd->enable_hwirq[i] == irqd->cache_hwirq[i])
-> +			continue;
-> +
-> +		/* Find out the IRQ group */
-> +		top_gp = 0;
-> +		while ((top_gp + 1) < irqd->num_top &&
-> +		       i >= mt6358_ints[top_gp + 1].hwirq_base)
-> +			top_gp++;
-> +
-> +		/* Find the irq registers */
-
-Nit: "IRQ"
-
-> +		gp_offset = i - mt6358_ints[top_gp].hwirq_base;
-> +		int_regs = gp_offset / MT6358_REG_WIDTH;
-> +		shift = gp_offset % MT6358_REG_WIDTH;
-> +		en_reg = mt6358_ints[top_gp].en_reg +
-> +			 (mt6358_ints[top_gp].en_reg_shift * int_regs);
-> +
-> +		regmap_update_bits(chip->regmap, en_reg, BIT(shift),
-> +				   irqd->enable_hwirq[i] << shift);
-> +
-> +		irqd->cache_hwirq[i] = irqd->enable_hwirq[i];
-> +	}
-> +	mutex_unlock(&chip->irqlock);
-> +}
-
-[...]
-
-> +int mt6358_irq_init(struct mt6397_chip *chip)
-> +{
-> +	int i, j, ret;
-> +	struct pmic_irq_data *irqd;
-> +
-> +	irqd = devm_kzalloc(chip->dev, sizeof(struct pmic_irq_data *),
-
-sizeof(*irqd)
-
-[...]
-
->  static const struct chip_data mt6397_core = {
->  	.cid_addr = MT6397_CID,
->  	.cid_shift = 0,
-> @@ -154,19 +184,33 @@ static int mt6397_probe(struct platform_device *pdev)
->  	if (pmic->irq <= 0)
->  		return pmic->irq;
->  
-> -	ret = mt6397_irq_init(pmic);
-> -	if (ret)
-> -		return ret;
-> -
->  	switch (pmic->chip_id) {
->  	case MT6323_CHIP_ID:
-> +		ret = mt6397_irq_init(pmic);
-> +		if (ret)
-> +			return ret;
-> +
->  		ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
->  					   mt6323_devs, ARRAY_SIZE(mt6323_devs),
->  					   NULL, 0, pmic->irq_domain);
->  		break;
->  
-> +	case MT6358_CHIP_ID:
-> +		ret = mt6358_irq_init(pmic);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-> +					   mt6358_devs, ARRAY_SIZE(mt6358_devs),
-> +					   NULL, 0, pmic->irq_domain);
-
-In a subsequent patch you can choose the correct mtXXXX_devs structure
-to pass and call devm_mfd_add_devices() only once below the switch().
-
-> +		break;
-> +
->  	case MT6391_CHIP_ID:
->  	case MT6397_CHIP_ID:
-> +		ret = mt6397_irq_init(pmic);
-> +		if (ret)
-> +			return ret;
-> +
->  		ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
->  					   mt6397_devs, ARRAY_SIZE(mt6397_devs),
->  					   NULL, 0, pmic->irq_domain);
-
-[...]
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Miklos
