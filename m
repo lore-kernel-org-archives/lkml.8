@@ -2,104 +2,124 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A287C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C55C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06DE32076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:07:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585145234;
-	bh=diBwSLo8wU9yZnIJ95vKRVAR15DopN3BP6vf9PO3T88=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=z+DA+guFAKzgreh+7r4MSKEJS4LyYV4q8zgVCIEHtJ+Cp4sSHCi+aDIn5CM8LsyGD
-	 /JKu56iGBlgYTwtZlunanKxWCjmTCW6xbBxkbpP6drK0/OjmXc9CRJcAv16AHJ9Lmi
-	 atbQo3T1aLjPTsu5PNBM8munW8V2Yw+kCjW+Sih0=
+	by mail.kernel.org (Postfix) with ESMTP id B717620722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:07:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tPsjZH6u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgCYOHN (ORCPT
+        id S1727620AbgCYOH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39538 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgCYOHN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:07:13 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0172E20722;
-        Wed, 25 Mar 2020 14:07:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585145232;
-        bh=diBwSLo8wU9yZnIJ95vKRVAR15DopN3BP6vf9PO3T88=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uH2zC4S/RgnKGxWtghNl1SamqWsawwpHaEt9TT+1Sp0zx7h2V5l3Dmsrmm05Q8AHn
-         4iHmfEy63KjKNqG8Ibw8RrUdw5xdFJ5VhsXjnynR8ZG6/R1LTyjpApPHlMgqpWiB53
-         kiJRAonoSyD1eo0WYaOooK4A/sdty/eA/j9mwnuM=
-Date:   Wed, 25 Mar 2020 15:07:08 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Saravana Kannan <saravanak@google.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: Re: [PATCH 5.5 066/189] driver core: Call sync_state() even if
- supplier has no consumers
-Message-ID: <20200325140708.GA3533248@kroah.com>
-References: <20200310123639.608886314@linuxfoundation.org>
- <20200310123646.283600281@linuxfoundation.org>
- <93643339-612c-3438-fff8-4eac728118a0@suse.cz>
+        Wed, 25 Mar 2020 10:07:26 -0400
+Received: from mail-lj1-f177.google.com ([209.85.208.177]:39638 "EHLO
+        mail-lj1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727559AbgCYOH0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:07:26 -0400
+Received: by mail-lj1-f177.google.com with SMTP id i20so2585339ljn.6
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=DiPRZWoRa3lk/XExUnZi97Qb2rC0wdBFYoFDDD3DuDU=;
+        b=tPsjZH6u2MPpcRRBhaOlSJpoKbNNphbkMpXQkpwGlUx/rNrxQCqE9R8GhA2TO1cnLQ
+         os0bDQgi0HkHwSb4mcdD6J5/4Y3uz26mCcQOdm4ybPYKrbnBJz0TUxjswmv1evulTwj3
+         CyGcQKsC1gyNEy1SWdf9PZJ37SFtngmh6Vxtky4nhMS9GBdbgosra15D64WNKWMaDWC0
+         p5lmG+30/7D8sZryN5Boyn62x6Yg3gQTQ4eJwrHN3Mp6MaD6iw5S3wTNma2Fopj6XMIm
+         4LXKc/D09CTw5riV3BoEtug2aCimsG8otep2b1U5wW8RN6aI5+oDIF7Mio/jsYIjslWH
+         JZKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=DiPRZWoRa3lk/XExUnZi97Qb2rC0wdBFYoFDDD3DuDU=;
+        b=FWF/50HLydJXBUz65gK/05/tC7552635FAG2sW56S2UqOmPJm2tcKkswfPHn0FI07Q
+         5OqspNf1LIGR8W6QVkJ5XPBZj0UFQUrVBwTQ8mTNwSSBV6DNKihrbqn8dKylWHBqnvBf
+         PRUtfcM0/YuCf9bgb41NKLcw4ksEDTCu9q2cK4MQzZUVgpZYOzEg3+mW6flyptWqI4f5
+         fjDuO9wGlMgEWIzTJgvSfcrVKi1O59rl5doJB6LBXaPKLIMSpIQx7FfHjxYKxtMh9l9p
+         CroVruStlZczyjtJcU1z7SFEMboC8Q0OH+tG3CkGLdqH5umPBMMGNktnY4p1fXqD0YhZ
+         sYMA==
+X-Gm-Message-State: AGi0PuYqnX/XF1zslcHczFArJJytgLqLWZSATyDfg7UnDKyfs7helg3C
+        TFPL2RZBBdpV2NGim6B8Cb0K/nR55go7hbHYvRFmdwG//K6QJQ==
+X-Google-Smtp-Source: ADFU+vuu1FOsc42Ge8euBCx7Sux5WuLHcShxtchIUplsgCJfTCdDFsLNTiSoE4eTUhRtSRo27HUxllre+ibfJLQi6c0=
+X-Received: by 2002:a2e:a495:: with SMTP id h21mr2098422lji.123.1585145241766;
+ Wed, 25 Mar 2020 07:07:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93643339-612c-3438-fff8-4eac728118a0@suse.cz>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 25 Mar 2020 19:37:10 +0530
+Message-ID: <CA+G9fYtiroQnpwGu4oLA=ChmS==XGpmAAqB_Oa9nrXC3vQ0xsQ@mail.gmail.com>
+Subject: tools: Perf: build failed on linux next
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Cc:     lkft-triage@lists.linaro.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        jolsa@redhat.com, Namhyung Kim <namhyung@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Leo Yan <leo.yan@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 02:42:27PM +0100, Jiri Slaby wrote:
-> On 10. 03. 20, 13:38, Greg Kroah-Hartman wrote:
-> > From: Saravana Kannan <saravanak@google.com>
-> > 
-> > commit 21eb93f432b1a785df193df1a56a59e9eb3a985f upstream.
-> > 
-> > The initial patch that added sync_state() support didn't handle the case
-> > where a supplier has no consumers. This was because when a device is
-> > successfully bound with a driver, only its suppliers were checked to see
-> > if they are eligible to get a sync_state(). This is not sufficient for
-> > devices that have no consumers but still need to do device state clean
-> > up. So fix this.
-> > 
-> > Fixes: fc5a251d0fd7ca90 (driver core: Add sync_state driver/bus callback)
-> 
-> This causes NULL ptr dereferences (in 5.5 only). It is enough to load
-> the mac80211_hwsim module.
-> 
-> The backport to 5.5 needs at least these two commits:
-> commit ac338acf514e7b578fa9e3742ec2c292323b4c1a
-> Author: Saravana Kannan <saravanak@google.com>
-> Date:   Fri Feb 21 00:05:09 2020 -0800
-> 
->     driver core: Add dev_has_sync_state()
-> 
-> commit 77036165d8bcf7c7b2a2df28a601ec2c52bb172d
-> Author: Saravana Kannan <saravanak@google.com>
-> Date:   Fri Feb 21 00:05:10 2020 -0800
-> 
->     driver core: Skip unnecessary work when device doesn't have sync_state()
-> 
-> 
-> and playing with includes.
-> 
-> I am not sure if a revert wouldn't be better -- leaving up to maintainers.
-> 
-> https://bugzilla.suse.com/show_bug.cgi?id=1167245
+Perf build broken on Linux next and mainline on x86_64.
 
-These are already queued up, I think I'll push out an update in a bit
-with them in a release...
+find: unknown predicate `-m64/arch'
+Try 'find --help' for more information.
+  HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/json.o
+  LD       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/libperf-in.o
+x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+  GEN      perf-archive
+  AR       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/libperf.a
+  GEN      perf-with-kcore
+x86_64-linaro-linux-gcc: error: unrecognized command line option
+'-m64/include/uapi/asm-generic/errno.h'
+x86_64-linaro-linux-gcc: fatal error: no input files
+compilation terminated.
+  HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jevents.o
+  MKDIR    /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/
+x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+  HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jsmn.o
+x86_64-linaro-linux-gcc: error: unrecognized command line option
+'-m64/include/uapi/asm-generic/errno.h'
+x86_64-linaro-linux-gcc: fatal error: no input files
+compilation terminated.
+make[3]: Nothing to be done for
+'/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/plugins/libtraceevent-dynamic-list'.
+  GEN      /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so
+Traceback (most recent call last):
+  File "util/setup.py", line 6, in <module>
+    cc_is_clang = b"clang version" in Popen([cc, "-v"],
+stderr=PIPE).stderr.readline()
+  File "/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
+line 394, in __init__
+    errread, errwrite)
+  File "/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
+line 1047, in _execute_child
+    raise child_exception
+OSError: [Errno 2] No such file or directory
+cp: cannot stat
+'/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python_ext_build/lib/perf*.so':
+No such file or directory
+Makefile.perf:590: recipe for target
+'/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so'
+failed
+make[2]: *** [/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so]
+Error 1
+make[2]: *** Waiting for unfinished jobs....
 
-thanks,
+ref:
+https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/733/consoleText
 
-greg k-h
+-- 
+Linaro LKFT
+https://lkft.linaro.org
