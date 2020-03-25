@@ -4,356 +4,309 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDCBC54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E0AC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01151206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49CDB206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="dWbumP5X"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P7QMDeSd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726065AbgCYEIa (ORCPT
+        id S1726102AbgCYEK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:08:30 -0400
-Received: from mail-db8eur05on2050.outbound.protection.outlook.com ([40.107.20.50]:64321
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725263AbgCYEI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:08:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hy83IrurNHmwdTqNLUBruCKQDGCa+2i0ao3X3dEokAw5sCzsavXzB4eCzE+bCNZ7fGdiTX6CIY9oJtqVmkz2izRbN7riGSwp4dawrqNaDIZaKKGXKPKsPBzUxNKRuxe1lw+A3VCbgjq4tvcFaTUk/SVfC0Iqhiif6B469q2XAZMScMxiYVv9SuQ18Pd19eRntC15kk/CTrmoAMJ0IBHpzg3/bLkISeOedMPbSn7S8HPWk4oxTRe0kEQ+85R9ne+eEnRyyRYks+3FoxN8uRjKO7lj7UK6sa2Ujmcli47kl6nwsHmX1D3ws4mLZFGR44WlQBzNcwyi9mZ1NPoiNKcPwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vx8rcqc5rAXjpM6Am2DqFp7bOBpQPNLFQvk4mw2i3Ug=;
- b=B1U+SH0ZM5z/Q1OBchenQggpK1Sd5sm+hjQKz/GNxfn1ElyBcgIwtgQsbnKOmI3VSU/JJMMA9B5a2E9Ta/tgIeyBaP7PsIHQfAt5Ce78Wmc0v+PzLawKS5Xk1kz6VFucgWUxM4ho6tXXPydhAv+8aMbzLDVKEH9G4WAmzIBhnJI18R5MSGt7qZthaW8Ys1h5acKmZPtP60xi1GVcMBEeIR+k61/wiJczOnyNzIJSLrOnqEWvd2XizkRojjWyITAG71DiTFqoqjkXH8CoM2y346oOufHvXrIwChEi4N1RiwhEGlfjTHkf1DXqifKJ/34ylIAw68vC1DhSMsDBOkbLlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vx8rcqc5rAXjpM6Am2DqFp7bOBpQPNLFQvk4mw2i3Ug=;
- b=dWbumP5Xo2Vfe0ubzF8ISU/J+wpKFCsRakXarCWNptrxdhRKlHJcJny1oTWPwkvVN5cEwbZwNm1YlUqWecmrdI9+R0FwGdLIdcbJe42JRVmpscNkggkW7Cxc4fGO5gNMCM27hm7C4yVDePveO04yrm3KRAttdO1WBVR7OT+r2J8=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
- VI1PR0402MB3870.eurprd04.prod.outlook.com (52.134.16.156) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.22; Wed, 25 Mar 2020 04:08:23 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c991:848b:cc80:2768]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::c991:848b:cc80:2768%7]) with mapi id 15.20.2835.023; Wed, 25 Mar 2020
- 04:08:23 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Michael Walle <michael@walle.cc>
-CC:     Leonard Crestez <leonard.crestez@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>, Rob Herring <robh+dt@kernel.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Peng Fan <peng.fan@nxp.com>
-Subject: RE: [EXT] Re: [PATCH v4 1/4] tty: serial: fsl_lpuart: fix DMA
- operation when using IOMMU
-Thread-Topic: [EXT] Re: [PATCH v4 1/4] tty: serial: fsl_lpuart: fix DMA
- operation when using IOMMU
-Thread-Index: AQHV9AB7XTSsAtbd1E+3Etbi7F0aCKhYBLIQgAACxwCAAAGMwIAAA1SAgAC/5pA=
-Date:   Wed, 25 Mar 2020 04:08:23 +0000
-Message-ID: <VI1PR0402MB360011B90343A8008BDB3A3AFFCE0@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20200306214433.23215-1-michael@walle.cc>
- <20200306214433.23215-2-michael@walle.cc>
- <VI1PR04MB69413E158203E33D42E3B3B3EEF10@VI1PR04MB6941.eurprd04.prod.outlook.com>
- <VI1PR0402MB36001AEE78E0F067D29F2816FFF10@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <725d2abdcdc0ab05cc1f03028f8a2919@walle.cc>
- <VI1PR0402MB360060ABA69BB138A33C9615FFF10@VI1PR0402MB3600.eurprd04.prod.outlook.com>
- <d9882e8769f234cff634cfdfa9a3dd33@walle.cc>
-In-Reply-To: <d9882e8769f234cff634cfdfa9a3dd33@walle.cc>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e106faaa-9c8e-472c-7d45-08d7d0722948
-x-ms-traffictypediagnostic: VI1PR0402MB3870:|VI1PR0402MB3870:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB387073EC45BE660385593F8CFFCE0@VI1PR0402MB3870.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(396003)(136003)(478600001)(7696005)(53546011)(64756008)(6506007)(66476007)(66446008)(66556008)(186003)(71200400001)(26005)(66946007)(8676002)(81166006)(6916009)(5660300002)(33656002)(81156014)(8936002)(52536014)(9686003)(86362001)(316002)(2906002)(76116006)(4326008)(55016002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3870;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JuDBzJ1CpMJ6cafbtAewdKDJ8h83vnfweQPJiJ99+x0sXWh1OCj1Q/8LZ/7PmV1a1Afz9owgBUK109wgiZnlXnWoD2B1ltIIgVs9NyfCVLzeoe4+wAIKyIuABQD43OzTn7+i4LOzO0gDiI+KKtm1yPzYpDR5/YiQ82bsrPWqPe8kbn9Tv7LsYwy7eBgyMj7c8sqZSUrtDmgLLqig7cdzb2CuiGIa9Z4rhBpsUTODqXwjVU3jezVcJT+VBtu/1W0esHMbnXJXf9uPpTc1UYjkpLGuYlnH4yD7IL6OSqpod0SZ013zN7s/PmGqqzHG9g0Ema9L7566mpf1KWiS3gRl2zZrBMGx+AREfvncIAkpONWnASJYIZSNXft/g5FO0yvxWuPdg61mLFNxgf3dnWSwLY4lJWcqBrhDCx3dZb9p5NJMEIgFmxWkbQicO/MDChux
-x-ms-exchange-antispam-messagedata: 4Kq8bGNR2TXQ4N3W5xvYDC699+2pVRYLpvm04tJcODPxDkavxuRehxiEczAq45ShhWB1dAbrsrXVFeVn4sZHwNGcSsTMogY2t8unmZs+HcdSjCjqTl/pb5P9nprhKhz/H7tS8nsUySZqk/agF4zjOQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 25 Mar 2020 00:10:29 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34693 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725263AbgCYEK2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 00:10:28 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 23so427989pfj.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Mar 2020 21:10:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=25OzEqUObaJ/lFsKmI6WTIhfYJWR/xXh2aGHqr1VHUQ=;
+        b=P7QMDeSdeHPAZOLrRFAKX//esRRYrJEF+NZJ+oZSgI+fkVnSKHGXyzSZ8D1gKhWliw
+         TVkKodzsrMegry+flF8PdkGbpvH+WTEXHFlSn3G9zYRVlMQ2Kf4LvxZQwIXV18sbIjF9
+         KWSAW2Ee1iYVKPwRPrIljIuGOG9teZqbit9DRUx5r2GdSfE+RR906zceYRSYYoEKMJSr
+         YwM6Rv8rw7va8lUofsgt/TA2EQo/jCrVDf7gxBszXch5Z4u7i/7ir6FNw1reb51UsX5z
+         xjT+LEhLeKkG6uENnDjM7SJpU1974qXcrrjmqnqGEcKdzd9y3eLfxdCLZ+UqJyUhm8Tx
+         uBPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=25OzEqUObaJ/lFsKmI6WTIhfYJWR/xXh2aGHqr1VHUQ=;
+        b=ZdSEjxTqkEecvCObkfApCpBJLUwgVpHgDo+r1rj9cid1OmhXzzgCg0/aCZCUHTTNXU
+         HCV3AREjIqDX6xau9oT2zUNJgnBmq+dlUfD1hn/d/iguCFztDfB7FLsbT5nmRtZAzS5J
+         QEk/eQP7YLfMbI5T9I6wlAIEylBTtSLVG/baFC+0k3X5IrWgVvAUOGfz12f28YcpNYNd
+         o5zxBt0BUvu6y3rIM4I6Uvo0ZIbvT0D7c6JuoTeNRc9mQ4/ssd3ZlFp8xwWGPteL4mFp
+         9upc/tzaE6O0SMZ1GJgHhYMzh27ZN7T6BSDdBL4zqILkyZvWVW4Gx6henEtF0bP7OK/X
+         8Svg==
+X-Gm-Message-State: ANhLgQ2vtfdD7ydJu3YgnODgfkTsfC2r1J2TYTL2Dus9vtqBfr3J/WFF
+        CNrtao3xvhPrQUZN7sSMvXZlfQ==
+X-Google-Smtp-Source: ADFU+vu7wNrXWyow4a+tot2YKg365qHkN5GLHXm74BySm2HK9FeUvY6BdTkTxnCbgKosE0/55PJXfQ==
+X-Received: by 2002:a63:7f05:: with SMTP id a5mr1129193pgd.327.1585109427234;
+        Tue, 24 Mar 2020 21:10:27 -0700 (PDT)
+Received: from yoga (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id c15sm11099111pfo.139.2020.03.24.21.10.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2020 21:10:26 -0700 (PDT)
+Date:   Tue, 24 Mar 2020 21:10:23 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-remoteproc-owner@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org,
+        psodagud@codeaurora.org, tsoni@codeaurora.org,
+        sidgup@codeaurora.org
+Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
+Message-ID: <20200325041023.GE522435@yoga>
+References: <1584747377-14824-1-git-send-email-rishabhb@codeaurora.org>
+ <1584747377-14824-2-git-send-email-rishabhb@codeaurora.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e106faaa-9c8e-472c-7d45-08d7d0722948
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 04:08:23.2450
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9kiGPCMqo0EXGC9RCVCDfC5A2S5KGc5/zfGem1Q4s2DmoGgwdM1Z1GYS7scQc09j5QpidE7qccW5+Huj4ohAfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3870
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1584747377-14824-2-git-send-email-rishabhb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc> Sent: Wednesday, March 25, 2020 12:3=
-5 AM
-> Am 2020-03-24 17:28, schrieb Andy Duan:
-> > From: Michael Walle <michael@walle.cc> Sent: Wednesday, March 25,
-> 2020
-> > 12:18 AM
-> >> Am 2020-03-24 17:12, schrieb Andy Duan:
-> >> > From: Leonard Crestez <leonard.crestez@nxp.com> Sent: Tuesday,
-> >> > March 24, 2020 11:27 PM
-> >> >> On 06.03.2020 23:44, Michael Walle wrote:
-> >> >> > The DMA channel might not be available at probe time. This is esp=
-.
-> >> >> > the case if the DMA controller has an IOMMU mapping.
-> >> >> >
-> >> >> > There is also another caveat. If there is no DMA controller at
-> >> >> > all,
-> >> >> > dma_request_chan() will also return -EPROBE_DEFER. Thus we
-> >> >> > cannot test for -EPROBE_DEFER in probe(). Otherwise the lpuart
-> >> >> > driver will fail to probe if, for example, the DMA driver is not
-> >> >> > enabled in the kernel configuration.
-> >> > If DMA driver is not enabled, we should disable DMA controller node
-> >> > in dts file to match current sw environment, then driver doesn't do
-> >> > defer probe.
-> >> >
-> >> > So I still suggest to check -EPROBE_DEFER for
-> >> > dma_request_slave_channel() in
-> >> > .probe() function.
-> >>
-> >> I don't know if I can follow you here. This would lead to non
-> >> functional setups, eg. one build its own kernel with DMA disabled,
-> >> but still have a device tree with the DMA nodes. And besides, the
-> >> current workaround to request the DMA channel in startup() is
-> >> basically working, isn't it? And once the underlying problem is fixed
-> >> (the infinite EPROBE_DEFER), it could be moved back into _probe().
-> >>
-> >> -michael
-> >
-> > I think the user use wrong dtb file. The dtb file doesn't reflect the
-> > real enabled modules. For such case, there have many problems for
-> > syscon,... that other modules depends on them.
->=20
-> But the user doesn't use the wrong dtb. I don't consider having the DMA
-> channels in the dtb makes it wrong, just because DMA is not enabled in th=
-e
-> kernel. If you'd follow that argument, then the dtb is also wrong if ther=
-e is for
-> example a crypto device, although the kernel doesn't have support for it
-> enabled.
->=20
-> -michael
+On Fri 20 Mar 16:36 PDT 2020, Rishabh Bhatnagar wrote:
 
-dma_request_chan() is not atomic context.
-Even if move it into .startup(), please move it out of spinlock context.
+> Add the driver for creating the character device interface for
+> userspace applications. The character device interface can be used
+> in order to boot up and shutdown the remote processor.
+> This might be helpful for remote processors that are booted by
+> userspace applications and need to shutdown when the application
+> crahes/shutsdown.
+> 
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 
->=20
-> >
-> > So we cannot support wrong usage cases, that is my thought.
-> >
-> > Thanks,
-> > Andy
-> >
-> >>
-> >> >
-> >> > Andy
-> >> >> >
-> >> >> > To workaround this, we request the DMA channel in _startup().
-> >> >> > Other serial drivers do it the same way.
-> >> >> >
-> >> >> > Signed-off-by: Michael Walle <michael@walle.cc>
-> >> >>
-> >> >> This appears to cause boot hangs on imx8qxp-mek (boards boots fine
-> >> >> on
-> >> >> next-20200324 if this patch is reverted)
-> >> >>
-> >> >> > ---
-> >> >> >   drivers/tty/serial/fsl_lpuart.c | 88
-> >> +++++++++++++++++++++------------
-> >> >> >   1 file changed, 57 insertions(+), 31 deletions(-)
-> >> >> >
-> >> >> > diff --git a/drivers/tty/serial/fsl_lpuart.c
-> >> >> > b/drivers/tty/serial/fsl_lpuart.c index
-> >> >> > c31b8f3db6bf..33798df4d727
-> >> >> > 100644
-> >> >> > --- a/drivers/tty/serial/fsl_lpuart.c
-> >> >> > +++ b/drivers/tty/serial/fsl_lpuart.c
-> >> >> > @@ -1493,36 +1493,67 @@ static void rx_dma_timer_init(struct
-> >> >> lpuart_port *sport)
-> >> >> >   static void lpuart_tx_dma_startup(struct lpuart_port *sport)
-> >> >> >   {
-> >> >> >    u32 uartbaud;
-> >> >> > +  int ret;
-> >> >> >
-> >> >> > -  if (sport->dma_tx_chan
-> && !lpuart_dma_tx_request(&sport->port)) {
-> >> >> > -          init_waitqueue_head(&sport->dma_wait);
-> >> >> > -          sport->lpuart_dma_tx_use =3D true;
-> >> >> > -          if (lpuart_is_32(sport)) {
-> >> >> > -                  uartbaud =3D lpuart32_read(&sport->port,
-> >> UARTBAUD);
-> >> >> > -                  lpuart32_write(&sport->port,
-> >> >> > -                                 uartbaud |
-> >> UARTBAUD_TDMAE, UARTBAUD);
-> >> >> > -          } else {
-> >> >> > -                  writeb(readb(sport->port.membase +
-> UARTCR5)
-> >> |
-> >> >> > -                          UARTCR5_TDMAS,
-> >> sport->port.membase + UARTCR5);
-> >> >> > -          }
-> >> >> > +  sport->dma_tx_chan =3D dma_request_chan(sport->port.dev, "tx")=
-;
-> >> >> > + if (IS_ERR(sport->dma_tx_chan)) {
-> >> >> > +          dev_info_once(sport->port.dev,
-> >> >> > +                        "DMA tx channel request failed,
-> >> >> > + operating without tx
-> >> >> DMA (%ld)\n",
-> >> >> > +                        PTR_ERR(sport->dma_tx_chan));
-> >> >>
-> >> >> It seems that this since this is called from lpuart32_startup with
-> >> >> &sport->port.lock held and lpuart32_console_write takes the same
-> >> >> lock it can and hang.
-> >> >>
-> >> >> As a workaround I can just remove this print but there are other
-> >> >> possible error conditions in dmaengine code which can cause a print=
-k.
-> >> >>
-> >> >> Maybe the port lock should only be held around register manipulatio=
-n?
-> >> >>
-> >> >> > +          sport->dma_tx_chan =3D NULL;
-> >> >> > +          goto err;
-> >> >> > +  }
-> >> >> > +
-> >> >> > +  ret =3D lpuart_dma_tx_request(&sport->port);
-> >> >> > +  if (!ret)
-> >> >> > +          goto err;
-> >> >>
-> >> >> This is backwards: lpuart_dma_tx_request returns negative errno on
-> >> >> failure.
-> >> >>
-> >> >> > +
-> >> >> > +  init_waitqueue_head(&sport->dma_wait);
-> >> >> > +  sport->lpuart_dma_tx_use =3D true;  if (lpuart_is_32(sport)) {
-> >> >> > +          uartbaud =3D lpuart32_read(&sport->port, UARTBAUD);
-> >> >> > +          lpuart32_write(&sport->port,
-> >> >> > +                         uartbaud | UARTBAUD_TDMAE,
-> >> UARTBAUD);
-> >> >> >    } else {
-> >> >> > -          sport->lpuart_dma_tx_use =3D false;
-> >> >> > +          writeb(readb(sport->port.membase + UARTCR5) |
-> >> >> > +                 UARTCR5_TDMAS, sport->port.membase +
-> >> UARTCR5);
-> >> >> >    }
-> >> >> > +
-> >> >> > +  return;
-> >> >> > +
-> >> >> > +err:
-> >> >> > +  sport->lpuart_dma_tx_use =3D false;
-> >> >> >   }
-> >> >> >
-> >> >> >   static void lpuart_rx_dma_startup(struct lpuart_port *sport)
-> >> >> >   {
-> >> >> > -  if (sport->dma_rx_chan && !lpuart_start_rx_dma(sport)) {
-> >> >> > -          /* set Rx DMA timeout */
-> >> >> > -          sport->dma_rx_timeout =3D
-> >> msecs_to_jiffies(DMA_RX_TIMEOUT);
-> >> >> > -          if (!sport->dma_rx_timeout)
-> >> >> > -                  sport->dma_rx_timeout =3D 1;
-> >> >> > +  int ret;
-> >> >> >
-> >> >> > -          sport->lpuart_dma_rx_use =3D true;
-> >> >> > -          rx_dma_timer_init(sport);
-> >> >> > -  } else {
-> >> >> > -          sport->lpuart_dma_rx_use =3D false;
-> >> >> > +  sport->dma_rx_chan =3D dma_request_chan(sport->port.dev, "rx")=
-;
-> >> >> > + if (IS_ERR(sport->dma_rx_chan)) {
-> >> >> > +          dev_info_once(sport->port.dev,
-> >> >> > +                        "DMA rx channel request failed,
-> >> >> > + operating without rx
-> >> >> DMA (%ld)\n",
-> >> >> > +                        PTR_ERR(sport->dma_rx_chan));
-> >> >> > +          sport->dma_rx_chan =3D NULL;
-> >> >> > +          goto err;
-> >> >> >    }
-> >> >> > +
-> >> >> > +  ret =3D lpuart_start_rx_dma(sport);  if (ret)
-> >> >> > +          goto err;
-> >> >>
-> >> >> This is not backwards.
-> >> >>
-> >> >> > +
-> >> >> > +  /* set Rx DMA timeout */
-> >> >> > +  sport->dma_rx_timeout =3D msecs_to_jiffies(DMA_RX_TIMEOUT);
-> if
-> >> >> > + (!sport->dma_rx_timeout)
-> >> >> > +          sport->dma_rx_timeout =3D 1;
-> >> >> > +
-> >> >> > +  sport->lpuart_dma_rx_use =3D true;  rx_dma_timer_init(sport);
-> >> >> > +
-> >> >> > +  return;
-> >> >> > +
-> >> >> > +err:
-> >> >> > +  sport->lpuart_dma_rx_use =3D false;
-> >> >> >   }
-> >> >> >
-> >> >> >   static int lpuart_startup(struct uart_port *port) @@ -1615,6
-> >> >> > +1646,11 @@ static void lpuart_dma_shutdown(struct lpuart_port
-> >> >> > +*sport)
-> >> >> >
-> >> dmaengine_terminate_all(sport->dma_tx_chan);
-> >> >> >            }
-> >> >> >    }
-> >> >> > +
-> >> >> > +  if (sport->dma_tx_chan)
-> >> >> > +          dma_release_channel(sport->dma_tx_chan);
-> >> >> > +  if (sport->dma_rx_chan)
-> >> >> > +          dma_release_channel(sport->dma_rx_chan);
-> >> >> >   }
-> >> >> >
-> >> >> >   static void lpuart_shutdown(struct uart_port *port) @@
-> >> >> > -2520,16
-> >> >> > +2556,6 @@ static int lpuart_probe(struct platform_device *pdev)
-> >> >> >
-> >> >> >    sport->port.rs485_config(&sport->port, &sport->port.rs485);
-> >> >> >
-> >> >> > -  sport->dma_tx_chan =3D
-> >> >> > dma_request_slave_channel(sport->port.dev,
-> >> >> "tx");
-> >> >> > -  if (!sport->dma_tx_chan)
-> >> >> > -          dev_info(sport->port.dev, "DMA tx channel request
-> failed, "
-> >> >> > -                          "operating without tx DMA\n");
-> >> >> > -
-> >> >> > -  sport->dma_rx_chan =3D
-> >> >> > dma_request_slave_channel(sport->port.dev,
-> >> >> "rx");
-> >> >> > -  if (!sport->dma_rx_chan)
-> >> >> > -          dev_info(sport->port.dev, "DMA rx channel request
-> failed, "
-> >> >> > -                          "operating without rx DMA\n");
-> >> >> > -
-> >> >> >    return 0;
-> >> >> >
-> >> >> >   failed_attach_port:
-> >> >> >
+Please use linux-remoteproc@ instead of linux-remoteproc-owner@, to
+ensure you're reaching the whole community.
+
+> ---
+>  drivers/remoteproc/Makefile               |   1 +
+>  drivers/remoteproc/remoteproc_internal.h  |   3 +
+>  drivers/remoteproc/remoteproc_userspace.c | 126 ++++++++++++++++++++++++++++++
+>  include/linux/remoteproc.h                |   2 +
+>  4 files changed, 132 insertions(+)
+>  create mode 100644 drivers/remoteproc/remoteproc_userspace.c
+> 
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b1..facb3fa 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_REMOTEPROC)		+= remoteproc.o
+>  remoteproc-y				:= remoteproc_core.o
+>  remoteproc-y				+= remoteproc_debugfs.o
+>  remoteproc-y				+= remoteproc_sysfs.o
+> +remoteproc-y				+= remoteproc_userspace.o
+>  remoteproc-y				+= remoteproc_virtio.o
+>  remoteproc-y				+= remoteproc_elf_loader.o
+>  obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+> index 493ef92..bafaa12 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -63,6 +63,9 @@ struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+>  struct rproc_mem_entry *
+>  rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
+>  
+> +/* from remoteproc_userspace.c */
+> +extern int rproc_char_device_add(struct rproc *rproc);
+
+Please omit "external" from this.
+
+> +
+>  static inline
+>  int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
+>  {
+> diff --git a/drivers/remoteproc/remoteproc_userspace.c b/drivers/remoteproc/remoteproc_userspace.c
+> new file mode 100644
+> index 0000000..e3017e7
+> --- /dev/null
+> +++ b/drivers/remoteproc/remoteproc_userspace.c
+> @@ -0,0 +1,126 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Character device interface driver for Remoteproc framework.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/fs.h>
+> +#include <linux/cdev.h>
+> +#include <linux/mutex.h>
+> +#include <linux/remoteproc.h>
+> +
+> +#include "remoteproc_internal.h"
+> +
+> +static LIST_HEAD(rproc_chrdev_list);
+> +
+> +struct rproc_char_dev {
+> +	struct list_head node;
+> +	dev_t dev_no;
+> +	struct rproc *rproc;
+> +};
+
+Per below suggestions you don't need this struct (or list).
+
+> +
+> +static DEFINE_MUTEX(rproc_chrdev_lock);
+> +
+> +static struct rproc *rproc_get_by_dev_no(int minor)
+> +{
+> +	struct rproc_char_dev *r;
+> +
+> +	mutex_lock(&rproc_chrdev_lock);
+> +	list_for_each_entry(r, &rproc_chrdev_list, node) {
+> +		if (MINOR(r->dev_no) == minor)
+> +			break;
+> +	}
+> +	mutex_unlock(&rproc_chrdev_lock);
+> +
+> +	return r->rproc;
+> +}
+> +
+> +static int rproc_open(struct inode *inode, struct file *file)
+> +{
+> +	struct rproc *rproc;
+> +	int retval;
+> +
+
+rproc can be found with:
+  container_of(inode->i_cdev, struct rproc, char_dev);
+
+so you don't need rproc_get_by_dev_no() and hence not rproc_chrdev_list.
+
+> +	rproc = rproc_get_by_dev_no(iminor(inode));
+> +	if (!rproc)
+> +		return -EINVAL;
+> +
+> +	if (!try_module_get(rproc->dev.parent->driver->owner)) {
+> +		dev_err(&rproc->dev, "can't get owner\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	get_device(&rproc->dev);
+> +	retval = rproc_boot(rproc);
+
+return rproc_boot(); and drop "retval".
+
+> +
+> +	return retval;
+> +}
+> +
+> +static int rproc_close(struct inode *inode, struct file *file)
+
+s/close/release/
+
+> +{
+> +	struct rproc *rproc;
+> +
+> +	rproc = rproc_get_by_dev_no(iminor(inode));
+> +	if (!rproc)
+> +		return -EINVAL;
+> +
+> +	rproc_shutdown(rproc);
+> +	rproc_put(rproc);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations rproc_fops = {
+> +	.open = rproc_open,
+> +	.release = rproc_close,
+> +};
+> +
+> +int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	int ret = 0;
+
+No need to initialize ret, its first use is an assignment.
+
+> +	static int major, minor;
+
+Move these to the top of the file, and use an ida for allocating the
+minor.
+
+> +	dev_t dev_no;
+> +	struct rproc_char_dev *chrdev;
+> +
+> +	mutex_lock(&rproc_chrdev_lock);
+> +	if (!major) {
+> +		ret = alloc_chrdev_region(&dev_no, 0, 4, "subsys");
+
+Please do this during remoteproc_init()
+
+Regards,
+Bjorn
+
+> +		if (ret < 0) {
+> +			pr_err("Failed to alloc subsys_dev region, err %d\n",
+> +									ret);
+> +			goto fail;
+> +		}
+> +		major = MAJOR(dev_no);
+> +		minor = MINOR(dev_no);
+> +	} else
+> +		dev_no = MKDEV(major, minor);
+> +
+> +	cdev_init(&rproc->char_dev, &rproc_fops);
+> +	rproc->char_dev.owner = THIS_MODULE;
+> +	ret = cdev_add(&rproc->char_dev, dev_no, 1);
+> +	if (ret < 0)
+> +		goto fail_unregister_cdev_region;
+> +
+> +	rproc->dev.devt = dev_no;
+> +
+> +	chrdev = kzalloc(sizeof(struct rproc_char_dev), GFP_KERNEL);
+> +	if (!chrdev) {
+> +		ret = -ENOMEM;
+> +		goto fail_unregister_cdev_region;
+> +	}
+> +
+> +	chrdev->rproc = rproc;
+> +	chrdev->dev_no = dev_no;
+> +	list_add(&chrdev->node, &rproc_chrdev_list);
+> +	++minor;
+> +	mutex_unlock(&rproc_chrdev_lock);
+> +
+> +	return 0;
+> +
+> +fail_unregister_cdev_region:
+> +	unregister_chrdev_region(dev_no, 1);
+> +fail:
+> +	mutex_unlock(&rproc_chrdev_lock);
+> +	return ret;
+> +}
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad666..c4ca796 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -37,6 +37,7 @@
+>  
+>  #include <linux/types.h>
+>  #include <linux/mutex.h>
+> +#include <linux/cdev.h>
+>  #include <linux/virtio.h>
+>  #include <linux/completion.h>
+>  #include <linux/idr.h>
+> @@ -514,6 +515,7 @@ struct rproc {
+>  	bool auto_boot;
+>  	struct list_head dump_segments;
+>  	int nb_vdev;
+> +	struct cdev char_dev;
+>  };
+>  
+>  /**
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
