@@ -2,162 +2,95 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4578FC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D06CC54FCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18F1420724
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65F5A20724
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:08:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="and8LT/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbgCYBGL (ORCPT
+        id S1727277AbgCYBIx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:06:11 -0400
-Received: from mga01.intel.com ([192.55.52.88]:32038 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727113AbgCYBGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:06:10 -0400
-IronPort-SDR: ay7TFHOeaJW50VAXg7l3jaenbZgbJsPVBDEB4Y+bVy36KnY9b5Op1l+e93oEBA9LSNX4H0Z+/+
- gFdRlu6zEybg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 18:06:09 -0700
-IronPort-SDR: z5R6lpjG8+2Oc1MM89RRMHOBYnTW4DVLrjfbD/wS/e2JrgHpwwTPP0nHfUphaKQqI2BmxmGIG/
- bf8OkxO1AWWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
-   d="scan'208";a="246951513"
-Received: from joy-optiplex-7040.sh.intel.com (HELO joy-OptiPlex-7040) ([10.239.13.16])
-  by orsmga003.jf.intel.com with ESMTP; 24 Mar 2020 18:06:03 -0700
-Date:   Tue, 24 Mar 2020 20:56:32 -0400
-From:   Yan Zhao <yan.y.zhao@intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        "cjia@nvidia.com" <cjia@nvidia.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "aik@ozlabs.ru" <aik@ozlabs.ru>,
-        "Zhengxiao.zx@alibaba-inc.com" <Zhengxiao.zx@alibaba-inc.com>,
-        "shuangtai.tst@alibaba-inc.com" <shuangtai.tst@alibaba-inc.com>,
-        "qemu-devel@nongnu.org" <qemu-devel@nongnu.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "eauger@redhat.com" <eauger@redhat.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>,
-        "Yang, Ziye" <ziye.yang@intel.com>,
-        "mlevitsk@redhat.com" <mlevitsk@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "libvir-list@redhat.com" <libvir-list@redhat.com>,
-        "felipe@nutanix.com" <felipe@nutanix.com>,
-        "Ken.Xue@amd.com" <Ken.Xue@amd.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "dinechin@redhat.com" <dinechin@redhat.com>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "Liu, Changpeng" <changpeng.liu@intel.com>,
-        "berrange@redhat.com" <berrange@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "jonathan.davies@nutanix.com" <jonathan.davies@nutanix.com>,
-        "He, Shaopeng" <shaopeng.he@intel.com>
-Subject: Re: [PATCH v4 0/2] introduction of migration_version attribute for
- VFIO live migration
-Message-ID: <20200325005631.GA20109@joy-OptiPlex-7040>
-Reply-To: Yan Zhao <yan.y.zhao@intel.com>
-References: <20190531004438.24528-1-yan.y.zhao@intel.com>
- <20190603132932.1b5dc7fe@x1.home>
- <20190604003422.GA30229@joy-OptiPlex-7040>
- <20200323152959.1c39e9a7@w520.home>
- <20200324035316.GE5456@joy-OptiPlex-7040>
- <20200324092331.GA2645@work-vm>
- <20200324084954.0dd835e2@w520.home>
+        Tue, 24 Mar 2020 21:08:53 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16847 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727119AbgCYBIx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 21:08:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7aaef70000>; Tue, 24 Mar 2020 18:08:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 24 Mar 2020 18:08:52 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 24 Mar 2020 18:08:52 -0700
+Received: from [10.2.160.81] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 01:08:51 +0000
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Dmitry Osipenko <digetx@gmail.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <hverkuil@xs4all.nl>,
+        <helen.koike@collabora.com>
+CC:     <sboyd@kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+ <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+Message-ID: <5695fc27-6839-dda3-9d06-77ef36ecfd43@nvidia.com>
+Date:   Tue, 24 Mar 2020 18:08:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324084954.0dd835e2@w520.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585098487; bh=aKHthfLue+1H2XDz473VqkpiUrB/NbryW9pP8d76r+s=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=and8LT/30BHlj1Hs1vFx5H2aqxApXzDkDdNer+loRB+Wgj+01QrMDvgjzESzdwwxd
+         ChtlCFqZQPGZmdLWJzx/x22OQ94pCqO3R0jismKLaALCIUtlesptrkE/fxP1CjLca2
+         jCU4ugZjhQ2n1Kd6KriXNfve5uSN/5KC6JpGGCOF4EUDEzlE3sV1vXPjQxA6m+ijg5
+         wr5E/1sX3iF0JjJAE4mmwDI+MciU9rfJd7Q/0zczolkJQBXUTmTUeJmDs06vD/ZbtF
+         5dbYP/EJ5QxPkoff0zwMjk/SNPEFuxKOMOSf8HfSGvZBfsfWUguUEGkVao+Duojqf/
+         D952W4A2bjHdg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 10:49:54PM +0800, Alex Williamson wrote:
-> On Tue, 24 Mar 2020 09:23:31 +0000
-> "Dr. David Alan Gilbert" <dgilbert@redhat.com> wrote:
-> 
-> > * Yan Zhao (yan.y.zhao@intel.com) wrote:
-> > > On Tue, Mar 24, 2020 at 05:29:59AM +0800, Alex Williamson wrote:  
-> > > > On Mon, 3 Jun 2019 20:34:22 -0400
-> > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > >   
-> > > > > On Tue, Jun 04, 2019 at 03:29:32AM +0800, Alex Williamson wrote:  
-> > > > > > On Thu, 30 May 2019 20:44:38 -0400
-> > > > > > Yan Zhao <yan.y.zhao@intel.com> wrote:
-> > > > > >     
-> > > > > > > This patchset introduces a migration_version attribute under sysfs of VFIO
-> > > > > > > Mediated devices.
-> > > > > > > 
-> > > > > > > This migration_version attribute is used to check migration compatibility
-> > > > > > > between two mdev devices of the same mdev type.
-> > > > > > > 
-> > > > > > > Patch 1 defines migration_version attribute in
-> > > > > > > Documentation/vfio-mediated-device.txt
-> > > > > > > 
-> > > > > > > Patch 2 uses GVT as an example to show how to expose migration_version
-> > > > > > > attribute and check migration compatibility in vendor driver.    
-> > > > > > 
-> > > > > > Thanks for iterating through this, it looks like we've settled on
-> > > > > > something reasonable, but now what?  This is one piece of the puzzle to
-> > > > > > supporting mdev migration, but I don't think it makes sense to commit
-> > > > > > this upstream on its own without also defining the remainder of how we
-> > > > > > actually do migration, preferably with more than one working
-> > > > > > implementation and at least prototyped, if not final, QEMU support.  I
-> > > > > > hope that was the intent, and maybe it's now time to look at the next
-> > > > > > piece of the puzzle.  Thanks,
-> > > > > > 
-> > > > > > Alex    
-> > > > > 
-> > > > > Got it. 
-> > > > > Also thank you and all for discussing and guiding all along:)
-> > > > > We'll move to the next episode now.  
-> > > > 
-> > > > Hi Yan,
-> > > > 
-> > > > As we're hopefully moving towards a migration API, would it make sense
-> > > > to refresh this series at the same time?  I think we're still expecting
-> > > > a vendor driver implementing Kirti's migration API to also implement
-> > > > this sysfs interface for compatibility verification.  Thanks,
-> > > >  
-> > > Hi Alex
-> > > Got it!
-> > > Thanks for reminding of this. And as now we have vfio-pci implementing
-> > > vendor ops to allow live migration of pass-through devices, is it
-> > > necessary to implement similar sysfs node for those devices?
-> > > or do you think just PCI IDs of those devices are enough for libvirt to
-> > > know device compatibility ?  
-> > 
-> > Wasn't the problem that we'd have to know how to check for things like:
-> >   a) Whether different firmware versions in the device were actually
-> > compatible
-> >   b) Whether minor hardware differences were compatible - e.g. some
-> > hardware might let you migrate to the next version of hardware up.
-> 
-> Yes, minor changes in hardware or firmware that may not be represented
-> in the device ID or hardware revision.  Also the version is as much for
-> indicating the compatibility of the vendor defined migration protocol
-> as it is for the hardware itself.  I certainly wouldn't be so bold as
-> to create a protocol that is guaranteed compatible forever.  We'll need
-> to expose the same sysfs attribute in some standard location for
-> non-mdev devices.  I assume vfio-pci would provide the vendor ops some
-> mechanism to expose these in a standard namespace of sysfs attributes
-> under the device itself.  Perhaps that indicates we need to link the
-> mdev type version under the mdev device as well to make this
-> transparent to userspace tools like libvirt.  Thanks,
->
-Got it. will do it.
-Thanks!
 
-Yan
+On 3/24/20 5:34 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 23.03.2020 20:52, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> +static void tegra_channel_vi_soft_reset(struct tegra_vi_channel *chan)
+>> +{
+>> +     /* disable clock gating to enable continuous clock */
+>> +     tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0);
+>> +     /*
+>> +      * Soft reset memory client interface, pixel format logic, sensor
+>> +      * control logic, and a shadow copy logic to bring VI to clean sta=
+te.
+>> +      */
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xf);
+>> +     usleep_range(100, 200);
+>> +     vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0);
+> Is it safe to reset MCCIF without blocking and flushing memory requests
+> at first?
+Yes to bring VI to clean state on errors its recommended by HW design team.
