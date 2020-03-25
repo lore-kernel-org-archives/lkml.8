@@ -4,145 +4,202 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D9DC2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3C2C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E0320773
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C34020773
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:10:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iwwJs37q"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MEGiICJV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbgCYUHw (ORCPT
+        id S1727386AbgCYUKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:07:52 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36338 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgCYUHv (ORCPT
+        Wed, 25 Mar 2020 16:10:38 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54820 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727275AbgCYUKh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:07:51 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g2so1241316plo.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 13:07:51 -0700 (PDT)
+        Wed, 25 Mar 2020 16:10:37 -0400
+Received: by mail-pj1-f67.google.com with SMTP id np9so1501269pjb.4
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 13:10:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=6P5bTAGsE0amInvCSHC0blEKE/ToIH6x//KXcxXkD08=;
-        b=iwwJs37qnuJfDrZ3hbRFpiXq4hpsEHFv3tJYxWCys78aTmwq9KISIsEDfCqkhpgAqe
-         Xb74jT1J0Y1159WgIYJBvSdCm3J8XpLgm7TTaK5Qv34pzY64c3WvrpCgW9G+rTJWxuQ5
-         qxyy8aSw7Jgob9XNWo+qA0mvugPw1SHcL4ePw=
+         :content-disposition:in-reply-to;
+        bh=jNzyH7EnpWUf8Zb+Itt1+uHYTbc8/5pBIyHGqaUSrO4=;
+        b=MEGiICJVD1Daf2cbxxrPQ0bmN7kE511daNuEf5YVKbSSU2fc8eGqlezUG6hF5WAWWN
+         4Z29itskZCX43JaPGxgVCCfwcgR7A1FJ2drYNDTMQGykPlEuY6XGU7FqQpPoSz6Qmdpf
+         EjY6ys62ECz5N1bvBAw9OHQ1TY8+Bh7xiiKgs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=6P5bTAGsE0amInvCSHC0blEKE/ToIH6x//KXcxXkD08=;
-        b=RVRE6/TQsI/cCZlRH7IyxapPGd71+Plf5OmpCpTpyoBauBS624xK5Yg5V1cKcRuE98
-         4V2sDYFfi3sVoNy8ntOHNkSQZZKeO3kzK5fYi6l6G4ikZJU+veCylutLyNULrz+B1du8
-         na+s7B6WOLw8emMugElv2mqG+kGkHAXOgjCkyopTedSQOlwYdC0v8kJM1h9nNArH23+9
-         juOvUuBVUXsmkIVmB6nRVDQLx9yl9a34LqjntSrLJjfjrGMaqXzh7D+167D8byaJpSnK
-         Zj0uJRhdmZjxjr7WkjA9TVUMTjlpzZ4CzRQlSnPt2H2knia6Vnao/R/kq+iGHvXqT07q
-         fcLg==
-X-Gm-Message-State: ANhLgQ1wX1blp5TTwFItoNKuYiAyl6qou8mLRLVdAuCdmVUUdIqMXiV7
-        UmNDkhFcdlzhzwFIE2NXSKcpXA==
-X-Google-Smtp-Source: ADFU+vsnCDdTqQ/eLFXY+637edokg88uorV6An1aox+orWo/paerQoA15rocN1ChqG2o5GuJsfRNhw==
-X-Received: by 2002:a17:90a:2a89:: with SMTP id j9mr5435067pjd.64.1585166870475;
-        Wed, 25 Mar 2020 13:07:50 -0700 (PDT)
+         :mime-version:content-disposition:in-reply-to;
+        bh=jNzyH7EnpWUf8Zb+Itt1+uHYTbc8/5pBIyHGqaUSrO4=;
+        b=WjKAFq8mbbrcsdaOX57cRimvUEztOU5kq0FTTHLbxvbDGIVmuH5NeKg77sy7StgeI/
+         ILTK8HuGFUgOAi5IM3gLBXZr8D1XE8M1wyvdNU4JzognVQV3DPaMHRqr16UkdztZmfoJ
+         RNKu6MIF6zW5QK7As3pMbq1BRxPl0L6BSk2KqZ1QFxl+gkP1jE9PlXwHjTnCoOnpaLYV
+         8sMhqS8sKyR87AdKUWVIHs4x5UbyKT8jb51Pbr8ediOsXaU4PbOJJLHNEQizvVy/A8mj
+         kb2Eb4LMCW2r37pp0aQ+xVIp9lJ8Zt5HNRbttjza3MpgcZjgKzmbkBHhkxDB+8B39V3T
+         hz2g==
+X-Gm-Message-State: ANhLgQ3+rA9gd111km+ThXI3axTjlx2toR9UahbHB1y5a0rjcjkRmbNH
+        UYV3RdN/pDbXVw40+XuMh7qIMQ==
+X-Google-Smtp-Source: ADFU+vsYp5M/XTtN+TcZk2Nh+XRbqEFhcmQJdL17aNi4dFQGvV40j4QHfLEelW8iB1jV1eqXRaU4+Q==
+X-Received: by 2002:a17:90a:7105:: with SMTP id h5mr5632351pjk.54.1585167034299;
+        Wed, 25 Mar 2020 13:10:34 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r63sm12610703pfr.42.2020.03.25.13.07.49
+        by smtp.gmail.com with ESMTPSA id q9sm17708439pgs.89.2020.03.25.13.10.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 13:07:49 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 13:07:48 -0700
+        Wed, 25 Mar 2020 13:10:33 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 13:10:32 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v6 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <202003251257.AD4381C861@keescook>
-References: <20200325152629.6904-1-kpsingh@chromium.org>
- <20200325152629.6904-4-kpsingh@chromium.org>
- <202003251225.923FF1DD7@keescook>
- <20200325193956.GA22898@chromium.org>
+To:     Nick Terrell <nickrterrell@gmail.com>
+Cc:     Nick Terrell <terrelln@fb.com>, linux-kernel@vger.kernel.org,
+        Chris Mason <clm@fb.com>, linux-kbuild@vger.kernel.org,
+        x86@kernel.org, gregkh@linuxfoundation.org,
+        Petr Malat <oss@malat.biz>, Kernel Team <Kernel-team@fb.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>
+Subject: Re: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and
+ initramfs
+Message-ID: <202003251309.349484C8E@keescook>
+References: <20200325195849.407900-1-nickrterrell@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200325193956.GA22898@chromium.org>
+In-Reply-To: <20200325195849.407900-1-nickrterrell@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 08:39:56PM +0100, KP Singh wrote:
-> On 25-Mär 12:28, Kees Cook wrote:
-> > On Wed, Mar 25, 2020 at 04:26:24PM +0100, KP Singh wrote:
-> > > +noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)	\
-> > 
-> > I don't think the __weak is needed any more here?
+On Wed, Mar 25, 2020 at 12:58:41PM -0700, Nick Terrell wrote:
+> From: Nick Terrell <terrelln@fb.com>
 > 
-> This was suggested in:
+> Hi all,
 > 
->  https://lore.kernel.org/bpf/20200221022537.wbmhdfkdbfvw2pww@ast-mbp/
+> I attempted to send this patch on March 19, but it got rejected by the
+> mailing lists for some reason, so I'm resending it.
 > 
-> "I think I saw cases when gcc ignored 'noinline' when function is
-> defined in the same file and still performed inlining while keeping
-> the function body.  To be safe I think __weak is necessary. That will
-> guarantee noinline."
+> This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+> initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+> are supported on all architectures. The ZSTD-compressed kernel is only
+> hooked up to x86 in this patch set.
 > 
-> It happened to work nicely with the previous approach for the special
-> hooks but the actual reason for adding the __weak was to guarrantee
-> that these functions don't get inlined.
+> Zstandard requires slightly more memory during the kernel decompression
+> on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+> window size.
+> 
+> Zstandard requires memory proprortional to the window size used during
+> compression for decompressing the ramdisk image, since streaming mode is
+> used. Newer versions of zstd (1.3.2+) list the window size of a file
+> with `zstd -lv <file>'. The absolute maximum amount of memory required
+> is just over 8 MB, but it can be controlled at compression time.
+> 
+> This patch set has been boot tested with buildroot and QEMU based off
+> of linux-5.6-rc6.
+> 
+> On i386 and x86_64 I have tested the following configurations:
+> * zstd compressed kernel and a separate zstd compressed initramfs
+> * zstd compressed kernel and a built-in zstd compressed initramfs
+> * gzip compressed kernel and a separate gzip compressed initramfs
+> * gzip compressed kernel and a built-in gzip compressed initramfs
+> 
+> On arm and aarch64 I tested the same configurations, except that the kernel is
+> always gzip compressed.
+> 
+> Facebook has been using v1 of these patches on x86_64 devices for more than 6
+> months. When we switched from a xz compressed initramfs to a zstd compressed
+> initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+> switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+> seconds of boot time.
+> 
+> Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+> When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+> decompression time shrunk from 27 seconds to 8 seconds.
+> 
+> The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+> than the xz or lzma compressed kernels, and it decompresses faster than
+> everything except lz4. See the table below for the measurement of an x86_64
+> kernel ordered by compressed size:
+> 
+> algo	size
+> xz  	 6,509,792
+> lzma	 6,856,576
+> zstd	 7,399,157
+> gzip	 8,522,527
+> bzip	 8,629,603
+> lzo 	 9,808,035
+> lz4 	10,705,570
+> none	32,565,672
+> 
+> v1 -> v2:
+> - Rebase
+>   - usr/Makefile and init/Kconfig were changed so the patches were updated
+> - No functional changes except to rebase
+> - Split the patches up into smaller chunks
+> 
+> v2 -> v3:
+> - Add *.zst to the .gitignore in patch 8
+> - Style nits in patch 3
+> - Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+>   1 through 3
+> 
+> Best,
+> Nick Terrell
+> 
 
-Oh, hrm. Well, okay. That rationale would imply that the "noinline"
-macro needs adjustment instead, but that can be separate, something like:
+Hi! Just resending Reviewed-by, since it looks like the earlier v3
+didn't make it to the mailing list, as Nick just pointed out to me:
 
-include/linux/compiler_attributes.h
+https://lore.kernel.org/lkml/202003201109.00FDE311A7@keescook/
 
--#define noinline __attribute__((__noinline__))
-+#define noinline __attribute__((__noinline__)) __attribute__((__weak__))
-
-With a comment, etc...
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
 -Kees
 
+> Adam Borowski (1):
+>   .gitignore: add ZSTD-compressed files
 > 
-> > 
-> > > +{						\
-> > > +	return DEFAULT;				\
-> > 
-> > I'm impressed that LSM_RET_VOID actually works. :)
+> Nick Terrell (7):
+>   lib: prepare zstd for preboot environment
+>   lib: prepare xxhash for preboot environment
+>   lib: add zstd support to decompress
+>   init: add support for zstd compressed kernel
+>   usr: add support for zstd compressed initramfs
+>   x86: bump ZO_z_extra_bytes margin for zstd
+>   x86: Add support for ZSTD compressed kernel
 > 
-> All the credit goes to Andrii :)
+>  .gitignore                        |   1 +
+>  Documentation/x86/boot.rst        |   6 +-
+>  arch/x86/Kconfig                  |   1 +
+>  arch/x86/boot/compressed/Makefile |   5 +-
+>  arch/x86/boot/compressed/misc.c   |   4 +
+>  arch/x86/boot/header.S            |   8 +-
+>  arch/x86/include/asm/boot.h       |   6 +-
+>  include/linux/decompress/unzstd.h |  11 +
+>  init/Kconfig                      |  15 +-
+>  lib/Kconfig                       |   4 +
+>  lib/Makefile                      |   1 +
+>  lib/decompress.c                  |   5 +
+>  lib/decompress_unzstd.c           | 338 ++++++++++++++++++++++++++++++
+>  lib/xxhash.c                      |  21 +-
+>  lib/zstd/decompress.c             |   2 +
+>  lib/zstd/fse_decompress.c         |   9 +-
+>  lib/zstd/zstd_internal.h          |  14 +-
+>  scripts/Makefile.lib              |  15 ++
+>  usr/Kconfig                       |  20 ++
+>  usr/Makefile                      |   1 +
+>  20 files changed, 460 insertions(+), 27 deletions(-)
+>  create mode 100644 include/linux/decompress/unzstd.h
+>  create mode 100644 lib/decompress_unzstd.c
 > 
-> - KP
+> -- 
+> 2.25.1
 > 
-> > 
-> > -Kees
-> > 
-> > > +}
-> > > +
-> > > +#include <linux/lsm_hook_defs.h>
-> > > +#undef LSM_HOOK
-> > >  
-> > >  const struct bpf_prog_ops lsm_prog_ops = {
-> > >  };
-> > > -- 
-> > > 2.20.1
-> > > 
-> > 
-> > -- 
-> > Kees Cook
 
 -- 
 Kees Cook
