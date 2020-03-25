@@ -2,123 +2,73 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5AFC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA3BC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:32:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011B3206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nwr8fvcC"
+	by mail.kernel.org (Postfix) with ESMTP id ABBDB206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:32:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgCYPcb (ORCPT
+        id S1727875AbgCYPc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:32:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53644 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727491AbgCYPca (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:32:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=L8UzQwxATOZdjWZ+3tNM04b2mH/5tj4IRSDfIFAnCq4=; b=nwr8fvcCAKrcOHuwe8r/p16lMc
-        bZh3DEdAU9aGBWN3F5ynv1Ne93Ij03ZhftdP2p/j/SwKFdDbTLj5/ZaltpVeKwhDVOtZpmt6dBgOM
-        Y5kNAkTDyJM9LmxIOgZivD4BtHVK41PC4z2UtEwA8qUzMYjVHQwzjfESuvsJdyTL91AdLqA/lHmDm
-        b4ONx8n6tUgKbzMesC9PHNx/tJe345Szba01BQVbNkeQ4aBKyS9/rqkTgJMFlzt5JsbGeTzjBPG19
-        tW79XBGQHh8i08Okr8byBxVFG1QH7u5q9rAcay5PaTaRDoWupoIchhUNkRzhk4f/AQVLTP2rNvR7K
-        5pnTChzQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH816-0004oZ-U3; Wed, 25 Mar 2020 15:32:28 +0000
-Date:   Wed, 25 Mar 2020 08:32:28 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, linux-xfs <linux-xfs@vger.kernel.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        William Kucharski <william.kucharski@oracle.com>
-Subject: Re: [PATCH v10 24/25] fuse: Convert from readpages to readahead
-Message-ID: <20200325153228.GB22483@bombadil.infradead.org>
-References: <20200323202259.13363-1-willy@infradead.org>
- <20200323202259.13363-25-willy@infradead.org>
- <CAJfpegu7EFcWrg3bP+-2BX_kb52RrzBCo_U3QKYzUkZfe4EjDA@mail.gmail.com>
- <20200325120254.GA22483@bombadil.infradead.org>
- <CAJfpegshssCJiA8PBcq2XvBj3mR8dufHb0zWRFvvKKv82VQYsw@mail.gmail.com>
+        Wed, 25 Mar 2020 11:32:56 -0400
+Received: from mga14.intel.com ([192.55.52.115]:37327 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727491AbgCYPc4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:32:56 -0400
+IronPort-SDR: RdDVsOjr5hc+yIpfkOgO1WNzwdIvjhbzdMWBTa5kcdPCpcbLkxSKaQ/7M42lEXYUPSmqksqji+
+ lRSknRWV9LEA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 08:32:55 -0700
+IronPort-SDR: lwG8YFe/S1M+7otpyY2XcPjdQZi0KulJ5ajLWmFWM6vokbAvzAtZ2u2fGBguyVbVRo/dVz2IGj
+ qp6MGcPO9CwA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="446656572"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 08:32:55 -0700
+Date:   Wed, 25 Mar 2020 08:32:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
+Message-ID: <20200325153255.GC14294@linux.intel.com>
+References: <20200325195350.7300fee9@canb.auug.org.au>
+ <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegshssCJiA8PBcq2XvBj3mR8dufHb0zWRFvvKKv82VQYsw@mail.gmail.com>
+In-Reply-To: <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 03:43:02PM +0100, Miklos Szeredi wrote:
-> >
-> > -       while ((page = readahead_page(rac))) {
-> > -               if (fuse_readpages_fill(&data, page) != 0)
-> > +               nr_pages = min(readahead_count(rac), fc->max_pages);
+On Wed, Mar 25, 2020 at 08:30:00AM -0700, Randy Dunlap wrote:
+> On 3/25/20 1:53 AM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Changes since 20200324:
+> > 
 > 
-> Missing fc->max_read clamp.
-
-Yeah, I realised that.  I ended up doing ...
-
-+       unsigned int i, max_pages, nr_pages = 0;
-...
-+       max_pages = min(fc->max_pages, fc->max_read / PAGE_SIZE);
-
-> > +               ia = fuse_io_alloc(NULL, nr_pages);
-> > +               if (!ia)
-> >                         return;
-> > +               ap = &ia->ap;
-> > +               __readahead_batch(rac, ap->pages, nr_pages);
 > 
-> nr_pages = __readahead_batch(...)?
+> on i386 randconfig build:
+> and gcc 7.5.0:
+> 
+> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
+> function __cpuid_entry_get_reg(), for the default: case.
 
-That's the other bug ... this was designed for btrfs which has a fixed-size
-buffer.  But you want to dynamically allocate fuse_io_args(), so we need to
-figure out the number of pages beforehand, which is a little awkward.  I've
-settled on this for the moment:
-
-        for (;;) {
-               struct fuse_io_args *ia;
-                struct fuse_args_pages *ap;
-
-                nr_pages = readahead_count(rac) - nr_pages;
-                if (nr_pages > max_pages)
-                        nr_pages = max_pages;
-                if (nr_pages == 0)
-                        break;
-                ia = fuse_io_alloc(NULL, nr_pages);
-                if (!ia)
-                        return;
-                ap = &ia->ap;
-                __readahead_batch(rac, ap->pages, nr_pages);
-                for (i = 0; i < nr_pages; i++) {
-                        fuse_wait_on_page_writeback(inode,
-                                                    readahead_index(rac) + i);
-                        ap->descs[i].length = PAGE_SIZE;
-                }
-                ap->num_pages = nr_pages;
-                fuse_send_readpages(ia, rac->file);
-        }
-
-but I'm not entirely happy with that either.  Pondering better options.
-
-> This will give consecutive pages, right?
-
-readpages() was already being called with consecutive pages.  Several
-filesystems had code to cope with the pages being non-consecutive, but
-that wasn't how the core code worked; if there was a discontiguity it
-would send off the pages that were consecutive and start a new batch.
-
-__readahead_batch() can't return fewer than nr_pages, so you don't need
-to check for that.
+I'll take a gander at this.
