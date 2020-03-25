@@ -2,190 +2,118 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5523C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2671DC54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9712920772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0519320772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:24:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="AsmavEhC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SsLqtwNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCYRXK (ORCPT
+        id S1727717AbgCYRYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:23:10 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41563 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbgCYRXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:23:10 -0400
-Received: from [IPv6:2601:646:8600:3281:c898:2a71:8b3c:1618] ([IPv6:2601:646:8600:3281:c898:2a71:8b3c:1618])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02PHLjgI3526476
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 25 Mar 2020 10:21:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02PHLjgI3526476
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020032201; t=1585156906;
-        bh=hNa8evV5Hu1zOs/UUGiqrSieOily/K/LQaClIZEAxmc=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=AsmavEhCc1MFkyU0nBp1sVNYnVxuijnL/E5P61pz6a+Pa6hrtKVg54sNCJBe7RoX9
-         CWtebAS/xDHrfxUFzQUGWphTWVZgT4FSTu8bTkJKqg8kfJYu72IZz3HJ8x9fzCrIwf
-         SP2PvNTMj4+NIi8nhpOTmCwc8pqNJfYLS8f5E2mJEr2oPEoDkOqCbHZilmIUoFnfP3
-         0fmfd6lah2QwXcrUbrWZwJmEoz5IItpE4umtgf1wR9/73SoPfDFUOM5AA9NYaXHZgq
-         XxI76OYxuel3r2Oeyn6HRMr9mjNcZXLeII/fC3ry5y5ayujkiyj7B53wEileAVuoey
-         Pofp5dLQKUqXg==
-Date:   Wed, 25 Mar 2020 10:21:39 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAP6exYLK11rhreX=6QPyDQmW7wPHsKNEFtXE47pjx41xS6O7-A@mail.gmail.com>
-References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com> <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com> <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com> <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com> <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com> <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com> <CAP6exYLEg+iu4Hs0+vdk0b6rgB5ZT7ZTvuhe--biCg9dGbNCTQ@mail.gmail.com> <CAP6exYLCFp8AMFx_d3XJtYiSibF76Fo-km4vB5MwSbqE8D8DNA@mail.gmail.com> <2837291a-b682-bd6d-4e08-ffa76d3097b0@infradead.org> <CAP6exYLK11rhreX=6QPyDQmW7wPHsKNEFtXE47pjx41xS6O7-A@mail.gmail.com>
+        Wed, 25 Mar 2020 13:24:37 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:55392 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727320AbgCYRYg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:24:36 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PHIUu9063725;
+        Wed, 25 Mar 2020 17:23:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=BVLD2DnNfc3hv/pKnHW3xvm86ovl8foR84Cu3jjRluI=;
+ b=SsLqtwNsiMxQfXKTjwpsTimV5kVfZurxza6rlE6nubcGWAuwfTQLsLzfoqG0Stq9ih08
+ JPc3GVkauUN9Cml8EKZvjx69mZwbc+VFBo0XITYoEyIu99jyzN2TJm/F2sx57xWqNmOh
+ zf792px6wXY0CY6mrHRCF2ct3trMMgap/0VufstShpXG/ZafG3BTY0QKhfGEra51fy1s
+ bVcRlQFVCNRwWWIGQ8CXRaRPqg/kGM6NAgfMca09okEe2kHd280CipW0AqoOSFCv+deO
+ 6GesVjacIeNC6T/w8+zLlG+Fz5PlAFNc1I53QbM4qMrLiNxiF65nF5uiIX0kBdvOmngY gQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 3005kva3e8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 17:23:45 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PHMVh7021581;
+        Wed, 25 Mar 2020 17:23:44 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2yxw4rvfvw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 17:23:44 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02PHNepp026829;
+        Wed, 25 Mar 2020 17:23:40 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Mar 2020 10:23:40 -0700
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>, axboe@kernel.dk,
+        bob.liu@oracle.com, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, song@kernel.org, tytso@mit.edu,
+        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/6] block: Introduce REQ_ALLOCATE flag for REQ_OP_WRITE_ZEROES
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
+        <e2b7cbab-d91f-fd7b-de6f-a671caa6f5eb@virtuozzo.com>
+        <69c0b8a4-656f-98c4-eb55-2fd1184f5fc9@virtuozzo.com>
+        <67d63190-c16f-cd26-6b67-641c8943dc3d@virtuozzo.com>
+        <20200319102819.GA26418@infradead.org> <yq1tv2k8pjn.fsf@oracle.com>
+        <20200325162656.GJ29351@magnolia>
+        <20200325163223.GA27156@infradead.org>
+Date:   Wed, 25 Mar 2020 13:23:33 -0400
+In-Reply-To: <20200325163223.GA27156@infradead.org> (Christoph Hellwig's
+        message of "Wed, 25 Mar 2020 09:32:23 -0700")
+Message-ID: <yq1d090jqlm.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
-To:     ron minnich <rminnich@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>
-CC:     Matthew Garrett <mjg59@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
-        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
-From:   hpa@zytor.com
-Message-ID: <F4664C3D-B6A0-4559-BEFB-59098190904D@zytor.com>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ spamscore=0 mlxlogscore=786 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003250140
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
+ suspectscore=0 impostorscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=841 lowpriorityscore=0 mlxscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003250139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 24, 2020 9:19:01 AM PDT, ron minnich <rminnich@gmail=2Ecom> wrote:
->Subject: [PATCH 1/1] initrdmem=3D option to specify initrd physical
->address
->
->This patch adds the initrdmem option:
->initrdmem=3Dss[KMG],nn[KMG]
->which is used to specify the physical address of the initrd,
->almost always an address in FLASH=2E It also adds code for
->x86 to use the existing phys_init_start and
->phys_init_size variables in the kernel=2E
->This is useful in cases where we wish to place a kernel
->and initrd in FLASH, but there is no firmware file
->system structure in the FLASH=2E
->
->One such situation occurs when we have reclaimed unused FLASH
->space on UEFI systems by, e=2Eg=2E, taking it from the Management
->Engine=2E For example, on many systems, the ME is given half the
->FLASH part; not only is 2=2E75M of an 8M part unused; but 10=2E75M
->of a 16M part is unused=2E We can use this space to contain
->an initrd, but need to tell Linux where it is=2E
->
->This space is "raw": due to, e=2Eg=2E, UEFI limitations:
->it can not be added to UEFI firmware volumes without rebuilding
->UEFI from source or writing a UEFI device driver=2E We can reference it
->only as a physical address and size=2E
->
->At the same time, should we netboot a kernel or load it from
->GRUB or syslinux, we want to have the option of not using
->the physical address specification=2E Then, should we wish, it
->is easy to boot the kernel and provide an initrd; or boot the
->the kernel and let it use the initrd in FLASH=2E In practice this
->has proven to be very helpful as we integrate Linux into FLASH
->on x86=2E
->
->Hence, the most flexible and convenient path is to enable the
->initrdmem command line flag in a way that it is the last choice tried=2E
->
->For example, on the DigitalLoggers Atomic Pi, we burn an image into
->FLASH with a built-in command line which includes:
->initrdmem=3D0xff968000,0x200000
->which specifies a location and size=2E
->
->Signed-off-by: Ronald G=2E Minnich <rminnich@gmail=2Ecom>
->---
-> Documentation/admin-guide/kernel-parameters=2Etxt |  7 +++++++
-> arch/x86/kernel/setup=2Ec                         |  6 ++++++
-> init/do_mounts_initrd=2Ec                         | 13 ++++++++++++-
-> 3 files changed, 25 insertions(+), 1 deletion(-)
->
->diff --git a/Documentation/admin-guide/kernel-parameters=2Etxt
->b/Documentation/admin-guide/kernel-parameters=2Etxt
->index c07815d230bc=2E=2E9cd356958a7f 100644
->--- a/Documentation/admin-guide/kernel-parameters=2Etxt
->+++ b/Documentation/admin-guide/kernel-parameters=2Etxt
->@@ -1714,6 +1714,13 @@
->
->     initrd=3D        [BOOT] Specify the location of the initial ramdisk
->
->+    initrdmem=3D    [KNL] Specify a physical adddress and size from
->which
->+            to load the initrd=2E If an initrd is compiled in or
->+            specified in the bootparams, it takes priority
->+            over this setting=2E
->+            Format: ss[KMG],nn[KMG]
->+            Default is 0, 0
->+
->init_on_alloc=3D    [MM] Fill newly allocated pages and heap objects with
->             zeroes=2E
->             Format: 0 | 1
->diff --git a/arch/x86/kernel/setup=2Ec b/arch/x86/kernel/setup=2Ec
->index a74262c71484=2E=2E1b04ef8ea12d 100644
->--- a/arch/x86/kernel/setup=2Ec
->+++ b/arch/x86/kernel/setup=2Ec
->@@ -237,6 +237,9 @@ static u64 __init get_ramdisk_image(void)
->
->     ramdisk_image |=3D (u64)boot_params=2Eext_ramdisk_image << 32;
->
->+    if (ramdisk_image =3D=3D 0) {
->+        ramdisk_image =3D phys_initrd_start;
->+    }
->     return ramdisk_image;
-> }
-> static u64 __init get_ramdisk_size(void)
->@@ -245,6 +248,9 @@ static u64 __init get_ramdisk_size(void)
->
->     ramdisk_size |=3D (u64)boot_params=2Eext_ramdisk_size << 32;
->
->+    if (ramdisk_size =3D=3D 0) {
->+        ramdisk_size =3D phys_initrd_size;
->+    }
->     return ramdisk_size;
-> }
->
->diff --git a/init/do_mounts_initrd=2Ec b/init/do_mounts_initrd=2Ec
->index dab8b1151b56=2E=2Ed72beda824aa 100644
->--- a/init/do_mounts_initrd=2Ec
->+++ b/init/do_mounts_initrd=2Ec
->@@ -28,7 +28,7 @@ static int __init no_initrd(char *str)
->
-> __setup("noinitrd", no_initrd);
->
->-static int __init early_initrd(char *p)
->+static int __init early_initrdmem(char *p)
-> {
->     phys_addr_t start;
->     unsigned long size;
->@@ -43,6 +43,17 @@ static int __init early_initrd(char *p)
->     }
->     return 0;
-> }
->+early_param("initrdmem", early_initrdmem);
->+
->+/*
->+ * This is here as the initrd keyword has been in use since 11/2018
->+ * on ARM, PowerPC, and MIPS=2E
->+ * It should not be; it is reserved for bootloaders=2E
->+ */
->+static int __init early_initrd(char *p)
->+{
->+    return early_initrdmem(p);
->+}
-> early_param("initrd", early_initrd);
->
->static int init_linuxrc(struct subprocess_info *info, struct cred *new)
 
-Reviewed-by: H=2E Peter Anvin (Intel) <hpa@zytor=2Ecom>
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Christoph,
+
+> I am very much against that for the following reason:
+>
+>  - the current REQ_OP_DISCARD is purely a hint, and implementations can
+>    (and do) choose to ignore it
+>
+>  - REQ_OP_WRITE_ZEROES is an actual data integrity operation with
+>    everything that entails
+
+If you want to keep emphasis on the "integrity operation" instead of the
+provisioning aspect, would you expect REQ_ALLOCATE (which may or may not
+zero blocks) to be considered a deterministic operation or a
+non-deterministic one? Should this depend on whether the device
+guarantees zeroing when provisioning blocks or not?
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
