@@ -2,207 +2,276 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FE7C2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:16:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2F7C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CA920740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:16:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD5E2074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:18:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oZy686pV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="d+RZYVj0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbgCYUQE (ORCPT
+        id S1727539AbgCYUS5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:16:04 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33530 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbgCYUQD (ORCPT
+        Wed, 25 Mar 2020 16:18:57 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:38438 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbgCYUS5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:16:03 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w25so2986278wmi.0;
-        Wed, 25 Mar 2020 13:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=P4Ii0TDkwdlQFHK60zjqPMZ23Hc82ZULQPDzrcrxaC8=;
-        b=oZy686pVHSQV8lyVpekxmI1+huiDJ7QLLElLaZDKRDcctT+pOt1/2Y2xwrDxKsGeos
-         4SvsW8E/PLHAAzEea+YC8yH9ZfJ/HbxW1kU7H+O1uOetbk26GI2KPBymqpyofWh6gW/a
-         D+TauRu6IgwANmhZQZtqfWgiQflfbwLyp8Z1avVEouhlzJy1BFyCeWOAGjrLzSXArW5V
-         c2id3KUepfnpOVku/SYZCFlMelGDLBcxBAeRJ/S3N2bvSGVnXmQZTT49x3fCt29Cxid9
-         Ml8rLTeJuBfPSUR1VLAwSF6G/Z/LEjLH+dQthMTLQwwx2yefXw90ZhQToBeBp8mT8llW
-         x02Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P4Ii0TDkwdlQFHK60zjqPMZ23Hc82ZULQPDzrcrxaC8=;
-        b=J1XTS0eEu9ga4fvIzOr/xYFr9lkv5tuPs+GKmVDYfvG5LaA4dEffPkbs/iPLzV5b6J
-         Vi60en/WBW1GdxKRlDhdTybTwH8ErU6JDJcJtdQCj5ekQlDVqYTnxcDroTPKxZYmS1I5
-         G1n0DrDXXXIRo4E8BuZ1XdhpwxGZvqL3+hv5jOPkHjhne49kUR/UPkdG7JOdzPPRcKcd
-         VpR1vOsv6GiiVLzLg0B/gVlRNmJ1vRxzvaS9Vf6fAYcQnRxgnAEtAYsC3Q9fCA6mAajH
-         PQynquZ1BnGd1DL3VaFstHyLKMcf9LJbffntOdWqlnq5/4G6V1LfQuOKyhzq6lU0OdDX
-         pYxQ==
-X-Gm-Message-State: ANhLgQ09O/xLe6EZJWfmiQSghSKJBZqPVjzgI+uttlizMLv55K3hV3vv
-        +2N/fVzUBrXAlyY2SW5nz/lLMqi6
-X-Google-Smtp-Source: ADFU+vuE9rCWTIE+VyxaxIFQu4xroR46lSyL0yhW+d++eabzC47tRT7bOOIeAZCWX4fFBJUP0iKadQ==
-X-Received: by 2002:a1c:4d7:: with SMTP id 206mr5008380wme.5.1585167358877;
-        Wed, 25 Mar 2020 13:15:58 -0700 (PDT)
-Received: from localhost (p200300E41F4A9B0076D02BFFFE273F51.dip0.t-ipconnect.de. [2003:e4:1f4a:9b00:76d0:2bff:fe27:3f51])
-        by smtp.gmail.com with ESMTPSA id y7sm142535wrq.54.2020.03.25.13.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 13:15:57 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 21:15:56 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     LABBE Corentin <clabbe@baylibre.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        pdeschrijver@nvidia.com,
-        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
-        axboe@kernel.dk, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Subject: Re: tegra124-jetson-tk1: sata doesnt work since 5.2
-Message-ID: <20200325201125.GA832965@ulmo>
-References: <20200319074401.GA4116@Red>
- <CABr+WTnBmJsDZPjUxYkG98dTneDD1p8G=uRftVduTGYbY0ruqQ@mail.gmail.com>
- <20200325134003.GA27961@Red>
- <cf63d40c-7b84-60f6-76be-a13255e69c99@nvidia.com>
- <20200325142306.GB27961@Red>
+        Wed, 25 Mar 2020 16:18:57 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02PKIj6j085839;
+        Wed, 25 Mar 2020 15:18:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585167525;
+        bh=YWnbA9p3RGUrjpZGEuExQ7ejQ8cGZmK3O4zvWi+b1+8=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=d+RZYVj0RwSPPge/qLJk4R6+yDy3WaPygHYxDbfzOGyWaEidrnA2sSZImU8CRS1I4
+         agwEpd5MguGvf8ARG05JShVCLXYZrCjEHIdTcsn+Q/ZCginBvn/h+h2WfT5q57z0mq
+         4bn8Vz6HrmGCbkx/3Lr1iJpsSOjzLyMTN6zLKY3g=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKIjJN019777;
+        Wed, 25 Mar 2020 15:18:45 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 25
+ Mar 2020 15:18:45 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 25 Mar 2020 15:18:45 -0500
+Received: from fllv0103.dal.design.ti.com (fllv0103.dal.design.ti.com [10.247.120.73])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02PKIjws098090;
+        Wed, 25 Mar 2020 15:18:45 -0500
+Received: from localhost ([10.250.35.147])
+        by fllv0103.dal.design.ti.com (8.14.7/8.14.7) with ESMTP id 02PKIjHl090856;
+        Wed, 25 Mar 2020 15:18:45 -0500
+From:   Suman Anna <s-anna@ti.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     Lokesh Vutla <lokeshvutla@ti.com>,
+        <linux-remoteproc@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Suman Anna <s-anna@ti.com>
+Subject: [PATCH 1/3] dt-bindings: remoteproc: Add bindings for C66x DSPs on TI K3 SoCs
+Date:   Wed, 25 Mar 2020 15:18:37 -0500
+Message-ID: <20200325201839.15896-2-s-anna@ti.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200325201839.15896-1-s-anna@ti.com>
+References: <20200325201839.15896-1-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="A6N2fC+uXW/VQSAv"
-Content-Disposition: inline
-In-Reply-To: <20200325142306.GB27961@Red>
-User-Agent: Mutt/1.13.1 (2019-12-14)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some Texas Instruments K3 family of SoCs have one of more Digital Signal
+Processor (DSP) subsystems that are comprised of either a TMS320C66x
+CorePac and/or a next-generation TMS320C71x CorePac processor subsystem.
+Add the device tree bindings document for the C66x DSP devices on these
+SoCs. The added example illustrates the DT nodes for the first C66x DSP
+device present on the K3 J721E family of SoCs.
 
---A6N2fC+uXW/VQSAv
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+ .../bindings/remoteproc/ti,k3-dsp-rproc.yaml  | 180 ++++++++++++++++++
+ 1 file changed, 180 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
 
-On Wed, Mar 25, 2020 at 03:23:06PM +0100, LABBE Corentin wrote:
-> On Wed, Mar 25, 2020 at 02:00:25PM +0000, Jon Hunter wrote:
-> >=20
-> > On 25/03/2020 13:40, LABBE Corentin wrote:
-> > > On Thu, Mar 19, 2020 at 08:55:38AM +0100, Nicolas Chauvet wrote:
-> > >> Le jeu. 19 mars 2020 =C3=A0 08:44, LABBE Corentin <clabbe@baylibre.c=
-om> a =C3=A9crit :
-> > >>>
-> > >>> Hello
-> > >>>
-> > >>> sata doesnt work on tegra124-jetson-tk1 on next and master and at l=
-east since 5.2 (but 5.1 works).
-> > >>> [    0.492810] +5V_SATA: supplied by +5V_SYS
-> > >>> [    0.493230] +12V_SATA: supplied by +VDD_MUX
-> > >>> [    2.088675] tegra-ahci 70027000.sata: 70027000.sata supply ahci =
-not found, using dummy regulator
-> > >>> [    2.097643] tegra-ahci 70027000.sata: 70027000.sata supply phy n=
-ot found, using dummy regulator
-> > >>> [    3.314776] tegra-ahci 70027000.sata: 70027000.sata supply ahci =
-not found, using dummy regulator
-> > >>> [    3.323658] tegra-ahci 70027000.sata: 70027000.sata supply phy n=
-ot found, using dummy regulator
-> > >>> [    5.236964] tegra-ahci 70027000.sata: 70027000.sata supply ahci =
-not found, using dummy regulator
-> > >>> [    5.245867] tegra-ahci 70027000.sata: 70027000.sata supply phy n=
-ot found, using dummy regulator
-> > >>> [    5.254706] tegra-ahci 70027000.sata: 70027000.sata supply targe=
-t not found, using dummy regulator
-> > >>> [    5.310270] phy phy-sata.6: phy poweron failed --> -110
-> > >>> [    5.315604] tegra-ahci 70027000.sata: failed to power on AHCI co=
-ntroller: -110
-> > >>> [    5.323022] tegra-ahci: probe of 70027000.sata failed with error=
- -110
-> > >>> [   35.694269] +5V_SATA: disabling
-> > >>> [   35.697438] +12V_SATA: disabling
-> > >>
-> > >> It looks strange, because (on same device) , I have sata working as
-> > >> appropriate, but ethernet fails with me.
-> > >> https://bugzilla.kernel.org/show_bug.cgi?id=3D206217
-> > >>
-> > >> It might worth to have another report.
-> > >>
-> > >=20
-> > > Hello
-> > >=20
-> > > Mine has ethernet works well. But I hit many problem with it and olde=
-r kernel.
-> > > Perhaps the 5.1.21, were I am stuck, does not have it.
-> > >=20
-> > > Anyway, the tegra of kerneci has the same SATA problem.
-> > > https://storage.kernelci.org/next/master/next-20200325/arm/multi_v7_d=
-efconfig+CONFIG_SMP=3Dn/gcc-8/lab-baylibre/boot-tegra124-jetson-tk1.txt
-> > >=20
-> > > Maintainers, any idea on this sata issue ?
-> >=20
-> > I have checked our bootlogs for v5.6-rc7 and don't see the issue with
-> > either the tegra_defconfig or the multi_v7_defconfig. I am wondering if
-> > this could be due a difference in the bootloader version. Currently we
-> > are testing with a v2019.07 u-boot bootloader. Looks like the kernelci
-> > board is using an older u-boot. Obviously it should still work, but
-> > would be good to know if the reason why were are not seeing this is
-> > because of the bootloader.
-> >=20
-> > Another thing to check would be the pll_e clock frequency on a working
-> > build and non-working build to see if there is a difference in the pll
-> > frequency that is causing this.
-> >=20
-> > Cheers
-> > Jon
-> >=20
->=20
-> Hello
->=20
-> My uboot is 2016.01-rc4-00002-g3861d78, so a bit old.
-> I have a mainline uboot build for this tegra, but still didnt find a clea=
-r way to update it.
-> Did you have a good documentation on how to update it ?
-> If possible some clear uboot commands to update it via tftp.
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+new file mode 100644
+index 000000000000..416e3abe7937
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/ti,k3-dsp-rproc.yaml
+@@ -0,0 +1,180 @@
++# SPDX-License-Identifier: (GPL-2.0-only or BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/remoteproc/ti,k3-dsp-rproc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI K3 DSP devices
++
++maintainers:
++  - Suman Anna <s-anna@ti.com>
++
++description: |
++  The TI K3 family of SoCs usually have one or more TI DSP Core sub-systems
++  that are used to offload some of the processor-intensive tasks or algorithms,
++  for achieving various system level goals.
++
++  These processor sub-systems usually contain additional sub-modules like
++  L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
++  controller, a dedicated local power/sleep controller etc. The DSP processor
++  cores in the K3 SoCs are usually either a TMS320C66x CorePac processor or a
++  TMS320C71x CorePac processor.
++
++  Each DSP Core sub-system is represented as a single DT node. Each node has a
++  number of required or optional properties that enable the OS running on the
++  host processor (Arm CorePac) to perform the device management of the remote
++  processor and to communicate with the remote processor.
++
++properties:
++  compatible:
++    const: ti,j721e-c66-dsp
++    description:
++      Use "ti,j721e-c66-dsp" for C66x DSPs on K3 J721E SoCs
++
++  reg:
++    description: |
++      Should contain an entry for each value in 'reg-names'.
++      Each entry should have the memory region's start address
++      and the size of the region, the representation matching
++      the parent node's '#address-cells' and '#size-cells' values.
++    minItems: 3
++    maxItems: 3
++
++  reg-names:
++    description: |
++      Should contain strings with the names of the specific internal
++      internal memory regions, and should be defined in this order
++    maxItems: 3
++    items:
++      - const: l2sram
++      - const: l1pram
++      - const: l1dram
++
++  ti,sci:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description:
++      Should be a phandle to the TI-SCI System Controller node
++
++  ti,sci-dev-id:
++    $ref: /schemas/types.yaml#/definitions/uint32
++    description: |
++      Should contain the TI-SCI device id corresponding to the DSP core.
++      Please refer to the corresponding System Controller documentation
++      for valid values for the DSP cores.
++
++  ti,sci-proc-ids:
++    description: Should contain a single tuple of <proc_id host_id>.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
++      - maxItems: 1
++        items:
++          items:
++            - description: TI-SCI processor id for the DSP core device
++            - description: TI-SCI host id to which processor control
++                           ownership should be transferred to
++
++  resets:
++    description: |
++      Should contain the phandle to the reset controller node
++      managing the resets for this device, and a reset
++      specifier. Please refer to the following reset bindings
++      for the reset argument specifier,
++      Documentation/devicetree/bindings/reset/ti,sci-reset.txt
++
++  firmware-name:
++    description: |
++      Should contain the name of the default firmware image
++      file located on the firmware search path
++
++  mboxes:
++    description: |
++      OMAP Mailbox specifier denoting the sub-mailbox, to be used for
++      communication with the remote processor. This property should match
++      with the sub-mailbox node used in the firmware image. The specifier
++      format is as per the bindings,
++      Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
++
++  memory-region:
++    minItems: 2
++    description: |
++      phandle to the reserved memory nodes to be associated with the remoteproc
++      device. There should be atleast two reserved memory nodes defined - the
++      first one would be used for dynamic DMA allocations like vrings and vring
++      buffers, and the remaining ones used for the firmware image sections. The
++      reserved memory nodes should be carveout nodes, and should be defined as
++      per the bindings in
++      Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
++
++# Optional properties:
++# --------------------
++
++  sram:
++    $ref: /schemas/types.yaml#/definitions/phandle-array
++    minItems: 1
++    description: |
++      pHandles to one or more reserved on-chip SRAM regions. The regions
++      should be defined as child nodes of the respective SRAM node, and
++      should be defined as per the generic bindings in,
++      Documentation/devicetree/bindings/sram/sram.yaml
++
++required:
++ - compatible
++ - reg
++ - reg-names
++ - ti,sci
++ - ti,sci-dev-id
++ - ti,sci-proc-ids
++ - resets
++ - firmware-name
++ - mboxes
++ - memory-region
++
++additionalProperties: false
++
++examples:
++  - |
++
++    //Example: J721E SoC
++    /* DSP Carveout reserved memory nodes */
++    reserved-memory {
++        #address-cells = <2>;
++        #size-cells = <2>;
++        ranges;
++
++        c66_0_dma_memory_region: c66-dma-memory@a6000000 {
++            compatible = "shared-dma-pool";
++            reg = <0x00 0xa6000000 0x00 0x100000>;
++            no-map;
++        };
++
++        c66_0_memory_region: c66-memory@a6100000 {
++            compatible = "shared-dma-pool";
++            reg = <0x00 0xa6100000 0x00 0xf00000>;
++            no-map;
++        };
++    };
++
++    cbass_main: interconnect@100000 {
++        compatible = "simple-bus";
++        #address-cells = <2>;
++        #size-cells = <2>;
++        ranges = <0x4d 0x80800000 0x4d 0x80800000 0x00 0x00800000>, /* C66_0 */
++                 <0x4d 0x81800000 0x4d 0x81800000 0x00 0x00800000>; /* C66_1 */
++
++        /* J721E C66_0 DSP node */
++        c66_0: dsp@4d80800000 {
++            compatible = "ti,j721e-c66-dsp";
++            reg = <0x4d 0x80800000 0x00 0x00048000>,
++                  <0x4d 0x80e00000 0x00 0x00008000>,
++                  <0x4d 0x80f00000 0x00 0x00008000>;
++            reg-names = "l2sram", "l1pram", "l1dram";
++            ti,sci = <&dmsc>;
++            ti,sci-dev-id = <142>;
++            ti,sci-proc-ids = <0x03 0xFF>;
++            resets = <&k3_reset 142 1>;
++            firmware-name = "j7-c66_0-fw";
++            memory-region = <&c66_0_dma_memory_region>,
++                            <&c66_0_memory_region>;
++            mboxes = <&mailbox0_cluster3 &mbox_c66_0>;
++        };
++    };
+-- 
+2.23.0
 
-Not sure about TFTP, but you can find the standard flashing scripts for
-various devices here:
-
-	https://github.com/NVIDIA/tegra-uboot-flasher-scripts
-
-Those work by uploading the image via RCM and then running the commands
-to flash it.
-
-I think those scripts will also create the images that they will flash,
-so you should be able to download that image via TFTP and then flash it
-using the command that the tool would normally use.
-
-Thierry
-
---A6N2fC+uXW/VQSAv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl57u/wACgkQ3SOs138+
-s6GNUhAAkrcqqRMGZtLkT0sMvVkiyOWw3Bj/DAvkCBNjNgmtxBu//ZjPqOsK7B/h
-4eZJO8SfPWTHHh3zi76o8xMbKu1KFQZxANZ6vNj71GwM2f7iqrHe/wYlD+vv5Myb
-hRYw7oSJVcaAhbTIeQCG4SrGFXT7EBpBHsQqRizsj9voCjY4TrWvG+ZTJZ6fqA5t
-+QtsdOy32rdCIJbLGzHTkzHZg3LDPr6x5KnPhtCUDzoVWJgmBlLjgjPzxcgxzawJ
-MGqvqEkl9I7TAdIBFoxna3HVOX1jZWS1NhCXSP8fJzxmKwrRIgDWP+QYkUegbmve
-RjiI8A94VcdOTnfDTyZSfo7m3rXP4gtLQDTP4r2VUjvElByBlwN5rHM8bNEOyZCM
-FgIVc8kByoK6+leOOfBQWl5aQiQoaUN1pnJHJk/VvC99spAv5Ik692/Tm7wH30SV
-keDGeh7J7QTdsJ/++Obc7vteJo1jNkh0fZLSSA6wukFAYUK9O/+bDkigVOcBmLNY
-H9otuH0Y1uGzwb0Jc1aRKDYOO9FDWNpTop2vGXNOz+BMLFBMjes6/EqmCEPgDtZH
-/4yxLajy71mEl01i8B4cyZSwD796xya9L7cinyVYevxpoxUOmOgb9p/QNG1ziy3C
-IZgWNp5TzacaL4iBFb/UZ86N8BMuwnWADLI8O+1l1kiONPp9i4A=
-=8N/K
------END PGP SIGNATURE-----
-
---A6N2fC+uXW/VQSAv--
