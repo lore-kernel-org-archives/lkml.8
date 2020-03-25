@@ -2,101 +2,147 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 571F5C2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EC1C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3418920774
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585161095;
-	bh=bUVzSI9dzv00tGiSCBQcCwFyz4bKHFbg5OdnpsNxay4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=AgNViL2W03MpCpcVBlzmjjTeicQDcg8kBLIRE6MFFruGMPtNXaYNzJIfmfhTwfNXK
-	 sWxRZzFWj0TxLoAUcMlAG/0CB8Uv8QZmjvrg8K9U5FG2+hJpNaVGyE/yrIEBGotSbG
-	 8pMQKKIBb+xAgqSxgpufzCFttcOcEsCcSeo/gtBA=
+	by mail.kernel.org (Postfix) with ESMTP id 462C020774
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:31:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PVvDpU8r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727943AbgCYSbd (ORCPT
+        id S1727975AbgCYSbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:31:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727027AbgCYSbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:31:32 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C139206F6;
-        Wed, 25 Mar 2020 18:31:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585161091;
-        bh=bUVzSI9dzv00tGiSCBQcCwFyz4bKHFbg5OdnpsNxay4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=h0cTdrgxgbuEC6eoNOaOOybXnUDCfcYCPmFkWZMT5fV+WWIsosBg2gcMRsqPu196e
-         eAq/f8XS+n/3PCkoxNPz3nTxiYdLNZXmrUOdEE9ldsb0mawD2TybHiD4mES7vhrdbF
-         P0Hw2X8id1hiGHCFyR5jyxW/RxrP8s3NBHQWfHpM=
-Date:   Wed, 25 Mar 2020 13:31:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shiju Jose <shiju.jose@huawei.com>
-Cc:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-        "james.morse@arm.com" <james.morse@arm.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        Wed, 25 Mar 2020 14:31:42 -0400
+Received: from mail-bn7nam10on2108.outbound.protection.outlook.com ([40.107.92.108]:20640
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727275AbgCYSbl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:31:41 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HUCcC82ZMaUMY+vgiOt48e51mJznsDFInhfG+Uk3gzm3Iz5zHPUmUX2IMUv4MZjJgQ/bOP4FceDQs0qNe+7crFgVQa5y0eshbuXUBQux5d5392ldSk1jhQl1xZ1Ui0z22Cj4SnqNSC0RBR+GQyz+dXP8qjUvvaEhcw42wn+RK37s5RnrlGV955ZkmD1YvDRYOjHU5bQfYxZB4IsNCQQWvAEnXR10AaI4Ohf5fzVTHIbQWc2x7uemmreD9XHJGh54gZNpdaIsu9AjEVucVetkkWjiR+3cKNLBtMyR+zViH/HhQBcbGj1FJSYSTYjyGbRCDv/YmbDX7xbFAKbNWQln+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9WN7uYoplqTxf+W2u4qTk8j9ZiQ+VgbtNIq+3GAtH5c=;
+ b=b134r/Q6PoSqhoA3kX882tXoTXB58iki/BDSdqazc6ppyVq799pMUnHelg9OH/eccqY7gZo9F3WV2i1SYQhboZrxiQv6PwuLfoBQNbprRfT8vsScOHEx+HpoYaR1w58brC+ztQj8Pdw43DBtGhs556rV0l9qCyxabJYbLMrB8TEBY1bfaTi75sxHmaqAcA3MAZLsIx+E8PdJ84w1gY4RLIjartvE9O9CwcukLgUVlvVCiU2H87XPGX2Wi2ujNyW27WlN9VOuEN1pm8Z+YlkhHqumm52nfaLOEgmO3iLuKg/cIQ0FMbNUXsjEv0bDKjeNUht0AFjRL4bbbZAoZ30oBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9WN7uYoplqTxf+W2u4qTk8j9ZiQ+VgbtNIq+3GAtH5c=;
+ b=PVvDpU8rYV81Oy1wAeivUhJ8kp6/TEyVdZfxlM15g+XPAmiXUGCK7sHM9zI53IxEGhJ8mdXA+FcgGw1Ig6g5c21iQdmAlsYWtL8F1G/HG5bp6owFTXfY15kBq2sxJ2bg40NbbCH2k+YvHnqSf9bImDOavqCrOw5SuMATMVuxt50=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Wed, 25 Mar
+ 2020 18:31:34 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.007; Wed, 25 Mar 2020
+ 18:31:34 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
         "tglx@linutronix.de" <tglx@linutronix.de>,
-        Linuxarm <linuxarm@huawei.com>,
-        Jonathan Cameron <jonathan.cameron@huawei.com>,
-        tanxiaofei <tanxiaofei@huawei.com>,
-        yangyicong <yangyicong@huawei.com>
-Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
- specific HW errors
-Message-ID: <20200325183129.GA29158@google.com>
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>
+CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>
+Subject: RE: [PATCH V3 3/6] x86/Hyper-V: Trigger crash enlightenment only once
+ during  system crash.
+Thread-Topic: [PATCH V3 3/6] x86/Hyper-V: Trigger crash enlightenment only
+ once during  system crash.
+Thread-Index: AQHWAbHkVQqv7848GEyMFXlIMavObahZo21A
+Date:   Wed, 25 Mar 2020 18:31:34 +0000
+Message-ID: <MW2PR2101MB1052446D68104978CC02468FD7CE0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
+ <20200324075720.9462-4-Tianyu.Lan@microsoft.com>
+In-Reply-To: <20200324075720.9462-4-Tianyu.Lan@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:31:32.3622987Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=08811a53-9bd9-447b-8942-bc1586d2cc3c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mikelley@microsoft.com; 
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 51e35313-bd2c-464e-4dbe-08d7d0eabf2b
+x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB093864536C24348CC59B31E4D7CE0@MW2PR2101MB0938.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:121;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(110136005)(66446008)(64756008)(6506007)(8676002)(66946007)(66556008)(66476007)(2906002)(54906003)(478600001)(33656002)(81156014)(81166006)(26005)(4744005)(8990500004)(10290500003)(186003)(55016002)(71200400001)(7696005)(76116006)(8936002)(5660300002)(86362001)(316002)(4326008)(52536014)(9686003)(921003)(1121003);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: hY8hDnjCls9Br/vNZwaZFbg87dHrUQ7vbj6NyqHc0uta/d3huoIDX4bKsUlbs5pCOuhDatCfygE4xrOwH+JMLb+Ge8oGIp00VB1bpb6vlOu7FhObXUHhSXKhOtE6CIx6dQFEjGAyIb0OrTzosK/gAUoY0Ef8EFKRLpiFPgiURQLDBkvpjds9vDLXTkuGr4n7vVN901Ayh76557E87GmmyKhqRCR1RwKpqGuo0Yec6JX82E714tWnzQlpLivVJPJAcnnECHf/KrOVufouf6elCO6TKdwYvPGNXTmKiDT1ULJSTJLBB56flsqqi04MhV0J8DDpSYI5DEzi4BJ4+9V7S0kEjjy0FqrkP0HsizDptKdvtxTitbRWQlPe1uu3knokuzoqR2ZAodK9e+VX6XIo6Q/LXJ+5i65zbXXVuV2y2C6HHeUVTcfNif3USaPkPLRS1Ub4QFg/nMq/YTobT0iKZ1V7fBYoYnJOJR79OA+/WdXqzzuMzBLplFaeYONV6mwG
+x-ms-exchange-antispam-messagedata: uNQoli9O1DIIIHp+LeP2/P4pIrM01ejIp0jRoOFjFqYWpdKi0tsyF6Tvja786lQqGDgTjqG6I9cNjabBFZJFLJI1MB41eVLBADgJElCFDmvYFNe21iYEMlSvxJr1XO+BkqHSUB5CPgVDXm7/T/C11w==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <84a30116698a49cda1e8b580ee35ce1f@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51e35313-bd2c-464e-4dbe-08d7d0eabf2b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:31:34.2486
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: csylkRkBKmbcGoDECElDkgFKO9V2hBSrefVzv6TTOop8SJfJgMLB9amx+/0JIw36Dd0ei0LEY7Dt2XWhDAz+NL2HKX/lQa2dBSeCbqYHOC0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 04:27:15PM +0000, Shiju Jose wrote:
-> >-----Original Message-----
-> >From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 24, 2020 1=
+2:57 AM
+>=20
+> When a guest VM panics, Hyper-V should be notified only once via the
+> crash synthetic MSRs.  Current Linux code might write these crash MSRs
+> twice during a system panic:
+> 1) hyperv_panic/die_event() calling hyperv_report_panic()
+> 2) hv_kmsg_dump() calling hyperv_report_panic_msg()
+>=20
+> Fix this by not calling hyperv_report_panic() if a kmsg dump has been
+> successfully registered.  The notification will happen later via
+> hyperv_report_panic_msg().
+>=20
+> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+> ---
+> Change since v1:
+> 	- Update commit log
+>=20
+> Change since v2:
+>         - Update comment
+> ---
+>  drivers/hv/vmbus_drv.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>=20
 
-> >3) drivers/pci/controller/pcie-hisi-error.c should be next to
-> >drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
->
-> Our hip PCIe controller doesn't use DWC ip.
-
-Ah, I was assuming this pcie-hisi-error.c driver was for the same
-device claimed by pcie-hisi.c.
-
-Error drivers like this will have some device-specific knowledge
-(e.g., which registers to dump), but I guess they'll always be
-used with the generic acpi/pci_root.c driver, right?
-
-It looks like this driver has little or nothing to do with the PCI
-core directly.  It does include drivers/pci/pci.h, but I'm not sure it
-really needs it.
-
-Maybe drivers/pci/controller/ is the best place for it, but I'm not
-sure.  It's a little confusing because it's not really like the other
-things there.
-
-There are some vaguely similar things in drivers/acpi/apei/ and
-drivers/acpi/nfit/.  And of course there are .acpi_match_table uses
-all over the drivers/ tree.  Maybe we need a new subdirectory under
-drivers/pci?  drivers/pci/controller/apei/?
-
-Any thoughts, Rafael?
-
-Bjorn
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
