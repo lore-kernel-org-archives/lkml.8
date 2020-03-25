@@ -2,138 +2,192 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF48C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEE6C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2266A20658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A58220658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:58:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lIGFzrVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbgCYTzF (ORCPT
+        id S1727487AbgCYT6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:55:05 -0400
-Received: from ciao.gmane.io ([159.69.161.202]:47904 "EHLO ciao.gmane.io"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbgCYTzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:55:05 -0400
-Received: from list by ciao.gmane.io with local (Exim 4.92)
-        (envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
-        id 1jHC7C-000PHR-CC
-        for linux-kernel@vger.kernel.org; Wed, 25 Mar 2020 20:55:02 +0100
-X-Injected-Via-Gmane: http://gmane.org/
-To:     linux-kernel@vger.kernel.org
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-Date:   Wed, 25 Mar 2020 20:46:36 +0100
-Message-ID: <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
- <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 25 Mar 2020 15:58:17 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35464 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbgCYT6R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:58:17 -0400
+Received: by mail-pf1-f194.google.com with SMTP id u68so1588492pfb.2;
+        Wed, 25 Mar 2020 12:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ismgBCt2kpHX8pPzeoAWGu8mbsMC1DWgn2mXloiL0TQ=;
+        b=lIGFzrVXAqN5GirFzI+32M9KhN1JYF/YB/zBRqTeeGqFd5fe1dnsSJPyvnNPb2Ijei
+         i1hv2rAyEqdl7JkVFzP0TS8iMNU+ulmvqYshpkbhKcWnKx6+L98hXTppquqh0T8qa4hO
+         RRFUUqrLPcmafn9unm7beBE6FcpdssI5bIMu1P0Cd0JIxJvk+D36XGF0ZsqCVw+cV8MC
+         EUa5Lbv1OLxdRZu12faHPJZgTPCeOiavs48clpylIFIFAkRwTrkXA52I0jJE9VIYNnqE
+         c18fU5D/4ecB6oDlAEnf757JjAT6VH0JqjNxnDrU0ensVdABVh/d5NXLLU2n5UxjyWAd
+         zvTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ismgBCt2kpHX8pPzeoAWGu8mbsMC1DWgn2mXloiL0TQ=;
+        b=bpm6x4wNroBxKtWlx8xCT3Z13X1YoNfKn9ouxcSiXI/lBcYh7QlK++OxG9pL9ixJMP
+         kwChAE5ptRzgknuo3X+mwkwC87cRLDnHgNvsENEwgP72o8oSxu9mZz5jk9BXx83WQ/RI
+         YBGLQg1QKVew3lB7CLdEIlpzit0vrrBAuBl/eRh+sK7OREgVYKaeNSpsv9+aGBRKdgt5
+         oybzBoZcWV4myl1Uhj7FSusm63Zh8Jh4nipxisYw9u79AO5cuv28RqsR6UC/Xrio0V6+
+         sIVUkaZpzrlt6ptjR0mAwLuEJElafviqIYteA5e3rQ9WaewmN3KxVqFN++g9VENST7z8
+         GITg==
+X-Gm-Message-State: ANhLgQ1I3Yr/v8DdfM8ooYWGSueyx5bfJJIbuhSOlqmyCeiyr38WWLca
+        0p1zlQTRouJMyKYWDjo3NIQ=
+X-Google-Smtp-Source: ADFU+vverIEbJfN8a2mqnFIPMBjLgQtCX6/KdVQkE6vjXOUcKC/KEgA8Kmv+e14PLGy0zwuo9rQXhg==
+X-Received: by 2002:a62:2b05:: with SMTP id r5mr4888359pfr.120.1585166295135;
+        Wed, 25 Mar 2020 12:58:15 -0700 (PDT)
+Received: from nickserv.localdomain (c-67-188-225-242.hsd1.ca.comcast.net. [67.188.225.242])
+        by smtp.gmail.com with ESMTPSA id d7sm19341374pfr.17.2020.03.25.12.58.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 12:58:14 -0700 (PDT)
+From:   Nick Terrell <nickrterrell@gmail.com>
+To:     Nick Terrell <terrelln@fb.com>
+Cc:     linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+        linux-kbuild@vger.kernel.org, x86@kernel.org,
+        gregkh@linuxfoundation.org, Petr Malat <oss@malat.biz>,
+        Kees Cook <keescook@chromium.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        Nick Terrell <nickrterrell@gmail.com>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Patrick Williams <patrickw3@fb.com>, rmikey@fb.com,
+        mingo@kernel.org, Patrick Williams <patrick@stwcx.xyz>
+Subject: [PATCH v3 0/8] Add support for ZSTD-compressed kernel and initramfs
+Date:   Wed, 25 Mar 2020 12:58:41 -0700
+Message-Id: <20200325195849.407900-1-nickrterrell@gmail.com>
+X-Mailer: git-send-email 2.26.0
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-Cc:     linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
-Content-Language: en-US
-Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 25/03/2020 à 15:52, Chuck Lever a écrit :
-> Hi Christophe,
->
->
->> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
->>
->> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
->> overflow.
-> That's true as a general statement, but how likely is such an
-> overflow to occur here?
->
-I guess, that it us unlikely and that the 80 chars buffer is big enough.
-That is the exact reason of why I've proposed 2 patches. The first one 
-could happen in RL. The 2nd is more like a clean-up and is less 
-relevant, IMHO.
->
->> The return value can also be used to avoid a strlen a call.
-> That's also true of sprintf, isn't it?
+From: Nick Terrell <terrelln@fb.com>
 
-Sure.
+Hi all,
 
+I attempted to send this patch on March 19, but it got rejected by the
+mailing lists for some reason, so I'm resending it.
 
->
->> Finally, we know where we need to copy and the length to copy, so, we
->> can save a few cycles by rearraging the code and using a memcpy instead of
->> a strcat.
-> I would be OK with squashing these two patches together. I don't
-> see the need to keep the two changes separated.
+This patch set adds support for a ZSTD-compressed kernel, ramdisk, and
+initramfs in the kernel boot process. ZSTD-compressed ramdisk and initramfs
+are supported on all architectures. The ZSTD-compressed kernel is only
+hooked up to x86 in this patch set.
 
-NP, I can resend as a V2 with your comments.
-As said above, the first fixes something that could, IMHO, happen and 
-the 2nd is more a matter of taste and a clean-up.
+Zstandard requires slightly more memory during the kernel decompression
+on x86 (192 KB vs 64 KB), and the memory usage is independent of the
+window size.
 
+Zstandard requires memory proprortional to the window size used during
+compression for decompressing the ramdisk image, since streaming mode is
+used. Newer versions of zstd (1.3.2+) list the window size of a file
+with `zstd -lv <file>'. The absolute maximum amount of memory required
+is just over 8 MB, but it can be controlled at compression time.
 
->
->> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->> ---
->> This patch should have no functionnal change.
->> We could go further, use scnprintf and write directly in the destination
->> buffer. However, this could lead to a truncated last line.
-> That's exactly what this function is trying to avoid. As part of any
-> change in this area, it would be good to replace the current block
-> comment before this function with a Doxygen-format comment that
-> documents that goal.
+This patch set has been boot tested with buildroot and QEMU based off
+of linux-5.6-rc6.
 
-I'll take care of it.
+On i386 and x86_64 I have tested the following configurations:
+* zstd compressed kernel and a separate zstd compressed initramfs
+* zstd compressed kernel and a built-in zstd compressed initramfs
+* gzip compressed kernel and a separate gzip compressed initramfs
+* gzip compressed kernel and a built-in gzip compressed initramfs
 
+On arm and aarch64 I tested the same configurations, except that the kernel is
+always gzip compressed.
 
->> ---
->> net/sunrpc/svc_xprt.c | 8 ++++----
->> 1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->> index df39e7b8b06c..6df861650040 100644
->> --- a/net/sunrpc/svc_xprt.c
->> +++ b/net/sunrpc/svc_xprt.c
->> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
->> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
->> 		int slen;
->>
->> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
->> -		slen = strlen(tmpstr);
->> -		if (len + slen >= maxlen)
->> +		slen = snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
->> +				xcl->xcl_name, xcl->xcl_max_payload);
->> +		if (slen >= sizeof(tmpstr) || len + slen >= maxlen)
->> 			break;
->> +		memcpy(buf + len, tmpstr, slen + 1);
->> 		len += slen;
->> -		strcat(buf, tmpstr);
-> IMO replacing the strcat makes the code harder to read, and this
-> is certainly not a performance path. Can you drop that part of the
-> patch?
+Facebook has been using v1 of these patches on x86_64 devices for more than 6
+months. When we switched from a xz compressed initramfs to a zstd compressed
+initramfs decompression time shrunk from 12 seconds to 3 seconds. When we
+switched from a xz compressed kernel to a zstd compressed kernel we saved 2
+seconds of boot time.
 
-Ok
+Facebook has been using v2 of these patches on aarch64 devices for a few weeks.
+When we switched from an lzma compressed initramfs to a zstd compressed initramfs
+decompression time shrunk from 27 seconds to 8 seconds.
 
+The zstd compressed kernel is smaller than the gzip compressed kernel but larger
+than the xz or lzma compressed kernels, and it decompresses faster than
+everything except lz4. See the table below for the measurement of an x86_64
+kernel ordered by compressed size:
 
->
->> 	}
->> 	spin_unlock(&svc_xprt_class_lock);
->>
->> -- 
->> 2.20.1
->>
-> --
-> Chuck Lever
->
->
->
->
+algo	size
+xz  	 6,509,792
+lzma	 6,856,576
+zstd	 7,399,157
+gzip	 8,522,527
+bzip	 8,629,603
+lzo 	 9,808,035
+lz4 	10,705,570
+none	32,565,672
 
+v1 -> v2:
+- Rebase
+  - usr/Makefile and init/Kconfig were changed so the patches were updated
+- No functional changes except to rebase
+- Split the patches up into smaller chunks
+
+v2 -> v3:
+- Add *.zst to the .gitignore in patch 8
+- Style nits in patch 3
+- Rename the PREBOOT macro to ZSTD_PREBOOT and XXH_PREBOOT in patches
+  1 through 3
+
+Best,
+Nick Terrell
+
+Adam Borowski (1):
+  .gitignore: add ZSTD-compressed files
+
+Nick Terrell (7):
+  lib: prepare zstd for preboot environment
+  lib: prepare xxhash for preboot environment
+  lib: add zstd support to decompress
+  init: add support for zstd compressed kernel
+  usr: add support for zstd compressed initramfs
+  x86: bump ZO_z_extra_bytes margin for zstd
+  x86: Add support for ZSTD compressed kernel
+
+ .gitignore                        |   1 +
+ Documentation/x86/boot.rst        |   6 +-
+ arch/x86/Kconfig                  |   1 +
+ arch/x86/boot/compressed/Makefile |   5 +-
+ arch/x86/boot/compressed/misc.c   |   4 +
+ arch/x86/boot/header.S            |   8 +-
+ arch/x86/include/asm/boot.h       |   6 +-
+ include/linux/decompress/unzstd.h |  11 +
+ init/Kconfig                      |  15 +-
+ lib/Kconfig                       |   4 +
+ lib/Makefile                      |   1 +
+ lib/decompress.c                  |   5 +
+ lib/decompress_unzstd.c           | 338 ++++++++++++++++++++++++++++++
+ lib/xxhash.c                      |  21 +-
+ lib/zstd/decompress.c             |   2 +
+ lib/zstd/fse_decompress.c         |   9 +-
+ lib/zstd/zstd_internal.h          |  14 +-
+ scripts/Makefile.lib              |  15 ++
+ usr/Kconfig                       |  20 ++
+ usr/Makefile                      |   1 +
+ 20 files changed, 460 insertions(+), 27 deletions(-)
+ create mode 100644 include/linux/decompress/unzstd.h
+ create mode 100644 lib/decompress_unzstd.c
+
+-- 
+2.25.1
 
