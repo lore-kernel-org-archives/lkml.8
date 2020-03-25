@@ -2,133 +2,116 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C034C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F3EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A7B208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TF2wKrnB"
+	by mail.kernel.org (Postfix) with ESMTP id 5DC79208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:25:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgCYOXa (ORCPT
+        id S1727697AbgCYOZn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:23:30 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:28274 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727566AbgCYOX3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:23:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585146207;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=GSFdRidEnIhtkPZ+oc94MfcptNw43s+nSxOUqCIguho=;
-        b=TF2wKrnB46Sxgc5gAFmuqrqxltOKPkkT0EA0wtCnTFKZYzx4+Tr1kwrhOMJo3wfLrTKFWA
-        mkoYWG72fc09isJwb0Qm905ugOzveTY/Gk93/Nph2xiIo5ZCu8QQaQ8jx2dL/tFE9syrQw
-        z0eY9l/tNvaSQgGUB8S5E5SOIxvIEZA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-373-TMqCBrEgNSy-dYZve-7NeQ-1; Wed, 25 Mar 2020 10:23:23 -0400
-X-MC-Unique: TMqCBrEgNSy-dYZve-7NeQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B966418A8C88;
-        Wed, 25 Mar 2020 14:23:20 +0000 (UTC)
-Received: from localhost (ovpn-12-88.pek2.redhat.com [10.72.12.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 154C291293;
-        Wed, 25 Mar 2020 14:23:18 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 22:23:15 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     David Rientjes <rientjes@google.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org,
-        iamjoonsoo.kim@lge.com, hannes@cmpxchg.org, vbabka@suse.cz,
-        mgorman@techsingularity.net
-Subject: Re: [PATCH 4/5] mm/vmstat.c: move the per-node stats to the front of
- /proc/zoneinfo
-Message-ID: <20200325142315.GC9942@MiWiFi-R3L-srv>
-References: <20200324142229.12028-1-bhe@redhat.com>
- <20200324142229.12028-5-bhe@redhat.com>
- <alpine.DEB.2.21.2003241220360.34058@chino.kir.corp.google.com>
- <20200325055331.GB9942@MiWiFi-R3L-srv>
- <20200325085537.GZ19542@dhcp22.suse.cz>
+        Wed, 25 Mar 2020 10:25:43 -0400
+Received: from mga04.intel.com ([192.55.52.120]:42723 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727620AbgCYOZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 10:25:43 -0400
+IronPort-SDR: 0aLkYhUQi+VwFxxj0HxjaG3zk891wjJw2ojjykEDDhXJnU6uB3X+AUUGeiusx0+SJoPiNDjDFi
+ V4LctI9L4cWQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 07:25:42 -0700
+IronPort-SDR: htzfHXoUNkSPBbUSnLZHWBq9wNDEgBuzYWwWMQXGZksyQ0Thixhmdz5iYDavm1+rJ+cLyTgv8g
+ 0/tVzvrEYiLQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="240631483"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga008.jf.intel.com with ESMTP; 25 Mar 2020 07:25:40 -0700
+Subject: Re: [PATCH] perf tools: Add missing Intel CPU events to parser
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200324150443.28832-1-adrian.hunter@intel.com>
+ <20200325103345.GA1856035@krava> <20200325131549.GB14102@kernel.org>
+ <20200325135350.GA1888042@krava> <20200325142214.GD14102@kernel.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <ea516b26-6249-e870-20bf-819ea1a2d2c2@intel.com>
+Date:   Wed, 25 Mar 2020 16:24:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325085537.GZ19542@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200325142214.GD14102@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/25/20 at 09:55am, Michal Hocko wrote:
-> On Wed 25-03-20 13:53:31, Baoquan He wrote:
-> > On 03/24/20 at 12:25pm, David Rientjes wrote:
-> > > On Tue, 24 Mar 2020, Baoquan He wrote:
-> > > 
-> > > > This moving makes the layout of /proc/zoneinfo more sensible. And there
-> > > > are 4 zones at most currently, it doesn't need to scroll down much to get
-> > > > to the 1st populated zone, even though the 1st populated zone is MOVABLE
-> > > > zone.
-> > > > 
-> > > 
-> > > Doesn't this introduce risk that it will break existing parsers of 
-> > > /proc/zoneinfo in subtle ways?
-> > > 
-> > > In some cases /proc/zoneinfo is a tricky file to correctly parse because 
-> > > you have to rely on the existing order in which it is printed to determine 
-> > > which zone is being described.  We need to print zones even with unmanaged 
-> > > pages, for instance, otherwise userspace may be unaware of which zones are 
-> > > supported and what order they are in.  That's important to be able to 
-> > > construct the proper string to use when writing vm.lowmem_reserve_ratio.
-> > > 
-> > > I'd prefer not changing the order of /proc/zoneinfo if it can be avoided 
-> > > just because the risk outweighs the reward that we may break some 
-> > > initscript parsers.
-> > 
-> > Oh, I may not describe the change and result clearly. This patch doesn't
-> > change zone order at all.  I only move the per-node stats to the front of
-> > each node, the zone order is completely kept the same, still DMA, DMA32,
-> > NORMAL, MOVABLE.
+On 25/03/20 4:22 pm, Arnaldo Carvalho de Melo wrote:
+> Em Wed, Mar 25, 2020 at 02:53:50PM +0100, Jiri Olsa escreveu:
+>> On Wed, Mar 25, 2020 at 10:15:49AM -0300, Arnaldo Carvalho de Melo wrote:
+>>> Em Wed, Mar 25, 2020 at 11:33:45AM +0100, Jiri Olsa escreveu:
+>>>> On Tue, Mar 24, 2020 at 05:04:43PM +0200, Adrian Hunter wrote:
+>>>>> perf list expects CPU events to be parseable by name, e.g.
+>>>
+>>>>>     # perf list | grep el-capacity-read
+>>>>>       el-capacity-read OR cpu/el-capacity-read/          [Kernel PMU event]
+>>>
+>>>>> But the event parser does not recognize them that way, e.g.
+>>>
+>>>>>     # perf test -v "Parse event"
+>>>>>     <SNIP>
+>>>>>     running test 54 'cycles//u'
+>>>>>     running test 55 'cycles:k'
+>>>>>     running test 0 'cpu/config=10,config1,config2=3,period=1000/u'
+>>>>>     running test 1 'cpu/config=1,name=krava/u,cpu/config=2/u'
+>>>>>     running test 2 'cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/'
+>>>>>     running test 3 'cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp'
+>>>>>     -> cpu/event=0,umask=0x11/
+>>>>>     -> cpu/event=0,umask=0x13/
+>>>>>     -> cpu/event=0x54,umask=0x1/
+>>>>>     failed to parse event 'el-capacity-read:u,cpu/event=el-capacity-read/u', err 1, str 'parser error'
+>>>>>     event syntax error: 'el-capacity-read:u,cpu/event=el-capacity-read/u'
+>>>>>                            \___ parser error test child finished with 1
+>>>>>     ---- end ----
+>>>>>     Parse event definition strings: FAILED!
+>>>
+>>>>> Fix by adding missing Intel CPU events to the event parser.
+>>>>> Missing events were found by using:
+>>>
+>>>>>     grep -r EVENT_ATTR_STR arch/x86/events/intel/core.c
+>>>>>
+>>>>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+>>>>
+>>>> Acked-by: Jiri Olsa <jolsa@redhat.com>
+>>>
+>>> So, I'm not being able to reproduce this, what an I missing?
+>>
+>> I think you need to be on some really recent intel
+>> which defines events which we did not covered yet
+>> like el-capacity-write in icelake
 > 
-> Even this can break existing parsers. Fixing that up is likely not hard
-> and existing parsers would be mostly debugging hacks here and there but
-> I do miss any actual justification except for you considering it more
-> sensible. I do not remember this would be a common pain point for people
-> parsing this file. If anything the overal structure of the file makes it
-> hard to parse and your patches do not really address that. We are likely
-> too late to make the output much more sensible TBH.
+> That is why I tried with el-capacity, which is moved to the parser as
+> well, I've replaced el-capacity-read, which I don't have in this Kaby
+> Lake machine, with el-capacity, that is present:
 > 
-> That being said, I haven't looked more closely on your patches because I
-> do not have spare cycles for that. Your justification for touching the
-> code which seems to be working relatively well is quite weak IMHO, yet
-> it adds a non zero risk for breaking existing parsers.
+> [root@seventh ~]# perf list | grep el-capacity
+>   el-capacity OR cpu/el-capacity/                    [Kernel PMU event]
+> [root@seventh ~]#
 
-I would take the saying of non zero risk for breaking existing parsers.
-When considering this change, I thought about the possible risk. However,
-found out the per-node stats was added in 2016 which is not so late, and
-assume nobody will rely on the order of per-node stats embeded into a
-zone. But I have to admit any concern or worry of risk is worth being
-considerred carefully since /proc/zoneinfo is a classic interface.
+I just checked that and it seems to be a "feature" of the parser that it
+gets confused between el-capacity and el-capacity-read.
 
-So, in view of objections from you and David, I would like to drop this
-patch and patch 5. It's a small improvement, not worth taking any risk.
-But if it goes back to this time of 2017, I would like to spend some
-time to defend it :-)
+Making them explicit in parse-events.l makes the problem go away, but I
+wonder now if the parser could be better in this regard.
 
-commit e2ecc8a79ed49f7838b4fdf352c4c48cec9424ac
-Author: Mel Gorman <mgorman@techsingularity.net>
-Date:   Thu Jul 28 15:47:02 2016 -0700
-
-    mm, vmstat: print node-based stats in zoneinfo file
-
-
+Any ideas?
