@@ -2,72 +2,141 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8829C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9586C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C10AC20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 814E720722
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:06:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585127204;
+	bh=LuxmRBQBUF21r7dMi2L88Id1prbbBcYaTj1wh5mBdp8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Nyp4V7+tA5PSYHqe2PV1QwV8WbizGiiv1PfDDGxZEs4HzoLO0rgI0wM4D6RdoiMpX
+	 0B6vbEwRnJlBBpTpZiHge0hMArTn3vDH2IJF/5E7idtp8ew3u/GJhf44b/ox3fPrPK
+	 YAU9CIa5uwiSiu0axUUP21AaKk6Kh8Jqcpu8qqR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgCYJFO (ORCPT
+        id S1727466AbgCYJGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:05:14 -0400
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:46006 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726276AbgCYJFO (ORCPT
+        Wed, 25 Mar 2020 05:06:43 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:16700 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726276AbgCYJGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:05:14 -0400
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Wed, 25 Mar 2020 05:05:13 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 46C883F226;
-        Wed, 25 Mar 2020 09:55:26 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2m8-KGu0_NoS; Wed, 25 Mar 2020 09:55:25 +0100 (CET)
-Received: from localhost (h-41-252.A163.priv.bahnhof.se [46.59.41.252])
-        (Authenticated sender: mb547485)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id DBF2E3F398;
-        Wed, 25 Mar 2020 09:55:24 +0100 (CET)
-Date:   Wed, 25 Mar 2020 09:55:24 +0100
-From:   Fredrik Noring <noring@nocrew.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] MIPS: remove cpu_has_64bit_gp_regs and
- cpu_has_64bit_addresses
-Message-ID: <20200325085524.GA28706@sx9>
-References: <20200324161525.754181-1-hch@lst.de>
- <20200324161525.754181-2-hch@lst.de>
- <alpine.LFD.2.21.2003250226450.2689954@eddie.linux-mips.org>
- <20200325083012.GA21605@lst.de>
+        Wed, 25 Mar 2020 05:06:42 -0400
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 02P96ZbM027674;
+        Wed, 25 Mar 2020 18:06:36 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 02P96ZbM027674
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585127196;
+        bh=jQcvOgKqTGSzHXwDHncWQg6w6pf0v6SEzzk1QrsBys8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CMKxaS/UhOBp5QlmO8Ozw/yJ+COqMcOMUEkDDeVpiRe3S+QsviZwQGNCob05lcdoH
+         U2JjEB5E9LvP6ep/wAU7PV0nq5l2CoiociIscD4feY9qrLxDV+jso8D31spvbpHkhs
+         9W2OQVx5qOCF/kEJOa/AEm0dAaFwj+ZOMS2XsTBmhZcz7OxmNJ7E/v4K4P1TR2EumA
+         g23ng5yhxKv40xT3wZwpYQ1Xi3X8qTHXO1MvenNEXtPYuCg8Kg4B4vyq0vzg1ChV89
+         IoJbSOLCngwQ8nd1s/jJf/YbPB1OKOvzPv35HQNumb9mwwAi4H3uhdqo0X2mdfHk2y
+         LBROyPOCN1Cdg==
+X-Nifty-SrcIP: [209.85.222.44]
+Received: by mail-ua1-f44.google.com with SMTP id v24so473570uak.0;
+        Wed, 25 Mar 2020 02:06:36 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3maYwOtLMk73jjJKqnVVnWwMGI0TAGIuMqZdx5KNWObcQMeylm
+        RgwIl6z8hzbJFCcJJvzd4xwUjUb95CUUC2P7bJw=
+X-Google-Smtp-Source: ADFU+vt/Lpfs/eZV6L7RPsd8+/+xb6x93eEITtXtqxGfFjCg699gz7SVs829mVoswfcp1CZNlUKl42nEbHZjhnywqQA=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr1479980uar.109.1585127195169;
+ Wed, 25 Mar 2020 02:06:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200325083012.GA21605@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200324161539.7538-1-masahiroy@kernel.org> <CAMuHMdWPNFRhUVGb0J27MZg2CrWWm06N9OQjQsGLMZkNXJktAg@mail.gmail.com>
+ <CAK7LNAQFbcfK=q4eYW_dQUqe-sqbjpxSpQBeCkp0Vr4P3HJc7A@mail.gmail.com> <CAMuHMdXeOUu_zxKHXnNoLwyExy1GTp6N5UP2Neqyc8M3w2B8KQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdXeOUu_zxKHXnNoLwyExy1GTp6N5UP2Neqyc8M3w2B8KQ@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 18:05:58 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAST-ygeLAAneKRhr-uMdSW0V_V1s9AvN6VJSqfWfN4Otg@mail.gmail.com>
+Message-ID: <CAK7LNAST-ygeLAAneKRhr-uMdSW0V_V1s9AvN6VJSqfWfN4Otg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] net: wan: wanxl: use $(CC68K) instead of $(AS68K) for
+ rebuilding firmware
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-kbuild <linux-kbuild@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The only use of cpu_has_64bit_addresses is the choice of the ioremap
-> code base.  Which ioremap code does the R5900 want to use?  If it
-> doesn't match CONFIG_64BIT having a config option for the ioremap
-> implementation seems much more sensible, and can be added with the
-> R5900 patch set (do you have a link to it?).
+Hi Geert,
 
-I suppose this would be relevant for the n32 ABI, but initially we only
-have o32 for the R5900. The (slightly outdated) patch series under review
-is available here:
+On Wed, Mar 25, 2020 at 4:53 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Yamada-san,
+>
+> On Wed, Mar 25, 2020 at 4:50 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > On Wed, Mar 25, 2020 at 2:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Tue, Mar 24, 2020 at 5:17 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > > As far as I understood from the Kconfig help text, this build rule is
+> > > > used to rebuild the driver firmware, which runs on the QUICC, m68k-based
+> > > > Motorola 68360.
+> > > >
+> > > > The firmware source, wanxlfw.S, is currently compiled by the combo of
+> > > > $(CPP) and $(AS68K). This is not what we usually do for compiling *.S
+> > > > files. In fact, this is the only user of $(AS) in the kernel build.
+> > > >
+> > > > Moreover, $(CPP) is not likely to be a m68k tool because wanxl.c is a
+> > > > PCI driver, but CONFIG_M68K does not select CONFIG_HAVE_PCI.
+> > > > Instead of combining $(CPP) and (AS) from different tool sets, using
+> > > > single $(CC68K) seems simpler, and saner.
+> > > >
+> > > > After this commit, the firmware rebuild will require cc68k instead of
+> > > > as68k. I do not know how many people care about this, though.
+> > > >
+> > > > I do not have cc68k/ld68k in hand, but I was able to build it by using
+> > > > the kernel.org m68k toolchain. [1]
+> > >
+> > > Would this work with a "standard" m68k-linux-gnu-gcc toolchain, like
+> > > provided by Debian/Ubuntu, too?
+> > >
+> >
+> > Yes, I did 'sudo apt install gcc-8-m68k-linux-gnu'
+> > It successfully compiled this firmware.
+>
+> Thanks for checking!
+>
+> > In my understanding, the difference is that
+> > the kernel.org ones lack libc,
+> > so cannot link userspace programs.
+> >
+> > They do not make much difference for this case.
+>
+> Indeed.
+>
+> So perhaps it makes sense to replace cc68k and ld68k in the Makefile by
+> m68k-linux-gnu-gcc and m68k-linux-gnu-ld, as these are easier to get hold
+> of on a modern system?
+>
+> What do you think?
+> Thanks!
+>
 
-https://lore.kernel.org/linux-mips/cover.1567326213.git.noring@nocrew.org/T/
 
-Regarding cpu_has_64bit_gp_regs: another unusual aspect of the R5900 is
-its 128-bit GPRs. :)
+If desired, I can do like this:
 
-Fredrik
+
+ifeq ($(ARCH),m68k)
+  CC_M68K = $(CC)
+  LD_M68K = $(LD)
+else
+  CC_M68K = $(CROSS_COMPILE_M68K)gcc
+  LD_M68K = $(CROSS_COMPILE_M68K)ld
+endif
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
