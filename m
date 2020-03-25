@@ -2,230 +2,365 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD06AC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3662C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96C212078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uk1q+G09"
+	by mail.kernel.org (Postfix) with ESMTP id A8FC8207FF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:43:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585140191;
+	bh=0N5NwWug7ytyvaRU9+WeyUDqKc7pPB9S0AHwn8vM78s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=of3EvyrUvz55KKD8m2ZO0SMilnUIZGyWWe+mpjJuCFd34jY/9JvgOq8krSeUegCbJ
+	 8X2D7vn8dDnZhzZePsfrsM4wUpoEYTY/IKgjcFvGadTeXB0J5ZTG8ExItp47TzFg2t
+	 exE2OItgAEixAz4iDVOqfBANS+3vMbbjsmVltd7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgCYMm7 (ORCPT
+        id S1727794AbgCYMnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:42:59 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:51710 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727721AbgCYMm4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:42:56 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PCdUAM052990;
-        Wed, 25 Mar 2020 12:42:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=4CxQcsvrlZYbDGdz/Ttr6KfahZweiekg6E11FnAAvqQ=;
- b=uk1q+G09jPjs/Xk0XW9zqaw5RKL8v9liO+PN/isnJJAvmqlwJeuzWLdeNdbKib3e+mmO
- L7LX4yKvvkLumMwzcBqMQQsFo5DfEJKlHwTjETBuRLEfz6O+eHkUfRcOoZL1/rN1PgY2
- TZihFYkzEPRuZQTKYRp08Cqx1mkDSd//FEaAhiEdEGsTD+bbo2kBNmwfxt+Dw5CG1o8t
- dyuEFEwRn3XWvLVtDxgsT+AAwrCQ6Rf3vsrPSNyKkXaiYW/uUdGl9UtXK8eOSVhmdp/m
- lFXlfYtIW6nfwVO65+IRRxNSwK1rQeK5YREWN/BWkhlAwNtC+JwLSveakxxHnQBywlCl nw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2ywavm9dj5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 12:42:46 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PCfbXI165088;
-        Wed, 25 Mar 2020 12:42:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 3003ghnayj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 12:42:45 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02PCgh08017482;
-        Wed, 25 Mar 2020 12:42:43 GMT
-Received: from dhcp-10-175-163-133.vpn.oracle.com (/10.175.163.133)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 05:42:43 -0700
-Date:   Wed, 25 Mar 2020 12:42:36 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Patricia Alfonso <trishalfonso@google.com>
-cc:     Alan Maguire <alan.maguire@oracle.com>,
-        David Gow <davidgow@google.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
+        Wed, 25 Mar 2020 08:43:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60140 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727457AbgCYMnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:43:05 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCEF82078E;
+        Wed, 25 Mar 2020 12:43:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585140185;
+        bh=0N5NwWug7ytyvaRU9+WeyUDqKc7pPB9S0AHwn8vM78s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZbTzZIHJSrzcmY4echpHJ6lOm2hBQ4pHuU0WPsO3W17n7nsUssGEsODVIU1eY0eYE
+         tFllda+tZJHqN7jvjo3MMX65KuZjD05BP5p1lx2gC7xxwcPl3yrmhuOo7Uc7gXeAal
+         Mmrrxh1Gjq6c8/81T0ErVkhTyNsVJ08sMWLqsuuI=
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        John Garry <john.garry@huawei.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        kunit-dev@googlegroups.com,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Subject: Re: [RFC PATCH v2 1/3] Add KUnit Struct to Current Task
-In-Reply-To: <CAKFsvULUx3qi_kMGJx69ndzCgq=m2xf4XWrYRYBCViud0P7qqA@mail.gmail.com>
-Message-ID: <alpine.LRH.2.21.2003251242200.9650@localhost>
-References: <20200319164227.87419-1-trishalfonso@google.com> <20200319164227.87419-2-trishalfonso@google.com> <alpine.LRH.2.21.2003241635230.30637@localhost> <CAKFsvULUx3qi_kMGJx69ndzCgq=m2xf4XWrYRYBCViud0P7qqA@mail.gmail.com>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Will Deacon <will@kernel.org>, linuxarm@huawei.com
+Subject: [PATCH 22/24] perf test: Test pmu-events aliases
+Date:   Wed, 25 Mar 2020 09:41:22 -0300
+Message-Id: <20200325124124.32648-23-acme@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200325124124.32648-1-acme@kernel.org>
+References: <20200325124124.32648-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
- phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250106
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=3 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250105
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: John Garry <john.garry@huawei.com>
 
-On Tue, 24 Mar 2020, Patricia Alfonso wrote:
+Add creating event aliases to the pmu-events test.
 
-> On Tue, Mar 24, 2020 at 9:40 AM Alan Maguire <alan.maguire@oracle.com> wrote:
-> >
-> >
-> > On Thu, 19 Mar 2020, Patricia Alfonso wrote:
-> >
-> > > In order to integrate debugging tools like KASAN into the KUnit
-> > > framework, add KUnit struct to the current task to keep track of the
-> > > current KUnit test.
-> > >
-> > > Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> > > ---
-> > >  include/linux/sched.h | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/include/linux/sched.h b/include/linux/sched.h
-> > > index 04278493bf15..1fbfa0634776 100644
-> > > --- a/include/linux/sched.h
-> > > +++ b/include/linux/sched.h
-> > > @@ -1180,6 +1180,10 @@ struct task_struct {
-> > >       unsigned int                    kasan_depth;
-> > >  #endif
-> > >
-> > > +#if IS_BUILTIN(CONFIG_KUNIT)
-> >
-> > This patch set looks great! You might have noticed I
-> > refreshed the kunit resources stuff to incorporate
-> > feedback from Brendan, but I don't think any API changes
-> > were made that should have consequences for your code
-> > (I'm building with your patches on top to make sure).
-> > I'd suggest promoting from RFC to v3 on the next round
-> > unless anyone objects.
-> >
-> > As Dmitry suggested, the above could likely be changed to be
-> > "#ifdef CONFIG_KUNIT" as kunit can be built as a
-> > module also. More on this in patch 2..
-> >
-> I suppose this could be changed so that this can be used in possible
-> future scenarios, but for now, since built-in things can't rely on
-> modules, the KASAN integration relies on KUnit being built-in.
->
+So currently we verify that the generated pmu-events.c is as expected for
+some test events. Now test that we generate aliases as expected for those
+events during normal operation.
 
-I think we can get around that. I've tried tweaking the resources
-patchset such that the functions you need in KASAN (which
-is builtin) are declared as "static inline" in include/kunit/test.h;
-doing this allows us to build kunit and test_kasan as a
-module while supporting the builtin functionality required to
-retrieve and use kunit resources within KASAN itself.  
+For that, we cycle through each HW PMU in the system, and use the test
+events to create aliases, and verify those against known, expected values.
 
-The impact of this amounts to a few functions, but it would
-require a rebase of your changes. I'll send out a  v3 of the
-resources patches shortly; I just want to do some additional
-testing on them. I can also send you the modified versions of
-your patches that I used to test with.
+For core PMUs, we should create an alias for every event in
+test_cpu_events[].
 
-With these changes I can run the tests on baremetal
-x86_64 by modprobe'ing test_kasan. However I see a few failures:
+However, for uncore PMUs, they need to be matched by the pmu_event.pmu
+member, so use test_uncore_events[]; so check the match beforehand with
+pmu_uncore_alias_match().
 
-[   87.577012]  # kasan_memchr: EXPECTATION FAILED at lib/test_kasan.c:509
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.577104]  not ok 30 - kasan_memchr
-[   87.603823]  # kasan_memcmp: EXPECTATION FAILED at lib/test_kasan.c:523
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.603929]  not ok 31 - kasan_memcmp
-[   87.630644]  # kasan_strings: EXPECTATION FAILED at 
-lib/test_kasan.c:544
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.630910]  # kasan_strings: EXPECTATION FAILED at 
-lib/test_kasan.c:546
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.654037]  # kasan_strings: EXPECTATION FAILED at 
-lib/test_kasan.c:548
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.677179]  # kasan_strings: EXPECTATION FAILED at 
-lib/test_kasan.c:550
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.700242]  # kasan_strings: EXPECTATION FAILED at 
-lib/test_kasan.c:552
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.723336]  # kasan_strings: EXPECTATION FAILED at 
-lib/test_kasan.c:554
-        Expected kasan_data->report_expected == kasan_data->report_found, 
-but
-                kasan_data->report_expected == 1
-                kasan_data->report_found == 0
-[   87.746304]  not ok 32 - kasan_strings
+A sample run is as follows for my x86 machine:
 
-The above three tests consistently fail while everything
-else passes, and happen irrespective of whether kunit
-is built as a module or built-in.  Let me know if you 
-need any more info to debug (I built the kernel with
-CONFIG_SLUB=y if that matters).
+  john@linux-3c19:~/linux> tools/perf/perf test -vv 10
+  10: PMU events                                            :
+  --- start ---
 
-Thanks!
+  ...
 
-Alan
+  testing PMU uncore_arb aliases: no events to match
+  testing PMU cstate_pkg aliases: no events to match
+  skipping testing PMU breakpoint
+  testing aliases PMU uncore_cbox_1: matched event unc_cbo_xsnp_response.miss_eviction
+  testing PMU uncore_cbox_1 aliases: pass
+  testing PMU power aliases: no events to match
+  testing aliases PMU cpu: matched event bp_l1_btb_correct
+  testing aliases PMU cpu: matched event bp_l2_btb_correct
+  testing aliases PMU cpu: matched event segment_reg_loads.any
+  testing aliases PMU cpu: matched event dispatch_blocked.any
+  testing aliases PMU cpu: matched event eist_trans
+  testing PMU cpu aliases: pass
+  testing PMU intel_pt aliases: no events to match
+  skipping testing PMU software
+  skipping testing PMU intel_bts
+  testing PMU uncore_imc aliases: no events to match
+  testing aliases PMU uncore_cbox_0: matched event unc_cbo_xsnp_response.miss_eviction
+  testing PMU uncore_cbox_0 aliases: pass
+  testing PMU cstate_core aliases: no events to match
+  skipping testing PMU tracepoint
+  testing PMU msr aliases: no events to match
+  test child finished with 0
 
+Signed-off-by: John Garry <john.garry@huawei.com>
+Acked-by: Jiri Olsa <jolsa@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: James Clark <james.clark@arm.com>
+Cc: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: linuxarm@huawei.com
+Link: http://lore.kernel.org/lkml/1584442939-8911-8-git-send-email-john.garry@huawei.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/pmu-events.c | 148 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 147 insertions(+), 1 deletion(-)
 
-> > > +     struct kunit                    *kunit_test;
-> > > +#endif /* IS_BUILTIN(CONFIG_KUNIT) */
-> > > +
-> > >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> > >       /* Index of current stored address in ret_stack: */
-> > >       int                             curr_ret_stack;
-> > > --
-> > > 2.25.1.696.g5e7596f4ac-goog
-> > >
-> > >
-> 
-> -- 
-> Best,
-> Patricia
-> 
+diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
+index 12fc29746a09..d64261da8bf7 100644
+--- a/tools/perf/tests/pmu-events.c
++++ b/tools/perf/tests/pmu-events.c
+@@ -5,13 +5,24 @@
+ #include <errno.h>
+ #include <stdio.h>
+ #include <linux/kernel.h>
+-
++#include <linux/zalloc.h>
+ #include "debug.h"
+ #include "../pmu-events/pmu-events.h"
+ 
+ struct perf_pmu_test_event {
+ 	struct pmu_event event;
++
++	/* extra events for aliases */
++	const char *alias_str;
++
++	/*
++	 * Note: For when PublicDescription does not exist in the JSON, we
++	 * will have no long_desc in pmu_event.long_desc, but long_desc may
++	 * be set in the alias.
++	 */
++	const char *alias_long_desc;
+ };
++
+ static struct perf_pmu_test_event test_cpu_events[] = {
+ 	{
+ 		.event = {
+@@ -20,6 +31,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+ 			.desc = "L1 BTB Correction",
+ 			.topic = "branch",
+ 		},
++		.alias_str = "event=0x8a",
++		.alias_long_desc = "L1 BTB Correction",
+ 	},
+ 	{
+ 		.event = {
+@@ -28,6 +41,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+ 			.desc = "L2 BTB Correction",
+ 			.topic = "branch",
+ 		},
++		.alias_str = "event=0x8b",
++		.alias_long_desc = "L2 BTB Correction",
+ 	},
+ 	{
+ 		.event = {
+@@ -36,6 +51,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+ 			.desc = "Number of segment register loads",
+ 			.topic = "other",
+ 		},
++		.alias_str = "umask=0x80,(null)=0x30d40,event=0x6",
++		.alias_long_desc = "Number of segment register loads",
+ 	},
+ 	{
+ 		.event = {
+@@ -44,6 +61,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+ 			.desc = "Memory cluster signals to block micro-op dispatch for any reason",
+ 			.topic = "other",
+ 		},
++		.alias_str = "umask=0x20,(null)=0x30d40,event=0x9",
++		.alias_long_desc = "Memory cluster signals to block micro-op dispatch for any reason",
+ 	},
+ 	{
+ 		.event = {
+@@ -52,6 +71,8 @@ static struct perf_pmu_test_event test_cpu_events[] = {
+ 			.desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+ 			.topic = "other",
+ 		},
++		.alias_str = "umask=0,(null)=0x30d40,event=0x3a",
++		.alias_long_desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+ 	},
+ 	{ /* sentinel */
+ 		.event = {
+@@ -70,6 +91,8 @@ static struct perf_pmu_test_event test_uncore_events[] = {
+ 			.long_desc = "DDRC write commands",
+ 			.pmu = "hisi_sccl,ddrc",
+ 		},
++		.alias_str = "event=0x2",
++		.alias_long_desc = "DDRC write commands",
+ 	},
+ 	{
+ 		.event = {
+@@ -80,6 +103,8 @@ static struct perf_pmu_test_event test_uncore_events[] = {
+ 			.long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+ 			.pmu = "uncore_cbox",
+ 		},
++		.alias_str = "umask=0x81,event=0x22",
++		.alias_long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+ 	},
+ 	{ /* sentinel */
+ 		.event = {
+@@ -223,11 +248,132 @@ static int __test_pmu_event_table(void)
+ 
+ 	return 0;
+ }
++
++static struct perf_pmu_alias *find_alias(const char *test_event, struct list_head *aliases)
++{
++	struct perf_pmu_alias *alias;
++
++	list_for_each_entry(alias, aliases, list)
++		if (!strcmp(test_event, alias->name))
++			return alias;
++
++	return NULL;
++}
++
++/* Verify aliases are as expected */
++static int __test__pmu_event_aliases(char *pmu_name, int *count)
++{
++	struct perf_pmu_test_event *test;
++	struct pmu_event *te;
++	struct perf_pmu *pmu;
++	LIST_HEAD(aliases);
++	int res = 0;
++	bool use_uncore_table;
++	struct pmu_events_map *map = __test_pmu_get_events_map();
++
++	if (!map)
++		return -1;
++
++	if (is_pmu_core(pmu_name)) {
++		test = &test_cpu_events[0];
++		use_uncore_table = false;
++	} else {
++		test = &test_uncore_events[0];
++		use_uncore_table = true;
++	}
++
++	pmu = zalloc(sizeof(*pmu));
++	if (!pmu)
++		return -1;
++
++	pmu->name = pmu_name;
++
++	pmu_add_cpu_aliases_map(&aliases, pmu, map);
++
++	for (te = &test->event; te->name; test++, te = &test->event) {
++		struct perf_pmu_alias *alias = find_alias(te->name, &aliases);
++
++		if (!alias) {
++			bool uncore_match = pmu_uncore_alias_match(pmu_name,
++								   te->pmu);
++
++			if (use_uncore_table && !uncore_match) {
++				pr_debug3("testing aliases PMU %s: skip matching alias %s\n",
++					  pmu_name, te->name);
++				continue;
++			}
++
++			pr_debug2("testing aliases PMU %s: no alias, alias_table->name=%s\n",
++				  pmu_name, te->name);
++			res = -1;
++			break;
++		}
++
++		if (!is_same(alias->desc, te->desc)) {
++			pr_debug2("testing aliases PMU %s: mismatched desc, %s vs %s\n",
++				  pmu_name, alias->desc, te->desc);
++			res = -1;
++			break;
++		}
++
++		if (!is_same(alias->long_desc, test->alias_long_desc)) {
++			pr_debug2("testing aliases PMU %s: mismatched long_desc, %s vs %s\n",
++				  pmu_name, alias->long_desc,
++				  test->alias_long_desc);
++			res = -1;
++			break;
++		}
++
++		if (!is_same(alias->str, test->alias_str)) {
++			pr_debug2("testing aliases PMU %s: mismatched str, %s vs %s\n",
++				  pmu_name, alias->str, test->alias_str);
++			res = -1;
++			break;
++		}
++
++		if (!is_same(alias->topic, te->topic)) {
++			pr_debug2("testing aliases PMU %s: mismatched topic, %s vs %s\n",
++				  pmu_name, alias->topic, te->topic);
++			res = -1;
++			break;
++		}
++
++		(*count)++;
++		pr_debug2("testing aliases PMU %s: matched event %s\n",
++			  pmu_name, alias->name);
++	}
++
++	free(pmu);
++	return res;
++}
++
+ int test__pmu_events(struct test *test __maybe_unused,
+ 		     int subtest __maybe_unused)
+ {
++	struct perf_pmu *pmu = NULL;
++
+ 	if (__test_pmu_event_table())
+ 		return -1;
+ 
++	while ((pmu = perf_pmu__scan(pmu)) != NULL) {
++		int count = 0;
++
++		if (list_empty(&pmu->format)) {
++			pr_debug2("skipping testing PMU %s\n", pmu->name);
++			continue;
++		}
++
++		if (__test__pmu_event_aliases(pmu->name, &count)) {
++			pr_debug("testing PMU %s aliases: failed\n", pmu->name);
++			return -1;
++		}
++
++		if (count == 0)
++			pr_debug3("testing PMU %s aliases: no events to match\n",
++				  pmu->name);
++		else
++			pr_debug("testing PMU %s aliases: pass\n", pmu->name);
++	}
++
+ 	return 0;
+ }
+-- 
+2.21.1
+
