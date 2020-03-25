@@ -2,193 +2,58 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABAEC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B061C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 187C220409
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hjzQkLqk"
+	by mail.kernel.org (Postfix) with ESMTP id 6D93920409
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:30:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgCYIaF (ORCPT
+        id S1727400AbgCYIaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:30:05 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:24420 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727346AbgCYIaC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585125001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Qv2sf5ZLe8MVzng446R1oQxVfhG/+fRJUSulJ/I8CAY=;
-        b=hjzQkLqkZ84gQ9X9IWjSvhd4KG/S2z+p9uCOwcV6b9UwKIPEzQqbHeJLvvth+R63+SITPC
-        HsZE3n9pl3+/0NkVoXGk/i12rY7vcnVJDag42AZBcFlMnubnPtHAGWpveNUClEatOd/kPb
-        qnGwTWeICMWqd1ZusiO1EtyZaRY/yhE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-466-cuucHGfzOnWFqH-bOVKv-g-1; Wed, 25 Mar 2020 04:30:00 -0400
-X-MC-Unique: cuucHGfzOnWFqH-bOVKv-g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 526041902EA1;
-        Wed, 25 Mar 2020 08:29:57 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-14-13.pek2.redhat.com [10.72.14.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD583194BB;
-        Wed, 25 Mar 2020 08:28:58 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V8 2/9] vhost: allow per device message handler
-Date:   Wed, 25 Mar 2020 16:27:04 +0800
-Message-Id: <20200325082711.1107-3-jasowang@redhat.com>
-In-Reply-To: <20200325082711.1107-1-jasowang@redhat.com>
-References: <20200325082711.1107-1-jasowang@redhat.com>
+        Wed, 25 Mar 2020 04:30:17 -0400
+Received: from verein.lst.de ([213.95.11.211]:39651 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727275AbgCYIaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 04:30:17 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id A87AE68AFE; Wed, 25 Mar 2020 09:30:13 +0100 (CET)
+Date:   Wed, 25 Mar 2020 09:30:12 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Maciej W. Rozycki" <macro@linux-mips.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Fredrik Noring <noring@nocrew.org>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] MIPS: remove cpu_has_64bit_gp_regs and
+ cpu_has_64bit_addresses
+Message-ID: <20200325083012.GA21605@lst.de>
+References: <20200324161525.754181-1-hch@lst.de> <20200324161525.754181-2-hch@lst.de> <alpine.LFD.2.21.2003250226450.2689954@eddie.linux-mips.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.21.2003250226450.2689954@eddie.linux-mips.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allow device to register its own message handler during
-vhost_dev_init(). vDPA device will use it to implement its own DMA
-mapping logic.
+On Wed, Mar 25, 2020 at 02:36:57AM +0000, Maciej W. Rozycki wrote:
+> On Tue, 24 Mar 2020, Christoph Hellwig wrote:
+> 
+> > Both macros are always identical to CONFIG_64BIT.
+> 
+>  I think this abstraction makes sense, especially if we want to support 
+> 64-bit CPUs that only support 32-bit segments, i.e. MIPS architecture 
+> processors whose CP0.Config.AT=1, or legacy MIPS processors that had a 
+> similar limitation, such as the R5900 currently under review.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vhost/net.c   |  3 ++-
- drivers/vhost/scsi.c  |  2 +-
- drivers/vhost/vhost.c | 12 ++++++++++--
- drivers/vhost/vhost.h |  6 +++++-
- drivers/vhost/vsock.c |  2 +-
- 5 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
-index e158159671fa..c8ab8d83b530 100644
---- a/drivers/vhost/net.c
-+++ b/drivers/vhost/net.c
-@@ -1324,7 +1324,8 @@ static int vhost_net_open(struct inode *inode, stru=
-ct file *f)
- 	}
- 	vhost_dev_init(dev, vqs, VHOST_NET_VQ_MAX,
- 		       UIO_MAXIOV + VHOST_NET_BATCH,
--		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT);
-+		       VHOST_NET_PKT_WEIGHT, VHOST_NET_WEIGHT,
-+		       NULL);
-=20
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_TX, handle_tx_net, EPOLLOUT, dev=
-);
- 	vhost_poll_init(n->poll + VHOST_NET_VQ_RX, handle_rx_net, EPOLLIN, dev)=
-;
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index 0b949a14bce3..7653667a8cdc 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -1628,7 +1628,7 @@ static int vhost_scsi_open(struct inode *inode, str=
-uct file *f)
- 		vs->vqs[i].vq.handle_kick =3D vhost_scsi_handle_kick;
- 	}
- 	vhost_dev_init(&vs->dev, vqs, VHOST_SCSI_MAX_VQ, UIO_MAXIOV,
--		       VHOST_SCSI_WEIGHT, 0);
-+		       VHOST_SCSI_WEIGHT, 0, NULL);
-=20
- 	vhost_scsi_init_inflight(vs, NULL);
-=20
-diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
-index f44340b41494..8e9e2341e40a 100644
---- a/drivers/vhost/vhost.c
-+++ b/drivers/vhost/vhost.c
-@@ -457,7 +457,9 @@ static size_t vhost_get_desc_size(struct vhost_virtqu=
-eue *vq,
-=20
- void vhost_dev_init(struct vhost_dev *dev,
- 		    struct vhost_virtqueue **vqs, int nvqs,
--		    int iov_limit, int weight, int byte_weight)
-+		    int iov_limit, int weight, int byte_weight,
-+		    int (*msg_handler)(struct vhost_dev *dev,
-+				       struct vhost_iotlb_msg *msg))
- {
- 	struct vhost_virtqueue *vq;
- 	int i;
-@@ -473,6 +475,7 @@ void vhost_dev_init(struct vhost_dev *dev,
- 	dev->iov_limit =3D iov_limit;
- 	dev->weight =3D weight;
- 	dev->byte_weight =3D byte_weight;
-+	dev->msg_handler =3D msg_handler;
- 	init_llist_head(&dev->work_list);
- 	init_waitqueue_head(&dev->wait);
- 	INIT_LIST_HEAD(&dev->read_list);
-@@ -1178,7 +1181,12 @@ ssize_t vhost_chr_write_iter(struct vhost_dev *dev=
-,
- 		ret =3D -EINVAL;
- 		goto done;
- 	}
--	if (vhost_process_iotlb_msg(dev, &msg)) {
-+
-+	if (dev->msg_handler)
-+		ret =3D dev->msg_handler(dev, &msg);
-+	else
-+		ret =3D vhost_process_iotlb_msg(dev, &msg);
-+	if (ret) {
- 		ret =3D -EFAULT;
- 		goto done;
- 	}
-diff --git a/drivers/vhost/vhost.h b/drivers/vhost/vhost.h
-index a123fd70847e..f9d1a03dd153 100644
---- a/drivers/vhost/vhost.h
-+++ b/drivers/vhost/vhost.h
-@@ -174,11 +174,15 @@ struct vhost_dev {
- 	int weight;
- 	int byte_weight;
- 	u64 kcov_handle;
-+	int (*msg_handler)(struct vhost_dev *dev,
-+			   struct vhost_iotlb_msg *msg);
- };
-=20
- bool vhost_exceeds_weight(struct vhost_virtqueue *vq, int pkts, int tota=
-l_len);
- void vhost_dev_init(struct vhost_dev *, struct vhost_virtqueue **vqs,
--		    int nvqs, int iov_limit, int weight, int byte_weight);
-+		    int nvqs, int iov_limit, int weight, int byte_weight,
-+		    int (*msg_handler)(struct vhost_dev *dev,
-+				       struct vhost_iotlb_msg *msg));
- long vhost_dev_set_owner(struct vhost_dev *dev);
- bool vhost_dev_has_owner(struct vhost_dev *dev);
- long vhost_dev_check_owner(struct vhost_dev *);
-diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
-index c2d7d57e98cf..97669484a3f6 100644
---- a/drivers/vhost/vsock.c
-+++ b/drivers/vhost/vsock.c
-@@ -621,7 +621,7 @@ static int vhost_vsock_dev_open(struct inode *inode, =
-struct file *file)
-=20
- 	vhost_dev_init(&vsock->dev, vqs, ARRAY_SIZE(vsock->vqs),
- 		       UIO_MAXIOV, VHOST_VSOCK_PKT_WEIGHT,
--		       VHOST_VSOCK_WEIGHT);
-+		       VHOST_VSOCK_WEIGHT, NULL);
-=20
- 	file->private_data =3D vsock;
- 	spin_lock_init(&vsock->send_pkt_list_lock);
---=20
-2.20.1
-
+The only use of cpu_has_64bit_addresses is the choice of the ioremap
+code base.  Which ioremap code does the R5900 want to use?  If it
+doesn't match CONFIG_64BIT having a config option for the ioremap
+implementation seems much more sensible, and can be added with the
+R5900 patch set (do you have a link to it?).
