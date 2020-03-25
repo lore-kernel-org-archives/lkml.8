@@ -2,96 +2,99 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 514BFC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB466C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2607320775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="r4ccyl6U"
+	by mail.kernel.org (Postfix) with ESMTP id A71F920714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:22:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585131748;
+	bh=0jc2gQJlyp6t7qnzvKEUEHdB24QoBYSDB2QoCfzXjVQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=nZHlzWv+Nehl1ZNeBH89rOsttAp1at7UAwd4cYR9kYFdqSNcOWFPjnRO4txAsaTc1
+	 vtraZ7gEylwdoFe9oCufoeuPiwoHta5+QyxP+pgzaMdZI65aH5V63viSGqwO9COZMC
+	 B9CZZGvfIPnD8/gAuKNMRNofRnX5KzrdHPRmO8Zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgCYKWY (ORCPT
+        id S1727667AbgCYKW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:22:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40649 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbgCYKWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:22:23 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nPLk01K9z9sR4;
-        Wed, 25 Mar 2020 21:22:21 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585131742;
-        bh=h5Vz9jZG3mRLJBK/442MEWiwrL0sm+QQV6Q9zKhPR4c=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=r4ccyl6U2aLYtjIHFH6hL8rKstByfOWJlsMhhhgsUTpL/Cb9U5E/2CY6mFUWGS0er
-         An8i62X9qMtAUZcQW4sz4VAB1KarFfTWYsgamqOc7yG0QFrcBhFs55yGLmjv5JK/i2
-         m3H/tdNvBk4mV5VWDZ3jMeGQaf8BfV7HDyjGByiorLe/pRjmdfJrMMX8U2tZ+Jceax
-         GH/gvmrO1Y9O1xFvBEOcIcejfqRm6ojnfk4kS7h+wnz/2kmWzOGR/bKQLbmdzpdLAf
-         5pGP4RKKBg6yFB2iO8v86iLIVWimfyb28KIln0P+XCWqvKwoNElBodQx1l10pRs7ya
-         H8XI5UXiUIAUg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Scott Wood <oss@buserror.net>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Vitaly Bordug <vitb@kernel.crashing.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] powerpc: Replace setup_irq() by request_irq()
-In-Reply-To: <20200324110637.GA5836@afzalpc>
-References: <20200304004746.4557-1-afzal.mohd.ma@gmail.com> <20200312064256.18735-1-afzal.mohd.ma@gmail.com> <20200324110637.GA5836@afzalpc>
-Date:   Wed, 25 Mar 2020 21:22:29 +1100
-Message-ID: <87wo78wx7e.fsf@mpe.ellerman.id.au>
+        Wed, 25 Mar 2020 06:22:27 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:62524 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbgCYKW1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:22:27 -0400
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id 02PAMGQx028925;
+        Wed, 25 Mar 2020 19:22:16 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 02PAMGQx028925
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585131736;
+        bh=oKV4gkaGjA8JUJ0R19IwiELg1IvohIMnv7gyVQFEv8g=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=xy87udG48Uqlz1ouCY/JCBjnyVTjON2Ra05VsF8gkizOyqx0vrwUGOGoRgk2y6yoT
+         f34+RcZiuNNxC5QmSTgpDaDcBNWtBQkovq0517Mdih8WzMOgVieUR6gj70vsl6OYBr
+         2L5EVf26gs/5mI/Ed7r8n3kN6PKk9EhXs0KYXBTupldY/0tyh5J3VGUdoOOM24ssN4
+         yKRkA6eUh+MkNXLv7cDbhdAuI9RybZk+vr4j6Ml05L6ZdNZ0IkBnXVc387egPpRrxq
+         BB1juIwc6LBW9dLVjfon00pdN0+GBvV4nhJhnJ7syoaZNP0Mh2sm7zlULME2j/+zlR
+         QhwDcZcR4QF8w==
+X-Nifty-SrcIP: [209.85.222.43]
+Received: by mail-ua1-f43.google.com with SMTP id o16so523878uap.6;
+        Wed, 25 Mar 2020 03:22:16 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ1NHx6ju7XiN0slUernAEhDOuTEU9uJvv0PYUq3PpQem48L9F+M
+        lXv0/BqdQC9Uxjzz/IAGLTt6KpAGtS+93K/Igb4=
+X-Google-Smtp-Source: ADFU+vulOrH4nh/j/MQxVkE4DfCZT//dWVxt1fewODMBiEhlfJUPE3Cgci+RGQ7TVq1ud7qHRP44QHrIEw5As28k7VY=
+X-Received: by 2002:ab0:28d8:: with SMTP id g24mr1599988uaq.121.1585131735496;
+ Wed, 25 Mar 2020 03:22:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200303133600.9263-1-masahiroy@kernel.org> <20200303133600.9263-2-masahiroy@kernel.org>
+ <CAK7LNARZUpDKXpniNZ+_=G5Gskebc0HEHT5TKbaz2Xs_Ni6u4g@mail.gmail.com> <20200325101838.GA3084128@kroah.com>
+In-Reply-To: <20200325101838.GA3084128@kroah.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 25 Mar 2020 19:21:39 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQtxwXzmHXr6GMm_BrEvittoUHJkrROVFX02if5BTCgGw@mail.gmail.com>
+Message-ID: <CAK7LNAQtxwXzmHXr6GMm_BrEvittoUHJkrROVFX02if5BTCgGw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] .gitignore: add SPDX License Identifier
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-spdx@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-afzal mohammed <afzal.mohd.ma@gmail.com> writes:
-> Hi Michael Ellerman,
-> On Thu, Mar 12, 2020 at 12:12:55PM +0530, afzal mohammed wrote:
->> request_irq() is preferred over setup_irq(). Invocations of setup_irq()
->> occur after memory allocators are ready.
->> 
->> Per tglx[1], setup_irq() existed in olden days when allocators were not
->> ready by the time early interrupts were initialized.
->> 
->> Hence replace setup_irq() by request_irq().
->> 
->> [1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
->> 
->> Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+On Wed, Mar 25, 2020 at 7:18 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> This patch is seen in next-test branch for last 4-5 days, i don't know
-> exactly how powerpc workflow happens, so a question - this would be
-> appear in linux-next soon right ? (for last 4-5 days i had been daily
-> checking -next, but not appearing there).
+> On Wed, Mar 25, 2020 at 07:10:03PM +0900, Masahiro Yamada wrote:
+> > On Tue, Mar 3, 2020 at 10:36 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > >
+> > > Add SPDX License Identifier to all .gitignore files.
+> > >
+> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> >
+> >
+> > Ping?
+>
+> Ah, I just assumed you would take these through your tree, sorry about
+> that.
+>
+> Both look find:
+>
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>
+> Or do you want me to take these?
+>
 
-Yeah it will appear in next "soon".
+Yes.
+That is why I sent this to linux-spdx ML,
+which seems a valid path.
 
-It's been stuck behind a big series that has hit some bugs during
-testing, so that has delayed me pushing the whole branch.
 
-> Sorry for the query for this trivial patch, i am asking because Thomas
-> had mentioned [1] to get setup_irq() cleanup thr' respective
-> maintainers (earlier it was part of tree-wide series), check -next after
-> -rc6 & resubmit ignored ones to him, this patch is neither in -next,
-> neither ignored, so i am at a loss what to do :(
-
-That's OK. I will take this one, you can stop worrying about it.
-
-It should appear in next tomorrow or Friday.
-
-cheers
+-- 
+Best Regards
+Masahiro Yamada
