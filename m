@@ -2,193 +2,138 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C27EDC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF48C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:55:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7670820658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:47:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J8VeokEi"
+	by mail.kernel.org (Postfix) with ESMTP id 2266A20658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:55:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgCYTrz (ORCPT
+        id S1727395AbgCYTzF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:47:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44327 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727259AbgCYTry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:47:54 -0400
-Received: by mail-ed1-f68.google.com with SMTP id i16so3172604edy.11
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 12:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=m+sWsfawp9IPajoIZdacO9dJYYta78Pw+YueeYzFlxY=;
-        b=J8VeokEiP3c6G7lK6+ho/hDzU0xo/hYsK36WzY+oz0mWQJu2vTWmP6XnvsA9cYT9N5
-         nqqsbWG/RFwkjbsq94/N10fjA5usQGnqs9lg09zavJDcntFYWRLBPaoUVe3g4k89jqC8
-         /N0wZsvGA1SxxoqBJ9OF2PAQHcqCZ6GlCZdsg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=m+sWsfawp9IPajoIZdacO9dJYYta78Pw+YueeYzFlxY=;
-        b=mlAZry+Aw5qViiTtFzxNGAQfm614OqKV16WMxKe5nJUmKgkkanqP5eXaRwWJznHt+I
-         Cl/NvZMjGyLVB/MNcWPa34SWD6ittHrjXCwLq2Bf9MUcgPeQgM3MXPO+ognSX/pF4c+n
-         NVAirPDge3YNJLPt3shmybqpcYKUfWlYlla9SbhUyMBqlxE14eAeZtuHdn0j/q4gk7q5
-         4MYxUFm4+YXzIuM/krjmxkjtaVBK1oh4vTNUwnSYdBvUXIjT7arLLHRQoQPOqlC+oOJK
-         Xrjy4t9d2WM9VMYTMQPdqlN5uOLRGV+qfHVCRP3MjsmsZ8qNUNXjNSS4YhFbwgmZb4Xo
-         p0IQ==
-X-Gm-Message-State: ANhLgQ1eIFc1a+Sy6v+UW4z9YP/auIvvjRfaO2Zuw93cQg1oB8TL8qX9
-        5Cr5OEl1asPZH29bgyVG11iPIMKsQPo=
-X-Google-Smtp-Source: ADFU+vsXC2+G4dAEdq3BT0kzbpG7W1L+TlJ6Q9f3rfe8/j2ql4POnBClUnujbpyTjYOq/YSFp3UcGg==
-X-Received: by 2002:adf:b3d4:: with SMTP id x20mr4822089wrd.269.1585165199246;
-        Wed, 25 Mar 2020 12:39:59 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id o67sm135582wmo.5.2020.03.25.12.39.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 12:39:58 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 25 Mar 2020 20:39:56 +0100
-To:     Kees Cook <keescook@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v6 3/8] bpf: lsm: provide attachment points for
- BPF LSM programs
-Message-ID: <20200325193956.GA22898@chromium.org>
-References: <20200325152629.6904-1-kpsingh@chromium.org>
- <20200325152629.6904-4-kpsingh@chromium.org>
- <202003251225.923FF1DD7@keescook>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+        Wed, 25 Mar 2020 15:55:05 -0400
+Received: from ciao.gmane.io ([159.69.161.202]:47904 "EHLO ciao.gmane.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727236AbgCYTzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:55:05 -0400
+Received: from list by ciao.gmane.io with local (Exim 4.92)
+        (envelope-from <glk-linux-kernel-4@m.gmane-mx.org>)
+        id 1jHC7C-000PHR-CC
+        for linux-kernel@vger.kernel.org; Wed, 25 Mar 2020 20:55:02 +0100
+X-Injected-Via-Gmane: http://gmane.org/
+To:     linux-kernel@vger.kernel.org
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
+Date:   Wed, 25 Mar 2020 20:46:36 +0100
+Message-ID: <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
+References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
+ <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <202003251225.923FF1DD7@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+Cc:     linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org
+In-Reply-To: <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
+Content-Language: en-US
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-M�r 12:28, Kees Cook wrote:
-> On Wed, Mar 25, 2020 at 04:26:24PM +0100, KP Singh wrote:
-> > From: KP Singh <kpsingh@google.com>
-> > 
-> > When CONFIG_BPF_LSM is enabled, nop functions, bpf_lsm_<hook_name>, are
-> > generated for each LSM hook. These functions are initialized as LSM
-> > hooks in a subsequent patch.
-> > 
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> > Reviewed-by: Florent Revest <revest@google.com>
-> > Reviewed-by: Kees Cook <keescook@chromium.org>
-> > Acked-by: Yonghong Song <yhs@fb.com>
-> > ---
-> >  include/linux/bpf_lsm.h | 22 ++++++++++++++++++++++
-> >  kernel/bpf/bpf_lsm.c    | 14 ++++++++++++++
-> >  2 files changed, 36 insertions(+)
-> >  create mode 100644 include/linux/bpf_lsm.h
-> > 
-> > diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-> > new file mode 100644
-> > index 000000000000..83b96895829f
-> > --- /dev/null
-> > +++ b/include/linux/bpf_lsm.h
-> > @@ -0,0 +1,22 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +
-> > +/*
-> > + * Copyright (C) 2020 Google LLC.
-> > + */
-> > +
-> > +#ifndef _LINUX_BPF_LSM_H
-> > +#define _LINUX_BPF_LSM_H
-> > +
-> > +#include <linux/bpf.h>
-> > +#include <linux/lsm_hooks.h>
-> > +
-> > +#ifdef CONFIG_BPF_LSM
-> > +
-> > +#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
-> > +	RET bpf_lsm_##NAME(__VA_ARGS__);
-> > +#include <linux/lsm_hook_defs.h>
-> > +#undef LSM_HOOK
-> > +
-> > +#endif /* CONFIG_BPF_LSM */
-> > +
-> > +#endif /* _LINUX_BPF_LSM_H */
-> > diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-> > index 82875039ca90..1210a819ca52 100644
-> > --- a/kernel/bpf/bpf_lsm.c
-> > +++ b/kernel/bpf/bpf_lsm.c
-> > @@ -7,6 +7,20 @@
-> >  #include <linux/filter.h>
-> >  #include <linux/bpf.h>
-> >  #include <linux/btf.h>
-> > +#include <linux/lsm_hooks.h>
-> > +#include <linux/bpf_lsm.h>
-> > +
-> > +/* For every LSM hook that allows attachment of BPF programs, declare a nop
-> > + * function where a BPF program can be attached.
-> > + */
-> > +#define LSM_HOOK(RET, DEFAULT, NAME, ...) 	\
-> > +noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)	\
-> 
-> I don't think the __weak is needed any more here?
+Le 25/03/2020 à 15:52, Chuck Lever a écrit :
+> Hi Christophe,
+>
+>
+>> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+>>
+>> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
+>> overflow.
+> That's true as a general statement, but how likely is such an
+> overflow to occur here?
+>
+I guess, that it us unlikely and that the 80 chars buffer is big enough.
+That is the exact reason of why I've proposed 2 patches. The first one 
+could happen in RL. The 2nd is more like a clean-up and is less 
+relevant, IMHO.
+>
+>> The return value can also be used to avoid a strlen a call.
+> That's also true of sprintf, isn't it?
 
-This was suggested in:
+Sure.
 
- https://lore.kernel.org/bpf/20200221022537.wbmhdfkdbfvw2pww@ast-mbp/
 
-"I think I saw cases when gcc ignored 'noinline' when function is
-defined in the same file and still performed inlining while keeping
-the function body.  To be safe I think __weak is necessary. That will
-guarantee noinline."
+>
+>> Finally, we know where we need to copy and the length to copy, so, we
+>> can save a few cycles by rearraging the code and using a memcpy instead of
+>> a strcat.
+> I would be OK with squashing these two patches together. I don't
+> see the need to keep the two changes separated.
 
-It happened to work nicely with the previous approach for the special
-hooks but the actual reason for adding the __weak was to guarrantee
-that these functions don't get inlined.
+NP, I can resend as a V2 with your comments.
+As said above, the first fixes something that could, IMHO, happen and 
+the 2nd is more a matter of taste and a clean-up.
 
-> 
-> > +{						\
-> > +	return DEFAULT;				\
-> 
-> I'm impressed that LSM_RET_VOID actually works. :)
 
-All the credit goes to Andrii :)
+>
+>> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+>> ---
+>> This patch should have no functionnal change.
+>> We could go further, use scnprintf and write directly in the destination
+>> buffer. However, this could lead to a truncated last line.
+> That's exactly what this function is trying to avoid. As part of any
+> change in this area, it would be good to replace the current block
+> comment before this function with a Doxygen-format comment that
+> documents that goal.
 
-- KP
+I'll take care of it.
 
-> 
-> -Kees
-> 
-> > +}
-> > +
-> > +#include <linux/lsm_hook_defs.h>
-> > +#undef LSM_HOOK
-> >  
-> >  const struct bpf_prog_ops lsm_prog_ops = {
-> >  };
-> > -- 
-> > 2.20.1
-> > 
-> 
-> -- 
-> Kees Cook
+
+>> ---
+>> net/sunrpc/svc_xprt.c | 8 ++++----
+>> 1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+>> index df39e7b8b06c..6df861650040 100644
+>> --- a/net/sunrpc/svc_xprt.c
+>> +++ b/net/sunrpc/svc_xprt.c
+>> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
+>> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+>> 		int slen;
+>>
+>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
+>> -		slen = strlen(tmpstr);
+>> -		if (len + slen >= maxlen)
+>> +		slen = snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
+>> +				xcl->xcl_name, xcl->xcl_max_payload);
+>> +		if (slen >= sizeof(tmpstr) || len + slen >= maxlen)
+>> 			break;
+>> +		memcpy(buf + len, tmpstr, slen + 1);
+>> 		len += slen;
+>> -		strcat(buf, tmpstr);
+> IMO replacing the strcat makes the code harder to read, and this
+> is certainly not a performance path. Can you drop that part of the
+> patch?
+
+Ok
+
+
+>
+>> 	}
+>> 	spin_unlock(&svc_xprt_class_lock);
+>>
+>> -- 
+>> 2.20.1
+>>
+> --
+> Chuck Lever
+>
+>
+>
+>
+
+
