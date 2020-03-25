@@ -2,270 +2,182 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40786C2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DC2C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A6092076F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E82720740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585163150;
-	bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0iJ9Fq3Hm0eVpxB9KJDvQOqmI/3NY1BK55c3Xu1LDj7BqLOKSL+1rLtXBdh5h5cq5
-	 q4/1X8RrUImYd1gWvQ9Xu8RTijq5kd8OyN9fswT7sZesU/IUxFn/XQE4FAd3u6MgUj
-	 Eqi9+duCOixv8bfJS//7nNsIXFV4GR2baZQUpMGs=
+	s=default; t=1585163262;
+	bh=lhy+Eu3yict1wi7voNpWry2+n+0EtZmY4ZR96Tpx/lk=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=oYmvjZMxjtSj3OAbOz/PH3ov/P9iDhWlVeU1NtjkLa4/nQYplgd7sjwpVSzJsBJrP
+	 d/zeFTbyA9l/wnZUk6nsLPPpS1sNaR7aa+KvioRjNAxwoPo1d91vB1+pRJPkOCUYFD
+	 /hmfJCtO7SYEMuQJD6aScV/yzntmEwXEAXqoMIUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCYTFt (ORCPT
+        id S1727639AbgCYTHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58046 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 15:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727279AbgCYTFs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:05:48 -0400
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727399AbgCYTHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 15:07:40 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86522076F;
-        Wed, 25 Mar 2020 19:05:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8FD3820714;
+        Wed, 25 Mar 2020 19:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585163147;
-        bh=++J1l22iODPsdFUfxz8jQjkKIYHE5X8erMXa2/ilh3o=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kqV2+isT+3mowQAoVTiPQgQ2DjtFWvGZpTKQwUYikcmB/fWfPgUOzc28y2M7gktVI
-         w9tzmg7fhk5C331Kc/oMpWM1lLNsHzDQFQvRYDdyCdR87r7160m86Jcs369tMsYf4c
-         TwyDfgeNuVOacPiiJrzD7oOc/pPLFvQrdRNJADYU=
-Received: by mail-qv1-f51.google.com with SMTP id v38so1662572qvf.6;
-        Wed, 25 Mar 2020 12:05:47 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ16jCYPmu0lN2Sh5en7ug2ds8Z/wJC70bUK3PzGZpr0DsHAH57x
-        CM6D6q9a28uGAZBm6inuyhm68po2AR16OHyixg==
-X-Google-Smtp-Source: ADFU+vsyukn7zvIPawA++JIpoRR33DaG19B2BoYv9ZrgL4BE0crMXNzCbxcpYD7SVqS9OR2ZR0zCz4JJu7zGUp7IlWY=
-X-Received: by 2002:ad4:4bc3:: with SMTP id l3mr4462107qvw.79.1585163146836;
- Wed, 25 Mar 2020 12:05:46 -0700 (PDT)
+        s=default; t=1585163259;
+        bh=lhy+Eu3yict1wi7voNpWry2+n+0EtZmY4ZR96Tpx/lk=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=covR7fziSsoadZsZ3tfWGwczdeUG39GhVnWXCKG+7tq8E1HYiSz1PYd3ELksGojq2
+         rPjZ7AvTthbbsa3jKaD1DrCwkSzWKIliKuXK7H0OJEDATfGIy2Ul1oZeLwElqrnj++
+         VZuuljk7mYTga+VGE220XaFoAartJ1pigV1vzOBo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 631D33520BDC; Wed, 25 Mar 2020 12:07:39 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 12:07:39 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
+Message-ID: <20200325190739.GA19865@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <000000000000742e9e05a10170bc@google.com>
+ <87a74arown.fsf@nanos.tec.linutronix.de>
+ <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
+ <87ftdypyec.fsf@nanos.tec.linutronix.de>
+ <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
+ <875zeuftwm.fsf@nanos.tec.linutronix.de>
+ <20200324020504.GR3199@paulmck-ThinkPad-P72>
+ <CAM_iQpVK5tNrer3UnnBVU82cRcdNAVtn5bxCm4rDVZM1_ffPAQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200324094506.55938-1-alexandru.tachici@analog.com> <20200324094506.55938-3-alexandru.tachici@analog.com>
-In-Reply-To: <20200324094506.55938-3-alexandru.tachici@analog.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 25 Mar 2020 13:05:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
-Message-ID: <CAL_JsqKFdcACQtXd5h=4Pxbij+=uoHr2rLTFZMq4fVX8ph398g@mail.gmail.com>
-Subject: Re: [RESEND PATCH 2/2] dt-bindings: iio: dac: AD5570R fix bindings errors
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAM_iQpVK5tNrer3UnnBVU82cRcdNAVtn5bxCm4rDVZM1_ffPAQ@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 3:45 AM <alexandru.tachici@analog.com> wrote:
->
-> From: Alexandru Tachici <alexandru.tachici@analog.com>
->
-> Replaced num property with reg property, fixed errors
-> reported by dt-binding-check.
->
-> Fixes: ea52c21268e6 ("iio: dac: ad5770r: Add AD5770R support")
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
-> ---
->  .../bindings/iio/dac/adi,ad5770r.yaml         | 77 ++++++++++---------
->  1 file changed, 40 insertions(+), 37 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> index d9c25cf4b92f..d1755dbc1a41 100644
-> --- a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> @@ -2,7 +2,7 @@
->  # Copyright 2020 Analog Devices Inc.
->  %YAML 1.2
->  ---
-> -$id: http://devicetree.org/schemas/bindings/iio/dac/adi,ad5770r.yaml#
-> +$id: http://devicetree.org/schemas/iio/dac/adi,ad5770r.yaml#
->  $schema: http://devicetree.org/meta-schemas/core.yaml#
->
->  title: Analog Devices AD5770R DAC device driver
-> @@ -49,83 +49,84 @@ properties:
->        asserted during driver probe.
->      maxItems: 1
->
-> -  channel0:
-> +  channel@0:
->      description: Represents an external channel which are
->        connected to the DAC. Channel 0 can act both as a current
->        source and sink.
->      type: object
->
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          const: 0
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/int32-array
->              - items:
-> -                - enum: [0 300000]
-> -                - enum: [-60000 0]
-> -                - enum: [-60000 300000]
-> +                - const: 0
-> +                - const: 300000
-> +            - items:
-> +                - const: -60000
-> +                - const: 0
-> +            - items:
-> +                - const: -60000
-> +                - const: 300000
->
-> -  channel1:
-> +  channel@1:
->      description: Represents an external channel which are
->        connected to the DAC.
->      type: object
->
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          const: 1
+On Wed, Mar 25, 2020 at 11:53:51AM -0700, Cong Wang wrote:
+> On Mon, Mar 23, 2020 at 7:05 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, Mar 24, 2020 at 02:01:13AM +0100, Thomas Gleixner wrote:
+> > > Cong Wang <xiyou.wangcong@gmail.com> writes:
+> > > > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > > >> > We use an ordered workqueue for tc filters, so these two
+> > > >> > works are executed in the same order as they are queued.
+> > > >>
+> > > >> The workqueue is ordered, but look how the work is queued on the work
+> > > >> queue:
+> > > >>
+> > > >> tcf_queue_work()
+> > > >>   queue_rcu_work()
+> > > >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
+> > > >>
+> > > >> So after the grace period elapses rcu_work_rcufn() queues it in the
+> > > >> actual work queue.
+> > > >>
+> > > >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
+> > > >> invoked from preemtible context. Now assume the following:
+> > > >>
+> > > >> CPU0
+> > > >>   tcf_queue_work()
+> > > >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+> > > >>
+> > > >> -> Migration
+> > > >>
+> > > >> CPU1
+> > > >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
+> > > >>
+> > > >> So your RCU callbacks can be placed on different CPUs which obviously
+> > > >> has no ordering guarantee at all. See also:
+> > > >
+> > > > Good catch!
+> > > >
+> > > > I thought about this when I added this ordered workqueue, but it
+> > > > seems I misinterpret max_active, so despite we have max_active==1,
+> > > > more than 1 work could still be queued on different CPU's here.
+> > >
+> > > The workqueue is not the problem. it works perfectly fine. The way how
+> > > the work gets queued is the issue.
+> > >
+> > > > I don't know how to fix this properly, I think essentially RCU work
+> > > > should be guaranteed the same ordering with regular work. But this
+> > > > seems impossible unless RCU offers some API to achieve that.
+> > >
+> > > I don't think that's possible w/o putting constraints on the flexibility
+> > > of RCU (Paul of course might disagree).
+> >
+> > It is possible, but it does not come for free.
+> >
+> > From an RCU/workqueues perspective, if I understand the scenario, you
+> > can do the following:
+> >
+> >         tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+> >
+> >         rcu_barrier(); // Wait for the RCU callback.
+> >         flush_work(...); // Wait for the workqueue handler.
+> >                          // But maybe for quite a few of them...
+> >
+> >         // All the earlier handlers have completed.
+> >         tcf_queue_work(&p->rwork, tcindex_destroy_work);
+> >
+> > This of course introduces overhead and latency.  Maybe that is not a
+> > problem at teardown time, or maybe the final tcf_queue_work() can itself
+> > be dumped into a workqueue in order to get it off of the critical path.
+> 
+> I personally agree, but nowadays NIC vendors care about tc filter
+> slow path performance as well. :-/
 
-This should be:
+I bet that they do!  ;-)
 
-reg:
-  const: 1
+But have you actually tried the rcu_barrier()/flush_work() approach?
+It is reasonably simple to implement, even if you do have to use multiple
+flush_work() calls, and who knows?  Maybe it is fast enough.
 
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
->              - items:
-> -                - enum: [0 140000]
-> -                - enum: [0 250000]
-> +                - const: 0
-> +                - const: 140000
-> +            - items:
-> +                - const: 0
-> +                - const: 250000
->
-> -  channel2:
-> +  channel@2:
->      description: Represents an external channel which are
->        connected to the DAC.
->      type: object
->
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          const: 2
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
->              - items:
-> -                - enum: [0 140000]
-> -                - enum: [0 250000]
-> +                - const: 0
-> +                - const: 55000
-> +            - items:
-> +                - const: 0
-> +                - const: 150000
->
->  patternProperties:
->    "^channel@([3-5])$":
->      type: object
->      description: Represents the external channels which are connected to the DAC.
->      properties:
-> -      num:
-> +      reg:
->          description: This represents the channel number.
-> -        items:
-> -          minimum: 3
-> -          maximum: 5
+So why not try it?
 
-reg:
-  minimum: 3
-  maximum: 5
+Hmmm...  Another approach would be to associate a counter with this group
+of requests, incrementing this count in tcf_queue_work() and capturing
+the prior value of the count, then in tcindex_destroy_work() waiting
+for the count to reach the captured value.  This would avoid needless
+waiting in tcindex_destroy_rexts_work().  Such needless waiting would
+be hard to avoid within the confines of either RCU or workqueues, and
+such needless waiting might well slow down this slowpath, which again
+might make the NIC vendors unhappy.
 
->
->        adi,range-microamp:
->            description: Output range of the channel.
->            oneOf:
-> -            - $ref: /schemas/types.yaml#/definitions/uint32-array
->              - items:
-> -                - enum: [0 45000]
-> -                - enum: [0 100000]
-> +                - const: 0
-> +                - const: 45000
-> +            - items:
-> +                - const: 0
-> +                - const: 100000
+> > However, depending on your constraints ...
+> >
+> > > I assume that the filters which hang of tcindex_data::perfect and
+> > > tcindex_data:p must be freed before tcindex_data, right?
+> > >
+> > > Refcounting of tcindex_data should do the trick. I.e. any element which
+> > > you add to a tcindex_data instance takes a refcount and when that is
+> > > destroyed then the rcu/work callback drops a reference which once it
+> > > reaches 0 triggers tcindex_data to be freed.
+> >
+> > ... reference counts might work much better for you.
+> 
+> I need to think about how much work is needed for refcnting, given
+> other filters have the same assumption.
 
-This can be simplified to:
+Perhaps you can create some common code to handle this situation, which
+can then be shared among those various filters.
 
-items:
-  - const: 0
-  - enum: [ 45000, 100000 ]
-
->
->  required:
->  - reg
-> @@ -150,34 +151,36 @@ examples:
->                          vref-supply = <&vref>;
->                          adi,external-resistor;
->                          reset-gpios = <&gpio 22 0>;
-> +                        #address-cells = <1>;
-> +                        #size-cells = <0>;
->
->                          channel@0 {
-> -                                num = <0>;
-> -                                adi,range-microamp = <(-60000) 300000>;
-> +                                reg = <0>;
-> +                                adi,range-microamp = <0 300000>;
->                          };
->
->                          channel@1 {
-> -                                num = <1>;
-> +                                reg = <1>;
->                                  adi,range-microamp = <0 140000>;
->                          };
->
->                          channel@2 {
-> -                                num = <2>;
-> +                                reg = <2>;
->                                  adi,range-microamp = <0 55000>;
->                          };
->
->                          channel@3 {
-> -                                num = <3>;
-> +                                reg = <3>;
->                                  adi,range-microamp = <0 45000>;
->                          };
->
->                          channel@4 {
-> -                                num = <4>;
-> +                                reg = <4>;
->                                  adi,range-microamp = <0 45000>;
->                          };
->
->                          channel@5 {
-> -                                num = <5>;
-> +                                reg = <5>;
->                                  adi,range-microamp = <0 45000>;
->                          };
->                  };
-> --
-> 2.20.1
->
+							Thanx, Paul
