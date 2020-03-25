@@ -5,129 +5,111 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE3EC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47506C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC02720714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1899B20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 23:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T5Qtp5XY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KhZ47hmH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgCYX03 (ORCPT
+        id S1727539AbgCYX22 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 19:26:29 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39853 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727395AbgCYX03 (ORCPT
+        Wed, 25 Mar 2020 19:28:28 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41888 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727402AbgCYX21 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 19:26:29 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m1so1421334pll.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 16:26:28 -0700 (PDT)
+        Wed, 25 Mar 2020 19:28:27 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t16so1418071plr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 16:28:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=l+rxsfJdm0pMWVSL8Cwqx9YZjRtZV7LirGrxygW1T+I=;
-        b=T5Qtp5XYn5CYWlMaK0R8K/DeiEM5Iuo3kdJcttk8CP+O5s3wuwr3dkgYe7hIUWV9ws
-         kyoc8AsH+rLWAJmWxIIpL+oFFeBxMCmLOmdwmavFD623LYmjYcNHJybMgOXfzySt0Jrg
-         A6HV7GwF+zd6CUsWG9D23gqWul7SMmwQP0UVA=
+        bh=SX3uEj2yupJi2G9dIsEwiUFvEAf2VWTLKIwRxsxm8Yk=;
+        b=KhZ47hmHyZ3plfSihQcc04GhPmya+BN4Yz36ianPP2/QMX6T5nod8hBzA3+bckshYI
+         R8BGgu1kvH5UqrfhV7l5o4PFa2je3PRSR0zU+6aHOtDFb/7Yj29VcJdveO7GJ87Oa3Wc
+         73NNQoSOVpU3uOuGS7812aKtDGxq+de3O1+7Y=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=l+rxsfJdm0pMWVSL8Cwqx9YZjRtZV7LirGrxygW1T+I=;
-        b=eZFOquD44l9zkXwiyc/uSZPmPg3mEskiQlUMy2OiUMQQxOpgYo7VEbg2j1XgaExyqR
-         oJStF41WpvF7wER41J34nXH8jzTuMm94/eCpKwraTWSp/cNiOHBEvY543G921IMTCWjT
-         6E1uE6JuhETS9eeqN6BBN3cZ6xyGjdB4mI1wQDTK+4ixgTDWk4G6wQrOE23rVnjACSMz
-         0e0oUKv3csdkIdVfZmeVHlSJbx8DaJcTZBLpkPDGm5xFR/xyLAh4ZdkabAK95guxMTkb
-         t1C/w9BCBzBoA5sVjsOKHRBgCskJKhqIPmgQ+a7LECD3OdoFSw7sKdTpYfr0p7CF5Vsq
-         MKoQ==
-X-Gm-Message-State: ANhLgQ0thXclw1rY9/6Cos9NNC7gzusnk/aiO+O2zRMr4avEO9yY955H
-        fMMUGrQtnYpghLg1H9Hw7e/KRw==
-X-Google-Smtp-Source: ADFU+vv6NVn42B5/CmzW/EHGOiTv5qi4qoLdQ4nsxPuo23Svqmn87kpZkw9gctTj5dnpzQY61Savlw==
-X-Received: by 2002:a17:902:b198:: with SMTP id s24mr5318549plr.89.1585178787913;
-        Wed, 25 Mar 2020 16:26:27 -0700 (PDT)
+        bh=SX3uEj2yupJi2G9dIsEwiUFvEAf2VWTLKIwRxsxm8Yk=;
+        b=VVEt0NOntqgUoNWUtGPS8gnPGcntSY3AoACDrC7zSF5Tl3R70iXBXYMetZ+FP9zvz3
+         ojPJZVn/rNzK85NM8GTPM88CklaQWPyUoGIC/4v2bxBbeuZ9DhwdzwxmNsVq/d9Smdt6
+         7AcLV5CUl1jFgE4RKrCibN5TOGyS/1vKMmq+seuC+0HwtQPgQlnadLO5Nfsaz5m3UD+r
+         gjnoPCyqeUM88Ld4fT5Y0MbymPa7JxD0tN/RoryjiC3HeN16ng/jH3DoDG7Gqg5Z4ZrW
+         miarrXLdZddIn2btaPa+4tot9qbCeRiJg/3JScv8hufDK+ysf273ZsYZxm4zX8eRFaFm
+         wEUg==
+X-Gm-Message-State: ANhLgQ1d+6OyNMTRPFZ3AqdahGdWtgDSBmsoH3cuUjTuP4ckXCNTIsvM
+        /523xyh/R3Ff9VBxwGTcw5Eyrg==
+X-Google-Smtp-Source: ADFU+vt0ApjzPBOE0W0mEjIXv58VpXVRZglvlCiDXecmwqCjn6VANpyr6wQRMLJgO8f0u2V7hif+TA==
+X-Received: by 2002:a17:90b:4c45:: with SMTP id np5mr6318836pjb.19.1585178906610;
+        Wed, 25 Mar 2020 16:28:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id d84sm182058pfd.197.2020.03.25.16.26.26
+        by smtp.gmail.com with ESMTPSA id d3sm193028pfn.113.2020.03.25.16.28.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 16:26:26 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 16:26:25 -0700
+        Wed, 25 Mar 2020 16:28:25 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 16:28:24 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     luto@amacapital.net, wad@chromium.org, shuah@kernel.org,
-        mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] selftests: Fix seccomp to support relocatable build
- (O=objdir)
-Message-ID: <202003251626.D47C4B3@keescook>
-References: <20200325231602.12964-1-skhan@linuxfoundation.org>
+Cc:     shuah@kernel.org, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] selftests: enforce local header dependency in lib.mk
+Message-ID: <202003251627.91036FC@keescook>
+References: <20200325231649.13049-1-skhan@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325231602.12964-1-skhan@linuxfoundation.org>
+In-Reply-To: <20200325231649.13049-1-skhan@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 05:16:02PM -0600, Shuah Khan wrote:
-> Fix seccomp relocatable builds. This is a simple fix to use the
-> right lib.mk variable TEST_GEN_PROGS. Local header dependency
-> is addressed in a change to lib.mk as a framework change that
-> enforces the dependency without requiring changes to individual
-> tests.
-> 
-> The following use-cases work with this change:
-> 
-> In seccomp directory:
-> make all and make clean
-> 
-> From top level from main Makefile:
-> make kselftest-install O=objdir ARCH=arm64 HOSTCC=gcc \
->  CROSS_COMPILE=aarch64-linux-gnu- TARGETS=seccomp
+On Wed, Mar 25, 2020 at 05:16:49PM -0600, Shuah Khan wrote:
+> Add local header dependency in lib.mk. This enforces the dependency
+> blindly even when a test doesn't include the file, with the benefit
+> of a simpler common logic without requiring individual tests to have
+> special rule for it.
 > 
 > Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Thanks for getting this fixed. :)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Acked-by: Kees Cook <keescook@chromium.org>
+style nit below...
+
+> ---
+>  tools/testing/selftests/lib.mk | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+> index 3ed0134a764d..b0556c752443 100644
+> --- a/tools/testing/selftests/lib.mk
+> +++ b/tools/testing/selftests/lib.mk
+> @@ -137,7 +137,8 @@ endif
+>  # Selftest makefiles can override those targets by setting
+>  # OVERRIDE_TARGETS = 1.
+>  ifeq ($(OVERRIDE_TARGETS),)
+> -$(OUTPUT)/%:%.c
+> +LOCAL_HDRS := $(selfdir)/kselftest_harness.h $(selfdir)/kselftest.h
+> +$(OUTPUT)/%:%.c $(LOCAL_HDRS)
+>  	$(LINK.c) $^ $(LDLIBS) -o $@
+
+It's already in lib.mk as "target:deps" but the tradition for kernel
+make rules has been "target: deps". i.e.:
+
+$(OUTPUT)/%: %.c $(LOCAL_HDRS)
+
+But it doesn't actually matter. :)
 
 -Kees
 
-> ---
-> Changes since v3:
-> Simplified logic based on comments from Kees and Michael
-> 
->  tools/testing/selftests/seccomp/Makefile | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
-> index 1760b3e39730..0ebfe8b0e147 100644
-> --- a/tools/testing/selftests/seccomp/Makefile
-> +++ b/tools/testing/selftests/seccomp/Makefile
-> @@ -1,17 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -all:
-> -
-> -include ../lib.mk
-> -
-> -.PHONY: all clean
-> -
-> -BINARIES := seccomp_bpf seccomp_benchmark
->  CFLAGS += -Wl,-no-as-needed -Wall
-> +LDFLAGS += -lpthread
 >  
-> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
-> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
-> -
-> -TEST_PROGS += $(BINARIES)
-> -EXTRA_CLEAN := $(BINARIES)
-> -
-> -all: $(BINARIES)
-> +TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
-> +include ../lib.mk
+>  $(OUTPUT)/%.o:%.S
 > -- 
 > 2.20.1
 > 
