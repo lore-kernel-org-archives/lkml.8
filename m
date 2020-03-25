@@ -2,97 +2,97 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A242BC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE83C10DCE
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:34:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A4220719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B831920719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:34:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aySC5VtF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbgCYAb3 (ORCPT
+        id S1727230AbgCYAeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:31:29 -0400
-Received: from mga02.intel.com ([134.134.136.20]:50410 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbgCYAb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 20:31:29 -0400
-IronPort-SDR: cJLDkC3wCpyVIDqxd/RlQc1sxSrdn77yTQ0+nsEmn/cpy7pRLStIGZj/0247dIXo0kDdCiZ6Tq
- FhDhlGj7vm5A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 17:31:28 -0700
-IronPort-SDR: IjDW8Fh1RUSOFjUVHr7o4ibU5xKTGeVUQee9K8tvntMfUqnWaInjyv5w2zhX6vi475LzLbiXuF
- rufpamoCH23A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
-   d="scan'208";a="446451454"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.170.28]) ([10.249.170.28])
-  by fmsmga005.fm.intel.com with ESMTP; 24 Mar 2020 17:31:25 -0700
-Subject: Re: [PATCH v6 4/8] kvm: x86: Emulate split-lock access as a write in
- emulator
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
- <20200324151859.31068-5-xiaoyao.li@intel.com>
- <87lfnpz4k2.fsf@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <afd05186-dd2d-5610-d03e-98f4ed93d15f@intel.com>
-Date:   Wed, 25 Mar 2020 08:31:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 24 Mar 2020 20:34:11 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40620 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727110AbgCYAeL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 20:34:11 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 19so646684ljj.7;
+        Tue, 24 Mar 2020 17:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UmzJJ1sBsi/K93++MwxgB1lpuwtWNL5ZiLz4oULTYSU=;
+        b=aySC5VtF2Lpz1SCaOxutjcQeJM+oSmgXt7I3r3vBp9aMGjay3IP0ixSC6lKICaiU0K
+         Y4jhr8sB3x3mN9ZKHTg5M7dX/fMdjamkzJI7K8bF1W28Gd6JpfDwT3ISFra5loOE9KqE
+         9M6H1LOQQvYww1+V0mT641WwD+/pS4f2wSuoJn4XNkeCOLttqQXaTJKBvpLkXsCvvMxi
+         VqNdUxnbaI8L/5qp+hm43ww+ZLmqMy+gIlL7Dh7YZesT3e/9EofY0JF40mPn75zz5sBk
+         vwn7bPQv2Y/3SGXUNPAFUMv/dm68z3BvDK3erxKBwzm4pqo16CrW0W0CWi5lAfgF4h90
+         wdhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UmzJJ1sBsi/K93++MwxgB1lpuwtWNL5ZiLz4oULTYSU=;
+        b=H2C3Ja2df+eBq7l4Erx5QQ/52g7HoKz5e9LsMlMpH377dSh8YGHG6hWejbwGfgkGxc
+         ky4ugrNnRwMdQakvxM9wwb7MAqioQOExOjpJ/g4gaf6cANx9+76O/rBkQ8PSGkOsPYer
+         8tdSWFLYU/a9bE8REVjiq7uXGngQALtFQ/pffoY1qHSwfI6DQ9Nkq2gliaWpFsJJFv9r
+         q0oaGjdc5AHZ6XBFnEiGINkTrcS0yUJx3jj8EDUez7OZoduIsq513DOdvvW/X/2/6IP6
+         9YJ4m0/ktqMklVfGc/xkp8nLekt785JjUGFq6QMzlAZ9QMU+zjW1bjUhZthz4JbljV5N
+         twRA==
+X-Gm-Message-State: ANhLgQ2N1KUvj1s1gPskoGUvlXLGcdlKXF0Yz4KyqBS7aWBuQkF2+XP5
+        FlK4Q4JDDP87wTmQM83smFQPUMh9
+X-Google-Smtp-Source: ADFU+vuCxpuw4rfOM+Omo0XN30+J4cvPl2YMt0oWv/u/P6eoWP5wpufAJYEV92UIOYxtWfIn0YJCCw==
+X-Received: by 2002:a2e:90c4:: with SMTP id o4mr188845ljg.287.1585096448059;
+        Tue, 24 Mar 2020 17:34:08 -0700 (PDT)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id x2sm10601960lfn.79.2020.03.24.17.34.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Mar 2020 17:34:07 -0700 (PDT)
+Subject: Re: [RFC PATCH v5 6/9] media: tegra: Add Tegra210 Video input driver
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, frankc@nvidia.com,
+        hverkuil@xs4all.nl, helen.koike@collabora.com
+Cc:     sboyd@kernel.org, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1584985955-19101-1-git-send-email-skomatineni@nvidia.com>
+ <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <8f44e42d-2008-fe53-f4fb-b57502da91a8@gmail.com>
+Date:   Wed, 25 Mar 2020 03:34:06 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <87lfnpz4k2.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1584985955-19101-7-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/2020 8:00 AM, Thomas Gleixner wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>   
->> +bool split_lock_detect_on(void)
->> +{
->> +	return sld_state != sld_off;
->> +}
->> +EXPORT_SYMBOL_GPL(split_lock_detect_on);
-> 
-> 1) You export this function here
-> 
-> 2) You change that in one of the next patches to something else
-> 
-> 3) According to patch 1/8 X86_FEATURE_SPLIT_LOCK_DETECT is not set when
->     sld_state == sld_off. FYI, I did that on purpose.
-> 
-> AFAICT #1 and #2 are just historical leftovers of your previous patch
-> series and the extra step was just adding more changed lines per patch
-> for no value.
-> 
-> #3 changed the detection mechanism and at the same time the semantics of
-> the feature flag.
-> 
-> So what's the point of this exercise?
+23.03.2020 20:52, Sowjanya Komatineni пишет:
+> +static void tegra_channel_vi_soft_reset(struct tegra_vi_channel *chan)
+> +{
+> +	/* disable clock gating to enable continuous clock */
+> +	tegra_vi_write(chan, TEGRA_VI_CFG_CG_CTRL, 0);
+> +	/*
+> +	 * Soft reset memory client interface, pixel format logic, sensor
+> +	 * control logic, and a shadow copy logic to bring VI to clean state.
+> +	 */
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0xf);
+> +	usleep_range(100, 200);
+> +	vi_csi_write(chan, TEGRA_VI_CSI_SW_RESET, 0x0);
 
-Right. In this series, setting X86_FEATURE_SPLIT_LOCK_DETECT flag means 
-SLD is turned on. Need to remove split_lock_detect_on(). Thanks for 
-pointing out this.
-
-> Thanks,
-> 
->          tglx
-> 
-
+Is it safe to reset MCCIF without blocking and flushing memory requests
+at first?
