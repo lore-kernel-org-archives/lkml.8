@@ -2,73 +2,180 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A5DC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DBBC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1B4206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8B5B206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:01:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="mlgmtSbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgCYGAn (ORCPT
+        id S1727174AbgCYGBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 02:00:43 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43040 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725832AbgCYGAn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 02:00:43 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jGz3e-002EkU-4i; Wed, 25 Mar 2020 05:58:30 +0000
-Date:   Wed, 25 Mar 2020 05:58:30 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
-Message-ID: <20200325055830.GL23230@ZenIV.linux.org.uk>
-References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
- <20200324214637.GI23230@ZenIV.linux.org.uk>
- <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
- <20200325021327.GJ23230@ZenIV.linux.org.uk>
- <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
- <20200325040359.GK23230@ZenIV.linux.org.uk>
+        Wed, 25 Mar 2020 02:01:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:58623 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725939AbgCYGBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 02:01:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nHZ11LxCz9sPk;
+        Wed, 25 Mar 2020 17:01:44 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1585116106;
+        bh=jliOT/ryxznSbhEYa1PbM2oL6orVsTIvLgvub5p0cl0=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=mlgmtSbp3t1aiYmI26R1gmVLtLZqurVPcUoVGs+O3fMCzj3bXywssN1ZL23e8yfJn
+         cAcs52jV26RqBt/1W++BOIhPWQIj717Zl6pTPUX8XqdntnOAB860PpyekIEgSKrvzv
+         BMjYN36jjsjizk190Jls/EfunP3zuJb+zJg0m3Zw/ZDACMsBL3e6Em0OCeD0E5mzYs
+         LuvWRAeUwWqmB/1kSPus0cuUenP1NfYoMAwNviNh+/t+/k/zmOYKs6rCYoheCP9Zoj
+         3SYJMJZD4/VbjR9N/oiC6ozYXeORIxMkoUL1SZsURMejEEIwVTltVhEzPngnmNz9z7
+         uTOWhi4ZwhvxA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Qian Cai <cai@lca.pw>,
+        Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
+        "paulus\@samba.org" <paulus@samba.org>,
+        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Subject: Re: Argh, can't find dcache properties !
+In-Reply-To: <48F1D8CF-13A1-4348-8973-81503782A451@lca.pw>
+References: <be8c123a90f6d1664a902b6ad6c754b9f3d9e567.camel@alliedtelesis.co.nz> <87tv2exst1.fsf@mpe.ellerman.id.au> <876a5938fbad9d9e176e5f22f12e6b472d0dc4f7.camel@alliedtelesis.co.nz> <48F1D8CF-13A1-4348-8973-81503782A451@lca.pw>
+Date:   Wed, 25 Mar 2020 17:01:49 +1100
+Message-ID: <87369xx99u.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325040359.GK23230@ZenIV.linux.org.uk>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 04:03:59AM +0000, Al Viro wrote:
+Qian Cai <cai@lca.pw> writes:
+>> On Mar 24, 2020, at 4:06 PM, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+>> On Tue, 2020-03-24 at 15:47 +1100, Michael Ellerman wrote:
+>>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
+>>>> Hi All,
+>>>> 
+>>>> Just booting up v5.5.11 on a Freescale T2080RDB and I'm seeing the
+>>>> following mesage.
+>>>> 
+>>>> kern.warning linuxbox kernel: Argh, can't find dcache properties !
+>>>> kern.warning linuxbox kernel: Argh, can't find icache properties !
+...
+>
+> BTW, POWER9 PowerNV would have the same thing. 
 
-> Lovely.  So
-> 	* we really do get NULL nd->path.dentry there; I've not misread the
-> trace.
-> 	* on the entry into link_path_walk() nd->path.dentry is non-NULL.
-> 	* *ALL* components should've been LAST_NORM ones
-> 	* not a single symlink in sight, unless the setup is rather unusual
-> 	* possibly not even a single mountpoint along the way (depending
-> upon the userland used)
+Ugh, you're right.
 
-OK, I see one place where that could occur, but I really don't see how that
-could be triggered on this pathname, short of very odd symlink layout in
-the filesystem on the testbox.  Does the following fix your reproducer?
+Because we're missing the cache-line-size properties, even though they
+are optional when the block & line size are the same.
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 311e33dbac63..4082b70f32ff 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -1805,6 +1805,8 @@ static const char *handle_dots(struct nameidata *nd, int type)
- 			error = step_into(nd, WALK_NOFOLLOW,
- 					 parent, inode, seq);
- 		}
-+		if (unlikely(error))
-+			return ERR_PTR(error);
- 
- 		if (unlikely(nd->flags & LOOKUP_IS_SCOPED)) {
- 			/*
+  # find /proc/device-tree/cpus/PowerPC\,POWER9@0/ -name '*cache*'
+  /proc/device-tree/cpus/PowerPC,POWER9@0/l2-cache
+  /proc/device-tree/cpus/PowerPC,POWER9@0/d-cache-block-size
+  /proc/device-tree/cpus/PowerPC,POWER9@0/d-cache-size
+  /proc/device-tree/cpus/PowerPC,POWER9@0/i-cache-size
+  /proc/device-tree/cpus/PowerPC,POWER9@0/d-cache-sets
+  /proc/device-tree/cpus/PowerPC,POWER9@0/i-cache-block-size
+  /proc/device-tree/cpus/PowerPC,POWER9@0/i-cache-sets
+
+skiboot even explicitly omits them:
+
+	if (cache->icache_line_size != cache->icache_block_size)
+		dt_add_property_cells(cpu, "i-cache-line-size",
+				      be32_to_cpu(cache->icache_line_size));
+	if (cache->l1_dcache_line_size != cache->dcache_block_size)
+		dt_add_property_cells(cpu, "d-cache-line-size",
+				      be32_to_cpu(cache->l1_dcache_line_size));
+
+
+Looks like it was broken ~3 years ago, in:
+  bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
+
+
+Previously we did:
+			lsizep = of_get_property(np, "d-cache-block-size",
+						 NULL);
+			/* fallback if block size missing */
+			if (lsizep == NULL)
+				lsizep = of_get_property(np,
+							 "d-cache-line-size",
+							 NULL);
+			if (lsizep != NULL)
+				lsize = be32_to_cpu(*lsizep);
+			if (sizep == NULL || lsizep == NULL)
+				DBG("Argh, can't find dcache properties ! "
+				    "sizep: %p, lsizep: %p\n", sizep, lsizep);
+
+ie. fallback from block size to line size, and only print if both are missing.
+
+That commit changed the names and the logic, but not in a consistent
+fashion, making "d-cache-line-size" required to avoid the Argh:
+
+			bsizep = of_get_property(np, "d-cache-block-size",
+						 NULL);
+			lsizep = of_get_property(np, "d-cache-line-size",
+						 NULL);
+			if (bsizep == NULL)
+				bsizep = lsizep;
+			if (lsizep != NULL)
+				lsize = be32_to_cpu(*lsizep);
+			if (bsizep != NULL)
+				bsize = be32_to_cpu(*bsizep);
+			if (sizep == NULL || bsizep == NULL || lsizep == NULL)
+				DBG("Argh, can't find dcache properties ! "
+				    "sizep: %p, bsizep: %p, lsizep: %p\n",
+				    sizep, bsizep, lsizep);
+
+Back then we fell back to cur_cpu_spec->dcache_bsize, which should be
+correct. But since then we introduced the device tree CPU features
+parsing, which does:
+
+static struct cpu_spec __initdata base_cpu_spec = {
+	...
+	.icache_bsize		= 32, /* minimum block size, fixed by */
+	.dcache_bsize		= 32, /* cache info init.             */
+
+So on systems with new enough skiboot we now default to 32, which is
+wrong on Power9.
+
+
+Luckily this info is not used by the sysfs cache files, because that
+code doesn't use the values we parse here, it goes and looks at the
+device tree itself. Which is pretty gross but actually saves us in this
+case.
+
+These values do end up in the vdso_data, and I can see the wrong values
+in the vdso_data:
+
+1c:mon> d4 c000000002390000
+c000000002390000 54535953 46434d45 50503a47 00343643	eyecatcher
+c000000002390010 00000001 00000001 00000100 004e1202	major		minor	platform	processor
+c000000002390020 000000b0 00000000 00000000 0000003c	processorCount		physicalMemorySize
+c000000002390030 57b7623f 0000ac10 1e848000 00000000	tb_orig_stamp		tb_ticks_per_sec
+c000000002390040 de6d9e42 008637af 8de66bca 0005e7ae	tb_to_xs		stamp_xsec
+c000000002390050 000ff730 00000000 00000000 00000000	tb_update_count		tz_minuteswest	tz_dsttime
+c000000002390060 00008000 00000020 00008000 00000020	dcache_size	line_size	icache_size	icache_line_size
+                                ^
+                                32 != 128
+
+And that appears to flow through to glibc, ie. I see:
+
+_SC_LEVEL1_ICACHE_LINESIZE = 32
+_SC_LEVEL1_DCACHE_LINESIZE = 32
+_SC_LEVEL2_CACHE_LINESIZE = 32
+_SC_LEVEL3_CACHE_LINESIZE = 32
+
+
+So excuse me while I go and swear at something.
+
+cheers
