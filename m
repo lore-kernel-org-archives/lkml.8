@@ -2,242 +2,210 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 193AFC54FD6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2667BC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC23F2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E643120740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:45:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dz9M17el"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgCYQnY (ORCPT
+        id S1727556AbgCYQpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:43:24 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12194 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727729AbgCYQnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:43:23 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A2A1F8FA3A6CD59B77DA;
-        Thu, 26 Mar 2020 00:43:18 +0800 (CST)
-Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.86.66) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 26 Mar 2020 00:43:09 +0800
-From:   Shiju Jose <shiju.jose@huawei.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
-        <helgaas@kernel.org>, <lenb@kernel.org>, <bp@alien8.de>,
-        <james.morse@arm.com>, <tony.luck@intel.com>,
-        <gregkh@linuxfoundation.org>, <zhangliguang@linux.alibaba.com>,
-        <tglx@linutronix.de>
-CC:     <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-        <tanxiaofei@huawei.com>, <yangyicong@hisilicon.com>,
-        Shiju Jose <shiju.jose@huawei.com>
-Subject: [PATCH v6 1/2] ACPI / APEI: Add support to notify the vendor specific HW errors
-Date:   Wed, 25 Mar 2020 16:42:22 +0000
-Message-ID: <20200325164223.650-2-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200325164223.650-1-shiju.jose@huawei.com>
-References: <Shiju Jose>
- <20200325164223.650-1-shiju.jose@huawei.com>
+        Wed, 25 Mar 2020 12:45:25 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36978 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727174AbgCYQpZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 12:45:25 -0400
+Received: by mail-pf1-f195.google.com with SMTP id h72so1318376pfe.4
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 09:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=8TyWZF/hKjoYHK9kozfXNfOetaQstcsdqGIUqpxVSWo=;
+        b=dz9M17elo03t5YW8wGA9UpAawb+jWBG2PQMy0JsQVilQVNYxCRRmMmW6vE1gCdSSDS
+         Jza2UJ9N6RYhJjNNHE8oy9FOE1QT8ZznAsPw4Bh6oAQNyww3L3nP0RrFfvJRJ4Ad+QNL
+         cSz90mc4v23Ji7ewYC5gBiL9ZcDGPn7o2AaSXI139hrp9bqtjAuZqumDqh9Qe2TwOHTc
+         hw5+PZRHvgWPogxNtkMLafRsqp+fChVnwRYWHNDS+xKqPfKXniWdD2U7d5Y+Sd8z3RH/
+         Ykeo1OwGxEaK1ZGEsIqBuc+eOUefbjRuxgO6EvbvMmo2jtgrYa6drp76OUpo9l7yPjKd
+         yJYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=8TyWZF/hKjoYHK9kozfXNfOetaQstcsdqGIUqpxVSWo=;
+        b=Do7b4rbp55mBmLfxEwJw6Z5FT1CrBUnmv4D9rZie7aLjMgA3e1wwGu+HrrLNhebOSa
+         3YlmMS3YHwA5MGnEMw6kKzU2Ey288xBmHNkxpkm2r6//L48YEI1W5arwFjhbSgsc8WPi
+         tFZV4CJ/6Q9xt7EEU8HFGmHRbiTJ8jv2RyuXfHXRtgBaV3dIMiC9YHo8y9X0gH/PwNsa
+         9FRC/sBNKpqxnMVd46V6G7J+IDD5hm+YwnLME0dtNa6Evh4lhk/leLw51jDok2viS28M
+         UAvyPCr872x6sG7Uo94gOlyESECJ+ILpHjp6SygZS+SOmjT8TqgJkgBQAJMYPchOmg8u
+         4+xg==
+X-Gm-Message-State: ANhLgQ0K12gJPmRFcz11doR5Mzgn/atPAblYIWTiKwtfWdCnTilNfEwD
+        tM+IgCCZIg9esgdM2RpKGAA=
+X-Google-Smtp-Source: ADFU+vvoIyFeLN9VxSn6nckvi+mw7xVb808VZp/lp4AR2Nh4O8t9mTx8HnA3kMu5FPKSlE3l70KHTQ==
+X-Received: by 2002:a63:4502:: with SMTP id s2mr3946982pga.391.1585154723293;
+        Wed, 25 Mar 2020 09:45:23 -0700 (PDT)
+Received: from simran-Inspiron-5558 ([2409:4052:78f:bb47:8124:5e4b:ea06:7595])
+        by smtp.gmail.com with ESMTPSA id o15sm4815290pjp.41.2020.03.25.09.45.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 09:45:22 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 22:14:52 +0530
+From:   Simran Singhal <singhalsimran0@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel@googlegroups.com
+Subject: [PATCH] staging: rtl8723bs: Add line after variable declarations
+Message-ID: <20200325164451.GA17569@simran-Inspiron-5558>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.47.86.66]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Presently APEI does not support reporting the vendor specific
-HW errors, received in the vendor defined table entries, to the
-vendor drivers for any recovery.
+Add whiteline after variable declarations to remove the checkpatch.pl
+warning:
+WARNING: Missing a blank line after declarations
 
-This patch adds the support to register and unregister the
-error handling function for the vendor specific HW errors and
-notify the registered kernel driver.
-
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
 ---
- drivers/acpi/apei/ghes.c | 35 ++++++++++++++++++++++++++++++++++-
- drivers/ras/ras.c        |  5 +++--
- include/acpi/ghes.h      | 28 ++++++++++++++++++++++++++++
- include/linux/ras.h      |  6 ++++--
- include/ras/ras_event.h  |  7 +++++--
- 5 files changed, 74 insertions(+), 7 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_mlme_ext.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
-index 24c9642e8fc7..d83f0b1aad0d 100644
---- a/drivers/acpi/apei/ghes.c
-+++ b/drivers/acpi/apei/ghes.c
-@@ -490,6 +490,32 @@ static void ghes_handle_aer(struct acpi_hest_generic_data *gdata)
- #endif
- }
- 
-+static ATOMIC_NOTIFIER_HEAD(ghes_event_notify_list);
-+
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ *
-+ * return 0 : SUCCESS, non-zero : FAIL
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return atomic_notifier_chain_register(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_register_event_notifier);
-+
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event handler.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb)
-+{
-+	atomic_notifier_chain_unregister(&ghes_event_notify_list, nb);
-+}
-+EXPORT_SYMBOL_GPL(ghes_unregister_event_notifier);
-+
- static void ghes_do_proc(struct ghes *ghes,
- 			 const struct acpi_hest_generic_status *estatus)
+diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+index c642825ca8ef..8f9da1d49343 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
++++ b/drivers/staging/rtl8723bs/core/rtw_mlme_ext.c
+@@ -219,6 +219,7 @@ static RT_CHANNEL_PLAN_MAP RTW_CHANNEL_PLAN_MAP_REALTEK_DEFINE = {0x03, 0x02};
+ int rtw_ch_set_search_ch(RT_CHANNEL_INFO *ch_set, const u32 ch)
  {
-@@ -526,10 +552,17 @@ static void ghes_do_proc(struct ghes *ghes,
- 			log_arm_hw_error(err);
- 		} else {
- 			void *err = acpi_hest_get_payload(gdata);
-+			u8 error_handled = false;
-+			int ret;
+ 	int i;
 +
-+			ret = atomic_notifier_call_chain(&ghes_event_notify_list, 0, gdata);
-+			if (ret & NOTIFY_OK)
-+				error_handled = true;
- 
- 			log_non_standard_event(sec_type, fru_id, fru_text,
- 					       sec_sev, err,
--					       gdata->error_data_length);
-+					       gdata->error_data_length,
-+					       error_handled);
- 		}
+ 	for (i = 0; ch_set[i].ChannelNum != 0; i++) {
+ 		if (ch == ch_set[i].ChannelNum)
+ 			break;
+@@ -2184,6 +2185,7 @@ unsigned int OnAction_sa_query(struct adapter *padapter, union recv_frame *precv
  	}
- }
-diff --git a/drivers/ras/ras.c b/drivers/ras/ras.c
-index 95540ea8dd9d..0ed784a8466e 100644
---- a/drivers/ras/ras.c
-+++ b/drivers/ras/ras.c
-@@ -16,9 +16,10 @@
- 
- void log_non_standard_event(const guid_t *sec_type, const guid_t *fru_id,
- 			    const char *fru_text, const u8 sev, const u8 *err,
--			    const u32 len)
-+			    const u32 len, const u8 error_handled)
- {
--	trace_non_standard_event(sec_type, fru_id, fru_text, sev, err, len);
-+	trace_non_standard_event(sec_type, fru_id, fru_text, sev,
-+				 err, len, error_handled);
- }
- 
- void log_arm_hw_error(struct cper_sec_proc_arm *err)
-diff --git a/include/acpi/ghes.h b/include/acpi/ghes.h
-index e3f1cddb4ac8..a3dd82069069 100644
---- a/include/acpi/ghes.h
-+++ b/include/acpi/ghes.h
-@@ -50,6 +50,34 @@ enum {
- 	GHES_SEV_PANIC = 0x3,
- };
- 
+ 	if (0) {
+ 		int pp;
 +
-+#ifdef CONFIG_ACPI_APEI_GHES
-+/**
-+ * ghes_register_event_notifier - register an event notifier
-+ * for the non-fatal HW errors.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ *
-+ * Return : 0 - SUCCESS, non-zero - FAIL.
-+ */
-+int ghes_register_event_notifier(struct notifier_block *nb);
+ 		printk("pattrib->pktlen = %d =>", pattrib->pkt_len);
+ 		for (pp = 0; pp < pattrib->pkt_len; pp++)
+ 			printk(" %02x ", pframe[pp]);
+@@ -2486,6 +2488,7 @@ void issue_beacon(struct adapter *padapter, int timeout_ms)
+ 		/* DBG_871X("ie len =%d\n", cur_network->IELength); */
+ 		{
+ 			int len_diff;
 +
-+/**
-+ * ghes_unregister_event_notifier - unregister the previously
-+ * registered event notifier.
-+ * @nb: pointer to the notifier_block structure of the event notifier.
-+ */
-+void ghes_unregister_event_notifier(struct notifier_block *nb);
-+#else
-+static inline int ghes_register_event_notifier(struct notifier_block *nb)
-+{
-+	return -ENODEV;
-+}
+ 			memcpy(pframe, cur_network->IEs, cur_network->IELength);
+ 			len_diff = update_hidden_ssid(
+ 				pframe+_BEACON_IE_OFFSET_
+@@ -2500,6 +2503,7 @@ void issue_beacon(struct adapter *padapter, int timeout_ms)
+ 			u8 *wps_ie;
+ 			uint wps_ielen;
+ 			u8 sr = 0;
 +
-+static inline void ghes_unregister_event_notifier(struct notifier_block *nb)
-+{
-+}
-+#endif
+ 			wps_ie = rtw_get_wps_ie(pmgntframe->buf_addr+TXDESC_OFFSET+sizeof(struct ieee80211_hdr_3addr)+_BEACON_IE_OFFSET_,
+ 				pattrib->pktlen-sizeof(struct ieee80211_hdr_3addr)-_BEACON_IE_OFFSET_, NULL, &wps_ielen);
+ 			if (wps_ie && wps_ielen > 0) {
+@@ -2700,6 +2704,7 @@ void issue_probersp(struct adapter *padapter, unsigned char *da, u8 is_valid_p2p
+ 			if (ssid_ie &&  cur_network->Ssid.SsidLength) {
+ 				uint remainder_ielen;
+ 				u8 *remainder_ie;
 +
- int ghes_estatus_pool_init(int num_ghes);
+ 				remainder_ie = ssid_ie+2;
+ 				remainder_ielen = (pframe-remainder_ie);
  
- /* From drivers/edac/ghes_edac.c */
-diff --git a/include/linux/ras.h b/include/linux/ras.h
-index 7c3debb47c87..6ed3c67ab905 100644
---- a/include/linux/ras.h
-+++ b/include/linux/ras.h
-@@ -28,13 +28,15 @@ static inline int cec_add_elem(u64 pfn)		{ return -ENODEV; }
- #ifdef CONFIG_RAS
- void log_non_standard_event(const guid_t *sec_type,
- 			    const guid_t *fru_id, const char *fru_text,
--			    const u8 sev, const u8 *err, const u32 len);
-+			    const u8 sev, const u8 *err, const u32 len,
-+			    const u8 error_handled);
- void log_arm_hw_error(struct cper_sec_proc_arm *err);
- #else
- static inline void
- log_non_standard_event(const guid_t *sec_type,
- 		       const guid_t *fru_id, const char *fru_text,
--		       const u8 sev, const u8 *err, const u32 len)
-+		       const u8 sev, const u8 *err, const u32 len,
-+		       const u8 error_handled);
- { return; }
- static inline void
- log_arm_hw_error(struct cper_sec_proc_arm *err) { return; }
-diff --git a/include/ras/ras_event.h b/include/ras/ras_event.h
-index 36c5c5e38c1d..38fd05d82d8e 100644
---- a/include/ras/ras_event.h
-+++ b/include/ras/ras_event.h
-@@ -223,9 +223,10 @@ TRACE_EVENT(non_standard_event,
- 		 const char *fru_text,
- 		 const u8 sev,
- 		 const u8 *err,
--		 const u32 len),
-+		 const u32 len,
-+		 const u8 error_handled),
+@@ -4280,6 +4285,7 @@ void site_survey(struct adapter *padapter)
  
--	TP_ARGS(sec_type, fru_id, fru_text, sev, err, len),
-+	TP_ARGS(sec_type, fru_id, fru_text, sev, err, len, error_handled),
+ 	{
+ 		struct rtw_ieee80211_channel *ch;
++
+ 		if (pmlmeext->sitesurvey_res.channel_idx < pmlmeext->sitesurvey_res.ch_num) {
+ 			ch = &pmlmeext->sitesurvey_res.ch[pmlmeext->sitesurvey_res.channel_idx];
+ 			survey_channel = ch->hw_value;
+@@ -4323,6 +4329,7 @@ void site_survey(struct adapter *padapter)
+ 		if (ScanType == SCAN_ACTIVE) { /* obey the channel plan setting... */
+ 			{
+ 				int i;
++
+ 				for (i = 0; i < RTW_SSID_SCAN_AMOUNT; i++) {
+ 					if (pmlmeext->sitesurvey_res.ssid[i].SsidLength) {
+ 						/* IOT issue, When wifi_spec is not set, send one probe req without WPS IE. */
+@@ -4351,6 +4358,7 @@ void site_survey(struct adapter *padapter)
+ #if defined(CONFIG_SIGNAL_DISPLAY_DBM) && defined(CONFIG_BACKGROUND_NOISE_MONITOR)
+ 		{
+ 			struct noise_info info;
++
+ 			info.bPauseDIG = false;
+ 			info.IGIValue = 0;
+ 			info.max_time = channel_scan_time_ms/2;/* ms */
+@@ -4518,6 +4526,7 @@ u8 collect_bss_info(struct adapter *padapter, union recv_frame *precv_frame, str
+ 		p = rtw_get_ie(bssid->IEs + ie_offset, _HT_ADD_INFO_IE_, &len, bssid->IELength - ie_offset);
+ 		if (p) {
+ 			struct HT_info_element *HT_info = (struct HT_info_element *)(p + 2);
++
+ 			bssid->Configuration.DSConfig = HT_info->primary_channel;
+ 		} else { /*  use current channel */
+ 			bssid->Configuration.DSConfig = rtw_get_oper_ch(padapter);
+@@ -4551,6 +4560,7 @@ u8 collect_bss_info(struct adapter *padapter, union recv_frame *precv_frame, str
+ 		p = rtw_get_ie(bssid->IEs + ie_offset, _HT_CAPABILITY_IE_, &len, bssid->IELength - ie_offset);
+ 		if (p && len > 0) {
+ 			struct HT_caps_element	*pHT_caps;
++
+ 			pHT_caps = (struct HT_caps_element	*)(p + 2);
  
- 	TP_STRUCT__entry(
- 		__array(char, sec_type, UUID_SIZE)
-@@ -234,6 +235,7 @@ TRACE_EVENT(non_standard_event,
- 		__field(u8, sev)
- 		__field(u32, len)
- 		__dynamic_array(u8, buf, len)
-+		__field(u8, error_handled)
- 	),
+ 			if (le16_to_cpu(pHT_caps->u.HT_cap_element.HT_caps_info) & BIT(14))
+@@ -4584,6 +4594,7 @@ void start_create_ibss(struct adapter *padapter)
+ 	struct mlme_ext_priv *pmlmeext = &padapter->mlmeextpriv;
+ 	struct mlme_ext_info *pmlmeinfo = &(pmlmeext->mlmext_info);
+ 	struct wlan_bssid_ex		*pnetwork = (struct wlan_bssid_ex *)(&(pmlmeinfo->network));
++
+ 	pmlmeext->cur_channel = (u8)pnetwork->Configuration.DSConfig;
+ 	pmlmeinfo->bcn_interval = get_beacon_interval(pnetwork);
  
- 	TP_fast_assign(
-@@ -243,6 +245,7 @@ TRACE_EVENT(non_standard_event,
- 		__entry->sev = sev;
- 		__entry->len = len;
- 		memcpy(__get_dynamic_array(buf), err, len);
-+		__entry->error_handled = error_handled;
- 	),
+@@ -5388,6 +5399,7 @@ static void rtw_mlmeext_disconnect(struct adapter *padapter)
+ 	/* wakeup macid after disconnect. */
+ 	{
+ 		struct sta_info *psta;
++
+ 		psta = rtw_get_stainfo(&padapter->stapriv, get_my_bssid(pnetwork));
+ 		if (psta)
+ 			rtw_hal_macid_wakeup(padapter, psta->mac_id);
+@@ -5425,6 +5437,7 @@ void mlmeext_joinbss_event_callback(struct adapter *padapter, int join_res)
+ 	struct sta_priv 	*pstapriv = &padapter->stapriv;
+ 	u8 join_type;
+ 	struct sta_info *psta;
++
+ 	if (join_res < 0) {
+ 		join_type = 1;
+ 		rtw_hal_set_hwreg(padapter, HW_VAR_MLME_JOIN, (u8 *)(&join_type));
+@@ -6047,6 +6060,7 @@ u8 createbss_hdl(struct adapter *padapter, u8 *pbuf)
  
- 	TP_printk("severity: %d; sec type:%pU; FRU: %pU %s; data len:%d; raw data:%s",
+ 	if (pmlmeinfo->state == WIFI_FW_AP_STATE) {
+ 		struct wlan_bssid_ex *network = &padapter->mlmepriv.cur_network.network;
++
+ 		start_bss_network(padapter, (u8 *)network);
+ 		return H2C_SUCCESS;
+ 	}
+@@ -6810,6 +6824,7 @@ u8 set_chplan_hdl(struct adapter *padapter, unsigned char *pbuf)
+ 
+ 	if ((padapter->rtw_wdev != NULL) && (padapter->rtw_wdev->wiphy)) {
+ 		struct regulatory_request request;
++
+ 		request.initiator = NL80211_REGDOM_SET_BY_DRIVER;
+ 		rtw_reg_notifier(padapter->rtw_wdev->wiphy, &request);
+ 	}
 -- 
 2.17.1
-
 
