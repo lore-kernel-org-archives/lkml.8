@@ -2,106 +2,73 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E466C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A5DC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D25920714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 05:56:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pZR9ei1v"
+	by mail.kernel.org (Postfix) with ESMTP id 3C1B4206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbgCYF4h (ORCPT
+        id S1726264AbgCYGAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 01:56:37 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42653 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgCYF4g (ORCPT
+        Wed, 25 Mar 2020 02:00:43 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:43040 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725832AbgCYGAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 01:56:36 -0400
-Received: by mail-lj1-f194.google.com with SMTP id q19so1127117ljp.9;
-        Tue, 24 Mar 2020 22:56:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KXLP0/H62Iyak+HWMvNxv2asCanHU5NDryMupzQljyQ=;
-        b=pZR9ei1vxMr3u8y5qL+mLZGwU/2WSStdK5WDY0E67329D/GFURPI717SH1LJJ8Pjl7
-         wUdOM8f3RY5tMwLxdZsfS2NcnGAlpDtHxYI0uxbPL6F9TO7dGiB4hByqOrnYTrxKfmTo
-         A9UGNoNuiQS8omgDrK2UzlP1gAqF/MB49ucMu7uZDJnyngiYbvPjENn2qXW3Rvwl/ggV
-         7Nsvzpj0Rsp1IIXZDXTPcAhvp88VuGFAb6uU8X7xM4ZAtLdxAZJUVQaP9mjst3dNvyH6
-         zUEeJAmo1krCrnnxTFUZrv9Vlh7c7wpu+5450YoGJZ1wXhHlZZaBDIF8ZrAWkm9SL/jK
-         8qWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=KXLP0/H62Iyak+HWMvNxv2asCanHU5NDryMupzQljyQ=;
-        b=I8xT6ZihSHIoVXxYazCLGFQIHPGwmAMWhIKTTOBzepjtgWNQaX5v173aN/3RNgxE1y
-         ruu6SEs73v85BBQ4q1aJzLDYIYfQc4vBfs34NL74LK8NPHINGlh6B+25nBHMPkFWE6dE
-         gijm81X/T4IF/sWkockwt9GNwzifR/GuMzPyyjBAu+U6q1vKwbGg/JSRCVme8F26By8K
-         kAOSe7CKWIR141bQDiFkO71PZsV8xL8JDJbEQ7JYRJxLnnlSArQTgxCepwB8SCJtXBzI
-         WvfFgdxYI/kj0KiEnHDmdoGs7vIklexno1d4d26DwRtd6onTEfsjinCq/MWcYUfp1qPK
-         uBwg==
-X-Gm-Message-State: AGi0Pub44ziro9PAxnXedMvzOawcPRqS1W7458umI1PQfRT6Ye4rW3bX
-        PR/z9rzHnnsXhMo2Favud0c=
-X-Google-Smtp-Source: ADFU+vu3fs9td+AZg+GfH8KE6sCDA0t03LRyFkKaskNvANi2tSXlhNrCU5zMzOlFPRoZLQ/GPlGnQg==
-X-Received: by 2002:a2e:878a:: with SMTP id n10mr885894lji.130.1585115794908;
-        Tue, 24 Mar 2020 22:56:34 -0700 (PDT)
-Received: from localhost.localdomain ([185.188.71.122])
-        by smtp.gmail.com with ESMTPSA id y20sm3453692ljy.100.2020.03.24.22.56.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Mar 2020 22:56:34 -0700 (PDT)
-From:   Pawel Dembicki <paweldembicki@gmail.com>
-To:     Felix Fietkau <nbd@nbd.name>
-Cc:     Pawel Dembicki <paweldembicki@gmail.com>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Roy Luo <royluo@google.com>, Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mt76: mt76x0: pci: add mt7610 PCI ID
-Date:   Wed, 25 Mar 2020 06:55:23 +0100
-Message-Id: <20200325055525.20279-1-paweldembicki@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 25 Mar 2020 02:00:43 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGz3e-002EkU-4i; Wed, 25 Mar 2020 05:58:30 +0000
+Date:   Wed, 25 Mar 2020 05:58:30 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
+Message-ID: <20200325055830.GL23230@ZenIV.linux.org.uk>
+References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
+ <20200324214637.GI23230@ZenIV.linux.org.uk>
+ <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
+ <20200325021327.GJ23230@ZenIV.linux.org.uk>
+ <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
+ <20200325040359.GK23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325040359.GK23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add mt7610 PCI id found on D-Link DWR-960 to pci_device_id table.
+On Wed, Mar 25, 2020 at 04:03:59AM +0000, Al Viro wrote:
 
-Run-tested on D-Link DWR-960 with no-name half-size mPCIE card
-with mt7610e.
+> Lovely.  So
+> 	* we really do get NULL nd->path.dentry there; I've not misread the
+> trace.
+> 	* on the entry into link_path_walk() nd->path.dentry is non-NULL.
+> 	* *ALL* components should've been LAST_NORM ones
+> 	* not a single symlink in sight, unless the setup is rather unusual
+> 	* possibly not even a single mountpoint along the way (depending
+> upon the userland used)
 
-Signed-off-by: Pawel Dembicki <paweldembicki@gmail.com>
----
- drivers/net/wireless/mediatek/mt76/mt76x0/pci.c | 1 +
- 1 file changed, 1 insertion(+)
+OK, I see one place where that could occur, but I really don't see how that
+could be triggered on this pathname, short of very odd symlink layout in
+the filesystem on the testbox.  Does the following fix your reproducer?
 
-diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c b/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c
-index e2974e0ae1fc..3bd753cda190 100644
---- a/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/mt76x0/pci.c
-@@ -215,6 +215,7 @@ mt76x0e_remove(struct pci_dev *pdev)
- }
+diff --git a/fs/namei.c b/fs/namei.c
+index 311e33dbac63..4082b70f32ff 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1805,6 +1805,8 @@ static const char *handle_dots(struct nameidata *nd, int type)
+ 			error = step_into(nd, WALK_NOFOLLOW,
+ 					 parent, inode, seq);
+ 		}
++		if (unlikely(error))
++			return ERR_PTR(error);
  
- static const struct pci_device_id mt76x0e_device_table[] = {
-+	{ PCI_DEVICE(0x14c3, 0x7610) },
- 	{ PCI_DEVICE(0x14c3, 0x7630) },
- 	{ PCI_DEVICE(0x14c3, 0x7650) },
- 	{ },
--- 
-2.20.1
-
+ 		if (unlikely(nd->flags & LOOKUP_IS_SCOPED)) {
+ 			/*
