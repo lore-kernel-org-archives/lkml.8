@@ -2,153 +2,174 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26263C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A9CC1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BE8221EB
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:27:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BC420772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:28:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jOtKOWyT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SsqRu3Vf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgCYP1M (ORCPT
+        id S1727811AbgCYP2b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:27:12 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:36181 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727701AbgCYP0m (ORCPT
+        Wed, 25 Mar 2020 11:28:31 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40581 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727439AbgCYP2b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:26:42 -0400
-Received: by mail-wm1-f68.google.com with SMTP id g62so3190510wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:26:41 -0700 (PDT)
+        Wed, 25 Mar 2020 11:28:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id u10so3646333wro.7;
+        Wed, 25 Mar 2020 08:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gr2YowP7xZurwhXRmAY/lGUCfPPt09BjXH0RtGSlGeM=;
-        b=jOtKOWyTFlnI/HR751jZDGLmFII6PtQqnMWGGc6Kuplu+oLGGOyoVx/n2KE9AEXfa7
-         S7Q8DjwzxNI5Dfx0qEYkavRH2hNu9bmEzzUZFSVfmmJw1Ox0SZ3iel47ilMw1cLL+ETj
-         R8OXrs1soxud01CII8flpnkTsDNk6QMVRbGkM=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+TuwiFh6ptZG2bbIYvP+HL4r312J6Ae1r0580dUYeiw=;
+        b=SsqRu3VfcjXQUd9sQY1p9+YtlAipWWtLkXyxyN+z5kEmeY6VzKak39ao6cznTfg2NT
+         JGvYzxeRy82Skqt0L0EeJ7KyEtEAJa4GelLcPLwZBSfUIxv8GEsZ8y71GTFSz+6JYZc0
+         mbPMZscQZSFuAK4K9ov0Cg0S3QfQrec8EP2g8u26qflS20jrXCrfd10JfFWdIktqPBow
+         bq8CuQtwRSDDab3bGWNndTVDVDFa41Rzh0N2INsWTeH4TJh/LawHbmORV9q4nKu1eEOk
+         b1JumXhAYajXIY5ZDjfQy/g+N96lmcjadnjE07w4JCA++a0mStooP3PiMSZwDRR9yyLX
+         F4Vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gr2YowP7xZurwhXRmAY/lGUCfPPt09BjXH0RtGSlGeM=;
-        b=afx+5A//kAOWkHaBG0TOxqphfJi1NH4KHOaFHTNO+anpMswBrTIVlwebLhOsWXdQEY
-         d1qt+0W3GEkUwW90/o1yc/SLOjUiw8cBU4HAjE2PmDKu6PglktyjcmzV01+5uEFQt2q/
-         plY6isdPBAXrBhvwHW8JpCSiwu0avtUpI+3NtSSHNoxjFrOOknKonZVGTtnzWD5DnijB
-         PbX7StUae8HZK+SqFeU8RInfqHOaKSiGcJdQAiCsnGLJoWnDfzZl6bMJeC7LGwTpgZ/l
-         z7PUM51srAB8SK755yu+iIKO3gVRqXtp2v4OkXypnX1OSnqfI19qNRwgxvaazVz6jei/
-         Duag==
-X-Gm-Message-State: ANhLgQ3ggJ6y4sT2sFeqbKaqt41n3cN678/ip3cL8SJV/jEmtUjqN+Ni
-        rMI1X3zmMimOpMARpEWJOLXY5HxbhHQ=
-X-Google-Smtp-Source: ADFU+vvy259BxeGiK8c7t1ayuKqsAgNDwtV6vzhjuhUBg/FiqUoeBqmrE08UcneZC4pHHld1lJDKpw==
-X-Received: by 2002:a1c:df07:: with SMTP id w7mr3820469wmg.7.1585150000943;
-        Wed, 25 Mar 2020 08:26:40 -0700 (PDT)
-Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id a2sm4033701wrp.13.2020.03.25.08.26.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 08:26:40 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Cc:     Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Kees Cook <keescook@chromium.org>, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
-        Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH bpf-next v6 3/8] bpf: lsm: provide attachment points for BPF LSM programs
-Date:   Wed, 25 Mar 2020 16:26:24 +0100
-Message-Id: <20200325152629.6904-4-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200325152629.6904-1-kpsingh@chromium.org>
-References: <20200325152629.6904-1-kpsingh@chromium.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+TuwiFh6ptZG2bbIYvP+HL4r312J6Ae1r0580dUYeiw=;
+        b=S8QAMXCC7Yl3HIHqDRuoejOOR5Hqmvq+gBoIpZAa8772X9XvwohY+a7No3UDouL/9p
+         LfdiBehuW/oAQMWTiZyFIMhQeY46PVG350oS2H2/NT88I5gqRwmTV0/V/0RkIAeepkZ9
+         /FHh6c6pT36mqUjRFPqZ49f6PF6L5yzf3n5Yqpw+ony3bgcLCfQ5Q49pOu7vFTiRYzTH
+         VufRC3BsG4Da6vioSDe//UB1dwwG8kGwHrt2mT6y0fXM+KtCX4D0llPvVt3DJOWBvNLi
+         5YcHCSFZBhUocEXnW4W/qxddpNHTc8HOgeikFp106/vrYGkW8XGGdpJrW9Fl8eWLSMiU
+         88ug==
+X-Gm-Message-State: ANhLgQ3BiEHFQwFCCiekpErRGmFCh2Hg5lPO5ktnRAjcnZz8p202clLU
+        7HpG0d1Q/b/aZ1xkJYNY5tY=
+X-Google-Smtp-Source: ADFU+vv2WmXZviwL1prI7g4XxxAMgN1uOZn5i5kh4PmLtj27KlvZBV9mmlfSXaQ1afOTdfZN0W2zpA==
+X-Received: by 2002:adf:fdc6:: with SMTP id i6mr4134003wrs.252.1585150108315;
+        Wed, 25 Mar 2020 08:28:28 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:f4a0:1b38:2faf:56e9? (p200300EA8F296000F4A01B382FAF56E9.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f4a0:1b38:2faf:56e9])
+        by smtp.googlemail.com with ESMTPSA id b6sm18851817wrp.59.2020.03.25.08.28.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 08:28:27 -0700 (PDT)
+Subject: Re: [PATCH 1/2] net: phy: micrel.c: add rgmii interface delay
+ possibility to ksz9131
+To:     Philippe Schenker <philippe.schenker@toradex.com>, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux@armlinux.org.uk,
+        netdev@vger.kernel.org, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, shawnguo@kernel.org,
+        mark.rutland@arm.com
+Cc:     o.rempel@pengutronix.de, linux-kernel@vger.kernel.org,
+        silvan.murer@gmail.com, s.hauer@pengutronix.de,
+        a.fatoum@pengutronix.de, "David S. Miller" <davem@davemloft.net>
+References: <20200325150329.228329-1-philippe.schenker@toradex.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <7948ffaa-e530-f82e-0f58-39fa7e8f082f@gmail.com>
+Date:   Wed, 25 Mar 2020 16:28:24 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325150329.228329-1-philippe.schenker@toradex.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On 25.03.2020 16:03, Philippe Schenker wrote:
+> The KSZ9131 provides DLL controlled delays on RXC and TXC lines. This
+> patch makes use of those delays. The information which delays should
+> be enabled or disabled comes from the interface names, documented in
+> ethernet-controller.yaml:
+> 
+> rgmii:      Disable RXC and TXC delays
+> rgmii-id:   Enable RXC and TXC delays
+> rgmii-txid: Enable only TXC delay, disable RXC delay
+> rgmii-rxid: Enable onlx RXC delay, disable TXC delay
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+>  drivers/net/phy/micrel.c | 45 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+> index 63dedec0433d..d3ad09774847 100644
+> --- a/drivers/net/phy/micrel.c
+> +++ b/drivers/net/phy/micrel.c
+> @@ -704,6 +704,48 @@ static int ksz9131_of_load_skew_values(struct phy_device *phydev,
+>  	return phy_write_mmd(phydev, 2, reg, newval);
+>  }
+>  
+> +/* MMD Address 0x2 */
+> +#define KSZ9131RN_RXC_DLL_CTRL		76
+> +#define KSZ9131RN_TXC_DLL_CTRL		77
+> +#define KSZ9131RN_DLL_CTRL_BYPASS	BIT_MASK(12)
+> +#define KSZ9131RN_DLL_ENABLE_DELAY	0
+> +#define KSZ9131RN_DLL_DISABLE_DELAY	BIT(12)
+> +
+> +static int ksz9131_config_rgmii_delay(struct phy_device *phydev)
+> +{
+> +	int ret;
+> +	u16 rxcdll_val, txcdll_val;
+> +
+> +	switch (phydev->interface) {
+> +	case PHY_INTERFACE_MODE_RGMII:
+> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_ID:
+> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_RXID:
+> +		rxcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		break;
+> +	case PHY_INTERFACE_MODE_RGMII_TXID:
+> +		rxcdll_val = KSZ9131RN_DLL_DISABLE_DELAY;
+> +		txcdll_val = KSZ9131RN_DLL_ENABLE_DELAY;
+> +		break;
+> +	default:
+> +		return 0;
+> +	}
+> +
+> +	ret = phy_modify_mmd_changed(phydev, 2, KSZ9131RN_RXC_DLL_CTRL,
 
-When CONFIG_BPF_LSM is enabled, nop functions, bpf_lsm_<hook_name>, are
-generated for each LSM hook. These functions are initialized as LSM
-hooks in a subsequent patch.
+Using a constant for the device address would be good.
 
-Signed-off-by: KP Singh <kpsingh@google.com>
-Reviewed-by: Brendan Jackman <jackmanb@google.com>
-Reviewed-by: Florent Revest <revest@google.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Yonghong Song <yhs@fb.com>
----
- include/linux/bpf_lsm.h | 22 ++++++++++++++++++++++
- kernel/bpf/bpf_lsm.c    | 14 ++++++++++++++
- 2 files changed, 36 insertions(+)
- create mode 100644 include/linux/bpf_lsm.h
+Last but not least your patch misses the net-next annotation
+(except you consider it a fix, then the net annotation and
+a Fixes tag would be needed).
 
-diff --git a/include/linux/bpf_lsm.h b/include/linux/bpf_lsm.h
-new file mode 100644
-index 000000000000..83b96895829f
---- /dev/null
-+++ b/include/linux/bpf_lsm.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (C) 2020 Google LLC.
-+ */
-+
-+#ifndef _LINUX_BPF_LSM_H
-+#define _LINUX_BPF_LSM_H
-+
-+#include <linux/bpf.h>
-+#include <linux/lsm_hooks.h>
-+
-+#ifdef CONFIG_BPF_LSM
-+
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...) \
-+	RET bpf_lsm_##NAME(__VA_ARGS__);
-+#include <linux/lsm_hook_defs.h>
-+#undef LSM_HOOK
-+
-+#endif /* CONFIG_BPF_LSM */
-+
-+#endif /* _LINUX_BPF_LSM_H */
-diff --git a/kernel/bpf/bpf_lsm.c b/kernel/bpf/bpf_lsm.c
-index 82875039ca90..1210a819ca52 100644
---- a/kernel/bpf/bpf_lsm.c
-+++ b/kernel/bpf/bpf_lsm.c
-@@ -7,6 +7,20 @@
- #include <linux/filter.h>
- #include <linux/bpf.h>
- #include <linux/btf.h>
-+#include <linux/lsm_hooks.h>
-+#include <linux/bpf_lsm.h>
-+
-+/* For every LSM hook that allows attachment of BPF programs, declare a nop
-+ * function where a BPF program can be attached.
-+ */
-+#define LSM_HOOK(RET, DEFAULT, NAME, ...) 	\
-+noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)	\
-+{						\
-+	return DEFAULT;				\
-+}
-+
-+#include <linux/lsm_hook_defs.h>
-+#undef LSM_HOOK
- 
- const struct bpf_prog_ops lsm_prog_ops = {
- };
--- 
-2.20.1
+> +				     KSZ9131RN_DLL_CTRL_BYPASS, rxcdll_val);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return phy_modify_mmd_changed(phydev, 2, KSZ9131RN_TXC_DLL_CTRL,
+> +				     KSZ9131RN_DLL_CTRL_BYPASS, txcdll_val);
+> +}
+> +
+>  static int ksz9131_config_init(struct phy_device *phydev)
+>  {
+>  	const struct device *dev = &phydev->mdio.dev;
+> @@ -730,6 +772,9 @@ static int ksz9131_config_init(struct phy_device *phydev)
+>  	if (!of_node)
+>  		return 0;
+>  
+> +	if (phy_interface_is_rgmii(phydev))
+> +		ksz9131_config_rgmii_delay(phydev);
+> +
+>  	ret = ksz9131_of_load_skew_values(phydev, of_node,
+>  					  MII_KSZ9031RN_CLK_PAD_SKEW, 5,
+>  					  clk_skews, 2);
+> 
 
