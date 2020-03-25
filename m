@@ -2,101 +2,55 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA7FC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:13:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 006D7C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F116B207FC
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D441E2082D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:13:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727488AbgCYVNW (ORCPT
+        id S1727536AbgCYVNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:13:22 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:53325 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgCYVNV (ORCPT
+        Wed, 25 Mar 2020 17:13:30 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:46897 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727357AbgCYVNa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:13:21 -0400
-Received: from mail-qk1-f170.google.com ([209.85.222.170]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1N5FQJ-1jQfbG41CP-01178k; Wed, 25 Mar 2020 22:13:20 +0100
-Received: by mail-qk1-f170.google.com with SMTP id o10so4229550qki.10;
-        Wed, 25 Mar 2020 14:13:19 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ0LONAbeSxw4khp+j5NYRVO/giJMuxHjWYdo4nsNufUq1zmcG64
-        ZURuF/A0KxW13qXAdek2oFToUPzgoN3XaHmHz6o=
-X-Google-Smtp-Source: ADFU+vu9l/z+oM0lxSfEA0g3Poid+2S8rWoUyL4yoOgi/cbZMJnhoiOFpbVGBHfvi6Rzso58zdS/a4b1BFTBjUGoCJc=
-X-Received: by 2002:a37:6285:: with SMTP id w127mr4965337qkb.138.1585170798637;
- Wed, 25 Mar 2020 14:13:18 -0700 (PDT)
+        Wed, 25 Mar 2020 17:13:30 -0400
+X-Originating-IP: 91.224.148.103
+Received: from localhost.localdomain (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id B9FBDFF807;
+        Wed, 25 Mar 2020 21:13:16 +0000 (UTC)
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>,
+        miquel.raynal@bootlin.com, vigneshr@ti.com
+Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] mtd: rawnand: toshiba: Support reading the number of bitflips for BENAND (Built-in ECC NAND)
+Date:   Wed, 25 Mar 2020 22:13:15 +0100
+Message-Id: <20200325211315.13291-1-miquel.raynal@bootlin.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <1585124572-4693-1-git-send-email-ytc-mb-yfuruyama7@kioxia.com>
+References: 
 MIME-Version: 1.0
-References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
-In-Reply-To: <20200302020757.551483-1-bjorn.andersson@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 25 Mar 2020 22:13:02 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
-Message-ID: <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc firmware
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:23AlKoK7JfyvIqlkPc2VNTcV1RVX6tcnr2s1dZFIRMkWYb7/awp
- ToEpktsd3CItXRFAKCESrsG53CRGbCXOwV2fH9Rz/yBIlqzgYngxZkOEQC2ynk4arBSE5tL
- CslJuye1gSg+YynI0TyV0P7tOcgysN7S8JhG1ptU3k0+HOtWz4Bwdo9GHN+p4hFwT1Z6xK8
- x8pb2A05E5bWaPhQOLnRw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:80eBV72EX1k=:5PQ4T/KOmiq/GiMZnDYD8K
- H/yEaQViDU7LY+uGNFn5GRXtLk0i9D4tv7DUcWPYn5ALhKUx6hD9eS2aQlVd3q2oL0pX77h3X
- UsmgHW/67rZrNfRfGwT6xr6Hr9hSzi2maKVpuu7h47p5dNPFW+k/rTm7+kkIjdzMzgLjpUBMm
- YN5MoWcDZBsCovQt+zH1roRUWWSNiHuHwJil1WQUduppWN0xTITPDNPT0zVVU7XGOAUq8Jx2f
- xm8F1fHEauh2wKQab8dM24NseCAQz4+2Mm2XXcZypcYAJbX9cXQdNIpsE5ocD9GMWwsA38zRX
- 3Rag2GtLyfYr1tw80sk/rRoi63R31qRuaxZA645ZHi+83lqmsQS01feFr0TuMxSlgHDOi8Q61
- 2/D+L0qiZWvIreH7saLip87Eq2Cy3udR1rfa95HLDwqeCyfsS847eruetwlsi2I5bOu+ExL63
- iacvaztwU9JNsBRNb3mwl1xbABcPKvXalE7A+KgZiUZiAwU433iZUydR8gkSczBzkwRQ1UKLT
- HRbavrgty6wlGCgBIFvPehF5qZQ3c0c3vrKsG1QtCgtzvzwFKgVLpch5DjGyzlLBSO36C6Pk/
- /7Ju8OEseF7iKN174DpfAFaav6yqIY+x4DGQbtbog2Rb6pGMa6bav5CKl12696bT2vvRWWodu
- 4rsrtUCl1oVCGVPbkKBav0oGZ9sZBwIbj98jcy+HejBI3oaZZe2GRFmtDGOOxmUU0WYA1UMcs
- qfkVeY7DyFya+dqGkBiWOhO5oaDxTF2fOCfYyIDNEMinokmnJYxa7BKT/JSqog8l93tgqvb6G
- snyKyPwJ2lXSaIKBTizN93rWTDdldTZwoRizbxg77RTtIUjJYA=
+X-linux-mtd-patch-notification: thanks
+X-linux-mtd-patch-commit: fca88925d76978b7f20de42d8ead34fb91500003
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> Update the firmware-name of the remoteproc nodes to mimic the firmware
-> structure on other 845 devices.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
->  1 file changed, 7 insertions(+)
+On Wed, 2020-03-25 at 08:22:52 UTC, Yoshio Furuyama wrote:
+> Add support vendor specific commands for KIOXIA CORPORATION BENAND.
+> The actual bitflips number can be retrieved by this command.
+> 
+> Signed-off-by: Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
 
-Hi Bjorn,
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/mtd/linux.git nand/next, thanks.
 
-Sorry for the late reply, I only came across this one while going
-through the pull requests
-that we had failed to pick up earlier.
-
-I really dislike the idea of hardcoding a firmware name in the
-devicetree, we had long
-discussions about this a few years ago and basically concluded that the firmware
-name needs to be generated by the driver after identifying the hardware itself.
-
-The problem is that the firmware generally needs to match both the device driver
-and the hardware, so when there is a firmware update that changes the behavior
-(intentionally or not) in a way the driver needs to know about, then
-the driver should
-be able to request a particular firmware file based on information
-that the owner
-of the dtb may not have.
-
-I'm holding off on the pull request for today, maybe there is something we can
-still do about it before the merge window.
-
-        Arnd
+Miquel
