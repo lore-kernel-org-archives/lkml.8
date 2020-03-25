@@ -2,141 +2,118 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2179EC10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5E68C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2CF2206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD6F206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 00:40:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SZuiJWZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727211AbgCYAkI (ORCPT
+        id S1727285AbgCYAkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 20:40:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:16928 "EHLO mga05.intel.com"
+        Tue, 24 Mar 2020 20:40:23 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:53419 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727099AbgCYAkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 20:40:07 -0400
-IronPort-SDR: qrqs8K/1J0Vj9X9iXt7v7z75outbVZhVIM1xhnVrf7D6FylWLVzbv5OLH2yLEu4cYJz5mCOLPM
- ZMWzheVPheKg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 17:40:07 -0700
-IronPort-SDR: e1rJ8IMBngrXbAyKxLgCIR7m6e9P7dkS9PIgQD+2100ugxG2ZO0VJVStofUy2wAad4otxDvR0M
- vqlnfbr5pH/g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,302,1580803200"; 
-   d="scan'208";a="357661266"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Mar 2020 17:40:04 -0700
-Subject: Re: [PATCH] sched: Use RCU-sched in core-scheduling balancing logic
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     paulmck@kernel.org, linux-kernel@vger.kernel.org,
-        vpillai <vpillai@digitalocean.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, peterz@infradead.org,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-References: <20200313232918.62303-1-joel@joelfernandes.org>
- <20200314003004.GI3199@paulmck-ThinkPad-P72>
- <f77b9432-933c-a9fe-5541-437cf0094a65@linux.intel.com>
- <20200323152126.GA141027@google.com>
- <6d933ce2-75e3-6469-4bb0-08ce9df29139@linux.intel.com>
- <20200324184946.GD257597@google.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <a715e9f5-adc3-60fa-d2a0-2e82b1f4be9c@linux.intel.com>
-Date:   Wed, 25 Mar 2020 08:40:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1727099AbgCYAkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 24 Mar 2020 20:40:23 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48n8R80zKKz9sPk;
+        Wed, 25 Mar 2020 11:40:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585096820;
+        bh=Bai3sk8CLodeWGRu1CYGl+WPcRwjBXEwTh1ZqVH0/F0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=SZuiJWZjueCoU/j2ge/QJZn5TO8/hbxrbvdGMY0tdUQznTjEXROCYx90KhZvK2r7S
+         AZUcYE3j69ONyJTPgm9k8VBQy+GRwJZOsS/n4xnyoeQR2YsMa/369Yw7+zT1pGktLq
+         cRbYBsWkQMwALGn+8J8xmqVFff5+8zUqedVzBK/W0eJBuLkKE+hvI27U2Uix83qAq/
+         bOVKLD2xjNYjAYsjBaujQaAT54kSwVI77/lzCNRG1nERhmv+8IL56VwN81LpHb6XW7
+         8q0sJ8JCVqDovfkLeLMOQLU4r+jIZIu3Dk0nQ/dTo9W6AVvRIyPJ8MWvHslbQMRlCL
+         +WJ1WbwJLx8eA==
+Date:   Wed, 25 Mar 2020 11:40:16 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Willem de Bruijn <willemb@google.com>,
+        Era Mayflower <mayflowerera@gmail.com>
+Subject: linux-next: manual merge of the net-next tree with the net tree
+Message-ID: <20200325114016.156768f2@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20200324184946.GD257597@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/sv3AX7jQUXkgO=e5bapi3NH";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/25 2:49, Joel Fernandes wrote:
-> On Tue, Mar 24, 2020 at 11:01:27AM +0800, Li, Aubrey wrote:
->> On 2020/3/23 23:21, Joel Fernandes wrote:
->>> On Mon, Mar 23, 2020 at 02:58:18PM +0800, Li, Aubrey wrote:
->>>> On 2020/3/14 8:30, Paul E. McKenney wrote:
->>>>> On Fri, Mar 13, 2020 at 07:29:18PM -0400, Joel Fernandes (Google) wrote:
->>>>>> rcu_read_unlock() can incur an infrequent deadlock in
->>>>>> sched_core_balance(). Fix this by using the RCU-sched flavor instead.
->>>>>>
->>>>>> This fixes the following spinlock recursion observed when testing the
->>>>>> core scheduling patches on PREEMPT=y kernel on ChromeOS:
->>>>>>
->>>>>> [   14.998590] watchdog: BUG: soft lockup - CPU#0 stuck for 11s! [kworker/0:10:965]
->>>>>>
->>>>>
->>>>> The original could indeed deadlock, and this would avoid that deadlock.
->>>>> (The commit to solve this deadlock is sadly not yet in mainline.)
->>>>>
->>>>> Acked-by: Paul E. McKenney <paulmck@kernel.org>
->>>>
->>>> I saw this in dmesg with this patch, is it expected?
->>>>
->>>> [  117.000905] =============================
->>>> [  117.000907] WARNING: suspicious RCU usage
->>>> [  117.000911] 5.5.7+ #160 Not tainted
->>>> [  117.000913] -----------------------------
->>>> [  117.000916] kernel/sched/core.c:4747 suspicious rcu_dereference_check() usage!
->>>> [  117.000918] 
->>>>                other info that might help us debug this:
->>>
->>> Sigh, this is because for_each_domain() expects rcu_read_lock(). From an RCU
->>> PoV, the code is correct (warning doesn't cause any issue).
->>>
->>> To silence warning, we could replace the rcu_read_lock_sched() in my patch with:
->>> preempt_disable();
->>> rcu_read_lock();
->>>
->>> and replace the unlock with:
->>>
->>> rcu_read_unlock();
->>> preempt_enable();
->>>
->>> That should both take care of both the warning and the scheduler-related
->>> deadlock. Thoughts?
->>>
->>
->> How about this?
->>
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index a01df3e..7ff694e 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -4743,7 +4743,6 @@ static void sched_core_balance(struct rq *rq)
->>  	int cpu = cpu_of(rq);
->>  
->>  	rcu_read_lock();
->> -	raw_spin_unlock_irq(rq_lockp(rq));
->>  	for_each_domain(cpu, sd) {
->>  		if (!(sd->flags & SD_LOAD_BALANCE))
->>  			break;
->> @@ -4754,7 +4753,6 @@ static void sched_core_balance(struct rq *rq)
->>  		if (steal_cookie_task(cpu, sd))
->>  			break;
->>  	}
->> -	raw_spin_lock_irq(rq_lockp(rq));
-> 
-> try_steal_cookie() does a double_rq_lock(). Would this change not deadlock
-> with that?
-> 
-Oh yes, missed double_rq_lock() inside, just want to keep local intr disabled
-to avoid preemption. will try Paul's patch and report back.
+--Sig_/sv3AX7jQUXkgO=e5bapi3NH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
--Aubrey
+Hi all,
+
+Today's linux-next merge of the net-next tree got a conflict in:
+
+  drivers/net/macsec.c
+
+between commit:
+
+  b06d072ccc4b ("macsec: restrict to ethernet devices")
+
+from the net tree and commit:
+
+  a21ecf0e0338 ("macsec: Support XPN frame handling - IEEE 802.1AEbw")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/macsec.c
+index 92bc2b2df660,49b138e7aeac..000000000000
+--- a/drivers/net/macsec.c
++++ b/drivers/net/macsec.c
+@@@ -19,7 -19,7 +19,8 @@@
+  #include <net/gro_cells.h>
+  #include <net/macsec.h>
+  #include <linux/phy.h>
+ +#include <linux/if_arp.h>
++ #include <linux/byteorder/generic.h>
+ =20
+  #include <uapi/linux/if_macsec.h>
+ =20
+
+--Sig_/sv3AX7jQUXkgO=e5bapi3NH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl56qHAACgkQAVBC80lX
+0Gxt/Qf9H8xBjtaPori8bP7C7ScBjmtat11519pOpi5LyDdlD1TjEQNV93SmAi/h
+TsfTKpq63rLgfQuEdY7qX4HCfFZtjgfLENbt7Q4ManjoDBmtPTjUz9B7FA+q7nrI
+2bAUjLmapVq1WAK5C5B5kd1wsoVl77FEi7KU29lsYA8K0cgD7JsipSqEDQUldU78
+C2fRFgyde4XbCL+9VnPZmoWDA79qFINZZiYzPXk29lB8MGuE6EeAbYQDoYg7I5Eh
+eVShEytRIEbACpIyYotW8ucJLvOednmCYq1vldaw7BcSuUSlm2pxqbyp04gaMDIy
+A9TUG1Puw6EaisLvHAiLmhTzosv6ew==
+=nL9v
+-----END PGP SIGNATURE-----
+
+--Sig_/sv3AX7jQUXkgO=e5bapi3NH--
