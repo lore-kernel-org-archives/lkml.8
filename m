@@ -3,68 +3,69 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F205AC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01903C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C64DC20719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C794E20719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:01:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="WcbDqTsC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTcpa9AH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727537AbgCYWBK (ORCPT
+        id S1727539AbgCYWBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:01:10 -0400
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:45389 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727464AbgCYWBK (ORCPT
+        Wed, 25 Mar 2020 18:01:43 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38850 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727351AbgCYWBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:01:10 -0400
-Received: by mail-qv1-f65.google.com with SMTP id g4so1926499qvo.12
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:01:09 -0700 (PDT)
+        Wed, 25 Mar 2020 18:01:43 -0400
+Received: by mail-wr1-f65.google.com with SMTP id s1so5431335wrv.5
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:01:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2LRvU1MBkUR83Gqvgx7L+Y8Q4FBFbX8N5vp+5n4yg4Q=;
-        b=WcbDqTsCMr/IAwnZN8MoX/dVXK1RBR6E9bZd8ICOvtz6cZoglcAGaTl705g0nhrOp8
-         tZ6gQDXn0zF05An8BN6HQ6CjAGOnzk2EgErysPwvey8ehfgxQlcD9QVEmume+6aQ38pG
-         wtyN32HhUV015KYPnNVRmQpJH2F6UwG7lP+YQMU/p+GGFshq9FWCXmHF/ZYCrvc+p2+R
-         F7ta4az8XTEskx5SGmes2SL51S2CbFmlT8davsU7lIfct17FUr6Cpc9Q0tITcvlUswez
-         ec2lE1gxRq2JkJ7xaTMy4Ub/tRRlIomDghBjRQWdRmn5hBPYYNFsSmeAKs52N055Ockb
-         HGiQ==
+        bh=K21ukMg2rSrNdWu0B2OE9Pp6GqyZFADsw1I/2vin0js=;
+        b=LTcpa9AH2U87sh+x8mjTD9zy5yhGvEAkoGFgATTjGhqIBrLRQApxp4ieCmAG+RQyt7
+         DTSOaztlg4f30UsNAF+G0M4lE/RpfdqeZGlgsFVH7l2gHeKTw95Z6g3alnbEAhMhwysl
+         50D03Z7uE/On28h3CNk1ezIr3QWJURibdBcx/BhFNwOU1lwbU71dehjuZU0NOgJmFtmX
+         UE40E3PtwKsAEj0j0PtSkLz0Scs4ZUki4SuWmeltmD31S9OlKaB6rdvwUbAj4MR4ydUB
+         UgHJ+SDIjSc9k+5bjmHBvXVbYqx+IAqF7Zi0EW1irVFJsC3ip6KZJ6jazcKD/BAII5Mh
+         uC2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2LRvU1MBkUR83Gqvgx7L+Y8Q4FBFbX8N5vp+5n4yg4Q=;
-        b=QwkqIga4yrywzFL5ZiQUaarbCz//yZrwhO+YDHzAxSFTZc5I4puHYk421HSiIekTWq
-         VSvNLPoBWzkEggvWquX4lGiHiXYjmQISGzmaU/lx9LNxEgECDSLZzUHhd9WBybhL19b9
-         yTbp+LS6uDxblYB/QzhIEaJsyBnjLQYy7A3Wao4AGLGCTDLWlfTw/dbtYQ+9lBFvzmb8
-         FYdg5DkOnQ3OXntQd5jbmfwbZ/+HDF+ncp82hTEAJgwXrIUOSQD7+o4PR7ONPYkDn7wb
-         I2mTulG28NMyTgT2/IbBdfEKbL0G07rONZx+XaNbNcCZiXHPjC9uMHoC/9Nw2Ieq6quW
-         PhIQ==
-X-Gm-Message-State: ANhLgQ3AjvwaOlVfXxLYx7LdFCiOxidND70kxN/bJbFQRNYQb0KTbvpL
-        Y1ElemiZZ6/dpZjnUiX1xmPnMQ==
-X-Google-Smtp-Source: ADFU+vs7SuVQXXkdNRbBL1RUpn65JVCeZ4bdF/5nuV5w6WTVXfR1bgNyW6rTpZ9NHRfVC6aCgq347g==
-X-Received: by 2002:a05:6214:11ec:: with SMTP id e12mr5359612qvu.89.1585173669264;
-        Wed, 25 Mar 2020 15:01:09 -0700 (PDT)
-Received: from ovpn-66-69.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id l42sm205009qtf.51.2020.03.25.15.01.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 15:01:08 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        eric.dumazet@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Wed, 25 Mar 2020 18:01:00 -0400
-Message-Id: <20200325220100.7863-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        bh=K21ukMg2rSrNdWu0B2OE9Pp6GqyZFADsw1I/2vin0js=;
+        b=fHCSiXs0YY7Fe0pkWh1FM52afY55OhbDUZ6yijosmgo1v/MkEAOXlOPRVRnxGOcM9m
+         mVIFA7daHeFiDeGT8Wcgse0JHDKjKSzU/9uRVaQyZkyKxwsI5N01bps/JYkjYBmTePKR
+         f1DbcgKjhID9di+tp2oCkkVoqXklXe50qWMiTiEBex/3pkt08F3Blg9rkT5xfp4/vlBU
+         gyjj+wH851tsYsWb/cCHTWJ08wNCBOOVxxZsdcQGRGP6z6hRKJ8vaurs6k9iLghJ6OdL
+         fPF1SyeUZCxAp1DAm5efH82C6UgnHZRjKTzYlDpoAySRNpGYMbv3cL7ojoSLlJndJqoj
+         iXdQ==
+X-Gm-Message-State: ANhLgQ2b3ZMWhWP1FvOnsK6heqx0r2WqXV/lhb1lRPbv8cUm4oGGPAJi
+        iv+PYLct+Z/WE6RfgUft+18=
+X-Google-Smtp-Source: ADFU+vv/fvbyUFtUVKnn+VBzvNOvnYxDeCpTO3pOrA0paN4gZFnT0GqdHLFuizR6+NNWjfSMpsVD2Q==
+X-Received: by 2002:a5d:6109:: with SMTP id v9mr5849821wrt.203.1585173701248;
+        Wed, 25 Mar 2020 15:01:41 -0700 (PDT)
+Received: from localhost.localdomain (dslb-002-204-140-180.002.204.pools.vodafone-ip.de. [2.204.140.180])
+        by smtp.gmail.com with ESMTPSA id u8sm403538wrn.69.2020.03.25.15.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 15:01:40 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH] staging: rtl8188eu: cleanup long line in odm.c
+Date:   Wed, 25 Mar 2020 22:59:40 +0100
+Message-Id: <20200325215940.9225-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,62 +73,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+Cleanup line over 80 characters by removing unnecessary parentheses.
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
-
- other info that might help us debug this:
-
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
-
-Fix it by adding a pair of rcu_read_lock/unlock() and use
-cond_resched_rcu() to avoid the situation where walking of a large
-number of items  may prevent scheduling for a long time.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
+ drivers/staging/rtl8188eu/hal/odm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Use cond_resched_rcu() from Eric.
-
- net/ipv4/fib_trie.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index ff0c24371e33..3be0affbabd3 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2577,6 +2577,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
- 		   " %zd bytes, size of tnode: %zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
- 
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2596,7 +2597,9 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
- 			trie_show_usage(seq, t->stats);
- #endif
- 		}
-+		cond_resched_rcu();
- 	}
-+	rcu_read_unlock();
- 
- 	return 0;
- }
+diff --git a/drivers/staging/rtl8188eu/hal/odm.c b/drivers/staging/rtl8188eu/hal/odm.c
+index a6eb9798b6f8..ed1a6ea0eecf 100644
+--- a/drivers/staging/rtl8188eu/hal/odm.c
++++ b/drivers/staging/rtl8188eu/hal/odm.c
+@@ -590,7 +590,7 @@ void odm_CCKPacketDetectionThresh(struct odm_dm_struct *pDM_Odm)
+ 	if (pDM_Odm->bLinked) {
+ 		if (pDM_Odm->RSSI_Min > 25) {
+ 			CurCCK_CCAThres = 0xcd;
+-		} else if ((pDM_Odm->RSSI_Min <= 25) && (pDM_Odm->RSSI_Min > 10)) {
++		} else if (pDM_Odm->RSSI_Min <= 25 && pDM_Odm->RSSI_Min > 10) {
+ 			CurCCK_CCAThres = 0x83;
+ 		} else {
+ 			if (FalseAlmCnt->Cnt_Cck_fail > 1000)
 -- 
-2.21.0 (Apple Git-122.2)
+2.25.1
 
