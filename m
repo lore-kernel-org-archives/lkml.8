@@ -3,220 +3,137 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551D4C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D96C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2510520719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:10:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3482082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:11:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585174238;
-	bh=wloj/EPW+OkyZtwQxndjXMPki61/NdW12lp51YiYTEc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=xEjhnt6iYQwN9bH14D7dm/TB8hr+4yWnBfPbtlhNc/99z3pOoP6asfUmZUYeqBN60
-	 oNmybld5D2eqh0RiJtI4i5KkqfN+GkJbQ5h/YzvIXBjqE0PbqqWV+iR32RIQyveE4T
-	 TW+cwOufI9uLDty6aizvLQTjM6OhwVen0fiAsE8c=
+	s=default; t=1585174272;
+	bh=yWNg9yztHt+7I4h0soifkK3UL3DvWslZVJ7YKdYxXzM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=huVdhg8EiAbtQliHzg/X512sLG2kqA8OfS55qz/WhsSOuYWSSUglRy7eEcMDaP94X
+	 OAWWtcWcHfbJ5EdUvQRR5YXZqPyOEwqls1bH8IK0zFfN+C2SrpyHlYcLr8m6oENRQY
+	 Usw+VKUNZMmkjJzBYQPWw1oo9k/oo+od8dDrajVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbgCYWKh (ORCPT
+        id S1727550AbgCYWLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:10:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48744 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 18:11:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgCYWKg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:10:36 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727358AbgCYWLL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 18:11:11 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0F9620719;
-        Wed, 25 Mar 2020 22:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC2D520719;
+        Wed, 25 Mar 2020 22:11:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585174235;
-        bh=wloj/EPW+OkyZtwQxndjXMPki61/NdW12lp51YiYTEc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FltFgdlKsLUIr06TgjYDl3xuTRpmeUvHTz9DBzAOP0fcHWjtGO2OAqUAgsmhfCTK9
-         SO/Jn7FWP/Lbgnjd1M5kl9cS43HivJClsd1JipENC9IyU/ha2yT8xElvQXZWT03EtB
-         UHw+RwlbloTcmJQU79d0wgbveu8CzrA9KTUurhPk=
-Date:   Wed, 25 Mar 2020 17:10:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kelsey Skunberg <skunberg.kelsey@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kelsey Skunberg <kelsey.skunberg@gmail.com>,
-        rbilovol@cisco.com, stable <stable@vger.kernel.org>,
-        ddutile@redhat.com, ruslan.bilovol@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, bodong@mellanox.com
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] PCI: sysfs: Change bus_rescan
- and dev_rescan to rescan
-Message-ID: <20200325221033.GA88141@google.com>
+        s=default; t=1585174270;
+        bh=yWNg9yztHt+7I4h0soifkK3UL3DvWslZVJ7YKdYxXzM=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=civQwJIX1MzK96vfW26z8Mc4qQdpo12r5aMh1NIM9mjYIm7Nr8ig9pskeVZ2uGAF9
+         9VNljHBmxcbjtmyVADgCM4D189mssdgH2VezZbOGKaiQvMRNpudaIzmCLLKVwe+ZyR
+         uiv8YskcJTZHhmHcZLso+ITce7hQ4QCHPzOXg0Dw=
+Subject: Re: [PATCH v7 kunit-next 3/4] kunit: subtests should be indented 4
+ spaces according to TAP
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     brendanhiggins@google.com, frowand.list@gmail.com,
+        gregkh@linuxfoundation.org, corbet@lwn.net,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
+ <1584110682-3837-4-git-send-email-alan.maguire@oracle.com>
+ <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
+ <alpine.LRH.2.21.2003252202360.25268@localhost>
+From:   shuah <shuah@kernel.org>
+Message-ID: <6b41e9fe-aa9e-698b-d356-0227e6f2021c@kernel.org>
+Date:   Wed, 25 Mar 2020 16:11:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325151708.32612-1-skunberg.kelsey@gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <alpine.LRH.2.21.2003252202360.25268@localhost>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kelsey,
+On 3/25/20 4:03 PM, Alan Maguire wrote:
+> On Wed, 25 Mar 2020, shuah wrote:
+> 
+>> On 3/13/20 8:44 AM, Alan Maguire wrote:
+>>> Introduce KUNIT_INDENT macro which corresponds to 4-space indentation,
+>>> and use it to modify indentation from tab to 4 spaces.
+>>>
+>>> Suggested-by: Frank Rowand <frowand.list@gmail.com>
+>>> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+>>> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+>>> ---
+>>>    include/kunit/test.h                |  7 +++-
+>>>    lib/kunit/assert.c                  | 79
+>>>    +++++++++++++++++++------------------
+>>>    lib/kunit/test.c                    |  6 +--
+>>>    tools/testing/kunit/kunit_parser.py | 10 ++---
+>>>    4 files changed, 54 insertions(+), 48 deletions(-)
+>>>
+>>> diff --git a/include/kunit/test.h b/include/kunit/test.h
+>>> index f7b2ed4c..d49cdb4 100644
+>>> --- a/include/kunit/test.h
+>>> +++ b/include/kunit/test.h
+>>> @@ -84,6 +84,10 @@ struct kunit_resource {
+>>>    /* Size of log associated with test. */
+>>>    #define KUNIT_LOG_SIZE	512
+>>>    
+>>> +/* TAP specifies subtest indentation of 4 spaces. */
+>>> +#define KUNIT_INDENT	"    "
+>>> +#define KUNIT_INDENT2	KUNIT_INDENT KUNIT_INDENT
+>>
+>> Sorry for a late comment on this.
+>>
+>> What's the reason to do it this way? Why wouldn't you define
+>> it as 8 spaces long string?
+>>
+> 
+> I could have I suppose; I thought it makes it a bit easier
+> to read as above (though it did generate a checkpatch
+> warning; I thought readability was more important in this
+> case, but I can alter if needed).
+>   
+Please do. Couple of things. KUNIT_INDENT2 doesn't really
+tell me much. Same with KUNIT_INDENT
 
-On Wed, Mar 25, 2020 at 09:17:08AM -0600, Kelsey Skunberg wrote:
-> From: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> 
-> rename device attribute name arguments 'bus_rescan' and 'dev_rescan' to 'rescan'
-> to avoid breaking userspace applications.
-> 
-> The attribute argument names were changed in the following commits:
-> 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> 
-> Revert the names used for attributes back to the names used before the above
-> patches were applied. This also requires to change DEVICE_ATTR_WO() to
-> DEVICE_ATTR() and __ATTR().
-> 
-> Note when using DEVICE_ATTR() the attribute is automatically named
-> dev_attr_<name>.attr. To avoid duplicated names between attributes, use
-> __ATTR() instead of DEVICE_ATTR() to a assign a custom attribute name for
-> dev_rescan.
-> 
-> change bus_rescan_store() to dev_bus_rescan_store() to complete matching the
-> names used before the mentioned patches were applied.
-> 
-> Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-> Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-> 
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> 
-> v2 updates: 
-> 	commit log updated to include 'Fixes: *' and Cc: stable to aid commit
-> 	being backported properly.
-> 
->  drivers/pci/pci-sysfs.c | 17 ++++++++++-------
->  1 file changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 13f766db0684..667e13d597ff 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -464,7 +464,10 @@ static ssize_t dev_rescan_store(struct device *dev,
->  	}
->  	return count;
->  }
-> -static DEVICE_ATTR_WO(dev_rescan);
-> +static struct device_attribute dev_rescan_attr = __ATTR(rescan,
-> +							0220, NULL,
-> +							dev_rescan_store);
-> +
->  
->  static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->  			    const char *buf, size_t count)
-> @@ -481,9 +484,9 @@ static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
->  static DEVICE_ATTR_IGNORE_LOCKDEP(remove, 0220, NULL,
->  				  remove_store);
->  
-> -static ssize_t bus_rescan_store(struct device *dev,
-> -				struct device_attribute *attr,
-> -				const char *buf, size_t count)
-> +static ssize_t dev_bus_rescan_store(struct device *dev,
-> +				    struct device_attribute *attr,
-> +				    const char *buf, size_t count)
->  {
->  	unsigned long val;
->  	struct pci_bus *bus = to_pci_bus(dev);
-> @@ -501,7 +504,7 @@ static ssize_t bus_rescan_store(struct device *dev,
->  	}
->  	return count;
->  }
-> -static DEVICE_ATTR_WO(bus_rescan);
-> +static DEVICE_ATTR(rescan, 0220, NULL, dev_bus_rescan_store);
->  
->  #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
->  static ssize_t d3cold_allowed_store(struct device *dev,
-> @@ -641,7 +644,7 @@ static struct attribute *pcie_dev_attrs[] = {
->  };
->  
->  static struct attribute *pcibus_attrs[] = {
-> -	&dev_attr_bus_rescan.attr,
-> +	&dev_attr_rescan.attr,
->  	&dev_attr_cpuaffinity.attr,
->  	&dev_attr_cpulistaffinity.attr,
->  	NULL,
-> @@ -1487,7 +1490,7 @@ static umode_t pci_dev_attrs_are_visible(struct kobject *kobj,
->  
->  static struct attribute *pci_dev_hp_attrs[] = {
->  	&dev_attr_remove.attr,
-> -	&dev_attr_dev_rescan.attr,
-> +	&dev_rescan_attr.attr,
->  	NULL,
->  };
+Please make the names more descriptive. Something along the
+lines of
 
-Thanks for taking care of this!  Two questions:
+KUNIT_INDENT_4SPACE
+KUNIT_INDENT_8SPACE
 
-1) You supplied permissions of 0220, but DEVICE_ATTR_WO()
-uses__ATTR_WO(), which uses 0200.  Shouldn't we keep 0200?
+>> Also can you please make sure to run checkpatch --strict on the
+>> patches you send?
+>>
+> 
+> Sure! There were also some other line-too-long warnings
+> generated as a result of this patch, but when I fixed those
+> checkpatch complained about splitting strings across multiple
+> lines.  The only way out was to reduce the amount of information
+> in the log messages, which I didn't want to do.  In future I can
+> note checkpatch warnings that I couldn't find a way to fix in the
+> commit message if that would help?
+> 
 
-2) I think the use of __ATTR() for the device side and DEVICE_ATTR()
-for the bus side is confusing.  Couldn't we accomplish the same thing
-with a patch like the following (compiled but not tested)?
+I understand. This is an error though. I am willing to ignore line-too
+long warnings for the most part. I don't like to see errors in general.
 
-Bjorn
+thanks,
+-- Shuah
 
 
-commit 06094b3fd9f1 ("PCI: sysfs: Revert "rescan" file renames")
-Author: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-Date:   Wed Mar 25 09:17:08 2020 -0600
 
-    PCI: sysfs: Revert "rescan" file renames
-    
-    We changed these sysfs filenames:
-    
-      .../pci_bus/<domain:bus>/rescan  ->  .../pci_bus/<domain:bus>/bus_rescan
-      .../<domain:bus:dev.fn>/rescan   ->  .../<domain:bus:dev.fn>/dev_rescan
-    
-    and Ruslan reported [1] that this broke a userspace application.
-    
-    Revert these name changes so both files are named "rescan" again.
-    
-    The argument to DEVICE_ATTR_WO() determines both the struct
-    device_attribute name and the .store() function name.  We have to
-    use __ATTR() so we can specify different .store() functions for
-    the two "rescan" files.
-    
-    [1] https://lore.kernel.org/r/CAB=otbSYozS-ZfxB0nCiNnxcbqxwrHOSYxJJtDKa63KzXbXgpw@mail.gmail.com
-    
-    [bhelgaas: commit log]
-    Fixes: 8bdfa145f582 ("PCI: sysfs: Define device attributes with DEVICE_ATTR*()")
-    Fixes: 4e2b79436e4f ("PCI: sysfs: Change DEVICE_ATTR() to DEVICE_ATTR_WO()")
-    Link: https://lore.kernel.org/r/20200325151708.32612-1-skunberg.kelsey@gmail.com
-    Signed-off-by: Kelsey Skunberg <kelsey.skunberg@gmail.com>
-    Cc: stable@vger.kernel.org	# v5.4+
-
-diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 13f766db0684..bf025a2c296d 100644
---- a/drivers/pci/pci-sysfs.c
-+++ b/drivers/pci/pci-sysfs.c
-@@ -464,7 +464,8 @@ static ssize_t dev_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(dev_rescan);
-+static struct device_attribute dev_attr_dev_rescan = __ATTR(rescan, 0200, NULL,
-+							    dev_rescan_store);
- 
- static ssize_t remove_store(struct device *dev, struct device_attribute *attr,
- 			    const char *buf, size_t count)
-@@ -501,7 +502,8 @@ static ssize_t bus_rescan_store(struct device *dev,
- 	}
- 	return count;
- }
--static DEVICE_ATTR_WO(bus_rescan);
-+static struct device_attribute dev_attr_bus_rescan = __ATTR(rescan, 0200, NULL,
-+							    bus_rescan_store);
- 
- #if defined(CONFIG_PM) && defined(CONFIG_ACPI)
- static ssize_t d3cold_allowed_store(struct device *dev,
