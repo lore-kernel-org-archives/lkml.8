@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDC8C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E86C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:42:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504EB2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BA92078E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585140157;
-	bh=XcSAFmz7j9h/ld+mxI8Ru5nGyAyH8L4LiHQo9b4qTV4=;
+	s=default; t=1585140160;
+	bh=VWGEnA/Uo+vZ025vQwvABvAvEMli9prCsOUG8RLy1Ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YLcg6I9VfiAfKO3SfiZe4DvYqz++IzKI1w5rfKKUYqW0Qm1XT+PzSGca4lsQY7kb7
-	 9Or9yI0uxz3dpuIiDkZNwwznSldZImTxDmVLFCXF5VR/CbN6uCm3wZB2keh5657p3h
-	 QH5PovLcwH6NG5r0zH1qU94zn7UVfZzCqGzuzEhA=
+	b=gHSaNn3jFvA9I0AsHz4vaTG/de8eZWz02jCABB3O83yb/xAmbiF10kU0XPq+Uguqp
+	 yYmK1nIVzkj2kiGUpsaZZfFeyYWw3yN7r0+6Dx4OSt4JviwgWlT9sn1CjWC+IZqsIS
+	 1RgJNIv1W3H0SujkEAz+k7Jw1s6v2hQ6OXudEt7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbgCYMmg (ORCPT
+        id S1727697AbgCYMmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:42:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59316 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 08:42:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727667AbgCYMma (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:42:30 -0400
+        id S1727438AbgCYMme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 08:42:34 -0400
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 535F12078A;
-        Wed, 25 Mar 2020 12:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7145B2078D;
+        Wed, 25 Mar 2020 12:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585140149;
-        bh=XcSAFmz7j9h/ld+mxI8Ru5nGyAyH8L4LiHQo9b4qTV4=;
+        s=default; t=1585140153;
+        bh=VWGEnA/Uo+vZ025vQwvABvAvEMli9prCsOUG8RLy1Ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PzuC1BA2hirqc39BNQhc5Yxm3HK7Xh0/P/HXxaqdnqg3VE5MbzEI4ZFnJXPFT9Ec5
-         FLB72aWfLWHaE9n25vXq8xdiAEgo8TRmv9MjzY/eX8z/kVL05qS2vLerPA4e2jDdgJ
-         AXnz/Q7dQmXp3Fw0IFHeZFt8fccL++d5qd0iRaII=
+        b=I0wtpg7TmhKaAiCcb8ghyCKJ7lGFNSWKMFBCPUD0jCigFM5fAX2hRjfCwUUC5C8vP
+         uw/paXn2kabVQEHnz90+hbcbfgsR54FzbLmmSiZGAvDK9iOtehhMNSEhXXqzqaMBYz
+         OfoQ/Pdh2qMkGCI7AZzAKDqTbMC2IMvSvOROg6N4=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -46,12 +46,12 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Paolo Lungaroni <paolo.lungaroni@cnit.it>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 14/24] tools headers uapi: Update linux/in.h copy
-Date:   Wed, 25 Mar 2020 09:41:14 -0300
-Message-Id: <20200325124124.32648-15-acme@kernel.org>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 15/24] perf tools: Unify a bit the build directory output
+Date:   Wed, 25 Mar 2020 09:41:15 -0300
+Message-Id: <20200325124124.32648-16-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200325124124.32648-1-acme@kernel.org>
 References: <20200325124124.32648-1-acme@kernel.org>
@@ -62,61 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Jiri Olsa <jolsa@kernel.org>
 
-To get the changes in:
+Removing the extra 'SUBDIR' line from clean and doc build output.
+Because it's annoying.. ;-)
 
-  267762538705 ("seg6: fix SRv6 L2 tunnels to use IANA-assigned protocol number")
+Before:
 
-That ends up automatically adding the new IPPROTO_ETHERNET to the socket
-args beautifiers:
+  $ make clean
+  ...
+  SUBDIR   Documentation
+  CLEAN    Documentation
 
-  $ tools/perf/trace/beauty/socket_ipproto.sh > before
+After:
 
-Apply this patch:
+  $ make clean
+  ...
+  CLEAN    Documentation
 
-  $ tools/perf/trace/beauty/socket_ipproto.sh > after
-  $ diff -u before after
-  --- before	2020-03-19 11:48:36.876673819 -0300
-  +++ after	2020-03-19 11:49:00.148541377 -0300
-  @@ -6,6 +6,7 @@
-   	[132] = "SCTP",
-   	[136] = "UDPLITE",
-   	[137] = "MPLS",
-  +	[143] = "ETHERNET",
-   	[17] = "UDP",
-   	[1] = "ICMP",
-   	[22] = "IDP",
-  $
+Before:
 
-Addresses this tools/perf build warning:
+  $ make doc
+  BUILD:   Doing 'make -j8' parallel build
+  SUBDIR   Documentation
+  ASCIIDOC perf-stat.html
+  ...
 
-  Warning: Kernel ABI header at 'tools/include/uapi/linux/in.h' differs from latest version at 'include/uapi/linux/in.h'
-  diff -u tools/include/uapi/linux/in.h include/uapi/linux/in.h
+After:
 
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Paolo Lungaroni <paolo.lungaroni@cnit.it>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
+  $ make doc
+  BUILD:   Doing 'make -j8' parallel build
+  ASCIIDOC perf-stat.html
+  ...
+
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lore.kernel.org/lkml/20200318204522.1200981-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/include/uapi/linux/in.h | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/Makefile.perf | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/tools/include/uapi/linux/in.h b/tools/include/uapi/linux/in.h
-index 1521073b6348..8533bf07450f 100644
---- a/tools/include/uapi/linux/in.h
-+++ b/tools/include/uapi/linux/in.h
-@@ -74,6 +74,8 @@ enum {
- #define IPPROTO_UDPLITE		IPPROTO_UDPLITE
-   IPPROTO_MPLS = 137,		/* MPLS in IP (RFC 4023)		*/
- #define IPPROTO_MPLS		IPPROTO_MPLS
-+  IPPROTO_ETHERNET = 143,	/* Ethernet-within-IPv6 Encapsulation	*/
-+#define IPPROTO_ETHERNET	IPPROTO_ETHERNET
-   IPPROTO_RAW = 255,		/* Raw IP packets			*/
- #define IPPROTO_RAW		IPPROTO_RAW
-   IPPROTO_MPTCP = 262,		/* Multipath TCP connection		*/
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 3eda9d4b88e7..a02aca9b21f4 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -231,6 +231,7 @@ TRACE_EVENT_DIR = $(srctree)/tools/lib/traceevent/
+ BPF_DIR         = $(srctree)/tools/lib/bpf/
+ SUBCMD_DIR      = $(srctree)/tools/lib/subcmd/
+ LIBPERF_DIR     = $(srctree)/tools/lib/perf/
++DOC_DIR         = $(srctree)/tools/perf/Documentation/
+ 
+ # Set FEATURE_TESTS to 'all' so all possible feature checkers are executed.
+ # Without this setting the output feature dump file misses some features, for
+@@ -792,7 +793,6 @@ $(LIBSUBCMD): FORCE
+ 	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) $(OUTPUT)libsubcmd.a
+ 
+ $(LIBSUBCMD)-clean:
+-	$(call QUIET_CLEAN, libsubcmd)
+ 	$(Q)$(MAKE) -C $(SUBCMD_DIR) O=$(OUTPUT) clean
+ 
+ help:
+@@ -832,7 +832,7 @@ INSTALL_DOC_TARGETS += quick-install-doc quick-install-man quick-install-html
+ 
+ # 'make doc' should call 'make -C Documentation all'
+ $(DOC_TARGETS):
+-	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) $(@:doc=all)
++	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:doc=all)
+ 
+ TAG_FOLDERS= . ../lib ../include
+ TAG_FILES= ../../include/uapi/linux/perf_event.h
+@@ -959,7 +959,7 @@ install-python_ext:
+ 
+ # 'make install-doc' should call 'make -C Documentation install'
+ $(INSTALL_DOC_TARGETS):
+-	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) $(@:-doc=)
++	$(Q)$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) $(@:-doc=)
+ 
+ ### Cleaning rules
+ 
+@@ -1008,7 +1008,8 @@ clean:: $(LIBTRACEEVENT)-clean $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clea
+ 		$(OUTPUT)$(rename_flags_array) \
+ 		$(OUTPUT)$(arch_errno_name_array) \
+ 		$(OUTPUT)$(sync_file_range_arrays)
+-	$(QUIET_SUBDIR0)Documentation $(QUIET_SUBDIR1) clean
++	$(call QUIET_CLEAN, Documentation) \
++	$(MAKE) -C $(DOC_DIR) O=$(OUTPUT) clean >/dev/null
+ 
+ #
+ # To provide FEATURE-DUMP into $(FEATURE_DUMP_COPY)
 -- 
 2.21.1
 
