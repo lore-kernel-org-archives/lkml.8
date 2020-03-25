@@ -2,95 +2,83 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8646C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1056C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:22:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C263D20772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7835120772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:22:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxiJeYFe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FHKHhVNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727644AbgCYRTH (ORCPT
+        id S1727590AbgCYRWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:19:07 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:37910 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbgCYRTH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:19:07 -0400
-Received: by mail-pl1-f195.google.com with SMTP id w3so1053833plz.5
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 10:19:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9rb8HC6WGsGE44SQ6X/4w8KC/GhzvOIVOOh1NOcuS0o=;
-        b=kxiJeYFeSlAM1QBZhriylp7P3+E/0IlkMNbZs5HqHRHVo7fzk8AW0hOIAnuXBZsU+j
-         OGdIVimcyjuLURvB/KI/st7FxzLqvk22hGA8quolTPLXu0Pn8KeLJVukPVN0rgDrAnbE
-         4zCbNDfg0y3RWmPjpGXr18nxMSvaw+EV5Dm/9Qh7PRAbmt2YYu6v4LHbE79Q1EGvopTP
-         hvHIcdzGHUeIEfrhVzndPiShG8Y/EoWEYFBPDoP0tc2KEpITQtmsUTyAQsFuLgjoxzgP
-         8pcaqOMQvTncduAOG3JG/ekDM+ms7KLxSpZ3HiRTCqPne9H2f8TMFxvdDuoSneR6DgzA
-         9Cog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9rb8HC6WGsGE44SQ6X/4w8KC/GhzvOIVOOh1NOcuS0o=;
-        b=sl2ND8W86o4BuV1NPlmI9XmDM15LRgJy3s9d5zd626jkYAyLVnCXn50NM1KqDR3/pu
-         owWs1gBq8Z0LxhQzH0yrdOk2SumFVg1r7DtQiBBQsLsPqrHm5+fl3LdIsm/DaJ65TzYI
-         zif2mD3x2/NRaDpE7l7tUg93MMPxlJKQDr8iboVvGefEMgyeA85keuQ0mCk9cbY7wGae
-         PWP1HM9rhLBd8iuHS7rwWHkx3ImHi4yuWgfsBBbJcAdxiQRkfFuyk++cYJ/KCnGypDTW
-         NjQaiQMHRm8huTzZebPqB4RSHBSbbKL8KWiLppXVLCwXzl+10fNADMVoht1yZSqk1XnA
-         pMmw==
-X-Gm-Message-State: ANhLgQ3iGDlPbgjFCBfkNvv9m2skdVczVOcQdJKVWFFsXUjoFuWvrj18
-        VAv5Z7uJb9hHRuG/pk05WhZg3Xu4Xyc528Qt3ct906KCD3o=
-X-Google-Smtp-Source: ADFU+vuw8tjfEoctA9OGJGVVEc/U+r3gP9GtmCngawmj0t6q9H1tL86i8ssX8g7CQ3dny0tDhLG62Yx6AgnraK7Qsr4=
-X-Received: by 2002:a17:902:7204:: with SMTP id ba4mr4220548plb.232.1585156745997;
- Wed, 25 Mar 2020 10:19:05 -0700 (PDT)
+        Wed, 25 Mar 2020 13:22:30 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56831 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727320AbgCYRWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:22:30 -0400
+Received: from [IPv6:2601:646:8600:3281:c898:2a71:8b3c:1618] ([IPv6:2601:646:8600:3281:c898:2a71:8b3c:1618])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 02PHL55v3526219
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Wed, 25 Mar 2020 10:21:06 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 02PHL55v3526219
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020032201; t=1585156867;
+        bh=ucC3weRqhDQdNbcns5oA5TYTC1s6BG+hwqL9v/DS6Wc=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=FHKHhVNUTycvw+HKogfsSM7r3lsQGrMBvBlKUTPWeFmJ7Fb2JkegDImFuFi59sten
+         hWWsRUkYPmVZg4h9zjVqNKcMIUkyW0Q1bJc1s79Q0Imcr6d8ePg6A1T6L9PlPEmMrl
+         KHFVO9DlKwrAIHT4dEyMZiuCv6ULwOA8wbwQh7NNYlKYYnsm54YmqvvqI2UolgCcG/
+         nKD7C4hNq+MCjr+/bpIDL7wI9CvKZj0HWnwvHE3itRtM9JGGIuskDUldSLyDK/U8yv
+         uuspBelf55olHtf7Z/9+sjgBhZznIi6wPJOUiO4ydfK7TWUCL0KY2N8hUHh7pB34RG
+         asf3GMWi/5p8w==
+Date:   Wed, 25 Mar 2020 10:20:57 -0700
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAP6exYKCgyM-PFPGLds9LcLPjOMOX40ff2261ZpUuUYijRrCxg@mail.gmail.com>
+References: <CAP6exY+LnUXaOVRZUXmi2wajCPZoJVMFFAwbCzN3YywWyhi8ZA@mail.gmail.com> <D31718CF-1755-4846-8043-6E62D57E4937@zytor.com> <CAP6exYJHgqsNq84DCjgNP=nOjp1Aud9J5JAiEZMXe=+dtm-QGA@mail.gmail.com> <8E80838A-7A3F-4600-AF58-923EDA3DE91D@zytor.com> <CACdnJusmAHJYauKvHEXNZKaUWPqZoabB_pSn5WokSy_gOnRtTw@mail.gmail.com> <A814A71D-0450-4724-885B-859BCD2B7CBD@zytor.com> <CAP6exYJdCzG5EOPB9uaWz+uG-KKt+j7aJMGMfqqD3vthco_Y_g@mail.gmail.com> <CF1457CD-0BE2-4806-9703-E99146218BEC@zytor.com> <CAP6exYJj5n8tLibwnAPA554ax9gjUFvyMntCx4OYULUOknWQ0g@mail.gmail.com> <C2B3BE61-665A-47FD-87E0-BDB5C30CEFF4@zytor.com> <CAP6exY+avh0G3nuqbxJj2ZgKkRdvwGTKeWyazqXJHbp+X-2u+A@mail.gmail.com> <0f31f437-c644-210c-8dc9-22630ab9bd0d@zytor.com> <CAP6exYKCgyM-PFPGLds9LcLPjOMOX40ff2261ZpUuUYijRrCxg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200324024333.41663-1-davidgow@google.com>
-In-Reply-To: <20200324024333.41663-1-davidgow@google.com>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Wed, 25 Mar 2020 10:18:54 -0700
-Message-ID: <CAFd5g451jGmh5xocZUOcDnFaSHRVBDnP=BznZ8mKefXV2XJxOw@mail.gmail.com>
-Subject: Re: [PATCH kunit-next] kunit: kunit_tool: Allow .kunitconfig to
- disable config items
-To:     David Gow <davidgow@google.com>
-Cc:     shuah <shuah@kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/1] x86 support for the initrd= command line option
+To:     ron minnich <rminnich@gmail.com>
+CC:     Matthew Garrett <mjg59@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        lkml - Kernel Mailing List <linux-kernel@vger.kernel.org>
+From:   hpa@zytor.com
+Message-ID: <D0A5B937-74DC-4469-B24E-4F111DD3D1C2@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 7:43 PM David Gow <davidgow@google.com> wrote:
+On March 25, 2020 9:19:26 AM PDT, ron minnich <rminnich@gmail=2Ecom> wrote:
+>I think it may be fine at this point=2E The only reference to initrd=3D i=
+s
+>in some of the platform-specific docs and I'm reluctant to change
+>those=2E wdyt?
 >
-> Rework kunit_tool in order to allow .kunitconfig files to better enforce
-> that disabled items in .kunitconfig are disabled in the generated
-> .config.
+>thanks again
 >
-> Previously, kunit_tool simply enforced that any line present in
-> .kunitconfig was also present in .config, but this could cause problems
-> if a config option was disabled in .kunitconfig, but not listed in .config
-> due to (for example) having disabled dependencies.
->
-> To fix this, re-work the parser to track config names and values, and
-> require values to match unless they are explicitly disabled with the
-> "CONFIG_x is not set" comment (or by setting its value to 'n'). Those
-> "disabled" values will pass validation if omitted from the .config, but
-> not if they have a different value.
->
-> Signed-off-by: David Gow <davidgow@google.com>
+>On Tue, Mar 24, 2020 at 8:31 PM H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
+>>
+>> On 2020-03-23 15:29, ron minnich wrote:
+>> > sounds good, I'm inclined to want to mention only initrdmem=3D in
+>> > Documentation? or just say initrd is discouraged or deprecated?
+>>
+>> Deprecated, yes=2E
+>>
+>>         -hpa
+>>
 
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Looks good to me=2E
 
-Thanks!
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
