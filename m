@@ -2,146 +2,234 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_HDRS_LCASE,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D30DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B91AC2D0EB
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:05:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E86FF20737
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:04:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lO8+ptMy"
+	by mail.kernel.org (Postfix) with ESMTP id EBE4120719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:05:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585173949;
+	bh=o9kTsTDvzX6XRBskyx/3cnGfmJvD3krgA4ezWk/YKKo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pTC2g1vuJlx2qeKKCqYRbsfWdqfAX9FsampU9VqP8IX84ORBQEufuq232Dp1XRAqZ
+	 tqYUSoMHzOSVbabyaOGna0DXv5kP0H896F3IxSoEzWOTK0K/hjGCkq6pTKXUzU+Hxw
+	 NtgIs2FvV/rBTH+ifoiz+QOodXU7hoiq2ft92tos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbgCYWEK (ORCPT
+        id S1727498AbgCYWFr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:04:10 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37042 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgCYWEJ (ORCPT
+        Wed, 25 Mar 2020 18:05:47 -0400
+Received: from mail-il1-f175.google.com ([209.85.166.175]:43780 "EHLO
+        mail-il1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgCYWFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:04:09 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PM35m1109673;
-        Wed, 25 Mar 2020 22:04:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=gaA4GEcqi9j2CQxBte6tshCMih51XWIGLpE+4um3dyI=;
- b=lO8+ptMyy3Hd+wTBQDCZqwarI3fgPTqvuHWVbdeNyohJt26hR4ulc9MUPu7IcDI8nSNp
- koJ2natxAHqFLij/14heAIuQW7bJwANaNv8B8kjVxDQWUbaqxg6JAl3V6jGKV0QEMCAP
- 6DRDvi0LQbO2MEoTvAX4a+Dtv4DkkBGOR2T8IGvjtUIbIj8XFyApNr+Qu8ZS+JJXSwHj
- Q/87pahcU4dZ4nb5aVUeZSPd7NgQwaDOV+eGvztomrodhHSsmGCn5VMMEVtZWztBdI6z
- nRqL15OWqG5KdTCTTFt2rNfei+0hg+oMJeVqj43a+pl4Yak848lZX/CncG7sq8t/gBvD 0g== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2ywavmcc91-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 22:04:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PM1p0a021401;
-        Wed, 25 Mar 2020 22:04:01 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 3006r7b4nj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 22:04:01 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02PM40ll008484;
-        Wed, 25 Mar 2020 22:04:00 GMT
-Received: from dhcp-10-175-163-133.vpn.oracle.com (/10.175.163.133)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 15:03:59 -0700
-Date:   Wed, 25 Mar 2020 22:03:52 +0000 (GMT)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     shuah <shuah@kernel.org>
-cc:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org, corbet@lwn.net,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org
-Subject: Re: [PATCH v7 kunit-next 3/4] kunit: subtests should be indented 4
- spaces according to TAP
-In-Reply-To: <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
-Message-ID: <alpine.LRH.2.21.2003252202360.25268@localhost>
-References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com> <1584110682-3837-4-git-send-email-alan.maguire@oracle.com> <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Wed, 25 Mar 2020 18:05:47 -0400
+Received: by mail-il1-f175.google.com with SMTP id g15so3465753ilj.10;
+        Wed, 25 Mar 2020 15:05:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=b/UNNUiqZNH/+Iv9VGZJuE2UKU7Uzk2Xjaa2yHi3k54=;
+        b=h8YVqz004LvjsagR0EJUS0EuPZ3qLqxgEqYyDMivOMaWbrCU8E7pdyi9N4YIdg8OTX
+         3tWrkESOi1CqPE1qEe+Z8nQaSdrAqf1fAsAFgL4Al+HS2vrqjLK1XboLDsNXhkx0ev6+
+         0EZZ1UKqC1T5cMTOnIKLyvkt7RtlEhtjfMP9NOWwi+MkCZFC6Y5qyuIUUtL5NhYTYEVZ
+         Q1EXNLNspmTlPRpT1q51dMo4o/k7vpdl0uRI2fGD+KPVdQZBnDZ4YdP25DXwvGkd5T+t
+         /4TKrSZxtqZcjSgwNlngRlpGr2Bjw5wpdXxAkxOR3qZWFdfqYT72ssOzvRYmZeOobfg6
+         52/A==
+X-Gm-Message-State: ANhLgQ2E+MW6/mXKRRpf8ikFfyNvihMLGQ68XAOCjJDRRsehoMtdGkTN
+        6HCStjWnRRwNi8P4jfI+4AMsPik=
+X-Google-Smtp-Source: ADFU+vt2kokrkcEpGRLO2UvFmwmQbT400vUIkyFS/Pwj5bVyFFr+iqUWdZpWVM9WT6gFsFQdf7TdIQ==
+X-Received: by 2002:a92:83ca:: with SMTP id p71mr5277381ilk.278.1585173944474;
+        Wed, 25 Mar 2020 15:05:44 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.250])
+        by smtp.googlemail.com with ESMTPSA id v8sm102390ioh.40.2020.03.25.15.05.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 15:05:43 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH 0/4] dt-bindings: additionalProperties clean-up
+Date:   Wed, 25 Mar 2020 16:05:37 -0600
+Message-Id: <20200325220542.19189-1-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 suspectscore=4
- phishscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250168
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=4 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250168
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 25 Mar 2020, shuah wrote:
+Setting 'additionalProperties: false' is frequently omitted, but is
+important in order to check that there aren't extra undocumented
+properties in a binding.
 
-> On 3/13/20 8:44 AM, Alan Maguire wrote:
-> > Introduce KUNIT_INDENT macro which corresponds to 4-space indentation,
-> > and use it to modify indentation from tab to 4 spaces.
-> > 
-> > Suggested-by: Frank Rowand <frowand.list@gmail.com>
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> > ---
-> >   include/kunit/test.h                |  7 +++-
-> >   lib/kunit/assert.c                  | 79
-> >   +++++++++++++++++++------------------
-> >   lib/kunit/test.c                    |  6 +--
-> >   tools/testing/kunit/kunit_parser.py | 10 ++---
-> >   4 files changed, 54 insertions(+), 48 deletions(-)
-> > 
-> > diff --git a/include/kunit/test.h b/include/kunit/test.h
-> > index f7b2ed4c..d49cdb4 100644
-> > --- a/include/kunit/test.h
-> > +++ b/include/kunit/test.h
-> > @@ -84,6 +84,10 @@ struct kunit_resource {
-> >   /* Size of log associated with test. */
-> >   #define KUNIT_LOG_SIZE	512
-> >   
-> > +/* TAP specifies subtest indentation of 4 spaces. */
-> > +#define KUNIT_INDENT	"    "
-> > +#define KUNIT_INDENT2	KUNIT_INDENT KUNIT_INDENT
-> 
-> Sorry for a late comment on this.
-> 
-> What's the reason to do it this way? Why wouldn't you define
-> it as 8 spaces long string?
->
+This series is a bunch of fixes in patches 1-3 found by setting
+'additionalProperties: false' and then patch 4 sets additionalProperties
+on a bunch of schema.
 
-I could have I suppose; I thought it makes it a bit easier
-to read as above (though it did generate a checkpatch
-warning; I thought readability was more important in this   
-case, but I can alter if needed).
- 
-> Also can you please make sure to run checkpatch --strict on the
-> patches you send?
->
+Rob
 
-Sure! There were also some other line-too-long warnings
-generated as a result of this patch, but when I fixed those
-checkpatch complained about splitting strings across multiple
-lines.  The only way out was to reduce the amount of information
-in the log messages, which I didn't want to do.  In future I can
-note checkpatch warnings that I couldn't find a way to fix in the
-commit message if that would help?
 
-Thanks for taking a look!
+Rob Herring (4):
+  dt-bindings: iio/accel: Drop duplicate adi,adxl345/6 from
+    trivial-devices.yaml
+  dt-bindings: sram: qcom: Clean-up 'ranges' and child node names
+  dt-bindings: Clean-up schema errors due to missing
+    'addtionalProperties: false'
+  dt-bindings: Add missing 'additionalProperties: false'
 
-Alan
- 
-> thanks,
-> -- Shuah
-> 
-> 
+ .../arm/altera/socfpga-clk-manager.yaml       |  2 ++
+ .../amlogic/amlogic,meson-gx-ao-secure.yaml   |  2 ++
+ .../bindings/arm/msm/qcom,llcc.yaml           |  2 ++
+ .../devicetree/bindings/arm/renesas,prr.yaml  |  2 ++
+ .../bindings/arm/samsung/exynos-chipid.yaml   |  2 ++
+ .../devicetree/bindings/arm/samsung/pmu.yaml  |  2 ++
+ .../arm/samsung/samsung-secure-firmware.yaml  |  2 ++
+ .../bindings/arm/stm32/st,stm32-syscon.yaml   |  2 ++
+ .../devicetree/bindings/clock/fsl,plldig.yaml |  5 ++++
+ .../bindings/clock/imx8mn-clock.yaml          |  2 ++
+ .../bindings/clock/imx8mp-clock.yaml          |  2 ++
+ .../bindings/clock/milbeaut-clock.yaml        |  2 ++
+ .../bindings/clock/qcom,gcc-apq8064.yaml      |  2 ++
+ .../bindings/clock/qcom,gcc-ipq8074.yaml      |  2 ++
+ .../bindings/clock/qcom,gcc-msm8996.yaml      |  2 ++
+ .../bindings/clock/qcom,gcc-msm8998.yaml      |  2 ++
+ .../bindings/clock/qcom,gcc-qcs404.yaml       |  2 ++
+ .../bindings/clock/qcom,gcc-sc7180.yaml       |  2 ++
+ .../bindings/clock/qcom,gcc-sm8150.yaml       |  2 ++
+ .../devicetree/bindings/clock/qcom,gcc.yaml   |  2 ++
+ .../devicetree/bindings/clock/qcom,mmcc.yaml  |  2 ++
+ .../bindings/clock/qcom,msm8998-gpucc.yaml    |  2 ++
+ .../bindings/clock/qcom,rpmhcc.yaml           |  2 ++
+ .../bindings/clock/qcom,sc7180-dispcc.yaml    |  2 ++
+ .../bindings/clock/qcom,sc7180-gpucc.yaml     |  2 ++
+ .../bindings/clock/qcom,sc7180-videocc.yaml   |  2 ++
+ .../bindings/clock/qcom,sdm845-dispcc.yaml    |  2 ++
+ .../bindings/clock/qcom,sdm845-gpucc.yaml     |  2 ++
+ .../bindings/clock/qcom,sdm845-videocc.yaml   |  2 ++
+ .../bindings/display/amlogic,meson-vpu.yaml   |  2 ++
+ .../bindings/dma/sifive,fu540-c000-pdma.yaml  |  2 ++
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |  2 ++
+ .../devicetree/bindings/eeprom/at24.yaml      |  2 ++
+ ...ntel,ixp4xx-network-processing-engine.yaml |  3 +++
+ .../bindings/gpio/brcm,xgs-iproc-gpio.yaml    |  2 ++
+ .../gpio/socionext,uniphier-gpio.yaml         |  4 +++
+ .../bindings/gpio/xylon,logicvc-gpio.yaml     |  2 ++
+ .../bindings/gpu/arm,mali-bifrost.yaml        |  8 +++---
+ .../bindings/gpu/arm,mali-midgard.yaml        |  5 ++++
+ .../bindings/gpu/arm,mali-utgard.yaml         |  2 ++
+ .../bindings/gpu/samsung-rotator.yaml         |  2 ++
+ .../bindings/hwmon/adi,adm1177.yaml           |  2 ++
+ .../bindings/hwmon/adi,ltc2947.yaml           |  2 ++
+ .../bindings/hwmon/pmbus/ti,ucd90320.yaml     |  2 ++
+ .../devicetree/bindings/hwmon/ti,tmp513.yaml  |  2 ++
+ .../bindings/iio/accel/adi,adxl345.yaml       | 10 +++++---
+ .../bindings/iio/accel/bosch,bma400.yaml      |  2 ++
+ .../bindings/iio/adc/adi,ad7192.yaml          |  1 -
+ .../bindings/iio/adc/adi,ad7780.yaml          |  2 ++
+ .../bindings/iio/adc/avia-hx711.yaml          |  2 ++
+ .../bindings/iio/adc/lltc,ltc2496.yaml        |  2 ++
+ .../bindings/iio/adc/microchip,mcp3911.yaml   |  2 ++
+ .../bindings/iio/adc/st,stm32-dfsdm-adc.yaml  |  2 ++
+ .../iio/chemical/plantower,pms7003.yaml       |  2 ++
+ .../iio/chemical/sensirion,sps30.yaml         |  2 ++
+ .../bindings/iio/dac/lltc,ltc1660.yaml        |  2 ++
+ .../bindings/iio/light/adux1020.yaml          |  2 ++
+ .../devicetree/bindings/iio/light/bh1750.yaml |  2 ++
+ .../bindings/iio/light/isl29018.yaml          |  2 ++
+ .../bindings/iio/light/noa1305.yaml           |  2 ++
+ .../bindings/iio/light/stk33xx.yaml           |  2 ++
+ .../bindings/iio/light/tsl2583.yaml           |  2 ++
+ .../bindings/iio/light/tsl2772.yaml           |  2 ++
+ .../bindings/iio/light/veml6030.yaml          |  2 ++
+ .../bindings/iio/pressure/asc,dlhl60d.yaml    |  2 ++
+ .../bindings/iio/pressure/bmp085.yaml         |  5 ++++
+ .../iio/proximity/devantech-srf04.yaml        |  2 ++
+ .../bindings/iio/proximity/parallax-ping.yaml |  2 ++
+ .../bindings/iio/temperature/adi,ltc2983.yaml |  2 ++
+ .../bindings/input/gpio-vibrator.yaml         |  2 ++
+ .../bindings/input/max77650-onkey.yaml        |  3 +++
+ .../intel,ixp4xx-interrupt.yaml               |  2 ++
+ .../bindings/iommu/samsung,sysmmu.yaml        |  2 ++
+ .../bindings/leds/leds-max77650.yaml          |  3 +++
+ .../bindings/leds/rohm,bd71828-leds.yaml      |  3 +++
+ .../mailbox/amlogic,meson-gxbb-mhu.yaml       |  2 ++
+ .../bindings/media/amlogic,gx-vdec.yaml       |  2 ++
+ .../media/amlogic,meson-gx-ao-cec.yaml        | 11 +++++---
+ .../bindings/media/renesas,ceu.yaml           |  2 ++
+ .../devicetree/bindings/mfd/max77650.yaml     |  2 ++
+ .../bindings/mfd/rohm,bd71828-pmic.yaml       |  5 ++++
+ .../misc/intel,ixp4xx-ahb-queue-manager.yaml  |  2 ++
+ .../bindings/net/ti,cpsw-switch.yaml          | 25 +++++++++++++------
+ .../phy/allwinner,sun50i-h6-usb3-phy.yaml     |  2 ++
+ .../phy/amlogic,meson-g12a-usb3-pcie-phy.yaml |  2 ++
+ .../bindings/phy/intel,lgm-emmc-phy.yaml      |  2 ++
+ .../bindings/phy/marvell,mmp3-hsic-phy.yaml   |  2 ++
+ .../bindings/phy/ti,phy-j721e-wiz.yaml        |  2 ++
+ .../pinctrl/aspeed,ast2400-pinctrl.yaml       |  2 ++
+ .../pinctrl/aspeed,ast2500-pinctrl.yaml       |  2 ++
+ .../pinctrl/aspeed,ast2600-pinctrl.yaml       |  2 ++
+ .../bindings/pinctrl/st,stm32-pinctrl.yaml    |  2 ++
+ .../bindings/power/amlogic,meson-ee-pwrc.yaml |  2 ++
+ .../bindings/power/reset/syscon-poweroff.yaml |  2 ++
+ .../bindings/power/reset/syscon-reboot.yaml   |  2 ++
+ .../power/supply/max77650-charger.yaml        |  3 +++
+ .../devicetree/bindings/ptp/ptp-idtcm.yaml    |  2 ++
+ .../regulator/max77650-regulator.yaml         |  5 +++-
+ .../bindings/reset/amlogic,meson-reset.yaml   |  2 ++
+ .../reset/brcm,bcm7216-pcie-sata-rescal.yaml  |  2 ++
+ .../bindings/rng/amlogic,meson-rng.yaml       |  2 ++
+ .../devicetree/bindings/rng/brcm,bcm2835.yaml |  2 ++
+ .../bindings/rtc/renesas,sh-rtc.yaml          |  2 ++
+ .../devicetree/bindings/rtc/st,stm32-rtc.yaml |  2 ++
+ .../bindings/serial/amlogic,meson-uart.yaml   |  2 ++
+ .../bindings/soc/amlogic/amlogic,canvas.yaml  |  2 ++
+ .../bindings/sound/adi,adau7118.yaml          |  2 ++
+ .../bindings/sound/qcom,wcd934x.yaml          |  2 ++
+ .../bindings/sound/renesas,fsi.yaml           |  2 ++
+ .../bindings/sound/samsung,odroid.yaml        |  2 ++
+ .../bindings/sound/samsung-i2s.yaml           |  2 ++
+ .../devicetree/bindings/sram/qcom,ocmem.yaml  | 14 ++++++-----
+ .../bindings/thermal/amlogic,thermal.yaml     |  4 +++
+ .../bindings/timer/arm,arch_timer.yaml        |  2 ++
+ .../bindings/timer/arm,arch_timer_mmio.yaml   |  4 +++
+ .../bindings/timer/arm,global_timer.yaml      |  2 ++
+ .../bindings/timer/intel,ixp4xx-timer.yaml    |  2 ++
+ .../timer/samsung,exynos4210-mct.yaml         |  2 ++
+ .../devicetree/bindings/trivial-devices.yaml  |  6 ++---
+ 119 files changed, 296 insertions(+), 29 deletions(-)
+
+--
+2.20.1
