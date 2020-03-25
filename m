@@ -2,167 +2,92 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B835C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92911C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC1420658
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710C12076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727911AbgCYNfk (ORCPT
+        id S1727884AbgCYNfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:35:40 -0400
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:53208 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727888AbgCYNfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Mar 2020 09:35:36 -0400
-IronPort-SDR: B7szITx8hvFLi6vx7hYYQHvub93QQjqTj5ZKtPA2W0rvQRWMeL13krUpcKlzlSy/ZOSYchtCn9
- w0tnPLjnnMO9ntVIXvX+uIGV1zP1pR8CzestmRPnqJtcO36fnu3CqigxiafWjSdooD9hFY915o
- tfmBlR1KHtVkRzaCLzqf94As+CSaLl6JByKdSHplHuMT8ZOTTQk3ehmuIaow2zPa5WenviS6Ov
- F9xtX2YhWXpPRK5J1Xj7KCN6YquaKNfpCjAM+j7v5/yV0bvQd+NKxCgu904to5QOoSXpfGYkhI
- xcw=
-X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="47099729"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 25 Mar 2020 05:35:36 -0800
-IronPort-SDR: U2l6Lc2HmbeHTBDW4hiW4ZVy4buU3DSFHVEiXfOx5x9JebSS5FBUUpYWx7S8OKd32su33TQxSc
- zWoLruMnWnnecIzYtfztOHVM5ycP/dNBts4WZwxiaTRSCYuAfNUnwIHGdk06jSrpr1RdTKWwRV
- UgWYvj9ZvIyCzm7U+fwM4ZMe5UUBGv6qsUC7Gd1qi8HlbiHnMb9DzuKj/2TqefO5Cqoir5Ri8k
- 4xLe2NLywUQKkE3wpRlJpHX3dOO2HXz4kAzpyANH6iGiH1G2nmNfNvCy/t0DhtmU9Y5fl0wBpz
- +vM=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <nick@shmanahar.org>, <dmitry.torokhov@gmail.com>,
-        <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <bsz@semihalf.com>, <rydberg@bitmath.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>,
-        <jiada_wang@mentor.com>
-Subject: [PATCH v9 29/55] Input: atmel_mxt_ts - rename bl_completion to chg_completion
-Date:   Wed, 25 Mar 2020 06:33:08 -0700
-Message-ID: <20200325133334.19346-30-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200325133334.19346-1-jiada_wang@mentor.com>
-References: <20200325133334.19346-1-jiada_wang@mentor.com>
+Received: from mail-sh.amlogic.com ([58.32.228.43]:32827 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbgCYNfb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:35:31 -0400
+Received: from [10.18.38.73] (10.18.38.73) by mail-sh.amlogic.com (10.18.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Wed, 25 Mar
+ 2020 21:36:06 +0800
+Subject: Re: [PATCH 02/13] usb: dwc3: meson-g12a: specify phy names in soc
+ data
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Neil Armstrong <narmstrong@baylibre.com>
+CC:     <kishon@ti.com>, <balbi@kernel.org>, <khilman@baylibre.com>,
+        <linux-amlogic@lists.infradead.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200324102030.31000-1-narmstrong@baylibre.com>
+ <20200324102030.31000-3-narmstrong@baylibre.com>
+ <CAFBinCA9rQKWx47F2-dT4ZrCwSKW+LiwAH2VdzPKr-9ymRxkSw@mail.gmail.com>
+ <a7020606-57be-81de-da2d-73d399853217@baylibre.com>
+ <CAFBinCDOrhXAEwPf4L8-5XoCGqDT89=L2CX2Qsr2J-1pQp6N5Q@mail.gmail.com>
+From:   Hanjie Lin <hanjie.lin@amlogic.com>
+Message-ID: <0cc6076c-1334-026f-c7ce-32a5945351b5@amlogic.com>
+Date:   Wed, 25 Mar 2020 21:36:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <CAFBinCDOrhXAEwPf4L8-5XoCGqDT89=L2CX2Qsr2J-1pQp6N5Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.18.38.73]
+X-ClientProxiedBy: mail-sh.amlogic.com (10.18.11.5) To mail-sh.amlogic.com
+ (10.18.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Rename bl_completion to chg_completion
 
-Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
-(cherry picked from ndyer/linux/for-upstream commit dda8453bfb44216645ede798918a314d4fca2481)
-[gdavis: Resolve forward port conflicts due to applying upstream
-	 commit 96a938aa214e ("Input: atmel_mxt_ts - remove platform
-	 data support").]
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-[jiada: call complete(&data->chg_completion) only when in_bootloader is TRUE
-	Add commit description]
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+On 2020/3/24 22:19, Martin Blumenstingl wrote:
+> On Tue, Mar 24, 2020 at 3:17 PM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>
+>> On 24/03/2020 15:13, Martin Blumenstingl wrote:
+>>> Hi Neil,
+>>>
+>>> On Tue, Mar 24, 2020 at 11:20 AM Neil Armstrong <narmstrong@baylibre.com> wrote:
+>>> [...]
+>>>> +static const char *meson_a1_phy_names[] = {
+>>>> +       "usb2-phy0", "usb2-phy1"
+>>>> +};
+>>> my understanding is that the A1 SoC only has usb2-phy1.
+>>> +Cc Hanjie Lin to confirm this
+>>
+>> I forgot a comment here, it only has a single PHY, but still the 2 U2 PHY
+>> controls slots... it would need a large amount of code to handle this
+>> tweak, and leaving 2 PHYs keeps the behavior before the patchset.
+> I just reviewed patch #3 and I now understand that it would require a
+> large code-change
+> I'm fine with a comment
+> 
+> 
+> Martin
+> 
+> .
+> 
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 0f1c0e5c6169..ed142b24d12d 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -382,9 +382,6 @@ struct mxt_data {
- 	u8 T100_reportid_max;
- 	u16 T107_address;
- 
--	/* for fw update in bootloader */
--	struct completion bl_completion;
--
- 	/* for reset handling */
- 	struct completion reset_completion;
- 
-@@ -396,6 +393,9 @@ struct mxt_data {
- 
- 	enum mxt_suspend_mode suspend_mode;
- 
-+	/* for power up handling */
-+	struct completion chg_completion;
-+
- 	/* Indicates whether device is in suspend */
- 	bool suspended;
- 
-@@ -613,7 +613,7 @@ static int mxt_check_bootloader(struct mxt_data *data, struct mxt_flash *f)
- 		 * CHG assertion before reading the status byte.
- 		 * Once the status byte has been read, the line is deasserted.
- 		 */
--		ret = mxt_wait_for_completion(data, &data->bl_completion,
-+		ret = mxt_wait_for_completion(data, &data->chg_completion,
- 					      MXT_FW_CHG_TIMEOUT);
- 		if (ret) {
- 			/*
-@@ -1414,8 +1414,7 @@ static irqreturn_t mxt_interrupt(int irq, void *dev_id)
- 	struct mxt_data *data = dev_id;
- 
- 	if (data->in_bootloader) {
--		/* bootloader state transition completion */
--		complete(&data->bl_completion);
-+		complete(&data->chg_completion);
- 		return IRQ_HANDLED;
- 	}
- 
-@@ -2179,9 +2178,9 @@ static void mxt_regulator_enable(struct mxt_data *data)
- 	msleep(MXT_CHG_DELAY);
- 
- retry_wait:
--	reinit_completion(&data->bl_completion);
-+	reinit_completion(&data->chg_completion);
- 	data->in_bootloader = true;
--	error = mxt_wait_for_completion(data, &data->bl_completion,
-+	error = mxt_wait_for_completion(data, &data->chg_completion,
- 					MXT_POWERON_DELAY);
- 	if (error == -EINTR)
- 		goto retry_wait;
-@@ -3346,7 +3345,7 @@ static int mxt_enter_bootloader(struct mxt_data *data)
- 		enable_irq(data->irq);
- 	}
- 
--	reinit_completion(&data->bl_completion);
-+	reinit_completion(&data->chg_completion);
- 
- 	return 0;
- }
-@@ -3382,7 +3381,7 @@ static int mxt_load_fw(struct device *dev)
- 	}
- 
- 	/* Wait for flash. */
--	ret = mxt_wait_for_completion(data, &data->bl_completion,
-+	ret = mxt_wait_for_completion(data, &data->chg_completion,
- 				      MXT_FW_RESET_TIME);
- 	if (ret)
- 		goto disable_irq;
-@@ -3393,7 +3392,7 @@ static int mxt_load_fw(struct device *dev)
- 	 * the CHG line after bootloading has finished, so ignore potential
- 	 * errors.
- 	 */
--	mxt_wait_for_completion(data, &data->bl_completion, MXT_FW_RESET_TIME);
-+	mxt_wait_for_completion(data, &data->chg_completion, MXT_FW_RESET_TIME);
- 
- 	data->in_bootloader = false;
- disable_irq:
-@@ -3815,7 +3814,7 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	data->irq = client->irq;
- 	i2c_set_clientdata(client, data);
- 
--	init_completion(&data->bl_completion);
-+	init_completion(&data->chg_completion);
- 	init_completion(&data->reset_completion);
- 	init_completion(&data->crc_completion);
- 
--- 
-2.17.1
+I see, 
+A comment here will be more comprehensible.
+
+Acked-by: Hanjie Lin <hanjie.lin@amlogic.com>
+
+Hanjie
 
