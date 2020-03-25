@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB5CC54FD4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073DAC18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 249D5206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24AF20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:50:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="tYYkl7w2"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="noxHwO+a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCYIup (ORCPT
+        id S1727607AbgCYIut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:50:45 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46440 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCYIul (ORCPT
+        Wed, 25 Mar 2020 04:50:49 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33211 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727550AbgCYIuk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:50:41 -0400
-Received: by mail-wr1-f65.google.com with SMTP id j17so1739060wru.13
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:50:41 -0700 (PDT)
+        Wed, 25 Mar 2020 04:50:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id w25so1568192wmi.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:50:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a7NBuU6BQz6Obl4bQL5kVXb4i/CiUVxXf3T2A6sy18g=;
-        b=tYYkl7w2rkDL5ykaeimrPutSRwZHQ7iS+8kB1dUyydbsaydxVK4EY7ovdjecPrIWV6
-         fCFrWdQKHfxHPezznmFrw+ujsYrqvjiHFIhrwak7CJuT6eSobyVh+eURDrS4zr7U7PZB
-         Yc3oDiR511B/zVsLh/akZpKlEVlQmuU4L94xCTqrXS/QZxDnXNHZp2UVL8E04eOEsFy5
-         J44RA9ejyor0TWODhxoRURdiZqSEVw3BG9uvO9+se9eB1duPcCb+MqXZBHAorsrvny4B
-         ePR7M7E7oRNp3niOZ9M+xUyR02XEYgtvJIl5uHwOYYnDXxat3cOsS6dMf6rAaXA9LzKs
-         KhmA==
+        bh=Q9l8X4L1wYo/Bu0UrNNDh9XednyRebzGgXHXi0wzQ5Y=;
+        b=noxHwO+a8RZLmm/H8YM/X17fO+M9jPDojcTFnZOiHMbgM/KRXHq1P8x5uREIDIg+SF
+         FJyG78kJ4A5V4zmcF+8XgOwEhYXMObeC4vPtnUF7+ljYjlpl95BLgqYwdnKo7LCZ8362
+         fMrAcLF/+AhFLB+9Ql5EHtE/GKDJZXntL3Cm0Fgxi3F+SNCgAiwDGW5z4M1CYEjP9Uxi
+         Z8jEBZkhvqnKXX4DDLrzBKiiOwzJT1EtV4rC3gHx55rli4aHT1xZ+pElPKaPXE9NCBYU
+         BFaWMwcEO9q3+pth4qAcHgPBkcBnhbSgfQwOqFk6y6PBvVj8rSNNH0OVsNx727FxypaK
+         3njw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=a7NBuU6BQz6Obl4bQL5kVXb4i/CiUVxXf3T2A6sy18g=;
-        b=I2Px5QT4TdOwZSXRbLZZcypakwMFe+MAm2j442K65RGH0XVEuXdtJecnAiMLwJ4tGk
-         1K1ovR+oulSWfWma5R6/jUemB454PalsBrqFkDwESvP2Fh0iGP28kg+5c5ciujSpWsZv
-         zc4Ltw2qaJKfX+q3af52J5Vn1BQ3D2khX+8+9LXxJ2qrW+kA2VfvCb7x5Sci81Q7TEvS
-         Yf9T3u0LCkvG4xNtoVR5FLAzANU120KWzaAr7h373dObCxR6NFCE5ovMocu4O5fcCSTx
-         lRB9prUjlLnLLpkERrXrxYwRcf+JGSASYH5wp7bAe2UHNWLkcsuwm9ri+ZdLGyylY9nr
-         DdJQ==
-X-Gm-Message-State: ANhLgQ2YtI5u3+NYZ5qZmfyIWiHB6t/oU1vpeXlR8jtJGgU9vwgZCn0L
-        V9te/efl0bjs9qNUphxqtzj1Kw==
-X-Google-Smtp-Source: ADFU+vuou5X1eDZ972N84Mwzuo/ljyXvfQFfABfKOKpCvwoCetTua86kkxSrWVNvCj18ZaTj49gujg==
-X-Received: by 2002:adf:efc9:: with SMTP id i9mr2095608wrp.23.1585126239909;
-        Wed, 25 Mar 2020 01:50:39 -0700 (PDT)
+        bh=Q9l8X4L1wYo/Bu0UrNNDh9XednyRebzGgXHXi0wzQ5Y=;
+        b=M+NL4oUpEhrLq7Gg2J6N07ASiR54P5C+A66xfaJSyD+xFn4fNtmMV2mUc6LQkVgnZx
+         FX34oqeziH+dg195HBPFKrNwHnzzcDfGSG5DmTc+Uc3l5Gjq4yLvjdf6gTQTXsftaDxE
+         1RLcXTResq7GC3KR7MORUwVpuTyjisg3ylDWsadGDF9iiSkFE6sCds3nMm7WpqkeDnqb
+         L9t2wgj0LAk8uBoIRYUKPX1OCFNusrXYnZzp6s6LtWPliJBNtcLqcA32dJbB/bCb+jMa
+         bJR8o/W5k3qE+JdCel/+uvBpdqiQdd/RJVSmS2bnOR4fD0o/DqApQEERY8Zfm/XVRcrr
+         gN2w==
+X-Gm-Message-State: ANhLgQ03Oxpz7GgrlolrKiSbQihqS0W/hXfxQ/byfyQRuNFKklYoEmAv
+        b3TAXoiS87ffEcIgePgUVoXzTQ==
+X-Google-Smtp-Source: ADFU+vt+uw4hhT5gVLqrLThJ7Bn9/HL7QfI6wZ3InIgG/WW9t5QAx3AdZg1AILOEFxruKjtvkGDmDw==
+X-Received: by 2002:a1c:1fc9:: with SMTP id f192mr2427074wmf.4.1585126238688;
+        Wed, 25 Mar 2020 01:50:38 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id o16sm33892229wrs.44.2020.03.25.01.50.38
+        by smtp.gmail.com with ESMTPSA id o16sm33892229wrs.44.2020.03.25.01.50.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 01:50:39 -0700 (PDT)
+        Wed, 25 Mar 2020 01:50:38 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     daniel@ffwll.ch, dri-devel@lists.freedesktop.org
 Cc:     ppaalanen@gmail.com, mjourdan@baylibre.com, brian.starkey@arm.com,
@@ -63,9 +63,9 @@ Cc:     ppaalanen@gmail.com, mjourdan@baylibre.com, brian.starkey@arm.com,
         linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v4 8/8] drm/meson: overlay: setup overlay for Amlogic FBC Scatter Memory layout
-Date:   Wed, 25 Mar 2020 09:50:25 +0100
-Message-Id: <20200325085025.30631-9-narmstrong@baylibre.com>
+Subject: [PATCH v4 7/8] drm/fourcc: amlogic: Add modifier definitions for the Scatter layout
+Date:   Wed, 25 Mar 2020 09:50:24 +0100
+Message-Id: <20200325085025.30631-8-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200325085025.30631-1-narmstrong@baylibre.com>
 References: <20200325085025.30631-1-narmstrong@baylibre.com>
@@ -76,88 +76,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Setup the Amlogic FBC decoder for the VD1 video overlay plane to use
-read the FBC header as Scatter Memory layout reference.
+Amlogic uses a proprietary lossless image compression protocol and format
+for their hardware video codec accelerators, either video decoders or
+video input encoders.
+
+This introduces the Scatter Memory layout, means the header contains IOMMU
+references to the compressed frames content to optimize memory access
+and layout.
+
+In this mode, only the header memory address is needed, thus the content
+memory organization is tied to the current producer execution and cannot
+be saved/dumped neither transferrable between Amlogic SoCs supporting this
+modifier.
 
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/gpu/drm/meson/meson_overlay.c | 48 +++++++++++++++++----------
- 1 file changed, 31 insertions(+), 17 deletions(-)
+ include/uapi/drm/drm_fourcc.h | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/meson/meson_overlay.c b/drivers/gpu/drm/meson/meson_overlay.c
-index 8b9d4984b2a7..3c54135f53a0 100644
---- a/drivers/gpu/drm/meson/meson_overlay.c
-+++ b/drivers/gpu/drm/meson/meson_overlay.c
-@@ -487,6 +487,9 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 					  AFBC_HOLD_LINE_NUM(8) |
- 					  AFBC_BURST_LEN(2);
+diff --git a/include/uapi/drm/drm_fourcc.h b/include/uapi/drm/drm_fourcc.h
+index 84edc5d69613..b49f1d45e1b4 100644
+--- a/include/uapi/drm/drm_fourcc.h
++++ b/include/uapi/drm/drm_fourcc.h
+@@ -840,6 +840,19 @@ extern "C" {
+  */
+ #define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC		(1ULL << 0)
  
-+		if (fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER)
-+			priv->viu.vd1_afbc_mode |= AFBC_SCATTER_MODE;
++/*
++ * Amlogic FBC Scatter Memory layout
++ *
++ * Indicates the header contains IOMMU references to the compressed
++ * frames content to optimize memory access and layout.
++ *
++ * In this mode, only the header memory address is needed, thus the
++ * content memory organization is tied to the current producer
++ * execution and cannot be saved/dumped neither transferrable between
++ * Amlogic SoCs supporting this modifier.
++ */
++#define DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER	(2ULL << 0)
 +
- 		if (fb->modifier & DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING)
- 			priv->viu.vd1_afbc_mode |= AFBC_BLK_MEM_MODE;
+ /*
+  * Amlogic FBC Layout Options
+  */
+@@ -852,7 +865,8 @@ extern "C" {
+  * memory.
+  *
+  * This mode reduces body layout to 3072 bytes per 64x32 superblock with
+- * the basic layout.
++ * the basic layout and 3200 bytes per 64x32 superblock combined with
++ * the scatter layout.
+  */
+ #define DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING	(1ULL << 8)
  
-@@ -675,23 +678,32 @@ static void meson_overlay_atomic_update(struct drm_plane *plane,
- 	}
- 
- 	if (priv->viu.vd1_afbc) {
--		/* Default mode is 4k per superblock */
--		unsigned long block_size = 4096;
--		unsigned long body_size;
--
--		/* 8bit mem saving mode is 3072bytes per superblock */
--		if (priv->viu.vd1_afbc_mode & AFBC_BLK_MEM_MODE)
--			block_size = 3072;
--
--		body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
--			    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
--			    block_size;
--
--		priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
--
--		/* Header is after body content */
--		priv->viu.vd1_afbc_head_addr = (priv->viu.vd1_addr0 +
--						body_size) >> 4;
-+		if (priv->viu.vd1_afbc_mode & AFBC_SCATTER_MODE) {
-+			/*
-+			 * In Scatter mode, the header contains the physical
-+			 * body content layout, thus the body content
-+			 * size isn't needed.
-+			 */
-+			priv->viu.vd1_afbc_head_addr = priv->viu.vd1_addr0 >> 4;
-+			priv->viu.vd1_afbc_body_addr = 0;
-+		} else {
-+			/* Default mode is 4k per superblock */
-+			unsigned long block_size = 4096;
-+			unsigned long body_size;
-+
-+			/* 8bit mem saving mode is 3072bytes per superblock */
-+			if (priv->viu.vd1_afbc_mode & AFBC_BLK_MEM_MODE)
-+				block_size = 3072;
-+
-+			body_size = (ALIGN(priv->viu.vd1_stride0, 64) / 64) *
-+				    (ALIGN(priv->viu.vd1_height0, 32) / 32) *
-+				    block_size;
-+
-+			priv->viu.vd1_afbc_body_addr = priv->viu.vd1_addr0 >> 4;
-+			/* Header is after body content */
-+			priv->viu.vd1_afbc_head_addr = (priv->viu.vd1_addr0 +
-+							body_size) >> 4;
-+		}
- 	}
- 
- 	priv->viu.vd1_enabled = true;
-@@ -771,6 +783,8 @@ static const uint32_t supported_drm_formats[] = {
- };
- 
- static const uint64_t format_modifiers[] = {
-+	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_SCATTER |
-+				   DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING),
- 	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC |
- 				   DRM_FORMAT_MOD_AMLOGIC_FBC_MEM_SAVING),
- 	DRM_FORMAT_MOD_AMLOGIC_FBC(DRM_FORMAT_MOD_AMLOGIC_FBC_LAYOUT_BASIC),
 -- 
 2.22.0
 
