@@ -2,107 +2,155 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 419D0C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2267C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1602A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:42:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6829208E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:42:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hvfrPeq4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lFuzV3Bg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgCYOmX (ORCPT
+        id S1727830AbgCYOmd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:42:23 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:48123 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727123AbgCYOmW (ORCPT
+        Wed, 25 Mar 2020 10:42:33 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37396 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727123AbgCYOmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:42:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585147341;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f0QoE/qndgvHkzTsiprhqXEFUL5AmxJl7pgoSBh+XjM=;
-        b=hvfrPeq4KmAm+Cs+gb+IfgeE/LP1KsgV18F4eXD7KaMzpn34cNds/eiasiSFJMO6CrItQe
-        p1Ys5PISfcM2A+Y6iWE7LPloHhlFJv5c6GAbgl/mjgGfp/bc8jSrkdnu6t4ZKCk6ju24Px
-        rwV1Ky9WSYumZ8oiPkdVxXiKGUNi0j0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-163-3heDe8q8OI-tXT8rSVc0iQ-1; Wed, 25 Mar 2020 10:42:16 -0400
-X-MC-Unique: 3heDe8q8OI-tXT8rSVc0iQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD080800D54;
-        Wed, 25 Mar 2020 14:42:14 +0000 (UTC)
-Received: from treble (unknown [10.10.119.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BBCEA10002A5;
-        Wed, 25 Mar 2020 14:42:13 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 09:42:11 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-Subject: Re: [PATCH v3 26/26] objtool: Add STT_NOTYPE noinstr validation
-Message-ID: <20200325144211.irnwnly37fyhapvx@treble>
+        Wed, 25 Mar 2020 10:42:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kQVyswkIEiQqu0q2j98vbPa2ZQs9K9mLGiYpslDqK7w=; b=lFuzV3BgjEFuhVj0JQ7JS2Nc4e
+        TdiIekkSH8C3CNNCJNiS5cnKtN1iHbSHsa9Jg0ICgx6uDkK2hFUpmyrFCLbLptYKd+1JoN71Q8pFQ
+        sTvjo8W5IV4DUwXNQWt/XXmm0ELuoG1R6RRZKfxCdmYqz7Itb94xrlHU6D/v1+69q8IroaZ0bHape
+        quRZbarvOAshpQeV98eF3ke8Xp03yYb1vcGSSF69n8HdAViBn6DUgk5F0o0d2gsz+47I/ltrUPUS7
+        m7MXkMMUuFOZB5j/Oq+MGoCMwlJXRLozXIhWCpT2wGq7pyQTa3pQL2b5oZMLO+tUaU0lJTVwh9WF7
+        lgZJT7Wg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH7Ej-00086W-T3; Wed, 25 Mar 2020 14:42:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B4905303D97;
+        Wed, 25 Mar 2020 15:42:28 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A01E029A8F430; Wed, 25 Mar 2020 15:42:28 +0100 (CET)
+Date:   Wed, 25 Mar 2020 15:42:28 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     tglx@linutronix.de, jpoimboe@redhat.com
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
+        mbenes@suse.cz, brgerst@gmail.com
+Subject: [PATCH v3.1 18b/26] objtool: Factor out CFI hints
+Message-ID: <20200325144228.GW20696@hirez.programming.kicks-ass.net>
 References: <20200324153113.098167666@infradead.org>
- <20200324160925.470421121@infradead.org>
- <20200324221616.2tdljgyay37aiw2t@treble>
- <20200324223455.GV2452@worktop.programming.kicks-ass.net>
+ <20200324160924.987489248@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200324223455.GV2452@worktop.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200324160924.987489248@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 11:34:55PM +0100, Peter Zijlstra wrote:
-> On Tue, Mar 24, 2020 at 05:16:16PM -0500, Josh Poimboeuf wrote:
-> > On Tue, Mar 24, 2020 at 04:31:39PM +0100, Peter Zijlstra wrote:
-> 
-> > > +	if (state.noinstr) {
-> > > +		/*
-> > > +		 * In vmlinux mode we will not run validate_unwind_hints() by
-> > > +		 * default which means we'll not otherwise visit STT_NOTYPE
-> > > +		 * symbols.
-> > > +		 *
-> > > +		 * In case of --duplicate mode, insn->visited will avoid actual
-> > > +		 * duplicate work being done.
-> > > +		 */
-> > > +		list_for_each_entry(func, &sec->symbol_list, list) {
-> > > +			if (func->type != STT_NOTYPE)
-> > > +				continue;
-> > > +
-> > > +			warnings += validate_symbol(file, sec, func, &state);
-> > > +		}
-> > > +	}
-> > > +
-> > 
-> > I guess this is ok, but is there a valid reason why we don't just call
-> > validate_unwind_hints()?
-> > 
-> > It's also slightly concerning that validate_reachable_instructions()
-> > isn't called, I'm not 100% convinced all the code will get checked.
-> 
-> This will only end up running on .noinstr.text, while
-> validate_unwind_hints() will run on *everything*. That is, we're
-> purposely not checking everything.
-> 
-> It very much relies on the !vmlinux mode to do the unreachable things.
+Subject: objtool: Factor out CFI hints
+From: Peter Zijlstra <peterz@infradead.org>
+Date: Wed Mar 25 13:08:17 CET 2020
 
-Sure, but couldn't validate_unwind_hints() and
-validate_reachable_instructions() be changed to *only* run on
-.noinstr.text, for the vmlinux case?  That might help converge the
-vmlinux and !vmlinux paths.
+Move the application of CFI hints into it's own function.
+No functional changes intended.
 
--- 
-Josh
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ tools/objtool/check.c |   66 ++++++++++++++++++++++++++++----------------------
+ 1 file changed, 37 insertions(+), 29 deletions(-)
 
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -2033,6 +2033,40 @@ static int validate_return(struct symbol
+ 	return 0;
+ }
+ 
++static int apply_insn_hint(struct objtool_file *file, struct section *sec,
++			   struct symbol *func, struct instruction *insn,
++			   struct insn_state *state)
++{
++	if (insn->restore) {
++		struct instruction *save_insn, *i;
++
++		i = insn;
++		save_insn = NULL;
++		sym_for_each_insn_continue_reverse(file, func, i) {
++			if (i->save) {
++				save_insn = i;
++				break;
++			}
++		}
++
++		if (!save_insn) {
++			WARN_FUNC("no corresponding CFI save for CFI restore",
++				  sec, insn->offset);
++			return 1;
++		}
++
++		if (!save_insn->visited) {
++			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
++				  sec, insn->offset);
++			return 1;
++		}
++
++		insn->state = save_insn->state;
++	}
++
++	state = insn->state;
++}
++
+ /*
+  * Follow the branch starting at the given instruction, and recursively follow
+  * any other branches (jumps).  Meanwhile, track the frame pointer state at
+@@ -2081,35 +2115,9 @@ static int validate_branch(struct objtoo
+ 		}
+ 
+ 		if (insn->hint) {
+-			if (insn->restore) {
+-				struct instruction *save_insn, *i;
+-
+-				i = insn;
+-				save_insn = NULL;
+-				sym_for_each_insn_continue_reverse(file, func, i) {
+-					if (i->save) {
+-						save_insn = i;
+-						break;
+-					}
+-				}
+-
+-				if (!save_insn) {
+-					WARN_FUNC("no corresponding CFI save for CFI restore",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				if (!save_insn->visited) {
+-					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
+-						  sec, insn->offset);
+-					return 1;
+-				}
+-
+-				insn->state = save_insn->state;
+-			}
+-
+-			state = insn->state;
+-
++			ret = apply_insn_hint(file, sec, func, insn, &state);
++			if (ret)
++				return ret;
+ 		} else
+ 			insn->state = state;
+ 
