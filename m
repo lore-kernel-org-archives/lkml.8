@@ -2,110 +2,118 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC72C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3C6C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7703D2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:54:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="JyaRjhBB"
+	by mail.kernel.org (Postfix) with ESMTP id 979E72073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 16:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727525AbgCYQyd (ORCPT
+        id S1727775AbgCYQys convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 12:54:33 -0400
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:51505 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726102AbgCYQyd (ORCPT
+        Wed, 25 Mar 2020 12:54:48 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:48640 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727539AbgCYQyr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 12:54:33 -0400
-Received: from [192.168.2.10] ([46.9.234.233])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id H9IRjgCfxBr2bH9IVjIfa9; Wed, 25 Mar 2020 17:54:31 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
-        t=1585155271; bh=iS6jb4nVJ328cKw60HlU88wMMG8URM3B8kU0TKTSFwk=;
-        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
-         Subject;
-        b=JyaRjhBB/u8lB+ErXH87D1DRxhYADFSvqbHzIlXTnd0ATOhEycyJGDKsojsH77EJ+
-         0+vWuyJPOQSilaN2ZzmFiSInijLlaKoLCvQfl4rzI4zqkXTiielD++mshFjV4htRwq
-         Ob3TQC/8pHRqRySATtrFD/0EcQzf+sMM8/9Vi28dGaF9y+U7Yzh6m+siTSS6lhxaAT
-         DZHSmW3TmuLSFzac39OPgic3SEGEmOeq7P9wwBNhrKd4RH9hBh+qMiMVOl/BC4VtBo
-         uHBCOCbsOrHK3Y0AFIqNnsWSUdmzFMsOJNWcbyfyDisIi97l6hoQ9y9JYqZm+z0wXH
-         syHcQYTAfPowg==
-Subject: Re: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
- condition
-To:     Seungchul Kim <sc377.kim@samsung.com>, mchehab@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <CGME20200323023045epcas2p12007502edd2a65efcccb00eb899d5532@epcas2p1.samsung.com>
- <000601d600bb$0e2d4320$2a87c960$@samsung.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <1a0ad24c-e577-e6d2-32ca-514a645b008f@xs4all.nl>
-Date:   Wed, 25 Mar 2020 17:54:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 25 Mar 2020 12:54:47 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1jH9IM-00061w-Lf; Wed, 25 Mar 2020 17:54:22 +0100
+Date:   Wed, 25 Mar 2020 17:54:22 +0100
+From:   Sebastian Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        linux-pci@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Zhang Rui <rui.zhang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pm@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        linux-acpi@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guo Ren <guoren@kernel.org>, linux-csky@vger.kernel.org,
+        Brian Cain <bcain@codeaurora.org>,
+        linux-hexagon@vger.kernel.org, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Michal Simek <monstr@monstr.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geoff Levand <geoff@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: Documentation/locking/locktypes: Further clarifications and
+ wordsmithing
+Message-ID: <20200325165422.hfxzkxcj3jhqcstr@linutronix.de>
+References: <20200323025501.GE3199@paulmck-ThinkPad-P72>
+ <87r1xhz6qp.fsf@nanos.tec.linutronix.de>
+ <20200325002811.GO19865@paulmck-ThinkPad-P72>
+ <87wo78y5yy.fsf@nanos.tec.linutronix.de>
+ <20200325160212.oavrni7gmzudnczv@linutronix.de>
+ <20200325163919.GU19865@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <000601d600bb$0e2d4320$2a87c960$@samsung.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGng8Vdo9jUZGcpRDgzESsB6NHS45BZGfTGDBsC9roLpcV9T8CExtqLySQSFtV4/qFoaWwGGPz5IU77Ntr93Rp9ex8h8R2420eKGxAac6x02VNCgSVoh
- VSHi59yqPhj51j7GRONzRfEWvpYnPsKCIwmPdIabiRsiz8qNKOVMXx/Hn6OGg/qTh9bcZhKqu2IatXCP2b3ubEWKiFL727JXEBswPfVQ7slEQxupfLpOdpjg
- zlNWq0pe/3AMChpElln0+O7SNNYuYQfherSEjR4yJaxTY/5iKSblCOVlV1HF2j+6
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200325163919.GU19865@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/23/20 3:30 AM, Seungchul Kim wrote:
-> v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
-> If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module, it can make the
-> mismatch of v4l2_fh sturct.
+On 2020-03-25 09:39:19 [-0700], Paul E. McKenney wrote:
+> > > --- a/Documentation/locking/locktypes.rst
+> > > +++ b/Documentation/locking/locktypes.rst
+> > …
+> > > +rw_semaphore
+> > > +============
+> > > +
+> > > +rw_semaphore is a multiple readers and single writer lock mechanism.
+> > > +
+> > > +On non-PREEMPT_RT kernels the implementation is fair, thus preventing
+> > > +writer starvation.
+> > > +
+> > > +rw_semaphore complies by default with the strict owner semantics, but there
+> > > +exist special-purpose interfaces that allow non-owner release for readers.
+> > > +These work independent of the kernel configuration.
+> > 
+> > This reads funny, could be my English. "This works independent …" maybe?
 > 
-> By the mismatch, the following error occurs.
-> ===============================
-> [    7.533506] v4l2_mem2mem: disagrees about version of symbol video_devdata
-> [    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
-> [    7.535319] v4l2_mem2mem: disagrees about version of symbol
-> v4l2_event_pending
-> [    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
-> ===============================
+> The "These" refers to "interfaces", which is plural, so "These" rather
+> than "This".  But yes, it is a bit awkward, because you have to skip
+> back past "readers", "release", and "non-owner" to find the implied
+> subject of that last sentence.
 > 
-> So v4l2_fh struct is modified to does not have dependency for
-> CONFIG_V4L2_MEM2MEM_DEV.
+> So how about this instead, making the implied subject explicit?
 > 
-> Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
-> ---
->  include/media/v4l2-fh.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h index
-> 53b4dbb..b5b3e00 100644
-> --- a/include/media/v4l2-fh.h
-> +++ b/include/media/v4l2-fh.h
-> @@ -53,9 +53,7 @@ struct v4l2_fh {
->  	unsigned int		navailable;
->  	u32			sequence;
->  
-> -#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
->  	struct v4l2_m2m_ctx	*m2m_ctx;
-> -#endif
+> rw_semaphore complies by default with the strict owner semantics, but there
+> exist special-purpose interfaces that allow non-owner release for readers.
+> These interfaces work independent of the kernel configuration.
 
-This is a good change, but please also remove the same #if from v4l2_ioctl_get_lock()
-in drivers/media/v4l2-core/v4l2-ioctl.c. That is now no longer needed there either
-and without removing that those vendor drivers would be using the wrong lock.
+Yes, perfect. Thank you.
 
-Regards,
+> 							Thanx, Paul
 
-	Hans
-
->  };
->  
->  /**
-> --
-> 2.7.4
-> 
-
+Sebastian
