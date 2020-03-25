@@ -2,93 +2,121 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2043CC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AA5C54FD7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E08A2215A4
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 968F320789
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D2PgJT5G"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="eEeJkPVL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgCYPFR (ORCPT
+        id S1727598AbgCYPLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:05:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47424 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727306AbgCYPFQ (ORCPT
+        Wed, 25 Mar 2020 11:11:30 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17854 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727319AbgCYPL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:05:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=RgL3fFDWUfi6OWcUf2aZFRQF2RBFjztz840WQI7cRrw=; b=D2PgJT5GWvwimZ+nxt3NjqP52H
-        bRaS81pr7TBINEDhA4/hLqobFxqEDzpWYG60fV6Yr7KhtRO6qj8ckxyMwCDty73iVrNP1q62AfLWC
-        3Gff5dD2OpwhkVzEa7TJxcAH+Hf582moq+ixiGz+LkK/Cq7e4+y++Q2SAOS3aKOfO8q2G0KUhs5Ip
-        n5Hk1sqLu6uO9TnmUwNPbh5VIb25yasBxLx/UqmogiScdnj5HZscdZuuV+4r1QmTcLYFQpsn6hLe4
-        WXaUuqRLStaqecTD/z7QCDaSZ/0BCBBOmAb4UHJ0uTQldldWGfBSYXmZ/wPnt2ey2Pea+59llj9RI
-        qGlMjP/w==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH7ak-0003GQ-TB; Wed, 25 Mar 2020 15:05:14 +0000
-Subject: Re: [PATCH v5 4/6] pinctrl: mediatek: add pinctrl support for MT6779
- SoC
-To:     Hanks Chen <hanks.chen@mediatek.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        Wed, 25 Mar 2020 11:11:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585148957;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=UQjW8/R/isr4G+IcObaYVbHnSPnY0ohL2PN+TOGINxU=;
+        b=eEeJkPVLVJ+o14DGDqHn3Y4QG81zbhdA9Byd5TPzBuOYUQVir601pnFe1Y9xiBa/
+        XpbC7wQHEpzbnLWAR0pXp3pdNw69U9qxlsxrfN5ehRe/+Ka0T2IXkSKcXYy+mnKUHpC
+        AlmmvWmPtl3PERAnKEQmXWoA/zR1Vw4MJqMedAd8=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585148954458715.120308966621; Wed, 25 Mar 2020 23:09:14 +0800 (CST)
+Date:   Wed, 25 Mar 2020 23:09:10 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200325150437.GA14217@alpha.franken.de>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de> <a69f727d37daac6e20ac08de022245b1@kernel.org> <C4892878-8463-448D-897B-5F2C56F5A340@flygoat.com> <5eb9ce9ea665ee32da40779f00fc9b37@kernel.org> <4BB367D3-B8AD-47B6-ACC2-30752137BC1B@flygoat.com> <c4520c4b0b0eaaba5fdbaebfce7b4460@kernel.org> <39CF835E-D1D9-4B52-ABDC-BDB17B650936@flygoat.com> <20200325150437.GA14217@alpha.franken.de>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     Marc Zyngier <maz@kernel.org>, linux-mips@vger.kernel.org,
+        Huacai Chen <chenhc@lemote.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sean Wang <sean.wang@kernel.org>
-Cc:     Andy Teng <andy.teng@mediatek.com>, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        wsd_upstream@mediatek.com, Mars Cheng <mars.cheng@mediatek.com>
-References: <1585128694-13881-1-git-send-email-hanks.chen@mediatek.com>
- <1585128694-13881-5-git-send-email-hanks.chen@mediatek.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e91e09ca-d896-3712-f8fa-8811a2be6b5e@infradead.org>
-Date:   Wed, 25 Mar 2020 08:05:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <1585128694-13881-5-git-send-email-hanks.chen@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <777D8DAA-F462-4E8D-9012-C114DE6D56DE@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 2:31 AM, Hanks Chen wrote:
-> diff --git a/drivers/pinctrl/mediatek/Kconfig b/drivers/pinctrl/mediatek/Kconfig
-> index 701f9af..f628d01 100644
-> --- a/drivers/pinctrl/mediatek/Kconfig
-> +++ b/drivers/pinctrl/mediatek/Kconfig
-> @@ -86,6 +86,13 @@ config PINCTRL_MT6765
->  	default ARM64 && ARCH_MEDIATEK
->  	select PINCTRL_MTK_PARIS
->  
-> +config PINCTRL_MT6779
-> +	bool "Mediatek MT6779 pin control"
-> +	depends on OF
-> +	depends on ARM64 || COMPILE_TEST
-> +	default ARM64 && ARCH_MEDIATEK
-> +	select PINCTRL_MTK_PARIS
 
-Hi,
-Please add some useful help text.
 
-> +
->  config PINCTRL_MT6797
->  	bool "Mediatek MT6797 pin control"
->  	depends on OF
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+1:04:37, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=
+=88=B0:
+>On Wed, Mar 25, 2020 at 10:31:21PM +0800, Jiaxun Yang wrote:
+>>=20
+>>=20
+>> =E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=8810:15:16, Marc Zyngier <maz@kernel=2Eorg> =E5=86=99=E5=88=B0:
+>> >On 2020-03-25 13:59, Jiaxun Yang wrote:
+>> >
+>> >[=2E=2E=2E]
+>> >
+>> >>>> So probably we can use legacy domain when  MIPS IRQ BASE is in
+>the
+>> >>>> range of legacy IRQ
+>> >>>> and switch to simple domain when it's not in that range?
+>> >>>=20
+>> >>> No, see below=2E
+>> >>>=20
+>> >>>> Here in Loongson systems IRQ 0-15 is occupied by I8259 so I did
+>> >this
+>> >>>> hack=2E
+>> >>>=20
+>> >>> Well, if you have to consider which Linux IRQ gets assigned,
+>> >>> then your platform is definitely not ready for non-legacy
+>> >>> irqdomains=2E Just stick to legacy for now until you have removed
+>> >>> all the code that knows the hwirq mapping=2E
+>> >>=20
+>> >> Thanks=2E
+>> >>=20
+>> >> So I have to allocate irq_desc here in driver manually?
+>> >
+>> >No, you are probably better off just dropping this patch, as MIPS
+>> >doesn't seem to be ready for a wholesale switch to virtual
+>interrupts=2E
+>>=20
+>> It can't work without this patch=2E
+>>=20
+>> Legacy domain require IRQ number within 0-15=20
+>> however it's already occupied by i8259 or "HTPIC" driver=2E
+>
+>what's the problem here ? AFAIK there could be more than one
+>legacy domain, at least that's what at least IP22/SNI in MIPS world=20
+>are doing=2E
 
-thanks.
--- 
-~Randy
+MIPS_IRQ_BASE must be higher than 15, otherwise it will conflict with i825=
+9=2E
 
+However we have only preallocated irq_desc for 0-15=2E
+And legacy domain require irq_desc being preallocated=2E
+
+>
+>Thomas=2E
+
+--=20
+Jiaxun Yang
