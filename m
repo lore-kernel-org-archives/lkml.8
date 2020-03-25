@@ -2,88 +2,74 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29663C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9255C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED02620772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585130279;
-	bh=VBlYmGDntmPnOzTL6eabTzbRIvqY0qeVA9siIV5zk+E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tpnRaTX7fRr9KGUrl2ldRw8TdXZ8gpwr1vLIKNEK6RQvmB31eOaN6SAuYQN/xj328
-	 G1DHP0Mirhh+ymxjkK0OwpuRmlHDbGQdlwMs5lmCfPmcfF4xN5vwuzgfGbf+aUDyYZ
-	 LQ1EOyyXJkLbHKz6P3ysDMHZuhjH+w4PelBj73WY=
+	by mail.kernel.org (Postfix) with ESMTP id 7CC3020775
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 09:59:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OWEeOHan"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbgCYJ55 (ORCPT
+        id S1727265AbgCYJ7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 05:57:57 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38856 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725873AbgCYJ55 (ORCPT
+        Wed, 25 Mar 2020 05:59:45 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:58040 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725873AbgCYJ7p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 05:57:57 -0400
-Received: by mail-oi1-f195.google.com with SMTP id w2so1537101oic.5;
-        Wed, 25 Mar 2020 02:57:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NrHDtRwPhSmDON/us38dmUQzHS32k9eLAFxKK6HSnl0=;
-        b=DP5Pw4stLMIJ3D8u9E+sYOz+ggv19+wfz6lhCAXn9J/q33q40xLDZrQSjmxJDmjwBE
-         8Tnb9BHJSb9wmbO5GJ94j3hoVDHOhtbzk+w1HMBVrrqhwbD2eZc597NxsIWgk3fDOT5/
-         d8F+BmwYAK/83jBMeMB8JZe+vVk8bBs7rE/BOV2B5Zj0NT0CHJgUBa7HDqWeV8TLWg+C
-         HieZTQZB1rRuPJ+EqpkSSWfSU+q78rX9KZasWs76i+0/DYP84s/fwLnU3uRisqGLQ1qo
-         AAHYSqHCWwdz+jbIOr4b+vrF2i0JSYJSgdpCevoF4ljn6md7OLwvMybM051VZDhEpZ91
-         j0Yg==
-X-Gm-Message-State: ANhLgQ2Br9vXkzBJDuzDPCpHnU2+KYGp1DEIi8rfR4TWw6WTPP1v5ZX5
-        q/4Nnn3T0S9pXF5ub7rogm8BgU19c7tGULEufek=
-X-Google-Smtp-Source: ADFU+vty5QelQ9Rhdv8R71W76aSaOFGqdoguN3P+mdffL711qq/q5fywvQlk5Zp4b94WCLMPnyxxHbnfrLJNF+Yh9dw=
-X-Received: by 2002:a05:6808:8f:: with SMTP id s15mr1941750oic.110.1585130276966;
- Wed, 25 Mar 2020 02:57:56 -0700 (PDT)
+        Wed, 25 Mar 2020 05:59:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585130384;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=E28MMaAg2Rq74B9GHLdMLCeDNE/kzIHBch46RLtapL0=;
+        b=OWEeOHanKpU2ePpAwngQGB3ZLBZf7ZnaQuh69M35esy5QuzSKD/8mP1qnd7vjXhENS8r3I
+        B+74kCKoC30yGDUt55zvqKthuuIDXimT7uJDEDHHLaa9M3CgQUB5HRgTL6iv4qMAyaSWoY
+        RBQlFSVJFU1oBX/xKvXhssngC+7a58k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-272-UkxxZoVqOlmQW2B8TIESxA-1; Wed, 25 Mar 2020 05:59:41 -0400
+X-MC-Unique: UkxxZoVqOlmQW2B8TIESxA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C4C0189D6C3;
+        Wed, 25 Mar 2020 09:59:40 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-112-49.ams2.redhat.com [10.36.112.49])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C0BF25C28E;
+        Wed, 25 Mar 2020 09:59:39 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id 1339A17535; Wed, 25 Mar 2020 10:59:38 +0100 (CET)
+Date:   Wed, 25 Mar 2020 10:59:38 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Juerg Haefliger <juergh@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: arm64 kernel crash in bochs_get_edid_block() with QEMU '-device
+ VGA'
+Message-ID: <20200325095938.vn4v7bdk6pgmotxg@sirius.home.kraxel.org>
+References: <CADLDEKugE-Y9rMumiCDJDW_FvGcBaQd3fBv80YeSS0=udnkMAQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <CGME20200324234525epcas1p28f4150423112c61645bc19e3742b22bf@epcas1p2.samsung.com>
- <21bd6b76-5a3e-96c1-4184-49e96ea5f594@samsung.com>
-In-Reply-To: <21bd6b76-5a3e-96c1-4184-49e96ea5f594@samsung.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 25 Mar 2020 10:57:45 +0100
-Message-ID: <CAJZ5v0gDJkH=TBE4tFTz94rLoCCUnN1UNOpeYxRNPjf8uQsOsg@mail.gmail.com>
-Subject: Re: [GIT PULL] devfreq next for v5.7
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     "Rafael J. Wysocki <rjw@rjwysocki.net>" <rjw@rjwysocki.net>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Chanwoo Choi (samsung.com)" <chanwoo@kernel.org>,
-        =?UTF-8?B?7ZWo66qF7KO8?= <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADLDEKugE-Y9rMumiCDJDW_FvGcBaQd3fBv80YeSS0=udnkMAQ@mail.gmail.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 12:45 AM Chanwoo Choi <cw00.choi@samsung.com> wrote:
->
-> Dear Rafael,
->
-> This is devfreq-next pull request for v5.7-rc1. I add detailed description of
-> this pull request on the following tag. Please pull devfreq with following updates.
-> - tag name : devfreq-next-for-5.7
->
-> Best Regards,
-> Chanwoo Choi
->
-> The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
->
->   Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git tags/devfreq-next-for-5.7
+On Sat, Feb 15, 2020 at 01:11:45PM +0100, Juerg Haefliger wrote:
+> The QEMU default edid=off results in a kernel crash [1] on arm64 due
+> to commit [2]. To reproduce:
 
-Pulled, thanks!
+Should be fixed in qemu 5.0-rc0
+
+cheers,
+  Gerd
+
