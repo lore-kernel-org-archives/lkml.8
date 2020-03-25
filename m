@@ -2,154 +2,120 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1753DC2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2825C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2EF20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:28:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="WNIFFlJh"
+	by mail.kernel.org (Postfix) with ESMTP id C8708206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:29:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCYS2w (ORCPT
+        id S1727798AbgCYS3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:28:52 -0400
-Received: from mail-bn7nam10on2103.outbound.protection.outlook.com ([40.107.92.103]:25024
-        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727129AbgCYS2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:28:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fSEzZWU1Y+FTMzmJG9MNLuZ6H63NhqU4TSPfy06fagv1As0qn+3lMR7jUVHMO91rKLm3TnFc+FZl+e6ZKJnOf5EmLrB+LuY0QeAYcF7YupSDUFUTtTYC/gBhpthaGnipDVT3ZOw5VsCYdmYi5Tg+0pm3IrR0W7sJ4nj4Advr1eeSaKDz8spqKP6VvTxSCFQzooTcAEgSvozGNT2g1e9ym9QJv0xT1dWXqaH1PezvR9jAG1to1D11yLVpJSj8XGXwm1tn1dAPYnhJWgEWMEI4OcQJxAC8dX8doHMIUpmm0rZ2s0fISAF4MiJEtKJOI5CbnR1jjc6gF3AJybQOQsAMeQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=58W/Lx8q/5ucMLuMq99DvbU2ymj1QXwluZD+FMaIYgY=;
- b=RIH6q0hlIDu5XCnzcTIjrI2ZmsvngXlpWNK6cMrixQbnBzFjsgDTxIst3Rtdk8x609C31y3jZh1POnKxAj2oU53rzucb7TMeQi/El2zJWc7h/eBwNyvInqgyawV9opshgDN+6zoozBKxoHWbDd7/aaxQJkSmqVtt9nmRRL5Mxdbgz+H39ljr5ZyDz1uJXmScrBy4mAjTX/kMoPtylTikBC4CWIWddRSsK4QvSRHnvmpWeDpmfAjAAp8foiPTLkQWxX0Q5dM0aIRn0k8cqYR4VTRJ37R1cXG1WNyD+SY7XZJaZWaaCuN/nZ5XYFH2LPONDuc8zqQ/4nQakwhjuAUBCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=58W/Lx8q/5ucMLuMq99DvbU2ymj1QXwluZD+FMaIYgY=;
- b=WNIFFlJhPZRGcuk/quLUxoxm5zkdKlAE+VzWGkyjDb4HHAN5FvOAE7WnouosvVLGLar25fjYtJaviGr6WvegC/cRD0hNt8bPqJDNteytu7sRSC9TJCVTq9tknD/C/nwre4DTOMHltOI4sqltOpV7EeuBD8zCWFR+2udUKgwHvCc=
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
- by MW2PR2101MB0938.namprd21.prod.outlook.com (2603:10b6:302:4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.2; Wed, 25 Mar
- 2020 18:28:48 +0000
-Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156]) by MW2PR2101MB1052.namprd21.prod.outlook.com
- ([fe80::71ee:121:71bd:6156%8]) with mapi id 15.20.2878.007; Wed, 25 Mar 2020
- 18:28:48 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     "ltykernel@gmail.com" <ltykernel@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <liuwe@microsoft.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>
-CC:     Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        vkuznets <vkuznets@redhat.com>
-Subject: RE: [PATCH V3 1/6] x86/Hyper-V: Unload vmbus channel in hv panic
- callback
-Thread-Topic: [PATCH V3 1/6] x86/Hyper-V: Unload vmbus channel in hv panic
- callback
-Thread-Index: AQHWAbHhyjbM82h+9EugSPMzjTGeoqhZoqEw
-Date:   Wed, 25 Mar 2020 18:28:48 +0000
-Message-ID: <MW2PR2101MB10522109A2DB7C0E269B9DB8D7CE0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-References: <20200324075720.9462-1-Tianyu.Lan@microsoft.com>
- <20200324075720.9462-2-Tianyu.Lan@microsoft.com>
-In-Reply-To: <20200324075720.9462-2-Tianyu.Lan@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:28:46.6316980Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c22f032b-e44e-4c36-916e-36b69aa2eae5;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2a97bcb6-f257-41a7-d5a0-08d7d0ea5c36
-x-ms-traffictypediagnostic: MW2PR2101MB0938:|MW2PR2101MB0938:|MW2PR2101MB0938:
-x-ms-exchange-transport-forked: True
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <MW2PR2101MB09381B1127BF79F72F2EC560D7CE0@MW2PR2101MB0938.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-forefront-prvs: 0353563E2B
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(366004)(110136005)(66446008)(64756008)(6506007)(8676002)(66946007)(66556008)(66476007)(2906002)(54906003)(478600001)(33656002)(81156014)(81166006)(26005)(8990500004)(10290500003)(186003)(55016002)(71200400001)(7696005)(76116006)(8936002)(5660300002)(86362001)(316002)(4326008)(52536014)(9686003)(921003)(1121003);DIR:OUT;SFP:1102;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ze+lnrUG8yuyF5T47PGYf4/xFnXdsLklVpVV1kOqEejDuxwpi5sfOzndKAGDvAwRvGIUjY6xXe48Tbk23PYlX4UB+3hAKcC8mSsMR31I+PzLaNdTZXPLg71L6Ti/uiXk62TPq3T8JpvADC7jFoF2MXgqoskaPBSo8iAVtLNNXQc6ZowG2fsxzMY4ZJv5ZDw5Q+tSUz6tG8zAGjY0tbkfD8veQ4Nc4JaRTdf6Lw3nCKYbxxtgbgUj5rGU817RuZVQgR3Xy8/x7+sdiEroyBYFXmD/FRyHG2pRqdVoMwnF/cS4nFh8di/7FD6PmX4A3ddk5gpPmHDy9/AJIeTVnVBfRhryPGLDB5h/QdF4I4p314s2zGdta00zrMt4ZvY4AHhe+TKwFFdhZL2wPgiymmjxjNQCFVQDa8zaJClJsA1gmHE8oqx9bA+A9ISMGvS0vB+a3zr4OKaFamYD5ihEUG0UusFc9kH3387E3XDs90QWQ0zNaE+6Y5DNNPPCcBHKQ+hr
-x-ms-exchange-antispam-messagedata: j82Hia3DFxeDpVqeDN/VIioOZacSNZ38WGOPOlypOoG9cBiTNUeghdVaZLsOYUst/NHNdhFWvlBCFW607qDAaXhEwXzShe9iWocuZ3efe2tw2wk21xxX8R9hybk1Cg+TY2oxzcCOEgNLeSJK31guvg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a97bcb6-f257-41a7-d5a0-08d7d0ea5c36
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:28:48.3537
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fZt2K6NmqXoNwbi58qmdhsbNEdjeQ8WUYOX7ztKQPqeh4ZvpKzshhxvfJ7iTkYJvjmeGyemF6ai/Ra2+OE88CY+Yjon1g7nkH1WD+Xj012Q=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0938
+        Wed, 25 Mar 2020 14:29:20 -0400
+Received: from alexa-out-sd-02.qualcomm.com ([199.106.114.39]:50676 "EHLO
+        alexa-out-sd-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727129AbgCYS3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:29:19 -0400
+Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
+  by alexa-out-sd-02.qualcomm.com with ESMTP; 25 Mar 2020 11:29:18 -0700
+Received: from asutoshd-linux1.qualcomm.com ([10.46.160.39])
+  by ironmsg03-sd.qualcomm.com with ESMTP; 25 Mar 2020 11:29:17 -0700
+Received: by asutoshd-linux1.qualcomm.com (Postfix, from userid 92687)
+        id B50AE208CE; Wed, 25 Mar 2020 11:29:17 -0700 (PDT)
+From:   Asutosh Das <asutoshd@codeaurora.org>
+To:     Avri.Altman@wdc.com, cang@codeaurora.org,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org
+Cc:     Asutosh Das <asutoshd@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 1/3] scsi: ufshcd: Update the set frequency to devfreq
+Date:   Wed, 25 Mar 2020 11:29:00 -0700
+Message-Id: <d0c6c22455811e9f0eda01f9bc70d1398b51b2bd.1585160616.git.asutoshd@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1585160616.git.asutoshd@codeaurora.org>
+References: <cover.1585160616.git.asutoshd@codeaurora.org>
+In-Reply-To: <cover.1585160616.git.asutoshd@codeaurora.org>
+References: <cover.1585160616.git.asutoshd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianyu Lan <Tianyu.Lan@microsoft.com> Sent: Tuesday, March 24, 2020 1=
-2:57 AM
->=20
-> When kdump is not configured, a Hyper-V VM might still respond to
-> network traffic after a kernel panic when kernel parameter panic=3D0.
-> The panic CPU goes into an infinite loop with interrupts enabled,
-> and the VMbus driver interrupt handler still works because the
-> VMbus connection is unloaded only in the kdump path.  The network
-> responses make the other end of the connection think the VM is
-> still functional even though it has panic'ed, which could affect any
-> failover actions that should be taken.
->=20
-> Fix this by unloading the VMbus connection during the panic process.
-> vmbus_initiate_unload() could then be called twice (e.g., by
-> hyperv_panic_event() and hv_crash_handler(), so reset the connection
-> state in vmbus_initiate_unload() to ensure the unload is done only
-> once.
->=20
-> Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
-> ---
-> Change since v1:
-> 	- Update change log
-> 	- Use xchg() to change vmbus connection status
-> Change since v2:
-> 	- Update comment of registering panic callback.
-> ---
->  drivers/hv/channel_mgmt.c |  3 +++
->  drivers/hv/vmbus_drv.c    | 21 +++++++++++++--------
->  2 files changed, 16 insertions(+), 8 deletions(-)
->=20
+Currently, the frequency that devfreq provides the
+driver to set always leads the clocks to be scaled up.
+Hence, round the clock-rate to the nearest frequency
+before deciding to scale.
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Also update the devfreq statistics of current frequency.
+
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+---
+ drivers/scsi/ufs/ufshcd.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 2a2a63b..7916c8b 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1187,6 +1187,9 @@ static int ufshcd_devfreq_target(struct device *dev,
+ 	if (!ufshcd_is_clkscaling_supported(hba))
+ 		return -EINVAL;
+ 
++	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
++	/* Override with the closest supported frequency */
++	*freq = (unsigned long) clk_round_rate(clki->clk, *freq);
+ 	spin_lock_irqsave(hba->host->host_lock, irq_flags);
+ 	if (ufshcd_eh_in_progress(hba)) {
+ 		spin_unlock_irqrestore(hba->host->host_lock, irq_flags);
+@@ -1201,8 +1204,11 @@ static int ufshcd_devfreq_target(struct device *dev,
+ 		goto out;
+ 	}
+ 
+-	clki = list_first_entry(&hba->clk_list_head, struct ufs_clk_info, list);
++	/* Decide based on the rounded-off frequency and update */
+ 	scale_up = (*freq == clki->max_freq) ? true : false;
++	if (!scale_up)
++		*freq = clki->min_freq;
++	/* Update the frequency */
+ 	if (!ufshcd_is_devfreq_scaling_required(hba, scale_up)) {
+ 		spin_unlock_irqrestore(hba->host->host_lock, irq_flags);
+ 		ret = 0;
+@@ -1250,6 +1256,8 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	struct ufs_hba *hba = dev_get_drvdata(dev);
+ 	struct ufs_clk_scaling *scaling = &hba->clk_scaling;
+ 	unsigned long flags;
++	struct list_head *clk_list = &hba->clk_list_head;
++	struct ufs_clk_info *clki;
+ 
+ 	if (!ufshcd_is_clkscaling_supported(hba))
+ 		return -EINVAL;
+@@ -1260,6 +1268,13 @@ static int ufshcd_devfreq_get_dev_status(struct device *dev,
+ 	if (!scaling->window_start_t)
+ 		goto start_window;
+ 
++	clki = list_first_entry(clk_list, struct ufs_clk_info, list);
++	/*
++	 * If current frequency is 0, then the ondemand governor considers
++	 * there's no initial frequency set. And it always requests to set
++	 * to max. frequency.
++	 */
++	stat->current_frequency = clki->curr_freq;
+ 	if (scaling->is_busy_started)
+ 		scaling->tot_busy_t += ktime_to_us(ktime_sub(ktime_get(),
+ 					scaling->busy_start_t));
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
 
