@@ -2,168 +2,149 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E940FC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB51EC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B202078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:54:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CBB22074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xql09Nf2"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="PU2azbUl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgCYSyE (ORCPT
+        id S1727553AbgCYS5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:54:04 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34217 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727006AbgCYSyE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:54:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e9so3154595oii.1;
-        Wed, 25 Mar 2020 11:54:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cWw78govt1jCZMTOGm30sOUc8tNMV0QPWqlJNzfJWWI=;
-        b=Xql09Nf2OOJO07fx1b8npRsZZ63dIc7zbOgp7/7cw4DPczOSwwt7hip7Pt5bKKQFqS
-         dKBg1mYXV1eQHi3seyBWSkTymITneF9jgWjHz/vmmuPG9jGrNITskAaUhCKofzG6tTm4
-         6Juu/hopTUYaKE++RhnZSiigR8kkddc3saJVx15ToDA3/jGgtqFnH5nLTRjmKBBI9sdA
-         0PFScrCb1UWVLwbbiCHjtScw1Jd0ogQOudJD7fRYW6XCjxVW20pBfVYHYCdBZnV9x1IV
-         iAf9j+8fXyseidEFtNJXVrPF7Bd5XMFeogiPXKsfmDI2u5Fu5BwsJ4TlI682HtrCn8+i
-         LgdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cWw78govt1jCZMTOGm30sOUc8tNMV0QPWqlJNzfJWWI=;
-        b=nyqtdJMnWwcLfHyEMMjLKKMYf3UtcqTvjFkInTOQaNp8KnAwQXdeFIH1xMhISgT3jc
-         X1w5e8XjmqgsgJyS+dyQraYcfaUuLF4Uip+C+qjTyra1J0hOIpLXux1gAUFisc4IInUz
-         RTt7FH0dszXAzVWxdk4a1EkWRMBR5LA5WABB8oiCmCHBee7xlu0byE5e8Armb3GOlTXS
-         hhFZJ1z8wobCuZFqwy8dcm4c3C+cIuva/oQAUK85hy4deKOxH4hpmMm4USLPKWvVmWOd
-         r34uVQ8o2uV9T9dlwfP4AuTWWCeuMU2JUDxHlYxWxIXdWf0ENIFA4IkmNqOEomaVnvic
-         NKWA==
-X-Gm-Message-State: ANhLgQ3ugppc8TEM5NOxlX4CL3e+xJGw1RDBT2qGvdNC/ADZNO4LW0kW
-        Np6Kc+JK8JVHcTt1KwtAN9/4Ag/o6uRJldAlrZI=
-X-Google-Smtp-Source: ADFU+vthgnztGDzpqeOyOwWxg1D8ByJOoiqbKapZiuDqO3A3t7/JHbTDNJA1rqd5w+Jg5H2jliyGGIKSTVS+BihGYRo=
-X-Received: by 2002:aca:4b56:: with SMTP id y83mr3616037oia.142.1585162443547;
- Wed, 25 Mar 2020 11:54:03 -0700 (PDT)
+        Wed, 25 Mar 2020 14:57:19 -0400
+Received: from mail-eopbgr640117.outbound.protection.outlook.com ([40.107.64.117]:61344
+        "EHLO NAM06-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727174AbgCYS5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 14:57:18 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ARBryghX9/ZVsg4QeyaXxIKyu6HjDKnaiPXJ1sC/HHOBYKnkPCvpVTU7R/p1dCN8YW3UKkHax/XGsMEJeWM7zi5nItK60r/h6ERe4TSYwz5+jyynAZUNRLtoF0als0vlLmGxGzNNVYNjy8/uJtm+krSzxt7jPzxBWttE6/jU6bji9ww0o1KT/mztjsJ0jPtLu++d19hf1P/5VdVxsYE2Kzh+huVhyQD1tDLT63U+vNKVmwp+F9waPagvyWr0heN7+Yh5SIR3RVrzcCBJYggpOZe7+TxU6MofKL7pxzNqybhAuPt3eTtHbWQGzLmAslKvh7VXU8w0uQsGhu0Bj5QLwQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k3xQMZjgnXIoznaTQ2ZjFwI9qzbGqPiKDFlnvoCavqU=;
+ b=Gel4eWE6LqMBERrA766t5uH1+KS2O8O3ffX9Wqe1fwKaoHQcUWCWmJY8m3QHZ0JZxFdWv8GQ5xnCA1uKCGI6f7pMhnGfKSFp6gs/fQOvaZhpNj+G424Msdl1LDgffHQuw84xZ2I+L+NSnXNUh2IP3nn0oGwv0KLGe8j+0Lz+i0HcU+URV47ZxPnxg5rWxBnSaVpe3kDr0STZFh5jylIHzjkFohjWR2cHyBEVcHiJKLR8qdMS7hzPaVy8dUkB3a3YJ/ET8Y4GkTfEeM/WZDaOX+7+2zRfg0FwtIVcj6/A3z/VFDjIrdHWy6TF3p2lwyYKqklhRLBdWKbWe2PBg22sXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k3xQMZjgnXIoznaTQ2ZjFwI9qzbGqPiKDFlnvoCavqU=;
+ b=PU2azbUl3glTHjHPu6r8T465bQVVwy9bW4w381XNzAR2rGzS74WjbbDHPtMfCh8BltHBlOvDfFc4pG1cPBBXzxQ9EbT69MV5C2KYrnwPdIx3HEQsgVtAf2vABtqIBcemikvpibWOA2dIeyLV+Z4kcLXoQWFYUgrSAM0FBWvRTJ4=
+Received: from DM5PR00MB0424.namprd00.prod.outlook.com (52.132.129.36) by
+ DM5PR00MB0374.namprd00.prod.outlook.com (52.132.129.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2897.0; Wed, 25 Mar 2020 18:57:14 +0000
+Received: from DM5PR00MB0424.namprd00.prod.outlook.com
+ ([fe80::f922:ae66:e64:e8]) by DM5PR00MB0424.namprd00.prod.outlook.com
+ ([fe80::f922:ae66:e64:e8%8]) with mapi id 15.20.2897.000; Wed, 25 Mar 2020
+ 18:57:14 +0000
+From:   Yubo Xie <yuboxie@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>, Yubo Xie <ltykernel@gmail.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <liuwe@microsoft.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        vkuznets <vkuznets@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: RE: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong
+ time unit
+Thread-Topic: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong
+ time unit
+Thread-Index: AQHWAtWohpE1hUqs8UCHxUmnqp3mpqhZpyww
+Date:   Wed, 25 Mar 2020 18:57:14 +0000
+Message-ID: <DM5PR00MB0424FA0EC96382D3B6D2D269B4CE0@DM5PR00MB0424.namprd00.prod.outlook.com>
+References: <20200324151935.15814-1-yuboxie@microsoft.com>
+ <HK0P153MB0273AEB3D64694E8DF31C0B0BFCE0@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+In-Reply-To: <HK0P153MB0273AEB3D64694E8DF31C0B0BFCE0@HK0P153MB0273.APCP153.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-03-25T18:46:05.1806297Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5f141aee-3c29-4a29-a518-1eaaf4ed75fb;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yuboxie@microsoft.com; 
+x-originating-ip: [75.172.59.86]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3ad7d72d-1c37-434e-22a1-08d7d0ee551e
+x-ms-traffictypediagnostic: DM5PR00MB0374:|DM5PR00MB0374:|DM5PR00MB0374:
+x-ms-exchange-transport-forked: True
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR00MB03745532233037DA05417E04B4CE0@DM5PR00MB0374.namprd00.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4941;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR00MB0424.namprd00.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(136003)(366004)(39860400002)(346002)(376002)(71200400001)(107886003)(110136005)(9686003)(33656002)(54906003)(66946007)(4326008)(66446008)(64756008)(66556008)(66476007)(76116006)(7696005)(6506007)(53546011)(8990500004)(2906002)(26005)(4744005)(81166006)(10290500003)(86362001)(52536014)(5660300002)(6636002)(186003)(8936002)(478600001)(55016002)(8676002)(316002)(81156014);DIR:OUT;SFP:1102;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 31KFDhsa2O0CnGFjxi2JmYr/bfe2tKdZa9xF4f6maFNZTvqZMxv9i+uxpOtUx2P352wWGvdz83/sq5XIlV11ERBh90N3IcAQwK5Khtp6GnUOHtcOsZ5eLt5x0dLLVWULNqL9IYiFVdU6DfGBvABWJnX7MMw7YuIE7xhqj9mYCZ3e/ao34XRdPVxHwO2Xqe/zRiuPBGeHB5d+byV0KflPxrRPLj6L1G4t95IvPIVMACPQw0dUKz5z29U7/bx540xU45QBS+JpbkCH23zaw+my0mIpx9xFZFCCtN4sm/Dm7VIAZRNkMftuwGqZwuk/Uo71bjHmw6rOBdyc4GrmBps1CS6B21G543HEi6tGpWoteKxkfanu8+pgasGuE12s1C+hvhg8Hz4rvPAsWa/qkv3NzUx60inGfunWRfnWoswqvr/QiCWpcaW3CU+8zWVXHDM+
+x-ms-exchange-antispam-messagedata: 3pI+SWMgZms1UtEpH7bpUUKj2DfPUZDNMPjSMm1oViEz/j7RRN66noQojyLLfBAVRDXH79a7Aba39JCjNMf9fSD2YxQxAt1M0kwVM749iPe9ZL2ijuEOU87ycQIEW8mZeE6XkfZXgw8h2aOMEQHg2g==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000742e9e05a10170bc@google.com> <87a74arown.fsf@nanos.tec.linutronix.de>
- <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
- <87ftdypyec.fsf@nanos.tec.linutronix.de> <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
- <875zeuftwm.fsf@nanos.tec.linutronix.de> <20200324020504.GR3199@paulmck-ThinkPad-P72>
-In-Reply-To: <20200324020504.GR3199@paulmck-ThinkPad-P72>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Wed, 25 Mar 2020 11:53:51 -0700
-Message-ID: <CAM_iQpVK5tNrer3UnnBVU82cRcdNAVtn5bxCm4rDVZM1_ffPAQ@mail.gmail.com>
-Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
-To:     "Paul E . McKenney" <paulmck@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ad7d72d-1c37-434e-22a1-08d7d0ee551e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 18:57:14.3787
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3SE85t9Yp+R4gbOBmDZBv0RZmE1HinfGmgg2/J2YvI6yl4duFWjv0TR7Fli9diG//pQHn4ObzNWFtAkzYhi97w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR00MB0374
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 7:05 PM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Tue, Mar 24, 2020 at 02:01:13AM +0100, Thomas Gleixner wrote:
-> > Cong Wang <xiyou.wangcong@gmail.com> writes:
-> > > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >> > We use an ordered workqueue for tc filters, so these two
-> > >> > works are executed in the same order as they are queued.
-> > >>
-> > >> The workqueue is ordered, but look how the work is queued on the work
-> > >> queue:
-> > >>
-> > >> tcf_queue_work()
-> > >>   queue_rcu_work()
-> > >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
-> > >>
-> > >> So after the grace period elapses rcu_work_rcufn() queues it in the
-> > >> actual work queue.
-> > >>
-> > >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
-> > >> invoked from preemtible context. Now assume the following:
-> > >>
-> > >> CPU0
-> > >>   tcf_queue_work()
-> > >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
-> > >>
-> > >> -> Migration
-> > >>
-> > >> CPU1
-> > >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
-> > >>
-> > >> So your RCU callbacks can be placed on different CPUs which obviously
-> > >> has no ordering guarantee at all. See also:
-> > >
-> > > Good catch!
-> > >
-> > > I thought about this when I added this ordered workqueue, but it
-> > > seems I misinterpret max_active, so despite we have max_active==1,
-> > > more than 1 work could still be queued on different CPU's here.
-> >
-> > The workqueue is not the problem. it works perfectly fine. The way how
-> > the work gets queued is the issue.
-> >
-> > > I don't know how to fix this properly, I think essentially RCU work
-> > > should be guaranteed the same ordering with regular work. But this
-> > > seems impossible unless RCU offers some API to achieve that.
-> >
-> > I don't think that's possible w/o putting constraints on the flexibility
-> > of RCU (Paul of course might disagree).
->
-> It is possible, but it does not come for free.
->
-> From an RCU/workqueues perspective, if I understand the scenario, you
-> can do the following:
->
->         tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
->
->         rcu_barrier(); // Wait for the RCU callback.
->         flush_work(...); // Wait for the workqueue handler.
->                          // But maybe for quite a few of them...
->
->         // All the earlier handlers have completed.
->         tcf_queue_work(&p->rwork, tcindex_destroy_work);
->
-> This of course introduces overhead and latency.  Maybe that is not a
-> problem at teardown time, or maybe the final tcf_queue_work() can itself
-> be dumped into a workqueue in order to get it off of the critical path.
+I use "time" to run some performance tests in our project under WSL2, but t=
+he result looks weird:  the value of "real" is far from the sum of "user" +=
+ "sys".
 
-I personally agree, but nowadays NIC vendors care about tc filter
-slow path performance as well. :-/
+-----Original Message-----
+From: Dexuan Cui <decui@microsoft.com>=20
+Sent: Wednesday, March 25, 2020 11:46 AM
+To: Yubo Xie <ltykernel@gmail.com>; KY Srinivasan <kys@microsoft.com>; Haiy=
+ang Zhang <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.c=
+om>; Wei Liu <liuwe@microsoft.com>; daniel.lezcano@linaro.org; tglx@linutro=
+nix.de; Michael Kelley <mikelley@microsoft.com>
+Cc: Yubo Xie <yuboxie@microsoft.com>; linux-hyperv@vger.kernel.org; linux-k=
+ernel@vger.kernel.org; vkuznets <vkuznets@redhat.com>; stable@vger.kernel.o=
+rg; Tianyu Lan <Tianyu.Lan@microsoft.com>
+Subject: RE: [PATCH] x86/Hyper-V: Fix hv sched clock function return wrong =
+time unit
 
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Yubo Xie
+> Sent: Tuesday, March 24, 2020 8:20 AM
+> ...
+> sched clock callback should return time with nano second as unit but=20
+> current hv callback returns time with 100ns. Fix it.
 
->
-> However, depending on your constraints ...
->
-> > I assume that the filters which hang of tcindex_data::perfect and
-> > tcindex_data:p must be freed before tcindex_data, right?
-> >
-> > Refcounting of tcindex_data should do the trick. I.e. any element which
-> > you add to a tcindex_data instance takes a refcount and when that is
-> > destroyed then the rcu/work callback drops a reference which once it
-> > reaches 0 triggers tcindex_data to be freed.
->
-> ... reference counts might work much better for you.
->
+Hi Yubo,
+I'm curious how you found the bug? :-) Did you notice some kind of symtom?
 
-I need to think about how much work is needed for refcnting, given
-other filters have the same assumption.
-
-Thanks.
+Thanks,
+-- Dexuan
