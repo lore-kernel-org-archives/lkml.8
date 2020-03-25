@@ -2,123 +2,157 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBBDC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE83DC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C68C2073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA572073E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hUPBtEbE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z/NtPChq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgCYP4E (ORCPT
+        id S1727830AbgCYP5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:56:04 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:35760 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbgCYP4D (ORCPT
+        Wed, 25 Mar 2020 11:57:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51790 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727456AbgCYP5v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:56:03 -0400
-Received: by mail-qt1-f196.google.com with SMTP id e14so2587041qts.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:56:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5LjboPnDfMYr+D+3numlwyKRNovhORGQjxZDfSq6m9Y=;
-        b=hUPBtEbERszA+YII5Yxm3jnhf4gWvrQeMIUx7nRUKWsaVY/hTEbkcVwZ824Se5rjur
-         x16y9PSdBsh167UfAZB5rT8bdfE8B41JnUCsPalmpfBxfrdDF/j6w9juDr9y/qiY8f1h
-         pNQfeGBclLRBzT/fGnw6z3HBUlqE3UAo1M36/bqz9zfViGSlGkvioTbJiS2pCU7VlNop
-         OQdFs/PIbIFnGIxs+zlMC8scqnUkRuWE0TWt3fVrW/7JpC5dxhnn5niw6m4tH5ntSp8s
-         qpps1r0bF2/oiW3GuFKkRAgQUlhbibiMzAZHDiUoxY2kjLYpzPOqOSgyvIRDqfhyupYy
-         4Vew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=5LjboPnDfMYr+D+3numlwyKRNovhORGQjxZDfSq6m9Y=;
-        b=SuH0sbLIYT1Zh6V9of6T1LiLf62EUAQKU2q9r8NcRWB+vm/osRDkZLyQ16+t8syjtJ
-         f8INOGwEx6qDJjVnJFun5GSxgOgeHuOd9d64vBl+qU/MSmAOOwVwtTzjTjNGE+a2cdPJ
-         CosjNJoXnA42KRbgZ4bJ5N1SiEHE0xM3cXu7U9/HyE/nXjjzunOOJj+ERlRrD9T+QDdR
-         s/F8z0NpN8KTim8PxoZc5wfrUk0SFY9i770LGhRSPO5t3CqvGMt7nRUFjW9QwgjKlgPK
-         MNxYJLUAC1arGvoDbAfkxpuTczR/bJU1/C6URLUzu9TyBLVj94UYU/19X+hrRhgpAF7o
-         skFA==
-X-Gm-Message-State: ANhLgQ14bnqHn4+meIQZExP6/fcaX9SrnJIarwc25harY6wVLhZIGzS/
-        NZJjT+p0yTiiLcqSapdi8x3ItA==
-X-Google-Smtp-Source: ADFU+vsnGtXHOB3Q1SbOrengVFBDEEpEz+h2e/kMJ6fU6G+kU2YhLUoG6gF8c+vYKIE7feOWLDUscQ==
-X-Received: by 2002:ac8:346f:: with SMTP id v44mr3526427qtb.205.1585151761950;
-        Wed, 25 Mar 2020 08:56:01 -0700 (PDT)
-Received: from ovpn-66-69.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t23sm17931750qtj.63.2020.03.25.08.55.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:55:47 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Wed, 25 Mar 2020 11:55:32 -0400
-Message-Id: <20200325155532.7238-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        Wed, 25 Mar 2020 11:57:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=0Nq4yxa20BJ37D0s9zLhKVxO/JAu1Z42ScKUYri07QE=; b=Z/NtPChqiONDSQ1rBH5Zm0gRDL
+        fJ27q2PwIEazs4iALNhvZqw0guyErk+s5SN9N1OTzDukEAwKlvvAGObBeZh96TXJujzhaBs2hjg6h
+        UtBvh3Irht1oTEwVXwZnrF8Nm5JvyUQbG27ZzZchwXrVcx0aMtxkmVZHKls3U990Q8CEgbnPtanli
+        k03nHr1rNW43oAke4lBo8U16gihxsyqTy0cbJvPq9a/Ffi+GEje+uCqYT4Bjj09y7Gm2UeaqGgBPb
+        OimelX9k2iqf78qNic+/dkvBoawQ2RaKZGnYCmisjVjuwrX6ZsjQ370U1u3NOrj0LS+4v1V0fWNFF
+        ADbH30MA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jH8PJ-0000jp-Ru; Wed, 25 Mar 2020 15:57:29 +0000
+Subject: Re: linux-next: Tree for Mar 25 (arch/x86/kvm/)
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        KVM <kvm@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <20200325195350.7300fee9@canb.auug.org.au>
+ <e9286016-66ae-9505-ea52-834527cdae27@infradead.org>
+ <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <064720eb-2147-1b92-7a62-f89d6380f40a@infradead.org>
+Date:   Wed, 25 Mar 2020 08:57:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
+In-Reply-To: <d9af8094-96c3-3b7f-835c-4e48d157e582@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fib_triestat_seq_show() calls hlist_for_each_entry_rcu(tb, head,
-tb_hlist) without rcu_read_lock() will trigger a warning,
+On 3/25/20 8:46 AM, Paolo Bonzini wrote:
+> On 25/03/20 16:30, Randy Dunlap wrote:
+>> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
+>> function __cpuid_entry_get_reg(), for the default: case.
+>>
+>>
+>>   CC      arch/x86/kvm/cpuid.o
+>> In file included from ../include/linux/export.h:43:0,
+>>                  from ../include/linux/linkage.h:7,
+>>                  from ../include/linux/preempt.h:10,
+>>                  from ../include/linux/hardirq.h:5,
+>>                  from ../include/linux/kvm_host.h:7,
+>>                  from ../arch/x86/kvm/cpuid.c:12:
+>> In function ‘__cpuid_entry_get_reg’,
+>>     inlined from ‘kvm_cpu_cap_mask’ at ../arch/x86/kvm/cpuid.c:272:25,
+>>     inlined from ‘kvm_set_cpu_caps’ at ../arch/x86/kvm/cpuid.c:292:2:
+>> ../include/linux/compiler.h:394:38: error: call to ‘__compiletime_assert_114’ declared with attribute error: BUILD_BUG failed
+>>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>                                       ^
+>> ../include/linux/compiler.h:375:4: note: in definition of macro ‘__compiletime_assert’
+>>     prefix ## suffix();    \
+>>     ^~~~~~
+>> ../include/linux/compiler.h:394:2: note: in expansion of macro ‘_compiletime_assert’
+>>   _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+>>   ^~~~~~~~~~~~~~~~~~~
+>> ../include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
+>>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+>>                                      ^~~~~~~~~~~~~~~~~~
+>> ../include/linux/build_bug.h:59:21: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
+>>  #define BUILD_BUG() BUILD_BUG_ON_MSG(1, "BUILD_BUG failed")
+>>                      ^~~~~~~~~~~~~~~~
+>> ../arch/x86/kvm/cpuid.h:114:3: note: in expansion of macro ‘BUILD_BUG’
+>>    BUILD_BUG();
+>>    ^~~~~~~~~
+>>
+> 
+> Looks like the compiler is not smart enough to figure out the constant 
+> expressions in BUILD_BUG.  I think we need to do something like this:
+> 
+> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> index 23b4cd1ad986..8f711b0cdec0 100644
+> --- a/arch/x86/kvm/cpuid.h
+> +++ b/arch/x86/kvm/cpuid.h
+> @@ -40,6 +40,7 @@ struct cpuid_reg {
+>  	int reg;
+>  };
+>  
+> +/* Update reverse_cpuid_check as well when adding an entry.  */
+>  static const struct cpuid_reg reverse_cpuid[] = {
+>  	[CPUID_1_EDX]         = {         1, 0, CPUID_EDX},
+>  	[CPUID_8000_0001_EDX] = {0x80000001, 0, CPUID_EDX},
+> @@ -68,12 +69,21 @@ static const struct cpuid_reg reverse_cpuid[] = {
+>   */
+>  static __always_inline void reverse_cpuid_check(unsigned int x86_leaf)
+>  {
+> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_1);
+> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_2);
+> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_3);
+> -	BUILD_BUG_ON(x86_leaf == CPUID_LNX_4);
+> -	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
+> -	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
+> +	BUILD_BUG_ON(x86_leaf != CPUID_1_EDX &&
+> +	             x86_leaf != CPUID_8000_0001_EDX &&
+> +	             x86_leaf != CPUID_8086_0001_EDX &&
+> +	             x86_leaf != CPUID_1_ECX &&
+> +	             x86_leaf != CPUID_C000_0001_EDX &&
+> +	             x86_leaf != CPUID_8000_0001_ECX &&
+> +	             x86_leaf != CPUID_7_0_EBX &&
+> +	             x86_leaf != CPUID_D_1_EAX &&
+> +	             x86_leaf != CPUID_8000_0008_EBX &&
+> +	             x86_leaf != CPUID_6_EAX &&
+> +	             x86_leaf != CPUID_8000_000A_EDX &&
+> +	             x86_leaf != CPUID_7_ECX &&
+> +	             x86_leaf != CPUID_8000_0007_EBX &&
+> +	             x86_leaf != CPUID_7_EDX &&
+> +	             x86_leaf != CPUID_7_1_EAX);
+>  }
+>  
+>  /*
+> 
+> Randy, can you test it with your compiler?
 
- net/ipv4/fib_trie.c:2579 RCU-list traversed in non-reader section!!
+Nope, no help.  That's the wrong location.
+Need a patch for this:
+>> 24 (only showing one of them here) BUILD_BUG() errors in arch/x86/kvm/cpuid.h
+>> function __cpuid_entry_get_reg(), for the default: case.
 
- other info that might help us debug this:
 
- rcu_scheduler_active = 2, debug_locks = 1
- 1 lock held by proc01/115277:
-  #0: c0000014507acf00 (&p->lock){+.+.}-{3:3}, at: seq_read+0x58/0x670
-
- Call Trace:
-  dump_stack+0xf4/0x164 (unreliable)
-  lockdep_rcu_suspicious+0x140/0x164
-  fib_triestat_seq_show+0x750/0x880
-  seq_read+0x1a0/0x670
-  proc_reg_read+0x10c/0x1b0
-  __vfs_read+0x3c/0x70
-  vfs_read+0xac/0x170
-  ksys_read+0x7c/0x140
-  system_call+0x5c/0x68
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- net/ipv4/fib_trie.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index ff0c24371e33..73fa37476f03 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -2577,6 +2577,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
- 		   " %zd bytes, size of tnode: %zd bytes.\n",
- 		   LEAF_SIZE, TNODE_SIZE(0));
- 
-+	rcu_read_lock();
- 	for (h = 0; h < FIB_TABLE_HASHSZ; h++) {
- 		struct hlist_head *head = &net->ipv4.fib_table_hash[h];
- 		struct fib_table *tb;
-@@ -2597,6 +2598,7 @@ static int fib_triestat_seq_show(struct seq_file *seq, void *v)
- #endif
- 		}
- 	}
-+	rcu_read_unlock();
- 
- 	return 0;
- }
 -- 
-2.21.0 (Apple Git-122.2)
+~Randy
 
