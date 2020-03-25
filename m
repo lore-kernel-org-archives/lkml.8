@@ -2,127 +2,193 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6349BC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:21:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F26C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:22:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4457A2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:21:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD50E2078A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:22:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dLui0I7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727394AbgCYNVd (ORCPT
+        id S1727444AbgCYNWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:21:33 -0400
-Received: from foss.arm.com ([217.140.110.172]:48312 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727286AbgCYNVc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:21:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E442B31B;
-        Wed, 25 Mar 2020 06:21:31 -0700 (PDT)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E6D813F71F;
-        Wed, 25 Mar 2020 06:21:29 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 13:21:27 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] arm64: entry: Enable random_kstack_offset support
-Message-ID: <20200325132127.GB12236@lakrids.cambridge.arm.com>
-References: <20200324203231.64324-1-keescook@chromium.org>
- <20200324203231.64324-6-keescook@chromium.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324203231.64324-6-keescook@chromium.org>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+        Wed, 25 Mar 2020 09:22:04 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:44789 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbgCYNWE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:22:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id x16so2026846qts.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 06:22:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6BqCxccxfCYt0s0B7B5Tq5f8zXMXUI8kTYEC1wL3LOA=;
+        b=dLui0I7wqDgCnRAsbciTulvvaOb9VbQSkhfUF5xkxBmsG/OFh6/8s4wJxoJ1qCVwEA
+         5ZBM0IpJiNJ6Dwbsn6t+ae9+7GhRREiC1ZhekIQBc0llXtx6iVWp/xqxDafD1/xBhCGK
+         CXXq/z6TXXzzQkZjUXxHzBEYtj+vUr65KY3Cr+bAyLDyGjnjiDwx0tV760TPtBZASjPk
+         5JXarGayW0M+vcdmovzt03eaduYIEUdWjrFpXL1cGpL6ADAHELS36dLbQ0ntuqADUFFZ
+         eYR4KFIopBY0eGirgN0BBsq9iC4ll0+wJrzW/CbwNTPFvWxSiZJqL1iyftgRkbrkD17i
+         scdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6BqCxccxfCYt0s0B7B5Tq5f8zXMXUI8kTYEC1wL3LOA=;
+        b=XPMUCUixRJu96yDKeEhWp77nfEv04CWCEAZOazUNOJNqOFVBtrL9yWn+Ku3uCZqolW
+         INreZuZTFFmdLBvBSHYjpCTmKFfBIvObuUYcN0e6/dgPnml/PTAcd1fil8DV1WvaRzgl
+         Mk4gRaSgvNJCn2gBl+l2oCqgXWyd+Upa6x+vtk5D3v3Qcq4WMc7Ofbv7VDy+WxasTueb
+         QMQAwnsStNFAi8YIqMPeSC2CVzDCtzcgFKHcZEogQ7DCQ7NlOQkAEwjpQ1Y2Cxv5YtGx
+         Db5MX0cNnvu9nlEKsz+NI75/deFWxPMyQemDLF2fxvEDLLQwOwqkR9c0Nl8e5r7cH4s0
+         +D+A==
+X-Gm-Message-State: ANhLgQ12ABrSr+EG8I0FAR9T/MnSVbW9Ts29NUBIt36V6gxgRHTRnBJY
+        oCsXYLTM8/ZHT1gHzxJ4YePmGg==
+X-Google-Smtp-Source: ADFU+vuegRt8+orGLk337zyGYvIH1gOlRdv5e1meeLpZQG9/qCprfgsRFdInNkaQ6Q00aut4EQNizw==
+X-Received: by 2002:ac8:6d31:: with SMTP id r17mr2911848qtu.68.1585142522727;
+        Wed, 25 Mar 2020 06:22:02 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id 2sm17715492qtp.33.2020.03.25.06.22.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 06:22:02 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200325040359.GK23230@ZenIV.linux.org.uk>
+Date:   Wed, 25 Mar 2020 09:21:59 -0400
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <B1AE49C8-A33E-4991-88D5-803DE044C560@lca.pw>
+References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
+ <20200324214637.GI23230@ZenIV.linux.org.uk>
+ <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
+ <20200325021327.GJ23230@ZenIV.linux.org.uk>
+ <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
+ <20200325040359.GK23230@ZenIV.linux.org.uk>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 01:32:31PM -0700, Kees Cook wrote:
-> Allow for a randomized stack offset on a per-syscall basis, with roughly
-> 5 bits of entropy.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Just to check, do you have an idea of the impact on arm64? Patch 3 had
-figures for x86 where it reads the TSC, and it's unclear to me how
-get_random_int() compares to that.
 
-Otherwise, this looks sound to me; I'd jsut like to know whether the
-overhead is in the same ballpark.
+> On Mar 25, 2020, at 12:03 AM, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>=20
+> On Tue, Mar 24, 2020 at 11:24:01PM -0400, Qian Cai wrote:
+>=20
+>>> On Mar 24, 2020, at 10:13 PM, Al Viro <viro@zeniv.linux.org.uk> =
+wrote:
+>>>=20
+>>> On Tue, Mar 24, 2020 at 09:49:48PM -0400, Qian Cai wrote:
+>>>=20
+>>>> It does not catch anything at all with the patch,
+>>>=20
+>>> You mean, oops happens, but neither WARN_ON() is triggered?
+>>> Lovely...  Just to make sure: could you slap the same couple
+>>> of lines just before
+>>>               if (unlikely(!d_can_lookup(nd->path.dentry))) {
+>>> in link_path_walk(), just to check if I have misread the trace
+>>> you've got?
+>>>=20
+>>> Does that (+ other two inserts) end up with
+>>> 	1) some of these WARN_ON() triggered when oops happens or
+>>> 	2) oops is happening, but neither WARN_ON() triggers or
+>>> 	3) oops not happening / becoming harder to hit?
+>>=20
+>> Only the one just before
+>> if (unlikely(!d_can_lookup(nd->path.dentry))) {
+>> In link_path_walk() will trigger.
+>=20
+>> [  245.767202][ T5020] pathname =3D /var/run/nscd/socket
+>=20
+> Lovely.  So
+> 	* we really do get NULL nd->path.dentry there; I've not misread =
+the
+> trace.
+> 	* on the entry into link_path_walk() nd->path.dentry is =
+non-NULL.
+> 	* *ALL* components should've been LAST_NORM ones
+> 	* not a single symlink in sight, unless the setup is rather =
+unusual
+> 	* possibly not even a single mountpoint along the way (depending
+> upon the userland used)
+>=20
+> And in the same loop we have
+>                if (likely(type =3D=3D LAST_NORM)) {
+>                        struct dentry *parent =3D nd->path.dentry;
+>                        nd->flags &=3D ~LOOKUP_JUMPED;
+>                        if (unlikely(parent->d_flags & DCACHE_OP_HASH)) =
+{
+>                                struct qstr this =3D { { .hash_len =3D =
+hash_len }, .name =3D name };
+>                                err =3D parent->d_op->d_hash(parent, =
+&this);
+>                                if (err < 0)
+>                                        return err;
+>                                hash_len =3D this.hash_len;
+>                                name =3D this.name;
+>                        }
+>                }
+> upstream of that thing.  So NULL nd->path.dentry *there* would've =
+oopsed.
+> IOW, what we are hitting is walk_component() with non-NULL =
+nd->path.dentry
+> when we enter it, NULL being returned and nd->path.dentry becoming =
+NULL
+> by the time we return from walk_component().
+>=20
+> Could you post the results of
+> 	stat / /var /var/run /var/run/nscd /var/run/nscd/socket
 
-Thanks
-Mark.
+The file is gone after a successful boot,
 
-> ---
->  arch/arm64/Kconfig          |  1 +
->  arch/arm64/kernel/syscall.c | 10 ++++++++++
->  2 files changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 0b30e884e088..4d5aa4959f72 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -127,6 +127,7 @@ config ARM64
->  	select HAVE_ARCH_MMAP_RND_BITS
->  	select HAVE_ARCH_MMAP_RND_COMPAT_BITS if COMPAT
->  	select HAVE_ARCH_PREL32_RELOCATIONS
-> +	select HAVE_ARCH_RANDOMIZE_KSTACK_OFFSET
->  	select HAVE_ARCH_SECCOMP_FILTER
->  	select HAVE_ARCH_STACKLEAK
->  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
-> diff --git a/arch/arm64/kernel/syscall.c b/arch/arm64/kernel/syscall.c
-> index a12c0c88d345..238dbd753b44 100644
-> --- a/arch/arm64/kernel/syscall.c
-> +++ b/arch/arm64/kernel/syscall.c
-> @@ -5,6 +5,7 @@
->  #include <linux/errno.h>
->  #include <linux/nospec.h>
->  #include <linux/ptrace.h>
-> +#include <linux/randomize_kstack.h>
->  #include <linux/syscalls.h>
->  
->  #include <asm/daifflags.h>
-> @@ -42,6 +43,8 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
->  {
->  	long ret;
->  
-> +	add_random_kstack_offset();
-> +
->  	if (scno < sc_nr) {
->  		syscall_fn_t syscall_fn;
->  		syscall_fn = syscall_table[array_index_nospec(scno, sc_nr)];
-> @@ -51,6 +54,13 @@ static void invoke_syscall(struct pt_regs *regs, unsigned int scno,
->  	}
->  
->  	regs->regs[0] = ret;
-> +
-> +	/*
-> +	 * Since the compiler chooses a 4 bit alignment for the stack,
-> +	 * let's save one additional bit (9 total), which gets us up
-> +	 * near 5 bits of entropy.
-> +	 */
-> +	choose_random_kstack_offset(get_random_int() & 0x1FF);
->  }
->  
->  static inline bool has_syscall_work(unsigned long flags)
-> -- 
-> 2.20.1
-> 
+#  stat / /var /var/run /var/run/nscd /var/run/nscd/socket
+  File: /
+  Size: 244       	Blocks: 0          IO Block: 65536  directory
+Device: fe00h/65024d	Inode: 128         Links: 17
+Access: (0555/dr-xr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-03-24 14:21:27.112559236 -0400
+Modify: 2020-03-24 14:21:25.840486593 -0400
+Change: 2020-03-24 14:21:25.840486593 -0400
+ Birth: -
+  File: /var
+  Size: 4096      	Blocks: 8          IO Block: 65536  directory
+Device: fe00h/65024d	Inode: 133         Links: 21
+Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2018-08-12 05:57:57.000000000 -0400
+Modify: 2020-03-23 21:29:31.087264900 -0400
+Change: 2020-03-23 21:29:31.087264900 -0400
+ Birth: -
+  File: /var/run -> ../run
+  Size: 6         	Blocks: 0          IO Block: 65536  symbolic =
+link
+Device: fe00h/65024d	Inode: 143         Links: 1
+Access: (0777/lrwxrwxrwx)  Uid: (    0/    root)   Gid: (    0/    root)
+Access: 2020-03-24 17:34:11.865030724 -0400
+Modify: 2020-03-23 17:16:40.573974805 -0400
+Change: 2020-03-23 17:16:40.573974805 -0400
+ Birth: -
+stat: cannot stat '/var/run/nscd': No such file or directory
+stat: cannot stat '/var/run/nscd/socket': No such file or directory
+
+> after the boot with working kernel?  Also, is that "hit on every boot" =
+or
+> stochastic?  If it's the latter, I'd like to see the output of the =
+same
+> thing on a successful boot of the same kernel, if possible...
+
+It does not hit every time, so I used a cron job,
+
+@reboot sleep 180; systemctl reboot
+
+It has always hit it within a hour so far.
+
