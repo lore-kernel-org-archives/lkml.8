@@ -2,122 +2,137 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C160C10DCE
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74278C41621
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 565352072E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:42:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57A1920658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 01:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727285AbgCYBmG (ORCPT
+        id S1727280AbgCYBpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 24 Mar 2020 21:42:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:46726 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727189AbgCYBmG (ORCPT
+        Tue, 24 Mar 2020 21:45:42 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37014 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727189AbgCYBpm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 24 Mar 2020 21:42:06 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jGv3I-00018S-NH; Wed, 25 Mar 2020 02:41:53 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id C5E67100C51; Wed, 25 Mar 2020 02:41:51 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
-In-Reply-To: <6d3e7e03-d304-8ec0-b00d-050b1c12140d@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-9-xiaoyao.li@intel.com> <87eethz2p6.fsf@nanos.tec.linutronix.de> <6d3e7e03-d304-8ec0-b00d-050b1c12140d@intel.com>
-Date:   Wed, 25 Mar 2020 02:41:51 +0100
-Message-ID: <87369xyzvk.fsf@nanos.tec.linutronix.de>
+        Tue, 24 Mar 2020 21:45:42 -0400
+Received: by mail-il1-f193.google.com with SMTP id a6so441213ilr.4;
+        Tue, 24 Mar 2020 18:45:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f4D6B9MrkGLZB2AIEqGTRqzOxW30N5+6gdlWcIa45lc=;
+        b=J3uwS3Cec42SW6eWzYZzfp/8fGv/eaXm0osEKAnUNcgI2KvfNjbRRAI8V+foDst3sX
+         FTZ9zlvc/loEyxQWJQJm45lILHveMvIdsWVZ0xTlYOxmzYGkwwBo1XHiYv22cTBcryud
+         pKgZIOJC6evk7oxxK3EUJYqBtIWF5Nyjm+iCj5TgtlpWsDCE3kReQcEWpcGIFx/7r54L
+         uf7CSyZGWZpV9FInZPdmRhdCBAtTqxfUXrRaBmXSuzlZMmBzIHC1A3WxHmYuh4B0G28E
+         U11yg5DnBfUSkFyaJ0Mex/+gJdxuFFxsVy9FtlRxevE/XjRSlw3nCivA2kZRp3QY3zju
+         l69w==
+X-Gm-Message-State: ANhLgQ09t1mBmMTWuKgg8i6gM3ssaRGL7+8iHTuTOAdAGjdjiN6JSxMR
+        veKqC/P0ax8o68pVajnmgU5JpuLMzPRfuWKu5D0m2Eam
+X-Google-Smtp-Source: ADFU+vuSQONXJlK8DCLnl3/KGz7ZQKK5ZiNMyS2gUS4INYXRJmqEDqZCv0Gd42u4BjkIiTkvjaXHVHVh/8X3OVHllyM=
+X-Received: by 2002:a92:8510:: with SMTP id f16mr1332299ilh.208.1585100741368;
+ Tue, 24 Mar 2020 18:45:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20200324153624.23109-1-jiaxun.yang@flygoat.com> <20200324153624.23109-3-jiaxun.yang@flygoat.com>
+In-Reply-To: <20200324153624.23109-3-jiaxun.yang@flygoat.com>
+From:   Huacai Chen <chenhc@lemote.com>
+Date:   Wed, 25 Mar 2020 09:52:26 +0800
+Message-ID: <CAAhV-H7__WmeWZ4w8Kc37WztRZ+-du9nKbVkRJeK7=ZhPaVY3g@mail.gmail.com>
+Subject: Re: [PATCH v6 02/11] irqchip: loongson-liointc: Workaround LPC IRQ Errata
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc:     "open list:MIPS" <linux-mips@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> On 3/25/2020 8:40 AM, Thomas Gleixner wrote:
->>>   		if (!split_lock_detect_on() ||
->>> +		    guest_cpu_split_lock_detect_on(vmx) ||
->>>   		    guest_cpu_alignment_check_enabled(vcpu)) {
->> 
->> If the host has split lock detection disabled then how is the guest
->> supposed to have it enabled in the first place?
+Hi, Jiaxun,
+
+On Tue, Mar 24, 2020 at 11:39 PM Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
 >
-> So we need to reach an agreement on whether we need a state that host 
-> turns it off but feature is available to be exposed to guest.
-
-There is a very simple agreement:
-
-  If the host turns it off, then it is not available at all
-
-  If the host sets 'warn' then this applies to everything
-
-  If the host sets 'fatal' then this applies to everything
-
-Make it simple and consistent.
-
->>> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
->>> +	    guest_cpu_split_lock_detect_on(vmx)) {
->>> +		if (test_thread_flag(TIF_SLD))
->>> +			sld_turn_back_on();
->> 
->> This is completely inconsistent behaviour. The only way that TIF_SLD is
->> set is when the host has sld_state == sld_warn and the guest triggered
->> a split lock #AC.
+> The 1.0 version of that controller has a bug that status bit
+> of LPC IRQ sometimes doesn't get set correctly.
 >
-> Can you image the case that both host and guest set sld_state == sld_warn.
+> So we can always blame LPC IRQ when spurious interrupt happens
+> at the parent interrupt line which LPC IRQ supposed to route
+> to.
 >
-> 1. There is guest userspace thread causing split lock.
-> 2. It sets TIF_SLD for the thread in guest, and clears SLD bit to re- 
-> execute the instruction in guest.
-> 3. Then it still causes #AC since hardware SLD is not cleared. In host 
-> kvm, we call handle_user_split_lock() that sets TIF_SLD for this VMM 
-> thread, and clears hardware SLD bit. Then it enters guest and re-execute 
-> the instruction.
-> 4. In guest, it schedules to another thread without TIF_SLD being set. 
-> it sets the SLD bit to detect the split lock for this thread. So for 
-> this purpose, we need to turn sld back on for the VMM thread, otherwise 
-> this guest vcpu cannot catch split lock any more.
+> Co-developed-by: Huacai Chen <chenhc@lemote.com>
+> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+> ---
+>  drivers/irqchip/irq-loongson-liointc.c | 16 ++++++++++++++--
+>  1 file changed, 14 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/irqchip/irq-loongson-liointc.c b/drivers/irqchip/irq-loongson-liointc.c
+> index 8b6d7b8ddaca..d5054e90eab8 100644
+> --- a/drivers/irqchip/irq-loongson-liointc.c
+> +++ b/drivers/irqchip/irq-loongson-liointc.c
+> @@ -32,6 +32,8 @@
+>
+>  #define LIOINTC_SHIFT_INTx     4
+>
+> +#define LIOINTC_ERRATA_IRQ     10
+> +
+>  struct liointc_handler_data {
+>         struct liointc_priv     *priv;
+>         u32                     parent_int_map;
+> @@ -41,6 +43,7 @@ struct liointc_priv {
+>         struct irq_chip_generic         *gc;
+>         struct liointc_handler_data     handler[LIOINTC_NUM_PARENT];
+>         u8                              map_cache[LIOINTC_CHIP_IRQ];
+> +       bool                            have_lpc_irq_errata;
+Maybe has_lpc_irq_errata?
 
-If you really want to address that scenario, then why are you needing
-any of those completely backwards interfaces at all?
+>  };
+>
+>  static void liointc_chained_handle_irq(struct irq_desc *desc)
+> @@ -54,8 +57,14 @@ static void liointc_chained_handle_irq(struct irq_desc *desc)
+>
+>         pending = readl(gc->reg_base + LIOINTC_REG_INTC_STATUS);
+>
+> -       if (!pending)
+> -               spurious_interrupt();
+> +       if (!pending) {
+> +               /* Always blame LPC IRQ if we have that bug and LPC IRQ is enabled */
+> +               if (handler->priv->have_lpc_irq_errata &&
+> +                       (handler->parent_int_map & ~gc->mask_cache & BIT(LIOINTC_ERRATA_IRQ)))
+> +                       pending = BIT(LIOINTC_ERRATA_IRQ);
+> +               else
+> +                       spurious_interrupt();
+> +       }
+>
+>         while (pending) {
+>                 int bit = __ffs(pending);
+> @@ -164,6 +173,9 @@ int __init liointc_of_init(struct device_node *node,
+>                 goto out_iounmap;
+>         }
+>
+> +       if (of_device_is_compatible(node, "loongson,liointc-1.0"))
+> +               priv->have_lpc_irq_errata = true;
+> +
+>         sz = of_property_read_variable_u32_array(node, "loongson,parent_int_map",
+>                                                 &of_parent_int_map[0], LIOINTC_NUM_PARENT,
+>                                                 LIOINTC_NUM_PARENT);
+> --
+> 2.26.0.rc2
+>
+>
 
-Just because your KVM exception trap uses the host handling function
-which sets TIF_SLD?
- 
-Please sit down, go back to the drawing board and figure it out how to
-solve that without creating inconsistent state and duct tape functions
-to deal with that.
-
-I'm not rewriting the patches for you this time.
-
-> Do you need me to spin a new version of patch 1 to clear SLD bit on APs 
-> if SLD_OFF?
-
-I assume you can answer that question yourself.
-
-Thanks,
-
-        tglx
-
-
-
+Regards,
+Huacai Chen
