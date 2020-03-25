@@ -2,165 +2,167 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B9CC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26B38C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DAE2077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:22:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BRzMaolB"
+	by mail.kernel.org (Postfix) with ESMTP id EDA2B2077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585149748;
+	bh=6gntTE+Xau1wJ0Nv7DlZZSKZ1qwXpTkhd+ax6/ytv08=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=GbgzEBpMPvby2h4dsmNdl9TwyWgaUlxerzc0M10T7arxmJyyAYjRwXimC0cQVYiFd
+	 ddQ0RJcp/nTHOUQPB6tIHXxxvnf3E99iaCx9bERiDdb1WYR8J3jrcGSNzPQbIBCBBH
+	 Ckq1O0xyAyE/ArTzfDfmV4Ha8LE98HDk2GbSvV7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgCYPWW (ORCPT
+        id S1727830AbgCYPW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:22:22 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47333 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727488AbgCYPWU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:22:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585149739;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DdhKJXE/99PfeU3KvZHkWk8Q0IeQ2XK8anu6Byn+KFk=;
-        b=BRzMaolBphwPHpj+fsoekP/sU5eneha0o9bxunzE36mbpOrJ/uD8IyvisC7NHPf6LXEqG3
-        As8TxSe0I0cdD1EGxUpYmVDxuABirIGWeMeMLTdZ2Xe5vI7dZo4HvcPtgBEd02uvc8y+ym
-        NQAaaNdn7C0w97XBBheKZrW0ANkyQ50=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-207-eE4soRceN8G2bTfvKpOoXw-1; Wed, 25 Mar 2020 11:22:17 -0400
-X-MC-Unique: eE4soRceN8G2bTfvKpOoXw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 25 Mar 2020 11:22:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34710 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbgCYPWX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 11:22:23 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 990F713F5;
-        Wed, 25 Mar 2020 15:22:16 +0000 (UTC)
-Received: from krava (unknown [10.40.192.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8727960BF3;
-        Wed, 25 Mar 2020 15:22:15 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 16:22:11 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf tools: Add missing Intel CPU events to parser
-Message-ID: <20200325152211.GA1908530@krava>
-References: <20200324150443.28832-1-adrian.hunter@intel.com>
- <20200325103345.GA1856035@krava>
- <20200325131549.GB14102@kernel.org>
- <20200325135350.GA1888042@krava>
- <20200325142214.GD14102@kernel.org>
- <ea516b26-6249-e870-20bf-819ea1a2d2c2@intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id B1BB520775;
+        Wed, 25 Mar 2020 15:22:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585149743;
+        bh=6gntTE+Xau1wJ0Nv7DlZZSKZ1qwXpTkhd+ax6/ytv08=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p7dsjeHuTmKWXuC2OStQuIYcRGrP9jUztSyIKJl1rzoDo32b6zLL9PZDhBDU2hdXs
+         SPoM3mVlEOXssPzC3TV3FOTctk7XLIxW7pwnY7Gg1+AmqfTVfXNzMVw8tL61QUrrNf
+         Sf00JWp4kAjeX6VV6G2hW40sFnDjw3pS7yPUiT8w=
+Date:   Wed, 25 Mar 2020 10:22:20 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Shiju Jose <shiju.jose@huawei.com>
+Cc:     linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, rjw@rjwysocki.net, lenb@kernel.org,
+        bp@alien8.de, james.morse@arm.com, tony.luck@intel.com,
+        gregkh@linuxfoundation.org, zhangliguang@linux.alibaba.com,
+        tglx@linutronix.de, linuxarm@huawei.com,
+        jonathan.cameron@huawei.com, tanxiaofei@huawei.com,
+        yangyicong@hisilicon.com
+Subject: Re: [PATCH v5 0/2] ACPI: APEI: Add support to notify the vendor
+ specific HW errors
+Message-ID: <20200325152220.GA261586@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ea516b26-6249-e870-20bf-819ea1a2d2c2@intel.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <8aa40a48-39c9-ba6b-ea70-bcb60907a733@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 04:24:58PM +0200, Adrian Hunter wrote:
-> On 25/03/20 4:22 pm, Arnaldo Carvalho de Melo wrote:
-> > Em Wed, Mar 25, 2020 at 02:53:50PM +0100, Jiri Olsa escreveu:
-> >> On Wed, Mar 25, 2020 at 10:15:49AM -0300, Arnaldo Carvalho de Melo wrote:
-> >>> Em Wed, Mar 25, 2020 at 11:33:45AM +0100, Jiri Olsa escreveu:
-> >>>> On Tue, Mar 24, 2020 at 05:04:43PM +0200, Adrian Hunter wrote:
-> >>>>> perf list expects CPU events to be parseable by name, e.g.
-> >>>
-> >>>>>     # perf list | grep el-capacity-read
-> >>>>>       el-capacity-read OR cpu/el-capacity-read/          [Kernel PMU event]
-> >>>
-> >>>>> But the event parser does not recognize them that way, e.g.
-> >>>
-> >>>>>     # perf test -v "Parse event"
-> >>>>>     <SNIP>
-> >>>>>     running test 54 'cycles//u'
-> >>>>>     running test 55 'cycles:k'
-> >>>>>     running test 0 'cpu/config=10,config1,config2=3,period=1000/u'
-> >>>>>     running test 1 'cpu/config=1,name=krava/u,cpu/config=2/u'
-> >>>>>     running test 2 'cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/'
-> >>>>>     running test 3 'cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp'
-> >>>>>     -> cpu/event=0,umask=0x11/
-> >>>>>     -> cpu/event=0,umask=0x13/
-> >>>>>     -> cpu/event=0x54,umask=0x1/
-> >>>>>     failed to parse event 'el-capacity-read:u,cpu/event=el-capacity-read/u', err 1, str 'parser error'
-> >>>>>     event syntax error: 'el-capacity-read:u,cpu/event=el-capacity-read/u'
-> >>>>>                            \___ parser error test child finished with 1
-> >>>>>     ---- end ----
-> >>>>>     Parse event definition strings: FAILED!
-> >>>
-> >>>>> Fix by adding missing Intel CPU events to the event parser.
-> >>>>> Missing events were found by using:
-> >>>
-> >>>>>     grep -r EVENT_ATTR_STR arch/x86/events/intel/core.c
-> >>>>>
-> >>>>> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-> >>>>
-> >>>> Acked-by: Jiri Olsa <jolsa@redhat.com>
-> >>>
-> >>> So, I'm not being able to reproduce this, what an I missing?
-> >>
-> >> I think you need to be on some really recent intel
-> >> which defines events which we did not covered yet
-> >> like el-capacity-write in icelake
-> > 
-> > That is why I tried with el-capacity, which is moved to the parser as
-> > well, I've replaced el-capacity-read, which I don't have in this Kaby
-> > Lake machine, with el-capacity, that is present:
-> > 
-> > [root@seventh ~]# perf list | grep el-capacity
-> >   el-capacity OR cpu/el-capacity/                    [Kernel PMU event]
-> > [root@seventh ~]#
+1) If you can post things as a series, i.e., with patch 1/2 and patch
+2/2 being responses to the 0/2 cover letter, that makes things easier.
+It looks like you did this for the previous postings.
+
+2) When applying these, "git am" complained (but they did apply
+cleanly):
+
+  warning: Patch sent with format=flowed; space at the end of lines might be lost.
+  Applying: APEI: Add support to notify the vendor specific HW errors
+  warning: Patch sent with format=flowed; space at the end of lines might be lost.
+  Applying: PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
+
+3) drivers/pci/controller/pcie-hisi-error.c should be next to
+drivers/pci/controller/dwc/pcie-hisi.c, shouldn't it?
+
+4) Your subject lines don't match the convention.  "git log --oneline
+drivers/acpi/apei" says:
+
+  011077d8fbfe ("APEI: Add support to notify the vendor specific HW errors")
+  cea79e7e2f24 ("apei/ghes: Do not delay GHES polling")
+  933ca4e323de ("acpi: Use pr_warn instead of pr_warning")
+  6abc7622271d ("ACPI / APEI: Release resources if gen_pool_add() fails")
+  bb100b64763c ("ACPI / APEI: Get rid of NULL_UUID_LE constant")
+  371b86897d01 ("ACPI / APEI: Remove needless __ghes_check_estatus() calls")
+
+and "git log --oneline --follow drivers/pci/controller/dwc/pcie-hisi*"
+says:
+
+  6e0832fa432e ("PCI: Collect all native drivers under drivers/pci/controller/")
+  8cfab3cf63cf ("PCI: Add SPDX GPL-2.0 to replace GPL v2 boilerplate")
+  5a4751680189 ("PCI: hisi: Constify dw_pcie_host_ops structure")
+  b379d385bbaa ("PCI: hisi: Remove unused variable driver")
+  a5f40e8098fe ("PCI: Don't allow unbinding host controllers that aren't prepared")
+  e313a447e735 ("PCI: hisi: Update PCI config space remap function")
+  b9c1153f7a9c ("PCI: hisi: Fix DT binding (hisi-pcie-almost-ecam)")
+
+So your subject lines should be:
+
+  ACPI / APEI: ...
+  PCI: hisi: ...
+
+On Wed, Mar 25, 2020 at 01:55:03PM +0000, Shiju Jose wrote:
+> Presently the vendor drivers are unable to do the recovery for the
+> vendor specific recoverable HW errors, reported to the APEI driver
+> in the vendor defined sections, because APEI driver does not support
+> reporting the same to the vendor drivers.
 > 
-> I just checked that and it seems to be a "feature" of the parser that it
-> gets confused between el-capacity and el-capacity-read.
+> This patch set
+> 1. add an interface to the APEI driver to enable the vendor
+> drivers to register the event handling functions for the corresponding
+> vendor specific HW errors and report the error to the vendor driver.
 > 
-> Making them explicit in parse-events.l makes the problem go away, but I
-> wonder now if the parser could be better in this regard.
-
-so we have that PRE/SUFFIX logic that allows us
-to specify any sysfs event term as standalone event
-
-the lexer in this case below was used to handle special cases..
-and IIUC think having more than one '-' is one of them
-
-could you check if the patch below will fix that for you?
-
-jirka
-
-
----
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 7b1c8ee537cf..347eb3e6794a 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -342,11 +342,15 @@ bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUT
- 	 * Because the prefix cycles is mixed up with cpu-cycles.
- 	 * loads and stores are mixed up with cache event
- 	 */
--cycles-ct					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
--cycles-t					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
--mem-loads					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
--mem-stores					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
--topdown-[a-z-]+					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
-+cycles-ct				|
-+cycles-t				|
-+mem-loads				|
-+mem-stores				|
-+topdown-[a-z-]+				|
-+tx-capacity-read			|
-+tx-capacity-write			|
-+el-capacity-read			|
-+el-capacity-write			{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
- 
- L1-dcache|l1-d|l1d|L1-data		|
- L1-icache|l1-i|l1i|L1-instruction	|
-
+> 2. add driver to handle HiSilicon hip08 PCIe controller's errors
+>    which is an example application of the above APEI interface.
+> 
+> Changes:
+> 
+> V5:
+> 1. Fix comments from James Morse.
+> 1.1 Changed the notification method to use the atomic_notifier_chain.
+> 1.2 Add the error handled status for the user space.
+> 
+> V4:
+> 1. Fix for the smatch warning in the PCIe error driver:
+>    warn: should '((((1))) << (9 + i))' be a 64 bit type?
+>    if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+> 	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+> 
+> V3:
+> 1. Fix the comments from Bjorn Helgaas.
+> 
+> V2:
+> 1. Changes in the HiSilicon PCIe controller's error handling driver
+>    for the comments from Bjorn Helgaas.
+> 
+> 2. Changes in the APEI interface to support reporting the vendor error
+>    for module with multiple devices, but use the same section type.
+>    In the error handler will use socket id/sub module id etc to distinguish
+>    the device.
+> 
+> V1:
+> 1. Fix comments from James Morse.
+> 
+> 2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+>    which is an application of the above interface.
+> 
+> Shiju Jose (1):
+>   APEI: Add support to notify the vendor specific HW errors
+> 
+> Yicong Yang (1):
+>   PCI: HIP: Add handling of HiSilicon HIP PCIe controller errors
+> 
+>  drivers/acpi/apei/ghes.c                 |  35 ++-
+>  drivers/pci/controller/Kconfig           |   8 +
+>  drivers/pci/controller/Makefile          |   1 +
+>  drivers/pci/controller/pcie-hisi-error.c | 357 +++++++++++++++++++++++
+>  drivers/ras/ras.c                        |   5 +-
+>  include/acpi/ghes.h                      |  28 ++
+>  include/linux/ras.h                      |   6 +-
+>  include/ras/ras_event.h                  |   7 +-
+>  8 files changed, 440 insertions(+), 7 deletions(-)
+>  create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+> 
+> -- 
+> 2.17.1
