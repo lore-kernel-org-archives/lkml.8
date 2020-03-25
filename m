@@ -2,96 +2,125 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 757FEC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3564BC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5174F2076A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B0AF2076A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 12:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="VWDVw0jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgCYMus (ORCPT
+        id S1727459AbgCYMuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 08:50:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53355 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726998AbgCYMur (ORCPT
+        Wed, 25 Mar 2020 08:50:52 -0400
+Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17851 "EHLO
+        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726820AbgCYMuu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 08:50:47 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1jH5UX-0005f3-9Y; Wed, 25 Mar 2020 12:50:41 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Pawel Laszczak <pawell@cadence.com>, linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: cdns3: make signed 1 bit bitfields unsigned
-Date:   Wed, 25 Mar 2020 12:50:41 +0000
-Message-Id: <20200325125041.94769-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 25 Mar 2020 08:50:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585140544;
+        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
+        h=Date:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Subject:To:CC:From:Message-ID;
+        bh=vqy9KgzyVYxmnrqFQc0i1Zu/TD9bYgtnU+TgEsbMRRo=;
+        b=VWDVw0jlewF6cYs4orJtnyyrFP4lXEoBwc3qWxgWugL6Qbe5rnNu8cQYlvTuA4Zs
+        GIStJDBaX9M0K3uYMcklLmRX8voyqvSfdxxSmwBsIWhTsTS9QXzABA4xO2dslNYWMvu
+        Jtk1j1/vyJijL2Sv/5B5q8zNdjNl5Pum0UfJ3N88=
+Received: from [10.233.233.252] (183.157.60.227 [183.157.60.227]) by mx.zoho.com.cn
+        with SMTPS id 1585140543288901.7885813665146; Wed, 25 Mar 2020 20:49:03 +0800 (CST)
+Date:   Wed, 25 Mar 2020 20:48:55 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200325123742.GA9911@alpha.franken.de>
+References: <20200325035537.156911-1-jiaxun.yang@flygoat.com> <20200325035537.156911-7-jiaxun.yang@flygoat.com> <20200325123742.GA9911@alpha.franken.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 06/11] irqchip: mips-cpu: Convert to simple domain
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+CC:     linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <DC9062E8-42E3-4139-99F9-157DEAF5DB7B@flygoat.com>
+X-ZohoCNMailClient: External
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-The signed 1 bit bitfields should be unsigned, so make them unsigned.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/usb/cdns3/cdns3-ti.c | 4 ++--
- drivers/usb/cdns3/gadget.h   | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=888=
+:37:42, Thomas Bogendoerfer <tsbogend@alpha=2Efranken=2Ede> =E5=86=99=E5=88=
+=B0:
+>On Wed, Mar 25, 2020 at 11:54:59AM +0800, Jiaxun Yang wrote:
+>> The old code is using legacy domain to setup irq_domain for CPU
+>interrupts
+>> which requires irq_desc to be preallocated=2E
+>>=20
+>> However, when MIPS_CPU_IRQ_BASE >=3D 16, irq_desc for CPU IRQs may end
+>up
+>> unallocated and lead to incorrect behavior=2E
+>>=20
+>> Thus we convert the legacy domain to simple domain which can allocate
+>> irq_desc during initialization=2E
+>>=20
+>> Signed-off-by: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
+>> Co-developed-by: Huacai Chen <chenhc@lemote=2Ecom>
+>> Signed-off-by: Huacai Chen <chenhc@lemote=2Ecom>
+>> Reviewed-by: Marc Zyngier <maz@kernel=2Eorg>
+>> ---
+>>  drivers/irqchip/irq-mips-cpu=2Ec | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>=20
+>> diff --git a/drivers/irqchip/irq-mips-cpu=2Ec
+>b/drivers/irqchip/irq-mips-cpu=2Ec
+>> index 95d4fd8f7a96=2E=2Ec3cf7fa76424 100644
+>> --- a/drivers/irqchip/irq-mips-cpu=2Ec
+>> +++ b/drivers/irqchip/irq-mips-cpu=2Ec
+>> @@ -251,7 +251,7 @@ static void __init __mips_cpu_irq_init(struct
+>device_node *of_node)
+>>  	clear_c0_status(ST0_IM);
+>>  	clear_c0_cause(CAUSEF_IP);
+>> =20
+>> -	irq_domain =3D irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE,
+>0,
+>> +	irq_domain =3D irq_domain_add_simple(of_node, 8, MIPS_CPU_IRQ_BASE,
+>>  					   &mips_cpu_intc_irq_domain_ops,
+>>  					   NULL);
+>
+>this breaks at least IP30 and guess it will break every platform where
+>MIPS_CPU_IRQ_BASE =3D=3D 0=2E add_legacy will always do
+>irq_domain_associate_many(),
+>while add_simple doesn't do it, if first_irq =3D=3D 0=2E
+>
+>Marc, what is the reason not doing it all the time ? What's the correct
+>way here to work with irq_domain_add_simple() in this case ?
+=20
+I guess there is a inconsistent about whether IRQ 0 is a valid IRQ=2E
 
-diff --git a/drivers/usb/cdns3/cdns3-ti.c b/drivers/usb/cdns3/cdns3-ti.c
-index c6a79ca15858..5685ba11480b 100644
---- a/drivers/usb/cdns3/cdns3-ti.c
-+++ b/drivers/usb/cdns3/cdns3-ti.c
-@@ -52,8 +52,8 @@ enum modestrap_mode { USBSS_MODESTRAP_MODE_NONE,
- struct cdns_ti {
- 	struct device *dev;
- 	void __iomem *usbss;
--	int usb2_only:1;
--	int vbus_divider:1;
-+	unsigned usb2_only:1;
-+	unsigned vbus_divider:1;
- 	struct clk *usb2_refclk;
- 	struct clk *lpm_clk;
- };
-diff --git a/drivers/usb/cdns3/gadget.h b/drivers/usb/cdns3/gadget.h
-index f003a7801872..bf2828e4df2c 100644
---- a/drivers/usb/cdns3/gadget.h
-+++ b/drivers/usb/cdns3/gadget.h
-@@ -1199,7 +1199,7 @@ struct cdns3_aligned_buf {
- 	void			*buf;
- 	dma_addr_t		dma;
- 	u32			size;
--	int			in_use:1;
-+	unsigned		in_use:1;
- 	struct list_head	list;
- };
- 
-@@ -1308,8 +1308,8 @@ struct cdns3_device {
- 	unsigned			u2_allowed:1;
- 	unsigned			is_selfpowered:1;
- 	unsigned			setup_pending:1;
--	int				hw_configured_flag:1;
--	int				wake_up_flag:1;
-+	unsigned			hw_configured_flag:1;
-+	unsigned			wake_up_flag:1;
- 	unsigned			status_completion_no_call:1;
- 	unsigned			using_streams:1;
- 	int				out_mem_is_allocated;
--- 
-2.25.1
+In many places we consider IRQ 0 is invalid but here it should be valid=2E
 
+Thanks=2E
+
+
+>
+>Thomas=2E
+
+--=20
+Jiaxun Yang
