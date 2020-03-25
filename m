@@ -2,87 +2,105 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7601EC54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84675C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E8620714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=flygoat.com header.i=jiaxun.yang@flygoat.com header.b="ZQj4lfHz"
+	by mail.kernel.org (Postfix) with ESMTP id 58A64206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 04:04:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCYECt (ORCPT
+        id S1726074AbgCYEEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 00:02:49 -0400
-Received: from sender3-op-o12.zoho.com.cn ([124.251.121.243]:17826 "EHLO
-        sender3-op-o12.zoho.com.cn" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725939AbgCYECt (ORCPT
+        Wed, 25 Mar 2020 00:04:06 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:41842 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbgCYEEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 00:02:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1585108919;
-        s=mail; d=flygoat.com; i=jiaxun.yang@flygoat.com;
-        h=From:To:Cc:Message-ID:Subject:Date:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type;
-        bh=CobqPhmR8+Dbb6mCWhIWt3fIG017REwXbaViNjjyZSc=;
-        b=ZQj4lfHzdf3Efgm+WiUGJFcg6b64/W8t8vNiJFk3U/JXEuzj83A7FoeZ51IpCDoN
-        N7libCvkyAnOjR1yTSfXl58RMSvVf8SohPHzACm9Gf9xbxJVuGMwctkLuyXhZOOaR7v
-        mDvqqTEnQWC94KFH2TYxI2BHzvlB5Fqy349iYMeg=
-Received: from localhost.localdomain (39.155.141.144 [39.155.141.144]) by mx.zoho.com.cn
-        with SMTPS id 1585108918331810.7566212679819; Wed, 25 Mar 2020 12:01:58 +0800 (CST)
-From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
-To:     linux-mips@vger.kernel.org
-Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Huacai Chen <chenhc@lemote.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Message-ID: <20200325035537.156911-12-jiaxun.yang@flygoat.com>
-Subject: [PATCH v8 11/11] MAINTAINERS: Update Loongson64 entry
-Date:   Wed, 25 Mar 2020 11:55:04 +0800
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
-References: <20200325035537.156911-1-jiaxun.yang@flygoat.com>
+        Wed, 25 Mar 2020 00:04:06 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jGxGp-002Aql-K1; Wed, 25 Mar 2020 04:03:59 +0000
+Date:   Wed, 25 Mar 2020 04:03:59 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
+Message-ID: <20200325040359.GK23230@ZenIV.linux.org.uk>
+References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
+ <20200324214637.GI23230@ZenIV.linux.org.uk>
+ <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
+ <20200325021327.GJ23230@ZenIV.linux.org.uk>
+ <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-ZohoCNMailClient: External
-Content-Type: text/plain; charset=utf8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To include newly added irqchip drivers.
+On Tue, Mar 24, 2020 at 11:24:01PM -0400, Qian Cai wrote:
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> > On Mar 24, 2020, at 10:13 PM, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > 
+> > On Tue, Mar 24, 2020 at 09:49:48PM -0400, Qian Cai wrote:
+> > 
+> >> It does not catch anything at all with the patch,
+> > 
+> > You mean, oops happens, but neither WARN_ON() is triggered?
+> > Lovely...  Just to make sure: could you slap the same couple
+> > of lines just before
+> >                if (unlikely(!d_can_lookup(nd->path.dentry))) {
+> > in link_path_walk(), just to check if I have misread the trace
+> > you've got?
+> > 
+> > Does that (+ other two inserts) end up with
+> > 	1) some of these WARN_ON() triggered when oops happens or
+> > 	2) oops is happening, but neither WARN_ON() triggers or
+> > 	3) oops not happening / becoming harder to hit?
+> 
+> Only the one just before
+>  if (unlikely(!d_can_lookup(nd->path.dentry))) {
+> In link_path_walk() will trigger.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 53d6ba9f7029..ba1ab3bfe18b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11169,6 +11169,7 @@ S:=09Maintained
- F:=09arch/mips/loongson64/
- F:=09arch/mips/include/asm/mach-loongson64/
- F:=09drivers/platform/mips/cpu_hwmon.c
-+F:=09drivers/irqchip/irq-loongson*
- F:=09drivers/*/*loongson3*
- F:=09drivers/*/*/*loongson3*
-=20
---=20
-2.26.0.rc2
+> [  245.767202][ T5020] pathname = /var/run/nscd/socket
 
+Lovely.  So
+	* we really do get NULL nd->path.dentry there; I've not misread the
+trace.
+	* on the entry into link_path_walk() nd->path.dentry is non-NULL.
+	* *ALL* components should've been LAST_NORM ones
+	* not a single symlink in sight, unless the setup is rather unusual
+	* possibly not even a single mountpoint along the way (depending
+upon the userland used)
 
+And in the same loop we have
+                if (likely(type == LAST_NORM)) {
+                        struct dentry *parent = nd->path.dentry;
+                        nd->flags &= ~LOOKUP_JUMPED;
+                        if (unlikely(parent->d_flags & DCACHE_OP_HASH)) {
+                                struct qstr this = { { .hash_len = hash_len }, .name = name };
+                                err = parent->d_op->d_hash(parent, &this);
+                                if (err < 0)
+                                        return err;
+                                hash_len = this.hash_len;
+                                name = this.name;
+                        }
+                }
+upstream of that thing.  So NULL nd->path.dentry *there* would've oopsed.
+IOW, what we are hitting is walk_component() with non-NULL nd->path.dentry
+when we enter it, NULL being returned and nd->path.dentry becoming NULL
+by the time we return from walk_component().
+
+Could you post the results of
+	stat / /var /var/run /var/run/nscd /var/run/nscd/socket
+after the boot with working kernel?  Also, is that "hit on every boot" or
+stochastic?  If it's the latter, I'd like to see the output of the same
+thing on a successful boot of the same kernel, if possible...
+
+Also, is the pathname always the same and if not, what other variants have
+been observed?
