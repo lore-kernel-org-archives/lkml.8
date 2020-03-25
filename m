@@ -2,126 +2,134 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F29C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16052C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:11:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E8B420772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E267120772
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:11:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Wnkn1AXN";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="oLiBjC+j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbgCYNLN convert rfc822-to-8bit (ORCPT
+        id S1727457AbgCYNLp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:11:13 -0400
-Received: from mga03.intel.com ([134.134.136.65]:31955 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727129AbgCYNLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:11:13 -0400
-IronPort-SDR: +pyz6I9cTDgx6JJ06qvs5VuPsZZ9Io4xt7lN7Dmem0jqnoUFy6DiZdFR8Rzd0kZqUI/4k17RF5
- ODPS5cHPDvsg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 06:11:12 -0700
-IronPort-SDR: clQRKiwbv1/99tLauQvTCow+r5cSYsqoMQeYRPTxir5so2wx7LWxTTxyY0AXS8lLb00XYjuQFP
- F0zXB9bRkTzA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
-   d="scan'208";a="326220818"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga001.jf.intel.com with ESMTP; 25 Mar 2020 06:11:12 -0700
-Received: from fmsmsx117.amr.corp.intel.com (10.18.116.17) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 25 Mar 2020 06:11:11 -0700
-Received: from fmsmsx107.amr.corp.intel.com ([169.254.6.38]) by
- fmsmsx117.amr.corp.intel.com ([169.254.3.48]) with mapi id 14.03.0439.000;
- Wed, 25 Mar 2020 06:11:11 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Shane Francis <bigbeeshane@gmail.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-CC:     "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "amd-gfx-request@lists.freedesktop.org" 
-        <amd-gfx-request@lists.freedesktop.org>,
-        "alexander.deucher@amd.com" <alexander.deucher@amd.com>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>
-Subject: RE: [PATCH v4 0/3] AMDGPU / RADEON / DRM Fix mapping of user pages
-Thread-Topic: [PATCH v4 0/3] AMDGPU / RADEON / DRM Fix mapping of user pages
-Thread-Index: AQHWAoUBcHg2O0WoqkuGqDdXnKtf46hZSF3A
-Date:   Wed, 25 Mar 2020 13:11:11 +0000
-Message-ID: <14063C7AD467DE4B82DEDB5C278E8663FFFBD36E@fmsmsx107.amr.corp.intel.com>
-References: <20200325090741.21957-1-bigbeeshane@gmail.com>
-In-Reply-To: <20200325090741.21957-1-bigbeeshane@gmail.com>
+        Wed, 25 Mar 2020 09:11:45 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:36885 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgCYNLo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:11:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1585141904; x=1616677904;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=HVv5YclHeLLcNlH0AGIMT+Jyb0FrttGbX/9YbXsTtI0=;
+  b=Wnkn1AXNaYDSTaUo/l3MejT0k1q8Bw2LLUFeq1mXd9Wdrno769N6Sth8
+   WvtABMrFiBktoHk6+lGNRH1zR0nEezODkszPPUUNwlnmEvEFq/2Yx4qmS
+   FJBSzDCV1X9/ZyUuGppUVfhro/mlOVnxuzB3L1tsweVBCCYVBnHwTjA57
+   WnpyGB7Cme1djr12+OVKLmmMCAwh229jpo0mwD/UsVbg3Ie9sqz28xO1U
+   3Yg5GJP10kNam6sj5s9Og78IBs5/AaVzt9PxjYbDsEesxoaSYiO5Y/rSK
+   Ksvupq/kzk74NEyHeZigrRz07v7JIufsvfCIv33FKNy4ooBpXWSXe8+oJ
+   w==;
+IronPort-SDR: OBuae43YG4RBtCvgV9M3BkjhaPL+t8LQyLrczf98JZHba4ljFT+QnudsytwBvzdJreS+X5k8wL
+ XNjo9gLTvbiiqU3OggvNoPHKQPQHLimzZsbe0auHGeX2S5hFmJiLFu+L+TYW6h73jFNWvkZXJf
+ OEgCco7M/LXnO3Z6C/OSZiVrFe1XYWR7Lom2iux/7Cj4Yq42bsNqTjEXjLLq+0sOif9eVew3xk
+ ouinEg7/WE8vLhHKHJ1Om/OdOk+AL3wt3TCcZh7Og2njK4RD5MFtIcPPeTxvloIdLFE1nr36rz
+ FUM=
+X-IronPort-AV: E=Sophos;i="5.72,304,1580745600"; 
+   d="scan'208";a="241957517"
+Received: from mail-mw2nam10lp2105.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.105])
+  by ob1.hgst.iphmx.com with ESMTP; 25 Mar 2020 21:11:42 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BD+cwA7pa3Xbq9uKch94++28GWLfIxj4Omj0U3EmDSQYFOjCipADBZ85cmPR4IBCu4z9FAKjakzSEQ4kZVffFfgC00nNTStDfcNTzF0ugvxmGxX5HBeAVFqiTQCzV+MImHBUC6o8+CdxuwvjHjdhSO2CVAOG+LFyqTUsUZ2S3/kx7yyRkdEiXhv70DllTm92w42CIcmpK5ycTVOtWaurTeqXKBmomReo0nygB/aOJILZtggDJWkfJ+aLwVwycIK6J4byHoBpP7n2Ht+dHh16BUWHKOalfp6REioyYN3Y0kF5Sl8mO+jvSnCJHbdDfBiT4TbLuuJry1jkw7N9u+z+PA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HVv5YclHeLLcNlH0AGIMT+Jyb0FrttGbX/9YbXsTtI0=;
+ b=BtRGp3+5M4DMzzs5Kv82TgqE3PWQvQNxXVp8oSydE1nZszUt63bPsJ4yECLVM0LZtkl86A7HqWx0A3bCnJexBsooywGNz/5XqRvF1e1j2FUy/8KA7tCQ0Opx14TR6rjfTonf6JHXBxAnbUtwNC4egfnZhQxevVxMm9SlXzvr9YRg7MxLGvKEiLjuSkZ+IeIxyoToOzWiJp9oNpqLZzFn7TtlMbmXK7d0GMTAN247gCTixdnao50Vv85+6O7ZlVHK58NmF2X8RVSRsQNy5eaGNXJqz3Ki0HD0oEcKbw7ttQI034o8mSApE2CWnFYNy23IFYjq9Pye/6ZF8PzW2KfOWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HVv5YclHeLLcNlH0AGIMT+Jyb0FrttGbX/9YbXsTtI0=;
+ b=oLiBjC+j0I6A38/ULuUh4QNp4bbZFFbmv7eD+xnPJk0XKFZ5mRA0m71Jmzzp7ZpxNTbj2NzM7x0AluGkUIoD2SHyieR9Sf4FK0dm9hDHLX9QE38IJPLCSyVRTQ7u2UBLVafb/AQCagn2ciiXrYDA5DriDGIsoplNzDtKu55DQNw=
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com (2603:10b6:805:a4::19)
+ by SN6PR04MB4256.namprd04.prod.outlook.com (2603:10b6:805:31::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Wed, 25 Mar
+ 2020 13:11:41 +0000
+Received: from SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b]) by SN6PR04MB4640.namprd04.prod.outlook.com
+ ([fe80::3877:5e49:6cdd:c8b%5]) with mapi id 15.20.2835.021; Wed, 25 Mar 2020
+ 13:11:41 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Asutosh Das <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+CC:     "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 3/3] scsi: ufs-qcom: Override devfreq parameters
+Thread-Topic: [PATCH v1 3/3] scsi: ufs-qcom: Override devfreq parameters
+Thread-Index: AQHWAjlcpqA7jaPL8EOL1y/uhTivaahZJxag
+Date:   Wed, 25 Mar 2020 13:11:40 +0000
+Message-ID: <SN6PR04MB46402BF8525B5BEC29B81858FCCE0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <ebd9ea7d0ebb1884b15e4fe7e3e03460c1e3c52b.1585094538.git.asutoshd@codeaurora.org>
+ <8595b24c49bd84974ced1fec5a8eecdeeae47746.1585094538.git.asutoshd@codeaurora.org>
+In-Reply-To: <8595b24c49bd84974ced1fec5a8eecdeeae47746.1585094538.git.asutoshd@codeaurora.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.1.200.107]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e649e846-5c8c-4010-5f1d-08d7d0be0f0d
+x-ms-traffictypediagnostic: SN6PR04MB4256:
+x-microsoft-antispam-prvs: <SN6PR04MB42565110B79E77BF1891270FFCCE0@SN6PR04MB4256.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1775;
+x-forefront-prvs: 0353563E2B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(366004)(39860400002)(136003)(376002)(346002)(316002)(54906003)(110136005)(558084003)(9686003)(7416002)(55016002)(26005)(186003)(2906002)(33656002)(8936002)(71200400001)(86362001)(66446008)(5660300002)(66946007)(66476007)(7696005)(478600001)(66556008)(64756008)(6506007)(4326008)(52536014)(76116006)(8676002)(81156014)(81166006);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4256;H:SN6PR04MB4640.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: e1orLibYq0GFqAGWs5y9XYEjaOBRHfORgQkkU/C9KLpnkiWvwYl+A/gvUp3Z8g/OYAinrSZCfEC3yPy+nq2Z7uT4KJk/KpUDe+P2ezKqhaWXW1O1B2k6Z6uRe8R1cG2N4Lc0PVET4TzBiz12Ti7Yfqt2nTU3yl7s2KXHZMp1jFHuEJWwox8dWPv59NMO3oaQetanrnxww9tTqwjGjuSClJhmwTxZma9DZqASKpppnyNnpts2Ivhqe7yR+LLTGk6iW5mKJ+IKOh5E1hZdOpQk8XkqYGepBL3pQ83mWYcovDiIrXUmfKVhGnj90Nxnbknq2WH+xuVBzV+HqNtajuHXzXJkyg8nuCln4U2bbWh8saCPku8IqnEmPoQDKjL6E3kd/WemqGXc0v9cEACwHF87gfk2WETjKdekhc05cC6obF+4bPftDNOwjwH3eTKFvnIx
+x-ms-exchange-antispam-messagedata: oXMVX8jnXxFuFxrQII7xtDgsbIzk4wEnjKCYSvK1UU8RMWA4wbYlRbboQqWgaywAkjGM0XeSi4Veb0SlCiE8sOA797V/aozCPQn1Tos/3V+jYSNcdIJYojwfaCklUHn+gjMH6F2NTooXMFANd7yhMQ==
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e649e846-5c8c-4010-5f1d-08d7d0be0f0d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2020 13:11:40.9765
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A+HXKHQkDfCXKNVS5aI4+JjKcGRNF/47zO4gr23SpoW4Eg7MsSfZnX7+YnNNgn/ITvMTReWdbkpqL3FR/i9whA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: dri-devel <dri-devel-bounces@lists.freedesktop.org> On Behalf Of
->Shane Francis
->Sent: Wednesday, March 25, 2020 5:08 AM
->To: dri-devel@lists.freedesktop.org
->Cc: airlied@linux.ie; linux-kernel@vger.kernel.org; bigbeeshane@gmail.com;
->amd-gfx-request@lists.freedesktop.org; alexander.deucher@amd.com;
->christian.koenig@amd.com
->Subject: [PATCH v4 0/3] AMDGPU / RADEON / DRM Fix mapping of user pages
->
->This patch set is to fix a bug in amdgpu / radeon drm that results in
->a crash when dma_map_sg combines elemnets within a scatterlist table.
 
-s/elemnets/elements
-
->There are 2 shortfalls in the current kernel.
->
->1) AMDGPU / RADEON assumes that the requested and created scatterlist
->   table lengths using from dma_map_sg are equal. This may not be the
->   case using the newer dma-iommu implementation
->
->2) drm_prime does not fetch the length of the scatterlist
->   via the correct dma macro, this can use the incorrect length
->   being used (>0) in places where dma_map_sg has updated the table
->   elements.
->
->   The sg_dma_len macro is representative of the length of the sg item
->   after dma_map_sg
->
->Example Crash :
->> [drm:amdgpu_ttm_backend_bind [amdgpu]] *ERROR* failed to pin userptr
->
->This happens in OpenCL applications, causing them to crash or hang, on
->either amdgpu-pro or ROCm OpenCL implementations
->
->I have verified this fixes the above on kernel 5.5 and 5.5rc using an
->AMD Vega 64 GPU
->
->Shane Francis (3):
->  drm/prime: use dma length macro when mapping sg to arrays
->  drm/amdgpu: fix scatter-gather mapping with user pages
->  drm/radeon: fix scatter-gather mapping with user pages
->
-> drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c | 2 +-
-> drivers/gpu/drm/drm_prime.c             | 2 +-
-> drivers/gpu/drm/radeon/radeon_ttm.c     | 2 +-
-> 3 files changed, 3 insertions(+), 3 deletions(-)
->
->--
->2.26.0
->
->_______________________________________________
->dri-devel mailing list
->dri-devel@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>=20
+> Override devfreq parameters for power-performance
+> trade-off.
+>=20
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
