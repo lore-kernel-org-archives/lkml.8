@@ -4,71 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A602C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 760D6C18E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F8020714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F4F2206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 08:42:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IWbgSAf0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="arcA/iPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727440AbgCYImQ (ORCPT
+        id S1727470AbgCYImT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 04:42:16 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47726 "EHLO
+        Wed, 25 Mar 2020 04:42:19 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:55993 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726906AbgCYImQ (ORCPT
+        by vger.kernel.org with ESMTP id S1727439AbgCYImR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 04:42:16 -0400
+        Wed, 25 Mar 2020 04:42:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585125734;
+        s=mimecast20190719; t=1585125736;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8fwXwWjgfvFpCa/LXnsDpuKIOaaCZRr+v9HmG2ULDTA=;
-        b=IWbgSAf0A9DlHAt6xPQVcONWCTNYRJcVZ8R2J1v2knznc/AyGV3w/PDKrJmd7W26jvC1YE
-        awedYYWTvei0in4uMeQ7KXOVwSZmJsNc+XPw1qMH+6Vdrl2oebBzz8QJLG6fT975XIT9g3
-        vRE5vbOB6eqvF0ATqprEbEJoKi3lG2Y=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-287-PnqcKxfDN7WNmJpNndfe9A-1; Wed, 25 Mar 2020 04:42:12 -0400
-X-MC-Unique: PnqcKxfDN7WNmJpNndfe9A-1
-Received: by mail-wr1-f69.google.com with SMTP id f15so811793wrt.4
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:12 -0700 (PDT)
+        bh=51rxB8X3LKaSO6kBzN9NJ6oqx+pGV1s+xW9wpseYzBI=;
+        b=arcA/iPT1FPkLTTjcGDbX8/SCCJwrysFvCO1z7uLW9QFHpWVxUMz9uHFWwLajxzME3mKUa
+        6yGEHZGVx7AQjLEDWE3FjaGytdwGDkGB5+KmcW1doJwUusGfLdS0+DoidjfedRksaCr3Lw
+        Y7vDryxmSKrjwLFw4zGNGQOB2/X3abs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-169-i-P3sYwcMYGVdpeI8y2huw-1; Wed, 25 Mar 2020 04:42:15 -0400
+X-MC-Unique: i-P3sYwcMYGVdpeI8y2huw-1
+Received: by mail-wm1-f70.google.com with SMTP id s15so414388wmc.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 01:42:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=8fwXwWjgfvFpCa/LXnsDpuKIOaaCZRr+v9HmG2ULDTA=;
-        b=GB6p/6sjHdBvSYko9Swt7ZBTkUpFeL+Cd3gj5w7bdNVfwT90baldvTtgLwRHEsapFQ
-         2speiiaj4g7L2WGeIm9wDcE+KIVIM1wvSfi72HBewlHxJDz3cMziQ1V+zM21Xm9oK7MJ
-         b/MjGEGZiKWJpBn82j4Sfv1baqAxjE4GBL/nbrCce9GRDLm95eb/HuUjq9f9wYDfZcfF
-         QHpeADc6Lq8e3/j4kBqUawahwjGsvPMXVzNHIHGf/8iPwBfA7alG3yIQ+FXZterw5RB4
-         fJQNTm0M2VApRT3D1tyNvHd84Ob9PkTPh4t3j309/6Ufl63nMEAe/KtYQQr1pttH8DHM
-         zvBA==
-X-Gm-Message-State: ANhLgQ2AtBno0amM+wpw+7YltQdu1vitMmeaCiz4EOb0h2xmHIpVJhV6
-        LY/u0NPxrzdGWi4PzAEesRAoGYzPAF2cSJ5BS6Yh2S05tFpLPNceUza1Mpsr+XmbUndVJltaass
-        siFURoUpH4rVQC6WF/b8QkVSl
-X-Received: by 2002:adf:9465:: with SMTP id 92mr2203505wrq.122.1585125731613;
-        Wed, 25 Mar 2020 01:42:11 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtCB4o+WgoTJ4BiC2oTMAVQV5bLLQTPgkJxOnayugYiLFC2xFic8hHaql40cujwZuyoZCxU3w==
-X-Received: by 2002:adf:9465:: with SMTP id 92mr2203485wrq.122.1585125731433;
-        Wed, 25 Mar 2020 01:42:11 -0700 (PDT)
+        bh=51rxB8X3LKaSO6kBzN9NJ6oqx+pGV1s+xW9wpseYzBI=;
+        b=Dr2X1bTS5BY65X7y+umTZgMypnsVVmS1LdgysUvfohrW32Vl/R6BpAyExoD+nawbIc
+         kQkak4Ky5Ibn9xl1lQQduB2j5CNZmZ/49zZpWJejQHaA3FLROoMj+ff4ITNhvOWn4NGo
+         3S/Me27+VtlYjfhScYm7n5aOuPazjd5E5scgcBs9elX8pwfGglnE2lFBtBOdvIc61j2c
+         C8B8SQ2+RLPbvz4HK2g2yIe+l2+g3f0+5yP1osDCsnhYYiXcTttt9nJvhw2ARlbHbL34
+         KMfDtjZtLPIonGkh7ndzptS0JmgwrIx1X14avtbEGRBhFClWcNauyDCprJPwXTbNZkFC
+         DHLA==
+X-Gm-Message-State: ANhLgQ0p7gds+BFmBHRRisF+UbrdGPX2jjVHAHzrDn1Np1w2EbB3+lbf
+        DrFAyYJx1Me0m57NDaEZHp0HN+/JDCTdX9z4Jn5k8rBDLGe1GwVqJVIMR1UBVedB2UohnkS4uSH
+        aaKjDVHOhkjOstUB7T5fZiLZZ
+X-Received: by 2002:a1c:cc11:: with SMTP id h17mr2294031wmb.39.1585125733289;
+        Wed, 25 Mar 2020 01:42:13 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vunehZfMGxMtiujBipZmQcbXxqUR5oj9EJKFM3KDdVL1gHpq0KQEHuRUPgVUODbCAiYcbc85g==
+X-Received: by 2002:a1c:cc11:: with SMTP id h17mr2293985wmb.39.1585125732758;
+        Wed, 25 Mar 2020 01:42:12 -0700 (PDT)
 Received: from redfedo.redhat.com ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.09
+        by smtp.gmail.com with ESMTPSA id f12sm8055323wmf.24.2020.03.25.01.42.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 01:42:10 -0700 (PDT)
+        Wed, 25 Mar 2020 01:42:11 -0700 (PDT)
 From:   Julien Thierry <jthierry@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     jpoimboe@redhat.com, peterz@infradead.org, raphael.gault@arm.com,
         Julien Thierry <jthierry@redhat.com>
-Subject: [PATCH 01/10] objtool: Move header sync-check ealier in build
-Date:   Wed, 25 Mar 2020 08:41:54 +0000
-Message-Id: <20200325084203.17005-2-jthierry@redhat.com>
+Subject: [PATCH 02/10] objtool: check: Remove redundant checks on operand type
+Date:   Wed, 25 Mar 2020 08:41:55 +0000
+Message-Id: <20200325084203.17005-3-jthierry@redhat.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200325084203.17005-1-jthierry@redhat.com>
 References: <20200325084203.17005-1-jthierry@redhat.com>
@@ -79,35 +79,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the check of tools files against kernel equivalent is only
-done after every object file has been built. This means one might fix
-build issues against outdated headers without seeing a warning about
-this.
-
-Check headers before any object is built. Also, make it part of a
-FORCE'd recipe so every attempt to build objtool will report the
-outdated headers (if any).
+POP operations are already in code path where destination operand
+is OP_DEST_REG. There is no need to check the operand type again.
 
 Signed-off-by: Julien Thierry <jthierry@redhat.com>
 ---
- tools/objtool/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/objtool/check.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/objtool/Makefile b/tools/objtool/Makefile
-index ee08aeff30a1..519af6ec4eee 100644
---- a/tools/objtool/Makefile
-+++ b/tools/objtool/Makefile
-@@ -43,10 +43,10 @@ export srctree OUTPUT CFLAGS SRCARCH AWK
- include $(srctree)/tools/build/Makefile.include
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index a2c62bc82907..44a3abbb0b0b 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -1730,15 +1730,13 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
  
- $(OBJTOOL_IN): fixdep FORCE
-+	@$(CONFIG_SHELL) ./sync-check.sh
- 	@$(MAKE) $(build)=objtool
+ 		case OP_SRC_POP:
+ 		case OP_SRC_POPF:
+-			if (!state->drap && op->dest.type == OP_DEST_REG &&
+-			    op->dest.reg == cfa->base) {
++			if (!state->drap && op->dest.reg == cfa->base) {
  
- $(OBJTOOL): $(LIBSUBCMD) $(OBJTOOL_IN)
--	@$(CONFIG_SHELL) ./sync-check.sh
- 	$(QUIET_LINK)$(CC) $(OBJTOOL_IN) $(LDFLAGS) -o $@
+ 				/* pop %rbp */
+ 				cfa->base = CFI_SP;
+ 			}
  
+ 			if (state->drap && cfa->base == CFI_BP_INDIRECT &&
+-			    op->dest.type == OP_DEST_REG &&
+ 			    op->dest.reg == state->drap_reg &&
+ 			    state->drap_offset == -state->stack_size) {
  
 -- 
 2.21.1
