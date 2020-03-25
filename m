@@ -2,110 +2,131 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URG_BIZ,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDAFC54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A443C54FD3
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA21320722
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="emz1+nz3"
+	by mail.kernel.org (Postfix) with ESMTP id 6AFBB2078D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgCYLgI (ORCPT
+        id S1727407AbgCYLgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:36:08 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36254 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgCYLgI (ORCPT
+        Wed, 25 Mar 2020 07:36:55 -0400
+Received: from mailgate1.rohmeurope.com ([87.129.152.131]:49370 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726906AbgCYLgz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:36:08 -0400
-Received: by mail-qk1-f196.google.com with SMTP id d11so2128149qko.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 04:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=bSc9mBMtLwWQfwKgquoZTlMfgszjByzVoNHeKAodWUs=;
-        b=emz1+nz3y4wvNriGJwoIRqoV4ci7HwNm85PTpB/38lXN0Ja9bOf5HMyriN27EMwQkA
-         I6/jfJ2upb3hvkU3Ey40vobcv67jc9Q4BvFoGWrN5Yfc7TKXqja99vetjVG4C0w/ktkD
-         rCQLMtaYIurWO/vFvXB26Ki2WEoGZFX939E2TfMNSuWy2469Ve/OoBSx4xS86OFaJP7w
-         ZfSiWBPzFNPbfu1peFPSPg62RcHnzEDORJMMc6zXOiNQNfNsx0LAHAtW7JhLzrlgeIsb
-         Vc1JD73KKDVJVx8EMJNeBpDJMnPyD5oC4kYNJDMp8Z2aO80yd2xLz9Ft9VW6vMc39IRh
-         TMSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=bSc9mBMtLwWQfwKgquoZTlMfgszjByzVoNHeKAodWUs=;
-        b=ZVS7210VQM5KzHyoFpmwOwCORjrX+VWwrE2cBSb0X7zauWH/OWRZzu3MVtrljuh2CV
-         +YHWEg8SIzrxuz6V1tDMdSfG4S0WQkwzqMgeNtmBNYiZsxgB4G3eeWIiiCiQ/cFuwKdO
-         Qrn5iwFq1hDIj8m/GUApKXkA2oDl6RZ+dRMlJVmBa4GIi2eM0GpMHHNZidMPkZF3MuAZ
-         0aSDpqIUGl1jQseYzUClPEFmOqJ3w4FPVbyQroOAQID1vTPnqYK5HgLT8pAfa3estLbG
-         fLFt5fu2lbBKOZRwgEMcBJBJkora/LVsoCWd1UavAZu9Dv224FqNo1OAlD6/+8STmqN9
-         XkCA==
-X-Gm-Message-State: ANhLgQ0+0yGHd7u0FSPRHgf2WZRtF2KcTcBDihyuXY86qk9hDg+qam07
-        pFvT9TJOFUjDju8VrX4OCNHVIlQndnecpggTGn3KVQ==
-X-Google-Smtp-Source: ADFU+vulW3rcFWA4Rup1YiyivwdmvSxJzrHPxnTXjr9Wh5EcRjyi8bY3bUNqPEDPbEtw9JdXo/Z4SNjuFFhobVSlFys=
-X-Received: by 2002:a37:3c9:: with SMTP id 192mr2446179qkd.330.1585136165908;
- Wed, 25 Mar 2020 04:36:05 -0700 (PDT)
+        Wed, 25 Mar 2020 07:36:55 -0400
+X-AuditID: c0a8fbf4-489ff70000004419-3a-5e7b4254a412
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id CE.D1.17433.4524B7E5; Wed, 25 Mar 2020 12:36:52 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0487.000; Wed, 25 Mar 2020 12:36:47 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+CC:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Thread-Topic: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Thread-Index: AQHWAbbAyLpT1a+wPEGvvo/J38Wk46hXbxYAgAAMuoCAAaNYgA==
+Date:   Wed, 25 Mar 2020 11:36:46 +0000
+Message-ID: <4d75bfeab55c04cc3ca751cf7c364c812848e9ed.camel@fi.rohmeurope.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+         <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200324095024.GE1922688@smile.fi.intel.com>
+         <20200324103557.GH1922688@smile.fi.intel.com>
+In-Reply-To: <20200324103557.GH1922688@smile.fi.intel.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <85534FA46F1BC646A64DFADFA82589B4@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
- <CAMRc=MdbvwQ3Exa2gmY-J0p8UeB-_dKrgqHEBo=S08yU4Uth=A@mail.gmail.com>
- <CACRpkdbBCihyayQ=hPVLY8z4G=n5cxLnUmaPpHRuKedDQPVUyQ@mail.gmail.com>
- <CAMpxmJX_Jqz97bp-nKtJp7_CgJ=72ZxWkEPN4Y-dpNpqEwa_Mg@mail.gmail.com>
- <CACRpkdYpers8Zzh9A3T0mFSyZYDcrjfn9iaQn92RkVHWE+GinQ@mail.gmail.com>
- <CAMRc=MdLYD3CeFtp4jF+-P+4kSmt1sAezrkPFk5rK4=whNEWuA@mail.gmail.com>
- <CAMRc=MfEo6=im5EPHYtht3xN83k+rcRgQDSOB=Ucs52M8RWirg@mail.gmail.com> <CACRpkdY1u2xEFzJPrat73me11wdY9uGCK=FWWWzLkBY505JrUw@mail.gmail.com>
-In-Reply-To: <CACRpkdY1u2xEFzJPrat73me11wdY9uGCK=FWWWzLkBY505JrUw@mail.gmail.com>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Wed, 25 Mar 2020 12:35:55 +0100
-Message-ID: <CAMpxmJXXdmW_2MhUSGYZGy8xWy=oQKgng+cphzU-WDqQUKe=Dw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Khouloud Touil <ktouil@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Tf0wTZxzGfe+udwf29CiYvlbNQhdndBn+YJnvFuYYW5ZTl2XLssQsA3aO
+        kzYrLbm2DGGJDKebJWT8rl6KsLIKY43Q1qyoNGuwLjiTdjonSmCTSZyQDZmorLLp7rgp/HXP
+        vc/z+T73Jt+jcV2YMtBmq0MQrbzFSKYS0a65wDPv5FUWbPoyE3l6/CSqrXZjKHnnFkD1X6xH
+        F6404qh5bJxE7uYfAfIkPiXQYKCXQG2xuAbt7+ghUc3kapRI9FLo3qXPMdT0TyeGfjrlIdFM
+        bQwg39AFDHl8gwTq6HwK9YZmMfTniJtAByIxCkXcxzTo/GkHammNUCgUbMbR0O1hDEUeJAkU
+        +WUGoO//SoLcJzj/UT/gTnx9FeNOSqMU9210LdcedHKhrg1cR/8ExgW7D5FcwzGvhhu53E9y
+        U/E4xQ0eniO4Om8UcEfPvcV91+qnuBvuM9ib6e8uzdnNO8reNhdbN257f6nJ69WW3lteHg40
+        YFUgutwFUmjIPgt7mmcoF0ildezPAA5LMUJ9GQTwcPQk6QI0TbI50HWVUoAMdie8P3UFKBmc
+        bafh/m8a5oElbJSA07/XYkoqnd0Ou369qFGJHbDzYIRUdR5sDH02nyHYtbCrOoQrmmHfgL5e
+        P6FoHXsAg7fGtIpOYV+A16XEfDNg18BDVVPzLM7qYfDGrEa9Agu/6k/gql4BJ64/+P88E4Zn
+        jxPKBXB2Pew5tVFFc+Gky0eqOhM21YxR6iekwXNHxok6oJcWNUgLtLSIlhbR0iK6HWi6ASzh
+        zZZi3iFszhIFZ5ZoM5XIjw9sJUGgLuKdPvBwYPsAwGgwAFbSmHEF8+TWygLdst22or0m3m4q
+        FJ0WwT4AII0bM5iQUF6gY4r4vRWCaHtkraIJo55ZN1afr2OVrg8FoVQQH7mradoImb5ceWia
+        KBQL5XvMFseCjdEpyvBUQ4ZdsBYJIu90mAqVXSm0y8uiWFq5t2GbjDP2Ur5EPlXRH8DTdN1E
+        qxenY60+L64jrDarYNAzq16Wo6wSNTmtj4smgZ4GxnTm75dkVyv/jY/nTMoVmFxRLH2kVDj4
+        BctQBQy3LXfLspaYk1vrx+fWVESz/drAc3ePHxm+1hIPZ7+XjO+5ePNMX0t0aof/xP0XvbGH
+        iVfOj6y7nF3m//dSTsGW/vCuNi687/WWm92dNVV5nrSK55s+yW87PV05FMhpH82tG92UfXba
+        z3/86m+Ny6q35NsmYsxOxvDHtX27+s6unD34mpGwm/jNG3DRzv8HaiO7FEoEAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=C5=9Br., 25 mar 2020 o 12:16 Linus Walleij <linus.walleij@linaro.org> napi=
-sa=C5=82(a):
->
-> On Mon, Mar 23, 2020 at 9:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote=
-:
->
-> > Hi Linus,
-> >
-> > what is your decision on this? Because if we don't merge this, then we
-> > need to make sure nvmem doesn't call gpiod_put() for descriptors it
-> > didn't obtain itself and we should probably fix it this week.
->
-> I'm simply just overloaded right now, things related to how the world
-> looks etc. Also Torvalds writes in Documentation/process/management-style=
-.rst
-> that if someone ask you to make a decision, you are screwed :/
->
-
-I see, yeah the times are uncertain for sure. :(
-
-> Your decision is as good as mine, I'm not smarter in any
-> way so if it is urgent send me a pull request for the solution that seems=
- best
-> to you, I trust you on this.
->
-
-There are no users right now of the broken interface, so I'll just
-send a patch with an appropriate comment to Srinivas for the time
-being and we can try to fix it in the next release.
-
-Bartosz
+SGVsbG8gQW5keSwNCg0KT24gVHVlLCAyMDIwLTAzLTI0IGF0IDEyOjM1ICswMjAwLCBBbmR5IFNo
+ZXZjaGVua28gd3JvdGU6DQo+IE9uIFR1ZSwgTWFyIDI0LCAyMDIwIGF0IDExOjUwOjI0QU0gKzAy
+MDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4gPiBPbiBUdWUsIE1hciAyNCwgMjAyMCBhdCAx
+MDozMjoxOUFNICswMjAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gPiArI2luY2x1ZGUg
+PGxpbnV4L2FjcGkuaD4NCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4gPiANCj4gPiBJ
+IGRpZG4ndCBmaW5kIGFueSBldmlkZW5jZSBvZiB1c2Ugb2YgdGhvc2UgdHdvLCBvdGhlcndpc2Us
+IG1pc3NlZA0KPiA+IHByb3BlcnR5LmgNCj4gPiBhbmQgcGVyaGFwcyBtb2RfZGV2aWNldGFibGUu
+aC4NCj4gDQo+IC4uLg0KPiANCj4gPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBiZDk5OTV4
+X29mX21hdGNoKTsNCj4gPiA+ICtNT0RVTEVfREVWSUNFX1RBQkxFKGFjcGksIGJkOTk5NXhfYWNw
+aV9tYXRjaCk7DQo+IA0KPiBJIGhhdmUgdG8gYWRkIHNpbmNlIHlvdSBhcmUgdXNpbmcgdGhvc2Ug
+bWFjcm9zIHdpdGhvdXQgaWZkZWZmZXJ5LCB5b3UNCj4gc2hvdWxkDQo+IGdldCB3YXJuaW5nIGlu
+ICFBQ1BJIGFuZC9vciAhT0YgY2FzZXMuDQo+IA0KPiBTbywgZHJvcCB0aG9zZSBvZl9tYXRjaF9w
+dHIoKSAvIEFDUElfUFRSKCkgYW5kIHRodXMgYWJvdmUgaGVhZGVycy4NCg0KU29ycnkgYnV0IEkg
+ZG9uJ3QgZm9sbG93IDovIEkgZGlkIGRyb3Agd2hvbGUgQUNQSSB0YWJsZSBhcyB0aGUgYmF0dGVy
+eQ0KaW5mb3JtYXRpb24gaXMgbm90IGZldGNoZWQgZnJvbSBBQ1BJIGFueXdheXMuIEJ1dCBJIGRv
+bid0IGtub3cgd2hhdCB5b3UNCm1lYW4gYnkgZHJvcHBpbmcgdGhlIG9mX21hdGNoX3B0cj8gSSBm
+b3Igc3VyZSBuZWVkIHRoZSBvZl9kZXZpY2VfaWQgYXMNCmluIG1hbnkgY2FzZXMgYm90aCB0aGUg
+ZGV2aWNlIG1hdGNoaW5nIGFuZCBtb2R1bGUgbWF0Y2hpbmcgYXJlIGRvbmUNCmJhc2VkIG9uICBv
+Zl9tYXRjaF90YWJsZSBhbmQgb2ZfZGV2aWNlX2lkLg0KDQpJIGFkbWl0IEkgZGlkbid0IHRyeSBj
+b21waWxpbmcgdGhlICFPRiBjb25maWcuIEFyZSB5b3Ugc3VnZ2VzdGluZyBJDQpzaG91bGQgcHV0
+IHRoZSBvZl9kZXZpY2VfaWQgYXJyYXkgYW5kIHBvcHVsYXRpbmcgdGhlIG9mX21hdGNoX3RhYmxl
+IGluDQojaWZkZWYgQ09ORklHX09GPyBPciBtYXliZSB5b3Ugc3VnZ2VzdCB0aGF0IEkgd2lsbCBw
+dXQgb2ZfZGV2aWNlX2lkDQphcnJheSBpbiAjaWZkZWYgQ09ORklHX09GIGFuZCB1c2Ugb2ZfbWF0
+Y2hfcHRyKCkgd2hlbiBwb3B1bGF0aW5nIHRoZQ0Kb2ZfbWF0Y2hfdGFibGUgcG9pbnRlcj8gSSBn
+dWVzcyB0aGF0IHdvdWxkIG1ha2Ugc2Vuc2UuIEknbGwgZG8gdGhhdCAtDQpjYW4geW91IHBsZWFz
+ZSBleHBsYWluIGlmIHRoaXMgd2FzIG5vdCB3aGF0IHlvdSBtZWFudC4NCg0KQnIsDQogICAgTWF0
+dGkNCg==
