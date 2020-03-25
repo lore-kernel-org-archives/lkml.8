@@ -2,230 +2,147 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8417C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D9DC2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC80A20719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E0320773
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iwwJs37q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbgCYUHM (ORCPT
+        id S1727498AbgCYUHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:07:12 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2145 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbgCYUHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:07:12 -0400
-IronPort-SDR: 9yEtO9WmSu6s2rUumzUQ6XqJwSVUyRQjZqvyPA40tyjDaAmxsPjzvAXgfE6cdKsBgrTxTAL5ZY
- bX+b7eT4DW0g==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 13:07:11 -0700
-IronPort-SDR: +sRrRJR4oKvuxpsji2EHtEppPYDwMbs9xtzf69x7YVFRe4wgX/lF2xQ1aM2eB8fF3UCAIckSbB
- UgbxIByMRfgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
-   d="scan'208";a="448387527"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 25 Mar 2020 13:07:10 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jHCIv-0004S6-Tu; Thu, 26 Mar 2020 04:07:09 +0800
-Date:   Thu, 26 Mar 2020 04:06:08 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/cleanups] BUILD SUCCESS
- 244febbee876203d8505dfadcc6edb82a0e061b8
-Message-ID: <5e7bb9b0.tKo66f6CSQjdcfDH%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 25 Mar 2020 16:07:52 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36338 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgCYUHv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 16:07:51 -0400
+Received: by mail-pl1-f193.google.com with SMTP id g2so1241316plo.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 13:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=6P5bTAGsE0amInvCSHC0blEKE/ToIH6x//KXcxXkD08=;
+        b=iwwJs37qnuJfDrZ3hbRFpiXq4hpsEHFv3tJYxWCys78aTmwq9KISIsEDfCqkhpgAqe
+         Xb74jT1J0Y1159WgIYJBvSdCm3J8XpLgm7TTaK5Qv34pzY64c3WvrpCgW9G+rTJWxuQ5
+         qxyy8aSw7Jgob9XNWo+qA0mvugPw1SHcL4ePw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=6P5bTAGsE0amInvCSHC0blEKE/ToIH6x//KXcxXkD08=;
+        b=RVRE6/TQsI/cCZlRH7IyxapPGd71+Plf5OmpCpTpyoBauBS624xK5Yg5V1cKcRuE98
+         4V2sDYFfi3sVoNy8ntOHNkSQZZKeO3kzK5fYi6l6G4ikZJU+veCylutLyNULrz+B1du8
+         na+s7B6WOLw8emMugElv2mqG+kGkHAXOgjCkyopTedSQOlwYdC0v8kJM1h9nNArH23+9
+         juOvUuBVUXsmkIVmB6nRVDQLx9yl9a34LqjntSrLJjfjrGMaqXzh7D+167D8byaJpSnK
+         Zj0uJRhdmZjxjr7WkjA9TVUMTjlpzZ4CzRQlSnPt2H2knia6Vnao/R/kq+iGHvXqT07q
+         fcLg==
+X-Gm-Message-State: ANhLgQ1wX1blp5TTwFItoNKuYiAyl6qou8mLRLVdAuCdmVUUdIqMXiV7
+        UmNDkhFcdlzhzwFIE2NXSKcpXA==
+X-Google-Smtp-Source: ADFU+vsnCDdTqQ/eLFXY+637edokg88uorV6An1aox+orWo/paerQoA15rocN1ChqG2o5GuJsfRNhw==
+X-Received: by 2002:a17:90a:2a89:: with SMTP id j9mr5435067pjd.64.1585166870475;
+        Wed, 25 Mar 2020 13:07:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r63sm12610703pfr.42.2020.03.25.13.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 13:07:49 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 13:07:48 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>, Paul Turner <pjt@google.com>,
+        Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH bpf-next v6 3/8] bpf: lsm: provide attachment points for
+ BPF LSM programs
+Message-ID: <202003251257.AD4381C861@keescook>
+References: <20200325152629.6904-1-kpsingh@chromium.org>
+ <20200325152629.6904-4-kpsingh@chromium.org>
+ <202003251225.923FF1DD7@keescook>
+ <20200325193956.GA22898@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200325193956.GA22898@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cleanups
-branch HEAD: 244febbee876203d8505dfadcc6edb82a0e061b8  x86/alternatives: Mark text_poke_loc_init() static
+On Wed, Mar 25, 2020 at 08:39:56PM +0100, KP Singh wrote:
+> On 25-Mär 12:28, Kees Cook wrote:
+> > On Wed, Mar 25, 2020 at 04:26:24PM +0100, KP Singh wrote:
+> > > +noinline __weak RET bpf_lsm_##NAME(__VA_ARGS__)	\
+> > 
+> > I don't think the __weak is needed any more here?
+> 
+> This was suggested in:
+> 
+>  https://lore.kernel.org/bpf/20200221022537.wbmhdfkdbfvw2pww@ast-mbp/
+> 
+> "I think I saw cases when gcc ignored 'noinline' when function is
+> defined in the same file and still performed inlining while keeping
+> the function body.  To be safe I think __weak is necessary. That will
+> guarantee noinline."
+> 
+> It happened to work nicely with the previous approach for the special
+> hooks but the actual reason for adding the __weak was to guarrantee
+> that these functions don't get inlined.
 
-elapsed time: 485m
+Oh, hrm. Well, okay. That rationale would imply that the "noinline"
+macro needs adjustment instead, but that can be separate, something like:
 
-configs tested: 163
-configs skipped: 106
+include/linux/compiler_attributes.h
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+-#define noinline __attribute__((__noinline__))
++#define noinline __attribute__((__noinline__)) __attribute__((__weak__))
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-mips                             allmodconfig
-xtensa                       common_defconfig
-microblaze                    nommu_defconfig
-s390                                defconfig
-riscv                            allyesconfig
-h8300                       h8s-sim_defconfig
-m68k                           sun3_defconfig
-s390                             allyesconfig
-mips                             allyesconfig
-s390                              allnoconfig
-sh                            titan_defconfig
-csky                                defconfig
-sparc64                           allnoconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                              allnoconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200325
-x86_64               randconfig-a002-20200325
-x86_64               randconfig-a003-20200325
-i386                 randconfig-a001-20200325
-i386                 randconfig-a002-20200325
-i386                 randconfig-a003-20200325
-alpha                randconfig-a001-20200325
-m68k                 randconfig-a001-20200325
-mips                 randconfig-a001-20200325
-nds32                randconfig-a001-20200325
-parisc               randconfig-a001-20200325
-riscv                randconfig-a001-20200325
-c6x                  randconfig-a001-20200325
-h8300                randconfig-a001-20200325
-microblaze           randconfig-a001-20200325
-nios2                randconfig-a001-20200325
-sparc64              randconfig-a001-20200325
-csky                 randconfig-a001-20200325
-openrisc             randconfig-a001-20200325
-s390                 randconfig-a001-20200325
-sh                   randconfig-a001-20200325
-xtensa               randconfig-a001-20200325
-x86_64               randconfig-b001-20200325
-x86_64               randconfig-b002-20200325
-x86_64               randconfig-b003-20200325
-i386                 randconfig-b001-20200325
-i386                 randconfig-b002-20200325
-i386                 randconfig-b003-20200325
-x86_64               randconfig-c001-20200325
-x86_64               randconfig-c002-20200325
-x86_64               randconfig-c003-20200325
-i386                 randconfig-c001-20200325
-i386                 randconfig-c002-20200325
-i386                 randconfig-c003-20200325
-x86_64               randconfig-d001-20200325
-x86_64               randconfig-d002-20200325
-x86_64               randconfig-d003-20200325
-i386                 randconfig-d001-20200325
-i386                 randconfig-d002-20200325
-i386                 randconfig-d003-20200325
-x86_64               randconfig-e001-20200325
-x86_64               randconfig-e002-20200325
-x86_64               randconfig-e003-20200325
-i386                 randconfig-e001-20200325
-i386                 randconfig-e002-20200325
-i386                 randconfig-e003-20200325
-x86_64               randconfig-f001-20200325
-x86_64               randconfig-f002-20200325
-x86_64               randconfig-f003-20200325
-i386                 randconfig-f001-20200325
-i386                 randconfig-f002-20200325
-i386                 randconfig-f003-20200325
-x86_64               randconfig-g001-20200325
-x86_64               randconfig-g002-20200325
-x86_64               randconfig-g003-20200325
-i386                 randconfig-g001-20200325
-i386                 randconfig-g002-20200325
-i386                 randconfig-g003-20200325
-x86_64               randconfig-h001-20200325
-x86_64               randconfig-h002-20200325
-x86_64               randconfig-h003-20200325
-i386                 randconfig-h001-20200325
-i386                 randconfig-h002-20200325
-i386                 randconfig-h003-20200325
-arc                  randconfig-a001-20200325
-arm                  randconfig-a001-20200325
-arm64                randconfig-a001-20200325
-ia64                 randconfig-a001-20200325
-powerpc              randconfig-a001-20200325
-sparc                randconfig-a001-20200325
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                          debug_defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                                   rhel
-x86_64                               rhel-7.6
-x86_64                         rhel-7.2-clear
-x86_64                                    lkp
-x86_64                              fedora-25
-x86_64                                  kexec
+With a comment, etc...
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+-Kees
+
+> 
+> > 
+> > > +{						\
+> > > +	return DEFAULT;				\
+> > 
+> > I'm impressed that LSM_RET_VOID actually works. :)
+> 
+> All the credit goes to Andrii :)
+> 
+> - KP
+> 
+> > 
+> > -Kees
+> > 
+> > > +}
+> > > +
+> > > +#include <linux/lsm_hook_defs.h>
+> > > +#undef LSM_HOOK
+> > >  
+> > >  const struct bpf_prog_ops lsm_prog_ops = {
+> > >  };
+> > > -- 
+> > > 2.20.1
+> > > 
+> > 
+> > -- 
+> > Kees Cook
+
+-- 
+Kees Cook
