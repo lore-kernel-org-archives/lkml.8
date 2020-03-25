@@ -2,140 +2,143 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C3C5C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD271C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 509F020719
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:28:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585171700;
-	bh=5K2E5w4ZAxUttugnFuAHbhicY1xyCyoKDUNqdcoJPBs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B3/2zrGx8IxpEk29UFUmDN625+cLDeindETcNXULt5msvhid9bKmfvNcNaQlmH/R8
-	 f+N3fjc1TnmkaBrG0B8brHVs9aONLawwycKP7Cdwl/Sh648XKbayviRVKlL8NUHm7c
-	 oA86aSzydV+tG4XgPnlEmXYmzFIu9ZHBV7hUtR/Y=
+	by mail.kernel.org (Postfix) with ESMTP id AAE2F2070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:30:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JSA1Om7w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727469AbgCYV2T (ORCPT
+        id S1727486AbgCYVaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:28:19 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:44175 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727351AbgCYV2T (ORCPT
+        Wed, 25 Mar 2020 17:30:02 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9019 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727384AbgCYVaC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:28:19 -0400
-Received: by mail-oi1-f196.google.com with SMTP id v134so3548502oie.11;
-        Wed, 25 Mar 2020 14:28:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kMnQUhHsMUqkwZSy38drjBgyagt4hVHMEAtOg07ZQq8=;
-        b=X3OOwSWwF9exeyEaukuWVnthtnuCWkdj/NhnzgeqrAmzkzlpU2fT/VytfClj4jEFGJ
-         G5o4gBQdeEgLIC78xTNGk+ErRE3NP+lWB3eKoLn+VkXHURccNbfl2IDQooDC0N2FqxpP
-         1rSlrh4Lfm6leOlBEFzcsfCAw1tbbHxp731gtzTNtDy02Owu+V9KHo1qO7+HnfTeIrb+
-         jF8ouIms+DFnG0IazntOwmamZ+brj1YNWbwLkf1X6oRBRU0OMbDQ5r25hjyWp/LbPxQk
-         K1D7JZg1/HWdNehhcl35Poa+DQfvSFhSXkg3mqICk3/nxMCSvt6eki071DUhP8sx2BYE
-         kAfQ==
-X-Gm-Message-State: ANhLgQ1pUVY2M0FtB2Yw1Dhc97q49m1Z29krYAT8gHNAYsSASS5uAPUW
-        Sl3yUdcc7Ae7hb0le3d1rzRpVC7rBVQSt94Tcds=
-X-Google-Smtp-Source: ADFU+vvzKkZOnTfMVU8Sfwv/GSImVsJgGRvYaaTVayXvuwf+AsGAEnB58orlXTBPHO173efwnlO+Y+mX9i6UdjFRaiI=
-X-Received: by 2002:aca:f07:: with SMTP id 7mr2269427oip.68.1585171698442;
- Wed, 25 Mar 2020 14:28:18 -0700 (PDT)
+        Wed, 25 Mar 2020 17:30:02 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e7bcd4c0001>; Wed, 25 Mar 2020 14:29:48 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 25 Mar 2020 14:30:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 25 Mar 2020 14:30:01 -0700
+Received: from [10.26.72.231] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 25 Mar
+ 2020 21:29:59 +0000
+Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
+ creating dead devices
+To:     Ionela Voinescu <ionela.voinescu@arm.com>,
+        <linux-kernel@vger.kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+CC:     <linux-tip-commits@vger.kernel.org>, x86 <x86@kernel.org>,
+        <liviu.dudau@arm.com>, <sudeep.holla@arm.com>,
+        <lorenzo.pieralisi@arm.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200111052125.238212-1-saravanak@google.com>
+ <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
+ <20200324175955.GA16972@arm.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <e75ae529-264c-9aa6-f711-2afe28ceec36@nvidia.com>
+Date:   Wed, 25 Mar 2020 21:29:57 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200325150017.xhabucfo3v6i234o@e107158-lin> <Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org>
-In-Reply-To: <Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 25 Mar 2020 22:28:06 +0100
-Message-ID: <CAJZ5v0gqNnoT41=Vm7AtbH8PMW+qPGighK7Up3q2rS+B0jBKFg@mail.gmail.com>
-Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Oliver Neukum <oneukum@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Linux-pm mailing list <linux-pm@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200324175955.GA16972@arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1585171788; bh=zwkSmPWYbRZk6Ce7Av1OcrGsQ4eYCwVvf0CQ6wsWw2k=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=JSA1Om7wkt2BSVOehQRgF4VAja1l6ZPtUcoB5fNOP5axn37rdw8iHeqRDUeY9L/iQ
+         nk/M+2oIsXJLRXVgPxVFR5QlE6XIq/kA7lIUAlODiGazqSKNuiz9ciNW2EtMQlIiGP
+         //f2D9hZFi2VB0LS3bQbDe0Cly6aIamiwer9Jw2SinXh+zKjbkq/SUjGczSs/IQPtR
+         SCH0IGkbPh3ZA+STrjUmakR1w8aePJis960Bll5yPBt4b/VzAxArvgvjeXmzEjqzLA
+         ZkAC+GIbN284VCaEVXisMQJ4e1n3z7dkyNyIkeSfPp1V2qIOuEenydPRbYIlYxEXOk
+         X81Uxb7KVKFYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 9:49 PM Alan Stern <stern@rowland.harvard.edu> wrote:
->
-> On Wed, 25 Mar 2020, Qais Yousef wrote:
->
-> > Thanks for all the hints Alan.
-> >
-> > I think I figured it out, the below patch seems to fix it for me. Looking
-> > at other drivers resume functions it seems we're missing the
-> > pm_runtime_disable()->set_active()->enable() dance. Doing that fixes the
-> > warning and the dev_err() in driver/base/power.
->
-> Ah, yes.  This should have been added years ago; guess I forgot.  :-(
->
-> > I don't see xhci-plat.c doing that, I wonder if it needs it too.
-> >
-> > I'm not well versed about the details and the rules here. So my fix could be
-> > a hack, though it does seem the right thing to do.
-> >
-> > I wonder why the power core doesn't handle this transparently..
->
-> Initially, we didn't want the PM core to do this automatically because
-> we thought some devices might want to remain runtime-suspended
-> following a system resume, and only the device driver would know what
-> to do.
->
-> Raphael, now that we have the direct_complete mechanism, can we revisit
-> this?  Should the PM core automatically call pm_runtime_set_active() if
-> dev->power.direct_complete isn't set?  Perhaps in device_resume_early()
-> prior to the pm_runtime_enable() call?
->
-> It's possible we discussed this and decided against it at the time when
-> direct_complete was added, but if so I don't remember what was said.
 
-Me neither. :-)
+On 24/03/2020 17:59, Ionela Voinescu wrote:
+> Hi guys,
+> 
+> On Thursday 19 Mar 2020 at 08:47:46 (-0000), tip-bot2 for Saravana Kannan wrote:
+>> The following commit has been merged into the timers/core branch of tip:
+>>
+>> Conommit-ID:     4f41fe386a94639cd9a1831298d4f85db5662f1e
+>> Gitweb:        https://git.kernel.org/tip/4f41fe386a94639cd9a1831298d4f85db5662f1e
+>> Author:        Saravana Kannan <saravanak@google.com>
+>> AuthorDate:    Fri, 10 Jan 2020 21:21:25 -08:00
+>> Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
+>> CommitterDate: Tue, 17 Mar 2020 13:10:07 +01:00
+>>
+>> clocksource/drivers/timer-probe: Avoid creating dead devices
+>>
+>> Timer initialization is done during early boot way before the driver
+>> core starts processing devices and drivers. Timers initialized during
+>> this early boot period don't really need or use a struct device.
+>>
+>> However, for timers represented as device tree nodes, the struct devices
+>> are still created and sit around unused and wasting memory. This change
+>> avoid this by marking the device tree nodes as "populated" if the
+>> corresponding timer is successfully initialized.
+>>
+>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> Link: https://lore.kernel.org/r/20200111052125.238212-1-saravanak@google.com
+>> ---
+>>  drivers/clocksource/timer-probe.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+>> index ee9574d..a10f28d 100644
+>> --- a/drivers/clocksource/timer-probe.c
+>> +++ b/drivers/clocksource/timer-probe.c
+>> @@ -27,8 +27,10 @@ void __init timer_probe(void)
+>>  
+>>  		init_func_ret = match->data;
+>>  
+>> +		of_node_set_flag(np, OF_POPULATED);
+>>  		ret = init_func_ret(np);
+>>  		if (ret) {
+>> +			of_node_clear_flag(np, OF_POPULATED);
+>>  			if (ret != -EPROBE_DEFER)
+>>  				pr_err("Failed to initialize '%pOF': %d\n", np,
+>>  				       ret);
+>>
+> 
+> This patch is creating problems on some vexpress platforms - ones that
+> are using CLKSRC_VERSATILE (drivers/clocksource/timer-versatile.c).
+> I noticed issues on TC2 and FVPs (fixed virtual platforms) starting with
+> next-20200318 and still reproducible with next-20200323.
 
-That said complexity has grown since then and there are the
-DPM_FLAG_SMART_SUSPEND and DPM_FLAG_LEAVE_SUSPENDED flags that can be
-used to control that behavior to some extent.
+I am also seeing a regression on tegra30-cardhu-a04 when testing system
+suspend on -next. Bisect is pointing to this commit and reverting on top
+of -next fixes the problem. Unfortunately, there is no crash dump
+observed, but the device hangs somewhere when testing suspend.
 
-Setting DPM_FLAG_SMART_SUSPEND alone, in particular, causes
-pm_runtime_set_active() to be called at the noirq stage of device
-resume either by the core or by bus types (e.g. PCI) etc.
+I have not looked into this any further but wanted to report the problem.
 
-It looks like ohci-platform might use DPM_FLAG_SMART_SUSPEND, but I
-need to take a closer look at that (possibly later this week).
+Cheers
+Jon
 
-Cheers!
-
-
->
-> > diff --git a/drivers/usb/host/ohci-platform.c b/drivers/usb/host/ohci-platform.c
-> > index 7addfc2cbadc..eb92c8092fae 100644
-> > --- a/drivers/usb/host/ohci-platform.c
-> > +++ b/drivers/usb/host/ohci-platform.c
-> > @@ -299,6 +299,10 @@ static int ohci_platform_resume(struct device *dev)
-> >         }
-> >
-> >         ohci_resume(hcd, false);
-> > +
-> > +       pm_runtime_disable(dev);
-> > +       pm_runtime_set_active(dev);
-> > +       pm_runtime_enable(dev);
-> >         return 0;
-> >  }
-> >  #endif /* CONFIG_PM_SLEEP */
-> >
-> >
-> > Thanks
-> >
-> > --
-> > Qais Yousef
->
->
+-- 
+nvpublic
