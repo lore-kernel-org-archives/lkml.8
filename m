@@ -2,100 +2,231 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E53FC2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2F8FC2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 461342074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:05:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585166735;
-	bh=KQrQobMfXnFgSLgQMvsALc1syatq3RUPZzn2UmwaMVw=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=JuC2E0Ddt2O+350IQCRxQKEnJOUZp4O0gb3sA8FZZTYqcUZiMtZfrmAelVbfLy3fK
-	 O6bRTLowuoQVG6zDKrPt6JcKM42p/RBgmXK47nyJD2sq4PAZXo9AUMmZuAUldcyIHb
-	 ZfOZLkL92zaiQOv3HsQsmI482fej7g/Iflde4M7E=
+	by mail.kernel.org (Postfix) with ESMTP id 99FC120658
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 20:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgCYUFe (ORCPT
+        id S1727464AbgCYUGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 16:05:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43348 "EHLO mail.kernel.org"
+        Wed, 25 Mar 2020 16:06:12 -0400
+Received: from mga05.intel.com ([192.55.52.43]:23072 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbgCYUFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 16:05:34 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4542620658;
-        Wed, 25 Mar 2020 20:05:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585166733;
-        bh=KQrQobMfXnFgSLgQMvsALc1syatq3RUPZzn2UmwaMVw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=GV5JghfmqxWq3tY+RJacwokQxZRZmQbmJvX4q4IR9JKa+SwqragqcX5Y9e8cMtR7l
-         xUOZj63b50DHIQeQTeZeYljtcmpe5aKFwQN3m0tm0/a6tjog6aJmnxYzgMDoAM7kEQ
-         rv97ZvcPtzgSJdD3QMYQ96KFBwR3kD8UDDvoVTjk=
-Subject: Re: [PATCH v7 kunit-next 3/4] kunit: subtests should be indented 4
- spaces according to TAP
-To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, shuah <shuah@kernel.org>
-References: <1584110682-3837-1-git-send-email-alan.maguire@oracle.com>
- <1584110682-3837-4-git-send-email-alan.maguire@oracle.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <dd82e9cb-6c88-58cf-933e-f2a644e09b15@kernel.org>
-Date:   Wed, 25 Mar 2020 14:05:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727236AbgCYUGM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 16:06:12 -0400
+IronPort-SDR: koSNnrt4qVnOOmNASs+uafay7IJIyV1AuPr3zpa/U4oEvrecgHHOrQx6WfqgxNsFn1XRLnuMWV
+ rvxOK/tqpHFQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 13:06:10 -0700
+IronPort-SDR: FuRaQ8WjBiIMn1QP8ayfXQfvHZ0dmEgvN+0rUKJYlse8fqp8D8Rr7MV3RevcO0KEToo6rSS4Dz
+ XugFD0633M2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,305,1580803200"; 
+   d="scan'208";a="393736768"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 25 Mar 2020 13:06:08 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1jHCHw-000HoF-1N; Thu, 26 Mar 2020 04:06:08 +0800
+Date:   Thu, 26 Mar 2020 04:05:54 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:smp/core] BUILD SUCCESS
+ 33c3736ec88811b9b6f6ce2cc8967f6b97c3db5e
+Message-ID: <5e7bb9a2.LwhhN3ilmTQzkHeD%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-In-Reply-To: <1584110682-3837-4-git-send-email-alan.maguire@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/13/20 8:44 AM, Alan Maguire wrote:
-> Introduce KUNIT_INDENT macro which corresponds to 4-space indentation,
-> and use it to modify indentation from tab to 4 spaces.
-> 
-> Suggested-by: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> Reviewed-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->   include/kunit/test.h                |  7 +++-
->   lib/kunit/assert.c                  | 79 +++++++++++++++++++------------------
->   lib/kunit/test.c                    |  6 +--
->   tools/testing/kunit/kunit_parser.py | 10 ++---
->   4 files changed, 54 insertions(+), 48 deletions(-)
-> 
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index f7b2ed4c..d49cdb4 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -84,6 +84,10 @@ struct kunit_resource {
->   /* Size of log associated with test. */
->   #define KUNIT_LOG_SIZE	512
->   
-> +/* TAP specifies subtest indentation of 4 spaces. */
-> +#define KUNIT_INDENT	"    "
-> +#define KUNIT_INDENT2	KUNIT_INDENT KUNIT_INDENT
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  smp/core
+branch HEAD: 33c3736ec88811b9b6f6ce2cc8967f6b97c3db5e  cpu/hotplug: Hide cpu_up/down()
 
-Sorry for a late comment on this.
+elapsed time: 485m
 
-What's the reason to do it this way? Why wouldn't you define
-it as 8 spaces long string?
+configs tested: 164
+configs skipped: 0
 
-Also can you please make sure to run checkpatch --strict on the
-patches you send?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-thanks,
--- Shuah
+arm                              allmodconfig
+arm                               allnoconfig
+arm                              allyesconfig
+arm64                            allmodconfig
+arm64                             allnoconfig
+arm64                            allyesconfig
+arm                           efm32_defconfig
+arm                         at91_dt_defconfig
+arm                        shmobile_defconfig
+arm64                               defconfig
+arm                          exynos_defconfig
+arm                        multi_v5_defconfig
+arm                           sunxi_defconfig
+arm                        multi_v7_defconfig
+sparc                            allyesconfig
+mips                             allmodconfig
+xtensa                       common_defconfig
+microblaze                    nommu_defconfig
+s390                                defconfig
+riscv                            allyesconfig
+h8300                       h8s-sim_defconfig
+m68k                           sun3_defconfig
+s390                             allyesconfig
+mips                             allyesconfig
+s390                              allnoconfig
+sh                            titan_defconfig
+csky                                defconfig
+mips                              allnoconfig
+sparc64                           allnoconfig
+i386                              allnoconfig
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+ia64                             alldefconfig
+ia64                             allmodconfig
+ia64                              allnoconfig
+ia64                             allyesconfig
+ia64                                defconfig
+c6x                              allyesconfig
+c6x                        evmc6678_defconfig
+nios2                         10m50_defconfig
+nios2                         3c120_defconfig
+openrisc                    or1ksim_defconfig
+openrisc                 simple_smp_defconfig
+xtensa                          iss_defconfig
+alpha                               defconfig
+nds32                             allnoconfig
+nds32                               defconfig
+h8300                     edosk2674_defconfig
+h8300                    h8300h-sim_defconfig
+m68k                             allmodconfig
+m68k                       m5475evb_defconfig
+m68k                          multi_defconfig
+arc                              allyesconfig
+arc                                 defconfig
+microblaze                      mmu_defconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+powerpc                       ppc64_defconfig
+powerpc                          rhel-kconfig
+mips                           32r2_defconfig
+mips                         64r6el_defconfig
+mips                      fuloong2e_defconfig
+mips                      malta_kvm_defconfig
+parisc                            allnoconfig
+parisc                           allyesconfig
+parisc                generic-32bit_defconfig
+parisc                generic-64bit_defconfig
+x86_64               randconfig-a001-20200325
+x86_64               randconfig-a002-20200325
+x86_64               randconfig-a003-20200325
+i386                 randconfig-a001-20200325
+i386                 randconfig-a002-20200325
+i386                 randconfig-a003-20200325
+alpha                randconfig-a001-20200325
+m68k                 randconfig-a001-20200325
+mips                 randconfig-a001-20200325
+nds32                randconfig-a001-20200325
+parisc               randconfig-a001-20200325
+riscv                randconfig-a001-20200325
+c6x                  randconfig-a001-20200325
+h8300                randconfig-a001-20200325
+microblaze           randconfig-a001-20200325
+nios2                randconfig-a001-20200325
+sparc64              randconfig-a001-20200325
+csky                 randconfig-a001-20200325
+openrisc             randconfig-a001-20200325
+s390                 randconfig-a001-20200325
+sh                   randconfig-a001-20200325
+xtensa               randconfig-a001-20200325
+x86_64               randconfig-b001-20200325
+x86_64               randconfig-b002-20200325
+x86_64               randconfig-b003-20200325
+i386                 randconfig-b001-20200325
+i386                 randconfig-b002-20200325
+i386                 randconfig-b003-20200325
+x86_64               randconfig-c001-20200325
+x86_64               randconfig-c002-20200325
+x86_64               randconfig-c003-20200325
+i386                 randconfig-c001-20200325
+i386                 randconfig-c002-20200325
+i386                 randconfig-c003-20200325
+x86_64               randconfig-d001-20200325
+x86_64               randconfig-d002-20200325
+x86_64               randconfig-d003-20200325
+i386                 randconfig-d001-20200325
+i386                 randconfig-d002-20200325
+i386                 randconfig-d003-20200325
+x86_64               randconfig-e001-20200325
+x86_64               randconfig-e002-20200325
+x86_64               randconfig-e003-20200325
+i386                 randconfig-e001-20200325
+i386                 randconfig-e002-20200325
+i386                 randconfig-e003-20200325
+x86_64               randconfig-f001-20200325
+x86_64               randconfig-f002-20200325
+x86_64               randconfig-f003-20200325
+i386                 randconfig-f001-20200325
+i386                 randconfig-f002-20200325
+i386                 randconfig-f003-20200325
+x86_64               randconfig-g001-20200325
+x86_64               randconfig-g002-20200325
+x86_64               randconfig-g003-20200325
+i386                 randconfig-g001-20200325
+i386                 randconfig-g002-20200325
+i386                 randconfig-g003-20200325
+x86_64               randconfig-h001-20200325
+x86_64               randconfig-h002-20200325
+x86_64               randconfig-h003-20200325
+i386                 randconfig-h001-20200325
+i386                 randconfig-h002-20200325
+i386                 randconfig-h003-20200325
+arc                  randconfig-a001-20200325
+arm                  randconfig-a001-20200325
+arm64                randconfig-a001-20200325
+ia64                 randconfig-a001-20200325
+powerpc              randconfig-a001-20200325
+sparc                randconfig-a001-20200325
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                            allmodconfig
+s390                       zfcpdump_defconfig
+s390                          debug_defconfig
+s390                             allmodconfig
+s390                             alldefconfig
+sh                               allmodconfig
+sh                                allnoconfig
+sh                          rsk7269_defconfig
+sh                  sh7785lcr_32bit_defconfig
+sparc                               defconfig
+sparc64                          allmodconfig
+sparc64                          allyesconfig
+sparc64                             defconfig
+um                                  defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                              fedora-25
+x86_64                                  kexec
+x86_64                                    lkp
+x86_64                                   rhel
+x86_64                         rhel-7.2-clear
+x86_64                               rhel-7.6
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
