@@ -2,89 +2,111 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9787C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AA8C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D572070A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:34:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lkr/Qdff"
+	by mail.kernel.org (Postfix) with ESMTP id C18D02070A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 21:34:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgCYVeL (ORCPT
+        id S1727491AbgCYVe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 17:34:11 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46708 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgCYVeL (ORCPT
+        Wed, 25 Mar 2020 17:34:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39822 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgCYVe4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 17:34:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=5CW2LFSFroNe8X3GnaRxYiUYrl2HMG+IcwPOPQea1Ao=; b=Lkr/Qdffvz/lLb8oqO84rvCguH
-        1yC/g4K8NWh7BWqLVFMtgOFxWKRB8/ukcVcsZp5Ycb59TzvWdBjd6Te7vzuN3OoVjmsIsW1s8tr+a
-        MrwBUT46+cqVPOC6Aylw1LqjCgJTPmdJ/T/jUqmmvMzZjHbqPeeoyHpAJ6KJxFaoJ7EbpayE6+M+Q
-        SwoX9eDW06M+ergFueLKUCgLyokrqaDYc4xFTZ63ZgZn2SEGdIoPHOmrSOKunLTtALRRgltSdH4BF
-        Rvw/GJe2bgyy8+RF2sQHxePFydd6Jj3pMQDrq5B3Lk4IDCyoDT3siPttWNoeVdGyk9IfwSVNDHa4A
-        USlALxBw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHDf8-0006G3-1X; Wed, 25 Mar 2020 21:34:10 +0000
-Subject: Re: mmotm 2020-03-23-21-29 uploaded
- (pci/controller/dwc/pcie-tegra194.c)
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, akpm@linux-foundation.org,
-        broonie@kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        linux-pci <linux-pci@vger.kernel.org>
-References: <20200325212048.GA72586@google.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c1538231-196e-c99e-db48-a802bbab049d@infradead.org>
-Date:   Wed, 25 Mar 2020 14:34:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 25 Mar 2020 17:34:56 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id DA42F293EA8
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Jeffrey Kardatzke <jkardatzke@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        Ezequiel Garcia <ezequiel@collabora.com>
+Subject: [PATCH v3 0/7] hantro: set of small cleanups and fixes
+Date:   Wed, 25 Mar 2020 18:34:31 -0300
+Message-Id: <20200325213439.16509-1-ezequiel@collabora.com>
+X-Mailer: git-send-email 2.26.0.rc2
 MIME-Version: 1.0
-In-Reply-To: <20200325212048.GA72586@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 2:20 PM, Bjorn Helgaas wrote:
-> On Wed, Mar 25, 2020 at 05:01:43PM +0000, Lorenzo Pieralisi wrote:
->> On Wed, Mar 25, 2020 at 08:43:32PM +0530, Vidya Sagar wrote:
+Hi all,
 
->>> Also, I wanted to know how can I catch this locally? i.e. How can I
->>> generate the config file attached by Randy locally so that I can get the
->>> source ready without these kind of issues?
-> 
-> Randy attached the config-r1578 file to his initial report.  I saved
-> that attachment, then:
-> 
->   $ git checkout next
->   $ make mrproper
->   $ cp ~/Downloads/config-r1578 .config
->   $ make drivers/pci/controller/
+Cleanups and fixes, third iteration.
 
-Hi Vidya,
+The main idea here is to address two issues, and while
+at it, clean the driver a bit.
 
-All I do is run 20 of these on each linux-next and mmotm release:
+The first issue can be found in Patch 1, when the Request
+API is used, the CAPTURE buffer should be returned _before_
+the OUTPUT buffer, to avoid waking up userspace prematurely.
 
-$ make clean; make randconfig; make all
+I noticed this issue while working on the rkvdec driver,
+but this time I've decided to tackle it at the core,
+in v4l2_m2m_buf_done_and_job_finish().
 
-and see what happens.
+The second issue is a simple compliance issue, which is solved
+by refactoring the driver, dealing with internal set format
+properly.
+
+Note that patch 7 still needs reviews from device tree maintainers.
+
+Changes v3:
+
+* Rebased media master.
+
+* Revert buffer sequence removal change.
+
+Changes v2:
+
+* Fix compile warning introduced by patch 6.
+
+* I'm adding two additional patches this time.
+  Patch 7 converts the binding to json-schema,
+  and patch 8 puts linux-rockchip mailing list in MAINTAINERS. 
+
+Thanks,
+Ezequiel
+
+Ezequiel Garcia (7):
+  v4l2-mem2mem: return CAPTURE buffer first
+  hantro: Set buffers' zeroth plane payload in .buf_prepare
+  hantro: Use v4l2_m2m_buf_done_and_job_finish
+  hantro: Remove unneeded hantro_dec_buf_finish
+  hantro: Move H264 motion vector calculation to a helper
+  hantro: Refactor for V4L2 API spec compliancy
+  dt-bindings: rockchip-vpu: Convert bindings to json-schema
+
+ .../bindings/media/rockchip-vpu.txt           |  43 -------
+ .../bindings/media/rockchip-vpu.yaml          |  82 +++++++++++++
+ MAINTAINERS                                   |   2 +-
+ drivers/media/v4l2-core/v4l2-mem2mem.c        |  11 +-
+ drivers/staging/media/hantro/hantro.h         |   7 +-
+ drivers/staging/media/hantro/hantro_drv.c     |  28 ++---
+ drivers/staging/media/hantro/hantro_hw.h      |  31 +++++
+ drivers/staging/media/hantro/hantro_v4l2.c    | 111 +++++++++---------
+ 8 files changed, 193 insertions(+), 122 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
 
 -- 
-~Randy
+2.26.0.rc2
 
