@@ -2,152 +2,149 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625D9C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 254BEC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3422420B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7B90208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="fhol/5lM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4lv2ExY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgCYOXO (ORCPT
+        id S1727749AbgCYOX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:23:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34876 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727683AbgCYOXN (ORCPT
+        Wed, 25 Mar 2020 10:23:28 -0400
+Received: from mail-qt1-f170.google.com ([209.85.160.170]:43790 "EHLO
+        mail-qt1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgCYOX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:23:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d5so3375990wrn.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:23:10 -0700 (PDT)
+        Wed, 25 Mar 2020 10:23:27 -0400
+Received: by mail-qt1-f170.google.com with SMTP id a5so2232633qtw.10;
+        Wed, 25 Mar 2020 07:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=NR2RALCfd8rSS/oDIEHAtXd82vJW7Hsk6ulYdw+wc04=;
-        b=fhol/5lM5IvZRvcSRcYglAhotMmsx+h7Mdx0iKzllcDwdCj0ONi8mneAd+IQViE4PP
-         Ez/ELSeS5qVugsR0bopiA1WCjg32V8+5lqXuGfSLDIvvMLqBE02nB7zH+PW3U9VVGF0e
-         A9nkhBGwhElsFWlPPMYvfy2INjM71FPl54tNoXiZ6ct73rcmb/oKJtaFXKlX09dmcw2Z
-         YqknhxJwJtM6WF8DysisY4HcJn5V2aL9h67yq6Do/iYlqsWapzDIyW27+WBjUrnXOrPp
-         ekTS+j9OlYylXYSa+c2b0Nbxwj//rcF3QpIqfrnOADMtui8QXENj/1Zcp3L0bjavMmpr
-         adog==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Yht3Hr3Z2LR8imhVwniUokEOhf9PD9ShQzB5wpJUp7I=;
+        b=H4lv2ExY8zdsjjNslKgsEZs5uBONVSrNzo4qFhyqpJ4gkzc7OE9h7h2vLWGo7kQPbJ
+         jxOgg9iEpsjuRz+5z4ccDxXFeEplNff6AfPcLRs0ncAP5DvGIgt0IYMDXmgj6Minj4G7
+         L41nOxQLMzv3m7mwyJDhUjddy1G7A4bLk00kiylxKwj1l67myofaGxUfY/w1A9E1LKZp
+         M1lzA71O8TlVjyC520n/t/m16TB85yBdVlZJssuGz0cK92oiBIN4B3d9Hb1Zz+VTkkEd
+         svuSvEmkC56fGl+o6iltUJEeiiAS7t5h5HSLZpG4dk85zTCkSOlK1c44pajmzCT4Lv9z
+         EG8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=NR2RALCfd8rSS/oDIEHAtXd82vJW7Hsk6ulYdw+wc04=;
-        b=K4C9kTlXLgX6X1aQ4K0u/HHw5hfOUew2EWs0XYFZJdvifSJhAIr9IdsupHLHLC0PzZ
-         qm3s+Aq2993neXJs9l6NYjjZwG8e0OKUk+GqlJC2QOatU2gGKJBBXHUW+NFfwLG0GrhJ
-         fwbPSfQmAAMy/NwUDEmsHTlQxYBBH/2HV6hlXSIz1YUY7l5WodzhYFn93lZ6eLSWHYz8
-         bQsbFdEF379zOMKFn04PTrv8eudw7TzJYKr0jCpHUXjP28+6Pi240oOe1/Qcf6ztWpsA
-         rLB3p1K7sFXui4/wAHVX318Gx+P3Vs9nlzMUozzBCvPC4/OUpedYR8KDNT5zx9lv5IRg
-         cNfA==
-X-Gm-Message-State: ANhLgQ1QtGaHrtpf9exLafaBjrXLcq5lsAN3PskoaNgaoneEVwNmPYb6
-        bfGrHoXLCn+H2ia4IuqVrJlQzg==
-X-Google-Smtp-Source: ADFU+vtTF9vR+W3wWj+2sDb6HXmAtIEH5sqlH6cy58JofmUBn2Cpva5yr3B5Ye5ldkU3jc3+WXdOiA==
-X-Received: by 2002:adf:dd86:: with SMTP id x6mr3688680wrl.169.1585146189020;
-        Wed, 25 Mar 2020 07:23:09 -0700 (PDT)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id k18sm33137543wru.94.2020.03.25.07.23.07
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Yht3Hr3Z2LR8imhVwniUokEOhf9PD9ShQzB5wpJUp7I=;
+        b=uclPqd4bPrjJUgtEO40iQQCtiMLZ2yN70NI+qvnZY9OUOEG99nEq0CQi3tWZHxQ/dI
+         c1IMvZQ+YbM+KwSvgOr3RyjJ5ANqP0NRTnukJmKIiTMVHBqzulJjjXsi3ymz0bL6Xwpq
+         eNMG1oGElb2bupBWJn3gKiG3Ty8ShpZSZC66IMmcuvDSZ58DZSoHsbtExFU1fx8TaG1V
+         IZ0IVbJyqnf4y+wG3OQZ8/KsFTxWlO++Q0BGzGfQX/MENaAbRgM3zytgBY6W6D0os6nH
+         nT6dFxv6ejY+joW9vVLK6/BFJFhVoPm1AmLeEV1aAiJZ0e/frEcZjT88kwOJR5J78DYE
+         XyJQ==
+X-Gm-Message-State: ANhLgQ3jmU+8C7rJnr6aEHiR/AbU7xmCLlR291F2DJIBCF613iwdgthX
+        fk87R93lw1RgcAa7r4NHrWU=
+X-Google-Smtp-Source: ADFU+vtnZ6zSN/9XvmD840B39Naz3Lc3yVMoWy3y6qVl/TRldW/Upvc3wcLPCgltAV2ybJ+oEWpWWQ==
+X-Received: by 2002:aed:3988:: with SMTP id m8mr3227568qte.9.1585146206535;
+        Wed, 25 Mar 2020 07:23:26 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id q142sm15895019qke.45.2020.03.25.07.23.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 07:23:08 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 15:23:06 +0100
-From:   LABBE Corentin <clabbe@baylibre.com>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     Nicolas Chauvet <kwizart@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Prashant Gaikwad <pgaikwad@nvidia.com>,
-        pdeschrijver@nvidia.com,
-        Michael Turquette <mturquette@baylibre.com>, sboyd@kernel.org,
-        axboe@kernel.dk, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-ide@vger.kernel.org
-Subject: Re: tegra124-jetson-tk1: sata doesnt work since 5.2
-Message-ID: <20200325142306.GB27961@Red>
-References: <20200319074401.GA4116@Red>
- <CABr+WTnBmJsDZPjUxYkG98dTneDD1p8G=uRftVduTGYbY0ruqQ@mail.gmail.com>
- <20200325134003.GA27961@Red>
- <cf63d40c-7b84-60f6-76be-a13255e69c99@nvidia.com>
+        Wed, 25 Mar 2020 07:23:25 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 0B0B240F77; Wed, 25 Mar 2020 11:23:24 -0300 (-03)
+Date:   Wed, 25 Mar 2020 11:23:23 -0300
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        jolsa@redhat.com, Namhyung Kim <namhyung@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Leo Yan <leo.yan@linaro.org>
+Subject: Re: tools: Perf: build failed on linux next
+Message-ID: <20200325142323.GE14102@kernel.org>
+References: <CA+G9fYtiroQnpwGu4oLA=ChmS==XGpmAAqB_Oa9nrXC3vQ0xsQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cf63d40c-7b84-60f6-76be-a13255e69c99@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+G9fYtiroQnpwGu4oLA=ChmS==XGpmAAqB_Oa9nrXC3vQ0xsQ@mail.gmail.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 02:00:25PM +0000, Jon Hunter wrote:
+Em Wed, Mar 25, 2020 at 07:37:10PM +0530, Naresh Kamboju escreveu:
+> Perf build broken on Linux next and mainline on x86_64.
 > 
-> On 25/03/2020 13:40, LABBE Corentin wrote:
-> > On Thu, Mar 19, 2020 at 08:55:38AM +0100, Nicolas Chauvet wrote:
-> >> Le jeu. 19 mars 2020 à 08:44, LABBE Corentin <clabbe@baylibre.com> a écrit :
-> >>>
-> >>> Hello
-> >>>
-> >>> sata doesnt work on tegra124-jetson-tk1 on next and master and at least since 5.2 (but 5.1 works).
-> >>> [    0.492810] +5V_SATA: supplied by +5V_SYS
-> >>> [    0.493230] +12V_SATA: supplied by +VDD_MUX
-> >>> [    2.088675] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-> >>> [    2.097643] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-> >>> [    3.314776] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-> >>> [    3.323658] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-> >>> [    5.236964] tegra-ahci 70027000.sata: 70027000.sata supply ahci not found, using dummy regulator
-> >>> [    5.245867] tegra-ahci 70027000.sata: 70027000.sata supply phy not found, using dummy regulator
-> >>> [    5.254706] tegra-ahci 70027000.sata: 70027000.sata supply target not found, using dummy regulator
-> >>> [    5.310270] phy phy-sata.6: phy poweron failed --> -110
-> >>> [    5.315604] tegra-ahci 70027000.sata: failed to power on AHCI controller: -110
-> >>> [    5.323022] tegra-ahci: probe of 70027000.sata failed with error -110
-> >>> [   35.694269] +5V_SATA: disabling
-> >>> [   35.697438] +12V_SATA: disabling
-> >>
-> >> It looks strange, because (on same device) , I have sata working as
-> >> appropriate, but ethernet fails with me.
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=206217
-> >>
-> >> It might worth to have another report.
-> >>
-> > 
-> > Hello
-> > 
-> > Mine has ethernet works well. But I hit many problem with it and older kernel.
-> > Perhaps the 5.1.21, were I am stuck, does not have it.
-> > 
-> > Anyway, the tegra of kerneci has the same SATA problem.
-> > https://storage.kernelci.org/next/master/next-20200325/arm/multi_v7_defconfig+CONFIG_SMP=n/gcc-8/lab-baylibre/boot-tegra124-jetson-tk1.txt
-> > 
-> > Maintainers, any idea on this sata issue ?
-> 
-> I have checked our bootlogs for v5.6-rc7 and don't see the issue with
-> either the tegra_defconfig or the multi_v7_defconfig. I am wondering if
-> this could be due a difference in the bootloader version. Currently we
-> are testing with a v2019.07 u-boot bootloader. Looks like the kernelci
-> board is using an older u-boot. Obviously it should still work, but
-> would be good to know if the reason why were are not seeing this is
-> because of the bootloader.
-> 
-> Another thing to check would be the pll_e clock frequency on a working
-> build and non-working build to see if there is a difference in the pll
-> frequency that is causing this.
-> 
-> Cheers
-> Jon
-> 
+> find: unknown predicate `-m64/arch'
+> Try 'find --help' for more information.
+>   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/json.o
+>   LD       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/libperf-in.o
+> x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+>   GEN      perf-archive
+>   AR       /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/libperf.a
+>   GEN      perf-with-kcore
+> x86_64-linaro-linux-gcc: error: unrecognized command line option
+> '-m64/include/uapi/asm-generic/errno.h'
+> x86_64-linaro-linux-gcc: fatal error: no input files
+> compilation terminated.
+>   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jevents.o
+>   MKDIR    /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/
+> x86_64-linaro-linux-gcc: warning: '-x c' after last input file has no effect
+>   HOSTCC   /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/pmu-events/jsmn.o
+> x86_64-linaro-linux-gcc: error: unrecognized command line option
 
-Hello
+Right, there is some patch handling this, which we're trying to process
+but has some issues.
 
-My uboot is 2016.01-rc4-00002-g3861d78, so a bit old.
-I have a mainline uboot build for this tegra, but still didnt find a clear way to update it.
-Did you have a good documentation on how to update it ?
-If possible some clear uboot commands to update it via tftp.
+- Arnaldo
 
-Thanks
-Regards
+> '-m64/include/uapi/asm-generic/errno.h'
+> x86_64-linaro-linux-gcc: fatal error: no input files
+> compilation terminated.
+> make[3]: Nothing to be done for
+> '/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/plugins/libtraceevent-dynamic-list'.
+>   GEN      /srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so
+> Traceback (most recent call last):
+>   File "util/setup.py", line 6, in <module>
+>     cc_is_clang = b"clang version" in Popen([cc, "-v"],
+> stderr=PIPE).stderr.readline()
+>   File "/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
+> line 394, in __init__
+>     errread, errwrite)
+>   File "/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/recipe-sysroot-native/usr/lib/python2.7/subprocess.py",
+> line 1047, in _execute_child
+>     raise child_exception
+> OSError: [Errno 2] No such file or directory
+> cp: cannot stat
+> '/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python_ext_build/lib/perf*.so':
+> No such file or directory
+> Makefile.perf:590: recipe for target
+> '/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so'
+> failed
+> make[2]: *** [/srv/oe/build/tmp-lkft-glibc/work/intel_corei7_64-linaro-linux/perf/1.0-r9/perf-1.0/python/perf.so]
+> Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> 
+> ref:
+> https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-next/DISTRO=lkft,MACHINE=intel-corei7-64,label=docker-lkft/733/consoleText
+> 
+> -- 
+> Linaro LKFT
+> https://lkft.linaro.org
+
+-- 
+
+- Arnaldo
