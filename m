@@ -2,83 +2,145 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890AAC2D0E6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8297C2D0E6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655B62078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A214020777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 18:36:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ByJ3yaD+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X0rc0Q10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgCYSg1 (ORCPT
+        id S1727935AbgCYSg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 14:36:27 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:14496 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727129AbgCYSg0 (ORCPT
+        Wed, 25 Mar 2020 14:36:29 -0400
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:45494 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbgCYSg2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 14:36:26 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02PIMLoR009691;
-        Wed, 25 Mar 2020 19:36:11 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=4smaSaGfx0ev3ozXhDm/hbuZrYNRElVuP+FA/ERuJiw=;
- b=ByJ3yaD+xINB9VaUHJ/PwlGxKeGleD3vbhjgasPCzJ8qEzXCFhY2U/N1P5DaDMa0wgop
- Yjm3ep8OrMG79/KbRe7bMxVXw5si2a9hVYZPhgNNKNzeVg+ONNRIuKoyvNRajrS7gB1P
- j0RXM2+Ih1W/F+Yu0Xz9LCJDpA5SdEtf17gSQ7uurKqEv3jCddjomxh4+kcTsm56kBVI
- kd52NyWwxGSu8C03L4WsyC/TML0d99vF30GTndQ6RY1+CT8E7CQhiMHmJe5J3nn7oTNw
- UE7cHLTb5cacry8+s9eakpmAIpUiS6QA5G73Vl8Bl6+wC36coRy1G8BFj3ZtaoTppf0r Yg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2yw8xe7eq5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 25 Mar 2020 19:36:11 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D9CAF10002A;
-        Wed, 25 Mar 2020 19:36:10 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B4C792AD2DB;
-        Wed, 25 Mar 2020 19:36:10 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 25 Mar 2020 19:36:10
- +0100
-From:   Alain Volmat <alain.volmat@st.com>
-To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
-CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
-        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
-        <alain.volmat@st.com>
-Subject: [PATCH 0/2] i2c: i2c-stm32f7: allow range of I2C bus frequency
-Date:   Wed, 25 Mar 2020 19:35:59 +0100
-Message-ID: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
-X-Mailer: git-send-email 2.7.4
+        Wed, 25 Mar 2020 14:36:28 -0400
+Received: by mail-ot1-f41.google.com with SMTP id c9so3028822otl.12;
+        Wed, 25 Mar 2020 11:36:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QZ2w8dYk3oZ7eIX0CA2JNbgc/d6IyN2hBn59JxaCzDQ=;
+        b=X0rc0Q109Exh3m9jTkwhEw1/pcvNY4a4HA7bZ2zR7PzmRIo42JGfovwHGe2kb2a5+4
+         Ah1oerFHqYjNPRkvCr9PDBr7nKu0J9XxYvW4VKL9Wye4qXdAcYFT0JIqdJmUQil0rdPS
+         KGtI4e0kQsn/di37lUpe+ASWpfoI9yZ9hbWTOoLW5lex2T/PyuwtcFe3vBDg9PAb9tSP
+         eqhQqMvqYU4SV6S6K+UiAZQkDyP8zUhKFz4aPodPva1rPMf921dPwPakdnbXQfEVMS8i
+         jV/B/RoA809ppGOVkGEStVHMZWKDTqCU/KKb9JinjRiae4mfBur7kDUn1ReZOOQZiGk/
+         cDbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QZ2w8dYk3oZ7eIX0CA2JNbgc/d6IyN2hBn59JxaCzDQ=;
+        b=TR8cZJjlmHFSM38KAGpEh/b3jEjp3j90xO3daEOmWo0yjDjIR/4h4iyGa7I5y/VGr9
+         aoG3W2I9TlOnAgMXNGX0Ywmmcu87xfa7D5ReWLQ0OHasFyYvPF4KwdtVcULgiCVAmsLm
+         /buI85HoB8P6Iw37vej5MPWQP35NTd4XdDbtxbznOkELuf2z1k8zbyof/4FnA7/NPyVi
+         0Poq0UfUdyxIBTPpkF+dlyDimB99lwSFCam3czGisLKOSrgD6VNY43XljxMJzF36LOVc
+         Zwe8H8y3FbR3xoxw/ICNHtYeLQENKGTePDoa88U+tI5YMKr4kAkXWyc+JTTgPDC1TLi4
+         jWXQ==
+X-Gm-Message-State: ANhLgQ0N65mD04SnQXL4Tm5Hj3ZJZRemHKe/TFo0j6J8/Up7/gUvoxUu
+        BiyKY/7q3Uf1ZEvOxeP0yf3m53jX0nvp1KHJhCY=
+X-Google-Smtp-Source: ADFU+vu3vjQp1i3XCIHLj2Q88z2wpzZKwQ/3nlMdrnYxk4FTS2u6hpyZv3/dmo0hAQDjFSStvN923zlT4mFtz/QAG3I=
+X-Received: by 2002:a9d:926:: with SMTP id 35mr3387794otp.319.1585161387764;
+ Wed, 25 Mar 2020 11:36:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-25_09:2020-03-24,2020-03-25 signatures=0
+References: <000000000000742e9e05a10170bc@google.com> <87a74arown.fsf@nanos.tec.linutronix.de>
+ <CAM_iQpV3S0xv5xzSrA5COYa3uyy_TBGpDA9Wcj9Qt_vn1n3jBQ@mail.gmail.com>
+ <87ftdypyec.fsf@nanos.tec.linutronix.de> <CAM_iQpVR8Ve3Jy8bb9VB6RcQ=p22ZTyTqjxJxL11RZmO7rkWeg@mail.gmail.com>
+ <875zeuftwm.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <875zeuftwm.fsf@nanos.tec.linutronix.de>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Wed, 25 Mar 2020 11:36:16 -0700
+Message-ID: <CAM_iQpWkNJ+yQ1g+pdkhJBCZ-CJfUGGpvJqOz1JH7LPVtqbRxg@mail.gmail.com>
+Subject: Re: WARNING: ODEBUG bug in tcindex_destroy_work (3)
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     syzbot <syzbot+46f513c3033d592409d2@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This serie introduces the possibility to set bus frequency other
-than 100KHz, 400KHz and 1MHz.
+On Mon, Mar 23, 2020 at 6:01 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Cong Wang <xiyou.wangcong@gmail.com> writes:
+> > On Mon, Mar 23, 2020 at 2:14 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> > We use an ordered workqueue for tc filters, so these two
+> >> > works are executed in the same order as they are queued.
+> >>
+> >> The workqueue is ordered, but look how the work is queued on the work
+> >> queue:
+> >>
+> >> tcf_queue_work()
+> >>   queue_rcu_work()
+> >>     call_rcu(&rwork->rcu, rcu_work_rcufn);
+> >>
+> >> So after the grace period elapses rcu_work_rcufn() queues it in the
+> >> actual work queue.
+> >>
+> >> Now tcindex_destroy() is invoked via tcf_proto_destroy() which can be
+> >> invoked from preemtible context. Now assume the following:
+> >>
+> >> CPU0
+> >>   tcf_queue_work()
+> >>     tcf_queue_work(&r->rwork, tcindex_destroy_rexts_work);
+> >>
+> >> -> Migration
+> >>
+> >> CPU1
+> >>    tcf_queue_work(&p->rwork, tcindex_destroy_work);
+> >>
+> >> So your RCU callbacks can be placed on different CPUs which obviously
+> >> has no ordering guarantee at all. See also:
+> >
+> > Good catch!
+> >
+> > I thought about this when I added this ordered workqueue, but it
+> > seems I misinterpret max_active, so despite we have max_active==1,
+> > more than 1 work could still be queued on different CPU's here.
+>
+> The workqueue is not the problem. it works perfectly fine. The way how
+> the work gets queued is the issue.
 
-Alain Volmat (2):
-  dt-bindings: i2c: i2c-stm32f7: allow clock-frequency range
-  i2c: i2c-stm32f7: allows for any bus frequency
+Well, a RCU work is also a work, so the ordered workqueue should
+apply to RCU works too, from users' perspective. Users should not
+need to learn queue_rcu_work() is actually a call_rcu() which does
+not guarantee the ordering for an ordered workqueue.
 
- .../devicetree/bindings/i2c/st,stm32-i2c.yaml |   8 +-
- drivers/i2c/busses/i2c-stm32f7.c              | 116 +++++++++---------
- 2 files changed, 65 insertions(+), 59 deletions(-)
 
+> > I don't know how to fix this properly, I think essentially RCU work
+> > should be guaranteed the same ordering with regular work. But this
+> > seems impossible unless RCU offers some API to achieve that.
+>
+> I don't think that's possible w/o putting constraints on the flexibility
+> of RCU (Paul of course might disagree).
+>
+> I assume that the filters which hang of tcindex_data::perfect and
+> tcindex_data:p must be freed before tcindex_data, right?
+>
+> Refcounting of tcindex_data should do the trick. I.e. any element which
+> you add to a tcindex_data instance takes a refcount and when that is
+> destroyed then the rcu/work callback drops a reference which once it
+> reaches 0 triggers tcindex_data to be freed.
+
+Yeah, but the problem is more than just tcindex filter, we have many
+places make the same assumption of ordering.
+
+Thanks!
