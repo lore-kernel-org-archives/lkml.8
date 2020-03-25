@@ -2,102 +2,295 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5970C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD565C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EDF20714
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:06:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uhvgkR5E"
+	by mail.kernel.org (Postfix) with ESMTP id 7BB9520714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 11:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727510AbgCYLF6 (ORCPT
+        id S1727702AbgCYLGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 07:05:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57814 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726043AbgCYLF5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 07:05:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Xj5cCj8r7SaDFtamrs+Fgedwd23OEns1xvko9GLsk5M=; b=uhvgkR5ENy58dFitnfuFzxbUMm
-        o8h494/2840b8bTFZ8xEzeB+yoOjjQuiiWeSIglHEuJcyLTWjcrk9Okov+eo3j4ZXCChNUFEcmOfD
-        8h52OUovUqmklMbCasiCXZ7jqSobrRwtVg8a4vQq4B7S5U6xNZqx9qCPnpJnJy4BdEXo8nDQnvSNu
-        SRsmZfJ/beExLo21ncLiWmlPhTrI3a+UtGvPbTrdjnPIf+MNZ6ZGBiMV0uwE19FhgfibW3LlR3pSO
-        EHTPWO6W+4Q815dnhpiEWC7VAnySVhuchIDC6K5TxMPIofd66jVBR1PJ4rp5imIGQaS7RUtSlXmWQ
-        6cDbV4Eg==;
-Received: from [2001:4bb8:18c:2a9e:999c:283e:b14a:9189] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jH3rB-0001tU-0w; Wed, 25 Mar 2020 11:05:57 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/8] block: mark part_in_flight and part_in_flight_rw static
-Date:   Wed, 25 Mar 2020 12:03:32 +0100
-Message-Id: <20200325110338.1029232-3-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200325110338.1029232-1-hch@lst.de>
-References: <20200325110338.1029232-1-hch@lst.de>
+        Wed, 25 Mar 2020 07:06:32 -0400
+Received: from foss.arm.com ([217.140.110.172]:46696 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726842AbgCYLGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 07:06:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1164231B;
+        Wed, 25 Mar 2020 04:06:31 -0700 (PDT)
+Received: from [10.37.12.110] (unknown [10.37.12.110])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C30883F71F;
+        Wed, 25 Mar 2020 04:06:28 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] dt-bindings: thermal: Add yaml bindings for
+ thermal zones
+To:     Amit Kucheria <amit.kucheria@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        swboyd@chromium.org, mka@chromium.org, daniel.lezcano@linaro.org,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+References: <cover.1585117436.git.amit.kucheria@linaro.org>
+ <9c447186008ef2e3f4c3e712458dc0ddcd8a8b03.1585117436.git.amit.kucheria@linaro.org>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <81b0cbe1-23c8-b4a3-4775-62e7d6c49b6b@arm.com>
+Date:   Wed, 25 Mar 2020 11:06:27 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <9c447186008ef2e3f4c3e712458dc0ddcd8a8b03.1585117436.git.amit.kucheria@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/genhd.c         | 7 ++++---
- include/linux/genhd.h | 3 ---
- 2 files changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 52841f41d6eb..e8978df06f35 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -112,7 +112,8 @@ void part_dec_in_flight(struct request_queue *q, struct hd_struct *part, int rw)
- 		part_stat_local_dec(&part_to_disk(part)->part0, in_flight[rw]);
- }
- 
--unsigned int part_in_flight(struct request_queue *q, struct hd_struct *part)
-+static unsigned int part_in_flight(struct request_queue *q,
-+		struct hd_struct *part)
- {
- 	int cpu;
- 	unsigned int inflight;
-@@ -132,8 +133,8 @@ unsigned int part_in_flight(struct request_queue *q, struct hd_struct *part)
- 	return inflight;
- }
- 
--void part_in_flight_rw(struct request_queue *q, struct hd_struct *part,
--		       unsigned int inflight[2])
-+static void part_in_flight_rw(struct request_queue *q, struct hd_struct *part,
-+		unsigned int inflight[2])
- {
- 	int cpu;
- 
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 7310108f5351..18fd9e01c511 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -413,9 +413,6 @@ static inline void free_part_stats(struct hd_struct *part)
- #define part_stat_local_read_cpu(gendiskp, field, cpu)			\
- 	local_read(&(part_stat_get_cpu(gendiskp, field, cpu)))
- 
--unsigned int part_in_flight(struct request_queue *q, struct hd_struct *part);
--void part_in_flight_rw(struct request_queue *q, struct hd_struct *part,
--		       unsigned int inflight[2]);
- void part_dec_in_flight(struct request_queue *q, struct hd_struct *part,
- 			int rw);
- void part_inc_in_flight(struct request_queue *q, struct hd_struct *part,
--- 
-2.25.1
 
+On 3/25/20 6:34 AM, Amit Kucheria wrote:
+> As part of moving the thermal bindings to YAML, split it up into 3
+> bindings: thermal sensors, cooling devices and thermal zones.
+> 
+> The thermal-zone binding is a software abstraction to capture the
+> properties of each zone - how often they should be checked, the
+> temperature thresholds (trips) at which mitigation actions need to be
+> taken and the level of mitigation needed at those thresholds.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+> Changes since v2:
+> - Addressed review comment from Rob
+> - Added required properties for thermal-zones node
+> - Added select: true to thermal-cooling-devices.yaml
+> - Fixed up example to pass dt_binding_check
+> 
+>   .../bindings/thermal/thermal-zones.yaml       | 324 ++++++++++++++++++
+>   1 file changed, 324 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/thermal-zones.yaml b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> new file mode 100644
+> index 000000000000..5632304dcf62
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/thermal-zones.yaml
+> @@ -0,0 +1,324 @@
+> +# SPDX-License-Identifier: (GPL-2.0)
+> +# Copyright 2020 Linaro Ltd.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/thermal/thermal-zones.yaml#
+> +$schema: http://devicetree.org/meta-schemas/base.yaml#
+> +
+> +title: Thermal zone binding
+> +
+> +maintainers:
+> +  - Amit Kucheria <amitk@kernel.org>
+> +
+> +description: |
+> +  Thermal management is achieved in devicetree by describing the sensor hardware
+> +  and the software abstraction of cooling devices and thermal zones required to
+> +  take appropriate action to mitigate thermal overloads.
+> +
+> +  The following node types are used to completely describe a thermal management
+> +  system in devicetree:
+> +   - thermal-sensor: device that measures temperature, has SoC-specific bindings
+> +   - cooling-device: device used to dissipate heat either passively or actively
+> +   - thermal-zones: a container of the following node types used to describe all
+> +     thermal data for the platform
+> +
+> +  This binding describes the thermal-zones.
+> +
+> +  The polling-delay properties of a thermal-zone are bound to the maximum dT/dt
+> +  (temperature derivative over time) in two situations for a thermal zone:
+> +    1. when passive cooling is activated (polling-delay-passive)
+> +    2. when the zone just needs to be monitored (polling-delay) or when
+> +       active cooling is activated.
+> +
+> +  The maximum dT/dt is highly bound to hardware power consumption and
+> +  dissipation capability. The delays should be chosen to account for said
+> +  max dT/dt, such that a device does not cross several trip boundaries
+> +  unexpectedly between polls. Choosing the right polling delays shall avoid
+> +  having the device in temperature ranges that may damage the silicon structures
+> +  and reduce silicon lifetime.
+> +
+> +properties:
+> +  $nodename:
+> +    const: thermal-zones
+> +    description:
+> +      A /thermal-zones node is required in order to use the thermal framework to
+> +      manage input from the various thermal zones in the system in order to
+> +      mitigate thermal overload conditions. It does not represent a real device
+> +      in the system, but acts as a container to link thermal sensor devices,
+
+I would say 'thermal sensor device', since there is 1-to-1 mapping and
+aggregating a few sensors inside one tz is not allowed (or I missed
+some patches queuing).
+
+> +      platform-data regarding temperature thresholds and the mitigation actions
+> +      to take when the temperature crosses those thresholds.
+> +
+> +patternProperties:
+> +  "^[a-zA-Z][a-zA-Z0-9\\-]{1,12}-thermal$":
+> +    type: object
+> +    description:
+> +      Each thermal zone node contains information about how frequently it
+> +      must be checked, the sensor responsible for reporting temperature for
+> +      this zone, one sub-node containing the various trip points for this
+> +      zone and one sub-node containing all the zone cooling-maps.
+> +
+> +    properties:
+> +      polling-delay:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          The maximum number of milliseconds to wait between polls when
+> +          checking this thermal zone. Setting this to 0 disables the polling
+> +          timers setup by the thermal framework and assumes that the thermal
+> +          sensors in this zone support interrupts.
+> +
+> +      polling-delay-passive:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        description:
+> +          The maximum number of milliseconds to wait between polls when
+> +          checking this thermal zone while doing passive cooling. Setting
+> +          this to 0 disables the polling timers setup by the thermal
+> +          framework and assumes that the thermal sensors in this zone
+> +          support interrupts.
+> +
+> +      thermal-sensors:
+> +        $ref: /schemas/types.yaml#/definitions/phandle-array
+> +        description:
+> +          A list of thermal sensor phandles and sensor specifiers used to
+> +          monitor this thermal zone.
+
+I don't know why it's not consistent with the actual code in
+of-thermal.c, where there is even a comment stated:
+/* For now, thermal framework supports only 1 sensor per zone */
+
+I think this is the place where developers should be informed about
+the limitation and not even try to put more sensors into the list.
+
+> +
+> +      trips:
+> +        type: object
+> +        description:
+> +          This node describes a set of points in the temperature domain at
+> +          which the thermal framework needs to takes action. The actions to
+
+s/needs to takes/needs to take/
+
+> +          be taken are defined in another node called cooling-maps.
+> +
+> +        patternProperties:
+> +          "^[a-zA-Z][a-zA-Z0-9\\-_]{0,63}$":
+> +            type: object
+> +
+> +            properties:
+> +              temperature:
+> +                $ref: /schemas/types.yaml#/definitions/int32
+> +                minimum: -273000
+> +                maximum: 200000
+> +                description:
+> +                  An integer expressing the trip temperature in millicelsius.
+> +
+> +              hysteresis:
+> +                $ref: /schemas/types.yaml#/definitions/uint32
+> +                description:
+> +                  An unsigned integer expressing the hysteresis delta with
+> +                  respect to the trip temperature property above, also in
+> +                  millicelsius.
+
+This property is worth a bit longer description.
+
+> +
+> +              type:
+> +                $ref: /schemas/types.yaml#/definitions/string
+> +                enum:
+> +                  - active   # enable active cooling e.g. fans
+> +                  - passive  # enable passive cooling e.g. throttling cpu
+> +                  - hot      # send notification to driver
+> +                  - critical # send notification to driver, trigger shutdown
+> +                description: |
+> +                  There are four valid trip types: active, passive, hot,
+> +                  critical.
+
+[snip]
+
+> +
+> +    thermal-zones {
+> +            cpu0-thermal {
+> +                    polling-delay-passive = <250>;
+> +                    polling-delay = <1000>;
+> +
+> +                    thermal-sensors = <&tsens0 1>;
+> +
+> +                    trips {
+> +                            cpu0_alert0: trip-point0 {
+> +                                    temperature = <90000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                            };
+> +
+> +                            cpu0_alert1: trip-point1 {
+> +                                    temperature = <95000>;
+> +                                    hysteresis = <2000>;
+> +                                    type = "passive";
+> +                            };
+> +
+> +                            cpu0_crit: cpu_crit {
+> +                                    temperature = <110000>;
+> +                                    hysteresis = <1000>;
+> +                                    type = "critical";
+> +                            };
+> +                    };
+> +
+> +                    cooling-maps {
+> +                            map0 {
+> +                                    trip = <&cpu0_alert0>;
+> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU1 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU2 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU3 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>;
+> +                            };
+> +
+> +                            map1 {
+> +                                    trip = <&cpu0_alert1>;
+> +                                    cooling-device = <&CPU0 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU1 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU2 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>,
+> +                                                     <&CPU3 THERMAL_NO_LIMIT
+> +                                                            THERMAL_NO_LIMIT>;
+
+ From this two examples of handling cpu0_alert0 and cpu0_alert1 you
+cannot conclude anything (if you don't understand thermal framework (and
+probably IPA). As a simple example it would be better to put a comment
+with a description and limit min, max to a specific OPP:
+
+map0 {
+     trip = <&cpu0_alert0>;
+     /* Corresponds to 1400MHz in OPP table */
+     cooling-device = <&CPU0 3 3>, <&CPU1 3 3>, <&CPU2 3 3>, <&CPU3 3 3>;
+};
+
+map1 {
+     trip = <&cpu0_alert1>;
+     /* Corresponds to 1000MHz in OPP table */
+     cooling-device = <&CPU0 5 5>, <&CPU1 5 5>, <&CPU2 5 5>, <&CPU3 5 5>;
+};
+
+IMHO this kind of example would tell more to an avg driver developer.
+
+Regards,
+Lukasz
