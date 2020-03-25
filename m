@@ -2,180 +2,94 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DBBC1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB689C1975A
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B5B206F8
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:01:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="mlgmtSbp"
+	by mail.kernel.org (Postfix) with ESMTP id 89EF1206F8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 06:11:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgCYGBt (ORCPT
+        id S1726154AbgCYGLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 02:01:49 -0400
-Received: from ozlabs.org ([203.11.71.1]:58623 "EHLO ozlabs.org"
+        Wed, 25 Mar 2020 02:11:22 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50568 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbgCYGBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 02:01:49 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nHZ11LxCz9sPk;
-        Wed, 25 Mar 2020 17:01:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1585116106;
-        bh=jliOT/ryxznSbhEYa1PbM2oL6orVsTIvLgvub5p0cl0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=mlgmtSbp3t1aiYmI26R1gmVLtLZqurVPcUoVGs+O3fMCzj3bXywssN1ZL23e8yfJn
-         cAcs52jV26RqBt/1W++BOIhPWQIj717Zl6pTPUX8XqdntnOAB860PpyekIEgSKrvzv
-         BMjYN36jjsjizk190Jls/EfunP3zuJb+zJg0m3Zw/ZDACMsBL3e6Em0OCeD0E5mzYs
-         LuvWRAeUwWqmB/1kSPus0cuUenP1NfYoMAwNviNh+/t+/k/zmOYKs6rCYoheCP9Zoj
-         3SYJMJZD4/VbjR9N/oiC6ozYXeORIxMkoUL1SZsURMejEEIwVTltVhEzPngnmNz9z7
-         uTOWhi4ZwhvxA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Qian Cai <cai@lca.pw>,
-        Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc:     "christophe.leroy\@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus\@samba.org" <paulus@samba.org>,
-        "benh\@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
-Subject: Re: Argh, can't find dcache properties !
-In-Reply-To: <48F1D8CF-13A1-4348-8973-81503782A451@lca.pw>
-References: <be8c123a90f6d1664a902b6ad6c754b9f3d9e567.camel@alliedtelesis.co.nz> <87tv2exst1.fsf@mpe.ellerman.id.au> <876a5938fbad9d9e176e5f22f12e6b472d0dc4f7.camel@alliedtelesis.co.nz> <48F1D8CF-13A1-4348-8973-81503782A451@lca.pw>
-Date:   Wed, 25 Mar 2020 17:01:49 +1100
-Message-ID: <87369xx99u.fsf@mpe.ellerman.id.au>
+        id S1725781AbgCYGLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 02:11:22 -0400
+IronPort-SDR: uzJlxEzN9g9yNRszG0zAbdm9sPcDVkyJhO/czCdrOHUlb0EBwnqUJNB6HbM83hC6LUPf+Htk3G
+ Z+iy/V3J4NJg==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2020 23:11:21 -0700
+IronPort-SDR: Ki5JpDid7RDImR7N+0d5vf2HPkKv2ebEyM/aljPblzyoS+RZ7Y5WtcrEY5kpimaL61M9gTZ8xD
+ Ii1ybdc+QqGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
+   d="scan'208";a="420212956"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by orsmga005.jf.intel.com with ESMTP; 24 Mar 2020 23:11:18 -0700
+Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
+ instructions
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Mingbo Zhang <whensungoes@gmail.com>, x86@kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org, Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>
+References: <20200303045033.6137-1-whensungoes@gmail.com>
+ <931d8779-8b77-b75f-bb3a-ee2f9d75f149@intel.com>
+ <a384009b-0b5d-22da-5613-870c85c546df@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <06eec783-733c-c8e1-441b-2d25b897485c@intel.com>
+Date:   Wed, 25 Mar 2020 08:10:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <a384009b-0b5d-22da-5613-870c85c546df@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Qian Cai <cai@lca.pw> writes:
->> On Mar 24, 2020, at 4:06 PM, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
->> On Tue, 2020-03-24 at 15:47 +1100, Michael Ellerman wrote:
->>> Chris Packham <Chris.Packham@alliedtelesis.co.nz> writes:
->>>> Hi All,
->>>> 
->>>> Just booting up v5.5.11 on a Freescale T2080RDB and I'm seeing the
->>>> following mesage.
->>>> 
->>>> kern.warning linuxbox kernel: Argh, can't find dcache properties !
->>>> kern.warning linuxbox kernel: Argh, can't find icache properties !
-...
->
-> BTW, POWER9 PowerNV would have the same thing. 
+On 16/03/20 9:10 am, Adrian Hunter wrote:
+> On 3/03/20 9:17 am, Adrian Hunter wrote:
+>> On 3/03/20 6:50 am, Mingbo Zhang wrote:
+>>> Intel CET instructions are not described in the Intel SDM. When trying to
+>>> get the instruction length, the following instructions get wrong (missing
+>>> ModR/M byte).
+>>>
+>>> RDSSPD r32
+>>> RSDDPQ r64
+>>> ENDBR32
+>>> ENDBR64
+>>> WRSSD r/m32, r32
+>>> WRSSQ r/m64, r64
+>>>
+>>> RDSSPD/Q and ENDBR32/64 use the same opcode (f3 0f 1e) slot, which is
+>>> described in SDM as Reserved-NOP with no encoding characters, and got an
+>>> empty slot in the opcode map. WRSSD/Q (0f 38 f6) also got an empty slot.
+>>
+>> We have patches for that:
+>>
+>> 	https://lore.kernel.org/lkml/20200204171425.28073-1-yu-cheng.yu@intel.com/
+>>
+>> But they have not yet been applied.  Arnaldo, could you take them?
+>>
+> 
+> Any takers?
+> 
 
-Ugh, you're right.
-
-Because we're missing the cache-line-size properties, even though they
-are optional when the block & line size are the same.
-
-  # find /proc/device-tree/cpus/PowerPC\,POWER9@0/ -name '*cache*'
-  /proc/device-tree/cpus/PowerPC,POWER9@0/l2-cache
-  /proc/device-tree/cpus/PowerPC,POWER9@0/d-cache-block-size
-  /proc/device-tree/cpus/PowerPC,POWER9@0/d-cache-size
-  /proc/device-tree/cpus/PowerPC,POWER9@0/i-cache-size
-  /proc/device-tree/cpus/PowerPC,POWER9@0/d-cache-sets
-  /proc/device-tree/cpus/PowerPC,POWER9@0/i-cache-block-size
-  /proc/device-tree/cpus/PowerPC,POWER9@0/i-cache-sets
-
-skiboot even explicitly omits them:
-
-	if (cache->icache_line_size != cache->icache_block_size)
-		dt_add_property_cells(cpu, "i-cache-line-size",
-				      be32_to_cpu(cache->icache_line_size));
-	if (cache->l1_dcache_line_size != cache->dcache_block_size)
-		dt_add_property_cells(cpu, "d-cache-line-size",
-				      be32_to_cpu(cache->l1_dcache_line_size));
-
-
-Looks like it was broken ~3 years ago, in:
-  bd067f83b084 ("powerpc/64: Fix naming of cache block vs. cache line")
-
-
-Previously we did:
-			lsizep = of_get_property(np, "d-cache-block-size",
-						 NULL);
-			/* fallback if block size missing */
-			if (lsizep == NULL)
-				lsizep = of_get_property(np,
-							 "d-cache-line-size",
-							 NULL);
-			if (lsizep != NULL)
-				lsize = be32_to_cpu(*lsizep);
-			if (sizep == NULL || lsizep == NULL)
-				DBG("Argh, can't find dcache properties ! "
-				    "sizep: %p, lsizep: %p\n", sizep, lsizep);
-
-ie. fallback from block size to line size, and only print if both are missing.
-
-That commit changed the names and the logic, but not in a consistent
-fashion, making "d-cache-line-size" required to avoid the Argh:
-
-			bsizep = of_get_property(np, "d-cache-block-size",
-						 NULL);
-			lsizep = of_get_property(np, "d-cache-line-size",
-						 NULL);
-			if (bsizep == NULL)
-				bsizep = lsizep;
-			if (lsizep != NULL)
-				lsize = be32_to_cpu(*lsizep);
-			if (bsizep != NULL)
-				bsize = be32_to_cpu(*bsizep);
-			if (sizep == NULL || bsizep == NULL || lsizep == NULL)
-				DBG("Argh, can't find dcache properties ! "
-				    "sizep: %p, bsizep: %p, lsizep: %p\n",
-				    sizep, bsizep, lsizep);
-
-Back then we fell back to cur_cpu_spec->dcache_bsize, which should be
-correct. But since then we introduced the device tree CPU features
-parsing, which does:
-
-static struct cpu_spec __initdata base_cpu_spec = {
-	...
-	.icache_bsize		= 32, /* minimum block size, fixed by */
-	.dcache_bsize		= 32, /* cache info init.             */
-
-So on systems with new enough skiboot we now default to 32, which is
-wrong on Power9.
-
-
-Luckily this info is not used by the sysfs cache files, because that
-code doesn't use the values we parse here, it goes and looks at the
-device tree itself. Which is pretty gross but actually saves us in this
-case.
-
-These values do end up in the vdso_data, and I can see the wrong values
-in the vdso_data:
-
-1c:mon> d4 c000000002390000
-c000000002390000 54535953 46434d45 50503a47 00343643	eyecatcher
-c000000002390010 00000001 00000001 00000100 004e1202	major		minor	platform	processor
-c000000002390020 000000b0 00000000 00000000 0000003c	processorCount		physicalMemorySize
-c000000002390030 57b7623f 0000ac10 1e848000 00000000	tb_orig_stamp		tb_ticks_per_sec
-c000000002390040 de6d9e42 008637af 8de66bca 0005e7ae	tb_to_xs		stamp_xsec
-c000000002390050 000ff730 00000000 00000000 00000000	tb_update_count		tz_minuteswest	tz_dsttime
-c000000002390060 00008000 00000020 00008000 00000020	dcache_size	line_size	icache_size	icache_line_size
-                                ^
-                                32 != 128
-
-And that appears to flow through to glibc, ie. I see:
-
-_SC_LEVEL1_ICACHE_LINESIZE = 32
-_SC_LEVEL1_DCACHE_LINESIZE = 32
-_SC_LEVEL2_CACHE_LINESIZE = 32
-_SC_LEVEL3_CACHE_LINESIZE = 32
-
-
-So excuse me while I go and swear at something.
-
-cheers
+:-)
