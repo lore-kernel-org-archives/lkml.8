@@ -2,138 +2,405 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3205EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8771EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F017320772
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A3572077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:06:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=windriversystems.onmicrosoft.com header.i=@windriversystems.onmicrosoft.com header.b="KqgFgdFw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0rqw87B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgCYNFa (ORCPT
+        id S1727399AbgCYNGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:05:30 -0400
-Received: from mail-eopbgr750084.outbound.protection.outlook.com ([40.107.75.84]:18934
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727279AbgCYNFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:05:30 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gOFGrUHX7clzoYUsESmEGko+jYX9B4Qa+vGcZ81PcZ6gg6Xxawhi5mB26INGyGyQa9t+x4YQgrlsQCNxnx5GlmXIXtcV6yF5HhtPHoxH+kh9q/ftzwTfNFPN4jfkD3z76Fm42Cy+Iz76mJHO29LZOXsgzT8zTb71U3jXOghT4nNtrS9ffTzEGvRLFd48KkSoB3XiTNyx2PUentf4O0XWJbpwf2yh5r6kgpsK+qvgYipAXYT+ePfiqSdUZk4+Wk/j/spr5/qjXuz9I7J/NgHpHM3ESjiuqc20d7IEATTmdjjz23EjXEtdKG/1FFX45ELy8MU5zgieoPGSxF9cPv0E0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6qv8OyJMg854jD91cIgOd74ILvwTut5vOBkWDm681F8=;
- b=DXfIMq07CrQhEKve2NMFhmr+y1yM21VAIuxGroMUArwoJK4yhNG7QNaZXRL9I5ibo00ffcbfASMMpyg4XR7wvgRpHnibhUSaKNnjmuVq3yseu7vWz9YiYqsPKS5OKVSpH757nxijc7ooyzWAky1hzqCIcq8kQZdWVqNGn34d3X4TNz0XBs8T+E1s3fNh++fgNVVaRXraV2ujiwQoglsSH4wM3Wl8rSMeNB44vFTqQKugqPy8bKwo0VrKQzK4siQYtVgBtvJkf8rrJi0evH+aNLHmGOBE6PWdDm99I/N05I6jV0tfAuM3pMBOiQ6dtJWtpAVVhkzej5Kso1ZigPuNwg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+        Wed, 25 Mar 2020 09:06:05 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36680 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbgCYNGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:06:04 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m33so2021512qtb.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 06:06:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=windriversystems.onmicrosoft.com;
- s=selector2-windriversystems-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6qv8OyJMg854jD91cIgOd74ILvwTut5vOBkWDm681F8=;
- b=KqgFgdFwTdcQTcdGp14YDW6hRDo5DNktClSDi85+9aRqjp7w0IzG0844A5obwXi7+2Ny7qwt9kCzUtRq28eWTuVmTsS1eZIes7czB77B8rdJFL0CNBkOejpWM+WyiLHNyZ2a9CaIjZnA6jZlfRT2pfJ0HArYMQlZLOQ3gGcpiLw=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Zhe.He@windriver.com; 
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com (2603:10b6:805:c8::30)
- by SN6PR11MB2749.namprd11.prod.outlook.com (2603:10b6:805:5f::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Wed, 25 Mar
- 2020 13:05:27 +0000
-Received: from SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::d852:181d:278b:ba9d]) by SN6PR11MB3360.namprd11.prod.outlook.com
- ([fe80::d852:181d:278b:ba9d%5]) with mapi id 15.20.2835.021; Wed, 25 Mar 2020
- 13:05:27 +0000
-Subject: Re: [PATCH 2/2] perf: Normalize gcc parameter when generating arch
- errno table
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, linux-kernel@vger.kernel.org
-References: <1581618066-187262-1-git-send-email-zhe.he@windriver.com>
- <1581618066-187262-2-git-send-email-zhe.he@windriver.com>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <2addb3c4-5b0d-0196-5262-d1983a893896@windriver.com>
-Date:   Wed, 25 Mar 2020 21:05:17 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <1581618066-187262-2-git-send-email-zhe.he@windriver.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: HK2PR06CA0013.apcprd06.prod.outlook.com
- (2603:1096:202:2e::25) To SN6PR11MB3360.namprd11.prod.outlook.com
- (2603:10b6:805:c8::30)
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5sVbz0QFF1TQYNaY+eDh6mNaQ7m/dm6ngpTVWacY4wM=;
+        b=M0rqw87Boy6b7q3BcCDjpwDel7R8qsz/fVp3X0Ug8icfGpeu5pA7TMOXXQqTpPIw3+
+         XAGI3oIShHFoC/dO55y6WTWOGL0WOvgjO0LPDR5SOilg0QxneQTXz8id2ilF5nRrDsvr
+         jd4OZcu22FIDdMCEema94rLjF2dbv8BSTorh3qwK7G9eI0/2BQbg1LJueEG1z64LoPLV
+         BPdUYj+fVmt/p5brkJ2fWibvNwrEYdXYaYAt3yAhLPGnXo5LRlAN5HQ0phqYkaru/422
+         eJxQ0LPddZArMABpLyC0q30jwja1pCa4f/zRJOKSr2DTCMHlxrWNiXRjR5GE0xQR7nff
+         I8mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5sVbz0QFF1TQYNaY+eDh6mNaQ7m/dm6ngpTVWacY4wM=;
+        b=Zv0aM8Ka4UnL5YLXMoKdRzHLDEIUuHHMjNlGPrzs6DNMWCauBe5y4MswltFkVStBbO
+         XB4FzSS1WXvs6FjG1tq37fiJFy4mBIYxmejj8/IFKLfMnwjkbRCZRsHvRjWnpMqrEMgT
+         blu+3aIMJqkXFwJcnOItcE0f75BFND5fnkGn9JyhbRYRbqdzMWfQU208MST50Ja7lvU0
+         GXHAhx1sCKRaEe5TbkPYTfhBOK+0chK7u4bMKi8rnr+hgwf5RGIWbvgJQGiHnCBraMf+
+         TmNLQOwF4tGilr4roETy23HFZChyLsH2mGQrYRArDhd7F8fooNlncDGa9FBODEejQoqf
+         UtrA==
+X-Gm-Message-State: ANhLgQ2dtpl+LA7h5pkf3tjnTBfnUHfKJJ/MQcCwv++JrgPd8NMiRl4N
+        Er/DNs7s1sLqBm8CRFXwZ0KEeYkM
+X-Google-Smtp-Source: ADFU+vtiKB2tu9lhXF89YE9TKcwymfNripbgArmLVaqfX+PssUV/vJtreC8ZuE8UiivixinpC2L4Eg==
+X-Received: by 2002:ac8:312e:: with SMTP id g43mr2871983qtb.360.1585141550985;
+        Wed, 25 Mar 2020 06:05:50 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id j20sm2658187qke.44.2020.03.25.06.05.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 06:05:50 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1AB4D40F77; Wed, 25 Mar 2020 10:05:48 -0300 (-03)
+Date:   Wed, 25 Mar 2020 10:05:48 -0300
+To:     Namhyung Kim <namhyung@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Tejun Heo <tj@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCHSET 0/9] perf: Improve cgroup profiling (v6)
+Message-ID: <20200325130548.GA14102@kernel.org>
+References: <20200325124536.2800725-1-namhyung@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [128.224.162.175] (60.247.85.82) by HK2PR06CA0013.apcprd06.prod.outlook.com (2603:1096:202:2e::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.19 via Frontend Transport; Wed, 25 Mar 2020 13:05:24 +0000
-X-Originating-IP: [60.247.85.82]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 04daf2a9-50df-400b-7a5c-08d7d0bd3058
-X-MS-TrafficTypeDiagnostic: SN6PR11MB2749:
-X-Microsoft-Antispam-PRVS: <SN6PR11MB274917E98FA977A7B68B639F8FCE0@SN6PR11MB2749.namprd11.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
-X-Forefront-PRVS: 0353563E2B
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(396003)(366004)(39850400004)(136003)(346002)(376002)(6486002)(36756003)(316002)(66556008)(956004)(86362001)(66946007)(31696002)(6666004)(66476007)(6706004)(53546011)(2616005)(8676002)(2906002)(16576012)(31686004)(8936002)(186003)(16526019)(5660300002)(52116002)(478600001)(81156014)(81166006)(26005)(78286006);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR11MB2749;H:SN6PR11MB3360.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-Received-SPF: None (protection.outlook.com: windriver.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lbEHB4zUW2WhowN8Iw/1mz+blfcUhqFeHIDa4ZW+tGK9f+QKWajDbU6tjVNyaPQ46dnMIDP6mrUVE9V7ZokC2Dw8qMwukHTjIX8Pw7Qk1fNS+M8ND331f+Ilw02NQcom2uQlzULKsr6Df79DL10UZjbSzbOA2KeOcbP3HSmvfVYbV0MJ1VglkftHW7mt0O71USSFlzGTZ6FVPrD16EosCZ+wgOXXJT01kFi4cWsUphw42F7FzZ5iNuXqJrukhcFIccvsXTNc0X73//Beugg4ouq6r2OtSwSMuWz7I0Wh5V90dhdxRoF+HM8l9sJmGWSHjc8gvGi2CfRb4N4YUCaSGMJHs8la+QEfS7GWW0DIiMiYXwz9KkwgjsqyMeNTUXjM2jqPY8D53UdL7Kkzwy67i6p3lz1pR6YH4uIlH9AOxCYvzYoFp/4UoxzNDcVSAC3whf7a4hgQXjDZOoWtL/3qTzXKLZDNyQ80G5jB7MyqukFeNSopXsOfbiqxueMt4JKvA0/JxWUVfcVrSguaHFnTdo/Jy8fDEi+p2E/ZNQm/R78=
-X-MS-Exchange-AntiSpam-MessageData: m38vwovpoBUcImBbSC2lZ6F1kRkInNcLwSgFpr5igl0yFEZfUtS6tyAJ9y0wcOtfKBCTRIDfBICIl/OrQtYglWPn6cHtoi0vq9sO8E7oCtJV552gqkZA0cFAC+mcqWyG6fMzRrOP47ZNY9MN2WX+/w==
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04daf2a9-50df-400b-7a5c-08d7d0bd3058
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Mar 2020 13:05:27.6604
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3eHB/+feMAqGuUJnp+iYEvxSD8CLISTs88Mr3Vdj0kjsL/EAoLxLrChqNTh6TFWkQo6WGtZXojeyCIbRbmNhvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR11MB2749
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325124536.2800725-1-namhyung@kernel.org>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Can this be considered for the moment?
+Em Wed, Mar 25, 2020 at 09:45:27PM +0900, Namhyung Kim escreveu:
+> Hello,
+> 
+> This work is to improve cgroup profiling in perf.  Currently it only
+> supports profiling tasks in a specific cgroup and there's no way to
+> identify which cgroup the current sample belongs to.  So I added
+> PERF_SAMPLE_CGROUP to add cgroup id into each sample.  It's a 64-bit
+> integer having file handle of the cgroup.  And kernel also generates
+> PERF_RECORD_CGROUP event for new groups to correlate the cgroup id and
+> cgroup name (path in the cgroup filesystem).  The cgroup id can be
+> read from userspace by name_to_handle_at() system call so it can
+> synthesize the CGROUP event for existing groups.
 
-Thanks,
-Zhe
+Thanks for the refresh, I'll test this today and all going well push to
+Ingo soon,
 
-On 2/14/20 2:21 AM, zhe.he@windriver.com wrote:
-> From: He Zhe <zhe.he@windriver.com>
->
-> The $(CC) passed to arch_errno_names.sh may include a series of parameters
-> along with gcc itself. To avoid overwriting the following parameters of
-> arch_errno_names.sh and break the build like below, we just pick up the
-> first word of the $(CC).
->
-> find: unknown predicate `-m64/arch'
-> x86_64-wrs-linux-gcc: warning: '-x c' after last input file has no effect
-> x86_64-wrs-linux-gcc: error: unrecognized command line option '-m64/include/uapi/asm-generic/errno.h'
-> x86_64-wrs-linux-gcc: fatal error: no input files
->
-> Signed-off-by: He Zhe <zhe.he@windriver.com>
-> ---
->  tools/perf/Makefile.perf | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 3eda9d4..7114c11 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -573,7 +573,7 @@ arch_errno_hdr_dir := $(srctree)/tools
->  arch_errno_tbl := $(srctree)/tools/perf/trace/beauty/arch_errno_names.sh
->  
->  $(arch_errno_name_array): $(arch_errno_tbl)
-> -	$(Q)$(SHELL) '$(arch_errno_tbl)' $(CC) $(arch_errno_hdr_dir) > $@
-> +	$(Q)$(SHELL) '$(arch_errno_tbl)' $(firstword $(CC)) $(arch_errno_hdr_dir) > $@
->  
->  sync_file_range_arrays := $(beauty_outdir)/sync_file_range_arrays.c
->  sync_file_range_tbls := $(srctree)/tools/perf/trace/beauty/sync_file_range.sh
+- Arnaldo
+ 
+> So why do we want this?  Systems running a large number of jobs in
+> different cgroups want to profiling such jobs precisely. This includes
+> container hosting systems widely used today. Currently perf supports
+> namespace tracking but the systems may not use (cgroup) namespace for
+> their jobs. Also it'd be more intuitive to see cgroup names (as
+> they're given by user or sysadmin) rather than numeric
+> cgroup/namespace id even if they use the namespaces.
+> 
+> From Stephane Eranian:
+> > In data centers you care about attributing samples to a job not such
+> > much to a process.  A job may have multiple processes which may come
+> > and go. The cgroup on the other hand stays around for the entire
+> > lifetime of the job. It is much easier to map a cgroup name to a
+> > particular job than it is to map a pid back to a job name,
+> > especially for offline post-processing.
+> 
+> Note that this only works for "perf_event" cgroups (obviously) so if
+> users are still using cgroup-v1 interface, they need to have same
+> hierarchy for subsystem(s) want to profile with it.
+> 
+>  * Changes from v5:
+>   - add ACKs for the kernel changes
+>   - fix sort column alignment when no cgroup is available
+> 
+>  * Changes from v4:
+>   - use CONFIG_CGROUP_PERF
+>   - move cgroup tree to perf_env
+>   - move cgroup fs utility function to tools/lib/api/fs
+>   - use a local buffer and check its size for cgroup systhesis
+> 
+>  * Changes from v3:
+>   - staticize perf_event_cgroup()
+>   - fix sample parsing test
+> 
+>  * Changes from v2:
+>   - remove path_len from cgroup_event
+>   - bail out if kernel doesn't support cgroup sampling
+>   - add some description in the Kconfig
+> 
+>  * Changes from v1:
+>   - use new cgroup id (= file handle)
+> 
+> The code is available at perf/cgroup-v6 branch in
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> 
+> 
+> The testing result looks something like this:
+> 
+>   [root@qemu build]# ./perf record --all-cgroups ./cgtest
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.009 MB perf.data (150 samples) ]
+>   
+>   [root@qemu build]# ./perf report -s cgroup,comm --stdio
+>   # To display the perf.data header info, please use --header/--header-only options.
+>   #
+>   #
+>   # Total Lost Samples: 0
+>   #
+>   # Samples: 150  of event 'cpu-clock:pppH'
+>   # Event count (approx.): 37500000
+>   #
+>   # Overhead  cgroup      Command
+>   # ........  ..........  .......
+>   #
+>       32.00%  /sub/cgrp2  looper2
+>       28.00%  /sub/cgrp1  looper1
+>       25.33%  /sub        looper0
+>        4.00%  /           cgtest 
+>        4.00%  /sub        cgtest 
+>        3.33%  /sub/cgrp2  cgtest 
+>        2.67%  /sub/cgrp1  cgtest 
+>        0.67%  /           looper0
+> 
+> 
+> The test program (cgtest) follows.
+> 
+> Thanks,
+> Namhyung
+> 
+> 
+> Cc: Tejun Heo <tj@kernel.org>
+> Cc: Li Zefan <lizefan@huawei.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> 
+> -------8<-----------------------------------------8<----------------
+> #define _GNU_SOURCE
+> #include <stdio.h>
+> #include <stdlib.h>
+> #include <string.h>
+> #include <unistd.h>
+> #include <fcntl.h>
+> #include <sched.h>
+> #include <errno.h>
+> #include <sys/stat.h>
+> #include <sys/wait.h>
+> #include <sys/prctl.h>
+> #include <sys/mount.h>
+> 
+> char cgbase[] = "/sys/fs/cgroup/perf_event";
+> 
+> void mkcgrp(char *name) {
+>   char buf[256];
+> 
+>   snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+>   if (mkdir(buf, 0755) < 0)
+>     perror("mkdir");
+> }
+> 
+> void rmcgrp(char *name) {
+>   char buf[256];
+> 
+>   snprintf(buf, sizeof(buf), "%s%s", cgbase, name);
+>   if (rmdir(buf) < 0)
+>     perror("rmdir");
+> }
+> 
+> void setcgrp(char *name) {
+>   char buf[256];
+>   int fd;
+> 
+>   snprintf(buf, sizeof(buf), "%s%s/tasks", cgbase, name);
+> 
+>   fd = open(buf, O_WRONLY);
+>   if (fd > 0) {
+>     if (write(fd, "0\n", 2) != 2)
+>       perror("write");
+>     close(fd);
+>   }
+> }
+> 
+> void create_sub_cgroup(int idx) {
+>   char buf[128];
+> 
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   mkcgrp(buf);
+> }
+> 
+> void remove_sub_cgroup(int idx) {
+>   char buf[128];
+> 
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   rmcgrp(buf);
+> }
+> 
+> void set_sub_cgroup(int idx) {
+>   char buf[128];
+> 
+>   snprintf(buf, sizeof(buf), "/sub/cgrp%d", idx);
+>   setcgrp(buf);
+> }
+> 
+> void set_task_name(int idx) {
+>   char buf[16];
+> 
+>   snprintf(buf, sizeof(buf), "looper%d", idx);
+>   prctl(PR_SET_NAME, buf, 0, 0, 0);
+> }
+> 
+> void loop(unsigned max) {
+>   volatile unsigned int count = 1;
+> 
+>   while (count++ != max) {
+>     asm volatile ("pause");
+>   }
+> }
+> 
+> void worker(int idx, unsigned cnt, int new_ns) {
+>   int oldns;
+> 
+>   create_sub_cgroup(idx);
+>   set_sub_cgroup(idx);
+> 
+>   if (new_ns) {
+>     if (unshare(CLONE_NEWCGROUP) < 0)
+>       perror("unshare");
+> 
+> #if 0  /* FIXME */
+>     if (unshare(CLONE_NEWNS) < 0)
+>       perror("unshare");
+> 
+>     if (mount("none", "/sys", NULL, MS_REMOUNT | MS_REC | MS_SLAVE, NULL) < 0)
+>       perror("mount --make-rslave");
+> 
+>     sleep(1);
+>     if (umount("/sys/fs/cgroup/perf_event") < 0)
+>       perror("umount");
+> 
+>     if (mount("cgroup", "/sys/fs/cgroup/perf_event", "cgroup",
+>               MS_NODEV | MS_NOEXEC | MS_NOSUID, "perf_event") < 0)
+>       perror("mount again");
+> #endif
+>   }
+> 
+>   if (fork() == 0) {
+>     set_task_name(idx);
+>     loop(cnt);
+>     exit(0);
+>   }
+>   wait(NULL);
+> }
+> 
+> int main(int argc, char *argv[])
+> {
+>   int i, nr = 2;
+>   int new_ns = 1;
+>   unsigned cnt = 1000000;
+>   int fd;
+> 
+>   if (argc > 1)
+>     nr = atoi(argv[1]);
+>   if (argc > 2)
+>     cnt = atoi(argv[2]);
+>   if (argc > 3)
+>     new_ns = atoi(argv[3]);
+> 
+>   mkcgrp("/sub");
+>   setcgrp("/sub");
+> 
+>   for (i = 0; i < nr; i++) {
+>     if (fork() == 0) {
+>       worker(i+1, cnt, new_ns);
+>       exit(0);
+>     }
+>   }
+> 
+>   set_task_name(0);
+>   loop(cnt);
+> 
+>   for (i = 0; i < nr; i++)
+>     wait(NULL);
+> 
+>   for (i = 0; i < nr; i++)
+>     remove_sub_cgroup(i+1);
+> 
+>   setcgrp("/");
+>   rmcgrp("/sub");
+> 
+>   return 0;
+> }
+> -------8<-----------------------------------------8<----------------
+> 
+> 
+> Namhyung Kim (9):
+>   perf/core: Add PERF_RECORD_CGROUP event
+>   perf/core: Add PERF_SAMPLE_CGROUP feature
+>   perf tools: Basic support for CGROUP event
+>   perf tools: Maintain cgroup hierarchy
+>   perf report: Add 'cgroup' sort key
+>   perf record: Support synthesizing cgroup events
+>   perf record: Add --all-cgroups option
+>   perf top: Add --all-cgroups option
+>   perf script: Add --show-cgroup-events option
+> 
+>  include/linux/perf_event.h                |   1 +
+>  include/uapi/linux/perf_event.h           |  16 ++-
+>  init/Kconfig                              |   3 +-
+>  kernel/events/core.c                      | 133 ++++++++++++++++++++++
+>  tools/include/uapi/linux/perf_event.h     |  16 ++-
+>  tools/lib/perf/include/perf/event.h       |   7 ++
+>  tools/perf/Documentation/perf-record.txt  |   5 +-
+>  tools/perf/Documentation/perf-report.txt  |   1 +
+>  tools/perf/Documentation/perf-script.txt  |   3 +
+>  tools/perf/Documentation/perf-top.txt     |   4 +
+>  tools/perf/builtin-diff.c                 |   1 +
+>  tools/perf/builtin-record.c               |  10 ++
+>  tools/perf/builtin-report.c               |   1 +
+>  tools/perf/builtin-script.c               |  41 +++++++
+>  tools/perf/builtin-top.c                  |   9 ++
+>  tools/perf/tests/sample-parsing.c         |   6 +-
+>  tools/perf/util/cgroup.c                  |  80 +++++++++++++
+>  tools/perf/util/cgroup.h                  |  17 ++-
+>  tools/perf/util/env.c                     |   2 +
+>  tools/perf/util/env.h                     |   6 +
+>  tools/perf/util/event.c                   |  18 +++
+>  tools/perf/util/event.h                   |   6 +
+>  tools/perf/util/evsel.c                   |  17 ++-
+>  tools/perf/util/evsel.h                   |   1 +
+>  tools/perf/util/hist.c                    |  13 +++
+>  tools/perf/util/hist.h                    |   1 +
+>  tools/perf/util/machine.c                 |  19 ++++
+>  tools/perf/util/machine.h                 |   3 +
+>  tools/perf/util/perf_event_attr_fprintf.c |   2 +
+>  tools/perf/util/record.h                  |   1 +
+>  tools/perf/util/session.c                 |   4 +
+>  tools/perf/util/sort.c                    |  37 ++++++
+>  tools/perf/util/sort.h                    |   2 +
+>  tools/perf/util/synthetic-events.c        | 121 ++++++++++++++++++++
+>  tools/perf/util/synthetic-events.h        |   1 +
+>  tools/perf/util/tool.h                    |   2 +
+>  36 files changed, 598 insertions(+), 12 deletions(-)
+> 
+> -- 
+> 2.25.1.696.g5e7596f4ac-goog
+> 
 
+-- 
+
+- Arnaldo
