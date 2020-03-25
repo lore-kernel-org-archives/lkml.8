@@ -6,52 +6,66 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10774C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D34D8C43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F2520775
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:25:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD41A20714
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 10:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgCYKZ3 (ORCPT
+        id S1727513AbgCYK1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 06:25:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59474 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727346AbgCYKZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 06:25:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6820CABEA;
-        Wed, 25 Mar 2020 10:25:28 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 11:25:27 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org,
-        brgerst@gmail.com
-Subject: Re: [PATCH v3 13/26] objtool: Optimize find_symbol_by_name()
-In-Reply-To: <20200324160924.676865656@infradead.org>
-Message-ID: <alpine.LSU.2.21.2003251125090.12098@pobox.suse.cz>
-References: <20200324153113.098167666@infradead.org> <20200324160924.676865656@infradead.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Wed, 25 Mar 2020 06:27:50 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38790 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726073AbgCYK1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 06:27:50 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6683DA4D7888C90A18DD;
+        Wed, 25 Mar 2020 18:27:43 +0800 (CST)
+Received: from [127.0.0.1] (10.173.222.153) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Wed, 25 Mar 2020
+ 18:27:33 +0800
+Subject: Re: [PATCH v2] sys_personality: Add a optional arch hook
+ arch_check_personality() for common sys_personality()
+To:     Dominik Brodowski <linux@dominikbrodowski.net>
+CC:     <mark.rutland@arm.com>, <hch@infradead.org>,
+        <cj.chengjian@huawei.com>, <huawei.libin@huawei.com>,
+        <xiexiuqi@huawei.com>, <yangyingliang@huawei.com>,
+        <guohanjun@huawei.com>, <wcohen@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <mtk.manpages@gmail.com>,
+        <wezhang@redhat.com>
+References: <20200109133634.176483-1-bobo.shaobowang@huawei.com>
+ <20200110054551.GA352443@light.dominikbrodowski.net>
+From:   "Wangshaobo (bobo)" <bobo.shaobowang@huawei.com>
+Message-ID: <ec8e957b-9fd2-3956-f9c6-338ee7178951@huawei.com>
+Date:   Wed, 25 Mar 2020 18:27:33 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200110054551.GA352443@light.dominikbrodowski.net>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.222.153]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020, Peter Zijlstra wrote:
+ping...
 
-> Perf showed that find_symbol_by_name() takes time; add a symbol name
-> hash.
-> 
-> This shaves another second off of objtool on vmlinux.o runtime, down
-> to 15 seconds.
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+this issue still exists, I am looking forward to your attention.
 
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
+ÔÚ 2020/1/10 13:45, Dominik Brodowski Ð´µÀ:
+> On Thu, Jan 09, 2020 at 09:36:34PM +0800, Wang ShaoBo wrote:
+>> currently arm64 use __arm64_sys_arm64_personality() as its default
+>> syscall. But using a normal hook arch_check_personality() can reject
+>> personality settings for special case of different archs.
+>>
+>> Signed-off-by: Wang ShaoBo <bobo.shaobowang@huawei.com>
+> Reviewed-by: Dominik Brodowski <linux@dominikbrodowski.net>
+>
+> Thanks,
+> 	Dominik
+> .
 
-M
