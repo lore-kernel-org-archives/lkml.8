@@ -2,318 +2,133 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873F2C43331
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31478C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 451592073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060BB20719
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vhJz/rvS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NndamQJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727485AbgCYWJH (ORCPT
+        id S1727501AbgCYWKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:09:07 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41279 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgCYWJG (ORCPT
+        Wed, 25 Mar 2020 18:10:12 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:45324 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgCYWKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 18:09:06 -0400
-Received: by mail-ot1-f68.google.com with SMTP id f52so3752997otf.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 15:09:06 -0700 (PDT)
+        Wed, 25 Mar 2020 18:10:11 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c145so4395021qke.12;
+        Wed, 25 Mar 2020 15:10:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/B3Fn/NZp0u5YjvAsrvCZ47CGKXzqXaHZWxOWZCjPak=;
-        b=vhJz/rvSW4br8LJDJC4l9sbyvawTeakbWrKzjHgSOQhLV2Lapm3Gt11lsJFrP7QUvL
-         zdzgtaY6FPr6alPZ4iUTJwdhyX6bP6kIFSf9fnhWfc5uvoh2+mP0hCQQsAmAJ6RifCd2
-         cBIsNcE2og+GWAEHtyY/IkoUlEEFaJhrR+efbU7XtM7oTGVC72KFXfMi8wWEgLSAy3eu
-         f8tk5Zwe1FT488ur8MxfLO8YiMDLTtTXEwDO75k6d6DP8Rdd54EJxxSzDrtV09eg56U7
-         zaDyGTh1ipaS5tKLGmx7ijUvA4uFIdpZnYDeG2y6iuz5GpOcUbEoX+Xh9tH4fMAg7hoV
-         g6Aw==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G6hkME+S0PYlYZxwSs9MYKKNvRnw6v/XJQKR6sVxwEw=;
+        b=NndamQJL8xsQ6uhwtkCYDRuQpXDOJ61VOPSE/mnQTcqcRMHCdrEMgXig0rhIZ04NeD
+         XqXMEQGHAn16Go0UZU7TAL4feTgCN+AgnCTEiL+bVBezZPcdTxTMOo6xJsgf3jGfxLoM
+         is5SFSPdmVapLiQkVJWtg4IaJGSnQMU/rpxg4sIx5xhyoz7B9GCnXl2F+O7aiMeBRKJp
+         ADYIevtqYMB0dHRjXmhU2WobEYQrjRMqdxw36Q5323e54uS1CgQ8PvIMWrvHme305SgL
+         vJeikm9awhu/kIVzjwnP8WkhKC1XMtMSlEIb5bRfH2mgKAR1y56IcnmTmtto0l1hQOiD
+         9QiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/B3Fn/NZp0u5YjvAsrvCZ47CGKXzqXaHZWxOWZCjPak=;
-        b=qd+i3WqFh6dPc7zUycspDLIB2I30RFkZXHUq3ar2YVT4NwSO/xDqJAWLjenlxudnDw
-         B9o7aPLkCkYCPtehqVWkkJolcrk1zqw/J1mbaSjr4bM4Vt1uh2nahZIaIAjPPS+16yNn
-         de/x84DIGg/OA6w0uNL0QbcWNQ+3op2OtBqpP5C/k2HwXPdMS7+NOrxAa2tFpDiX385Y
-         FrOzUZ8xoWMmswYjP4t8TVmmtnIDov+LgKso9FWc5Depr/T8o7M+JOvVS8un6NlyPyp5
-         L6eaceyZ2wPKV3RnvzeHgrUNC/XzRBpIvfvu1pCn++WFoRlYbsHlJm7JkCt3xBJ1QnIY
-         XeLA==
-X-Gm-Message-State: ANhLgQ1lkshyUaKBDxP+osafVPE2c0tNfknX/9ipmBwDcUiny01rh6Q0
-        LPtOg4XAqEQ1MY8Eo+Ml7t15xPLKpogoJYG0HhI6qw==
-X-Google-Smtp-Source: ADFU+vsUPuWi4JeAIFmzPJbmCaYn4zslF6DcPH7SO8lnUglsQMNXOpO+mKJxmopO2/eQ67EPuUbQIA4cQuUe22XTzDw=
-X-Received: by 2002:a9d:42f:: with SMTP id 44mr4087288otc.236.1585174145157;
- Wed, 25 Mar 2020 15:09:05 -0700 (PDT)
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G6hkME+S0PYlYZxwSs9MYKKNvRnw6v/XJQKR6sVxwEw=;
+        b=hNZqxRFLvHpkHOxowd52gSi0jbD2JLYjYQjvQW33d1dVn3NAAhqqA3rRMYruqm4u5/
+         9aEfbKFwdEhPAzXuujrltNky/rQQiAvDov59JxtghTcKFvEGykDdCZIPDhoLahy0mnqR
+         HapRMxMotSgyK/qsj/qHjNsfb8f8oe4QBKfTa9ONyWDc32uAgbr74ZBe6M34A6zGZeCh
+         Tivid/EWCvZ7evJmUk11jfNWmFuDjDM2pyQz4iSbhnTbvK8uORAtSWfRKQPUA4zZcZBf
+         DwKYtCjy2Plwjj5mvcoYEqqHZSgDAeWar26Cnwe8hU9WDqwP2CUdizLMT58gngbEgcQQ
+         WZoA==
+X-Gm-Message-State: ANhLgQ1ScYbkcq/99dGJu0cNLNPjhyyPYdeBfgPT3aAUw5E6bIqbBMwh
+        jn4imnzi6bHIxm6C9JEV9dA=
+X-Google-Smtp-Source: ADFU+vvnVZKet6TW1bmTmL4LFrJX2tvJ/po9HvmuayBQalnCFpULIuWafVvKkcssta2fYIRc3IH+GA==
+X-Received: by 2002:a37:6606:: with SMTP id a6mr5051094qkc.364.1585174210448;
+        Wed, 25 Mar 2020 15:10:10 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id d201sm129006qke.59.2020.03.25.15.10.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 15:10:09 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 25 Mar 2020 18:10:08 -0400
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 00/14] efi/gop: Refactoring + mode-setting feature
+Message-ID: <20200325221007.GA290267@rani.riverdale.lan>
+References: <20200319192855.29876-1-nivedita@alum.mit.edu>
+ <20200320020028.1936003-1-nivedita@alum.mit.edu>
+ <CAKv+Gu8-iK-FQrgCY6YGXyg155chMPJQZeQr-i_xQbqoQ57F0g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
-In-Reply-To: <20200325125120.GX1922688@smile.fi.intel.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 25 Mar 2020 15:08:29 -0700
-Message-ID: <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     a.hajda@samsung.com, artem.bityutskiy@linux.intel.com,
-        balbi@kernel.org, Mark Brown <broonie@kernel.org>,
-        fntoth@gmail.com, grant.likely@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>, peter.ujfalusi@ti.com,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8-iK-FQrgCY6YGXyg155chMPJQZeQr-i_xQbqoQ57F0g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
-> > On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
-> > > Consider the following scenario.
-> > >
-> > > The main driver of USB OTG controller (dwc3-pci), which has the following
-> > > functional dependencies on certain platform:
-> > > - ULPI (tusb1210)
-> > > - extcon (tested with extcon-intel-mrfld)
-> > >
-> > > Note, that first driver, tusb1210, is available at the moment of
-> > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
-> > > won't appear till user space does something about it.
-> > >
-> > > This is depicted by kernel configuration excerpt:
-> > >
-> > >     CONFIG_PHY_TUSB1210=y
-> > >     CONFIG_USB_DWC3=y
-> > >     CONFIG_USB_DWC3_ULPI=y
-> > >     CONFIG_USB_DWC3_DUAL_ROLE=y
-> > >     CONFIG_USB_DWC3_PCI=y
-> > >     CONFIG_EXTCON_INTEL_MRFLD=m
-> > >
-> > > In the Buildroot environment the modules are probed by alphabetical ordering
-> > > of their modaliases. The latter comes to the case when USB OTG driver will be
-> > > probed first followed by extcon one.
-> > >
-> > > So, if the platform anticipates extcon device to be appeared, in the above case
-> > > we will get deferred probe of USB OTG, because of ordering.
-> > >
-> > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
-> > > deferral race condition fix") counts the amount of triggered deferred probe,
-> > > we never advance the situation -- the change makes it to be an infinite loop.
+On Wed, Mar 25, 2020 at 05:41:43PM +0100, Ard Biesheuvel wrote:
+> On Fri, 20 Mar 2020 at 03:00, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 > >
-> > Hi Andy,
+> > This series is against tip:efi/core.
 > >
-> > I'm trying to understand this sequence of steps. Sorry if the questions
-> > are stupid -- I'm not very familiar with USB/PCI stuff.
->
-> Thank you for looking into this. My answer below.
->
-> As a first thing I would like to tell that there is another example of bad
-> behaviour of deferred probe with no relation to USB. The proposed change also
-> fixes that one (however, less possible to find in real life).
-
-Unless I see what the other issue is, I can't speak for the unknown.
-
-> > > ---8<---8<---
-> > >
-> > > [   22.187127] driver_deferred_probe_trigger <<< 1
-> > >
-> > > ...here is the late initcall triggers deferred probe...
-> > >
-> > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
-> > >
-> > > ...dwc3.0.auto is the only device in the deferred list...
+> > Patches 1-9 are small cleanups and refactoring of the code in
+> > libstub/gop.c.
 > >
-> > Ok, dwc3.0.auto is the only unprobed device at this point?
->
-> Correct.
->
-> > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
-> > >
-> > > ...the counter before mutex is unlocked is kept the same...
-> > >
-> > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
-> > >
-> > > ...mutes has been unlocked, we try to re-probe the driver...
-> > >
-> > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
-> > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
-> > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
-> > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
-> > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
-> > > [   22.263723] driver_deferred_probe_trigger <<< 2
-> > >
-> > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
-> > >
-> > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+> > The rest of the patches add the ability to use a command-line option to
+> > switch the gop's display mode.
 > >
-> > So where did this dwc3.0.auto.ulpi come from?
->
-> > Looks like the device is created by dwc3_probe() through this call flow:
-> > dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
-> > dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
->
-> Correct.
->
-> > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> > The options supported are:
+> > video=efifb:mode=n
+> >         Choose a specific mode number
+> > video=efifb:<xres>x<yres>[-(rgb|bgr|<bpp>)]
+> >         Specify mode by resolution and optionally color depth
+> > video=efifb:auto
+> >         Let the EFI stub choose the highest resolution mode available.
 > >
-> > Can you please point me to which code patch actually caused the probe
-> > deferral?
->
-> Sure, it's in drd.c.
->
-> if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
->   edev = extcon_get_extcon_dev(name);
->   if (!edev)
->     return ERR_PTR(-EPROBE_DEFER);
->   return edev;
-> }
-
-Thanks for the confirmations and pointers. I assume
-"linux,extcon-name" is a property that's obtained from ACPI? Because I
-couldn't find a relevant reference to it elsewhere in the kernel.
-
-> > > ...but extcon driver is still missing...
-> > >
-> > > [   22.283174] platform dwc3.0.auto: Added to deferred list
-> > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> > The mode-setting additions increase code size of gop.o by about 3k on
+> > x86-64 with EFI_MIXED enabled.
 > >
-> > I'm not fully aware of all the USB implications, but if extcon is
-> > needed, why can't that check be done before we add and probe the ulpi
-> > device? That'll avoid this whole "fake" probing and avoid the counter
-> > increase. And avoid the need for this patch that's touching the code
-> > code that's already a bit delicate.
->
-> > Also, with my limited experience with all the possible drivers in the
-> > kernel, it's weird that the ulpi device is added and probed before we
-> > make sure the parent device (dwc3.0.auto) can actually probe
-> > successfully.
->
-> As I said above the deferred probe trigger has flaw on its own.
-
-Definitely agree. I'm not saying deferred probe is perfect.
-
-> Even if we fix for USB case, there is (and probably will be) others.
->
-> > Most of the platform device code I've seen in systems with OF (device
-> > tree) add the child devices towards the end of the parent's probe
-> > function.
->
-> > > ...and since we had a successful probe, we got counter mismatch...
-> > >
-> > > [   22.297490] driver_deferred_probe_trigger <<< 3
-> > > [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
-> > >
-> > > ...at the end we have a new counter and loop repeats again, see 22.198727...
-> > >
-> > > ---8<---8<---
-> > >
-> > > Revert of the commit helps, but it is probably not helpful for the initially
-> > > found regression. Artem Bityutskiy suggested to use counter of the successful
-> > > probes instead. This fixes above mentioned case and shouldn't prevent driver
-> > > to reprobe deferred ones.
-> > >
-> > > Under "successful probe" we understand the state when a driver of the certain
-> > > device is being kept bound after deferred probe trigger cycle. For instance,
-> > > in the above mentioned case probing of tusb1210 is not successful because dwc3
-> > > driver unbinds device dwc3.0.auto.ulpi. The atomic_dec() call is used to keep
-> > > track of this. The amount of bindings is always great than or equal to the
-> > > amount of unbindings as guaranteed by design of the driver binding mechanism.
+> > Changes in v2 (HT lkp@intel.com):
+> > - Fix __efistub_global attribute to be after the variable.
+> >   (NB: bunch of other places should ideally be fixed, those I guess
+> >   don't matter as they are scalars?)
+> > - Silence -Wmaybe-uninitialized warning in set_mode function.
 > >
-> > The unbindings count can increase for other unrelated drivers unbinding
-> > too. Wouldn't it? Seems a bit fragile and racy in a fashion similar to
-> > the issue the original patch was trying to fix.
->
-> Yes, it's (unlikely) possible (*), but it will give one more iteration per such
-> case. It's definitely better than infinite loop. Do you agree?
+> 
+> These look good to me. The only question I have is whether it would be
+> possible to use the existing next_arg() and parse_option_str()
+> functions to replace some of the open code parsing that goes on in
+> patches 11 - 14.
+> 
 
-Sorry I wasn't being clear (I was in a rush). I'm saying this patch
-can reintroduce the bug where the deferred probe isn't triggered when
-it should be.
+I don't think so -- next_arg is for parsing space-separated param=value
+pairs, so efi_parse_options can use it, but it doesn't work for the
+comma-separated options we'll have within the value.
 
-Let's take a simple execution flow.
+parse_option_str would only work for the "auto" option, but it scans the
+entire option string and just returns whether it was there or not, so it
+wouldn't be too useful either, since we have to check for the other
+possibilities anyway.
 
-probe_okay is at 10.
+It would be nice to have a more generic library for cmdline parsing,
+there are a lot of places that have to open-code option parsing like
+this.
 
-Thread-A
-  really_probe(Device-A)
-    local_probe_okay_count = 10
-    Device-A probe function is running...
-
-Thread-B
-  really_probe(Device-B)
-    Device-B probes successfully.
-    probe_okay incremented to 11
-
-Thread-C
-  Device-C (which had bound earlier) is unbound (say module is
-unloaded or a million other reasons).
-  probe_okay is decremented to 10.
-
-Thread-A continues
-  Device-A probe function returns -EPROBE_DEFER
-  driver_deferred_probe_add_trigger() doesn't do anything because
-    local_probe_okay_count == probe_okay
-  But Device-A might have deferred probe waiting on Device-B.
-  Device-A never probes.
-
-> *) It means during probe you have _intensive_ removing, of course you may keep
-> kernel busy with iterations, but it has no practical sense. DoS attacks more
-> effective in different ways.
-
-I wasn't worried about DoS attacks. More of a functional correctness
-issue what I explained above.
-
-Anyway, if your issue and similar issues can be handles in driver core
-in a clean way without breaking other cases, I don't have any problem
-with that. Just that, I think the current solution breaks other cases.
-
-As an alternate solution, assuming "linux,extcon-name" is coming
-from some firmware, you might want to look into the fw_devlink
-feature.
-
-That feature allows driver core to add device links from firmware
-information. If you can get that feature to create device links from
-your dwc3.0.auto (or its parent pci_dev?) to the extcon supplier
-device, all of this can be sidestepped and your dwc3.0.auto's (or the
-dwc pci_dev's) probe will be triggered only after extcon is probed.
-
-I have very little familiarity with PCI/ACPI. I spent about an hour or
-two poking at ACPI scan/property code. The relationship between a
-pci_dev and an acpi_device is a bit confusing to me because I see:
-
-static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
-{
-        struct property_entry *p = (struct property_entry *)id->driver_data;
-        struct dwc3_pci         *dwc;
-        struct resource         res[2];
-        int                     ret;
-        struct device           *dev = &pci->dev;
-....
-        dwc->dwc3 = platform_device_alloc("dwc3", PLATFORM_DEVID_AUTO);
-....
-        ACPI_COMPANION_SET(&dwc->dwc3->dev, ACPI_COMPANION(dev));
-
-And ACPI_COMPANION returns an acpi_device by looking at dev->fwnode.
-So how the heck is a pci_device.dev.fwnode pointing to an
-acpi_device.fwnode?
-
-Anyway, assuming the fwnode here points to an acpi_device's fwnode,
-you can implement add_links() ops for acpi_device_fwnode_ops and get
-fw_devlink working for ACPI.
-
-I've implemented something similar for OF in drivers/of/property.c if
-you are interested.
-
--Saravana
+There's one thing I noticed while working at this, btw. The Makefile
+specifies -ffreestanding, but at least x86 builds without having to
+specify that. With -ffreestanding, the compiler doesn't optimize string
+functions -- strlen(string literal) into a compile-time constant, for
+eg. A couple hundred bytes or so can be saved by removing that option,
+if it also works for ARM.
