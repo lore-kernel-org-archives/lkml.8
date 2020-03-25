@@ -2,193 +2,109 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F26C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93715C54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD50E2078A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dLui0I7w"
+	by mail.kernel.org (Postfix) with ESMTP id 704A12077D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 13:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCYNWE (ORCPT
+        id S1727521AbgCYNWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 09:22:04 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44789 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727286AbgCYNWE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 09:22:04 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x16so2026846qts.11
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 06:22:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6BqCxccxfCYt0s0B7B5Tq5f8zXMXUI8kTYEC1wL3LOA=;
-        b=dLui0I7wqDgCnRAsbciTulvvaOb9VbQSkhfUF5xkxBmsG/OFh6/8s4wJxoJ1qCVwEA
-         5ZBM0IpJiNJ6Dwbsn6t+ae9+7GhRREiC1ZhekIQBc0llXtx6iVWp/xqxDafD1/xBhCGK
-         CXXq/z6TXXzzQkZjUXxHzBEYtj+vUr65KY3Cr+bAyLDyGjnjiDwx0tV760TPtBZASjPk
-         5JXarGayW0M+vcdmovzt03eaduYIEUdWjrFpXL1cGpL6ADAHELS36dLbQ0ntuqADUFFZ
-         eYR4KFIopBY0eGirgN0BBsq9iC4ll0+wJrzW/CbwNTPFvWxSiZJqL1iyftgRkbrkD17i
-         scdg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=6BqCxccxfCYt0s0B7B5Tq5f8zXMXUI8kTYEC1wL3LOA=;
-        b=XPMUCUixRJu96yDKeEhWp77nfEv04CWCEAZOazUNOJNqOFVBtrL9yWn+Ku3uCZqolW
-         INreZuZTFFmdLBvBSHYjpCTmKFfBIvObuUYcN0e6/dgPnml/PTAcd1fil8DV1WvaRzgl
-         Mk4gRaSgvNJCn2gBl+l2oCqgXWyd+Upa6x+vtk5D3v3Qcq4WMc7Ofbv7VDy+WxasTueb
-         QMQAwnsStNFAi8YIqMPeSC2CVzDCtzcgFKHcZEogQ7DCQ7NlOQkAEwjpQ1Y2Cxv5YtGx
-         Db5MX0cNnvu9nlEKsz+NI75/deFWxPMyQemDLF2fxvEDLLQwOwqkR9c0Nl8e5r7cH4s0
-         +D+A==
-X-Gm-Message-State: ANhLgQ12ABrSr+EG8I0FAR9T/MnSVbW9Ts29NUBIt36V6gxgRHTRnBJY
-        oCsXYLTM8/ZHT1gHzxJ4YePmGg==
-X-Google-Smtp-Source: ADFU+vuegRt8+orGLk337zyGYvIH1gOlRdv5e1meeLpZQG9/qCprfgsRFdInNkaQ6Q00aut4EQNizw==
-X-Received: by 2002:ac8:6d31:: with SMTP id r17mr2911848qtu.68.1585142522727;
-        Wed, 25 Mar 2020 06:22:02 -0700 (PDT)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id 2sm17715492qtp.33.2020.03.25.06.22.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 25 Mar 2020 06:22:02 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: Null-ptr-deref due to "sanitized pathwalk machinery (v4)"
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200325040359.GK23230@ZenIV.linux.org.uk>
-Date:   Wed, 25 Mar 2020 09:21:59 -0400
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <B1AE49C8-A33E-4991-88D5-803DE044C560@lca.pw>
-References: <4CBDE0F3-FB73-43F3-8535-6C75BA004233@lca.pw>
- <20200324214637.GI23230@ZenIV.linux.org.uk>
- <A32DAE66-ADBA-46C7-BD26-F9BA8F12BC18@lca.pw>
- <20200325021327.GJ23230@ZenIV.linux.org.uk>
- <5281297D-B66E-4A4C-9B41-D2242F6B7AE7@lca.pw>
- <20200325040359.GK23230@ZenIV.linux.org.uk>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        Wed, 25 Mar 2020 09:22:08 -0400
+Received: from mga04.intel.com ([192.55.52.120]:38450 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727493AbgCYNWH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 09:22:07 -0400
+IronPort-SDR: YxEKrTLf3PAXvrZTMRBA/wCi9yDnuLJEt2zVPTT3Cy4uhuPjLGwPS+K/pOb9rzkAEpe4vLc9wX
+ DRdvvDM/ZVkQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 06:22:06 -0700
+IronPort-SDR: 0Jzf9dk7Gw11erDkTbA58HlkoOJOAyD+fbLjqw4wV+NtoG9lCMpstQFrQFVAR7RGPO+8CdVpgk
+ FvMGZnNApHwQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,304,1580803200"; 
+   d="scan'208";a="393625854"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga004.jf.intel.com with ESMTP; 25 Mar 2020 06:21:57 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jH5yo-00CpHP-VS; Wed, 25 Mar 2020 15:21:58 +0200
+Date:   Wed, 25 Mar 2020 15:21:58 +0200
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "brendanhiggins@google.com" <brendanhiggins@google.com>,
+        "olteanv@gmail.com" <olteanv@gmail.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "talgi@mellanox.com" <talgi@mellanox.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "davidgow@google.com" <davidgow@google.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "rdunlap@infradead.org" <rdunlap@infradead.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>,
+        "bp@suse.de" <bp@suse.de>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "skhan@linuxfoundation.org" <skhan@linuxfoundation.org>,
+        "zaslonko@linux.ibm.com" <zaslonko@linux.ibm.com>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "vincenzo.frascino@arm.com" <vincenzo.frascino@arm.com>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "ardb@kernel.org" <ardb@kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "uwe@kleine-koenig.org" <uwe@kleine-koenig.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v6 09/10] power: supply: Support ROHM bd99954 charger
+Message-ID: <20200325132158.GZ1922688@smile.fi.intel.com>
+References: <cover.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <1bf2431b80489ae412e774519a92616a9aa2bcca.1584977512.git.matti.vaittinen@fi.rohmeurope.com>
+ <20200324095024.GE1922688@smile.fi.intel.com>
+ <20200324103557.GH1922688@smile.fi.intel.com>
+ <4d75bfeab55c04cc3ca751cf7c364c812848e9ed.camel@fi.rohmeurope.com>
+ <20200325120956.GW1922688@smile.fi.intel.com>
+ <d533c18dcd7b4d4ca453661b3f9495a840b3313b.camel@fi.rohmeurope.com>
+ <20200325132033.GY1922688@smile.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325132033.GY1922688@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Mar 25, 2020 at 03:20:33PM +0200, andriy.shevchenko@linux.intel.com wrote:
+> On Wed, Mar 25, 2020 at 01:00:21PM +0000, Vaittinen, Matti wrote:
 
+> But why?
+> 
+> You really uglify the code with ifdeffery, make a dependency to OF (yes, you
+> will have to have of.h include) only because of that silly
+> macro and save 64 bytes of memory footprint.
 
-> On Mar 25, 2020, at 12:03 AM, Al Viro <viro@zeniv.linux.org.uk> wrote:
->=20
-> On Tue, Mar 24, 2020 at 11:24:01PM -0400, Qian Cai wrote:
->=20
->>> On Mar 24, 2020, at 10:13 PM, Al Viro <viro@zeniv.linux.org.uk> =
-wrote:
->>>=20
->>> On Tue, Mar 24, 2020 at 09:49:48PM -0400, Qian Cai wrote:
->>>=20
->>>> It does not catch anything at all with the patch,
->>>=20
->>> You mean, oops happens, but neither WARN_ON() is triggered?
->>> Lovely...  Just to make sure: could you slap the same couple
->>> of lines just before
->>>               if (unlikely(!d_can_lookup(nd->path.dentry))) {
->>> in link_path_walk(), just to check if I have misread the trace
->>> you've got?
->>>=20
->>> Does that (+ other two inserts) end up with
->>> 	1) some of these WARN_ON() triggered when oops happens or
->>> 	2) oops is happening, but neither WARN_ON() triggers or
->>> 	3) oops not happening / becoming harder to hit?
->>=20
->> Only the one just before
->> if (unlikely(!d_can_lookup(nd->path.dentry))) {
->> In link_path_walk() will trigger.
->=20
->> [  245.767202][ T5020] pathname =3D /var/run/nscd/socket
->=20
-> Lovely.  So
-> 	* we really do get NULL nd->path.dentry there; I've not misread =
-the
-> trace.
-> 	* on the entry into link_path_walk() nd->path.dentry is =
-non-NULL.
-> 	* *ALL* components should've been LAST_NORM ones
-> 	* not a single symlink in sight, unless the setup is rather =
-unusual
-> 	* possibly not even a single mountpoint along the way (depending
-> upon the userland used)
->=20
-> And in the same loop we have
->                if (likely(type =3D=3D LAST_NORM)) {
->                        struct dentry *parent =3D nd->path.dentry;
->                        nd->flags &=3D ~LOOKUP_JUMPED;
->                        if (unlikely(parent->d_flags & DCACHE_OP_HASH)) =
-{
->                                struct qstr this =3D { { .hash_len =3D =
-hash_len }, .name =3D name };
->                                err =3D parent->d_op->d_hash(parent, =
-&this);
->                                if (err < 0)
->                                        return err;
->                                hash_len =3D this.hash_len;
->                                name =3D this.name;
->                        }
->                }
-> upstream of that thing.  So NULL nd->path.dentry *there* would've =
-oopsed.
-> IOW, what we are hitting is walk_component() with non-NULL =
-nd->path.dentry
-> when we enter it, NULL being returned and nd->path.dentry becoming =
-NULL
-> by the time we return from walk_component().
->=20
-> Could you post the results of
-> 	stat / /var /var/run /var/run/nscd /var/run/nscd/socket
+And on top of that for !OF configuration you prevent your driver to be usable.
+(Consider PRP0001 ACPI case, for example)
 
-The file is gone after a successful boot,
+-- 
+With Best Regards,
+Andy Shevchenko
 
-#  stat / /var /var/run /var/run/nscd /var/run/nscd/socket
-  File: /
-  Size: 244       	Blocks: 0          IO Block: 65536  directory
-Device: fe00h/65024d	Inode: 128         Links: 17
-Access: (0555/dr-xr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2020-03-24 14:21:27.112559236 -0400
-Modify: 2020-03-24 14:21:25.840486593 -0400
-Change: 2020-03-24 14:21:25.840486593 -0400
- Birth: -
-  File: /var
-  Size: 4096      	Blocks: 8          IO Block: 65536  directory
-Device: fe00h/65024d	Inode: 133         Links: 21
-Access: (0755/drwxr-xr-x)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2018-08-12 05:57:57.000000000 -0400
-Modify: 2020-03-23 21:29:31.087264900 -0400
-Change: 2020-03-23 21:29:31.087264900 -0400
- Birth: -
-  File: /var/run -> ../run
-  Size: 6         	Blocks: 0          IO Block: 65536  symbolic =
-link
-Device: fe00h/65024d	Inode: 143         Links: 1
-Access: (0777/lrwxrwxrwx)  Uid: (    0/    root)   Gid: (    0/    root)
-Access: 2020-03-24 17:34:11.865030724 -0400
-Modify: 2020-03-23 17:16:40.573974805 -0400
-Change: 2020-03-23 17:16:40.573974805 -0400
- Birth: -
-stat: cannot stat '/var/run/nscd': No such file or directory
-stat: cannot stat '/var/run/nscd/socket': No such file or directory
-
-> after the boot with working kernel?  Also, is that "hit on every boot" =
-or
-> stochastic?  If it's the latter, I'd like to see the output of the =
-same
-> thing on a successful boot of the same kernel, if possible...
-
-It does not hit every time, so I used a cron job,
-
-@reboot sleep 180; systemctl reboot
-
-It has always hit it within a hour so far.
 
