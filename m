@@ -2,121 +2,99 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0153EC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A23C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFC6820740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AEEF20740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:41:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="2j2TeH/f"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GC3qIAhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727461AbgCYTlJ (ORCPT
+        id S1727486AbgCYTl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:41:09 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38588 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYTlJ (ORCPT
+        Wed, 25 Mar 2020 15:41:29 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:47093 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727280AbgCYTl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:41:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=A4m0ZPlZ5obZNWQXf/Gh81v44Z2dZ2lWdMjLJARw93o=; b=2j2TeH/fcS3veYk8MlAVFfrNY9
-        NVsmTpfC8Py8Giv9Wp9JA00hC85v5ol0Di/AE4K7sRPP4pItlhuFoz6zHvf7Roj+NaJmp4+Ydf5ow
-        tOt5qFIZjCRQvNR7TIBc3yM7meeDcQrjdOC629I79voE0rhhC6uEKGCrmNM5vFacbMTDtFZFszjsV
-        wfimBFgU5T2Hh2nmbZSsqmI9EdMRAyIg13kgafcMYNAf5CHzk/cc6akYM+zIqKS52ZgrtdKVqgbe8
-        KhhnwSd7e56qhwogXUIJ6lGRhI4HmgsZB3Gqcq/UTq/AVS4/03vlZAS1Xitg3mzcp00m1xBJWxtr8
-        ctZeuymQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHBtf-0006Nk-3P; Wed, 25 Mar 2020 19:41:03 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 288843010C2;
-        Wed, 25 Mar 2020 20:41:00 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 16FB720206085; Wed, 25 Mar 2020 20:41:00 +0100 (CET)
-Date:   Wed, 25 Mar 2020 20:41:00 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org
-Subject: Re: [PATCH v4 02/13] objtool: Factor out CFI hints
-Message-ID: <20200325194100.GL20713@hirez.programming.kicks-ass.net>
-References: <20200325174525.772641599@infradead.org>
- <20200325174605.455086309@infradead.org>
- <alpine.LSU.2.21.2003251924440.3128@pobox.suse.cz>
+        Wed, 25 Mar 2020 15:41:28 -0400
+Received: by mail-lj1-f193.google.com with SMTP id v16so3806385ljk.13;
+        Wed, 25 Mar 2020 12:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZZS0Rvn5boXXlcKEenVsV6sEBu9lb4z3VYflqBvkEdA=;
+        b=GC3qIAhMhdFjiowjeMdKpo1YSavSLstRZjn9/h8d7jH/iQhQzTCBIblcnZuPQLcu9G
+         8irNk8/uPHEd6Tmta8DDjpmGFHFyYFp+ukL4FUnIZftVVWpnG2w2tQeTdY3IyOW2B9P4
+         vd7GjNpPlRRAs2hxE92Nuj5Je/ejhR0Y7wQr+TOZxfqfMhtqY+EVMYiAbLAc9PtVdugE
+         HVZA3F6Pr2maGbamiMrR7uO3Czmt18AJOsS3Mn+ikb9N2OYZtiVP/LTIv+tg9lg1svYv
+         TPe1IWERjRBDLzaFfVbs4ueX28VEy2rBDRGBOJRqIX9xcN052VY/P78/fCzeN1BGcb2J
+         aqsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZZS0Rvn5boXXlcKEenVsV6sEBu9lb4z3VYflqBvkEdA=;
+        b=RIyIj+XgEPXQQZtsmMScbSwXdX/n1Rz8+HHOr7Jbxs1zxd0M3qn8r8xN4EqO7Mn9i4
+         0Q1mnNwj5sr0qUM6+h1oylZ+efs+H3Ctk0yOFoRnER2gKZB1ImiM8cSB8+5u/ldLQPc8
+         F5NEwYEGPDZtonjOy8H4zIniXvtDtHc6h47ty1FKMMGj9EvtErXjvsH8WVmUSj/NJ1Fb
+         /EXj41tB00TgdMX+LD3i5NM2SiaZ+BW3wT5FnvrYuuHaHqhqNuw4rvlpPQxPfn4WEUUq
+         WpqLzQ5lPkSh8TAKca7VfCQYdTomhAJm2YsH6H+zF3St8Zv0MNohg+zADFmcHBXlNCeX
+         Ac6g==
+X-Gm-Message-State: ANhLgQ3r4UtQQKSm0A/u0avgPFl2tVXcdSMWxRqKsnQ8jN7MMnMfHRF0
+        UuejTgdzChnh32uHPu3J7FE=
+X-Google-Smtp-Source: ADFU+vuEChCfzwWRUzzdrSd+BAxzxzAwMrXks4EsnsdCMmDoowBLhmLL8K8Y26A0ABHzH8Pp29zvQA==
+X-Received: by 2002:a2e:9b41:: with SMTP id o1mr2982988ljj.145.1585165286166;
+        Wed, 25 Mar 2020 12:41:26 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-78-208-152.pppoe.mtu-net.ru. [91.78.208.152])
+        by smtp.googlemail.com with ESMTPSA id y20sm69026ljy.100.2020.03.25.12.41.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Mar 2020 12:41:25 -0700 (PDT)
+Subject: Re: [PATCH v9 52/55] input: touchscreen: atmel_mxt_ts: Added sysfs
+ entry for touchscreen status
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jiada Wang <jiada_wang@mentor.com>, nick@shmanahar.org,
+        dmitry.torokhov@gmail.com, jikos@kernel.org,
+        benjamin.tissoires@redhat.com, bsz@semihalf.com,
+        rydberg@bitmath.org
+Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
+References: <20200325133334.19346-1-jiada_wang@mentor.com>
+ <20200325133334.19346-53-jiada_wang@mentor.com>
+ <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
+Message-ID: <fb22c049-d070-bd4f-baba-e094b046ec85@gmail.com>
+Date:   Wed, 25 Mar 2020 22:41:24 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.21.2003251924440.3128@pobox.suse.cz>
+In-Reply-To: <4aeda6f1-25d8-9437-5cd0-560e43dbe081@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 07:26:06PM +0100, Miroslav Benes wrote:
-> On Wed, 25 Mar 2020, Peter Zijlstra wrote:
+25.03.2020 22:35, Dmitry Osipenko пишет:
+...
+>> +	INIT_WORK(&data->watchdog_work, mxt_watchdog_work);
+>> +
+>> +	/* setup watchdog timer */
+>> +	timer_setup(&data->watchdog_timer, mxt_watchdog_timer, 0);
+>> +
+>> +	mxt_start_wd_timer(data);
 > 
-> > Move the application of CFI hints into it's own function.
-> > No functional changes intended.
-> > 
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > ---
-> >  tools/objtool/check.c |   67 ++++++++++++++++++++++++++++----------------------
-> >  1 file changed, 38 insertions(+), 29 deletions(-)
-> > 
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -2033,6 +2033,41 @@ static int validate_return(struct symbol
-> >  	return 0;
-> >  }
-> >  
-> > +static int apply_insn_hint(struct objtool_file *file, struct section *sec,
-> > +			   struct symbol *func, struct instruction *insn,
-> > +			   struct insn_state *state)
-> > +{
-> > +	if (insn->restore) {
-> > +		struct instruction *save_insn, *i;
-> > +
-> > +		i = insn;
-> > +		save_insn = NULL;
-> > +		sym_for_each_insn_continue_reverse(file, func, i) {
-> > +			if (i->save) {
-> > +				save_insn = i;
-> > +				break;
-> > +			}
-> > +		}
-> > +
-> > +		if (!save_insn) {
-> > +			WARN_FUNC("no corresponding CFI save for CFI restore",
-> > +				  sec, insn->offset);
-> > +			return 1;
-> > +		}
-> > +
-> > +		if (!save_insn->visited) {
-> > +			WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
-> > +				  sec, insn->offset);
-> > +			return 1;
-> > +		}
-> > +
-> > +		insn->state = save_insn->state;
-> > +	}
-> > +
-> > +	state = insn->state;
+> I'd expect it to be optional and opt-in by either using #ifdef
+> TOUCHSCREEN_ATMEL_MXT_DEBUG or having a new debugfs option to explicitly
+> enable the "watchdog".
 > 
-> It does not matter, because it will change later again, but there should 
-> be
-> 
-> *state = insn->state;
-> 
-> here, right?
 
-Argh, yes.  Let me go edit the patches.
+It also could be a kernel module parameter.
