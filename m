@@ -2,138 +2,163 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 528DDC54FCF
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD8BC54FD0
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31A8E20740
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:50:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD85720740
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 15:51:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XtpjmpZH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BX/mueEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgCYPuV (ORCPT
+        id S1727821AbgCYPvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 11:50:21 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:41227 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbgCYPuU (ORCPT
+        Wed, 25 Mar 2020 11:51:13 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42552 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727592AbgCYPvN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 11:50:20 -0400
-Received: by mail-ua1-f66.google.com with SMTP id f9so906016uaq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:50:20 -0700 (PDT)
+        Wed, 25 Mar 2020 11:51:13 -0400
+Received: by mail-wr1-f65.google.com with SMTP id h15so3737260wrx.9
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
-        b=XtpjmpZHorFljb0nMx6/72BT6LEyg6Yu3GZqe2zFozULuw0vZvc0DGxN1dv5nyYcCC
-         hHWAbWGSOUvReB9nY4FED4Ar/y5wjn/ZL8FKAYhFCQofbGaikMQxNWYRkq+MvceY2mpy
-         N4Sp0qbxAYASySnf+wDwpkd2kniFgXVKTcZFs=
+        bh=jdzCJSQMgm0oyL98baNgXzwRjxVHoWxbruLDM0oUMk4=;
+        b=BX/mueElGQ2pf5TxuXX1CUbBcr7X3BOPwGSt2wLZHkfy08N/rTANbsO/1zOe1fkxGE
+         4XZAV/FMJvqzZZyr6Wv4pXgV0+Fip/4hAZs5GPTXS2vDmoC8VA76e0QA8XEGwSGvxNrf
+         zYigoBJngcvnWPAFT4E10OhZ7R+76I0d0w7MN7nrfqpV3GKVqxxaUdzS3GjbVLD9TRML
+         rregJC2ikLGw+s59YJ/ActxK4orduHalzGtdQKpIML/MvCQ2lMlI7NZvr44yANbgI+rz
+         hVLc/W9TKopWDTISoc0dn5PgSIu6lX63hlQbFbv3cFWxf4iPByzQsAxns94rQFpz9p1/
+         rE+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5R9OlcysTIjSd6LSQUVfdd7d9zM2FdO/Mwd40Pw5oqo=;
-        b=oH75PR6S9p4FMhmeT1b6FALNxyTzSSgd0F1HYU932tATA+9O1R2Fem0TX7HfXrQT7l
-         1cp0RPhyuHNeOXJLOCrzcjXijmEmYgOe8QADGmUN0Ns9CnG5Ew0GuciulJr5vefShaFZ
-         1z8ZSKlF7N/qe94F5Vdqp6VFhcP7Hlq5fhmSCTF+kIabKjLxHRReHmHWVdXgl2cye3L3
-         vIzwua7lz6oTTFAUJkRhFxC432GaZlPqG2rt+YUSD0MnW/WrtyOkDaULg+SeQUZUFRVo
-         Ri5nHMPhQKt4LeXVdHydUPLMijwtf3ln7/toBbyQTdX01e6JoC6783LfmtOoB+LwwRDq
-         2VHw==
-X-Gm-Message-State: ANhLgQ2GZtT+F3GZu/I5wjQa7ePPimKQCqb/R+i3H64LNKfQnkBmAMMV
-        BqtWgAVKHa01glZNWNFbnpv7U7gc22I=
-X-Google-Smtp-Source: ADFU+vsn/Gq7+jA1ahH0mmC5pyuCE0VmXofvEgWcHkKqfv7ljtVeDLBwPhQxjjKCKMHptBK7EhQEUA==
-X-Received: by 2002:ab0:45f8:: with SMTP id u111mr3003030uau.50.1585151419230;
-        Wed, 25 Mar 2020 08:50:19 -0700 (PDT)
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com. [209.85.217.54])
-        by smtp.gmail.com with ESMTPSA id k14sm3109052vke.16.2020.03.25.08.50.18
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
-Received: by mail-vs1-f54.google.com with SMTP id e138so1767027vsc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 08:50:18 -0700 (PDT)
-X-Received: by 2002:a67:694f:: with SMTP id e76mr2833828vsc.73.1585151417831;
- Wed, 25 Mar 2020 08:50:17 -0700 (PDT)
+        bh=jdzCJSQMgm0oyL98baNgXzwRjxVHoWxbruLDM0oUMk4=;
+        b=nY2oa8qtTIt2djhp7uuaHn/xTygfmnvAU44R5vGHuNNo6XDCjaLLJIGbVYBIvOEDlH
+         kSL2csK5Pwf8sx2i7oy36W734nE4a92LOKC7CkFhQZfxbNarfFxuSJ8aZV0JeGNZVkBz
+         x6Dtxcrv0hMhxF9CV0SmTp4RSIPicwfLknFADlmi48UNA5zYEVo1dU286B0qKbBJl9X3
+         Abzv6gAIXPopJLyvFpkmTN9FExeSruLS5ES/akUckILbtB+eX99pk0U4GUO8Ah0pDZxV
+         OaKhfhksQKz1YlTkMMa4kuOArxB26NK1gVG3fQe4Ybf1vDqQKazpSqYrnGx+6uohLoA0
+         E3rg==
+X-Gm-Message-State: ANhLgQ2bK589r0A42/HmL3E3vzvsemucoLZd9lLTpOFMtn8Ceunn6yPV
+        AjWOY3SOMrF2xsypU9MUp0MI0LmACSoJiE9fp+bVyA==
+X-Google-Smtp-Source: ADFU+vv+tNQ8YPWvfibugvCnhwLOYJlgXo6GRSCXcpR6TQyErbNU+Sksiez3chDL5nslTuI6gv9Wi3hMfyEPl8slG1Q=
+X-Received: by 2002:a05:6000:111:: with SMTP id o17mr4069115wrx.111.1585151471221;
+ Wed, 25 Mar 2020 08:51:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <1584944027-1730-1-git-send-email-kalyan_t@codeaurora.org>
- <CAD=FV=VX+Lj=NeZnYxDv9gLYUiwUO6brwvDSL8dbs1MTF4ieuA@mail.gmail.com> <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGs5saoU3FeO++S+YD=Js499HB2CjK8neYCXAZmCjgy2nQ@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 25 Mar 2020 08:50:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
-Message-ID: <CAD=FV=VxeCUEEFi9T0Jand3EWkaQTLnQkT3v5yjyjLi4yDeQ-w@mail.gmail.com>
-Subject: Re: [PATCH] drm/msm/dpu: ensure device suspend happens during PM sleep
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+References: <20200213153928.28407-1-masahiroy@kernel.org> <CAK7LNARvxFk=ct9AoRLwjZ9cKRsA_bjiLaq0di12TRe5+fpmGA@mail.gmail.com>
+ <CADnq5_Mieh9G-8hheKRdKe=qMbAQjwTheM2TWWSaZjeGU3635Q@mail.gmail.com> <CAK7LNAT2r3Octg-Pdjn6xNzGM49_PiGqoJSTzbmL4iBpH6_AaQ@mail.gmail.com>
+In-Reply-To: <CAK7LNAT2r3Octg-Pdjn6xNzGM49_PiGqoJSTzbmL4iBpH6_AaQ@mail.gmail.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 25 Mar 2020 11:50:59 -0400
+Message-ID: <CADnq5_PN4orASM4F9VMtrmuL6W7B4MwvgOX00_Tdw2c-UJ6WrA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] drm/radeon: remove unneeded header include path
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     David Zhou <David1.Zhou@amd.com>, David Airlie <airlied@linux.ie>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        mkrishn@codeaurora.org, travitej@codeaurora.org,
-        nganji@codeaurora.org
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?B?Q2hyaXN0aWFuIEvvv73vv73Dk25pZw==?= 
+        <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Mar 25, 2020 at 8:40 AM Rob Clark <robdclark@gmail.com> wrote:
+On Tue, Mar 24, 2020 at 9:14 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> On Tue, Mar 24, 2020 at 7:35 AM Doug Anderson <dianders@chromium.org> wrote:
+> On Wed, Mar 25, 2020 at 4:42 AM Alex Deucher <alexdeucher@gmail.com> wrote:
 > >
-> > Hi,
-> >
-> > On Sun, Mar 22, 2020 at 11:14 PM Kalyan Thota <kalyan_t@codeaurora.org> wrote:
+> > On Tue, Mar 24, 2020 at 12:48 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 > > >
-> > > "The PM core always increments the runtime usage counter
-> > > before calling the ->suspend() callback and decrements it
-> > > after calling the ->resume() callback"
+> > > Hi,
 > > >
-> > > DPU and DSI are managed as runtime devices. When
-> > > suspend is triggered, PM core adds a refcount on all the
-> > > devices and calls device suspend, since usage count is
-> > > already incremented, runtime suspend was not getting called
-> > > and it kept the clocks on which resulted in target not
-> > > entering into XO shutdown.
+> > > I think this series is a good clean-up.
 > > >
-> > > Add changes to manage runtime devices during pm sleep.
-> > >
-> > > Changes in v1:
-> > >  - Remove unnecessary checks in the function
-> > >      _dpu_kms_disable_dpu (Rob Clark).
+> > > Could you take a look at this please?
 > >
-> > I'm wondering what happened with my feedback on v1, AKA:
-> >
-> > https://lore.kernel.org/r/CAD=FV=VxzEV40g+ieuEN+7o=34+wM8MHO8o7T5zA1Yosx7SVWg@mail.gmail.com
-> >
-> > Maybe you didn't see it?  ...or if you or Rob think I'm way off base
-> > (always possible) then please tell me so.
-> >
+> > Can you resend?  I don't seem to have gotten it.  Must have ended up
+> > getting flagged a spam or something.
 >
-> At least w/ the current patch, disable_dpu should not be called for
-> screen-off (although I'd hope if all the screens are off the device
-> would suspend).
-
-OK, that's good.
-
-> But I won't claim to be a pm expert.. so not really
-> sure if this is the best approach or not.  I don't think our
-> arrangement of sub-devices under a parent is completely abnormal, so
-> it does feel like there should be a simpler solution..
-
-I think the other arguments about asymmetry are still valid and I've
-fixed bugs around this type of thing in the past.  For instance, see
-commit f7ccbed656f7 ("drm/rockchip: Suspend DP late").
+>
+> Can you take it from patchwork ?  (4 patches)
+>
+> https://lore.kernel.org/patchwork/project/lkml/list/?series=429491
 
 
--Doug
+Applied.  thanks!
+
+Alex
+
+>
+>
+> Thanks.
+>
+>
+>
+>
+>
+>
+> > Alex
+> >
+> > >
+> > >
+> > >
+> > > On Fri, Feb 14, 2020 at 12:40 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> > > >
+> > > > A header include path without $(srctree)/ is suspicious because it does
+> > > > not work with O= builds.
+> > > >
+> > > > You can build drivers/gpu/drm/radeon/ without this include path.
+> > > >
+> > > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > > ---
+> > > >
+> > > >  drivers/gpu/drm/radeon/Makefile | 2 --
+> > > >  1 file changed, 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/radeon/Makefile b/drivers/gpu/drm/radeon/Makefile
+> > > > index c693b2ca0329..9d5d3dc1011f 100644
+> > > > --- a/drivers/gpu/drm/radeon/Makefile
+> > > > +++ b/drivers/gpu/drm/radeon/Makefile
+> > > > @@ -3,8 +3,6 @@
+> > > >  # Makefile for the drm device driver.  This driver provides support for the
+> > > >  # Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+> > > >
+> > > > -ccflags-y := -Idrivers/gpu/drm/amd/include
+> > > > -
+> > > >  hostprogs := mkregtable
+> > > >  clean-files := rn50_reg_safe.h r100_reg_safe.h r200_reg_safe.h rv515_reg_safe.h r300_reg_safe.h r420_reg_safe.h rs600_reg_safe.h r600_reg_safe.h evergreen_reg_safe.h cayman_reg_safe.h
+> > > >
+> > > > --
+> > > > 2.17.1
+> > > >
+> > >
+> > >
+> > > --
+> > > Best Regards
+> > > Masahiro Yamada
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
