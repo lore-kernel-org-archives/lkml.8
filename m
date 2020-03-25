@@ -2,161 +2,305 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB3FC54FDB
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90223C55189
 	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB972173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538E220777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:03:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fG7rcdUE"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dhmArywJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgCYHGz (ORCPT
+        id S1727374AbgCYHDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:06:55 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:33427 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725815AbgCYHGz (ORCPT
+        Wed, 25 Mar 2020 03:03:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46693 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727281AbgCYHDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:06:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585120013;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=DXe37XA0lfapO5Rb1aOqlNhUPIp3vNMLcAvl3Ef53Tg=;
-        b=fG7rcdUESzzzhEOtlVTcfooXFD+Iur+eymIU7S9bldzVQoYCJiIx+MERBG/L41GUKAsj2F
-        4p0oSRWU0lQpNhgcimZvXCX3c532Br+42xJaTEm1jEqwxkKrfc4TdXX1PkJWBtedswTMXV
-        fxB8yoPVCi97w4jzfJpwI4Mexf3vONQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-lr4m0wjzMhewtNCfl9Hs1w-1; Wed, 25 Mar 2020 03:06:49 -0400
-X-MC-Unique: lr4m0wjzMhewtNCfl9Hs1w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E8248017CC;
-        Wed, 25 Mar 2020 07:06:48 +0000 (UTC)
-Received: from localhost (ovpn-12-88.pek2.redhat.com [10.72.12.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A43DE91D82;
-        Wed, 25 Mar 2020 07:06:46 +0000 (UTC)
-Date:   Wed, 25 Mar 2020 15:06:43 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        linux-kernel@vger.kernel.org, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        dan.j.williams@intel.com
-Subject: Re: [PATCH] mm/sparse: Fix kernel crash with pfn_section_valid check
-Message-ID: <20200325070643.GH3039@MiWiFi-R3L-srv>
-References: <20200325031914.107660-1-aneesh.kumar@linux.ibm.com>
+        Wed, 25 Mar 2020 03:03:45 -0400
+Received: by mail-pg1-f194.google.com with SMTP id k191so691809pgc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 00:03:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Qcq5vrjZaaxUecQ+MN/hNrxkpIRWmwyvSkwcuBIBglM=;
+        b=dhmArywJt/DihP0cdNXOX7mfpiBNidjkNvyh0NmfMEE5l+7gintMXj8bN5EOTRwom6
+         gpWGPhJctGzXN7L6Ku3hLOBf0nUGcxbeSyIaAEjbo57fgT4Fav81hl1BLmoN52B2VJb8
+         lXGD5aw/Z0IoHEg/jOusEADKAjbdcFk7XDSKU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Qcq5vrjZaaxUecQ+MN/hNrxkpIRWmwyvSkwcuBIBglM=;
+        b=GJWTmwKqnEevR2q4smTGCDTddnfXJMVa9GW6XmJd7SifUIB3ZPo2ol/QpU/wFu7zwL
+         muZYn4Dx6Wk5XKBOB/F8QI7JY5CY5nGWagaaz9TGcfx5Gy+jjDdmh7aiQbrdV/D2AS3c
+         78YU3oZ1isjfUZrdrXOExWa8Gh/lHhKCGCEFHizjhEtrIUx+ic//9ZnVdSUpZs+THuoh
+         izH8KCe2JUzTB1Jx91G/DScHaWv1MNHJcJFYL2OdzHhrvJzz3tVyN+h27Zp9pTOz2LpX
+         MMTYVQ/6lC88GUSLZ9Gwed/FYEajFi1n5SHgIO7QRik0mvv4piVBcgybpspUixbpi4Uv
+         LTbA==
+X-Gm-Message-State: ANhLgQ3SBo3BPbhFweI9BpItFkpz+AG9WtB9zM+Fv79vjha8cdvrovSW
+        f9VQN15QeVr9XwwyIPiw7wjnbA==
+X-Google-Smtp-Source: ADFU+vsTz6uFkl+Pl1zVIE3DGxuOS1SqR/O70bKBWPD7Tn7mYIeVU+zCQE84Rb+Vx4QH6dglYiyP9w==
+X-Received: by 2002:a63:c40a:: with SMTP id h10mr1654902pgd.291.1585119823848;
+        Wed, 25 Mar 2020 00:03:43 -0700 (PDT)
+Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:b46:ac84:1014:9555])
+        by smtp.gmail.com with ESMTPSA id i34sm566240pgm.83.2020.03.25.00.03.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 00:03:43 -0700 (PDT)
+From:   Miao-chen Chou <mcchou@chromium.org>
+To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
+Cc:     Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Alain Michaud <alainm@chromium.org>,
+        Miao-chen Chou <mcchou@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v2 2/2] Bluetooth: btusb: Read the supported features of Microsoft vendor extension
+Date:   Wed, 25 Mar 2020 00:03:36 -0700
+Message-Id: <20200325000332.v2.2.I4e01733fa5b818028dc9188ca91438fc54aa5028@changeid>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200325070336.1097-1-mcchou@chromium.org>
+References: <20200325070336.1097-1-mcchou@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200325031914.107660-1-aneesh.kumar@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/25/20 at 08:49am, Aneesh Kumar K.V wrote:
-> Fixes the below crash
-> 
-> BUG: Kernel NULL pointer dereference on read at 0x00000000
-> Faulting instruction address: 0xc000000000c3447c
-> Oops: Kernel access of bad area, sig: 11 [#1]
-> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
-> CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
-> ...
-> NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
-> LR [c000000000088354] vmemmap_free+0x144/0x320
-> Call Trace:
->  section_deactivate+0x220/0x240
->  __remove_pages+0x118/0x170
->  arch_remove_memory+0x3c/0x150
->  memunmap_pages+0x1cc/0x2f0
->  devm_action_release+0x30/0x50
->  release_nodes+0x2f8/0x3e0
->  device_release_driver_internal+0x168/0x270
->  unbind_store+0x130/0x170
->  drv_attr_store+0x44/0x60
->  sysfs_kf_write+0x68/0x80
->  kernfs_fop_write+0x100/0x290
->  __vfs_write+0x3c/0x70
->  vfs_write+0xcc/0x240
->  ksys_write+0x7c/0x140
->  system_call+0x5c/0x68
-> 
-> With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-> section_mem_map is set to NULL after depopulate_section_mem(). This
-> was done so that pfn_page() can work correctly with kernel config that disables
-> SPARSEMEM_VMEMMAP. With that config pfn_to_page does
-> 
-> 	__section_mem_map_addr(__sec) + __pfn;
-> where
-> 
-> static inline struct page *__section_mem_map_addr(struct mem_section *section)
-> {
-> 	unsigned long map = section->section_mem_map;
-> 	map &= SECTION_MAP_MASK;
-> 	return (struct page *)map;
-> }
-> 
-> Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
-> check the pfn validity (pfn_valid()). Since section_deactivate release
-> mem_section->usage if a section is fully deactivated, pfn_valid() check after
-> a subsection_deactivate cause a kernel crash.
-> 
-> static inline int pfn_valid(unsigned long pfn)
-> {
-> ...
-> 	return early_section(ms) || pfn_section_valid(ms, pfn);
-> }
-> 
-> where
-> 
-> static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
-> {
-> 	int idx = subsection_map_index(pfn);
-> 
-> 	return test_bit(idx, ms->usage->subsection_map);
-> }
-> 
-> Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
-> 
-> Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
-> Cc: Baoquan He <bhe@redhat.com>
-> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+This adds a new header to facilitate the opcode and packet structures of
+vendor extension(s). For now, we add only the
+HCI_VS_MSFT_Read_Supported_Features command from Microsoft vendor
+extension. See https://docs.microsoft.com/en-us/windows-hardware/drivers/
+bluetooth/microsoft-defined-bluetooth-hci-commands-and-events#
+microsoft-defined-bluetooth-hci-events for more details.
+Upon initialization of a hci_dev, we issue a
+HCI_VS_MSFT_Read_Supported_Features command to read the supported features
+of Microsoft vendor extension if the opcode of Microsoft vendor extension
+is valid. See https://docs.microsoft.com/en-us/windows-hardware/drivers/
+bluetooth/microsoft-defined-bluetooth-hci-commands-and-events#
+hci_vs_msft_read_supported_features for more details.
+This was verified on a device with Intel ThhunderPeak BT controller where
+the Microsoft vendor extension features are 0x000000000000003f.
 
-Maybe add Sachin's Tested-by, Sachin has tested and confirmed this fix
-works.
+Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+---
 
-> ---
->  mm/sparse.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index aadb7298dcef..3012d1f3771a 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -781,6 +781,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->  			ms->usage = NULL;
->  		}
->  		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> +		/* Mark the section invalid */
-> +		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+Changes in v2:
+- Issue a HCI_VS_MSFT_Read_Supported_Features command with
+__hci_cmd_sync() instead of constructing a request.
 
-Not sure if we should add checking in valid_section() or pfn_valid(),
-e.g check ms->usage validation too. Otherwise, this fix looks good to
-me.
+ drivers/bluetooth/btusb.c          |  3 ++
+ include/net/bluetooth/hci_core.h   |  4 ++
+ include/net/bluetooth/vendor_hci.h | 51 +++++++++++++++++++
+ net/bluetooth/hci_core.c           | 78 ++++++++++++++++++++++++++++++
+ 4 files changed, 136 insertions(+)
+ create mode 100644 include/net/bluetooth/vendor_hci.h
 
-Reviewed-by: Baoquan He <bhe@redhat.com>
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 4c49f394f174..410d50dbd4e2 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3738,6 +3738,9 @@ static int btusb_probe(struct usb_interface *intf,
+ 	hdev->notify = btusb_notify;
+ 
+ 	hdev->msft_ext.opcode = HCI_OP_NOP;
++	hdev->msft_ext.features = 0;
++	hdev->msft_ext.evt_prefix_len = 0;
++	hdev->msft_ext.evt_prefix = NULL;
+ 
+ #ifdef CONFIG_PM
+ 	err = btusb_config_oob_wake(hdev);
+diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+index 0ec3d9b41d81..f2876c5067a4 100644
+--- a/include/net/bluetooth/hci_core.h
++++ b/include/net/bluetooth/hci_core.h
+@@ -30,6 +30,7 @@
+ 
+ #include <net/bluetooth/hci.h>
+ #include <net/bluetooth/hci_sock.h>
++#include <net/bluetooth/vendor_hci.h>
+ 
+ /* HCI priority */
+ #define HCI_PRIO_MAX	7
+@@ -246,6 +247,9 @@ struct amp_assoc {
+ 
+ struct msft_vnd_ext {
+ 	__u16	opcode;
++	__u64	features;
++	__u8	evt_prefix_len;
++	void	*evt_prefix;
+ };
+ 
+ struct hci_dev {
+diff --git a/include/net/bluetooth/vendor_hci.h b/include/net/bluetooth/vendor_hci.h
+new file mode 100644
+index 000000000000..89a6795e672c
+--- /dev/null
++++ b/include/net/bluetooth/vendor_hci.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * BlueZ - Bluetooth protocol stack for Linux
++ * Copyright (C) 2020 Google Corporation
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation;
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
++ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
++ * IN NO EVENT SHALL THE COPYRIGHT HOLDER(S) AND AUTHOR(S) BE LIABLE FOR ANY
++ * CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ *
++ * ALL LIABILITY, INCLUDING LIABILITY FOR INFRINGEMENT OF ANY PATENTS,
++ * COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS, RELATING TO USE OF THIS
++ * SOFTWARE IS DISCLAIMED.
++ */
++
++#ifndef __VENDOR_HCI_H
++#define __VENDOR_HCI_H
++
++#define MSFT_EVT_PREFIX_MAX_LEN			255
++
++struct msft_cmd_cmp_info {
++	__u8 status;
++	__u8 sub_opcode;
++} __packed;
++
++/* Microsoft Vendor HCI subcommands */
++#define MSFT_OP_READ_SUPPORTED_FEATURES		0x00
++#define MSFT_FEATURE_MASK_RSSI_MONITOR_BREDR_CONN	0x0000000000000001
++#define MSFT_FEATURE_MASK_RSSI_MONITOR_LE_CONN		0x0000000000000002
++#define MSFT_FEATURE_MASK_RSSI_MONITOR_LE_ADV		0x0000000000000004
++#define MSFT_FEATURE_MASK_ADV_MONITOR_LE_ADV		0x0000000000000008
++#define MSFT_FEATURE_MASK_VERIFY_CURVE			0x0000000000000010
++#define MSFT_FEATURE_MASK_CONCURRENT_ADV_MONITOR	0x0000000000000020
++struct msft_cp_read_supported_features {
++	__u8 sub_opcode;
++} __packed;
++struct msft_rp_read_supported_features {
++	__u64 features;
++	__u8  evt_prefix_len;
++	__u8  evt_prefix[0];
++} __packed;
++
++#endif /* __VENDOR_HCI_H */
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index dbd2ad3a26ed..1ea32d10ed08 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -1407,6 +1407,76 @@ static void hci_dev_get_bd_addr_from_property(struct hci_dev *hdev)
+ 	bacpy(&hdev->public_addr, &ba);
+ }
+ 
++static void process_msft_vnd_ext_cmd_complete(struct hci_dev *hdev,
++					      struct sk_buff *skb)
++{
++	struct msft_cmd_cmp_info *info = (void *)skb->data;
++	const u8 status = info->status;
++	const u16 sub_opcode = __le16_to_cpu(info->sub_opcode);
++
++	skb_pull(skb, sizeof(*info));
++
++	if (IS_ERR(skb)) {
++		BT_WARN("%s: Microsoft extension response packet invalid",
++			hdev->name);
++		return;
++	}
++
++	if (status) {
++		BT_WARN("%s: Microsoft extension sub command 0x%2.2x failed",
++			hdev->name, sub_opcode);
++		return;
++	}
++
++	BT_DBG("%s: status 0x%2.2x sub opcode 0x%2.2x", hdev->name, status,
++	       sub_opcode);
++
++	switch (sub_opcode) {
++	case MSFT_OP_READ_SUPPORTED_FEATURES: {
++		struct msft_rp_read_supported_features *rp = (void *)skb->data;
++		u8 prefix_len = rp->evt_prefix_len;
++
++		hdev->msft_ext.features = __le64_to_cpu(rp->features);
++		hdev->msft_ext.evt_prefix_len = prefix_len;
++		hdev->msft_ext.evt_prefix = kmalloc(prefix_len, GFP_ATOMIC);
++		if (!hdev->msft_ext.evt_prefix) {
++			BT_WARN("%s: Microsoft extension invalid event prefix",
++				hdev->name);
++			return;
++		}
++
++		memcpy(hdev->msft_ext.evt_prefix, rp->evt_prefix, prefix_len);
++		BT_INFO("%s: Microsoft extension features 0x%016llx",
++			hdev->name, hdev->msft_ext.features);
++		break;
++	}
++	default:
++		BT_WARN("%s: Microsoft extension unknown sub opcode 0x%2.2x",
++			hdev->name, sub_opcode);
++		break;
++	}
++}
++
++static void read_vendor_extension_features(struct hci_dev *hdev)
++{
++	struct sk_buff *skb;
++	const u16 msft_opcode = hdev->msft_ext.opcode;
++
++	if (msft_opcode !=  HCI_OP_NOP) {
++		struct msft_cp_read_supported_features cp;
++
++		cp.sub_opcode = MSFT_OP_READ_SUPPORTED_FEATURES;
++		skb = __hci_cmd_sync(hdev, msft_opcode, sizeof(cp), &cp,
++				     HCI_CMD_TIMEOUT);
++
++		process_msft_vnd_ext_cmd_complete(hdev, skb);
++		if (skb) {
++			kfree_skb(skb);
++			skb = NULL;
++		}
++	}
++}
++
+ static int hci_dev_do_open(struct hci_dev *hdev)
+ {
+ 	int ret = 0;
+@@ -1554,6 +1624,11 @@ static int hci_dev_do_open(struct hci_dev *hdev)
+ 		}
+ 	}
+ 
++	/* Check features supported by HCI extensions after the init procedure
++	 * completed.
++	 */
++	read_vendor_extension_features(hdev);
++
+ 	/* If the HCI Reset command is clearing all diagnostic settings,
+ 	 * then they need to be reprogrammed after the init procedure
+ 	 * completed.
+@@ -1733,6 +1808,9 @@ int hci_dev_do_close(struct hci_dev *hdev)
+ 			cancel_delayed_work_sync(&adv_instance->rpa_expired_cb);
+ 	}
+ 
++	kfree(hdev->msft_ext.evt_prefix);
++	hdev->msft_ext.evt_prefix = NULL;
++
+ 	/* Avoid potential lockdep warnings from the *_flush() calls by
+ 	 * ensuring the workqueue is empty up front.
+ 	 */
+-- 
+2.24.1
 
