@@ -2,230 +2,136 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D14C1975A
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 697DEC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:16:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE95F206F6
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41A2B206F6
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 07:16:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IyakAjTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727290AbgCYHP0 (ORCPT
+        id S1727325AbgCYHQF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 03:15:26 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37140 "EHLO mga17.intel.com"
+        Wed, 25 Mar 2020 03:16:05 -0400
+Received: from ozlabs.org ([203.11.71.1]:58187 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726276AbgCYHP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 03:15:26 -0400
-IronPort-SDR: doOGr04Ejd5RbuN4Usg0l+gOiDV+xAMlJ8mkcxwu1A3HfuTMX0nrDBsF226OQfNuOaknDrRopm
- WIaYmDh1jSxQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 00:15:25 -0700
-IronPort-SDR: ufgKdX6nZu0I/KT3CbCpizxpZhREsuvarfu9lIgfsESQHJYhcKOyK7w+Gc1xAVVRNj1SvyLgKB
- ctVFCfOXj1Tg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,303,1580803200"; 
-   d="scan'208";a="293274097"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 25 Mar 2020 00:15:24 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jH0G3-000BAw-UW; Wed, 25 Mar 2020 15:15:23 +0800
-Date:   Wed, 25 Mar 2020 15:14:47 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/vmware] BUILD SUCCESS
- 8fefe9dacdb0a1347d3dac871bb1bba3cbc32945
-Message-ID: <5e7b04e7.5SosBEfLqhKcTJY7%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725832AbgCYHQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 03:16:05 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nKCj3m9qz9sR4;
+        Wed, 25 Mar 2020 18:16:01 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585120561;
+        bh=s1AIt52YFiyujN94KaqbCeEnwYxZ0tmlVApRoETUA44=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IyakAjTEgLDivNXuNfNlFESNiOWDbkhakw0wdaq9VrdJNOsWCgsY88VfG9TocWPrB
+         +z9vNBeJlgQ6ZzZaPbZqEfxm19fSD2sk2gw96rQw1YJcxG1dSjI8SRZYA+AVt99for
+         fQlnGV8SF/BY/Uoha0NjgJuvGs8CgsSxYjeCbFkK7/RSXtEiBFhFZTfB+zq4x7DVai
+         QFB3I5LANjk/eHFZbSuAKkpHLsk8CJfPlTQqJ+B+RBimHBXMGB/MeONTRGIB5c/ZT4
+         tlhynaN6BsUQy7iGE37V8+Q05x9hEnSLrV5gSWRhNiYG2pmHC3qiVdnENBvAWqZDXY
+         OvDKouElsEB0g==
+Date:   Wed, 25 Mar 2020 18:16:00 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: linux-next: build failure after merge of the input tree
+Message-ID: <20200325181600.207eb7ac@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/aJzUAUv/SLTtPvEts2RhgcO";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/vmware
-branch HEAD: 8fefe9dacdb0a1347d3dac871bb1bba3cbc32945  x86/vmware: Use bool type for vmw_sched_clock
+--Sig_/aJzUAUv/SLTtPvEts2RhgcO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-elapsed time: 732m
+Hi all,
 
-configs tested: 163
-configs skipped: 0
+After merging the input tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+drivers/input/touchscreen/goodix.c: In function 'goodix_irq_direction_outpu=
+t':
+drivers/input/touchscreen/goodix.c:624:12: error: implicit declaration of f=
+unction 'acpi_execute_simple_method' [-Werror=3Dimplicit-function-declarati=
+on]
+  624 |   status =3D acpi_execute_simple_method(ACPI_HANDLE(dev),
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/input/touchscreen/goodix.c:606:17: warning: unused variable 'dev' [=
+-Wunused-variable]
+  606 |  struct device *dev =3D &ts->client->dev;
+      |                 ^~~
+drivers/input/touchscreen/goodix.c: In function 'goodix_irq_direction_input=
+':
+drivers/input/touchscreen/goodix.c:634:17: warning: unused variable 'dev' [=
+-Wunused-variable]
+  634 |  struct device *dev =3D &ts->client->dev;
+      |                 ^~~
+cc1: some warnings being treated as errors
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-parisc                generic-64bit_defconfig
-powerpc                       ppc64_defconfig
-s390                             alldefconfig
-um                             i386_defconfig
-nds32                               defconfig
-i386                                defconfig
-m68k                       m5475evb_defconfig
-sparc                               defconfig
-sparc64                             defconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                              allnoconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-c6x                              allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-nds32                             allnoconfig
-csky                                defconfig
-alpha                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-x86_64               randconfig-a001-20200324
-x86_64               randconfig-a002-20200324
-x86_64               randconfig-a003-20200324
-i386                 randconfig-a001-20200324
-i386                 randconfig-a002-20200324
-i386                 randconfig-a003-20200324
-alpha                randconfig-a001-20200324
-m68k                 randconfig-a001-20200324
-mips                 randconfig-a001-20200324
-nds32                randconfig-a001-20200324
-parisc               randconfig-a001-20200324
-riscv                randconfig-a001-20200324
-c6x                  randconfig-a001-20200324
-h8300                randconfig-a001-20200324
-microblaze           randconfig-a001-20200324
-nios2                randconfig-a001-20200324
-sparc64              randconfig-a001-20200324
-csky                 randconfig-a001-20200324
-openrisc             randconfig-a001-20200324
-s390                 randconfig-a001-20200324
-xtensa               randconfig-a001-20200324
-sh                   randconfig-a001-20200324
-x86_64               randconfig-b001-20200324
-x86_64               randconfig-b002-20200324
-x86_64               randconfig-b003-20200324
-i386                 randconfig-b001-20200324
-i386                 randconfig-b002-20200324
-i386                 randconfig-b003-20200324
-x86_64               randconfig-c001-20200324
-x86_64               randconfig-c002-20200324
-x86_64               randconfig-c003-20200324
-i386                 randconfig-c001-20200324
-i386                 randconfig-c002-20200324
-i386                 randconfig-c003-20200324
-x86_64               randconfig-d001-20200324
-x86_64               randconfig-d002-20200324
-x86_64               randconfig-d003-20200324
-i386                 randconfig-d001-20200324
-i386                 randconfig-d002-20200324
-i386                 randconfig-d003-20200324
-x86_64               randconfig-e001-20200324
-x86_64               randconfig-e002-20200324
-x86_64               randconfig-e003-20200324
-i386                 randconfig-e001-20200324
-i386                 randconfig-e002-20200324
-i386                 randconfig-e003-20200324
-x86_64               randconfig-f001-20200324
-x86_64               randconfig-f002-20200324
-x86_64               randconfig-f003-20200324
-i386                 randconfig-f001-20200324
-i386                 randconfig-f002-20200324
-i386                 randconfig-f003-20200324
-x86_64               randconfig-g001-20200324
-x86_64               randconfig-g002-20200324
-x86_64               randconfig-g003-20200324
-i386                 randconfig-g001-20200324
-i386                 randconfig-g002-20200324
-i386                 randconfig-g003-20200324
-x86_64               randconfig-g001-20200325
-x86_64               randconfig-g002-20200325
-x86_64               randconfig-g003-20200325
-i386                 randconfig-g001-20200325
-i386                 randconfig-g002-20200325
-i386                 randconfig-g003-20200325
-x86_64               randconfig-h001-20200324
-x86_64               randconfig-h002-20200324
-x86_64               randconfig-h003-20200324
-i386                 randconfig-h001-20200324
-i386                 randconfig-h002-20200324
-i386                 randconfig-h003-20200324
-arc                  randconfig-a001-20200324
-arm                  randconfig-a001-20200324
-arm64                randconfig-a001-20200324
-ia64                 randconfig-a001-20200324
-powerpc              randconfig-a001-20200324
-sparc                randconfig-a001-20200324
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-riscv                            allmodconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-um                           x86_64_defconfig
-um                                  defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+Caused by commit
 
+  c5fca485320e ("Input: goodix - add support for controlling the IRQ pin th=
+rough ACPI methods")
+
+I have applied the following patch for today:
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 25 Mar 2020 18:04:08 +1100
+Subject: [PATCH] Input: goodix - mark as BROKEN for noe
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/input/touchscreen/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/input/touchscreen/Kconfig b/drivers/input/touchscreen/=
+Kconfig
+index c071f7c407b6..98788fb83917 100644
+--- a/drivers/input/touchscreen/Kconfig
++++ b/drivers/input/touchscreen/Kconfig
+@@ -380,6 +380,7 @@ config TOUCHSCREEN_GOODIX
+ 	tristate "Goodix I2C touchscreen"
+ 	depends on I2C
+ 	depends on GPIOLIB || COMPILE_TEST
++	depends on BROKEN
+ 	help
+ 	  Say Y here if you have the Goodix touchscreen (such as one
+ 	  installed in Onda v975w tablets) connected to your
+--=20
+2.25.0
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/aJzUAUv/SLTtPvEts2RhgcO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl57BTAACgkQAVBC80lX
+0GzbJwf9FPn8YZhkFcYdLw5yhxs9g2LGyHBBLUWTu67CCNr1ZO3EIHKzqoo2bUXe
+iISGKB4VY69zuRdXZncTKky4A+HS89i/rdAjtb8Qs5XCzcQXTDaIXQLJNWbdYsUL
+XSG7OY/gXDUKU2DcO7nc8puiPpoYxTn7jGtkgLCkL+rCFQhVaPtgWgwFOslf53G5
+12/lzC8XrR8tcpiBek9l0RkYHIPzvFSUAluCQzgPlsBsIzbnaVdEokrAk2HE2lhU
+F4rUyqKPy6ojWIBAoUHcTbvjmEWykl7UueWW681xI9+ZoNrAQxQWJgFYAyDU8yDt
+BIMn0cv4IAkxCHGZtF0xHg1lMwVDwg==
+=ZLkq
+-----END PGP SIGNATURE-----
+
+--Sig_/aJzUAUv/SLTtPvEts2RhgcO--
