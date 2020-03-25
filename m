@@ -2,104 +2,169 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E08E9C54FD0
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD10C54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB1BD2074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36692074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 14:53:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Vq2x/FtK"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="yQJWcnOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCYOtn (ORCPT
+        id S1727488AbgCYOxH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 10:49:43 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:34523 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727123AbgCYOtn (ORCPT
+        Wed, 25 Mar 2020 10:53:07 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44488 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727006AbgCYOxH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 10:49:43 -0400
-Received: by mail-pj1-f66.google.com with SMTP id q16so2348919pje.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 07:49:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XaoMEMejIpMESAc9WqR2GhKqL0OQjsDRcjnTUf3tMEU=;
-        b=Vq2x/FtK+b9c3oq56Ike2Db5P6DEsGVOcUUKgyP+GHz434GzReIN2kgefyNw323oln
-         gEOwym2ejfMVV0z9WW53ltBChF9b42YciEy+RTto6pk4bJSkBfdTZntslttgOV79WAn4
-         phzJGBtAkyesDelSw/CmbodkA/VJ9nLJoREr88utYFaEtFQwhyqJXch7vXa9fJiJcMzh
-         3t9QT7wHOSvQt5jeb2uq/RH/w2hTvHEbFvYs+3hbYntd5s/VsVJl95HMXf7p7CwN8z7I
-         ZlD6Be0pN4pgT3z30DBD7Iz7pw9aIth6Fz2uV27vzPXZnCvPxph/3PT8svIj3M9NNln/
-         A50w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XaoMEMejIpMESAc9WqR2GhKqL0OQjsDRcjnTUf3tMEU=;
-        b=RdY1sWFaZuyAZDWnoTPLWHMQ5fLDJ5SxuBh7jS9o46FDJQgAUe70eymx9h07nMfdp2
-         oh6CcX2QViUmjZGB+f5NOuV06OL1St/k3M8nMZ0vou71voGi/K6RN+WZ7Ci9hcDypuLt
-         N7TCyP3jOhemWms2HJhJuz/hr17D9JjrKIiiC2cTJwupj+vX7BSwLXhKMAjitiVSg1g9
-         U7MTmYRoQnBnqxNue2ZzNUyJLDntZwAC+fkW5sQP/ZnuL1v+6NXZhnBwbn8KkCMKUZOk
-         8oBI7EPvRj7r5YN2CLYqJFxefLFq+ptTgkCLXjFtLfqx8LwDHO4qPn0/VrlQZ7EMgCmK
-         ByFw==
-X-Gm-Message-State: ANhLgQ0kIx90HCTWvmzkxhyoKpNfaKcZ8k+dstEQ+z6U7dDmJsBJdDu/
-        kD0CMVxdaHSejN0xSdQVqBeipQ==
-X-Google-Smtp-Source: ADFU+vtAJhJaAlT8lvsDcE+zhPZE/r4CdTmaK8ibgJdiL7XXlGU4pvlo03OdxzU01Pwam6evPWdUHw==
-X-Received: by 2002:a17:90b:4d07:: with SMTP id mw7mr4246463pjb.103.1585147780821;
-        Wed, 25 Mar 2020 07:49:40 -0700 (PDT)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id i11sm4668038pje.30.2020.03.25.07.49.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 07:49:40 -0700 (PDT)
-Subject: Re: [PATCH v4 0/3] block/diskstats: more accurate io_ticks and
- optimization
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>
-References: <158514148436.7009.1234367408038809210.stgit@buzz>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <0d8e3459-6d67-72ae-c1df-5335d2a49bf7@kernel.dk>
-Date:   Wed, 25 Mar 2020 08:49:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <158514148436.7009.1234367408038809210.stgit@buzz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 25 Mar 2020 10:53:07 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PEnCVY123452;
+        Wed, 25 Mar 2020 14:52:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=zAbyJ2Adl64oNbkxQzSsrnmxkJw2yY8FglQ1E9FwStQ=;
+ b=yQJWcnOfku9uKxYBkOXUpDtesOWtiEBYp+1Hn3ZsnCMfcihU0S3HrgOE9CJ2R2xHfmMc
+ tr3u0Ao+VmlsOjX8PR2UBoVXQJsO6uej3N8QdvLA9O7Rtozbcor1SJ6LaodjwvnICNmm
+ R7yuxqbigT1spwuEPU8c7yv8mvNZm/mGB4y9thRh7WIVVDUOINh/TUPUov2whNxRGg2r
+ +dOv+2swst5qtmqNcs8a4Zc3UHhkXKIWogzCLc4nvBZSqUgjkZLwgM1/gtDwtMjg3H/W
+ ir0ECcbuUvPjrr1+xcIVylcLAHSQovB2JGmxHZGNSBVA+mJjW2vPsX8ylAtFGU7aQjPP 6w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2ywabra6g4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 14:52:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PEnjRm022210;
+        Wed, 25 Mar 2020 14:52:50 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 3003ghv4qe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Mar 2020 14:52:50 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02PEqkf5008920;
+        Wed, 25 Mar 2020 14:52:46 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 25 Mar 2020 07:52:46 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
+Date:   Wed, 25 Mar 2020 10:52:44 -0400
+Cc:     trond.myklebust@hammerspace.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Bruce Fields <bfields@fieldses.org>, davem@davemloft.net,
+        kuba@kernel.org, gnb@sgi.com, Neil Brown <neilb@suse.de>,
+        Tom Tucker <tom@opengridcomputing.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
+References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9570 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ phishscore=0 adultscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003250122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
+ lowpriorityscore=0 malwarescore=0 phishscore=0 priorityscore=1501
+ clxscore=1011 adultscore=0 mlxscore=0 mlxlogscore=999 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003250122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 7:07 AM, Konstantin Khlebnikov wrote:
-> Simplified estimation for io_ticks introduced in patch
-> https://lore.kernel.org/linux-block/20181206164122.2166-5-snitzer@redhat.com/
-> could be very inaccurate for request longer than jiffy (i.e. any HDD)
-> 
-> There is at least one another report about this:
-> https://lore.kernel.org/linux-block/20200324031942.GA3060@ming.t460p/
-> See detail in comment for first patch.
-> 
-> v1: https://lore.kernel.org/lkml/155413438394.3201.15211440151043943989.stgit@buzz/
-> v2: https://lore.kernel.org/lkml/158314549775.1788.6529015932237292177.stgit@buzz/
-> v3: https://lore.kernel.org/lkml/158503038812.1955.7827988255138056389.stgit@buzz/
->  * update documentation
->  * rebase to current linux-next
->  * fix compilation for CONFIG_SMP=n
-> v4:
->  * rebase to for-5.7/block
->  * make part_stat_read_all static in block/genhd.c
+Hi Christophe,
 
-Applied for 5.7, thanks.
 
--- 
-Jens Axboe
+> On Mar 25, 2020, at 3:04 AM, Christophe JAILLET =
+<christophe.jaillet@wanadoo.fr> wrote:
+>=20
+> Using 'snprintf' is safer than 'sprintf' because it can avoid a buffer
+> overflow.
+
+That's true as a general statement, but how likely is such an
+overflow to occur here?
+
+
+> The return value can also be used to avoid a strlen a call.
+
+That's also true of sprintf, isn't it?
+
+
+> Finally, we know where we need to copy and the length to copy, so, we
+> can save a few cycles by rearraging the code and using a memcpy =
+instead of
+> a strcat.
+
+I would be OK with squashing these two patches together. I don't
+see the need to keep the two changes separated.
+
+
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+> This patch should have no functionnal change.
+> We could go further, use scnprintf and write directly in the =
+destination
+> buffer. However, this could lead to a truncated last line.
+
+That's exactly what this function is trying to avoid. As part of any
+change in this area, it would be good to replace the current block
+comment before this function with a Doxygen-format comment that
+documents that goal.
+
+
+> ---
+> net/sunrpc/svc_xprt.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index df39e7b8b06c..6df861650040 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -118,12 +118,12 @@ int svc_print_xprts(char *buf, int maxlen)
+> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+> 		int slen;
+>=20
+> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
+xcl->xcl_max_payload);
+> -		slen =3D strlen(tmpstr);
+> -		if (len + slen >=3D maxlen)
+> +		slen =3D snprintf(tmpstr, sizeof(tmpstr), "%s %d\n",
+> +				xcl->xcl_name, xcl->xcl_max_payload);
+> +		if (slen >=3D sizeof(tmpstr) || len + slen >=3D maxlen)
+> 			break;
+> +		memcpy(buf + len, tmpstr, slen + 1);
+> 		len +=3D slen;
+> -		strcat(buf, tmpstr);
+
+IMO replacing the strcat makes the code harder to read, and this
+is certainly not a performance path. Can you drop that part of the
+patch?
+
+
+> 	}
+> 	spin_unlock(&svc_xprt_class_lock);
+>=20
+> --=20
+> 2.20.1
+>=20
+
+--
+Chuck Lever
+
+
 
