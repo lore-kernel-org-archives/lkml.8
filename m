@@ -2,615 +2,131 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD5B1C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:44:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA489C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 876582074D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:44:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9060B2074D
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 19:45:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="p+gm6vFr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BdyV+Mrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgCYTod (ORCPT
+        id S1727456AbgCYTpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 15:44:33 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50972 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727456AbgCYTn5 (ORCPT
+        Wed, 25 Mar 2020 15:45:23 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35265 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727259AbgCYTpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 15:43:57 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PJePZI126984;
-        Wed, 25 Mar 2020 19:43:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=zBYFId2+QJ57GIYhzHe31Ky7FLz/H/9WDbl1SPXp6IY=;
- b=p+gm6vFrC+peJVJRL7ayuv5AbakKiRs9mfV3hiqHQWn3jru8hKNFEGgLKnB4YAFBjKVP
- dR9I4q1Ox4EvxL6WP7firkTeiOjcMX7UxG+FGZlHcQJHqllLhkhCCCwm7ZR+/PngTx+2
- GYbGBG2JS9f6EhDZ6DtWfz0KaLsqLcfrl6c+km8IJJqczoKM+IXNe1my8CXfG3niIN4E
- NKvI4yIyXD9CgzOckf1GckcXzbnaWqByCZ1nSwjgiPl6OzlRwnKQG5dRgWjTK0fWcEV1
- pre0TNdqhx0oDPFG5pE3ENXdjjkeQc1ZEx/mjZMXJYjbGkp5N3S9yXBVDth+JqWRRT9j XA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 3005kvasxy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 19:43:28 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02PJgW7X188364;
-        Wed, 25 Mar 2020 19:43:28 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yxw4s3pb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 25 Mar 2020 19:43:27 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02PJhQ0n012182;
-        Wed, 25 Mar 2020 19:43:26 GMT
-Received: from pneuma.us.oracle.com (/10.39.203.246)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 25 Mar 2020 12:43:26 -0700
-From:   Ross Philipson <ross.philipson@oracle.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     ross.philipson@oracle.com, dpsmith@apertussolutions.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        trenchboot-devel@googlegroups.com
-Subject: [RFC PATCH 02/12] x86: Secure Launch main header file
-Date:   Wed, 25 Mar 2020 15:43:07 -0400
-Message-Id: <20200325194317.526492-3-ross.philipson@oracle.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200325194317.526492-1-ross.philipson@oracle.com>
-References: <20200325194317.526492-1-ross.philipson@oracle.com>
+        Wed, 25 Mar 2020 15:45:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 7so1669329pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 12:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=fT51JITI/R6tUXu2+U8t7/7SudwFVF/4mYDYH5hINGs=;
+        b=BdyV+MrhBAqfFueYJW3JN6gP4VkHwpfFCKps/8+JC/+CUuSbVCQh/yiG7tsINMMa30
+         A1YUWNufqpwqw7N6EIlhYPb8riEVPEFzWYraVf5uQhPfPdczVePmDRD48CWEkJbzd6C0
+         bJ3/5K6xLTR7HEmYC+tLDWxPoz/R1WsK+C0mOSg6P7/2SHM2HSFscrOE6vgVeU6rf8Ke
+         dkveg/Uc2kIbL4DvDWZDsokcio8MUTcUQj9IvQVBy8iuSz/oubfCwpP+129xhhE7ojXb
+         3fRDQTeNTUnAdu0aNmpy2inrTlOKqfhKsYh0Gs5Tbm/jao77Z+MnqLKrJfxMqWmuflFj
+         3hvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=fT51JITI/R6tUXu2+U8t7/7SudwFVF/4mYDYH5hINGs=;
+        b=C36WUww8BiPvMDG2lJkGcw5wwVMt/HUD2R5H5bTufuAmy79ofMxg62bH5ngT+Fb7VJ
+         hcEp/QLdHk7iv1sZsH2H1zTAqhNsN9T0HZPWst8GM6Bx0iO1K7Ew9xSlXTG7swNS1G9o
+         82OtFaJg9HYdEAtfSxXjY2KOD6vzFojwnjRS0+IIbOeJfpxoCYcUfy9+/jqDz09v50zy
+         NEthLEV2LstU+g1wtCBEiMo0P6uBbNbVoc1fhPpp7mGnvn29gOpTaKsb+WGpoSQE7SPj
+         wPGE6MWXYy/i2ROts04JJeApkMLGrei7yZ3VpRoc7iI/+TCpJdi89vLwltwv08bpNJ2B
+         ShcA==
+X-Gm-Message-State: ANhLgQ1FmdYpPg+TP1xQrTOuk8ghRQjm7kZQHf0poE4Fuln799zVHVL4
+        P/j+OcfwlBtZacnqsBHSPKTAhg==
+X-Google-Smtp-Source: ADFU+vthJvbagwjWYQ9rj0cIytrpK3pwQlicfE4ifFd9KcJSlBRDD+au9x66fUUppHlr/vOP+1o03A==
+X-Received: by 2002:a63:b22:: with SMTP id 34mr4593624pgl.78.1585165520542;
+        Wed, 25 Mar 2020 12:45:20 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id m29sm8401249pgl.35.2020.03.25.12.45.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 12:45:19 -0700 (PDT)
+Date:   Wed, 25 Mar 2020 12:45:18 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Baoquan He <bhe@redhat.com>
+cc:     Michal Hocko <mhocko@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        iamjoonsoo.kim@lge.com, hannes@cmpxchg.org, vbabka@suse.cz,
+        mgorman@techsingularity.net
+Subject: Re: [PATCH 4/5] mm/vmstat.c: move the per-node stats to the front
+ of /proc/zoneinfo
+In-Reply-To: <20200325142315.GC9942@MiWiFi-R3L-srv>
+Message-ID: <alpine.DEB.2.21.2003251242060.51844@chino.kir.corp.google.com>
+References: <20200324142229.12028-1-bhe@redhat.com> <20200324142229.12028-5-bhe@redhat.com> <alpine.DEB.2.21.2003241220360.34058@chino.kir.corp.google.com> <20200325055331.GB9942@MiWiFi-R3L-srv> <20200325085537.GZ19542@dhcp22.suse.cz>
+ <20200325142315.GC9942@MiWiFi-R3L-srv>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=y
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003250157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
- suspectscore=0 impostorscore=0 spamscore=0 adultscore=0 priorityscore=1501
- mlxlogscore=999 lowpriorityscore=0 mlxscore=0 clxscore=1011
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003250156
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce the main Secure Launch header file used in the early SL stub
-and the early setup code.
+On Wed, 25 Mar 2020, Baoquan He wrote:
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
----
- include/linux/slaunch.h | 513 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 513 insertions(+)
- create mode 100644 include/linux/slaunch.h
+> > Even this can break existing parsers. Fixing that up is likely not hard
+> > and existing parsers would be mostly debugging hacks here and there but
+> > I do miss any actual justification except for you considering it more
+> > sensible. I do not remember this would be a common pain point for people
+> > parsing this file. If anything the overal structure of the file makes it
+> > hard to parse and your patches do not really address that. We are likely
+> > too late to make the output much more sensible TBH.
+> > 
+> > That being said, I haven't looked more closely on your patches because I
+> > do not have spare cycles for that. Your justification for touching the
+> > code which seems to be working relatively well is quite weak IMHO, yet
+> > it adds a non zero risk for breaking existing parsers.
+> 
+> I would take the saying of non zero risk for breaking existing parsers.
+> When considering this change, I thought about the possible risk. However,
+> found out the per-node stats was added in 2016 which is not so late, and
+> assume nobody will rely on the order of per-node stats embeded into a
+> zone. But I have to admit any concern or worry of risk is worth being
+> considerred carefully since /proc/zoneinfo is a classic interface.
+> 
 
-diff --git a/include/linux/slaunch.h b/include/linux/slaunch.h
-new file mode 100644
-index 000000000000..8f090dc38984
---- /dev/null
-+++ b/include/linux/slaunch.h
-@@ -0,0 +1,513 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_SLAUNCH_H
-+#define _LINUX_SLAUNCH_H
-+
-+/*
-+ * Secure Launch Defined State Flags
-+ */
-+#define SL_FLAG_ACTIVE		0x00000001
-+#define SL_FLAG_ARCH_SKINIT	0x00000002
-+#define SL_FLAG_ARCH_TXT	0x00000004
-+
-+#ifdef CONFIG_SECURE_LAUNCH
-+
-+/*
-+ * Secure Launch main definitions file.
-+ *
-+ * Copyright (c) 2019 Oracle and/or its affiliates. All rights reserved.
-+ */
-+
-+#define __SL32_CS	0x0008
-+#define __SL32_DS	0x0010
-+
-+#define SL_CPU_AMD	1
-+#define SL_CPU_INTEL	2
-+
-+#define INTEL_CPUID_MFGID_EBX	0x756e6547 /* Genu */
-+#define INTEL_CPUID_MFGID_EDX	0x49656e69 /* ineI */
-+#define INTEL_CPUID_MFGID_ECX	0x6c65746e /* ntel */
-+
-+#define AMD_CPUID_MFGID_EBX	0x68747541 /* Auth */
-+#define AMD_CPUID_MFGID_EDX	0x69746e65 /* enti */
-+#define AMD_CPUID_MFGID_ECX	0x444d4163 /* cAMD */
-+
-+/*
-+ * Intel Safer Mode Extensions (SMX)
-+ *
-+ * Intel SMX provides a programming interface to establish a Measured Launched
-+ * Environment (MLE). The measurement and protection mechanisms supported by the
-+ * capabilities of an Intel Trusted Execution Technology (TXT) platform. SMX is
-+ * the processor’s programming interface in an Intel TXT platform.
-+ *
-+ * See Intel SDM Volume 2 - 6.1 "Safer Mode Extensions Reference"
-+ */
-+
-+/*
-+ * SMX GETSEC Leaf Functions
-+ */
-+#define SMX_X86_GETSEC_SEXIT	5
-+#define SMX_X86_GETSEC_SMCTRL	7
-+#define SMX_X86_GETSEC_WAKEUP	8
-+
-+/*
-+ * Intel Trusted Execution Technology MMIO Registers Banks
-+ */
-+#define TXT_PUB_CONFIG_REGS_BASE	0xfed30000
-+#define TXT_PRIV_CONFIG_REGS_BASE	0xfed20000
-+#define TXT_NR_CONFIG_PAGES     ((TXT_PUB_CONFIG_REGS_BASE - \
-+				  TXT_PRIV_CONFIG_REGS_BASE) >> PAGE_SHIFT)
-+
-+/*
-+ * Intel Trusted Execution Technology (TXT) Registers
-+ */
-+#define TXT_CR_STS			0x0000
-+#define TXT_CR_ESTS			0x0008
-+#define TXT_CR_ERRORCODE		0x0030
-+#define TXT_CR_CMD_RESET		0x0038
-+#define TXT_CR_CMD_CLOSE_PRIVATE	0x0048
-+#define TXT_CR_DIDVID			0x0110
-+#define TXT_CR_CMD_UNLOCK_MEM_CONFIG	0x0218
-+#define TXT_CR_SINIT_BASE		0x0270
-+#define TXT_CR_SINIT_SIZE		0x0278
-+#define TXT_CR_MLE_JOIN			0x0290
-+#define TXT_CR_HEAP_BASE		0x0300
-+#define TXT_CR_HEAP_SIZE		0x0308
-+#define TXT_CR_CMD_OPEN_LOCALITY1	0x0380
-+#define TXT_CR_CMD_CLOSE_LOCALITY1	0x0388
-+#define TXT_CR_CMD_OPEN_LOCALITY2	0x0390
-+#define TXT_CR_CMD_CLOSE_LOCALITY2	0x0398
-+#define TXT_CR_CMD_SECRETS		0x08e0
-+#define TXT_CR_CMD_NO_SECRETS		0x08e8
-+#define TXT_CR_E2STS			0x08f0
-+
-+/* TXTCR_STS status bits */
-+#define TXT_SENTER_DONE_STS		(1<<0)
-+#define TXT_SEXIT_DONE_STS		(1<<1)
-+
-+/*
-+ * SINIT/MLE Capabilities Field Bit Definitions
-+ */
-+#define TXT_SINIT_MLE_CAP_WAKE_GETSEC	0
-+#define TXT_SINIT_MLE_CAP_WAKE_MONITOR	1
-+
-+/*
-+ * OS/MLE Secure Launch Specific Definitions
-+ */
-+#define TXT_MAX_EVENT_LOG_SIZE		(5*4*1024)   /* 4k*5 */
-+#define TXT_MAX_VARIABLE_MTRRS		32
-+#define TXT_OS_MLE_STRUCT_VERSION	1
-+
-+/*
-+ * TXT Heap Table Enumeration
-+ */
-+#define TXT_BIOS_DATA_TABLE		1
-+#define TXT_OS_MLE_DATA_TABLE		2
-+#define TXT_OS_SINIT_DATA_TABLE		3
-+#define TXT_SINIT_MLE_DATA_TABLE	4
-+
-+/*
-+ * Secure Launch Defined Error Codes used in MLE-initiated TXT resets.
-+ *
-+ * TXT Specification
-+ * Appendix I ACM Error Codes
-+ */
-+#define SL_ERROR_GENERIC		0xc0008001
-+#define SL_ERROR_TPM_INIT		0xc0008002
-+#define SL_ERROR_TPM_INVALID_LOG20	0xc0008003
-+#define SL_ERROR_TPM_LOGGING_FAILED	0xc0008004
-+#define SL_ERROR_TPM_GET_LOC		0xc0008005
-+#define SL_ERROR_TPM_EXTEND		0xc0008006
-+#define SL_ERROR_MTRR_INV_VCNT		0xc0008007
-+#define SL_ERROR_MTRR_INV_DEF_TYPE	0xc0008008
-+#define SL_ERROR_MTRR_INV_BASE		0xc0008009
-+#define SL_ERROR_MTRR_INV_MASK		0xc000800a
-+#define SL_ERROR_MSR_INV_MISC_EN	0xc000800b
-+#define SL_ERROR_INV_AP_INTERRUPT	0xc000800c
-+#define SL_ERROR_RESERVE_AP_WAKE	0xc000800d
-+#define SL_ERROR_HEAP_WALK		0xc000800e
-+#define SL_ERROR_HEAP_MAP		0xc000800f
-+#define SL_ERROR_HEAP_MDR_VALS		0xc0008010
-+#define SL_ERROR_HEAP_INVALID_DMAR	0xc0008011
-+#define SL_ERROR_HEAP_DMAR_SIZE		0xc0008012
-+#define SL_ERROR_HEAP_DMAR_MAP		0xc0008013
-+#define SL_ERROR_HI_PMR_BASE		0xc0008014
-+#define SL_ERROR_HI_PMR_SIZE		0xc0008015
-+#define SL_ERROR_LO_PMR_BASE		0xc0008016
-+#define SL_ERROR_LO_PMR_MLE		0xc0008017
-+#define SL_ERROR_HEAP_ZERO_OFFSET	0xc0008018
-+
-+/*
-+ * Secure Launch Defined Limits
-+ */
-+#define TXT_MAX_CPUS		512
-+#define TXT_BOOT_STACK_SIZE	24
-+
-+/*
-+ * Secure Launch event log entry type. The TXT specification defines the
-+ * base event value as 0x400 for DRTM values.
-+ */
-+#define TXT_EVTYPE_BASE		0x400
-+#define TXT_EVTYPE_SLAUNCH	(TXT_EVTYPE_BASE + 0x102)
-+
-+/*
-+ * Measured Launch PCRs
-+ */
-+#define SL_IMAGE_PCR17		17
-+#define SL_CONFIG_PCR18		18
-+
-+/*
-+ * MLE scratch area offsets
-+ */
-+#define SL_SCRATCH_AP_EBP		0
-+#define SL_SCRATCH_AP_JMP_OFFSET	4
-+
-+#ifndef __ASSEMBLY__
-+
-+/*
-+ * Secure Launch AP wakeup information fetched in SMP boot code.
-+ */
-+struct sl_ap_wake_info {
-+	u64 ap_wake_block;
-+	u32 ap_jmp_offset;
-+};
-+
-+/*
-+ * TXT heap extended data elements.
-+ */
-+struct txt_heap_ext_data_element {
-+	u32 type;
-+	u32 size;
-+	/* Data */
-+} __packed;
-+
-+#define TXT_HEAP_EXTDATA_TYPE_END			0
-+
-+struct txt_heap_end_element {
-+	u32 type;
-+	u32 size;
-+} __packed;
-+
-+#define TXT_HEAP_EXTDATA_TYPE_TPM_EVENT_LOG_PTR		5
-+
-+struct txt_heap_event_log_element {
-+	u64 event_log_phys_addr;
-+} __packed;
-+
-+#define TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1	8
-+
-+struct txt_heap_event_log_pointer2_1_element {
-+	u64 phys_addr;
-+	u32 allocated_event_container_size;
-+	u32 first_record_offset;
-+	u32 next_record_offset;
-+} __packed;
-+
-+/*
-+ * Secure Launch defined MTRR saving structures
-+ */
-+struct txt_mtrr_pair {
-+	u64 mtrr_physbase;
-+	u64 mtrr_physmask;
-+} __packed;
-+
-+struct txt_mtrr_state {
-+	u64 default_mem_type;
-+	u64 mtrr_vcnt;
-+	struct txt_mtrr_pair mtrr_pair[TXT_MAX_VARIABLE_MTRRS];
-+} __packed;
-+
-+/*
-+ * Secure Launch defined OS/MLE TXT Heap table
-+ */
-+struct txt_os_mle_data {
-+	u32 version;
-+	u32 zero_page_addr;
-+	u8 msb_key_hash[20];
-+	u64 saved_misc_enable_msr;
-+	struct txt_mtrr_state saved_bsp_mtrrs;
-+	u64 ap_wake_block;
-+	/* These two fields should always be last */
-+	u64 mle_scratch;
-+	u8 event_log_buffer[TXT_MAX_EVENT_LOG_SIZE];
-+} __packed;
-+
-+/*
-+ * TXT specification defined BIOS data TXT Heap table
-+ */
-+struct txt_bios_data {
-+	u32 version; /* Currently 5 for TPM 1.2 and 6 for TPM 2.0 */
-+	u32 bios_sinit_size;
-+	u64 reserved1;
-+	u64 reserved2;
-+	u32 num_logical_procs;
-+	/* Versions >= 5 with updates in version 6 */
-+	u32 sinit_flags;
-+	u32 mle_flags;
-+	/* Versions >= 4 */
-+	/* Ext Data Elements */
-+} __packed;
-+
-+/*
-+ * TXT specification defined OS/SINIT TXT Heap table
-+ */
-+struct txt_os_sinit_data {
-+	u32 version; /* Currently 6 for TPM 1.2 and 7 for TPM 2.0 */
-+	u32 flags;
-+	u64 mle_ptab;
-+	u64 mle_size;
-+	u64 mle_hdr_base;
-+	u64 vtd_pmr_lo_base;
-+	u64 vtd_pmr_lo_size;
-+	u64 vtd_pmr_hi_base;
-+	u64 vtd_pmr_hi_size;
-+	u64 lcp_po_base;
-+	u64 lcp_po_size;
-+	u32 capabilities;
-+	/* Version = 5 */
-+	u64 efi_rsdt_ptr;
-+	/* Versions >= 6 */
-+	/* Ext Data Elements */
-+} __packed;
-+
-+/*
-+ * TXT specification defined SINIT/MLE TXT Heap table
-+ */
-+struct txt_sinit_mle_data {
-+	u32 version;             /* Current values are 6 through 9 */
-+	/* Versions <= 8 */
-+	u8 bios_acm_id[20];
-+	u32 edx_senter_flags;
-+	u64 mseg_valid;
-+	u8 sinit_hash[20];
-+	u8 mle_hash[20];
-+	u8 stm_hash[20];
-+	u8 lcp_policy_hash[20];
-+	u32 lcp_policy_control;
-+	/* Versions >= 7 */
-+	u32 rlp_wakeup_addr;
-+	u32 reserved;
-+	u32 num_of_sinit_mdrs;
-+	u32 sinit_mdrs_table_offset;
-+	u32 sinit_vtd_dmar_table_size;
-+	u32 sinit_vtd_dmar_table_offset;
-+	/* Versions >= 8 */
-+	u32 processor_scrtm_status;
-+	/* Versions >= 9 */
-+	/* Ext Data Elements */
-+} __packed;
-+
-+/*
-+ * TXT data reporting structure for memory types
-+ */
-+struct txt_sinit_memory_descriptor_record {
-+	u64 address;
-+	u64 length;
-+	u8 type;
-+	u8 reserved[7];
-+} __packed;
-+
-+/*
-+ * TXT data structure used by a responsive local processor (RLP) to start
-+ * execution in response to a GETSEC[WAKEUP].
-+ */
-+struct smx_rlp_mle_join {
-+	u32 rlp_gdt_limit;
-+	u32 rlp_gdt_base;
-+	u32 rlp_seg_sel;     /* cs (ds, es, ss are seg_sel+8) */
-+	u32 rlp_entry_point; /* phys addr */
-+} __packed;
-+
-+/*
-+ * TPM event log structures defined in both the TXT specification and
-+ * the TCG documentation.
-+ */
-+#define TPM12_EVTLOG_SIGNATURE "TXT Event Container"
-+
-+struct tpm12_event_log_header {
-+	char signature[20];
-+	char reserved[12];
-+	u8 container_ver_major;
-+	u8 container_ver_minor;
-+	u8 pcr_event_ver_major;
-+	u8 pcr_event_ver_minor;
-+	u32 container_size;
-+	u32 pcr_events_offset;
-+	u32 next_event_offset;
-+	/* PCREvents[] */
-+} __packed;
-+
-+struct tpm12_pcr_event {
-+	u32 pcr_index;
-+	u32 type;
-+	u8 digest[20];
-+	u32 size;
-+	/* Data[] */
-+} __packed;
-+
-+#define TPM20_EVTLOG_SIGNATURE "Spec ID Event03"
-+
-+struct tpm20_ha {
-+	u16 algorithm_id;
-+	/* digest[AlgorithmID_DIGEST_SIZE] */
-+} __packed;
-+
-+struct tpm20_digest_values {
-+	u32 count;
-+	/* TPMT_HA digests[count] */
-+} __packed;
-+
-+struct tpm20_pcr_event_head {
-+	u32 pcr_index;
-+	u32 event_type;
-+} __packed;
-+
-+/* Variable size array of hashes in the tpm20_digest_values structure */
-+
-+struct tpm20_pcr_event_tail {
-+	u32 event_size;
-+	/* Event[EventSize]; */
-+} __packed;
-+
-+#include <linux/io.h>
-+
-+/*
-+ * Functions to extract data from the Intel TXT Heap Memory
-+ */
-+static inline u64 txt_bios_data_size(void *heap)
-+{
-+	return *((u64 *)heap);
-+}
-+
-+static inline void *txt_bios_data_start(void *heap)
-+{
-+	return heap + sizeof(u64);
-+}
-+
-+static inline u64 txt_os_mle_data_size(void *heap)
-+{
-+	return *((u64 *)(heap + txt_bios_data_size(heap)));
-+}
-+
-+static inline void *txt_os_mle_data_start(void *heap)
-+{
-+	return heap + txt_bios_data_size(heap) + sizeof(u64);
-+}
-+
-+static inline u64 txt_os_sinit_data_size(void *heap)
-+{
-+	return *((u64 *)(heap + txt_bios_data_size(heap) +
-+			txt_os_mle_data_size(heap)));
-+}
-+
-+static inline void *txt_os_sinit_data_start(void *heap)
-+{
-+	return heap + txt_bios_data_size(heap) +
-+		txt_os_mle_data_size(heap) + sizeof(u64);
-+}
-+
-+static inline u64 txt_sinit_mle_data_size(void *heap)
-+{
-+	return *((u64 *)(heap + txt_bios_data_size(heap) +
-+			txt_os_mle_data_size(heap) +
-+			txt_os_sinit_data_size(heap)));
-+}
-+
-+static inline void *txt_sinit_mle_data_start(void *heap)
-+{
-+	return heap + txt_bios_data_size(heap) +
-+		txt_os_mle_data_size(heap) +
-+		txt_sinit_mle_data_size(heap) + sizeof(u64);
-+}
-+
-+/*
-+ * TPM event logging functions.
-+ */
-+static inline struct txt_heap_event_log_pointer2_1_element*
-+tpm20_find_log2_1_element(struct txt_os_sinit_data *os_sinit_data)
-+{
-+	struct txt_heap_ext_data_element *ext_elem;
-+
-+	/* The extended element array as at the end of this table */
-+	ext_elem = (struct txt_heap_ext_data_element *)
-+		((u8 *)os_sinit_data + sizeof(struct txt_os_sinit_data));
-+
-+	while (ext_elem->type != TXT_HEAP_EXTDATA_TYPE_END) {
-+		if (ext_elem->type ==
-+		    TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1) {
-+			return (struct txt_heap_event_log_pointer2_1_element *)
-+				((u8 *)ext_elem +
-+					sizeof(struct txt_heap_ext_data_element));
-+		}
-+		ext_elem =
-+			(struct txt_heap_ext_data_element *)
-+			((u8 *)ext_elem + ext_elem->size);
-+	}
-+
-+	return NULL;
-+}
-+
-+static inline int tpm12_log_event(void *evtlog_base,
-+				  u32 event_size, void *event)
-+{
-+	struct tpm12_event_log_header *evtlog =
-+		(struct tpm12_event_log_header *)evtlog_base;
-+
-+	if (memcmp(evtlog->signature, TPM12_EVTLOG_SIGNATURE,
-+		   sizeof(TPM12_EVTLOG_SIGNATURE)))
-+		return -EINVAL;
-+
-+	if (evtlog->next_event_offset + event_size > evtlog->container_size)
-+		return -E2BIG;
-+
-+	memcpy(evtlog_base + evtlog->next_event_offset, event, event_size);
-+	evtlog->next_event_offset += event_size;
-+
-+	return 0;
-+}
-+
-+static inline int tpm20_log_event(struct txt_heap_event_log_pointer2_1_element *elem,
-+				  void *evtlog_base,
-+				  u32 event_size, void *event)
-+{
-+	struct tpm12_pcr_event *header =
-+		(struct tpm12_pcr_event *)evtlog_base;
-+
-+	/* Has to be at least big enough for the signature */
-+	if (header->size < sizeof(TPM20_EVTLOG_SIGNATURE))
-+		return -EINVAL;
-+
-+	if (memcmp((u8 *)header + sizeof(struct tpm12_pcr_event),
-+		   TPM20_EVTLOG_SIGNATURE, sizeof(TPM20_EVTLOG_SIGNATURE)))
-+		return -EINVAL;
-+
-+	if (elem->next_record_offset + event_size >
-+	    elem->allocated_event_container_size)
-+		return -E2BIG;
-+
-+	memcpy(evtlog_base + elem->next_record_offset, event, event_size);
-+	elem->next_record_offset += event_size;
-+
-+	return 0;
-+}
-+
-+/*
-+ * External functions
-+ */
-+extern void slaunch_setup(void);
-+extern u32 slaunch_get_flags(void);
-+extern struct sl_ap_wake_info *slaunch_get_ap_wake_info(void);
-+extern struct acpi_table_header *slaunch_get_dmar_table(struct acpi_table_header *dmar);
-+extern void slaunch_sexit(void);
-+
-+#endif /* !__ASSEMBLY */
-+
-+#else
-+
-+#define slaunch_setup()			do { } while (0)
-+#define slaunch_get_flags()		0
-+#define slaunch_get_dmar_table(d)	(d)
-+#define slaunch_sexit()			do { } while (0)
-+
-+#endif /* !CONFIG_SECURE_LAUNCH */
-+
-+#endif /* _LINUX_SLAUNCH_H */
--- 
-2.25.1
+For context, we started parsing /proc/zoneinfo in initscripts to be able 
+to determine the order in which vm.lowmem_reserve_ratio needs to be set 
+and this required my kernel change from 2017:
 
+commit b2bd8598195f1b2a72130592125ac6b4218988a2
+Author: David Rientjes <rientjes@google.com>
+Date:   Wed May 3 14:52:59 2017 -0700
+
+    mm, vmstat: print non-populated zones in zoneinfo
+
+Otherwise, we found, it's much more difficult to determine how this array 
+should be structured.  So at least we parse this file very carefully, I'm 
+not sure how much others do, but it seems like an unnecessary risk for 
+little reward.  I'm happy to see it has been decided to drop this patch 
+and patch 5.
+
+> So, in view of objections from you and David, I would like to drop this
+> patch and patch 5. It's a small improvement, not worth taking any risk.
+> But if it goes back to this time of 2017, I would like to spend some
+> time to defend it :-)
+> 
+> commit e2ecc8a79ed49f7838b4fdf352c4c48cec9424ac
+> Author: Mel Gorman <mgorman@techsingularity.net>
+> Date:   Thu Jul 28 15:47:02 2016 -0700
+> 
+>     mm, vmstat: print node-based stats in zoneinfo file
+> 
+> 
+> 
