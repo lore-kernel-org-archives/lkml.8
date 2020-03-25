@@ -2,110 +2,114 @@ Return-Path: <SRS0=vy7l=5K=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42E46C54FD3
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B013CC54FCF
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20DE92077D
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="SLk1pebG"
+	by mail.kernel.org (Postfix) with ESMTP id 8AEB720777
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 17:35:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585157730;
+	bh=uoqoCTnzrI1QvRiPoGYOHLfI25++lyJvjrMQ4QB/UTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nbcCNU+jp56Mg0T7a8h1ibKzGeQaQo03VaYvQ7z6R9NbOHZ475QpJT/KsBVTr4evn
+	 rfKmjIWK8SZGaNWZHZNBf+d7TjEOgGcWLNqcoakDQe6k0SUKjQxYko7eATO3oi8T3+
+	 +X9hALZIkTCDFOq28En4U9Kr8WfXSMV4pIaKQQx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgCYReu (ORCPT
+        id S1727898AbgCYRf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 13:34:50 -0400
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:41287 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727253AbgCYRet (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 13:34:49 -0400
-Received: by mail-qv1-f66.google.com with SMTP id o7so1486855qvq.8
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 10:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Yi5HT0gIMU1vXoOcsaUkgeprWNpD7T8tR8cpKS9kJTk=;
-        b=SLk1pebGcLYeZ4z/jd6Fqh1mraqZbisWYOTgqwiA5nLWQUaeYs7xUhpQRw+6W11/Hu
-         MrORLS95iFFGSRc/yEb/ns1zlod6UnpB5l4z0azg2eiIpg3WKa/yDjVuLsPWkWpGeg52
-         tOlgKuoSPSayanlhLPewETKDhOLWvDFYt53WzVCNcwwMRtns6kZVip3OIAGlrBIBnfCt
-         2tM82vWYGCpWCv6X5zk8lZgG8TTGMVLjMDGZG8DuyFWnyz9Ot/3WgromPZxnGJ0YT/eL
-         BCX0epCrTOGn6RJFODaZQwBmD3tkMuWwOFnQwaxpJbqHb3RdwGYtwDT0DsX/MMgAUvVp
-         gJ1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Yi5HT0gIMU1vXoOcsaUkgeprWNpD7T8tR8cpKS9kJTk=;
-        b=ktTdoEv0txm3FOm6uSArkrAXBtGjP5AZxfpZvc6PsADQkP3NSmCzWb7Qb1+9EqDh8G
-         v+E4W2VFNSflNC6JrGgdkT7zlBVTMtHhjqE67URyqWdgqBqruGnhH5TKgw7UTiJ+cO6b
-         U5W/E2UptQpszoQo4G8VcRQui3XBgj/D3nWsys3/Kq/KTrftafyGrQnD25gHaqivgT1q
-         2/FfrKrQsL1CatT8vvAcUrbUcwjE7fbdZLfdtvY5OCrkFR6V0z7absABp+0OM6ApjmbQ
-         jb/YFeFZ67GatB8+dH717x1Ixq/DMINz2L1HP6RiNOpmDbt9WbBj2fc1fLBZROSo4H1k
-         mDlg==
-X-Gm-Message-State: ANhLgQ0Ky50qY/OvYyWOXnPTQ9KdxLFjh1JMppO5POP1Ua43eotg0hp9
-        BI165UCpu2Fm7qIowSfXLXlYBA==
-X-Google-Smtp-Source: ADFU+vvSTm3iJZG8SeK5DwIXubRWFkjx6qZHORcGN9/Uw+XHKMovA4wLWTp/xZfcBXIPrNG0XpH9HA==
-X-Received: by 2002:a05:6214:aa2:: with SMTP id ew2mr4279653qvb.123.1585157687498;
-        Wed, 25 Mar 2020 10:34:47 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u25sm11933305qkj.71.2020.03.25.10.34.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Mar 2020 10:34:46 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] ipv4: fix a RCU-list lock in fib_triestat_seq_show
-Date:   Wed, 25 Mar 2020 13:34:46 -0400
-Message-Id: <92C7474D-4592-44BF-B0ED-26253196511E@lca.pw>
-References: <5e2ed86a-23bc-d3e5-05ad-4e7ed147539c@gmail.com>
-Cc:     davem@davemloft.net, kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        kuba@kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <5e2ed86a-23bc-d3e5-05ad-4e7ed147539c@gmail.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-X-Mailer: iPhone Mail (17D50)
+        Wed, 25 Mar 2020 13:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727129AbgCYRf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 13:35:29 -0400
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC0CA20740;
+        Wed, 25 Mar 2020 17:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585157728;
+        bh=uoqoCTnzrI1QvRiPoGYOHLfI25++lyJvjrMQ4QB/UTQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cpFspdu5nq1sGD8h5Ph531tuDJOEzmeuHg2VBJLfG6Gsbd5Dz9ZH4tGJY1cdD2WnE
+         +tOmSNrA8X67i/nCyaICUtIf/e/beNuVl6SGS29e3o2LeXLuYWLBNB+zyyBqXSD5/k
+         f8cwagp8KdMs1YkI2vwTniIyWfMOLR3HxeRjtEV4=
+Date:   Wed, 25 Mar 2020 18:35:22 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [RESEND][PATCH v3 03/17] module: Properly propagate
+ MODULE_STATE_COMING failure
+Message-ID: <20200325173519.GA5415@linux-8ccs>
+References: <20200324135603.483964896@infradead.org>
+ <20200324142245.445253190@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200324142245.445253190@infradead.org>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
++++ Peter Zijlstra [24/03/20 14:56 +0100]:
+>Now that notifiers got unbroken; use the proper interface to handle
+>notifier errors and propagate them.
+>
+>There were already MODULE_STATE_COMING notifiers that failed; notably:
+>
+> - jump_label_module_notifier()
+> - tracepoint_module_notify()
+> - bpf_event_notify()
+>
+>By propagating this error, we fix those users.
+>
+>Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>Cc: jeyu@kernel.org
+>---
+> kernel/module.c |   10 +++++++---
+> 1 file changed, 7 insertions(+), 3 deletions(-)
+>
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -3751,9 +3751,13 @@ static int prepare_coming_module(struct
+> 	if (err)
+> 		return err;
+>
+>-	blocking_notifier_call_chain(&module_notify_list,
+>-				     MODULE_STATE_COMING, mod);
+>-	return 0;
+>+	err = blocking_notifier_call_chain_robust(&module_notify_list,
+>+			MODULE_STATE_COMING, MODULE_STATE_GOING, mod);
+>+	err = notifier_to_errno(err);
+>+	if (err)
+>+		klp_module_going(mod);
+>+
+>+	return err;
+> }
+>
+> static int unknown_module_param_cb(char *param, char *val, const char *modname,
+>
 
+This looks fine to me - klp_module_going() is only called after
+successful klp_module_coming(), and klp_module_going() is fine with
+mod->state still being MODULE_STATE_COMING here. Would be good to have
+livepatch folks double check. Which reminds me - Miroslav had pointed
+out in the past that if there is an error when calling the COMING
+notifiers, the GOING notifiers will be called while the mod->state is
+still MODULE_STATE_COMING. I've briefly looked through all the module
+notifiers and it looks like nobody is looking at mod->state directly
+at least.
 
-> On Mar 25, 2020, at 12:13 PM, Eric Dumazet <eric.dumazet@gmail.com> wrote:=
-
->=20
-> I would prefer :
->=20
-> diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-> index ff0c24371e3309b3068980f46d1ed743337d2a3e..4b98ffb27136d3b43f179d6b1b=
-42fe84586acc06 100644
-> --- a/net/ipv4/fib_trie.c
-> +++ b/net/ipv4/fib_trie.c
-> @@ -2581,6 +2581,7 @@ static int fib_triestat_seq_show(struct seq_file *se=
-q, void *v)
->                struct hlist_head *head =3D &net->ipv4.fib_table_hash[h];
->                struct fib_table *tb;
->=20
-> +               rcu_read_lock();
->                hlist_for_each_entry_rcu(tb, head, tb_hlist) {
->                        struct trie *t =3D (struct trie *) tb->tb_data;
->                        struct trie_stat stat;
-> @@ -2596,6 +2597,7 @@ static int fib_triestat_seq_show(struct seq_file *se=
-q, void *v)
->                        trie_show_usage(seq, t->stats);
-> #endif
->                }
-> +               rcu_read_unlock();
->        }
->=20
->        return 0;
-
-I have no strong opinion either way. My initial thought was to save 255 extr=
-a lock/unlock with a single lock/unlock, but I am not sure how time-consumin=
-g for each iteration of the outer loop could be. If it could take a bit too l=
-ong, it does make a lot of sense to reduce the critical section.=
+Acked-by: Jessica Yu <jeyu@kernel.org>
