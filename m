@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD162C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BEFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 951252073E
-	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57F62082E
+	for <linux-kernel@archiver.kernel.org>; Wed, 25 Mar 2020 22:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585173954;
-	bh=K5FXUgPFp2zVJwYRIWLrMG6m5759UHyUkE1YipOnLfk=;
+	s=default; t=1585173956;
+	bh=h1JIaMJ7tQpgNRXO467p+V4j+52rJvNdy3dnEJ2ewrs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxIGZrVdT3MV2YcpWQe625nlpylMcDgl3fggXDTZaX3mxoOP6Npt8EjQzyFEFksAb
-	 lTK6pxZ9+SXFfiaCjUjR5BdB9suIh7FdEnofatR9I+sJw7MGzpPVgoYUIniOOo9cXP
-	 ZpMI2G/kCpMTITVp6CUPe9TjVdh/iZGcwTx8M/xY=
+	b=MsyItodb05oy/zV5P0DgwYL6BCfCP3bKQ8IPDIeVyhYG3ANolGlYavK84fj7z835/
+	 gBFEai8MYg4CjxFNjwhcfgmen2hg7ve+IxdGiXXcbl8P7311N1DzQhcmhQWhiTnWyJ
+	 5YxWmqAZl1X+TGiIHqJKIINuITuHVUOPZnEWIqIo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCYWFx (ORCPT
+        id S1727682AbgCYWFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 18:05:53 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:44182 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727485AbgCYWFt (ORCPT
+        Wed, 25 Mar 2020 18:05:55 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:42329 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbgCYWFt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 25 Mar 2020 18:05:49 -0400
-Received: by mail-io1-f67.google.com with SMTP id v3so3947013iot.11;
-        Wed, 25 Mar 2020 15:05:49 -0700 (PDT)
+Received: by mail-il1-f196.google.com with SMTP id f16so3470280ilj.9;
+        Wed, 25 Mar 2020 15:05:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=AwF7FEOUbNvNk4mSehe5GSFcN0+uDrOJWlHbrUm2jl4=;
-        b=pxv7G0herYnThW09pyD7DYp4RI8JVvu7jYaN33KTOuLgkNv+3/nMj0yJ5veHQCt39N
-         oDt7O7mDwcObu8qZy6LIVkkkc98wzRAwclrDNQ0e1bqwWdaYKs6iJMb8tIhBXX+D9BeI
-         J2r2cmU5dIxAAU+eq3tlPrW3Y31VbwcF5MDwOUeZc4Th/RyWXQSSYlJYUajbxNOwoNIh
-         G4xolGeHUDw9cXUOZ0FQsV1XIhx4zXdwXsHEHKJv+yUPe3PTTkyCVZd7rM/jPw68Pq4X
-         9Urp2XjESJfCe7EHqB97Yfo+LysGH/euyVK9k1cGPiHcF9Ze2VZP+ShSkNaE5WOfhIlo
-         D4aQ==
-X-Gm-Message-State: ANhLgQ3QQ76rZ5PNb2Rue3g92sfGo/nu+Ag6kvksZtiOPKWlZXGBnviL
-        +mUCAeUwUoaJI40ikJuL5H2wBig=
-X-Google-Smtp-Source: ADFU+vsP1GIXWhv3Nn2746MnQvCz0PBygUKBaoaDtLTv4UJllArEZXEuLW2CGMWNrRni/irdN7azAg==
-X-Received: by 2002:a5e:8214:: with SMTP id l20mr5055871iom.54.1585173948584;
-        Wed, 25 Mar 2020 15:05:48 -0700 (PDT)
+        bh=7Ulr9pBC4SUbqUU5FsVEbaY1gpVe/0DQ9QLWI1PPgfQ=;
+        b=h8lmGFQZlK5QIMgUBSRohVsWI+SzJs+RRumzyzMs4lTHl9FL+n4P1U7I/z+M/2Cc46
+         xvnHGLo8n1XWvYmEZOuGa3lRxstQLgXiWfyYEiIEyLN4ybSNpLNAp9ALKqbJ5tedforT
+         ZprOTWErdxUVlI7kmKreDbdtCQA+fCofh4uloll27G7t7ma6DzTmmdX8V7UHOoClVBO1
+         YpC+Viz0nBDstmgAU8CaAD/XDDoEdajrfvnLm4AqehtzF+lcxYYv9UgMLuehwcGSJ4uF
+         x8Pj3UBuzXGAXtropwvHDHnNifpyyPfyIR3HEw8mbYRRNwIYe4gD9X1yBgYzQQql6daT
+         bn5w==
+X-Gm-Message-State: ANhLgQ0mIqnH4zuwPZrs3JINLpMitAtKylmVqXrGnayRlsNHJ34P+s0w
+        KYU5ujb1zUWGsePVJvfmoMsb9JU=
+X-Google-Smtp-Source: ADFU+vue8Vxmky7PF9etOIHQcfy9dQqZ6AbqyS9J6TatHClhkfnl2UGT86/bcc6UGlxsmE61Cop/rw==
+X-Received: by 2002:a92:6e11:: with SMTP id j17mr5689060ilc.249.1585173946547;
+        Wed, 25 Mar 2020 15:05:46 -0700 (PDT)
 Received: from xps15.herring.priv ([64.188.179.250])
-        by smtp.googlemail.com with ESMTPSA id v8sm102390ioh.40.2020.03.25.15.05.46
+        by smtp.googlemail.com with ESMTPSA id v8sm102390ioh.40.2020.03.25.15.05.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 15:05:48 -0700 (PDT)
+        Wed, 25 Mar 2020 15:05:45 -0700 (PDT)
 From:   Rob Herring <robh@kernel.org>
 To:     devicetree@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
@@ -81,9 +81,9 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org,
         linux-media@vger.kernel.org, linux-pm@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH 2/4] dt-bindings: sram: qcom: Clean-up 'ranges' and child node names
-Date:   Wed, 25 Mar 2020 16:05:39 -0600
-Message-Id: <20200325220542.19189-3-robh@kernel.org>
+Subject: [PATCH 1/4] dt-bindings: iio/accel: Drop duplicate adi,adxl345/6 from trivial-devices.yaml
+Date:   Wed, 25 Mar 2020 16:05:38 -0600
+Message-Id: <20200325220542.19189-2-robh@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200325220542.19189-1-robh@kernel.org>
 References: <20200325220542.19189-1-robh@kernel.org>
@@ -94,70 +94,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The regex for child nodes doesn't match the example. This wasn't flagged
-with 'additionalProperties: false' missing. The child node schema was also
-incorrect with 'ranges' property as it applies to child nodes and should
-be moved up to the parent node.
+The 'adi,adxl345' definition is a duplicate as there's a full binding in:
+Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
 
-Fixes: 957fd69d396b ("dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings")
-Cc: Brian Masney <masneyb@onstation.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
+The trivial-devices binding doesn't capture that 'adi,adxl346' has a
+fallback compatible 'adi,adxl345', so let's add it to adi,adxl345.yaml.
+
+Cc: Michael Hennerich <michael.hennerich@analog.com>
+Cc: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>
+Cc: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Cc: linux-iio@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/sram/qcom,ocmem.yaml         | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/iio/accel/adi,adxl345.yaml     | 10 +++++++---
+ Documentation/devicetree/bindings/trivial-devices.yaml |  4 ----
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml b/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
-index 222990f9923c..469cec133647 100644
---- a/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
-+++ b/Documentation/devicetree/bindings/sram/qcom,ocmem.yaml
-@@ -43,6 +43,9 @@ properties:
-   '#size-cells':
-     const: 1
+diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+index c602b6fe1c0c..d124eba1ce54 100644
+--- a/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
++++ b/Documentation/devicetree/bindings/iio/accel/adi,adxl345.yaml
+@@ -17,9 +17,13 @@ description: |
  
-+  ranges:
-+    maxItems: 1
-+
- required:
-   - compatible
-   - reg
-@@ -51,9 +54,10 @@ required:
-   - clock-names
-   - '#address-cells'
-   - '#size-cells'
-+  - ranges
+ properties:
+   compatible:
+-    enum:
+-      - adi,adxl345
+-      - adi,adxl375
++    oneOf:
++      - items:
++          - const: adi,adxl346
++          - const: adi,adxl345
++      - enum:
++          - adi,adxl345
++          - adi,adxl375
  
- patternProperties:
--  "^.+-sram$":
-+  "-sram@[0-9a-f]+$":
-     type: object
-     description: A region of reserved memory.
- 
-@@ -61,12 +65,8 @@ patternProperties:
-       reg:
-         maxItems: 1
- 
--      ranges:
--        maxItems: 1
--
-     required:
-       - reg
--      - ranges
- 
- examples:
-   - |
-@@ -88,9 +88,9 @@ examples:
- 
-         #address-cells = <1>;
-         #size-cells = <1>;
-+        ranges = <0 0xfec00000 0x100000>;
- 
-         gmu-sram@0 {
-                 reg = <0x0 0x100000>;
--                ranges = <0 0 0xfec00000 0x100000>;
-         };
-       };
+   reg:
+     maxItems: 1
+diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
+index 978de7d37c66..51d1f6e43c02 100644
+--- a/Documentation/devicetree/bindings/trivial-devices.yaml
++++ b/Documentation/devicetree/bindings/trivial-devices.yaml
+@@ -42,10 +42,6 @@ properties:
+           - adi,adt7476
+             # +/-1C TDM Extended Temp Range I.C
+           - adi,adt7490
+-            # Three-Axis Digital Accelerometer
+-          - adi,adxl345
+-            # Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
+-          - adi,adxl346
+             # AMS iAQ-Core VOC Sensor
+           - ams,iaq-core
+             # i2c serial eeprom  (24cxx)
 -- 
 2.20.1
 
