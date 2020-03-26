@@ -2,120 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02A0C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 552C7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E1B206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E57E2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:26:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585232762;
+	bh=KMkEwoFLR0gA4f1WF6jeYdZ+fFFbpN1NEKW94s38IeE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PYq/ZxraP6+nP350sLnfe5cSCzfLyhqs1ajxswdvBlq4jY8J2sEijHj7FL196Nl/J
+	 AaIh7b0X82UULvVJvRRLOBnC9LIrcELTtoFO1SKsJKbDuZMSMBbBwE3OGja2XZUeOy
+	 6VuLkX//W+OGTBDs/MAXgOFRVInlz9w7/yZjOMs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgCZOXw (ORCPT
+        id S1727875AbgCZO0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:23:52 -0400
-Received: from mga17.intel.com ([192.55.52.151]:20673 "EHLO mga17.intel.com"
+        Thu, 26 Mar 2020 10:26:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727869AbgCZOXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:23:52 -0400
-IronPort-SDR: V0OKcmgpwP/pm9ybSEtswjlXlaHLMcFnWJ9I/r1d98RDV0rInFcCc8x8pwCSd7tSOVNYBBbVHe
- LJ1LkCADYgdQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 07:23:52 -0700
-IronPort-SDR: DimBgg8sUOWeCGBgqUZj9R2clPDodmlm9rZiNKMrLL1pxw1LeFXbUuozHmbhQTCfV3CMJHQYBN
- K49CAPxNv3hw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="265882920"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 26 Mar 2020 07:23:48 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jHTQE-00D99J-Dv; Thu, 26 Mar 2020 16:23:50 +0200
-Date:   Thu, 26 Mar 2020 16:23:50 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Grant Likely <grant.likely@arm.com>
-Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-Message-ID: <20200326142350.GW1922688@smile.fi.intel.com>
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com>
- <20200325125120.GX1922688@smile.fi.intel.com>
- <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
- <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
- <ca661616-f5bf-d92f-9173-172792797b16@ti.com>
- <20200326120323.GR1922688@smile.fi.intel.com>
- <6c04af00-adc8-6be2-b7fd-b4a875524563@arm.com>
+        id S1726347AbgCZO0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:26:00 -0400
+Received: from kernel.org (unknown [87.70.82.132])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF4E120737;
+        Thu, 26 Mar 2020 14:25:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585232760;
+        bh=KMkEwoFLR0gA4f1WF6jeYdZ+fFFbpN1NEKW94s38IeE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oeDhPEvk0eFtq+gXdH4d4sq590TuOJzGFmBo5wIFU2+S8saJft+6H3HS2PZfZ+LMy
+         KIDo8zl84Krh+qBUA28KeUM44MpeT3UVlTrZ/GPLbMsYbiLCsX2RAZFljWB/W53zTf
+         FOLroABLtXiEiVaY5pcrEdWDFWrLDZBqOcpQ970w=
+Date:   Thu, 26 Mar 2020 16:25:49 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org
+Subject: Re: [PATCH] mm: Remove dummy struct bootmem_data/bootmem_data_t
+Message-ID: <20200326142549.GA3544@kernel.org>
+References: <20200326022617.26208-1-longman@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6c04af00-adc8-6be2-b7fd-b4a875524563@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200326022617.26208-1-longman@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 01:45:50PM +0000, Grant Likely wrote:
-> On 26/03/2020 12:03, Andy Shevchenko wrote:
-> > On Thu, Mar 26, 2020 at 11:45:18AM +0200, Peter Ujfalusi wrote:
-> > > On 26/03/2020 10.39, Rafael J. Wysocki wrote:
-> > > > On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > 
-> > ...
-> > 
-> > > > OK, so the situation right now is that commit 58b116bce136 has
-> > > > introduced a regression and so it needs to be fixed or reverted.  The
-> > > > cases that were previously broken and were unbroken by that commit
-> > > > don't matter here, so you cannot argue that they would be "broken".
-> > > 
-> > > commit 58b116bce136 is from 2014 and the whole ULPI support for dwc3
-> > > came in a year later.
-> > > While I agree that 58b116bce136 fail to handle came a year later, but
-> > > technically it did not introduced a regression.
-> > > 
-> > > The revert on the other hand is going to introduce a regression as
-> > > things were working fine since 2014. Not sure why the dwc3 issue got
-> > > this long to be noticed as the 58b116bce136 was already in kernel when
-> > > the ULPI support was added...
-> > 
-> > I dare to say that is luck based on people's laziness to figure out the root
-> > cause. As I pointed out in email to Saravana the issue is not limited to USB
-> > case and, if my memory doesn't trick me out, I suffered from it approximately
-> > in ~2014-2015 with pin control tables.
+On Wed, Mar 25, 2020 at 10:26:17PM -0400, Waiman Long wrote:
+> Both bootmem_data and bootmem_data_t structures are no longer defined.
+> Remove the dummy forward declarations.
 > 
-> I've not been involved in this for a very long time, but from our past
-> conversations and the description that is given here I still feel that this
-> problem is a design bug on the dwc3 driver dependencies rather than a
-> failure with driver core. dwc3 is doing something rather convoluted and it
-> would be worth reevaluating how probe failures are unwound on that
-> particular driver stack.
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-I disagree. Have you chance to look into another example I gave to Saravana?
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
 
-The unbalanced increment is fragile per se, because you can't guarantee that
-it will be no unsynchronization between probed successfully (unrelated!) and
-deferred drivers.
+> ---
+>  arch/alpha/include/asm/mmzone.h | 2 --
+>  include/linux/mmzone.h          | 1 -
+>  2 files changed, 3 deletions(-)
+> 
+> diff --git a/arch/alpha/include/asm/mmzone.h b/arch/alpha/include/asm/mmzone.h
+> index 7ee144f484f1..9b521c857436 100644
+> --- a/arch/alpha/include/asm/mmzone.h
+> +++ b/arch/alpha/include/asm/mmzone.h
+> @@ -8,8 +8,6 @@
+>  
+>  #include <asm/smp.h>
+>  
+> -struct bootmem_data_t; /* stupid forward decl. */
+> -
+>  /*
+>   * Following are macros that are specific to this numa platform.
+>   */
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 462f6873905a..5c388eced889 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -706,7 +706,6 @@ struct deferred_split {
+>   * Memory statistics and page replacement data structures are maintained on a
+>   * per-zone basis.
+>   */
+> -struct bootmem_data;
+>  typedef struct pglist_data {
+>  	struct zone node_zones[MAX_NR_ZONES];
+>  	struct zonelist node_zonelists[MAX_ZONELISTS];
+> -- 
+> 2.18.1
+> 
+> 
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Sincerely yours,
+Mike.
