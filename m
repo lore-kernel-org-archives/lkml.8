@@ -2,140 +2,150 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 818F5C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767E9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6472920748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538122073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgCZMru (ORCPT
+        id S1728251AbgCZMr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:47:50 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:48598 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728070AbgCZMru (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:47:50 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jHRvI-0004FF-F4; Thu, 26 Mar 2020 06:47:48 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jHRvH-0005af-Mz; Thu, 26 Mar 2020 06:47:48 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-References: <20200325120345.12946-1-vbabka@suse.cz>
-        <874kuc5b5z.fsf@x220.int.ebiederm.org>
-        <20200326065829.GC27965@dhcp22.suse.cz>
-Date:   Thu, 26 Mar 2020 07:45:13 -0500
-In-Reply-To: <20200326065829.GC27965@dhcp22.suse.cz> (Michal Hocko's message
-        of "Thu, 26 Mar 2020 07:58:29 +0100")
-Message-ID: <87bloj2skm.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 26 Mar 2020 08:47:58 -0400
+Received: from mga18.intel.com ([134.134.136.126]:16947 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727841AbgCZMr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:47:57 -0400
+IronPort-SDR: 7WQ/DVEfSuuuJ3MO3WQeXL8T/8epGDim1PVVmvtCBKg+uvtDnP7wCWZ/0KPE4930UYEIQejHHj
+ UreKrO+Med0g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 05:47:57 -0700
+IronPort-SDR: 4MeGnowaMGpgEa9Oj0vOqTX6OTJWRFj2MYMvitJ08h0w8rixQahEakV1Y57nrNbL7Iv7suTABP
+ oZzd3Exx34kg==
+X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
+   d="scan'208";a="420687679"
+Received: from likexu-mobl1.ccr.corp.intel.com (HELO [10.249.175.106]) ([10.249.175.106])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 05:47:54 -0700
+Subject: Re: [PATCH v2] KVM: x86/pmu: Reduce counter period change overhead
+ and delay the effective time
+To:     pbonzini@redhat.com
+Cc:     ehankland@google.com, jmattson@google.com, joro@8bytes.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com
+References: <20200317075315.70933-1-like.xu@linux.intel.com>
+ <20200317081458.88714-1-like.xu@linux.intel.com>
+From:   Like Xu <like.xu@linux.intel.com>
+Organization: Intel OTC
+Message-ID: <1528e1b4-3dee-161b-9463-57471263b5a8@linux.intel.com>
+Date:   Thu, 26 Mar 2020 20:47:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jHRvH-0005af-Mz;;;mid=<87bloj2skm.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19UwF8u5e2QvQbuXdnuXgW+a4jTDraswv0=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters from kernel command line
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+In-Reply-To: <20200317081458.88714-1-like.xu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@kernel.org> writes:
+Anyone to help review this change?
 
-> On Wed 25-03-20 17:20:40, Eric W. Biederman wrote:
->> Vlastimil Babka <vbabka@suse.cz> writes:
-> [...]
->> > +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
->> > +		return 0;
->> 
->> Is there any way we can use a slash separated path.  I know
->> in practice there are not any sysctl names that don't have
->> a '.' in them but why should we artifically limit ourselves?
->
-> Because this is the normal userspace interface? Why should it be any
-> different from calling sysctl?
-> [...]
+Thanks,
+Like Xu
 
-Why should the kernel command line implement userspace whims?
-I was thinking something like: "sysctl/kernel/max_lock_depth=2048"
-doesn't look too bad and it makes things like reusing our
-kernel internal helpers much easier.
+On 2020/3/17 16:14, Like Xu wrote:
+> The cost of perf_event_period() is unstable, and when the guest samples
+> multiple events, the overhead increases dramatically (5378 ns on E5-2699).
+> 
+> For a non-running counter, the effective time of the new period is when
+> its corresponding enable bit is enabled. Calling perf_event_period()
+> in advance is superfluous. For a running counter, it's safe to delay the
+> effective time until the KVM_REQ_PMU event is handled. If there are
+> multiple perf_event_period() calls before handling KVM_REQ_PMU,
+> it helps to reduce the total cost.
+> 
+> Signed-off-by: Like Xu <like.xu@linux.intel.com>
+> ---
+>   arch/x86/kvm/pmu.c           | 11 -----------
+>   arch/x86/kvm/pmu.h           | 11 +++++++++++
+>   arch/x86/kvm/vmx/pmu_intel.c | 10 ++++------
+>   3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
+> index d1f8ca57d354..527a8bb85080 100644
+> --- a/arch/x86/kvm/pmu.c
+> +++ b/arch/x86/kvm/pmu.c
+> @@ -437,17 +437,6 @@ void kvm_pmu_init(struct kvm_vcpu *vcpu)
+>   	kvm_pmu_refresh(vcpu);
+>   }
+>   
+> -static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+> -{
+> -	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+> -
+> -	if (pmc_is_fixed(pmc))
+> -		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+> -			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+> -
+> -	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+> -}
+> -
+>   /* Release perf_events for vPMCs that have been unused for a full time slice.  */
+>   void kvm_pmu_cleanup(struct kvm_vcpu *vcpu)
+>   {
+> diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
+> index d7da2b9e0755..cd112e825d2c 100644
+> --- a/arch/x86/kvm/pmu.h
+> +++ b/arch/x86/kvm/pmu.h
+> @@ -138,6 +138,17 @@ static inline u64 get_sample_period(struct kvm_pmc *pmc, u64 counter_value)
+>   	return sample_period;
+>   }
+>   
+> +static inline bool pmc_speculative_in_use(struct kvm_pmc *pmc)
+> +{
+> +	struct kvm_pmu *pmu = pmc_to_pmu(pmc);
+> +
+> +	if (pmc_is_fixed(pmc))
+> +		return fixed_ctrl_field(pmu->fixed_ctr_ctrl,
+> +			pmc->idx - INTEL_PMC_IDX_FIXED) & 0x3;
+> +
+> +	return pmc->eventsel & ARCH_PERFMON_EVENTSEL_ENABLE;
+> +}
+> +
+>   void reprogram_gp_counter(struct kvm_pmc *pmc, u64 eventsel);
+>   void reprogram_fixed_counter(struct kvm_pmc *pmc, u8 ctrl, int fixed_idx);
+>   void reprogram_counter(struct kvm_pmu *pmu, int pmc_idx);
+> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+> index 7c857737b438..20f654a0c09b 100644
+> --- a/arch/x86/kvm/vmx/pmu_intel.c
+> +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> @@ -263,15 +263,13 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>   			if (!msr_info->host_initiated)
+>   				data = (s64)(s32)data;
+>   			pmc->counter += data - pmc_read_counter(pmc);
+> -			if (pmc->perf_event)
+> -				perf_event_period(pmc->perf_event,
+> -						  get_sample_period(pmc, data));
+> +			if (pmc_speculative_in_use(pmc))
+> +				kvm_make_request(KVM_REQ_PMU, vcpu);
+>   			return 0;
+>   		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
+>   			pmc->counter += data - pmc_read_counter(pmc);
+> -			if (pmc->perf_event)
+> -				perf_event_period(pmc->perf_event,
+> -						  get_sample_period(pmc, data));
+> +			if (pmc_speculative_in_use(pmc))
+> +				kvm_make_request(KVM_REQ_PMU, vcpu);
+>   			return 0;
+>   		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+>   			if (data == pmc->eventsel)
+> 
 
-Plus it suggest that we could do the same for sysfs files:
-	"sysfs/kernel/fscaps=1"
-
-And the code could be same for both cases except for the filesystem
-prefix.
-
->> Further it will be faster to lookup the sysctls using the code from
->> proc_sysctl.c as it constructs an rbtree of all of the entries in
->> a directory.  The code might as well take advantage of that for large
->> directories.
->
-> Sounds like a good fit for a follow up patch to me. Let's make this
-> as simple as possible for the initial version. But up to Vlastimil of course.
-
-I would argue that reusing proc_sysctl.c:lookup_entry() should make the
-code simpler, and easier to reason about.
-
-Especially given the bugs in the first version with a sysctl path.
-A clean separation between separating the path from into pieces and
-looking up those pieces should make the code more robust.
-
-That plus I want to get very far away from the incorrect idea that you
-can have sysctls without compiling in proc support.  That is not how
-the code works, that is not how the code is tested.
-
-It is also worth pointing out that:
-
-	proc_mnt = kern_mount(proc_fs_type);
-        for_each_sysctl_cmdline() {
-        	...
-		file = file_open_root(proc_mnt->mnt_root, proc_mnt, sysctl_path, O_WRONLY, 0);
-		kernel_write(file, value, value_len);
-        }
-        kern_umount(proc_mnt);
-
-Is not an unreasonable implementation.
-
-There are problems with a persistent mount of proc in that it forces
-userspace not to use any proc mount options.  But a temporary mount of
-proc to deal with command line options is not at all unreasonable.
-Plus it looks like we can have kern_write do all of the kernel/user
-buffer silliness.
-
-> [...]
->
->> Hmm.  There is a big gotcha in here and I think it should be mentioned.
->> This code only works because no one has done set_fs(KERNEL_DS).  Which
->> means this only works with strings that are kernel addresses essentially
->> by mistake.  A big fat comment documenting why it is safe to pass in
->> kernel addresses to a function that takes a "char __user*" pointer
->> would be very good.
->
-> Agreed
-
-Eric
