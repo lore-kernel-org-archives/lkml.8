@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F67CC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E90C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:04:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 395E220857
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B1620857
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:04:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585209854;
-	bh=Y3/Q1dAYlOe+FI0AjMLamnTH5l+s0nLah8D4EA2vZo4=;
+	s=default; t=1585209856;
+	bh=2W+1kPsy5QBsjCzNZ6arOx57/Bjw3nNlC1j32mPd/rQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AT+m+3WCaXLyo8E0n8CTpVmt4gZKJryLdK0BJluGP7e13R+vKJizjnlZYsIQwX6eA
-	 lhL5IH9+oSzDA5GeeY6J6av75y1AJ3IaGUYOTs0lLLSOULWspllgvw8b3QeoJ1HBt1
-	 +QMC7/FRAkt0S2B3u6UPAwl2qcsFVSuTTvIsXfSI=
+	b=fce05jH0jQbTP2oF5wtX9OtJXT3g1vJythn5vnHzfvGU/ngjB1n8ghr2Jwpx242l5
+	 y0KWN8iNgHKZWxSQq/CJynYAaS4ECoet0y4XscfysnsnB829n3yJRHXWjy9KArrZz7
+	 KGAaT5k8AmYW08BgGItw3LQaZWfn2xKlOBP3UfxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgCZIEN (ORCPT
+        id S1727937AbgCZIEO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:04:13 -0400
-Received: from conuserg-11.nifty.com ([210.131.2.78]:19151 "EHLO
+        Thu, 26 Mar 2020 04:04:14 -0400
+Received: from conuserg-11.nifty.com ([210.131.2.78]:19339 "EHLO
         conuserg-11.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727867AbgCZIEG (ORCPT
+        with ESMTP id S1727773AbgCZIEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:04:06 -0400
+        Thu, 26 Mar 2020 04:04:12 -0400
 Received: from pug.e01.socionext.com (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-11.nifty.com with ESMTP id 02Q81Wpg002183;
-        Thu, 26 Mar 2020 17:01:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 02Q81Wpg002183
+        by conuserg-11.nifty.com with ESMTP id 02Q81WpZ002183;
+        Thu, 26 Mar 2020 17:01:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-11.nifty.com 02Q81WpZ002183
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1585209715;
-        bh=n1XeZ1wVDljXai1fPjVNbhqgRjXfYjMjNINQQzEPCTo=;
+        s=dec2015msa; t=1585209705;
+        bh=kjAsZXCjiHywP61qOSzAcHLQWlDx4t3Nswuo57yw6A4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XylL7NCibWYgEIVrdmEYUdWAnpVbPxd7As7VO4xh53v7ggirMQC2r+FKJpaJtZjSp
-         Vi2wSf1SCw8GputRHnmhIxWFXoxN7Utu9iKxb9e5bqucyfcHELm6qBXIAhFUZ/Vkrl
-         uw/B7p9TnRyfw+Dep5eQvNjh3R601pvsIF52/GTg6QJpsn8NpNTlRBxgzhTYjZyo8U
-         LlkCqRJlfGkNtBB2id+RgBp6flAjo+ChEGz4T1bow4qGEVV2oAjxqE9Gjw87UULJ6a
-         2JdrLfEdbRGdSkkKpVKi34Xk7NpqJbm/kQjoPkDDf8TTphQzoz15OAQJzSLnrMweo4
-         JJwUev5omSA0g==
+        b=qeE74kIsHYvE7EJsiXX+2bvW4GA8wH7aoeyxBtKpRrgqr7CJlb4GZE/W5YWXQmsGK
+         OD0ff2yYok+bxa2pbCk1er1JXwLphiRuiAahhEwSciLCPZokiLPe85VLlg6mFwiW9h
+         3uFMlswqcYep26rIXj3WolmwV+00w6mS6FxB2jompyRAmgujHRMDMHvJmY6DufkSWC
+         dPo7jk+F1AoY7O0bYBFpUH9wYFXvarrL/aPGqSJwj6zx+0mOBtCb1Xrp6h9//K2J73
+         Nw9gg/fsTpjLXTqQQK0bJjFWwYbRXmMCbGwuKjDg1BBmz90Euyoaucvp7xa8HXfbWy
+         xEQugyFVKqWqg==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     linux-kbuild@vger.kernel.org
@@ -55,10 +55,11 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Masahiro Yamada <masahiroy@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 13/16] crypto: curve25519 - do not pollute dispatcher based on assembler
-Date:   Thu, 26 Mar 2020 17:01:01 +0900
-Message-Id: <20200326080104.27286-14-masahiroy@kernel.org>
+        Ingo Molnar <mingo@redhat.com>, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 06/16] x86: remove always-defined CONFIG_AS_SSSE3
+Date:   Thu, 26 Mar 2020 17:00:54 +0900
+Message-Id: <20200326080104.27286-7-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200326080104.27286-1-masahiroy@kernel.org>
 References: <20200326080104.27286-1-masahiroy@kernel.org>
@@ -67,50 +68,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+CONFIG_AS_SSSE3 was introduced by commit 75aaf4c3e6a4 ("x86/raid6:
+correctly check for assembler capabilities").
 
-Since we're doing a static inline dispatch here, we normally branch
-based on whether or not there's an arch implementation. That would have
-been fine in general, except the crypto Makefile prior used to turn
-things off -- despite the Kconfig -- resulting in us needing to also
-hard code various assembler things into the dispatcher too. The horror!
-Now that the assembler config options are done by Kconfig, we can get
-rid of the inconsistency.
+We raise the minimal supported binutils version from time to time.
+The last bump was commit 1fb12b35e5ff ("kbuild: Raise the minimum
+required binutils version to 2.21").
 
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+I confirmed the code in $(call as-instr,...) can be assembled by the
+binutils 2.21 assembler and also by LLVM integrated assembler.
+
+Remove CONFIG_AS_SSSE3, which is always defined.
+
+I added ifdef CONFIG_X86 to lib/raid6/algos.c to avoid link errors
+on non-x86 architectures.
+
+lib/raid6/algos.c is built not only for the kernel but also for
+testing the library code from userspace. I added -DCONFIG_X86 to
+lib/raid6/test/Makefile to cator to this usecase.
+
 Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Acked-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
 
 Changes in v2: None
 
- include/crypto/curve25519.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/Makefile              | 5 ++---
+ arch/x86/crypto/blake2s-core.S | 2 --
+ lib/raid6/algos.c              | 2 +-
+ lib/raid6/recov_ssse3.c        | 6 ------
+ lib/raid6/test/Makefile        | 4 +---
+ 5 files changed, 4 insertions(+), 15 deletions(-)
 
-diff --git a/include/crypto/curve25519.h b/include/crypto/curve25519.h
-index 9ecb3c1f0f15..4e6dc840b159 100644
---- a/include/crypto/curve25519.h
-+++ b/include/crypto/curve25519.h
-@@ -33,8 +33,7 @@ bool __must_check curve25519(u8 mypublic[CURVE25519_KEY_SIZE],
- 			     const u8 secret[CURVE25519_KEY_SIZE],
- 			     const u8 basepoint[CURVE25519_KEY_SIZE])
- {
--	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519) &&
--	    (!IS_ENABLED(CONFIG_CRYPTO_CURVE25519_X86) || IS_ENABLED(CONFIG_AS_ADX)))
-+	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519))
- 		curve25519_arch(mypublic, secret, basepoint);
- 	else
- 		curve25519_generic(mypublic, secret, basepoint);
-@@ -50,8 +49,7 @@ __must_check curve25519_generate_public(u8 pub[CURVE25519_KEY_SIZE],
- 				    CURVE25519_KEY_SIZE)))
- 		return false;
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index e4a062313bb0..94f89612e024 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -178,7 +178,6 @@ ifeq ($(ACCUMULATE_OUTGOING_ARGS), 1)
+ endif
  
--	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519) &&
--	    (!IS_ENABLED(CONFIG_CRYPTO_CURVE25519_X86) || IS_ENABLED(CONFIG_AS_ADX)))
-+	if (IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_CURVE25519))
- 		curve25519_base_arch(pub, secret);
- 	else
- 		curve25519_generic(pub, secret, curve25519_base_point);
+ # does binutils support specific instructions?
+-asinstr += $(call as-instr,pshufb %xmm0$(comma)%xmm0,-DCONFIG_AS_SSSE3=1)
+ avx_instr := $(call as-instr,vxorps %ymm0$(comma)%ymm1$(comma)%ymm2,-DCONFIG_AS_AVX=1)
+ avx2_instr :=$(call as-instr,vpbroadcastb %xmm0$(comma)%ymm1,-DCONFIG_AS_AVX2=1)
+ avx512_instr :=$(call as-instr,vpmovm2b %k1$(comma)%zmm5,-DCONFIG_AS_AVX512=1)
+@@ -186,8 +185,8 @@ sha1_ni_instr :=$(call as-instr,sha1msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA1_NI=
+ sha256_ni_instr :=$(call as-instr,sha256msg1 %xmm0$(comma)%xmm1,-DCONFIG_AS_SHA256_NI=1)
+ adx_instr := $(call as-instr,adox %r10$(comma)%r10,-DCONFIG_AS_ADX=1)
+ 
+-KBUILD_AFLAGS += $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+-KBUILD_CFLAGS += $(asinstr) $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
++KBUILD_AFLAGS += $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
++KBUILD_CFLAGS += $(avx_instr) $(avx2_instr) $(avx512_instr) $(sha1_ni_instr) $(sha256_ni_instr) $(adx_instr)
+ 
+ KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
+ 
+diff --git a/arch/x86/crypto/blake2s-core.S b/arch/x86/crypto/blake2s-core.S
+index 24910b766bdd..2ca79974f819 100644
+--- a/arch/x86/crypto/blake2s-core.S
++++ b/arch/x86/crypto/blake2s-core.S
+@@ -46,7 +46,6 @@ SIGMA2:
+ #endif /* CONFIG_AS_AVX512 */
+ 
+ .text
+-#ifdef CONFIG_AS_SSSE3
+ SYM_FUNC_START(blake2s_compress_ssse3)
+ 	testq		%rdx,%rdx
+ 	je		.Lendofloop
+@@ -174,7 +173,6 @@ SYM_FUNC_START(blake2s_compress_ssse3)
+ .Lendofloop:
+ 	ret
+ SYM_FUNC_END(blake2s_compress_ssse3)
+-#endif /* CONFIG_AS_SSSE3 */
+ 
+ #ifdef CONFIG_AS_AVX512
+ SYM_FUNC_START(blake2s_compress_avx512)
+diff --git a/lib/raid6/algos.c b/lib/raid6/algos.c
+index bf1b4765c8f6..df08664d3432 100644
+--- a/lib/raid6/algos.c
++++ b/lib/raid6/algos.c
+@@ -97,13 +97,13 @@ void (*raid6_datap_recov)(int, size_t, int, void **);
+ EXPORT_SYMBOL_GPL(raid6_datap_recov);
+ 
+ const struct raid6_recov_calls *const raid6_recov_algos[] = {
++#ifdef CONFIG_X86
+ #ifdef CONFIG_AS_AVX512
+ 	&raid6_recov_avx512,
+ #endif
+ #ifdef CONFIG_AS_AVX2
+ 	&raid6_recov_avx2,
+ #endif
+-#ifdef CONFIG_AS_SSSE3
+ 	&raid6_recov_ssse3,
+ #endif
+ #ifdef CONFIG_S390
+diff --git a/lib/raid6/recov_ssse3.c b/lib/raid6/recov_ssse3.c
+index 1de97d2405d0..4bfa3c6b60de 100644
+--- a/lib/raid6/recov_ssse3.c
++++ b/lib/raid6/recov_ssse3.c
+@@ -3,8 +3,6 @@
+  * Copyright (C) 2012 Intel Corporation
+  */
+ 
+-#ifdef CONFIG_AS_SSSE3
+-
+ #include <linux/raid/pq.h>
+ #include "x86.h"
+ 
+@@ -328,7 +326,3 @@ const struct raid6_recov_calls raid6_recov_ssse3 = {
+ #endif
+ 	.priority = 1,
+ };
+-
+-#else
+-#warning "your version of binutils lacks SSSE3 support"
+-#endif
+diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
+index b9e6c3648be1..60021319ac78 100644
+--- a/lib/raid6/test/Makefile
++++ b/lib/raid6/test/Makefile
+@@ -34,9 +34,7 @@ endif
+ 
+ ifeq ($(IS_X86),yes)
+         OBJS   += mmx.o sse1.o sse2.o avx2.o recov_ssse3.o recov_avx2.o avx512.o recov_avx512.o
+-        CFLAGS += $(shell echo "pshufb %xmm0, %xmm0" |		\
+-                    gcc -c -x assembler - >/dev/null 2>&1 &&	\
+-                    rm ./-.o && echo -DCONFIG_AS_SSSE3=1)
++        CFLAGS += -DCONFIG_X86
+         CFLAGS += $(shell echo "vpbroadcastb %xmm0, %ymm1" |	\
+                     gcc -c -x assembler - >/dev/null 2>&1 &&	\
+                     rm ./-.o && echo -DCONFIG_AS_AVX2=1)
 -- 
 2.17.1
 
