@@ -2,224 +2,172 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E031C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6955BC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22A220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4090920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:41:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585251670;
+	bh=Ess4P7rTXsdNg1EcCIx+Mxp+xHNnRi779J8+YVPtKj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oV/DiihxEZ6mMBT7pYJ9aVVTXzNaahQmIwwKeZ7W7OMgZVm8T5wTq8jBGBUlEJhEp
+	 71QRAQA7N4uE9GOmHVdhxTNkAnezu91zU41gHGNnwrXOPxReTCB4CFrqY/rCJGsAql
+	 cskEj7G7T87D6eXLTw1EX97uIDNg9NYQB9kz1mJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgCZTkK (ORCPT
+        id S1728618AbgCZTlJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:40:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:25373 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbgCZTkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:40:10 -0400
-IronPort-SDR: alRY/aBH4+soBlZjRvGtyKyodG7PSTQKFWk2khmieWqZs7F5iiNuC3kpbXWJk3C1YvcaoiaIea
- u92z7+N9I6sg==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 12:40:10 -0700
-IronPort-SDR: AciiEhWLBiYwZLW89IdP5cn4Y9n+0W5fAR3aWjXc5CD1itXjFU1dnLOj5mDqJSLl8i58wcjB6b
- pARRh/C5s82w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,309,1580803200"; 
-   d="scan'208";a="236388051"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 26 Mar 2020 12:40:08 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1jHYMJ-000BRL-Ab; Fri, 27 Mar 2020 03:40:07 +0800
-Date:   Fri, 27 Mar 2020 03:39:31 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/misc] BUILD SUCCESS
- 1032f32645f8a650edb0134d52fa085642d0a492
-Message-ID: <5e7d04f3.3+Gh7BTN7JFPbHfe%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Thu, 26 Mar 2020 15:41:09 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34820 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZTlI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:41:08 -0400
+Received: by mail-io1-f68.google.com with SMTP id o3so1806148ioh.2;
+        Thu, 26 Mar 2020 12:41:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4Z5GoQwOlXq34jMbrNfddtNsm4YbfUIB3Klcgi2n0p8=;
+        b=Zaa5swK5BdP+vNYvnOClHhS8yoFBYx8uJQ1uH/dQdCLYouS7dm1mkZ+pYE5sv7FmrX
+         8YdYDCKUOTuf+q0cJH7abTPaMCdg0UMTAj1/5YgQfaNhIFVaMCDv6L5mX547JvjDnfkq
+         IY65viHf+SpLVETQWVMdDHHdYs3JlYa7oZWIuCBVO+R1ZQkBDSb/tQykrm+mVxj6HO+Z
+         uY9SyBYbZGuScWtzJ1G6LwWjWvPyPBVgm+a/Ui+MIwcsKDmXZcoBiLxDzjgo7CmWgU26
+         MtHEQ74RmA5QU2rHAlkeUdJPOL99kIjNnCrGPS+d15UdcMMywVIQmG4sHBLT2YgL+Oj/
+         Tzvw==
+X-Gm-Message-State: ANhLgQ3uQRBN4OhlmgdSwqaLACzlnG2GX+Sccbt+cGzjDvTo1WlvmrUp
+        co4GWSewtG/IeTNL0+1dKw==
+X-Google-Smtp-Source: ADFU+vtj8JYvbn4eVg+I4HxwGh9ItJrI3wS4cOSL0jWkNvzGNgqbXajFrLmp6mGnIiVyKBZuytot6A==
+X-Received: by 2002:a02:40c9:: with SMTP id n192mr7472911jaa.91.1585251666531;
+        Thu, 26 Mar 2020 12:41:06 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id j84sm1106640ili.65.2020.03.26.12.41.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 12:41:05 -0700 (PDT)
+Received: (nullmailer pid 12454 invoked by uid 1000);
+        Thu, 26 Mar 2020 19:41:04 -0000
+Date:   Thu, 26 Mar 2020 13:41:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hadar Gat <hadar.gat@arm.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Zaibo Xu <xuzaibo@huawei.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <ofir.drang@arm.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: add device tree binding for Arm
+ CryptoCell trng engine
+Message-ID: <20200326194104.GA4118@bogus>
+References: <1585114871-6912-1-git-send-email-hadar.gat@arm.com>
+ <1585114871-6912-2-git-send-email-hadar.gat@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1585114871-6912-2-git-send-email-hadar.gat@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/misc
-branch HEAD: 1032f32645f8a650edb0134d52fa085642d0a492  perf/tests: Add CET instructions to the new instructions test
+On Wed, Mar 25, 2020 at 07:41:09AM +0200, Hadar Gat wrote:
+> The Arm CryptoCell is a hardware security engine. This patch adds DT
+> bindings for its TRNG (True Random Number Generator) engine.
+> 
+> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
+> ---
+>  .../devicetree/bindings/rng/arm-cctrng.yaml        | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> new file mode 100644
+> index 0000000..7f70e4b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
+> @@ -0,0 +1,55 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Arm TrustZone CryptoCell TRNG engine
+> +
+> +maintainers:
+> +  - Hadar Gat <hadar.gat@arm.com>
+> +
+> +description: |+
+> +  Arm TrustZone CryptoCell TRNG (True Random Number Generator) engine.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - arm,cryptocell-713-trng
+> +      - arm,cryptocell-703-trng
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  arm,rosc-ratio:
+> +    description:
+> +      Arm TrustZone CryptoCell TRNG engine has 4 ring oscillators.
+> +      Sampling ratio values for these 4 ring oscillators. (from calibration)
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +      - items:
+> +          minItems: 4
+> +          maxItems: 4
 
-elapsed time: 480m
+Aren't there some constraints on the values?
 
-configs tested: 157
-configs skipped: 14
+If not, then just this is enough:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+- maxItems: 4
 
-arm64                            allyesconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm                               allnoconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                               defconfig
-sparc                            allyesconfig
-arm                              allyesconfig
-um                             i386_defconfig
-powerpc                             defconfig
-riscv                               defconfig
-um                                  defconfig
-c6x                        evmc6678_defconfig
-riscv                    nommu_virt_defconfig
-s390                             alldefconfig
-riscv                          rv32_defconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                             alldefconfig
-i386                                defconfig
-ia64                             alldefconfig
-ia64                             allmodconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-arm                              allmodconfig
-c6x                              allyesconfig
-nios2                         10m50_defconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-csky                                defconfig
-nds32                             allnoconfig
-nds32                               defconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                                 defconfig
-arc                              allyesconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                           allnoconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      fuloong2e_defconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                           allyesconfig
-parisc                generic-32bit_defconfig
-parisc                generic-64bit_defconfig
-x86_64               randconfig-a001-20200326
-x86_64               randconfig-a002-20200326
-x86_64               randconfig-a003-20200326
-i386                 randconfig-a001-20200326
-i386                 randconfig-a002-20200326
-i386                 randconfig-a003-20200326
-alpha                randconfig-a001-20200326
-m68k                 randconfig-a001-20200326
-mips                 randconfig-a001-20200326
-nds32                randconfig-a001-20200326
-parisc               randconfig-a001-20200326
-riscv                randconfig-a001-20200326
-c6x                  randconfig-a001-20200326
-h8300                randconfig-a001-20200326
-microblaze           randconfig-a001-20200326
-nios2                randconfig-a001-20200326
-sparc64              randconfig-a001-20200326
-s390                 randconfig-a001-20200326
-csky                 randconfig-a001-20200326
-xtensa               randconfig-a001-20200326
-openrisc             randconfig-a001-20200326
-sh                   randconfig-a001-20200326
-i386                 randconfig-b003-20200326
-i386                 randconfig-b001-20200326
-x86_64               randconfig-b003-20200326
-i386                 randconfig-b002-20200326
-x86_64               randconfig-b002-20200326
-x86_64               randconfig-c003-20200326
-x86_64               randconfig-c001-20200326
-i386                 randconfig-c002-20200326
-x86_64               randconfig-c002-20200326
-i386                 randconfig-c003-20200326
-i386                 randconfig-c001-20200326
-x86_64               randconfig-e001-20200326
-x86_64               randconfig-e003-20200326
-i386                 randconfig-e002-20200326
-i386                 randconfig-e003-20200326
-i386                 randconfig-e001-20200326
-x86_64               randconfig-e002-20200326
-x86_64               randconfig-f001-20200326
-x86_64               randconfig-f002-20200326
-x86_64               randconfig-f003-20200326
-i386                 randconfig-f001-20200326
-i386                 randconfig-f002-20200326
-i386                 randconfig-f003-20200326
-x86_64               randconfig-g001-20200326
-x86_64               randconfig-g002-20200326
-x86_64               randconfig-g003-20200326
-i386                 randconfig-g001-20200326
-i386                 randconfig-g002-20200326
-i386                 randconfig-g003-20200326
-x86_64               randconfig-h001-20200326
-x86_64               randconfig-h002-20200326
-x86_64               randconfig-h003-20200326
-i386                 randconfig-h001-20200326
-i386                 randconfig-h002-20200326
-i386                 randconfig-h003-20200326
-arc                  randconfig-a001-20200326
-arm                  randconfig-a001-20200326
-arm64                randconfig-a001-20200326
-ia64                 randconfig-a001-20200326
-powerpc              randconfig-a001-20200326
-sparc                randconfig-a001-20200326
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                          rsk7269_defconfig
-sh                               allmodconfig
-sh                            titan_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                                allnoconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                           allnoconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - interrupts
+> +  - reg
+> +  - arm,rosc-ratio
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    arm_cctrng: rng@60000000 {
+> +        compatible = "arm,cryptocell-713-trng";
+> +        interrupts = <0 29 4>;
+> +        reg = <0x60000000 0x10000>;
+> +        arm,rosc-ratio = <5000 1000 500 0>;
+> +    };
+> -- 
+> 2.7.4
+> 
