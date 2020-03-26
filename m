@@ -2,90 +2,126 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD8DC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84497C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B021120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A4F020409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:38:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cz8v/be9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728221AbgCZMht (ORCPT
+        id S1728239AbgCZMiw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:37:49 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:57611 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727841AbgCZMht (ORCPT
+        Thu, 26 Mar 2020 08:38:52 -0400
+Received: from mail-wm1-f73.google.com ([209.85.128.73]:52951 "EHLO
+        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727841AbgCZMiv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:37:49 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MkYoK-1jew1V3tGA-00m4bg; Thu, 26 Mar 2020 13:37:48 +0100
-Received: by mail-qk1-f171.google.com with SMTP id h14so6119127qke.5;
-        Thu, 26 Mar 2020 05:37:47 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ1wVQBRyIT6VSGkaUf+e8UsHW4KXYjsvdskVE8Gf6weFgvwGP1B
-        NA83Z6HTtbM2KcK38Rvk74NaCWKxcfsnsE8lW5Y=
-X-Google-Smtp-Source: ADFU+vvb7BIXY+D9glCcU91L9kO0tyFWP+EOFEhwVrFka5N8pk0bXgtM967EIkNgE0o5eeGQr3N7S8aDV2fUMF6iRbU=
-X-Received: by 2002:a37:6455:: with SMTP id y82mr7866531qkb.286.1585226266623;
- Thu, 26 Mar 2020 05:37:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585205326-25326-1-git-send-email-srinath.mannam@broadcom.com> <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
-In-Reply-To: <1585205326-25326-2-git-send-email-srinath.mannam@broadcom.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Thu, 26 Mar 2020 13:37:30 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a1qJv-Euvh06fqFxn4Cx-wkh4gCMOf29DAmQzWKZJji-A@mail.gmail.com>
-Message-ID: <CAK8P3a1qJv-Euvh06fqFxn4Cx-wkh4gCMOf29DAmQzWKZJji-A@mail.gmail.com>
-Subject: Re: [PATCH v5 1/6] dt-bindings: pci: Update iProc PCI binding for
- INTx support
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ray Jui <ray.jui@broadcom.com>
+        Thu, 26 Mar 2020 08:38:51 -0400
+Received: by mail-wm1-f73.google.com with SMTP id w9so2122553wmi.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 05:38:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
+        bh=8yqBrfdJM+UOOeS4se8770yNMpiUTGHQoT5T8DP4qB8=;
+        b=cz8v/be9ZLdMPE+hQeq2vnACmD7uqiN8Lq6TKluF0QZdRurVUMGO/Nkjigif91QwY5
+         3olUJsW79QJtQwo5MICQlAayampaZfYhnd5DOxSPhJlu6zUUdJM4An/CEtBX5syjwFrG
+         bFnI62fgBXnQKzFiADNm0p+P0J0/oahYLaUiZInfTgRUpLv+HtnQmtyNYbeQ+PWoZQQK
+         IYDBtpV7vZAFYxyrL9CbgSFM7vWPsht7QzsRMnfxoDLktjlvax679zqjDQ4VWW+T+eBz
+         0A3H7eBt/5Jv9KIkWdE4h5ZCPUq39MtsDrxg0UgLD53g4NY0vJV698NDiz7G7dKZr725
+         4Qgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:cc;
+        bh=8yqBrfdJM+UOOeS4se8770yNMpiUTGHQoT5T8DP4qB8=;
+        b=YHbThTposXPbzFR89r09dXciOc6whkFzREhvrb4OMHw3JJcb42xzZv9bjdXof7HclR
+         TcL43ObWOpsPl9x6WpPfbl1mogyIq8uWjc+i8TIcvx88ZOY30mcDRptIY6Km82XmcEBG
+         wsG6QywO/Bk2U63MJn5bOHcGCywqGvcA6E1tKe4KpxQi3wJttwd8/xomVn8V8vRXvHgX
+         IwuTOJc/gyAbMyrsnwf7K9a5IuBjYHOumrUi5U3+Be1ZwqkTctGGkYmG3vbY8B2KEWb+
+         cq/wPaavC/RBDFsdmDQ4u5ungPVJ2oXhuEY4M9TSA4kUYym0ru5mE/3y6PNNoi9Vz6nN
+         oicQ==
+X-Gm-Message-State: ANhLgQ1w0M7Y6oDtYZk4XGXZkvpKchFMM1RAQQzIdKBxoCMKihR9Bcnc
+        12GSnCm/fADI5+sB/gve9lbtls6jAdXv
+X-Google-Smtp-Source: ADFU+vtfeWdsMSn3bw0z8r9AjHsg1/TKeAFFpdNBrMjpIkIssmcXGEq6QCd9HvQD+cKah5CpMN25OCh4DKvH
+X-Received: by 2002:adf:a2d8:: with SMTP id t24mr9044184wra.366.1585226330006;
+ Thu, 26 Mar 2020 05:38:50 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 13:38:39 +0100
+In-Reply-To: <20200323114207.222412-1-courbet@google.com>
+Message-Id: <20200326123841.134068-1-courbet@google.com>
+Mime-Version: 1.0
+References: <20200323114207.222412-1-courbet@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH]     x86: Alias memset to __builtin_memset.
+From:   Clement Courbet <courbet@google.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Joe Perches <joe@perches.com>,
+        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Allison Randal <allison@lohutok.net>,
+        Clement Courbet <courbet@google.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:ot7xNvf642aE99y3X1D3Om+BI+axlz7Ao6JnAZUCUUpSgXuGiu0
- Eg/HMAr5dH3lXK+/GAe1sTRPlBFdoT5OPRPk+bJ9LzYRAMU0rRu5kRKv3SxyhnbBZANdnSO
- cQAF/rz8fn/SL9YjegTlznbHqLT7jEBSwRC6sLGwl57e4PTwCVCAOX5Hdn9GMdd1UDMuRoO
- PMum8CtdQkgvwRGmwAR/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2vmJUh2FWqI=:9dGAP2tgpAktcqDyIkVulo
- uVzX6Zt7+X3fi5UjijyMeapN3PjnBDos3V11g5CXLnnb64KGweykYT2LZC2OW/h0XlmGGn5fy
- PrTfvspkHknApt0EdA61C4K8K+g0TaBtrn+pK6Pd0dJ+AWHnIOlP7Gh8MHwl3aVjNlxJ2J74n
- h63PnAtXaPJbF1LPFBidMki8p9eKi4+noIZeCBCoHkhMXZ9yQjoOgj7EzSdxjgGa8FMDogWZC
- 7BWATFy6NVN+MbU8icySGFHzR29aIb0BQsQ5gbHRVkZy+tnoWeW5Ag8+Fr52WKTe64F/m6G6S
- JU2WR7pnYZzWc4UJaPFn7ZFGKjLYkJOb7aQO+ajpLLiSCSjPK+MDw81bcPq+dpdbKa6MXl7HO
- SHky5Fz7SW64mtiKkbLT86uZl3yxEFOCCZr7zh96YTjF6LYQ3rwB/wu2tDBVJkA0I9IX2Ni2u
- XaW2hX2YWXJYg5nPWoon1pm+hkY4LOUX95WEiBwlNgIZa10boeH2jtGe8mY/L5Q5kcssSZTan
- 0SxS5H9xndRIVWeEKJBFvBV2clNXeoZrr9e9OpWkBiDZtNQIWhPwSJ6wLxErYYtC080dRoIue
- zh7DwEQsg9fnZeoYD3RVnIIYJWVwvNCNNkqCIygGN4f2kbDfQsHqmu1nvp/tv2/tWpUdCc23H
- qoxNG8dr62N2A89rGWL5jrgVHD6u9bShx6E9LW5BfFecBBRAFbx64K8r8QzGhoI88i8kFbVeK
- 7qYT2jtTdnn6WFcV1OKaOKjgvecGfsQwUH1GwJlX/E/CdbixjHqfkZhGgV+ZJNfJpu2PitjlO
- gvQ0I+7TtYL4u7QRUsyIlJdAShYcmi+RsM0GemV7+0Xz08sEPE=
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 7:49 AM Srinath Mannam
-<srinath.mannam@broadcom.com> wrote:
->
-> From: Ray Jui <ray.jui@broadcom.com>
->
-> Update the iProc PCIe binding document for better modeling of the legacy
-> interrupt (INTx) support.
+I discussed with the original authors who added freestanding to our
+build. It turns out that it was added globally but this was just to
+to workaround powerpc not compiling under clang, but they felt the
+fix was appropriate globally.
 
-Could you describe in the changelog what happens when you get an old dtb
-with a new kernel or vice versa? If any combination won't work, please make
-that very clear, and give a reason why you consider this not to be a problem.
+Now Nick has dug up https://lkml.org/lkml/2019/8/29/1300, which
+advises against freestanding. Also, I've did some research and
+discovered that the original reason for using freestanding for
+powerpc has been fixed here:
+https://lore.kernel.org/linuxppc-dev/20191119045712.39633-3-natechancellor@gmail.com/
 
-      Arnd
+I'm going to remove -ffreestanding from downstream, so we don't really need
+this anymore, sorry for waisting people's time.
+
+I wonder if the freestanding fix from the aforementioned patch is really needed
+though. I think that clang is actually right to point out the issue.
+I don't see any reason why setjmp()/longjmp() are declared as taking longs
+rather than ints. The implementation looks like it only ever propagates the
+value (in longjmp) or sets it to 1 (in setjmp), and we only ever call longjmp
+with integer parameters. But I'm not a PowerPC expert, so I might
+be misreading the code.
+
+
+So it seems that we could just remove freestanding altogether and rewrite the
+code to:
+
+diff --git a/arch/powerpc/include/asm/setjmp.h b/arch/powerpc/include/asm/setjmp.h
+index 279d03a1eec6..7941ae68fe21 100644
+--- a/arch/powerpc/include/asm/setjmp.h
++++ b/arch/powerpc/include/asm/setjmp.h
+@@ -12,7 +12,9 @@
+
+ #define JMP_BUF_LEN    23
+-extern long setjmp(long *);
+-extern void longjmp(long *, long);
++typedef long * jmp_buf;
++
++extern int setjmp(jmp_buf);
++extern void longjmp(jmp_buf, int);
+
+I'm happy to send a patch for this, and get rid of more -ffreestanding.
+Opinions ?
