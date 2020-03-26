@@ -2,179 +2,161 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE29C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24910C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1053F20838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:23:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1BD22078E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:25:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=forissier-org.20150623.gappssmtp.com header.i=@forissier-org.20150623.gappssmtp.com header.b="wdSfUa9f"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rrLNxsxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727817AbgCZJXi (ORCPT
+        id S1727795AbgCZJZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:23:38 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38053 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727688AbgCZJXi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:23:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s1so6802815wrv.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 02:23:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=forissier-org.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=NCq0cMZFL5YKjrRymewcPmfdY/+U3QFHvibyA/UA0EM=;
-        b=wdSfUa9fXkTxk6SAooj0EMqhEemdVCAWUYagyKUugjT86tKyyvSLhv2/FiUiyov4hj
-         89WD+pgTLUpbrkBkpZJ/0bKwhJcaYs3WznzozuSx0anb2PFHcy7AGNIu/VpLXY158ZoU
-         yjgZpE+3CSeZ6vn8gXwkBjTvqO0VqsRYxIedSj0klcjx4P/6D7+CI56RoMQfXUQMZ8Ii
-         LVIaMn5jvETT3zik+AVmi48zuFg97z2HGEBO+LQfoOnpdmThCA/SUbD3HPQN1SyvMQK+
-         HFnS09leWdTNU0v6ORvnW5LYWsMKag0syHH0AC36RD/fIHHJmajqty41YHeBypHjExs2
-         rD4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NCq0cMZFL5YKjrRymewcPmfdY/+U3QFHvibyA/UA0EM=;
-        b=cFVimj7q2AFwOsY9wSTbOq8pUgAigUJIADn125AgaMmGICCuTNBiyy+2yJMuz5mSXr
-         u1F0RJNIbQjoNAirN2GqJMUYUChNuFFVDfe9mIgJ/YwbMRmXjawvafte/0RPz0GFRmkT
-         vqKHkodFmw01Z6PkcC3xWOtsouguFIXKkppuqB8ySkfalAYUQlkTMj38KvnkusTyqXFI
-         WbHAmVOh/QYhnlw03Ge92NiIE9f2KVgERrxGrxDUg9lSZ0En2wfesVal+dHmBMExPvH+
-         OliOQ+Kq7aGyueUrmk9vin1S5W0NUhX7IZEPnQVk875VosSv48V/hE1/ogthSSYWKeCO
-         MmkQ==
-X-Gm-Message-State: ANhLgQ0gCFXL3xtTLSRMkvoR1DiLPBIWAQlG+i4Y+VQeJpiAZm+fqMCn
-        V5F1fYmXaCwaiGQgNseFNZ/xbaPWjmuySOo8
-X-Google-Smtp-Source: ADFU+vt9docCioSkc9NiHMBLy3kC56uqVBuM4+xxcH9k4v/ldbSjC99vA5BdNc5GOByqORl9VCC0yw==
-X-Received: by 2002:a5d:6847:: with SMTP id o7mr8066426wrw.274.1585214614992;
-        Thu, 26 Mar 2020 02:23:34 -0700 (PDT)
-Received: from ?IPv6:2a01:e0a:3cb:7bb0:4468:e57e:609:75e5? ([2a01:e0a:3cb:7bb0:4468:e57e:609:75e5])
-        by smtp.gmail.com with ESMTPSA id h18sm2552278wmm.34.2020.03.26.02.23.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 02:23:34 -0700 (PDT)
-Subject: Re: [Tee-dev] [PATCH v5 2/2] tee: add private login method for kernel
- clients
-To:     Sumit Garg <sumit.garg@linaro.org>
-Cc:     Jens Wiklander <jens.wiklander@linaro.org>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <1585207429-10630-1-git-send-email-sumit.garg@linaro.org>
- <1585207429-10630-3-git-send-email-sumit.garg@linaro.org>
- <CAA-cTWZWPFtq-9MOrr6YDV4SGyo_JNaNsFJc=pjaWBrWHMid1A@mail.gmail.com>
- <CAFA6WYOvBNcGe+4ndq-YmM6haVoH4QiM7goYw5T40mR15muQKQ@mail.gmail.com>
-From:   Jerome Forissier <jerome@forissier.org>
-Message-ID: <b64c3ace-4558-deb5-7493-4837f48af188@forissier.org>
-Date:   Thu, 26 Mar 2020 10:23:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAFA6WYOvBNcGe+4ndq-YmM6haVoH4QiM7goYw5T40mR15muQKQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+        Thu, 26 Mar 2020 05:25:16 -0400
+Received: from mail-eopbgr70058.outbound.protection.outlook.com ([40.107.7.58]:6238
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726338AbgCZJZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:25:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XQ8U710FFNFeyDQqLcvgr7gVSNcAPRRx7n5e4r1pHgCJG8IUCA23IyeyuvI9gH2vjwvIjrCEa9srYNI/fBdLMqlH/QZE0xZRckXVTU/wUeQDKZpkBnFubFXRKvwoLX6vRbLod3qYkZBPY4WBs76YexYQjOMzHplEdYcDPkEhOQtCVl9DOrQjLSIT7WF/lwOBeSX6+ofVW/X7FSxZ4+gedCo3ZS0wWhKn/dhfbszKEho+tImQqg4Rmq0QHSPPrhPEnIDzh6Gv/3i7pDj4B7zgFNXEdGzeCSNWsTgE3gWpQDvxRMZsuTdEJQq3Mc9yYxzhn2MtnPjwMB5FOIOjg6ZaQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GBzm66wqaJBCVJK79rHWwbn/YN8IYwukW+OVfkaiTJs=;
+ b=RdEjDjR45AHiMBRJI106QQS/rJ0fZnoyleN99souUFxUCcXGl387oWwAleFbi97WlazoR4g07K6GyqtERP7Ggjnakr4u+DyN7eAaQl8CftRBSXKSX4A8sQdpEhVO18y6oB6WPpJMv78OpDqFCug3/XXa5ShOUOtmeIpD6g2kqHGMX2VUzOZpT2vOnRHY1xIGM5zRkfl0Y5faHmydmhjsrygg9W4VpXdMDJ9eoGFMthfhI3XCoEMafMsCjgFz0+x9heJHA0eqolRg7efU74QUL3CarDXTIntsmRWd+/VzSKKl9mvuiGEnVg2diAXpR1AGpAmEla1Np4p6RZTg08tGWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GBzm66wqaJBCVJK79rHWwbn/YN8IYwukW+OVfkaiTJs=;
+ b=rrLNxsxl3BVp7K4DvPimWmxRg+7b8fSfgFpHGEtW2yG5ov03dYeVPX1L4N5omOAtexJMroZ7JdBaC23qBF9ieYu/hCPjSNIeESGY6nH2O+tkvtKn6e9wKN1bvLH88bpuavpMbB+hSsUXz3PEhPk0C3A4V3xuu4Hm30EgnmSFAo8=
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (10.141.174.88) by
+ AM7PR04MB7192.eurprd04.prod.outlook.com (52.135.58.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Thu, 26 Mar 2020 09:25:11 +0000
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::dcc0:6a0:c64b:9f94]) by AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::dcc0:6a0:c64b:9f94%2]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
+ 09:25:11 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: RE: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Thread-Topic: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Thread-Index: AQHV/qQWBIiKj5A/T0WD8BjMeGVxRqhZUaeAgAFP25A=
+Date:   Thu, 26 Mar 2020 09:25:11 +0000
+Message-ID: <AM7PR04MB6885D1A865AD7E539DAA16F6F8CF0@AM7PR04MB6885.eurprd04.prod.outlook.com>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-7-yangbo.lu@nxp.com> <20200325131534.GA32284@localhost>
+In-Reply-To: <20200325131534.GA32284@localhost>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f0971688-e420-4646-1909-08d7d1679543
+x-ms-traffictypediagnostic: AM7PR04MB7192:|AM7PR04MB7192:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB7192E25EBA0B23061690EEC1F8CF0@AM7PR04MB7192.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(136003)(346002)(376002)(6506007)(53546011)(81156014)(81166006)(52536014)(9686003)(76116006)(66946007)(66446008)(66556008)(66476007)(64756008)(478600001)(8936002)(7696005)(55016002)(2906002)(33656002)(86362001)(4326008)(71200400001)(5660300002)(8676002)(186003)(26005)(54906003)(6916009)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7192;H:AM7PR04MB6885.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BeEpNPDN3bL8lLXmew2LfRM86kWGR40oW8uMOvchrzcjTBYSRBE2f3wUjiQ3wA15A5BbYlyrK46zRXUU8qBwObWhnMi9SleyQ0d4X6ohLc4fEDDooYU3sUEThGNIfmvpa2+JPQMpl/cg6rja/BQYbp9yx4iNMLPweqBg52RFDcGp567qCN9GzUlQjGV71BdV8ZcC+//iFUaF2+INe5S4mqrq9Us1pV19t/FGWy2houxVEtAfO6/v4cmuCJ2AM4tDLMFtxwGqlW+aG4+xe2tPCpwBXXkw9FXaqvBVHTHaBP3uRi+q58TN2r0Sl0aXgs5fK6lpc+OfOsSAvKz+naBP7TvF1V90z5oZPI/oQB1+sHDjLGath6agFxzyA8JmmYRjS1c4Ax1HciM1Fo+M/KmE/t1/iUq7Wx20624TWmzGG9txEvB736/cb79BlIAX1XiT
+x-ms-exchange-antispam-messagedata: g2S0SU1kGQPrC6blbsnyoHTqK56ckZgd69L+PQljoNbwv8CQRWpa0aHTXK6kA03Q3Vxp+feR5QWXg+u9eKDFPpaR3msPAjLF0nLPeoTBRpvqRzYLf62zoMyQM0KTgazQoClM7iKpcMl2cJktrGUBpQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f0971688-e420-4646-1909-08d7d1679543
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 09:25:11.0820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WZVt6k80X+806uqARoBkOAJqXsGz8G430ZjynMong/iXrTZOTV/0F9YeKDyCDUfkkH6OcUjdDIugc+4WI/tp+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7192
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Richard,
 
+> -----Original Message-----
+> From: Richard Cochran <richardcochran@gmail.com>
+> Sent: Wednesday, March 25, 2020 9:16 PM
+> To: Y.b. Lu <yangbo.lu@nxp.com>
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; David S . Mille=
+r
+> <davem@davemloft.net>; Vladimir Oltean <vladimir.oltean@nxp.com>;
+> Claudiu Manoil <claudiu.manoil@nxp.com>; Andrew Lunn <andrew@lunn.ch>;
+> Vivien Didelot <vivien.didelot@gmail.com>; Florian Fainelli
+> <f.fainelli@gmail.com>; Alexandre Belloni <alexandre.belloni@bootlin.com>=
+;
+> Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+> Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+>=20
+> On Fri, Mar 20, 2020 at 06:37:26PM +0800, Yangbo Lu wrote:
+> > Support 4 programmable pins for only one function periodic
+> > signal for now.
+>=20
+> For now?
 
-On 3/26/20 10:07 AM, Sumit Garg wrote:
-> On Thu, 26 Mar 2020 at 14:05, Jérôme Forissier <jerome@forissier.org> wrote:
->>
->> On Thu, Mar 26, 2020 at 8:24 AM Sumit Garg <sumit.garg@linaro.org> wrote:
->>>
->>> There are use-cases where user-space shouldn't be allowed to communicate
->>> directly with a TEE device which is dedicated to provide a specific
->>> service for a kernel client. So add a private login method for kernel
->>> clients
->>
->>
->> OK
->>
->>> and disallow user-space to open-session using GP implementation
->>> defined login method range: (0x80000000 - 0xFFFFFFFF).
->>
->>
->> I'm not sure this is correct, because it would prevent the client library or the TEE supplicant from using such values, although they are part of the TEE implementation; and further, nothing mandates that an implementation-defined method should not be used directly by client applications.
->>
-> 
-> Initial implementation of this patch only put restriction for single
-> implementation-defined login method (TEE_IOCTL_LOGIN_REE_KERNEL) only.
-> But after discussion with Jens here [1], I have changed that to
-> restrict complete implementation-defined range. If we think to further
-> partition this range considering API stability then I am open to that
-> too.
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1088062/
+Yes. The pin on Ocelot/Felix supports both PTP_PF_PEROUT and PTP_PF_EXTTS f=
+unctions.
+But the PTP_PF_EXTTS function should be implemented separately in Ocelot an=
+d Felix since hardware interrupt implementation is different on them.
+I am responsible for Felix. However I am facing some issue on PTP_PF_EXTTS =
+function on hardware. It may take a long time to discuss internally.
 
-In the end he proposed to reserve half the range for user space and half
-for kernel space.
+Thanks.
 
-(BTW sorry for my previous HTML reply)
+>=20
+> > +static int ocelot_ptp_verify(struct ptp_clock_info *ptp, unsigned int =
+pin,
+> > +			     enum ptp_pin_function func, unsigned int chan)
+> > +{
+> > +	switch (func) {
+> > +	case PTP_PF_NONE:
+> > +	case PTP_PF_PEROUT:
+> > +		break;
+>=20
+> If the functions cannot be changed, then supporting the
+> PTP_PIN_SETFUNC ioctl does not make sense!
 
--- 
-Jerome
-> 
-> -Sumit
-> 
->> --
->> Jerome
->>
->>>
->>>
->>> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->>> ---
->>>  drivers/tee/tee_core.c   | 6 ++++++
->>>  include/uapi/linux/tee.h | 8 ++++++++
->>>  2 files changed, 14 insertions(+)
->>>
->>> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
->>> index 37d22e3..533e7a8 100644
->>> --- a/drivers/tee/tee_core.c
->>> +++ b/drivers/tee/tee_core.c
->>> @@ -334,6 +334,12 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
->>>                         goto out;
->>>         }
->>>
->>> +       if (arg.clnt_login & TEE_IOCTL_LOGIN_MASK) {
->>> +               pr_debug("login method not allowed for user-space client\n");
->>> +               rc = -EPERM;
->>> +               goto out;
->>> +       }
->>> +
->>>         rc = ctx->teedev->desc->ops->open_session(ctx, &arg, params);
->>>         if (rc)
->>>                 goto out;
->>> diff --git a/include/uapi/linux/tee.h b/include/uapi/linux/tee.h
->>> index 6596f3a..19172a2 100644
->>> --- a/include/uapi/linux/tee.h
->>> +++ b/include/uapi/linux/tee.h
->>> @@ -173,6 +173,14 @@ struct tee_ioctl_buf_data {
->>>  #define TEE_IOCTL_LOGIN_APPLICATION            4
->>>  #define TEE_IOCTL_LOGIN_USER_APPLICATION       5
->>>  #define TEE_IOCTL_LOGIN_GROUP_APPLICATION      6
->>> +/*
->>> + * Disallow user-space to use GP implementation specific login
->>> + * method range (0x80000000 - 0xFFFFFFFF). This range is rather
->>> + * being reserved for REE kernel clients or TEE implementation.
->>> + */
->>> +#define TEE_IOCTL_LOGIN_MASK                   0x80000000
->>> +/* Private login method for REE kernel clients */
->>> +#define TEE_IOCTL_LOGIN_REE_KERNEL             0x80000000
->>>
->>>  /**
->>>   * struct tee_ioctl_param - parameter
->>> --
->>> 2.7.4
->>>
->>> _______________________________________________
->>> Tee-dev mailing list
->>> Tee-dev@lists.linaro.org
->>> https://lists.linaro.org/mailman/listinfo/tee-dev
+Did you mean the dead lock issue? Or you thought the pin supported only PTP=
+_PF_PEROUT function in hardware?
+
+>=20
+> > +	case PTP_PF_EXTTS:
+> > +	case PTP_PF_PHYSYNC:
+> > +		return -1;
+> > +	}
+> > +	return 0;
+> > +}
+>=20
+> Thanks,
+> Richard
