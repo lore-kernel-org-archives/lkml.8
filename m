@@ -2,196 +2,307 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46018C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1999AC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:54:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED7B2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:51:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585223484;
-	bh=aq4QLDizm5z7XgE90omYxZwQkaswl8l1jr6TALu8Phc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ooyUS2C5ObwxDV1E2tYt447Gu2TglY7AqQnMfad50WKJjkeaDgib8Zp0me88uaU1J
-	 NDKBn3+6cvZDDR0OHCwhmLzjI+lKonoP2HiwtZFDFV+ogpUUzp4Hny7DDKWwQgIrRp
-	 K16GDdZkmZRIuFWde1+zLZcvgJFuJkg3S36SZfzo=
+	by mail.kernel.org (Postfix) with ESMTP id DD4B220409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:54:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgCZLvX (ORCPT
+        id S1728159AbgCZLye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:51:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57368 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 07:54:34 -0400
+Received: from mga09.intel.com ([134.134.136.24]:17708 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727994AbgCZLvX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:51:23 -0400
-Received: from localhost (unknown [106.201.104.212])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC56820409;
-        Thu, 26 Mar 2020 11:51:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585223481;
-        bh=aq4QLDizm5z7XgE90omYxZwQkaswl8l1jr6TALu8Phc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UGPLyM704qblOPPjpT5K1M9Ecn5EpP5jWs9XYImiwvu6cBkvOQ2a0dbCnY2tSgKOJ
-         +pZty14fMTVBnluwP4QxTP+Gdi5NZDwfQur5zWwLlOMc89X77XaBYHPsetP2zZL6CF
-         ZIX+fVfVPbfxuFWo4yRBKpNUBTqmGXO16tqtyoug=
-Date:   Thu, 26 Mar 2020 17:21:17 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        id S1728119AbgCZLyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:54:33 -0400
+IronPort-SDR: ClBkefjfjSY7kS6ppOYPNNpye5QswmI/atflNMFQVJxlKd7wb4RnbJ6CaRhLKqRGFNNCZu4jt0
+ bcgdcRCsKzvQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 04:54:32 -0700
+IronPort-SDR: HPP8N9irDUvrN4UGIlZE/JlclTiU3u4/4AB6azYpsXYbswOFaesETfzKyLHtpkQIu4tQARxKGB
+ kgfwRLckm0Ng==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
+   d="scan'208";a="238783813"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga007.fm.intel.com with ESMTP; 26 Mar 2020 04:54:29 -0700
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1jHR5j-00D6qq-LQ; Thu, 26 Mar 2020 13:54:31 +0200
+Date:   Thu, 26 Mar 2020 13:54:31 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     a.hajda@samsung.com, artem.bityutskiy@linux.intel.com,
+        balbi@kernel.org, Mark Brown <broonie@kernel.org>,
+        fntoth@gmail.com, grant.likely@arm.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andreas =?iso-8859-1?Q?B=F6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 3/5] usb: xhci: Add support for Renesas controller
- with memory
-Message-ID: <20200326115117.GZ72691@vkoul-mobl>
-References: <20200323170601.419809-1-vkoul@kernel.org>
- <20200323170601.419809-4-vkoul@kernel.org>
- <6ea778a7-6d58-6dae-bd65-3a63a945fb97@linux.intel.com>
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>, peter.ujfalusi@ti.com,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+Message-ID: <20200326115431.GP1922688@smile.fi.intel.com>
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com>
+ <20200325125120.GX1922688@smile.fi.intel.com>
+ <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <6ea778a7-6d58-6dae-bd65-3a63a945fb97@linux.intel.com>
+In-Reply-To: <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-03-20, 13:29, Mathias Nyman wrote:
-> Hi Vinod
+On Wed, Mar 25, 2020 at 03:08:29PM -0700, Saravana Kannan wrote:
+> On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Mar 24, 2020 at 08:29:01PM -0700, Saravana Kannan wrote:
+> > > On Tue, Mar 24, 2020 at 5:38 AM Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> > > > Consider the following scenario.
+> > > >
+> > > > The main driver of USB OTG controller (dwc3-pci), which has the following
+> > > > functional dependencies on certain platform:
+> > > > - ULPI (tusb1210)
+> > > > - extcon (tested with extcon-intel-mrfld)
+> > > >
+> > > > Note, that first driver, tusb1210, is available at the moment of
+> > > > dwc3-pci probing, while extcon-intel-mrfld is built as a module and
+> > > > won't appear till user space does something about it.
+> > > >
+> > > > This is depicted by kernel configuration excerpt:
+> > > >
+> > > >     CONFIG_PHY_TUSB1210=y
+> > > >     CONFIG_USB_DWC3=y
+> > > >     CONFIG_USB_DWC3_ULPI=y
+> > > >     CONFIG_USB_DWC3_DUAL_ROLE=y
+> > > >     CONFIG_USB_DWC3_PCI=y
+> > > >     CONFIG_EXTCON_INTEL_MRFLD=m
+> > > >
+> > > > In the Buildroot environment the modules are probed by alphabetical ordering
+> > > > of their modaliases. The latter comes to the case when USB OTG driver will be
+> > > > probed first followed by extcon one.
+> > > >
+> > > > So, if the platform anticipates extcon device to be appeared, in the above case
+> > > > we will get deferred probe of USB OTG, because of ordering.
+> > > >
+> > > > Since current implementation, done by the commit 58b116bce136 ("drivercore:
+> > > > deferral race condition fix") counts the amount of triggered deferred probe,
+> > > > we never advance the situation -- the change makes it to be an infinite loop.
+> > >
+> > > Hi Andy,
+> > >
+> > > I'm trying to understand this sequence of steps. Sorry if the questions
+> > > are stupid -- I'm not very familiar with USB/PCI stuff.
+> >
+> > Thank you for looking into this. My answer below.
+> >
+> > As a first thing I would like to tell that there is another example of bad
+> > behaviour of deferred probe with no relation to USB. The proposed change also
+> > fixes that one (however, less possible to find in real life).
 > 
-> On 23.3.2020 19.05, Vinod Koul wrote:
-> > Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> > loaded. Add these devices in table and invoke renesas firmware loader
-> > functions to check and load the firmware into device memory when
-> > required.
-> > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  drivers/usb/host/xhci-pci-renesas.c |  1 +
-> >  drivers/usb/host/xhci-pci.c         | 29 ++++++++++++++++++++++++++++-
-> >  drivers/usb/host/xhci-pci.h         |  3 +++
-> >  3 files changed, 32 insertions(+), 1 deletion(-)
-> > 
-> 
-> It's unfortunate if firmware loading couldn't be initiated in a PCI fixup hook
-> for this Renesas controller. What was the reason it failed?
-> 
-> Nicolas Saenz Julienne just submitted a solution like that for Raspberry Pi 4
-> where firmware loading is initiated in pci-quirks.c quirk_usb_early_handoff()
-> 
-> https://lore.kernel.org/lkml/20200324182812.20420-1-nsaenzjulienne@suse.de
-> 
-> Is he doing something different than what was done for the Renesas controller?
+> Unless I see what the other issue is, I can't speak for the unknown.
 
-I tried and everytime ended up not getting firmware. Though I did not
-investigate a lot. Christian seemed to have tested sometime back as
-well.
+Okay, let's talk about other case (actually it's the one which I had noticed
+approximately at the time when culprit patch made the kernel).
 
-Another problem is that we dont get driver_data in the quirk and there
-didnt seem a way to find the firmware name.
+For some debugging purposes I have been using pin control table in board code.
 
-> > diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-> > index c588277ac9b8..d413d53df94b 100644
-> > --- a/drivers/usb/host/xhci-pci-renesas.c
-> > +++ b/drivers/usb/host/xhci-pci-renesas.c
-> > @@ -336,6 +336,7 @@ static void renesas_fw_callback(const struct firmware *fw,
-> >  		goto cleanup;
-> >  	}
-> >  
-> > +	xhci_pci_probe(pdev, ctx->id);
-> >  	return;
-> 
-> I haven't looked into this but instead of calling xhci_pci_probe() here in the async fw
-> loading callback could we just return -EPROBE_DEFER until firmware is loaded when
-> xhci_pci_probe() is originally called?
+Since I would like to boot kernel on different systems I have some tables for
+non-existing pin control device. Pin control framework returns -EPROBE_DEFER
+when trying to probe device with attached table for wrong pin control. This is
+fine, the problem is that *any* successfully probed device, which happens in
+the deferred probe initcall will desynchronize existing counter. As a result ->
+infinite loop. For the record, I didn't realize and didn't investigate that
+time the issue and now I can confirm that this is a culprit which is fixed by
+this patch.
 
-Hmm, initially my thinking was how to tell device core to probe again,
-and then digging up I saw wait_for_device_probe() which can be used, let
-me try that
+> > > > ---8<---8<---
+> > > >
+> > > > [   22.187127] driver_deferred_probe_trigger <<< 1
+> > > >
+> > > > ...here is the late initcall triggers deferred probe...
+> > > >
+> > > > [   22.191725] platform dwc3.0.auto: deferred_probe_work_func in deferred list
+> > > >
+> > > > ...dwc3.0.auto is the only device in the deferred list...
+> > >
+> > > Ok, dwc3.0.auto is the only unprobed device at this point?
+> >
+> > Correct.
+> >
+> > > > [   22.198727] platform dwc3.0.auto: deferred_probe_work_func 1 <<< counter 1
+> > > >
+> > > > ...the counter before mutex is unlocked is kept the same...
+> > > >
+> > > > [   22.205663] platform dwc3.0.auto: Retrying from deferred list
+> > > >
+> > > > ...mutes has been unlocked, we try to re-probe the driver...
+> > > >
+> > > > [   22.211487] bus: 'platform': driver_probe_device: matched device dwc3.0.auto with driver dwc3
+> > > > [   22.220060] bus: 'platform': really_probe: probing driver dwc3 with device dwc3.0.auto
+> > > > [   22.238735] bus: 'ulpi': driver_probe_device: matched device dwc3.0.auto.ulpi with driver tusb1210
+> > > > [   22.247743] bus: 'ulpi': really_probe: probing driver tusb1210 with device dwc3.0.auto.ulpi
+> > > > [   22.256292] driver: 'tusb1210': driver_bound: bound to device 'dwc3.0.auto.ulpi'
+> > > > [   22.263723] driver_deferred_probe_trigger <<< 2
+> > > >
+> > > > ...the dwc3.0.auto probes ULPI, we got successful bound and bumped counter...
+> > > >
+> > > > [   22.268304] bus: 'ulpi': really_probe: bound device dwc3.0.auto.ulpi to driver tusb1210
+> > >
+> > > So where did this dwc3.0.auto.ulpi come from?
+> >
+> > > Looks like the device is created by dwc3_probe() through this call flow:
+> > > dwc3_probe() -> dwc3_core_init() -> dwc3_core_ulpi_init() ->
+> > > dwc3_ulpi_init() -> ulpi_register_interface() -> ulpi_register()
+> >
+> > Correct.
+> >
+> > > > [   22.276697] platform dwc3.0.auto: Driver dwc3 requests probe deferral
+> > >
+> > > Can you please point me to which code patch actually caused the probe
+> > > deferral?
+> >
+> > Sure, it's in drd.c.
+> >
+> > if (device_property_read_string(dev, "linux,extcon-name", &name) == 0) {
+> >   edev = extcon_get_extcon_dev(name);
+> >   if (!edev)
+> >     return ERR_PTR(-EPROBE_DEFER);
+> >   return edev;
+> > }
+> 
+> Thanks for the confirmations and pointers. I assume
+> "linux,extcon-name" is a property that's obtained from ACPI? Because I
+> couldn't find a relevant reference to it elsewhere in the kernel.
 
-> >  cleanup:
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index a19752178216..7e63658542ac 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -15,6 +15,7 @@
-> >  
-> >  #include "xhci.h"
-> >  #include "xhci-trace.h"
-> > +#include "xhci-pci.h"
-> >  
-> >  #define SSIC_PORT_NUM		2
-> >  #define SSIC_PORT_CFG2		0x880c
-> > @@ -312,11 +313,25 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
-> >   * We need to register our own PCI probe function (instead of the USB core's
-> >   * function) in order to create a second roothub under xHCI.
-> >   */
-> > -static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> > +int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> >  {
-> >  	int retval;
-> >  	struct xhci_hcd *xhci;
-> >  	struct usb_hcd *hcd;
-> > +	char *renesas_fw;
-> > +
-> > +	renesas_fw = (char *)id->driver_data;
-> 
-> driver_data is useful for other things than just renesas firmware loading.
-> Heikki suggested a long time ago to use it for passing the quirk flags as well, which
-> makes sense.
-> 
-> We probably need a structure, something like
-> 
-> struct xhci_driver_data = {
-> 	u64 quirks;
-> 	const char *firmware;
-> };
-> 
-> > +	if (renesas_fw) {
-> > +		retval = renesas_xhci_pci_probe(dev, id);
-> > +		switch (retval) {
-> > +		case 0: /* fw check success, continue */
-> > +			break;
-> > +		case 1: /* fw will be loaded by async load */
-> > +			return 0;
-> > +		default: /* error */
-> > +			return retval;
-> > +		}
-> > +	}
-> >  
-> 
-> If returning -EPROBE_DEFER until firmware is loaded is an option then we would prevent probe
-> from returning success while the renesas controller is still loading firmware.
-> 
-> So we would end up with something like this:
-> (we can add a quirk flag for renesas firmware loading)
-> 
-> int xhci_pci_probe(..)
-> {
-> 	...
-> 	struct xhci_driver_data *data = id->driver_data;
-> 	if (data && data->quirks & XHCI_RENESAS_FW_QUIRK) { 
-> 		if (!xhci_renesas_fw_ready(...))
-> 			return -EPROBE_DEFER
-> 	}
-> }
-> 
-> xhci_renesas_fw_ready() would need to initiate firmware loading unless
-> firmware is already running or loading.
-> 
-> Would that work for you?
+Yes.
 
-I think yes that should work, let me try that..
+> > > > ...but extcon driver is still missing...
+> > > >
+> > > > [   22.283174] platform dwc3.0.auto: Added to deferred list
+> > > > [   22.288513] platform dwc3.0.auto: driver_deferred_probe_add_trigger local counter: 1 new counter 2
+> > >
+> > > I'm not fully aware of all the USB implications, but if extcon is
+> > > needed, why can't that check be done before we add and probe the ulpi
+> > > device? That'll avoid this whole "fake" probing and avoid the counter
+> > > increase. And avoid the need for this patch that's touching the code
+> > > code that's already a bit delicate.
+> >
+> > > Also, with my limited experience with all the possible drivers in the
+> > > kernel, it's weird that the ulpi device is added and probed before we
+> > > make sure the parent device (dwc3.0.auto) can actually probe
+> > > successfully.
+> >
+> > As I said above the deferred probe trigger has flaw on its own.
+> 
+> Definitely agree. I'm not saying deferred probe is perfect.
+> 
+> > Even if we fix for USB case, there is (and probably will be) others.
+> >
+> > > Most of the platform device code I've seen in systems with OF (device
+> > > tree) add the child devices towards the end of the parent's probe
+> > > function.
+
+I realized also that your fix won't work if we change extcon to be compiled in
+and ULPI to be a module. So, any driver with two or more strict dependencies
+one of which is satisfied and one is not will end up in this infinite loop.
+
+> > > > ...and since we had a successful probe, we got counter mismatch...
+> > > >
+> > > > [   22.297490] driver_deferred_probe_trigger <<< 3
+> > > > [   22.302074] platform dwc3.0.auto: deferred_probe_work_func 2 <<< counter 3
+> > > >
+> > > > ...at the end we have a new counter and loop repeats again, see 22.198727...
+> > > >
+> > > > ---8<---8<---
+> > > >
+> > > > Revert of the commit helps, but it is probably not helpful for the initially
+> > > > found regression. Artem Bityutskiy suggested to use counter of the successful
+> > > > probes instead. This fixes above mentioned case and shouldn't prevent driver
+> > > > to reprobe deferred ones.
+> > > >
+> > > > Under "successful probe" we understand the state when a driver of the certain
+> > > > device is being kept bound after deferred probe trigger cycle. For instance,
+> > > > in the above mentioned case probing of tusb1210 is not successful because dwc3
+> > > > driver unbinds device dwc3.0.auto.ulpi. The atomic_dec() call is used to keep
+> > > > track of this. The amount of bindings is always great than or equal to the
+> > > > amount of unbindings as guaranteed by design of the driver binding mechanism.
+> > >
+> > > The unbindings count can increase for other unrelated drivers unbinding
+> > > too. Wouldn't it? Seems a bit fragile and racy in a fashion similar to
+> > > the issue the original patch was trying to fix.
+> >
+> > Yes, it's (unlikely) possible (*), but it will give one more iteration per such
+> > case. It's definitely better than infinite loop. Do you agree?
+> 
+> Sorry I wasn't being clear (I was in a rush). I'm saying this patch
+> can reintroduce the bug where the deferred probe isn't triggered when
+> it should be.
+
+I don't think so. If I'm not mistaken we still have one more cycle to trigger probe.
+
+> Let's take a simple execution flow.
+> 
+> probe_okay is at 10.
+> 
+> Thread-A
+>   really_probe(Device-A)
+>     local_probe_okay_count = 10
+>     Device-A probe function is running...
+> 
+> Thread-B
+>   really_probe(Device-B)
+>     Device-B probes successfully.
+>     probe_okay incremented to 11
+
+And probe trigger task is called. It goes to the loop because counters are not the same.
+
+> Thread-C
+>   Device-C (which had bound earlier) is unbound (say module is
+> unloaded or a million other reasons).
+>   probe_okay is decremented to 10.
+
+ 
+> Thread-A continues
+>   Device-A probe function returns -EPROBE_DEFER
+>   driver_deferred_probe_add_trigger() doesn't do anything because
+>     local_probe_okay_count == probe_okay
+>   But Device-A might have deferred probe waiting on Device-B.
+>   Device-A never probes.
+
+See above.
+
+> > *) It means during probe you have _intensive_ removing, of course you may keep
+> > kernel busy with iterations, but it has no practical sense. DoS attacks more
+> > effective in different ways.
+> 
+> I wasn't worried about DoS attacks. More of a functional correctness
+> issue what I explained above.
+> 
+> Anyway, if your issue and similar issues can be handles in driver core
+> in a clean way without breaking other cases, I don't have any problem
+> with that. Just that, I think the current solution breaks other cases.
+
+> As an alternate solution, assuming "linux,extcon-name" is coming
+> from some firmware, you might want to look into the fw_devlink
+> feature.
+
+Let's forget about USB. Don't be fixed on it. It one of the particular case out
+of others. I'm not going to comment USB particularities, sorry. It seems to me
+as not related.
 
 -- 
-~Vinod
+With Best Regards,
+Andy Shevchenko
+
+
