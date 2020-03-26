@@ -2,134 +2,206 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6618C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:22:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B5DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B675A20746
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:22:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1AF20746
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:22:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCmIfvbY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727699AbgCZDWW (ORCPT
+        id S1727721AbgCZDW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:22:22 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:55603 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727560AbgCZDWW (ORCPT
+        Wed, 25 Mar 2020 23:22:58 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33777 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727560AbgCZDW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:22:22 -0400
-Received: from dread.disaster.area (pa49-179-23-206.pa.nsw.optusnet.com.au [49.179.23.206])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id D3C267EB4DD;
-        Thu, 26 Mar 2020 14:22:13 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1jHJ5w-0006v8-Du; Thu, 26 Mar 2020 14:22:12 +1100
-Date:   Thu, 26 Mar 2020 14:22:12 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        Richard Weinberger <richard@nod.at>, linux-xfs@vger.kernel.org,
-        Eric Biggers <ebiggers@kernel.org>, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/4] fs: avoid double-writing the inode on a lazytime
- expiration
-Message-ID: <20200326032212.GN10776@dread.disaster.area>
-References: <20200325122825.1086872-1-hch@lst.de>
- <20200325122825.1086872-3-hch@lst.de>
+        Wed, 25 Mar 2020 23:22:57 -0400
+Received: by mail-qk1-f196.google.com with SMTP id v7so5137759qkc.0;
+        Wed, 25 Mar 2020 20:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=YeOy0OBasIdly6oWWvsKSzzwXWKpMwurTBwp+GVkZds=;
+        b=KCmIfvbYyV7j43ojdw2tuBoWEvYIzBj7v7nPy611jNiX7OuPrMWI1OFBiJODURzwPO
+         iIU/LkLvDfZcJ5yqUdM6z97qgBbw+DL5czuJoqk1KdCAzLvvWcJXq2i3wTi6JLIc3KA1
+         AkvaRfuM7sxuswgbDJGdPO4sKjnc19a3gTVnrvaFX+hlBbK36TCUlRkXzTO9zFRYnmgs
+         gPeJGy04xFJwAMAokTAZ4KO40eX/DDfgg2cf3ffgtwNYkkrcjaWTG6T4VuSF4JVEr/PY
+         aHjhSF0712u6Mv5Fc+oi7pDIn6226qGec2iu2g8QzFU/Mj++QPrGgD3h5WWsgOEWk/wQ
+         iFQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YeOy0OBasIdly6oWWvsKSzzwXWKpMwurTBwp+GVkZds=;
+        b=s4kk8tGoK4NcvpSejZ8uWiWLpZMC9wPsj4itBktbTWL3r/ajwd7dLKGfRkzVSTl8lq
+         0fByktlQoiDtruoe8uM7eRH762q6FsMcYUKMvQYhpezNyM4xoyLnLQE1z5QYHPXBhXTx
+         VCRSYy6RXVSJppOgwdjmpF8T2QUUIMM+mtwwqb2IxvX5b+C38NUulvl8te+tdVrq0vZe
+         EgpEvfxh9icaiSRLxUJP9rqXsJXlZOQv9xpcNdi2hkSp7yWr8R7mugaDAr5nHj7KFNea
+         V+XGGlftW6g9+UGzE4qyCoS0/0CF9By1e07HilVnv4ocHTp6pz+RhdaSeN/cEAK90O6X
+         daGw==
+X-Gm-Message-State: ANhLgQ3teMoYXMoZJLjcBvHmScGrCx1n3rOeiyiFSS/DtUKBE+hvr7NQ
+        CBVSuw/cj5sJtHn+9z9SU4I=
+X-Google-Smtp-Source: ADFU+vs8Ayeb6bVEbFzkIaUSWWCm8+4rjxtf1TQeNATQ5/YUiFsyKQNQlmIu8dGuhB8WFBwYSX88fQ==
+X-Received: by 2002:a37:7e82:: with SMTP id z124mr5941475qkc.360.1585192976039;
+        Wed, 25 Mar 2020 20:22:56 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f028:d8e3:b319:cf5:7776:b4d9])
+        by smtp.gmail.com with ESMTPSA id t140sm619143qke.48.2020.03.25.20.22.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Mar 2020 20:22:55 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id EC155C5CE4; Thu, 26 Mar 2020 00:22:52 -0300 (-03)
+Date:   Thu, 26 Mar 2020 00:22:52 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     "David S. Miller" <davem@davemloft.net>, vyasevich@gmail.com,
+        nhorman@tuxdriver.com, Jakub Kicinski <kuba@kernel.org>,
+        linux-sctp@vger.kernel.org, netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, anenbupt@gmail.com
+Subject: Re: [PATCH v4] sctp: fix refcount bug in sctp_wfree
+Message-ID: <20200326032252.GI3756@localhost.localdomain>
+References: <20200322090425.6253-1-hqjagain@gmail.com>
+ <20200326001416.GH3756@localhost.localdomain>
+ <CAJRQjoeWUHj7Ep5ycTxVJVuxmhzrzXx=-rP_h=hCCrBvgTUNEg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200325122825.1086872-3-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=LYdCFQXi c=1 sm=1 tr=0
-        a=n/Z79dAqQwRlp4tcgfhWYA==:117 a=n/Z79dAqQwRlp4tcgfhWYA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=SS2py6AdgQ4A:10
-        a=7-415B0cAAAA:8 a=TQi0xSRmeD81B83iwF8A:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <CAJRQjoeWUHj7Ep5ycTxVJVuxmhzrzXx=-rP_h=hCCrBvgTUNEg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 01:28:23PM +0100, Christoph Hellwig wrote:
-> In the case that an inode has dirty timestamp for longer than the
-> lazytime expiration timeout (or if all such inodes are being flushed
-> out due to a sync or syncfs system call), we need to inform the file
-> system that the inode is dirty so that the inode's timestamps can be
-> copied out to the on-disk data structures.  That's because if the file
-> system supports lazytime, it will have ignored the dirty_inode(inode,
-> I_DIRTY_TIME) notification when the timestamp was modified in memory.q
-> Previously, this was accomplished by calling mark_inode_dirty_sync(),
-> but that has the unfortunate side effect of also putting the inode the
-> writeback list, and that's not necessary in this case, since we will
-> immediately call write_inode() afterwards.  Replace the call to
-> mark_inode_dirty_sync() with a new lazytime_expired method to clearly
-> separate out this case.
+On Thu, Mar 26, 2020 at 09:30:08AM +0800, Qiujun Huang wrote:
+> On Thu, Mar 26, 2020 at 8:14 AM Marcelo Ricardo Leitner
+> <marcelo.leitner@gmail.com> wrote:
+> >
+> > On Sun, Mar 22, 2020 at 05:04:25PM +0800, Qiujun Huang wrote:
+> > > sctp_sock_migrate should iterate over the datamsgs to modify
+> > > all trunks(skbs) to newsk. For this, out_msg_list is added to
+> >
+> > s/trunks/chunks/
+> 
+> My :p.
+> 
+> >
+> > > sctp_outq to maintain datamsgs list.
+> >
+> > It is an interesting approach. It speeds up the migration, yes, but it
+> > will also use more memory per datamsg, for an operation that, when
+> > performed, the socket is usually calm.
+> >
+> > It's also another list to be handled, and I'm not seeing the patch
+> > here move the datamsg itself now to the new outq. It would need
+> > something along these lines:
+> 
+> Are all the rx chunks in the rx queues?
+
+Yes, even with GSO.
+
+> 
+> > sctp_sock_migrate()
+> > {
+> > ...
+> >         /* Move any messages in the old socket's receive queue that are for the
+> >          * peeled off association to the new socket's receive queue.
+> >          */
+> >         sctp_skb_for_each(skb, &oldsk->sk_receive_queue, tmp) {
+> >                 event = sctp_skb2event(skb);
+> > ...
+> >                 /* Walk through the pd_lobby, looking for skbs that
+> >                  * need moved to the new socket.
+> >                  */
+> >                 sctp_skb_for_each(skb, &oldsp->pd_lobby, tmp) {
+> >                         event = sctp_skb2event(skb);
+> >
+> > That said, I don't think it's worth this new list.
+> 
+> About this case:
+> datamsg
+>                    ->chunk0                       chunk1
+>        chunk2
+>  queue          ->transmitted                 ->retransmit
+>  ->not in any queue
+
+We always can find it through the other chunks, otherwise it's freed.
+
+> 
+> Also need to maintain a datamsg list to record which datamsg is
+> processed avoiding repetitive
+> processing.
+
+Right, but for that we can add a simple check on
+sctp_for_each_tx_datamsg() based on a parameter.
+
+> So, list it to outq. Maybe it will be used sometime.
+
+We can change it when the time comes. For now, if we can avoid growing
+sctp_datamsg, it's better. With this patch, it grows from 40 to 56
+bytes, leaving just 8 left before it starts using a slab of 128 bytes
+for it.
 
 
-hmmm. Doesn't this cause issues with both iput() and
-vfs_fsync_range() because they call mark_inode_dirty_sync() on
-I_DIRTY_TIME inodes to move them onto the writeback list so they are
-appropriately expired when the inode is written back.
+The patched list_for_each_entry() can/should be factored out into
+__sctp_for_each_tx_datachunk, whose first parameter then is the queue
+instead the asoc.
 
-i.e.:
+---8<---
 
-
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index 2094386af8ac..e5aafd40dd0f 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -612,19 +612,13 @@ xfs_fs_destroy_inode(
->  }
->  
->  static void
-> -xfs_fs_dirty_inode(
-> -	struct inode			*inode,
-> -	int				flag)
-> +xfs_fs_lazytime_expired(
-> +	struct inode			*inode)
->  {
->  	struct xfs_inode		*ip = XFS_I(inode);
->  	struct xfs_mount		*mp = ip->i_mount;
->  	struct xfs_trans		*tp;
->  
-> -	if (!(inode->i_sb->s_flags & SB_LAZYTIME))
-> -		return;
-> -	if (flag != I_DIRTY_SYNC || !(inode->i_state & I_DIRTY_TIME))
-> -		return;
-> -
->  	if (xfs_trans_alloc(mp, &M_RES(mp)->tr_fsyncts, 0, 0, 0, &tp))
->  		return;
->  	xfs_ilock(ip, XFS_ILOCK_EXCL);
-> @@ -1053,7 +1047,7 @@ xfs_fs_free_cached_objects(
->  static const struct super_operations xfs_super_operations = {
->  	.alloc_inode		= xfs_fs_alloc_inode,
->  	.destroy_inode		= xfs_fs_destroy_inode,
-> -	.dirty_inode		= xfs_fs_dirty_inode,
-> +	.lazytime_expired	= xfs_fs_lazytime_expired,
->  	.drop_inode		= xfs_fs_drop_inode,
->  	.put_super		= xfs_fs_put_super,
->  	.sync_fs		= xfs_fs_sync_fs,
-
-This means XFS no longer updates/logs the current timestamp because
-->dirty_inode(I_DIRTY_SYNC) is no longer called for XFS) before
-->fsync flushes the inode data and metadata changes to the journal.
-Hence the current in-memory timestamps are not present in the log
-before the fsync is run as so we violate the fsync guarantees
-lazytime gives for timestamp updates....
-
-I haven't quite got it straight in my head if the iput() case has
-similar problems, but the fsync case definitely looks broken.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+diff --git a/net/sctp/socket.c b/net/sctp/socket.c
+index fed26a1e9518..62f401799709 100644
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -148,19 +148,30 @@ static void sctp_clear_owner_w(struct sctp_chunk *chunk)
+ }
+ 
+ static void sctp_for_each_tx_datachunk(struct sctp_association *asoc,
++				       bool clear,
+ 				       void (*cb)(struct sctp_chunk *))
+ 
+ {
++	struct sctp_datamsg *msg, *prev_msg = NULL;
+ 	struct sctp_outq *q = &asoc->outqueue;
++	struct sctp_chunk *chunk, *c;
+ 	struct sctp_transport *t;
+-	struct sctp_chunk *chunk;
+ 
+ 	list_for_each_entry(t, &asoc->peer.transport_addr_list, transports)
+ 		list_for_each_entry(chunk, &t->transmitted, transmitted_list)
+ 			cb(chunk);
+ 
+-	list_for_each_entry(chunk, &q->retransmit, transmitted_list)
+-		cb(chunk);
++	list_for_each_entry(chunk, &q->sacked, transmitted_list) {
++		msg = chunk->msg;
++		if (msg == prev_msg)
++			continue;
++		list_for_each_entry(c, &msg->chunks, frag_list) {
++			if ((clear && asoc->base.sk == c->skb->sk) ||
++			    (!clear && asoc->base.sk != c->skb->sk))
++				cb(c);
++		}
++		prev_msg = msg;
++	}
+ 
+ 	list_for_each_entry(chunk, &q->sacked, transmitted_list)
+ 		cb(chunk);
+@@ -9574,9 +9585,9 @@ static int sctp_sock_migrate(struct sock *oldsk, struct sock *newsk,
+ 	 * paths won't try to lock it and then oldsk.
+ 	 */
+ 	lock_sock_nested(newsk, SINGLE_DEPTH_NESTING);
+-	sctp_for_each_tx_datachunk(assoc, sctp_clear_owner_w);
++	sctp_for_each_tx_datachunk(assoc, true, sctp_clear_owner_w);
+ 	sctp_assoc_migrate(assoc, newsk);
+-	sctp_for_each_tx_datachunk(assoc, sctp_set_owner_w);
++	sctp_for_each_tx_datachunk(assoc, false, sctp_set_owner_w);
+ 
+ 	/* If the association on the newsk is already closed before accept()
+ 	 * is called, set RCV_SHUTDOWN flag.
