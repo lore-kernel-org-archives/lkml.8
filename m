@@ -2,172 +2,146 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6955BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF67FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4090920714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585251670;
-	bh=Ess4P7rTXsdNg1EcCIx+Mxp+xHNnRi779J8+YVPtKj0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=oV/DiihxEZ6mMBT7pYJ9aVVTXzNaahQmIwwKeZ7W7OMgZVm8T5wTq8jBGBUlEJhEp
-	 71QRAQA7N4uE9GOmHVdhxTNkAnezu91zU41gHGNnwrXOPxReTCB4CFrqY/rCJGsAql
-	 cskEj7G7T87D6eXLTw1EX97uIDNg9NYQB9kz1mJA=
+	by mail.kernel.org (Postfix) with ESMTP id 9AB1520714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:42:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJyeQZuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728618AbgCZTlJ (ORCPT
+        id S1728626AbgCZTmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:41:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34820 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZTlI (ORCPT
+        Thu, 26 Mar 2020 15:42:21 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36742 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727354AbgCZTmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:41:08 -0400
-Received: by mail-io1-f68.google.com with SMTP id o3so1806148ioh.2;
-        Thu, 26 Mar 2020 12:41:07 -0700 (PDT)
+        Thu, 26 Mar 2020 15:42:21 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l23so7257859otf.3;
+        Thu, 26 Mar 2020 12:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NAO+A7y/DjbsbhI8P0r25mk2n531NNa6uqK4EPh5TpQ=;
+        b=YJyeQZuE88tXwIGESRzyCScKjxwzZInWYCOPgHKZB9iAtDqXwGNEmvXT3F7hHDN/7S
+         2nxj06plwFSBAqdNAjeTcntrQ9YwQfyDuWuoS4cv6yWLEVWOnPlcW7gOPo8sIPN9RS9e
+         WdAaWvPUeW8Dt+iIOpELi38MstOw39XI7EJolASmUkbBcfsXg6Wcp+d9fnF2s7XYHu6m
+         5gPKVsMcSA6PNRErY1fPZuE2BAKi6lxq84i05+UkGHkP6oqSSsAX51jegFmIOjU8Oq2q
+         xmCdLVPOGPRFp0IatVDPcWj8T3IVApSAyZvU9jlPMbp9I3EJUw0qkRDr1AFsS7cWsBM2
+         tIXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4Z5GoQwOlXq34jMbrNfddtNsm4YbfUIB3Klcgi2n0p8=;
-        b=Zaa5swK5BdP+vNYvnOClHhS8yoFBYx8uJQ1uH/dQdCLYouS7dm1mkZ+pYE5sv7FmrX
-         8YdYDCKUOTuf+q0cJH7abTPaMCdg0UMTAj1/5YgQfaNhIFVaMCDv6L5mX547JvjDnfkq
-         IY65viHf+SpLVETQWVMdDHHdYs3JlYa7oZWIuCBVO+R1ZQkBDSb/tQykrm+mVxj6HO+Z
-         uY9SyBYbZGuScWtzJ1G6LwWjWvPyPBVgm+a/Ui+MIwcsKDmXZcoBiLxDzjgo7CmWgU26
-         MtHEQ74RmA5QU2rHAlkeUdJPOL99kIjNnCrGPS+d15UdcMMywVIQmG4sHBLT2YgL+Oj/
-         Tzvw==
-X-Gm-Message-State: ANhLgQ3uQRBN4OhlmgdSwqaLACzlnG2GX+Sccbt+cGzjDvTo1WlvmrUp
-        co4GWSewtG/IeTNL0+1dKw==
-X-Google-Smtp-Source: ADFU+vtj8JYvbn4eVg+I4HxwGh9ItJrI3wS4cOSL0jWkNvzGNgqbXajFrLmp6mGnIiVyKBZuytot6A==
-X-Received: by 2002:a02:40c9:: with SMTP id n192mr7472911jaa.91.1585251666531;
-        Thu, 26 Mar 2020 12:41:06 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id j84sm1106640ili.65.2020.03.26.12.41.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NAO+A7y/DjbsbhI8P0r25mk2n531NNa6uqK4EPh5TpQ=;
+        b=VbanNDR9SeBViRdoYmW2wpa0Cg3CaHY0f15UVInOB20zxy46BrRD+GIVQ/M6NUVT7y
+         PLibhKFjlMumZLse1kUoZZyNsgZ8diO4olMiFyQCBJX4q9iq2ANY33abipuR0gIrnzZa
+         5432YpDUCUE5nQ7UZ5UoZP6FmmkJn4IPNoBI1ZF+u1ALSWz9v1OwrSKm9mPCN0nRzfNU
+         hu95/uhU53ba8WrcOEWr3nsaKAZl/X8wH059cXSGJa4BoP+94yBlnSGfPv1Ayjq9DV3C
+         nFEOArPrDKoB2WBJmhkNOwRpu1m3gYlpoaVXbZjhEKiuABF6jLqzZyqW1mThtMqGrmjk
+         HSzw==
+X-Gm-Message-State: ANhLgQ1cQaLiJL2xFF66ZOajNAqPx1m1cGEF8glPOYxnhdp2n3u0SmE9
+        feBGgd0rLmR9lL8JGvmaASE=
+X-Google-Smtp-Source: ADFU+vuiMcq46oUmXHR2bMnV/CwmiktOve7dTS+rU24ap8MFGJusIKF7ghKNqLB97FpXujgF6amFWw==
+X-Received: by 2002:a05:6830:91:: with SMTP id a17mr102414oto.240.1585251740119;
+        Thu, 26 Mar 2020 12:42:20 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id l1sm851058otd.35.2020.03.26.12.42.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:41:05 -0700 (PDT)
-Received: (nullmailer pid 12454 invoked by uid 1000);
-        Thu, 26 Mar 2020 19:41:04 -0000
-Date:   Thu, 26 Mar 2020 13:41:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Hadar Gat <hadar.gat@arm.com>
-Cc:     Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zaibo Xu <xuzaibo@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        linux-crypto@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <ofir.drang@arm.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: add device tree binding for Arm
- CryptoCell trng engine
-Message-ID: <20200326194104.GA4118@bogus>
-References: <1585114871-6912-1-git-send-email-hadar.gat@arm.com>
- <1585114871-6912-2-git-send-email-hadar.gat@arm.com>
+        Thu, 26 Mar 2020 12:42:19 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
+Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH v2] kbuild: Enable -Wtautological-compare
+Date:   Thu, 26 Mar 2020 12:41:55 -0700
+Message-Id: <20200326194155.29107-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585114871-6912-2-git-send-email-hadar.gat@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 07:41:09AM +0200, Hadar Gat wrote:
-> The Arm CryptoCell is a hardware security engine. This patch adds DT
-> bindings for its TRNG (True Random Number Generator) engine.
-> 
-> Signed-off-by: Hadar Gat <hadar.gat@arm.com>
-> ---
->  .../devicetree/bindings/rng/arm-cctrng.yaml        | 55 ++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/arm-cctrng.yaml b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> new file mode 100644
-> index 0000000..7f70e4b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rng/arm-cctrng.yaml
-> @@ -0,0 +1,55 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/rng/arm-cctrng.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Arm TrustZone CryptoCell TRNG engine
-> +
-> +maintainers:
-> +  - Hadar Gat <hadar.gat@arm.com>
-> +
-> +description: |+
-> +  Arm TrustZone CryptoCell TRNG (True Random Number Generator) engine.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - arm,cryptocell-713-trng
-> +      - arm,cryptocell-703-trng
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  arm,rosc-ratio:
-> +    description:
-> +      Arm TrustZone CryptoCell TRNG engine has 4 ring oscillators.
-> +      Sampling ratio values for these 4 ring oscillators. (from calibration)
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +      - items:
-> +          minItems: 4
-> +          maxItems: 4
+Currently, we disable -Wtautological-compare, which in turn disables a
+bunch of more specific tautological comparison warnings that are useful
+for the kernel such as -Wtautological-bitwise-compare. See clang's
+documentation below for the other warnings that are suppressed by
+-Wtautological-compare. Now that all of the major/noisy warnings have
+been fixed, enable -Wtautological-compare so that more issues can be
+caught at build time by various continuous integration setups.
 
-Aren't there some constraints on the values?
+-Wtautological-constant-out-of-range-compare is kept disabled under a
+normal build but visible at W=1 because there are places in the kernel
+where a constant or variable size can change based on the kernel
+configuration. These are not fixed in a clean/concise way and the ones
+I have audited so far appear to be harmless. It is not a subgroup but
+rather just one warning so we do not lose out on much coverage by
+default.
 
-If not, then just this is enough:
+Link: https://github.com/ClangBuiltLinux/linux/issues/488
+Link: http://releases.llvm.org/10.0.0/tools/clang/docs/DiagnosticsReference.html#wtautological-compare
+Link: https://bugs.llvm.org/show_bug.cgi?id=42666
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
 
-- maxItems: 4
+v1 -> v2: https://lore.kernel.org/lkml/20200219045423.54190-7-natechancellor@gmail.com/
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - interrupts
-> +  - reg
-> +  - arm,rosc-ratio
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    arm_cctrng: rng@60000000 {
-> +        compatible = "arm,cryptocell-713-trng";
-> +        interrupts = <0 29 4>;
-> +        reg = <0x60000000 0x10000>;
-> +        arm,rosc-ratio = <5000 1000 500 0>;
-> +    };
-> -- 
-> 2.7.4
-> 
+* Expand commit message a bit by adding more reasoning behind change.
+* Disable -Wtautological-constant-out-of-range-compare under a normal
+  build but allow it to show up at W=1 for easy auditing.
+
+I hope this can be accepted for 5.7. There are two warnings that I see
+still across a bunch of allyesconfig/allmodconfig builds that have
+patches sent but not accepted. I will ping them today.
+
+* https://lore.kernel.org/lkml/20191023002014.22571-1-natechancellor@gmail.com/
+* https://lore.kernel.org/lkml/20200220051011.26113-1-natechancellor@gmail.com/
+
+ Makefile                   | 2 --
+ scripts/Makefile.extrawarn | 1 +
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index db442a9ee6b2..05f9f50dda3e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -746,8 +746,6 @@ ifdef CONFIG_CC_IS_CLANG
+ KBUILD_CPPFLAGS += -Qunused-arguments
+ KBUILD_CFLAGS += -Wno-format-invalid-specifier
+ KBUILD_CFLAGS += -Wno-gnu
+-# Quiet clang warning: comparison of unsigned expression < 0 is always false
+-KBUILD_CFLAGS += -Wno-tautological-compare
+ # CLANG uses a _MergedGlobals as optimization, but this breaks modpost, as the
+ # source of a reference will be _MergedGlobals and not on of the whitelisted names.
+ # See modpost pattern 2
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index ca08f2fe7c34..4aea7cf71d11 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -49,6 +49,7 @@ KBUILD_CFLAGS += -Wno-format
+ KBUILD_CFLAGS += -Wno-sign-compare
+ KBUILD_CFLAGS += -Wno-format-zero-length
+ KBUILD_CFLAGS += $(call cc-disable-warning, pointer-to-enum-cast)
++KBUILD_CFLAGS += -Wno-tautological-constant-out-of-range-compare
+ endif
+ 
+ endif
+-- 
+2.26.0
+
