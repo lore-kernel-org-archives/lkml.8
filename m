@@ -2,92 +2,72 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD82C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5962FC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BEBF20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:56:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585248981;
-	bh=hdJPv9xhaBKDZLXddal+yjQOkmE6xXXuourHmFStd1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ooh+zaSeRi/pt6nxQ/gI16IKxLLsJh7dD+vdmnNp8EqPJ/0FmFf8bR9JpM8KpEz30
-	 KCK4zVUtpfGhh1VpuXb798if4LsOz3ifrto4cDBQ43T8sTkkygOgXh+XaDvD80iPqs
-	 4JY1MxHzgx0PEPDStO1Cx7/2zcbAWMiLK5tQyD4Q=
+	by mail.kernel.org (Postfix) with ESMTP id 317D320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:57:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgCZS4U (ORCPT
+        id S1728488AbgCZS5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:56:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:35373 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgCZS4T (ORCPT
+        Thu, 26 Mar 2020 14:57:12 -0400
+Received: from smtprelay0084.hostedemail.com ([216.40.44.84]:60970 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726340AbgCZS5M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:56:19 -0400
-Received: by mail-io1-f67.google.com with SMTP id o3so1651645ioh.2;
-        Thu, 26 Mar 2020 11:56:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rsRID+4ywURyAyuA/w9/hHAuGfXNLPrY2kgVLRJSNDI=;
-        b=Q48UCJ+Esz+1rMNm5O0Zwpj93vORqxoZPpeadZE7QRtuYplxB+FDTkLUHm5UWQnqNm
-         z3ZF8GfkFYAaemulzwigMLuTiH96SrPvaLh+gn5tmnIcvNWeS+XUPqI7Ysbw1fgiFQe2
-         K3dpdACCI8Mff9cSzQ75DOqzcXUKEn2xDk7pY3E8DYNWQgTxwN+YIQIzOyjsi+lrEub1
-         svkBTc2kTIMeGNBApLYCNiexhhcvhNJzOmXGTW++opS1ruX4tDc4AOSoadv2IJztakwu
-         Kal7g45cI1J8A64o6WP/NdmSOvQEVNY91znvviQxiYnfBunx5C6V23Pc0eZHQoRlj8RH
-         k/tQ==
-X-Gm-Message-State: ANhLgQ28pA7CgrRYtHHA6+ewDV+NxOJuDMyK2VXE6Nq1gubrOT1zMGC2
-        yCLLciHhs2kpX2cHGlcYYRM+qM8=
-X-Google-Smtp-Source: ADFU+vtRPv4apIZSrqWZwLmrtHPu5H5hRNKX2YALCXj/uOlsIjEEAlNmaZzmEb4PLudSoqRBOKy4rw==
-X-Received: by 2002:a5e:d919:: with SMTP id n25mr9062347iop.205.1585248978329;
-        Thu, 26 Mar 2020 11:56:18 -0700 (PDT)
-Received: from rob-hp-laptop ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id y6sm1064630ilc.41.2020.03.26.11.56.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 11:56:17 -0700 (PDT)
-Received: (nullmailer pid 3638 invoked by uid 1000);
-        Thu, 26 Mar 2020 18:56:16 -0000
-Date:   Thu, 26 Mar 2020 12:56:16 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, jic23@kernel.org, robh+dt@kernel.org,
-        Laszlo.Nagy@analog.com, Andrei.Grozav@analog.com,
-        Michael.Hennerich@analog.com, Istvan.Csomortani@analog.com,
-        Adrian.Costina@analog.com, Dragos.Bogdan@analog.com,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: Re: [PATCH v13 8/8] dt-bindings: iio: adc: add bindings doc for
- AD9467 ADC
-Message-ID: <20200326185616.GA2673@bogus>
-References: <20200324134636.64643-1-alexandru.ardelean@analog.com>
- <20200324134636.64643-9-alexandru.ardelean@analog.com>
+        Thu, 26 Mar 2020 14:57:12 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 4CDDD837F24D;
+        Thu, 26 Mar 2020 18:57:11 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: box88_4315bd86663d
+X-Filterd-Recvd-Size: 1839
+Received: from XPS-9350.home (unknown [47.151.136.130])
+        (Authenticated sender: joe@perches.com)
+        by omf10.hostedemail.com (Postfix) with ESMTPA;
+        Thu, 26 Mar 2020 18:57:08 +0000 (UTC)
+Message-ID: <46bf05a81237ed716bf06b48891fcd7c129eae5d.camel@perches.com>
+Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
+From:   Joe Perches <joe@perches.com>
+To:     David Miller <davem@davemloft.net>, florinel.iordache@nxp.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, f.fainelli@gmail.com,
+        hkallweit1@gmail.com, linux@armlinux.org.uk,
+        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
+        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
+        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
+        linux-kernel@vger.kernel.org
+Date:   Thu, 26 Mar 2020 11:55:17 -0700
+In-Reply-To: <20200326.115330.2250343131621391364.davem@davemloft.net>
+References: <1585230682-24417-1-git-send-email-florinel.iordache@nxp.com>
+         <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
+         <20200326.115330.2250343131621391364.davem@davemloft.net>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324134636.64643-9-alexandru.ardelean@analog.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 15:46:36 +0200, Alexandru Ardelean wrote:
-> This change adds the binding doc for the AD9467 ADC.
+On Thu, 2020-03-26 at 11:53 -0700, David Miller wrote:
+> From: Florinel Iordache <florinel.iordache@nxp.com>
+> Date: Thu, 26 Mar 2020 15:51:19 +0200
 > 
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ad9467.yaml          | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad9467.yaml
+> > +static void kr_reset_master_lane(struct kr_lane_info *krln)
+> > +{
+> > +     struct phy_device *bpphy = krln->bpphy;
+> > +     struct backplane_phy_info *bp_phy = bpphy->priv;
+> > +     const struct lane_io_ops *lane_ops = krln->bp_phy->bp_dev.lane_ops;
 > 
+> Please use reverse christmas tree ordering for local variables.
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+How (any why) do you suggest the first 2 entries here
+should be ordered?
 
-If a tag was not added on purpose, please state why and what changed.
+
