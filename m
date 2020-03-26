@@ -2,231 +2,184 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D5CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:43:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D27DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD60520748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:43:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233102070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TFmukmOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgCZKnn (ORCPT
+        id S1728020AbgCZKpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:43:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:42857 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727560AbgCZKnn (ORCPT
+        Thu, 26 Mar 2020 06:45:02 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40437 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgCZKpB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:43:43 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1N79q8-1jIVOq1alI-017X7z for <linux-kernel@vger.kernel.org>; Thu, 26 Mar
- 2020 11:43:40 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 291156502CB
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:43:40 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id ItpFom61juuT for <linux-kernel@vger.kernel.org>;
-        Thu, 26 Mar 2020 11:43:39 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id 9CA4A64FD0A
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:43:39 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.79) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 26 Mar 2020 11:43:39 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id 4A517804FE; Thu, 26 Mar 2020 11:34:59 +0100 (CET)
-Date:   Thu, 26 Mar 2020 11:34:59 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v4 2/9] media: adv748x: include everything adv748x.h needs
- into the file
-Message-ID: <e37abb9c66571ad02a7d0c7903d1889d7d52ed46.1585218857.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585218857.git.alexander.riesen@cetitec.com>
+        Thu, 26 Mar 2020 06:45:01 -0400
+Received: by mail-pl1-f194.google.com with SMTP id h11so1969913plk.7
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 03:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RrPUkEdcvg/y0PcHJ6HKdHNJrtFFWRIeDiiLxBsymSg=;
+        b=TFmukmOEEJ9JvbTUyj/fyAuzIACL0f7DZw5lHvjrmObXyFhLyn85sKcTW9nb6bb5lJ
+         +8K7x/p+/PJqkq2Y8E7mHe3CJuxq2Yn/lsjcIx9tijhapEPrhgrXeTLlI8kyStJuVEhq
+         q3uxaJo6lcwYGv2XBdaMbm2u3WjI9plJZaR9XViYpZWNYqJkw1iPw+uSHbAfOVrHM8tU
+         Q6ASaqbifZBkCns14PZ6E7EXF5GhgOQ2wiRdalDwLSh7D2WDnQpyElG+23V4sypHLZHr
+         voASvcQFP1zPKwYGh4irfocmMdv5MiRaynYHj0TqZzV7gCV79CefEJNItQ6iogBBdI1t
+         MDBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RrPUkEdcvg/y0PcHJ6HKdHNJrtFFWRIeDiiLxBsymSg=;
+        b=O3dsneMfRbuXyS0QOMDcbsGlMkkDpeOKhE5x1N46YUcUtdgq1z1hz7Kjekjo+kFkvc
+         6WToqw8B3rBSqwT8/qOvquxeX/bxiZm4XkrE2V2rnn3+ZVLPmZfcJvdiBXNoYTrr/MqD
+         0TfeCM65rtLd6gFm1Pv5y5iWbTJiYkicA7l5dA7rvjQy5XyZMUjFmvEQffKLBaPNY+ds
+         VSD2CW8IAblk5mbFCj8tVGkHx3A5miYP1gzWyLvvkIIGdZ4c6slHZwadrNebYelfpcgT
+         vMD6FrNsi5djEIN5NO/x8w4VL3TSLWaRCwfs6Eh/+KoqdnBhii7U0YT9Gp5rRspB5UD1
+         u+LA==
+X-Gm-Message-State: ANhLgQ026r8j2vARBj7WLu1ifU+fQN47FKnnI8HwISAAD/xptR8OFvsL
+        w3QRaoc+pe+X9WL1Qu032uCp6ez5RUt82LhyrHlV0A==
+X-Google-Smtp-Source: ADFU+vtm4pvZ1baADEMOm5q8Pq+om9KOooFXupVEi/ZshCBi906in5Vg+qwqtVBStK9fzAnqSREMEv1vvOyoKa3TD6E=
+X-Received: by 2002:a17:90b:1985:: with SMTP id mv5mr2448311pjb.69.1585219500102;
+ Thu, 26 Mar 2020 03:45:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1585218857.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.79]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7C67
-X-Provags-ID: V03:K1:6zX46J1OtgbpS91h09Kh2mhAAB+Ra+cyNtMiLUGp4bzNShjrQJm
- eQN9iY4JlmlGhTDxch2V/wwUVUeB42OKCXxCrJhHHU3/qluWniPGpMIBrJZmQrh69rTi3Zl
- cvQSNYThq8Ijs+LVN+V5qMsQjFAzv/uSusoKGutIGJRVZG2OcLiQZAvs5OxAHYr7cMG7+8x
- EnRtoanuPGsHAtKcbH76Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:V92qZAtN7tQ=:r64Bhqb7NdoYe6iNVcxZKc
- A3NpSitdtPd43PX6Ew+vNxE7yIrgu3qDsX0ewymTsCLO1r9yyTybFMDoMDqM2yBnfgYxw7V5j
- u1CceExUXX3OamFJpjO7UOTWBlq3811mj1rBmZCk7/eBATjiyEn+pnxSFNII0+oEgzmVro7YW
- DgdRyKzF1uAlrobJHTxLxjZ+Hi7NWveBZ7NWCYxiTPN0tZ2H3nfpgKj8f3dR/ovjzfZCbhdAV
- XjVjzcKYSpD4qL63jw7hnmXiakdVNTPAnvH+3MEx+mfA7xeF7BXNGjAsafCGXXsv3hoT88sD3
- 7Iz6RvDhAxvIqavGbe+JufMVeESvde49+vYpJQLB6CFeYZXdIKijh3DUl7q2RLs6YFh6FWcEt
- SX48bedGNnbQ/oKnGAZVOXD/dyd4hnmMkIkvCwfxtoi63EUaSdHWKK8FNX1wr3i/xHMXA7Rnj
- j7rXiME5YufmpwV6Hir+8343Ry/LCZHfsCFSZzDXKOzC/9KXkR8ApEOv0TtxEXjr79cjPYGW3
- uegcddJwRJ9sLCn6rFv98Uom7XxDXJvZt5NttuRa3mcITtUGWgcBEj784YPHOWrzR54O0MsQ4
- iXSHWHbBnkQ6IqDe6zWqLLxQtJcwKVp/u0auuMjaq4Q8qvWQXIm02iBEvj3Z8tVp3ZykuNJP3
- VQUMDIS6JAGjTBZOQAcArUcohjdHe+H01SPe9f3MhZhOAgHGKUAgd751JDZXN6Z82oNlYjM2p
- Z9Fb428wf56mcWVU4B2luaLM5vJ3sWQKk0ofwRWdQo8kY6Rr0b8oNAObI9xzMUzKFSQ8nOHcT
- WQYJmJ6ighsgtvgs+jU09Eo8nnf+vCnyoNQoYbHgScruUuo7Z34Eo/uNaL5kgScaABp7LFa
+References: <0000000000006678a105a184ecb7@google.com> <CADG63jCCECPjZWmJfhn9RyJwFvDK3SYQTb8X2GPkrGumAuRfJA@mail.gmail.com>
+In-Reply-To: <CADG63jCCECPjZWmJfhn9RyJwFvDK3SYQTb8X2GPkrGumAuRfJA@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Thu, 26 Mar 2020 11:44:49 +0100
+Message-ID: <CAAeHK+xi8zjUb8Laigmy7eKHU-36nhXdW_dCXp_MB1nPaLBW4g@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in hfa384x_usbin_callback
+To:     Qiujun Huang <anenbupt@gmail.com>
+Cc:     syzbot <syzbot+a57b24d359dc5577634a@syzkaller.appspotmail.com>,
+        devel@driverdev.osuosl.org, Greg KH <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>, nishkadg.linux@gmail.com,
+        osdevtc@gmail.com, syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To follow the established practice of not depending on others to
-pull everything in. While at it, make sure it stays like this.
+On Thu, Mar 26, 2020 at 3:52 AM Qiujun Huang <anenbupt@gmail.com> wrote:
+>
+> #syz test: https://github.com/google/kasan.git e17994d1
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/media/i2c/adv748x/adv748x-afe.c  | 6 ++----
- drivers/media/i2c/adv748x/adv748x-core.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-csi2.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x-hdmi.c | 6 ++----
- drivers/media/i2c/adv748x/adv748x.h      | 2 ++
- 5 files changed, 10 insertions(+), 16 deletions(-)
+Hi Qiujun,
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-afe.c b/drivers/media/i2c/adv748x/adv748x-afe.c
-index dbbb1e4d6363..5a25d1fbe25f 100644
---- a/drivers/media/i2c/adv748x/adv748x-afe.c
-+++ b/drivers/media/i2c/adv748x/adv748x-afe.c
-@@ -6,18 +6,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * SDP
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index c3fb113cef62..5c59aad319d1 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -10,6 +10,8 @@
-  *	Kieran Bingham <kieran.bingham@ideasonboard.com>
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/delay.h>
- #include <linux/errno.h>
- #include <linux/i2c.h>
-@@ -20,14 +22,10 @@
- #include <linux/slab.h>
- #include <linux/v4l2-dv-timings.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-fwnode.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * Register manipulation
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x-csi2.c b/drivers/media/i2c/adv748x/adv748x-csi2.c
-index c43ce5d78723..c00d4f347d95 100644
---- a/drivers/media/i2c/adv748x/adv748x-csi2.c
-+++ b/drivers/media/i2c/adv748x/adv748x-csi2.c
-@@ -5,15 +5,13 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-ioctl.h>
- 
--#include "adv748x.h"
--
- static int adv748x_csi2_set_virtual_channel(struct adv748x_csi2 *tx,
- 					    unsigned int vc)
- {
-diff --git a/drivers/media/i2c/adv748x/adv748x-hdmi.c b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-index c557f8fdf11a..f598acec3b5c 100644
---- a/drivers/media/i2c/adv748x/adv748x-hdmi.c
-+++ b/drivers/media/i2c/adv748x/adv748x-hdmi.c
-@@ -5,18 +5,16 @@
-  * Copyright (C) 2017 Renesas Electronics Corp.
-  */
- 
-+#include "adv748x.h"
-+
- #include <linux/module.h>
- #include <linux/mutex.h>
- 
--#include <media/v4l2-ctrls.h>
--#include <media/v4l2-device.h>
- #include <media/v4l2-dv-timings.h>
- #include <media/v4l2-ioctl.h>
- 
- #include <uapi/linux/v4l2-dv-timings.h>
- 
--#include "adv748x.h"
--
- /* -----------------------------------------------------------------------------
-  * HDMI and CP
-  */
-diff --git a/drivers/media/i2c/adv748x/adv748x.h b/drivers/media/i2c/adv748x/adv748x.h
-index fccb388ce179..09aab4138c3f 100644
---- a/drivers/media/i2c/adv748x/adv748x.h
-+++ b/drivers/media/i2c/adv748x/adv748x.h
-@@ -19,6 +19,8 @@
-  */
- 
- #include <linux/i2c.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
- 
- #ifndef _ADV748X_H_
- #define _ADV748X_H_
--- 
-2.25.1.25.g9ecbe7eb18
+I've already duped this bug to "KASAN: slab-out-of-bounds Read in
+hfa384x_usbin_callback" since I had assumed they have the same root
+cause. Are those bugs different? We can undup if needed.
 
+Thanks!
 
+>
+> On Mon, Mar 23, 2020 at 8:39 PM syzbot
+> <syzbot+a57b24d359dc5577634a@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    e17994d1 usb: core: kcov: collect coverage from usb comple..
+> > git tree:       https://github.com/google/kasan.git usb-fuzzer
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15217373e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d64370c438bc60
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=a57b24d359dc5577634a
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a720ade00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1467b755e00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+a57b24d359dc5577634a@syzkaller.appspotmail.com
+> >
+> > ==================================================================
+> > BUG: KASAN: use-after-free in memcpy include/linux/string.h:381 [inline]
+> > BUG: KASAN: use-after-free in skb_put_data include/linux/skbuff.h:2284 [inline]
+> > BUG: KASAN: use-after-free in hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
+> > BUG: KASAN: use-after-free in hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
+> > BUG: KASAN: use-after-free in hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
+> > Read of size 34945 at addr ffff8881cda9f33c by task swapper/0/0
+> >
+> > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.6.0-rc5-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Call Trace:
+> >  <IRQ>
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0xef/0x16e lib/dump_stack.c:118
+> >  print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+> >  __kasan_report.cold+0x37/0x77 mm/kasan/report.c:506
+> >  kasan_report+0xe/0x20 mm/kasan/common.c:641
+> >  check_memory_region_inline mm/kasan/generic.c:185 [inline]
+> >  check_memory_region+0x152/0x1c0 mm/kasan/generic.c:192
+> >  memcpy+0x20/0x50 mm/kasan/common.c:127
+> >  memcpy include/linux/string.h:381 [inline]
+> >  skb_put_data include/linux/skbuff.h:2284 [inline]
+> >  hfa384x_int_rxmonitor drivers/staging/wlan-ng/hfa384x_usb.c:3412 [inline]
+> >  hfa384x_usbin_rx drivers/staging/wlan-ng/hfa384x_usb.c:3312 [inline]
+> >  hfa384x_usbin_callback+0x1993/0x2360 drivers/staging/wlan-ng/hfa384x_usb.c:3026
+> >  __usb_hcd_giveback_urb+0x29a/0x550 drivers/usb/core/hcd.c:1650
+> >  usb_hcd_giveback_urb+0x368/0x420 drivers/usb/core/hcd.c:1716
+> >  dummy_timer+0x1258/0x32ae drivers/usb/gadget/udc/dummy_hcd.c:1966
+> >  call_timer_fn+0x195/0x6f0 kernel/time/timer.c:1404
+> >  expire_timers kernel/time/timer.c:1449 [inline]
+> >  __run_timers kernel/time/timer.c:1773 [inline]
+> >  __run_timers kernel/time/timer.c:1740 [inline]
+> >  run_timer_softirq+0x5f9/0x1500 kernel/time/timer.c:1786
+> >  __do_softirq+0x21e/0x950 kernel/softirq.c:292
+> >  invoke_softirq kernel/softirq.c:373 [inline]
+> >  irq_exit+0x178/0x1a0 kernel/softirq.c:413
+> >  exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+> >  smp_apic_timer_interrupt+0x141/0x540 arch/x86/kernel/apic/apic.c:1146
+> >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+> >  </IRQ>
+> > RIP: 0010:default_idle+0x28/0x300 arch/x86/kernel/process.c:696
+> > Code: cc cc 41 56 41 55 65 44 8b 2d 44 77 72 7a 41 54 55 53 0f 1f 44 00 00 e8 b6 62 b5 fb e9 07 00 00 00 0f 00 2d ea 0c 53 00 fb f4 <65> 44 8b 2d 20 77 72 7a 0f 1f 44 00 00 5b 5d 41 5c 41 5d 41 5e c3
+> > RSP: 0018:ffffffff87007d80 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
+> > RAX: 0000000000000007 RBX: ffffffff8702cc40 RCX: 0000000000000000
+> > RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffffffff8702d48c
+> > RBP: fffffbfff0e05988 R08: ffffffff8702cc40 R09: 0000000000000000
+> > R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> > R13: 0000000000000000 R14: ffffffff87e607c0 R15: 0000000000000000
+> >  cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+> >  do_idle+0x3e0/0x500 kernel/sched/idle.c:269
+> >  cpu_startup_entry+0x14/0x20 kernel/sched/idle.c:361
+> >  start_kernel+0xe16/0xe5a init/main.c:998
+> >  secondary_startup_64+0xb6/0xc0 arch/x86/kernel/head_64.S:242
+> >
+> > The buggy address belongs to the page:
+> > page:ffffea000736a600 refcount:32769 mapcount:0 mapping:0000000000000000 index:0x0 compound_mapcount: 0
+> > flags: 0x200000000010000(head)
+> > raw: 0200000000010000 dead000000000100 dead000000000122 0000000000000000
+> > raw: 0000000000000000 0000000000000000 00008001ffffffff 0000000000000000
+> > page dumped because: kasan: bad access detected
+> >
+> > Memory state around the buggy address:
+> >  ffff8881cda9ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> >  ffff8881cda9ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > >ffff8881cdaa0000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >                    ^
+> >  ffff8881cdaa0080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >  ffff8881cdaa0100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> > ==================================================================
+> >
+> >
+> > ---
+> > This bug is generated by a bot. It may contain errors.
+> > See https://goo.gl/tpsmEJ for more information about syzbot.
+> > syzbot engineers can be reached at syzkaller@googlegroups.com.
+> >
+> > syzbot will keep track of this bug report. See:
+> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> > syzbot can test patches for this bug, for details see:
+> > https://goo.gl/tpsmEJ#testing-patches
