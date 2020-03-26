@@ -2,88 +2,57 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E21C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FA1C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC2520772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:01:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dfdgAQd8"
+	by mail.kernel.org (Postfix) with ESMTP id 7478820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgCZIB0 (ORCPT
+        id S1727656AbgCZICb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:01:26 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:47929 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726279AbgCZIBZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:01:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585209683;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RJQEHD1Ows+hM3qEdzrVtapLFzvX7w+mPGqMQ54jHjc=;
-        b=dfdgAQd84MhroGXfDthoYySvgyUkWBfqshE98cuY0vFuzIaGxhob+DOTpkfCun5ypZqJa0
-        3En5hE6UVlTdxTnMLbNSxjZ+czuQjTnY7wcV8IdVLaR1BAX7q+T/SThsH8wi0FL1PFGta5
-        cLIr4tlnoeeLc+4ZJTwtc0eCue3GWwg=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-471-NbOknJugNtuXePa-kzi4cg-1; Thu, 26 Mar 2020 04:01:22 -0400
-X-MC-Unique: NbOknJugNtuXePa-kzi4cg-1
-Received: by mail-wm1-f69.google.com with SMTP id s15so1834990wmc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 01:01:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=RJQEHD1Ows+hM3qEdzrVtapLFzvX7w+mPGqMQ54jHjc=;
-        b=sAB43Ww+/HcVz47SiH8aU8S7WCHUTX/zilpGKaTuOq2spDuvk3zTg3HAoEDeS6vkiC
-         QFV+FWDzy0GaFHL1iwUVj9fGpQDxLQmnIMugI15q0REoSowLicRYaLJW6XQptRbRFQnM
-         bKnOSk7mhhGC2ev0c+yS2nITMszLHoIntHjSBGsrxYfWl3tkMOT+aNRCou7Zbs7i6Sc/
-         cDUhB7q+bXz214AlVUNG28xaPmVXuZEb7yjoUAwzRy1ggSiWgdFEC2S03xnnpZbXrjGJ
-         AUh31b48qT1TxgP6sKEheghJiMfCZfbjLsQEC1e4vNzR73TtIezJpvs/dz6iX4l98axC
-         xQ6w==
-X-Gm-Message-State: ANhLgQ2mAiwDm0qYh70+L4tzQUgjHjdo3mmjDIHsUbg7srQCPNH/SRck
-        C7bbAWKXiySuvdWTwaU+iqYsiVtLtY26/FGS+0kQOnaIKsawjrgO/UX+ijbe1opu6R9O4pbTOFI
-        P4uFYSDFOa8q+kpJRnsCfEo7g
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr1819000wmc.150.1585209680962;
-        Thu, 26 Mar 2020 01:01:20 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vtb3KkNGE9dbBjniJ2El19flvQdOIpIUXw84Dn8sx/bYR/Y/0OWQrFeSni9SBX0KbEtrOZyWQ==
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr1818967wmc.150.1585209680674;
-        Thu, 26 Mar 2020 01:01:20 -0700 (PDT)
-Received: from ?IPv6:2a01:cb14:58d:8400:ecf6:58e2:9c06:a308? ([2a01:cb14:58d:8400:ecf6:58e2:9c06:a308])
-        by smtp.gmail.com with ESMTPSA id o9sm2456132wrx.48.2020.03.26.01.01.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 01:01:19 -0700 (PDT)
-Subject: Re: [PATCH v3 26/26] objtool: Add STT_NOTYPE noinstr validation
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz, brgerst@gmail.com
-References: <20200324153113.098167666@infradead.org>
- <20200324160925.470421121@infradead.org>
- <20200324221616.2tdljgyay37aiw2t@treble>
- <20200324223455.GV2452@worktop.programming.kicks-ass.net>
- <20200325144211.irnwnly37fyhapvx@treble>
- <20200325155348.GA20696@hirez.programming.kicks-ass.net>
- <20200325164046.p2oxemcjnj2tnxbz@treble>
- <20200325165050.GC20696@hirez.programming.kicks-ass.net>
-From:   Julien Thierry <jthierry@redhat.com>
-Message-ID: <bda9603b-df93-8012-ec2b-b3feceab530c@redhat.com>
-Date:   Thu, 26 Mar 2020 08:01:18 +0000
+        Thu, 26 Mar 2020 04:02:31 -0400
+Received: from mga05.intel.com ([192.55.52.43]:62561 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726138AbgCZICa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:02:30 -0400
+IronPort-SDR: crbeDrVIpMVW+XBg0CbRYYo9MazbkTpSF99koz07St7QZjAsvHqElEEXY3dQkdWcbBE+EX3AY1
+ hOX7J2CqHdVA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:02:30 -0700
+IronPort-SDR: kII/cpXO6x6V6bmPddu+ycZJglZJPs/FoeQV/VPfuDSj8ZCFw6MMdeQ0nnUlo/HH2ULesYzYkV
+ 0bDeXr49LkMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
+   d="scan'208";a="271083532"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.87]) ([10.237.72.87])
+  by fmsmga004.fm.intel.com with ESMTP; 26 Mar 2020 01:02:29 -0700
+Subject: [PATCH V2] perf tools: Add missing Intel CPU events to parser
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        linux-kernel@vger.kernel.org, Kan Liang <kan.liang@intel.com>
+References: <20200324150443.28832-1-adrian.hunter@intel.com>
+ <20200325103345.GA1856035@krava> <20200325131549.GB14102@kernel.org>
+ <20200325135350.GA1888042@krava> <20200325142214.GD14102@kernel.org>
+ <ea516b26-6249-e870-20bf-819ea1a2d2c2@intel.com>
+ <20200325152211.GA1908530@krava>
+ <fc3c4dee-981e-4c39-566a-4163ee0bcc02@intel.com>
+ <20200325174449.GB1934048@krava>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <90c7ae07-c568-b6d3-f9c4-d0c1528a0610@intel.com>
+Date:   Thu, 26 Mar 2020 10:01:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200325165050.GC20696@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200325174449.GB1934048@krava>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,106 +60,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+perf list expects CPU events to be parseable by name, e.g.
+
+    # perf list | grep el-capacity-read
+      el-capacity-read OR cpu/el-capacity-read/          [Kernel PMU event]
+
+But the event parser does not recognize them that way, e.g.
+
+    # perf test -v "Parse event"
+    <SNIP>
+    running test 54 'cycles//u'
+    running test 55 'cycles:k'
+    running test 0 'cpu/config=10,config1,config2=3,period=1000/u'
+    running test 1 'cpu/config=1,name=krava/u,cpu/config=2/u'
+    running test 2 'cpu/config=1,call-graph=fp,time,period=100000/,cpu/config=2,call-graph=no,time=0,period=2000/'
+    running test 3 'cpu/name='COMPLEX_CYCLES_NAME:orig=cycles,desc=chip-clock-ticks',period=0x1,event=0x2/ukp'
+    -> cpu/event=0,umask=0x11/
+    -> cpu/event=0,umask=0x13/
+    -> cpu/event=0x54,umask=0x1/
+    failed to parse event 'el-capacity-read:u,cpu/event=el-capacity-read/u', err 1, str 'parser error'
+    event syntax error: 'el-capacity-read:u,cpu/event=el-capacity-read/u'
+                           \___ parser error test child finished with 1
+    ---- end ----
+    Parse event definition strings: FAILED!
+
+This happens because the parser splits names by '-' in order to deal
+with cache events. For example 'L1-dcache' is a token in
+parse-events.l which is matched to 'L1-dcache-load-miss' by the
+following rule:
+
+    PE_NAME_CACHE_TYPE '-' PE_NAME_CACHE_OP_RESULT '-' PE_NAME_CACHE_OP_RESULT opt_event_config
+
+And so there is special handling for 2-part PMU names i.e.
+
+    PE_PMU_EVENT_PRE '-' PE_PMU_EVENT_SUF sep_dc
+
+but no handling for 3-part names, which are instead added as tokens e.g.
+
+    topdown-[a-z-]+
+
+While it would be possible to add a rule for 3-part names, that would
+not work if the first parts were also a valid PMU name e.g.
+'el-capacity-read' would be matched to 'el-capacity' before the parser
+reached the 3rd part.
+
+The parser would need significant change to rationalize all this, so
+instead fix for now by adding missing Intel CPU events with 3-part names
+to the event parser as tokens.
+
+Missing events were found by using:
+
+    grep -r EVENT_ATTR_STR arch/x86/events/intel/core.c
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
 
 
-On 3/25/20 4:50 PM, Peter Zijlstra wrote:
-> On Wed, Mar 25, 2020 at 11:40:46AM -0500, Josh Poimboeuf wrote:
->> On Wed, Mar 25, 2020 at 04:53:48PM +0100, Peter Zijlstra wrote:
->>> On Wed, Mar 25, 2020 at 09:42:11AM -0500, Josh Poimboeuf wrote:
->>>> Sure, but couldn't validate_unwind_hints() and
->>>> validate_reachable_instructions() be changed to *only* run on
->>>> .noinstr.text, for the vmlinux case?  That might help converge the
->>>> vmlinux and !vmlinux paths.
->>>
->>> You're thinking something like so then?
->>
->> Not exactly.  But I don't want to keep churning this patch set.  I can
->> add more patches later, so don't worry about it.
->>
->> But I was thinking it would eventually be good to have the top-level
->> check() be like
->>
->> 	sec = NULL;
->> 	if (!validate_all)
->> 		sec = find_section_by_name(file->elf, ".noinstr.text");
->>
->> 	ret = validate_functions(&file, sec);
->> 	if (ret < 0)
->> 		goto out;
->> 	warnings += ret;
->>
->> 	ret = validate_unwind_hints(&file, sec);
->> 	if (ret < 0)
->> 		goto out;
->> 	warnings += ret;
->>
->> 	if (!warnings) {
->> 		ret = validate_reachable_instructions(&file, sec);
->> 		if (ret < 0)
->> 			goto out;
->> 		warnings += ret;
->> 	}
->>
->> 	if (!validate_all)
->> 		goto out;
->>
->> 	ret = validate_retpoline(&file);
->> 	....
->>
->> that way the general flow is the same regardless...
-> 
-> Ah,... I see what you mean, there's two little wrinkles with that:
-> 
->   - validate_reachable_instructions() is strictly superluous, it does no
->     additional validation between the !vmlinux and vmlinux mode, so I'd
->     put that if (!validate_all) goto out, one up.
-> 
->   - tglx has a patch adding .entry.text to be considered as noinstr as a
->     whole, which has:
-> 
-> 
-> @@ -2636,11 +2637,16 @@ static int validate_vmlinux_functions(st
->   	int warnings = 0;
->   
->   	sec = find_section_by_name(file->elf, ".noinstr.text");
-> -	if (!sec)
-> -		return 0;
-> +	if (sec) {
-> +		warnings += validate_section(file, sec);
-> +		warnings += validate_unwind_hints(file, sec);
-> +	}
->   
-> -	warnings += validate_section(file, sec);
-> -	warnings += validate_unwind_hints(file, sec);
-> +	sec = find_section_by_name(file->elf, ".entry.text");
-> +	if (sec) {
-> +		warnings += validate_section(file, sec);
-> +		warnings += validate_unwind_hints(file, sec);
-> +	}
->   
->   	return warnings;
->   }
-> 
-> Anyway, yes, we can do this on top.
-> 
-> I was going to commit the first 17 patches to tip/core/objtool and
-> repost the remaining 13 once more. And then see how much pain I did to
-> Julien's patches :-)
-> 
+Changes in V2:
 
-I appreciate the concideration for my patches but, since your patches 
-have been posted a few times already and were already reviewed, you 
-might as well commit them. I'll rebase my patches on top and see the 
-state of things (I'll need to do that with the whole arm64 series anyway).
+	Add only 3-part names
+	Clarify commit message
 
-I'll try to post the new version fast enough so I'm not behind some 
-other major objtool changes :) .
 
-In the mean time I'll have a look at this series and see what I might 
-have to change for the rest of the arm64-objtool set!
+ tools/perf/util/parse-events.l | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Thanks,
-
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 7b1c8ee537cf..baa48f28d57d 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -342,11 +342,13 @@ bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUT
+ 	 * Because the prefix cycles is mixed up with cpu-cycles.
+ 	 * loads and stores are mixed up with cache event
+ 	 */
+-cycles-ct					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
+-cycles-t					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
+-mem-loads					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
+-mem-stores					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
+-topdown-[a-z-]+					{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
++cycles-ct				|
++cycles-t				|
++mem-loads				|
++mem-stores				|
++topdown-[a-z-]+				|
++tx-capacity-[a-z-]+			|
++el-capacity-[a-z-]+			{ return str(yyscanner, PE_KERNEL_PMU_EVENT); }
+ 
+ L1-dcache|l1-d|l1d|L1-data		|
+ L1-icache|l1-i|l1i|L1-instruction	|
 -- 
-Julien Thierry
+2.17.1
+
 
