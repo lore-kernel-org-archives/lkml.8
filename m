@@ -2,250 +2,134 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C5BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03C6C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:09:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCC720719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585260374;
-	bh=WdY/DM4Q5srCmWYCGqaxdKrarkgIB5A5+x1t8gIT+UY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=kz4gqkoyYmkFMfhb8J6FN2kLU/kgscUvUlfX6M89lXrHrGMW2W/ej9SVa4LgCBNvq
-	 SOIgdqX0z0roGsjsrwl2zFzBPA4+7lbtDtLlC5NjBIW12JAKgLsyRHFCbvIvM5FbYu
-	 hYpxBxJqO76uEHk2VMy0xp6e4e9EiHFSQT6GxdBM=
+	by mail.kernel.org (Postfix) with ESMTP id C008820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:09:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SKw+PWvC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbgCZWGM (ORCPT
+        id S1727670AbgCZWJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:06:12 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42756 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgCZWGM (ORCPT
+        Thu, 26 Mar 2020 18:09:28 -0400
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:36669 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbgCZWJ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:06:12 -0400
-Received: by mail-io1-f68.google.com with SMTP id q128so7777297iof.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:06:11 -0700 (PDT)
+        Thu, 26 Mar 2020 18:09:28 -0400
+Received: by mail-yb1-f196.google.com with SMTP id i4so3504925ybl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:09:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=eXMKLFOuig/lrxP0VVUXkgc9/EArNxSzfnhMuffijjs=;
-        b=V6ann6QcT5OZrlVlQ0m0HfuOpK+HG2vAx0XRSxqnqYUZAFEPnOdrYGOHu9JYcYM2JO
-         X/qOaM/Gx+gE/Nqog3CUZS7+XCufCbSbYGRq9Pa0vyuMCmWi8fNWSyzgokLTsSCDtRAq
-         KYwWzyi94K8pM32rWZTtD7jK4LxEB+3yn73lI=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kn2WIN8QO5W0o3GwWRwvCngYE1iUlvZV7DjAfzZNk4Y=;
+        b=SKw+PWvCw12GGiUc78HNQOrdcBLILk9gtKEUUBLb5YgvnMEBi9QQlBJw/px2g4zxkb
+         lVy4BzBzdo6zSNY9ReR388SUKDBrjGHX12X7HjcGACPWYgF+MmAji9E8oY2bSVqZQHUQ
+         aDJmKRwQkXvzXv2kU+1/5jBylz001PwVYBu7J73fzTbuAE6E9t00F1gYYzMqd4CyuJxI
+         1Dp1Cp0T1cZlI22IYQ7A6m0MmC9UfSCFOrBQeuEYoSxB9/fjRy5fFfNRYP5/dY0Dj/zN
+         EdL//hQQnI8e0RXG2vhOKhqokNsWyMAMv7vJtJH+HMmYIMHKqHgh+GaYwit4MCRI+57U
+         3Qpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=eXMKLFOuig/lrxP0VVUXkgc9/EArNxSzfnhMuffijjs=;
-        b=GiRuZzklk38haNoc+NeS5wkQWAFHunO5xKiKR0qojZoEJ7GPeO1z9LQ2A7sfDn9NuF
-         IcM9XxDjEQ4IBJO30SpSPg2VTGwbQfqe6kMWlm+11bpvQ/19iJ9T6YkLXTZMe8kO8lsX
-         aPAKiENiKP1ctpoo/5O3BMvycleK5q6yVgPIDOX9nYLDjzCmLuGyndBzZihxcNACbX2h
-         7H9gtsiYpJJzT4/ETu62b80fxWmLNCgXfpf6ZEkNkAcslqBJiPZr2NX/I2gi4UrYPje0
-         wnZs/123s+OLPv9oZ/01CPcpebuGD+gIwaLeHAN688kL5rsQOLanG6vJ8GZsW/QozVGl
-         lTcw==
-X-Gm-Message-State: ANhLgQ1w1QS3Q6T+nZQFq5a9o+bXvJOjY28B0Un+7i0z5FQkPb3OYy3W
-        4PJEhE9DH1czzh1274pC2Z4VZVISDvA=
-X-Google-Smtp-Source: ADFU+vvn0CBUAeH84a65C1q/ml3yPgrErF0qDzQEnjfnEEbzAdMPg5OeiGiOxOKeStzxa+QblkUkdw==
-X-Received: by 2002:a02:2a4a:: with SMTP id w71mr10005605jaw.75.1585260370579;
-        Thu, 26 Mar 2020 15:06:10 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id u5sm942481ion.51.2020.03.26.15.06.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 15:06:10 -0700 (PDT)
-Subject: Re: [PATCH v2 3/3] media: vimc: deb: Add support for {RGB,BGR,GBR}888
- bus formats on source pad
-To:     =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= 
-        <nfraprado@protonmail.com>, linux-media@vger.kernel.org
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200326214730.2449707-1-nfraprado@protonmail.com>
- <20200326214730.2449707-4-nfraprado@protonmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <b5bc6ab8-274a-adc7-9d86-a91a1efb8805@linuxfoundation.org>
-Date:   Thu, 26 Mar 2020 16:06:08 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kn2WIN8QO5W0o3GwWRwvCngYE1iUlvZV7DjAfzZNk4Y=;
+        b=bor1SYfTZ1Xgn7zG/lLXs7MUZNqzxz7HBNQAhju9RnaqrNRLwkrlpwPkzrHRppknVW
+         6M81e5XZE8P4KI3e9X9ijTti00aH4uDLURv9EzY5vRZqxwwe9UCF0uCjIGjoV9iT75+S
+         /Ds06qPeA286A0szmTUJPX92UoZA5L2NdNfaKSrpAlXfefDlN+qsWgW248q4AGXKmDgW
+         f/ffQ9VlTdUI5Z1PEf5zsoTll41ciDrK8m+hWQdY4lzmjdWLCR6tfMPjCFxIiCPv/kjF
+         KvOk6ilILCyEWBEK5WfqqieVk45j8BY9lrRQI7weHl6pj6w6FbyUQWv6wIi1yBYMMDRF
+         zDWg==
+X-Gm-Message-State: ANhLgQ0F0oVsDqU7Q3k1jalPObZkkZIzevHTeb+whWtriGVxUthSNwi8
+        MmhvBLBRvFTbHfNCB0dO7q8MNmauSYWPx8jS45wRAw==
+X-Google-Smtp-Source: ADFU+vsiuvYkGOAcQrTLEN7AeDPDUJv6pbNL7GNXF8gjitkY112bG3MVqrYPV4cBnfMV0soJ5jlaDndiEYR2Ne48WyE=
+X-Received: by 2002:a25:ccd0:: with SMTP id l199mr16214330ybf.446.1585260566392;
+ Thu, 26 Mar 2020 15:09:26 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326214730.2449707-4-nfraprado@protonmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200326070236.235835-1-walken@google.com> <20200326070236.235835-2-walken@google.com>
+ <20200326175644.GN20941@ziepe.ca> <20200326180621.GK22483@bombadil.infradead.org>
+ <20200326180916.GL22483@bombadil.infradead.org>
+In-Reply-To: <20200326180916.GL22483@bombadil.infradead.org>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 26 Mar 2020 15:09:13 -0700
+Message-ID: <CANN689GNvU68nQUmR-NJg8To3-8w7f+Hu6s9jAW8ZeKV21JAbA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] mmap locking API: initial implementation as rwsem wrappers
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 3:47 PM, Nícolas F. R. A. Prado wrote:
-> Add support for RGB888_*, BGR888_* and GBR888_* media bus formats on
-> the source pad of debayer subdevices.
-> 
-> Co-developed-by: Vitor Massaru Iha <vitor@massaru.org>
-> Signed-off-by: Vitor Massaru Iha <vitor@massaru.org>
-> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@protonmail.com>
-> ---
-> 
-> Changes in v2:
-> - Change commit message to reflect v2 changes
-> - Rename variables
-> - Fix array formatting
-> - Add vimc_deb_is_src_code_valid function
-> - Add other BGR888 and RGB888 formats to debayer source pad supported
->    formats
-> 
->   drivers/media/platform/vimc/vimc-debayer.c | 61 +++++++++++++++++-----
->   1 file changed, 49 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-debayer.c b/drivers/media/platform/vimc/vimc-debayer.c
-> index baf6bf9f65b5..33a9bea770bc 100644
-> --- a/drivers/media/platform/vimc/vimc-debayer.c
-> +++ b/drivers/media/platform/vimc/vimc-debayer.c
-> @@ -51,6 +51,19 @@ static const struct v4l2_mbus_framefmt sink_fmt_default = {
->   	.colorspace = V4L2_COLORSPACE_DEFAULT,
->   };
->   
-> +static const u32 vimc_deb_src_mbus_codes[] = {
-> +	MEDIA_BUS_FMT_GBR888_1X24,
-> +	MEDIA_BUS_FMT_BGR888_1X24,
-> +	MEDIA_BUS_FMT_BGR888_3X8,
-> +	MEDIA_BUS_FMT_RGB888_1X24,
-> +	MEDIA_BUS_FMT_RGB888_2X12_BE,
-> +	MEDIA_BUS_FMT_RGB888_2X12_LE,
-> +	MEDIA_BUS_FMT_RGB888_3X8,
-> +	MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-> +	MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA,
-> +	MEDIA_BUS_FMT_RGB888_1X32_PADHI,
-> +};
-> +
->   static const struct vimc_deb_pix_map vimc_deb_pix_map_list[] = {
->   	{
->   		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
-> @@ -125,6 +138,17 @@ static const struct vimc_deb_pix_map *vimc_deb_pix_map_by_code(u32 code)
->   	return NULL;
->   }
->   
-> +static int vimc_deb_is_src_code_invalid(u32 code)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(vimc_deb_src_mbus_codes); i++)
-> +		if (vimc_deb_src_mbus_codes[i] == code)
-> +			return 0;
-> +
-> +	return -EINVAL;
-> +}
-> +
->   static int vimc_deb_init_cfg(struct v4l2_subdev *sd,
->   			     struct v4l2_subdev_pad_config *cfg)
->   {
-> @@ -148,14 +172,11 @@ static int vimc_deb_enum_mbus_code(struct v4l2_subdev *sd,
->   				   struct v4l2_subdev_pad_config *cfg,
->   				   struct v4l2_subdev_mbus_code_enum *code)
->   {
-> -	/* We only support one format for source pads */
->   	if (VIMC_IS_SRC(code->pad)) {
-> -		struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
-> -
-> -		if (code->index)
-> +		if (code->index >= ARRAY_SIZE(vimc_deb_src_mbus_codes))
->   			return -EINVAL;
->   
-> -		code->code = vdeb->src_code;
-> +		code->code = vimc_deb_src_mbus_codes[code->index];
->   	} else {
->   		if (code->index >= ARRAY_SIZE(vimc_deb_pix_map_list))
->   			return -EINVAL;
-> @@ -170,8 +191,6 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
->   				    struct v4l2_subdev_pad_config *cfg,
->   				    struct v4l2_subdev_frame_size_enum *fse)
->   {
-> -	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
-> -
->   	if (fse->index)
->   		return -EINVAL;
->   
-> @@ -181,7 +200,7 @@ static int vimc_deb_enum_frame_size(struct v4l2_subdev *sd,
->   
->   		if (!vpix)
->   			return -EINVAL;
-> -	} else if (fse->code != vdeb->src_code) {
-> +	} else if (vimc_deb_is_src_code_invalid(fse->code)) {
->   		return -EINVAL;
->   	}
->   
-> @@ -237,6 +256,7 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
->   {
->   	struct vimc_deb_device *vdeb = v4l2_get_subdevdata(sd);
->   	struct v4l2_mbus_framefmt *sink_fmt;
-> +	u32 *src_code;
->   
->   	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
->   		/* Do not change the format while stream is on */
-> @@ -244,8 +264,10 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
->   			return -EBUSY;
->   
->   		sink_fmt = &vdeb->sink_fmt;
-> +		src_code = &vdeb->src_code;
->   	} else {
->   		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> +		src_code = &v4l2_subdev_get_try_format(sd, cfg, 1)->code;
->   	}
->   
->   	/*
-> @@ -253,9 +275,14 @@ static int vimc_deb_set_fmt(struct v4l2_subdev *sd,
->   	 * it is propagated from the sink
->   	 */
->   	if (VIMC_IS_SRC(fmt->pad)) {
-> +		u32 code = fmt->format.code;
-> +
->   		fmt->format = *sink_fmt;
-> -		/* TODO: Add support for other formats */
-> -		fmt->format.code = vdeb->src_code;
-> +
-> +		if (!vimc_deb_is_src_code_invalid(code))
-> +			*src_code = code;
-> +
-> +		fmt->format.code = *src_code;
->   	} else {
->   		/* Set the new format in the sink pad */
->   		vimc_deb_adjust_sink_fmt(&fmt->format);
-> @@ -291,11 +318,21 @@ static void vimc_deb_set_rgb_mbus_fmt_rgb888_1x24(struct vimc_deb_device *vdeb,
->   						  unsigned int col,
->   						  unsigned int rgb[3])
+I don't think we strongly need an API for such assertions at this
+point. There are actually a number of them (mostly the lockdep form)
+being handled in the last patch renaming the mmap_sem field.
 
-Change this to pass a pointer and size.
+If a new form of lock is introduced in the future, it is doable to
+implement it in such a way that lockdep assertions will work on it (I
+have that working in my range locking patchset). For a range lock you
+would probably want to add a new API anyway so that the assert can
+verify that the specific range is locked, but IMO there is no strong
+justification for new assertion APIs until we get there.
 
->   {
-> +	const struct vimc_pix_map *vpix;
->   	unsigned int i, index;
->   
-> +	vpix = vimc_pix_map_by_code(vdeb->src_code);
->   	index = VIMC_FRAME_INDEX(lin, col, vdeb->sink_fmt.width, 3);
-> -	for (i = 0; i < 3; i++)
-> -		vdeb->src_frame[index + i] = rgb[i];
-> +	for (i = 0; i < 3; i++) {
-> +		switch (vpix->pixelformat) {
-> +		case V4L2_PIX_FMT_RGB24:
-> +			vdeb->src_frame[index + i] = rgb[i];
-> +			break;
-> +		case V4L2_PIX_FMT_BGR24:
-> +			vdeb->src_frame[index + i] = rgb[2-i];
-> +			break;
-> +		}
-> +	}
->   }
->   
->   static int vimc_deb_s_stream(struct v4l2_subdev *sd, int enable)
-> 
+If there is no opposition to replacing rwsem_is_locked with
+lockdep_assert_held, then I think that is workable. mmap_is_locked()
+only has 5 call sites, so that's not a very large change.
 
-thanks,
--- Shuah
+On Thu, Mar 26, 2020 at 11:09 AM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Thu, Mar 26, 2020 at 11:06:21AM -0700, Matthew Wilcox wrote:
+> > On Thu, Mar 26, 2020 at 02:56:44PM -0300, Jason Gunthorpe wrote:
+> > > On Thu, Mar 26, 2020 at 12:02:29AM -0700, Michel Lespinasse wrote:
+> > >
+> > > > +static inline bool mmap_is_locked(struct mm_struct *mm)
+> > > > +{
+> > > > + return rwsem_is_locked(&mm->mmap_sem) != 0;
+> > > > +}
+> > >
+> > > I've been wondering if the various VM_BUG(rwsem_is_locked()) would be
+> > > better as lockdep expressions? Certainly when lockdep is enabled it
+> > > should be preferred, IMHO.
+> > >
+> > > So, I think if inlines are to be introduced this should be something
+> > > similar to netdev's ASSERT_RTNL which seems to have worked well.
+> > >
+> > > Maybe ASSERT_MMAP_SEM_READ/WRITE/HELD() and do the VM_BUG or
+> > > lockdep_is_held as appropriate?
+> >
+> > I'd rather see lockdep_assert_held() used directly rather than have
+> > a wrapper.  This API includes options to check for it beind explicitly
+> > held for read/write/any, which should be useful.
+>
+> ... oh, but that requires naming the lock, which we're trying to get
+> away from.
+>
+> I guess we need a wrapper, but yes, by all means, let's level it up
+> to put the VM_BUG_ON inside the wrapper, as that means we can get the
+> mm dumped everywhere, rather than just the few places that have done
+> VM_BUG_ON_MM instead of plain VM_BUG_ON.
+
+
+
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
