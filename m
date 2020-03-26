@@ -2,179 +2,119 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CD6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FDFEC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081DD2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:56:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682882073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:56:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HSv98EME"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbgCZM4l (ORCPT
+        id S1728321AbgCZM45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:56:41 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:49528 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgCZM4k (ORCPT
+        Thu, 26 Mar 2020 08:56:57 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:36107 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728144AbgCZM45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:56:40 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jHS3q-0004mY-VW; Thu, 26 Mar 2020 06:56:39 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jHS3q-0002Ox-5s; Thu, 26 Mar 2020 06:56:38 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Yoji <yoji.fujihar.min@gmail.com>, linux-kernel@vger.kernel.org
-References: <20200322110901.GA25108@redhat.com>
-        <20200324200932.GB24230@redhat.com>
-Date:   Thu, 26 Mar 2020 07:54:04 -0500
-In-Reply-To: <20200324200932.GB24230@redhat.com> (Oleg Nesterov's message of
-        "Tue, 24 Mar 2020 21:09:32 +0100")
-Message-ID: <87v9mr1dlf.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Thu, 26 Mar 2020 08:56:57 -0400
+Received: by mail-yb1-f193.google.com with SMTP id i4so3168164ybl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 05:56:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Y9YWW6vz22mlq1guLvP+/fT4LGWaEEduUDPTk3TTYX4=;
+        b=HSv98EMEHHKD7UrRFLWR8ZBt4EMruUsPmDtAvm0qup2h9sFn6HXYf98wloKcmRhC9c
+         s9NomqprvtpQWkfHrqHk4EXaQ8ApGUgEUc7lgCJouaeYlOAeDpYcVxNcPoghjRyH/yRa
+         aQ5GWklAUXwS8/Z/lnWserBu7VV4tBVRWz59he+CaMkmc5uIR6foZuF9Vi+QZ+V5KB7P
+         pkbs8FYrAboUF0FhrJFzl5qHjoAwbuN3zggbIb76d2vgarOa9XHBPReLGMIbG99gYW32
+         ar0IBEYhHFRy7EK6xYjVPSB2O8lrG4nqCSdcfFVSgu86gEygJpJ9eyHYnd7P2/olTVoy
+         v8lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Y9YWW6vz22mlq1guLvP+/fT4LGWaEEduUDPTk3TTYX4=;
+        b=hgor6ruabJK/bGjAEix7oNpFGmVNul87H8a1hqNqOR0li2Kq+WpyfbNSnaVRtydCOo
+         HtT8VGKtw1Li8BNQLI56ZF/OOxNSYyruf+9TNNPN6+4BsBxs4NuIoSLMAmtEN1+rewG0
+         tLUeae5Fm8hnDyeo/fDXDBD2g/FPKOMztX8HBssShDlcm9osHr/7gaj4gMfmFi8NzgLG
+         32XKM51saQ8NjwTbo1uk5Z7fw3JjXoce3diP5x7CKBs4Jzy5tFBAHexqCsMkY2SjvMHK
+         7crEp67sTPeCbqzU99Q6bsQ3J/TtD1/3RAL4//j224sGLfv343T3zUQc+POgntjJqxsN
+         +QGQ==
+X-Gm-Message-State: ANhLgQ3Vbmqctq6Hk1sTfDrOWxHgyjePbnPdJHOo8oTQI46BuieWStS9
+        g0r0upceSTVC1KuWc4+nKMo5cRf6UJ263/qQCAOAvAoegOQ=
+X-Google-Smtp-Source: ADFU+vtF2qA3KBXX2BP5sJdWnpK/D2XCaS4hZJxxpwlwViIjO8YnBCF6JvUS+L7CIbDo7ziKEq2xz1Qd6tz/vPNxDBc=
+X-Received: by 2002:a25:ccd0:: with SMTP id l199mr14690377ybf.446.1585227415649;
+ Thu, 26 Mar 2020 05:56:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jHS3q-0002Ox-5s;;;mid=<87v9mr1dlf.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19FQNW6El1vkn/O9+aq6uzvW1DZho99q7U=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [PATCH V2] ipc/mqueue.c: change __do_notify() to bypass check_kill_permission()
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20200326070236.235835-1-walken@google.com> <20200326070236.235835-6-walken@google.com>
+ <20200326120931.GF22483@bombadil.infradead.org>
+In-Reply-To: <20200326120931.GF22483@bombadil.infradead.org>
+From:   Michel Lespinasse <walken@google.com>
+Date:   Thu, 26 Mar 2020 05:56:43 -0700
+Message-ID: <CANN689F_wVcLddAfcvZ+CvqW-JxF4=7an_B5WLRKjYcf31DkAg@mail.gmail.com>
+Subject: Re: [PATCH 5/8] mmap locking API: convert nested write lock sites
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurent Dufour <ldufour@linux.ibm.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Liam Howlett <Liam.Howlett@oracle.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        David Rientjes <rientjes@google.com>,
+        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oleg Nesterov <oleg@redhat.com> writes:
+On Thu, Mar 26, 2020 at 5:09 AM Matthew Wilcox <willy@infradead.org> wrote:
+> On Thu, Mar 26, 2020 at 12:02:33AM -0700, Michel Lespinasse wrote:
+> > @@ -47,9 +48,9 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
+> >        * when the new ->mm is used for the first time.
+> >        */
+> >       __switch_mm(&new->context.id);
+> > -     down_write_nested(&new->mmap_sem, 1);
+> > +     mmap_write_lock_nested(new, 1);
+> >       uml_setup_stubs(new);
+> > -     mmap_write_unlock(new);
+> > +     mmap_write_unlock_nested(new);
+>
+> This is a bit of an oddity.  We don't usually have an unlock_nested()
+> variant (a quick grep finds only something complicated in reiserfs).
+> That's because it's legitimate to release locks in a different order from
+> the one they were acquired in (eg lock A, lock B, unlock A, unlock B), and
+> it's not clear whether "nested" would follow the lock (ie unlock_nested B)
+> or whether it would follow the code (ie unlock_nested A).
+>
+> Does your future API require knowing the nested nature at the unlock
+> point?  And if so, does it require it for A or B in the above scenario?
+> And how does it mix with lock A or B being of a different type (eg a
+> plain mutex or a spinlock)?
 
-> Commit cc731525f26a ("signal: Remove kernel interal si_code magic")
-> changed the value of SI_FROMUSER(SI_MESGQ), this means that mq_notify()
-> no longer works if the sender doesn't have rights to send a signal.
->
-> Change __do_notify() to use do_send_sig_info() instead of kill_pid_info()
-> to avoid check_kill_permission().
->
-> This needs the additional notify.sigev_signo != 0 check, shouldn't we
-> change do_mq_notify() to deny sigev_signo == 0 ?
->
-> Test-case:
->
-> 	#include <signal.h>
-> 	#include <mqueue.h>
-> 	#include <unistd.h>
-> 	#include <sys/wait.h>
-> 	#include <assert.h>
->
-> 	static int notified;
->
-> 	static void sigh(int sig)
-> 	{
-> 		notified = 1;
-> 	}
->
-> 	int main(void)
-> 	{
-> 		signal(SIGIO, sigh);
->
-> 		int fd = mq_open("/mq", O_RDWR|O_CREAT, 0666, NULL);
-> 		assert(fd >= 0);
->
-> 		struct sigevent se = {
-> 			.sigev_notify	= SIGEV_SIGNAL,
-> 			.sigev_signo	= SIGIO,
-> 		};
-> 		assert(mq_notify(fd, &se) == 0);
->
-> 		if (!fork()) {
-> 			assert(setuid(1) == 0);
-> 			mq_send(fd, "",1,0);
-> 			return 0;
-> 		}
->
-> 		wait(NULL);
-> 		mq_unlink("/mq");
-> 		assert(notified);
-> 		return 0;
-> 	}
->
-> Reported-by: Yoji <yoji.fujihar.min@gmail.com>
-> Fixes: cc731525f26a ("signal: Remove kernel interal si_code magic")
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-> ---
->  ipc/mqueue.c | 28 ++++++++++++++++++++--------
->  1 file changed, 20 insertions(+), 8 deletions(-)
->
-> diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-> index 49a05ba3000d..63b164932ffd 100644
-> --- a/ipc/mqueue.c
-> +++ b/ipc/mqueue.c
-> @@ -774,28 +774,40 @@ static void __do_notify(struct mqueue_inode_info *info)
->  	 * synchronously. */
->  	if (info->notify_owner &&
->  	    info->attr.mq_curmsgs == 1) {
-> -		struct kernel_siginfo sig_i;
->  		switch (info->notify.sigev_notify) {
->  		case SIGEV_NONE:
->  			break;
-> -		case SIGEV_SIGNAL:
-> -			/* sends signal */
-> +		case SIGEV_SIGNAL: {
-> +			struct kernel_siginfo sig_i;
-> +			struct task_struct *task;
-> +
-> +			/* do_mq_notify() accepts sigev_signo == 0, why?? */
-> +			if (!info->notify.sigev_signo)
-> +				break;
->  
->  			clear_siginfo(&sig_i);
->  			sig_i.si_signo = info->notify.sigev_signo;
->  			sig_i.si_errno = 0;
->  			sig_i.si_code = SI_MESGQ;
->  			sig_i.si_value = info->notify.sigev_value;
-> -			/* map current pid/uid into info->owner's namespaces */
->  			rcu_read_lock();
-> +			/* map current pid/uid into info->owner's namespaces */
->  			sig_i.si_pid = task_tgid_nr_ns(current,
->  						ns_of_pid(info->notify_owner));
-> -			sig_i.si_uid = from_kuid_munged(info->notify_user_ns, current_uid());
-> +			sig_i.si_uid = from_kuid_munged(info->notify_user_ns,
-> +						current_uid());
-> +			/*
-> +			 * We can't use kill_pid_info(), this signal should
-> +			 * bypass check_kill_permission(). It is from kernel
-> +			 * but si_fromuser() can't know this.
-> +			 */
-> +			task = pid_task(info->notify_owner, PIDTYPE_PID);
-                                                            ^^^^^^^^^^^^
-Minor nit:  If we are doing the task lookup ourselves that can and
-            should be PIDTYPE_TGID.  Because the code captures the TGID
-            itself none of the very valid backwards compatibility
-            reasons for using PIDTYPE_PID come into play.
+I'll admit it's a bit unusual.
 
-> +			if (task)
-> +				do_send_sig_info(info->notify.sigev_signo,
-> +						&sig_i, task, PIDTYPE_TGID);
->  			rcu_read_unlock();
-> -
-> -			kill_pid_info(info->notify.sigev_signo,
-> -				      &sig_i, info->notify_owner);
->  			break;
-> +		}
->  		case SIGEV_THREAD:
->  			set_cookie(info->notify_cookie, NOTIFY_WOKENUP);
->  			netlink_sendskb(info->notify_sock, info->notify_cookie);
-Eric
+In MM we have only two uses nested mmap locks (as you can see in this
+patch), and they both release locks in the opposite order as they
+acquire them. We could probably follow this pattern if additional use
+cases end up being needed.
+
+In my range locking patchset, nested locks need to pass an explicit
+lock range. Also when implementing mmap_sem locking latencies, it can
+be convenient to ignore the nested locks under the assumption that
+their hold interval is contained within the outer lock's hold
+interval.
+
+-- 
+Michel "Walken" Lespinasse
+A program is never fully debugged until the last user dies.
