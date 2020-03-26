@@ -2,178 +2,160 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C828FC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CBEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8162082E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ac9RTNti"
+	by mail.kernel.org (Postfix) with ESMTP id 1725620772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585183101;
+	bh=6XqFnjUYEhgYgKKUjpg7puclVqjDqQbNalTX5nxwQgY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=KaqZHX5kqHN7Wtrd++i0nyC15LuiIbaN8HotxDP5xoM3+lqsvnIvty/sWEj0VSxsD
+	 SIbqF/yHRc+S96jpMHNsm4nnrz6VxmjBI9cnWjE5y6m0fGyCQfkOxv4Z0xgJ2+cHmz
+	 qPPDGizkhGRu9GUDfzMwqF6ltHDy+K4n6t2xTWwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgCZAgp (ORCPT
+        id S1727607AbgCZAiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:36:45 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39429 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgCZAgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 20:36:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d25so1905503pfn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 17:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ru7Xg8oyZNAOPgD4TDit2eFp41YNY/vd+RoiLDWH7AM=;
-        b=Ac9RTNtiGmUz73N34b35nfes/bBdr3vlwfZxKjhL95F8rCEqK8UT3pzhYn9RASR30g
-         hW3hIeZMy9TuCGS3K7ooXw5ZzbKirrmDoqKSsZKMpeA/kA1U/o13cvhtgO38tLz/uCJx
-         15aUZmVzwF3l44aKu5/jg76hOlzcanvSnBSkWW73wY0viiHTKRty+6W4DBvqsl+BO0og
-         MVcWXPUoGkRecR2d4c1Mi+68SYFg9qf6u0Muz1xqZ2zwve4aJhS4Mnew8lcRznl/6YUo
-         7BRxb6zFXP71xEt5JQnf7AAg7wK0gqargU6q4dXY7zeiUEa5Yg9qIzH2FXWTDXpZvACN
-         J9NQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ru7Xg8oyZNAOPgD4TDit2eFp41YNY/vd+RoiLDWH7AM=;
-        b=swDm13s6ZuVuMloFy/dTcH7PYNsgp2HaWRfwSa/LGmZeShRyebJn4Hf7TlYBtpMtC2
-         0LsJ98reKPzh2u/jaQqzf3oFhsdGmvW7FF9reynfWozjJx2ctSS+DLJvLWZxqhhu1Bgz
-         PSubKiuK7j/j9kOglo+hWFCPP2E468kcvqBY4JNDw7hDbeV2b7elNkTpMrikQ1M3BwW6
-         s7U+gjRZ0syhHs8jWAwiTP5prm0BuBIsVFCyDoVHsA0kdA3rbXj9JYBYsWtnjafOc4U8
-         l3l10toPG8eKKLcnkJKmoa+nKwhRxwhUXnrCdb8ED+AVGFqr1oNpNxbUpjzqqXXAbX91
-         8HeQ==
-X-Gm-Message-State: ANhLgQ2C8fCGQ5yAeEmEjAgncHFEE4iwnaKl5xqarP/Hq/dzzFKzx4Ck
-        FoyyOfU/woIwSUxn649mUsaLQA==
-X-Google-Smtp-Source: ADFU+vuQ00w/IlwtTGRW/NqKJ7itCRhCZTwZmHq9FxET/6XEhNyLBVYxZZmcySH+nXeOAmRDGbAj7w==
-X-Received: by 2002:a63:68f:: with SMTP id 137mr5929568pgg.348.1585183003888;
-        Wed, 25 Mar 2020 17:36:43 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id g7sm338358pjl.17.2020.03.25.17.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 17:36:43 -0700 (PDT)
-Date:   Wed, 25 Mar 2020 17:36:40 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Relocate remoteproc
- firmware
-Message-ID: <20200326003640.GG119913@minitux>
-References: <20200302020757.551483-1-bjorn.andersson@linaro.org>
- <CAK8P3a1QZbpYV8juTb31-CXQMVF==qFjJdRd064Md_rw5V7Vnw@mail.gmail.com>
- <CAOCk7NpuC3J2EoOrkYQjjqc-DpTgYBdEwQk762v-7L7eki3RPg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7NpuC3J2EoOrkYQjjqc-DpTgYBdEwQk762v-7L7eki3RPg@mail.gmail.com>
+        Wed, 25 Mar 2020 20:38:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46972 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727536AbgCZAiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 20:38:19 -0400
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 646662076A;
+        Thu, 26 Mar 2020 00:38:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585183098;
+        bh=6XqFnjUYEhgYgKKUjpg7puclVqjDqQbNalTX5nxwQgY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LkRP/TuCvV8ytf1gA4MmhvMTASt5+4pAnSCE7CJfFgl9uBtcp4s9Z5vi7HCwsDRPe
+         hWXbBD1FpaOcma18yZ2qXUkqTOEVSLGEYW5QCuWVEYkLn1MlbhE18FNkYdRfX3P9Ip
+         4QfgJjXRQgExK1cNskTvkONWL9dvptAIJuEuzrXg=
+Date:   Wed, 25 Mar 2020 17:38:17 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        Baoquan He <bhe@redhat.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH] mm/sparse: Fix kernel crash with pfn_section_valid
+ check
+Message-Id: <20200325173817.a63f20dd0ec618e063569e4a@linux-foundation.org>
+In-Reply-To: <20200325031914.107660-1-aneesh.kumar@linux.ibm.com>
+References: <20200325031914.107660-1-aneesh.kumar@linux.ibm.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 25 Mar 14:54 PDT 2020, Jeffrey Hugo wrote:
+On Wed, 25 Mar 2020 08:49:14 +0530 "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com> wrote:
 
-> On Wed, Mar 25, 2020 at 3:13 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> >
-> > On Mon, Mar 2, 2020 at 3:09 AM Bjorn Andersson
-> > <bjorn.andersson@linaro.org> wrote:
-> > >
-> > > Update the firmware-name of the remoteproc nodes to mimic the firmware
-> > > structure on other 845 devices.
-> > >
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> >
-> > Hi Bjorn,
-> >
-> > Sorry for the late reply, I only came across this one while going
-> > through the pull requests
-> > that we had failed to pick up earlier.
-> >
-> > I really dislike the idea of hardcoding a firmware name in the
-> > devicetree, we had long
-> > discussions about this a few years ago and basically concluded that the firmware
-> > name needs to be generated by the driver after identifying the hardware itself.
-> >
-> > The problem is that the firmware generally needs to match both the device driver
-> > and the hardware, so when there is a firmware update that changes the behavior
-> > (intentionally or not) in a way the driver needs to know about, then
-> > the driver should
-> > be able to request a particular firmware file based on information
-> > that the owner
-> > of the dtb may not have.
-> 
-> Interesting, this intersects some work I plan on doing.
-> 
-> What level information did this discussion assume that the device
-> driver had?  Do you have a reference to the discussion handy?
-> 
-> Please correct me if I am wrong, but this seems to assume that for
-> device X, there is one firmware at a specific version that the driver
-> is then knowledgeable about, and the driver can query the device
-> hardware in some way to determine what is appropriate.  It seems like
-> this assumption is believed to hold true, no matter what system X is
-> included in.
-> 
-> I think we have the problem where likely impossible that the driver
-> will know what firmware is valid.
-> 
-> Qualcomm, for better or worse, has a signing process for their images.
-> This establishes a root a trust which is enforced by hardware.  For
-> example, the Modem subsystem (the part of the SoC that talks to cell
-> towers and such) will not run an image which is not properly signed.
-> The valid signature is burned into the chip.
-> 
-> "Surely there is one signed image for a particular modem on a specific SoC?"
-> Sadly, no.  The OEM is allowed to provide their own key.  This may be
-> a key which is specific to the device (Ie the Brand XYZ Model 123
-> phone).  Therefore, that device will only run the firmware that
-> contains that OEM's signature, even if the actual code happens to be
-> identical to what every other OEM has.
-> 
+> Fixes the below crash
 
-And generally your XYZ 123 might come in different SKUs that might or
-might not vary in software and hardware features; so for some products
-the driver should know that it can use the "generic" XYZ 123 firmware
-and in others it needs to know that it should be looking for the XYZ 123
-firmware for, say, the Japanese market (different hardware).
+(cc's added)
 
-> For some SoCs which go into multiple products, there seem to be
-> several OEMs which are willing to allow the firmware to be included in
-> the linux-firmware project.  Therefore, it is likely that there will
-> be multiple copies of the Modem image for the 845 SoC (for example) in
-> /lib/firmware.  In this case, it seems like your recommendation is
-> that the driver should somehow detect that it is running on device 123
-> and not device 456, and therefore be able to request the device 123
-> specific firmware.
+> BUG: Kernel NULL pointer dereference on read at 0x00000000
+> Faulting instruction address: 0xc000000000c3447c
+> Oops: Kernel access of bad area, sig: 11 [#1]
+> LE PAGE_SIZE=64K MMU=Hash SMP NR_CPUS=2048 NUMA pSeries
+> CPU: 11 PID: 7519 Comm: lt-ndctl Not tainted 5.6.0-rc7-autotest #1
+> ...
+> NIP [c000000000c3447c] vmemmap_populated+0x98/0xc0
+> LR [c000000000088354] vmemmap_free+0x144/0x320
+> Call Trace:
+>  section_deactivate+0x220/0x240
+>  __remove_pages+0x118/0x170
+>  arch_remove_memory+0x3c/0x150
+>  memunmap_pages+0x1cc/0x2f0
+>  devm_action_release+0x30/0x50
+>  release_nodes+0x2f8/0x3e0
+>  device_release_driver_internal+0x168/0x270
+>  unbind_store+0x130/0x170
+>  drv_attr_store+0x44/0x60
+>  sysfs_kf_write+0x68/0x80
+>  kernfs_fop_write+0x100/0x290
+>  __vfs_write+0x3c/0x70
+>  vfs_write+0xcc/0x240
+>  ksys_write+0x7c/0x140
+>  system_call+0x5c/0x68
 > 
+> With commit: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
+> section_mem_map is set to NULL after depopulate_section_mem(). This
+> was done so that pfn_page() can work correctly with kernel config that disables
+> SPARSEMEM_VMEMMAP. With that config pfn_to_page does
+> 
+> 	__section_mem_map_addr(__sec) + __pfn;
+> where
+> 
+> static inline struct page *__section_mem_map_addr(struct mem_section *section)
+> {
+> 	unsigned long map = section->section_mem_map;
+> 	map &= SECTION_MAP_MASK;
+> 	return (struct page *)map;
+> }
+> 
+> Now with SPASEMEM_VMEMAP enabled, mem_section->usage->subsection_map is used to
+> check the pfn validity (pfn_valid()). Since section_deactivate release
+> mem_section->usage if a section is fully deactivated, pfn_valid() check after
+> a subsection_deactivate cause a kernel crash.
+> 
+> static inline int pfn_valid(unsigned long pfn)
+> {
+> ...
+> 	return early_section(ms) || pfn_section_valid(ms, pfn);
+> }
+> 
+> where
+> 
+> static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+> {
+> 	int idx = subsection_map_index(pfn);
+> 
+> 	return test_bit(idx, ms->usage->subsection_map);
+> }
+> 
+> Avoid this by clearing SECTION_HAS_MEM_MAP when mem_section->usage is freed.
+> 
+> Fixes: d41e2f3bd546 ("mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case")
 
-And in the past I've worked on products where product 123, 456 and 789
-had the same firmware, but on some particular market all three used a
-market-specific firmware and in some cases two of them existed in a WiFi
-only variant.
+d41e2f3bd546 had cc:stable, so I shall add cc:stable to this one as well.
 
-> I don't know how the device driver is supposed to make that
-> determination, and its my opinion that the driver shouldn't be.  Other
-> than the need to have the correct firmware, which is tied to the
-> specific device, I'm not aware of an instance where a driver cares
-> about anything more than the hardware revision of the block it drives.
+> Cc: Baoquan He <bhe@redhat.com>
+> Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> ---
+>  mm/sparse.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index aadb7298dcef..3012d1f3771a 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -781,6 +781,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>  			ms->usage = NULL;
+>  		}
+>  		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+> +		/* Mark the section invalid */
+> +		ms->section_mem_map &= ~SECTION_HAS_MEM_MAP;
+>  	}
+>  
+>  	if (section_is_early && memmap)
 
-Looking at the particular problem it's not the revision of the hardware
-block(s) that the remoteproc interacts with that determines any of this.
-
-E.g. the modem subsystem is the same on Dragonboard845c with WiFi-only
-as it is on the Lenovo Yoga C630 with or without LTE - but we still need
-some mechanism to determine which of the 3 firmware files to pick.
-
-Regards,
-Bjorn
