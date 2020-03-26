@@ -2,99 +2,102 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 520C8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2E7C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22DB220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:36:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21E6D2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XfAKdd2e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bdO4KFht"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727800AbgCZUgA (ORCPT
+        id S1727702AbgCZUgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:36:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48324 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgCZUf7 (ORCPT
+        Thu, 26 Mar 2020 16:36:53 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:35188 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgCZUgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:35:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2D+2vncTikC9/HnOBtgzamVlSeubBDo21bU7QpehDEU=; b=XfAKdd2ewX7eGSogzSHKnafZ19
-        p2fxmxA8QoZUm/OxYsHb/MJsDTWW86X08P8qrCsbDJIUl4biIK739Uzd8U4E3GHBGklJ7cx2JsI5u
-        lrszLg4ndJ6jshm1mQgZnnT9KUzGZSdDg3D0xHmsBweY3zLF9fBG7jHUpqIx1XjxgqlvQ3V1nV2t2
-        dREO9moY17l75lr/MHOeeM/G4yzBLbFXCmLkWdFhy0tkGQK1SuRxyswxy1tJI2m288IoZhGSWTV+I
-        FUw5GVxBzulKyjyOai3ecP/fI4OhDp2U2IAz/yFCyd8SQ7JTuwoxcOPih8FXAIRDAj1ybxVeXXle3
-        xdh+TsZQ==;
-Received: from [179.97.37.151] (helo=sandy.ghostprotocols.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHZEH-0004si-IE; Thu, 26 Mar 2020 20:35:53 +0000
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 57842169; Thu, 26 Mar 2020 17:35:49 -0300 (BRT)
-Date:   Thu, 26 Mar 2020 17:35:49 -0300
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mingbo Zhang <whensungoes@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
- instructions
-Message-ID: <20200326203549.GD20397@redhat.com>
-References: <20200303045033.6137-1-whensungoes@gmail.com>
- <20200326103153.de709903f26fee0918414bd2@kernel.org>
- <bac567dd-9810-4919-365e-b3dfb54a6c4b@intel.com>
- <20200326135547.GA20397@redhat.com>
- <363DA0ED52042842948283D2FC38E4649C72EFF3@IRSMSX106.ger.corp.intel.com>
- <20200326145726.GC6411@kernel.org>
- <20200326150137.GD6411@kernel.org>
- <4a2a3582-21a0-f3fc-102e-42ec67d0aafa@intel.com>
+        Thu, 26 Mar 2020 16:36:52 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u68so3386199pfb.2;
+        Thu, 26 Mar 2020 13:36:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t+UEiQ8yfqgCYbdamETpWg51SIJm0Evjj0FdT/Dr3I0=;
+        b=bdO4KFhttrIM8xOkNnMb3OnmpOWJ5mHVX+21JOsGY0Oj0R9aU+gblAMAv8kB7eTCCC
+         R3wUfUgx4jDPiL0tsu2L5j8g4TW8XyLtYqHrRg6k+V7vcrR7lgJ3uifzWFV6ySXCPYqL
+         ZY8VxLeGHicm5J2YWmZHL9Xxd0EylAYRDLPmd8E3aDCYgAOyTwDedg/N44KDesBPOF+8
+         oxKJZJuxvAuc24eF/Fqku0+UijjmLSZUjKnAEVhVGKgUFv/fCkyofgSrq+7vzbWxQbn0
+         WZhHGPh+WWgGckBgnUebIcKS+qYnza92Bu5jGgIVy2GhD608M2+O9NoZckf1au4Wm2fY
+         A46Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t+UEiQ8yfqgCYbdamETpWg51SIJm0Evjj0FdT/Dr3I0=;
+        b=aO5EidQ9G2ANlesDktFymz+SiXn7bL/rfRzDtOWKdqx+oU1TTGee/6IVlJNMSGhOLz
+         fxMzLeVFJwDbDMd9PftrqZ4He5bPdUvYVnRQAzQ40gnA52xvjQ2ZwUzvf0IX4fTwgapp
+         JSTZR47hRvpaXmJKofky6BQX7tUZfoDsGbnl/yLmwTny6/Cg4hWLyu7vW2IbmcKw0MpJ
+         0rRdaPAFzUQjgVptGpvqKgvA/EEPp1OtU/FjJOXMCY1oDjBH9Hbk/lWu4/uyKPQVEptE
+         MNgeNm2wqAEM5l2Z5hoaMJAxB0WTUq83aZHL3ViwbdoJbeIYpYZ8i+V8MouSopDKKTy0
+         ye7g==
+X-Gm-Message-State: ANhLgQ2af+B9WgA53rjuGDvcbtu2puePCduJ52Zh7y1XR6ADm6ji81LV
+        xxU5s879PIT++nKBR1XhGB3gU+ET
+X-Google-Smtp-Source: ADFU+vvHmwCpydnpgZIzK6cQlPqAiKa3/mZDIHNnuNigmXRHJuXsHIje6L1r4syzRd5BhVwb4eZwJA==
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr10629783pgb.263.1585255010217;
+        Thu, 26 Mar 2020 13:36:50 -0700 (PDT)
+Received: from s15.smythies.com (mail.smythies.com. [173.180.45.4])
+        by smtp.gmail.com with ESMTPSA id z16sm2373767pfr.138.2020.03.26.13.36.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 13:36:49 -0700 (PDT)
+From:   Doug Smythies <doug.smythies@gmail.com>
+X-Google-Original-From: Doug Smythies <dsmythies@telus.net>
+To:     lenb@kernel.org
+Cc:     dsmythies@telus.net, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Subject: [PATCH] tools/power/x86/turbostat: Always print idle in the system configuration header
+Date:   Thu, 26 Mar 2020 13:36:37 -0700
+Message-Id: <20200326203637.1892-1-dsmythies@telus.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a2a3582-21a0-f3fc-102e-42ec67d0aafa@intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 26, 2020 at 07:36:27PM +0200, Adrian Hunter escreveu:
-> On 26/03/20 5:01 pm, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Mar 26, 2020 at 11:57:26AM -0300, Arnaldo Carvalho de Melo escreveu:
-> >> Em Thu, Mar 26, 2020 at 02:19:07PM +0000, Hunter, Adrian escreveu:
-> >>>>> But they have not yet been applied.
-> > 
-> >>>>> Sorry for the confusion.
-> > 
-> >>>> I'll collect them, thanks for pointing this out.
-> > 
-> >>> The patches are in tip courtesy of Borislav Petkov thank you!
-> >  
-> >> Ok, thanks Borislav,
-> > 
-> > I didn't notice because it didn't made into tip/perf/core :-\ In what
-> > branch is it btw, I couldn't find any cset with substr summary "Add
-> > Control-flow Enforcement" in, tip/master also doesn't have it.
-> > 
-> > - Arnaldo
-> > 
-> 
-> 
-> x86/misc
+If the --quiet option is not used, turbostat prints a useful system
+configuration header during startup. Inclusion of idle system configuration
+information is a function of inclusion in the columns choosen to be displayed.
 
-Right, he told me, thanks,
+Always list the idle system configuration.
 
-- Arnaldo
+Signed-off-by: Doug Smythies <dsmythies@telus.net>
+---
+ tools/power/x86/turbostat/turbostat.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 33b370865d16..834b86676d00 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -3530,9 +3530,6 @@ dump_sysfs_cstate_config(void)
+ 	int state;
+ 	char *sp;
+ 
+-	if (!DO_BIC(BIC_sysfs))
+-		return;
+-
+ 	if (access("/sys/devices/system/cpu/cpuidle", R_OK)) {
+ 		fprintf(outf, "cpuidle not loaded\n");
+ 		return;
+-- 
+2.25.1
+
