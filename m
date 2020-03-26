@@ -2,96 +2,108 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAA2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD771C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:44:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA49A206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04A2206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:44:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="Wvi8sFDy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbgCZToJ (ORCPT
+        id S1728599AbgCZTov (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:44:09 -0400
-Received: from smtprelay0223.hostedemail.com ([216.40.44.223]:42186 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728317AbgCZToH (ORCPT
+        Thu, 26 Mar 2020 15:44:51 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44097 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZTov (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:44:07 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 9A217181D41BF;
-        Thu, 26 Mar 2020 19:44:06 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: laugh42_7acb8a21a4a4b
-X-Filterd-Recvd-Size: 2711
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 26 Mar 2020 19:44:03 +0000 (UTC)
-Message-ID: <385ff77269e5df76c917d494de012a8f83fea31e.camel@perches.com>
-Subject: Re: [PATCH net-next 6/9] net: phy: add backplane kr driver support
-From:   Joe Perches <joe@perches.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     florinel.iordache@nxp.com, netdev@vger.kernel.org, andrew@lunn.ch,
-        f.fainelli@gmail.com, hkallweit1@gmail.com, linux@armlinux.org.uk,
-        devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
-        robh+dt@kernel.org, mark.rutland@arm.com, kuba@kernel.org,
-        corbet@lwn.net, shawnguo@kernel.org, leoyang.li@nxp.com,
-        madalin.bucur@oss.nxp.com, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 26 Mar 2020 12:42:11 -0700
-In-Reply-To: <20200326.120743.1932411612374465145.davem@davemloft.net>
-References: <1585230682-24417-7-git-send-email-florinel.iordache@nxp.com>
-         <20200326.115330.2250343131621391364.davem@davemloft.net>
-         <46bf05a81237ed716bf06b48891fcd7c129eae5d.camel@perches.com>
-         <20200326.120743.1932411612374465145.davem@davemloft.net>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 26 Mar 2020 15:44:51 -0400
+Received: by mail-qk1-f194.google.com with SMTP id j4so8156559qkc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 12:44:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Vz8M+WY12BuCsCLe/S9A2YcP2dqH4GItbGgYzpSKVks=;
+        b=Wvi8sFDy3Xelku+ev0Z+8Z88gUwLdh49TKjzgpvENdRnjLybfJv52p2eJGWj4Po7mX
+         9ZiDd3dnWbFl0RVSEDSIc7JcCinAuAswL3ehy/VJRT+S+Z294BqheymwNr9VaspjVkRw
+         jDTamd/KQWz5bhF0xB8oGvoDFbXtqoH/LflMo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Vz8M+WY12BuCsCLe/S9A2YcP2dqH4GItbGgYzpSKVks=;
+        b=QMevjwzosaw4DTQ3V/eYYR/TfhcACjDwFjPd/1DilnVZ2G1Wv3jjGxOlgSHeSLQXbH
+         b034UuuUvqz2HQ1iS02pwl9mqhUcDBQG/ecF4J1UuHi0+w6DDZAWcSXr5HKvQt5V5nKS
+         CfF1jTUkWVmfMMvclgVHWURPXt4CeJJkthjdVNQDOBueDt/en0cXMzvNTL7cWCqmU5oL
+         qLRTkvQgL3KNM4tZbH2PLddZ/caCcVJ/uOHFJAeQaabMA+V4oGZK90iBb/eXJ+1zrmOl
+         CPJM99T3Wfsdg45NQAZSWSoVdDy+hooVXyO9S+FhMO2KmDmt5g8BV8PkqGdxdv+S9Pth
+         7qfA==
+X-Gm-Message-State: ANhLgQ32oGUGA5/xAdi9PAus2BqKpIdcYmM/9wJ15WXHonnA9rZhvCM8
+        Pg/guPCM5KwLxZBKxg8NRs897rM6I3o=
+X-Google-Smtp-Source: ADFU+vv4Ed+8fGkonegfzDlU+QiZdHa5jyfFN+G7H65B9V9e/l32Mev8DSAqceTHpeLqzZ3Vgffnmw==
+X-Received: by 2002:a37:9ec8:: with SMTP id h191mr10060075qke.260.1585251889761;
+        Thu, 26 Mar 2020 12:44:49 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id s36sm2246621qtb.28.2020.03.26.12.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 12:44:49 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 15:44:48 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
+        jsbarnes@google.com, sonnyrao@google.com, vpillai@digitalocean.com,
+        peterz@infradead.org, Guenter Roeck <groeck@chromium.org>,
+        Waiman Long <longman@redhat.com>,
+        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
+Message-ID: <20200326194448.GA133524@google.com>
+References: <20200326191623.129285-1-joel@joelfernandes.org>
+ <20200326192035.GO162390@mtj.duckdns.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326192035.GO162390@mtj.duckdns.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-26 at 12:07 -0700, David Miller wrote:
-> From: Joe Perches <joe@perches.com>
-> Date: Thu, 26 Mar 2020 11:55:17 -0700
+Hi Tejun,
+
+On Thu, Mar 26, 2020 at 03:20:35PM -0400, Tejun Heo wrote:
+> On Thu, Mar 26, 2020 at 03:16:23PM -0400, Joel Fernandes (Google) wrote:
+> > This deliberately changes the behavior of the per-cpuset
+> > cpus file to not be effected by hotplug. When a cpu is offlined,
+> > it will be removed from the cpuset/cpus file. When a cpu is onlined,
+> > if the cpuset originally requested that that cpu was part of the cpuset,
+> > that cpu will be restored to the cpuset. The cpus files still
+> > have to be hierachical, but the ranges no longer have to be out of
+> > the currently online cpus, just the physically present cpus.
 > 
-> > On Thu, 2020-03-26 at 11:53 -0700, David Miller wrote:
-> >> From: Florinel Iordache <florinel.iordache@nxp.com>
-> >> Date: Thu, 26 Mar 2020 15:51:19 +0200
-> >> 
-> >> > +static void kr_reset_master_lane(struct kr_lane_info *krln)
-> >> > +{
-> >> > +     struct phy_device *bpphy = krln->bpphy;
-> >> > +     struct backplane_phy_info *bp_phy = bpphy->priv;
-> >> > +     const struct lane_io_ops *lane_ops = krln->bp_phy->bp_dev.lane_ops;
-> >> 
-> >> Please use reverse christmas tree ordering for local variables.
-> > 
-> > How (any why) do you suggest the first 2 entries here
-> > should be ordered?
-> 
-> You have to sometimes put assignments into the code body rather than
-> the declarations in situations like this.
+> This is already the behavior on cgroup2 and I don't think we want to
+> introduce this big a behavior change to cgroup1 cpuset at this point.
 
-No "why" reply given.
+It is not really that big a change. Please go over the patch, we are not
+changing anything with how ->cpus_allowed works and interacts with the rest
+of the system and the scheduler. We have just introduced a new mask to keep
+track of which CPUs were requested without them being affected by hotplug. On
+CPU onlining, we restore the state of ->cpus_allowed as not be affected by
+hotplug.
 
-An option is not using reverse christmas tree to both
-avoid ordering
-constraints and reduce overall line count.
+There's 3 companies that have this issue so that should tell you something.
+We don't want to carry this patch forever. Many people consider the hotplug
+behavior to be completely broken.
 
-I think this is your own personal taste rather than an
-actual valuable addition for subsystem maintenance.
+thanks,
 
-And if this a serious requirement for the subsystem
-you oversee, you should add it to something like a
-maintainer-entry-profile with a "P:" line in MAINTAINERS.
-
-https://www.kernel.org/doc/html/latest/maintainer/maintainer-entry-profile.html
-
-
+ - Joel
 
