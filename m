@@ -2,116 +2,119 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14319C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2477C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13D620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A866A2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oOVvjG/3"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="mJgIki0K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728036AbgCZOhi (ORCPT
+        id S1727869AbgCZOmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:37:38 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:56242 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZOhh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:37:37 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QEX7M4009867;
-        Thu, 26 Mar 2020 14:36:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2020-01-29;
- bh=7ms8FwymQmddGHgatxkaCEwofDmjeI0drCKbrY3vE+A=;
- b=oOVvjG/31vXbRMOzNpZ/LF+hTmcD6PEEc8JMgwIKf+ywhGB14RZdvG/5EhRCLmmJNYox
- P58kYdfDT7YLAotxz+eQ3JMyXl2oBrX1tb5i50OeGWQtYK6IFO58ALlNV13aXsApdcC9
- ta6kx8O4O0k9Fug82JJd2EvdzrkmLbzKRFD5z/6M+Uoq0u/ze2M2uDkEuCa0YnWmFY/L
- NiAIwUiFxqdOA76OtqxPjoqBvbwO5MqbmL+LUAHzklChNqmzYd6XBX6qY8/1Kc0hGd3y
- xfWMSna09dPrI/8NeeHvvKncNNvRrh01++6zorBh6r+cu8LfIe4neKQ+yqSX3oNIBQeF FQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2ywavmg5am-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 14:36:56 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QEWpDq129855;
-        Thu, 26 Mar 2020 14:34:55 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yxw4trtk3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 14:34:55 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02QEYmJI025407;
-        Thu, 26 Mar 2020 14:34:48 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 07:34:47 -0700
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>, axboe@kernel.dk,
-        bob.liu@oracle.com, agk@redhat.com, snitzer@redhat.com,
-        dm-devel@redhat.com, song@kernel.org, tytso@mit.edu,
-        adilger.kernel@dilger.ca, Chaitanya.Kulkarni@wdc.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/6] block: Introduce REQ_ALLOCATE flag for REQ_OP_WRITE_ZEROES
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <158157930219.111879.12072477040351921368.stgit@localhost.localdomain>
-        <e2b7cbab-d91f-fd7b-de6f-a671caa6f5eb@virtuozzo.com>
-        <69c0b8a4-656f-98c4-eb55-2fd1184f5fc9@virtuozzo.com>
-        <67d63190-c16f-cd26-6b67-641c8943dc3d@virtuozzo.com>
-        <20200319102819.GA26418@infradead.org> <yq1tv2k8pjn.fsf@oracle.com>
-        <20200325162656.GJ29351@magnolia>
-        <20200325163223.GA27156@infradead.org> <yq1d090jqlm.fsf@oracle.com>
-        <20200326092935.GA6478@infradead.org>
-Date:   Thu, 26 Mar 2020 10:34:42 -0400
-In-Reply-To: <20200326092935.GA6478@infradead.org> (Christoph Hellwig's
-        message of "Thu, 26 Mar 2020 02:29:35 -0700")
-Message-ID: <yq1lfnngp6l.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
- spamscore=0 mlxlogscore=923 adultscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260113
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9571 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
- priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
- phishscore=0 suspectscore=0 mlxlogscore=965 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260113
+        Thu, 26 Mar 2020 10:42:18 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60999 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgCZOmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:42:18 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48p7466SP9z9vBmt;
+        Thu, 26 Mar 2020 15:42:14 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=mJgIki0K; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id cr9aaoSfj6m6; Thu, 26 Mar 2020 15:42:14 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48p746529Yz9vBmr;
+        Thu, 26 Mar 2020 15:42:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1585233734; bh=pxlhHd5KJjHJbZKhUrrTB5maIqr0JBMbVZgBuq9rqY8=;
+        h=From:Subject:To:Cc:Date:From;
+        b=mJgIki0KIobQpvxL4shrRvaUsX2PrpAHFRxhXSImCNW6EPhlmMgYw1kvv98dBNn/m
+         mrTOYJdkt/CnIa9OY1UVWKIU6x6ziFptgzZP5knwnD+oNQ5VJMcecfCHfAMF504wul
+         /YdBUHanRuX6qYBkn+TcQRd764WnxcRcIQ/We3HA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2E4318B7AD;
+        Thu, 26 Mar 2020 15:42:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id zamguf2qSdgK; Thu, 26 Mar 2020 15:42:16 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id ED95F8B756;
+        Thu, 26 Mar 2020 15:42:15 +0100 (CET)
+Received: by pc16570vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id B152C655EB; Thu, 26 Mar 2020 14:42:15 +0000 (UTC)
+Message-Id: <c88b13ede49744d81fdab32e037a7ae10f0b241f.1585233657.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [RFC PATCH] powerpc/lib: Fixing use a temporary mm for code patching
+To:     cmr@informatik.wtf
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 26 Mar 2020 14:42:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch fixes the RFC series identified below.
+It fixes three points:
+- Failure with CONFIG_PPC_KUAP
+- Failure to write do to lack of DIRTY bit set on the 8xx
+- Inadequaly complex WARN post verification
 
-Christoph,
+However, it has an impact on the CPU load. Here is the time
+needed on an 8xx to run the ftrace selftests without and
+with this series:
+- Without CONFIG_STRICT_KERNEL_RWX		==> 38 seconds
+- With CONFIG_STRICT_KERNEL_RWX			==> 40 seconds
+- With CONFIG_STRICT_KERNEL_RWX + this series	==> 43 seconds
 
-> That's why I don't like the whole flags game very much.  I'd rather
-> have REQ_OP_WRITE_ZEROES as the integrity operation that gurantees
-> zeroing, and a REQ_ALLOCATE that doesn't guarantee zeroing, just some
-> deterministic state of the blocks.
+Link: https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166003
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/lib/code-patching.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I just worry about the proliferation of identical merging and splitting
-code throughout the block stack as we add additional single-range, no
-payload operations (Verify, etc.). I prefer to enforce the semantics in
-the LLD and not in the plumbing. But I won't object to a separate
-REQ_OP_ALLOCATE if you find the resulting code duplication acceptable.
-
+diff --git a/arch/powerpc/lib/code-patching.c b/arch/powerpc/lib/code-patching.c
+index f156132e8975..4ccff427592e 100644
+--- a/arch/powerpc/lib/code-patching.c
++++ b/arch/powerpc/lib/code-patching.c
+@@ -97,6 +97,7 @@ static int map_patch(const void *addr, struct patch_mapping *patch_mapping)
+ 	}
+ 
+ 	pte = mk_pte(page, pgprot);
++	pte = pte_mkdirty(pte);
+ 	set_pte_at(patching_mm, patching_addr, ptep, pte);
+ 
+ 	init_temp_mm(&patch_mapping->temp_mm, patching_mm);
+@@ -168,7 +169,9 @@ static int do_patch_instruction(unsigned int *addr, unsigned int instr)
+ 			(offset_in_page((unsigned long)addr) /
+ 				sizeof(unsigned int));
+ 
++	allow_write_to_user(patch_addr, sizeof(instr));
+ 	__patch_instruction(addr, instr, patch_addr);
++	prevent_write_to_user(patch_addr, sizeof(instr));
+ 
+ 	err = unmap_patch(&patch_mapping);
+ 	if (err)
+@@ -179,7 +182,7 @@ static int do_patch_instruction(unsigned int *addr, unsigned int instr)
+ 	 * think we just wrote.
+ 	 * XXX: BUG_ON() instead?
+ 	 */
+-	WARN_ON(memcmp(addr, &instr, sizeof(instr)));
++	WARN_ON(*addr != instr);
+ 
+ out:
+ 	local_irq_restore(flags);
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.25.0
+
