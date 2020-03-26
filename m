@@ -2,75 +2,96 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B027AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AC99C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 829602076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5979C206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:57:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="hamAasPB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgCZO4I (ORCPT
+        id S1728060AbgCZO5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:56:08 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50949 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbgCZO4I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:56:08 -0400
-Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1jHTvF-0002bx-8i; Thu, 26 Mar 2020 15:55:53 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 7644D10069D; Thu, 26 Mar 2020 15:55:52 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, hpa@zytor.com,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
-In-Reply-To: <1d98bddd-a6a4-2fcc-476b-c9b19f65c6b6@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com> <20200324151859.31068-9-xiaoyao.li@intel.com> <87eethz2p6.fsf@nanos.tec.linutronix.de> <88b01989-25cd-90af-bfe8-c236bd5d1dbf@intel.com> <87d08zxtgl.fsf@nanos.tec.linutronix.de> <1d98bddd-a6a4-2fcc-476b-c9b19f65c6b6@intel.com>
-Date:   Thu, 26 Mar 2020 15:55:52 +0100
-Message-ID: <87a743xj0n.fsf@nanos.tec.linutronix.de>
+        Thu, 26 Mar 2020 10:57:19 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58556 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727885AbgCZO5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:57:19 -0400
+Received: from zn.tnic (p200300EC2F0A4900341618FA2426449A.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:4900:3416:18fa:2426:449a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1CFD91EC0469;
+        Thu, 26 Mar 2020 15:57:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585234637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=I5bzym9yUMWO0jgjlADgMWnILk9HKqW39Q1cend1Znw=;
+        b=hamAasPB1uuxLYTMK2DmIuXoiIH0eaaT7MmvTTfPeL7YCT7znmmD3Of4d+f1fopvTpU5CO
+        77nhM0XgmB7QeKrE6nBKC7HoxE3mn92XDzLQAOr30wAOcYh9jxsVpw7V8LnueGBSe4BQr8
+        bxprFNFKyWN3iOZL9APdhJcyooAeul0=
+Date:   Thu, 26 Mar 2020 15:57:09 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com
+Subject: Re: [RESEND][PATCH v3 09/17] x86/static_call: Add out-of-line static
+ call implementation
+Message-ID: <20200326145709.GB11398@zn.tnic>
+References: <20200324135603.483964896@infradead.org>
+ <20200324142245.819003994@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200324142245.819003994@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xiaoyao Li <xiaoyao.li@intel.com> writes:
-> On 3/26/2020 7:10 PM, Thomas Gleixner wrote:
-> If the host has it disabled, !split_lock_detect_on() is true, it skips 
-> following check due to ||
->
-> if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK)) {
-> 	inject #AC back to guest
+On Tue, Mar 24, 2020 at 02:56:12PM +0100, Peter Zijlstra wrote:
+> +static void __static_call_transform(void *insn, u8 opcode, void *func)
+> +{
+> +	const void *code = text_gen_insn(opcode, (long)insn, (long)func);
+> +
+> +	if (WARN_ONCE(*(u8 *)insn != opcode,
+> +		      "unexpected static call insn opcode 0x%x at %pS\n",
+> +		      opcode, insn))
+> +		return;
+> +
+> +	if (memcmp(insn, code, CALL_INSN_SIZE) == 0)
+> +		return;
+> +
+> +	text_poke_bp(insn, code, CALL_INSN_SIZE, NULL);
 
-That'd be a regular #AC, right?
+Right, this is working with CALL_INSN_SIZE but ...
 
-> } else {
-> 	if (guest_alignment_check_enabled() || guest_sld_on())
-> 		inject #AC back to guest
+> +}
+> +
+> +void arch_static_call_transform(void *site, void *tramp, void *func)
+> +{
+> +	mutex_lock(&text_mutex);
+> +
+> +	if (tramp)
+> +		__static_call_transform(tramp, JMP32_INSN_OPCODE, func);
 
-Here is clearly an else path missing. 
+... it gets called with JMP32_INSN_OPCODE too. I mean, both lengths are
+equal and all - it is just a bit confusing at a first glance. Maybe slap
+a small comment that it is ok.
 
-> }
+Thx.
 
-Thanks,
+-- 
+Regards/Gruss,
+    Boris.
 
-        tglx
+https://people.kernel.org/tglx/notes-about-netiquette
