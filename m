@@ -2,130 +2,98 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C72EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0DEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AF24206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7760F206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:54:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="wqxyOyNe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgCZTwF (ORCPT
+        id S1728630AbgCZTyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:52:05 -0400
-Received: from haggis.mythic-beasts.com ([46.235.224.141]:51573 "EHLO
-        haggis.mythic-beasts.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726540AbgCZTwE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:52:04 -0400
-Received: from 141.226.115.87.dyn.plus.net ([87.115.226.141]:56456 helo=slartibartfast.quignogs.org.uk)
-        by haggis.mythic-beasts.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92.3)
-        (envelope-from <peter@bikeshed.quignogs.org.uk>)
-        id 1jHYXp-0002h8-2W; Thu, 26 Mar 2020 19:52:01 +0000
-From:   peter@bikeshed.quignogs.org.uk
-To:     Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>,
-        Peter Lister <peter@bikeshed.quignogs.org.uk>
-Subject: [PATCH v3 1/1] A compact idiom to add code examples in kerneldoc comments.
-Date:   Thu, 26 Mar 2020 19:51:56 +0000
-Message-Id: <20200326195156.11858-2-peter@bikeshed.quignogs.org.uk>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200326195156.11858-1-peter@bikeshed.quignogs.org.uk>
-References: <20200326192947.GM22483@bombadil.infradead.org>
- <20200326195156.11858-1-peter@bikeshed.quignogs.org.uk>
+        Thu, 26 Mar 2020 15:54:00 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:34917 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727560AbgCZTyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:54:00 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e7128844;
+        Thu, 26 Mar 2020 19:46:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=f1lz/GYg7MmJePg+lVSsCStJm3U=; b=wqxyOy
+        NeaYX7S/Bf3CiXu6WxweGGWX1Hfa4F0YCmVxtZZenj6BFaEHcT/FL+g2VXrlWpjp
+        WT22EOvuNl095TFGcln/LNho4QnbNf4lIL7ilDO0aXIMYwBHqoGaqvij8vUuQdjw
+        tZDMhZHoN/evmNLuyINgvEGnxU7pjbS0slvQPhI8K94LyCMTL5O//nkpc0WXsDkD
+        5WDnNmI+SPwByl17mhH1Sbn3lAjpat2VMgDZHpMdAmK5bTT25g8OVj3S71RJc5Y2
+        hE+E0XLV5QnlcbIkD3yqZFvLcn0DKOSni0/9AsUO9tXyZ/wXVzJu9lZ/4wbp61QE
+        UBZIuyHD4moYKtYg==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f3fb72b3 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 26 Mar 2020 19:46:32 +0000 (UTC)
+Received: by mail-il1-f178.google.com with SMTP id 7so6624794ill.2;
+        Thu, 26 Mar 2020 12:53:57 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3bTj0XaIl73u2eFyaAYfd8mthlqRj0Rax669Wmi93WAvLoGLse
+        w766mjjKEA78EU9HpXBp/NZ7OPIzahVoqFEaOPk=
+X-Google-Smtp-Source: ADFU+vvmm3DgmItvaRXrVSSTSPN3EV2Lxto5YPkj/t2SJndqzbHfmaLbH/lj09YNUmXjFkl/j8dGix5cOzXToO3VP9U=
+X-Received: by 2002:a92:798f:: with SMTP id u137mr7565295ilc.231.1585252436484;
+ Thu, 26 Mar 2020 12:53:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-BlackCat-Spam-Score: 50
+References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-11-masahiroy@kernel.org>
+ <CAKwvOdk=MCePWHD=Kj3K7fD0y8TBZfiFLB0X+gnhPUd=RnrH6A@mail.gmail.com>
+In-Reply-To: <CAKwvOdk=MCePWHD=Kj3K7fD0y8TBZfiFLB0X+gnhPUd=RnrH6A@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 26 Mar 2020 13:53:44 -0600
+X-Gmail-Original-Message-ID: <CAHmME9oD7DVSGVkWv2jAyr5eZUy2Ac+MWzss5dhKEmG3hq6AFg@mail.gmail.com>
+Message-ID: <CAHmME9oD7DVSGVkWv2jAyr5eZUy2Ac+MWzss5dhKEmG3hq6AFg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/16] x86: probe assembler capabilities via kconfig
+ instead of makefile
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Lister <peter@bikeshed.quignogs.org.uk>
+On Thu, Mar 26, 2020 at 11:49 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Thu, Mar 26, 2020 at 1:02 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> >
+> > Doing this probing inside of the Makefiles means we have a maze of
+> > ifdefs inside the source code and child Makefiles that need to make
+> > proper decisions on this too. Instead, we do it at Kconfig time, like
+> > many other compiler and assembler options, which allows us to set up the
+> > dependencies normally for full compilation units. In the process, the
+> > ADX test changes to use %eax instead of %r10 so that it's valid in both
+> > 32-bit and 64-bit mode.
+>
+> Does KConfig generate -D<foo> flags for KBUILD_CFLAGS and KBUILD_AFLAGS?
 
-scripts/kernel-doc - When a double colon follows a section heading
-(e.g. Example::), write a double colon line to the ReST output to make
-the following text (e.g. a code snippet) into a literal block.
+kconfig sticks everything it's got into include/generated/autoconf.h.
+That's how you're able to use all those #ifdef CONFIG_* macros
+already. This change moves things from a command line -D to the
+autoconf.h file.
 
-drivers/base/platform.c - Changed Example: headings to Example:: to
-literalise code snippets as above.
+> Looks like lib/raid6/test/Makefile also generates some of these?
 
-This patch also removes two kerneldoc build warnings:
-./drivers/base/platform.c:134: WARNING: Unexpected indentation.
-./drivers/base/platform.c:213: WARNING: Unexpected indentation.
-
-Signed-off-by: Peter Lister <peter@bikeshed.quignogs.org.uk>
----
- drivers/base/platform.c |  4 ++--
- scripts/kernel-doc      | 19 +++++++++++++++----
- 2 files changed, 17 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index b5ce7b085795..47f4a9b410b2 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -128,7 +128,7 @@ EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
-  * request_irq() APIs. This is the same as platform_get_irq(), except that it
-  * does not print an error message if an IRQ can not be obtained.
-  *
-- * Example:
-+ * Example::
-  *		int irq = platform_get_irq_optional(pdev, 0);
-  *		if (irq < 0)
-  *			return irq;
-@@ -207,7 +207,7 @@ EXPORT_SYMBOL_GPL(platform_get_irq_optional);
-  * IRQ fails. Device drivers should check the return value for errors so as to
-  * not pass a negative integer value to the request_irq() APIs.
-  *
-- * Example:
-+ * Example::
-  *		int irq = platform_get_irq(pdev, 0);
-  *		if (irq < 0)
-  *			return irq;
-diff --git a/scripts/kernel-doc b/scripts/kernel-doc
-index f2d73f04e71d..732db3dcc402 100755
---- a/scripts/kernel-doc
-+++ b/scripts/kernel-doc
-@@ -362,7 +362,7 @@ my $doc_com_body = '\s*\* ?';
- my $doc_decl = $doc_com . '(\w+)';
- # @params and a strictly limited set of supported section names
- my $doc_sect = $doc_com .
--    '\s*(\@[.\w]+|\@\.\.\.|description|context|returns?|notes?|examples?)\s*:(.*)';
-+    '\s*(\@[.\w]+|\@\.\.\.|description|context|returns?|notes?|examples?)\s*:(:?)(.*)';
- my $doc_content = $doc_com_body . '(.*)';
- my $doc_block = $doc_com . 'DOC:\s*(.*)?';
- my $doc_inline_start = '^\s*/\*\*\s*$';
-@@ -1952,11 +1952,22 @@ sub process_body($$) {
- 	    ++$warnings;
- 	}
-     }
--
-+    # $doc_sect is a regex which searches for section names.
-+    # If it matches:
-+    #   $1 is the section name
-+    #   $2 is a colon if the section name was followed by a double colon.
-+    #   $3 is the rest of the content after the colon (or double colon).
-     if (/$doc_sect/i) { # case insensitive for supported section names
- 	$newsection = $1;
--	$newcontents = $2;
--
-+	# If $2 is ':', the section name was followed by a double
-+	# colon, so insert a line containing just '::' to make the
-+	# following block into a ReST literal.  This idiom is useful
-+	# for an Example section introducing a code snippet.
-+	if ($2 eq ':') {
-+	    $newcontents = "::\n" . $3;
-+	} else {
-+	    $newcontents = $3;
-+	}
- 	# map the supported section names to the canonical names
- 	if ($newsection =~ m/^description$/i) {
- 	    $newsection = $section_default;
--- 
-2.25.1
-
+raid6 has its own crazy thing going on. The test directory compiles
+that code for use in userspace. You might argue that its whole
+situation is non-standard and weird and should be reworked
+differently, but that seems like fodder for a different patchset on
+the linux-raid list.
