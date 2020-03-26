@@ -7,95 +7,98 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFB9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E870E2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A14082073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:10:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585231658;
-	bh=qWk9HPzMLp4G3xmGFhWg4Ov3UmUSX9leOSeE8g8DUhY=;
+	s=default; t=1585231817;
+	bh=PeDZLWIRhhe2o42I/gqvyiiMuKNamoLO8nfHcq+EkCc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Meg8ZWkW7za/pu26CZfamCcOtYWqKRSHTzUdpg6cPaYkwnYaLDzGtjYP9CdRuDTxa
-	 2RmIKHeQ/6kozlkZBcRgJIcAy5H7yxj+agM381d751UZuhJgXIsRUj1oO+56Khr+VO
-	 d+yUzZUUS2sfG/5cJSRZZzQ4zRTe8fDQInNMtN/8=
+	b=Fjyh+0ZEztRy0lWdUy5ODnmCkx45lyoVSkHb5MXU1g5BCywmiWykY9jrLM+cslgFH
+	 IdQjoJVuE35wce/SE+RPKzXzf3e9ipCHsw1V4+aShtIEvgGsZSJ4euFIEBRMmNXLF3
+	 ak5mivtUoV1iYflL4pYi6AFVkGZayF7Qw1C7EPLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgCZOHg (ORCPT
+        id S1727909AbgCZOKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:07:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55566 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 10:10:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727846AbgCZOHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:07:36 -0400
+        id S1727822AbgCZOKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:10:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04E8A206F6;
-        Thu, 26 Mar 2020 14:07:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CF95206F8;
+        Thu, 26 Mar 2020 14:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585231655;
-        bh=qWk9HPzMLp4G3xmGFhWg4Ov3UmUSX9leOSeE8g8DUhY=;
+        s=default; t=1585231815;
+        bh=PeDZLWIRhhe2o42I/gqvyiiMuKNamoLO8nfHcq+EkCc=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BN+eIfS+Ywt9Y1GA7cHA4PNUeZgQPO4Zr5++GzweW2gUjY0AOH1bfHI1G4mWt9lyE
-         XaAQ88yZJcHLgE7d0J0fzXRBMFm9yq3quVktYN5A1jJUTmGmHDP2A2thic6q6Vg+w0
-         E6ZwYHEhYAcYk3zky3pSLA+0Dvw2v3wm5CSywnlM=
-Date:   Thu, 26 Mar 2020 15:07:33 +0100
+        b=q+HavB7wzgTYW3kPySjLPPoFLj+9aNlpEq50YxNDKKRzsgG7ARI+2fa1J4sYhcmvd
+         BTOyHlkLNotN2GwwHNkryJ4W1nlUR+pAx11lVOgV1quJL231pXotHGVltvYV2fn+QM
+         DqMa1ugiLPJgmlRKMJI7hjcDNVP3f/Fapum5Uwqg=
+Date:   Thu, 26 Mar 2020 15:10:11 +0100
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Anton Blanchard <anton@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ulrich Weigand <uweigand@de.ibm.com>, paulmck@kernel.org,
-        jejb@linux.ibm.com, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] Documentation: provide IBM contacts for embargoed
- hardware
-Message-ID: <20200326140733.GA1313566@kroah.com>
-References: <20200326093831.428337-1-borntraeger@de.ibm.com>
- <20200326094241.GA996751@kroah.com>
- <20200326210401.7060e766@kryten.localdomain>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Michael Williams <michael.williams@arm.com>,
+        Chunyan Zhang <zhang.chunyan@linaro.org>,
+        "Dmitry V. Levin" <ldv@altlinux.org>
+Subject: Re: [PATCH] coresight: do not use the BIT() macro in the UAPI header
+Message-ID: <20200326141011.GA1313869@kroah.com>
+References: <20200324042213.GA10452@asgard.redhat.com>
+ <CANLsYkwVybRG9L6gDJTzZ=eXut66vJYfuEtOfLzaYaVpdybT1A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326210401.7060e766@kryten.localdomain>
+In-Reply-To: <CANLsYkwVybRG9L6gDJTzZ=eXut66vJYfuEtOfLzaYaVpdybT1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 09:04:01PM +1100, Anton Blanchard wrote:
-> Hi Greg,
+On Tue, Mar 24, 2020 at 09:31:15AM -0600, Mathieu Poirier wrote:
+> On Mon, 23 Mar 2020 at 22:22, Eugene Syromiatnikov <esyr@redhat.com> wrote:
+> >
+> > The BIT() macro definition is not available for the UAPI headers
+> > (moreover, it can be defined differently in the user space); replace
+> > its usage with the _BITUL() macro that is defined in <linux/const.h>.
+> >
+> > Fixes: 237483aa5cf4 ("coresight: stm: adding driver for CoreSight STM component")
+> > Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> > ---
+> >  include/uapi/linux/coresight-stm.h | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/uapi/linux/coresight-stm.h b/include/uapi/linux/coresight-stm.h
+> > index aac550a..8847dbf 100644
+> > --- a/include/uapi/linux/coresight-stm.h
+> > +++ b/include/uapi/linux/coresight-stm.h
+> > @@ -2,8 +2,10 @@
+> >  #ifndef __UAPI_CORESIGHT_STM_H_
+> >  #define __UAPI_CORESIGHT_STM_H_
+> >
+> > -#define STM_FLAG_TIMESTAMPED   BIT(3)
+> > -#define STM_FLAG_GUARANTEED    BIT(7)
+> > +#include <linux/const.h>
+> > +
+> > +#define STM_FLAG_TIMESTAMPED   _BITUL(3)
+> > +#define STM_FLAG_GUARANTEED    _BITUL(7)
 > 
-> > On Thu, Mar 26, 2020 at 10:38:31AM +0100, Christian Borntraeger wrote:
-> > > Provide IBM contact for embargoed hardware issues. As POWER and Z
-> > > are different teams with different designs it makes sense to have
-> > > separate persons for the first contact.
-> > > 
-> > > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> > > Cc: Anton Blanchard <anton@linux.ibm.com>
-> > > ---
-> > >  Documentation/process/embargoed-hardware-issues.rst | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/Documentation/process/embargoed-hardware-issues.rst
-> > > b/Documentation/process/embargoed-hardware-issues.rst index
-> > > a19d084f9b2c..43cdc67e4f8e 100644 ---
-> > > a/Documentation/process/embargoed-hardware-issues.rst +++
-> > > b/Documentation/process/embargoed-hardware-issues.rst @@ -246,7
-> > > +246,8 @@ an involved disclosed party. The current ambassadors
-> > > list: =============
-> > > ======================================================== ARM
-> > >    Grant Likely <grant.likely@arm.com> AMD		Tom
-> > > Lendacky <tom.lendacky@amd.com>
-> > > -  IBM
-> > > +  IBM Z         Christian Borntraeger <borntraeger@de.ibm.com>
-> > > +  IBM Power     Anton Blanchard <anton@linux.ibm.com>  
-> > 
-> > Can I get an ack from Anton that he really agrees with this?  :)
+> Greg, if you want to pick this up right away:
 > 
-> Sure :)
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 > 
-> Acked-by: Anton Blanchard <anton@linux.ibm.com>
+> Otherwise let me know and I'll add it to my next tree.
 
-Sucker :)
+I'll take it now, thanks.
 
-thanks, I'll go queue this up now, and I will fix the checkpatch
-warning...
+greg k-h
