@@ -2,242 +2,117 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56181C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA186C2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D1120714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9386220722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iajwo6oj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eAH5+9B8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgCZSHY (ORCPT
+        id S1728090AbgCZSH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:07:24 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46029 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727803AbgCZSHX (ORCPT
+        Thu, 26 Mar 2020 14:07:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:35784 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727933AbgCZSH3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:07:23 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 9so2468280uav.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:07:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=S+88eV5gK0LljhqKdZ1yGcysPszYlI5kB6q6EVwjYtM=;
-        b=iajwo6ojaH6PQ0M+kFhP3CIwc4WeldtAB8KkVDaqEJ2XOiscCgtWqKrv9JgYGGrzCN
-         9HdQjVQDYrEB0Tpwu/BZBGrA+jNrpOZ5/jUEOE9t1h6DXRmYGPEbeHF4k7AwRlraXoPf
-         nkYRKiOHMLvzeuAXL9m/nvB/Uo76yXnDU+Dw8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=S+88eV5gK0LljhqKdZ1yGcysPszYlI5kB6q6EVwjYtM=;
-        b=P0283AbNi5TJOQyaKdS5WT2Yb8P+G+pzHSAAdA4IQ0645uFH+jkG3n3bptu/pBOY52
-         Agn6RSK37ZVWcqtUYgtGchfzhGaSHgvw/eoOu/6O8jUqESFfbWXw4zvjGIreU7epssy7
-         syM6IpymbSaRaIKi19EJNf5tq29Bo8RM6yki1tdqPexf5T9Lr5F4jiEKDLLVF2qFo3UF
-         vEsa4mGPG/r2pWyXe0PhttEWYnxShd5e3FUleizS0VmOCkig6pjA79sYTe//YrPq/kP8
-         o9svDXdshSU1ZFxvxjLH3GPhG/6b7zvykfCWovRkDCOj0fpmDunB60Porn9LlOHY32PO
-         qKyw==
-X-Gm-Message-State: ANhLgQ14ePDu10U9mt7cKKCwrGC7+Bjta0CjMTG1GBZwbEuljb5g5PEv
-        OV58IofxQKQKc8kCmSmmU96i6YnNuJg=
-X-Google-Smtp-Source: ADFU+vv2d3LZk3vJV1RM8y1LCOULA8h61TRw5zlBTCkSUYhXjCuhTqdzICp8v/xlRdxGzFEYnHeZDQ==
-X-Received: by 2002:ab0:70a1:: with SMTP id q1mr7785760ual.52.1585246041293;
-        Thu, 26 Mar 2020 11:07:21 -0700 (PDT)
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com. [209.85.217.52])
-        by smtp.gmail.com with ESMTPSA id e1sm1345644vkg.10.2020.03.26.11.07.19
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 11:07:20 -0700 (PDT)
-Received: by mail-vs1-f52.google.com with SMTP id a63so4475810vsa.8
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:07:19 -0700 (PDT)
-X-Received: by 2002:a67:1e46:: with SMTP id e67mr8011826vse.106.1585246038937;
- Thu, 26 Mar 2020 11:07:18 -0700 (PDT)
+        Thu, 26 Mar 2020 14:07:29 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QI3LR7083907;
+        Thu, 26 Mar 2020 18:07:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=BJaWZQd3Uzd0rIHPr8Tee7YFwxS0GsA8ikWhqjK/e0I=;
+ b=eAH5+9B8Dlao4gANk+9VC3KHEoCNjPwSA1bFece9Z7Eeu2OwXw+qkyABtsWD0KqcGEl2
+ JiKWqMclSTNfdN+Lo3FnSYtR4auuXSu6+31R9gUmsApdFj0gn2HXoRw6dRH91JJ1arp6
+ czecPixOUhR54tKla1baSgGcHLiDiKfWgx+i0BxSilUGAoq+8vkZHIUNaaSoTHnAusuf
+ DnXVQZhVluGRx1wSdTSRWA2AnzHH8iQm6fHXr3cWCIkYhrzalj/AYS/OxrA8sv/UHFP5
+ PCCXk0UD/JoV7VOTwuE2YoX4iijwJ58kFHiWWEY8TWEVVMUYZtFSFG/NtCxwsBzEgO5h DQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2ywavmhdca-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 18:07:01 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QI2cJ4175416;
+        Thu, 26 Mar 2020 18:07:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 30073e3vta-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 18:07:00 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QI6wo6016073;
+        Thu, 26 Mar 2020 18:06:58 GMT
+Received: from tomti.i.net-space.pl (/10.175.206.254)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 11:06:57 -0700
+Date:   Thu, 26 Mar 2020 19:06:53 +0100
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     Ross Philipson <ross.philipson@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, dpsmith@apertussolutions.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        trenchboot-devel@googlegroups.com
+Subject: Re: [RFC PATCH 01/12] x86: Secure Launch Kconfig
+Message-ID: <20200326180653.nyfkbrczl5gxbukl@tomti.i.net-space.pl>
+References: <20200325194317.526492-1-ross.philipson@oracle.com>
+ <20200325194317.526492-2-ross.philipson@oracle.com>
 MIME-Version: 1.0
-References: <20190218140210.14631-1-rplsssn@codeaurora.org> <20190218140210.14631-2-rplsssn@codeaurora.org>
-In-Reply-To: <20190218140210.14631-2-rplsssn@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Mar 2020 11:07:07 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XmBQb8yfx14T-tMQ68F-h=3UHog744b3X3JZViu15+4g@mail.gmail.com>
-Message-ID: <CAD=FV=XmBQb8yfx14T-tMQ68F-h=3UHog744b3X3JZViu15+4g@mail.gmail.com>
-Subject: Re: [PATCH RESEND v1 1/2] drivers: qcom: rpmh-rsc: clear active mode
- configuration for wake TCS
-To:     Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200325194317.526492-2-ross.philipson@oracle.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1015 impostorscore=0
+ phishscore=0 suspectscore=0 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003260135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi
-
-On Mon, 18 Feb 2019 19:32:09 Raju P.L.S.S.S.N <rplsssn@codeaurora.org> wrote:
+On Wed, Mar 25, 2020 at 03:43:06PM -0400, Ross Philipson wrote:
+> Initial bits to bring in Secure Launch functionality. Add Kconfig
+> options for compiling in/out the Secure Launch code.
 >
-> For RSCs that have sleep & wake TCS but no dedicated active TCS, wake
-> TCS can be re-purposed to send active requests. Once the active requests
-> are sent and response is received, the active mode configuration needs
-> to be cleared so that controller can use wake TCS for sending wake
-> requests.
->
-> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 > ---
->  drivers/soc/qcom/rpmh-rsc.c | 77 ++++++++++++++++++++++++++-----------
->  1 file changed, 54 insertions(+), 23 deletions(-)
+>  arch/x86/Kconfig | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 >
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 75bd9a83aef0..6cc7f219ce48 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -201,6 +201,42 @@ static const struct tcs_request *get_req_from_tcs(struct rsc_drv *drv,
->         return NULL;
->  }
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 5e8949953660..7f3406a9948b 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2014,6 +2014,17 @@ config EFI_MIXED
 >
-> +static void __tcs_trigger(struct rsc_drv *drv, int tcs_id, bool trigger)
-
-nit: can you rename this to __tcs_set_trigger() so it's a little more
-obvious that the last value means trigger/untrigger?
-
-It'd also be nice to really understand why it has to be structured
-this way.  It's weird that the two options are "untrigger + retrigger"
-and "untrigger"
-
-
-> +{
-> +       u32 enable;
-> +
-> +       /*
-> +        * HW req: Clear the DRV_CONTROL and enable TCS again
-> +        * While clearing ensure that the AMC mode trigger is cleared
-> +        * and then the mode enable is cleared.
-> +        */
-> +       enable = read_tcs_reg(drv, RSC_DRV_CONTROL, tcs_id, 0);
-> +       enable &= ~TCS_AMC_MODE_TRIGGER;
-> +       write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-> +       enable &= ~TCS_AMC_MODE_ENABLE;
-> +       write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-> +
-> +       if (trigger) {
-> +               /* Enable the AMC mode on the TCS and then trigger the TCS */
-> +               enable = TCS_AMC_MODE_ENABLE;
-> +               write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-> +               enable |= TCS_AMC_MODE_TRIGGER;
-> +               write_tcs_reg_sync(drv, RSC_DRV_CONTROL, tcs_id, enable);
-> +       }
-> +}
-> +
-> +static inline void enable_tcs_irq(struct rsc_drv *drv, int tcs_id, bool enable)
-> +{
-> +       u32 data;
-> +
-> +       data = read_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, 0);
-> +       if (enable)
-> +               data |= BIT(tcs_id);
-> +       else
-> +               data &= ~BIT(tcs_id);
-> +       write_tcs_reg(drv, RSC_DRV_IRQ_ENABLE, 0, data);
-> +}
-> +
->  /**
->   * tcs_tx_done: TX Done interrupt handler
->   */
-> @@ -237,6 +273,21 @@ static irqreturn_t tcs_tx_done(int irq, void *p)
->                 }
+>  	   If unsure, say N.
 >
->                 trace_rpmh_tx_done(drv, i, req, err);
-> +
-> +               /*
-> +                * if wake tcs was re-purposed for sending active
-> +                * votes, clear AMC trigger & enable modes and
-> +                * disable interrupt for this TCS
-> +                */
-> +               if (!drv->tcs[ACTIVE_TCS].num_tcs) {
-> +                       __tcs_trigger(drv, i, false);
+> +config SECURE_LAUNCH
+> +	bool "Secure Launch support"
+> +	default n
+> +	depends on X86_64
+> +	help
+> +	  This Secure Launch kernel feature allows a bzImage to be loaded
+> +	  directly through Intel TXT or AMD SKINIT measured launch. This
 
-I assume that the reason that the code originally didn't try to
-"untrigger" in the interrupt handler is that it's slow (it uses
-write_tcs_reg_sync).  If that's true then maybe you shouldn't do the
-untrigger here for the case when you're on a borrowed TCS.  Can't you
-just do the untrigger later when you reprogram the TCS for someone
-else's use?
+I think that you should drop AMD SKINIT from here. This should be added
+when AMD secure launch implementation is added.
 
+...and why we need this as separate patch? Could not we add this in
+a patch which uses CONFIG_SECURE_LAUNCH for first time?
 
-> +                       /*
-> +                        * Disable interrupt for this TCS to avoid being
-> +                        * spammed with interrupts coming when the solver
-> +                        * sends its wake votes.
-> +                        */
-> +                       enable_tcs_irq(drv, i, false);
-
-Should you be doing this under the spinlock?  You're doing a
-read-modify-write of the RSC_DRV_IRQ_ENABLE register which seems like
-it could race with someone trying to enable an IRQ if the borrowed TCS
-type has more than one TCS (so you could be trying to start a transfer
-on one TCS while one is finishing on another).
-
-It would be somewhat hard for this to happen, but I don't _think_ it's
-impossible.  Specifically:
-
-1. Two threads can call rpmh_write() at the same time.
-
-2. Both threads call into rpmh_rsc_send_data() w/out holding any locks.
-
-3. Both threads call into tcs_write() w/out holding any locks.
-
-4. Both threads call get_tcs_for_msg() w/out holding any locks.
-
-5. Both threads notice they need to borrow the wake TCS.
-
-6. Both threads call rpmh_rsc_invalidate().  There are locks in here,
-but nothing stops both threads from returning 0 (not -EAGAIN) since
-nobody has claimed the wake TCS by setting 'tcs_in_use' yet.
-
-Assuming that there are more than one wake TCSs it is possible that
-both transfers can be happening at the same time and I believe it's
-even possible (though you'd need crazy timing) for one thread to hit
-the interrupt handler and finish at the same time that the other
-thread starts.
-
-
-Assuming we care about the case of having zero-active TCS and
-more-than-one-wake TCS, it'd be nice to fix.  If we don't care about
-this case, it should be documented in the code.  Funny enough, most of
-the time having zero-active TCS and more-than-one-wake TCS doesn't buy
-us much with the current code because the 2nd thread will return
--EAGAIN from rpmh_rsc_invalidate() assuming that the 1st thread
-manages to set "tcs_in_use" before the 2nd thread gets there.
-
-
-Overall the locking involved with borrowing a wake TCS is really
-tricky if you want to close all corner cases.  I need to constantly
-refer to my series adding documentation to have any chance here.
-
-https://lore.kernel.org/r/20200311161104.RFT.v2.5.I52653eb85d7dc8981ee0dafcd0b6cc0f273e9425@changeid
-
-I'd love review feedback on that!  Some of this stuff maybe becomes
-easier to understand if we don't have Maulik's flushing series and we
-can always assume that writing active TCSs and writing sleep/wake TCSs
-never happen at the same time (I think traditionally sleep/wake TCSs
-only get written from special PM code when we know nothing else is
-running).
-
-
--Doug
+Daniel
