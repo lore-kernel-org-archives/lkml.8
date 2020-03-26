@@ -2,114 +2,86 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F4DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08692C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED1420658
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E052073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:44:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="R90rYQ6b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbgCZMnw (ORCPT
+        id S1728228AbgCZMot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:43:52 -0400
-Received: from mga01.intel.com ([192.55.52.88]:28885 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbgCZMnw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:43:52 -0400
-IronPort-SDR: TYdxB1lOtpSt4GGJE+UxOy5MO4c0u25JHt1wdkdWwmKXF2WyCt3rJfj07r7/AXSZZdinasUZSt
- Hoz7Gr8FbCdw==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 05:43:51 -0700
-IronPort-SDR: jw2qdcI7va/Nyzs4yYdWUgcaPhhqBYPJc/gIvAFH8TazI2npO5hrNRHTn3jIcRnSHKoJZOAdNc
- Yck0EEEZBEXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="393967490"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.99]) ([10.249.169.99])
-  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 05:43:47 -0700
-Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
- <20200324151859.31068-9-xiaoyao.li@intel.com>
- <87eethz2p6.fsf@nanos.tec.linutronix.de>
- <88b01989-25cd-90af-bfe8-c236bd5d1dbf@intel.com>
- <87d08zxtgl.fsf@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <1d98bddd-a6a4-2fcc-476b-c9b19f65c6b6@intel.com>
-Date:   Thu, 26 Mar 2020 20:43:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 08:44:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:10484 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727841AbgCZMot (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:44:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QCcP4P019331;
+        Thu, 26 Mar 2020 13:44:38 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=D+ohMog7QnAtbmnqjRFJ0GxJ7rXuyTtsJyMA4a9kqvM=;
+ b=R90rYQ6bVoYY5AEf9v0VYmetKxb5EuGy0wPgsjbNWZxKDcw73aze4LJq4VqgO3rruyDI
+ RTOGrsGpb4Bzzj6dFvHQps/fFG/FqKzWgowrsH8AA6qC7tjMTgSJ9lEvIcDeVuYP38VA
+ qUum3Dku3mDeiqVNuOKQjqfRVlOjHCdqMVsIMZgqjDgCVrFawJPudkb+rcv7mXQQ8rT7
+ bIql6OVjdiWm17U8vZFFBtOXT22HwBUhtSPpbGIF3FnUJmDZAuS66T6rlSJEgZm6syK+
+ Kh3J3P/HCyQBdqx6EySixOyga6w7I/3DfcImcexfriOTCdS81cxdVgpt3vOB0ESEzS1E Ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xec2cj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 13:44:38 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 491A8100034;
+        Thu, 26 Mar 2020 13:44:38 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2FA0A2AC69C;
+        Thu, 26 Mar 2020 13:44:38 +0100 (CET)
+Received: from localhost (10.75.127.49) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 26 Mar 2020 13:44:37
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH v2 0/2] i2c: i2c-stm32f7: allow range of I2C bus frequency
+Date:   Thu, 26 Mar 2020 13:44:19 +0100
+Message-ID: <1585226661-26262-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <87d08zxtgl.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.49]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_03:2020-03-26,2020-03-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/2020 7:10 PM, Thomas Gleixner wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->> On 3/25/2020 8:40 AM, Thomas Gleixner wrote:
->>> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->>>>    static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->>>>    {
->>>>    	struct vcpu_vmx *vmx = to_vmx(vcpu);
->>>> @@ -4725,12 +4746,13 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->>>>    	case AC_VECTOR:
->>>>    		/*
->>>>    		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
->>>> -		 * legacy alignment check enabled.  Pre-check host split lock
->>>> -		 * support to avoid the VMREADs needed to check legacy #AC,
->>>> -		 * i.e. reflect the #AC if the only possible source is legacy
->>>> -		 * alignment checks.
->>>> +		 * legacy alignment check enabled or split lock detect enabled.
->>>> +		 * Pre-check host split lock support to avoid further check of
->>>> +		 * guest, i.e. reflect the #AC if host doesn't enable split lock
->>>> +		 * detection.
->>>>    		 */
->>>>    		if (!split_lock_detect_on() ||
->>>> +		    guest_cpu_split_lock_detect_on(vmx) ||
->>>>    		    guest_cpu_alignment_check_enabled(vcpu)) {
->>>
->>> If the host has split lock detection disabled then how is the guest
->>> supposed to have it enabled in the first place?
->>>
->> It is ||
-> 
-> Again. If the host has it disabled, then the feature flag is OFF. So
-> how is the hypervisor exposing it in the first place?
-> 
+This serie introduces the possibility to set bus frequency other
+than 100KHz, 400KHz and 1MHz.
 
-So what's wrong with above code?
+Changelog:
+v2: fix i2c: i2c-stm32f7: allows for any bus frequency patch
 
-If the host has it disabled, !split_lock_detect_on() is true, it skips 
-following check due to ||
+Alain Volmat (2):
+  dt-bindings: i2c: i2c-stm32f7: allow clock-frequency range
+  i2c: i2c-stm32f7: allows for any bus frequency
 
-I guess you want something like below?
-
-if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK)) {
-	inject #AC back to guest
-} else {
-	if (guest_alignment_check_enabled() || guest_sld_on())
-		inject #AC back to guest
-}
-
-BTW, there is an issue in my original patch that guest_sld_on() should 
-be checked at last.
+ .../devicetree/bindings/i2c/st,stm32-i2c.yaml |   8 +-
+ drivers/i2c/busses/i2c-stm32f7.c              | 116 +++++++++---------
+ 2 files changed, 65 insertions(+), 59 deletions(-)
 
