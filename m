@@ -2,45 +2,45 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB439C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8865C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE8262070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9342070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727829AbgCZIQJ (ORCPT
+        id S1727847AbgCZIQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:16:09 -0400
+        Thu, 26 Mar 2020 04:16:13 -0400
 Received: from mga02.intel.com ([134.134.136.20]:27555 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727773AbgCZIQF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:16:05 -0400
-IronPort-SDR: LQ96lUIgV8vFBmmhXj/fCi6v7WEPncXEcsv693yKo2L70maBqeubN7XrpAOqk5e9r805bIcbLb
- MyNf3pzgFvRA==
+        id S1727821AbgCZIQJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:16:09 -0400
+IronPort-SDR: SUHJuVZnkewVjVtgDECCzPAd2H2+obD4XH8blCfMTfykGitYWHzGdi+TlXXfi4sgGsUIY/tGau
+ L2x/IsRS1hFA==
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:04 -0700
-IronPort-SDR: ZnKTzhy7MMp8o3lshlN/iDvks42/kFd58moWFPEJgU085TCswTgwTam5pV94zWVqMxTQHGORm+
- F2sesc836CKQ==
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:09 -0700
+IronPort-SDR: ia4rKTyL1XPXha9coEV6tdHxOPuGJ/SUuOuF5UBwK9yvEoUOtJHGCUc9Ko8++ZkoTo/yq1pEMI
+ mSBzZaRpt0FA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
-   d="scan'208";a="393898860"
+   d="scan'208";a="393898902"
 Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:16:02 -0700
+  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:16:06 -0700
 From:   Yang Weijiang <weijiang.yang@intel.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
         pbonzini@redhat.com, sean.j.christopherson@intel.com,
         jmattson@google.com
 Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v11 3/9] KVM: VMX: Set host/guest CET states for vmexit/vmentry
-Date:   Thu, 26 Mar 2020 16:18:40 +0800
-Message-Id: <20200326081847.5870-4-weijiang.yang@intel.com>
+Subject: [PATCH v11 5/9] KVM: X86: Refresh CPUID once guest XSS MSR changes
+Date:   Thu, 26 Mar 2020 16:18:42 +0800
+Message-Id: <20200326081847.5870-6-weijiang.yang@intel.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20200326081847.5870-1-weijiang.yang@intel.com>
 References: <20200326081847.5870-1-weijiang.yang@intel.com>
@@ -49,164 +49,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Load {guest,host} CET state" bit controls whether guest/host
-CET states will be loaded at VM entry/exit.
-Set default host kernel CET states to 0s in VMCS to avoid guest
-CET states leakage. When CR4.CET is cleared due to guest mode
-change, make guest CET states invalid in VMCS, this can happen,
-e.g., guest reboot.
+CPUID(0xd, 1) reports the current required storage size of
+XCR0 | XSS, when guest updates the XSS, it's necessary to update
+the CPUID leaf, otherwise guest will fetch old state size, and
+results to some WARN traces during guest running.
 
+Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
+Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
 Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
 ---
- arch/x86/kvm/vmx/capabilities.h | 10 ++++++
- arch/x86/kvm/vmx/vmx.c          | 56 +++++++++++++++++++++++++++++++--
- 2 files changed, 63 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  1 +
+ arch/x86/kvm/cpuid.c            | 21 ++++++++++++++++++---
+ arch/x86/kvm/x86.c              |  9 +++++++--
+ 3 files changed, 26 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-index 8903475f751e..565340352260 100644
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -107,6 +107,16 @@ static inline bool cpu_has_vmx_mpx(void)
- 		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
- }
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 24c90ea5ddbd..2c944ad99692 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -650,6 +650,7 @@ struct kvm_vcpu_arch {
  
-+static inline bool cpu_has_cet_guest_load_ctrl(void)
-+{
-+	return (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_GUEST_CET_STATE);
-+}
-+
-+static inline bool cpu_has_cet_host_load_ctrl(void)
-+{
-+	return (vmcs_config.vmexit_ctrl & VM_EXIT_LOAD_HOST_CET_STATE);
-+}
-+
- static inline bool cpu_has_vmx_tpr_shadow(void)
- {
- 	return vmcs_config.cpu_based_exec_ctrl & CPU_BASED_TPR_SHADOW;
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 1aca468d9a10..bd7cd175fd81 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -44,6 +44,7 @@
- #include <asm/spec-ctrl.h>
- #include <asm/virtext.h>
- #include <asm/vmx.h>
-+#include <asm/cet.h>
+ 	u64 xcr0;
+ 	u64 guest_supported_xcr0;
++	u64 guest_supported_xss;
+ 	u32 guest_xstate_size;
  
- #include "capabilities.h"
- #include "cpuid.h"
-@@ -2456,7 +2457,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      VM_EXIT_LOAD_IA32_EFER |
- 	      VM_EXIT_CLEAR_BNDCFGS |
- 	      VM_EXIT_PT_CONCEAL_PIP |
--	      VM_EXIT_CLEAR_IA32_RTIT_CTL;
-+	      VM_EXIT_CLEAR_IA32_RTIT_CTL |
-+	      VM_EXIT_LOAD_HOST_CET_STATE;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_EXIT_CTLS,
- 				&_vmexit_control) < 0)
- 		return -EIO;
-@@ -2480,7 +2482,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 	      VM_ENTRY_LOAD_IA32_EFER |
- 	      VM_ENTRY_LOAD_BNDCFGS |
- 	      VM_ENTRY_PT_CONCEAL_PIP |
--	      VM_ENTRY_LOAD_IA32_RTIT_CTL;
-+	      VM_ENTRY_LOAD_IA32_RTIT_CTL |
-+	      VM_ENTRY_LOAD_GUEST_CET_STATE;
- 	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_ENTRY_CTLS,
- 				&_vmentry_control) < 0)
- 		return -EIO;
-@@ -3040,6 +3043,12 @@ static bool is_cet_mode_allowed(struct kvm_vcpu *vcpu, u32 mode_mask)
- 		guest_cpuid_has(vcpu, X86_FEATURE_IBT)));
- }
- 
-+static bool is_cet_supported(struct kvm_vcpu *vcpu)
-+{
-+	return is_cet_mode_allowed(vcpu, XFEATURE_MASK_CET_USER |
-+				   XFEATURE_MASK_CET_KERNEL);
-+}
-+
- int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
-@@ -3110,6 +3119,12 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- 			hw_cr4 &= ~(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_PKE);
+ 	struct kvm_pio_request pio;
+diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+index 78d461be2102..25e9a11291b3 100644
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -95,9 +95,24 @@ int kvm_update_cpuid(struct kvm_vcpu *vcpu)
  	}
  
-+	if (!(hw_cr4 & X86_CR4_CET) && is_cet_supported(vcpu)) {
-+		vmcs_writel(GUEST_SSP, 0);
-+		vmcs_writel(GUEST_S_CET, 0);
-+		vmcs_writel(GUEST_INTR_SSP_TABLE, 0);
+ 	best = kvm_find_cpuid_entry(vcpu, 0xD, 1);
+-	if (best && (cpuid_entry_has(best, X86_FEATURE_XSAVES) ||
+-		     cpuid_entry_has(best, X86_FEATURE_XSAVEC)))
+-		best->ebx = xstate_required_size(vcpu->arch.xcr0, true);
++	if (best) {
++		if (best->eax & (F(XSAVES) | F(XSAVEC))) {
++			u64 xstate = vcpu->arch.xcr0 | vcpu->arch.ia32_xss;
++
++			best->ebx = xstate_required_size(xstate, true);
++		}
++
++		if (best->eax & F(XSAVES)) {
++			vcpu->arch.guest_supported_xss =
++			(best->ecx | ((u64)best->edx << 32)) & supported_xss;
++		} else {
++			best->ecx = 0;
++			best->edx = 0;
++			vcpu->arch.guest_supported_xss = 0;
++		}
++	} else {
++		vcpu->arch.guest_supported_xss = 0;
 +	}
-+
- 	vmcs_writel(CR4_READ_SHADOW, cr4);
- 	vmcs_writel(GUEST_CR4, hw_cr4);
- 	return 0;
-@@ -3939,6 +3954,12 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
  
- 	if (cpu_has_load_ia32_efer())
- 		vmcs_write64(HOST_IA32_EFER, host_efer);
-+
-+	if (cpu_has_cet_host_load_ctrl()) {
-+		vmcs_writel(HOST_S_CET, 0);
-+		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
-+		vmcs_writel(HOST_SSP, 0);
-+	}
- }
+ 	/*
+ 	 * The existing code assumes virtual address is 48-bit or 57-bit in the
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 90acdbbb8a5a..51ecb496d47d 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2836,9 +2836,12 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		 * IA32_XSS[bit 8]. Guests have to use RDMSR/WRMSR rather than
+ 		 * XSAVES/XRSTORS to save/restore PT MSRs.
+ 		 */
+-		if (data & ~supported_xss)
++		if (data & ~vcpu->arch.guest_supported_xss)
+ 			return 1;
+-		vcpu->arch.ia32_xss = data;
++		if (vcpu->arch.ia32_xss != data) {
++			vcpu->arch.ia32_xss = data;
++			kvm_update_cpuid(vcpu);
++		}
+ 		break;
+ 	case MSR_SMI_COUNT:
+ 		if (!msr_info->host_initiated)
+@@ -9635,6 +9638,8 @@ int kvm_arch_hardware_setup(void)
  
- void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-@@ -5749,6 +5770,13 @@ void dump_vmcs(void)
- 		pr_err("InterruptStatus = %04x\n",
- 		       vmcs_read16(GUEST_INTR_STATUS));
+ 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+ 		supported_xss = 0;
++	else
++		supported_xss = host_xss & KVM_SUPPORTED_XSS;
  
-+	if (vmentry_ctl & VM_ENTRY_LOAD_GUEST_CET_STATE) {
-+		pr_err("S_CET = 0x%016lx\n", vmcs_readl(GUEST_S_CET));
-+		pr_err("SSP = 0x%016lx\n", vmcs_readl(GUEST_SSP));
-+		pr_err("SSP TABLE = 0x%016lx\n",
-+		       vmcs_readl(GUEST_INTR_SSP_TABLE));
-+	}
-+
- 	pr_err("*** Host State ***\n");
- 	pr_err("RIP = 0x%016lx  RSP = 0x%016lx\n",
- 	       vmcs_readl(HOST_RIP), vmcs_readl(HOST_RSP));
-@@ -5831,6 +5859,13 @@ void dump_vmcs(void)
- 	if (secondary_exec_control & SECONDARY_EXEC_ENABLE_VPID)
- 		pr_err("Virtual processor ID = 0x%04x\n",
- 		       vmcs_read16(VIRTUAL_PROCESSOR_ID));
-+	if (vmexit_ctl & VM_EXIT_LOAD_HOST_CET_STATE) {
-+		pr_err("S_CET = 0x%016lx\n", vmcs_readl(HOST_S_CET));
-+		pr_err("SSP = 0x%016lx\n", vmcs_readl(HOST_SSP));
-+		pr_err("SSP TABLE = 0x%016lx\n",
-+		       vmcs_readl(HOST_INTR_SSP_TABLE));
-+	}
-+
- }
+ 	cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
  
- /*
-@@ -7140,8 +7175,23 @@ static void vmx_cpuid_update(struct kvm_vcpu *vcpu)
- 	}
- 
- 	if (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
--	    guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-+	    guest_cpuid_has(vcpu, X86_FEATURE_IBT)) {
- 		vmx_update_intercept_for_cet_msr(vcpu);
-+
-+		if (cpu_has_cet_guest_load_ctrl() && is_cet_supported(vcpu))
-+			vm_entry_controls_setbit(to_vmx(vcpu),
-+						 VM_ENTRY_LOAD_GUEST_CET_STATE);
-+		else
-+			vm_entry_controls_clearbit(to_vmx(vcpu),
-+						   VM_ENTRY_LOAD_GUEST_CET_STATE);
-+
-+		if (cpu_has_cet_host_load_ctrl() && is_cet_supported(vcpu))
-+			vm_exit_controls_setbit(to_vmx(vcpu),
-+						VM_EXIT_LOAD_HOST_CET_STATE);
-+		else
-+			vm_exit_controls_clearbit(to_vmx(vcpu),
-+						  VM_EXIT_LOAD_HOST_CET_STATE);
-+	}
- }
- 
- static __init void vmx_set_cpu_caps(void)
 -- 
 2.17.2
 
