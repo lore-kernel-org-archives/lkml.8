@@ -2,97 +2,492 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EE7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026CEC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC1D720714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:54:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585263270;
-	bh=f0UjLGri193S89E3mYjLNfonM34OhMW9YPxHGg7KafM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=q5v9oW8f/xGgHdjW8AQO2q8fOPynj6lwb8Qoqs5YFtVzfiPI9Ys6a3vLKCGz/HxKl
-	 m8rfs1nKGIjasWKPSh7/Pn30v7L/XGD4sFk3E1rWwT1Rroy3yGvRK0ofs8M2+CsKX9
-	 mZWM6p7/qCEUndqQ/N/kJZBo3Yz+oPMjNyZ8T+90=
+	by mail.kernel.org (Postfix) with ESMTP id B7A0D20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:55:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uADoUJt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgCZWy3 (ORCPT
+        id S1727732AbgCZWy7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:54:29 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44197 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbgCZWy3 (ORCPT
+        Thu, 26 Mar 2020 18:54:59 -0400
+Received: from mail27.static.mailgun.info ([104.130.122.27]:38221 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726067AbgCZWy7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:54:29 -0400
-Received: by mail-lj1-f196.google.com with SMTP id p14so8218001lji.11
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:54:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dketg2xmeCHjMWwyChFsYCLkTQHS2H7rmpcy40U5XQk=;
-        b=Mz5JJuHy+EHtTW2ruQf6KS8rf1FyuAKeuMpuRqgexQnmQQXt6lXbg+bouBcIe/NI2b
-         R1cEuYVS8YOPkYGJL/h8vPIKKTpgjeVLMEQKoTdrlx6KjEjvXsSQtn4JutgSGcLNu7FE
-         HzaHp6I8DeDQygWQA5Xz+Ha5vDztHbTw+RVIQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dketg2xmeCHjMWwyChFsYCLkTQHS2H7rmpcy40U5XQk=;
-        b=G830efXa3oOG1iEvBJF9FJHW/NGvKS3EyDq41U+65NsXkldQMzzyxkdTKy8blZGDOr
-         Z/R69kfc1nDqDjgUEXKIM7YUQk+/MrEdPSHkqTDuD345I1kamouGdoOx26m01gBMexT2
-         qKWq57aFHPQdwWhH6wcRoreOAgyj0b2zKZ25gwI4GD8jniRbpliCeyy3pJ5vHgTvYPTq
-         T6+K+TZF8261neG2v1pA3lf4u0qAQ4/xBShQp5KYzxFG4zNmqINvWM5lHlWc+/5WHR2Q
-         8wu1i88H5tWGLM9X7ScigWwDcOq8T7Qxv29EwnTUFUbpDOH5LsqNbAJqoKYIEbSsxWky
-         d4dA==
-X-Gm-Message-State: AGi0Pub99eIlRtXLcndlS69ZggA6Y4BKxN4EB74AUpx+4FnCvuvb8TYB
-        sJ3Z8iVx4J0u74botYJ1kyyt0mvahAk=
-X-Google-Smtp-Source: ADFU+vv212PQ7vsEGQT6w9lLSJdHhAnK1IGi+2EwyHqdozp4ip+pHzzcl7QLGbepWFh5fDgINRye5w==
-X-Received: by 2002:a2e:8084:: with SMTP id i4mr6535785ljg.185.1585263265840;
-        Thu, 26 Mar 2020 15:54:25 -0700 (PDT)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com. [209.85.167.46])
-        by smtp.gmail.com with ESMTPSA id d20sm2173778lfl.53.2020.03.26.15.54.24
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 15:54:24 -0700 (PDT)
-Received: by mail-lf1-f46.google.com with SMTP id c5so6314215lfp.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:54:24 -0700 (PDT)
-X-Received: by 2002:ac2:5e70:: with SMTP id a16mr3366363lfr.152.1585263263622;
- Thu, 26 Mar 2020 15:54:23 -0700 (PDT)
+        Thu, 26 Mar 2020 18:54:59 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585263298; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=IoLIrlXsOISidVHXZwSqy2RqmHNG97uCKmI4Rf/piE4=; b=uADoUJt9BoNrwgLMA+wV1+35WU9n/7ixGvyf/YueFF4L3HghppnjfCoFbt9bmFx1qHIT6esD
+ t2vQUEvkmpal7l5fcltaqeiOu7FU5IBetUySUYTH1C4tfA89du2c9Oqo++cL/GDfQgg0bN/O
+ rUc4vH0sf2WNby46UXgnx3cjHZg=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7d32b5.7f4ccf7f9f10-smtp-out-n05;
+ Thu, 26 Mar 2020 22:54:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 996BDC44788; Thu, 26 Mar 2020 22:54:45 +0000 (UTC)
+Received: from [192.168.142.6] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: clew)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 92F8DC433BA;
+        Thu, 26 Mar 2020 22:54:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 92F8DC433BA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=clew@codeaurora.org
+Subject: Re: [PATCH v3 6/7] net: qrtr: Add MHI transport layer
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     gregkh@linuxfoundation.org, davem@davemloft.net,
+        smohanad@codeaurora.org, jhugo@codeaurora.org,
+        kvalo@codeaurora.org, hemantk@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20200324061050.14845-1-manivannan.sadhasivam@linaro.org>
+ <20200324061050.14845-7-manivannan.sadhasivam@linaro.org>
+ <20200324203952.GC119913@minitux> <20200325103758.GA7216@Mani-XPS-13-9360>
+From:   Chris Lew <clew@codeaurora.org>
+Message-ID: <89f3c60c-70fb-23d3-d50f-98d1982b84b9@codeaurora.org>
+Date:   Thu, 26 Mar 2020 15:54:42 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
- <20200304131035.731a3947@lwn.net> <alpine.DEB.2.21.2003042145340.2698@felia>
- <e43f0cf0117fbfa8fe8c7e62538fd47a24b4657a.camel@perches.com>
- <alpine.DEB.2.21.2003062214500.5521@felia> <20200307110154.719572e4@onda.lan>
- <0d5503e1d864f2588e756ae590ff8935e11bf9d6.camel@perches.com>
- <4d5291fa3fb4962b1fa55e8fd9ef421ef0c1b1e5.camel@perches.com> <00d11cf766237d9c12c2a06458962c4bae84fa78.camel@perches.com>
-In-Reply-To: <00d11cf766237d9c12c2a06458962c4bae84fa78.camel@perches.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 26 Mar 2020 15:54:07 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg3=D0uFHXFsEz2CAvFGTb8RV1KJH-eOCqR5JUQGvOqeA@mail.gmail.com>
-Message-ID: <CAHk-=wg3=D0uFHXFsEz2CAvFGTb8RV1KJH-eOCqR5JUQGvOqeA@mail.gmail.com>
-Subject: Re: [PATCH] parse-maintainers: Do not sort section content by default
-To:     Joe Perches <joe@perches.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200325103758.GA7216@Mani-XPS-13-9360>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 9:47 AM Joe Perches <joe@perches.com> wrote:
+
+
+On 3/25/2020 3:37 AM, Manivannan Sadhasivam wrote:
+> Hi Bjorn,
+> 
+> + Chris Lew
+> 
+> On Tue, Mar 24, 2020 at 01:39:52PM -0700, Bjorn Andersson wrote:
+>> On Mon 23 Mar 23:10 PDT 2020, Manivannan Sadhasivam wrote:
+>>
+>>> MHI is the transport layer used for communicating to the external modems.
+>>> Hence, this commit adds MHI transport layer support to QRTR for
+>>> transferring the QMI messages over IPC Router.
+>>>
+>>> Cc: "David S. Miller" <davem@davemloft.net>
+>>> Cc: netdev@vger.kernel.org
+>>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>>> ---
+>>>   net/qrtr/Kconfig  |   7 ++
+>>>   net/qrtr/Makefile |   2 +
+>>>   net/qrtr/mhi.c    | 208 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>   3 files changed, 217 insertions(+)
+>>>   create mode 100644 net/qrtr/mhi.c
+>>>
+>>> diff --git a/net/qrtr/Kconfig b/net/qrtr/Kconfig
+>>> index 63f89cc6e82c..8eb876471564 100644
+>>> --- a/net/qrtr/Kconfig
+>>> +++ b/net/qrtr/Kconfig
+>>> @@ -29,4 +29,11 @@ config QRTR_TUN
+>>>   	  implement endpoints of QRTR, for purpose of tunneling data to other
+>>>   	  hosts or testing purposes.
+>>>   
+>>> +config QRTR_MHI
+>>> +	tristate "MHI IPC Router channels"
+>>> +	depends on MHI_BUS
+>>> +	help
+>>> +	  Say Y here to support MHI based ipcrouter channels. MHI is the
+>>> +	  transport used for communicating to external modems.
+>>> +
+>>>   endif # QRTR
+>>> diff --git a/net/qrtr/Makefile b/net/qrtr/Makefile
+>>> index 1c6d6c120fb7..3dc0a7c9d455 100644
+>>> --- a/net/qrtr/Makefile
+>>> +++ b/net/qrtr/Makefile
+>>> @@ -5,3 +5,5 @@ obj-$(CONFIG_QRTR_SMD) += qrtr-smd.o
+>>>   qrtr-smd-y	:= smd.o
+>>>   obj-$(CONFIG_QRTR_TUN) += qrtr-tun.o
+>>>   qrtr-tun-y	:= tun.o
+>>> +obj-$(CONFIG_QRTR_MHI) += qrtr-mhi.o
+>>> +qrtr-mhi-y	:= mhi.o
+>>> diff --git a/net/qrtr/mhi.c b/net/qrtr/mhi.c
+>>> new file mode 100644
+>>> index 000000000000..90af208f34c1
+>>> --- /dev/null
+>>> +++ b/net/qrtr/mhi.c
+>>> @@ -0,0 +1,208 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +/*
+>>> + * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+>>> + */
+>>> +
+>>> +#include <linux/mhi.h>
+>>> +#include <linux/mod_devicetable.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/skbuff.h>
+>>> +#include <net/sock.h>
+>>> +
+>>> +#include "qrtr.h"
+>>> +
+>>> +struct qrtr_mhi_dev {
+>>> +	struct qrtr_endpoint ep;
+>>> +	struct mhi_device *mhi_dev;
+>>> +	struct device *dev;
+>>> +	spinlock_t ul_lock;		/* lock to protect ul_pkts */
+>>> +	struct list_head ul_pkts;
+>>> +	atomic_t in_reset;
+>>> +};
+>>> +
+>>> +struct qrtr_mhi_pkt {
+>>> +	struct list_head node;
+>>> +	struct sk_buff *skb;
+>>> +	struct kref refcount;
+>>> +	struct completion done;
+>>> +};
+>>> +
+>>> +static void qrtr_mhi_pkt_release(struct kref *ref)
+>>> +{
+>>> +	struct qrtr_mhi_pkt *pkt = container_of(ref, struct qrtr_mhi_pkt,
+>>> +						refcount);
+>>> +	struct sock *sk = pkt->skb->sk;
+>>> +
+>>> +	consume_skb(pkt->skb);
+>>> +	if (sk)
+>>> +		sock_put(sk);
+>>> +
+>>> +	kfree(pkt);
+>>> +}
+>>> +
+>>> +/* From MHI to QRTR */
+>>> +static void qcom_mhi_qrtr_dl_callback(struct mhi_device *mhi_dev,
+>>> +				      struct mhi_result *mhi_res)
+>>> +{
+>>> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
+>>> +	int rc;
+>>> +
+>>> +	if (!qdev || mhi_res->transaction_status)
+>>> +		return;
+>>> +
+>>> +	rc = qrtr_endpoint_post(&qdev->ep, mhi_res->buf_addr,
+>>> +				mhi_res->bytes_xferd);
+>>> +	if (rc == -EINVAL)
+>>> +		dev_err(qdev->dev, "invalid ipcrouter packet\n");
+>>
+>> Perhaps this should be a debug print, perhaps rate limited. But either
+>> way it's relevant for any transport, so I think you should skip it here
+>> - and potentially move it into qrtr_endpoint_post() in some form.
+>>
+> 
+> I agree with moving this to qrtr_endpoint_post() but I don't think it is a
+> good idea to make it as a debug print. It is an error log and should stay
+> as it is. Only in this MHI transport driver, the return value is not getting
+> used but in others it is.
+> 
+
+This print has been useful for catching transport errors. Only issue I 
+see with moving this to qrtr_endpoint_post() is that there are multiple 
+points of failure in qrtr_endpoint_post() and logging it here makes it 
+easier.
+
+>>> +}
+>>> +
+>>> +/* From QRTR to MHI */
+>>> +static void qcom_mhi_qrtr_ul_callback(struct mhi_device *mhi_dev,
+>>> +				      struct mhi_result *mhi_res)
+>>> +{
+>>> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
+>>> +	struct qrtr_mhi_pkt *pkt;
+>>> +	unsigned long flags;
+>>> +
+>>> +	spin_lock_irqsave(&qdev->ul_lock, flags);
+>>> +	pkt = list_first_entry(&qdev->ul_pkts, struct qrtr_mhi_pkt, node);
+>>> +	list_del(&pkt->node);
+>>> +	complete_all(&pkt->done);
+>>
+>> You should be able to release the lock after popping the item off the
+>> list, then complete and refcount it.
+>>
+> 
+> Okay.
+> 
+>>> +
+>>> +	kref_put(&pkt->refcount, qrtr_mhi_pkt_release);
+>>> +	spin_unlock_irqrestore(&qdev->ul_lock, flags);
+>>> +}
+>>> +
+>>> +static void qcom_mhi_qrtr_status_callback(struct mhi_device *mhi_dev,
+>>> +					  enum mhi_callback mhi_cb)
+>>> +{
+>>> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
+>>> +	struct qrtr_mhi_pkt *pkt;
+>>> +	unsigned long flags;
+>>> +
+>>> +	if (mhi_cb != MHI_CB_FATAL_ERROR)
+>>> +		return;
+>>> +
+>>> +	atomic_inc(&qdev->in_reset);
+>>
+>> You have ul_lock close at hand in both places where you access in_reset,
+>> so I think it would be better to just use that, instead of an atomic.
+>>
+> 
+> Okay.
+> 
+
+Does this version of MHI give the MHI_CB_FATAL_ERROR as a status 
+callback? We added this as an early notifier workaround. The in_reset 
+code probably isn't required with the current feature set.
+
+>>> +	spin_lock_irqsave(&qdev->ul_lock, flags);
+>>> +	list_for_each_entry(pkt, &qdev->ul_pkts, node)
+>>> +		complete_all(&pkt->done);
+> 
+> Chris, shouldn't we require list_del(&pkt->node) here?
 >
-> Linus? ping?
 
-Applied and pushed out.
+No this isn't a full cleanup, with the "early notifier" we just 
+unblocked any threads waiting for the ul_callback. Those threads will 
+wake, check in_reset, return an error back to the caller. Any list 
+cleanup will be done in the ul_callbacks that the mhi bus will do for 
+each queued packet right before device remove.
 
-            Linus
+Again to simplify the code, we can probable remove the in_reset handling 
+since it's not required with the current feature set.
+
+>>> +	spin_unlock_irqrestore(&qdev->ul_lock, flags);
+>>> +}
+>>> +
+>>> +/* Send data over MHI */
+>>> +static int qcom_mhi_qrtr_send(struct qrtr_endpoint *ep, struct sk_buff *skb)
+>>> +{
+>>> +	struct qrtr_mhi_dev *qdev = container_of(ep, struct qrtr_mhi_dev, ep);
+>>> +	struct qrtr_mhi_pkt *pkt;
+>>> +	int rc;
+>>> +
+>>> +	rc = skb_linearize(skb);
+>>> +	if (rc) {
+>>> +		kfree_skb(skb);
+>>> +		return rc;
+>>> +	}
+>>> +
+>>> +	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
+>>> +	if (!pkt) {
+>>> +		kfree_skb(skb);
+>>> +		return -ENOMEM;
+>>> +	}
+>>> +
+>>> +	init_completion(&pkt->done);
+>>> +	kref_init(&pkt->refcount);
+>>> +	kref_get(&pkt->refcount);
+>>> +	pkt->skb = skb;
+>>> +
+>>> +	spin_lock_bh(&qdev->ul_lock);
+>>> +	list_add_tail(&pkt->node, &qdev->ul_pkts);
+>>> +	rc = mhi_queue_skb(qdev->mhi_dev, DMA_TO_DEVICE, skb, skb->len,
+>>> +			   MHI_EOT);
+>>
+>> Do you want to continue doing this when qdev->in_reset? Wouldn't it be
+>> better to bail early if the remote end is dying?
+>>
+> 
+> Now I'm thinking why we are not decrementing in_reset anywhere! Incase of
+> SYS_ERR, the status_cb will get processed and in_reset will be set but
+> it will stay so even when after MHI gets reset.
+> 
+> Chris, can you please clarify?
+> 
+
+Early notify of reset, if we do get SYS_ERR, we expect remove to be 
+called *soon*.
+
+>>> +	if (rc) {
+>>> +		list_del(&pkt->node);
+>>> +		/* Reference count needs to be dropped 2 times */
+>>> +		kref_put(&pkt->refcount, qrtr_mhi_pkt_release);
+>>> +		kref_put(&pkt->refcount, qrtr_mhi_pkt_release);
+>>> +		kfree_skb(skb);
+>>> +		spin_unlock_bh(&qdev->ul_lock);
+>>> +		return rc;
+>>> +	}
+>>> +
+>>> +	spin_unlock_bh(&qdev->ul_lock);
+>>> +	if (skb->sk)
+>>> +		sock_hold(skb->sk);
+>>> +
+>>> +	rc = wait_for_completion_interruptible_timeout(&pkt->done, HZ * 5);
+>>> +	if (atomic_read(&qdev->in_reset))
+>>> +		rc = -ECONNRESET;
+>>> +	else if (rc == 0)
+>>> +		rc = -ETIMEDOUT;
+>>
+>> Is this recoverable? The message will remain on the list and may be
+>> delivered at a later point(?), but qrtr and the app will learn that the
+>> message was lost - which is presumably considered fatal.
+>>
+>> Is it guaranteed that qcom_mhi_qrtr_ul_callback() will happen later and
+>> find the head of the list?
+>>
+> 
+> There are 2 scenarios:
+> 
+> 1. If the completion interrupt happens after timeout, ul_callback()
+> will be called. But it will only try to fetch the current head of ul_pkts.
+> In most cases, we can hope that the completion interrupt will happen before
+> next queue_skb().
+> 
+> 2. If we don't get completion interrupt, timeout will happen and at the final
+> stage (during mhi_driver_remove()), MHI stack will go over the pending TREs
+> for all channels in queue and call ul_callback() with -ENOTCONN. But in the
+> callback, we don't have any idea of the pkt which was not successfully
+> transferred to the device and currently just fetching first entry.
+> 
+> Now I'm seeing some issue here which I missed earlier. If the completion
+> interrupt never happens then the corresponding pkt will never get freed and
+> therefore we have a leak. Eventhough the ul_callback() will get called during
+> mhi_driver_remove() for pending TREs, we don't exactly fetch the right pkt.
+> 
+> Chris, our assumption of the ul_callback() gets called irrespective of
+> transfer status is wrong. I think this code needs a bit of rework.
+> 
+>>
+>> The reason for my question is that without this you have one of two
+>> scenarios;
+>> 1) the message is put on the list, decremented in
+>> qcom_mhi_qrtr_ul_callback() then we get back here and decrement it
+>> again.
+>> 2) the message is put on the list, then qcom_mhi_qrtr_status_callback()
+>> happens and all messages are released - presumably then
+>> qcom_mhi_qrtr_ul_callback() won't happen.
+>>
+>>
+>> So if the third case (where we return here and then later
+>> qcom_mhi_qrtr_ul_callback() must find this particular packet at the
+>> front of the queue) can't happen, then you can just skip the entire
+>> refcounting.
+>>
+>> Further more, you could carry qrtr_mhi_pkt on the stack.
+>>
+>>
+>> ...or to flip this around, is there a reason to wait here at all? What
+>> would happen if you just return immediately after calling
+>> mhi_queue_skb()? Wouldn't that provide you better throughput?
+>>
+> 
+> Chris would be best person to answer this question.
+> 
+
+Yea - after working with MHI for a bit now, I think we can definitely 
+return after queueing the skb.
+
+The IPC-Router Protocol, wasn't really designed with the ability to 
+recover from dropped packets since SMD/GLINK are "Lossless". I figured 
+it would be better for the client to definitely know that the packet 
+reached the other side which is why it blocks until ul callback.
+
+I thought having the client get an error on timeout and resend the 
+packet would be better than silently dropping it. In practice, we've 
+really only seen the timeout or ul_callback errors on unrecoverable 
+errors so I think the timeout handling can definitely be redone.
+
+Thanks,
+Chris
+
+>>> +	else if (rc > 0)
+>>> +		rc = 0;
+>>> +
+>>> +	kref_put(&pkt->refcount, qrtr_mhi_pkt_release);
+>>> +
+>>> +	return rc;
+>>> +}
+>>> +
+>>> +static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
+>>> +			       const struct mhi_device_id *id)
+>>> +{
+>>> +	struct qrtr_mhi_dev *qdev;
+>>> +	u32 net_id;
+>>> +	int rc;
+>>> +
+>>> +	qdev = devm_kzalloc(&mhi_dev->dev, sizeof(*qdev), GFP_KERNEL);
+>>> +	if (!qdev)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	qdev->mhi_dev = mhi_dev;
+>>> +	qdev->dev = &mhi_dev->dev;
+>>> +	qdev->ep.xmit = qcom_mhi_qrtr_send;
+>>> +	atomic_set(&qdev->in_reset, 0);
+>>> +
+>>> +	net_id = QRTR_EP_NID_AUTO;
+>>
+>> Just pass QRTR_EP_NID_AUTO directly in the function call below.
+>>
+> 
+> Okay.
+> 
+> Thanks,
+> Mani
+> 
+>> Regards,
+>> Bjorn
+>>
+>>> +
+>>> +	INIT_LIST_HEAD(&qdev->ul_pkts);
+>>> +	spin_lock_init(&qdev->ul_lock);
+>>> +
+>>> +	dev_set_drvdata(&mhi_dev->dev, qdev);
+>>> +	rc = qrtr_endpoint_register(&qdev->ep, net_id);
+>>> +	if (rc)
+>>> +		return rc;
+>>> +
+>>> +	dev_dbg(qdev->dev, "Qualcomm MHI QRTR driver probed\n");
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void qcom_mhi_qrtr_remove(struct mhi_device *mhi_dev)
+>>> +{
+>>> +	struct qrtr_mhi_dev *qdev = dev_get_drvdata(&mhi_dev->dev);
+>>> +
+>>> +	qrtr_endpoint_unregister(&qdev->ep);
+>>> +	dev_set_drvdata(&mhi_dev->dev, NULL);
+>>> +}
+>>> +
+>>> +static const struct mhi_device_id qcom_mhi_qrtr_id_table[] = {
+>>> +	{ .chan = "IPCR" },
+>>> +	{}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(mhi, qcom_mhi_qrtr_id_table);
+>>> +
+>>> +static struct mhi_driver qcom_mhi_qrtr_driver = {
+>>> +	.probe = qcom_mhi_qrtr_probe,
+>>> +	.remove = qcom_mhi_qrtr_remove,
+>>> +	.dl_xfer_cb = qcom_mhi_qrtr_dl_callback,
+>>> +	.ul_xfer_cb = qcom_mhi_qrtr_ul_callback,
+>>> +	.status_cb = qcom_mhi_qrtr_status_callback,
+>>> +	.id_table = qcom_mhi_qrtr_id_table,
+>>> +	.driver = {
+>>> +		.name = "qcom_mhi_qrtr",
+>>> +	},
+>>> +};
+>>> +
+>>> +module_mhi_driver(qcom_mhi_qrtr_driver);
+>>> +
+>>> +MODULE_DESCRIPTION("Qualcomm IPC-Router MHI interface driver");
+>>> +MODULE_LICENSE("GPL v2");
+>>> -- 
+>>> 2.17.1
+>>>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a 
+Linux Foundation Collaborative Project
