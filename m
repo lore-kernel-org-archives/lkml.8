@@ -2,424 +2,97 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 784FFC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798BFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47CC220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H7oRx57S"
+	by mail.kernel.org (Postfix) with ESMTP id 52C7720714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585236803;
+	bh=rL2Y2Gw09fCtL1rPs0/4tgTFjsRoiwOhxSOS+UbuO0g=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=TJP5SsBuu5HC0mXFWT0ATJymFtSLG/I9Ul9FcJZ+BpGF7c41HAYd1fpXhGcfTbWV9
+	 nGWp0DrkjkvOfQZ2JY905vU1aVgR3WxNLV/mYO/euvRgjeZkXewvIx2qWIEavA1zpx
+	 std97XZd3DmfLohU6ydJT2KWye3iLV1acJIamAL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgCZPdT (ORCPT
+        id S1728500AbgCZPdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:33:19 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35734 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZPdT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:33:19 -0400
-Received: by mail-qk1-f194.google.com with SMTP id k13so6916226qki.2;
-        Thu, 26 Mar 2020 08:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jIMG5J4DpJnY3XeODTjVqj5apfTgH9oaxHWz9r/kZ+g=;
-        b=H7oRx57S3Vuu4w5nouj3LTlpZuXYPtLcKeWUIPn5A/tfqhL3A38T6ndyUwXm1ZJJJJ
-         bC8nHZoc3/S6nV6SI4I61K3v9inOxK7X2Bi/zYf0pkVqv6MEXmyZf7x23Y3x9cv9JaSn
-         HH5XmqMwsgWyiPdU5XP9kYSbT+GXILuX/ZFOUqkYogboXu/uEgBYia/VEuK/rV1DDrpg
-         Af12BkV/Pcm7bGVxkVyZ4lJWgCYEfqdzydWG6nfMl4wkGNSxKRtysc3XM51llxxhyjdC
-         Qa5+4FQuMbdRJkC36EXM7jUHQNWppjofwm7aCX5a5ZQXdmG5s0ojqU0vIJtsCeByfaG6
-         ibLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jIMG5J4DpJnY3XeODTjVqj5apfTgH9oaxHWz9r/kZ+g=;
-        b=d7ajn4x7ay5P9RHDGIKUGvjmn6UfQyfDx3/5KeZcjUYMvujQRLfgT4tZxZrT2rhKmH
-         WYFsFe/YIodNgnT//Y01/J8SLMco3+bPSGmVEvsTaKMpipzPZuIv/uWO0yqeeVzp2oQq
-         2WwkcBw3wVhLUk5imMjaiHBtzCGWQRumqz/fbMbpsNJXATLZj0X7Aagz13w3rsT3OGIx
-         arMyhINtX7D6r4T5Kc6q4aBKD1Ps0y8/uZG4RDz2C1qp6UYTriBnqlPUV7qBem0J/IpD
-         AxlnlGllvWbtKc0XwOuUzTQmPFWbl1OtlM81V4NI6Ghoe1jzb1MdUgtUEWzr0XclAQuT
-         gzKQ==
-X-Gm-Message-State: ANhLgQ3DZmGGCb8Ksb9ti2eDjI72YVqMR8abs7Ce1pl+HVrpVD7YEchj
-        tO12AX6Sc0yRK7z9+eAXXs0=
-X-Google-Smtp-Source: ADFU+vvV3PWNxhhoejkw+MQ/6jUmOUwjgCnr3H4IE4WZNCUIWhXuzX8Pb5MK+lxGS8NRAGUZ/LqpkA==
-X-Received: by 2002:ae9:eb12:: with SMTP id b18mr8860176qkg.168.1585236796396;
-        Thu, 26 Mar 2020 08:33:16 -0700 (PDT)
-Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
-        by smtp.gmail.com with ESMTPSA id h143sm1581548qke.58.2020.03.26.08.33.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 26 Mar 2020 08:33:15 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] of: unittest: add overlay gpio test to catch gpio
- hog problem
-To:     Anders Roxell <anders.roxell@linaro.org>
-Cc:     robh@kernel.org, atull@kernel.org, devicetree@vger.kernel.org,
-        geert+renesas@glider.be,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-References: <1582224021-12827-1-git-send-email-frowand.list@gmail.com>
- <1582224021-12827-2-git-send-email-frowand.list@gmail.com>
- <20200226164206.GA10128@bogus>
- <60024e70-0abc-4a06-cd14-42c61a2d2597@gmail.com>
- <b620ddd2-34a5-df5d-310f-4aa2f3e93a4a@gmail.com>
- <CADYN=9JAt=pUB6DUGCfz_qaRAvSEWj6nFyyhvmCimaU6kOLk4Q@mail.gmail.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-Message-ID: <18e1cc62-bed3-b31b-28a3-ae08e81af4f4@gmail.com>
-Date:   Thu, 26 Mar 2020 10:33:14 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 26 Mar 2020 11:33:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726296AbgCZPdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 11:33:21 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85D6B20714;
+        Thu, 26 Mar 2020 15:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585236800;
+        bh=rL2Y2Gw09fCtL1rPs0/4tgTFjsRoiwOhxSOS+UbuO0g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tc/r24/4d4omGY37S1degx6anfIEBJljci+J+TuGPiIMwuYGmuO2+3C/UmF2nOkVD
+         aTp5kG59TgMDMJ0FslHmA2/odVQzD3TJbhiIN/IECjRmXtivUcw5J4YFGCtSLq7H9D
+         TRXkG4wvgU8L8KF9BUScx8g3rVReuXqjxKw52aXs=
+Date:   Thu, 26 Mar 2020 10:33:18 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Srinath Mannam <srinath.mannam@broadcom.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Roman Bacik <roman.bacik@broadcom.com>
+Subject: Re: [PATCH 2/3] PCI: iproc: fix invalidating PAXB address mapping
+Message-ID: <20200326153318.GA11697@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CADYN=9JAt=pUB6DUGCfz_qaRAvSEWj6nFyyhvmCimaU6kOLk4Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1585206447-1363-3-git-send-email-srinath.mannam@broadcom.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anders,
+On Thu, Mar 26, 2020 at 12:37:26PM +0530, Srinath Mannam wrote:
+> From: Roman Bacik <roman.bacik@broadcom.com>
+> 
+> Second stage bootloader prior to Linux boot may use all inbound windows
+> including IARR1/IMAP1. We need to ensure all previous configuration of
+> inbound windows are invalidated during the initialization stage of the
+> Linux iProc PCIe driver. Add fix to invalidate IARR1/IMAP1 because it was
+> missed in previous patch.
+> 
+> Fixes: 9415743e4c8a ("PCI: iproc: Invalidate PAXB address mapping")
+> Signed-off-by: Roman Bacik <roman.bacik@broadcom.com>
+> ---
+>  drivers/pci/controller/pcie-iproc.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
+> index 6972ca4..e7f0d58 100644
+> --- a/drivers/pci/controller/pcie-iproc.c
+> +++ b/drivers/pci/controller/pcie-iproc.c
+> @@ -351,6 +351,8 @@ static const u16 iproc_pcie_reg_paxb_v2[IPROC_PCIE_MAX_NUM_REG] = {
+>  	[IPROC_PCIE_OMAP3]		= 0xdf8,
+>  	[IPROC_PCIE_IARR0]		= 0xd00,
+>  	[IPROC_PCIE_IMAP0]		= 0xc00,
+> +	[IPROC_PCIE_IARR1]		= 0xd08,
+> +	[IPROC_PCIE_IMAP1]		= 0xd70,
 
-On 3/26/20 5:39 AM, Anders Roxell wrote:
-> On Thu, 26 Mar 2020 at 02:56, Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 3/13/20 11:40 AM, Frank Rowand wrote:
->>> Hi Anders,
->>>
->>> On 3/13/20 4:51 AM, Anders Roxell wrote:
->>>> From: Rob Herring <robh@kernel.org>
->>>>
->>>>> On Thu, 20 Feb 2020 12:40:20 -0600, frowand.list@gmail.com wrote:
->>>>>> From: Frank Rowand <frank.rowand@sony.com>
->>>>>>
->>>>>> Geert reports that gpio hog nodes are not properly processed when
->>>>>> the gpio hog node is added via an overlay reply and provides an
->>>>>> RFC patch to fix the problem [1].
->>>>>>
->>>>>> Add a unittest that shows the problem.  Unittest will report "1 failed"
->>>>>> test before applying Geert's RFC patch and "0 failed" after applying
->>>>>> Geert's RFC patch.
->>>>>>
->>>>>> [1] https://lore.kernel.org/linux-devicetree/20191230133852.5890-1-geert+renesas@glider.be/
->>>>>>
->>>>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->>>>
->>>> I'm building arm64 on tag next-20200312, and booting in qemu, and I see
->>>> this "Kernel panic":
->>>
->>> Thank you for the panic report.
->>>
->>> There has also been an x86_64 failure (with a very different stack trace).
->>> I am going to investigate the x86_64 failure first.
->>
->> I have fixed the x86_64 failure:
-> 
-> Great.
-> 
->>
->>    https://lore.kernel.org/linux-devicetree/1585187131-21642-1-git-send-email-frowand.list@gmail.com/
->>
->> Can you check if the two patches in that series fixes the problem that you
->> are seeing?
-> 
-> I got a new error instead.
-> 
-> next-20200325 before I applied your patches [1]:
-> 
-> [ 1933.602460][ T2795] random: get_random_u64 called from
-> arch_mmap_rnd+0x90/0xb8 with crng_init=1
-> [ 1933.602770][ T2795] random: get_random_u64 called from
-> randomize_stack_top+0x50/0xb8 with crng_init=1
-> [ 1933.603017][ T2795] random: get_random_u32 called from
-> arch_align_stack+0x70/0x90 with crng_init=1
-> [ 1936.391730][    T1] systemd[1]: Mounted Configuration File System.
-> [ [0;32m  OK   [0m] Mounted Configuration File System.
-> [ 1937.577008][ T2787] Unable to handle kernel paging request at
-> virtual address ccccccccccccccd4
-> [ 1937.604944][ T2787] Mem abort info:
-> [ 1937.622884][ T2787]   ESR = 0x96000004
-> [ 1937.624443][ T2787]   EC = 0x25: DABT (current EL), IL = 32 bits
-> [ 1937.651817][ T2787]   SET = 0, FnV = 0
-> [ 1937.672276][ T2787]   EA = 0, S1PTW = 0
-> [ 1937.679201][ T2787] Data abort info:
-> [ 1937.680594][ T2787]   ISV = 0, ISS = 0x00000004
-> [ 1937.705713][ T2787]   CM = 0, WnR = 0
-> [ 1937.707184][ T2787] [ccccccccccccccd4] address between user and
-> kernel address ranges
-> [ 1937.725628][ T2787] Internal error: Oops: 96000004 [#1] PREEMPT SMP
-> [ 1937.727743][ T2787] Modules linked in:
-> [ 1937.729157][ T2787] CPU: 0 PID: 2787 Comm: systemd-journal Tainted:
-> G    B   W       T 5.6.0-rc7-next-20200325-11880-gbae0ebe545c5 #1
-> [ 1937.733403][ T2787] Hardware name: linux,dummy-virt (DT)
-> [ 1937.735393][ T2787] pstate: 40400005 (nZcv daif +PAN -UAO)
-> [ 1937.737480][ T2787] pc : sysfs_file_ops+0xd0/0xf0
-> [ 1937.739292][ T2787] lr : sysfs_file_ops+0xd0/0xf0
-> [ 1937.741052][ T2787] sp : ffff000062287a80
-> [ 1937.742614][ T2787] x29: ffff000062287a80 x28: ffff000060868040
-> [ 1937.744875][ T2787] x27: ffff000068553810 x26: ffff000062287d80
-> [ 1937.747164][ T2787] x25: ffff00006263b200 x24: ffff000068415528
-> [ 1937.749355][ T2787] x23: ffff000068415538 x22: 0000000000000001
-> [ 1937.751610][ T2787] x21: ffff000068553810 x20: 0000000000000000
-> [ 1937.753908][ T2787] x19: cccccccccccccccc x18: 0000000000007ec0
-> [ 1937.756130][ T2787] x17: 0000000000002208 x16: 0000000000001650
-> [ 1937.758384][ T2787] x15: 0000000000000000 x14: 0000000000000000
-> [ 1937.760481][ T2787] x13: 0000000000000000 x12: 0000000000002240
-> [ 1937.762720][ T2787] x11: 00000000f1f1f1f1 x10: ffff000060868040
-> [ 1937.764810][ T2787] x9 : ffffa00010a03d28 x8 : 1fffe0000c3c2730
-> [ 1937.766856][ T2787] x7 : ffff80000c3c2730 x6 : dfffa00000000000
-> [ 1937.768926][ T2787] x5 : ffff000060868040 x4 : 0000000000000000
-> [ 1937.770980][ T2787] x3 : ffffa00010a03bc8 x2 : 0000000000000001
-> [ 1937.773041][ T2787] x1 : ffffa0001626d000 x0 : 0000000000000000
-> [ 1937.775068][ T2787] Call trace:
-> [ 1937.776252][ T2787]  sysfs_file_ops+0xd0/0xf0
-> [ 1937.777785][ T2787]  sysfs_kf_seq_show+0x70/0x240
-> [ 1937.779429][ T2787]  kernfs_seq_show+0xa8/0xc0
-> [ 1937.781004][ T2787]  seq_read+0x350/0x860
-> [ 1937.782437][ T2787]  kernfs_fop_read+0x94/0x3f8
-> [ 1937.784013][ T2787]  __vfs_read+0x68/0xc8
-> [ 1937.785456][ T2787]  vfs_read+0x15c/0x2b0
-> [ 1937.786876][ T2787]  ksys_read+0x104/0x1e8
-> [ 1937.788318][ T2787]  __arm64_sys_read+0x54/0x68
-> [ 1937.789931][ T2787]  el0_svc_common.constprop.0+0x294/0x338
-> [ 1937.791822][ T2787]  do_el0_svc+0xe8/0x108
-> [ 1937.793287][ T2787]  el0_svc+0x74/0x88
-> [ 1937.794656][ T2787]  el0_sync_handler+0xcc/0x77c
-> [ 1937.796259][ T2787]  el0_sync+0x17c/0x180
-> [ 1937.797758][ T2787] Code: b40000b3 97e8e4d9 91002260 97f6c841 (f9400673)
-> [ 1937.800049][ T2787] ---[ end trace 8e9be5808e45ebb1 ]---
-> [ 1937.801854][ T2787] Kernel panic - not syncing: Fatal exception
-> [ 1937.803844][ T2787] Kernel Offset: disabled
-> [ 1937.805325][ T2787] CPU features: 0x080002,20002004
-> [ 1937.806961][ T2787] Memory Limit: none
-> [ 1937.808349][ T2787] ---[ end Kernel panic - not syncing: Fatal exception ]---
-> 
-> and with the two patches applied I see this [2]:
-> 
-> node:test-bus:test-unittest0'
-> [ 1839.107618][    T1] PM: Removing info for
-> platform:testcase-data:overlay-node:test-bus:test-unittest0
-> [ 1839.111218][    T1] kobject:
-> 'testcase-data:overlay-node:test-bus:test-unittest0'
-> ((____ptrval____)): kobject_uevent_env
-> [ 1839.116021][    T1] kobject:
-> 'testcase-data:overlay-node:test-bus:test-unittest0'
-> ((____ptrval____)): fill_kobj_path: path =
-> '/devices/platform/testcase-data:overlay-node:test-bus:test-unittest0'
-> [ 1839.124287][    T1] kobject:
-> 'testcase-data:overlay-node:test-bus:test-unittest0'
-> ((____ptrval____)): kobject_release, parent (____ptrval____) (delayed
-> 1000)
-> [ 1839.130497][    T1] Unexpected kernel BRK exception at EL1
-> [ 1839.132466][    T1] Internal error: ptrace BRK handler: f20003e8
-> [#1] PREEMPT SMP
-> [ 1839.134933][    T1] Modules linked in:
-> [ 1839.136395][    T1] CPU: 0 PID: 1 Comm: swapper/0 Tainted: G    B
-> W       T 5.6.0-rc7-next-20200325-11882-ge7ffe3ef0d63 #1
-> [ 1839.140051][    T1] Hardware name: linux,dummy-virt (DT)
-> [ 1839.141976][    T1] pstate: 80400005 (Nzcv daif +PAN -UAO)
-> [ 1839.143958][    T1] pc : of_unittest_untrack_overlay+0x6c/0x13c
-> [ 1839.146026][    T1] lr : of_unittest_untrack_overlay+0x6c/0x13c
-> [ 1839.148046][    T1] sp : ffff000069807af0
-> [ 1839.149468][    T1] x29: ffff000069807af0 x28: ffffa00017258000
-> [ 1839.151579][    T1] x27: ffffa00017258400 x26: 0000000000000000
-> [ 1839.153635][    T1] x25: ffffa00017258480 x24: ffffa00013418a20
-> [ 1839.155735][    T1] x23: 0000000000000000 x22: ffffa000152dc880
-> [ 1839.157828][    T1] x21: 0000000000000000 x20: 00000000ffffffff
-> [ 1839.160076][    T1] x19: 00000000ffffffff x18: 0000000000001ca0
-> [ 1839.162198][    T1] x17: 00000000000019d8 x16: 0000000000001c60
-> [ 1839.164321][    T1] x15: 00000000000019b8 x14: 616c65642820295f
-> [ 1839.166388][    T1] x13: 5f5f5f6c61767274 x12: 705f5f5f5f282074
-> [ 1839.168503][    T1] x11: 00000000f1f1f1f1 x10: ffff00006a3f8040
-> [ 1839.170589][    T1] x9 : ffffa00013d6f370 x8 : 1ffff40002a5a688
-> [ 1839.172686][    T1] x7 : ffff940002a5a688 x6 : dfffa00000000000
-> [ 1839.174781][    T1] x5 : ffff00006a3f8040 x4 : 0000000000000000
-> [ 1839.176871][    T1] x3 : ffffa00011f234ac x2 : 00000000ffffffff
-> [ 1839.178947][    T1] x1 : ffff00006a3f8040 x0 : 0000000000000000
-> [ 1839.181034][    T1] Call trace:
-> [ 1839.182286][    T1]  of_unittest_untrack_overlay+0x6c/0x13c
-> [ 1839.184295][    T1]  of_unittest+0x3330/0x3638
-> [ 1839.185892][    T1]  do_one_initcall+0x480/0xa40
-> [ 1839.187598][    T1]  kernel_init_freeable+0x794/0x95c
-> [ 1839.189394][    T1]  kernel_init+0x20/0x1f8
-> [ 1839.190924][    T1]  ret_from_fork+0x10/0x18
-> [ 1839.192523][    T1] Code: 97955a2c d4210000 14000024 97955a29 (d4207d00)
-> [ 1839.194889][    T1] ---[ end trace 39370fb7c4bf9e64 ]---
-> [ 1839.196706][    T1] Kernel panic - not syncing: Fatal exception
-> [ 1839.198735][    T1] Kernel Offset: disabled
-> [ 1839.200246][    T1] CPU features: 0x080002,20002004
-> [ 1839.201900][    T1] Memory Limit: none
-> [ 1839.203340][    T1] ---[ end Kernel panic - not syncing: Fatal exception ]---
+And paxb_v2_ib_map[] has a comment saying "IARR1/IMAP1 (currently
+unused)".  Is that comment now wrong?
 
-At least this time the call trace is inside the unittest code.  :-)
-
-Can you send me the exact qemu command you use?
-
-Can I do the qemu command without an initrd image?  If not, any pointers
-to an arm64 initrd?
-
--Frank
-
-
+>  	[IPROC_PCIE_IARR2]		= 0xd10,
+>  	[IPROC_PCIE_IMAP2]		= 0xcc0,
+>  	[IPROC_PCIE_IARR3]		= 0xe00,
+> -- 
+> 2.7.4
 > 
-> Cheers,
-> Anders
-> [1] https://people.linaro.org/~anders.roxell/output-next-20200325.log
-> [2] https://people.linaro.org/~anders.roxell/output-next-20200325.test.log
-> 
->>
->> Thanks,
->>
->> Frank
->>
->>
->>>
->>> Can you please send the kernel .config?
->>>
->>> Thanks,
->>>
->>> Frank
->>>
->>>
->>>>
->>>> [...]
->>>> [  172.779435][    T1] systemd[1]: Mounted POSIX Message Queue File System.
->>>> [[0;32m  OK  [0m] Mounted POSIX Message Queue File System.
->>>> [  172.844551][    T1] systemd[1]: Mounted Huge Pages File System.
->>>> [[0;32m  OK  [0m] Mounted Huge Pages File System.
->>>> [  172.917332][    T1] systemd[1]: Mounted Debug File System.
->>>> [[0;32m  OK  [0m] Mounted Debug File System.
->>>> [  173.465694][  T251] _warn_unseeded_randomness: 6 callbacks suppressed
->>>> [  173.465803][  T251] random: get_random_u64 called from arch_mmap_rnd+0x94/0xb0 with crng_init=1
->>>> [  173.466000][  T251] random: get_random_u64 called from randomize_stack_top+0x4c/0xb0 with crng_init=1
->>>> [  173.466163][  T251] random: get_random_u32 called from arch_align_stack+0x6c/0x88 with crng_init=1
->>>> [  173.544157][    T1] systemd[1]: Started Create Static Device Nodes in /dev.
->>>> [[0;32m  OK  [0m] Started Create Static Device Nodes in /dev.
->>>> [  174.283422][  T240] Unable to handle kernel paging request at virtual address 978061b552800000
->>>> [  174.286169][  T240] Mem abort info:
->>>> [  174.303268][  T240]   ESR = 0x96000004
->>>> [  174.304652][  T240]   EC = 0x25: DABT (current EL), IL = 32 bits
->>>> [  174.323298][  T240]   SET = 0, FnV = 0
->>>> [  174.324677][  T240]   EA = 0, S1PTW = 0
->>>> [  174.325937][  T240] Data abort info:
->>>> [  174.345383][  T240]   ISV = 0, ISS = 0x00000004
->>>> [  174.359310][  T240]   CM = 0, WnR = 0
->>>> [  174.360641][  T240] [978061b552800000] address between user and kernel address ranges
->>>> [  174.378712][  T240] Internal error: Oops: 96000004 [#1] PREEMPT SMP
->>>> [  174.381030][  T240] Modules linked in:
->>>> [  174.382362][  T240] CPU: 0 PID: 240 Comm: systemd-journal Tainted: G    B   W         5.6.0-rc5-next-20200312-00018-g5c00c2e7cf27 #6
->>>> [  174.386251][  T240] Hardware name: linux,dummy-virt (DT)
->>>> [  174.388056][  T240] pstate: 40400005 (nZcv daif +PAN -UAO)
->>>> [  174.389892][  T240] pc : sysfs_kf_seq_show+0x114/0x250
->>>> [  174.391638][  T240] lr : sysfs_kf_seq_show+0x114/0x250
->>>> [  174.393325][  T240] sp : ffff00006374faa0
->>>> [  174.394697][  T240] x29: ffff00006374faa0 x28: ffff000062620040
->>>> [  174.396751][  T240] x27: ffff000062b0a010 x26: 978061b552800000
->>>> [  174.398779][  T240] x25: ffff000068aae020 x24: ffff000068aae010
->>>> [  174.400798][  T240] x23: ffff00006311c000 x22: ffff000064f4f800
->>>> [  174.402794][  T240] x21: 0000000000001000 x20: ffff000068aae008
->>>> [  174.404820][  T240] x19: 0000000000001000 x18: 0000000000000000
->>>> [  174.406792][  T240] x17: 0000000000000000 x16: 0000000000000000
->>>> [  174.408814][  T240] x15: 0000000000000000 x14: 0000000000000000
->>>> [  174.410805][  T240] x13: ffff80000c623a00 x12: 1fffe0000c623800
->>>> [  174.412829][  T240] x11: 1fffe0000c6239ff x10: ffff80000c6239ff
->>>> [  174.414821][  T240] x9 : 0000000000000000 x8 : ffff00006311d000
->>>> [  174.416865][  T240] x7 : 0000000000000000 x6 : 000000000000003f
->>>> [  174.418907][  T240] x5 : 0000000000000040 x4 : 000000000000002d
->>>> [  174.420932][  T240] x3 : ffffa000109a1274 x2 : 0000000000000001
->>>> [  174.422924][  T240] x1 : ffffa00016010000 x0 : 0000000000000000
->>>> [  174.424954][  T240] Call trace:
->>>> [  174.426097][  T240]  sysfs_kf_seq_show+0x114/0x250
->>>> [  174.427769][  T240]  kernfs_seq_show+0xa4/0xb8
->>>> [  174.429306][  T240]  seq_read+0x3a4/0x8e8
->>>> [  174.430678][  T240]  kernfs_fop_read+0x8c/0x6e0
->>>> [  174.432244][  T240]  __vfs_read+0x64/0xc0
->>>> [  174.433622][  T240]  vfs_read+0x158/0x2b0
->>>> [  174.435014][  T240]  ksys_read+0xfc/0x1e0
->>>> [  174.436427][  T240]  __arm64_sys_read+0x50/0x60
->>>> [  174.437944][  T240]  el0_svc_common.constprop.1+0x294/0x330
->>>> [  174.439795][  T240]  do_el0_svc+0xe4/0x100
->>>> [  174.441218][  T240]  el0_svc+0x70/0x80
->>>> [  174.442550][  T240]  el0_sync_handler+0xd0/0x7b4
->>>> [  174.444143][  T240]  el0_sync+0x164/0x180
->>>> [  174.445578][  T240] Code: aa1703e0 97f6e03a aa1a03e0 97f6e880 (f9400355)
->>>> [  174.447885][  T240] ---[ end trace 5bcb796ff4270d74 ]---
->>>> [  174.449629][  T240] Kernel panic - not syncing: Fatal exception
->>>> [  174.451590][  T240] Kernel Offset: disabled
->>>> [  174.453005][  T240] CPU features: 0x80002,20002004
->>>> [  174.454597][  T240] Memory Limit: none
->>>> [  174.455955][  T240] ---[ end Kernel panic - not syncing: Fatal exception ]---
->>>>
->>>> When I say CONFIG_OF_UNITTEST=n it works.
->>>> If I revert there it starts to work when I revert the last one,
->>>> f4056e705b2e, from the list below:
->>>>
->>>> 485bb19d0b3e of: unittest: make gpio overlay test dependent on CONFIG_OF_GPIO
->>>> 0ac174397940 of: unittest: annotate warnings triggered by unittest
->>>> f4056e705b2e of: unittest: add overlay gpio test to catch gpio hog problem
->>>>
->>>> Cheers,
->>>> Anders
->>>>
->>>>>> ---
->>>>>>
->>>>>> changes since v1:
->>>>>>   - base on 5.6-rc1
->>>>>>   - fixed node names in overlays
->>>>>>   - removed unused fields from struct unittest_gpio_dev
->>>>>>   - of_unittest_overlay_gpio() cleaned up comments
->>>>>>   - of_unittest_overlay_gpio() moved saving global values into
->>>>>>     probe_pass_count and chip_request_count more tightly around
->>>>>>     test code expected to trigger changes in the global values
->>>>>>
->>>>>> v1 of this patch incorrectly reported that it had made changes
->>>>>> since the RFC version, but it was mistakenly created from the
->>>>>> wrong branch.
->>>>>>
->>>>>> There are checkpatch warnings.
->>>>>>   - New files are in a directory already covered by MAINTAINERS
->>>>>>   - The undocumented compatibles are restricted to use by unittest
->>>>>>     and should not be documented under Documentation
->>>>>>   - The printk() KERN_<LEVEL> warnings are false positives.  The level
->>>>>>     is supplied by a define parameter instead of a hard coded constant
->>>>>>   - The lines over 80 characters are consistent with unittest.c style
->>>>>>
->>>>>> This unittest was also valuable in that it allowed me to explore
->>>>>> possible issues related to the proposed solution to the gpio hog
->>>>>> problem.
->>>>>>
->>>>>>
->>>>>>  drivers/of/unittest-data/Makefile             |   8 +-
->>>>>>  drivers/of/unittest-data/overlay_gpio_01.dts  |  23 +++
->>>>>>  drivers/of/unittest-data/overlay_gpio_02a.dts |  16 ++
->>>>>>  drivers/of/unittest-data/overlay_gpio_02b.dts |  16 ++
->>>>>>  drivers/of/unittest-data/overlay_gpio_03.dts  |  23 +++
->>>>>>  drivers/of/unittest-data/overlay_gpio_04a.dts |  16 ++
->>>>>>  drivers/of/unittest-data/overlay_gpio_04b.dts |  16 ++
->>>>>>  drivers/of/unittest.c                         | 253 ++++++++++++++++++++++++++
->>>>>>  8 files changed, 370 insertions(+), 1 deletion(-)
->>>>>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_01.dts
->>>>>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02a.dts
->>>>>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_02b.dts
->>>>>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_03.dts
->>>>>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04a.dts
->>>>>>  create mode 100644 drivers/of/unittest-data/overlay_gpio_04b.dts
->>>>>>
->>>>>
->>>>> Applied, thanks.
->>>>>
->>>>> Rob
->>>>
->>>>
->>>
->>>
->>
-> 
-
