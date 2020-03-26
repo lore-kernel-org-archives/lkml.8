@@ -2,132 +2,108 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C81A3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E130BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E6C20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8ECC20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:01:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hno7tLQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728052AbgCZLAI (ORCPT
+        id S1728022AbgCZLBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:00:08 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:40085 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727590AbgCZLAI (ORCPT
+        Thu, 26 Mar 2020 07:01:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41559 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727928AbgCZLBn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:00:08 -0400
-Received: from mail.cetitecgmbh.com ([87.190.42.90]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis)
- id 1MidPj-1jlpJ336lr-00fggk for <linux-kernel@vger.kernel.org>; Thu, 26 Mar
- 2020 12:00:06 +0100
-Received: from pflvmailgateway.corp.cetitec.com (unknown [127.0.0.1])
-        by mail.cetitecgmbh.com (Postfix) with ESMTP id 350CC6502CC
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:00:06 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at cetitec.com
-Received: from mail.cetitecgmbh.com ([127.0.0.1])
-        by pflvmailgateway.corp.cetitec.com (pflvmailgateway.corp.cetitec.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id QPOzjhV_9Y3C for <linux-kernel@vger.kernel.org>;
-        Thu, 26 Mar 2020 12:00:05 +0100 (CET)
-Received: from pfwsexchange.corp.cetitec.com (unknown [10.10.1.99])
-        by mail.cetitecgmbh.com (Postfix) with ESMTPS id D77B46500AC
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 12:00:05 +0100 (CET)
-Received: from pflmari.corp.cetitec.com (10.8.5.79) by
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Thu, 26 Mar 2020 12:00:05 +0100
-Received: by pflmari.corp.cetitec.com (Postfix, from userid 1000)
-        id DD5CD80504; Thu, 26 Mar 2020 11:35:42 +0100 (CET)
-Date:   Thu, 26 Mar 2020 11:35:42 +0100
-From:   Alex Riesen <alexander.riesen@cetitec.com>
-To:     Kieran Bingham <kieran.bingham@ideasonboard.com>
-CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <devel@driverdev.osuosl.org>, <linux-media@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-renesas-soc@vger.kernel.org>
-Subject: [PATCH v4 7/9] media: adv748x: only activate DAI if it is described
- in device tree
-Message-ID: <a7112a71e23d63cb6d19188e59252689e4900c70.1585218857.git.alexander.riesen@cetitec.com>
-Mail-Followup-To: Alex Riesen <alexander.riesen@cetitec.com>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        devel@driverdev.osuosl.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-References: <cover.1585218857.git.alexander.riesen@cetitec.com>
+        Thu, 26 Mar 2020 07:01:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id z23so4425496lfh.8
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 04:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AdGN3xaLWLh2g9ItHfw0n6XCBLId+VTX6q4Rvqq4Sjk=;
+        b=Hno7tLQKINqDFQBKig6K/4mPno/jREl+dokP2yCVBvAEiJHXxSOaziAirLO3YLxDGx
+         ZwlByCcWt6aUrqPFwjzYbiq7GeVcUS+Us7HOXnvwSqzIenXVhw8Kef1eZEfJu/WG5IUp
+         RO2BgAdyQvvhpoTdTXMmbhQ7DjEuUEifYDigfsRht0Pop91Xk2wmZVU39hD4NQdLs0u0
+         cyBjrD6Oj0bhkkUUtKvFuLutMJO7iZm9vHQoiMRq+sMGoD3i4Fl4YfGPaCoNrGoFkUGP
+         uHcKj7BniGoR5cg/CwXxR1auAEEiboE3X4/yj6mccmXVYYfd6iXKNKerEzU24JwVUxSc
+         1zQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AdGN3xaLWLh2g9ItHfw0n6XCBLId+VTX6q4Rvqq4Sjk=;
+        b=inf8qC2ergLPGwRGnb5XzC4xHaaujEA/5ZDhvL4UyCDeMEocvnbEITrPK+jjMi1P9f
+         jGSINLtHrK8QZzlAoJFiVZWaED+Ig2gB8KM7a2J7YbUdvApodbosLqbsgPfs7jXmxLC/
+         JRhNKyFWwuVDBiy7bMf5jb+q/w/caxV5qPrRCsZpUIWxRx0T7si3/7FbKJaYSu+A2YgS
+         TLtqsfnn2aKcIpt4o0EV1mWl4WtfTcqQ2OPDMVSRTPb9an0DL6fmLAJ0yEj7NzPEuZ+e
+         9LO85nTfjVi3pu58cvDo+ud3DbERAWKsO5bmb5FhuVUqJoV/nSSPaNz4Ladlpb/OY80a
+         ha0A==
+X-Gm-Message-State: ANhLgQ2RiOYQIbSUmK/tTY+SFhKMiiOiqeDRV3YOcfQLSbafWe26R5Fv
+        b8KD+Bgx0JrrYRThMxZhYcqOhCMTredGwNsYy/LGog==
+X-Google-Smtp-Source: ADFU+vu+++HmXhz0sLdZAQQoGQMXgK6tL/nvZrwEdCr/OwTj8sJydRwxvOW31v4mvR9kJ7wmEE83hCMNyIbdzIClDWk=
+X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr5067560lfc.4.1585220499722;
+ Thu, 26 Mar 2020 04:01:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <cover.1585218857.git.alexander.riesen@cetitec.com>
-X-Originating-IP: [10.8.5.79]
-X-ClientProxiedBy: PFWSEXCHANGE.corp.cetitec.com (10.10.1.99) To
- PFWSEXCHANGE.corp.cetitec.com (10.10.1.99)
-X-EsetResult: clean, is OK
-X-EsetId: 37303A290D7F536A6D7C67
-X-Provags-ID: V03:K1:jyjcLbFRqAkYVisLJ3uA1R0rveaKV5kqtpzvb9WvOsypntvh4yu
- zN7kfH+xukY0soiipLN7Gh29Z59NjrHC2Zp+Sg4q7HmK+xbqWK++yywkssVLyjqp7SlLPXf
- Xem+vl+zs7BHSn5xS13mlREQKPsJY2ImMJ0hb3x2813thE3xVtayHfM+AaSU5zB8KRYFBtR
- DtUApe7GGrfnCM26fRwSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jG5K2UJ80Jo=:IWe4qbDdigUW2WsB8esnOQ
- Gaam/jlvP7xUER9NnQYjW3tFRcKvyY0XAfFvNoHSDYP3hsTiJ/m5g9ydc+DKLTb3oe2IBdzi1
- ZnAwPFNk5VJArjxxz4znwJtaoEM0eCT1Rcl4sdvWDWznRDaW8e8XuB1w57DNhSaCkVIjr3XIZ
- 8DFhr+laB93cUZ6ryLjCa0DQVUIuIu+EL8Bfclh0PvjQf+6PxSJG5MNeKTgiAxoC/P74ETlGp
- AZ+uraH34l8p6mO0AGwyBhM4AlISNWiV6OReAMR0Lk6lLF8qI8sJ2brHItGSBE0Tqi8gnawuu
- 4Z/zoFCAehqQkkR/QfknTCjrlzTpjgKbQH5vPhkaH2bX3aHOIofNP6Hao0QFeau5jYZ8Xk11O
- zKXTup/fWR9i2CYFN78pBBpej+Q5Ram4SoQLivvqQ/gFh7DH8d/5MFi0cxAtIlI6vX+T9rPsu
- pflxwHIBlquafyCW+cW414piSFk6FBmHDj0sR3fQ1S1BXGPKAvmaHfI/0QDTIEmCOG06bVCaG
- tGYbIQyqznIkQ7IvPlYeNliuKdFqJryg7ngHQXjxR0Jv4l8Dtk7hgQLEhp3tXDdoKJy0Sl9tc
- sUrqD9hz3JmBY2OIycZiXk+GRBz9YlLBtW6OZyZL1sA87lWL/C2Xb9wbbq+Vzk3hnltmWrplf
- KOaZNmuCZ8kdDHGV2AqvIG0GJiJe2D1UBcvYmrc+h+Q7gPxJb1tvwU00Z+QVEksV7OL2h330R
- bGbWPOpx69RGDjAK0Er6FhDuI7tNvjrtzxHxmSsQC1T3ckhvHeV/2rSOQ7D0N9MsgxTfjQjzC
- +L4maKYrB6wtRqr6RSLWJdcaZ41WhT6TtXoMrlEzz4yTLe3gmKb6qOolGtMfKp52Wh3cdZp
+References: <20200325113407.26996-1-ulf.hansson@linaro.org> <20200325113407.26996-2-ulf.hansson@linaro.org>
+In-Reply-To: <20200325113407.26996-2-ulf.hansson@linaro.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 26 Mar 2020 12:01:28 +0100
+Message-ID: <CACRpkdbFQ4kjgxxwrTjXZWAt38AM2kyMbeaCX6wjMgyyRmE55Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] driver core: platform: Initialize dma_parms for
+ platform devices
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Vinod Koul <vkoul@kernel.org>, Haibo Chen <haibo.chen@nxp.com>,
+        Ludovic Barre <ludovic.barre@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        dmaengine <dmaengine@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To avoid setting it up even if the hardware is not actually connected
-to anything physically.
+On Wed, Mar 25, 2020 at 12:34 PM Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-Besides, the bindings explicitly notes that port definitions are
-"optional if they are not connected to anything at the hardware level".
+> It's currently the platform driver's responsibility to initialize the
+> pointer, dma_parms, for its corresponding struct device. The benefit with
+> this approach allows us to avoid the initialization and to not waste memory
+> for the struct device_dma_parameters, as this can be decided on a case by
+> case basis.
+>
+> However, it has turned out that this approach is not very practical.  Not
+> only does it lead to open coding, but also to real errors. In principle
+> callers of dma_set_max_seg_size() doesn't check the error code, but just
+> assumes it succeeds.
+>
+> For these reasons, let's do the initialization from the common platform bus
+> at the device registration point. This also follows the way the PCI devices
+> are being managed, see pci_device_add().
+>
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Signed-off-by: Alexander Riesen <alexander.riesen@cetitec.com>
----
- drivers/media/i2c/adv748x/adv748x-dai.c | 5 +++++
- 1 file changed, 5 insertions(+)
+This seems in line with what Christoph said.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/media/i2c/adv748x/adv748x-dai.c b/drivers/media/i2c/adv748x/adv748x-dai.c
-index 185f78023e91..f9cc47fa9ad1 100644
---- a/drivers/media/i2c/adv748x/adv748x-dai.c
-+++ b/drivers/media/i2c/adv748x/adv748x-dai.c
-@@ -216,6 +216,11 @@ int adv748x_dai_init(struct adv748x_dai *dai)
- 	int ret;
- 	struct adv748x_state *state = adv748x_dai_to_state(dai);
- 
-+	if (!state->endpoints[ADV748X_PORT_I2S]) {
-+		adv_info(state, "no I2S port, DAI disabled\n");
-+		ret = 0;
-+		goto fail;
-+	}
- 	dai->mclk_name = kasprintf(GFP_KERNEL, "%s.%s-i2s-mclk",
- 				   state->dev->driver->name,
- 				   dev_name(state->dev));
--- 
-2.25.1.25.g9ecbe7eb18
+I imagine we can eventually set up more of the DMA config such
+as segment size based on config from the device tree, but I'm not
+sure about that yet.
 
-
+Yours,
+Linus Walleij
