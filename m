@@ -2,610 +2,89 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8FEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2F71C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9546A2074D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="Yi5QmqKc"
+	by mail.kernel.org (Postfix) with ESMTP id 7F95A20746
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728054AbgCZDZ1 (ORCPT
+        id S1728089AbgCZDZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:25:27 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:36247 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727639AbgCZDY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:24:29 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m33so4205081qtb.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 20:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:in-reply-to:references;
-        bh=r4qyJ598s8ReeWjPdkKhrtlQmLJMhhLnGRdSKLq7dec=;
-        b=Yi5QmqKcG8HCpCRUaQq35UuIB8Flvz9/GmkR4fbhwtpv4xxhQp1A82Gn3j/VOUfZKl
-         5K1OBcDcxKjc7RGgywqTpPt66Cv0XLX7sUxEyCw/FG9YOXuCPDRPbJh8EIvEDgtoR0cz
-         qoUt6ge6i64xkjRIzg54WQGw0jbQhq1nRzTTxFp3Chlk2GiaKefJdh6Qlqci/PGgNI4k
-         cjMjHKBHG1naBlh6VkxPRAjCfFmxNBZLZ0qI3+YuAspuWKANLrSYhYs3Z66ElF49bahS
-         WTIKrGc4RWBhVhknhZfurA+ANAyasVTSNkzrZgdJNp9K8dL0ykliG+8dwXzP9ZInEM4B
-         1xzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references;
-        bh=r4qyJ598s8ReeWjPdkKhrtlQmLJMhhLnGRdSKLq7dec=;
-        b=tWKReEE3pJpFVvnQEIIe61rlWEomKFgvKtushwgLX9k/SR0uUQ9TUIVwGKJZMXTGjJ
-         0EY3OH1pHlDitn275SsNChua2HRkiLit3hUJ0ldbq3FBDtup0Va0D8NKeF/ZmX4XkSce
-         n5N+Ani075KkaP4zOgxgJKPF48CpocRgbT3HLhougRQZTuGFgQS+b+1OIxye/jTBDAY5
-         4I1p/4XW/p6BqP+mSbBw5M9/raG05027+IBjxlTcuXFWf8aAnuNCasF7psryt7VsexA+
-         0lt6Og9rH4sn+2F9SH2DdZEXGHu+AioxERbV+mLIGub0o2AForafzcWN/OsIIcsxxfX6
-         a/6w==
-X-Gm-Message-State: ANhLgQ3JHWgduKWwTY6nKA5g3tuN/eZbZRSEN3qomJiLyD1AXrpnjxsX
-        Ga/aNZO0X91TTv2sxwlK4iogRg==
-X-Google-Smtp-Source: ADFU+vu7Q1l/wckqgb6c2jLBm7NTBsdqcTI9aWNtfEa2Bgk2n1XqVSuqBEfaq6Nvi6F6zBYuy6iYWg==
-X-Received: by 2002:ac8:224c:: with SMTP id p12mr5964245qtp.32.1585193065951;
-        Wed, 25 Mar 2020 20:24:25 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id u4sm620034qka.35.2020.03.25.20.24.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Mar 2020 20:24:25 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org,
-        ebiederm@xmission.com, kexec@lists.infradead.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org, maz@kernel.org,
-        james.morse@arm.com, vladimir.murzin@arm.com,
-        matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org,
-        mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com,
-        tglx@linutronix.de, selindag@gmail.com
-Subject: [PATCH v9 02/18] arm64: hibernate: move page handling function to new trans_pgd.c
-Date:   Wed, 25 Mar 2020 23:24:04 -0400
-Message-Id: <20200326032420.27220-3-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200326032420.27220-1-pasha.tatashin@soleen.com>
-References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
+        Wed, 25 Mar 2020 23:25:33 -0400
+Received: from mga18.intel.com ([134.134.136.126]:53303 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727639AbgCZDZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:25:30 -0400
+IronPort-SDR: s4UQgJmIejk3VLJLH41WWRqHY0jdBHvZcXuQMm9HI86DWyarjKvVIbWB3R2cF9iRyDytmI2Eoy
+ DhUE5XtXE57g==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 20:25:29 -0700
+IronPort-SDR: TQP58wxqJHStCgf82omJMZzoodNQcpnqWADTBT0t3RDce8k4I2RL+UXv8iUUV8eyogYjZXR+oE
+ pJrP3oPHtEYA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
+   d="scan'208";a="446842797"
+Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
+  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 20:25:27 -0700
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: [RFC v3 0/3] Fix errors when try to build kvm selftests on specified output
+Date:   Thu, 26 Mar 2020 11:07:47 +0800
+Message-Id: <20200326030750.173972-1-xiaoyao.li@intel.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Now, that we abstracted the required functions move them to a new home.
-Later, we will generalize these function in order to be useful outside
-of hibernation.
+Hi Shuah,
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/Kconfig                 |   4 +
- arch/arm64/include/asm/trans_pgd.h |  21 +++
- arch/arm64/kernel/hibernate.c      | 199 +-------------------------
- arch/arm64/mm/Makefile             |   1 +
- arch/arm64/mm/trans_pgd.c          | 219 +++++++++++++++++++++++++++++
- 5 files changed, 246 insertions(+), 198 deletions(-)
- create mode 100644 arch/arm64/include/asm/trans_pgd.h
- create mode 100644 arch/arm64/mm/trans_pgd.c
+Hope you're happy with this version that I only touch KVM's Makefile.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 0b30e884e088..63e0e1db6b2e 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1107,6 +1107,10 @@ config CRASH_DUMP
- 
- 	  For more details see Documentation/admin-guide/kdump/kdump.rst
- 
-+config TRANS_TABLE
-+	def_bool y
-+	depends on HIBERNATION
-+
- config XEN_DOM0
- 	def_bool y
- 	depends on XEN
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-new file mode 100644
-index 000000000000..23153c13d1ce
---- /dev/null
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/*
-+ * Copyright (c) 2020, Microsoft Corporation.
-+ * Pavel Tatashin <pasha.tatashin@soleen.com>
-+ */
-+
-+#ifndef _ASM_TRANS_TABLE_H
-+#define _ASM_TRANS_TABLE_H
-+
-+#include <linux/bits.h>
-+#include <linux/types.h>
-+#include <asm/pgtable-types.h>
-+
-+int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+			  unsigned long end);
-+
-+int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
-+		       pgprot_t pgprot);
-+
-+#endif /* _ASM_TRANS_TABLE_H */
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 590963c9c609..3d6f0fd73591 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -16,7 +16,6 @@
- #define pr_fmt(x) "hibernate: " x
- #include <linux/cpu.h>
- #include <linux/kvm_host.h>
--#include <linux/mm.h>
- #include <linux/pm.h>
- #include <linux/sched.h>
- #include <linux/suspend.h>
-@@ -31,14 +30,12 @@
- #include <asm/kexec.h>
- #include <asm/memory.h>
- #include <asm/mmu_context.h>
--#include <asm/pgalloc.h>
--#include <asm/pgtable.h>
--#include <asm/pgtable-hwdef.h>
- #include <asm/sections.h>
- #include <asm/smp.h>
- #include <asm/smp_plat.h>
- #include <asm/suspend.h>
- #include <asm/sysreg.h>
-+#include <asm/trans_pgd.h>
- #include <asm/virt.h>
- 
- /*
-@@ -182,45 +179,6 @@ int arch_hibernation_header_restore(void *addr)
- }
- EXPORT_SYMBOL(arch_hibernation_header_restore);
- 
--static int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
--		       unsigned long dst_addr,
--		       pgprot_t pgprot)
--{
--	pgd_t *pgdp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		pudp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pudp)
--			return -ENOMEM;
--		pgd_populate(&init_mm, pgdp, pudp);
--	}
--
--	pudp = pud_offset(pgdp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pmdp)
--			return -ENOMEM;
--		pud_populate(&init_mm, pudp, pmdp);
--	}
--
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = (void *)get_safe_page(GFP_ATOMIC);
--		if (!ptep)
--			return -ENOMEM;
--		pmd_populate_kernel(&init_mm, pmdp, ptep);
--	}
--
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
--
--	return 0;
--}
--
- /*
-  * Copies length bytes, starting at src_start into an new page,
-  * perform cache maintenance, then maps it at the specified address low
-@@ -339,161 +297,6 @@ int swsusp_arch_suspend(void)
- 	return ret;
- }
- 
--static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
--{
--	pte_t pte = READ_ONCE(*src_ptep);
--
--	if (pte_valid(pte)) {
--		/*
--		 * Resume will overwrite areas that may be marked
--		 * read only (code, rodata). Clear the RDONLY bit from
--		 * the temporary mappings we use during restore.
--		 */
--		set_pte(dst_ptep, pte_mkwrite(pte));
--	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
--		/*
--		 * debug_pagealloc will removed the PTE_VALID bit if
--		 * the page isn't in use by the resume kernel. It may have
--		 * been in use by the original kernel, in which case we need
--		 * to put it back in our copy to do the restore.
--		 *
--		 * Before marking this entry valid, check the pfn should
--		 * be mapped.
--		 */
--		BUG_ON(!pfn_valid(pte_pfn(pte)));
--
--		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
--	}
--}
--
--static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
--		    unsigned long end)
--{
--	pte_t *src_ptep;
--	pte_t *dst_ptep;
--	unsigned long addr = start;
--
--	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
--	if (!dst_ptep)
--		return -ENOMEM;
--	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
--	dst_ptep = pte_offset_kernel(dst_pmdp, start);
--
--	src_ptep = pte_offset_kernel(src_pmdp, start);
--	do {
--		_copy_pte(dst_ptep, src_ptep, addr);
--	} while (dst_ptep++, src_ptep++, addr += PAGE_SIZE, addr != end);
--
--	return 0;
--}
--
--static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
--		    unsigned long end)
--{
--	pmd_t *src_pmdp;
--	pmd_t *dst_pmdp;
--	unsigned long next;
--	unsigned long addr = start;
--
--	if (pud_none(READ_ONCE(*dst_pudp))) {
--		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
--		if (!dst_pmdp)
--			return -ENOMEM;
--		pud_populate(&init_mm, dst_pudp, dst_pmdp);
--	}
--	dst_pmdp = pmd_offset(dst_pudp, start);
--
--	src_pmdp = pmd_offset(src_pudp, start);
--	do {
--		pmd_t pmd = READ_ONCE(*src_pmdp);
--
--		next = pmd_addr_end(addr, end);
--		if (pmd_none(pmd))
--			continue;
--		if (pmd_table(pmd)) {
--			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
--				return -ENOMEM;
--		} else {
--			set_pmd(dst_pmdp,
--				__pmd(pmd_val(pmd) & ~PMD_SECT_RDONLY));
--		}
--	} while (dst_pmdp++, src_pmdp++, addr = next, addr != end);
--
--	return 0;
--}
--
--static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
--		    unsigned long end)
--{
--	pud_t *dst_pudp;
--	pud_t *src_pudp;
--	unsigned long next;
--	unsigned long addr = start;
--
--	if (pgd_none(READ_ONCE(*dst_pgdp))) {
--		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
--		if (!dst_pudp)
--			return -ENOMEM;
--		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
--	}
--	dst_pudp = pud_offset(dst_pgdp, start);
--
--	src_pudp = pud_offset(src_pgdp, start);
--	do {
--		pud_t pud = READ_ONCE(*src_pudp);
--
--		next = pud_addr_end(addr, end);
--		if (pud_none(pud))
--			continue;
--		if (pud_table(pud)) {
--			if (copy_pmd(dst_pudp, src_pudp, addr, next))
--				return -ENOMEM;
--		} else {
--			set_pud(dst_pudp,
--				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
--		}
--	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
--
--	return 0;
--}
--
--static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
--			    unsigned long end)
--{
--	unsigned long next;
--	unsigned long addr = start;
--	pgd_t *src_pgdp = pgd_offset_k(start);
--
--	dst_pgdp = pgd_offset_raw(dst_pgdp, start);
--	do {
--		next = pgd_addr_end(addr, end);
--		if (pgd_none(READ_ONCE(*src_pgdp)))
--			continue;
--		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
--			return -ENOMEM;
--	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
--
--	return 0;
--}
--
--static int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
--			  unsigned long end)
--{
--	int rc;
--	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
--
--	if (!trans_pgd) {
--		pr_err("Failed to allocate memory for temporary page tables.\n");
--		return -ENOMEM;
--	}
--
--	rc = copy_page_tables(trans_pgd, start, end);
--	if (!rc)
--		*dst_pgdp = trans_pgd;
--
--	return rc;
--}
--
- /*
-  * Setup then Resume from the hibernate image using swsusp_arch_suspend_exit().
-  *
-diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-index d91030f0ffee..bdad6ff0d72c 100644
---- a/arch/arm64/mm/Makefile
-+++ b/arch/arm64/mm/Makefile
-@@ -6,6 +6,7 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_PTDUMP_CORE)	+= dump.o
- obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
-+obj-$(CONFIG_TRANS_TABLE)	+= trans_pgd.o
- obj-$(CONFIG_NUMA)		+= numa.o
- obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
- KASAN_SANITIZE_physaddr.o	+= n
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-new file mode 100644
-index 000000000000..d20e48520cef
---- /dev/null
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -0,0 +1,219 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Transitional page tables for kexec and hibernate
-+ *
-+ * This file derived from: arch/arm64/kernel/hibernate.c
-+ *
-+ * Copyright (c) 2020, Microsoft Corporation.
-+ * Pavel Tatashin <pasha.tatashin@soleen.com>
-+ *
-+ */
-+
-+/*
-+ * Transitional tables are used during system transferring from one world to
-+ * another: such as during hibernate restore, and kexec reboots. During these
-+ * phases one cannot rely on page table not being overwritten. This is because
-+ * hibernate and kexec can overwrite the current page tables during transition.
-+ */
-+
-+#include <asm/trans_pgd.h>
-+#include <asm/pgalloc.h>
-+#include <asm/pgtable.h>
-+#include <linux/suspend.h>
-+#include <linux/bug.h>
-+#include <linux/mm.h>
-+#include <linux/mmzone.h>
-+
-+static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
-+{
-+	pte_t pte = READ_ONCE(*src_ptep);
-+
-+	if (pte_valid(pte)) {
-+		/*
-+		 * Resume will overwrite areas that may be marked
-+		 * read only (code, rodata). Clear the RDONLY bit from
-+		 * the temporary mappings we use during restore.
-+		 */
-+		set_pte(dst_ptep, pte_mkwrite(pte));
-+	} else if (debug_pagealloc_enabled() && !pte_none(pte)) {
-+		/*
-+		 * debug_pagealloc will removed the PTE_VALID bit if
-+		 * the page isn't in use by the resume kernel. It may have
-+		 * been in use by the original kernel, in which case we need
-+		 * to put it back in our copy to do the restore.
-+		 *
-+		 * Before marking this entry valid, check the pfn should
-+		 * be mapped.
-+		 */
-+		BUG_ON(!pfn_valid(pte_pfn(pte)));
-+
-+		set_pte(dst_ptep, pte_mkpresent(pte_mkwrite(pte)));
-+	}
-+}
-+
-+static int copy_pte(pmd_t *dst_pmdp, pmd_t *src_pmdp, unsigned long start,
-+		    unsigned long end)
-+{
-+	pte_t *src_ptep;
-+	pte_t *dst_ptep;
-+	unsigned long addr = start;
-+
-+	dst_ptep = (pte_t *)get_safe_page(GFP_ATOMIC);
-+	if (!dst_ptep)
-+		return -ENOMEM;
-+	pmd_populate_kernel(&init_mm, dst_pmdp, dst_ptep);
-+	dst_ptep = pte_offset_kernel(dst_pmdp, start);
-+
-+	src_ptep = pte_offset_kernel(src_pmdp, start);
-+	do {
-+		_copy_pte(dst_ptep, src_ptep, addr);
-+	} while (dst_ptep++, src_ptep++, addr += PAGE_SIZE, addr != end);
-+
-+	return 0;
-+}
-+
-+static int copy_pmd(pud_t *dst_pudp, pud_t *src_pudp, unsigned long start,
-+		    unsigned long end)
-+{
-+	pmd_t *src_pmdp;
-+	pmd_t *dst_pmdp;
-+	unsigned long next;
-+	unsigned long addr = start;
-+
-+	if (pud_none(READ_ONCE(*dst_pudp))) {
-+		dst_pmdp = (pmd_t *)get_safe_page(GFP_ATOMIC);
-+		if (!dst_pmdp)
-+			return -ENOMEM;
-+		pud_populate(&init_mm, dst_pudp, dst_pmdp);
-+	}
-+	dst_pmdp = pmd_offset(dst_pudp, start);
-+
-+	src_pmdp = pmd_offset(src_pudp, start);
-+	do {
-+		pmd_t pmd = READ_ONCE(*src_pmdp);
-+
-+		next = pmd_addr_end(addr, end);
-+		if (pmd_none(pmd))
-+			continue;
-+		if (pmd_table(pmd)) {
-+			if (copy_pte(dst_pmdp, src_pmdp, addr, next))
-+				return -ENOMEM;
-+		} else {
-+			set_pmd(dst_pmdp,
-+				__pmd(pmd_val(pmd) & ~PMD_SECT_RDONLY));
-+		}
-+	} while (dst_pmdp++, src_pmdp++, addr = next, addr != end);
-+
-+	return 0;
-+}
-+
-+static int copy_pud(pgd_t *dst_pgdp, pgd_t *src_pgdp, unsigned long start,
-+		    unsigned long end)
-+{
-+	pud_t *dst_pudp;
-+	pud_t *src_pudp;
-+	unsigned long next;
-+	unsigned long addr = start;
-+
-+	if (pgd_none(READ_ONCE(*dst_pgdp))) {
-+		dst_pudp = (pud_t *)get_safe_page(GFP_ATOMIC);
-+		if (!dst_pudp)
-+			return -ENOMEM;
-+		pgd_populate(&init_mm, dst_pgdp, dst_pudp);
-+	}
-+	dst_pudp = pud_offset(dst_pgdp, start);
-+
-+	src_pudp = pud_offset(src_pgdp, start);
-+	do {
-+		pud_t pud = READ_ONCE(*src_pudp);
-+
-+		next = pud_addr_end(addr, end);
-+		if (pud_none(pud))
-+			continue;
-+		if (pud_table(pud)) {
-+			if (copy_pmd(dst_pudp, src_pudp, addr, next))
-+				return -ENOMEM;
-+		} else {
-+			set_pud(dst_pudp,
-+				__pud(pud_val(pud) & ~PUD_SECT_RDONLY));
-+		}
-+	} while (dst_pudp++, src_pudp++, addr = next, addr != end);
-+
-+	return 0;
-+}
-+
-+static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
-+			    unsigned long end)
-+{
-+	unsigned long next;
-+	unsigned long addr = start;
-+	pgd_t *src_pgdp = pgd_offset_k(start);
-+
-+	dst_pgdp = pgd_offset_raw(dst_pgdp, start);
-+	do {
-+		next = pgd_addr_end(addr, end);
-+		if (pgd_none(READ_ONCE(*src_pgdp)))
-+			continue;
-+		if (copy_pud(dst_pgdp, src_pgdp, addr, next))
-+			return -ENOMEM;
-+	} while (dst_pgdp++, src_pgdp++, addr = next, addr != end);
-+
-+	return 0;
-+}
-+
-+int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
-+			  unsigned long end)
-+{
-+	int rc;
-+	pgd_t *trans_pgd = (pgd_t *)get_safe_page(GFP_ATOMIC);
-+
-+	if (!trans_pgd) {
-+		pr_err("Failed to allocate memory for temporary page tables.\n");
-+		return -ENOMEM;
-+	}
-+
-+	rc = copy_page_tables(trans_pgd, start, end);
-+	if (!rc)
-+		*dst_pgdp = trans_pgd;
-+
-+	return rc;
-+}
-+
-+int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
-+		       pgprot_t pgprot)
-+{
-+	pgd_t *pgdp;
-+	pud_t *pudp;
-+	pmd_t *pmdp;
-+	pte_t *ptep;
-+
-+	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
-+	if (pgd_none(READ_ONCE(*pgdp))) {
-+		pudp = (void *)get_safe_page(GFP_ATOMIC);
-+		if (!pudp)
-+			return -ENOMEM;
-+		pgd_populate(&init_mm, pgdp, pudp);
-+	}
-+
-+	pudp = pud_offset(pgdp, dst_addr);
-+	if (pud_none(READ_ONCE(*pudp))) {
-+		pmdp = (void *)get_safe_page(GFP_ATOMIC);
-+		if (!pmdp)
-+			return -ENOMEM;
-+		pud_populate(&init_mm, pudp, pmdp);
-+	}
-+
-+	pmdp = pmd_offset(pudp, dst_addr);
-+	if (pmd_none(READ_ONCE(*pmdp))) {
-+		ptep = (void *)get_safe_page(GFP_ATOMIC);
-+		if (!ptep)
-+			return -ENOMEM;
-+		pmd_populate_kernel(&init_mm, pmdp, ptep);
-+	}
-+
-+	ptep = pte_offset_kernel(pmdp, dst_addr);
-+	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
-+
-+	return 0;
-+}
+I attempted to build KVM selftests on a specified dir, unfortunately
+neither	"make O=/path/to/mydir TARGETS=kvm" in tools/testing/selftests, nor
+"make OUTPUT=/path/to/mydir" in tools/testing/selftests/kvm work.
+
+This series aims to fix them.
+
+Patch 1 and Patch 3 are the fix patch, please see the seperate for details.
+While Patch 2 is more or less an fix for the future issue, since it works
+without Patch 2 currently.
+
+Changes in v3:
+ - Drop all the patches that touch things out of KVM
+ - Create OUTPUT dir in KVM's Makefile
+ - Correct the INSTALL_HDR_PATH in KVM's Makefile
+
+Changes in v2:
+https://lore.kernel.org/kvm/20200325140133.103236-1-xiaoyao.li@intel.com/
+ - fix the no directory issue in lib.mk
+ - make kvm fixes seperate patch
+ - Add the patch to fix linux src tree not clean issue
+
+v1:
+https://lore.kernel.org/kvm/20200315093425.33600-1-xiaoyao.li@intel.com/
+
+Xiaoyao Li (3):
+  kvm: selftests: Fix no directory error when OUTPUT specified
+  kvm: selftests: Use the right INSTALL_HDR_PATH when OUTPUT specified
+    and MAKELEVEL is 0
+  kvm: selftests: Fix header path when built from parent level with O
+    specified
+
+ tools/testing/selftests/kvm/Makefile | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
 -- 
-2.17.1
+2.20.1
 
