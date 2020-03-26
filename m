@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5C8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF89EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D39120409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 782372082D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265321;
-	bh=Uqu9T6znjX1+39KqQvn1WXb9FvYPbQ02CpAtw+3Q5ik=;
+	s=default; t=1585265324;
+	bh=jfT/vt+aedy9qZ+p0lGN1nj1vzPO6uDTNZJwx++fvUU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s9MnhK03fi/N3M81yFEPF9w3GeXO6AHTKFqKAKzzZy8wb7mxU3jzgzyiKnGLH97FG
-	 C6Curw7lAKmhK89HK71uqNpaJwB+KntQLj1oZdR3Uvpt8hBIOuefyXg9KIJDSDZBqu
-	 aN5h6ug0yctUFPMoNHGHj7njVBivB9Y42EmO4yIU=
+	b=QaqgHcpkLQ9j3wlvGaH3OgPkt7XZo110HPAIYI4GjYjqdROz2Kcwjkv40ZqxMGpFi
+	 rHEevTvATq1Dg5yPrV7x7kj9srOa2SvBCnsEqNRfkrcQHPD/ZzoXc0ban9TMeoaPnY
+	 D/RJj4SL9WmubxJa7u+ms+mfwOG9wBe8nFTC3wa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgCZXYb (ORCPT
+        id S1728347AbgCZX2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43802 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:28:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727809AbgCZXYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:18 -0400
+        id S1727923AbgCZXYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03AC420936;
-        Thu, 26 Mar 2020 23:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56D5B2082D;
+        Thu, 26 Mar 2020 23:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265057;
-        bh=Uqu9T6znjX1+39KqQvn1WXb9FvYPbQ02CpAtw+3Q5ik=;
+        s=default; t=1585265070;
+        bh=jfT/vt+aedy9qZ+p0lGN1nj1vzPO6uDTNZJwx++fvUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVEgJ6+mpQOM/fsOT04qcWx3AHDAl3i62L+RT4+bGWkE6smzR41zXs4T5uI8OCvBz
-         e7rFU8Zjj+CChlv3vsBtLq+sT/gCnEsa461VnYQRrVsoeSpzXdmISBvAJrGAAX2jPu
-         OMZ6lAsratf4Bt08EYRa326Nw9SCH8q/zT4tAk6Y=
+        b=H6kjFlFMOCKjOLMVOKt8WNZBWcAWtR1Mq/ut5dAdGI79m8N7jf7qvzkh2T1t4sTTx
+         LnqGr8jZmJS5QDucv3bSWIrbChujauVzhS8g7++s84+owgk8gmOsbqykvoAo3jhBSY
+         HhodDJB9PQzMTY/Iw2miiYtozj+j/rAatBePO5b0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     James Zhu <James.Zhu@amd.com>, Leo Liu <leo.liu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Qiujun Huang <hqjagain@gmail.com>,
+        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 17/28] drm/amdgpu: fix typo for vcn1 idle check
-Date:   Thu, 26 Mar 2020 19:23:46 -0400
-Message-Id: <20200326232357.7516-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 28/28] drm/lease: fix WARNING in idr_destroy
+Date:   Thu, 26 Mar 2020 19:23:57 -0400
+Message-Id: <20200326232357.7516-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -60,33 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Zhu <James.Zhu@amd.com>
+From: Qiujun Huang <hqjagain@gmail.com>
 
-[ Upstream commit acfc62dc68770aa665cc606891f6df7d6d1e52c0 ]
+[ Upstream commit b216a8e7908cd750550c0480cf7d2b3a37f06954 ]
 
-fix typo for vcn1 idle check
+drm_lease_create takes ownership of leases. And leases will be released
+by drm_master_put.
 
-Signed-off-by: James Zhu <James.Zhu@amd.com>
-Reviewed-by: Leo Liu <leo.liu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+drm_master_put
+    ->drm_master_destroy
+            ->idr_destroy
+
+So we needn't call idr_destroy again.
+
+Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_lease.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
-index b4f84a820a448..654912402a851 100644
---- a/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/vcn_v1_0.c
-@@ -1374,7 +1374,7 @@ static int vcn_v1_0_set_clockgating_state(void *handle,
+diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
+index b481cafdde280..825abe38201ac 100644
+--- a/drivers/gpu/drm/drm_lease.c
++++ b/drivers/gpu/drm/drm_lease.c
+@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+ 	}
  
- 	if (enable) {
- 		/* wait for STATUS to clear */
--		if (vcn_v1_0_is_idle(handle))
-+		if (!vcn_v1_0_is_idle(handle))
- 			return -EBUSY;
- 		vcn_v1_0_enable_clock_gating(adev);
- 	} else {
+ 	DRM_DEBUG_LEASE("Creating lease\n");
++	/* lessee will take the ownership of leases */
+ 	lessee = drm_lease_create(lessor, &leases);
+ 
+ 	if (IS_ERR(lessee)) {
+ 		ret = PTR_ERR(lessee);
++		idr_destroy(&leases);
+ 		goto out_leases;
+ 	}
+ 
+@@ -580,7 +582,6 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
+ 
+ out_leases:
+ 	put_unused_fd(fd);
+-	idr_destroy(&leases);
+ 
+ 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
+ 	return ret;
 -- 
 2.20.1
 
