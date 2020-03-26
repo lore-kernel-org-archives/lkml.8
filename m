@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 465DEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74997C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D8AC2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C3DF2082D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265272;
-	bh=kkdU1QXIZFrX+rWtjvi1c9fZwqHBpQtxlsPp5P5FGXk=;
+	s=default; t=1585265276;
+	bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2JS67hU3JH6OkDj8+bejexc+PFlFOF062vlGF9T2xycwzry54UX0WeaKFJ9ctsoQ
-	 FbDA4dsa8LRn0tQdzTqG8agqVDSB6GJ7uZ7xGFdRxRzTHY1wyAixYMUIWp0VS0ejwt
-	 uAXysubtloGSYEKhsSrEQk+330zkVzQiOlQdD7ls=
+	b=bOJNRHZHljhM8U/XKm+bqKQmap6Zl3XqH725+byV5YME2hgMnf8Mh4jmLc4rQGBVj
+	 xPYe9jMpSrfgc64ctuKPc6CQzYiRSn9aVfR5hE0eBZJeqRCp19iUSt9AIOt4xjdwR/
+	 wncmoqRO/xt85CyNu8B2IhylT31NcpoU6Upm6UP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728035AbgCZXYs (ORCPT
+        id S1727805AbgCZX1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:27:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727968AbgCZXYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:38 -0400
+        id S1728022AbgCZXYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F91F20A8B;
-        Thu, 26 Mar 2020 23:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54A3B20409;
+        Thu, 26 Mar 2020 23:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265078;
-        bh=kkdU1QXIZFrX+rWtjvi1c9fZwqHBpQtxlsPp5P5FGXk=;
+        s=default; t=1585265086;
+        bh=YOtm7zAs79v1XBoTlS89YdTT4HhPrN1rh4uVtP3fu6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jig9IXsS+DDvXx+FWHqqMpjgbLcctANxbyPP+iDrOabC76hiBmOkuAHkG2dUI+cCW
-         0hSWSwPdcW2ZakSb6+g6gPqEaUNp8kMZWCDxMrjqFLdJNRk0BMEY0A6MycXzwFa3eA
-         W2x04XNiwOKUV4qfvULvT8OpJA4IHWlUkO/ms9Mw=
+        b=mB7ogkdLMcbJB8o/Z9nnUXbEtknF64Oc9Wkng9GGgDgdW8FehR/AB9ChNbEGO10Zy
+         oVWbFNgKVEmOtwXJsNui7+b4TV1A5jPDasKyytOAAJIQFwZjz+lPlAsIf64pw+2Jdi
+         MPsx1CijcG8zTy6Bnk+iDbJi1eKIWrmHvjvlNiOg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mario Kleiner <mario.kleiner.de@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 05/19] drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
-Date:   Thu, 26 Mar 2020 19:24:17 -0400
-Message-Id: <20200326232431.7816-5-sashal@kernel.org>
+Cc:     Len Brown <len.brown@intel.com>, Sasha Levin <sashal@kernel.org>,
+        linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 13/19] tools/power turbostat: Fix 32-bit capabilities warning
+Date:   Thu, 26 Mar 2020 19:24:25 -0400
+Message-Id: <20200326232431.7816-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
 References: <20200326232431.7816-1-sashal@kernel.org>
@@ -60,65 +58,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mario Kleiner <mario.kleiner.de@gmail.com>
+From: Len Brown <len.brown@intel.com>
 
-[ Upstream commit dec9de2ada523b344eb2428abfedf9d6cd0a0029 ]
+[ Upstream commit fcaa681c03ea82193e60d7f2cdfd94fbbcd4cae9 ]
 
-This fixes a problem found on the MacBookPro 2017 Retina panel:
+warning: `turbostat' uses 32-bit capabilities (legacy support in use)
 
-The panel reports 10 bpc color depth in its EDID, and the
-firmware chooses link settings at boot which support enough
-bandwidth for 10 bpc (324000 kbit/sec aka LINK_RATE_RBR2
-aka 0xc), but the DP_MAX_LINK_RATE dpcd register only reports
-2.7 Gbps (multiplier value 0xa) as possible, in direct
-contradiction of what the firmware successfully set up.
-
-This restricts the panel to 8 bpc, not providing the full
-color depth of the panel on Linux <= 5.5. Additionally, commit
-'4a8ca46bae8a ("drm/amd/display: Default max bpc to 16 for eDP")'
-introduced into Linux 5.6-rc1 will unclamp panel depth to
-its full 10 bpc, thereby requiring a eDP bandwidth for all
-modes that exceeds the bandwidth available and causes all modes
-to fail validation -> No modes for the laptop panel -> failure
-to set any mode -> Panel goes dark.
-
-This patch adds a quirk specific to the MBP 2017 15" Retina
-panel to override reported max link rate to the correct maximum
-of 0xc = LINK_RATE_RBR2 to fix the darkness and reduced display
-precision.
-
-Please apply for Linux 5.6+ to avoid regressing Apple MBP panel
-support.
-
-Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/power/x86/turbostat/Makefile    |  2 +-
+ tools/power/x86/turbostat/turbostat.c | 46 +++++++++++++++++----------
+ 2 files changed, 31 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-index 0ab890c927ec7..6dd2334dd5e60 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
-@@ -2879,6 +2879,17 @@ static bool retrieve_link_cap(struct dc_link *link)
- 		sink_id.ieee_device_id,
- 		sizeof(sink_id.ieee_device_id));
+diff --git a/tools/power/x86/turbostat/Makefile b/tools/power/x86/turbostat/Makefile
+index 13f1e8b9ac525..2b6551269e431 100644
+--- a/tools/power/x86/turbostat/Makefile
++++ b/tools/power/x86/turbostat/Makefile
+@@ -16,7 +16,7 @@ override CFLAGS +=	-D_FORTIFY_SOURCE=2
  
-+	/* Quirk Apple MBP 2017 15" Retina panel: Wrong DP_MAX_LINK_RATE */
-+	{
-+		uint8_t str_mbp_2017[] = { 101, 68, 21, 101, 98, 97 };
+ %: %.c
+ 	@mkdir -p $(BUILD_OUTPUT)
+-	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS)
++	$(CC) $(CFLAGS) $< -o $(BUILD_OUTPUT)/$@ $(LDFLAGS) -lcap
+ 
+ .PHONY : clean
+ clean :
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 17e82eaf5c4f4..988326b67a916 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -30,7 +30,7 @@
+ #include <sched.h>
+ #include <time.h>
+ #include <cpuid.h>
+-#include <linux/capability.h>
++#include <sys/capability.h>
+ #include <errno.h>
+ #include <math.h>
+ 
+@@ -3150,28 +3150,42 @@ void check_dev_msr()
+ 			err(-5, "no /dev/cpu/0/msr, Try \"# modprobe msr\" ");
+ }
+ 
+-void check_permissions()
++/*
++ * check for CAP_SYS_RAWIO
++ * return 0 on success
++ * return 1 on fail
++ */
++int check_for_cap_sys_rawio(void)
+ {
+-	struct __user_cap_header_struct cap_header_data;
+-	cap_user_header_t cap_header = &cap_header_data;
+-	struct __user_cap_data_struct cap_data_data;
+-	cap_user_data_t cap_data = &cap_data_data;
+-	extern int capget(cap_user_header_t hdrp, cap_user_data_t datap);
+-	int do_exit = 0;
+-	char pathname[32];
++	cap_t caps;
++	cap_flag_value_t cap_flag_value;
+ 
+-	/* check for CAP_SYS_RAWIO */
+-	cap_header->pid = getpid();
+-	cap_header->version = _LINUX_CAPABILITY_VERSION;
+-	if (capget(cap_header, cap_data) < 0)
+-		err(-6, "capget(2) failed");
++	caps = cap_get_proc();
++	if (caps == NULL)
++		err(-6, "cap_get_proc\n");
+ 
+-	if ((cap_data->effective & (1 << CAP_SYS_RAWIO)) == 0) {
+-		do_exit++;
++	if (cap_get_flag(caps, CAP_SYS_RAWIO, CAP_EFFECTIVE, &cap_flag_value))
++		err(-6, "cap_get\n");
 +
-+		if ((link->dpcd_caps.sink_dev_id == 0x0010fa) &&
-+		    !memcmp(link->dpcd_caps.sink_dev_id_str, str_mbp_2017,
-+			    sizeof(str_mbp_2017))) {
-+			link->reported_link_cap.link_rate = 0x0c;
-+		}
-+	}
++	if (cap_flag_value != CAP_SET) {
+ 		warnx("capget(CAP_SYS_RAWIO) failed,"
+ 			" try \"# setcap cap_sys_rawio=ep %s\"", progname);
++		return 1;
+ 	}
+ 
++	if (cap_free(caps) == -1)
++		err(-6, "cap_free\n");
 +
- 	core_link_read_dpcd(
- 		link,
- 		DP_SINK_HW_REVISION_START,
++	return 0;
++}
++void check_permissions(void)
++{
++	int do_exit = 0;
++	char pathname[32];
++
++	/* check for CAP_SYS_RAWIO */
++	do_exit += check_for_cap_sys_rawio();
++
+ 	/* test file permissions */
+ 	sprintf(pathname, "/dev/cpu/%d/msr", base_cpu);
+ 	if (euidaccess(pathname, R_OK)) {
 -- 
 2.20.1
 
