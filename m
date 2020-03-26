@@ -2,117 +2,166 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8EFC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED40C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10D8520714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:37:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="OXLPvTnw"
+	by mail.kernel.org (Postfix) with ESMTP id 30DBB20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCZGhB (ORCPT
+        id S1727647AbgCZGie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:37:01 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50029 "EHLO ozlabs.org"
+        Thu, 26 Mar 2020 02:38:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38926 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726014AbgCZGhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:37:01 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nwJB0yJFz9sSH;
-        Thu, 26 Mar 2020 17:36:57 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585204618;
-        bh=AVMi9zNmzZTPMq/e9Qj767J1YMAyuM/Z5EjCyw0SljQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OXLPvTnwslbBC6TjRctA7OG1AjwUh0uccXCiWpX9Fh/ByfpI8dK1z3m3zv6kNcwDr
-         1pKvuR3wN4V0/qStTJ2wxyCDDrLll6TC0XnUkHk86wV+uHhscSPqms1gl5gZtQSKN1
-         1mOjVldqVaE+2Ggq7DXx+WiTRm63vLGMmaOSwxDSK/wCxt8KvwkF6rpLiHbOYnlYhX
-         VM7QqVskZqCFta5DamnyIz5ESzIX9PHDNLhdtfZ2pNF8BIzsq8yHLVHo0woSxZD/o6
-         k4IpYLw4JQNUNPxw3n+Bnp3eT3OfT2Eqz+iLxl8uWEt2oK3lY9AVS6uiBo9cAMARNm
-         bdhYCVHhnqqsg==
-Date:   Thu, 26 Mar 2020 17:36:56 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Mubin Sayyed <mubin.usman.sayyed@xilinx.com>
-Subject: Re: linux-next: build failure after merge of the irqchip tree
-Message-ID: <20200326173656.691628e8@canb.auug.org.au>
-In-Reply-To: <20200323175946.7ad497ea@canb.auug.org.au>
-References: <20200323175946.7ad497ea@canb.auug.org.au>
+        id S1726138AbgCZGid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 02:38:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0D37AAC90;
+        Thu, 26 Mar 2020 06:38:31 +0000 (UTC)
+Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
+To:     Joe Perches <joe@perches.com>,
+        Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        xiang xiao <xiaoxiang781216@gmail.com>
+References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
+ <20200324170407.16470-3-arnaud.pouliquen@st.com>
+ <e458f805-c746-c88e-98f4-d874a7552933@suse.cz>
+ <1e4ce821-dd9b-bb04-774b-58a255834cf5@st.com>
+ <ec061c30-eace-1df9-fa7b-71a61e5710a2@suse.cz>
+ <f97d9dc54178e4344512bc7986265f101f4639c6.camel@perches.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <a06f559c-3507-210c-d743-765163900935@suse.cz>
+Date:   Thu, 26 Mar 2020 07:38:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/913JVVRB1tgs/aeh7Xd7+Y8";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <f97d9dc54178e4344512bc7986265f101f4639c6.camel@perches.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/913JVVRB1tgs/aeh7Xd7+Y8
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 26. 03. 20, 1:01, Joe Perches wrote:
+> On Wed, 2020-03-25 at 14:31 +0100, Jiri Slaby wrote:
+>> The question was exactly about that: can a compiler optimize it to a
+>> bare number or will strlen call remain there?
+> 
+> $ cat str.c
+> #include <string.h>
+> 
+> int foo(void)
+> {
+> 	return strlen("abc");
+> }
+> 
+> $ gcc -c -O2 str.c
+> $ objdump -d str.o
+> str.o:     file format elf64-x86-64
+> 
+> 
+> Disassembly of section .text:
+> 
+> 0000000000000000 <foo>:
+>    0:	f3 0f 1e fa          	endbr64 
+>    4:	b8 03 00 00 00       	mov    $0x3,%eax
+>    9:	c3                   	retq   
 
-Hi all,
+Perfect, but:
+* that is userspace (different strlen).
+* what about other archs -- AFAIR, i386 implements strlen in asm in the
+kernel
 
-On Mon, 23 Mar 2020 17:59:46 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> After merging the irqchip tree, today's linux-next build (powerpc
-> ppc44x_defconfig) failed like this:
->=20
-> drivers/irqchip/irq-xilinx-intc.c: In function 'xil_intc_handle_irq':
-> drivers/irqchip/irq-xilinx-intc.c:176:10: error: implicit declaration of =
-function 'handle_domain_irq'; did you mean 'handle_bad_irq'? [-Werror=3Dimp=
-licit-function-declaration]
->   176 |    ret =3D handle_domain_irq(irqc->root_domain, hwirq, regs);
->       |          ^~~~~~~~~~~~~~~~~
->       |          handle_bad_irq
-> drivers/irqchip/irq-xilinx-intc.c: In function 'xilinx_intc_of_init':
-> drivers/irqchip/irq-xilinx-intc.c:253:3: error: implicit declaration of f=
-unction 'set_handle_irq'; did you mean 'generic_handle_irq'? [-Werror=3Dimp=
-licit-function-declaration]
->   253 |   set_handle_irq(xil_intc_handle_irq);
->       |   ^~~~~~~~~~~~~~
->       |   generic_handle_irq
->=20
-> Caused by commit
->=20
->   a0789993bf82 ("irqchip/xilinx: Enable generic irq multi handler")
->=20
-> I have reverted that commit (and commit
->=20
->   9c2d4f525c00 ("irqchip/xilinx: Do not call irq_set_default_host()")
->=20
-> that conflicted with the other revert).
+Maybe compilers use intrinsics and only after optimizations, they put a
+call to strlen?
 
-I am still getting these errors.
+/me digging
 
---=20
-Cheers,
-Stephen Rothwell
+Yeah, even gimple already contains:
+  int D.2094;
 
---Sig_/913JVVRB1tgs/aeh7Xd7+Y8
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+  D.2094 = 3;
+  return D.2094;
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl58TYgACgkQAVBC80lX
-0Gy1fwf+KrhnaPWcFTJnh+ks0wV74Ujj1CSP/c/ilu5V5SpaQtP4+oZdXZ9gkQ92
-J8elsP7jWnIsh4s6IkaICGLmNY2/J/h60hpB8BkLlK9mpWEsGJ9NtdvG9An76aBo
-EJ0vzhcoLB5O4SA9W1XR4pq5Itjlf+CBRM31jesCYtLbUhJHNS4Jm6aX2DNlecKg
-jQUQ9qpTyOH+F0TGbMfMEzTkz+9m2z4KFRimJC/3IdddGwZ0L/0Od+VrHxByO2CZ
-1kPghYA8NmZPBsqjnfz0KDJbolfw+17M9dbeSJaebqtVyWBoBMfGYlLsLMaLRL4x
-zXLTi9k08k+8vsApwNcyYbgwTWDGXA==
-=0OpA
------END PGP SIGNATURE-----
+That means, even -O0 should generate 3 instead of the call:
+$ echo -e '#include <string.h>\nint f() { return strlen("abc"); }' | gcc
+-S -x c - -o - -O0
+...
+f:
+.LFB0:
+        .cfi_startproc
+        pushq   %rbp
+        .cfi_def_cfa_offset 16
+        .cfi_offset 6, -16
+        movq    %rsp, %rbp
+        .cfi_def_cfa_register 6
+        movl    $3, %eax
+        popq    %rbp
+        .cfi_def_cfa 7, 8
+        ret
+        .cfi_endproc
 
---Sig_/913JVVRB1tgs/aeh7Xd7+Y8--
+
+So fine, use strlen :).
+
+thanks,
+-- 
+js
+suse labs
