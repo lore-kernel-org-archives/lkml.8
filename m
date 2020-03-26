@@ -2,100 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C26C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1386FC2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C11A2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:45:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hrCA3qCL"
+	by mail.kernel.org (Postfix) with ESMTP id E774A20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 00:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbgCZApa (ORCPT
+        id S1727641AbgCZApm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 20:45:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51776 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727537AbgCZAp3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 20:45:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=MWwomHnbhJIHVLVpUPf/22EMeHWN9bGAPIBVZmcKq3I=; b=hrCA3qCLYzT+ZlkiTVxH2XRaJS
-        9UGeR5/h64IyIq1GjJh7p1t+oUzr6yrD1h9TxLyNrG9GXJl7fM6Nz02odrprjToUzGMoc2zIC8bCD
-        aaJ7ypDcWXYzm8QdfmWLuqYomZjiTTnL7ni3Do7ao+nlycRe4d4Uhy5RBrW1pE7Zowt23knvKgHhD
-        /+jByArVEDYhsphlLVTlGlBwEw/VQ/Dkn3L5gMpvz4FwYIw7mHVXD+GltYFupfbCEozM1K9Kmf7Ae
-        6khm/FheGyzoQRflhKzzLrpJTuj1gDkz/ijMNx7ZpZLVwGX0EbmikT6jT+6EQb2MyBEm1bIu35gwR
-        y8+L7Zwg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHGeG-00014f-0K; Thu, 26 Mar 2020 00:45:28 +0000
-Subject: [PATCH] mm: mempolicy: require at least one nodeid for MPOL_PREFERRED
-To:     Entropy Moe <3ntr0py1337@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org
-References: <CALzBtjLSqFhSNAf4YusxuE1piUTzOSLFGFD4RrhPLQAmgpyL5g@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <89526377-7eb6-b662-e1d8-4430928abde9@infradead.org>
-Date:   Wed, 25 Mar 2020 17:45:26 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Wed, 25 Mar 2020 20:45:42 -0400
+Received: from mga04.intel.com ([192.55.52.120]:19082 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727537AbgCZApl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 20:45:41 -0400
+IronPort-SDR: eyZ+Lm8IS52aH2yif8+hSSC4ijUdrrhPYC4Y6mqcPYeIwdnDuTXQd/mCJa3VoO//yJqi89zR2R
+ iQyofA1J25ZQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 17:45:41 -0700
+IronPort-SDR: 9zOY6UgWxTyOVTL3IsoRMu7dl4YEEHlXDJsyVUbZRSeKnqNXMlasBB4Zzh87J/LndN9M9XIFVc
+ mxTxgJEHXspA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
+   d="scan'208";a="393803360"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.99]) ([10.249.169.99])
+  by orsmga004.jf.intel.com with ESMTP; 25 Mar 2020 17:45:38 -0700
+Subject: Re: [PATCH v2 0/6] Fix errors when try to build kvm selftests on
+ specified output
+To:     shuah <shuah@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200325140133.103236-1-xiaoyao.li@intel.com>
+ <8e5a7de6-25f3-7979-c6b9-49e1ea717f8e@kernel.org>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <00b92d64-5991-f102-4bec-7aca8f1ece9a@intel.com>
+Date:   Thu, 26 Mar 2020 08:45:37 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <CALzBtjLSqFhSNAf4YusxuE1piUTzOSLFGFD4RrhPLQAmgpyL5g@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <8e5a7de6-25f3-7979-c6b9-49e1ea717f8e@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On 3/26/2020 12:12 AM, shuah wrote:
+> On 3/25/20 8:01 AM, Xiaoyao Li wrote:
+>> I attempted to build KVM selftests on a specified dir, unfortunately
+>> neither    "make O=/path/to/mydir TARGETS=kvm" in 
+>> tools/testing/selftests, nor
+>> "make OUTPUT=/path/to/mydir" in tools/testing/selftests/kvm work.
+>>
+> 
+> Please elaborate on the problems you are seeing. I would like you
+> to describe in detail the problems you are seeing and how you are
+> fixing them in this patch series.
+> 
+> The problem you are fixing here is subdir structure not being
+> supported for relocatable builds and the Makefile not being
+> able to locate headers files. These are issues, however, these
+> need to be fixed in the kvm Makefile
+Maybe I should have sent it as RFC.
 
-Using an empty (malformed) nodelist that is not caught during
-mount option parsing leads to a stack-out-of-bounds access.
+OK, then I'll just resend patch 1 in v1 to fix the subdir not created 
+issue for relocatable build, in kvm Makefile. Obviously lib.mk doesn't 
+create it, and you don't allow me to touch lib.mk
 
-The option string that was used was: "mpol=prefer:,".
-However, MPOL_PREFERRED requires a single node number,
-which is not being provided here.
+About headers issue, since I'm not familiar with Makefile, I don't want 
+to waste any more time on it and I decide to drop them.
 
-Add a check that 'nodes' is not empty after parsing for
-MPOL_PREFERRED's nodeid.
+I can add a "make mrproper" in my script to do the cleanup as a workaround.
 
-Fixes: 095f1fc4ebf3 ("mempolicy: rework shmem mpol parsing and display")
-Reported-by: Entropy Moe <3ntr0py1337@gmail.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-mm@kvack.org
-Cc: Lee Schermerhorn <lee.schermerhorn@hp.com>
----
- mm/mempolicy.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+And never make kvm selftests in parent dir with
+	make O=/somewhere TARGETS=kvm
+to workaround the header not found issue.
 
---- lnx-56-rc6.orig/mm/mempolicy.c
-+++ lnx-56-rc6/mm/mempolicy.c
-@@ -2841,7 +2841,9 @@ int mpol_parse_str(char *str, struct mem
- 	switch (mode) {
- 	case MPOL_PREFERRED:
- 		/*
--		 * Insist on a nodelist of one node only
-+		 * Insist on a nodelist of one node only, although later
-+		 * we use first_node(nodes) to grab a single node, so here
-+		 * nodelist (or nodes) cannot be empty.
- 		 */
- 		if (nodelist) {
- 			char *rest = nodelist;
-@@ -2849,6 +2851,8 @@ int mpol_parse_str(char *str, struct mem
- 				rest++;
- 			if (*rest)
- 				goto out;
-+			if (nodes_empty(nodes))
-+				goto out;
- 		}
- 		break;
- 	case MPOL_INTERLEAVE:
+> Please look at arm64, android, futex tests as examples. lib.mk
+> and main selftests Makefile allow for overrides for make targets.
+> When a test has sub-dir structure and libraries, it is easier to
+> handle these in the individual Makefile.
+> 
+> Please fix the problems you are seeing in kvm Makefile.
+> 
+>  >I only test the sub TARGET of kvm.
+>  >In theory, it won't break other TARGET of selftests.
+> 
+> When you change lib.mk which is a common infrastructure, theory
+> doesn't help. Statements like this make me very reluctant to
+> accept patches. :)
+> 
+> This is one reason why I asked Paolo to drop these patches.
+> 
+> thanks,
+> -- Shuah
 
