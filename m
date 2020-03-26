@@ -2,164 +2,160 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A598C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:15:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3876BC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:16:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017B92073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:15:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="De+vdbSm"
+	by mail.kernel.org (Postfix) with ESMTP id 186872073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:16:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbgCZSPb (ORCPT
+        id S1728558AbgCZSQZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:15:31 -0400
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:49823 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728383AbgCZSP1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:15:27 -0400
-Received: by mail-pl1-f202.google.com with SMTP id l2so4869696pld.16
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=REBj1fgB1itW3afNpdBeCKHTfmMER4muP4nMI9CXCW4=;
-        b=De+vdbSmZ4eV+CJ+UxFZBhShe8zH/Qk26KK8CRGODde3/2Qi8B5S/N2lYhGdR9yD2U
-         hPM6WHzB1LTjWX/roz7FcosVAFpwn9uha+5en/xMUBaugZcCu/YIBgBvQGtBUpZUwWZQ
-         Yi7CBHzjA1yN9GVu/Z7i9C+4Xry+g5D46J3/OZB/pkaasGKOwmkWPkmFiuWRffJrTY8Z
-         kTsCbX7z3IaVClheuxQ8416BFeCjQSRbWgs1GcEoe6K1yA68Zeue9kMNA9Id9SjEM81w
-         iXBmQJlFNC0CXF/4xW50ke/+f3lnOzc0rz+264IkbICCJIlYAFn96I220W+S6izkKbst
-         kpMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=REBj1fgB1itW3afNpdBeCKHTfmMER4muP4nMI9CXCW4=;
-        b=qbgBOFETO7VznjfEC3M9WtoKucZrLPMUJS4KgvjHfYvCDL3ISe3+c9MPcq0tVIBxlv
-         yvABBIwC+XpnqQN9EfeQqomZvojrK0jkBO/G6oxqBqqE098UgqcJVwD9WqfxnlRu3VlL
-         Ryrtjt1ss1zsiBdeK3BCYaEXeTxBM6uQpyU0BAQp5+X8cbfB6ARQB3QwvEbDorw8wNKG
-         lDvXYe9dhaey6sx7HKhvpCQZBWXiLbdQ60a3iGU6nM9YG8z2iexE/QxhAtsVYUoRshxu
-         ZwKNXeI36cxPgEPlednv2zpJ2+VgFvMmoYbWR8w/X+xHsIcSMZnkI49zhFL/US6mezEE
-         JdsQ==
-X-Gm-Message-State: ANhLgQ1O2qP/0g8tbhp1Pa+jdg9kCK2B419YQL4E7NHItg64O5duMwnd
-        t0dMO+yDaomWmBtqq3ugY7LdTZf4DjM=
-X-Google-Smtp-Source: ADFU+vuC4qedai97AsQzom+MPyQbpmPdnQ6oRFaE8QGT9W4/tlMA0F0FEEUIYjLnEYqJfkFHHc97xMWVyOA=
-X-Received: by 2002:a63:ff53:: with SMTP id s19mr9927452pgk.247.1585246525869;
- Thu, 26 Mar 2020 11:15:25 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 11:14:56 -0700
-In-Reply-To: <20200326181456.132742-1-dancol@google.com>
-Message-Id: <20200326181456.132742-4-dancol@google.com>
-Mime-Version: 1.0
-References: <20200214032635.75434-1-dancol@google.com> <20200326181456.132742-1-dancol@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v3 3/3] Wire UFFD up to SELinux
-From:   Daniel Colascione <dancol@google.com>
-To:     timmurray@google.com, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
-        nnk@google.com, sds@tycho.nsa.gov, lokeshgidra@google.com,
-        jmorris@namei.org
-Cc:     Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 26 Mar 2020 14:16:25 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45168 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728428AbgCZSQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 14:16:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D7D36ADE2;
+        Thu, 26 Mar 2020 18:16:22 +0000 (UTC)
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>
+Cc:     linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [RFC v3 2/2] kernel/sysctl: support handling command line aliases
+Date:   Thu, 26 Mar 2020 19:16:06 +0100
+Message-Id: <20200326181606.7027-2-vbabka@suse.cz>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200326181606.7027-1-vbabka@suse.cz>
+References: <20200326181606.7027-1-vbabka@suse.cz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change gives userfaultfd file descriptors a real security
-context, allowing policy to act on them.
+We can now handle sysctl parameters on kernel command line, but historically
+some parameters introduced their own command line equivalent, which we don't
+want to remove for compatibility reasons. We can however convert them to the
+generic infrastructure with a table translating the legacy command line
+parameters to their sysctl names, and removing the one-off param handlers.
 
-Signed-off-by: Daniel Colascione <dancol@google.com>
+This patch adds the support and makes the first conversion to demonstrate it,
+on the (deprecated) numa_zonelist_order parameter.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- fs/userfaultfd.c | 34 +++++++++++++++++++++++++++++-----
- 1 file changed, 29 insertions(+), 5 deletions(-)
+Changes in v3:
+- constify some things according to Kees
+- expand the comment of sysctl_aliases to note on different timings
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 07b0f6e03849..78ff5d898733 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -76,6 +76,8 @@ struct userfaultfd_ctx {
- 	bool mmap_changing;
- 	/* mm with one ore more vmas attached to this userfaultfd_ctx */
- 	struct mm_struct *mm;
-+	/* The inode that owns this context --- not a strong reference.  */
-+	const struct inode *owner;
- };
+ fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
+ mm/page_alloc.c       |  9 --------
+ 2 files changed, 41 insertions(+), 16 deletions(-)
+
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index 8ee3273e4540..3a861e0a7c7e 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -1729,6 +1729,37 @@ int __init proc_sys_init(void)
  
- struct userfaultfd_fork_ctx {
-@@ -1014,14 +1016,18 @@ static __poll_t userfaultfd_poll(struct file *file, poll_table *wait)
- 	}
- }
+ struct vfsmount *proc_mnt = NULL;
  
-+static const struct file_operations userfaultfd_fops;
++struct sysctl_alias {
++	const char *kernel_param;
++	const char *sysctl_param;
++};
 +
- static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
- 				  struct userfaultfd_ctx *new,
- 				  struct uffd_msg *msg)
- {
- 	int fd;
- 
--	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, new,
--			      O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS));
-+	fd = anon_inode_getfd_secure(
-+		"[userfaultfd]", &userfaultfd_fops, new,
-+		O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS),
-+		ctx->owner);
- 	if (fd < 0)
- 		return fd;
- 
-@@ -1918,7 +1924,7 @@ static void userfaultfd_show_fdinfo(struct seq_file *m, struct file *f)
- }
- #endif
- 
--const struct file_operations userfaultfd_fops = {
-+static const struct file_operations userfaultfd_fops = {
- #ifdef CONFIG_PROC_FS
- 	.show_fdinfo	= userfaultfd_show_fdinfo,
- #endif
-@@ -1943,6 +1949,7 @@ static void init_once_userfaultfd_ctx(void *mem)
- 
- SYSCALL_DEFINE1(userfaultfd, int, flags)
- {
-+	struct file *file;
- 	struct userfaultfd_ctx *ctx;
- 	int fd;
- 
-@@ -1972,8 +1979,25 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
- 	/* prevent the mm struct to be freed */
- 	mmgrab(ctx->mm);
- 
--	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, ctx,
--			      O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS));
-+	file = anon_inode_getfile_secure(
-+		"[userfaultfd]", &userfaultfd_fops, ctx,
-+		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
-+		NULL);
-+	if (IS_ERR(file)) {
-+		fd = PTR_ERR(file);
-+		goto out;
++/*
++ * Historically some settings had both sysctl and a command line parameter.
++ * With the generic sysctl. parameter support, we can handle them at a single
++ * place and only keep the historical name for compatibility. This is not meant
++ * to add brand new aliases. When adding existing aliases, consider whether
++ * the possibly different moment of changing the value (e.g. from early_param
++ * to the moment do_sysctl_args() is called) is an issue for the specific
++ * parameter.
++ */
++static const struct sysctl_alias sysctl_aliases[] = {
++	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
++	{ }
++};
++
++const char *sysctl_find_alias(char *param)
++{
++	const struct sysctl_alias *alias;
++
++	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
++		if (strcmp(alias->kernel_param, param) == 0)
++			return alias->sysctl_param;
 +	}
 +
-+	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-+	if (fd < 0) {
-+		fput(file);
-+		goto out;
++	return NULL;
++}
++
+ /* Set sysctl value passed on kernel command line. */
+ static int process_sysctl_arg(char *param, char *val,
+ 			       const char *unused, void *arg)
+@@ -1741,15 +1772,18 @@ static int process_sysctl_arg(char *param, char *val,
+ 	loff_t pos = 0;
+ 	ssize_t wret;
+ 
+-	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+-		return 0;
+-
+-	param += sizeof("sysctl") - 1;
++	if (strncmp(param, "sysctl", sizeof("sysctl") - 1) == 0) {
++		param += sizeof("sysctl") - 1;
+ 
+-	if (param[0] != '/' && param[0] != '.')
+-		return 0;
++		if (param[0] != '/' && param[0] != '.')
++			return 0;
+ 
+-	param++;
++		param++;
++	} else {
++		param = (char *) sysctl_find_alias(param);
++		if (!param)
++			return 0;
 +	}
-+
-+	ctx->owner = file_inode(file);
-+	fd_install(fd, file);
-+
-+out:
- 	if (fd < 0) {
- 		mmdrop(ctx->mm);
- 		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
+ 
+ 	if (!proc_mnt) {
+ 		proc_fs_type = get_fs_type("proc");
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3c4eb750a199..de7a134b1b8a 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
+ 	return 0;
+ }
+ 
+-static __init int setup_numa_zonelist_order(char *s)
+-{
+-	if (!s)
+-		return 0;
+-
+-	return __parse_numa_zonelist_order(s);
+-}
+-early_param("numa_zonelist_order", setup_numa_zonelist_order);
+-
+ char numa_zonelist_order[] = "Node";
+ 
+ /*
 -- 
-2.25.1.696.g5e7596f4ac-goog
+2.25.1
 
