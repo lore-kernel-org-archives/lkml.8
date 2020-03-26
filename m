@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E4BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2419C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F4B20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C7B20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265241;
-	bh=jfT/vt+aedy9qZ+p0lGN1nj1vzPO6uDTNZJwx++fvUU=;
+	s=default; t=1585265245;
+	bh=64g/FuVY4FkADB9UpvuwvHmWfRLDc5mR7iw725sbOe8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9zRCsGv7Ht0xaJy0lIH7MGgo9MmlumzP90gBjNbL8Uqaw+VuutP8yrYOefWeJLTq
-	 hjE8v505fO40zGaWNWAfu0yW9V9NzyId16hXXzX0hiw4lS3MD62z0JlyMIur05goKP
-	 A5FoGQWqVtXumcF0AqRVb0hro1dhZX9rCpHY6wqs=
+	b=zPNTjEWP4xtq7XxRZk4C6ibmrP7nCF8tMysfE9uR6c2Z2+la9Bf/BD4OHMb5vs+Ti
+	 zUCblNijOzX9Lpt9zYDCL7raj+9vLx/3iybqd2bLKV6QKet4zHREuADADTFfzvVzoj
+	 ihO1EmKua0eccMKoLS5oP3xpL9Ny+a9oihfrnVg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728148AbgCZXY7 (ORCPT
+        id S1728417AbgCZX1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45190 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728056AbgCZXYy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:54 -0400
+        id S1728153AbgCZXZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:01 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDF7D2083E;
-        Thu, 26 Mar 2020 23:24:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC17E2083E;
+        Thu, 26 Mar 2020 23:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265093;
-        bh=jfT/vt+aedy9qZ+p0lGN1nj1vzPO6uDTNZJwx++fvUU=;
+        s=default; t=1585265100;
+        bh=64g/FuVY4FkADB9UpvuwvHmWfRLDc5mR7iw725sbOe8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMycbxlHsSAYM8jLUf6+ENf0EJ2yvf87HTg2kRKjlDhhvUVD/loT8exg49KkFuJdO
-         Ur8jZggT0GYrFq+vxztdvn5LKBWCbcbhj6KzTpKucDCGalOngkFBuTuCcaJ2MkqE2v
-         QaR9kFd+r1zKzw//yfV8tt+Cc6NvykHLlv1qjvcU=
+        b=tcSGkmKzns7w2uSE4BzIaZmhIvnPjTVuKbdpaNoIwf4yoiazGt7CunDyCOmMK+Nrz
+         G7kckm9Zi6g3+HnX5ntqoHdiBF3OrwDugCDYN57uMoqblxMI821nOCYTTTspWtMuCT
+         DlyUg0+G0b2Qeh6loM/19+nsjZqW7SiGCZ7u8VBI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiujun Huang <hqjagain@gmail.com>,
-        syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Mario Kleiner <mario.kleiner.de@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 19/19] drm/lease: fix WARNING in idr_destroy
-Date:   Thu, 26 Mar 2020 19:24:31 -0400
-Message-Id: <20200326232431.7816-19-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 04/15] drm/amd/display: Add link_rate quirk for Apple 15" MBP 2017
+Date:   Thu, 26 Mar 2020 19:24:44 -0400
+Message-Id: <20200326232455.8029-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
-References: <20200326232431.7816-1-sashal@kernel.org>
+In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
+References: <20200326232455.8029-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,54 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiujun Huang <hqjagain@gmail.com>
+From: Mario Kleiner <mario.kleiner.de@gmail.com>
 
-[ Upstream commit b216a8e7908cd750550c0480cf7d2b3a37f06954 ]
+[ Upstream commit dec9de2ada523b344eb2428abfedf9d6cd0a0029 ]
 
-drm_lease_create takes ownership of leases. And leases will be released
-by drm_master_put.
+This fixes a problem found on the MacBookPro 2017 Retina panel:
 
-drm_master_put
-    ->drm_master_destroy
-            ->idr_destroy
+The panel reports 10 bpc color depth in its EDID, and the
+firmware chooses link settings at boot which support enough
+bandwidth for 10 bpc (324000 kbit/sec aka LINK_RATE_RBR2
+aka 0xc), but the DP_MAX_LINK_RATE dpcd register only reports
+2.7 Gbps (multiplier value 0xa) as possible, in direct
+contradiction of what the firmware successfully set up.
 
-So we needn't call idr_destroy again.
+This restricts the panel to 8 bpc, not providing the full
+color depth of the panel on Linux <= 5.5. Additionally, commit
+'4a8ca46bae8a ("drm/amd/display: Default max bpc to 16 for eDP")'
+introduced into Linux 5.6-rc1 will unclamp panel depth to
+its full 10 bpc, thereby requiring a eDP bandwidth for all
+modes that exceeds the bandwidth available and causes all modes
+to fail validation -> No modes for the laptop panel -> failure
+to set any mode -> Panel goes dark.
 
-Reported-and-tested-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/1584518030-4173-1-git-send-email-hqjagain@gmail.com
+This patch adds a quirk specific to the MBP 2017 15" Retina
+panel to override reported max link rate to the correct maximum
+of 0xc = LINK_RATE_RBR2 to fix the darkness and reduced display
+precision.
+
+Please apply for Linux 5.6+ to avoid regressing Apple MBP panel
+support.
+
+Signed-off-by: Mario Kleiner <mario.kleiner.de@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_lease.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_lease.c b/drivers/gpu/drm/drm_lease.c
-index b481cafdde280..825abe38201ac 100644
---- a/drivers/gpu/drm/drm_lease.c
-+++ b/drivers/gpu/drm/drm_lease.c
-@@ -542,10 +542,12 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 122249da03ab7..a4928854a3de5 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -2440,6 +2440,17 @@ static bool retrieve_link_cap(struct dc_link *link)
+ 		sink_id.ieee_device_id,
+ 		sizeof(sink_id.ieee_device_id));
  
- 	DRM_DEBUG_LEASE("Creating lease\n");
-+	/* lessee will take the ownership of leases */
- 	lessee = drm_lease_create(lessor, &leases);
- 
- 	if (IS_ERR(lessee)) {
- 		ret = PTR_ERR(lessee);
-+		idr_destroy(&leases);
- 		goto out_leases;
- 	}
- 
-@@ -580,7 +582,6 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
- 
- out_leases:
- 	put_unused_fd(fd);
--	idr_destroy(&leases);
- 
- 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
- 	return ret;
++	/* Quirk Apple MBP 2017 15" Retina panel: Wrong DP_MAX_LINK_RATE */
++	{
++		uint8_t str_mbp_2017[] = { 101, 68, 21, 101, 98, 97 };
++
++		if ((link->dpcd_caps.sink_dev_id == 0x0010fa) &&
++		    !memcmp(link->dpcd_caps.sink_dev_id_str, str_mbp_2017,
++			    sizeof(str_mbp_2017))) {
++			link->reported_link_cap.link_rate = 0x0c;
++		}
++	}
++
+ 	core_link_read_dpcd(
+ 		link,
+ 		DP_SINK_HW_REVISION_START,
 -- 
 2.20.1
 
