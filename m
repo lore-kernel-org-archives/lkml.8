@@ -2,163 +2,84 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C94C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ABA8C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:48:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74D0E206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:48:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585252095;
-	bh=b6FCW3WlxWo0SYwAFfFxDQ58Wf6zmyYpc8D2IBsWEnI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=0+MQKZQUo58BRjSiH59UBqtMySbSZmkBuQLo+3Kn8L6uit+xicV/IU79hTR8CyMbr
-	 4oUkh7Q2fiUmYX/+ROiwWCJs0d7gVnERddaGOS8Vc0KUDiumlnGDjJMM7y/2p5fNRi
-	 xOB5iZIwDB92Hk7UxnFwkyFtvFyX9CneEj4kRIcw=
+	by mail.kernel.org (Postfix) with ESMTP id 2C370206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:48:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="J0fGwC6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgCZTsO (ORCPT
+        id S1728635AbgCZTsn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:48:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 15:48:43 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:40083 "EHLO frisell.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726270AbgCZTsO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:48:14 -0400
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C2EA206E6;
-        Thu, 26 Mar 2020 19:48:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585252092;
-        bh=b6FCW3WlxWo0SYwAFfFxDQ58Wf6zmyYpc8D2IBsWEnI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=K1kqVHD4FztmdpVIGWhY64PJmspLsqkW0Yb2M0hRvb7pCoZB99w2U/rN06ORAoevq
-         +UpuIvl7wntDve6ws2txTDrE/fVyOZd9hxvd3XNh4WRWBOUDFWMrepgiHCUjfoZ1Na
-         a+gNhGdJ1R23BBScpzUtqGyduvcUAnqjgbP9h6iY=
-Date:   Thu, 26 Mar 2020 14:48:10 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Srinath Mannam <srinath.mannam@broadcom.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bharat Gooty <bharat.gooty@broadcom.com>
-Subject: Re: [PATCH 1/3] PCI: iproc: fix out of bound array access
-Message-ID: <20200326194810.GA11112@google.com>
+        id S1726067AbgCZTsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:48:42 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id b86917c3;
+        Thu, 26 Mar 2020 19:41:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=i1Ecy+SbHhe+7cdHbf2qrrbPYjU=; b=J0fGwC
+        6M53fw1muJ2q5jritKZo3X4sjyIs9VAdPO6ktC+dnet4/NH0/xkO74ccuT/uCmBH
+        ke012hoycOoUr5pRlyre24ICid0Dwid7xN5/gCwCrY9r7Yu+E6p8WPC+v6854gVJ
+        2Ong6qTb/A8JJ+aPa8F7eINbK3dXyZWzYZiJTfqQdCFwwzWwVf3pV0gkWaS8KH23
+        GnkCw+Y5LFA5fAvFmjdszXoItPpFXD/tdRJH9u68Lx5c/NCPRopsH2Dk5BLKqPc/
+        lD16Em8aprMX2AMc4uhbHCqf0uWHHnP9oy+ybPHsBaQil62RPNlTHFapjV2txqJ1
+        OLPg4KUPGugnF24g==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id d6d6ba66 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 26 Mar 2020 19:41:14 +0000 (UTC)
+Received: by mail-io1-f44.google.com with SMTP id q9so7434657iod.4;
+        Thu, 26 Mar 2020 12:48:39 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ2DJPP8nlqJbDxXTxoUNUgjxjRO0+aRn76GfRDWf8I1iJ9ejDMA
+        q1nUzCBhwsXKPhWzPLjAJIgLN7ME2tRHbEPUs30=
+X-Google-Smtp-Source: ADFU+vuKHsBA2DJck9vjtxQQlzpQrEEemrhzFUhdOt5x4tIfSg3P4dh72sKsIDBOeS2Lq1BWtwmgRF1TMvrMFxeMiTY=
+X-Received: by 2002:a6b:d012:: with SMTP id x18mr3320426ioa.80.1585252118168;
+ Thu, 26 Mar 2020 12:48:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585206447-1363-2-git-send-email-srinath.mannam@broadcom.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-16-masahiroy@kernel.org>
+ <CAKwvOdnG4F6+Ndfj+=BoV6OidJjWS_dYtjvyCEJ6nyxkSQc3rg@mail.gmail.com>
+In-Reply-To: <CAKwvOdnG4F6+Ndfj+=BoV6OidJjWS_dYtjvyCEJ6nyxkSQc3rg@mail.gmail.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 26 Mar 2020 13:48:27 -0600
+X-Gmail-Original-Message-ID: <CAHmME9p_N2cpMt20Gf1kWTRnj36nwrceFxEui2MU0kFu3WOdww@mail.gmail.com>
+Message-ID: <CAHmME9p_N2cpMt20Gf1kWTRnj36nwrceFxEui2MU0kFu3WOdww@mail.gmail.com>
+Subject: Re: [PATCH v2 15/16] x86: update AS_* macros to binutils >=2.23,
+ supporting ADX and AVX2
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change subject to match convention, e.g.,
+On Thu, Mar 26, 2020 at 11:55 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+> I see four checks for CONFIG_AS_AVX2 in:
+> net/netfilter/nft_set_pipapo.c
+> net/netfilter/nf_tables_api.c
+> net/netfilter/Makefile
+> net/netfilter/nft_set_pipapo_avx2.h
 
-  PCI: iproc: Fix out-of-bound array accesses
-
-On Thu, Mar 26, 2020 at 12:37:25PM +0530, Srinath Mannam wrote:
-> From: Bharat Gooty <bharat.gooty@broadcom.com>
-> 
-> Declare the full size array for all revisions of PAX register sets
-> to avoid potentially out of bound access of the register array
-> when they are being initialized in the 'iproc_pcie_rev_init'
-> function.
-
-s/the 'iproc_pcie_rev_init' function/iproc_pcie_rev_init()/
-
-It's outside the scope of this patch, but I'm not really a fan of the
-pcie->reg_offsets[] scheme this driver uses to deal with these
-differences.  There usually seems to be *something* that keeps the
-driver from referencing registers that don't exist, but it doesn't
-seem like the mechanism is very consistent or robust:
-
-  - IPROC_PCIE_LINK_STATUS is implemented by PAXB but not PAXC.
-    iproc_pcie_check_link() avoids using it if "ep_is_internal", which
-    is set for PAXC and PAXC_V2.  Not an obvious connection.
-
-  - IPROC_PCIE_CLK_CTRL is implemented for PAXB and PAXC_V1, but not
-    PAXC_V2.  iproc_pcie_perst_ctrl() avoids using it ep_is_internal",
-    so it *doesn't* use it for PAXC_V1, which does implement it.
-    Maybe a bug, maybe intentional; I can't tell.
-
-  - IPROC_PCIE_INTX_EN is only implemented by PAXB (not PAXC), but
-    AFAICT, we always call iproc_pcie_enable() and rely on
-    iproc_pcie_write_reg() silently drop the write to it on PAXC.
-
-  - IPROC_PCIE_OARR0 is implemented by PAXB and PAXB_V2 and used by
-    iproc_pcie_map_ranges(), which is called if "need_ob_cfg", which
-    is set if there's a "brcm,pcie-ob" DT property.  No clear
-    connection to PAXB.
-
-I think it would be more readable if we used a single variant
-identifier consistently, e.g., the "pcie->type" already used in
-iproc_pcie_msi_steer(), or maybe a set of variant-specific function
-pointers as pcie-qcom.c does.
-
-> Fixes: 06324ede76cdf ("PCI: iproc: Improve core register population")
-> Signed-off-by: Bharat Gooty <bharat.gooty@broadcom.com>
-> ---
->  drivers/pci/controller/pcie-iproc.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-iproc.c b/drivers/pci/controller/pcie-iproc.c
-> index 0a468c7..6972ca4 100644
-> --- a/drivers/pci/controller/pcie-iproc.c
-> +++ b/drivers/pci/controller/pcie-iproc.c
-> @@ -307,7 +307,7 @@ enum iproc_pcie_reg {
->  };
->  
->  /* iProc PCIe PAXB BCMA registers */
-> -static const u16 iproc_pcie_reg_paxb_bcma[] = {
-> +static const u16 iproc_pcie_reg_paxb_bcma[IPROC_PCIE_MAX_NUM_REG] = {
->  	[IPROC_PCIE_CLK_CTRL]		= 0x000,
->  	[IPROC_PCIE_CFG_IND_ADDR]	= 0x120,
->  	[IPROC_PCIE_CFG_IND_DATA]	= 0x124,
-> @@ -318,7 +318,7 @@ static const u16 iproc_pcie_reg_paxb_bcma[] = {
->  };
->  
->  /* iProc PCIe PAXB registers */
-> -static const u16 iproc_pcie_reg_paxb[] = {
-> +static const u16 iproc_pcie_reg_paxb[IPROC_PCIE_MAX_NUM_REG] = {
->  	[IPROC_PCIE_CLK_CTRL]		= 0x000,
->  	[IPROC_PCIE_CFG_IND_ADDR]	= 0x120,
->  	[IPROC_PCIE_CFG_IND_DATA]	= 0x124,
-> @@ -334,7 +334,7 @@ static const u16 iproc_pcie_reg_paxb[] = {
->  };
->  
->  /* iProc PCIe PAXB v2 registers */
-> -static const u16 iproc_pcie_reg_paxb_v2[] = {
-> +static const u16 iproc_pcie_reg_paxb_v2[IPROC_PCIE_MAX_NUM_REG] = {
->  	[IPROC_PCIE_CLK_CTRL]		= 0x000,
->  	[IPROC_PCIE_CFG_IND_ADDR]	= 0x120,
->  	[IPROC_PCIE_CFG_IND_DATA]	= 0x124,
-> @@ -363,7 +363,7 @@ static const u16 iproc_pcie_reg_paxb_v2[] = {
->  };
->  
->  /* iProc PCIe PAXC v1 registers */
-> -static const u16 iproc_pcie_reg_paxc[] = {
-> +static const u16 iproc_pcie_reg_paxc[IPROC_PCIE_MAX_NUM_REG] = {
->  	[IPROC_PCIE_CLK_CTRL]		= 0x000,
->  	[IPROC_PCIE_CFG_IND_ADDR]	= 0x1f0,
->  	[IPROC_PCIE_CFG_IND_DATA]	= 0x1f4,
-> @@ -372,7 +372,7 @@ static const u16 iproc_pcie_reg_paxc[] = {
->  };
->  
->  /* iProc PCIe PAXC v2 registers */
-> -static const u16 iproc_pcie_reg_paxc_v2[] = {
-> +static const u16 iproc_pcie_reg_paxc_v2[IPROC_PCIE_MAX_NUM_REG] = {
->  	[IPROC_PCIE_MSI_GIC_MODE]	= 0x050,
->  	[IPROC_PCIE_MSI_BASE_ADDR]	= 0x074,
->  	[IPROC_PCIE_MSI_WINDOW_SIZE]	= 0x078,
-> -- 
-> 2.7.4
-> 
+That code isn't in Linus' tree right now is it? Does it make sense for
+us to see which subsystem trees (crypto, netfilter, raid, etc) are
+submitted to 5.7? Or would you rather this patchset be rebased now on
+next?
