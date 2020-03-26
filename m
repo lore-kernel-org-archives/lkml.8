@@ -2,158 +2,107 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B44C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:15:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5C4EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6630220775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585253701;
-	bh=o1vMvq4OXn5LTOH+tAFfGSmQddiNm84t7AUPsdzQFuU=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=I6dt0arf5fdrtyIfhUc+nVs2d2cdDof3QwM2oQ0TWQND3l8hnb5BBWRmobgpfteoQ
-	 9dGt30jknNfzZLAgl7ggTCi/38K6mKm2lMm2gDhJWS9fUI9olHdp7N0hHMbdNSjtJF
-	 f7x+FvweOCWur5XOA3598JsRSULEPCg4bD9CYx44=
+	by mail.kernel.org (Postfix) with ESMTP id 6F6B22070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:15:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BH3eHgJr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgCZUPA (ORCPT
+        id S1728703AbgCZUPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:15:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38532 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726363AbgCZUPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:15:00 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DCF02070A;
-        Thu, 26 Mar 2020 20:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585253698;
-        bh=o1vMvq4OXn5LTOH+tAFfGSmQddiNm84t7AUPsdzQFuU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ChYsyZVKrOjooEmo6qcud+pXwOAddaMliBnjJ6d/jq56naAHn7gqJvMaXnFyzMqqD
-         M7+kvDPwVeV7QDs/5ja6ycvMAya+St2RxH8s8nW0is6EHpeOilp9xPeOXJF1lnmFmA
-         vI72t0ZThRt5T5zqJ+smP/VOjqsH4AQc+5N7rPC8=
-Subject: Re: [PATCH v8 kunit-next 0/4] kunit: add debugfs representation to
- show results
-To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        linux-kselftest@vger.kernel.org
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        shuah <shuah@kernel.org>
-References: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <2333d91d-2575-87ba-d8bb-60023cc19990@kernel.org>
-Date:   Thu, 26 Mar 2020 14:14:46 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 26 Mar 2020 16:15:09 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38521 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgCZUPJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 16:15:09 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f6so2400657wmj.3;
+        Thu, 26 Mar 2020 13:15:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iMrLYsKdnop151Jl/lpoDdMH/0Stp9QFCgC1isOqd2g=;
+        b=BH3eHgJr4v9eAS682F090rUPKFp6jWHjDKp1iZCr4XWNWYZmYqxrgc/77XMfldUu8w
+         1cvvoA0iu1Y4jI285nuptsep5xYUbDIfa84kRkaEEihPmkNwQ402A1IIvNJ2w7OkzGur
+         4Syf4QIs/cwbron/+8sLwyh0Shc0aIUgRu8dVzgljrNdU74JDBkXgVm80BO0TQ+FuWIT
+         HBIWflDNSJS2yz12o62rYNa1FkUcv66wmvqiez3qJfVnQ8gpx61M7tojfvQOKkb5WHDz
+         wOVEASxeqzvuXEy4tLFRFdJdZOe1k7x4IEmy9AHgRMr5XlqaN4N2z07ayU+2a7JPQfWl
+         IfMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iMrLYsKdnop151Jl/lpoDdMH/0Stp9QFCgC1isOqd2g=;
+        b=Hv+RpBmOhp6If2zAXEH+90SxtyUQSETQ0mfwo2sjYINOIaKiKzlw54tPhkMkgMy06B
+         n3k10x39IncxUA+XOqYRKYSFyGNBQkEByhb+Zy2FHr0B3y6Df5YOdtjQS6mAh2z9yiLd
+         rg111yZ6GIe8a8xKs5F1PklJbKY7PE7PzVKwmIiUEDqDVYDm/qMSYTCFC2y4b+cHFXLK
+         8C4RuF45R1oSallGxI7IIA5ItKvcNqiGI/yvZ8TcpQmo5c++tN95sNij4egLn9A91L2W
+         YZhm7fqoTAD0UtXWboFSKIqQjjE1hAhPePaLBeo4vBcu3xy5l4mm//NPpgxYj0bL42s/
+         FhXg==
+X-Gm-Message-State: ANhLgQ0nVEbOeJafScw7N/hxGUfES+vUHyiVzcdBGosTY4Zajee+Jo4j
+        QpBPAs2kyWByQS1wQm9BubblU/UP
+X-Google-Smtp-Source: ADFU+vvmnBc4o0w0B+0U/RgBi4ffTkBWgnkzSv9RJIc97VJyRxjjvB8w04vUygEFbJsf/YYtoYcTOw==
+X-Received: by 2002:adf:dd01:: with SMTP id a1mr12017594wrm.153.1585253706802;
+        Thu, 26 Mar 2020 13:15:06 -0700 (PDT)
+Received: from kwango.redhat.com (ip-94-112-129-237.net.upcbroadband.cz. [94.112.129.237])
+        by smtp.gmail.com with ESMTPSA id h18sm4714535wmm.34.2020.03.26.13.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 13:15:05 -0700 (PDT)
+From:   Ilya Dryomov <idryomov@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] Ceph fixes for 5.6-rc8
+Date:   Thu, 26 Mar 2020 21:14:53 +0100
+Message-Id: <20200326201453.7227-1-idryomov@gmail.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-In-Reply-To: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 8:25 AM, Alan Maguire wrote:
-> When kunit tests are run on native (i.e. non-UML) environments, the results
-> of test execution are often intermixed with dmesg output.  This patch
-> series attempts to solve this by providing a debugfs representation
-> of the results of the last test run, available as
-> 
-> /sys/kernel/debug/kunit/<testsuite>/results
-> 
-> Changes since v7:
-> 
-> - renamed KUNIT_INDENT[2] to KUNIT_SUBTEST_INDENT, KUNIT_SUBSUBTEST_INDENT
->    and added more description to their definitions to clarify why they
->    are defined as they are (Shuah)
-> - defined KUNIT_SUBSUBTEST_INDENT directly as 8 spaces to avoid
->    checkpatch error (Shuah)
-> 
-> Changes since v6:
-> 
-> - fixed regexp parsing in kunit_parser.py to ensure test results are read
->    successfully with 4-space indentation (Brendan, patch 3)
-> 
-> Changes since v5:
-> 
-> - replaced undefined behaviour use of snprintf(buf, ..., buf) in
->    kunit_log() with a function to append string to existing log
->    (Frank, patch 1)
-> - added clarification on log size limitations to documentation
->    (Frank, patch 4)
-> 
-> Changes since v4:
-> 
-> - added suite-level log expectations to kunit log test (Brendan, patch 2)
-> - added log expectations (of it being NULL) for case where
->    CONFIG_KUNIT_DEBUGFS=n to kunit log test (patch 2)
-> - added patch 3 which replaces subtest tab indentation with 4 space
->    indentation as per TAP 14 spec (Frank, patch 3)
-> 
-> Changes since v3:
-> 
-> - added CONFIG_KUNIT_DEBUGFS to support conditional compilation of debugfs
->    representation, including string logging (Frank, patch 1)
-> - removed unneeded NULL check for test_case in
->    kunit_suite_for_each_test_case() (Frank, patch 1)
-> - added kunit log test to verify logging multiple strings works
->    (Frank, patch 2)
-> - rephrased description of results file (Frank, patch 3)
-> 
-> Changes since v2:
-> 
-> - updated kunit_status2str() to kunit_status_to_string() and made it
->    static inline in include/kunit/test.h (Brendan)
-> - added log string to struct kunit_suite and kunit_case, with log
->    pointer in struct kunit pointing at the case log.  This allows us
->    to collect kunit_[err|info|warning]() messages at the same time
->    as we printk() them.  This solves for the most part the sharing
->    of log messages between test execution and debugfs since we
->    just print the suite log (which contains the test suite preamble)
->    and the individual test logs.  The only exception is the suite-level
->    status, which we cannot store in the suite log as it would mean
->    we'd print the suite and its status prior to the suite's results.
->    (Brendan, patch 1)
-> - dropped debugfs-based kunit run patch for now so as not to cause
->    problems with tests currently under development (Brendan)
-> - fixed doc issues with code block (Brendan, patch 3)
-> 
-> Changes since v1:
->   - trimmed unneeded include files in lib/kunit/debugfs.c (Greg)
->   - renamed global debugfs functions to be prefixed with kunit_ (Greg)
->   - removed error checking for debugfs operations (Greg)
-> 
-> Alan Maguire (4):
->    kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
->    kunit: add log test
->    kunit: subtests should be indented 4 spaces according to TAP
->    kunit: update documentation to describe debugfs representation
-> 
->   Documentation/dev-tools/kunit/usage.rst |  14 +++
->   include/kunit/test.h                    |  63 ++++++++++++--
->   lib/kunit/Kconfig                       |   8 ++
->   lib/kunit/Makefile                      |   4 +
->   lib/kunit/assert.c                      |  79 ++++++++---------
->   lib/kunit/debugfs.c                     | 116 +++++++++++++++++++++++++
->   lib/kunit/debugfs.h                     |  30 +++++++
->   lib/kunit/kunit-test.c                  |  44 +++++++++-
->   lib/kunit/test.c                        | 148 +++++++++++++++++++++++++-------
->   tools/testing/kunit/kunit_parser.py     |  10 +--
->   10 files changed, 430 insertions(+), 86 deletions(-)
->   create mode 100644 lib/kunit/debugfs.c
->   create mode 100644 lib/kunit/debugfs.h
-> 
+Hi Linus,
 
-Thanks. Applied to linux-kselftest kunit for 5.7-rc1.
+The following changes since commit 16fbf79b0f83bc752cee8589279f1ebfe57b3b6e:
 
-thanks,
--- Shuah
+  Linux 5.6-rc7 (2020-03-22 18:31:56 -0700)
+
+are available in the Git repository at:
+
+  https://github.com/ceph/ceph-client.git tags/ceph-for-5.6-rc8
+
+for you to fetch changes up to c8d6ee01449cd0d2f30410681cccb616a88f50b1:
+
+  ceph: fix memory leak in ceph_cleanup_snapid_map() (2020-03-23 13:07:08 +0100)
+
+----------------------------------------------------------------
+A patch for a rather old regression in fullness handling and two memory
+leak fixes, marked for stable.
+
+----------------------------------------------------------------
+Ilya Dryomov (2):
+      ceph: check POOL_FLAG_FULL/NEARFULL in addition to OSDMAP_FULL/NEARFULL
+      libceph: fix alloc_msg_with_page_vector() memory leaks
+
+Luis Henriques (1):
+      ceph: fix memory leak in ceph_cleanup_snapid_map()
+
+ fs/ceph/file.c                 | 14 +++++++++++---
+ fs/ceph/snap.c                 |  1 +
+ include/linux/ceph/messenger.h |  7 ++++---
+ include/linux/ceph/osdmap.h    |  4 ++++
+ include/linux/ceph/rados.h     |  6 ++++--
+ net/ceph/messenger.c           |  9 +++++++--
+ net/ceph/osd_client.c          | 14 +++-----------
+ net/ceph/osdmap.c              |  9 +++++++++
+ 8 files changed, 43 insertions(+), 21 deletions(-)
