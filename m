@@ -2,171 +2,131 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA93BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB36C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:01:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9945C20772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585187893;
-	bh=TMOO7VsQlxZk4nfg/cWiZR8CxMNUJ70TyQJHVereHMY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YwsE02PF/h/l7TExCY6Mqu1sZpx2rIj74AdSlHutAeV+VnArXNkLeM6UTOPMaTrFP
-	 4QTZjva3YX4LfZsjW+RiJVKVVcx8WH68OdMVNA1MFY74A727sKCFJ/ySpjR2ujA1Vg
-	 Fv6aGwd8zQhF17twgO/RzaR8hUlkc0jHPsKWLrnI=
+	by mail.kernel.org (Postfix) with ESMTP id 012F72073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:01:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fl4C1DBn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbgCZB6M (ORCPT
+        id S1727656AbgCZCBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:58:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727585AbgCZB6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:58:12 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 062C020714;
-        Thu, 26 Mar 2020 01:58:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585187891;
-        bh=TMOO7VsQlxZk4nfg/cWiZR8CxMNUJ70TyQJHVereHMY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DAnV8aQLc3WN+j9ahySa0ijX+ycikZJg70i2pxw7CwnZEfGnosLL9nu0Fc48wbipH
-         /hkYkTFh+5ueUo0ZMrH6yMPziUJsmUfbHaZDzaTgJ8FIImWWJGWx/akPSMtwrwDAec
-         WNv9rcfHwy9VZN/IChz9u1eTpKjptOiFCABeoOz0=
-Date:   Thu, 26 Mar 2020 10:58:05 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 05/13] perf/x86: Add perf text poke events for
- kprobes
-Message-Id: <20200326105805.0723cd10325ad301de061743@kernel.org>
-In-Reply-To: <20200324122150.GN20696@hirez.programming.kicks-ass.net>
-References: <20200304090633.420-1-adrian.hunter@intel.com>
-        <20200304090633.420-6-adrian.hunter@intel.com>
-        <20200324122150.GN20696@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 25 Mar 2020 22:01:13 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44156 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCZCBM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 22:01:12 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x16so4050097qts.11;
+        Wed, 25 Mar 2020 19:01:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nfDBqnoDk7+WrJd1+uPYSH2KCPjyEuxa89DWXm3bmH8=;
+        b=Fl4C1DBn+fUTzfbu/f+eoGiCyfJx7FwO92+Vxi31fr5sNtrsnlaD3iZfvr6LGLooEk
+         +01RoWONUrHOa6G/m6pERIO0iRY3JcKhGLYVCTOVHSyEeyE1G95Tkz0bWx0zEYFwdGT6
+         hnv+wmjW5dSDiN+3DPP2SiUpMu4UE2CckumGh9+LMZ6Sq69VedNJNE+zEPZLS3LhPot7
+         YTpo5oUoshGNjWRXI7sr6Y8kCmKU4Q43fEHlDfmpi5p/fvOrEbjjZq/PopfHpF7XgPER
+         SXcQ7zQi1sRzTwO2D4Tc/Sf+P1qHCI6HFnlB4gzDPTDZ0WXkmmXqwZSbEYWj1vHlVtMh
+         E4lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nfDBqnoDk7+WrJd1+uPYSH2KCPjyEuxa89DWXm3bmH8=;
+        b=BEKoWzuhqT7i/6ZF13DDa9roCTD5440fvWN0Y0HEpcD16AEcU7oWsNXUMymN34wO/G
+         6uM01Ha4vvhWvQHt7QePh74yg7IEuz28nFYf8yqxpAxhuD62C/QtLXS9WxybD8o6oCCv
+         LxTWUPd8U1AyRg+hJ99/DCRV/lA6zOXsqQDx06QlKfyG6sIv5m6ptnzwD+kOEv4M0nNQ
+         vx19MoYN0t8SOYT2r/sxZU6Xy2389VPDcYyGov4W5Zk5fmkO8XdE75QQHnEcnV4Xe4IA
+         4jlbxQQx3gvCV9g0YjvUrUqzixKFjp/TFbf+mpQwIHsXPYh6YtdkPekmKBdDHpltby4+
+         pjew==
+X-Gm-Message-State: ANhLgQ3joE2woMe5/uQURhzhjvrpf8hKWYVc4tseiE19qJiX+xR3X8QF
+        QvqtpCBcS+7Uu43sORvICCt3cDqUzJGo2ztHihQ=
+X-Google-Smtp-Source: ADFU+vso0K1cvL1q9SrpEdWIqGIFrHL4xgAECmYR7YSLtyGx3b7KBjOhL/42EFez99LDEYomrSf1BZZPJwg90uVjIcw=
+X-Received: by 2002:ac8:3f62:: with SMTP id w31mr5917641qtk.171.1585188071656;
+ Wed, 25 Mar 2020 19:01:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200325152629.6904-1-kpsingh@chromium.org> <20200325152629.6904-8-kpsingh@chromium.org>
+In-Reply-To: <20200325152629.6904-8-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 25 Mar 2020 19:01:00 -0700
+Message-ID: <CAEf4BzbzfbTT9x3tfLrqhYgozcvxvHvKSVkvyuNqji=aNgvmZg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v6 7/8] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 24 Mar 2020 13:21:50 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, Mar 25, 2020 at 8:27 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> * Load/attach a BPF program that hooks to file_mprotect (int)
+>   and bprm_committed_creds (void).
+> * Perform an action that triggers the hook.
+> * Verify if the audit event was received using the shared global
+>   variables for the process executed.
+> * Verify if the mprotect returns a -EPERM.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> ---
+>  tools/testing/selftests/bpf/config            |  2 +
+>  .../selftests/bpf/prog_tests/test_lsm.c       | 84 +++++++++++++++++++
+>  tools/testing/selftests/bpf/progs/lsm.c       | 48 +++++++++++
+>  3 files changed, 134 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/test_lsm.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/lsm.c
+>
 
-> We optimize only after having already installed a regular probe, that
-> is, what we're actually doing here is replacing INT3 with a JMP.d32. But
-> the above will make it appear as if we're replacing the original text
-> with a JMP.d32. Which doesn't make sense, since we've already poked an
-> INT3 there and that poke will have had a corresponding
-> perf_event_text_poke(), right? (except you didn't, see below)
-> 
-> At this point we'll already have constructed the optprobe trampoline,
-> which contains however much of the original instruction (in whole) as
-> will be overwritten by our 5 byte JMP.d32. And IIUC, we'll have a
-> perf_event_text_poke() event for the whole of that already -- except I
-> can't find that in the patches (again, see below).
+[...]
 
-Thanks Peter to point it out.
+> +
+> +int exec_cmd(int *monitored_pid)
+> +{
+> +       int child_pid;
+> +
+> +       child_pid = fork();
+> +       if (child_pid == 0) {
+> +               *monitored_pid = getpid();
+> +               execvp(CMD_ARGS[0], CMD_ARGS);
+> +               return -EINVAL;
+> +       } else if (child_pid > 0)
 
-> 
-> > @@ -454,9 +463,16 @@ void arch_optimize_kprobes(struct list_head *oplist)
-> >   */
-> >  void arch_unoptimize_kprobe(struct optimized_kprobe *op)
-> >  {
-> > +	u8 old[POKE_MAX_OPCODE_SIZE];
-> > +	u8 new[POKE_MAX_OPCODE_SIZE] = { op->kp.opcode, };
-> > +	size_t len = INT3_INSN_SIZE + DISP32_SIZE;
-> > +
-> > +	memcpy(old, op->kp.addr, len);
-> >  	arch_arm_kprobe(&op->kp);
-> >  	text_poke(op->kp.addr + INT3_INSN_SIZE,
-> >  		  op->optinsn.copied_insn, DISP32_SIZE);
-> > +	memcpy(new + INT3_INSN_SIZE, op->optinsn.copied_insn, DISP32_SIZE);
-> 
-> And then this is 'wrong' too. You've not written the original
-> instruction, you've just written an INT3.
-> 
-> > +	perf_event_text_poke(op->kp.addr, old, len, new, len);
-> >  	text_poke_sync();
-> >  }
-> 
-> 
-> So how about something like the below, with it you'll get 6 text_poke
-> events:
-> 
-> 1:  old0 -> INT3
-> 
->   // kprobe active
-> 
-> 2:  NULL -> optprobe_trampoline
-> 3:  INT3,old1,old2,old3,old4 -> JMP32
-> 
->   // optprobe active
-> 
-> 4:  JMP32 -> INT3,old1,old2,old3,old4
-> 5:  optprobe_trampoline -> NULL
-> 
->   // kprobe active
-> 
-> 6:  INT3 -> old0
-> 
-> 
-> 
-> Masami, did I get this all right?
+This test is part of test_progs, so let's be a good citizen and wait
+for your specific child. I'd rather not hunt for elusive bugs later,
+so please use waitpid() instead.
 
-Yes, you understand correctly. And there is also boosted kprobe
-which runs probe.ainsn.insn directly and jump back to old place.
-I guess it will also disturb Intel PT.
+Otherwise looks good and clean, thanks!
 
-0:  NULL -> probe.ainsn.insn (if ainsn.boostable && !kp.post_handler)
+> +               return wait(NULL);
+> +
+> +       return -EINVAL;
+> +}
+> +
 
-> 1:  old0 -> INT3
-> 
-  // boosted kprobe active
-> 
-> 2:  NULL -> optprobe_trampoline
-> 3:  INT3,old1,old2,old3,old4 -> JMP32
-> 
->   // optprobe active
-> 
-> 4:  JMP32 -> INT3,old1,old2,old3,old4
-
-   // optprobe disabled and kprobe active (this sometimes goes back to 3)
-
-> 5:  optprobe_trampoline -> NULL
-> 
-  // boosted kprobe active
-> 
-> 6:  INT3 -> old0
-
-7:  probe.ainsn.insn -> NULL (if ainsn.boostable && !kp.post_handler)
-
-So you'll get 8 events in max.
-
-Adrian, would you also need to trace the buffer which is used for
-single stepping? If so, as you did, we need to trace p->ainsn.insn
-always.
-
-Thank you,
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+[...]
