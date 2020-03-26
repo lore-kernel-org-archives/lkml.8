@@ -2,133 +2,197 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A81C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D4C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00A920719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D46820719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585187097;
+	bh=8LbJ1rOzX1zYoBejYpdC7F7zcKGB/JvH0asXD8eYU9E=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
+	b=YjQUX6uD/dzI5YcyDNTIVL59m3hjFD6OXfSnSeSZNar6uGdJLoT9djO/NUNWank+c
+	 NAW6SouwP3H2AMkPBZOdqfk0Mjf/VqE1864nRj/ldiFF+Ss6RlkyboE5h3gekOd2Xt
+	 pxsfaioCn0Acsxqsfq627nVYl08SA0CtHGBtEaYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbgCZBiq (ORCPT
+        id S1727652AbgCZBo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:38:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:42384 "EHLO mga17.intel.com"
+        Wed, 25 Mar 2020 21:44:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgCZBiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:38:46 -0400
-IronPort-SDR: hVYXu+B8pvcrPbErHIAb/hpmYS5oT0SN5pQLUHIeVyxuXmOJColcyQvTejsHa6HDKdBxfvNaIo
- 7HekWrORtsJA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 18:38:45 -0700
-IronPort-SDR: 7DWvfRxUQreA/Q190eIf2b298X/vwaLYWTHwRHmUZRBTDuK3nyIC21DKuWhuVc0/TfSBBsvIg2
- Kaze8U5kT1PQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
-   d="scan'208";a="393813500"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.99]) ([10.249.169.99])
-  by orsmga004.jf.intel.com with ESMTP; 25 Mar 2020 18:38:41 -0700
-Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
- <20200324151859.31068-9-xiaoyao.li@intel.com>
- <87eethz2p6.fsf@nanos.tec.linutronix.de>
- <6d3e7e03-d304-8ec0-b00d-050b1c12140d@intel.com>
- <87369xyzvk.fsf@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <9a9c0817-9ebb-524f-44df-176a15ea3fca@intel.com>
-Date:   Thu, 26 Mar 2020 09:38:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1727561AbgCZBoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 21:44:55 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1027020714;
+        Thu, 26 Mar 2020 01:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585187094;
+        bh=8LbJ1rOzX1zYoBejYpdC7F7zcKGB/JvH0asXD8eYU9E=;
+        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+        b=oEs++OaVBTcEmslMsPj+RGYKdfCXHQLyvbzyViFcH0FvbwO86DXYq9nSqLVoiaSmz
+         kb/33HUX8VTBtuxqpFrP/iAt11KpyvSCYr8VQ9qIXcG1uK3odHz6cjL7t7AThk7OVq
+         GDwsJgi7Nl64caeYnTF2AUaC1UX1J5j+SB+Mulrc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <87369xyzvk.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200325171109.cohnsw3s57ckaqud@ubsrv2.baikal.int>
+References: <20200306130231.05BBC8030795@mail.baikalelectronics.ru> <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru> <20200323100109.k2gckdyneyzo23fb@gilmour.lan> <20200323135017.4vi5nwam2rlpepgn@ubsrv2.baikal.int> <20200324101243.GG1922688@smile.fi.intel.com> <20200325171109.cohnsw3s57ckaqud@ubsrv2.baikal.int>
+Subject: Re: [PATCH v2] serial: 8250_dw: Fix common clocks usage race condition
+From:   Stephen Boyd <sboyd@kernel.org>
+Cc:     Maxime Ripard <maxime@cerno.tech>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
+        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Chen-Yu Tsai <wens@csie.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Catalin Marina s <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-clk@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Semin <Sergey.Semin@baikalelectronics.ru>
+Date:   Wed, 25 Mar 2020 18:44:53 -0700
+Message-ID: <158518709322.125146.10069235641747677647@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/2020 9:41 AM, Thomas Gleixner wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->> On 3/25/2020 8:40 AM, Thomas Gleixner wrote:
->>>>    		if (!split_lock_detect_on() ||
->>>> +		    guest_cpu_split_lock_detect_on(vmx) ||
->>>>    		    guest_cpu_alignment_check_enabled(vcpu)) {
->>>
->>> If the host has split lock detection disabled then how is the guest
->>> supposed to have it enabled in the first place?
->>
->> So we need to reach an agreement on whether we need a state that host
->> turns it off but feature is available to be exposed to guest.
-> 
-> There is a very simple agreement:
-> 
->    If the host turns it off, then it is not available at all
-> 
->    If the host sets 'warn' then this applies to everything
-> 
->    If the host sets 'fatal' then this applies to everything
-> 
-> Make it simple and consistent.
+Quoting Sergey Semin (2020-03-25 10:11:09)
+> On Tue, Mar 24, 2020 at 12:12:43PM +0200, Andy Shevchenko wrote:
+> > On Mon, Mar 23, 2020 at 04:50:17PM +0300, Sergey Semin wrote:
+> > > On Mon, Mar 23, 2020 at 11:01:09AM +0100, Maxime Ripard wrote:
+> >=20
+> > > > clk_rate_exclusive_get is pretty intrusive, and due to the usual
+> > > > topology of clock trees, this will lock down 3-4 parent clocks to
+> > > > their current rate as well. In the Allwinner SoCs case for example,
+> > > > this will lock down the same PLL than the one used by the CPU,
+> > > > preventing cpufreq from running.
+> > >=20
+> > > Speaking about weak design of a SoC' clock tree. Our problems are not=
+hing
+> > > with respect to the Allwinner SoC, in which case of changing the
+> > > CPU-frequency may cause the UART glitches subsequently causing data
+> > > transfer artefacts.) Moreover as I can see the same issue may raise f=
+or
+> > > I2C, QSPI, PWM devices there.
+> > >=20
+> > > Anyway your concern does make sense.
+> > >=20
+> > > > However, the 8250 has a pretty wide range of dividers and can adapt=
+ to
+> > > > any reasonable parent clock rate, so we don't really need to lock t=
+he
+> > > > rate either, we can simply react to a parent clock rate change using
+> > > > the clock notifiers, just like the SiFive UART is doing.
+> > > >=20
+> > > > I tried to do that, but given that I don't really have an extensive
+> > > > knowledge of the 8250, I couldn't find a way to stop the TX of chars
+> > > > while we change the clock rate. I'm not sure if this is a big deal =
+or
+> > > > not, the SiFive UART doesn't seem to care.
+> > >=20
+> > > Yes, your solution is also possible, but even in case of stopping Tx/=
+Rx it
+> > > doesn't lack drawbacks. First of all AFAIK there is no easy way to ju=
+st
+> > > pause the transfers. We'd have to first wait for the current transfers
+> > > to be completed, then somehow lock the port usage (both Tx and Rx
+> > > traffic), permit the reference clock rate change, accordingly adjust =
+the
+> > > UART clock divider, and finally unlock the port. While if we don't mi=
+nd
+> > > to occasionally have UART data glitches, we can just adjust the UART =
+ref
+> > > divider synchronously with ref clock rate change as you and SiFive UA=
+RT
+> > > driver suggest.
+> > >=20
+> > > So we are now at a zugzwang - a fork to three not that good solutions:
+> > > 1) lock the whole clock branch and provide a glitchless interfaces. B=
+ut
+> > > by doing so we may (in case of Allwinner SoCs we will) lockup some ve=
+ry
+> > > important functionality like CPU-frequency change while the UART port=
+ is
+> > > started up. In this case we won't have the data glitches.
+> > > 2) just adjust the UART clock divider in case of reference clock rate
+> > > change (use the SiFive UART driver approach). In this case we may hav=
+e the
+> > > data corruption.
+> > > 3) somehow implement the algo: wait for the transfers to be completed,
+> > > lock UART interface (it's possible for Tx, but for Rx in case of no h=
+andshake
+> > > enabled it's simply impossible), permit the ref clock rate change,
+> > > adjust the UART divider, then unlock the UART interface. In this case=
+ the data
+> > > glitches still may happen (if no modem control is available or
+> > > handshakes are disabled).
+> > >=20
+> > > As for the cases of Baikal-T1 UARTs the first solutions is the most s=
+uitable.
+> > > We don't lock anything valuable, since a base PLL output isn't direct=
+ly
+> > > connected to any device and it's rate once setup isn't changed during=
+ the
+> > > system running. On the other hand I don't mind to implement the second
+> > > solution, even though it's prone to data glitches. Regarding the solu=
+tion
+> > > 3) I won't even try. It's too complicated, I don't have time and
+> > > test-infrastructure for this.
+> > >=20
+> > > So Andy what do you think?
+> >=20
+> > From Intel HW perspective the first two are okay, but since Maxime is a=
+gainst
+> > first, you have the only option from your list. Perhaps somebody may gi=
+ve
+> > option 4) here...
+> >=20
+>=20
+> Ok then. I'll implement the option 2) in v3 if noone gives any alternativ=
+es
+> before that.
+>=20
 
-OK. you are the boss.
+Sorry, I haven't really read the thread but I'll quickly reply with
+this.
 
->>>> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
->>>> +	    guest_cpu_split_lock_detect_on(vmx)) {
->>>> +		if (test_thread_flag(TIF_SLD))
->>>> +			sld_turn_back_on();
->>>
->>> This is completely inconsistent behaviour. The only way that TIF_SLD is
->>> set is when the host has sld_state == sld_warn and the guest triggered
->>> a split lock #AC.
->>
->> Can you image the case that both host and guest set sld_state == sld_warn.
->>
->> 1. There is guest userspace thread causing split lock.
->> 2. It sets TIF_SLD for the thread in guest, and clears SLD bit to re-
->> execute the instruction in guest.
->> 3. Then it still causes #AC since hardware SLD is not cleared. In host
->> kvm, we call handle_user_split_lock() that sets TIF_SLD for this VMM
->> thread, and clears hardware SLD bit. Then it enters guest and re-execute
->> the instruction.
->> 4. In guest, it schedules to another thread without TIF_SLD being set.
->> it sets the SLD bit to detect the split lock for this thread. So for
->> this purpose, we need to turn sld back on for the VMM thread, otherwise
->> this guest vcpu cannot catch split lock any more.
-> 
-> If you really want to address that scenario, then why are you needing
-> any of those completely backwards interfaces at all?
-> 
-> Just because your KVM exception trap uses the host handling function
-> which sets TIF_SLD?
->   
+Maybe option 4 is to make the uart driver a clk provider that consumes
+the single reference clk like it is already doing today? Then when the
+rate changes up above for the clk implemented here the clk set rate op
+for the newly implemented clk can go poke the uart registers to maintain
+the baud or whatever?
 
-Yes. just because KVM use the host handling function.
-
-If you disallow me to touch codes out of kvm. It can be achieved with 
-something like in v2:
-https://lore.kernel.org/kvm/20200203151608.28053-1-xiaoyao.li@intel.com/
-
-Obviously re-use TIF_SLD flag to automatically switch MSR_TEST_CTRL.SLD 
-bit when switch to/from vcpu thread is better.
-
-And to virtualize SLD feature as full as possible for guest, we have to 
-implement the backwards interface. If you really don't want that 
-interface, we have to write code directly in kvm to modify TIF_SLD flag 
-and MSR_TEST_CTRL.SLD bit.
-
+That is close to how the notifier design would work, but it avoids
+keeping the notifiers around given that the notifiers are not preferred.
+It is also closer to reality, the uart has a divider or mux internally
+that we don't model as a clk, but we could just as easily model as such.
