@@ -2,133 +2,74 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67610C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:57:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6478EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42129206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37E9D206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:58:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L2p42bnG"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="ZstCYDJ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgCZN5S (ORCPT
+        id S1727795AbgCZN6s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:57:18 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45511 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727612AbgCZN5R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:57:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585231035;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=uTy9XzunUpSqneSBWA8G2EaCSTiTKP7tCVW6EiON0Oc=;
-        b=L2p42bnGJWVElHNvl6AAemYAHywKfbRHCaq07e9DxhgvZame76U+t6/pevNU7Xdrh/8B4+
-        7l4Zt2cd2a/SOkeWC1Bn3mlgoLnvw7xCvDQktGva7699/OCeTuwQxF/gR7cvicSUZIYbuc
-        LxrYyG/ssooXVqzzLqKsCeFrlB3Jc2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-154-aLmbfdiSP4iuwWm6Alh4Rw-1; Thu, 26 Mar 2020 09:57:12 -0400
-X-MC-Unique: aLmbfdiSP4iuwWm6Alh4Rw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82830800D50;
-        Thu, 26 Mar 2020 13:57:09 +0000 (UTC)
-Received: from [10.72.12.19] (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CFE2E60BF3;
-        Thu, 26 Mar 2020 13:56:49 +0000 (UTC)
-Subject: Re: [PATCH V8 9/9] virtio: Intel IFC VF driver for VDPA
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
-        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
-        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
-        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
-        saugatm@xilinx.com, vmireyno@marvell.com,
-        Bie Tiwei <tiwei.bie@intel.com>
-References: <20200325082711.1107-1-jasowang@redhat.com>
- <20200325082711.1107-10-jasowang@redhat.com>
- <20200325123410.GX13183@mellanox.com>
- <ed04692d-236c-2eee-4429-6ef4d5d165fe@redhat.com>
- <20200326121705.GJ13183@mellanox.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <a03edad7-e1c9-ae2f-5843-d63907289a3f@redhat.com>
-Date:   Thu, 26 Mar 2020 21:56:48 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200326121705.GJ13183@mellanox.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+        Thu, 26 Mar 2020 09:58:48 -0400
+Received: from mout01.posteo.de ([185.67.36.65]:60713 "EHLO mout01.posteo.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgCZN6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 09:58:47 -0400
+Received: from submission (posteo.de [89.146.220.130]) 
+        by mout01.posteo.de (Postfix) with ESMTPS id 2DB3B160066
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:58:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=posteo.de; s=2017;
+        t=1585231126; bh=XyEa0WG0QHRf+iVZSq+e8NoSnQfqAo4Q8SUDQl1ZTRg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ZstCYDJ3+WokglLD2lK42lskQdZUKZjGChX9klhY/WFG5uEDRwHOt+gSc1qTrrgtR
+         F7pTV5nn+/UHUK2PvKkLppOuR9IXU+5UnBCm+e+pkaoxCDE8+FnbPAtkCrTfcLobqq
+         sjsL+BjwVO5mXBchCRZGBN6p36Vvu2OPlLuIlW32Cyme0xN+3u1QG/mi6QEBCzOwG5
+         9vXMSRkNtgxIgIkqa3FFBLnTjekZmcl/g/Ki2VCTc8BF8ZM/q9pyedjiThFVvXbJQT
+         coH3E6q5L0Iw7APmgky1Z42hpLQRlgpM4127PmP2zZcZDhN/y/kDHcZ1rb0jpYx6Fk
+         kbmCiycP10CRw==
+Received: from customer (localhost [127.0.0.1])
+        by submission (posteo.de) with ESMTPSA id 48p65x5G97z6tmL;
+        Thu, 26 Mar 2020 14:58:45 +0100 (CET)
+From:   Benjamin Thiel <b.thiel@posteo.de>
+To:     X86 ML <x86@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Benjamin Thiel <b.thiel@posteo.de>
+Subject: [PATCH] x86/mm: Mark setup_emu2phys_nid() static
+Date:   Thu, 26 Mar 2020 14:58:42 +0100
+Message-Id: <20200326135842.3875-1-b.thiel@posteo.de>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Make function static because it is used only in this file.
 
-On 2020/3/26 =E4=B8=8B=E5=8D=888:17, Jason Gunthorpe wrote:
-> On Thu, Mar 26, 2020 at 01:50:53PM +0800, Jason Wang wrote:
->
->>>> +	adapter->vdpa.dma_dev =3D dev;
->>>> +	ret =3D vdpa_register_device(&adapter->vdpa);
->>>> +	if (ret) {
->>>> +		IFCVF_ERR(adapter->dev, "Failed to register ifcvf to vdpa bus");
->>>> +		goto err_msix;
->>>> +	}
->>>> +
->>>> +	return 0;
->>>> +
->>>> +err_msix:
->>>> +	put_device(&adapter->vdpa.dev);
->>>> +	return ret;
->>>> +err_alloc:
->>>> +	pci_free_irq_vectors(pdev);
->>>> +err_vectors:
->>>> +	pci_release_regions(pdev);
->>>> +err_regions:
->>>> +	pci_disable_device(pdev);
->>>> +err_enable:
->>>> +	return ret;
->>>> +}
->>> I personally don't like seeing goto unwinds with multiple returns, an=
-d
->>> here I think it is actually a tiny bug.
->>>
->>> All touches to the PCI device must stop before the driver core
->>> remove() returns - so these pci function cannot be in the kref put
->>> release function anyhow.
->>
->> I'm not sure I get here. IFCVF held refcnt of its PCI parent, so it lo=
-oks to
->> me it's safe to free PCI resources in vDPA free callback?
-> The refcnt doesn't prevent the driver core from re-binding the
-> pci_device to another driver. Then the refcount put would do a
-> pci_disable_device() after another driver has started
->
-> For this reason all touches to a struct pci_device must stop before
-> remove returns.
->
-> Jason
+Signed-off-by: Benjamin Thiel <b.thiel@posteo.de>
+---
+ arch/x86/mm/numa_emulation.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Ok, will send a new version shortly.
-
-Thanks
-
-
->
+diff --git a/arch/x86/mm/numa_emulation.c b/arch/x86/mm/numa_emulation.c
+index 7f1d2034df1e..c5174b4e318b 100644
+--- a/arch/x86/mm/numa_emulation.c
++++ b/arch/x86/mm/numa_emulation.c
+@@ -324,7 +324,7 @@ static int __init split_nodes_size_interleave(struct numa_meminfo *ei,
+ 			0, NULL, NUMA_NO_NODE);
+ }
+ 
+-int __init setup_emu2phys_nid(int *dfl_phys_nid)
++static int __init setup_emu2phys_nid(int *dfl_phys_nid)
+ {
+ 	int i, max_emu_nid = 0;
+ 
+-- 
+2.17.1
 
