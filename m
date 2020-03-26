@@ -2,121 +2,118 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40489C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3674C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:52:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19BDE20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875C320714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:52:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAaBD/0C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbgCZBvw (ORCPT
+        id S1727690AbgCZBwC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:51:52 -0400
-Received: from mga11.intel.com ([192.55.52.93]:36255 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727574AbgCZBvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:51:51 -0400
-IronPort-SDR: 6YGZ+OnztOR5GDP6cfIy7vG/V4LxI4+OUwT8mbZ+lHyfNYbCQUpEuJ1A5mkGutDjDksrJxwk0+
- xmRQZAJGa/lQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 18:51:51 -0700
-IronPort-SDR: RoL9FbxYUrE29Kx3LWqaDonpYvGmVq/WGWi0Daqxn/LD2yrLFhrs2a9SZ3C8R/iTOwA8XgzzFj
- f1CZqqWGBncg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
-   d="scan'208";a="357996141"
-Received: from unknown (HELO [10.239.161.118]) ([10.239.161.118])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2020 18:51:48 -0700
-Subject: Re: [PATCH] sched/fair: Don't pull task if local group is more loaded
- than busiest group
-To:     Phil Auld <pauld@redhat.com>, Aubrey Li <aubrey.li@intel.com>
-Cc:     vincent.guittot@linaro.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org, tim.c.chen@linux.intel.com,
-        vpillai@digitalocean.com, joel@joelfernandes.org
-References: <1585140388-61802-1-git-send-email-aubrey.li@intel.com>
- <20200325134300.GA30416@lorien.usersys.redhat.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <9272cabe-a777-4e1f-762e-8022f8439c33@linux.intel.com>
-Date:   Thu, 26 Mar 2020 09:51:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 25 Mar 2020 21:52:02 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:46906 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727574AbgCZBwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 21:52:02 -0400
+Received: by mail-qt1-f195.google.com with SMTP id g7so4019193qtj.13;
+        Wed, 25 Mar 2020 18:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y38zEgb3EH5u0ISLbX3L46cnC2XWupaDcY08yZB2pNc=;
+        b=lAaBD/0C9KD3FC5rERps9ALxqWaPr3p9p6GWkio2Ph34zVah9EUivfohLcXVxDIW8k
+         qC+DhDMxP3eYiHC3ugZ73vGAXcfnXs8XEfGvdVt5oCt/W+IjZ2NojiGk2NpIEJxtx7vO
+         c2scVpO98jYO/AK5np6/+QaBBAjSUo4Nlh+YmT5cLqx8fj26cwfUYLio9/ISH934psZ4
+         yzwIsXy1jFnnSBxKinBfISl8eBo4mmCCyqqkUtjYK8jf3KXWaAB407m9+iir7wpMrLpk
+         btU6fM5hJhUB4OfnvUiaFm0XvIxOL58V79S2zlELbiUwFhK350pKRqYCeUoYbhaL34wk
+         d9Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y38zEgb3EH5u0ISLbX3L46cnC2XWupaDcY08yZB2pNc=;
+        b=KpWulbrPCuxjlkGmccRjLTd+Pvggk0WXt909ZhZPtkFgcJv58qRm9AlquzSzAXsTaw
+         j5q5B6wNRu9XUrO1mi0Zv3Ewr7ydw4GZSCJ6P2YTe/JnF/nn9JyWtXppd/bzOyaN4yf4
+         4cXa6dWXU+r3k1gVGfqkzAKR50C1rb8laNWCDbJX3lOyIyUrPbVmAhtRZdtVEkWhzqxR
+         izYejf7K0s2VdTUBhvy4TOozWTs7EWL6oLp8NBPXWNb0M9x8yBeDku6sV0Cms86HtsSO
+         R2TNX6MDihJvFC09E4+FI4biGsyzsSOO4cjHdp4/eKtIeo3tEw2LqxCmMj3r8U0s8yWK
+         HEeQ==
+X-Gm-Message-State: ANhLgQ2ypscl2upjjGPVO/NtnaxURug/R2vHdblqiPy/6TtZJbHkIHO8
+        lKcMaw5xOquX11nvR2waYZa6+Db0Jxr6STXWZM4=
+X-Google-Smtp-Source: ADFU+vsEuvmfB/mTYFYnlUUT9EbTD50gewArOBTrfX+z1pFq5CwoE9ICI5sfKWceBFPTzgpb4mUU21kl1UL26iw54P8=
+X-Received: by 2002:ac8:1865:: with SMTP id n34mr5687310qtk.93.1585187521038;
+ Wed, 25 Mar 2020 18:52:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200325134300.GA30416@lorien.usersys.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200325152629.6904-1-kpsingh@chromium.org> <20200325152629.6904-2-kpsingh@chromium.org>
+In-Reply-To: <20200325152629.6904-2-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 25 Mar 2020 18:51:50 -0700
+Message-ID: <CAEf4BzYomSccqbO2AGbejQV2R2z0jz5GhEFZxuf7SGwtju+e8w@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v6 1/8] bpf: Introduce BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/3/25 21:43, Phil Auld wrote:
-> Hi Aubrey,
-> 
-> On Wed, Mar 25, 2020 at 08:46:28PM +0800 Aubrey Li wrote:
->> A huge number of load imbalance was observed when the local group
->> type is group_fully_busy, and the average load of local group is
->> greater than the selected busiest group, so the imbalance calculation
->> returns a negative value actually. Fix this problem by comparing the
->> average load before local group type check.
->>
->> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
->> ---
->>  kernel/sched/fair.c | 14 +++++++-------
->>  1 file changed, 7 insertions(+), 7 deletions(-)
->>
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index c1217bf..c524369 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -8862,17 +8862,17 @@ static struct sched_group *find_busiest_group(struct lb_env *env)
->>  		goto out_balanced;
->>  
->>  	/*
->> +	 * If the local group is more loaded than the selected
->> +	 * busiest group don't try to pull any tasks.
->> +	 */
->> +	if (local->avg_load >= busiest->avg_load)
->> +		goto out_balanced;
->> +
->> +	/*
->>  	 * When groups are overloaded, use the avg_load to ensure fairness
->>  	 * between tasks.
->>  	 */
->>  	if (local->group_type == group_overloaded) {
->> -		/*
->> -		 * If the local group is more loaded than the selected
->> -		 * busiest group don't try to pull any tasks.
->> -		 */
->> -		if (local->avg_load >= busiest->avg_load)
->> -			goto out_balanced;
->> -
->>  		/* XXX broken for overlapping NUMA groups */
->>  		sds.avg_load = (sds.total_load * SCHED_CAPACITY_SCALE) /
->>  				sds.total_capacity;
->> -- 
->> 2.7.4
->>
-> 
-> I'm not sure about this. I think this patch will undo a good bit of the
-> benefit of the load balancer rework.  Avg_load is really most useful
-> when things are overloaded. If we go back to looking at it here we may
-> fail to balance when needed.
-> 
-> There are cases where, due to group scheduler load scaling, local average
-> may be higher but have spare CPUs still whereas busiest may have extra
-> processes which be balanced.
-> 
-In my case, local group is fully busy, and the selected busiest group is overloaded,
-should we compute avg_idle for group_fully_busy as well?
+On Wed, Mar 25, 2020 at 8:27 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> Introduce types and configs for bpf programs that can be attached to
+> LSM hooks. The programs can be enabled by the config option
+> CONFIG_BPF_LSM.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> Acked-by: Yonghong Song <yhs@fb.com>
+> ---
 
-Thanks,
--Aubrey
+Looks good to me, so please add by ack, but I think it would be easier
+to review if this was combined with patch #4, which adds verifier
+support and kernel/bpf/syscall.c support. On its own this patch just
+adds random unused stuff.
 
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+
+>  MAINTAINERS                    |  1 +
+>  include/linux/bpf.h            |  3 +++
+>  include/linux/bpf_types.h      |  4 ++++
+>  include/uapi/linux/bpf.h       |  2 ++
+>  init/Kconfig                   | 12 ++++++++++++
+>  kernel/bpf/Makefile            |  1 +
+>  kernel/bpf/bpf_lsm.c           | 17 +++++++++++++++++
+>  kernel/trace/bpf_trace.c       | 12 ++++++------
+>  tools/include/uapi/linux/bpf.h |  2 ++
+>  tools/lib/bpf/libbpf_probes.c  |  1 +
+>  10 files changed, 49 insertions(+), 6 deletions(-)
+>  create mode 100644 kernel/bpf/bpf_lsm.c
+>
+
+[...]
