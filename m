@@ -2,98 +2,77 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0DEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4217AC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7760F206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05CB820722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:54:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="wqxyOyNe"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qYUIFzAt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbgCZTyA (ORCPT
+        id S1728664AbgCZTyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:54:00 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:34917 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgCZTyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:54:00 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id e7128844;
-        Thu, 26 Mar 2020 19:46:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=f1lz/GYg7MmJePg+lVSsCStJm3U=; b=wqxyOy
-        NeaYX7S/Bf3CiXu6WxweGGWX1Hfa4F0YCmVxtZZenj6BFaEHcT/FL+g2VXrlWpjp
-        WT22EOvuNl095TFGcln/LNho4QnbNf4lIL7ilDO0aXIMYwBHqoGaqvij8vUuQdjw
-        tZDMhZHoN/evmNLuyINgvEGnxU7pjbS0slvQPhI8K94LyCMTL5O//nkpc0WXsDkD
-        5WDnNmI+SPwByl17mhH1Sbn3lAjpat2VMgDZHpMdAmK5bTT25g8OVj3S71RJc5Y2
-        hE+E0XLV5QnlcbIkD3yqZFvLcn0DKOSni0/9AsUO9tXyZ/wXVzJu9lZ/4wbp61QE
-        UBZIuyHD4moYKtYg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f3fb72b3 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 26 Mar 2020 19:46:32 +0000 (UTC)
-Received: by mail-il1-f178.google.com with SMTP id 7so6624794ill.2;
-        Thu, 26 Mar 2020 12:53:57 -0700 (PDT)
-X-Gm-Message-State: ANhLgQ3bTj0XaIl73u2eFyaAYfd8mthlqRj0Rax669Wmi93WAvLoGLse
-        w766mjjKEA78EU9HpXBp/NZ7OPIzahVoqFEaOPk=
-X-Google-Smtp-Source: ADFU+vvmm3DgmItvaRXrVSSTSPN3EV2Lxto5YPkj/t2SJndqzbHfmaLbH/lj09YNUmXjFkl/j8dGix5cOzXToO3VP9U=
-X-Received: by 2002:a92:798f:: with SMTP id u137mr7565295ilc.231.1585252436484;
- Thu, 26 Mar 2020 12:53:56 -0700 (PDT)
+        Thu, 26 Mar 2020 15:54:21 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41740 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728317AbgCZTyU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 15:54:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=qBHJQbHLQF5fkECeKcaVm9P1eGfOjzxiiidEad5lOk0=; b=qYUIFzAtI84UJLvuJGcNV+sO/w
+        SSvEvCyVIHdUEkaeu1Ab3448vSH9GWkQdoya+vLKZig1NWhJuFGdaoAbYlNaixUGgkmkO8scdsM9o
+        kkuN88Zz4/l/JiR7Dq3BDnRmOPjJgKRygtDYEjW8FM51VU6tPyrRcnDnqX4u0xHonq33djUEpFbRT
+        lVJDRivxv9EaiFLuQG9Ov1N7f7OF8tfkA7cpX+lfQwi4BKaqJFBCMC1Z8Q86p8e+4QMenAif9wlx6
+        ZIfCunk+1+tP2NHsRghq0z512sFGi5fmMw4hBGfHUNCliW7M5AB/mVhG5QlpEfrUm14g/IIasmZQ+
+        I+pyjxNQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHYa4-0005Xg-FA; Thu, 26 Mar 2020 19:54:20 +0000
+Date:   Thu, 26 Mar 2020 12:54:20 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     peter@bikeshed.quignogs.org.uk
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3 1/1] A compact idiom to add code examples in kerneldoc
+ comments.
+Message-ID: <20200326195420.GO22483@bombadil.infradead.org>
+References: <20200326192947.GM22483@bombadil.infradead.org>
+ <20200326195156.11858-1-peter@bikeshed.quignogs.org.uk>
+ <20200326195156.11858-2-peter@bikeshed.quignogs.org.uk>
 MIME-Version: 1.0
-References: <20200326080104.27286-1-masahiroy@kernel.org> <20200326080104.27286-11-masahiroy@kernel.org>
- <CAKwvOdk=MCePWHD=Kj3K7fD0y8TBZfiFLB0X+gnhPUd=RnrH6A@mail.gmail.com>
-In-Reply-To: <CAKwvOdk=MCePWHD=Kj3K7fD0y8TBZfiFLB0X+gnhPUd=RnrH6A@mail.gmail.com>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Thu, 26 Mar 2020 13:53:44 -0600
-X-Gmail-Original-Message-ID: <CAHmME9oD7DVSGVkWv2jAyr5eZUy2Ac+MWzss5dhKEmG3hq6AFg@mail.gmail.com>
-Message-ID: <CAHmME9oD7DVSGVkWv2jAyr5eZUy2Ac+MWzss5dhKEmG3hq6AFg@mail.gmail.com>
-Subject: Re: [PATCH v2 10/16] x86: probe assembler capabilities via kconfig
- instead of makefile
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326195156.11858-2-peter@bikeshed.quignogs.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 11:49 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Thu, Mar 26, 2020 at 1:02 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > From: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> >
-> > Doing this probing inside of the Makefiles means we have a maze of
-> > ifdefs inside the source code and child Makefiles that need to make
-> > proper decisions on this too. Instead, we do it at Kconfig time, like
-> > many other compiler and assembler options, which allows us to set up the
-> > dependencies normally for full compilation units. In the process, the
-> > ADX test changes to use %eax instead of %r10 so that it's valid in both
-> > 32-bit and 64-bit mode.
->
-> Does KConfig generate -D<foo> flags for KBUILD_CFLAGS and KBUILD_AFLAGS?
+On Thu, Mar 26, 2020 at 07:51:56PM +0000, peter@bikeshed.quignogs.org.uk wrote:
+> From: Peter Lister <peter@bikeshed.quignogs.org.uk>
+> 
+> scripts/kernel-doc - When a double colon follows a section heading
+> (e.g. Example::), write a double colon line to the ReST output to make
+> the following text (e.g. a code snippet) into a literal block.
+> 
+> drivers/base/platform.c - Changed Example: headings to Example:: to
+> literalise code snippets as above.
+> 
+> This patch also removes two kerneldoc build warnings:
+> ./drivers/base/platform.c:134: WARNING: Unexpected indentation.
+> ./drivers/base/platform.c:213: WARNING: Unexpected indentation.
+> 
+> Signed-off-by: Peter Lister <peter@bikeshed.quignogs.org.uk>
 
-kconfig sticks everything it's got into include/generated/autoconf.h.
-That's how you're able to use all those #ifdef CONFIG_* macros
-already. This change moves things from a command line -D to the
-autoconf.h file.
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-> Looks like lib/raid6/test/Makefile also generates some of these?
-
-raid6 has its own crazy thing going on. The test directory compiles
-that code for use in userspace. You might argue that its whole
-situation is non-standard and weird and should be reworked
-differently, but that seems like fodder for a different patchset on
-the linux-raid list.
+(just to be clear, I'm no python programmer; I like the idea and it
+looks clear enough to me)
