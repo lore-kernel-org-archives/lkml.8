@@ -2,192 +2,259 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87EAEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E72C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46F8520719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:37:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="M9sVOfTN"
+	by mail.kernel.org (Postfix) with ESMTP id 313FF20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbgCZRhe (ORCPT
+        id S1728002AbgCZRiA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:37:34 -0400
-Received: from USAT19PA20.eemsg.mail.mil ([214.24.22.194]:23802 "EHLO
-        USAT19PA20.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZRhd (ORCPT
+        Thu, 26 Mar 2020 13:38:00 -0400
+Received: from zimbra2.kalray.eu ([92.103.151.219]:51498 "EHLO
+        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgCZRh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:37:33 -0400
-X-EEMSG-check-017: 93888031|USAT19PA20_ESA_OUT01.csd.disa.mil
-X-IronPort-AV: E=Sophos;i="5.72,309,1580774400"; 
-   d="scan'208";a="93888031"
-Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
-  by USAT19PA20.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 26 Mar 2020 17:36:41 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
-  s=tycho.nsa.gov; t=1585244201; x=1616780201;
-  h=subject:to:references:from:message-id:date:mime-version:
-   in-reply-to:content-transfer-encoding;
-  bh=4btUFkjZphQF2UdhZnXwDJJ8A/TabzXpxKrmQP1Nhwc=;
-  b=M9sVOfTNm3W1Xx1nQoEDacgCYJ97K4U2NzzCI6OpQUKXL+Y1AHi0IIJn
-   SralracjvE/QBOe0zzf4FaCRWNuaPYgqzzaUJJ6MHijxKnnkUXcF4B/0d
-   ujYUpDig1U8AZEHoCNhKlr3LUmjIKpKoC/SwOhAS/8KvNWsmnuLN4uZrZ
-   YHVJT5JUM1Cd74hdGXESojkbtRfkKRXltpWwVsHmHKa9IeNG3Y5UnpCR2
-   KOJCyWBOxMd6+TFiJRmqHcujqvXww1x0O6V5vNiCpCfR6NAh7f5f3VNhz
-   oxt4TM8I6wqzTS6VYYlP5Eg8PDUC4zvF0nvIYxbfC1SVt8bZ+iQ11MUN5
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.72,309,1580774400"; 
-   d="scan'208";a="34644859"
-IronPort-PHdr: =?us-ascii?q?9a23=3ARN2Bwhfdok8C1OGOSHEDiy9nlGMj4u6mDksu8p?=
- =?us-ascii?q?Mizoh2WeGdxc28bB2N2/xhgRfzUJnB7Loc0qyK6vymADFfqs3e+Fk5M7VyFD?=
- =?us-ascii?q?Y9wf0MmAIhBMPXQWbaF9XNKxIAIcJZSVV+9Gu6O0UGUOz3ZlnVv2HgpWVKQk?=
- =?us-ascii?q?a3OgV6PPn6FZDPhMqrye+y54fTYwJVjzahfL9+Nhq7oRjeu8UMnIdvKqQ8xh?=
- =?us-ascii?q?THr3ZKZu9b2X5mKVWPkhnz4cu94IRt+DlKtfI78M5AX6T6f6AmQrFdET8rLW?=
- =?us-ascii?q?M76tD1uBfaVQeA6WcSXWsQkhpTHgjK9wr6UYvrsiv7reVyxi+XNtDrQL8uWD?=
- =?us-ascii?q?Si66BrSAL0iCoCKjU0/n3bhtB2galGux+quQBxzJDIb4GULPp+f73SfdUGRW?=
- =?us-ascii?q?paQ81dUzVNDp6gY4cTCuYMO+hXr5P5p1ATsxWwAweiD/7rxjNRiHL72ag23u?=
- =?us-ascii?q?I8Gg/EwQMgBcoDvmnKotX7NKkcUu67w6fHwjrBc/xY1izw6JTKfx07vf2AQb?=
- =?us-ascii?q?x9fMjXxEIyFw3FlFKQqYn9Mj2IyuQCrXCb7+p+WuKplmUptgRxrSKrxscolI?=
- =?us-ascii?q?bIhp8ex1ff9Spk24Y4PsG4SU5nbt6kF5tcrSeaN5BsTc84TGFovzg6x6QAtJ?=
- =?us-ascii?q?WmfyYK0IwqywPQZvGIaYSF4g/vWPyPLTp3mn5pYq+zihCv+ka60OL8TNO70F?=
- =?us-ascii?q?NSoypAldnDq24C2gTI6siCVvt95kCh2SuT1wzL6uFLP0Q0la3DJp492LEwjJ?=
- =?us-ascii?q?sTsVnYHiPshEX3jLOZdkUj+uSy7eTofq7mqYOGO49xiwH+Nrwims25AesmLg?=
- =?us-ascii?q?gDR3WX9Ouz2bH5/UD1Xa9GguM5n6XHqpzWONwXpqujDA9U1oYj5Qy/DzCj0N?=
- =?us-ascii?q?kAhnkIMUlFdQmbj4npJ17OIPf4Ae25g1S3ijhn3f/GPrr/ApnVNHjMjK/hfa?=
- =?us-ascii?q?ph605b0Ac80MpQ55RIBbEGJPL+QUDxtNvfDh82Nwy73fzrB8l61oMbQWiPGL?=
- =?us-ascii?q?OWMLvOsV+U4eIiO/WMZI4QuDb4Nvgl/eTugmU5mFIGcqmp2pwXaH+8Hvt4OU?=
- =?us-ascii?q?mWfX3sgtIZG2cQogU+VPDqiEGFUTNLfHa9QaY85jA9CIK7AobOXZ6tgLOf0y?=
- =?us-ascii?q?ehBJFWZX5JCkqKEXj2c4WIQfAMaDidIsV5iDwLSaChS5M91RGprAL6z7tnLu?=
- =?us-ascii?q?zJ+iwXrJ7jz8Z66PHOlREo9Dx0E8Sc33iIT2Fzg2wIWjs2075krExjxVeMz7?=
- =?us-ascii?q?J4j+ZbFdNN/fNJVBk1NZrGw+x9EdDyVRrLfs2VR1a+XtWmHTYxQ8o1w98PZU?=
- =?us-ascii?q?Z9BtqjggnN3yqxHrAaiaKLC4Iw8q/HwXjxKNhyy2zc2KkikVYmWM1POnOihq?=
- =?us-ascii?q?Jl8AjTHYHJmV2Dl6m2baQcwDLN9GCbwGqKvUFYVhNwUKrcUXAceETWt9L56V?=
- =?us-ascii?q?3GT7K1F7QnPRVOydSYJqtJdNLpl1NGS+nnONjEZGKxgWiwDw6SxryQdIrqZ3?=
- =?us-ascii?q?kd3CLFBUgHjQAT+G2LNRYxBii/uWLSFj9uGkz1Y0Pq7+Z+rGm3TkguzwGFd0?=
- =?us-ascii?q?dhzaa6+gYJhfyATPMexqwEuCY7qzVzB1u83szZC9yBpwp/ZqlcZdI94FFa1W?=
- =?us-ascii?q?PWrQB9OYagL694il4DcAR9p1nu2AlvCoVcjcgqq2snzBJoJqKF1FNMbCuY0o?=
- =?us-ascii?q?rtOr3TM2Xy+Reva6nM2l7AytqZ5qAP6PEgoVX5oA6pDlYi82lg09RN1Xuc4J?=
- =?us-ascii?q?bKAREdUZL2VUY3+Bx6qK/AbiYh4IPU0GVmMbOovT/ax9IpGOwlxw6kf9dYM6?=
- =?us-ascii?q?OLChTyE80VB8ivNeMqgUKmYwkLPOBV8640MMemeOWc1KG3O+ZgmWHusWMSzI?=
- =?us-ascii?q?l700+IvwF7TufT1JcCxfzQigeOUTz7iH+utcf4nY0CbjYXSC731SnhAZNLfK?=
- =?us-ascii?q?RjVYkMDmiqLou8wdA6z4XgX39e6U6LGVwLwomqdACUYli72hdfkQwToHq6iW?=
- =?us-ascii?q?6jwjdpiTA1v++a2yDTx+nKahUKIChISXNkgFOqJpK7y5geXU61f00njxeo+0?=
- =?us-ascii?q?v+77ZUqb45LGTJR0pMOS/sICUqVqq2q6rHYMNV7p4smTtYXf76Yl2ATLP55R?=
- =?us-ascii?q?wA3GerHHVb7C40eivsuZjjmRF+zmWHIzI7snvDfuliyBHe+prYRPhMznwBXi?=
- =?us-ascii?q?Y+lDqTTkC1It2B5dyJk9LGteekWiSqUZgXOS/tzquPsyy04WAsChq627i3nd?=
- =?us-ascii?q?7qCgg10CPh3vFlUiLHqBu6aY7uhIqgNucyRVVlHF/x7YJBH4h6loYhzMUL1W?=
- =?us-ascii?q?MymoSe/X1Bl3z6d9pcx/StPzI2WTcXzouNs0De00p5IyfMntmoWw=3D=3D?=
-X-IPAS-Result: =?us-ascii?q?A2DuAADi53xe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgWoEA?=
- =?us-ascii?q?QELAYF8LIFBMiqEGo5+VAaBN4l6kHYDVAoBAQEBAQEBAQE0AQIEAQGERAKCL?=
- =?us-ascii?q?yQ3Bg4CEAEBAQUBAQEBAQUDAQFshWKCOykBgn8BBSMEEVELDgoCAiYCAlcGA?=
- =?us-ascii?q?QwGAgEBgmM/glglrXp/M4VLg16BPoEOKgGMLhp5gQeBOA+CXj6ES4MRgl4El?=
- =?us-ascii?q?w9xmFWCRoJWlC0GHZtfjxGeBSM3gSErCAIYCCEPgydQGA2OKReNbFUlAzCBB?=
- =?us-ascii?q?gEBjh0BAQ?=
-Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
-  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 26 Mar 2020 17:36:24 +0000
-Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto.infosec.tycho.ncsc.mil [192.168.25.131])
-        by tarius.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 02QHaiqe158602;
-        Thu, 26 Mar 2020 13:36:44 -0400
-Subject: Re: [PATCH v2 2/3] Teach SELinux about anonymous inodes
-To:     Daniel Colascione <dancol@google.com>, timmurray@google.com,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
-        nnk@google.com, lokeshgidra@google.com
-References: <20200214032635.75434-1-dancol@google.com>
- <20200325230245.184786-3-dancol@google.com>
-From:   Stephen Smalley <sds@tycho.nsa.gov>
-Message-ID: <3e098729-dc6d-68d0-46a6-7add4fd75b11@tycho.nsa.gov>
-Date:   Thu, 26 Mar 2020 13:37:36 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Thu, 26 Mar 2020 13:37:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 71C3927E043E;
+        Thu, 26 Mar 2020 18:37:58 +0100 (CET)
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id spkmu2Ax8Y4I; Thu, 26 Mar 2020 18:37:58 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 0053C27E0A11;
+        Thu, 26 Mar 2020 18:37:57 +0100 (CET)
+X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
+Received: from zimbra2.kalray.eu ([127.0.0.1])
+        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id CerupkUqSsv7; Thu, 26 Mar 2020 18:37:57 +0100 (CET)
+Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
+        by zimbra2.kalray.eu (Postfix) with ESMTP id DA0F827E043E;
+        Thu, 26 Mar 2020 18:37:57 +0100 (CET)
+Date:   Thu, 26 Mar 2020 18:37:57 +0100 (CET)
+From:   =?utf-8?Q?Cl=C3=A9ment?= Leger <cleger@kalrayinc.com>
+To:     Rishabh Bhatnagar <rishabhb@codeaurora.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>, psodagud@codeaurora.org,
+        tsoni@codeaurora.org, sidgup@codeaurora.org
+Message-ID: <1233159221.12306373.1585244277714.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
+References: <1585241440-7572-1-git-send-email-rishabhb@codeaurora.org> <1585241440-7572-2-git-send-email-rishabhb@codeaurora.org>
+Subject: Re: [PATCH 1/2] remoteproc: Add userspace char device driver
 MIME-Version: 1.0
-In-Reply-To: <20200325230245.184786-3-dancol@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [192.168.40.202]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - GC80 (Linux)/8.8.15_GA_3895)
+Thread-Topic: remoteproc: Add userspace char device driver
+Thread-Index: sALBqN+bhswvmd/pt74gPjg/0ba/6g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/25/20 7:02 PM, Daniel Colascione wrote:
-> This change uses the anon_inodes and LSM infrastructure introduced in
-> the previous patch to give SELinux the ability to control
-> anonymous-inode files that are created using the new _secure()
-> anon_inodes functions.
-> 
-> A SELinux policy author detects and controls these anonymous inodes by
-> adding a name-based type_transition rule that assigns a new security
-> type to anonymous-inode files created in some domain. The name used
-> for the name-based transition is the name associated with the
-> anonymous inode for file listings --- e.g., "[userfaultfd]" or
-> "[perf_event]".
-> 
-> Example:
-> 
-> type uffd_t;
-> type_transition sysadm_t sysadm_t : file uffd_t "[userfaultfd]";
-> allow sysadm_t uffd_t:file { create };
+Hi Rishabh,
 
-These should use :anon_inode rather than :file since the class is no 
-longer file.
+While being interesting to have a such a userspace interface, I have
+some remarks.
 
+----- On 26 Mar, 2020, at 17:50, Rishabh Bhatnagar rishabhb@codeaurora.org wrote:
+
+> Add the driver for creating the character device interface for
+> userspace applications. The character device interface can be used
+> in order to boot up and shutdown the remote processor.
+> This might be helpful for remote processors that are booted by
+> userspace applications and need to shutdown when the application
+> crahes/shutsdown.
 > 
-> (The next patch in this series is necessary for making userfaultfd
-> support this new interface.  The example above is just
-> for exposition.)
-> 
-> Signed-off-by: Daniel Colascione <dancol@google.com>
+> Change-Id: If23c8986272bb7c943eb76665f127ff706f12394
+> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
 > ---
->   security/selinux/hooks.c            | 54 +++++++++++++++++++++++++++++
->   security/selinux/include/classmap.h |  2 ++
->   2 files changed, 56 insertions(+)
+> drivers/remoteproc/Makefile               |  1 +
+> drivers/remoteproc/remoteproc_internal.h  |  6 +++
+> drivers/remoteproc/remoteproc_userspace.c | 90 +++++++++++++++++++++++++++++++
+> include/linux/remoteproc.h                |  2 +
+> 4 files changed, 99 insertions(+)
+> create mode 100644 drivers/remoteproc/remoteproc_userspace.c
 > 
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 1659b59fb5d7..b9eb45c2e4e5 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -2915,6 +2915,59 @@ static int selinux_inode_init_security(struct inode *inode, struct inode *dir,
->   	return 0;
->   }
->   
-> +static int selinux_inode_init_security_anon(struct inode *inode,
-> +					    const struct qstr *name,
-> +					    const struct file_operations *fops,
-> +					    const struct inode *context_inode)
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index e30a1b1..facb3fa 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_REMOTEPROC)		+= remoteproc.o
+> remoteproc-y				:= remoteproc_core.o
+> remoteproc-y				+= remoteproc_debugfs.o
+> remoteproc-y				+= remoteproc_sysfs.o
+> +remoteproc-y				+= remoteproc_userspace.o
+> remoteproc-y				+= remoteproc_virtio.o
+> remoteproc-y				+= remoteproc_elf_loader.o
+> obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+> diff --git a/drivers/remoteproc/remoteproc_internal.h
+> b/drivers/remoteproc/remoteproc_internal.h
+> index 493ef92..97513ba 100644
+> --- a/drivers/remoteproc/remoteproc_internal.h
+> +++ b/drivers/remoteproc/remoteproc_internal.h
+> @@ -47,6 +47,9 @@ struct dentry *rproc_create_trace_file(const char *name,
+> struct rproc *rproc,
+> int rproc_init_sysfs(void);
+> void rproc_exit_sysfs(void);
+> 
+> +void rproc_init_cdev(void);
+> +void rproc_exit_cdev(void);
+> +
+> void rproc_free_vring(struct rproc_vring *rvring);
+> int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+> 
+> @@ -63,6 +66,9 @@ struct resource_table *rproc_elf_find_loaded_rsc_table(struct
+> rproc *rproc,
+> struct rproc_mem_entry *
+> rproc_find_carveout_by_name(struct rproc *rproc, const char *name, ...);
+> 
+> +/* from remoteproc_userspace.c */
+> +int rproc_char_device_add(struct rproc *rproc);
+> +
+> static inline
+> int rproc_fw_sanity_check(struct rproc *rproc, const struct firmware *fw)
+> {
+> diff --git a/drivers/remoteproc/remoteproc_userspace.c
+> b/drivers/remoteproc/remoteproc_userspace.c
+> new file mode 100644
+> index 0000000..2ef7679
+> --- /dev/null
+> +++ b/drivers/remoteproc/remoteproc_userspace.c
+> @@ -0,0 +1,90 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Character device interface driver for Remoteproc framework.
+> + *
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/fs.h>
+> +#include <linux/cdev.h>
+> +#include <linux/mutex.h>
+> +#include <linux/remoteproc.h>
+> +
+> +#include "remoteproc_internal.h"
+> +
+> +#define NUM_RPROC_DEVICES	64
+> +static dev_t rproc_cdev;
+> +static DEFINE_IDA(cdev_minor_ida);
+> +
+> +static int rproc_open(struct inode *inode, struct file *file)
 > +{
-> +	const struct task_security_struct *tsec = selinux_cred(current_cred());
-> +	struct common_audit_data ad;
-> +	struct inode_security_struct *isec;
-> +	int rc;
+> +	struct rproc *rproc;
 > +
-> +	if (unlikely(!selinux_state.initialized))
-> +		return 0;
+> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+> +	if (!rproc)
+> +		return -EINVAL;
 > +
-> +	isec = selinux_inode(inode);
-> +
-> +	/*
-> +	 * We only get here once per ephemeral inode.  The inode has
-> +	 * been initialized via inode_alloc_security but is otherwise
-> +	 * untouched.
-> +	 */
-> +
-> +	if (context_inode) {
-> +		struct inode_security_struct *context_isec =
-> +			selinux_inode(context_inode);
-> +		isec->sclass = context_isec->sclass;
-> +		isec->sid = context_isec->sid;
-> +	} else {
-> +		isec->sclass = SECCLASS_ANON_INODE;
-> +		rc = security_transition_sid(
-> +			&selinux_state, tsec->sid, tsec->sid,
-> +			SECCLASS_FILE, name, &isec->sid);
+> +	return rproc_boot(rproc);
+> +}
 
-You should use isec->sclass == SECCLASS_ANON_INODE instead of 
-SECCLASS_FILE here.
+What happens if multiple user open this chardev ? Apparently,
+rproc_boot returns 0 if already powered_up, so the next user won't know
+what is the state of the rproc.
+Exclusive access could probably be a good idea.
+
+> +
+> +static int rproc_release(struct inode *inode, struct file *file)
+> +{
+> +	struct rproc *rproc;
+> +
+> +	rproc = container_of(inode->i_cdev, struct rproc, char_dev);
+> +	if (!rproc)
+> +		return -EINVAL;
+> +
+> +	rproc_shutdown(rproc);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct file_operations rproc_fops = {
+> +	.open = rproc_open,
+> +	.release = rproc_release,
+> +};
+> +
+> +int rproc_char_device_add(struct rproc *rproc)
+> +{
+> +	int ret, minor;
+> +	dev_t cdevt;
+> +
+> +	minor = ida_simple_get(&cdev_minor_ida, 0, NUM_RPROC_DEVICES,
+> +			GFP_KERNEL);
+> +	if (minor < 0) {
+> +	pr_err("%s: No more minor numbers left! rc:%d\n", __func__,
+> +							minor);
+> +		return -ENODEV;
+> +	}
+
+How can you make the link between the chardev and the device instance ?
+In our case, we have several remoteproc instances and thus we will end
+up having multiple chardev.
+
+Regards,
+
+Clément
+
+> +
+> +	cdev_init(&rproc->char_dev, &rproc_fops);
+> +	rproc->char_dev.owner = THIS_MODULE;
+> +
+> +	cdevt = MKDEV(MAJOR(rproc_cdev), minor);
+> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+> +	if (ret < 0)
+> +		ida_simple_remove(&cdev_minor_ida, minor);
+> +
+> +	rproc->dev.devt = cdevt;
+> +
+> +	return ret;
+> +}
+> +
+> +void __init rproc_init_cdev(void)
+> +{
+> +	int ret;
+> +
+> +	ret = alloc_chrdev_region(&rproc_cdev, 0, NUM_RPROC_DEVICES, "rproc");
+> +	if (ret < 0) {
+> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+> +		return;
+> +	}
+> +}
+> +
+> +void __exit rproc_exit_cdev(void)
+> +{
+> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_cdev), 0),
+> +				NUM_RPROC_DEVICES);
+> +}
+> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+> index 16ad666..c4ca796 100644
+> --- a/include/linux/remoteproc.h
+> +++ b/include/linux/remoteproc.h
+> @@ -37,6 +37,7 @@
+> 
+> #include <linux/types.h>
+> #include <linux/mutex.h>
+> +#include <linux/cdev.h>
+> #include <linux/virtio.h>
+> #include <linux/completion.h>
+> #include <linux/idr.h>
+> @@ -514,6 +515,7 @@ struct rproc {
+> 	bool auto_boot;
+> 	struct list_head dump_segments;
+> 	int nb_vdev;
+> +	struct cdev char_dev;
+> };
+> 
+> /**
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
