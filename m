@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00AC0C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF888C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC07A20774
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BABE8208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265141;
-	bh=BlfqdZa54NDq3OfYObDAkxKzjq23kbgBb8WXlxx7bxU=;
+	s=default; t=1585265143;
+	bh=jmFWny21xsnTOEOG9DY83c3Jc7v1c7S56O+7EUfbz/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZblsmjRRPxLLstmcqMhYeGAvxkd8+7Cyl0JZ25Ly9xml3YxGlSNYMJ5oLjHOQpQ6
-	 BgaVL/dM0J84BR/S3uGCiroE/0G9HmkZRLB2MtLTPbZinGyP7KVSwmb6bW7FJxog2b
-	 bJEO+NahESeoAT0o/s1NLXBMYKA1ZlZDgfE0NvvQ=
+	b=fjKTFdiQqiGG/VJoIXu58j0xdjUMQEu+G8uCXTITh1h5OVTg4koUQ8234tM1MgPTb
+	 ouzP5xff2N/+q5aAewyZifJJPrTmcxs0DyJD+VBZ3z0mn3uv+ZTmsl3cR1lT71jKKZ
+	 He49ligoc8nwUEtEuYcfmkzflVEHE4KOznU0Sj5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728413AbgCZXZk (ORCPT
+        id S1728426AbgCZXZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:25:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:25:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728357AbgCZXZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:34 -0400
+        id S1728353AbgCZXZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11B8920774;
-        Thu, 26 Mar 2020 23:25:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 207CD20B1F;
+        Thu, 26 Mar 2020 23:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265133;
-        bh=BlfqdZa54NDq3OfYObDAkxKzjq23kbgBb8WXlxx7bxU=;
+        s=default; t=1585265134;
+        bh=jmFWny21xsnTOEOG9DY83c3Jc7v1c7S56O+7EUfbz/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qxX1vHcJK+w4gKVK9dJDKBYljjUwEA2uaWX6zs77oGd+7qdCfEhYddErsY7hWQA9n
-         72bThoDco2GZzG9x059lU8loWsMJB+Lte8ynWKqxS72nqHu9qcXuWvxXuDJe5gUgZE
-         su0pZzhEnaAu3bWYDhLrv4zFCiQASJRgaEA63yqY=
+        b=0UML+U+gxy4tuE1Perk/urH4i98vYGBVdCnkrNHVovI3ZuAofX6lqbSiT7TpVYlmY
+         MATaZ+93HhOb6SZOx8vxmwF1DNGOHRlVYphn7GjeVoWx4Nw4XWqgXwd2WfDJ9aPI9k
+         VvAuLNGKcxJpHsNDwb+tq4yajXSICKY2+2eo+i9k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
+        syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.9 6/7] ALSA: line6: Fix endless MIDI read loop
-Date:   Thu, 26 Mar 2020 19:25:25 -0400
-Message-Id: <20200326232526.8349-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 7/7] ALSA: pcm: oss: Remove WARNING from snd_pcm_plug_alloc() checks
+Date:   Thu, 26 Mar 2020 19:25:26 -0400
+Message-Id: <20200326232526.8349-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232526.8349-1-sashal@kernel.org>
 References: <20200326232526.8349-1-sashal@kernel.org>
@@ -61,57 +61,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 ]
+[ Upstream commit 5461e0530c222129dfc941058be114b5cbc00837 ]
 
-The MIDI input event parser of the LINE6 driver may enter into an
-endless loop when the unexpected data sequence is given, as it tries
-to continue the secondary bytes without termination.  Also, when the
-input data is too short, the parser returns a negative error, while
-the caller doesn't handle it properly.  This would lead to the
-unexpected behavior as well.
+The return value checks in snd_pcm_plug_alloc() are covered with
+snd_BUG_ON() macro that may trigger a kernel WARNING depending on the
+kconfig.  But since the error condition can be triggered by a weird
+user space parameter passed to OSS layer, we shouldn't give the kernel
+stack trace just for that.  As it's a normal error condition, let's
+remove snd_BUG_ON() macro usage there.
 
-This patch addresses those issues by checking the return value
-correctly and handling the one-byte event in the parser properly.
-
-The bug was reported by syzkaller.
-
-Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
+Reported-by: syzbot+2a59ee7a9831b264f45e@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
-Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200312155730.7520-1-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/line6/driver.c  | 2 +-
- sound/usb/line6/midibuf.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/core/oss/pcm_plugin.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index 09189249d0d19..ea3a9bd05e687 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -306,7 +306,7 @@ static void line6_data_received(struct urb *urb)
- 				line6_midibuf_read(mb, line6->buffer_message,
- 						LINE6_MIDI_MESSAGE_MAXLEN);
- 
--			if (done == 0)
-+			if (done <= 0)
- 				break;
- 
- 			line6->message_length = done;
-diff --git a/sound/usb/line6/midibuf.c b/sound/usb/line6/midibuf.c
-index 36a610ba342ec..c931d48801ebe 100644
---- a/sound/usb/line6/midibuf.c
-+++ b/sound/usb/line6/midibuf.c
-@@ -163,7 +163,7 @@ int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
- 			int midi_length_prev =
- 			    midibuf_message_length(this->command_prev);
- 
--			if (midi_length_prev > 0) {
-+			if (midi_length_prev > 1) {
- 				midi_length = midi_length_prev - 1;
- 				repeat = 1;
- 			} else
+diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
+index b08b2d2d804bd..0e3dd6014ce55 100644
+--- a/sound/core/oss/pcm_plugin.c
++++ b/sound/core/oss/pcm_plugin.c
+@@ -111,7 +111,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->next) {
+ 			if (plugin->dst_frames)
+ 				frames = plugin->dst_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->next;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
+@@ -123,7 +123,7 @@ int snd_pcm_plug_alloc(struct snd_pcm_substream *plug, snd_pcm_uframes_t frames)
+ 		while (plugin->prev) {
+ 			if (plugin->src_frames)
+ 				frames = plugin->src_frames(plugin, frames);
+-			if (snd_BUG_ON((snd_pcm_sframes_t)frames <= 0))
++			if ((snd_pcm_sframes_t)frames <= 0)
+ 				return -ENXIO;
+ 			plugin = plugin->prev;
+ 			err = snd_pcm_plugin_alloc(plugin, frames);
 -- 
 2.20.1
 
