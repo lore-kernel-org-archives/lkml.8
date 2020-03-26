@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 580F3C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A489C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DD52083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B902077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265335;
-	bh=E3QsCnsuUDRRo8kdeYSkq2UO7hjxNljMU6+avIz5qQ4=;
+	s=default; t=1585265338;
+	bh=8u+PO8O/rMMjysdIVDeLa8atUBZcBPK1uZYnnII1iNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gl7DOTWtObBxM6drRkdKZXHQ8PunntGa1V/RqyOFIQOjYve4vIJkcmCH50tLfb70U
-	 npNNfrTvvIfSxWuA8VZsdZnk0PI3BaRhnhVcf2MVaFm/MXlVvHIp9jlgGtGD3dNVMd
-	 DDqnakz8asIzk54j5WD1P3EBCY+PpzOjn1NWnGe0=
+	b=1jzpmT7iiH7wnQN3mdDw39ullG7pe57lhGT6rJ6V8Cw6YxJx81qMt485wrRyvN03s
+	 6e28MlvKFSK6uRn/Gm4WHdF47KyYyx4YICXY5/2onYG7K45NEZEljoJIONVYwsQBCh
+	 lyn1nf28zRqXZBtnZ0gHLIMKGqcMtioaHc9SvsQs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgCZX2x (ORCPT
+        id S1727883AbgCZXYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:28:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44086 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbgCZXY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:27 -0400
+        id S1727775AbgCZXYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0EB420409;
-        Thu, 26 Mar 2020 23:24:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3AF132073E;
+        Thu, 26 Mar 2020 23:24:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265066;
-        bh=E3QsCnsuUDRRo8kdeYSkq2UO7hjxNljMU6+avIz5qQ4=;
+        s=default; t=1585265053;
+        bh=8u+PO8O/rMMjysdIVDeLa8atUBZcBPK1uZYnnII1iNQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5WPdLBsy6h7BQt+qrRdVU1aNVvd7qzF3xq54JymKqeP/jGkgudyFYArb/PioMYFj
-         2nSCx3wUlqewRytnrJ2UsoF4xaEZWAbe6byj2lqeBdGu2pGBGIIVPzi1523PP+TckC
-         F0tJ6Rpv/HGilCuv6o+ivpA/W84o9S1vr/PxiD/E=
+        b=TIyYI6zFs0yOKwwSRKoaLYqbMmQ4A8Y+J6khFaXzBL9i2nfkKUWypssHn9Zk+EwP/
+         ZUQbK3N0nHDtVRkRqTXeXEuNb5IUXtgP0mhMaioUbqBA8W34BDfEXnXeaI41/KEvx9
+         bupV7DJPSOcbmTvnUSeSGfnXvQHejhgx8esWo6EE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 25/28] ALSA: line6: Fix endless MIDI read loop
-Date:   Thu, 26 Mar 2020 19:23:54 -0400
-Message-Id: <20200326232357.7516-25-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.5 13/28] staging: greybus: loopback_test: fix potential path truncations
+Date:   Thu, 26 Mar 2020 19:23:42 -0400
+Message-Id: <20200326232357.7516-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -59,59 +60,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit d683469b3c93d7e2afd39e6e1970f24700eb7a68 ]
+[ Upstream commit ae62cf5eb2792d9a818c2d93728ed92119357017 ]
 
-The MIDI input event parser of the LINE6 driver may enter into an
-endless loop when the unexpected data sequence is given, as it tries
-to continue the secondary bytes without termination.  Also, when the
-input data is too short, the parser returns a negative error, while
-the caller doesn't handle it properly.  This would lead to the
-unexpected behavior as well.
+Newer GCC warns about possible truncations of two generated path names as
+we're concatenating the configurable sysfs and debugfs path prefixes
+with a filename and placing the results in buffers of the same size as
+the maximum length of the prefixes.
 
-This patch addresses those issues by checking the return value
-correctly and handling the one-byte event in the parser properly.
+	snprintf(d->name, MAX_STR_LEN, "gb_loopback%u", dev_id);
 
-The bug was reported by syzkaller.
+	snprintf(d->sysfs_entry, MAX_SYSFS_PATH, "%s%s/",
+		 t->sysfs_prefix, d->name);
 
-Reported-by: syzbot+cce32521ee0a824c21f7@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000033087059f8f8fa3@google.com
-Link: https://lore.kernel.org/r/20200309095922.30269-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	snprintf(d->debugfs_entry, MAX_SYSFS_PATH, "%sraw_latency_%s",
+		 t->debugfs_prefix, d->name);
+
+Fix this by separating the maximum path length from the maximum prefix
+length and reducing the latter enough to fit the generated strings.
+
+Note that we also need to reduce the device-name buffer size as GCC
+isn't smart enough to figure out that we ever only used MAX_STR_LEN
+bytes of it.
+
+Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200312110151.22028-4-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/line6/driver.c  | 2 +-
- sound/usb/line6/midibuf.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/greybus/tools/loopback_test.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/sound/usb/line6/driver.c b/sound/usb/line6/driver.c
-index b5a3f754a4f13..4f096685ed654 100644
---- a/sound/usb/line6/driver.c
-+++ b/sound/usb/line6/driver.c
-@@ -305,7 +305,7 @@ static void line6_data_received(struct urb *urb)
- 				line6_midibuf_read(mb, line6->buffer_message,
- 						LINE6_MIDI_MESSAGE_MAXLEN);
+diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
+index 5ce7d6fa086cc..3ee9109c38f60 100644
+--- a/drivers/staging/greybus/tools/loopback_test.c
++++ b/drivers/staging/greybus/tools/loopback_test.c
+@@ -19,6 +19,7 @@
+ #include <signal.h>
  
--			if (done == 0)
-+			if (done <= 0)
- 				break;
+ #define MAX_NUM_DEVICES 10
++#define MAX_SYSFS_PREFIX 0x80
+ #define MAX_SYSFS_PATH	0x200
+ #define CSV_MAX_LINE	0x1000
+ #define SYSFS_MAX_INT	0x20
+@@ -67,7 +68,7 @@ struct loopback_results {
+ };
  
- 			line6->message_length = done;
-diff --git a/sound/usb/line6/midibuf.c b/sound/usb/line6/midibuf.c
-index 8d6eefa0d9362..6a70463f82c4e 100644
---- a/sound/usb/line6/midibuf.c
-+++ b/sound/usb/line6/midibuf.c
-@@ -159,7 +159,7 @@ int line6_midibuf_read(struct midi_buffer *this, unsigned char *data,
- 			int midi_length_prev =
- 			    midibuf_message_length(this->command_prev);
+ struct loopback_device {
+-	char name[MAX_SYSFS_PATH];
++	char name[MAX_STR_LEN];
+ 	char sysfs_entry[MAX_SYSFS_PATH];
+ 	char debugfs_entry[MAX_SYSFS_PATH];
+ 	struct loopback_results results;
+@@ -93,8 +94,8 @@ struct loopback_test {
+ 	int stop_all;
+ 	int poll_count;
+ 	char test_name[MAX_STR_LEN];
+-	char sysfs_prefix[MAX_SYSFS_PATH];
+-	char debugfs_prefix[MAX_SYSFS_PATH];
++	char sysfs_prefix[MAX_SYSFS_PREFIX];
++	char debugfs_prefix[MAX_SYSFS_PREFIX];
+ 	struct timespec poll_timeout;
+ 	struct loopback_device devices[MAX_NUM_DEVICES];
+ 	struct loopback_results aggregate_results;
+@@ -907,10 +908,10 @@ int main(int argc, char *argv[])
+ 			t.iteration_max = atoi(optarg);
+ 			break;
+ 		case 'S':
+-			snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
++			snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
+ 			break;
+ 		case 'D':
+-			snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", optarg);
++			snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", optarg);
+ 			break;
+ 		case 'm':
+ 			t.mask = atol(optarg);
+@@ -961,10 +962,10 @@ int main(int argc, char *argv[])
+ 	}
  
--			if (midi_length_prev > 0) {
-+			if (midi_length_prev > 1) {
- 				midi_length = midi_length_prev - 1;
- 				repeat = 1;
- 			} else
+ 	if (!strcmp(t.sysfs_prefix, ""))
+-		snprintf(t.sysfs_prefix, MAX_SYSFS_PATH, "%s", sysfs_prefix);
++		snprintf(t.sysfs_prefix, MAX_SYSFS_PREFIX, "%s", sysfs_prefix);
+ 
+ 	if (!strcmp(t.debugfs_prefix, ""))
+-		snprintf(t.debugfs_prefix, MAX_SYSFS_PATH, "%s", debugfs_prefix);
++		snprintf(t.debugfs_prefix, MAX_SYSFS_PREFIX, "%s", debugfs_prefix);
+ 
+ 	ret = find_loopback_devices(&t);
+ 	if (ret)
 -- 
 2.20.1
 
