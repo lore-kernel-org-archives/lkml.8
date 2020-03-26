@@ -2,173 +2,85 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDF0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDBAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:54:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A7D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADA092070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgCZRw3 (ORCPT
+        id S1727763AbgCZRyV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:52:29 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:38361 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbgCZRw2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:52:28 -0400
-Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MJW5G-1ixeLQ2O40-00JoTP; Thu, 26 Mar 2020 18:52:16 +0100
-Subject: Re: [PATCH] drm/vc4: Fix HDMI mode validation
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     maxime@cerno.tech, linux-rpi-kernel@lists.infradead.org,
-        f.fainelli@gmail.com,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200326122001.22215-1-nsaenzjulienne@suse.de>
- <c4b3e083-ac6e-b321-f0eb-f20e8ec3b1a6@i2se.com>
- <486b5c63e5b9bd81051500c0c310e68af16956c4.camel@suse.de>
-From:   Stefan Wahren <stefan.wahren@i2se.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=stefan.wahren@i2se.com; keydata=
- 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 AQ==
-Message-ID: <096467b2-e617-4353-ce8c-33312bd553da@i2se.com>
-Date:   Thu, 26 Mar 2020 18:52:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 26 Mar 2020 13:54:21 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37829 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726971AbgCZRyV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 13:54:21 -0400
+IronPort-SDR: 3BJA3FMU3QO63eUTx2NtsyzglZABEsZROCoTzEn3vw1w5K0DYAEIXTRlRZo+PJcR0ClHMFYKC3
+ evilY/7sU3SQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 10:54:20 -0700
+IronPort-SDR: eO0oXpkcP+JrmK2DfvLF1N3u4+jli6PUEGF2JMPDEiNXD3WwIFROnSTCtWoT2e8mJr93ox/BNU
+ pGu34SkmFVjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,309,1580803200"; 
+   d="scan'208";a="394090478"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 10:54:17 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 7CF563BA; Thu, 26 Mar 2020 19:54:16 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] x86/early_printk: Drop unused headers
+Date:   Thu, 26 Mar 2020 19:54:15 +0200
+Message-Id: <20200326175415.8618-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <486b5c63e5b9bd81051500c0c310e68af16956c4.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:/dw4OxKu77CHBXgp2rsR6+DCGOJdgmDlUFJLI91y4YoNeJtp3/I
- dXC+CAT9xFZLt67e/gZQ4SoMDn3Lk5NBlYMEDkfmX2gfP7aCoDN+f6FWFDKPYyPtoI1722U
- Ldl1ETnpGUv53vyrjWxr8101C8difqptTvOAc1XX6nmc5D7Y2dBOeCUr3eDTE3S5SukMmxD
- Gm7L7y2LUwHINx3uVgIjQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AijSonU/UGo=:dHvzR77kshW/cUguLtQMC9
- ckaUihqsT6Keup+cYIRmwNHzXlv1OjKz2Va8eogi7Ag+SQopIEd/S/xRF7E3Y1KOI/xdrIH2w
- W2fBZGpcjsihH4+g2rBx5PagcT6m/JFp/AYH7QPsmKDH2to6tTkdb1bUy3ODcpaybogJo0rsu
- X8VPw64ZNI2ZtJOm6MgMYUq7GOgKmLswwEsbLrCbaXbwpWUlcveNEaLsev9n8hqTVk776QgaD
- xjcd+vFlSC6LFpA7GV1o2jcZcWOJM+r6KmnyoweiDvqbJD7L1bfeycqmIiUCnyexUhKkgSUro
- KjfVJ56prL4D8rz6nUpCV5D8Bysq25BcUF/Oj8SvjvWHji6VcNIFUJwzXDrxAUviMY0x/WAHb
- hKx0X14+rzrgQjU+lhGB1p1u69ar+XD80K/ada2u7+VOTuENPdr4Z8bIJWQe3OIkTglRYC9x8
- m/tm4ND6jxJq8Sfg7qe3pmT8UkgvMZQgGCkinUjc2lm6VtpfATDZ6O3CdDYxm9oMedYXrviIh
- qybpPyIbqLgKkyAXDnYiKvWckIsEeNLgLAueUMiebVT6REyRv4mr+xuIlTJU9Ypj6qLIn9abL
- 85mS1ZZVzWZ7aqieEH1x8fFc6WQ0kPKFJ/YmW/+pKVh4qBPl+cqGn5Qa2JdnHq8OxwWWbjSsT
- eGq6bXpLnTXQkfIrNnNrI0F6KFyQpPlCVjJcnj62NUD0f7AgeonAl4W708dPVHdw0E0t4pEUB
- 2yIp/wU3kcS6J8gfvky0LNnh4kGDUNpSqIlvNAbXl8sMWzhgfUvT7cyQFP96qzp6oR8XpWmcH
- AfoUy3yF2oeiVRuOC2EyGh7pdXBgBq/OzdmSZlN6MC6eenx0arVEfp3cN+pEqQmQP/I02r/
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 26.03.20 um 18:36 schrieb Nicolas Saenz Julienne:
-> On Thu, 2020-03-26 at 18:19 +0100, Stefan Wahren wrote:
->> Am 26.03.20 um 13:20 schrieb Nicolas Saenz Julienne:
->>> Current mode validation impedes setting up some video modes which should
->>> be supported otherwise. Namely 1920x1200@60Hz.
->>>
->>> Fix this by lowering the minimum HDMI state machine clock to pixel clock
->>> ratio allowed.
->>>
->>> Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks")
->>> Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
->>> Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
->>> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
->>> ---
->>>  drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
->>>  1 file changed, 16 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
->>> index cea18dc15f77..340719238753 100644
->>> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
->>> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
->>> @@ -681,11 +681,23 @@ static enum drm_mode_status
->>>  vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
->>>  			    const struct drm_display_mode *mode)
->>>  {
->>> -	/* HSM clock must be 108% of the pixel clock.  Additionally,
->>> -	 * the AXI clock needs to be at least 25% of pixel clock, but
->>> -	 * HSM ends up being the limiting factor.
->>> +	/*
->>> +	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
->>> +	 * be faster than pixel clock, infinitesimally faster, tested in
->>> +	 * simulation. Otherwise, exact value is unimportant for HDMI
->>> +	 * operation." This conflicts with bcm2835's vc4 documentation, which
->>> +	 * states HSM's clock has to be at least 108% of the pixel clock.
->>> +	 *
->>> +	 * Real life tests reveal that vc4's firmware statement holds up, and
->>> +	 * users are able to use pixel clocks closer to HSM's, namely for
->>> +	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
->>> +	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
->> s/RPi0-3/bcm2835/ ?
-> Well as Dave Stevenson stated on the previous thread[1], it's the firmware that
-> sets up the HSM limitation. IIUC technically both HSM and pixel clocks could be
-> increased. Hence this being more of a RPi limitation than the chip itself.
->
-> "Whilst the firmware would appear to use a fixed HSM clock on Pi0-3, I
-> don't anticipate there being any issue with varying it. It looks like
-> there was the expectation of it being variable in the past, but
-> someone has refactored it and either accidentally or deliberately
-> given up on the idea."
+After the commit 1bd187de5364
+("x86, intel-mid: remove Intel MID specific serial support")
+the Intel MID header is not needed anymore.
 
-Okay thanks for the explanation again
+After the commit 69c1f396f25b
+("efi/x86: Convert x86 EFI earlyprintk into generic earlycon implementation")
+the EFI headers are not needed anymore.
 
-So i'm fine this patch
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ arch/x86/kernel/early_printk.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
->
-> Regards,
-> Nicolas
->
-> [1] https://www.spinics.net/lists/arm-kernel/msg794591.html
->
+diff --git a/arch/x86/kernel/early_printk.c b/arch/x86/kernel/early_printk.c
+index 9b33904251a9..93fbdff2974f 100644
+--- a/arch/x86/kernel/early_printk.c
++++ b/arch/x86/kernel/early_printk.c
+@@ -15,12 +15,9 @@
+ #include <xen/hvc-console.h>
+ #include <asm/pci-direct.h>
+ #include <asm/fixmap.h>
+-#include <asm/intel-mid.h>
+ #include <asm/pgtable.h>
+ #include <linux/usb/ehci_def.h>
+ #include <linux/usb/xhci-dbgp.h>
+-#include <linux/efi.h>
+-#include <asm/efi.h>
+ #include <asm/pci_x86.h>
+ 
+ /* Simple VGA output */
+-- 
+2.25.1
+
