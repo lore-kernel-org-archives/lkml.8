@@ -2,130 +2,106 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76357C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD87C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470DB20737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8867D206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="pwpUmBWd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyEnc4F3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgCZORL (ORCPT
+        id S1727958AbgCZOSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:17:11 -0400
-Received: from mail-eopbgr80080.outbound.protection.outlook.com ([40.107.8.80]:9447
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727751AbgCZORL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:17:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bjlQa9HgI+twreTv1Hv6oJmaNjbki1o2sjaxpm9de3dHOHNHO8hiHXZLXr6iPUWUSWmqcteY0WpnOJzDmgYVpVeRDP+Q5Unl/Za6dEm64C4KLnWDSKZqDwFoZE0K5w80I5pi3yaalRMmMNbkHoQJ0Cqr3j8Y24MsYROpJtpa2GIABlWz5ogKALfykt4OIsh7DlXTeSRIghzaSpkI5MukH0DWt4jIqXPx9GNNrpqfh+GsAsO8jTqdMgFh8+Cg1kOqLK0F75j9Sgf9JIMe0d3WtRBuie5Q3F78OsOF+rzoPYUIz3k3nL2OERpLKVtoNJOh1UaxL03j23wwAHvsXKmkrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xRMCs5XdbSctT6VGReAGpgj7mfw20McXX7MyGgey5c=;
- b=Z5UWfAPuenbdb/E2l0YmqgigiAxXQZXSYrisQtU22Gyu93/yrmLGD4mh9WBnrCzXy6KkCkM5HoUR6/Z2ridw1zUNu7u44MSnsaUOok2VniI7ly+wqLuL7cMSdT2nT47VoaepSuGt5MlfTuRw2biHYIHBnQwGicoQ71uVa812kHh4R3/A7yQEhaMtWPh8WkBJiclnlgBmUx9A24uEnogwE5844tl727T9yqokz8Ug+x8/N7DvQDb4Y7hx5CXW+C2c0+wCAyZeW0pZcqB0FYH+3E5YW7ihfGPjEOReHQhKu/8KJeP7FrzD86dB7v+BS21mj4sVsBS5M0i89aJbgEEUPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1xRMCs5XdbSctT6VGReAGpgj7mfw20McXX7MyGgey5c=;
- b=pwpUmBWd1E60RkmOcXNYhJEPM1fneMG6ZMadb7VbVSMwtMQmE4y1wg0rSB1rwYyjtCqUUQMNLapmdU/SmGhdg3HXrpGBUo4NdbSWiPSMSk7p4HktaLzn+DuKFcplV9fji0g/L7YodWOKvSC01nnF5MnbMTaBHoggT62jOT/MpsQ=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3865.eurprd04.prod.outlook.com (52.134.73.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.22; Thu, 26 Mar 2020 14:17:05 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::3143:c46:62e4:8a8b%7]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
- 14:17:05 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "rui.zhang@intel.com" <rui.zhang@intel.com>,
-        "amit.kucheria@verdurent.com" <amit.kucheria@verdurent.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] thermal: imx: Add missing of_node_put()
-Thread-Topic: [PATCH] thermal: imx: Add missing of_node_put()
-Thread-Index: AQHWAzBAgRLyKlHtTk2Dsujd2fCjGqha6SaAgAABlyA=
-Date:   Thu, 26 Mar 2020 14:17:05 +0000
-Message-ID: <DB3PR0402MB3916F370C524F3F8CE590167F5CF0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1585200445-16461-1-git-send-email-Anson.Huang@nxp.com>
- <8325cde9-02f3-b913-b020-4c98d19936f4@linaro.org>
-In-Reply-To: <8325cde9-02f3-b913-b020-4c98d19936f4@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ba938f9a-0f00-4771-59fb-08d7d1905c86
-x-ms-traffictypediagnostic: DB3PR0402MB3865:|DB3PR0402MB3865:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB3PR0402MB3865D6D42F57C637AFD29BBDF5CF0@DB3PR0402MB3865.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1923;
-x-forefront-prvs: 0354B4BED2
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(376002)(346002)(366004)(39860400002)(2906002)(66556008)(66476007)(66446008)(55016002)(8676002)(316002)(64756008)(66946007)(5660300002)(86362001)(7416002)(71200400001)(9686003)(110136005)(7696005)(33656002)(52536014)(26005)(81166006)(44832011)(478600001)(4326008)(76116006)(53546011)(81156014)(8936002)(6506007)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3865;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: qSWLBoj/p6fNgEdU3KD7xRMF16qBlT+xNQkHhuae6EvlAvTEXzi6xZ8iT8K/SvYP71Q3aQco2MCmUdegW0nLQCoZlZPnGQ667GO3BqIlyafUHD9qmjSAlzKmXx82axKBF9qgQcn0F/3J0wJyssVhYSon0OZZ5Sj8cuvKM4Jpm3i5ofO7flgJTnKKRZOXgaTWgkrmYV70UpSrLVSzLUN0LJvLVb0lt2FD+1JkfzAZtM4cctco31K/qrDZIKDaQej4dTAXe2evut4b9DiQuCDSPDZILro7tKeRtcVbjTppUsUiSpLZHuklntis6TJGgnho0ZpjdYad1c0wl7a0IMmdUvXL/C+2Ig5iPrHlWNDRC6DNBN1eN2Sxt2d0pBPuoOp2WdCVrB1+RQmzc8avZgDdEujwDGwrEeeOZxwmvsHqafRokjGHyOgTguI8Kqv7t7WYm3GasKn0d6mHYgQZOPPWyOwUyeA+KqGpiMv14pQqsZKnrka0SY9d64bf0kxoudqW
-x-ms-exchange-antispam-messagedata: gE/0lHS7dG4g/Pamo49kCnc32z8NiJAq1jqQJ71iYRS122shG4KV32FCvtYQnocMXlwJmaVidBjAUIa/9xIDMIW1JLLSJMJiM8U5VmamuEfn1XgYffs4aqTfDwAqvjddIuHWYMAujFW71ejNw6k62A==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 26 Mar 2020 10:18:08 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:36347 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgCZOSI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:18:08 -0400
+Received: by mail-pj1-f68.google.com with SMTP id nu11so2461827pjb.1;
+        Thu, 26 Mar 2020 07:18:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=BA2bA9PavUC7l7dbOSeDNGiZmDysCoavq5nh0AKiFpY=;
+        b=jyEnc4F39900X3l7jblWNG3p0e4wzQF8tYoEsOLU0HfEZa1i5EVX6jRqFleD+SHmEQ
+         79zOTgjI5TxA/Tc/SybR0T3OkTkDOhVK5PhpF7M4WFfQuh54uPLmUdegVJH1xlH/PjgW
+         4E1gMLyay0W4PkcGASKSNGmPbDG6QyKGzszx04BUSkiI5d9mJxsKPl8bvDPwNkq2hhYW
+         sGRStwwcVZdphe3bKY+zgymraMQGl4WDYs4B+8YIgMlhKtRHEokEp5fb6qAZA/KOx/FS
+         nkKHon4++DPYXUNluZlaz9w3LiCOXuiCgTZ8LB9WFNTwqAAA9LbmHoLvNdfwPFcWTila
+         ZKXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BA2bA9PavUC7l7dbOSeDNGiZmDysCoavq5nh0AKiFpY=;
+        b=CQFkAxw2Djh9kv8Vr/LAAPrqFymxu+u/G9/TlgxXwS76J5dIMS/WD2qMFIwBv2u4+K
+         11eS161PkvW/mwnPF0juY1sVqgwAIFXJ1qyAxXvuyx/XPltJ20ZGo3JKjaSIDxnYeYmT
+         /fdqwQw9Fhj5SXa5NlucvcBHbLPNb3KZMwqdgwqY8BEFX+gCth9nHDTgYwr2CTZv3pWA
+         yf8DPf7AWy8LlQTZZo3nocOlcGnIy42fcg81gO6zsAoWLsi2xGyHYtn90TeP9xgnKrU4
+         O5HJ851CzGm1ys6HrLdW9rWXImnwHVO2Tu5pyH7rEwUOG7dwoWkKYaaNnmEBOOpHt9FA
+         UClw==
+X-Gm-Message-State: ANhLgQ36PMCKoP561hHQfBnnEhj8jBGbtP24v4AKoAURBire+IudVY9x
+        oyq3Nl4NJ8KB5ghlVpsw+PI=
+X-Google-Smtp-Source: ADFU+vsIwvpB25Rifcmkllw3Yln+dgc/3yaAaaH6TDoiKd25tKlDJPlPSD6wqJHK/AI4Y07gtLiCPQ==
+X-Received: by 2002:a17:902:a986:: with SMTP id bh6mr7751713plb.100.1585232286954;
+        Thu, 26 Mar 2020 07:18:06 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id a3sm1788882pfg.172.2020.03.26.07.18.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 07:18:06 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 07:18:04 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 02/11] net: ethernet: ti: cpts: separate hw
+ counter read from timecounter
+Message-ID: <20200326141804.GC20841@localhost>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-3-grygorii.strashko@ti.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba938f9a-0f00-4771-59fb-08d7d1905c86
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 14:17:05.1840
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PdiKLiBjDF0tPqWcat0h528FQDWxOa7XzkFRdS2vDhi9MUjAyRLFuQrWtjGggFYdqgZwb+5Qf36hHBV22s0i2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3865
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320194244.4703-3-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIERhbmllbA0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIHRoZXJtYWw6IGlteDogQWRkIG1p
-c3Npbmcgb2Zfbm9kZV9wdXQoKQ0KPiANCj4gT24gMjYvMDMvMjAyMCAwNjoyNywgQW5zb24gSHVh
-bmcgd3JvdGU6DQo+ID4gQWZ0ZXIgZmluaXNoaW5nIHVzaW5nIGNwdSBub2RlIGdvdCBmcm9tIG9m
-X2dldF9jcHVfbm9kZSgpLA0KPiA+IG9mX25vZGVfcHV0KCkgbmVlZHMgdG8gYmUgY2FsbGVkLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
-IC0tLQ0KPiA+IGRyaXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jIHwgMTAgKysrKysrKy0tLSAx
-IGZpbGUgY2hhbmdlZCwgNw0KPiA+IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQo+ID4N
-Cj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMNCj4gPiBiL2Ry
-aXZlcnMvdGhlcm1hbC9pbXhfdGhlcm1hbC5jIGluZGV4IGU3NjFjOWIuLmY3Yjk3MGQgMTAwNjQ0
-IC0tLQ0KPiA+IGEvZHJpdmVycy90aGVybWFsL2lteF90aGVybWFsLmMgKysrIGIvZHJpdmVycy90
-aGVybWFsL2lteF90aGVybWFsLmMNCj4gQEANCj4gPiAtNjQ5LDcgKzY0OSw3IEBAIE1PRFVMRV9E
-RVZJQ0VfVEFCTEUob2YsIG9mX2lteF90aGVybWFsX21hdGNoKTsNCj4gc3RhdGljDQo+ID4gaW50
-IGlteF90aGVybWFsX3JlZ2lzdGVyX2xlZ2FjeV9jb29saW5nKHN0cnVjdCBpbXhfdGhlcm1hbF9k
-YXRhICpkYXRhKQ0KPiA+IHsgc3RydWN0IGRldmljZV9ub2RlICpucDsgLQlpbnQgcmV0OyArCWlu
-dCByZXQgPSAwOw0KPiA+DQo+ID4gZGF0YS0+cG9saWN5ID0gY3B1ZnJlcV9jcHVfZ2V0KDApOyBp
-ZiAoIWRhdGEtPnBvbGljeSkgeyBAQCAtNjY0LDExDQo+ID4gKzY2NCwxNSBAQCBzdGF0aWMgaW50
-IGlteF90aGVybWFsX3JlZ2lzdGVyX2xlZ2FjeV9jb29saW5nKHN0cnVjdA0KPiA+IGlteF90aGVy
-bWFsX2RhdGEgKmRhdGEpIGlmIChJU19FUlIoZGF0YS0+Y2RldikpIHsgcmV0ID0NCj4gPiBQVFJf
-RVJSKGRhdGEtPmNkZXYpOyBjcHVmcmVxX2NwdV9wdXQoZGF0YS0+cG9saWN5KTsgLQ0KPiAJcmV0
-dXJuDQo+ID4gcmV0OyArCQkJZ290byBwdXRfbm9kZTsgfSB9DQo+ID4NCj4gPiAtCXJldHVybiAw
-OyArcHV0X25vZGU6ICsJaWYgKG5wKSArCQlvZl9ub2RlX3B1dChucCk7DQo+IA0KPiBvZl9ub2Rl
-X3B1dCgpIGlzIGFscmVhZHkgY2hlY2tpbmcgaWYgJ25wJyBpcyBOVUxMLg0KDQpPSywgSSB3aWxs
-IHJlbW92ZSB0aGUgY2hlY2tpbmcgb2YgaWYgJ25wJyBpcyBOVUxMLg0KDQpUaGFua3MsDQpBbnNv
-bg0K
+On Fri, Mar 20, 2020 at 09:42:35PM +0200, Grygorii Strashko wrote:
+> Separate hw counter read from timecounter code:
+> - add CPTS context field to store current HW counter value
+> - move HW timestamp request and FIFO read code out of timecounter code
+> - convert cyc2time on event reception in cpts_fifo_read()
+> - call timecounter_read() in cpts_fifo_read() to update tk->cycle_last
+
+This comment tells us WHAT the patch does, but does not help because
+we can see that from the patch itself.  Instead, the comment should
+tell us WHY is change is needed.
+
+I was left scratching my head, with the question, what is the purpose
+here?  Maybe the answer is to be found later on in the series.
+
+Here is commit message pattern to follow that I learned from tglx:
+
+1. context
+2. problem
+3. solution
+
+For this patch, the sentence, "Separate hw counter read from
+timecounter code" is #3.
+
+Thanks,
+Richard
