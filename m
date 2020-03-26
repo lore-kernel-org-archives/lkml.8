@@ -2,147 +2,306 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61337C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD322C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B0E120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B11620737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aX7Amg/4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qRukA1u1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbgCZNg1 (ORCPT
+        id S1727720AbgCZNhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:36:27 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45270 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZNg0 (ORCPT
+        Thu, 26 Mar 2020 09:37:21 -0400
+Received: from mail26.static.mailgun.info ([104.130.122.26]:36517 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726336AbgCZNhV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:36:26 -0400
-Received: by mail-wr1-f68.google.com with SMTP id t7so7758274wrw.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 06:36:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ovCKN6r26UhRylA1vm+kwz+TJf7uPDzl6lowndnjD70=;
-        b=aX7Amg/46758K2hIawHd5YOPoDrIwsKkKCmkQGPWJLgpI5bZnube9C0/LCQnSGvwUP
-         iV0QhWaOjaN7p9ZMwc8S8wSy9SSSu7TLsY4Zvtr09q7OeW0wtfFfAw0U+ZvFSyVA8SP0
-         da49F5jmKwK9hxv9Vjyrxo69UW1Zb58H1Roiw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ovCKN6r26UhRylA1vm+kwz+TJf7uPDzl6lowndnjD70=;
-        b=KMGTYYlZg4qrFnYR6XY/j57ZbQ+zt/KpFngmJCRwfia9kEqlbGOM9mYekN3rMDga9b
-         psvP8EHXcfLB/tncQ4VIO4NjBDoKwlWwmnQAmIl/NOB0bRgedts9cMmMDMl3vsRGNwNA
-         1NZAycMM+gzZ4nn/jPtLKLRzBP+SFGQIBSID3eXiARsSPt12lAwPtnOvaeJ6vr00muXI
-         ukt6CnB9MyR2bBfTyJs4xy3l+ZuqY30CuMxEsf/6Pb0z2K1OfYGwrybPjbsdvRBtMJnR
-         2lsacCxHx+2tq++MEgdDe8d15VmjVVURV16NOyYxiRMot67hA4aivzTyY/v6dgZojbwN
-         WZdg==
-X-Gm-Message-State: ANhLgQ1fFVj9eSwgm/wMmv9RK7UH5NwrUp2ozRqXCqNbpunhzZkThld5
-        sg2IxYIcs60wex5r53VPiiJ8zg==
-X-Google-Smtp-Source: ADFU+vsKWkKMYKPUzplU34IsZwsOqLykAHrTxJTpYTlmSJ4JSei5CHjs0/8o+xQyrIai7gjjyFDcQg==
-X-Received: by 2002:adf:f0c5:: with SMTP id x5mr9499607wro.415.1585229784324;
-        Thu, 26 Mar 2020 06:36:24 -0700 (PDT)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id a186sm3499256wmh.33.2020.03.26.06.36.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 06:36:23 -0700 (PDT)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Thu, 26 Mar 2020 14:36:17 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH bpf-next v6 7/8] bpf: lsm: Add selftests for
- BPF_PROG_TYPE_LSM
-Message-ID: <20200326133617.GC8575@chromium.org>
-References: <20200325152629.6904-1-kpsingh@chromium.org>
- <20200325152629.6904-8-kpsingh@chromium.org>
- <CAEf4BzbzfbTT9x3tfLrqhYgozcvxvHvKSVkvyuNqji=aNgvmZg@mail.gmail.com>
+        Thu, 26 Mar 2020 09:37:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1585229840; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=uOZHpRxzIqpO+4L0DPl+n7SjA8LxbZT7/KDDzbU/i5g=; b=qRukA1u1E2avJtKq/TtSe+JnPqiV/b56qR7gVzhDSXvz3gpBg9OdHabgA7IusbbdSP/ovSVM
+ CPWE3TEzqVpwHOczUC3EO9Ol6SaBJaa4uiWhZfs7RCYuA2qXPPaDorWeKnTpYnY3xsv2qsOE
+ ZJoSkvt20YYXBPMuP5xiZLLOQ8w=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e7cb003.7f57270a6b58-smtp-out-n02;
+ Thu, 26 Mar 2020 13:37:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 80995C433BA; Thu, 26 Mar 2020 13:37:07 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4965DC433F2;
+        Thu, 26 Mar 2020 13:37:04 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4965DC433F2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+Date:   Thu, 26 Mar 2020 19:07:00 +0530
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, stummala@codeaurora.org
+Subject: Re: [PATCH] f2fs: fix long latency due to discard during umount
+Message-ID: <20200326133700.GR20234@codeaurora.org>
+References: <1584506689-5041-1-git-send-email-stummala@codeaurora.org>
+ <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbzfbTT9x3tfLrqhYgozcvxvHvKSVkvyuNqji=aNgvmZg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <29d4adc4-482d-3d92-1470-3405989ea231@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25-Mär 19:01, Andrii Nakryiko wrote:
-> On Wed, Mar 25, 2020 at 8:27 AM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > * Load/attach a BPF program that hooks to file_mprotect (int)
-> >   and bprm_committed_creds (void).
-> > * Perform an action that triggers the hook.
-> > * Verify if the audit event was received using the shared global
-> >   variables for the process executed.
-> > * Verify if the mprotect returns a -EPERM.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> > Reviewed-by: Florent Revest <revest@google.com>
-> > Reviewed-by: Thomas Garnier <thgarnie@google.com>
+Hi Chao,
+
+On Thu, Mar 26, 2020 at 05:00:18PM +0800, Chao Yu wrote:
+> Hi Sahitya,
+> 
+> On 2020/3/18 12:44, Sahitya Tummala wrote:
+> > F2FS already has a default timeout of 5 secs for discards that
+> > can be issued during umount, but it can take more than the 5 sec
+> > timeout if the underlying UFS device queue is already full and there
+> > are no more available free tags to be used. In that case, submit_bio()
+> > will wait for the already queued discard requests to complete to get
+> > a free tag, which can potentially take way more than 5 sec.
+> > 
+> > Fix this by submitting the discard requests with REQ_NOWAIT
+> > flags during umount. This will return -EAGAIN for UFS queue/tag full
+> > scenario without waiting in the context of submit_bio(). The FS can
+> > then handle these requests by retrying again within the stipulated
+> > discard timeout period to avoid long latencies.
+> > 
+> > Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
 > > ---
-> >  tools/testing/selftests/bpf/config            |  2 +
-> >  .../selftests/bpf/prog_tests/test_lsm.c       | 84 +++++++++++++++++++
-> >  tools/testing/selftests/bpf/progs/lsm.c       | 48 +++++++++++
-> >  3 files changed, 134 insertions(+)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/test_lsm.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/lsm.c
-> >
-> 
-> [...]
-> 
+> > v2:
+> > - Handle the case where a dc can have multiple bios associated with it
+> > 
+> >  fs/f2fs/f2fs.h    |  1 +
+> >  fs/f2fs/segment.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++++-------
+> >  2 files changed, 74 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 12a197e..67b8dcc 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -340,6 +340,7 @@ struct discard_cmd_control {
+> >  	struct list_head pend_list[MAX_PLIST_NUM];/* store pending entries */
+> >  	struct list_head wait_list;		/* store on-flushing entries */
+> >  	struct list_head fstrim_list;		/* in-flight discard from fstrim */
+> > +	struct list_head retry_list;		/* list of cmds to retry */
+> >  	wait_queue_head_t discard_wait_queue;	/* waiting queue for wake-up */
+> >  	unsigned int discard_wake;		/* to wake up discard thread */
+> >  	struct mutex cmd_lock;
+> > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> > index fb3e531..4162c76 100644
+> > --- a/fs/f2fs/segment.c
+> > +++ b/fs/f2fs/segment.c
+> > @@ -1029,13 +1029,16 @@ static void f2fs_submit_discard_endio(struct bio *bio)
+> >  	struct discard_cmd *dc = (struct discard_cmd *)bio->bi_private;
+> >  	unsigned long flags;
+> >  
+> > -	dc->error = blk_status_to_errno(bio->bi_status);
+> > -
+> >  	spin_lock_irqsave(&dc->lock, flags);
+> > +	if (!dc->error)
+> > +		dc->error = blk_status_to_errno(bio->bi_status);
 > > +
-> > +int exec_cmd(int *monitored_pid)
+> >  	dc->bio_ref--;
+> > -	if (!dc->bio_ref && dc->state == D_SUBMIT) {
+> > -		dc->state = D_DONE;
+> > -		complete_all(&dc->wait);
+> > +	if (!dc->bio_ref) {
+> > +		if (dc->error || dc->state == D_SUBMIT) {
+> > +			dc->state = D_DONE;
+> > +			complete_all(&dc->wait);
+> > +		}
+> >  	}
+> >  	spin_unlock_irqrestore(&dc->lock, flags);
+> >  	bio_put(bio);
+> > @@ -1124,10 +1127,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> >  	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> >  	struct list_head *wait_list = (dpolicy->type == DPOLICY_FSTRIM) ?
+> >  					&(dcc->fstrim_list) : &(dcc->wait_list);
+> > -	int flag = dpolicy->sync ? REQ_SYNC : 0;
+> > -	block_t lstart, start, len, total_len;
+> > +	int flag;
+> > +	block_t lstart, start, len, total_len, orig_len;
+> >  	int err = 0;
+> >  
+> > +	flag = dpolicy->sync ? REQ_SYNC : 0;
+> > +	flag |= dpolicy->type == DPOLICY_UMOUNT ? REQ_NOWAIT : 0;
+> > +
+> >  	if (dc->state != D_PREP)
+> >  		return 0;
+> >  
+> > @@ -1139,7 +1145,7 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> >  	lstart = dc->lstart;
+> >  	start = dc->start;
+> >  	len = dc->len;
+> > -	total_len = len;
+> > +	orig_len = total_len = len;
+> >  
+> >  	dc->len = 0;
+> >  
+> > @@ -1203,6 +1209,14 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+> >  		bio->bi_end_io = f2fs_submit_discard_endio;
+> >  		bio->bi_opf |= flag;
+> >  		submit_bio(bio);
+> > +		if (flag & REQ_NOWAIT) {
+> > +			if (dc->error == -EAGAIN) {
+> > +				dc->len = orig_len;
+> > +				list_move(&dc->list, &dcc->retry_list);
+> > +				err = dc->error;
+> 
+> I encounter lots of dmesg, which should be printed by __remove_discard_cmd()
+> 
+> F2FS-fs (dm-0): Issue discard(23552, 23552, 2) failed, ret: -11
+> 
+> This should happen only if we didn't handle all discard in 5 seconds during
+> umount.
+> 
+> So I doubt we failed to move dc to retry_list, because after submit_bio(),
+> end_io() is not called synchronously as the bio was just pluged?
+> 
+This can happen if a discard cmd has multiple bios and at least 1 bio is 
+already submitted and when submitting other bios, we encounter -EAGAIN.
+In this case, this dc will be moved to retry_list and will be moved back
+to dcc->pend_list only if the dc->bio_ref becomes 0 within 5 sec timeout.
+If it doesn't become zero, then it will be left in retry_list itself, which
+will be later removed from retry_list. Before removing from retry_list we 
+will however ensure that submitted bio is done i.e., dc->bio_ref is 0, but
+dc->error will be -EAGAIN as this dc could not be requeued/retried.
+
+So this is expected, where it only means that this dc could not be
+submitted/retried again within timeout. I think we can ignore
+this -EAGAIN error in __remove_discard_cmd().
+
+Thanks,
+
+> Thanks,
+> 
+> > +				break;
+> > +			}
+> > +		}
+> >  
+> >  		atomic_inc(&dcc->issued_discard);
+> >  
+> > @@ -1463,6 +1477,40 @@ static unsigned int __issue_discard_cmd_orderly(struct f2fs_sb_info *sbi,
+> >  	return issued;
+> >  }
+> >  
+> > +static bool __should_discard_retry(struct f2fs_sb_info *sbi,
+s> > +		struct discard_policy *dpolicy)
 > > +{
-> > +       int child_pid;
+> > +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> > +	struct discard_cmd *dc, *tmp;
+> > +	bool retry = false;
+> > +	unsigned long flags;
 > > +
-> > +       child_pid = fork();
-> > +       if (child_pid == 0) {
-> > +               *monitored_pid = getpid();
-> > +               execvp(CMD_ARGS[0], CMD_ARGS);
-> > +               return -EINVAL;
-> > +       } else if (child_pid > 0)
-> 
-> This test is part of test_progs, so let's be a good citizen and wait
-> for your specific child. I'd rather not hunt for elusive bugs later,
-> so please use waitpid() instead.
-
-Good idea. Done.
-
-- KP
-
-> 
-> Otherwise looks good and clean, thanks!
-> 
-> > +               return wait(NULL);
+> > +	if (dpolicy->type != DPOLICY_UMOUNT)
+> > +		f2fs_bug_on(sbi, 1);
 > > +
-> > +       return -EINVAL;
+> > +	mutex_lock(&dcc->cmd_lock);
+> > +	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
+> > +		if (dpolicy->timeout != 0 &&
+> > +			f2fs_time_over(sbi, dpolicy->timeout)) {
+> > +			retry = false;
+> > +			break;
+> > +		}
+> > +
+> > +		spin_lock_irqsave(&dc->lock, flags);
+> > +		if (!dc->bio_ref) {
+> > +			dc->state = D_PREP;
+> > +			dc->error = 0;
+> > +			reinit_completion(&dc->wait);
+> > +			__relocate_discard_cmd(dcc, dc);
+> > +			retry = true;
+> > +		}
+> > +		spin_unlock_irqrestore(&dc->lock, flags);
+> > +	}
+> > +	mutex_unlock(&dcc->cmd_lock);
+> > +
+> > +	return retry;
 > > +}
 > > +
-> 
-> [...]
+> >  static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> >  					struct discard_policy *dpolicy)
+> >  {
+> > @@ -1470,12 +1518,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> >  	struct list_head *pend_list;
+> >  	struct discard_cmd *dc, *tmp;
+> >  	struct blk_plug plug;
+> > -	int i, issued = 0;
+> > +	int i, err, issued = 0;
+> >  	bool io_interrupted = false;
+> >  
+> >  	if (dpolicy->timeout != 0)
+> >  		f2fs_update_time(sbi, dpolicy->timeout);
+> >  
+> > +retry:
+> >  	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+> >  		if (dpolicy->timeout != 0 &&
+> >  				f2fs_time_over(sbi, dpolicy->timeout))
+> > @@ -1509,7 +1558,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> >  				break;
+> >  			}
+> >  
+> > -			__submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > +			err = __submit_discard_cmd(sbi, dpolicy, dc, &issued);
+> > +			if (err == -EAGAIN)
+> > +				congestion_wait(BLK_RW_ASYNC,
+> > +						DEFAULT_IO_TIMEOUT);
+> >  
+> >  			if (issued >= dpolicy->max_requests)
+> >  				break;
+> > @@ -1522,6 +1574,10 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+> >  			break;
+> >  	}
+> >  
+> > +	if (!list_empty(&dcc->retry_list) &&
+> > +		__should_discard_retry(sbi, dpolicy))
+> > +		goto retry;
+> > +
+> >  	if (!issued && io_interrupted)
+> >  		issued = -1;
+> >  
+> > @@ -1613,6 +1669,12 @@ static unsigned int __wait_discard_cmd_range(struct f2fs_sb_info *sbi,
+> >  		goto next;
+> >  	}
+> >  
+> > +	if (dpolicy->type == DPOLICY_UMOUNT &&
+> > +		!list_empty(&dcc->retry_list)) {
+> > +		wait_list = &dcc->retry_list;
+> > +		goto next;
+> > +	}
+> > +
+> >  	return trimmed;
+> >  }
+> >  
+> > @@ -2051,6 +2113,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+> >  	for (i = 0; i < MAX_PLIST_NUM; i++)
+> >  		INIT_LIST_HEAD(&dcc->pend_list[i]);
+> >  	INIT_LIST_HEAD(&dcc->wait_list);
+> > +	INIT_LIST_HEAD(&dcc->retry_list);
+> >  	INIT_LIST_HEAD(&dcc->fstrim_list);
+> >  	mutex_init(&dcc->cmd_lock);
+> >  	atomic_set(&dcc->issued_discard, 0);
+> > 
+
+-- 
+--
+Sent by a consultant of the Qualcomm Innovation Center, Inc.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum.
