@@ -2,122 +2,101 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2801BC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D02C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C3A620714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC26520714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:29:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FoT/5Osj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgCZO3b (ORCPT
+        id S1728385AbgCZO3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:29:31 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:37563 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726340AbgCZO3a (ORCPT
+        Thu, 26 Mar 2020 10:29:54 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:39917 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727798AbgCZO3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:29:30 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04427;MF=zhangliguang@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TthONLz_1585232950;
-Received: from localhost(mailfrom:zhangliguang@linux.alibaba.com fp:SMTPD_---0TthONLz_1585232950)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 26 Mar 2020 22:29:18 +0800
-From:   luanshi <zhangliguang@linux.alibaba.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI / CPPC: clean up acpi_get_psd_map
-Date:   Thu, 26 Mar 2020 22:29:10 +0800
-Message-Id: <1585232950-123704-1-git-send-email-zhangliguang@linux.alibaba.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 26 Mar 2020 10:29:54 -0400
+Received: by mail-pj1-f66.google.com with SMTP id z3so1962692pjr.4;
+        Thu, 26 Mar 2020 07:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+cg7/vNMMOsNUi/4m6oa2Zr/yCuH8pUcG9soKF+ye0M=;
+        b=FoT/5OsjuwqF3LGtq0NGlSwiQiABbGVpz1Ubm9nz4qpYemVxoyU4+5p0au6CvFEv0T
+         dP8lM+AQo/UDkSm6tro+/zfh4REKRahYDjFf0o0EKCHV+gPUOXHlwvuLf4UKdzFz7wCF
+         a/R3GcnhjpygHHNkBHi/COsruloz5Hh9Y78/7hOwHdhmlyMiCEdwJd1/cSyZsE6j4ZLy
+         Q91EJE0byzw2JZF4bwrL7xsKJfofrA00BLPpwk8pjFRh2kWOnxBpX1kIT8rC3R+9R0qQ
+         e9nzP20yGNCWeBlHfYaR32OXK7hXGIHqVjyfSb/wOjUCrvRuMC66R/UQTTIw4oFWS/Fd
+         pmUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+cg7/vNMMOsNUi/4m6oa2Zr/yCuH8pUcG9soKF+ye0M=;
+        b=HyPdxfBAT+hBDzVG8dr3YUT6lcprTerFJLBv+P+aqB+q3tN6PkN5q5zCgDKjXu+AaE
+         HR3z3POeLOyjGEov+gcRR0jec4NeghdSjJYDdtIj1qpa3UjGZRYzLLJXRzDtAvj3lwcc
+         tkhZRX8mS2nyXCMDTFc/CS4N9MOa6ACU+j1YzNS7S8jEtKuG3/KT2EeKZoslMpgL7aoA
+         2hnjKXtTBfchx8NShf3QjRmjXZeng4vGaqC/VCkJc6K3yLc+5sMbdaRAqHO9QVM2l89x
+         qse17px1mjnjAX/fVOENpk5AEXl9jnGGEJX5YiJJuRbFp4pv+/hNFrT2bWagqyqE3B1z
+         2yhQ==
+X-Gm-Message-State: ANhLgQ1u8yQKuy8zu0kU/y+wQa+pU00eAQ/75j15YCMoeGNxkFVrR6k+
+        pmxzyw7RCQrdFsx/lnUmESgOvo8x
+X-Google-Smtp-Source: ADFU+vvRPcavRwefyV3uIlhwFkQ82uJPgQ9Vv20Y60NzXTHS14gVTEZYA21QnYrQoHK2iqHkp0XMHw==
+X-Received: by 2002:a17:90a:fb47:: with SMTP id iq7mr256650pjb.191.1585232992872;
+        Thu, 26 Mar 2020 07:29:52 -0700 (PDT)
+Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
+        by smtp.gmail.com with ESMTPSA id e187sm1827120pfe.50.2020.03.26.07.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 07:29:52 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 07:29:50 -0700
+From:   Richard Cochran <richardcochran@gmail.com>
+To:     Grygorii Strashko <grygorii.strashko@ti.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 06/11] net: ethernet: ti: cpts: move tx
+ timestamp processing to ptp worker only
+Message-ID: <20200326142950.GE20841@localhost>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-7-grygorii.strashko@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200320194244.4703-7-grygorii.strashko@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch cleans up acpi_get_psd_map function. If got here,
-variable all_cpu_data[] can't be NULL. Variable match_cpc_ptr has been
-checked before, no need check again at the end of the funchtion. Then
-some code logic should be optimized.
+On Fri, Mar 20, 2020 at 09:42:39PM +0200, Grygorii Strashko wrote:
+> Now the tx timestamp processing happens from different contexts - softirq
+> and thread/PTP worker. Enabling IRQ will add one more hard_irq context.
+> This makes over all defered TX timestamp processing and locking
+> overcomplicated. Move tx timestamp processing to PTP worker always instead.
+> 
+> napi_rx->cpts_tx_timestamp
+>  if ptp_packet then
+>     push to txq
+>     ptp_schedule_worker()
+> 
+> do_aux_work->cpts_overflow_check
+>  cpts_process_events()
 
-Signed-off-by: Liguang Zhang <zhangliguang@linux.alibaba.com>
----
- drivers/acpi/cppc_acpi.c | 33 +++++++--------------------------
- 1 file changed, 7 insertions(+), 26 deletions(-)
+Since cpts_overflow_check() is performing new functions, consider
+renaming it to match.
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index a1a858a..8b2e89c 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -438,13 +438,10 @@ int acpi_get_psd_map(struct cppc_cpudata **all_cpu_data)
- 	 * domain info.
- 	 */
- 	for_each_possible_cpu(i) {
--		pr = all_cpu_data[i];
--		if (!pr)
--			continue;
--
- 		if (cpumask_test_cpu(i, covered_cpus))
- 			continue;
- 
-+		pr = all_cpu_data[i];
- 		cpc_ptr = per_cpu(cpc_desc_ptr, i);
- 		if (!cpc_ptr) {
- 			retval = -EFAULT;
-@@ -495,44 +492,28 @@ int acpi_get_psd_map(struct cppc_cpudata **all_cpu_data)
- 			cpumask_set_cpu(j, pr->shared_cpu_map);
- 		}
- 
--		for_each_possible_cpu(j) {
-+		for_each_cpu(j, pr->shared_cpu_map) {
- 			if (i == j)
- 				continue;
- 
- 			match_pr = all_cpu_data[j];
--			if (!match_pr)
--				continue;
--
--			match_cpc_ptr = per_cpu(cpc_desc_ptr, j);
--			if (!match_cpc_ptr) {
--				retval = -EFAULT;
--				goto err_ret;
--			}
--
--			match_pdomain = &(match_cpc_ptr->domain_info);
--			if (match_pdomain->domain != pdomain->domain)
--				continue;
--
- 			match_pr->shared_type = pr->shared_type;
- 			cpumask_copy(match_pr->shared_cpu_map,
- 				     pr->shared_cpu_map);
- 		}
- 	}
-+	goto out;
- 
- err_ret:
- 	for_each_possible_cpu(i) {
- 		pr = all_cpu_data[i];
--		if (!pr)
--			continue;
- 
- 		/* Assume no coordination on any error parsing domain info */
--		if (retval) {
--			cpumask_clear(pr->shared_cpu_map);
--			cpumask_set_cpu(i, pr->shared_cpu_map);
--			pr->shared_type = CPUFREQ_SHARED_TYPE_ALL;
--		}
-+		cpumask_clear(pr->shared_cpu_map);
-+		cpumask_set_cpu(i, pr->shared_cpu_map);
-+		pr->shared_type = CPUFREQ_SHARED_TYPE_ALL;
- 	}
--
-+out:
- 	free_cpumask_var(covered_cpus);
- 	return retval;
- }
--- 
-1.8.3.1
+Thanks,
+Richard
 
