@@ -2,198 +2,385 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092C9C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF61C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB71C20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:34:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRl4RWYn"
+	by mail.kernel.org (Postfix) with ESMTP id BB2CA20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCZUeN (ORCPT
+        id S1727718AbgCZUeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:34:13 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43194 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726281AbgCZUeN (ORCPT
+        Thu, 26 Mar 2020 16:34:24 -0400
+Received: from smtp-1909.mail.infomaniak.ch ([185.125.25.9]:45191 "EHLO
+        smtp-1909.mail.infomaniak.ch" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727650AbgCZUeY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:34:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id u12so3472853pgb.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:34:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Le7doV1aD2nnDIjljTT6TRoqwG4Kk2Xg5cqe+Y2QeE8=;
-        b=IRl4RWYnFi1S/4ylGpDj2CLK3Ia0Xfv+YRQBn3BpWZOs7UKH6YZo8+zxLGWahTKYuZ
-         M/tNUA95U4+1GTULWdX+4rxNECrKnt/UOjrhOmD5k3nKqeauDBg0WkYbDFmCbgqodyGb
-         N0hlBrV9t60fDGH88FD7DUnHKF0D8Q11RzoCg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Le7doV1aD2nnDIjljTT6TRoqwG4Kk2Xg5cqe+Y2QeE8=;
-        b=GQdtmDvf9t5jeIj0/l57Pf/S9zu6T3Hd+mqsQ6z2FRfUbdw6IA1cYMa6mQQUnZESG5
-         ll9SRKS0K0/ilnHbVPHMLfhwkTdsEiw/IRD3rOn8m1/xQV3w4VbzHbrDar90Ro5ZAHL8
-         tL0xsX7cdZcIrB3Nr7VpARROMa/sJM7JcIg6jsSw2eu2gOM5Afl45Te8jSnuhz3iPxEo
-         2hFX5oAMmEpCEU42t3hMx8u2hdNQCfsifRgGtrz4voZtO0r923kUPSxZI56jgD+lTnuW
-         DzCHUKMVLyLIPVlGaQsk1SFlDQEmuRu8dJAQPBLX0iqtZu5+hLsXG1gngTcFsCxJZx49
-         6a9w==
-X-Gm-Message-State: ANhLgQ0G3FsaUZ9A1+crHTUCLzL3ul+ujTMAsiQflyEFbkvzGc/WI3IM
-        hgTtxwp/D3QZpRv2qxu0/uJZTQ==
-X-Google-Smtp-Source: ADFU+vvJTCE0NaoY9hAAFAj5SygbDrAri2BStTDh6/CdBA2TgHqaM/8tkrZcR45y2gjrmFw6MHuIHw==
-X-Received: by 2002:a62:342:: with SMTP id 63mr11323648pfd.19.1585254850791;
-        Thu, 26 Mar 2020 13:34:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id l11sm2222672pjy.44.2020.03.26.13.34.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 13:34:09 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 13:34:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v3 2/2] kernel/sysctl: support handling command line aliases
-Message-ID: <202003261329.AAFEE9C@keescook>
-References: <20200326181606.7027-1-vbabka@suse.cz>
- <20200326181606.7027-2-vbabka@suse.cz>
+        Thu, 26 Mar 2020 16:34:24 -0400
+Received: from smtp-2-0000.mail.infomaniak.ch (unknown [10.5.36.107])
+        by smtp-2-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 48pGkv3QxdzlhYBY;
+        Thu, 26 Mar 2020 21:27:51 +0100 (CET)
+Received: from localhost (unknown [94.23.54.103])
+        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 48pGkv0VcnzlkchT;
+        Thu, 26 Mar 2020 21:27:51 +0100 (CET)
+From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincent Dagonneau <vincent.dagonneau@ssi.gouv.fr>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-security-module@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v15 09/10] samples/landlock: Add a sandbox manager example
+Date:   Thu, 26 Mar 2020 21:27:30 +0100
+Message-Id: <20200326202731.693608-10-mic@digikod.net>
+X-Mailer: git-send-email 2.26.0.rc2
+In-Reply-To: <20200326202731.693608-1-mic@digikod.net>
+References: <20200326202731.693608-1-mic@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326181606.7027-2-vbabka@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
+X-Antivirus-Code: 0x100000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:16:06PM +0100, Vlastimil Babka wrote:
-> We can now handle sysctl parameters on kernel command line, but historically
-> some parameters introduced their own command line equivalent, which we don't
-> want to remove for compatibility reasons. We can however convert them to the
-> generic infrastructure with a table translating the legacy command line
-> parameters to their sysctl names, and removing the one-off param handlers.
-> 
-> This patch adds the support and makes the first conversion to demonstrate it,
-> on the (deprecated) numa_zonelist_order parameter.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
-> Changes in v3:
-> - constify some things according to Kees
-> - expand the comment of sysctl_aliases to note on different timings
-> 
->  fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
->  mm/page_alloc.c       |  9 --------
->  2 files changed, 41 insertions(+), 16 deletions(-)
-> 
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index 8ee3273e4540..3a861e0a7c7e 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -1729,6 +1729,37 @@ int __init proc_sys_init(void)
->  
->  struct vfsmount *proc_mnt = NULL;
->  
-> +struct sysctl_alias {
-> +	const char *kernel_param;
-> +	const char *sysctl_param;
-> +};
-> +
-> +/*
-> + * Historically some settings had both sysctl and a command line parameter.
-> + * With the generic sysctl. parameter support, we can handle them at a single
-> + * place and only keep the historical name for compatibility. This is not meant
-> + * to add brand new aliases. When adding existing aliases, consider whether
-> + * the possibly different moment of changing the value (e.g. from early_param
-> + * to the moment do_sysctl_args() is called) is an issue for the specific
-> + * parameter.
-> + */
-> +static const struct sysctl_alias sysctl_aliases[] = {
-> +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
-> +	{ }
-> +};
-> +
-> +const char *sysctl_find_alias(char *param)
+Add a basic sandbox tool to launch a command which can only access a
+whitelist of file hierarchies in a read-only or read-write way.
 
-This should be "static" too.
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: James Morris <jmorris@namei.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Serge E. Hallyn <serge@hallyn.com>
+---
 
-> +{
-> +	const struct sysctl_alias *alias;
-> +
-> +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
-> +		if (strcmp(alias->kernel_param, param) == 0)
-> +			return alias->sysctl_param;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
->  /* Set sysctl value passed on kernel command line. */
->  static int process_sysctl_arg(char *param, char *val,
->  			       const char *unused, void *arg)
-> @@ -1741,15 +1772,18 @@ static int process_sysctl_arg(char *param, char *val,
->  	loff_t pos = 0;
->  	ssize_t wret;
->  
-> -	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
-> -		return 0;
-> -
-> -	param += sizeof("sysctl") - 1;
-> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1) == 0) {
-> +		param += sizeof("sysctl") - 1;
->  
-> -	if (param[0] != '/' && param[0] != '.')
-> -		return 0;
-> +		if (param[0] != '/' && param[0] != '.')
-> +			return 0;
->  
-> -	param++;
-> +		param++;
-> +	} else {
-> +		param = (char *) sysctl_find_alias(param);
-> +		if (!param)
-> +			return 0;
-> +	}
->  
->  	if (!proc_mnt) {
->  		proc_fs_type = get_fs_type("proc");
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 3c4eb750a199..de7a134b1b8a 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
->  	return 0;
->  }
->  
-> -static __init int setup_numa_zonelist_order(char *s)
-> -{
-> -	if (!s)
-> -		return 0;
-> -
-> -	return __parse_numa_zonelist_order(s);
-> -}
-> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
-> -
->  char numa_zonelist_order[] = "Node";
->  
->  /*
-> -- 
-> 2.25.1
-> 
+Changes since v14:
+* Fix Kconfig dependency.
+* Remove access rights that may be required for FD-only requests:
+  mmap, truncate, getattr, lock, chmod, chown, chgrp, ioctl.
+* Fix useless hardcoded syscall number.
+* Use execvpe().
+* Follow symlinks.
+* Extend help with common file paths.
+* Constify variables.
+* Clean up comments.
+* Improve error message.
 
-Otherwise, yay, I love it! :)
+Changes since v11:
+* Add back the filesystem sandbox manager and update it to work with the
+  new Landlock syscall.
 
+Previous version:
+https://lore.kernel.org/lkml/20190721213116.23476-9-mic@digikod.net/
+---
+ samples/Kconfig              |   7 ++
+ samples/Makefile             |   1 +
+ samples/landlock/.gitignore  |   1 +
+ samples/landlock/Makefile    |  15 +++
+ samples/landlock/sandboxer.c | 217 +++++++++++++++++++++++++++++++++++
+ 5 files changed, 241 insertions(+)
+ create mode 100644 samples/landlock/.gitignore
+ create mode 100644 samples/landlock/Makefile
+ create mode 100644 samples/landlock/sandboxer.c
+
+diff --git a/samples/Kconfig b/samples/Kconfig
+index 9d236c346de5..b54408c5bd86 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -120,6 +120,13 @@ config SAMPLE_HIDRAW
+ 	bool "hidraw sample"
+ 	depends on HEADERS_INSTALL
+ 
++config SAMPLE_LANDLOCK
++	bool "Build Landlock sample code"
++	select HEADERS_INSTALL
++	help
++	  Build a simple Landlock sandbox manager able to launch a process
++	  restricted by a user-defined filesystem access-control security policy.
++
+ config SAMPLE_PIDFD
+ 	bool "pidfd sample"
+ 	depends on HEADERS_INSTALL
+diff --git a/samples/Makefile b/samples/Makefile
+index f8f847b4f61f..61a2bd216f53 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
+ obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
+ obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
+ obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
++subdir-$(CONFIG_SAMPLE_LANDLOCK)	+= landlock
+ obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
+ subdir-$(CONFIG_SAMPLE_PIDFD)		+= pidfd
+ obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
+diff --git a/samples/landlock/.gitignore b/samples/landlock/.gitignore
+new file mode 100644
+index 000000000000..f43668b2d318
+--- /dev/null
++++ b/samples/landlock/.gitignore
+@@ -0,0 +1 @@
++/sandboxer
+diff --git a/samples/landlock/Makefile b/samples/landlock/Makefile
+new file mode 100644
+index 000000000000..9dfb571641ba
+--- /dev/null
++++ b/samples/landlock/Makefile
+@@ -0,0 +1,15 @@
++# SPDX-License-Identifier: BSD-3-Clause
++
++hostprogs-y := sandboxer
++
++always := $(hostprogs-y)
++
++KBUILD_HOSTCFLAGS += -I$(objtree)/usr/include
++
++.PHONY: all clean
++
++all:
++	$(MAKE) -C ../.. samples/landlock/
++
++clean:
++	$(MAKE) -C ../.. M=samples/landlock/ clean
+diff --git a/samples/landlock/sandboxer.c b/samples/landlock/sandboxer.c
+new file mode 100644
+index 000000000000..0725371672f9
+--- /dev/null
++++ b/samples/landlock/sandboxer.c
+@@ -0,0 +1,217 @@
++// SPDX-License-Identifier: BSD-3-Clause
++/*
++ * Simple Landlock sandbox manager able to launch a process restricted by a
++ * user-defined filesystem access-control security policy.
++ *
++ * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2020 ANSSI
++ */
++
++#define _GNU_SOURCE
++#include <errno.h>
++#include <fcntl.h>
++#include <linux/landlock.h>
++#include <linux/prctl.h>
++#include <stddef.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++#include <sys/prctl.h>
++#include <sys/syscall.h>
++#include <unistd.h>
++
++#ifndef landlock
++static inline int landlock(const unsigned int command,
++		const unsigned int options,
++		const size_t attr_size, void *const attr_ptr)
++{
++	errno = 0;
++	return syscall(__NR_landlock, command, options, attr_size, attr_ptr, 0,
++			NULL);
++}
++#endif
++
++#define ENV_FS_RO_NAME "LL_FS_RO"
++#define ENV_FS_RW_NAME "LL_FS_RW"
++#define ENV_PATH_TOKEN ":"
++
++static int parse_path(char *env_path, const char ***const path_list)
++{
++	int i, path_nb = 0;
++
++	if (env_path) {
++		path_nb++;
++		for (i = 0; env_path[i]; i++) {
++			if (env_path[i] == ENV_PATH_TOKEN[0])
++				path_nb++;
++		}
++	}
++	*path_list = malloc(path_nb * sizeof(**path_list));
++	for (i = 0; i < path_nb; i++)
++		(*path_list)[i] = strsep(&env_path, ENV_PATH_TOKEN);
++
++	return path_nb;
++}
++
++static int populate_ruleset(
++		const struct landlock_attr_features *const attr_features,
++		const char *const env_var, const int ruleset_fd,
++		const __u64 allowed_access)
++{
++	int path_nb, i;
++	char *env_path_name;
++	const char **path_list = NULL;
++	struct landlock_attr_path_beneath path_beneath = {
++		.ruleset_fd = ruleset_fd,
++		.allowed_access = allowed_access,
++		.parent_fd = -1,
++	};
++
++	env_path_name = getenv(env_var);
++	if (!env_path_name) {
++		fprintf(stderr, "Missing environment variable %s\n", env_var);
++		return 1;
++	}
++	env_path_name = strdup(env_path_name);
++	unsetenv(env_var);
++	path_nb = parse_path(env_path_name, &path_list);
++	if (path_nb == 1 && path_list[0][0] == '\0') {
++		fprintf(stderr, "Missing path in %s\n", env_var);
++		goto err_free_name;
++	}
++
++	/* Follows a best-effort approach. */
++	path_beneath.allowed_access &= attr_features->access_fs;
++	for (i = 0; i < path_nb; i++) {
++		path_beneath.parent_fd = open(path_list[i], O_PATH |
++				O_CLOEXEC);
++		if (path_beneath.parent_fd < 0) {
++			fprintf(stderr, "Failed to open \"%s\": %s\n",
++					path_list[i],
++					strerror(errno));
++			goto err_free_name;
++		}
++		if (landlock(LANDLOCK_CMD_ADD_RULE,
++					LANDLOCK_OPT_ADD_RULE_PATH_BENEATH,
++					sizeof(path_beneath), &path_beneath)) {
++			fprintf(stderr, "Failed to update the ruleset with \"%s\": %s\n",
++					path_list[i], strerror(errno));
++			close(path_beneath.parent_fd);
++			goto err_free_name;
++		}
++		close(path_beneath.parent_fd);
++	}
++	free(env_path_name);
++	return 0;
++
++err_free_name:
++	free(env_path_name);
++	return 1;
++}
++
++#define ACCESS_FS_ROUGHLY_READ ( \
++	LANDLOCK_ACCESS_FS_EXECUTE | \
++	LANDLOCK_ACCESS_FS_READ_FILE | \
++	LANDLOCK_ACCESS_FS_READ_DIR | \
++	LANDLOCK_ACCESS_FS_CHROOT)
++
++#define ACCESS_FS_ROUGHLY_WRITE ( \
++	LANDLOCK_ACCESS_FS_WRITE_FILE | \
++	LANDLOCK_ACCESS_FS_LINK_TO | \
++	LANDLOCK_ACCESS_FS_RENAME_FROM | \
++	LANDLOCK_ACCESS_FS_RENAME_TO | \
++	LANDLOCK_ACCESS_FS_RMDIR | \
++	LANDLOCK_ACCESS_FS_UNLINK | \
++	LANDLOCK_ACCESS_FS_MAKE_CHAR | \
++	LANDLOCK_ACCESS_FS_MAKE_DIR | \
++	LANDLOCK_ACCESS_FS_MAKE_REG | \
++	LANDLOCK_ACCESS_FS_MAKE_SOCK | \
++	LANDLOCK_ACCESS_FS_MAKE_FIFO | \
++	LANDLOCK_ACCESS_FS_MAKE_BLOCK | \
++	LANDLOCK_ACCESS_FS_MAKE_SYM)
++
++int main(const int argc, char *const argv[], char *const *const envp)
++{
++	const char *cmd_path;
++	char *const *cmd_argv;
++	int ruleset_fd;
++	struct landlock_attr_features attr_features;
++	struct landlock_attr_ruleset ruleset = {
++		.handled_access_fs = ACCESS_FS_ROUGHLY_READ |
++			ACCESS_FS_ROUGHLY_WRITE,
++	};
++	struct landlock_attr_enforce attr_enforce = {};
++
++	if (argc < 2) {
++		fprintf(stderr, "usage: %s=\"...\" %s=\"...\" %s <cmd> [args]...\n\n",
++				ENV_FS_RO_NAME, ENV_FS_RW_NAME, argv[0]);
++		fprintf(stderr, "Launch a command in a restricted environment.\n\n");
++		fprintf(stderr, "Environment variables containing paths, each separated by a colon:\n");
++		fprintf(stderr, "* %s: list of paths allowed to be used in a read-only way.\n",
++				ENV_FS_RO_NAME);
++		fprintf(stderr, "* %s: list of paths allowed to be used in a read-write way.\n",
++				ENV_FS_RO_NAME);
++		fprintf(stderr, "\nexample:\n"
++				"%s=\"/bin:/lib:/usr:/proc:/etc:/dev/urandom\" "
++				"%s=\"/dev/null:/dev/full:/dev/zero:/dev/pts:/tmp\" "
++				"%s bash -i\n",
++				ENV_FS_RO_NAME, ENV_FS_RW_NAME, argv[0]);
++		return 1;
++	}
++
++	if (landlock(LANDLOCK_CMD_GET_FEATURES, LANDLOCK_OPT_GET_FEATURES,
++				sizeof(attr_features), &attr_features)) {
++		perror("Failed to probe the Landlock supported features");
++		switch (errno) {
++		case ENOSYS:
++			fprintf(stderr, "Hint: this kernel does not support Landlock.\n");
++			break;
++		case ENOPKG:
++			fprintf(stderr, "Hint: Landlock is currently disabled. It can be enabled in the kernel configuration or at boot with the \"lsm=landlock\" parameter.\n");
++			break;
++		}
++		return 1;
++	}
++	/* Follows a best-effort approach. */
++	ruleset.handled_access_fs &= attr_features.access_fs;
++	ruleset_fd = landlock(LANDLOCK_CMD_CREATE_RULESET,
++			LANDLOCK_OPT_CREATE_RULESET, sizeof(ruleset),
++			&ruleset);
++	if (ruleset_fd < 0) {
++		perror("Failed to create a ruleset");
++		return 1;
++	}
++	if (populate_ruleset(&attr_features, ENV_FS_RO_NAME, ruleset_fd,
++				ACCESS_FS_ROUGHLY_READ)) {
++		goto err_close_ruleset;
++	}
++	if (populate_ruleset(&attr_features, ENV_FS_RW_NAME, ruleset_fd,
++				ACCESS_FS_ROUGHLY_READ |
++				ACCESS_FS_ROUGHLY_WRITE)) {
++		goto err_close_ruleset;
++	}
++	if (prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
++		perror("Failed to restrict privileges");
++		goto err_close_ruleset;
++	}
++	attr_enforce.ruleset_fd = ruleset_fd;
++	if (landlock(LANDLOCK_CMD_ENFORCE_RULESET,
++				LANDLOCK_OPT_ENFORCE_RULESET,
++				sizeof(attr_enforce), &attr_enforce)) {
++		perror("Failed to enforce ruleset");
++		goto err_close_ruleset;
++	}
++	close(ruleset_fd);
++
++	cmd_path = argv[1];
++	cmd_argv = argv + 1;
++	execvpe(cmd_path, cmd_argv, envp);
++	fprintf(stderr, "Failed to execute \"%s\": %s\n", cmd_path,
++			strerror(errno));
++	fprintf(stderr, "Hint: access to the binary, the interpreter or shared libraries may be denied.\n");
++	return 1;
++
++err_close_ruleset:
++	close(ruleset_fd);
++	return 1;
++}
 -- 
-Kees Cook
+2.26.0.rc2
+
