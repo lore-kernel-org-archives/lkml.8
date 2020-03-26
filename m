@@ -2,126 +2,131 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C38C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA134C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFE320775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54762073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:28:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEGKuITj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0AYeRSm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgCZO0a (ORCPT
+        id S1727981AbgCZO2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:26:30 -0400
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:33471 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZO0a (ORCPT
+        Thu, 26 Mar 2020 10:28:04 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:34883 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727695AbgCZO2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:26:30 -0400
-Received: by mail-qv1-f67.google.com with SMTP id p19so2998957qve.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:26:27 -0700 (PDT)
+        Thu, 26 Mar 2020 10:28:04 -0400
+Received: by mail-vs1-f68.google.com with SMTP id u11so3973671vsg.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nRJWwNt45KOlJFv0+GV8rTP+VDDuM81/hCQ1ITt89VA=;
-        b=ZEGKuITj9R8iEiPb3twAjh/lLsU7Lbd/rUcjDsFdUOKJ7/xQaLuSsdAFyEjuERpy6E
-         QskVooDIhlJhIqVS+lVR3CHDKjhtfuw231VnqhTttA77myRGdG33b3qTzl9l1ccaKycg
-         5BKfLy2gdqJjiShn8V9OCyq1RbOplIy6gHEuhqlpSGL5CsCuOttEHKfX9fqjVTHr8ZtF
-         XXTls/H0exKKhxRPs2eSRMMkS7koSN85nAVrHkStN6xHWpgQzdfA2AeGeD6uDHO1I8p5
-         VWNxkpPZaSGYFrwy8YKBlLqZ6HQ9C+k3s9HPV1wHYQzYWgLI5/hwjnrBW1rB7ImQNA5q
-         gbqg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Nwrqr8fUwcczi1tkKbhoCAaTj0Lz9vANHD/lv6450Ik=;
+        b=s0AYeRSme5ZYMG5Hj00MtSphy+ZF1hJEIT/x2laNKAPH6uwyawibNxjdwbP2n3VcAz
+         csHlsS0gxGoa5DicQVyRyza5fvlnbU7gXob7YwmrF1iP6Arowk1BTPlr0kz4O3XeecgF
+         1zk9ZTQ+jv4zeHagRLkhqZrvKEFdH+oNeK135nUnNRS91hY2ue714O+FEjcV14/4YNSF
+         LfEKcr0FypAkSBknWreQBXQ7JbSB7qSlCdDz+6IHoDYmn4ebQwicF5K71DOR0GD0cCFh
+         bCHWHd0BIGOXrsyTGs9lNM+SLJBnuSpHOhufi/2mLRvJCbJQ5z5/y/CztJiv8Q92tTQi
+         xs6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nRJWwNt45KOlJFv0+GV8rTP+VDDuM81/hCQ1ITt89VA=;
-        b=GKwIleWvHk8U0Obi7vZNheKGj9t3Gzoj/CuqjFXOn5LNHgoCulS65o65+qciZiICvv
-         p32BFyw11YI5bQgts8ipbRgk545SVQZO2oYm8muFBHET8uOapjGeloRgV0//GDeBKl5v
-         1Qtdd7QKHUEf14GbwvDlHRNPmMqG594dKrTVpZ1E2pmxX5bTUDBi3Bw2wZZsWpRi3kcx
-         hQzLA9qIhSt/QgY7xborLJwnzDAtlOswoODld/ot2YWbM4DEQ/jn8TJ92QuNhZETJQWh
-         OysliZ/ZFq5jUVher1Mt+jZ1F/rpvUsx4bgEYumNcuIui9VSjk7Uxgg0B1UnuliTz/0a
-         614w==
-X-Gm-Message-State: ANhLgQ2lUeC8WPUJgC7U0ZRv2qwGR5ghl81KVviIWmUesL3fuU1UKMUZ
-        M3dSO7MaIHCwLvL6aiWPeeY=
-X-Google-Smtp-Source: ADFU+vvuw4hcflYtITSxYXHTo+rByjGPFuw1vxLzLvN/Uok6bOOqgUuFTVjU1n5tiUBUIJ7lOqfkJg==
-X-Received: by 2002:a0c:b757:: with SMTP id q23mr8330697qve.213.1585232787222;
-        Thu, 26 Mar 2020 07:26:27 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id d19sm1468808qkc.14.2020.03.26.07.26.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 07:26:26 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5EE5A40061; Thu, 26 Mar 2020 11:26:24 -0300 (-03)
-Date:   Thu, 26 Mar 2020 11:26:24 -0300
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 0/2] Introduce Control-flow Enforcement opcodes
-Message-ID: <20200326142624.GA6411@kernel.org>
-References: <20200204171425.28073-1-yu-cheng.yu@intel.com>
- <20200303193550.692bf2be0ee800c21bd05215@kernel.org>
- <684e6012-b433-4b61-936d-b5c3b71e246c@intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Nwrqr8fUwcczi1tkKbhoCAaTj0Lz9vANHD/lv6450Ik=;
+        b=hMkTP9tsi5ME5sn0iIPAZ0vjwqmATtDJWJjuE4es9etdQ8a73YfXX11U/W8ij7epM+
+         cyXQ4T6ja5p2V7bfbInjpx9fetgqIPFiYbNYQObQz4f4uMH+Cr/zLYYaD5k1piy+8URd
+         XPqDusfAHk/mHxiJwiWTh//AfLJhLhI4NuX1gLkxFTDt9z1UsVdE7ebxlqZqVJr9iZ2H
+         XiUWTfUXQfk/amoHHpaeUMqPhSiR26K9UhY1h2kjRptK3ayLVCeMW4/PEwD2zLEGXvK8
+         WvcNWDOKPXyb3SkXwC5fVLnT7kjW2oGIXi2m+EM9Ik1ICJQTW/H8esz3Q7C9dxcrVLTL
+         YP/w==
+X-Gm-Message-State: ANhLgQ2bOQkHYZaWn7vgvWA54yVLgD3ImXLLb60Gd0MfTmncUPVjFT4L
+        tSofVJwPcR05OrwjTPYRS8NLn0Ag5iP4+Outt/5nug==
+X-Google-Smtp-Source: ADFU+vsDl0E1ShxlqFNIKGgRphr3dXzKQ2BouqsiqJSyqwn2BTjEQZNw7vYZJmX1XaoteUXkIePuQWywtUNQtEW50KM=
+X-Received: by 2002:a67:2ec6:: with SMTP id u189mr7072856vsu.200.1585232883289;
+ Thu, 26 Mar 2020 07:28:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <684e6012-b433-4b61-936d-b5c3b71e246c@intel.com>
-X-Url:  http://acmel.wordpress.com
+References: <20200325143409.13005-1-ludovic.barre@st.com> <20200325143409.13005-3-ludovic.barre@st.com>
+In-Reply-To: <20200325143409.13005-3-ludovic.barre@st.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Thu, 26 Mar 2020 15:27:27 +0100
+Message-ID: <CAPDyKFpO40Ois8pNwYOeqZrJbV9UeCLok=i8z4GWML+A7TP2-w@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] mmc: mmci: initialize pwr|clk|datactrl_reg with
+ their hardware values
+To:     Ludovic Barre <ludovic.barre@st.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 26, 2020 at 07:11:18AM +0200, Adrian Hunter escreveu:
-> On 3/03/20 12:35 pm, Masami Hiramatsu wrote:
-> > On Tue,  4 Feb 2020 09:14:23 -0800
-> > Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+On Wed, 25 Mar 2020 at 15:34, Ludovic Barre <ludovic.barre@st.com> wrote:
+>
+> In mmci_write_pwr|clk|datactrlreg functions, if the desired value
+> is equal to corresponding variable (pwr_reg|clk_reg|datactrl_reg),
+> the value is not written in the register.
+>
+> At probe pwr|clk|datactrl_reg of mmci_host structure are initialized
+> to 0 (kzalloc of mmc_alloc_host). But they does not necessarily reflect
+> hardware value of these registers, if they are used while boot level.
+> This is problematic, if we want to write 0 in these registers.
 
-> >> Control-flow Enforcement (CET) introduces 10 new instructions [1].  Add
-> >> them to the opcode map.  This series has been separated from the CET
-> >> patches [2] for ease of review.
+It could be, but I don't see that we ever needs to do that - at least
+not before we have written some other non-zero values to them (through
+the helper functions).
 
-> >> [1] Detailed information on CET can be found in "Intel 64 and IA-32
-> >>     Architectures Software Developer's Manual":
+>
+> This patch initializes pwr|clk|datactrl_reg variables with their
+> hardware values while probing.
 
-> >>     https://software.intel.com/en-us/download/intel-64-and-ia-32-
-> >>     architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+Hmm, so in principle this change seems quite okay, but I am hesitant
+to pick it up - unless it really addresses a problem that you have
+observed.
 
-> >> [2] CET patches:
+The reason is, this change may lead to avoiding to re-write the
+register with the same value it got during boot - and who knows what
+is best here.
 
-> >>     https://lkml.kernel.org/r/20190813205225.12032-1-yu-cheng.yu@intel.com/
-> >>     https://lkml.kernel.org/r/20190813205359.12196-1-yu-cheng.yu@intel.com/
+Kind regards
+Uffe
 
-> > Sorry, somewhat I've missed this series...
-
-> > This looks good to me.
-
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-> > for this series.
- 
-> These are the correct patches for CET instructions.
- 
-> Sorry for the confusion.
-
-Thanks, applied, sorry for the long delay in doing so.
-
-- Arnaldo
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 647567def612..f378ae18d5dc 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -2085,6 +2085,10 @@ static int mmci_probe(struct amba_device *dev,
+>         else if (plat->ocr_mask)
+>                 dev_warn(mmc_dev(mmc), "Platform OCR mask is ignored\n");
+>
+> +       host->pwr_reg = readl_relaxed(host->base + MMCIPOWER);
+> +       host->clk_reg = readl_relaxed(host->base + MMCICLOCK);
+> +       host->datactrl_reg = readl_relaxed(host->base + MMCIDATACTRL);
+> +
+>         /* We support these capabilities. */
+>         mmc->caps |= MMC_CAP_CMD23;
+>
+> --
+> 2.17.1
+>
