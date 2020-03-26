@@ -2,116 +2,150 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE72EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27B54C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:05:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B1E20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECF6220714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:05:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XWORKdbf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgCZMD0 (ORCPT
+        id S1728261AbgCZMFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:03:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:26764 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727948AbgCZMDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:03:25 -0400
-IronPort-SDR: GlmTAE/R0+1phTpNdWPJyZjfDeErfT9k0JmRuEQDn3wUzWAcheNigLCoSwVaQbmVg3pAAwkHSt
- +SVaTND35Z3A==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 05:03:25 -0700
-IronPort-SDR: 1ZJ4EORQxCkoT3ZSs5x1mOpeth8srErLVF3TqCGJGWpnCWMMeoDRPepsNMJTyyavBRQQWPc1xE
- raRstNqCwxAA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="326543337"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga001.jf.intel.com with ESMTP; 26 Mar 2020 05:03:21 -0700
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1jHREJ-00D70Q-N2; Thu, 26 Mar 2020 14:03:23 +0200
-Date:   Thu, 26 Mar 2020 14:03:23 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
-        grant.likely@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-Message-ID: <20200326120323.GR1922688@smile.fi.intel.com>
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com>
- <20200325125120.GX1922688@smile.fi.intel.com>
- <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
- <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
- <ca661616-f5bf-d92f-9173-172792797b16@ti.com>
+        Thu, 26 Mar 2020 08:05:45 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46653 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728192AbgCZMFo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:05:44 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v16so6044164ljk.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 05:05:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5nNaB9xpgft76kVOrndKIt++4NZQfhxGTzqRhmjvGb4=;
+        b=XWORKdbfk4/82GG2LMt8cw1STtFxI/ISwgvMyK9Jh8wthi51e4JxXSTZ0TJt5vpjBh
+         cO4sttEFEr4uECjeU0J+ooDJoDMx6wLr3W20rvJAV38zSVRH5O9uOVghjhyrb3y5wFFG
+         ilIYGxdeDyUMNNlr6MS/q/1gVYPChOTiPj8C+eqRP3RXb5i1iGN9COC/whQnMn5vK/tS
+         CVE7dMk0B9XObUIEAgeGtTVCRMlctuW8IkjDv7F1NSZ2zxdQKIRsbTsZAxY7DkXQt1Qw
+         IlWCh6R+pjDQfAdEcNyKTQn3orSJ8spu7mBrhwkAIwQ+ke5fQZRV+HgzJwsp8srg4GKA
+         Xa2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5nNaB9xpgft76kVOrndKIt++4NZQfhxGTzqRhmjvGb4=;
+        b=WRJ5X3rbOzpfFZrSbb/1juosyFBp4iTfptZUoE5jIc70LBQJJn0GOfNxOHASeRNni6
+         6pup8x8VckVK1ssZ/Oqd6OajZwfQu4h7awX+hP3nL28+F+GixofWIAFpIt1gQNVjHoGr
+         63jm60aaqMBiV/S7RLDcf1F/3Iahe3gkIsbiKj6CDfYXgcNL8EPO8/woCUbjGZiSYde3
+         9lxbYRyk/4TY9nXxtCOmqP0CC6yRmJlRnDwUahoEO5jdYr4uQdEG/yzx8LfRYiJjAjCp
+         +U0y5rZiLqvT1uhmeHLf+WwAptJ9rhr45by1qvsuPKRtVVKIahgNDguIWkZvtFjzVlU5
+         rRaA==
+X-Gm-Message-State: ANhLgQ3m7rNQvWRHlrLaub7iFkWdG2zWjn+igTTMC5eyqy1VHsBya0cL
+        1IQA0GDjoGGhlRUYSs4ftF0rXbwRULv3uoHgnco6Xg==
+X-Google-Smtp-Source: APiQypKOfvEhGwJX5+841/969FmwKYQ7PXm91S/4oiS1EpNSe8epGsQl/snZwjFZRDTJT3zfulTzEHZLNqv043QbqsY=
+X-Received: by 2002:a2e:730e:: with SMTP id o14mr4992253ljc.273.1585224342806;
+ Thu, 26 Mar 2020 05:05:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca661616-f5bf-d92f-9173-172792797b16@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200326205025.7cdf0d4e@canb.auug.org.au>
+In-Reply-To: <20200326205025.7cdf0d4e@canb.auug.org.au>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Thu, 26 Mar 2020 13:05:31 +0100
+Message-ID: <CADYN=9+u3NY8MES7GihA1o_E0OdpRFtBDRBs5dxb4VeDoWO4+A@mail.gmail.com>
+Subject: Re: linux-next: Tree for Mar 26
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        enric.balletbo@collabora.com,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 11:45:18AM +0200, Peter Ujfalusi wrote:
-> On 26/03/2020 10.39, Rafael J. Wysocki wrote:
-> > On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
-> >> On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
-> >> <andriy.shevchenko@linux.intel.com> wrote:
+On Thu, 26 Mar 2020 at 10:50, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> Changes since 20200325:
+>
+> The net-next tree gained a conflict against the net tree.
+>
+> The input tree still had its build failure for which I disabled a driver.
+>
+> The tip tree gained a semantic conflict against the battery tree.
+>
+> The irqchip tree still had its build failure for which I reverted
+> 2 commits.
+>
+> The rcu tree gained a conflict against the spdx tree.
+>
+> The kvm tree gained a conflict against the spdx tree.
+>
+> The drivers-x86 tree gained a conflict against the tip tree.
+>
+> The akpm tree lost a patch that turned up elsewhere.
+>
+> Non-merge commits (relative to Linus' tree): 10806
+>  9415 files changed, 417170 insertions(+), 204705 deletions(-)
+>
+> ----------------------------------------------------------------------------
+>
+> I have created today's linux-next tree at
+> git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> (patches at http://www.kernel.org/pub/linux/kernel/next/ ).  If you
+> are tracking the linux-next tree using git, you should not use "git pull"
+> to do so as that will try to merge the new linux-next release with the
+> old one.  You should use "git fetch" and checkout or reset to the new
+> master.
+>
+> You can see which trees have been included by looking in the Next/Trees
+> file in the source.  There are also quilt-import.log and merge.log
+> files in the Next directory.  Between each merge, the tree was built
+> with a ppc64_defconfig for powerpc, an allmodconfig for x86_64, a
+> multi_v7_defconfig for arm and a native build of tools/perf. After
+> the final fixups (if any), I do an x86_64 modules_install followed by
+> builds for x86_64 allnoconfig, powerpc allnoconfig (32 and 64 bit),
+> ppc44x_defconfig, allyesconfig and pseries_le_defconfig and i386, sparc
+> and sparc64 defconfig and htmldocs. And finally, a simple boot test
+> of the powerpc pseries_le_defconfig kernel in qemu (with and without
+> kvm enabled).
+>
+> Below is a summary of the state of the merge.
+>
+> I am currently merging 316 trees (counting Linus' and 78 trees of bug
+> fix patches pending for the current merge release).
+>
+> Stats about the size of the tree over time can be seen at
+> http://neuling.org/linux-next-size.html .
+>
+> Status of my local build tests will be at
+> http://kisskb.ellerman.id.au/linux-next .  If maintainers want to give
+> advice about cross compilers/configs that work, we are always open to add
+> more builds.
+>
+> Thanks to Randy Dunlap for doing many randconfig builds.  And to Paul
+> Gortmaker for triage and bug fixes.
 
-...
+When building todays tag on arm64 I see this error, CONFIG_DRM_MEDIATEK=m
 
-> > OK, so the situation right now is that commit 58b116bce136 has
-> > introduced a regression and so it needs to be fixed or reverted.  The
-> > cases that were previously broken and were unbroken by that commit
-> > don't matter here, so you cannot argue that they would be "broken".
-> 
-> commit 58b116bce136 is from 2014 and the whole ULPI support for dwc3
-> came in a year later.
-> While I agree that 58b116bce136 fail to handle came a year later, but
-> technically it did not introduced a regression.
-> 
-> The revert on the other hand is going to introduce a regression as
-> things were working fine since 2014. Not sure why the dwc3 issue got
-> this long to be noticed as the 58b116bce136 was already in kernel when
-> the ULPI support was added...
+ERROR: modpost: "mtk_mmsys_ddp_disconnect"
+[drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+ERROR: modpost: "mtk_mmsys_ddp_connect"
+[drivers/gpu/drm/mediatek/mediatek-drm.ko] undefined!
+make[2]: *** [../scripts/Makefile.modpost:94: __modpost] Error 1
+make[1]: *** [/linux/Makefile:1299: modules] Error 2
+make: *** [Makefile:180: sub-make] Error 2
 
-I dare to say that is luck based on people's laziness to figure out the root
-cause. As I pointed out in email to Saravana the issue is not limited to USB
-case and, if my memory doesn't trick me out, I suffered from it approximately
-in ~2014-2015 with pin control tables.
+I think this is the problematic patch:
+396c3fccaf03 ("soc / drm: mediatek: Move routing control to mmsys device")
 
-> > It looks to me like the original issue fixed by the commit in question
-> > needs to be addressed differently, so I would vote for reverting it
-> > and starting over.
-> 
-> Fwiw my original approach was a bit different:
-> https://lore.kernel.org/patchwork/patch/454800/
-
-Can you apply above scenario to your patch and see if it solves the issue?
-On the other hand to you possess the hardware you can test the original
-scenario with my patch applied?
-
-> Greg changed it to what ended up in the kernel:
-> https://lore.kernel.org/patchwork/cover/454799/
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Cheers,
+Anders
