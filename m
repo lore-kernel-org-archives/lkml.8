@@ -2,167 +2,81 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D3EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64495C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 329972077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585262029;
-	bh=jd4Y+6N5rNGyGPYAl5OwO+RyRTpcNli8YQTfvDwC6Zc=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=itivp1VIhVaTOri7/w1AWlm2qwXn3YZpzoUJEhZGHHE/haxPiuGXuMxRsFQAaNrEq
-	 0iZKimTwQjIKq3sRPBMqKHIr/UhkAlX2tOJOEQlGW8/bnE/O6FDpqA3WEenfjsha4o
-	 C/Syg1B4txQz1cG/YfGD5vhtX1QwFelWoziuvg0s=
+	by mail.kernel.org (Postfix) with ESMTP id 35F972077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:35:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="AFi+MNOM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgCZWds (ORCPT
+        id S1727652AbgCZWfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:33:48 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43280 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZWds (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:33:48 -0400
-Received: by mail-il1-f194.google.com with SMTP id g15so6985842ilj.10
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kjtLmei14Aqe6drnic5xmk3O+peLFqdWaisNXVkXGdU=;
-        b=LDp1HOz4HRDcpEUE/IODV5zUi8p4m/bTmt+Due8jI4CRWUH08jE3IOL0+gMN7atpoA
-         gTRYN4GEg+beygpKEJUpyOj5DLy7Aya6zVDZFacmvFjxr0x8yaK+xuZefyLMLtVSCXHQ
-         lDcPSqUMxCawAdciC6sGGZPl5FsLBpvCs/cuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kjtLmei14Aqe6drnic5xmk3O+peLFqdWaisNXVkXGdU=;
-        b=pAzk2nvQu9yUZgKrLPZ8g08Sc19q6qAnWtzCko7MdHKOEPKCZmHTYAnGfHd/dtpqOi
-         tSqARnQ5NNYxUct+gh+COgN8p0Wy5pOpnk4Vdgmph8Ynt+X/E5TQfw7GcGTmQ0nTRtwh
-         /+v9ZJwcv1sX4Ss2oqiK+bX/uUfH2YxOxdt7c/43O96snArWaYnqjN6Ly+MA9X0X3XVQ
-         hczFUs962+IzW8jD9f1jIs+c/9a/J4tftnET4a9QQ+f0ppPifAa+JYKQJMcOPkB/h3P/
-         vQJfAdNefhAfL8HqwQ3yBebT4/8Hoj2dJg4LR4N9vZw8xK7ouk8yP0cZVfdRtZhW2Vu9
-         7N3g==
-X-Gm-Message-State: ANhLgQ1WcyIyCASdgdK+mBjVpDMUmYpEUcdfMFitDU0eJNzReqbG9qJZ
-        aK6ctoFxSjGpA6hhLpF2+gSMwA==
-X-Google-Smtp-Source: ADFU+vtMO7/dx04DcpOtgDV7w5GSmDnkphd5lBOQl2I1jSMmN1W9RaTneGmqZD3lGbRVl2wtOisAng==
-X-Received: by 2002:a92:359b:: with SMTP id c27mr10690452ilf.148.1585262026859;
-        Thu, 26 Mar 2020 15:33:46 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id j84sm1238655ili.65.2020.03.26.15.33.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 15:33:46 -0700 (PDT)
-Subject: Re: [PATCH] selftests: Fix memfd to support relocatable build
- (O=objdir)
-To:     "Bird, Tim" <Tim.Bird@sony.com>,
-        "shuah@kernel.org" <shuah@kernel.org>
-Cc:     "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200325231709.13122-1-skhan@linuxfoundation.org>
- <MWHPR13MB08955F0F8C5D0B07CA86DA92FDCF0@MWHPR13MB0895.namprd13.prod.outlook.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <3fa8af77-4b4b-c1e2-2467-fb7b9adb3f66@linuxfoundation.org>
-Date:   Thu, 26 Mar 2020 16:33:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 26 Mar 2020 18:35:09 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49552 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgCZWfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 18:35:08 -0400
+Received: from zn.tnic (p200300EC2F0A4900088B6946FACBDF73.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:4900:88b:6946:facb:df73])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 65AFF1EC0758;
+        Thu, 26 Mar 2020 23:35:07 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585262107;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=TIKsnilOROD2p3S9sZUXRQKUtQkgU3ET1umN0i8mzFM=;
+        b=AFi+MNOMt80RADh3bkG3C616Y5yqZJU8RwFFQDaf992Lie78gtEOyYyngwMzn51zOWCvbb
+        AN1lRnP30HmdNGm6vGPbbFE4NNBCcrwn9ykItc84unvyL7UHrvH0Tu3eFAmg00w+PH6zyz
+        aQLXyZtC2ryzoEaW9dJorTHu3CXlCPA=
+Date:   Thu, 26 Mar 2020 23:35:01 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Sergei Trofimovich <slyfox@gentoo.org>
+Cc:     Jakub Jelinek <jakub@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>, x86@kernel.org,
+        Michael Matz <matz@suse.de>
+Subject: Re: [PATCH] x86: fix early boot crash on gcc-10
+Message-ID: <20200326223501.GK11398@zn.tnic>
+References: <20200316130414.GC12561@hirez.programming.kicks-ass.net>
+ <20200316132648.GM2156@tucnak>
+ <20200316134234.GE12561@hirez.programming.kicks-ass.net>
+ <20200316175450.GO26126@zn.tnic>
+ <20200316180303.GR2156@tucnak>
+ <20200317143602.GC15609@zn.tnic>
+ <20200317143914.GI2156@tucnak>
+ <20200317144942.GE15609@zn.tnic>
+ <20200325133137.GC27261@zn.tnic>
+ <20200326215424.5f1851f3@sf>
 MIME-Version: 1.0
-In-Reply-To: <MWHPR13MB08955F0F8C5D0B07CA86DA92FDCF0@MWHPR13MB0895.namprd13.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200326215424.5f1851f3@sf>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/20 4:23 PM, Bird, Tim wrote:
->> -----Original Message-----
->> From: Shuah Khan
->>
->> Fix memfd to support relocatable build (O=objdir). This calls out
->> source files necessary to build tests and simplfies the dependency
->> enforcement.
->>
->> Tested the following:
->>
->> Note that cross-build for fuse_mnt has dependency on -lfuse.
->>
->> make all
->> make clean
->> make kselftest-install O=/arm64_build/ ARCH=arm64 HOSTCC=gcc \
->> CROSS_COMPILE=aarch64-linux-gnu- TARGETS=memfd
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   tools/testing/selftests/memfd/Makefile | 9 ++++-----
->>   1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/testing/selftests/memfd/Makefile b/tools/testing/selftests/memfd/Makefile
->> index 53a848109f7b..0a15f9e23431 100644
->> --- a/tools/testing/selftests/memfd/Makefile
->> +++ b/tools/testing/selftests/memfd/Makefile
->> @@ -4,9 +4,8 @@ CFLAGS += -I../../../../include/uapi/
->>   CFLAGS += -I../../../../include/
->>   CFLAGS += -I../../../../usr/include/
->>
->> -TEST_GEN_PROGS := memfd_test
->> +TEST_GEN_PROGS := memfd_test fuse_test fuse_mnt
->>   TEST_PROGS := run_fuse_test.sh run_hugetlbfs_test.sh
->> -TEST_GEN_FILES := fuse_mnt fuse_test
->>
->>   fuse_mnt.o: CFLAGS += $(shell pkg-config fuse --cflags)
->>
->> @@ -14,7 +13,7 @@ include ../lib.mk
->>
->>   $(OUTPUT)/fuse_mnt: LDLIBS += $(shell pkg-config fuse --libs)
-> 
-> Sorry to interject here.  This comment doesn't have to do with this patch,
-> but the above line is problematical for cross-compilation.
-> $(shell pkg-config fuse --libs) will use pkg-config from the host
-> machine, and may produce something different from what's
-> installed on the target.  For most enterprise and desktop systems
-> library paths for are mostly standardized.  The effect is that if
-> you're doing 'simple' embedded, the pkg-config output on the
-> host will match that of the target board.  However, in some
-> embedded products the partition and filesystem setups are
-> often quite complicated (e.g. I recently worked on a TV set with 14
-> partitions) and things are not in the locations preferred by the
-> Filesystem Hierarchy Standard.
-> 
-> When cross-compiling for our products, we tend to use the pkg-config
-> from the filesystem of the target (a copy of which is on the host), rather
-> than the host's pkg-config.
-> 
-Thanks for bringing attention to the issue. This is an existing
-issue. Thankfully this is one of the two tests that use pkg-config.
+On Thu, Mar 26, 2020 at 09:54:24PM +0000, Sergei Trofimovich wrote:
+> Will attempt to write, test and send out the patch by tomorrow.
 
-The problem is limited to just two tests that are included in the
-Makefile TARGETS.
+No hurry - we'll have merge window opening next Monday so I'll queue
+yours after ~2 weeks. So later's fine too.
 
-> I don't have a board in my test lab where this shows up, nor a
-> proposed solution at the moment, but I'm just mentioning it as a
-> potential host-environment build contamination issue.  Maybe I
-> should start keeping a list, and start thinking of possible solutions for
-> more of these types of issues.
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
-Thanks for bringing attention to the issue. I will keep an eye out for
-this kind of usage during my reviews.
-
-> 
-> P.S. I'd ignore this issue for approving this patch.  I'm just bringing
-> it up as a red flag for future work.
-
-Thanks. This is an existing problem that can be addressed in a separate
-page.
-
-thanks,
--- Shuah
+https://people.kernel.org/tglx/notes-about-netiquette
