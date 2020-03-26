@@ -2,161 +2,198 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91F2C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:33:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092C9C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A316D20722
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:33:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB71C20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:34:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="NrpPlECo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRl4RWYn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgCZUdW (ORCPT
+        id S1727639AbgCZUeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:33:22 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44130 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727928AbgCZUdV (ORCPT
+        Thu, 26 Mar 2020 16:34:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43194 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726281AbgCZUeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:33:21 -0400
-Received: by mail-pl1-f195.google.com with SMTP id h11so2593066plr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:33:21 -0700 (PDT)
+        Thu, 26 Mar 2020 16:34:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id u12so3472853pgb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:34:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=31LBMmRcYe+yEGtoM08ZSaLwaQfDlxsblA8wVchHVi8=;
-        b=NrpPlECo6AI/hAQE3I/XEDAjdjtUo9LXqFqVAUMuzk1z6cbpF8zmw6aox8LpgFf6/D
-         e9DU2naiucIg6yd2Ts76fWA+ep+Gef7o5mHgq35y2n0lR8oGOCTdq8645lxKk264kt7M
-         fGlozyLZ/YECGQkKZp3ZuIQ9TuAVcsw7vmeEXm/dV6M5pNEWF2e+HRV35RyDCM2Gg4b6
-         QXl+vV0oSLfr7kuwXp1717znu1qp4xMgHFUHuCr0yvsK7sY6n/0WUSPg+IvDoZu0a/Db
-         Kb+kPOT74J/2lhYllCcc/XEgBWVZ2HG4UDhkPAFvX0GLeaE0/gpaNxU2/rL02Dm+OYiU
-         uU0w==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Le7doV1aD2nnDIjljTT6TRoqwG4Kk2Xg5cqe+Y2QeE8=;
+        b=IRl4RWYnFi1S/4ylGpDj2CLK3Ia0Xfv+YRQBn3BpWZOs7UKH6YZo8+zxLGWahTKYuZ
+         M/tNUA95U4+1GTULWdX+4rxNECrKnt/UOjrhOmD5k3nKqeauDBg0WkYbDFmCbgqodyGb
+         N0hlBrV9t60fDGH88FD7DUnHKF0D8Q11RzoCg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=31LBMmRcYe+yEGtoM08ZSaLwaQfDlxsblA8wVchHVi8=;
-        b=s7pWvHnv4kS4o1f+R8rL9ykF/q7c1cfvaPF02VLtjqNuj25dkvpmhFexAeRLjlOOmZ
-         danmPcrZkBd5cE99l9QPNFtSq7wkKuAQ5bNLHfaDmYJ8I3I8vgDyGyKAuDf8yMHc8Om4
-         D5a+ykp/70W4ENco3mx9COErnIEX3STGImgHA/8cS3SgujVLR8kmDlsJjUNlynrjygsh
-         6Sw7NIZLCOmZ95pPeitnIQ5OEu7WkB8q51WMcHJfkM0VeM/POixxZmFiCaeAknd7HjEd
-         TIyyQMFVtQZKW5CKhi5lnBnDewYUv7caZG0iBCtf1VJw/8DEVoZb7tosXUifgHDqAbz/
-         gkaA==
-X-Gm-Message-State: ANhLgQ1inXposh679PbEzMphf11+EcinPe1553VJa27B5TSIOnKwPU1u
-        VgCRM2rEnjdhxj+ogbBAsUH+Dg==
-X-Google-Smtp-Source: ADFU+vu+gUBPTHCiLbo4oeQsnkYNtYX/UDxhFzKc+aeKr+GO4BTRKm7q6N09v+wRxLLr/n/j+YjkuA==
-X-Received: by 2002:a17:902:b088:: with SMTP id p8mr10115931plr.106.1585254800408;
-        Thu, 26 Mar 2020 13:33:20 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:6dcf:5ef7:9489:9d02? ([2601:646:c200:1ef2:6dcf:5ef7:9489:9d02])
-        by smtp.gmail.com with ESMTPSA id 79sm2388418pfz.23.2020.03.26.13.33.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 13:33:19 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel support
-Date:   Thu, 26 Mar 2020 13:33:17 -0700
-Message-Id: <FE871C2B-15BB-4089-A912-40F2E9FE680B@amacapital.net>
-References: <CACdnJutT1F7YJ5KFkyuaZv=nj8GqC+mrnoAsHZfMP1ZRNUQg3Q@mail.gmail.com>
-Cc:     Daniel Kiper <daniel.kiper@oracle.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-doc@vger.kernel.org, dpsmith@apertussolutions.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        trenchboot-devel@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>, leif@nuviainc.com,
-        eric.snowberg@oracle.com, piotr.krol@3mdeb.com,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        andrew.cooper3@citrix.com
-In-Reply-To: <CACdnJutT1F7YJ5KFkyuaZv=nj8GqC+mrnoAsHZfMP1ZRNUQg3Q@mail.gmail.com>
-To:     Matthew Garrett <mjg59@google.com>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Le7doV1aD2nnDIjljTT6TRoqwG4Kk2Xg5cqe+Y2QeE8=;
+        b=GQdtmDvf9t5jeIj0/l57Pf/S9zu6T3Hd+mqsQ6z2FRfUbdw6IA1cYMa6mQQUnZESG5
+         ll9SRKS0K0/ilnHbVPHMLfhwkTdsEiw/IRD3rOn8m1/xQV3w4VbzHbrDar90Ro5ZAHL8
+         tL0xsX7cdZcIrB3Nr7VpARROMa/sJM7JcIg6jsSw2eu2gOM5Afl45Te8jSnuhz3iPxEo
+         2hFX5oAMmEpCEU42t3hMx8u2hdNQCfsifRgGtrz4voZtO0r923kUPSxZI56jgD+lTnuW
+         DzCHUKMVLyLIPVlGaQsk1SFlDQEmuRu8dJAQPBLX0iqtZu5+hLsXG1gngTcFsCxJZx49
+         6a9w==
+X-Gm-Message-State: ANhLgQ0G3FsaUZ9A1+crHTUCLzL3ul+ujTMAsiQflyEFbkvzGc/WI3IM
+        hgTtxwp/D3QZpRv2qxu0/uJZTQ==
+X-Google-Smtp-Source: ADFU+vvJTCE0NaoY9hAAFAj5SygbDrAri2BStTDh6/CdBA2TgHqaM/8tkrZcR45y2gjrmFw6MHuIHw==
+X-Received: by 2002:a62:342:: with SMTP id 63mr11323648pfd.19.1585254850791;
+        Thu, 26 Mar 2020 13:34:10 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l11sm2222672pjy.44.2020.03.26.13.34.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 13:34:09 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 13:34:08 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v3 2/2] kernel/sysctl: support handling command line aliases
+Message-ID: <202003261329.AAFEE9C@keescook>
+References: <20200326181606.7027-1-vbabka@suse.cz>
+ <20200326181606.7027-2-vbabka@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326181606.7027-2-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 26, 2020 at 07:16:06PM +0100, Vlastimil Babka wrote:
+> We can now handle sysctl parameters on kernel command line, but historically
+> some parameters introduced their own command line equivalent, which we don't
+> want to remove for compatibility reasons. We can however convert them to the
+> generic infrastructure with a table translating the legacy command line
+> parameters to their sysctl names, and removing the one-off param handlers.
+> 
+> This patch adds the support and makes the first conversion to demonstrate it,
+> on the (deprecated) numa_zonelist_order parameter.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+> Changes in v3:
+> - constify some things according to Kees
+> - expand the comment of sysctl_aliases to note on different timings
+> 
+>  fs/proc/proc_sysctl.c | 48 ++++++++++++++++++++++++++++++++++++-------
+>  mm/page_alloc.c       |  9 --------
+>  2 files changed, 41 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index 8ee3273e4540..3a861e0a7c7e 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -1729,6 +1729,37 @@ int __init proc_sys_init(void)
+>  
+>  struct vfsmount *proc_mnt = NULL;
+>  
+> +struct sysctl_alias {
+> +	const char *kernel_param;
+> +	const char *sysctl_param;
+> +};
+> +
+> +/*
+> + * Historically some settings had both sysctl and a command line parameter.
+> + * With the generic sysctl. parameter support, we can handle them at a single
+> + * place and only keep the historical name for compatibility. This is not meant
+> + * to add brand new aliases. When adding existing aliases, consider whether
+> + * the possibly different moment of changing the value (e.g. from early_param
+> + * to the moment do_sysctl_args() is called) is an issue for the specific
+> + * parameter.
+> + */
+> +static const struct sysctl_alias sysctl_aliases[] = {
+> +	{"numa_zonelist_order",		"vm.numa_zonelist_order" },
+> +	{ }
+> +};
+> +
+> +const char *sysctl_find_alias(char *param)
 
+This should be "static" too.
 
-> On Mar 26, 2020, at 1:19 PM, Matthew Garrett <mjg59@google.com> wrote:
->=20
-> =EF=BB=BFOn Thu, Mar 26, 2020 at 6:40 AM Daniel Kiper <daniel.kiper@oracle=
-.com> wrote:
->>> On Wed, Mar 25, 2020 at 01:29:03PM -0700, 'Matthew Garrett' via trenchbo=
-ot-devel wrote:
->>> On Wed, Mar 25, 2020 at 12:43 PM Ross Philipson
->>> <ross.philipson@oracle.com> wrote:
->>>> To enable the kernel to be launched by GETSEC or SKINIT, a stub must be=
+> +{
+> +	const struct sysctl_alias *alias;
+> +
+> +	for (alias = &sysctl_aliases[0]; alias->kernel_param != NULL; alias++) {
+> +		if (strcmp(alias->kernel_param, param) == 0)
+> +			return alias->sysctl_param;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+>  /* Set sysctl value passed on kernel command line. */
+>  static int process_sysctl_arg(char *param, char *val,
+>  			       const char *unused, void *arg)
+> @@ -1741,15 +1772,18 @@ static int process_sysctl_arg(char *param, char *val,
+>  	loff_t pos = 0;
+>  	ssize_t wret;
+>  
+> -	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+> -		return 0;
+> -
+> -	param += sizeof("sysctl") - 1;
+> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1) == 0) {
+> +		param += sizeof("sysctl") - 1;
+>  
+> -	if (param[0] != '/' && param[0] != '.')
+> -		return 0;
+> +		if (param[0] != '/' && param[0] != '.')
+> +			return 0;
+>  
+> -	param++;
+> +		param++;
+> +	} else {
+> +		param = (char *) sysctl_find_alias(param);
+> +		if (!param)
+> +			return 0;
+> +	}
+>  
+>  	if (!proc_mnt) {
+>  		proc_fs_type = get_fs_type("proc");
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..de7a134b1b8a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -5460,15 +5460,6 @@ static int __parse_numa_zonelist_order(char *s)
+>  	return 0;
+>  }
+>  
+> -static __init int setup_numa_zonelist_order(char *s)
+> -{
+> -	if (!s)
+> -		return 0;
+> -
+> -	return __parse_numa_zonelist_order(s);
+> -}
+> -early_param("numa_zonelist_order", setup_numa_zonelist_order);
+> -
+>  char numa_zonelist_order[] = "Node";
+>  
+>  /*
+> -- 
+> 2.25.1
+> 
 
->>>> built into the setup section of the compressed kernel to handle the
->>>> specific state that the late launch process leaves the BSP. This is a
->>>> lot like the EFI stub that is found in the same area. Also this stub
->>>> must measure everything that is going to be used as early as possible.
->>>> This stub code and subsequent code must also deal with the specific
->>>> state that the late launch leaves the APs in.
->>>=20
->>> How does this integrate with the EFI entry point? That's the expected
->>=20
->> It does not. We do not want and need to tie secure launch with UEFI.
->=20
-> I agree that it shouldn't be required, but it should be possible. We
-> shouldn't add new entry points that don't integrate with the standard
-> way of booting the kernel.
->=20
->>> What's calling ExitBootServices() in
->>=20
->> Currently it is a bootloader, the GRUB which I am working on... OK, this
->> is not perfect but if we want to call ExitBootServices() from the kernel
->> then we have to move all pre-launch code from the bootloader to the
->> kernel. Not nice because then everybody who wants to implement secure
->> launch in different kernel, hypervisor, etc. has to re-implement whole
->> pre-launch code again.
->=20
-> We call ExitBootServices() in the EFI stub, so this is fine as long as
-> the EFI stub hands over control to the SL code. But yes, I think it's
-> a requirement that it be kernel-owned code calling ExitBootServices().
->=20
->>> this flow, and does the secure launch have to occur after it? It'd be
->>=20
->> Yes, it does.
->=20
-> Ok. The firmware TPM interfaces are gone after ExitBootServices(), so
-> we're going to need an additional implementation.
->=20
->> I think any post-launch code in the kernel should not call anything from
->> the gap. And UEFI belongs to the gap. OK, we can potentially re-use UEFI
->> TPM code in the pre-launch phase but I am not convinced that we should
->> (I am looking at it right now). And this leads us to other question
->> which pops up here and there. How to call UEFI runtime services, e.g. to
->> modify UEFI variables, update firmware, etc., from MLE or even from the
->> OS started from MLE? In my opinion it is not safe to call anything from
->> the gap after secure launch. However, on the other hand we have to give
->> an option to change the boot order or update the firmware. So, how to
->> do that? I do not have an easy answer yet...
->=20
-> How does Windows manage this? Retaining access to EFI runtime services
-> is necessary, and the areas in the memory map marked as runtime
-> services code or data should be considered part of the TCB and
-> measured - they're very much not part of the gap.
+Otherwise, yay, I love it! :)
 
-As a straw-man approach: make the rule that we never call EFI after secure l=
-aunch. Instead we write out any firmware variables that we want to change on=
- disk somewhere.  When we want to commit those changes, we reboot, commit th=
-e changes, and re-launch. Or we deactivate the kernel kexec-style, seal the i=
-mage against PCRs, blow away PCRs, call EFI, relaunch, unseal the PCRs, and c=
-ontinue on our merry way.
-
-I=E2=80=99m not sure how SMM fits in to this whole mess.
-
-If we insist on allowing EFI calls and SMM, then we may be able to *measure*=
- our exposure to potentially malicious firmware, but we can=E2=80=99t elimin=
-ate it. I personally trust OEM firmware about as far as I can throw it.=
+-- 
+Kees Cook
