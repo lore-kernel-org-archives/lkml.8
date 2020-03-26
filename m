@@ -2,195 +2,127 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35793C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A1DC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1958E2078E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:16:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EA020772
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=xs4all.nl header.i=@xs4all.nl header.b="OC7eHg5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgCZIQD (ORCPT
+        id S1727991AbgCZIRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:16:03 -0400
-Received: from mga02.intel.com ([134.134.136.20]:27555 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726298AbgCZIQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:16:01 -0400
-IronPort-SDR: 7hAwDOgrA1G5ibx2L4iUCSktXmCxth0PjDxWwIdWdRjOCMjgJOcT7b1+LDz0YKUDZ03vKD6f2o
- NwTZ1UYNzWsQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 01:16:01 -0700
-IronPort-SDR: IA7xC5rvkLfqXy48PyIvj6KCU4/as/vZVGHY6Bv09oSS6ekYciXQsbso7y3t2LtymVgt7585iN
- 3/aBjsuFPNBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,307,1580803200"; 
-   d="scan'208";a="393898816"
-Received: from local-michael-cet-test.sh.intel.com ([10.239.159.128])
-  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 01:15:57 -0700
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, sean.j.christopherson@intel.com,
-        jmattson@google.com
-Cc:     yu.c.zhang@linux.intel.com, Yang Weijiang <weijiang.yang@intel.com>
-Subject: [PATCH v11 1/9] KVM: VMX: Introduce CET VMX fields and flags
-Date:   Thu, 26 Mar 2020 16:18:38 +0800
-Message-Id: <20200326081847.5870-2-weijiang.yang@intel.com>
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20200326081847.5870-1-weijiang.yang@intel.com>
-References: <20200326081847.5870-1-weijiang.yang@intel.com>
+        Thu, 26 Mar 2020 04:17:02 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:41681 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727821AbgCZIRB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:17:01 -0400
+Received: from [192.168.2.10] ([46.9.234.233])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id HNh9jRVkrLu1fHNhCj2KAP; Thu, 26 Mar 2020 09:16:59 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=xs4all.nl; s=s1;
+        t=1585210619; bh=IdHvLiex0OKHR3v/yq/bT44NRwc/GzOlOdVvGMv56YU=;
+        h=Subject:To:From:Message-ID:Date:MIME-Version:Content-Type:From:
+         Subject;
+        b=OC7eHg5//Kl6DYiIEwTog6H6Wi+FwYyD1qoYfbF1JoIdul10J/0Nh+t/EvgB9LTT0
+         EBmCECyQ+Sp3F2xkGxsd6wp3gVFoFQTivqRYQsRcNPO8DwEFRj1cHr6JFeW76xhJlY
+         so1URjc8OLI9vxMTdehbernUtK6P/s+OJsS11Dy233sGX2QAY5h8AYVP3Ymu3gbRkK
+         4puTFTKL0heL4HmGxl5hovkPgrvPjDqkPMtv1NxJavCmwO6+/lhungAx48lWiho41O
+         8gNbHc1ow5tEYxz0SDO+zxMLOmqEmBlagepzzJisjl+6e2fJIs47tsbV01A1lLb/+r
+         MZyI8SCH7+nJw==
+Subject: Re: [PATCH] media: v4l2-fh: define v4l2_fh struct regardless of
+ condition
+To:     Seungchul Kim <sc377.kim@samsung.com>, mchehab@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CGME20200323023045epcas2p12007502edd2a65efcccb00eb899d5532@epcas2p1.samsung.com>
+ <000601d600bb$0e2d4320$2a87c960$@samsung.com>
+ <1a0ad24c-e577-e6d2-32ca-514a645b008f@xs4all.nl>
+ <007b01d60316$7e554690$7affd3b0$@samsung.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <3e38fc75-f555-7d91-2561-9c95f76694d1@xs4all.nl>
+Date:   Thu, 26 Mar 2020 09:16:55 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <007b01d60316$7e554690$7affd3b0$@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfMtHPk9IgeYpRmxlKLFIYSoByU7M3rcWzdealPyxlyt1KNs8SKdEEiW0sYY+3yHUViqvjEQzXM6c6hoUNXQAY7ZGub+nezIKIhYlQxA7TsGY8vX86CmS
+ VT6VPkfj9SfLhTFPwUAMkqCxRc6OzHRWSJ9SWOFSS6nyWOO0gNhABCtGecZeQtb4cNQmo3BN67VS5Fa1rbA/4d7pyMrDOyEpGAKwo42ee1HVSOLdt0yzpHu1
+ hbJVxPRbOPoyMqekQdcYgWQ3oX3/yzHTl6850R2t/SRdXM+wTPfKRWYg2icgvHY1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CET(Control-flow Enforcement Technology) is a CPU feature
-used to prevent Return/Jump-Oriented Programming(ROP/JOP)
-attacks. It provides the following sub-features to defend
-against ROP/JOP style control-flow subversion attacks:
+On 3/26/20 3:30 AM, Seungchul Kim wrote:
+> On 3/25/20 5:54 PM, Hans Verkuil wrote:
+>> On 3/23/20 3:30 AM, Seungchul Kim wrote:
+>>> v4l2_fh struct define differently by CONFIG_V4L2_MEM2MEM_DEV.
+>>> If some vendors use CONFIG_V4L2_MEM2MEM_DEV by module, it can make the
+>>> mismatch of v4l2_fh sturct.
+>>>
+>>> By the mismatch, the following error occurs.
+>>> ===============================
+>>> [    7.533506] v4l2_mem2mem: disagrees about version of symbol
+>> video_devdata
+>>> [    7.533594] v4l2_mem2mem: Unknown symbol video_devdata (err -22)
+>>> [    7.535319] v4l2_mem2mem: disagrees about version of symbol
+>>> v4l2_event_pending
+>>> [    7.542532] v4l2_mem2mem: Unknown symbol v4l2_event_pending (err -22)
+>>> ===============================
+>>>
+>>> So v4l2_fh struct is modified to does not have dependency for
+>>> CONFIG_V4L2_MEM2MEM_DEV.
+>>>
+>>> Signed-off-by: Seungchul Kim <sc377.kim@samsung.com>
+>>> ---
+>>>  include/media/v4l2-fh.h | 2 --
+>>>  1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/include/media/v4l2-fh.h b/include/media/v4l2-fh.h index
+>>> 53b4dbb..b5b3e00 100644
+>>> --- a/include/media/v4l2-fh.h
+>>> +++ b/include/media/v4l2-fh.h
+>>> @@ -53,9 +53,7 @@ struct v4l2_fh {
+>>>  	unsigned int		navailable;
+>>>  	u32			sequence;
+>>>
+>>> -#if IS_ENABLED(CONFIG_V4L2_MEM2MEM_DEV)
+>>>  	struct v4l2_m2m_ctx	*m2m_ctx;
+>>> -#endif
+>>
+>> This is a good change, but please also remove the same #if from
+>> v4l2_ioctl_get_lock() in drivers/media/v4l2-core/v4l2-ioctl.c. That is now
+>> no longer needed there either and without removing that those vendor
+>> drivers would be using the wrong lock.
+>>
+>> Regards,
+>>
+>> 	Hans
+> 
+> Thank you for your comment. I worried about the same thing with you.
+> But vfh->m2m_ctx on v4l2_ioctl_get_lock() is always null
+> without CONFIG_V4L2_MEM2MEM_DEV, because m2m_ctx of v4l2-fh
+> is initialized only in v4l2_mem2mem.c.
+> Therefore it doesn't have a problem using an wrong lock
+> regardless of modification, so I did not fix it.
 
-Shadow Stack (SHSTK):
-  A second stack for program which is used exclusively for
-  control transfer operations.
+It is: if your out-of-tree driver sets CONFIG_V4L2_MEM2MEM_DEV, then
+I assume it will set vfh->m2m_ctx, and so the v4l2 core should also
+return the right lock for that out-of-tree driver.
 
-Indirect Branch Tracking (IBT):
-  Code branching protection to defend against jump/call oriented
-  programming.
+But in any case, if m2m_ctx is always part of v4l2-fh.h, then that
+#if in v4l2-ioctl.c has become pointless and should be removed in any
+case.
 
-Several new CET MSRs are defined in kernel to support CET:
-  MSR_IA32_{U,S}_CET: Controls the CET settings for user
-                      mode and kernel mode respectively.
+Regards,
 
-  MSR_IA32_PL{0,1,2,3}_SSP: Stores shadow stack pointers for
-                            CPL-0,1,2,3 protection respectively.
-
-  MSR_IA32_INT_SSP_TAB: Stores base address of shadow stack
-                        pointer table.
-
-Two XSAVES state bits are introduced for CET:
-  IA32_XSS:[bit 11]: Control saving/restoring user mode CET states
-  IA32_XSS:[bit 12]: Control saving/restoring kernel mode CET states.
-
-Six VMCS fields are introduced for CET:
-  {HOST,GUEST}_S_CET: Stores CET settings for kernel mode.
-  {HOST,GUEST}_SSP: Stores shadow stack pointer of current task/thread.
-  {HOST,GUEST}_INTR_SSP_TABLE: Stores base address of shadow stack pointer
-                               table.
-
-If VM_EXIT_LOAD_HOST_CET_STATE = 1, the host CET states are restored
-from below VMCS fields at VM-Exit:
-  HOST_S_CET
-  HOST_SSP
-  HOST_INTR_SSP_TABLE
-
-If VM_ENTRY_LOAD_GUEST_CET_STATE = 1, the guest CET states are loaded
-from below VMCS fields at VM-Entry:
-  GUEST_S_CET
-  GUEST_SSP
-  GUEST_INTR_SSP_TABLE
-
-Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
----
- arch/x86/include/asm/vmx.h      | 8 ++++++++
- arch/x86/include/uapi/asm/kvm.h | 1 +
- arch/x86/kvm/x86.c              | 4 ++++
- arch/x86/kvm/x86.h              | 2 +-
- 4 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-index 5e090d1f03f8..e938bc6c37aa 100644
---- a/arch/x86/include/asm/vmx.h
-+++ b/arch/x86/include/asm/vmx.h
-@@ -94,6 +94,7 @@
- #define VM_EXIT_CLEAR_BNDCFGS                   0x00800000
- #define VM_EXIT_PT_CONCEAL_PIP			0x01000000
- #define VM_EXIT_CLEAR_IA32_RTIT_CTL		0x02000000
-+#define VM_EXIT_LOAD_HOST_CET_STATE             0x10000000
- 
- #define VM_EXIT_ALWAYSON_WITHOUT_TRUE_MSR	0x00036dff
- 
-@@ -107,6 +108,7 @@
- #define VM_ENTRY_LOAD_BNDCFGS                   0x00010000
- #define VM_ENTRY_PT_CONCEAL_PIP			0x00020000
- #define VM_ENTRY_LOAD_IA32_RTIT_CTL		0x00040000
-+#define VM_ENTRY_LOAD_GUEST_CET_STATE           0x00100000
- 
- #define VM_ENTRY_ALWAYSON_WITHOUT_TRUE_MSR	0x000011ff
- 
-@@ -328,6 +330,9 @@ enum vmcs_field {
- 	GUEST_PENDING_DBG_EXCEPTIONS    = 0x00006822,
- 	GUEST_SYSENTER_ESP              = 0x00006824,
- 	GUEST_SYSENTER_EIP              = 0x00006826,
-+	GUEST_S_CET                     = 0x00006828,
-+	GUEST_SSP                       = 0x0000682a,
-+	GUEST_INTR_SSP_TABLE            = 0x0000682c,
- 	HOST_CR0                        = 0x00006c00,
- 	HOST_CR3                        = 0x00006c02,
- 	HOST_CR4                        = 0x00006c04,
-@@ -340,6 +345,9 @@ enum vmcs_field {
- 	HOST_IA32_SYSENTER_EIP          = 0x00006c12,
- 	HOST_RSP                        = 0x00006c14,
- 	HOST_RIP                        = 0x00006c16,
-+	HOST_S_CET                      = 0x00006c18,
-+	HOST_SSP                        = 0x00006c1a,
-+	HOST_INTR_SSP_TABLE             = 0x00006c1c
- };
- 
- /*
-diff --git a/arch/x86/include/uapi/asm/kvm.h b/arch/x86/include/uapi/asm/kvm.h
-index 3f3f780c8c65..78e5c4266270 100644
---- a/arch/x86/include/uapi/asm/kvm.h
-+++ b/arch/x86/include/uapi/asm/kvm.h
-@@ -31,6 +31,7 @@
- #define MC_VECTOR 18
- #define XM_VECTOR 19
- #define VE_VECTOR 20
-+#define CP_VECTOR 21
- 
- /* Select x86 specific features in <linux/kvm.h> */
- #define __KVM_HAVE_PIT
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 40c6768942ae..830afe5038d1 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -186,6 +186,9 @@ static struct kvm_shared_msrs __percpu *shared_msrs;
- 				| XFEATURE_MASK_BNDCSR | XFEATURE_MASK_AVX512 \
- 				| XFEATURE_MASK_PKRU)
- 
-+#define KVM_SUPPORTED_XSS	(XFEATURE_MASK_CET_USER | \
-+				 XFEATURE_MASK_CET_KERNEL)
-+
- u64 __read_mostly host_efer;
- EXPORT_SYMBOL_GPL(host_efer);
- 
-@@ -402,6 +405,7 @@ static int exception_class(int vector)
- 	case NP_VECTOR:
- 	case SS_VECTOR:
- 	case GP_VECTOR:
-+	case CP_VECTOR:
- 		return EXCPT_CONTRIBUTORY;
- 	default:
- 		break;
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index c1954e216b41..8f0baa6fa72f 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -115,7 +115,7 @@ static inline bool x86_exception_has_error_code(unsigned int vector)
- {
- 	static u32 exception_has_error_code = BIT(DF_VECTOR) | BIT(TS_VECTOR) |
- 			BIT(NP_VECTOR) | BIT(SS_VECTOR) | BIT(GP_VECTOR) |
--			BIT(PF_VECTOR) | BIT(AC_VECTOR);
-+			BIT(PF_VECTOR) | BIT(AC_VECTOR) | BIT(CP_VECTOR);
- 
- 	return (1U << vector) & exception_has_error_code;
- }
--- 
-2.17.2
-
+	Hans
