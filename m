@@ -2,109 +2,183 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,WEIRD_QUOTING autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54973C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0503EC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1704B20663
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4C5720663
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:20:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="vhY5OV6S"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="gxK9Lq1U";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="w6pqPp7I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCZXTs (ORCPT
+        id S1727620AbgCZXU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:19:48 -0400
-Received: from gateway21.websitewelcome.com ([192.185.46.113]:21493 "EHLO
-        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726359AbgCZXTs (ORCPT
+        Thu, 26 Mar 2020 19:20:57 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:43375 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726359AbgCZXU5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:19:48 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway21.websitewelcome.com (Postfix) with ESMTP id 9862B400CB9B4
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 18:19:47 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id HbmtjOdpNAGTXHbmtjnLw2; Thu, 26 Mar 2020 18:19:47 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=s6LutiGk2IllAHlFGyWkD3z+bSbaKNTGXhQLNtAMbZU=; b=vhY5OV6SGw7bbrYBQQiQ1VOo6t
-        LaHxWYVqHGcs4E5mi2Pm0j3mh6gFjFJ34zpsRPdsP7PdQh7rcA9B7EYeOqpLw3KNqfjUn3AOkWV2s
-        rY2wq3isOFZ/QljsGc4u2BEeS10NRAUC2Ifp6+xDl2fBwExWYDH0dhSR+zXPQyWQASUu6J0i+al37
-        HV30V73m3NU7wSD2fGwJCjGdtOklBUlApXzMNK8n8DONiB9RVJuEhyoOIo95sRzvRQ3cV/T8m0e7B
-        GsFQoxQRU2N+dRn52UkPTrdLY49AlWjLczB/L/MmN1crfOPhirYh7a1fOiCGkvAyCOWsC5dhbgkQj
-        h/dI3OcQ==;
-Received: from cablelink-189-218-116-241.hosts.intercable.net ([189.218.116.241]:33582 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1jHbmr-0012KV-NP; Thu, 26 Mar 2020 18:19:45 -0500
-Date:   Thu, 26 Mar 2020 18:23:22 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2][next] m68k: amiga: config: Use flexible-array member and
- mark expected switch fall-through
-Message-ID: <cover.1585264062.git.gustavo@embeddedor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.218.116.241
-X-Source-L: No
-X-Exim-ID: 1jHbmr-0012KV-NP
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink-189-218-116-241.hosts.intercable.net (embeddedor) [189.218.116.241]:33582
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Thu, 26 Mar 2020 19:20:57 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 3E0F95C0296;
+        Thu, 26 Mar 2020 19:20:56 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute3.internal (MEProxy); Thu, 26 Mar 2020 19:20:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to:cc
+        :subject:content-type; s=fm2; bh=SPBez9eP4WUK7nuKDXBKLrvMRPHaZsR
+        cUIsM6kI098U=; b=gxK9Lq1U1ZxYWuJmDagu+BiWgP0UnweCyPcj1hQFPT3pqyB
+        LxatrOpz3FAEfvUd5qLkvi73gmsE81WE1yuXW3/+H2utlTJ700zpmigwBnng3LbP
+        Epw8/ZUwW//YNGi5vI5WP29M05ArTjZhgECYpIDLXpl6l0XutKGVK/TqH3kcZBdb
+        3fSSnnl3RegVFPK/pIMZwfbrLHVDz3R6nOZICjfQBEfWu4mT5wdRt6V042RXxLmB
+        HkftvIlma412PclEU/x7QGDAcvIx6P6fK/P70Q67FDmPZhmfiGiC5mD8vTQus/wK
+        YbUFsrsiOCXjtwmYkz/tONJ9O56EGqCaNR+XSBg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=SPBez9
+        eP4WUK7nuKDXBKLrvMRPHaZsRcUIsM6kI098U=; b=w6pqPp7Ik+M1thZhT77paX
+        0kTNlrTdUYnMQAcVrtDz0NnabndanpH5Kz7uitVjMAH0IawekET32chwxjx/QrAB
+        AI5EfDCNQ0ShnkOkID+8nHPKbHikhphmtXZIsHLlv2WNug7wH7+rQJVOYtlTdBUy
+        /I5OGMrmq66pb2tLup533nvm5ega0BzsX+qGUr9aHIGB8pen3wqOIAzVku6CGdr5
+        xIWIZvNyfoE7Wpw1QhVFQ+KvRMN7rQD1z/FJcERurYlNGq8E/FSzXocw+RRPxMX9
+        jEcJsfq855jiZVYtNqFIlqx/UDaUIpMMzgTwthXI2YV74airZKu9lhdGwLETBR3Q
+        ==
+X-ME-Sender: <xms:1zh9XiSSQNyIfR04Kthsm7UhzVRMzwkPn4FDqhKG-ph4JO8hrCG-fw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrudehjedguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehn
+    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucevlh
+    hushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgurhgvfies
+    rghjrdhiugdrrghu
+X-ME-Proxy: <xmx:1zh9XufHtV7zdwoJoABA-XKbJMCRjPY8iHi8hsLe8a8Jb5SOWvmeYA>
+    <xmx:1zh9XhKzeexi5vEcv5EEK2-QJmy_wLjc9fAATGXS2oBd9NlFV8nS-w>
+    <xmx:1zh9Xj46U2c1B70fLh5hYzpKB_YaQ7-xS0qosaP_zzgI0y1FsQ5TFQ>
+    <xmx:2Dh9XmZVnS9kqIWj4sBS7nBGvNBOOGjDmrY1GIvL4Kj1IhMLrUY-hA>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 02149E00EF; Thu, 26 Mar 2020 19:20:54 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.7-1021-g152deaf-fmstable-20200319v1
+Mime-Version: 1.0
+Message-Id: <294a52cd-2f60-41e5-a58f-a74151a83b08@www.fastmail.com>
+In-Reply-To: <20200306170218.79698-2-geissonator@yahoo.com>
+References: <20200306170218.79698-1-geissonator@yahoo.com>
+ <20200306170218.79698-2-geissonator@yahoo.com>
+Date:   Fri, 27 Mar 2020 09:50:58 +1030
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Andrew Geissler" <geissonator@gmail.com>,
+        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org,
+        "Andrew Geissler" <geissonator@yahoo.com>
+Subject: Re: [PATCH 2/2] ARM: dts: aspeed: zaius: Add gpio line names
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mark expected switch fall-through
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Cc: linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org
 
-Hi,
 
-This series aims to replace a zero-length array with a flexible-array
-member and mark a switch case where we are expecting to fall through.
+On Sat, 7 Mar 2020, at 03:32, Andrew Geissler wrote:
+> Name the GPIOs to help userspace work with them. The names describe the
+> functionality the lines provide, not the net or ball name. This makes it
+> easier to share userspace code across different systems and makes the
+> use of the lines more obvious.
+> 
+> Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
 
-This also coverts some /* fall through */ comments to the new
-pseudo-keyword fallthrough;
+So we're creating a bit of an ad-hoc ABI here between the DT and userspace.
 
-Building: allmodconfig m68k
+Where are we documenting it?
 
-Thanks
+Generally I think the idea is good though, so:
 
-Gustavo A. R. Silva (2):
-  [next] m68k: amiga: config: Replace zero-length array with
-    flexible-array member
-  [next] m68k: amiga: config: Mark expected switch fall-through
+Acked-by: Andrew Jeffery <andrew@aj.id.au>
 
- arch/m68k/amiga/config.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
--- 
-2.26.0
-
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 37 +++++++++++++++++++---
+>  1 file changed, 33 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> index bc60ec291681..4bcc82046362 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> @@ -478,32 +478,61 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_gpioh_unbiased>;
+>  
+> +	gpio-line-names =
+> +	/*A0-A7*/	"","cfam-reset","","","","","","",
+> +	/*B0-B7*/	"","","","","","","","",
+> +	/*C0-C7*/	"","","","","","","","",
+> +	/*D0-D7*/	"fsi-enable","","","","","led-sys-boot-status","led-attention",
+> +				"led-fault",
+> +	/*E0-E7*/	"","","","","","","","presence-pcie-e2b",
+> +	/*F0-F7*/	"","","","","","","","checkstop",
+> +	/*G0-G7*/	"fsi-clock","fsi-data","","","","","","",
+> +	/*H0-H7*/	"onewire0","onewire1","onewire2","onewire3","","","","",
+> +	/*I0-I7*/	"","","","power-button","","","","",
+> +	/*J0-J7*/	"","","","","","","","",
+> +	/*K0-K7*/	"","","","","","","","",
+> +	/*L0-L7*/	"","","","","","","","",
+> +	/*M0-M7*/	"","","","","","","","",
+> +	/*N0-N7*/	"","","","","","","","",
+> +	/*O0-O7*/	"","","","","iso_u164_en","","fsi-trans","",
+> +	/*P0-P7*/	"ncsi_mux_en_n","bmc_i2c2_sw_rst_n","","bmc_i2c5_sw_rst_n","",
+> +				"","fsi-mux","",
+> +	/*Q0-Q7*/	"","","","","","","","",
+> +	/*R0-R7*/	"","","","","","","","",
+> +	/*S0-S7*/	"","","","","","","","",
+> +	/*T0-T7*/	"","","","","","","","",
+> +	/*U0-U7*/	"","","","","","","","",
+> +	/*V0-V7*/	"","","","","","","","",
+> +	/*W0-W7*/	"","","","","","","","",
+> +	/*X0-X7*/	"","","","","","","","",
+> +	/*Y0-Y7*/	"","","","","","","","",
+> +	/*Z0-Z7*/	"","","","","","","","",
+> +	/*AA0-AA7*/	"","","led-hdd-fault","","","","","",
+> +	/*AB0-AB7*/	"","","","","","","","",
+> +	/*AC0-AC7*/	"","","","","","","","";
+> +
+>  	line_iso_u146_en {
+>  		gpio-hog;
+>  		gpios = <ASPEED_GPIO(O, 4) GPIO_ACTIVE_HIGH>;
+>  		output-high;
+> -		line-name = "iso_u164_en";
+>  	};
+>  
+>  	ncsi_mux_en_n {
+>  		gpio-hog;
+>  		gpios = <ASPEED_GPIO(P, 0) GPIO_ACTIVE_HIGH>;
+>  		output-low;
+> -		line-name = "ncsi_mux_en_n";
+>  	};
+>  
+>  	line_bmc_i2c2_sw_rst_n {
+>  		gpio-hog;
+>  		gpios = <ASPEED_GPIO(P, 1) GPIO_ACTIVE_HIGH>;
+>  		output-high;
+> -		line-name = "bmc_i2c2_sw_rst_n";
+>  	};
+>  
+>  	line_bmc_i2c5_sw_rst_n {
+>  		gpio-hog;
+>  		gpios = <ASPEED_GPIO(P, 3) GPIO_ACTIVE_HIGH>;
+>  		output-high;
+> -		line-name = "bmc_i2c5_sw_rst_n";
+>  	};
+>  };
+>  
+> -- 
+> 2.21.0 (Apple Git-122)
+> 
+>
