@@ -2,139 +2,190 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DDFC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE58DC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:12:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36C342070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FCF020848
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 10:12:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ewiNc0NU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgCZKJd (ORCPT
+        id S1727787AbgCZKMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 06:09:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:50179 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZKIl (ORCPT
+        Thu, 26 Mar 2020 06:12:49 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:7364 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726298AbgCZKMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 06:08:41 -0400
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1jHPRC-00046L-G7; Thu, 26 Mar 2020 11:08:34 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 0EFB11C0440;
-        Thu, 26 Mar 2020 11:08:34 +0100 (CET)
-Date:   Thu, 26 Mar 2020 10:08:33 -0000
-From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/objtool] objtool: Optimize find_symbol_by_name()
-Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200324160924.676865656@infradead.org>
-References: <20200324160924.676865656@infradead.org>
+        Thu, 26 Mar 2020 06:12:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QACYnG032171;
+        Thu, 26 Mar 2020 11:12:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=STMicroelectronics;
+ bh=L85rZOpZxg375px3mWAwS/C7vybF5ftzlf5QE8rNbBw=;
+ b=ewiNc0NURcooa2CNZCnpwJ2/qcd5H7zKOVLl+rUFPuFDTR/ypJAFyy+I1XdX1HLCWyCx
+ gChVcjirmE+eEojq7dsgc3wEhu6qfIF2pPYZFHXM2qFp6P1bBUQEf68mfx4q5Xdt8n2/
+ HnyEuYLZD3WPUI+OM9reFz4sCxi1swXLLmbXuQG+q19pU6sgyu6qwmgwR6nR3ajXZ9Ys
+ E8rdXmNrRMZqGwlzOvvxalTnRUATrsxBdfFqhY+q2Ma/c3ni8ln0L+jNxKX8tQmB7lhF
+ xDvbggUkFql0Iq/wGT1jMIUxn+05hkPYokR5JDtgxD0L2mdqtrK0ocbcQ65CSNKlbApw Pw== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yw8xeb99h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 11:12:35 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 07635100034;
+        Thu, 26 Mar 2020 11:12:25 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C354B22228D;
+        Thu, 26 Mar 2020 11:12:25 +0100 (CET)
+Received: from gnbcxd0016.gnb.st.com (10.75.127.51) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 26 Mar
+ 2020 11:12:25 +0100
+Date:   Thu, 26 Mar 2020 11:12:19 +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/2] i2c: i2c-stm32f7: allows for any bus frequency
+Message-ID: <20200326101219.GA21190@gnbcxd0016.gnb.st.com>
+Mail-Followup-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pierre Yves MORDRET <pierre-yves.mordret@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" <linux-stm32@st-md-mailman.stormreply.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>
+References: <1585161361-3408-1-git-send-email-alain.volmat@st.com>
+ <1585161361-3408-3-git-send-email-alain.volmat@st.com>
+ <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
 MIME-Version: 1.0
-Message-ID: <158521731363.28353.8741952438283038310.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VdPCWdpGo=2n9g0ivti-g2m4jZ=cG4BKHBLk8BVDzaCyg@mail.gmail.com>
+X-Disclaimer: ce message est personnel / this message is private
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG4NODE1.st.com (10.75.127.10) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_02:2020-03-24,2020-03-26 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/objtool branch of tip:
+Hi Andy,
 
-Commit-ID:     cdb3d057a17d56363a831e486ea39e4c389a6cf9
-Gitweb:        https://git.kernel.org/tip/cdb3d057a17d56363a831e486ea39e4c389a6cf9
-Author:        Peter Zijlstra <peterz@infradead.org>
-AuthorDate:    Thu, 12 Mar 2020 10:17:38 +01:00
-Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Wed, 25 Mar 2020 18:28:30 +01:00
+Thanks for the review.
 
-objtool: Optimize find_symbol_by_name()
+On Wed, Mar 25, 2020 at 06:53:45PM +0000, Andy Shevchenko wrote:
+> On Wed, Mar 25, 2020 at 8:38 PM Alain Volmat <alain.volmat@st.com> wrote:
+> >
+> > Do not limitate to the 3 (100KHz, 400KHz, 1MHz) bus frequency but
+> > instead allows any frequency (if it matches timing requirements).
+> > Depending on the requested frequency, use the spec data from either
+> > Standard, Fast or Fast Plus mode.
+> >
+> > Hardcoding of min/max bus frequencies is removed and is instead computed.
+> >
+> > The driver do not use anymore speed identifier but instead handle
+> > directly the frequency and figure out the spec data (necessary
+> > for the computation of the timing register) based on the frequency.
+> 
+> ...
+> 
+> > +static struct stm32f7_i2c_spec *get_specs(u32 rate)
+> > +{
+> > +       int i;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(i2c_specs); i++)
+> > +               if (rate <= i2c_specs[i].rate)
+> > +                       return &i2c_specs[i];
+> > +
+> 
+> > +       /* NOT REACHED */
+> > +       return ERR_PTR(-EINVAL);
+> 
+> WARN_ONCE() ?
 
-Perf showed that find_symbol_by_name() takes time; add a symbol name
-hash.
+The comment should actually be removed. get_specs return value is
+properly checked in stm32f7_i2c_compute_timing and an error message
+is displayed in case of an error.
 
-This shaves another second off of objtool on vmlinux.o runtime, down
-to 15 seconds.
+> 
+> > +}
+> 
+> ...
+> 
+> > -                       if ((tscl_l < i2c_specs[setup->speed].l_min) ||
+> > +                       if ((tscl_l < specs->l_min) ||
+> 
+> >                             (i2cclk >=
+> >                              ((tscl_l - af_delay_min - dnf_delay) / 4))) {
+> 
+> Perhaps squash above two to one line at the same time?
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Miroslav Benes <mbenes@suse.cz>
-Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lkml.kernel.org/r/20200324160924.676865656@infradead.org
----
- tools/objtool/elf.c | 10 +++++-----
- tools/objtool/elf.h |  2 ++
- 2 files changed, 7 insertions(+), 5 deletions(-)
+I agree that this is not very pretty to read now but that would lead to
+a line exceeding 80 characters. To fix that it'd be better to rework the code
+but in such case that should be done at a separate time to keep this commit
+as small / simpler to understand as possible. So I'd prefer leave this code
+for the time being.
 
-diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index 07db4df..43abae7 100644
---- a/tools/objtool/elf.c
-+++ b/tools/objtool/elf.c
-@@ -203,13 +203,11 @@ struct symbol *find_func_containing(struct section *sec, unsigned long offset)
- 
- struct symbol *find_symbol_by_name(struct elf *elf, const char *name)
- {
--	struct section *sec;
- 	struct symbol *sym;
- 
--	list_for_each_entry(sec, &elf->sections, list)
--		list_for_each_entry(sym, &sec->symbol_list, list)
--			if (!strcmp(sym->name, name))
--				return sym;
-+	hash_for_each_possible(elf->symbol_name_hash, sym, name_hash, str_hash(name))
-+		if (!strcmp(sym->name, name))
-+			return sym;
- 
- 	return NULL;
- }
-@@ -386,6 +384,7 @@ static int read_symbols(struct elf *elf)
- 			entry = &sym->sec->symbol_list;
- 		list_add(&sym->list, entry);
- 		hash_add(elf->symbol_hash, &sym->hash, sym->idx);
-+		hash_add(elf->symbol_name_hash, &sym->name_hash, str_hash(sym->name));
- 	}
- 
- 	if (stats)
-@@ -524,6 +523,7 @@ struct elf *elf_read(const char *name, int flags)
- 	memset(elf, 0, sizeof(*elf));
- 
- 	hash_init(elf->symbol_hash);
-+	hash_init(elf->symbol_name_hash);
- 	hash_init(elf->section_hash);
- 	hash_init(elf->section_name_hash);
- 	INIT_LIST_HEAD(&elf->sections);
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index d18f466..3088d92 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -47,6 +47,7 @@ struct symbol {
- 	struct list_head list;
- 	struct rb_node node;
- 	struct hlist_node hash;
-+	struct hlist_node name_hash;
- 	GElf_Sym sym;
- 	struct section *sec;
- 	char *name;
-@@ -77,6 +78,7 @@ struct elf {
- 	char *name;
- 	struct list_head sections;
- 	DECLARE_HASHTABLE(symbol_hash, 20);
-+	DECLARE_HASHTABLE(symbol_name_hash, 20);
- 	DECLARE_HASHTABLE(section_hash, 16);
- 	DECLARE_HASHTABLE(section_name_hash, 16);
- };
+> 
+> ...
+> 
+> > +       int i;
+> > +
+> > +       for (i = ARRAY_SIZE(i2c_specs) - 1; i >= 0; i--)
+> 
+> 
+> Perhaps
+> 
+>        int i = ARRAY_SIZE(i2c_specs);
+> 
+>        while(i--)
+> 
+> ?
+
+I propose the following code to make it a bit easier to read/understand:
+
+static u32 get_lower_rate(u32 rate)
+{
+        int i = ARRAY_SIZE(i2c_specs);
+
+        while (i--)
+                if (i2c_specs[i].rate < rate)
+                        break;
+
+        return i2c_specs[i].rate;
+}
+
+If you agree with that I'll push a v2.
+
+> 
+> > +               if (i2c_specs[i].rate < rate)
+> > +                       return i2c_specs[i].rate;
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
