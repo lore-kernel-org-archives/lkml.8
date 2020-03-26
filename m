@@ -2,147 +2,122 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 593A0C2D0EC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B5B4C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3192420772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6A320719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:37:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KciO4EZK"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="NnPN28SR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726260AbgCZEei (ORCPT
+        id S1726270AbgCZEhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 00:34:38 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:34782 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgCZEei (ORCPT
+        Thu, 26 Mar 2020 00:37:01 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44214 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbgCZEhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 00:34:38 -0400
-Received: by mail-lf1-f65.google.com with SMTP id e7so3693777lfq.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 21:34:36 -0700 (PDT)
+        Thu, 26 Mar 2020 00:37:00 -0400
+Received: by mail-ed1-f68.google.com with SMTP id i16so4439467edy.11
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 21:36:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8N6jteRVPBSL9hTxDMbTPuUm3mSUhds7WafEAkqE7jw=;
-        b=KciO4EZK2hclyE9/T7X1J0ARNvopk2V0eLpCC+8wuGdNqsQE5CdbJY7+BgazwCU0jJ
-         yrnc3M22S6Bo5hRb/q8bG5FKLs5NkMi/ktDfvfK/U+RBYmAOtUza3MQqLjh7Df8M3iLX
-         ZlA+S8usMAK2O5oGjSEhl/klH+DBLtPGLLojs=
+         :cc:content-transfer-encoding;
+        bh=y20CeGQScdwXv2e5cBbGORXlmOAQqvqGM8Tbmxh+s8U=;
+        b=NnPN28SRXi1uUhX29Dz/ecQfFMQ9NJKJyWfz57OCY+So4pdu/YOtIs8TLBwkfsbit8
+         L86CQNndJIPSxbZw7+4McwCfFyqnS6QAt1fSE5U6H3Nkqv2JcsH+BTOz8r1B0Uc8Po1Z
+         FgR6DJqLubRVXNqXIs/ECINnaIo/eKg3fGwLnsgMno5LAY1Pq7LQB8Q8gF3vAkoCcfMl
+         vnzZaNxFqEbBn7VWrLnFQoq2BGEYck/v2nPHqISNO3LxmmA59JHDiQBRYPWN1ddlZtC/
+         o2henSodF7cP9rrq67FXCK5UY4MkegV791GX8DXKjyZFfwDOuyMKqMfSIUGM48MvD7s8
+         I4OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8N6jteRVPBSL9hTxDMbTPuUm3mSUhds7WafEAkqE7jw=;
-        b=EQgz4MEYTvLJYCQhbsd0M/+d+USmT+myp0/Hv3fXxKLEoYet0Nf9+ElQ3K7BBJ+SdV
-         8EZ3T9Q4ITBCKsu3/OkvjQc2oyIMXMrBb1H9FGmmobiFezo4KVxpxSyWm9a7i5O2CQkz
-         4vHkm2/u4/Jrfy0/H8yuLScB/ogsRy5HoEO6VOZYcR2h1JGn+C4M4c7o6hyGOAYd7vzO
-         c4cmhcBgtKm4RicU6kKV0hrV6R56FJ5AtKIks56KFe6jDhjF9GsyBayCASGdpfoo6DMY
-         ofa9Sxhgfna4AH0ZxpomV6T68mQwc9KjRsHPLP1Xb34DepJaKEzBcz1g4aHAuqVUn8Vl
-         87TA==
-X-Gm-Message-State: ANhLgQ1oCD8AKoY0SJcnP79MKMBitwpUpC+V1/8pJxEBi2p9TE5eh74s
-        PNA4nvCNpYUNasL6Q+EbwIQifwgMbGNekh1dcLVr8A==
-X-Google-Smtp-Source: ADFU+vsdsnqzx0S4EfYqQ5gj5c4EYjwMSVSo8raRdE6/BLyB0BfCVZnUibKiUfSrUJAL+zUbo1fteorR07wPoNo2oQc=
-X-Received: by 2002:a19:be11:: with SMTP id o17mr4280893lff.168.1585197275279;
- Wed, 25 Mar 2020 21:34:35 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y20CeGQScdwXv2e5cBbGORXlmOAQqvqGM8Tbmxh+s8U=;
+        b=Ek8IO97t5qiY0zCPHQ9JHFNYK1dNX0WfTMB+5zGoqprlXi76512TrG5oTkYe0KO7AJ
+         pC+Lbv4jGEUoHI/KDvbCuhwRy1v/8aTlsBDqGpyXxL/DErkVIL1+/65Mi83/Im/lwzjR
+         CtRuiQZBvLDbWtWXSxAP+jKUm9E7z9qywAZFT5fdvMkZyjsQa6276+ZjWIz+DSUBIu+o
+         b3fJNZwfD2jhUg0Q6FnEckiBXHDem/mQEvmUpcmGXFnrXOrg46T1TbHrAgpl1UGztIwn
+         YXPhVnczKHESBjjCXI/8Znwnz1CU0ZWSYA3U3hFst6z1p7pmmsjVf7ztOmkUuDct4zdV
+         772g==
+X-Gm-Message-State: ANhLgQ14OZWfpB9eULrjIUXjpVtpt2bnJHBzuS8BAe+qcy+D+Ih+6RWb
+        wHnFPGdEJSnqEyKtwQfa5xAGGI/ygi62v2Z3VkGs0jLi
+X-Google-Smtp-Source: ADFU+vuEqHrADScJDNrE5jEmfQwLB6omwEtMI9r+jBDuPZsEKbUtAYrdc7Maiu+s44RUM2179JuB/uQYQyUXcglHnqw=
+X-Received: by 2002:a17:906:6987:: with SMTP id i7mr6196042ejr.12.1585197418839;
+ Wed, 25 Mar 2020 21:36:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
- <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
- <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com> <CAL_JsqLW+3aJrB2EOEU74o+aVO9yPG74xi=Eov5_6++NdnOBPg@mail.gmail.com>
-In-Reply-To: <CAL_JsqLW+3aJrB2EOEU74o+aVO9yPG74xi=Eov5_6++NdnOBPg@mail.gmail.com>
-From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-Date:   Thu, 26 Mar 2020 10:04:23 +0530
-Message-ID: <CAHO=5PEEgQ+0xhBmFwjvi2nBada17fxDYeG42SDjk5qdzCQANg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <bcm-kernel-feedback-list@broadcom.com>
+References: <20200220122719.4302-1-thomas_os@shipmail.org> <20200220122719.4302-2-thomas_os@shipmail.org>
+In-Reply-To: <20200220122719.4302-2-thomas_os@shipmail.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 25 Mar 2020 21:36:47 -0700
+Message-ID: <CAPcyv4hUGPCWrR=Mj4-dR3vOq5peSXvBWL2F4c0ktsAT+YygEw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/9] fs: Constify vma argument to vma_is_dax
+To:     =?UTF-8?Q?Thomas_Hellstr=C3=B6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Roland Scheidegger <sroland@vmware.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:37 AM Rob Herring <robh+dt@kernel.org> wrote:
+On Thu, Feb 20, 2020 at 4:27 AM Thomas Hellstr=C3=B6m (VMware)
+<thomas_os@shipmail.org> wrote:
 >
-> On Mon, Mar 2, 2020 at 9:56 PM Rayagonda Kokatanur
-> <rayagonda.kokatanur@broadcom.com> wrote:
-> >
-> > On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
-> > >
-> > > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
-> > > <rayagonda.kokatanur@broadcom.com> wrote:
-> > > >
-> > > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
-> > > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
-> > > > these flags if check slave addr valid.
-> > > >
-> > > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
-> > > > ---
-> > > >  scripts/dtc/Makefile | 2 +-
-> > > >  scripts/dtc/checks.c | 5 +++++
-> > > >  2 files changed, 6 insertions(+), 1 deletion(-)
-> > >
-> > > dtc changes must be submitted against upstream dtc.
-> >
-> > Please let me know link to clone the upstream dtc branch.
-> > >
-> > >
-> > > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> > > > index 3acbb410904c..c5e8d6a9e73c 100644
-> > > > --- a/scripts/dtc/Makefile
-> > > > +++ b/scripts/dtc/Makefile
-> > > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
-> > > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
-> > > >
-> > > >  # Source files need to get at the userspace version of libfdt_env.h to compile
-> > > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
-> > > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
-> > > >
-> > > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
-> > > >  ifneq ($(CHECK_DTBS),)
-> > > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-> > > > index 756f0fa9203f..17c9ed4137b5 100644
-> > > > --- a/scripts/dtc/checks.c
-> > > > +++ b/scripts/dtc/checks.c
-> > > > @@ -3,6 +3,7 @@
-> > > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
-> > > >   */
-> > > >
-> > > > +#include <linux/bits.h>
-> > >
-> > > Not a UAPI header not that that would be much better as dtc also builds on Mac.
-> > >
-> > > >  #include "dtc.h"
-> > > >  #include "srcpos.h"
-> > > >
-> > > > @@ -17,6 +18,9 @@
-> > > >  #define TRACE(c, fmt, ...)     do { } while (0)
-> > > >  #endif
-> > > >
-> > > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
-> > > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
-> > > > +
-> > > >  enum checkstatus {
-> > > >         UNCHECKED = 0,
-> > > >         PREREQ,
-> > > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
-> > > >
-> > > >         for (len = prop->val.len; len > 0; len -= 4) {
-> > > >                 reg = fdt32_to_cpu(*(cells++));
-> > > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
-> > >
-> > > I'd just mask the top byte so we don't have to update on the next flag we add.
-> > Do you mean something like this, shown below ?
-> > reg &= 0xFFFF_FC000;
+> From: Thomas Hellstrom <thellstrom@vmware.com>
 >
-> Yes, but as I said, the 'top byte', so 0xFF000000.
-Thank you, will do as per your suggestion and send v2.
+> The vma argument is only dereferenced for reading.
 >
-> Rob
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> Cc: Ralph Campbell <rcampbell@nvidia.com>
+> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+> Cc: "Christian K=C3=B6nig" <christian.koenig@amd.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+> Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+> Acked-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+> ---
+>  include/linux/fs.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 98e0349adb52..4f41fdbf402f 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3367,7 +3367,7 @@ static inline bool io_is_direct(struct file *filp)
+>         return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host=
+);
+>  }
+>
+> -static inline bool vma_is_dax(struct vm_area_struct *vma)
+> +static inline bool vma_is_dax(const struct vm_area_struct *vma)
+>  {
+>         return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
+>  }
+
+Looks good to me:
+
+Acked-by: Dan Williams <dan.j.williams@intel.com>
