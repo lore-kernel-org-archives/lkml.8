@@ -2,653 +2,241 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBEEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2DEC2D0EC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7BA92073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA8A20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:03:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ER7qd1ID"
+	dkim=pass (2048-bit key) header.d=tycho.nsa.gov header.i=@tycho.nsa.gov header.b="NQVSQC5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgCZODz (ORCPT
+        id S1728337AbgCZOD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:03:55 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:26693 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727831AbgCZODy (ORCPT
+        Thu, 26 Mar 2020 10:03:57 -0400
+Received: from UHIL19PA37.eemsg.mail.mil ([214.24.21.196]:40123 "EHLO
+        UHIL19PA37.eemsg.mail.mil" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728294AbgCZOD4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:03:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585231432;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EeDt+X7w/K6mNiyHl+gIucluYHOeByK9BddsijF3SDw=;
-        b=ER7qd1IDPQPsywuy0lZg3LD12xdq2bK/kfNyj5ZOPaV8+pvDAdRIWETXOBWO7s4ukWznDX
-        JgL8XADs5GxMUpamLxH5HZl+tr84/MZbvhiWK5p84HRo+jfOUFZkSfewJMDJFzG+eiGVsk
-        qYeB5I3QCV6H0jBCwTjObFFsewWEF34=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-413-KyiJ3gppNam72QW3e7bRaA-1; Thu, 26 Mar 2020 10:03:48 -0400
-X-MC-Unique: KyiJ3gppNam72QW3e7bRaA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4794113F5;
-        Thu, 26 Mar 2020 14:03:45 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 88B6060BF3;
-        Thu, 26 Mar 2020 14:03:26 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com, kevin.tian@intel.com, stefanha@redhat.com,
-        rdunlap@infradead.org, hch@infradead.org, aadam@redhat.com,
-        jiri@mellanox.com, shahafs@mellanox.com, hanand@xilinx.com,
-        mhabets@solarflare.com, gdawar@xilinx.com, saugatm@xilinx.com,
-        vmireyno@marvell.com, zhangweining@ruijie.com.cn,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V9 5/9] vDPA: introduce vDPA bus
-Date:   Thu, 26 Mar 2020 22:01:21 +0800
-Message-Id: <20200326140125.19794-6-jasowang@redhat.com>
-In-Reply-To: <20200326140125.19794-1-jasowang@redhat.com>
-References: <20200326140125.19794-1-jasowang@redhat.com>
+        Thu, 26 Mar 2020 10:03:56 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Thu, 26 Mar 2020 10:03:55 EDT
+X-EEMSG-check-017: 89856681|UHIL19PA37_ESA_OUT03.csd.disa.mil
+X-IronPort-AV: E=Sophos;i="5.72,308,1580774400"; 
+   d="scan'208";a="89856681"
+Received: from emsm-gh1-uea10.ncsc.mil ([214.29.60.2])
+  by UHIL19PA37.eemsg.mail.mil with ESMTP/TLS/DHE-RSA-AES256-SHA256; 26 Mar 2020 13:56:47 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tycho.nsa.gov; i=@tycho.nsa.gov; q=dns/txt;
+  s=tycho.nsa.gov; t=1585231008; x=1616767008;
+  h=subject:to:references:from:message-id:date:mime-version:
+   in-reply-to:content-transfer-encoding;
+  bh=4klW1VsqpgpHGLj7aCzdzQeSrTNXwsMKRK/eE1tKzn0=;
+  b=NQVSQC5kzZwKlTNahP27uiFEE2PijMn+eSdTQxXAX/reZBYnduWMzXp/
+   IBW8kcEQqzd0xmQmTfuOdzEcFDRQUuZi8E2mz1HP3p4YI9xgMnHuHBYPO
+   t63uD9p0F9BoSk8uFgCfVtzD81FNVH8Xp5OzMG64FN5Sg9bJREQGJbXq5
+   lJ+BmrlPXOt0TIv6zcQAu6k9lM0s23dOxCrb3IbO8tYVssz6S03JrSUAg
+   0/WcczEkpg2D8JjS3wHWL9+Ebrh2LNpvYE8Xf4bAoD32JR1ZqBSYPPIQ8
+   JEdhffqyLn5UVCs5PJYquMFpfwn99UhWfDsG55leiM/SqmQb5G2Kla45S
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.72,308,1580774400"; 
+   d="scan'208";a="34628563"
+IronPort-PHdr: =?us-ascii?q?9a23=3Aou2MNRaqYuCnBWTiuirW+Pf/LSx+4OfEezUN45?=
+ =?us-ascii?q?9isYplN5qZpsqybR7h7PlgxGXEQZ/co6odzbaP7+a5BDJLvMjJmUtBWaIPfi?=
+ =?us-ascii?q?dNsd8RkQ0kDZzNImzAB9muURYHGt9fXkRu5XCxPBsdMs//Y1rPvi/6tmZKSV?=
+ =?us-ascii?q?3wOgVvO+v6BJPZgdip2OCu4Z3TZBhDiCagbb9oIxi6sArcutMLjYZiK6s9xR?=
+ =?us-ascii?q?vEr3pVcOlK2G1kIk6ekBn76sqs5pBo7j5eu+gm985OUKX6e7o3QLlFBzk4MG?=
+ =?us-ascii?q?47+dPmuwDbQQSA+nUTXGMWkgFVAwfe9xH1Qo3xsirhueVj3iSRIND7Qqo1WT?=
+ =?us-ascii?q?Sm6KdrVQPohSIaPDM37G3blsp9h79ArRm/uxJw3ZLbYICNNPp/YKzde88aRX?=
+ =?us-ascii?q?FcVcpVTiBNH5+wY5cKA+cHM+lYtY39rEYQoxW4CwenGefjxiZGi3Ly2KE31f?=
+ =?us-ascii?q?kqHwPb0ww6B98ArWrarNv1OqkRX+66wqbHwjffYP1Zwjr99IrFfwo9rf2QU7?=
+ =?us-ascii?q?99c8zcwlQvGQPfiVWQrJToMS6J1usTq2ib7/RvVeSygGA6rgF+uDyvxsMyhY?=
+ =?us-ascii?q?jJm4kYzUvE+jhiwIsuOd25SFJ0Yd6jEJdKsSGaLJF5TtktQ2FvpiY307sLso?=
+ =?us-ascii?q?O4cigS0Jkr2hHSZvOdf4WI/x7vTvidLDhmiH5/Zb6ygQu5/1K6xe3mTMa01U?=
+ =?us-ascii?q?5Hri9CktbRqH8AzwfT6s2bSvtl+UehxCqP2xjT6u5aJUA0krLWK4I7zb4ql5?=
+ =?us-ascii?q?oTrF/DEjXqmET2kKCWdkIk9vKu6+v7ebXpuoWQN4p1igH6Kqgum8q/DvokMg?=
+ =?us-ascii?q?UWQmSW9uux2Kfj8EHkWrlGkPI7nrfDvJzHPcgbo7S2Aw5R0oYt8Ra/CDKm3c?=
+ =?us-ascii?q?wDnXYaN1JIYw6Hjoj1NFHOJ/D0F/G/g0+2nztxyPDGOaPhDo3XLnffiLfhYa?=
+ =?us-ascii?q?p960lExQUu199f4Y5bCrYFIP/oVU/xs9vYDhA9MwOq2eroFNJ91oYGU2KVHq?=
+ =?us-ascii?q?CZKL/SsUOP5u83P+mMZYoVuDPgK/g//f7hl384lEQSfamu2psXZ3S4Eep8L0?=
+ =?us-ascii?q?qFZnrsh88LEX0WsQomUOzqlFqCXCZIZ3msW6I85zc7CJ+pDIrYWICtj6KO3D?=
+ =?us-ascii?q?2hEp1VeG9GEFaMHmnsd4meXPcMci2SKNd7kjMYTbihV5Mh1Ra2uQ/+yrpnKP?=
+ =?us-ascii?q?fU+yIBuZL4ytd6+/DTlQsz9TxoD8WRymSNT2ZpkWMVQz85wrtyoVJyylidy6?=
+ =?us-ascii?q?h0mf9YGsJJ5/NPTAg6MYTQz+tgC9D9QgjBZMuGSE66QtW6BjE8VtYxw94IY0?=
+ =?us-ascii?q?ZgFNSulx7D3zG3DLALibyEGpg0/7nC33j+Ocl90WzK1Ko/gFk8RMtAK2mmir?=
+ =?us-ascii?q?R49wjJCI7Di1+ZmLqydaQAwC7N83+OzW6PvEFeTQ5xXrzJXXMBaUvMq9T2+E?=
+ =?us-ascii?q?fCQqSwCbQoLARB09SOKqhUZd3zi1VJWvPjNM7ZY2KrlGe6HQyIya+UbIr2Z2?=
+ =?us-ascii?q?Ud2z3QCEsakwAW5nuGKwc+CTm7o27EDzxhC0jvY0Xy/ul6sn+7SVU0zw6SZU?=
+ =?us-ascii?q?17y7W14gIVheCbS/4LwLIEuT0hqzJvEVe8wd3WDduApxR7cKVYYNM95kpH1G?=
+ =?us-ascii?q?3Duwx6JJygILpuhkMdcw5vpUPhyw13CplckcgttH4q1BB9Kb+c0F5abzOXx4?=
+ =?us-ascii?q?3wOrnOJmn3+xCvbLTW1U/E3NmK/acP7ewyq0//swGxCkoi73Jn3sFT03ua5Z?=
+ =?us-ascii?q?XHFwUSUZX2UkY48xh1uavWbTU654PRzXdsK7W7sife29I1A+so0hKgf9BcMK?=
+ =?us-ascii?q?yaDw/yE8IaB8mzJ+wwgVekdR0EPOdV9K47O8OpaeGK17KsPOZlz3qaijFr6Y?=
+ =?us-ascii?q?Z830bE3C14Q/XD3pEDzrnM0gKBXDD4pFimtc/zlMZPYjREWiKjyC3hGZRLb7?=
+ =?us-ascii?q?xacoEMBmOjZcaww5E2nJPpWnhF5Ha9CF4cnsykYxyfaxr6xwIUnUAWp2G33D?=
+ =?us-ascii?q?C1xCFuki0466+Y0DHKzsz8excdfG1GXm9viRHrO4fwx9QbWlW4KgYymBa76E?=
+ =?us-ascii?q?LS2adWvuJ8InPVTEMOeDL5aylmU62tpv+BbtRJ5ZcArypaSqK/bEqcR7q7pA?=
+ =?us-ascii?q?EVl2vgAW522j82bXept4//khg8j3iSaD5trWDeUdN9wxbBotjdQ+NBmD0cS2?=
+ =?us-ascii?q?9lin2fHlGhO/Gx9MiQ0pLEtfqzEWmmU9kbdy/o5YyHsyS/6CthBhj71/S0md?=
+ =?us-ascii?q?D8EQc73TXy/9ZtUirMoVD3ZYy4+b69NLdcYkRwBFL6o/F/E4V6n5p40Iocwl?=
+ =?us-ascii?q?AGl56V+jwBim61PtJFj/GtJEERTCIGloaGqDPu31duezfQnNP0?=
+X-IPAS-Result: =?us-ascii?q?A2B0AAAltHxe/wHyM5BmHAEBAQEBBwEBEQEEBAEBgWkFA?=
+ =?us-ascii?q?QELAYF8LIFBMiqEGo58gWwliXqPUoEkA1QKAQEBAQEBAQEBNAECBAEBhEQCg?=
+ =?us-ascii?q?i8kNgcOAhABAQEFAQEBAQEFAwEBbIVigjspAYJ/AQUjBBFRCw4KAgImAgJXB?=
+ =?us-ascii?q?gEMBgIBAYJjP4JYJa1zfzOFS4NSgT6BDioBjC4aeYEHgREnDAOCXj6ES4MRg?=
+ =?us-ascii?q?l4Elw9xmFWCRoJWlC0GHYJMjQKMEY8RnXYBMTeBISsIAhgIIQ+DJ1AYDY4pF?=
+ =?us-ascii?q?41sVSUDMIEGAQGOHQEB?=
+Received: from tarius.tycho.ncsc.mil ([144.51.242.1])
+  by EMSM-GH1-UEA10.NCSC.MIL with ESMTP; 26 Mar 2020 13:56:46 +0000
+Received: from moss-pluto.infosec.tycho.ncsc.mil (moss-pluto.infosec.tycho.ncsc.mil [192.168.25.131])
+        by tarius.tycho.ncsc.mil (8.14.7/8.14.4) with ESMTP id 02QDv8uu044529;
+        Thu, 26 Mar 2020 09:57:08 -0400
+Subject: Re: [PATCH v2 2/3] Teach SELinux about anonymous inodes
+To:     Daniel Colascione <dancol@google.com>, timmurray@google.com,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
+        nnk@google.com, lokeshgidra@google.com
+References: <20200214032635.75434-1-dancol@google.com>
+ <20200325230245.184786-3-dancol@google.com>
+From:   Stephen Smalley <sds@tycho.nsa.gov>
+Message-ID: <b5999b89-6921-5667-9eb2-662b14d5f730@tycho.nsa.gov>
+Date:   Thu, 26 Mar 2020 09:58:05 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200325230245.184786-3-dancol@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vDPA device is a device that uses a datapath which complies with the
-virtio specifications with vendor specific control path. vDPA devices
-can be both physically located on the hardware or emulated by
-software. vDPA hardware devices are usually implemented through PCIE
-with the following types:
+On 3/25/20 7:02 PM, Daniel Colascione wrote:
+> This change uses the anon_inodes and LSM infrastructure introduced in
+> the previous patch to give SELinux the ability to control
+> anonymous-inode files that are created using the new _secure()
+> anon_inodes functions.
+> 
+> A SELinux policy author detects and controls these anonymous inodes by
+> adding a name-based type_transition rule that assigns a new security
+> type to anonymous-inode files created in some domain. The name used
+> for the name-based transition is the name associated with the
+> anonymous inode for file listings --- e.g., "[userfaultfd]" or
+> "[perf_event]".
+> 
+> Example:
+> 
+> type uffd_t;
+> type_transition sysadm_t sysadm_t : file uffd_t "[userfaultfd]";
+> allow sysadm_t uffd_t:file { create };
+> 
+> (The next patch in this series is necessary for making userfaultfd
+> support this new interface.  The example above is just
+> for exposition.)
+> 
+> Signed-off-by: Daniel Colascione <dancol@google.com>
+> ---
+>   security/selinux/hooks.c            | 54 +++++++++++++++++++++++++++++
+>   security/selinux/include/classmap.h |  2 ++
+>   2 files changed, 56 insertions(+)
+> 
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index 1659b59fb5d7..b9eb45c2e4e5 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -2915,6 +2915,59 @@ static int selinux_inode_init_security(struct inode *inode, struct inode *dir,
+>   	return 0;
+>   }
+>   
+> +static int selinux_inode_init_security_anon(struct inode *inode,
+> +					    const struct qstr *name,
+> +					    const struct file_operations *fops,
+> +					    const struct inode *context_inode)
+> +{
+> +	const struct task_security_struct *tsec = selinux_cred(current_cred());
+> +	struct common_audit_data ad;
+> +	struct inode_security_struct *isec;
+> +	int rc;
+> +
+> +	if (unlikely(!selinux_state.initialized))
+> +		return 0;
 
-- PF (Physical Function) - A single Physical Function
-- VF (Virtual Function) - Device that supports single root I/O
-  virtualization (SR-IOV). Its Virtual Function (VF) represents a
-  virtualized instance of the device that can be assigned to different
-  partitions
-- ADI (Assignable Device Interface) and its equivalents - With
-  technologies such as Intel Scalable IOV, a virtual device (VDEV)
-  composed by host OS utilizing one or more ADIs. Or its equivalent
-  like SF (Sub function) from Mellanox.
+This leaves secure anon inodes created before first policy load with the 
+unlabeled SID rather than defaulting to the SID of the creating task 
+(kernel SID in that situation).  Is that what you want?  Alternatively 
+you can just remove this test and let it proceed; nothing should be 
+break and the anon inodes will get the kernel SID.
 
-From a driver's perspective, depends on how and where the DMA
-translation is done, vDPA devices are split into two types:
-
-- Platform specific DMA translation - From the driver's perspective,
-  the device can be used on a platform where device access to data in
-  memory is limited and/or translated. An example is a PCIE vDPA whose
-  DMA request was tagged via a bus (e.g PCIE) specific way. DMA
-  translation and protection are done at PCIE bus IOMMU level.
-- Device specific DMA translation - The device implements DMA
-  isolation and protection through its own logic. An example is a vDPA
-  device which uses on-chip IOMMU.
-
-To hide the differences and complexity of the above types for a vDPA
-device/IOMMU options and in order to present a generic virtio device
-to the upper layer, a device agnostic framework is required.
-
-This patch introduces a software vDPA bus which abstracts the
-common attributes of vDPA device, vDPA bus driver and the
-communication method (vdpa_config_ops) between the vDPA device
-abstraction and the vDPA bus driver. This allows multiple types of
-drivers to be used for vDPA device like the virtio_vdpa and vhost_vdpa
-driver to operate on the bus and allow vDPA device could be used by
-either kernel virtio driver or userspace vhost drivers as:
-
-   virtio drivers  vhost drivers
-          |             |
-    [virtio bus]   [vhost uAPI]
-          |             |
-   virtio device   vhost device
-   virtio_vdpa drv vhost_vdpa drv
-             \       /
-            [vDPA bus]
-                 |
-            vDPA device
-            hardware drv
-                 |
-            [hardware bus]
-                 |
-            vDPA hardware
-
-With the abstraction of vDPA bus and vDPA bus operations, the
-difference and complexity of the under layer hardware is hidden from
-upper layer. The vDPA bus drivers on top can use a unified
-vdpa_config_ops to control different types of vDPA device.
-
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- MAINTAINERS                  |   1 +
- drivers/virtio/Kconfig       |   2 +
- drivers/virtio/Makefile      |   1 +
- drivers/virtio/vdpa/Kconfig  |   7 +
- drivers/virtio/vdpa/Makefile |   2 +
- drivers/virtio/vdpa/vdpa.c   | 180 +++++++++++++++++++++++++
- include/linux/vdpa.h         | 253 +++++++++++++++++++++++++++++++++++
- 7 files changed, 446 insertions(+)
- create mode 100644 drivers/virtio/vdpa/Kconfig
- create mode 100644 drivers/virtio/vdpa/Makefile
- create mode 100644 drivers/virtio/vdpa/vdpa.c
- create mode 100644 include/linux/vdpa.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0fb645b5a7df..2b8d9fa38d9a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17701,6 +17701,7 @@ F:	tools/virtio/
- F:	drivers/net/virtio_net.c
- F:	drivers/block/virtio_blk.c
- F:	include/linux/virtio*.h
-+F:	include/linux/vdpa.h
- F:	include/uapi/linux/virtio_*.h
- F:	drivers/crypto/virtio/
- F:	mm/balloon_compaction.c
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 078615cf2afc..9c4fdb64d9ac 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -96,3 +96,5 @@ config VIRTIO_MMIO_CMDLINE_DEVICES
- 	 If unsure, say 'N'.
-=20
- endif # VIRTIO_MENU
-+
-+source "drivers/virtio/vdpa/Kconfig"
-diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
-index 3a2b5c5dcf46..fdf5eacd0d0a 100644
---- a/drivers/virtio/Makefile
-+++ b/drivers/virtio/Makefile
-@@ -6,3 +6,4 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
- virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
- obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
- obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
-+obj-$(CONFIG_VDPA) +=3D vdpa/
-diff --git a/drivers/virtio/vdpa/Kconfig b/drivers/virtio/vdpa/Kconfig
-new file mode 100644
-index 000000000000..351617723d12
---- /dev/null
-+++ b/drivers/virtio/vdpa/Kconfig
-@@ -0,0 +1,7 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+config VDPA
-+	tristate
-+	help
-+	  Enable this module to support vDPA device that uses a
-+	  datapath which complies with virtio specifications with
-+	  vendor specific control path.
-diff --git a/drivers/virtio/vdpa/Makefile b/drivers/virtio/vdpa/Makefile
-new file mode 100644
-index 000000000000..ee6a35e8a4fb
---- /dev/null
-+++ b/drivers/virtio/vdpa/Makefile
-@@ -0,0 +1,2 @@
-+# SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_VDPA) +=3D vdpa.o
-diff --git a/drivers/virtio/vdpa/vdpa.c b/drivers/virtio/vdpa/vdpa.c
-new file mode 100644
-index 000000000000..e9ed6a2b635b
---- /dev/null
-+++ b/drivers/virtio/vdpa/vdpa.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * vDPA bus.
-+ *
-+ * Copyright (c) 2020, Red Hat. All rights reserved.
-+ *     Author: Jason Wang <jasowang@redhat.com>
-+ *
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/idr.h>
-+#include <linux/slab.h>
-+#include <linux/vdpa.h>
-+
-+static DEFINE_IDA(vdpa_index_ida);
-+
-+static int vdpa_dev_probe(struct device *d)
-+{
-+	struct vdpa_device *vdev =3D dev_to_vdpa(d);
-+	struct vdpa_driver *drv =3D drv_to_vdpa(vdev->dev.driver);
-+	int ret =3D 0;
-+
-+	if (drv && drv->probe)
-+		ret =3D drv->probe(vdev);
-+
-+	return ret;
-+}
-+
-+static int vdpa_dev_remove(struct device *d)
-+{
-+	struct vdpa_device *vdev =3D dev_to_vdpa(d);
-+	struct vdpa_driver *drv =3D drv_to_vdpa(vdev->dev.driver);
-+
-+	if (drv && drv->remove)
-+		drv->remove(vdev);
-+
-+	return 0;
-+}
-+
-+static struct bus_type vdpa_bus =3D {
-+	.name  =3D "vdpa",
-+	.probe =3D vdpa_dev_probe,
-+	.remove =3D vdpa_dev_remove,
-+};
-+
-+static void vdpa_release_dev(struct device *d)
-+{
-+	struct vdpa_device *vdev =3D dev_to_vdpa(d);
-+	const struct vdpa_config_ops *ops =3D vdev->config;
-+
-+	if (ops->free)
-+		ops->free(vdev);
-+
-+	ida_simple_remove(&vdpa_index_ida, vdev->index);
-+	kfree(vdev);
-+}
-+
-+/**
-+ * __vdpa_alloc_device - allocate and initilaize a vDPA device
-+ * This allows driver to some prepartion after device is
-+ * initialized but before registered.
-+ * @parent: the parent device
-+ * @config: the bus operations that is supported by this device
-+ * @size: size of the parent structure that contains private data
-+ *
-+ * Drvier should use vdap_alloc_device() wrapper macro instead of
-+ * using this directly.
-+ *
-+ * Returns an error when parent/config/dma_dev is not set or fail to get
-+ * ida.
-+ */
-+struct vdpa_device *__vdpa_alloc_device(struct device *parent,
-+					const struct vdpa_config_ops *config,
-+					size_t size)
-+{
-+	struct vdpa_device *vdev;
-+	int err =3D -EINVAL;
-+
-+	if (!config)
-+		goto err;
-+
-+	if (!!config->dma_map !=3D !!config->dma_unmap)
-+		goto err;
-+
-+	err =3D -ENOMEM;
-+	vdev =3D kzalloc(size, GFP_KERNEL);
-+	if (!vdev)
-+		goto err;
-+
-+	err =3D ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
-+	if (err < 0)
-+		goto err_ida;
-+
-+	vdev->dev.bus =3D &vdpa_bus;
-+	vdev->dev.parent =3D parent;
-+	vdev->dev.release =3D vdpa_release_dev;
-+	vdev->index =3D err;
-+	vdev->config =3D config;
-+
-+	err =3D dev_set_name(&vdev->dev, "vdpa%u", vdev->index);
-+	if (err)
-+		goto err_name;
-+
-+	device_initialize(&vdev->dev);
-+
-+	return vdev;
-+
-+err_name:
-+	ida_simple_remove(&vdpa_index_ida, vdev->index);
-+err_ida:
-+	kfree(vdev);
-+err:
-+	return ERR_PTR(err);
-+}
-+EXPORT_SYMBOL_GPL(__vdpa_alloc_device);
-+
-+/**
-+ * vdpa_register_device - register a vDPA device
-+ * Callers must have a succeed call of vdpa_init_device() before.
-+ * @vdev: the vdpa device to be registered to vDPA bus
-+ *
-+ * Returns an error when fail to add to vDPA bus
-+ */
-+int vdpa_register_device(struct vdpa_device *vdev)
-+{
-+	return device_add(&vdev->dev);
-+}
-+EXPORT_SYMBOL_GPL(vdpa_register_device);
-+
-+/**
-+ * vdpa_unregister_device - unregister a vDPA device
-+ * @vdev: the vdpa device to be unregisted from vDPA bus
-+ */
-+void vdpa_unregister_device(struct vdpa_device *vdev)
-+{
-+	device_unregister(&vdev->dev);
-+}
-+EXPORT_SYMBOL_GPL(vdpa_unregister_device);
-+
-+/**
-+ * __vdpa_register_driver - register a vDPA device driver
-+ * @drv: the vdpa device driver to be registered
-+ * @owner: module owner of the driver
-+ *
-+ * Returns an err when fail to do the registration
-+ */
-+int __vdpa_register_driver(struct vdpa_driver *drv, struct module *owner=
-)
-+{
-+	drv->driver.bus =3D &vdpa_bus;
-+	drv->driver.owner =3D owner;
-+
-+	return driver_register(&drv->driver);
-+}
-+EXPORT_SYMBOL_GPL(__vdpa_register_driver);
-+
-+/**
-+ * vdpa_unregister_driver - unregister a vDPA device driver
-+ * @drv: the vdpa device driver to be unregistered
-+ */
-+void vdpa_unregister_driver(struct vdpa_driver *drv)
-+{
-+	driver_unregister(&drv->driver);
-+}
-+EXPORT_SYMBOL_GPL(vdpa_unregister_driver);
-+
-+static int vdpa_init(void)
-+{
-+	return bus_register(&vdpa_bus);
-+}
-+
-+static void __exit vdpa_exit(void)
-+{
-+	bus_unregister(&vdpa_bus);
-+	ida_destroy(&vdpa_index_ida);
-+}
-+core_initcall(vdpa_init);
-+module_exit(vdpa_exit);
-+
-+MODULE_AUTHOR("Jason Wang <jasowang@redhat.com>");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/vdpa.h b/include/linux/vdpa.h
-new file mode 100644
-index 000000000000..733acfb7ef84
---- /dev/null
-+++ b/include/linux/vdpa.h
-@@ -0,0 +1,253 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_VDPA_H
-+#define _LINUX_VDPA_H
-+
-+#include <linux/kernel.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/vhost_iotlb.h>
-+
-+/**
-+ * vDPA callback definition.
-+ * @callback: interrupt callback function
-+ * @private: the data passed to the callback function
-+ */
-+struct vdpa_callback {
-+	irqreturn_t (*callback)(void *data);
-+	void *private;
-+};
-+
-+/**
-+ * vDPA device - representation of a vDPA device
-+ * @dev: underlying device
-+ * @dma_dev: the actual device that is performing DMA
-+ * @config: the configuration ops for this device.
-+ * @index: device index
-+ */
-+struct vdpa_device {
-+	struct device dev;
-+	struct device *dma_dev;
-+	const struct vdpa_config_ops *config;
-+	unsigned int index;
-+};
-+
-+/**
-+ * vDPA_config_ops - operations for configuring a vDPA device.
-+ * Note: vDPA device drivers are required to implement all of the
-+ * operations unless it is mentioned to be optional in the following
-+ * list.
-+ *
-+ * @set_vq_address:		Set the address of virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				@desc_area: address of desc area
-+ *				@driver_area: address of driver area
-+ *				@device_area: address of device area
-+ *				Returns integer: success (0) or error (< 0)
-+ * @set_vq_num:			Set the size of virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				@num: the size of virtqueue
-+ * @kick_vq:			Kick the virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ * @set_vq_cb:			Set the interrupt callback function for
-+ *				a virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				@cb: virtio-vdev interrupt callback structure
-+ * @set_vq_ready:		Set ready status for a virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				@ready: ready (true) not ready(false)
-+ * @get_vq_ready:		Get ready status for a virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				Returns boolean: ready (true) or not (false)
-+ * @set_vq_state:		Set the state for a virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				@state: virtqueue state (last_avail_idx)
-+ *				Returns integer: success (0) or error (< 0)
-+ * @get_vq_state:		Get the state for a virtqueue
-+ *				@vdev: vdpa device
-+ *				@idx: virtqueue index
-+ *				Returns virtqueue state (last_avail_idx)
-+ * @get_vq_align:		Get the virtqueue align requirement
-+ *				for the device
-+ *				@vdev: vdpa device
-+ *				Returns virtqueue algin requirement
-+ * @get_features:		Get virtio features supported by the device
-+ *				@vdev: vdpa device
-+ *				Returns the virtio features support by the
-+ *				device
-+ * @set_features:		Set virtio features supported by the driver
-+ *				@vdev: vdpa device
-+ *				@features: feature support by the driver
-+ *				Returns integer: success (0) or error (< 0)
-+ * @set_config_cb:		Set the config interrupt callback
-+ *				@vdev: vdpa device
-+ *				@cb: virtio-vdev interrupt callback structure
-+ * @get_vq_num_max:		Get the max size of virtqueue
-+ *				@vdev: vdpa device
-+ *				Returns u16: max size of virtqueue
-+ * @get_device_id:		Get virtio device id
-+ *				@vdev: vdpa device
-+ *				Returns u32: virtio device id
-+ * @get_vendor_id:		Get id for the vendor that provides this device
-+ *				@vdev: vdpa device
-+ *				Returns u32: virtio vendor id
-+ * @get_status:			Get the device status
-+ *				@vdev: vdpa device
-+ *				Returns u8: virtio device status
-+ * @set_status:			Set the device status
-+ *				@vdev: vdpa device
-+ *				@status: virtio device status
-+ * @get_config:			Read from device specific configuration space
-+ *				@vdev: vdpa device
-+ *				@offset: offset from the beginning of
-+ *				configuration space
-+ *				@buf: buffer used to read to
-+ *				@len: the length to read from
-+ *				configuration space
-+ * @set_config:			Write to device specific configuration space
-+ *				@vdev: vdpa device
-+ *				@offset: offset from the beginning of
-+ *				configuration space
-+ *				@buf: buffer used to write from
-+ *				@len: the length to write to
-+ *				configuration space
-+ * @get_generation:		Get device config generation (optional)
-+ *				@vdev: vdpa device
-+ *				Returns u32: device generation
-+ * @set_map:			Set device memory mapping (optional)
-+ *				Needed for device that using device
-+ *				specific DMA translation (on-chip IOMMU)
-+ *				@vdev: vdpa device
-+ *				@iotlb: vhost memory mapping to be
-+ *				used by the vDPA
-+ *				Returns integer: success (0) or error (< 0)
-+ * @dma_map:			Map an area of PA to IOVA (optional)
-+ *				Needed for device that using device
-+ *				specific DMA translation (on-chip IOMMU)
-+ *				and preferring incremental map.
-+ *				@vdev: vdpa device
-+ *				@iova: iova to be mapped
-+ *				@size: size of the area
-+ *				@pa: physical address for the map
-+ *				@perm: device access permission (VHOST_MAP_XX)
-+ *				Returns integer: success (0) or error (< 0)
-+ * @dma_unmap:			Unmap an area of IOVA (optional but
-+ *				must be implemented with dma_map)
-+ *				Needed for device that using device
-+ *				specific DMA translation (on-chip IOMMU)
-+ *				and preferring incremental unmap.
-+ *				@vdev: vdpa device
-+ *				@iova: iova to be unmapped
-+ *				@size: size of the area
-+ *				Returns integer: success (0) or error (< 0)
-+ * @free:			Free resources that belongs to vDPA (optional)
-+ *				@vdev: vdpa device
-+ */
-+struct vdpa_config_ops {
-+	/* Virtqueue ops */
-+	int (*set_vq_address)(struct vdpa_device *vdev,
-+			      u16 idx, u64 desc_area, u64 driver_area,
-+			      u64 device_area);
-+	void (*set_vq_num)(struct vdpa_device *vdev, u16 idx, u32 num);
-+	void (*kick_vq)(struct vdpa_device *vdev, u16 idx);
-+	void (*set_vq_cb)(struct vdpa_device *vdev, u16 idx,
-+			  struct vdpa_callback *cb);
-+	void (*set_vq_ready)(struct vdpa_device *vdev, u16 idx, bool ready);
-+	bool (*get_vq_ready)(struct vdpa_device *vdev, u16 idx);
-+	int (*set_vq_state)(struct vdpa_device *vdev, u16 idx, u64 state);
-+	u64 (*get_vq_state)(struct vdpa_device *vdev, u16 idx);
-+
-+	/* Device ops */
-+	u16 (*get_vq_align)(struct vdpa_device *vdev);
-+	u64 (*get_features)(struct vdpa_device *vdev);
-+	int (*set_features)(struct vdpa_device *vdev, u64 features);
-+	void (*set_config_cb)(struct vdpa_device *vdev,
-+			      struct vdpa_callback *cb);
-+	u16 (*get_vq_num_max)(struct vdpa_device *vdev);
-+	u32 (*get_device_id)(struct vdpa_device *vdev);
-+	u32 (*get_vendor_id)(struct vdpa_device *vdev);
-+	u8 (*get_status)(struct vdpa_device *vdev);
-+	void (*set_status)(struct vdpa_device *vdev, u8 status);
-+	void (*get_config)(struct vdpa_device *vdev, unsigned int offset,
-+			   void *buf, unsigned int len);
-+	void (*set_config)(struct vdpa_device *vdev, unsigned int offset,
-+			   const void *buf, unsigned int len);
-+	u32 (*get_generation)(struct vdpa_device *vdev);
-+
-+	/* DMA ops */
-+	int (*set_map)(struct vdpa_device *vdev, struct vhost_iotlb *iotlb);
-+	int (*dma_map)(struct vdpa_device *vdev, u64 iova, u64 size,
-+		       u64 pa, u32 perm);
-+	int (*dma_unmap)(struct vdpa_device *vdev, u64 iova, u64 size);
-+
-+	/* Free device resources */
-+	void (*free)(struct vdpa_device *vdev);
-+};
-+
-+struct vdpa_device *__vdpa_alloc_device(struct device *parent,
-+					const struct vdpa_config_ops *config,
-+					size_t size);
-+
-+#define vdpa_alloc_device(dev_struct, member, parent, config)   \
-+			  container_of(__vdpa_alloc_device( \
-+				       parent, config, \
-+				       sizeof(dev_struct) + \
-+				       BUILD_BUG_ON_ZERO(offsetof( \
-+				       dev_struct, member))), \
-+				       dev_struct, member)
-+
-+int vdpa_register_device(struct vdpa_device *vdev);
-+void vdpa_unregister_device(struct vdpa_device *vdev);
-+
-+/**
-+ * vdpa_driver - operations for a vDPA driver
-+ * @driver: underlying device driver
-+ * @probe: the function to call when a device is found.  Returns 0 or -e=
-rrno.
-+ * @remove: the function to call when a device is removed.
-+ */
-+struct vdpa_driver {
-+	struct device_driver driver;
-+	int (*probe)(struct vdpa_device *vdev);
-+	void (*remove)(struct vdpa_device *vdev);
-+};
-+
-+#define vdpa_register_driver(drv) \
-+	__vdpa_register_driver(drv, THIS_MODULE)
-+int __vdpa_register_driver(struct vdpa_driver *drv, struct module *owner=
-);
-+void vdpa_unregister_driver(struct vdpa_driver *drv);
-+
-+#define module_vdpa_driver(__vdpa_driver) \
-+	module_driver(__vdpa_driver, vdpa_register_driver,	\
-+		      vdpa_unregister_driver)
-+
-+static inline struct vdpa_driver *drv_to_vdpa(struct device_driver *driv=
-er)
-+{
-+	return container_of(driver, struct vdpa_driver, driver);
-+}
-+
-+static inline struct vdpa_device *dev_to_vdpa(struct device *_dev)
-+{
-+	return container_of(_dev, struct vdpa_device, dev);
-+}
-+
-+static inline void *vdpa_get_drvdata(const struct vdpa_device *vdev)
-+{
-+	return dev_get_drvdata(&vdev->dev);
-+}
-+
-+static inline void vdpa_set_drvdata(struct vdpa_device *vdev, void *data=
-)
-+{
-+	dev_set_drvdata(&vdev->dev, data);
-+}
-+
-+static inline struct device *vdpa_get_dma_dev(struct vdpa_device *vdev)
-+{
-+	return vdev->dma_dev;
-+}
-+#endif /* _LINUX_VDPA_H */
---=20
-2.20.1
+> +
+> +	isec = selinux_inode(inode);
+> +
+> +	/*
+> +	 * We only get here once per ephemeral inode.  The inode has
+> +	 * been initialized via inode_alloc_security but is otherwise
+> +	 * untouched.
+> +	 */
+> +
+> +	if (context_inode) {
+> +		struct inode_security_struct *context_isec =
+> +			selinux_inode(context_inode);
+> +		isec->sclass = context_isec->sclass;
+> +		isec->sid = context_isec->sid;
+> +	} else {
+> +		isec->sclass = SECCLASS_ANON_INODE;
+> +		rc = security_transition_sid(
+> +			&selinux_state, tsec->sid, tsec->sid,
+> +			SECCLASS_FILE, name, &isec->sid);
+> +		if (rc)
+> +			return rc;
+> +	}
+> +
+> +	isec->initialized = LABEL_INITIALIZED;
+> +
+> +	/*
+> +	 * Now that we've initialized security, check whether we're
+> +	 * allowed to actually create this type of anonymous inode.
+> +	 */
+> +
+> +	ad.type = LSM_AUDIT_DATA_INODE;
+> +	ad.u.inode = inode;
+> +
+> +	return avc_has_perm(&selinux_state,
+> +			    tsec->sid,
+> +			    isec->sid,
+> +			    isec->sclass,
+> +			    FILE__CREATE,
+> +			    &ad);
+> +}
+> +
+>   static int selinux_inode_create(struct inode *dir, struct dentry *dentry, umode_t mode)
+>   {
+>   	return may_create(dir, dentry, SECCLASS_FILE);
+> @@ -6923,6 +6976,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+>   
+>   	LSM_HOOK_INIT(inode_free_security, selinux_inode_free_security),
+>   	LSM_HOOK_INIT(inode_init_security, selinux_inode_init_security),
+> +	LSM_HOOK_INIT(inode_init_security_anon, selinux_inode_init_security_anon),
+>   	LSM_HOOK_INIT(inode_create, selinux_inode_create),
+>   	LSM_HOOK_INIT(inode_link, selinux_inode_link),
+>   	LSM_HOOK_INIT(inode_unlink, selinux_inode_unlink),
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 986f3ac14282..263750b6aaac 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -248,6 +248,8 @@ struct security_class_mapping secclass_map[] = {
+>   	  {"open", "cpu", "kernel", "tracepoint", "read", "write"} },
+>   	{ "lockdown",
+>   	  { "integrity", "confidentiality", NULL } },
+> +	{ "anon_inode",
+> +	  { COMMON_FILE_PERMS, NULL } },
+>   	{ NULL }
+>     };
+>   
+> 
 
