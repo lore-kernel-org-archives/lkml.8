@@ -2,389 +2,184 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239DFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A4ABC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EE92073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB7F20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:31:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Tw0orXlQ"
+	dkim=pass (2048-bit key) header.d=akamai.com header.i=@akamai.com header.b="WbNUpoTO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgCZP3A (ORCPT
+        id S1727946AbgCZPb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:29:00 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:45716 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728479AbgCZP26 (ORCPT
+        Thu, 26 Mar 2020 11:31:27 -0400
+Received: from mx0a-00190b01.pphosted.com ([67.231.149.131]:59396 "EHLO
+        mx0a-00190b01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727345AbgCZPb1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:28:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02QFSY7w029932;
-        Thu, 26 Mar 2020 10:28:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585236514;
-        bh=YhtAGzWoz1x25MCzSvKw3v6XyXmjkcZguGv3vnhIPQg=;
-        h=From:To:CC:Subject:Date;
-        b=Tw0orXlQBQgVcjqx8tMHHJDbs6lx740+TzLIG2rRf8Xs6Tsrht2jbja58IJwREuUW
-         6fZ0vFu05F+fJrBVjOd4ruIIhSsjmmEgmbBjciO6N1X1sy6jJtGZdHuie+HS7Wc21m
-         3w/T66sf3m+SJDZ1nReKPjkIjlscZG62NJQpbHyQ=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QFSYC1042592;
-        Thu, 26 Mar 2020 10:28:34 -0500
-Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
- Mar 2020 10:28:33 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 26 Mar 2020 10:28:33 -0500
-Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QFSTVr095959;
-        Thu, 26 Mar 2020 10:28:30 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        <linux-omap@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v3] PCI: dwc: pci-dra7xx: Fix MSI IRQ handling
-Date:   Thu, 26 Mar 2020 20:58:26 +0530
-Message-ID: <20200326152826.31851-1-vigneshr@ti.com>
-X-Mailer: git-send-email 2.26.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Thu, 26 Mar 2020 11:31:27 -0400
+Received: from pps.filterd (m0050095.ppops.net [127.0.0.1])
+        by m0050095.ppops.net-00190b01. (8.16.0.42/8.16.0.42) with SMTP id 02QFIStS021701;
+        Thu, 26 Mar 2020 15:31:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akamai.com; h=from : to : cc :
+ subject : date : message-id; s=jan2016.eng;
+ bh=R5AMhdr9GFrZtE5J9WLWPyNbx/Ba6fwB9FoVwauw5mg=;
+ b=WbNUpoTOoJVML0oufXoBUFAumZS561Kj4iY3jY0Uz9ub7RbXju5UW6RDs3B8xog2DZyX
+ 1i5ItoxYxZpSaXjz5Y7gg1AhTEC9m3xwjuGM1ZFcf0VLluOXtKyy3CtbrpWhBcisis9J
+ iuMLLvyErv4DWbMQm50r3uZAK748UTDMI6Fk1url0u2ru6tOM2CU7AxB2NcxtAz9PPS4
+ Gnx603q3JtONLQ9nppeNHuxlt4Azolkng4pfOkHj1wDutJ5UnrbCJB2Uc48LYqj4qI66
+ Ssu7JWEpEocy0ANvOBi06fy7XR5aF1Xi5QhxwOamk61mQ6mxyH1GqQVsx9Qk7CrkjJKp Dg== 
+Received: from prod-mail-ppoint2 (prod-mail-ppoint2.akamai.com [184.51.33.19] (may be forged))
+        by m0050095.ppops.net-00190b01. with ESMTP id 300b9xvems-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 15:31:15 +0000
+Received: from pps.filterd (prod-mail-ppoint2.akamai.com [127.0.0.1])
+        by prod-mail-ppoint2.akamai.com (8.16.0.27/8.16.0.27) with SMTP id 02QFIGQP003437;
+        Thu, 26 Mar 2020 11:31:14 -0400
+Received: from prod-mail-relay10.akamai.com ([172.27.118.251])
+        by prod-mail-ppoint2.akamai.com with ESMTP id 2ywe8uj015-1;
+        Thu, 26 Mar 2020 11:31:13 -0400
+Received: from bos-lpjec.145bw.corp.akamai.com (bos-lpjec.145bw.corp.akamai.com [172.28.3.71])
+        by prod-mail-relay10.akamai.com (Postfix) with ESMTP id A05E933E38;
+        Thu, 26 Mar 2020 15:31:13 +0000 (GMT)
+From:   Jason Baron <jbaron@akamai.com>
+To:     songliubraving@fb.com
+Cc:     agk@redhat.com, snitzer@redhat.com, linux-raid@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Guoqing Jiang <guoqing.jiang@cloud.ionos.com>,
+        NeilBrown <neilb@suse.de>
+Subject: [PATCH] md/raid0: add config parameters to specify zone layout
+Date:   Thu, 26 Mar 2020 11:28:20 -0400
+Message-Id: <1585236500-12015-1-git-send-email-jbaron@akamai.com>
+X-Mailer: git-send-email 2.7.4
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_06:2020-03-26,2020-03-26 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-2002250000 definitions=main-2003260118
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_06:2020-03-26,2020-03-26 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 mlxscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 clxscore=1011 suspectscore=0 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due an issue with PCIe wrapper around DWC PCIe IP on dra7xx, driver
-needs to ensure that there are no pending MSI IRQ vector set (i.e
-PCIE_MSI_INTR0_STATUS reads 0 at least once) before exiting IRQ handler.
-Else, the dra7xx PCIe wrapper will not register new MSI IRQs even though
-PCIE_MSI_INTR0_STATUS shows IRQs are pending.
+Let's add some CONFIG_* options to directly configure the raid0 layout
+if you know in advance how your raid0 array was created. This can be
+simpler than having to manage module or kernel command-line parameters.
 
-Therefore its no longer possible to use default IRQ handler provided by
-DWC library. So, add irqchip implementation inside pci-dra7xx.c and
-install new MSI IRQ handler to handle above errata.
+If the raid0 array was created by a pre-3.14 kernel, use
+RAID0_ORIG_LAYOUT. If the raid0 array was created by a 3.14 or newer
+kernel then select RAID0_ALT_MULTIZONE_LAYOUT. Otherwise, the default
+setting is RAID0_LAYOUT_NONE, in which case the current behavior of
+needing to specify a module parameter raid0.default_layout=1|2 is
+preserved.
 
-This fixes a bug, where PCIe wifi cards with 4 DMA queues like Intel
-8260 used to throw following error and stall during ping/iperf3 tests.
-
-[   97.776310] iwlwifi 0000:01:00.0: Queue 9 stuck for 2500 ms.
-
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-Tested-by: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Guoqing Jiang <guoqing.jiang@cloud.ionos.com>
+Cc: NeilBrown <neilb@suse.de>
+Cc: Song Liu <songliubraving@fb.com>
+Signed-off-by: Jason Baron <jbaron@akamai.com>
 ---
+ drivers/md/Kconfig | 55 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/md/raid0.c |  7 +++++++
+ 2 files changed, 62 insertions(+)
 
-v3:
-Fix comments from Lorenzo:
-- Move loop to service all MSI IRQs into dra7xx_pcie_handle_msi_irq()
-- Add a warning msg when loop counter overflows
-
-
- drivers/pci/controller/dwc/pci-dra7xx.c | 233 ++++++++++++++++++++----
- 1 file changed, 196 insertions(+), 37 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index 9bf7fa99b103..db33a3cb4348 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -215,10 +215,6 @@ static int dra7xx_pcie_host_init(struct pcie_port *pp)
- 	return 0;
- }
+diff --git a/drivers/md/Kconfig b/drivers/md/Kconfig
+index d6d5ab2..c0c6d82 100644
+--- a/drivers/md/Kconfig
++++ b/drivers/md/Kconfig
+@@ -79,6 +79,61 @@ config MD_RAID0
  
--static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
--	.host_init = dra7xx_pcie_host_init,
--};
--
- static int dra7xx_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
- 				irq_hw_number_t hwirq)
- {
-@@ -233,43 +229,77 @@ static const struct irq_domain_ops intx_domain_ops = {
- 	.xlate = pci_irqd_intx_xlate,
- };
+ 	  If unsure, say Y.
  
--static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
-+static int dra7xx_pcie_handle_msi_irq_once(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
--	struct device *dev = pci->dev;
--	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
--	struct device_node *node = dev->of_node;
--	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
--
--	if (!pcie_intc_node) {
--		dev_err(dev, "No PCIe Intc node found\n");
--		return -ENODEV;
-+	u32 status, num_ctrls;
-+	unsigned long val;
-+	int i, pos, irq;
-+	int ret = 0;
++choice
++	prompt "RAID0 Layout"
++	default RAID0_LAYOUT_NONE
++	depends on MD_RAID0
++	help
++	  A change was made in Linux 3.14 that unintentinally changed the
++	  the layout for RAID0. This can result in data corruption if a pre-3.14
++	  and a 3.14 or later kernel both wrote to the array. However, if the
++	  devices in the array are all of the same size then the layout would
++	  have been unaffected by this change, and there is no risk of data
++	  corruption from this issue.
 +
-+	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
++	  Unfortunately, the layout can not be determined by the kernel. If the
++	  array has only been written to by a 3.14 or later kernel its safe to
++	  set RAID0_ALT_MULTIZONE_LAYOUT. If its only been written to by a
++	  pre-3.14 kernel its safe to select RAID0_ORIG_LAYOUT. If its been
++	  written by both then select RAID0_LAYOUT_NONE, which will not
++	  configure the array. The array can then be examined for corruption.
 +
-+	for (i = 0; i < num_ctrls; i++) {
-+		status = dw_pcie_readl_dbi(pci, PCIE_MSI_INTR0_STATUS +
-+					   (i * MSI_REG_CTRL_BLOCK_SIZE));
-+		if (!status)
-+			continue;
++	  For new arrays you may choose either layout version. Neither version
++	  is inherently better than the other.
 +
-+		ret = 1;
-+		val = status;
-+		pos = 0;
-+		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
-+					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
-+			irq = irq_find_mapping(pp->irq_domain,
-+					       (i * MAX_MSI_IRQS_PER_CTRL) +
-+					       pos);
-+			generic_handle_irq(irq);
-+			pos++;
-+		}
- 	}
++	  Alternatively, these parameters can also be specified via the module
++	  parameter raid0.default_layout=<N>. N=2 selects the 'new' or multizone
++	  layout, while N=1 selects the 'old' layout or original layout. If
++	  unset the array will not be configured.
++
++	  The layout can also be written directly to the raid0 array via the
++	  mdadm command, which can be auto-detected by the kernel. See:
++	  <https://www.kernel.org/doc/html/latest/admin-guide/md.html#multi-zone-raid0-layout-migration>
++
++config RAID0_ORIG_LAYOUT
++	bool "raid0 layout for arrays only written to by a pre-3.14 kernel"
++	help
++	  If the raid0 array was only created and written to by a pre-3.14 kernel.
++
++config RAID0_ALT_MULTIZONE_LAYOUT
++	bool "raid0 layout for arrays only written to be a 3.14 or newer kernel"
++	help
++	  If the raid0 array was only created and written to by a 3.14 or later
++	  kernel.
++
++config RAID0_LAYOUT_NONE
++	bool "raid0 layout must be specified via a module parameter"
++	help
++	  If a raid0 array was written to by both a pre-3.14 and a 3.14 or
++	  later kernel, you may have data corruption. This option will not
++	  auto configure the array and thus you can examine the array offline
++	  to determine the best way to proceed. With RAID0_LAYOUT_NONE
++	  set, the choice for raid0 layout can be set via a module parameter
++	  raid0.default_layout=<N>. Or the layout can be written directly
++	  to the raid0 array via the mdadm command.
++
++endchoice
++
+ config MD_RAID1
+ 	tristate "RAID-1 (mirroring) mode"
+ 	depends on BLK_DEV_MD
+diff --git a/drivers/md/raid0.c b/drivers/md/raid0.c
+index 322386f..576eaa6 100644
+--- a/drivers/md/raid0.c
++++ b/drivers/md/raid0.c
+@@ -19,7 +19,14 @@
+ #include "raid0.h"
+ #include "raid5.h"
  
--	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
--						   &intx_domain_ops, pp);
--	of_node_put(pcie_intc_node);
--	if (!dra7xx->irq_domain) {
--		dev_err(dev, "Failed to get a INTx IRQ domain\n");
--		return -ENODEV;
--	}
-+	return ret;
-+}
++#if defined(CONFIG_RAID0_ORIG_LAYOUT)
++static int default_layout = RAID0_ORIG_LAYOUT;
++#elif defined(CONFIG_RAID0_ALT_MULTIZONE_LAYOUT)
++static int default_layout = RAID0_ALT_MULTIZONE_LAYOUT;
++#else
+ static int default_layout = 0;
++#endif
++
+ module_param(default_layout, int, 0644);
  
--	return 0;
-+static void dra7xx_pcie_handle_msi_irq(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	int count = 0;
-+
-+	/**
-+	 * Need to make sure all MSI status bits read 0 before exiting.
-+	 * Else, new MSI IRQs are not registered by the wrapper. Have an
-+	 * upperbound for the loop and exit the IRQ in case of IRQ flood
-+	 * to avoid locking up system in interrupt context.
-+	 */
-+	while (dra7xx_pcie_handle_msi_irq_once(pp) && count < 1000)
-+		count++;
-+
-+	if (count == 1000)
-+		dev_warn(pci->dev, "Too many MSI IRQs to handle\n");
- }
- 
--static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
-+static void dra7xx_pcie_msi_irq_handler(struct irq_desc *desc)
- {
--	struct dra7xx_pcie *dra7xx = arg;
--	struct dw_pcie *pci = dra7xx->pci;
--	struct pcie_port *pp = &pci->pp;
-+	struct irq_chip *chip = irq_desc_get_chip(desc);
-+	struct dra7xx_pcie *dra7xx;
-+	struct dw_pcie *pci;
-+	struct pcie_port *pp;
- 	unsigned long reg;
- 	u32 virq, bit;
- 
-+	chained_irq_enter(chip, desc);
-+
-+	pp = irq_desc_get_handler_data(desc);
-+	pci = to_dw_pcie_from_pp(pp);
-+	dra7xx = to_dra7xx_pcie(pci);
-+
- 	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI);
-+	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
- 
- 	switch (reg) {
- 	case MSI:
--		dw_handle_msi_irq(pp);
-+		dra7xx_pcie_handle_msi_irq(pp);
- 		break;
- 	case INTA:
- 	case INTB:
-@@ -283,9 +313,7 @@ static irqreturn_t dra7xx_pcie_msi_irq_handler(int irq, void *arg)
- 		break;
- 	}
- 
--	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI, reg);
--
--	return IRQ_HANDLED;
-+	chained_irq_exit(chip, desc);
- }
- 
- static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
-@@ -347,6 +375,145 @@ static irqreturn_t dra7xx_pcie_irq_handler(int irq, void *arg)
- 	return IRQ_HANDLED;
- }
- 
-+static int dra7xx_pcie_init_irq_domain(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct device *dev = pci->dev;
-+	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pci);
-+	struct device_node *node = dev->of_node;
-+	struct device_node *pcie_intc_node =  of_get_next_child(node, NULL);
-+
-+	if (!pcie_intc_node) {
-+		dev_err(dev, "No PCIe Intc node found\n");
-+		return -ENODEV;
-+	}
-+
-+	irq_set_chained_handler_and_data(pp->irq, dra7xx_pcie_msi_irq_handler,
-+					 pp);
-+	dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, PCI_NUM_INTX,
-+						   &intx_domain_ops, pp);
-+	of_node_put(pcie_intc_node);
-+	if (!dra7xx->irq_domain) {
-+		dev_err(dev, "Failed to get a INTx IRQ domain\n");
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
-+static void dra7xx_pcie_setup_msi_msg(struct irq_data *d, struct msi_msg *msg)
-+{
-+	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	u64 msi_target;
-+
-+	msi_target = (u64)pp->msi_data;
-+
-+	msg->address_lo = lower_32_bits(msi_target);
-+	msg->address_hi = upper_32_bits(msi_target);
-+
-+	msg->data = d->hwirq;
-+
-+	dev_dbg(pci->dev, "msi#%d address_hi %#x address_lo %#x\n",
-+		(int)d->hwirq, msg->address_hi, msg->address_lo);
-+}
-+
-+static int dra7xx_pcie_msi_set_affinity(struct irq_data *d,
-+					const struct cpumask *mask,
-+					bool force)
-+{
-+	return -EINVAL;
-+}
-+
-+static void dra7xx_pcie_bottom_mask(struct irq_data *d)
-+{
-+	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	unsigned int res, bit, ctrl;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
-+	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
-+	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
-+
-+	pp->irq_mask[ctrl] |= BIT(bit);
-+	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK + res,
-+			   pp->irq_mask[ctrl]);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+}
-+
-+static void dra7xx_pcie_bottom_unmask(struct irq_data *d)
-+{
-+	struct pcie_port *pp = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	unsigned int res, bit, ctrl;
-+	unsigned long flags;
-+
-+	raw_spin_lock_irqsave(&pp->lock, flags);
-+
-+	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
-+	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
-+	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
-+
-+	pp->irq_mask[ctrl] &= ~BIT(bit);
-+	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK + res,
-+			   pp->irq_mask[ctrl]);
-+
-+	raw_spin_unlock_irqrestore(&pp->lock, flags);
-+}
-+
-+static void dra7xx_pcie_bottom_ack(struct irq_data *d)
-+{
-+	struct pcie_port *pp  = irq_data_get_irq_chip_data(d);
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	unsigned int res, bit, ctrl;
-+
-+	ctrl = d->hwirq / MAX_MSI_IRQS_PER_CTRL;
-+	res = ctrl * MSI_REG_CTRL_BLOCK_SIZE;
-+	bit = d->hwirq % MAX_MSI_IRQS_PER_CTRL;
-+
-+	dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_STATUS + res, BIT(bit));
-+}
-+
-+static struct irq_chip dra7xx_pci_msi_bottom_irq_chip = {
-+	.name = "DRA7XX-PCI-MSI",
-+	.irq_ack = dra7xx_pcie_bottom_ack,
-+	.irq_compose_msi_msg = dra7xx_pcie_setup_msi_msg,
-+	.irq_set_affinity = dra7xx_pcie_msi_set_affinity,
-+	.irq_mask = dra7xx_pcie_bottom_mask,
-+	.irq_unmask = dra7xx_pcie_bottom_unmask,
-+};
-+
-+static int dra7xx_pcie_msi_host_init(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	u32 ctrl, num_ctrls;
-+
-+	pp->msi_irq_chip = &dra7xx_pci_msi_bottom_irq_chip;
-+
-+	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
-+	/* Initialize IRQ Status array */
-+	for (ctrl = 0; ctrl < num_ctrls; ctrl++) {
-+		pp->irq_mask[ctrl] = ~0;
-+		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_MASK +
-+				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-+				    pp->irq_mask[ctrl]);
-+		dw_pcie_writel_dbi(pci, PCIE_MSI_INTR0_ENABLE +
-+				    (ctrl * MSI_REG_CTRL_BLOCK_SIZE),
-+				    ~0);
-+	}
-+
-+	return dw_pcie_allocate_domains(pp);
-+}
-+
-+static const struct dw_pcie_host_ops dra7xx_pcie_host_ops = {
-+	.host_init = dra7xx_pcie_host_init,
-+	.msi_host_init = dra7xx_pcie_msi_host_init,
-+};
-+
- static void dra7xx_pcie_ep_init(struct dw_pcie_ep *ep)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-@@ -467,14 +634,6 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
- 		return pp->irq;
- 	}
- 
--	ret = devm_request_irq(dev, pp->irq, dra7xx_pcie_msi_irq_handler,
--			       IRQF_SHARED | IRQF_NO_THREAD,
--			       "dra7-pcie-msi",	dra7xx);
--	if (ret) {
--		dev_err(dev, "failed to request irq\n");
--		return ret;
--	}
--
- 	ret = dra7xx_pcie_init_irq_domain(pp);
- 	if (ret < 0)
- 		return ret;
+ #define UNSUPPORTED_MDDEV_FLAGS		\
 -- 
-2.26.0
+2.7.4
 
