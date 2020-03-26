@@ -2,151 +2,128 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D47B4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F40EC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A657F221F5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O+HVkvBE"
+	by mail.kernel.org (Postfix) with ESMTP id 19B30208FE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585240087;
+	bh=Oa+G6oexD3rBMaT8gUnzn+jnMbwNgDc/CjJQ5huz29Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GSnLFr9MXk52xDQiajcCjFeBe6ktCSe+mFkuDekscTOAbijUILQwGmomdQWr5Vvpa
+	 ko7xvSmC0IJpZn+FUYxgZqA6DbbghTyh1tRLScHf8VNVUF85BAzJDCHxKRgeUfWtg5
+	 KAfxiiekfZWcnb6J6LNdLJtMGuhOk7WbimMhcAa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728550AbgCZQ14 (ORCPT
+        id S1728592AbgCZQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:27:56 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41059 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbgCZQ14 (ORCPT
+        Thu, 26 Mar 2020 12:28:06 -0400
+Received: from mail-il1-f196.google.com ([209.85.166.196]:35458 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726163AbgCZQ2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:27:56 -0400
-Received: by mail-il1-f194.google.com with SMTP id t6so2322624ilj.8;
-        Thu, 26 Mar 2020 09:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2MvgnsSQhFJOcyx9F2ihbJOXdLnu/MGIqeeUoB2SLbM=;
-        b=O+HVkvBErHFx61kmKWqwDVr9mM9NwxkP5CgHZkz8KKBG51hrYlwuKP26qg84OHsxVB
-         0Csn9hEqw5zUtxAZ8hXbKJYonAGgMiW0oSwLVoWbnfKE7nmgDQTWRrmKkq0R3soBo1O6
-         YA2xpd7O25TSRoBEZeQ7E95N53qbjw3fE5HCjUUKmtAeNikCAx8lmf4WzXJgNMiGFSJx
-         c4+Rvjrk3GX2GNNId3q5hbOuLfTBkYt3mx/jzzQjOjWhqiNfneAMWR968ENRiKCvdJgC
-         Lt4zrBYpUJM4uD/0sBT0Ucf0edmhAvR21jjC3t8qlxejtaMgYo1HetQF0xoeZiEQ/Df3
-         Sgmw==
+        Thu, 26 Mar 2020 12:28:05 -0400
+Received: by mail-il1-f196.google.com with SMTP id 7so5945147ill.2;
+        Thu, 26 Mar 2020 09:28:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2MvgnsSQhFJOcyx9F2ihbJOXdLnu/MGIqeeUoB2SLbM=;
-        b=MNkjxv5kWyr3Pe1Cl//9zeE5kC6LSuxM1nh5bRaOuSeBBVr/vqmMbCsj2KZUXtHdHF
-         YsBnURRnnaoMhi4z++vAqr7EhE9pNcxcjmuEZYGp3X0PIbIThkxWgacIy8m28BpXqVlr
-         DP8UHztCbTQy8iJ8x2u6maFqsLmj19r8izkXyt2PQ3KM+ABOQE42XoEXfoJQnwiFBzI+
-         TS2l/tfu2k3oXmwf4RjNb/xVKFe/ojQjfuy3VuIdS20ZNi5JA5St29peQ22y5BcL6oUi
-         Cd2CXMy5b4fAWsyJRqiQtNSAj40GMkWuclxDy9yQyqtSZjaBVzs5xMOkaZPJ6yCNz2Ip
-         carw==
-X-Gm-Message-State: ANhLgQ0zlqfs3WFGsjO5UaFGySfNHjyxCMqpCdNfy1/KZ3Qyz1H8GLDV
-        9b8FJ9wfXpc515nlRFL5olRAZ4L+DNGRK5P19gQj6u2sw90=
-X-Google-Smtp-Source: ADFU+vs3UUxKJvBojeAzB/v9NDT0zXbWaHLGTU3p4w5iPWYt+V3DgoqWyKdwP6CKCFaA8gpJqDpqts+2JawxmNNR4DE=
-X-Received: by 2002:a92:3955:: with SMTP id g82mr9646493ila.237.1585240073233;
- Thu, 26 Mar 2020 09:27:53 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UbqpA/qctusCoT0I66qEao4xg0yyTmAQC3AIFj3TFBY=;
+        b=b7aH1tumEeak9M99h/IzzjBMifbxsHnasLqhItCs6bg9JDhU3yDa/o4l4hb9WX3ydq
+         bmc2uOAvzanM8wGQySoeyK7S8T1XgjL92AlmyoviDmJO6imDBGonNOTGlszBUDixhlPe
+         4u06KDJvvjK7MwE6DUVc6mILLl1xnOR63a/Y5IF9cM4HCFh69fSGWq2Igit5QTp0SVrG
+         TVmc56fLBbDoxCrFDkxdD7GTSTTsLx9vLNzK5JPa7Y9ziERkiM1kbgI1fGL3D0hV/r5z
+         WdIS+f3SsbTkitL1Axc6PbJd/mkyW/DTkg6X1WbPdoVHB/sIp6IJracW6yvdfUIjBJ5Q
+         jfDA==
+X-Gm-Message-State: ANhLgQ0iTy+crxG1NX2wpYjUEDjCXXcKCFx5cDln7XeqC8fvOtXf46xy
+        tBLqR9KGsrSuS/l+Qc+c6A==
+X-Google-Smtp-Source: ADFU+vu5QgSgYZqJfr7f7Kyd68l8DEG8P2xV4YNobUu7GZucH6gAyAscgLQY3q9Bj69qyNOItBf9XA==
+X-Received: by 2002:a92:41c7:: with SMTP id o190mr9261446ila.11.1585240084502;
+        Thu, 26 Mar 2020 09:28:04 -0700 (PDT)
+Received: from rob-hp-laptop ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id z13sm746046ioh.16.2020.03.26.09.28.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 09:28:03 -0700 (PDT)
+Received: (nullmailer pid 1099 invoked by uid 1000);
+        Thu, 26 Mar 2020 16:28:02 -0000
+Date:   Thu, 26 Mar 2020 10:28:02 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 3/7] dt-bindings: remoteproc: Add bindings for R5F
+ subsystem on TI K3 SoCs
+Message-ID: <20200326162802.GA32328@bogus>
+References: <20200324201819.23095-1-s-anna@ti.com>
+ <20200324201819.23095-4-s-anna@ti.com>
 MIME-Version: 1.0
-References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20200326103926.20888-1-kai.heng.feng@canonical.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Thu, 26 Mar 2020 09:27:42 -0700
-Message-ID: <CAKgT0UfFnXcSSsXvxk8+xiZvyzDh+8V-9bCT-z5U+MEVoAVKLw@mail.gmail.com>
-Subject: Re: [Intel-wired-lan] [PATCH] igb: Use a sperate mutex insead of rtnl_lock()
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200324201819.23095-4-s-anna@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:39 AM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
-> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
-> fixed race condition between close and power management ops by using
-> rtnl_lock().
->
-> This fix is a preparation for next patch, to prevent a dead lock under
-> rtnl_lock() when calling runtime resume routine.
->
-> However, we can't use device_lock() in igb_close() because when module
-> is getting removed, the lock is already held for igb_remove(), and
-> igb_close() gets called during unregistering the netdev, hence causing a
-> deadlock. So let's introduce a new mutex so we don't cause a deadlock
-> with driver core or netdev core.
->
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-So this description doesn't make much sense to me. You describe the
-use of the device_lock() in igb_close() but it isn't used there. In
-addition it seems like you are arbitrarily moving code that was
-wrapped in the rtnl_lock out of it. I'm not entirely sure that is safe
-since there are calls within many of these functions that assume the
-rtnl_lock is held and changing that is likely going to introduce more
-issues.
-
-
-
+On Tue, 24 Mar 2020 15:18:15 -0500, Suman Anna wrote:
+> The Texas Instruments K3 family of SoCs have one or more dual-core
+> Arm Cortex R5F processor subsystems/clusters (R5FSS). The clusters
+> can be split between multiple voltage domains as well. Add the device
+> tree bindings document for these R5F subsystem devices. These R5F
+> processors do not have an MMU, and so require fixed memory carveout
+> regions matching the firmware image addresses. The nodes require more
+> than one memory region, with the first memory region used for DMA
+> allocations at runtime. The remaining memory regions are reserved
+> and are used for the loading and running of the R5F remote processors.
+> The R5F processors can also optionally use any internal on-chip SRAM
+> memories either for executing code or using it as fast-access data.
+> 
+> The added example illustrates the DT nodes for the single R5FSS device
+> present on K3 AM65x family of SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
->  drivers/net/ethernet/intel/igb/igb_main.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/net/ethernet/intel/igb/igb_main.c b/drivers/net/ethernet/intel/igb/igb_main.c
-> index b46bff8fe056..dc7ed5dd216b 100644
-> --- a/drivers/net/ethernet/intel/igb/igb_main.c
-> +++ b/drivers/net/ethernet/intel/igb/igb_main.c
-> @@ -288,6 +288,8 @@ static const struct igb_reg_info igb_reg_info_tbl[] = {
->         {}
->  };
->
-> +static DEFINE_MUTEX(igb_mutex);
-> +
->  /* igb_regdump - register printout routine */
->  static void igb_regdump(struct e1000_hw *hw, struct igb_reg_info *reginfo)
->  {
-> @@ -4026,9 +4028,14 @@ static int __igb_close(struct net_device *netdev, bool suspending)
->
->  int igb_close(struct net_device *netdev)
->  {
-> +       int err = 0;
-> +
-> +       mutex_lock(&igb_mutex);
->         if (netif_device_present(netdev) || netdev->dismantle)
-> -               return __igb_close(netdev, false);
-> -       return 0;
-> +               err = __igb_close(netdev, false);
-> +       mutex_unlock(&igb_mutex);
-> +
-> +       return err;
->  }
->
+> Hi Rob,
+> 
+> The dt_bindings_check seems to throw couple of warnings around the
+> usage of ranges because the tooling is adding the #address-cells
+> and #size-cells of 1 by default, whereas our actual code uses 2.
+> No issues are found with dtbs_check.
+> 
+> regards
+> Suman
+> 
+>  .../bindings/remoteproc/ti,k3-r5f-rproc.yaml  | 338 ++++++++++++++++++
+>  1 file changed, 338 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.yaml
+> 
 
-Okay, so I am guessing the problem has something to do with the
-addition of the netdev->dismantle test here and the fact that it is
-bypassing the present check for the hotplug remove case?
+My bot found errors running 'make dt_binding_check' on your patch:
 
-So it looks like nobody ever really reviewed commit 888f22931478
-("igb: Free IRQs when device is hotplugged"). What I would recommend
-is reverting it and instead we fix the remaining pieces that need to
-be addressed in igb so it more closely matches what we have in e1000e
-after commit a7023819404a ("e1000e: Use rtnl_lock to prevent race
-conditions between net and pci/pm"). From what I can tell the only
-pieces that are really missing is to update igb_io_error_detected so
-that in addition to igb_down it will call igb_free_irq, and then in
-addition we should be wrapping most of the code in that function with
-an rtnl_lock since it is detaching a device and making modifications
-to it.
+Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #address-cells (2) differs from /example-0 (1)
+Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:23.13-20: Warning (ranges_format): /example-0/reserved-memory:ranges: empty "ranges" property but its #size-cells (2) differs from /example-0 (1)
+Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dts:54.13-56.72: Warning (ranges_format): /example-0/interconnect@100000:ranges: "ranges" property has invalid length (72 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: interconnect@100000: $nodename:0: 'interconnect@100000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: interconnect@28380000: $nodename:0: 'interconnect@28380000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: mcu-ram@41c00000: 'r5f-sram@0' does not match any of the regexes: '^([a-z]*-)?sram(-section)?@[a-f0-9]+$', 'pinctrl-[0-9]+'
+/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/remoteproc/ti,k3-r5f-rproc.example.dt.yaml: mcu-ram@41c00000: $nodename:0: 'mcu-ram@41c00000' does not match '^sram(@.*)?'
+
+See https://patchwork.ozlabs.org/patch/1260966
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
