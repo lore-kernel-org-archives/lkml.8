@@ -2,96 +2,185 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60918C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFCEC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 404A120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AE8C20737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:25:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgCZDZr (ORCPT
+        id S1727868AbgCZDZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:25:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:53303 "EHLO mga18.intel.com"
+        Wed, 25 Mar 2020 23:25:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55854 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgCZDZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:25:34 -0400
-IronPort-SDR: l6DxRvyZmYypsM5UXg0z+8FoC/FymFGj+N/iYD65bXOgNEmPckZj6A3BkcR/t10z/yd4jsP+vW
- A27dT4u8fDLQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2020 20:25:33 -0700
-IronPort-SDR: LXjqAhcF6kDMzEy0by7c8b642y5+g9LGiqo6QedAJkauKrkA6dwIpeKt0KeAqWEHLG3W8rhJqF
- tz6vmJ2tAl3g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,306,1580803200"; 
-   d="scan'208";a="446842833"
-Received: from lxy-clx-4s.sh.intel.com ([10.239.43.39])
-  by fmsmga005.fm.intel.com with ESMTP; 25 Mar 2020 20:25:32 -0700
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc:     kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: [RFC v3 3/3] kvm: selftests: Fix header path when built from parent level with O specified
-Date:   Thu, 26 Mar 2020 11:07:50 +0800
-Message-Id: <20200326030750.173972-4-xiaoyao.li@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326030750.173972-1-xiaoyao.li@intel.com>
-References: <20200326030750.173972-1-xiaoyao.li@intel.com>
+        id S1728096AbgCZDZh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:25:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D6ADAAD4F;
+        Thu, 26 Mar 2020 03:25:34 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker\@Netapp.com" <Anna.Schumaker@Netapp.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Date:   Thu, 26 Mar 2020 14:25:21 +1100
+Subject: [PATCH/RFC] MM: fix writeback for NFS
+cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <87tv2b7q72.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When build kvm selftests in tools/testing/selftests directory with
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-	make O=/home/lxy/kselftests TARGETS=kvm
 
-it fails building some kvm test binaries due to lack of header files,
-e.g.,
+Page account happens a little differently for NFS, and writeback is
+aware of this, but handles it wrongly.
+With NFS, pages go throught three states which are accounted separately:
+ NR_FILE_DIRTY - page is dirty and unwritten
+ NR_WRITEBACK  - page is being written back
+ NR_UNSTABLE_NFS - page has been written, but might need to be written
+		again if server restarts.  Once an NFS COMMIT
+		completes, page becomes freeable.
 
-  x86_64/vmx_set_nested_state_test.c: In function ‘set_default_vmx_state’:
-  x86_64/vmx_set_nested_state_test.c:85:7: error: ‘struct
-  kvm_nested_state’ has no member named ‘hdr’
-    state->hdr.vmx.vmxon_pa = 0x1000;
-  ...
+writeback combines both the NF_FILE_DIRTY counters and NF_UNSTABLE_NFS
+together, which doesn't make a lot of sense.  NR_UNSTABLE_NFS is more
+like NR_WRITEBACK in that there is nothing that can be done for these
+pages except wait.
 
-With "O" is specified, it also takes effect on "make headers_install",
-which causes no header files generated in "kernel-src/usr".
+Current behaviour is that when there are a lot of NR_UNSTABLE_NFS pages,
+balance_dirty_pages() repeatedly schedules the writeback thread, even
+when the number of dirty pages is below the threshold.  This result is
+each ->write_pages() call into NFS only finding relatively few DIRTY
+pages, so it creates requests that are well below the maximum size.
+Depending on performance of characteristics of the server, this can
+substantially reduce throughput.
 
-Fix INSTALL_HDR_PATH with correct path for this case.
+There are two places where balance_dirty_pages() schedules the writeback
+thread, and each of them schedule writeback too often.
 
-Opportunistically fix the case when KBUILD_OUTPUT specified as well,
-even though it can work currently.
+1/ When balance_dirty_pages() determines that it must wait for the
+   number of dirty pages to shrink, it unconditionally schedules
+   writeback.
+   This is probably not ideal for any filesystem but I measured it to be
+   harmful for NFS.  This writeback should only be scheduled if the
+   number of dirty pages is above the threshold.  While it is below,
+   waiting for the pending writes to complete (and be committed) is a more
+   appropriate behaviour.
 
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
----
- tools/testing/selftests/kvm/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+2/ When balance_dirty_pages() finishes, it again shedules writeback
+   if nr_reclaimable is above the background threshold.  This is
+   conceptually correct, but wrong because nr_reclaimable is wrong.
+   The impliciation of this usage is that nr_reclaimable is the number
+   of pages that can be reclaimed if writeback is triggered.  In fact it
+   is NR_FILE_DIRTY plus NR_UNSTABLE_NFS, which is not a meaningful
+   number.
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index 6a95878b2ab7..bf8f56488914 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -50,7 +50,11 @@ ifeq (0,$(MAKELEVEL))
- 	INSTALL_HDR_PATH := $(top_srcdir)/usr
-     endif
- else
-+    ifneq ($(O)$(KBUILD_OUTPUT),)
-+	INSTALL_HDR_PATH := $(BUILD)/usr
-+    else
- 	INSTALL_HDR_PATH := $(top_srcdir)/usr
-+    endif
- endif
- LINUX_HDR_PATH = $(INSTALL_HDR_PATH)/include/
- LINUX_TOOL_INCLUDE = $(top_srcdir)/tools/include
--- 
-2.20.1
+So this patch removes NR_UNSTABLE_NFS from nr_reclaimable, and only
+schedules writeback when the new nr_reclaimable is greater than
+=2D>thresh or ->bg_thresh, depending on context.
 
+The effect of this can be measured by looking at the count of
+nfs_writepages calls while performing a large streaming write (larger
+than dirty_threshold)
+
+e.g.
+  mount -t nfs server:/path /mnt
+  dd if=3D/dev/zero of=3D/mnt/zeros bs=3D1M count=3D1000
+  awk '/events:/ {print $13}' /proc/self/mountstats
+
+Each writepages call should normally submit writes for 4M (1024 pages)
+or more (MIN_WRITEBACK_PAGES) (unless memory size is tiny).
+With the patch I measure typically 200-300 writepages calls with the
+above, which suggests an average of about 850 pages being made available to
+each writepages call.  This is less than MIN_WRITEBACK_PAGES, but enough
+to assemble large 1MB WRITE requests fairly often.
+
+Without the patch, numbers range from about 2000 to over 10000, meaning
+an average of maybe 100 pages per call, which means we rarely get large
+1M requests, and often get small requests
+
+Note that there are other places where NR_FILE_DIRTY and NR_UNSTABLE_NFS
+are combined (wb_over_bg_thresh() and get_nr_dirty_pages()).  I suspect
+they are wrong too.  I also suspect that unstable-NFS pages should not be
+included in the WB_RECLAIMABLE wb_stat, but I haven't explored that in
+detail yet.
+
+Note that the current behaviour of NFS w.r.t sending COMMIT requests is
+that as soon as a batch of writes all complete, a COMMIT is scheduled.
+Prior to commit 919e3bd9a875 ("NFS: Ensure we commit after writeback is
+complete"), other mechanisms triggered the COMMIT.  It is possible that
+the current writeback code made more sense before that commit.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+=2D--
+ mm/page-writeback.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 2caf780a42e7..99419cba1e7a 100644
+=2D-- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -1593,10 +1593,11 @@ static void balance_dirty_pages(struct bdi_writebac=
+k *wb,
+ 		 * written to the server's write cache, but has not yet
+ 		 * been flushed to permanent storage.
+ 		 */
+=2D		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY) +
+=2D					global_node_page_state(NR_UNSTABLE_NFS);
++		nr_reclaimable =3D global_node_page_state(NR_FILE_DIRTY);
+ 		gdtc->avail =3D global_dirtyable_memory();
+=2D		gdtc->dirty =3D nr_reclaimable + global_node_page_state(NR_WRITEBACK);
++		gdtc->dirty =3D nr_reclaimable +
++			global_node_page_state(NR_WRITEBACK) +
++			global_node_page_state(NR_UNSTABLE_NFS);
+=20
+ 		domain_dirty_limits(gdtc);
+=20
+@@ -1664,7 +1665,8 @@ static void balance_dirty_pages(struct bdi_writeback =
+*wb,
+ 			break;
+ 		}
+=20
+=2D		if (unlikely(!writeback_in_progress(wb)))
++		if (nr_reclaimable > gdtc->thresh &&
++		    unlikely(!writeback_in_progress(wb)))
+ 			wb_start_background_writeback(wb);
+=20
+ 		mem_cgroup_flush_foreign(wb);
+=2D-=20
+2.25.2
+
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl58IKIACgkQOeye3VZi
+gbm0kA//S4tZFypb4X9O3m1jpKH4hS21QOLhfE6Su7e7QnvQ/RhDjh+XfQMgQlzN
+ih2rwz/J3tJN8HKvxK/8nK2ssqRXittASSn+0jZod4qLI47Or71MqZaK58on1xfr
+sq9Hfw0AR80tsxwwvligo1gwg53oxjpJty1gA0yNP/dTaiYL7+q9+Fau//IdcZq0
+DmVYIlglNucRW0mc8uOarT9WVo8g7v5LSRBOpIRyvc61/Mw8WP4tvlaKVUdSWijA
+V8NGGFJw7hJgbRq1VUBhPM2euD6lDzzLrlDLAUPoUbajwaGPxkP8mA09vTzmrinL
+HAFVIKBLVCCsfzZmYdXloyhrDRYFAFNujtsGdt/sqRocVDppCyWMZlfN+PdEomPQ
+dOQsTqAdrSZJeHwdhcqYfh6z6n6VEmTkjIwQeY3jtLBHUWHjjCnS4Ja8NKdF40Ub
+nNs3bLif3rV0pGjmJJ81O9oWglRRHoXTWt5PaU5m1kOEJjGuEthh/fjY1wZw9ejF
+muqWZZDpmfGxeRYgqR3xe1koh+MSPZuRp/timuX5B1mG7gcN1BUTX0dkBBHJbBdz
+oQHuuH6+F2zynjbCubaVigbC1cyiqdANrT9Itixi7VWoxqSzLds7KOBi8P/xSCzL
+gVR+i40MT3D6NDMaYefGkXX1CVAw4jbkaVHaKraoOIx1qZJiDAg=
+=A5hb
+-----END PGP SIGNATURE-----
+--=-=-=--
