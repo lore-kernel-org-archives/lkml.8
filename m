@@ -2,174 +2,101 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F76C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DC0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31D7C20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:39:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585211993;
-	bh=U3lGAdcroIPZb6qKDi+TjBsZ8RyoYtTRjfLTba0/PLI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xKkdN/HEsVqKBuUfh4ALy0Sb4cYM23foO6atOMrglmTAeBHcKo3UmNIc1yyoylDNe
-	 t974X7pDdWnKj+2JUhjGkqemcqqftvqjr/XuLD7LmPClefIQybEdf67fKaiUf6esLH
-	 E3mez1qmHNUHgCBfzdh3eexciD+t70RUH/+T8EeA=
+	by mail.kernel.org (Postfix) with ESMTP id ED34F20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pmDvDqxz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgCZIjw (ORCPT
+        id S1727639AbgCZIpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:39:52 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34513 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726210AbgCZIjw (ORCPT
+        Thu, 26 Mar 2020 04:45:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35342 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgCZIpT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:39:52 -0400
-Received: by mail-oi1-f196.google.com with SMTP id d3so215719oic.1;
-        Thu, 26 Mar 2020 01:39:51 -0700 (PDT)
+        Thu, 26 Mar 2020 04:45:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d5so6699336wrn.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 01:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FtuFDgZ0vqDMcROewVgWRuk00REi/YD6SlgN8SN6u8c=;
+        b=pmDvDqxzRcqHOg7IGXHP1JfirFjHaIj0rpzNdTljlxhF9QctKmdMnC8bFfETZA7Qpa
+         An2IhPebf0b6I6ChrGrJxBGni3Wbf6geiB5Pp7jcpkE1pCzvrr1ISmI8oOYp38otlqsd
+         TrRp2xdJhgGGIzbttrqrBCpGHNYQgmxZHj4f3qk5Y/xUQuTTtJtqgeK4X+2Wr2uI1s53
+         eKUutdBd5cyx/JXQ3YJxkAqPqTTBq9frxjuiRyEDngtTO2iOHbWLjpI7+wIJj23IwuVw
+         VnLWFiSJITXH4FW4DaMqgBRRyQRGUZ/Y9vs59pMWoUPFLFioU+xo5LxAnGR6GW+QuJhc
+         zCZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lRX7PLl1mEjB6H0fmMXyLD2J+FG3OvK9KawnS67f2j8=;
-        b=N1V1c2BsEqE7WYM3otZ/2it1bHYCJx2zxNtIMek1oeYGeSbL3BXxtPiPMjp2ec3Ya1
-         bim+QIZn8+JbEAJ+P5duvJEWGsDApXxZkwYdPQuJ9nPL2WPiCfbbD47yBKnz55la9nj6
-         tuRUdNaIoZ/BM/x20E9NaAE0188Qr/J/esNxAtT4EPc/V/IqIbBfWLq+U6++HD60EPIE
-         3UyeccSSgHn3FH1eRJIRH+J9cckzXjKrvYWYqWH64BgRhipOco51EyEwKBI9cv9jwGrP
-         b0egJgwiKhcGaPklDn4oYZo9LTEghY55IHTGSIEkEcQYWbCAkLxuHM+TdAh0qTpnw0ap
-         6u6A==
-X-Gm-Message-State: ANhLgQ25nwdBWQ8RjzeDgf8nIOeVe7MxOhrnnc2IbyYzdVKu/yZoBg/Y
-        eeuP/b6guGdixCb763ctgl6yF9lCwkM6dXH0VmQ=
-X-Google-Smtp-Source: ADFU+vsFeJkfPdBQXQpadxQd3zK1Np02OpHncJ5FVmppX4AHFdLoVJeQj3CcEqmMCkuJRnVthKUJM1QSY979jFx3uew=
-X-Received: by 2002:aca:5155:: with SMTP id f82mr1082932oib.103.1585211991269;
- Thu, 26 Mar 2020 01:39:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FtuFDgZ0vqDMcROewVgWRuk00REi/YD6SlgN8SN6u8c=;
+        b=JfmHgHaJpBHsCx9/aX3C3Golh0hP6F1rGB2A9NlsJkfIWnxKZ6Odd+hfcsOt1YFG4/
+         moK9DklI9ebuityzrfbp1jWWdU2rHQkxfKKbzZlDWy6+6UrBJwpvffzHuD7rUegQ55ok
+         /i7i1heUNyxhBiZixHAnlGok2DUOGzSYaSxeHBFhPtSokNzAdLv0540UmAlRKQ7nUi3R
+         6Lulxj5Wc0gZ+PXt8vKILBx9zx3OaPKFfS8UYokez/3RjmjbL8G6+nnng9TgAebwXPE4
+         ZcmVlvsgr8JrneeoRBgoVtnJ1e0NjY8t7cASuU9RnNQGOlXVJxxLgdQtzDg8vCcmNMlu
+         GFwA==
+X-Gm-Message-State: ANhLgQ3KClrdmTw45gEpZnfsw8kijjOxyTe4nJSFGpGHs+VFlCACIqLt
+        nzWVbV4nZiKqKGjrTeprFdU=
+X-Google-Smtp-Source: ADFU+vuvM719ihlCXp1dFMBWr//VJetOFXISXzO7ZRXfA17cX8YOcabxYBQeF5ZvMY2a891dp47E+w==
+X-Received: by 2002:a05:6000:11c2:: with SMTP id i2mr8580890wrx.210.1585212317665;
+        Thu, 26 Mar 2020 01:45:17 -0700 (PDT)
+Received: from localhost.localdomain (dslb-002-204-140-180.002.204.pools.vodafone-ip.de. [2.204.140.180])
+        by smtp.gmail.com with ESMTPSA id d13sm2595774wrv.34.2020.03.26.01.45.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 01:45:17 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH v2] staging: rtl8188eu: cleanup long line in odm.c
+Date:   Thu, 26 Mar 2020 09:43:48 +0100
+Message-Id: <20200326084348.15072-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
- <20200325032901.29551-1-saravanak@google.com> <20200325125120.GX1922688@smile.fi.intel.com>
- <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
-In-Reply-To: <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 26 Mar 2020 09:39:40 +0100
-Message-ID: <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
-Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
- can't be satisfied
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
-        grant.likely@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
+Cleanup line over 80 characters by removing unnecessary test
+'pDM_Odm->RSSI_Min <= 25'. The above test 'pDM_Odm->RSSI_Min > 25'
+already guarantees that it is <= 25.
 
-[cut]
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
+---
+v1 -> v2: Remove 'pDM_Odm->RSSI_Min <= 25' test.
 
-> >
-> > Yes, it's (unlikely) possible (*), but it will give one more iteration per such
-> > case. It's definitely better than infinite loop. Do you agree?
->
-> Sorry I wasn't being clear (I was in a rush). I'm saying this patch
-> can reintroduce the bug where the deferred probe isn't triggered when
-> it should be.
->
-> Let's take a simple execution flow.
->
-> probe_okay is at 10.
->
-> Thread-A
->   really_probe(Device-A)
->     local_probe_okay_count = 10
->     Device-A probe function is running...
->
-> Thread-B
->   really_probe(Device-B)
->     Device-B probes successfully.
->     probe_okay incremented to 11
->
-> Thread-C
->   Device-C (which had bound earlier) is unbound (say module is
-> unloaded or a million other reasons).
->   probe_okay is decremented to 10.
->
-> Thread-A continues
->   Device-A probe function returns -EPROBE_DEFER
->   driver_deferred_probe_add_trigger() doesn't do anything because
->     local_probe_okay_count == probe_okay
->   But Device-A might have deferred probe waiting on Device-B.
->   Device-A never probes.
->
-> > *) It means during probe you have _intensive_ removing, of course you may keep
-> > kernel busy with iterations, but it has no practical sense. DoS attacks more
-> > effective in different ways.
->
-> I wasn't worried about DoS attacks. More of a functional correctness
-> issue what I explained above.
+ drivers/staging/rtl8188eu/hal/odm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The code is functionally incorrect as is already AFAICS.
+diff --git a/drivers/staging/rtl8188eu/hal/odm.c b/drivers/staging/rtl8188eu/hal/odm.c
+index a6eb9798b6f8..698377ea60ee 100644
+--- a/drivers/staging/rtl8188eu/hal/odm.c
++++ b/drivers/staging/rtl8188eu/hal/odm.c
+@@ -590,7 +590,7 @@ void odm_CCKPacketDetectionThresh(struct odm_dm_struct *pDM_Odm)
+ 	if (pDM_Odm->bLinked) {
+ 		if (pDM_Odm->RSSI_Min > 25) {
+ 			CurCCK_CCAThres = 0xcd;
+-		} else if ((pDM_Odm->RSSI_Min <= 25) && (pDM_Odm->RSSI_Min > 10)) {
++		} else if (pDM_Odm->RSSI_Min > 10) {
+ 			CurCCK_CCAThres = 0x83;
+ 		} else {
+ 			if (FalseAlmCnt->Cnt_Cck_fail > 1000)
+-- 
+2.25.1
 
-> Anyway, if your issue and similar issues can be handles in driver core
-> in a clean way without breaking other cases, I don't have any problem
-> with that. Just that, I think the current solution breaks other cases.
-
-OK, so the situation right now is that commit 58b116bce136 has
-introduced a regression and so it needs to be fixed or reverted.  The
-cases that were previously broken and were unbroken by that commit
-don't matter here, so you cannot argue that they would be "broken".
-
-It looks to me like the original issue fixed by the commit in question
-needs to be addressed differently, so I would vote for reverting it
-and starting over.
-
-> As an alternate solution, assuming "linux,extcon-name" is coming
-> from some firmware, you might want to look into the fw_devlink
-> feature.
-
-That would be a workaround for a driver core issue, though, wouldn't it?
-
-> That feature allows driver core to add device links from firmware
-> information. If you can get that feature to create device links from
-> your dwc3.0.auto (or its parent pci_dev?) to the extcon supplier
-> device, all of this can be sidestepped and your dwc3.0.auto's (or the
-> dwc pci_dev's) probe will be triggered only after extcon is probed.
->
-> I have very little familiarity with PCI/ACPI. I spent about an hour or
-> two poking at ACPI scan/property code. The relationship between a
-> pci_dev and an acpi_device is a bit confusing to me because I see:
->
-> static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
-> {
->         struct property_entry *p = (struct property_entry *)id->driver_data;
->         struct dwc3_pci         *dwc;
->         struct resource         res[2];
->         int                     ret;
->         struct device           *dev = &pci->dev;
-> ....
->         dwc->dwc3 = platform_device_alloc("dwc3", PLATFORM_DEVID_AUTO);
-> ....
->         ACPI_COMPANION_SET(&dwc->dwc3->dev, ACPI_COMPANION(dev));
->
-> And ACPI_COMPANION returns an acpi_device by looking at dev->fwnode.
-> So how the heck is a pci_device.dev.fwnode pointing to an
-> acpi_device.fwnode?
-
-acpi_device is an of_node counterpart (or it is an fwnode itself if you will).
-
-Thanks!
