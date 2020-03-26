@@ -2,148 +2,114 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FD5C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3AFC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49AC220714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:25:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01C1920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pNXo66Ii"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R1ZbV8ZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727707AbgCZVZK (ORCPT
+        id S1727122AbgCZV0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:25:10 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:42998 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZVZJ (ORCPT
+        Thu, 26 Mar 2020 17:26:46 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46667 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZV0q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:25:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e1so2641115plt.9;
-        Thu, 26 Mar 2020 14:25:09 -0700 (PDT)
+        Thu, 26 Mar 2020 17:26:46 -0400
+Received: by mail-lj1-f195.google.com with SMTP id r7so398021ljg.13
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:26:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EBWQLMhBWW9tUXFqRtN+54ezrMGzdq5O+dIYEBDryGo=;
-        b=pNXo66Iib9dd51AfI5Kn4XmPlsuG+DRgfO1pjoxT4heP/wOCW7mxQTZC1t3rfCPH6H
-         ZPn3zDNE7oKFFDxenXlJcJR80p2r6GK5sCHHDoZ3ySW1D1qG2ktEN15caUI22xpp2sM6
-         mW396gjndbFQxz1SSdNnhYN2A9iQYRRWo9jFQHmFWnSlikmitltJJmNn/WERBMcOjZwK
-         62IAGF1BBNH81+9x0ai/nqraL9/CcX+M2s24mLpp0MC9MCHzAqTO7KHFbSi3sNiaAAqG
-         ivimQr5jFdzihlMrpQmqIoyoPgAi/2GUrYtG406ApmsRrjtPdkklkY2zPuofa0A+qrlO
-         mUJA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K6HhQ5CXYnVrjzdCb0GiH9KRJ8oDBIqHlDAtHtGoEj0=;
+        b=R1ZbV8ZHF2uNrvQMw6yLPcZXYX/L1Bi1ZDegFPmpGCQZQxDo4xJstG1+5lxSGccQjM
+         DtHC3HQ/jx2YMTytcd6ultwEU/i0RlVnZivmFm9vimqHtelawlsMju+sVKJ7lHhUFclt
+         CAT0JwPBKGwAs7QH0zYIR8ngkUu1HqQt+JNM8LA/bSlIAM7ldYL3U3TWwGQQsnl/Hel9
+         6kj0OiO6KeusAjhbIL7po4EZAoa2QzUuNNDHmg7OdxCfj5w04nJlHikrm/4rjGHXVBbt
+         BztQyx2aUzDzf8VaHiOVqUzXyYasFaATNZCxsfBVkbIyEnDecxq0KQKBEI2iK76fHmnY
+         Nh5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EBWQLMhBWW9tUXFqRtN+54ezrMGzdq5O+dIYEBDryGo=;
-        b=a9s1aSpsZGLtYSetQTIFHllFhzCq5hbgwCmUHJUS2HE7ZhLh4WReXahsbkHylIQwcz
-         lmKkkjMNC4OX/kSSCq4UOr/CKVtvKUp6q1Buk3999CrmuHdR10RN+8/DVBJnwBC/LDS5
-         48OqWumvfrJhpKquIiI26qPUA9TMrgziUEdbCJ5BfR3yOQYRm74LRGrARWzRyD2S9D/S
-         gKZ8xKOtv8LoHl4NBLnqQ2b2NYbVUMJSju0B9Jqj+rn8nk4fExxy7N/NkPDro66ccYnm
-         YhoBMOFl1+4QApO7yFBd6p3I8VqlTL1rxWAR72o6FHNb4Lcy4hzpq+VgEzhOlM3AQLLm
-         3qKA==
-X-Gm-Message-State: ANhLgQ1V8eoFdJ+P+oLvpDsz2MP43h6YrLFtQ2eCOl4M+82e4HkBMfBE
-        lJdHin3x89bFcFh+Bt3v4TY=
-X-Google-Smtp-Source: ADFU+vs0BBrk9+I2ddFEda+vQXmS5Jnv3BmW48JpttlOLT46IZkR0GLF9ueX6C/NeKude51qt3Se2g==
-X-Received: by 2002:a17:90a:1910:: with SMTP id 16mr2172311pjg.119.1585257908641;
-        Thu, 26 Mar 2020 14:25:08 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
-        by smtp.gmail.com with ESMTPSA id nk12sm2354537pjb.41.2020.03.26.14.25.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 14:25:08 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 14:25:05 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     dtor@google.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, furquan@google.com,
-        dlaurie@google.com, bleung@google.com, zentaro@google.com,
-        dbehr@google.com, rajatxjain@gmail.com,
-        Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH v2 1/5] input/serio/i8042: Attach fwnode to serio i8042
- kbd device
-Message-ID: <20200326212505.GI75430@dtor-ws>
-References: <20200324123518.239768-1-rajatja@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K6HhQ5CXYnVrjzdCb0GiH9KRJ8oDBIqHlDAtHtGoEj0=;
+        b=ICeRPZKjIzMPYGdAJEDOFoXv0q3U0+PBH2+d7pQhv4g6cyXvKBxuSHEWzBRavWrEaZ
+         s5ZAJEt7U8F+jpXVWZL2VH6F4+ZGlU0Ocup66yCs7Bu/1iSajZ/2W4PEf8vTFJDh9016
+         Pl8gIt6WtwTeFGWJpmJfPuEPwQOjk7b2wOl7kXxH5L/LSFrZfBzHJ3cJbLZvd4DQuMAe
+         TmrAoElcjqPpkLkod6FqDYvAWpX5KOIS3umpejDCDo5q7IkZgmnZWF29xaxfL6O7Ovng
+         DlcuhvmAs9mX+/etE8FlHse8rPQvnWiooW4q1iJwqyQCOHjDpRIrFPccaJNuWXO12EE8
+         ak+A==
+X-Gm-Message-State: AGi0PuYGd7uwv9VxqNcF6JQ75kyA8N6VMKM/2d8cv1eqv5ACQ8NTdswm
+        xg2Qc/OIppmLk4Tsk/o2a1ff8Hym/c3gXKysp9lKTA==
+X-Google-Smtp-Source: APiQypLsy28BzQ4YoJJE2i0gYrneALBvsp4MxQ5uVCHUPAjFEGFTMqFCGi01B7eAtiikChneeDns42u4uM1vGmEAXuk=
+X-Received: by 2002:a2e:9c48:: with SMTP id t8mr568502ljj.168.1585258002139;
+ Thu, 26 Mar 2020 14:26:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200324123518.239768-1-rajatja@google.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20200324135328.5796-1-geert+renesas@glider.be>
+ <20200324135653.6676-1-geert+renesas@glider.be> <20200324135653.6676-5-geert+renesas@glider.be>
+In-Reply-To: <20200324135653.6676-5-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 26 Mar 2020 22:26:30 +0100
+Message-ID: <CACRpkdZuQrPqFPyoop9pv6MVwqwz_C6ZNKMxWqSFXdAMkhbsvQ@mail.gmail.com>
+Subject: Re: [PATCH v6 5/8] gpiolib: Introduce gpiod_set_config()
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 05:35:14AM -0700, Rajat Jain wrote:
-> Attach the firmware node to the serio i8042 kbd device so that device
-> properties can be passed from the firmware.
-> 
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+
+> The GPIO Aggregator will need a method to forward a .set_config() call
+> to its parent gpiochip.  This requires obtaining the gpio_chip and
+> offset for a given gpio_desc.  While gpiod_to_chip() is public,
+> gpio_chip_hwgpio() is not, so there is currently no method to obtain the
+> needed GPIO offset parameter.
+>
+> Hence introduce a public gpiod_set_config() helper, which invokes the
+> .set_config() callback through a gpio_desc pointer, like is done for
+> most other gpio_chip callbacks.
+>
+> Rewrite the existing gpiod_set_debounce() helper as a wrapper around
+> gpiod_set_config(), to avoid duplication.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> v2: Remove the Change-Id from the commit log
-> 
->  drivers/input/serio/i8042-x86ia64io.h | 1 +
->  drivers/input/serio/i8042.c           | 3 +++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/drivers/input/serio/i8042-x86ia64io.h b/drivers/input/serio/i8042-x86ia64io.h
-> index dc974c288e880..ed9ec4310d976 100644
-> --- a/drivers/input/serio/i8042-x86ia64io.h
-> +++ b/drivers/input/serio/i8042-x86ia64io.h
-> @@ -927,6 +927,7 @@ static int i8042_pnp_kbd_probe(struct pnp_dev *dev, const struct pnp_device_id *
->  	}
->  	i8042_pnp_id_to_string(dev->id, i8042_kbd_firmware_id,
->  			       sizeof(i8042_kbd_firmware_id));
-> +	i8042_kbd_fwnode = dev_fwnode(&dev->dev);
->  
->  	/* Keyboard ports are always supposed to be wakeup-enabled */
->  	device_set_wakeup_enable(&dev->dev, true);
-> diff --git a/drivers/input/serio/i8042.c b/drivers/input/serio/i8042.c
-> index 20ff2bed3917a..0dddf273afd94 100644
-> --- a/drivers/input/serio/i8042.c
-> +++ b/drivers/input/serio/i8042.c
-> @@ -21,6 +21,7 @@
->  #include <linux/i8042.h>
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
-> +#include <linux/property.h>
->  
->  #include <asm/io.h>
->  
-> @@ -124,6 +125,7 @@ MODULE_PARM_DESC(unmask_kbd_data, "Unconditional enable (may reveal sensitive da
->  static bool i8042_bypass_aux_irq_test;
->  static char i8042_kbd_firmware_id[128];
->  static char i8042_aux_firmware_id[128];
-> +static struct fwnode_handle *i8042_kbd_fwnode;
->  
->  #include "i8042.h"
->  
-> @@ -1335,6 +1337,7 @@ static int __init i8042_create_kbd_port(void)
->  	strlcpy(serio->phys, I8042_KBD_PHYS_DESC, sizeof(serio->phys));
->  	strlcpy(serio->firmware_id, i8042_kbd_firmware_id,
->  		sizeof(serio->firmware_id));
-> +	set_primary_fwnode(&serio->dev, i8042_kbd_fwnode);
+> v6:
+>   - New.
 
-Rafael, do you have any concerns here? We want to be able to access
-properties assigned to KBC or similar device in ACPI. Serio port devices
-in i8042 essentially mirror the 2 PNP (typically called KBC, PS2K or
-PS2M) devices in ACPI.
+This is nice, I tried to actually just apply this (you also sent some
+two cleanups that I tried to apply) byt Yue's cleanup patch
+commit d18fddff061d2796525e6d4a958cb3d30aed8efd
+"gpiolib: Remove duplicated function gpio_do_set_config()"
+makes none of them apply :/
 
-Thanks.
-
--- 
-Dmitry
+Yours,
+Linus Walleij
