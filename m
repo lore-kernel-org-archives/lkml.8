@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F664C2D0ED
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2835CC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43FEB2073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8492073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xrz876FM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6EBDV5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgCZWpH (ORCPT
+        id S1727766AbgCZWpO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:45:07 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40169 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727711AbgCZWpG (ORCPT
+        Thu, 26 Mar 2020 18:45:14 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34938 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726296AbgCZWpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:45:06 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c20so975172pfi.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:45:04 -0700 (PDT)
+        Thu, 26 Mar 2020 18:45:07 -0400
+Received: by mail-pf1-f196.google.com with SMTP id u68so3532142pfb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=z3g/2X3xqKE2E6bsoNbDYiNdI89O/pvEeLJlm/o2OpE=;
-        b=Xrz876FMDozNGuIjV9RUCVbds29I/2Zmat9NHRrib4AsLtTtobMA/SSi7hjLncf2yA
-         lqmiEa+GyH/VnRNlyHRoY6r/ULU9/llEgod1gbjGx7uDvyD7RMdeq+8czV/BMgZPuJcE
-         oNQ0ye+dyQceMh07rv+amQjd810I+l0IR6ncwGE8ffkO0ZRSA/2EULHQOppY53VSu3kM
-         FlkLV6LETgkJt8BiO23uay777rqryr5JLwfYLKGBbEwMzwRAYpoTinIzgoYxUqSHnvfR
-         PJ1cfEsNaVBuKQ2uBTGdjF2QAP0HbfzB+TgJCQp4WT+WZiQjjbXamMlRP2PfzisA2pwu
-         TH7A==
+        bh=uXFWCA6HsRoFU7UHbCkibQyhhxiptzgR3ncwTu65yOs=;
+        b=b6EBDV5D14KVHV3wD3Ol5xWcqk/VSycmLNDdgJZ9srR1xMjA8/P+83qr06g+dwDBF3
+         tpkK0HVrqwYlyhyNs/6Fb9jrYz1YUFN1U7dIz0f2lGUMngq8+meZbD8zi0FnI1x2ZtmN
+         1NWQpNJL3NrsmF2m+TgTg8rdjT0TVisGMeu9gwy2G1GFTZHLc7kKDbJT2g0kdR4dBT1K
+         G/YP2FpEUoY6ZLU2tq9MsyfKtUB3dyAVMgzesmCp+jCzo7yLR7Vu2OCfOFWCzzioei41
+         GEZmdwuTUB+wOIx8RY0OI4BaDASpGUy6JVpuOmO70/NECorFsuLdy/35S5QODhrSfwKD
+         o/Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=z3g/2X3xqKE2E6bsoNbDYiNdI89O/pvEeLJlm/o2OpE=;
-        b=Yr2z2Ey283RBsv044GwdaFj33CC/KVW6LN1hQfP2MrkW+6F4/VX0UY+bDvTmveMywu
-         47dMEpOatOGADXrCo7HPLVfap4TGqA83DM8vjOEfdGeuJX0avP3B6QHKPR1avc+MoYBF
-         qUYklx7MjZ+wqabR3fMWKx3irmb7mCBkyx0G3UXZiclxEz3ToxHhICtvmKy1/g6zam6e
-         Dr172VMKRShcjCGHkXzItrWMezH+jn0eKdbbYsdTNl1GPfDMfpkRDpCKyR5UtKyrwb1A
-         PAvHFHA9RBd/eS+uCxr1xwZjSq0puj3+g3INLuw5ab1kBV9TamtsDZm7RPUonvB73ypX
-         cTTQ==
-X-Gm-Message-State: ANhLgQ2ZYbmoOfpnljzI0J7SvtCVe2F/UVOIKm3OaXuVSErLJlMHbIPE
-        eU5A9Cd16wr6kDaxTjSeZpYeNQ4WI5E=
-X-Google-Smtp-Source: ADFU+vtoCJXf8vwmtr6xsj2U3JR2F9hMCFfeXD53husYpJJuJFDNBaKMd5A71q5bsoMe9Y++eXFZAA==
-X-Received: by 2002:a62:3086:: with SMTP id w128mr11394896pfw.63.1585262704003;
-        Thu, 26 Mar 2020 15:45:04 -0700 (PDT)
+        bh=uXFWCA6HsRoFU7UHbCkibQyhhxiptzgR3ncwTu65yOs=;
+        b=NLybMBUd8OVIQEZFgf2pXesmOlIUvtWSAx0/8UXWhtNUCe3T5ABezkwzU35YgJR5cA
+         q8R7ZntFPrbF4PD2/rQXzH4x8eCGc5cHfOtTAPEHeWRRos3eJcdZX6IZG4oKwpia6ajj
+         45a3cWDRGyvUjKjzvixNaX5pt53+g6nDngMA4et18/ynINWJ5TwfOJeTmBo8f+WR9fmJ
+         1ZiEpUgVpdWXB2zcF8W3T2itZ9JjfwN0edZznbq/NCegrJKDJWH21Xci2M116lUluXP/
+         usTREicbRonsF21WhOgTQNIMjBjEPy9YIROlo95V/pvzMk1kjQ3rYjJpiXEiTXmfH4oL
+         soPw==
+X-Gm-Message-State: ANhLgQ3QDhy+YZVy4Z6ZcdMa/nzJ8mzmMrGc2KxGz4NmXu9N5/zJaw+h
+        nBWm16L9WZl9Uj0CEKqAgvTojUAdr+A=
+X-Google-Smtp-Source: ADFU+vu9KGqoAE4crBP4wJCZ1UO5CXpzN5sdzapPizXKKa7HM9pL5RtmXtBOe7hYseU2KlJwcR0Mww==
+X-Received: by 2002:a63:60d:: with SMTP id 13mr10693526pgg.151.1585262706292;
+        Thu, 26 Mar 2020 15:45:06 -0700 (PDT)
 Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id g10sm2592788pfk.90.2020.03.26.15.45.03
+        by smtp.gmail.com with ESMTPSA id g10sm2592788pfk.90.2020.03.26.15.45.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 15:45:03 -0700 (PDT)
+        Thu, 26 Mar 2020 15:45:05 -0700 (PDT)
 From:   John Stultz <john.stultz@linaro.org>
 To:     lkml <linux-kernel@vger.kernel.org>
 Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
@@ -63,9 +63,9 @@ Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Rajendra Nayak <rnayak@codeaurora.org>,
         linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3 1/3] soc: qcom: rpmpd: Allow RPMPD driver to be loaded as a module
-Date:   Thu, 26 Mar 2020 22:44:57 +0000
-Message-Id: <20200326224459.105170-2-john.stultz@linaro.org>
+Subject: [PATCH v3 3/3] soc: qcom: rpmhpd: Allow RPMHPD driver to be loaded as a module
+Date:   Thu, 26 Mar 2020 22:44:59 +0000
+Message-Id: <20200326224459.105170-4-john.stultz@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200326224459.105170-1-john.stultz@linaro.org>
 References: <20200326224459.105170-1-john.stultz@linaro.org>
@@ -74,13 +74,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allow the rpmpd driver to be loaded as a permenent
+This patch allow the rpmhpd driver to be loaded as a permenent
 module. Meaning it can be loaded from a module, but then cannot
 be unloaded.
 
 Ideally, it would include a remove hook and related logic, but
 apparently the genpd code isn't able to track usage and cleaning
-things up? (See: https://lkml.org/lkml/2019/1/24/38)
+things up?
 
 So making it a permenent module at least improves things slightly
 over requiring it to be a built in driver.
@@ -93,62 +93,52 @@ Cc: Andy Gross <agross@kernel.org>
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
 Cc: Rajendra Nayak <rnayak@codeaurora.org>
 Cc: linux-arm-msm@vger.kernel.org
-Acked-by: Saravana Kannan <saravanak@google.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2:
-* Fix MODULE_LICENSE to be GPL v2 as suggested by Bjorn
-* Leave initcall as core_initcall, since that switches to module_initcall
-  only when built as a module, also suggested by Bjorn
-* Add module tags taken from Rajendra's earlier patch
----
- drivers/soc/qcom/Kconfig | 4 ++--
- drivers/soc/qcom/rpmpd.c | 6 ++++++
- 2 files changed, 8 insertions(+), 2 deletions(-)
+ drivers/soc/qcom/Kconfig  | 2 +-
+ drivers/soc/qcom/rpmhpd.c | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index d0a73e76d563..af774555b9d2 100644
+index ac91eaf810f7..ffc04285840b 100644
 --- a/drivers/soc/qcom/Kconfig
 +++ b/drivers/soc/qcom/Kconfig
-@@ -123,8 +123,8 @@ config QCOM_RPMHPD
- 	  for the voltage rail.
+@@ -114,7 +114,7 @@ config QCOM_RPMH
+ 	  help apply the aggregated state on the resource.
  
- config QCOM_RPMPD
--	bool "Qualcomm RPM Power domain driver"
--	depends on QCOM_SMD_RPM=y
-+	tristate "Qualcomm RPM Power domain driver"
-+	depends on QCOM_SMD_RPM
+ config QCOM_RPMHPD
+-	bool "Qualcomm RPMh Power domain driver"
++	tristate "Qualcomm RPMh Power domain driver"
+ 	depends on QCOM_RPMH && QCOM_COMMAND_DB
  	help
- 	  QCOM RPM Power domain driver to support power-domains with
- 	  performance states. The driver communicates a performance state
-diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
-index 2b1834c5609a..22fe94c03e79 100644
---- a/drivers/soc/qcom/rpmpd.c
-+++ b/drivers/soc/qcom/rpmpd.c
-@@ -5,6 +5,7 @@
+ 	  QCOM RPMh Power domain driver to support power-domains with
+diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+index 4d264d0672c4..0bb12d5870a7 100644
+--- a/drivers/soc/qcom/rpmhpd.c
++++ b/drivers/soc/qcom/rpmhpd.c
+@@ -4,6 +4,7 @@
+ #include <linux/err.h>
  #include <linux/init.h>
  #include <linux/kernel.h>
- #include <linux/mutex.h>
 +#include <linux/module.h>
+ #include <linux/mutex.h>
  #include <linux/pm_domain.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -226,6 +227,7 @@ static const struct of_device_id rpmpd_match_table[] = {
- 	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
+ #include <linux/slab.h>
+@@ -189,6 +190,7 @@ static const struct of_device_id rpmhpd_match_table[] = {
+ 	{ .compatible = "qcom,sm8150-rpmhpd", .data = &sm8150_desc },
  	{ }
  };
-+MODULE_DEVICE_TABLE(of, rpmpd_match_table);
++MODULE_DEVICE_TABLE(of, rpmhpd_match_table);
  
- static int rpmpd_send_enable(struct rpmpd *pd, bool enable)
- {
-@@ -422,3 +424,7 @@ static int __init rpmpd_init(void)
- 	return platform_driver_register(&rpmpd_driver);
+ static int rpmhpd_send_corner(struct rpmhpd *pd, int state,
+ 			      unsigned int corner, bool sync)
+@@ -460,3 +462,6 @@ static int __init rpmhpd_init(void)
+ 	return platform_driver_register(&rpmhpd_driver);
  }
- core_initcall(rpmpd_init);
+ core_initcall(rpmhpd_init);
 +
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPM Power Domain Driver");
++MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Power Domain Driver");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:qcom-rpmpd");
 -- 
 2.17.1
 
