@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 988F9C2D0F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B9FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70C082077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4ADF2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265080;
-	bh=HZKph1vlL2+lbjT545LdjST3edbD4zKJanui7XS+8/I=;
+	s=default; t=1585265082;
+	bh=HlxskFbsYt3+njsgtfJZSeFdRTEuzk6dYipazKydfG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkAaqjJ0eAgxs8I2SgeWaCFtCrszmQpijKe8WRSKgVDewQoNnTaWjAQKbel0+5irE
-	 5JzE/eRvucvirX80zKGQuokK6kjdCq4xPh6C8Eog93yRZOC05H8PXamgJm1AGUtxE5
-	 Oyt8bDbtAeKYsIk1PaenYGIQ5SPj0sYzNo+J5R3A=
+	b=sYolFr7xZEWTxSs/Nr/z0vObN4AwPoELHSTe4sAj55kWvsy8k2SesU5W37h9RTMH1
+	 IRzfaPJNBIH1m+6G+SHcyCS6aDsmAnBSwtGPtr9Bvjf8uj9zkudAnWBLmGFb+3/d5N
+	 wV81cpCjskk4+wAVqQ2KuTwh5NP870wYIQj8BrOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbgCZXYj (ORCPT
+        id S1727989AbgCZXYl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44052 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727885AbgCZXY0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:26 -0400
+        id S1727912AbgCZXY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A862082D;
-        Thu, 26 Mar 2020 23:24:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C25220719;
+        Thu, 26 Mar 2020 23:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265065;
-        bh=HZKph1vlL2+lbjT545LdjST3edbD4zKJanui7XS+8/I=;
+        s=default; t=1585265068;
+        bh=HlxskFbsYt3+njsgtfJZSeFdRTEuzk6dYipazKydfG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QmSjwLOAd3fVyyi5kEI0QdvU1HA4nyNZbmEqguc+RATxwqWoNc5QpemXNeHmczW8r
-         PxpeqJYSoNZL8Kjmf7AAntpKzY7lYBZiDBbeeZ+hvHSEzDj7bdo+aGmcuyOddeWFjC
-         VGUjnlRNYkNh1d/qNrq4V++/tRNf+LbWUoI+z5As=
+        b=ov/npAwsHIdau8ZhA0+WeQYN+p6KGJS6V45IV/2uW0db32+Ri1WIv37NB9UFBrtos
+         uQ+Zk/TyItFpoxYCkMldWqA5RzBu4DBOxBU7HKLPK/5NVZFxJwfx7u+0Mqq+Q+FwgS
+         P+klsysXlZzzen3mfxdj6/zdxrXW/oylqHBYpXt0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 5.5 24/28] ALSA: pcm: oss: Avoid plugin buffer overflow
-Date:   Thu, 26 Mar 2020 19:23:53 -0400
-Message-Id: <20200326232357.7516-24-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com,
+        Jiri Slaby <jslaby@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 27/28] tty: fix compat TIOCGSERIAL leaking uninitialized memory
+Date:   Thu, 26 Mar 2020 19:23:56 -0400
+Message-Id: <20200326232357.7516-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -59,72 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit f2ecf903ef06eb1bbbfa969db9889643d487e73a ]
+[ Upstream commit 17329563a97df3ba474eca5037c1336e46e14ff8 ]
 
-Each OSS PCM plugins allocate its internal buffer per pre-calculation
-of the max buffer size through the chain of plugins (calling
-src_frames and dst_frames callbacks).  This works for most plugins,
-but the rate plugin might behave incorrectly.  The calculation in the
-rate plugin involves with the fractional position, i.e. it may vary
-depending on the input position.  Since the buffer size
-pre-calculation is always done with the offset zero, it may return a
-shorter size than it might be; this may result in the out-of-bound
-access as spotted by fuzzer.
+Commit 77654350306a ("take compat TIOC[SG]SERIAL treatment into
+tty_compat_ioctl()") changed the compat version of TIOCGSERIAL to start
+copying a whole 'serial_struct32' to userspace rather than individual
+fields, but failed to initialize all padding and fields -- namely the
+hole after the 'iomem_reg_shift' field, and the 'reserved' field.
 
-This patch addresses those possible buffer overflow accesses by simply
-setting the upper limit per the given buffer size for each plugin
-before src_frames() and after dst_frames() calls.
+Fix this by initializing the struct to zero.
 
-Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
-Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[v2: use sizeof, and convert the adjacent line for consistency.]
+
+Reported-by: syzbot+8da9175e28eadcb203ce@syzkaller.appspotmail.com
+Fixes: 77654350306a ("take compat TIOC[SG]SERIAL treatment into tty_compat_ioctl()")
+Cc: <stable@vger.kernel.org> # v4.20+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
+Link: https://lore.kernel.org/r/20200224182044.234553-2-ebiggers@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_plugin.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/tty/tty_io.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
-index 31cb2acf8afcc..9b588c6a6f099 100644
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
- 			plugin_next = plugin->next;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pc
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index d9f54c7d94f29..186e08a81b986 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -2734,7 +2734,9 @@ static int compat_tty_tiocgserial(struct tty_struct *tty,
+ 	struct serial_struct32 v32;
+ 	struct serial_struct v;
+ 	int err;
+-	memset(&v, 0, sizeof(struct serial_struct));
++
++	memset(&v, 0, sizeof(v));
++	memset(&v32, 0, sizeof(v32));
+ 
+ 	if (!tty->ops->set_serial)
+ 		return -ENOTTY;
 -- 
 2.20.1
 
