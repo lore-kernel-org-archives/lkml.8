@@ -2,323 +2,976 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBDEC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B925C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA8D2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:54:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DZV5q670"
+	by mail.kernel.org (Postfix) with ESMTP id 036CA20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbgCZLyo (ORCPT
+        id S1728209AbgCZLys (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:54:44 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:34383 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728119AbgCZLyo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:54:44 -0400
-X-UUID: d2b4618c332e4d5dbaed9ffeea95d2b0-20200326
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=s12A0zWwSPFwWWL3hA7SUCBHPhMCTxane52Og4gdNx4=;
-        b=DZV5q6701Z5tlZBX3aIj+NwrmPHB3/d4OOfg12lYyy7rGvgjI6u7+58RqVZaQnNq1s2Ev3SuKQCHbaab0RTLbuWeXZdXhp6z3qoaxg6TbE12S7reZaAkiZ9tUEnVCgNrBoVQQx8VMZEGHGm0/wleMnxEvWMpM1VjlBX8nNoFzZ4=;
-X-UUID: d2b4618c332e4d5dbaed9ffeea95d2b0-20200326
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <qii.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1929011097; Thu, 26 Mar 2020 19:54:36 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 26 Mar 2020 19:54:34 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 26 Mar 2020 19:54:33 +0800
-From:   <qii.wang@mediatek.com>
-To:     <wsa@the-dreams.de>
-CC:     <linux-i2c@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <leilk.liu@mediatek.com>,
-        <qii.wang@mediatek.com>
-Subject: [PATCH] i2c: mediatek: Add i2c ac-timing adjust support
-Date:   Thu, 26 Mar 2020 19:54:36 +0800
-Message-ID: <1585223676-30809-1-git-send-email-qii.wang@mediatek.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 26 Mar 2020 07:54:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35222 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728119AbgCZLyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:54:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id AF9C7ADDA;
+        Thu, 26 Mar 2020 11:54:43 +0000 (UTC)
+Subject: Re: [PATCH v12 4/5] soc / drm: mediatek: Move routing control to
+ mmsys device
+To:     CK Hu <ck.hu@mediatek.com>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        robh+dt@kernel.org, mark.rutland@arm.com, p.zabel@pengutronix.de,
+        airlied@linux.ie, mturquette@baylibre.com, sboyd@kernel.org,
+        ulrich.hecht+renesas@gmail.com, laurent.pinchart@ideasonboard.com,
+        Allison Randal <allison@lohutok.net>,
+        Matthias Brugger <matthias.bgg@gmail.com>, wens@csie.org,
+        linux-media@vger.kernel.org, sean.wang@mediatek.com,
+        hsinyi@chromium.org, rdunlap@infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        dri-devel@lists.freedesktop.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        linux-clk@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-kernel@lists.infradead.org, matthias.bgg@kernel.org,
+        Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
+        frank-w@public-files.de, devicetree@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
+        Richard Fontana <rfontana@redhat.com>
+References: <20200311165322.1594233-1-enric.balletbo@collabora.com>
+ <20200311165322.1594233-5-enric.balletbo@collabora.com>
+ <02290a21-7392-a2cf-576c-215091ec05e8@suse.com>
+ <1585177534.26117.4.camel@mtksdaap41>
+From:   Matthias Brugger <mbrugger@suse.com>
+Autocrypt: addr=mbrugger@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+ HxUCQ9Y1Y/Ct
+Message-ID: <f3c2926a-ef92-b004-9786-5be1645af497@suse.com>
+Date:   Thu, 26 Mar 2020 12:54:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <1585177534.26117.4.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogUWlpIFdhbmcgPHFpaS53YW5nQG1lZGlhdGVrLmNvbT4NCg0KVGhpcyBwYXRjaCBhZGRz
-IGEgYWxnb3JpdGhtIHRvIGNhbGN1bGF0ZSBzb21lIGFjLXRpbWluZyBwYXJhbWV0ZXJzDQp3aGlj
-aCBjYW4gZnVsbHkgbWVldCBJMkMgU3BlYy4NCg0KU2lnbmVkLW9mZi1ieTogUWlpIFdhbmcgPHFp
-aS53YW5nQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtbXQ2NXh4
-LmMgfCAzMzIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KIDEgZmls
-ZSBjaGFuZ2VkLCAyODEgaW5zZXJ0aW9ucygrKSwgNTEgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIGIvZHJpdmVycy9pMmMvYnVzc2Vz
-L2kyYy1tdDY1eHguYw0KaW5kZXggMjE1MmVjNWYuLjRkYTlhYWMgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQorKysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LW10NjV4eC5jDQpAQCAtNDAsMTIgKzQwLDExIEBADQogI2RlZmluZSBJMkNfU09GVF9SU1QJCQkw
-eDAwMDENCiAjZGVmaW5lIEkyQ19GSUZPX0FERFJfQ0xSCQkweDAwMDENCiAjZGVmaW5lIEkyQ19E
-RUxBWV9MRU4JCQkweDAwMDINCi0jZGVmaW5lIEkyQ19TVF9TVEFSVF9DT04JCTB4ODAwMQ0KLSNk
-ZWZpbmUgSTJDX0ZTX1NUQVJUX0NPTgkJMHgxODAwDQogI2RlZmluZSBJMkNfVElNRV9DTFJfVkFM
-VUUJCTB4MDAwMA0KICNkZWZpbmUgSTJDX1RJTUVfREVGQVVMVF9WQUxVRQkJMHgwMDAzDQogI2Rl
-ZmluZSBJMkNfV1JSRF9UUkFOQUNfVkFMVUUJCTB4MDAwMg0KICNkZWZpbmUgSTJDX1JEX1RSQU5B
-Q19WQUxVRQkJMHgwMDAxDQorI2RlZmluZSBJMkNfU0NMX01JU19DT01QX1ZBTFVFCQkweDAwMDAN
-CiANCiAjZGVmaW5lIEkyQ19ETUFfQ09OX1RYCQkJMHgwMDAwDQogI2RlZmluZSBJMkNfRE1BX0NP
-Tl9SWAkJCTB4MDAwMQ0KQEAgLTU1LDEzICs1NCwxNiBAQA0KICNkZWZpbmUgSTJDX0RNQV9IQVJE
-X1JTVAkJMHgwMDAyDQogI2RlZmluZSBJMkNfRE1BXzRHX01PREUJCQkweDAwMDENCiANCi0jZGVm
-aW5lIEkyQ19ERUZBVUxUX0NMS19ESVYJCTUNCiAjZGVmaW5lIEkyQ19ERUZBVUxUX1NQRUVECQkx
-MDAwMDAJLyogaHogKi8NCiAjZGVmaW5lIE1BWF9GU19NT0RFX1NQRUVECQk0MDAwMDANCiAjZGVm
-aW5lIE1BWF9IU19NT0RFX1NQRUVECQkzNDAwMDAwDQogI2RlZmluZSBNQVhfU0FNUExFX0NOVF9E
-SVYJCTgNCiAjZGVmaW5lIE1BWF9TVEVQX0NOVF9ESVYJCTY0DQorI2RlZmluZSBNQVhfQ0xPQ0tf
-RElWCQkJMjU2DQogI2RlZmluZSBNQVhfSFNfU1RFUF9DTlRfRElWCQk4DQorI2RlZmluZSBJMkNf
-U1RBTkRBUkRfTU9ERV9CVUZGRVIJKDEwMDAgLyAyKQ0KKyNkZWZpbmUgSTJDX0ZBU1RfTU9ERV9C
-VUZGRVIJCSgzMDAgLyAyKQ0KKyNkZWZpbmUgSTJDX0ZBU1RfTU9ERV9QTFVTX0JVRkZFUgkoMjAg
-LyAyKQ0KIA0KICNkZWZpbmUgSTJDX0NPTlRST0xfUlMgICAgICAgICAgICAgICAgICAoMHgxIDw8
-IDEpDQogI2RlZmluZSBJMkNfQ09OVFJPTF9ETUFfRU4gICAgICAgICAgICAgICgweDEgPDwgMikN
-CkBAIC0xMjYsNiArMTI4LDEyIEBAIGVudW0gSTJDX1JFR1NfT0ZGU0VUIHsNCiAJT0ZGU0VUX1RS
-QU5TRkVSX0xFTl9BVVgsDQogCU9GRlNFVF9DTE9DS19ESVYsDQogCU9GRlNFVF9MVElNSU5HLA0K
-KwlPRkZTRVRfU0NMX0hJR0hfTE9XX1JBVElPLA0KKwlPRkZTRVRfSFNfU0NMX0hJR0hfTE9XX1JB
-VElPLA0KKwlPRkZTRVRfU0NMX01JU19DT01QX1BPSU5ULA0KKwlPRkZTRVRfU1RBX1NUT19BQ19U
-SU1JTkcsDQorCU9GRlNFVF9IU19TVEFfU1RPX0FDX1RJTUlORywNCisJT0ZGU0VUX1NEQV9USU1J
-TkcsDQogfTsNCiANCiBzdGF0aWMgY29uc3QgdTE2IG10X2kyY19yZWdzX3YxW10gPSB7DQpAQCAt
-MTUzLDYgKzE2MSwxMiBAQCBlbnVtIEkyQ19SRUdTX09GRlNFVCB7DQogCVtPRkZTRVRfREVCVUdD
-VFJMXSA9IDB4NjgsDQogCVtPRkZTRVRfVFJBTlNGRVJfTEVOX0FVWF0gPSAweDZjLA0KIAlbT0ZG
-U0VUX0NMT0NLX0RJVl0gPSAweDcwLA0KKwlbT0ZGU0VUX1NDTF9ISUdIX0xPV19SQVRJT10gPSAw
-eDc0LA0KKwlbT0ZGU0VUX0hTX1NDTF9ISUdIX0xPV19SQVRJT10gPSAweDc4LA0KKwlbT0ZGU0VU
-X1NDTF9NSVNfQ09NUF9QT0lOVF0gPSAweDdDLA0KKwlbT0ZGU0VUX1NUQV9TVE9fQUNfVElNSU5H
-XSA9IDB4ODAsDQorCVtPRkZTRVRfSFNfU1RBX1NUT19BQ19USU1JTkddID0gMHg4NCwNCisJW09G
-RlNFVF9TREFfVElNSU5HXSA9IDB4ODgsDQogfTsNCiANCiBzdGF0aWMgY29uc3QgdTE2IG10X2ky
-Y19yZWdzX3YyW10gPSB7DQpAQCAtMTcxLDkgKzE4NSwxMSBAQCBlbnVtIEkyQ19SRUdTX09GRlNF
-VCB7DQogCVtPRkZTRVRfSFNdID0gMHgzMCwNCiAJW09GRlNFVF9JT19DT05GSUddID0gMHgzNCwN
-CiAJW09GRlNFVF9GSUZPX0FERFJfQ0xSXSA9IDB4MzgsDQorCVtPRkZTRVRfU0RBX1RJTUlOR10g
-PSAweDNjLA0KIAlbT0ZGU0VUX1RSQU5TRkVSX0xFTl9BVVhdID0gMHg0NCwNCiAJW09GRlNFVF9D
-TE9DS19ESVZdID0gMHg0OCwNCiAJW09GRlNFVF9TT0ZUUkVTRVRdID0gMHg1MCwNCisJW09GRlNF
-VF9TQ0xfTUlTX0NPTVBfUE9JTlRdID0gMHg5MCwNCiAJW09GRlNFVF9ERUJVR1NUQVRdID0gMHhl
-MCwNCiAJW09GRlNFVF9ERUJVR0NUUkxdID0gMHhlOCwNCiAJW09GRlNFVF9GSUZPX1NUQVRdID0g
-MHhmNCwNCkBAIC0xOTQsNiArMjEwLDE5IEBAIHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgew0K
-IAl1bnNpZ25lZCBjaGFyIGx0aW1pbmdfYWRqdXN0OiAxOw0KIH07DQogDQorc3RydWN0IG10a19p
-MmNfYWNfdGltaW5nIHsNCisJdTE2IGh0aW1pbmc7DQorCXUxNiBsdGltaW5nOw0KKwl1MTYgaHM7
-DQorCXUxNiBleHQ7DQorCXUxNiBpbnRlcl9jbGtfZGl2Ow0KKwl1MTYgc2NsX2hsX3JhdGlvOw0K
-Kwl1MTYgaHNfc2NsX2hsX3JhdGlvOw0KKwl1MTYgc3RhX3N0b3A7DQorCXUxNiBoc19zdGFfc3Rv
-cDsNCisJdTE2IHNkYV90aW1pbmc7DQorfTsNCisNCiBzdHJ1Y3QgbXRrX2kyYyB7DQogCXN0cnVj
-dCBpMmNfYWRhcHRlciBhZGFwOwkvKiBpMmMgaG9zdCBhZGFwdGVyICovDQogCXN0cnVjdCBkZXZp
-Y2UgKmRldjsNCkBAIC0yMTgsOSArMjQ3LDQ2IEBAIHN0cnVjdCBtdGtfaTJjIHsNCiAJdTE2IGx0
-aW1pbmdfcmVnOw0KIAl1bnNpZ25lZCBjaGFyIGF1dG9fcmVzdGFydDsNCiAJYm9vbCBpZ25vcmVf
-cmVzdGFydF9pcnE7DQorCXN0cnVjdCBtdGtfaTJjX2FjX3RpbWluZyBhY190aW1pbmc7DQogCWNv
-bnN0IHN0cnVjdCBtdGtfaTJjX2NvbXBhdGlibGUgKmRldl9jb21wOw0KIH07DQogDQorLyoqDQor
-ICogc3RydWN0IGkyY19zcGVjX3ZhbHVlczoNCisgKiBtaW5fbG93X25zOiBtaW4gTE9XIHBlcmlv
-ZCBvZiB0aGUgU0NMIGNsb2NrDQorICogbWluX3N1X3N0YV9uczogbWluIHNldC11cCB0aW1lIGZv
-ciBhIHJlcGVhdGVkIFNUQVJUIGNvbmRpdGlvbg0KKyAqIG1heF9oZF9kYXRfbnM6IG1heCBkYXRh
-IGhvbGQgdGltZQ0KKyAqIG1pbl9zdV9kYXRfbnM6IG1pbiBkYXRhIHNldC11cCB0aW1lDQorICov
-DQorc3RydWN0IGkyY19zcGVjX3ZhbHVlcyB7DQorCXVuc2lnbmVkIGludCBtaW5fbG93X25zOw0K
-Kwl1bnNpZ25lZCBpbnQgbWluX2hpZ2hfbnM7DQorCXVuc2lnbmVkIGludCBtaW5fc3Vfc3RhX25z
-Ow0KKwl1bnNpZ25lZCBpbnQgbWF4X2hkX2RhdF9uczsNCisJdW5zaWduZWQgaW50IG1pbl9zdV9k
-YXRfbnM7DQorfTsNCisNCitzdGF0aWMgY29uc3Qgc3RydWN0IGkyY19zcGVjX3ZhbHVlcyBzdGFu
-ZGFyZF9tb2RlX3NwZWMgPSB7DQorCS5taW5fbG93X25zID0gNDcwMCArIEkyQ19TVEFOREFSRF9N
-T0RFX0JVRkZFUiwNCisJLm1pbl9zdV9zdGFfbnMgPSA0NzAwICsgSTJDX1NUQU5EQVJEX01PREVf
-QlVGRkVSLA0KKwkubWF4X2hkX2RhdF9ucyA9IDM0NTAgLSBJMkNfU1RBTkRBUkRfTU9ERV9CVUZG
-RVIsDQorCS5taW5fc3VfZGF0X25zID0gMjUwICsgSTJDX1NUQU5EQVJEX01PREVfQlVGRkVSLA0K
-K307DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgZmFzdF9tb2RlX3Nw
-ZWMgPSB7DQorCS5taW5fbG93X25zID0gMTMwMCArIEkyQ19GQVNUX01PREVfQlVGRkVSLA0KKwku
-bWluX3N1X3N0YV9ucyA9IDYwMCArIEkyQ19GQVNUX01PREVfQlVGRkVSLA0KKwkubWF4X2hkX2Rh
-dF9ucyA9IDkwMCAtIEkyQ19GQVNUX01PREVfQlVGRkVSLA0KKwkubWluX3N1X2RhdF9ucyA9IDEw
-MCArIEkyQ19GQVNUX01PREVfQlVGRkVSLA0KK307DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBp
-MmNfc3BlY192YWx1ZXMgZmFzdF9tb2RlX3BsdXNfc3BlYyA9IHsNCisJLm1pbl9sb3dfbnMgPSA1
-MDAgKyBJMkNfRkFTVF9NT0RFX1BMVVNfQlVGRkVSLA0KKwkubWluX3N1X3N0YV9ucyA9IDI2MCAr
-IEkyQ19GQVNUX01PREVfUExVU19CVUZGRVIsDQorCS5tYXhfaGRfZGF0X25zID0gNDAwIC0gSTJD
-X0ZBU1RfTU9ERV9QTFVTX0JVRkZFUiwNCisJLm1pbl9zdV9kYXRfbnMgPSA1MCArIEkyQ19GQVNU
-X01PREVfUExVU19CVUZGRVIsDQorfTsNCisNCiBzdGF0aWMgY29uc3Qgc3RydWN0IGkyY19hZGFw
-dGVyX3F1aXJrcyBtdDY1NzdfaTJjX3F1aXJrcyA9IHsNCiAJLmZsYWdzID0gSTJDX0FRX0NPTUJf
-V1JJVEVfVEhFTl9SRUFELA0KIAkubWF4X251bV9tc2dzID0gMSwNCkBAIC00MDAsMTQgKzQ2Niwz
-OCBAQCBzdGF0aWMgdm9pZCBtdGtfaTJjX2luaXRfaHcoc3RydWN0IG10a19pMmMgKmkyYykNCiAJ
-aWYgKGkyYy0+ZGV2X2NvbXAtPmRjbSkNCiAJCW10a19pMmNfd3JpdGV3KGkyYywgSTJDX0RDTV9E
-SVNBQkxFLCBPRkZTRVRfRENNX0VOKTsNCiANCi0JaWYgKGkyYy0+ZGV2X2NvbXAtPnRpbWluZ19h
-ZGp1c3QpDQotCQltdGtfaTJjX3dyaXRldyhpMmMsIEkyQ19ERUZBVUxUX0NMS19ESVYgLSAxLCBP
-RkZTRVRfQ0xPQ0tfRElWKTsNCi0NCiAJbXRrX2kyY193cml0ZXcoaTJjLCBpMmMtPnRpbWluZ19y
-ZWcsIE9GRlNFVF9USU1JTkcpOw0KIAltdGtfaTJjX3dyaXRldyhpMmMsIGkyYy0+aGlnaF9zcGVl
-ZF9yZWcsIE9GRlNFVF9IUyk7DQogCWlmIChpMmMtPmRldl9jb21wLT5sdGltaW5nX2FkanVzdCkN
-CiAJCW10a19pMmNfd3JpdGV3KGkyYywgaTJjLT5sdGltaW5nX3JlZywgT0ZGU0VUX0xUSU1JTkcp
-Ow0KIA0KKwlpZiAoaTJjLT5kZXZfY29tcC0+dGltaW5nX2FkanVzdCkgew0KKwkJbXRrX2kyY193
-cml0ZXcoaTJjLCBpMmMtPmFjX3RpbWluZy5leHQsIE9GRlNFVF9FWFRfQ09ORik7DQorCQltdGtf
-aTJjX3dyaXRldyhpMmMsIGkyYy0+YWNfdGltaW5nLmludGVyX2Nsa19kaXYsDQorCQkJICAgICAg
-IE9GRlNFVF9DTE9DS19ESVYpOw0KKwkJbXRrX2kyY193cml0ZXcoaTJjLCBJMkNfU0NMX01JU19D
-T01QX1ZBTFVFLA0KKwkJCSAgICAgICBPRkZTRVRfU0NMX01JU19DT01QX1BPSU5UKTsNCisJCW10
-a19pMmNfd3JpdGV3KGkyYywgaTJjLT5hY190aW1pbmcuc2RhX3RpbWluZywNCisJCQkgICAgICAg
-T0ZGU0VUX1NEQV9USU1JTkcpOw0KKw0KKwkJaWYgKGkyYy0+ZGV2X2NvbXAtPmx0aW1pbmdfYWRq
-dXN0KSB7DQorCQkJbXRrX2kyY193cml0ZXcoaTJjLCBpMmMtPmFjX3RpbWluZy5odGltaW5nLA0K
-KwkJCQkgICAgICAgT0ZGU0VUX1RJTUlORyk7DQorCQkJbXRrX2kyY193cml0ZXcoaTJjLCBpMmMt
-PmFjX3RpbWluZy5ocywgT0ZGU0VUX0hTKTsNCisJCQltdGtfaTJjX3dyaXRldyhpMmMsIGkyYy0+
-YWNfdGltaW5nLmx0aW1pbmcsDQorCQkJCSAgICAgICBPRkZTRVRfTFRJTUlORyk7DQorCQl9IGVs
-c2Ugew0KKwkJCW10a19pMmNfd3JpdGV3KGkyYywgaTJjLT5hY190aW1pbmcuc2NsX2hsX3JhdGlv
-LA0KKwkJCQkgICAgICAgT0ZGU0VUX1NDTF9ISUdIX0xPV19SQVRJTyk7DQorCQkJbXRrX2kyY193
-cml0ZXcoaTJjLCBpMmMtPmFjX3RpbWluZy5oc19zY2xfaGxfcmF0aW8sDQorCQkJCSAgICAgICBP
-RkZTRVRfSFNfU0NMX0hJR0hfTE9XX1JBVElPKTsNCisJCQltdGtfaTJjX3dyaXRldyhpMmMsIGky
-Yy0+YWNfdGltaW5nLnN0YV9zdG9wLA0KKwkJCQkgICAgICAgT0ZGU0VUX1NUQV9TVE9fQUNfVElN
-SU5HKTsNCisJCQltdGtfaTJjX3dyaXRldyhpMmMsIGkyYy0+YWNfdGltaW5nLmhzX3N0YV9zdG9w
-LA0KKwkJCQkgICAgICAgT0ZGU0VUX0hTX1NUQV9TVE9fQUNfVElNSU5HKTsNCisJCX0NCisJfQ0K
-Kw0KIAkvKiBJZiB1c2UgaTJjIHBpbiBmcm9tIFBNSUMgbXQ2Mzk3IHNpZGUsIG5lZWQgc2V0IFBB
-VEhfRElSIGZpcnN0ICovDQogCWlmIChpMmMtPmhhdmVfcG1pYykNCiAJCW10a19pMmNfd3JpdGV3
-KGkyYywgSTJDX0NPTlRST0xfV1JBUFBFUiwgT0ZGU0VUX1BBVEhfRElSKTsNCkBAIC00MjUsNiAr
-NTE1LDEyOSBAQCBzdGF0aWMgdm9pZCBtdGtfaTJjX2luaXRfaHcoc3RydWN0IG10a19pMmMgKmky
-YykNCiAJd3JpdGVsKEkyQ19ETUFfQ0xSX0ZMQUcsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfUlNU
-KTsNCiB9DQogDQorc3RhdGljIGNvbnN0IHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgKm10a19pMmNf
-Z2V0X3NwZWModW5zaWduZWQgaW50IHNwZWVkKQ0KK3sNCisJaWYgKHNwZWVkIDw9IEkyQ19ERUZB
-VUxUX1NQRUVEKQ0KKwkJcmV0dXJuICZzdGFuZGFyZF9tb2RlX3NwZWM7DQorCWVsc2UgaWYgKHNw
-ZWVkIDw9IE1BWF9GU19NT0RFX1NQRUVEKQ0KKwkJcmV0dXJuICZmYXN0X21vZGVfc3BlYzsNCisJ
-ZWxzZQ0KKwkJcmV0dXJuICZmYXN0X21vZGVfcGx1c19zcGVjOw0KK30NCisNCitzdGF0aWMgaW50
-IG10a19pMmNfbWF4X3N0ZXBfY250KHVuc2lnbmVkIGludCB0YXJnZXRfc3BlZWQpDQorew0KKwlp
-ZiAodGFyZ2V0X3NwZWVkID4gTUFYX0ZTX01PREVfU1BFRUQpDQorCQlyZXR1cm4gTUFYX0hTX1NU
-RVBfQ05UX0RJVjsNCisJZWxzZQ0KKwkJcmV0dXJuIE1BWF9TVEVQX0NOVF9ESVY7DQorfQ0KKw0K
-Ky8qDQorICogQ2hlY2sgYW5kIENhbGN1bGF0ZSBpMmMgYWMtdGltaW5nDQorICoNCisgKiBIYXJk
-d2FyZSBkZXNpZ246DQorICogc2FtcGxlX25zID0gKDEwMDAwMDAwMDAgKiAoc2FtcGxlX2NudCAr
-IDEpKSAvIGNsa19zcmMNCisgKiB4eHhfY250X2RpdiA9ICBzcGVjLT5taW5feHh4X25zIC8gc2Ft
-cGxlX25zDQorICoNCisgKiBTYW1wbGVfbnMgaXMgcm91bmRlZCBkb3duIGZvciB4eHhfY250X2Rp
-diB3b3VsZCBiZSBncmVhdGVyDQorICogdGhhbiB0aGUgc21hbGxlc3Qgc3BlYy4NCisgKiBUaGUg
-c2RhX3RpbWluZyBpcyBjaG9zZW4gYXMgdGhlIG1pZGRsZSB2YWx1ZSBiZXR3ZWVuDQorICogdGhl
-IGxhcmdlc3QgYW5kIHNtYWxsZXN0Lg0KKyAqLw0KK3N0YXRpYyBpbnQgbXRrX2kyY19jaGVja19h
-Y190aW1pbmcoc3RydWN0IG10a19pMmMgKmkyYywNCisJCQkJICAgdW5zaWduZWQgaW50IGNsa19z
-cmMsDQorCQkJCSAgIHVuc2lnbmVkIGludCBjaGVja19zcGVlZCwNCisJCQkJICAgdW5zaWduZWQg
-aW50IHN0ZXBfY250LA0KKwkJCQkgICB1bnNpZ25lZCBpbnQgc2FtcGxlX2NudCkNCit7DQorCWNv
-bnN0IHN0cnVjdCBpMmNfc3BlY192YWx1ZXMgKnNwZWM7DQorCXVuc2lnbmVkIGludCBzdV9zdGFf
-Y250LCBsb3dfY250LCBoaWdoX2NudCwgbWF4X3N0ZXBfY250Ow0KKwl1bnNpZ25lZCBpbnQgc2Rh
-X21heCwgc2RhX21pbiwgY2xrX25zLCBtYXhfc3RhX2NudCA9IDB4M2Y7DQorCWxvbmcgbG9uZyBz
-YW1wbGVfbnMgPSAoMTAwMDAwMDAwMCAqIChzYW1wbGVfY250ICsgMSkpIC8gY2xrX3NyYzsNCisN
-CisJaWYgKCFpMmMtPmRldl9jb21wLT50aW1pbmdfYWRqdXN0KQ0KKwkJcmV0dXJuIDA7DQorDQor
-CWlmIChpMmMtPmRldl9jb21wLT5sdGltaW5nX2FkanVzdCkNCisJCW1heF9zdGFfY250ID0gMHgx
-MDA7DQorDQorCXNwZWMgPSBtdGtfaTJjX2dldF9zcGVjKGNoZWNrX3NwZWVkKTsNCisNCisJaWYg
-KGkyYy0+ZGV2X2NvbXAtPmx0aW1pbmdfYWRqdXN0KQ0KKwkJY2xrX25zID0gMTAwMDAwMDAwMCAv
-IGNsa19zcmM7DQorCWVsc2UNCisJCWNsa19ucyA9IHNhbXBsZV9ucyAvIDI7DQorDQorCXN1X3N0
-YV9jbnQgPSBESVZfUk9VTkRfVVAoc3BlYy0+bWluX3N1X3N0YV9ucywgY2xrX25zKTsNCisJaWYg
-KHN1X3N0YV9jbnQgPiBtYXhfc3RhX2NudCkNCisJCXJldHVybiAtMTsNCisNCisJbG93X2NudCA9
-IERJVl9ST1VORF9VUChzcGVjLT5taW5fbG93X25zLCBzYW1wbGVfbnMpOw0KKwltYXhfc3RlcF9j
-bnQgPSBtdGtfaTJjX21heF9zdGVwX2NudChjaGVja19zcGVlZCk7DQorCWlmICgoMiAqIHN0ZXBf
-Y250KSA+IGxvd19jbnQgJiYgbG93X2NudCA8IG1heF9zdGVwX2NudCkgew0KKwkJaWYgKGxvd19j
-bnQgPiBzdGVwX2NudCkgew0KKwkJCWhpZ2hfY250ID0gMiAqIHN0ZXBfY250IC0gbG93X2NudDsN
-CisJCX0gZWxzZSB7DQorCQkJaGlnaF9jbnQgPSBzdGVwX2NudDsNCisJCQlsb3dfY250ID0gc3Rl
-cF9jbnQ7DQorCQl9DQorCX0gZWxzZSB7DQorCQlyZXR1cm4gLTI7DQorCX0NCisNCisJc2RhX21h
-eCA9IHNwZWMtPm1heF9oZF9kYXRfbnMgLyBzYW1wbGVfbnM7DQorCWlmIChzZGFfbWF4IDwgbG93
-X2NudCkNCisJCXNkYV9tYXggPSBzZGFfbWF4Ow0KKwllbHNlDQorCQlzZGFfbWF4ID0gMDsNCisN
-CisJc2RhX21pbiA9IERJVl9ST1VORF9VUChzcGVjLT5taW5fc3VfZGF0X25zLCBzYW1wbGVfbnMp
-Ow0KKwlpZiAoc2RhX21pbiA+IGxvd19jbnQpDQorCQlzZGFfbWluID0gc2RhX21pbjsNCisJZWxz
-ZQ0KKwkJc2RhX21pbiA9IDA7DQorDQorCWlmIChzZGFfbWluID4gc2RhX21heCkNCisJCXJldHVy
-biAtMzsNCisNCisJaWYgKGNoZWNrX3NwZWVkID4gTUFYX0ZTX01PREVfU1BFRUQpIHsNCisJCWlm
-IChpMmMtPmRldl9jb21wLT5sdGltaW5nX2FkanVzdCkgew0KKwkJCWkyYy0+YWNfdGltaW5nLmhz
-ID0gSTJDX1RJTUVfREVGQVVMVF9WQUxVRSB8DQorCQkJCShzYW1wbGVfY250IDw8IDEyKSB8ICho
-aWdoX2NudCA8PCA4KTsNCisJCQlpMmMtPmFjX3RpbWluZy5sdGltaW5nICY9IH5HRU5NQVNLKDE1
-LCA5KTsNCisJCQlpMmMtPmFjX3RpbWluZy5sdGltaW5nIHw9IChzYW1wbGVfY250IDw8IDEyKSB8
-DQorCQkJCShsb3dfY250IDw8IDkpOw0KKwkJCWkyYy0+YWNfdGltaW5nLmV4dCAmPSB+R0VOTUFT
-Syg3LCAxKTsNCisJCQlpMmMtPmFjX3RpbWluZy5leHQgfD0gKHN1X3N0YV9jbnQgPDwgMSkgfCAo
-MSA8PCAwKTsNCisJCX0gZWxzZSB7DQorCQkJaTJjLT5hY190aW1pbmcuaHNfc2NsX2hsX3JhdGlv
-ID0gKDEgPDwgMTIpIHwNCisJCQkJKGhpZ2hfY250IDw8IDYpIHwgbG93X2NudDsNCisJCQlpMmMt
-PmFjX3RpbWluZy5oc19zdGFfc3RvcCA9IChzdV9zdGFfY250IDw8IDgpIHwNCisJCQkJc3Vfc3Rh
-X2NudDsNCisJCX0NCisJCWkyYy0+YWNfdGltaW5nLnNkYV90aW1pbmcgJj0gfkdFTk1BU0soMTEs
-IDYpOw0KKwkJaTJjLT5hY190aW1pbmcuc2RhX3RpbWluZyB8PSAoMSA8PCAxMikgfA0KKwkJCSgo
-c2RhX21heCArIHNkYV9taW4pIC8gMikgPDwgNjsNCisJfSBlbHNlIHsNCisJCWlmIChpMmMtPmRl
-dl9jb21wLT5sdGltaW5nX2FkanVzdCkgew0KKwkJCWkyYy0+YWNfdGltaW5nLmh0aW1pbmcgPSAo
-c2FtcGxlX2NudCA8PCA4KSB8IChoaWdoX2NudCk7DQorCQkJaTJjLT5hY190aW1pbmcubHRpbWlu
-ZyA9IChzYW1wbGVfY250IDw8IDYpIHwgKGxvd19jbnQpOw0KKwkJCWkyYy0+YWNfdGltaW5nLmV4
-dCA9IChzdV9zdGFfY250IDw8IDgpIHwgKDEgPDwgMCk7DQorCQl9IGVsc2Ugew0KKwkJCWkyYy0+
-YWNfdGltaW5nLnNjbF9obF9yYXRpbyA9ICgxIDw8IDEyKSB8DQorCQkJCShoaWdoX2NudCA8PCA2
-KSB8IGxvd19jbnQ7DQorCQkJaTJjLT5hY190aW1pbmcuc3RhX3N0b3AgPSAoc3Vfc3RhX2NudCA8
-PCA4KSB8DQorCQkJCXN1X3N0YV9jbnQ7DQorCQl9DQorDQorCQlpMmMtPmFjX3RpbWluZy5zZGFf
-dGltaW5nID0gKDEgPDwgMTIpIHwNCisJCQkoc2RhX21heCArIHNkYV9taW4pIC8gMjsNCisJfQ0K
-Kw0KKwlyZXR1cm4gMDsNCit9DQorDQogLyoNCiAgKiBDYWxjdWxhdGUgaTJjIHBvcnQgc3BlZWQN
-CiAgKg0KQEAgLTQ0OSwxNSArNjYyLDEyIEBAIHN0YXRpYyBpbnQgbXRrX2kyY19jYWxjdWxhdGVf
-c3BlZWQoc3RydWN0IG10a19pMmMgKmkyYywgdW5zaWduZWQgaW50IGNsa19zcmMsDQogCXVuc2ln
-bmVkIGludCBvcHRfZGl2Ow0KIAl1bnNpZ25lZCBpbnQgYmVzdF9tdWw7DQogCXVuc2lnbmVkIGlu
-dCBjbnRfbXVsOw0KKwlpbnQgcmV0ID0gLUVJTlZBTDsNCiANCiAJaWYgKHRhcmdldF9zcGVlZCA+
-IE1BWF9IU19NT0RFX1NQRUVEKQ0KIAkJdGFyZ2V0X3NwZWVkID0gTUFYX0hTX01PREVfU1BFRUQ7
-DQogDQotCWlmICh0YXJnZXRfc3BlZWQgPiBNQVhfRlNfTU9ERV9TUEVFRCkNCi0JCW1heF9zdGVw
-X2NudCA9IE1BWF9IU19TVEVQX0NOVF9ESVY7DQotCWVsc2UNCi0JCW1heF9zdGVwX2NudCA9IE1B
-WF9TVEVQX0NOVF9ESVY7DQotDQorCW1heF9zdGVwX2NudCA9IG10a19pMmNfbWF4X3N0ZXBfY250
-KHRhcmdldF9zcGVlZCk7DQogCWJhc2Vfc3RlcF9jbnQgPSBtYXhfc3RlcF9jbnQ7DQogCS8qIEZp
-bmQgdGhlIGJlc3QgY29tYmluYXRpb24gKi8NCiAJb3B0X2RpdiA9IERJVl9ST1VORF9VUChjbGtf
-c3JjID4+IDEsIHRhcmdldF9zcGVlZCk7DQpAQCAtNDc2LDYgKzY4NiwxMSBAQCBzdGF0aWMgaW50
-IG10a19pMmNfY2FsY3VsYXRlX3NwZWVkKHN0cnVjdCBtdGtfaTJjICppMmMsIHVuc2lnbmVkIGlu
-dCBjbGtfc3JjLA0KIAkJCWNvbnRpbnVlOw0KIA0KIAkJaWYgKGNudF9tdWwgPCBiZXN0X211bCkg
-ew0KKwkJCXJldCA9IG10a19pMmNfY2hlY2tfYWNfdGltaW5nKGkyYywgY2xrX3NyYywNCisJCQkJ
-dGFyZ2V0X3NwZWVkLCBzdGVwX2NudCAtIDEsIHNhbXBsZV9jbnQgLSAxKTsNCisJCQlpZiAocmV0
-KQ0KKwkJCQljb250aW51ZTsNCisNCiAJCQliZXN0X211bCA9IGNudF9tdWw7DQogCQkJYmFzZV9z
-YW1wbGVfY250ID0gc2FtcGxlX2NudDsNCiAJCQliYXNlX3N0ZXBfY250ID0gc3RlcF9jbnQ7DQpA
-QCAtNDg0LDYgKzY5OSw5IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19jYWxjdWxhdGVfc3BlZWQoc3Ry
-dWN0IG10a19pMmMgKmkyYywgdW5zaWduZWQgaW50IGNsa19zcmMsDQogCQl9DQogCX0NCiANCisJ
-aWYgKHJldCkNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KIAlzYW1wbGVfY250ID0gYmFzZV9zYW1w
-bGVfY250Ow0KIAlzdGVwX2NudCA9IGJhc2Vfc3RlcF9jbnQ7DQogDQpAQCAtNTA5LDQ3ICs3Mjcs
-NjggQEAgc3RhdGljIGludCBtdGtfaTJjX3NldF9zcGVlZChzdHJ1Y3QgbXRrX2kyYyAqaTJjLCB1
-bnNpZ25lZCBpbnQgcGFyZW50X2NsaykNCiAJdW5zaWduZWQgaW50IGxfc3RlcF9jbnQ7DQogCXVu
-c2lnbmVkIGludCBsX3NhbXBsZV9jbnQ7DQogCXVuc2lnbmVkIGludCB0YXJnZXRfc3BlZWQ7DQor
-CXVuc2lnbmVkIGludCBjbGtfZGl2Ow0KKwl1bnNpZ25lZCBpbnQgbWF4X2Nsa19kaXY7DQogCWlu
-dCByZXQ7DQogDQotCWNsa19zcmMgPSBwYXJlbnRfY2xrIC8gaTJjLT5jbGtfc3JjX2RpdjsNCiAJ
-dGFyZ2V0X3NwZWVkID0gaTJjLT5zcGVlZF9oejsNCisJcGFyZW50X2NsayAvPSBpMmMtPmNsa19z
-cmNfZGl2Ow0KIA0KLQlpZiAodGFyZ2V0X3NwZWVkID4gTUFYX0ZTX01PREVfU1BFRUQpIHsNCi0J
-CS8qIFNldCBtYXN0ZXIgY29kZSBzcGVlZCByZWdpc3RlciAqLw0KLQkJcmV0ID0gbXRrX2kyY19j
-YWxjdWxhdGVfc3BlZWQoaTJjLCBjbGtfc3JjLCBNQVhfRlNfTU9ERV9TUEVFRCwNCi0JCQkJCSAg
-ICAgICZsX3N0ZXBfY250LCAmbF9zYW1wbGVfY250KTsNCi0JCWlmIChyZXQgPCAwKQ0KLQkJCXJl
-dHVybiByZXQ7DQotDQotCQlpMmMtPnRpbWluZ19yZWcgPSAobF9zYW1wbGVfY250IDw8IDgpIHwg
-bF9zdGVwX2NudDsNCi0NCi0JCS8qIFNldCB0aGUgaGlnaCBzcGVlZCBtb2RlIHJlZ2lzdGVyICov
-DQotCQlyZXQgPSBtdGtfaTJjX2NhbGN1bGF0ZV9zcGVlZChpMmMsIGNsa19zcmMsIHRhcmdldF9z
-cGVlZCwNCi0JCQkJCSAgICAgICZzdGVwX2NudCwgJnNhbXBsZV9jbnQpOw0KLQkJaWYgKHJldCA8
-IDApDQotCQkJcmV0dXJuIHJldDsNCi0NCi0JCWkyYy0+aGlnaF9zcGVlZF9yZWcgPSBJMkNfVElN
-RV9ERUZBVUxUX1ZBTFVFIHwNCi0JCQkoc2FtcGxlX2NudCA8PCAxMikgfCAoc3RlcF9jbnQgPDwg
-OCk7DQorCWlmIChpMmMtPmRldl9jb21wLT50aW1pbmdfYWRqdXN0KQ0KKwkJbWF4X2Nsa19kaXYg
-PSBNQVhfQ0xPQ0tfRElWOw0KKwllbHNlDQorCQltYXhfY2xrX2RpdiA9IDE7DQorDQorCWZvciAo
-Y2xrX2RpdiA9IDE7IGNsa19kaXYgPD0gbWF4X2Nsa19kaXY7IGNsa19kaXYrKykgew0KKwkJY2xr
-X3NyYyA9IHBhcmVudF9jbGsgLyBjbGtfZGl2Ow0KKw0KKwkJaWYgKHRhcmdldF9zcGVlZCA+IE1B
-WF9GU19NT0RFX1NQRUVEKSB7DQorCQkJLyogU2V0IG1hc3RlciBjb2RlIHNwZWVkIHJlZ2lzdGVy
-ICovDQorCQkJcmV0ID0gbXRrX2kyY19jYWxjdWxhdGVfc3BlZWQoaTJjLCBjbGtfc3JjLA0KKwkJ
-CQkJCSAgICAgIE1BWF9GU19NT0RFX1NQRUVELA0KKwkJCQkJCSAgICAgICZsX3N0ZXBfY250LA0K
-KwkJCQkJCSAgICAgICZsX3NhbXBsZV9jbnQpOw0KKwkJCWlmIChyZXQgPCAwKQ0KKwkJCQljb250
-aW51ZTsNCisNCisJCQlpMmMtPnRpbWluZ19yZWcgPSAobF9zYW1wbGVfY250IDw8IDgpIHwgbF9z
-dGVwX2NudDsNCisNCisJCQkvKiBTZXQgdGhlIGhpZ2ggc3BlZWQgbW9kZSByZWdpc3RlciAqLw0K
-KwkJCXJldCA9IG10a19pMmNfY2FsY3VsYXRlX3NwZWVkKGkyYywgY2xrX3NyYywNCisJCQkJCQkg
-ICAgICB0YXJnZXRfc3BlZWQsICZzdGVwX2NudCwNCisJCQkJCQkgICAgICAmc2FtcGxlX2NudCk7
-DQorCQkJaWYgKHJldCA8IDApDQorCQkJCWNvbnRpbnVlOw0KKw0KKwkJCWkyYy0+aGlnaF9zcGVl
-ZF9yZWcgPSBJMkNfVElNRV9ERUZBVUxUX1ZBTFVFIHwNCisJCQkJCShzYW1wbGVfY250IDw8IDEy
-KSB8IChzdGVwX2NudCA8PCA4KTsNCisNCisJCQlpZiAoaTJjLT5kZXZfY29tcC0+bHRpbWluZ19h
-ZGp1c3QpDQorCQkJCWkyYy0+bHRpbWluZ19yZWcgPQ0KKwkJCQkJKGxfc2FtcGxlX2NudCA8PCA2
-KSB8IGxfc3RlcF9jbnQgfA0KKwkJCQkJKHNhbXBsZV9jbnQgPDwgMTIpIHwgKHN0ZXBfY250IDw8
-IDkpOw0KKwkJfSBlbHNlIHsNCisJCQlyZXQgPSBtdGtfaTJjX2NhbGN1bGF0ZV9zcGVlZChpMmMs
-IGNsa19zcmMsDQorCQkJCQkJICAgICAgdGFyZ2V0X3NwZWVkLCAmbF9zdGVwX2NudCwNCisJCQkJ
-CQkgICAgICAmbF9zYW1wbGVfY250KTsNCisJCQlpZiAocmV0IDwgMCkNCisJCQkJY29udGludWU7
-DQogDQotCQlpZiAoaTJjLT5kZXZfY29tcC0+bHRpbWluZ19hZGp1c3QpDQotCQkJaTJjLT5sdGlt
-aW5nX3JlZyA9IChsX3NhbXBsZV9jbnQgPDwgNikgfCBsX3N0ZXBfY250IHwNCi0JCQkJCSAgIChz
-YW1wbGVfY250IDw8IDEyKSB8IChzdGVwX2NudCA8PCA5KTsNCi0JfSBlbHNlIHsNCi0JCXJldCA9
-IG10a19pMmNfY2FsY3VsYXRlX3NwZWVkKGkyYywgY2xrX3NyYywgdGFyZ2V0X3NwZWVkLA0KLQkJ
-CQkJICAgICAgJnN0ZXBfY250LCAmc2FtcGxlX2NudCk7DQotCQlpZiAocmV0IDwgMCkNCi0JCQly
-ZXR1cm4gcmV0Ow0KKwkJCWkyYy0+dGltaW5nX3JlZyA9IChsX3NhbXBsZV9jbnQgPDwgOCkgfCBs
-X3N0ZXBfY250Ow0KIA0KLQkJaTJjLT50aW1pbmdfcmVnID0gKHNhbXBsZV9jbnQgPDwgOCkgfCBz
-dGVwX2NudDsNCisJCQkvKiBEaXNhYmxlIHRoZSBoaWdoIHNwZWVkIHRyYW5zYWN0aW9uICovDQor
-CQkJaTJjLT5oaWdoX3NwZWVkX3JlZyA9IEkyQ19USU1FX0NMUl9WQUxVRTsNCiANCi0JCS8qIERp
-c2FibGUgdGhlIGhpZ2ggc3BlZWQgdHJhbnNhY3Rpb24gKi8NCi0JCWkyYy0+aGlnaF9zcGVlZF9y
-ZWcgPSBJMkNfVElNRV9DTFJfVkFMVUU7DQorCQkJaWYgKGkyYy0+ZGV2X2NvbXAtPmx0aW1pbmdf
-YWRqdXN0KQ0KKwkJCQlpMmMtPmx0aW1pbmdfcmVnID0NCisJCQkJCShsX3NhbXBsZV9jbnQgPDwg
-NikgfCBsX3N0ZXBfY250Ow0KKwkJfQ0KIA0KLQkJaWYgKGkyYy0+ZGV2X2NvbXAtPmx0aW1pbmdf
-YWRqdXN0KQ0KLQkJCWkyYy0+bHRpbWluZ19yZWcgPSAoc2FtcGxlX2NudCA8PCA2KSB8IHN0ZXBf
-Y250Ow0KKwkJYnJlYWs7DQogCX0NCiANCisJaTJjLT5hY190aW1pbmcuaW50ZXJfY2xrX2RpdiA9
-IGNsa19kaXYgLSAxOw0KKw0KIAlyZXR1cm4gMDsNCiB9DQogDQpAQCAtNTg5LDEyICs4MjgsNiBA
-QCBzdGF0aWMgaW50IG10a19pMmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMgKmkyYywgc3Ry
-dWN0IGkyY19tc2cgKm1zZ3MsDQogDQogCW10a19pMmNfd3JpdGV3KGkyYywgY29udHJvbF9yZWcs
-IE9GRlNFVF9DT05UUk9MKTsNCiANCi0JLyogc2V0IHN0YXJ0IGNvbmRpdGlvbiAqLw0KLQlpZiAo
-aTJjLT5zcGVlZF9oeiA8PSBJMkNfREVGQVVMVF9TUEVFRCkNCi0JCW10a19pMmNfd3JpdGV3KGky
-YywgSTJDX1NUX1NUQVJUX0NPTiwgT0ZGU0VUX0VYVF9DT05GKTsNCi0JZWxzZQ0KLQkJbXRrX2ky
-Y193cml0ZXcoaTJjLCBJMkNfRlNfU1RBUlRfQ09OLCBPRkZTRVRfRVhUX0NPTkYpOw0KLQ0KIAlh
-ZGRyX3JlZyA9IGkyY184Yml0X2FkZHJfZnJvbV9tc2cobXNncyk7DQogCW10a19pMmNfd3JpdGV3
-KGkyYywgYWRkcl9yZWcsIE9GRlNFVF9TTEFWRV9BRERSKTsNCiANCkBAIC05NTEsOSArMTE4NCw2
-IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KQ0KIAlpZiAocmV0KQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogDQotCWlmIChpMmMtPmRldl9jb21w
-LT50aW1pbmdfYWRqdXN0KQ0KLQkJaTJjLT5jbGtfc3JjX2RpdiAqPSBJMkNfREVGQVVMVF9DTEtf
-RElWOw0KLQ0KIAlpZiAoaTJjLT5oYXZlX3BtaWMgJiYgIWkyYy0+ZGV2X2NvbXAtPnBtaWNfaTJj
-KQ0KIAkJcmV0dXJuIC1FSU5WQUw7DQogDQotLSANCjEuOS4xDQo=
+Hi CK,
 
+On 26/03/2020 00:05, CK Hu wrote:
+> Hi, Matthias:
+> 
+> On Wed, 2020-03-25 at 17:16 +0100, Matthias Brugger wrote:
+>>
+>> On 11/03/2020 17:53, Enric Balletbo i Serra wrote:
+>>> Provide a mtk_mmsys_ddp_connect() and mtk_mmsys_disconnect() functions to
+>>> replace mtk_ddp_add_comp_to_path() and mtk_ddp_remove_comp_from_path().
+>>> Those functions will allow DRM driver and others to control the data
+>>> path routing.
+>>>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>> Reviewed-by: CK Hu <ck.hu@mediatek.com>
+>>> Acked-by: CK Hu <ck.hu@mediatek.com>
+>>
+>> This patch does not apply against v5.6-rc1.
+>> Please rebase as this is a quite big patch and it won't be easy to do that by hand.
+> 
+> I think this patch depends on [1] which has been acked by me and I have
+> not picked it. The simple way is that you pick [1] first and then pick
+> this series.
+> 
+> [1] 
+> https://patchwork.kernel.org/patch/11406227/
+> 
+
+You would need to provide a stable tag for me that I can merge into my tree. You
+can also try to merge my for-next [1] which has the newest version from Enric.
+If you see any merge conflict, then we have to do something about it :)
+
+Regards,
+Matthias
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/matthias.bgg/linux.git/log/?h=for-next
+
+> Regards,
+> CK
+> 
+>>
+>> Regards,
+>> Matthias
+>>
+>>> ---
+>>>
+>>> Changes in v12: None
+>>> Changes in v10:
+>>> - Select CONFIG_MTK_MMSYS (CK)
+>>> - Pass device pointer of mmsys device instead of config regs (CK)
+>>>
+>>> Changes in v9:
+>>> - Introduced a new patch to move routing control into mmsys driver.
+>>> - Removed the patch to use regmap as is not needed anymore.
+>>>
+>>> Changes in v8: None
+>>> Changes in v7: None
+>>>
+>>>  drivers/gpu/drm/mediatek/Kconfig        |   1 +
+>>>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |  19 +-
+>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 256 ----------------------
+>>>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |   7 -
+>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  |  14 +-
+>>>  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |   2 +-
+>>>  drivers/soc/mediatek/mtk-mmsys.c        | 279 ++++++++++++++++++++++++
+>>>  include/linux/soc/mediatek/mtk-mmsys.h  |  20 ++
+>>>  8 files changed, 316 insertions(+), 282 deletions(-)
+>>>  create mode 100644 include/linux/soc/mediatek/mtk-mmsys.h
+>>>
+>>> diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/mediatek/Kconfig
+>>> index fa5ffc4fe823..c420f5a3d33b 100644
+>>> --- a/drivers/gpu/drm/mediatek/Kconfig
+>>> +++ b/drivers/gpu/drm/mediatek/Kconfig
+>>> @@ -11,6 +11,7 @@ config DRM_MEDIATEK
+>>>  	select DRM_MIPI_DSI
+>>>  	select DRM_PANEL
+>>>  	select MEMORY
+>>> +	select MTK_MMSYS
+>>>  	select MTK_SMI
+>>>  	select VIDEOMODE_HELPERS
+>>>  	help
+>>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+>>> index 0e05683d7b53..579a5a5d4472 100644
+>>> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+>>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+>>> @@ -6,6 +6,7 @@
+>>>  #include <linux/clk.h>
+>>>  #include <linux/pm_runtime.h>
+>>>  #include <linux/soc/mediatek/mtk-cmdq.h>
+>>> +#include <linux/soc/mediatek/mtk-mmsys.h>
+>>>  
+>>>  #include <asm/barrier.h>
+>>>  #include <soc/mediatek/smi.h>
+>>> @@ -28,7 +29,7 @@
+>>>   * @enabled: records whether crtc_enable succeeded
+>>>   * @planes: array of 4 drm_plane structures, one for each overlay plane
+>>>   * @pending_planes: whether any plane has pending changes to be applied
+>>> - * @config_regs: memory mapped mmsys configuration register space
+>>> + * @mmsys_dev: pointer to the mmsys device for configuration registers
+>>>   * @mutex: handle to one of the ten disp_mutex streams
+>>>   * @ddp_comp_nr: number of components in ddp_comp
+>>>   * @ddp_comp: array of pointers the mtk_ddp_comp structures used by this crtc
+>>> @@ -50,7 +51,7 @@ struct mtk_drm_crtc {
+>>>  	u32				cmdq_event;
+>>>  #endif
+>>>  
+>>> -	void __iomem			*config_regs;
+>>> +	struct device			*mmsys_dev;
+>>>  	struct mtk_disp_mutex		*mutex;
+>>>  	unsigned int			ddp_comp_nr;
+>>>  	struct mtk_ddp_comp		**ddp_comp;
+>>> @@ -296,9 +297,9 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>>>  	}
+>>>  
+>>>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+>>> -		mtk_ddp_add_comp_to_path(mtk_crtc->config_regs,
+>>> -					 mtk_crtc->ddp_comp[i]->id,
+>>> -					 mtk_crtc->ddp_comp[i + 1]->id);
+>>> +		mtk_mmsys_ddp_connect(mtk_crtc->mmsys_dev,
+>>> +				      mtk_crtc->ddp_comp[i]->id,
+>>> +				      mtk_crtc->ddp_comp[i + 1]->id);
+>>>  		mtk_disp_mutex_add_comp(mtk_crtc->mutex,
+>>>  					mtk_crtc->ddp_comp[i]->id);
+>>>  	}
+>>> @@ -355,9 +356,9 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>>>  					   mtk_crtc->ddp_comp[i]->id);
+>>>  	mtk_disp_mutex_disable(mtk_crtc->mutex);
+>>>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+>>> -		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+>>> -					      mtk_crtc->ddp_comp[i]->id,
+>>> -					      mtk_crtc->ddp_comp[i + 1]->id);
+>>> +		mtk_mmsys_ddp_disconnect(mtk_crtc->mmsys_dev,
+>>> +					 mtk_crtc->ddp_comp[i]->id,
+>>> +					 mtk_crtc->ddp_comp[i + 1]->id);
+>>>  		mtk_disp_mutex_remove_comp(mtk_crtc->mutex,
+>>>  					   mtk_crtc->ddp_comp[i]->id);
+>>>  	}
+>>> @@ -761,7 +762,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>>>  	if (!mtk_crtc)
+>>>  		return -ENOMEM;
+>>>  
+>>> -	mtk_crtc->config_regs = priv->config_regs;
+>>> +	mtk_crtc->mmsys_dev = priv->mmsys_dev;
+>>>  	mtk_crtc->ddp_comp_nr = path_len;
+>>>  	mtk_crtc->ddp_comp = devm_kmalloc_array(dev, mtk_crtc->ddp_comp_nr,
+>>>  						sizeof(*mtk_crtc->ddp_comp),
+>>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+>>> index b885f60f474c..014c1bbe1df2 100644
+>>> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+>>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+>>> @@ -13,26 +13,6 @@
+>>>  #include "mtk_drm_ddp.h"
+>>>  #include "mtk_drm_ddp_comp.h"
+>>>  
+>>> -#define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN	0x040
+>>> -#define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN	0x044
+>>> -#define DISP_REG_CONFIG_DISP_OD_MOUT_EN		0x048
+>>> -#define DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN	0x04c
+>>> -#define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN	0x050
+>>> -#define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN	0x084
+>>> -#define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN	0x088
+>>> -#define DISP_REG_CONFIG_DSIE_SEL_IN		0x0a4
+>>> -#define DISP_REG_CONFIG_DSIO_SEL_IN		0x0a8
+>>> -#define DISP_REG_CONFIG_DPI_SEL_IN		0x0ac
+>>> -#define DISP_REG_CONFIG_DISP_RDMA2_SOUT		0x0b8
+>>> -#define DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN	0x0c4
+>>> -#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN	0x0c8
+>>> -#define DISP_REG_CONFIG_MMSYS_CG_CON0		0x100
+>>> -
+>>> -#define DISP_REG_CONFIG_DISP_OVL_MOUT_EN	0x030
+>>> -#define DISP_REG_CONFIG_OUT_SEL			0x04c
+>>> -#define DISP_REG_CONFIG_DSI_SEL			0x050
+>>> -#define DISP_REG_CONFIG_DPI_SEL			0x064
+>>> -
+>>>  #define MT2701_DISP_MUTEX0_MOD0			0x2c
+>>>  #define MT2701_DISP_MUTEX0_SOF0			0x30
+>>>  
+>>> @@ -94,48 +74,6 @@
+>>>  #define MUTEX_SOF_DSI2			5
+>>>  #define MUTEX_SOF_DSI3			6
+>>>  
+>>> -#define OVL0_MOUT_EN_COLOR0		0x1
+>>> -#define OD_MOUT_EN_RDMA0		0x1
+>>> -#define OD1_MOUT_EN_RDMA1		BIT(16)
+>>> -#define UFOE_MOUT_EN_DSI0		0x1
+>>> -#define COLOR0_SEL_IN_OVL0		0x1
+>>> -#define OVL1_MOUT_EN_COLOR1		0x1
+>>> -#define GAMMA_MOUT_EN_RDMA1		0x1
+>>> -#define RDMA0_SOUT_DPI0			0x2
+>>> -#define RDMA0_SOUT_DPI1			0x3
+>>> -#define RDMA0_SOUT_DSI1			0x1
+>>> -#define RDMA0_SOUT_DSI2			0x4
+>>> -#define RDMA0_SOUT_DSI3			0x5
+>>> -#define RDMA1_SOUT_DPI0			0x2
+>>> -#define RDMA1_SOUT_DPI1			0x3
+>>> -#define RDMA1_SOUT_DSI1			0x1
+>>> -#define RDMA1_SOUT_DSI2			0x4
+>>> -#define RDMA1_SOUT_DSI3			0x5
+>>> -#define RDMA2_SOUT_DPI0			0x2
+>>> -#define RDMA2_SOUT_DPI1			0x3
+>>> -#define RDMA2_SOUT_DSI1			0x1
+>>> -#define RDMA2_SOUT_DSI2			0x4
+>>> -#define RDMA2_SOUT_DSI3			0x5
+>>> -#define DPI0_SEL_IN_RDMA1		0x1
+>>> -#define DPI0_SEL_IN_RDMA2		0x3
+>>> -#define DPI1_SEL_IN_RDMA1		(0x1 << 8)
+>>> -#define DPI1_SEL_IN_RDMA2		(0x3 << 8)
+>>> -#define DSI0_SEL_IN_RDMA1		0x1
+>>> -#define DSI0_SEL_IN_RDMA2		0x4
+>>> -#define DSI1_SEL_IN_RDMA1		0x1
+>>> -#define DSI1_SEL_IN_RDMA2		0x4
+>>> -#define DSI2_SEL_IN_RDMA1		(0x1 << 16)
+>>> -#define DSI2_SEL_IN_RDMA2		(0x4 << 16)
+>>> -#define DSI3_SEL_IN_RDMA1		(0x1 << 16)
+>>> -#define DSI3_SEL_IN_RDMA2		(0x4 << 16)
+>>> -#define COLOR1_SEL_IN_OVL1		0x1
+>>> -
+>>> -#define OVL_MOUT_EN_RDMA		0x1
+>>> -#define BLS_TO_DSI_RDMA1_TO_DPI1	0x8
+>>> -#define BLS_TO_DPI_RDMA1_TO_DSI		0x2
+>>> -#define DSI_SEL_IN_BLS			0x0
+>>> -#define DPI_SEL_IN_BLS			0x0
+>>> -#define DSI_SEL_IN_RDMA			0x1
+>>>  
+>>>  struct mtk_disp_mutex {
+>>>  	int id;
+>>> @@ -246,200 +184,6 @@ static const struct mtk_ddp_data mt8173_ddp_driver_data = {
+>>>  	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>>>  };
+>>>  
+>>> -static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>>> -				    enum mtk_ddp_comp_id next,
+>>> -				    unsigned int *addr)
+>>> -{
+>>> -	unsigned int value;
+>>> -
+>>> -	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_OVL0_MOUT_EN;
+>>> -		value = OVL0_MOUT_EN_COLOR0;
+>>> -	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_RDMA0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
+>>> -		value = OVL_MOUT_EN_RDMA;
+>>> -	} else if (cur == DDP_COMPONENT_OD0 && next == DDP_COMPONENT_RDMA0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+>>> -		value = OD_MOUT_EN_RDMA0;
+>>> -	} else if (cur == DDP_COMPONENT_UFOE && next == DDP_COMPONENT_DSI0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_UFOE_MOUT_EN;
+>>> -		value = UFOE_MOUT_EN_DSI0;
+>>> -	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_OVL1_MOUT_EN;
+>>> -		value = OVL1_MOUT_EN_COLOR1;
+>>> -	} else if (cur == DDP_COMPONENT_GAMMA && next == DDP_COMPONENT_RDMA1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN;
+>>> -		value = GAMMA_MOUT_EN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+>>> -		value = OD1_MOUT_EN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> -		value = RDMA0_SOUT_DPI0;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> -		value = RDMA0_SOUT_DPI1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> -		value = RDMA0_SOUT_DSI1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> -		value = RDMA0_SOUT_DSI2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> -		value = RDMA0_SOUT_DSI3;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> -		value = RDMA1_SOUT_DSI1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> -		value = RDMA1_SOUT_DSI2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> -		value = RDMA1_SOUT_DSI3;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> -		value = RDMA1_SOUT_DPI0;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> -		value = RDMA1_SOUT_DPI1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> -		value = RDMA2_SOUT_DPI0;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> -		value = RDMA2_SOUT_DPI1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> -		value = RDMA2_SOUT_DSI1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> -		value = RDMA2_SOUT_DSI2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> -		value = RDMA2_SOUT_DSI3;
+>>> -	} else {
+>>> -		value = 0;
+>>> -	}
+>>> -
+>>> -	return value;
+>>> -}
+>>> -
+>>> -static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+>>> -				   enum mtk_ddp_comp_id next,
+>>> -				   unsigned int *addr)
+>>> -{
+>>> -	unsigned int value;
+>>> -
+>>> -	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_COLOR0_SEL_IN;
+>>> -		value = COLOR0_SEL_IN_OVL0;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+>>> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> -		value = DPI0_SEL_IN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+>>> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> -		value = DPI1_SEL_IN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+>>> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> -		value = DSI0_SEL_IN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+>>> -		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>>> -		value = DSI1_SEL_IN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+>>> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> -		value = DSI2_SEL_IN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+>>> -		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>>> -		value = DSI3_SEL_IN_RDMA1;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+>>> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> -		value = DPI0_SEL_IN_RDMA2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+>>> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> -		value = DPI1_SEL_IN_RDMA2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI0) {
+>>> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> -		value = DSI0_SEL_IN_RDMA2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+>>> -		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>>> -		value = DSI1_SEL_IN_RDMA2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+>>> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> -		value = DSI2_SEL_IN_RDMA2;
+>>> -	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+>>> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> -		value = DSI3_SEL_IN_RDMA2;
+>>> -	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
+>>> -		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
+>>> -		value = COLOR1_SEL_IN_OVL1;
+>>> -	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+>>> -		*addr = DISP_REG_CONFIG_DSI_SEL;
+>>> -		value = DSI_SEL_IN_BLS;
+>>> -	} else {
+>>> -		value = 0;
+>>> -	}
+>>> -
+>>> -	return value;
+>>> -}
+>>> -
+>>> -static void mtk_ddp_sout_sel(void __iomem *config_regs,
+>>> -			     enum mtk_ddp_comp_id cur,
+>>> -			     enum mtk_ddp_comp_id next)
+>>> -{
+>>> -	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+>>> -		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+>>> -			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+>>> -	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+>>> -		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+>>> -			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+>>> -		writel_relaxed(DSI_SEL_IN_RDMA,
+>>> -			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+>>> -		writel_relaxed(DPI_SEL_IN_BLS,
+>>> -			       config_regs + DISP_REG_CONFIG_DPI_SEL);
+>>> -	}
+>>> -}
+>>> -
+>>> -void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+>>> -			      enum mtk_ddp_comp_id cur,
+>>> -			      enum mtk_ddp_comp_id next)
+>>> -{
+>>> -	unsigned int addr, value, reg;
+>>> -
+>>> -	value = mtk_ddp_mout_en(cur, next, &addr);
+>>> -	if (value) {
+>>> -		reg = readl_relaxed(config_regs + addr) | value;
+>>> -		writel_relaxed(reg, config_regs + addr);
+>>> -	}
+>>> -
+>>> -	mtk_ddp_sout_sel(config_regs, cur, next);
+>>> -
+>>> -	value = mtk_ddp_sel_in(cur, next, &addr);
+>>> -	if (value) {
+>>> -		reg = readl_relaxed(config_regs + addr) | value;
+>>> -		writel_relaxed(reg, config_regs + addr);
+>>> -	}
+>>> -}
+>>> -
+>>> -void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
+>>> -				   enum mtk_ddp_comp_id cur,
+>>> -				   enum mtk_ddp_comp_id next)
+>>> -{
+>>> -	unsigned int addr, value, reg;
+>>> -
+>>> -	value = mtk_ddp_mout_en(cur, next, &addr);
+>>> -	if (value) {
+>>> -		reg = readl_relaxed(config_regs + addr) & ~value;
+>>> -		writel_relaxed(reg, config_regs + addr);
+>>> -	}
+>>> -
+>>> -	value = mtk_ddp_sel_in(cur, next, &addr);
+>>> -	if (value) {
+>>> -		reg = readl_relaxed(config_regs + addr) & ~value;
+>>> -		writel_relaxed(reg, config_regs + addr);
+>>> -	}
+>>> -}
+>>> -
+>>>  struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned int id)
+>>>  {
+>>>  	struct mtk_ddp *ddp = dev_get_drvdata(dev);
+>>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+>>> index 827be424a148..6b691a57be4a 100644
+>>> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+>>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+>>> @@ -12,13 +12,6 @@ struct regmap;
+>>>  struct device;
+>>>  struct mtk_disp_mutex;
+>>>  
+>>> -void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+>>> -			      enum mtk_ddp_comp_id cur,
+>>> -			      enum mtk_ddp_comp_id next);
+>>> -void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
+>>> -				   enum mtk_ddp_comp_id cur,
+>>> -				   enum mtk_ddp_comp_id next);
+>>> -
+>>>  struct mtk_disp_mutex *mtk_disp_mutex_get(struct device *dev, unsigned int id);
+>>>  int mtk_disp_mutex_prepare(struct mtk_disp_mutex *mutex);
+>>>  void mtk_disp_mutex_add_comp(struct mtk_disp_mutex *mutex,
+>>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+>>> index 8e2d3cb62ad5..208f9c5256ef 100644
+>>> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+>>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+>>> @@ -10,6 +10,7 @@
+>>>  #include <linux/of_address.h>
+>>>  #include <linux/of_platform.h>
+>>>  #include <linux/pm_runtime.h>
+>>> +#include <linux/soc/mediatek/mtk-mmsys.h>
+>>>  #include <linux/dma-mapping.h>
+>>>  
+>>>  #include <drm/drm_atomic.h>
+>>> @@ -425,7 +426,6 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>>>  {
+>>>  	struct device *dev = &pdev->dev;
+>>>  	struct mtk_drm_private *private;
+>>> -	struct resource *mem;
+>>>  	struct device_node *node;
+>>>  	struct component_match *match = NULL;
+>>>  	int ret;
+>>> @@ -436,14 +436,10 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>>>  		return -ENOMEM;
+>>>  
+>>>  	private->data = of_device_get_match_data(dev);
+>>> -
+>>> -	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> -	private->config_regs = devm_ioremap_resource(dev, mem);
+>>> -	if (IS_ERR(private->config_regs)) {
+>>> -		ret = PTR_ERR(private->config_regs);
+>>> -		dev_err(dev, "Failed to ioremap mmsys-config resource: %d\n",
+>>> -			ret);
+>>> -		return ret;
+>>> +	private->mmsys_dev = dev->parent;
+>>> +	if (!private->mmsys_dev) {
+>>> +		dev_err(dev, "Failed to get MMSYS device\n");
+>>> +		return -ENODEV;
+>>>  	}
+>>>  
+>>>  	/* Iterate over sibling DISP function blocks */
+>>> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+>>> index 17bc99b9f5d4..b5be63e53176 100644
+>>> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+>>> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+>>> @@ -39,7 +39,7 @@ struct mtk_drm_private {
+>>>  
+>>>  	struct device_node *mutex_node;
+>>>  	struct device *mutex_dev;
+>>> -	void __iomem *config_regs;
+>>> +	struct device *mmsys_dev;
+>>>  	struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
+>>>  	struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
+>>>  	const struct mtk_mmsys_driver_data *data;
+>>> diff --git a/drivers/soc/mediatek/mtk-mmsys.c b/drivers/soc/mediatek/mtk-mmsys.c
+>>> index dbdfedd302fa..4b286b525cd3 100644
+>>> --- a/drivers/soc/mediatek/mtk-mmsys.c
+>>> +++ b/drivers/soc/mediatek/mtk-mmsys.c
+>>> @@ -5,8 +5,76 @@
+>>>   */
+>>>  
+>>>  #include <linux/clk-provider.h>
+>>> +#include <linux/device.h>
+>>>  #include <linux/of_device.h>
+>>>  #include <linux/platform_device.h>
+>>> +#include <linux/soc/mediatek/mtk-mmsys.h>
+>>> +
+>>> +#include "../../gpu/drm/mediatek/mtk_drm_ddp.h"
+>>> +#include "../../gpu/drm/mediatek/mtk_drm_ddp_comp.h"
+>>> +
+>>> +#define DISP_REG_CONFIG_DISP_OVL0_MOUT_EN	0x040
+>>> +#define DISP_REG_CONFIG_DISP_OVL1_MOUT_EN	0x044
+>>> +#define DISP_REG_CONFIG_DISP_OD_MOUT_EN		0x048
+>>> +#define DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN	0x04c
+>>> +#define DISP_REG_CONFIG_DISP_UFOE_MOUT_EN	0x050
+>>> +#define DISP_REG_CONFIG_DISP_COLOR0_SEL_IN	0x084
+>>> +#define DISP_REG_CONFIG_DISP_COLOR1_SEL_IN	0x088
+>>> +#define DISP_REG_CONFIG_DSIE_SEL_IN		0x0a4
+>>> +#define DISP_REG_CONFIG_DSIO_SEL_IN		0x0a8
+>>> +#define DISP_REG_CONFIG_DPI_SEL_IN		0x0ac
+>>> +#define DISP_REG_CONFIG_DISP_RDMA2_SOUT		0x0b8
+>>> +#define DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN	0x0c4
+>>> +#define DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN	0x0c8
+>>> +#define DISP_REG_CONFIG_MMSYS_CG_CON0		0x100
+>>> +
+>>> +#define DISP_REG_CONFIG_DISP_OVL_MOUT_EN	0x030
+>>> +#define DISP_REG_CONFIG_OUT_SEL			0x04c
+>>> +#define DISP_REG_CONFIG_DSI_SEL			0x050
+>>> +#define DISP_REG_CONFIG_DPI_SEL			0x064
+>>> +
+>>> +#define OVL0_MOUT_EN_COLOR0			0x1
+>>> +#define OD_MOUT_EN_RDMA0			0x1
+>>> +#define OD1_MOUT_EN_RDMA1			BIT(16)
+>>> +#define UFOE_MOUT_EN_DSI0			0x1
+>>> +#define COLOR0_SEL_IN_OVL0			0x1
+>>> +#define OVL1_MOUT_EN_COLOR1			0x1
+>>> +#define GAMMA_MOUT_EN_RDMA1			0x1
+>>> +#define RDMA0_SOUT_DPI0				0x2
+>>> +#define RDMA0_SOUT_DPI1				0x3
+>>> +#define RDMA0_SOUT_DSI1				0x1
+>>> +#define RDMA0_SOUT_DSI2				0x4
+>>> +#define RDMA0_SOUT_DSI3				0x5
+>>> +#define RDMA1_SOUT_DPI0				0x2
+>>> +#define RDMA1_SOUT_DPI1				0x3
+>>> +#define RDMA1_SOUT_DSI1				0x1
+>>> +#define RDMA1_SOUT_DSI2				0x4
+>>> +#define RDMA1_SOUT_DSI3				0x5
+>>> +#define RDMA2_SOUT_DPI0				0x2
+>>> +#define RDMA2_SOUT_DPI1				0x3
+>>> +#define RDMA2_SOUT_DSI1				0x1
+>>> +#define RDMA2_SOUT_DSI2				0x4
+>>> +#define RDMA2_SOUT_DSI3				0x5
+>>> +#define DPI0_SEL_IN_RDMA1			0x1
+>>> +#define DPI0_SEL_IN_RDMA2			0x3
+>>> +#define DPI1_SEL_IN_RDMA1			(0x1 << 8)
+>>> +#define DPI1_SEL_IN_RDMA2			(0x3 << 8)
+>>> +#define DSI0_SEL_IN_RDMA1			0x1
+>>> +#define DSI0_SEL_IN_RDMA2			0x4
+>>> +#define DSI1_SEL_IN_RDMA1			0x1
+>>> +#define DSI1_SEL_IN_RDMA2			0x4
+>>> +#define DSI2_SEL_IN_RDMA1			(0x1 << 16)
+>>> +#define DSI2_SEL_IN_RDMA2			(0x4 << 16)
+>>> +#define DSI3_SEL_IN_RDMA1			(0x1 << 16)
+>>> +#define DSI3_SEL_IN_RDMA2			(0x4 << 16)
+>>> +#define COLOR1_SEL_IN_OVL1			0x1
+>>> +
+>>> +#define OVL_MOUT_EN_RDMA			0x1
+>>> +#define BLS_TO_DSI_RDMA1_TO_DPI1		0x8
+>>> +#define BLS_TO_DPI_RDMA1_TO_DSI			0x2
+>>> +#define DSI_SEL_IN_BLS				0x0
+>>> +#define DPI_SEL_IN_BLS				0x0
+>>> +#define DSI_SEL_IN_RDMA				0x1
+>>>  
+>>>  struct mtk_mmsys_driver_data {
+>>>  	const char *clk_driver;
+>>> @@ -16,10 +84,221 @@ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+>>>  	.clk_driver = "clk-mt8173-mm",
+>>>  };
+>>>  
+>>> +static unsigned int mtk_mmsys_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>>> +					  enum mtk_ddp_comp_id next,
+>>> +					  unsigned int *addr)
+>>> +{
+>>> +	unsigned int value;
+>>> +
+>>> +	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_OVL0_MOUT_EN;
+>>> +		value = OVL0_MOUT_EN_COLOR0;
+>>> +	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_RDMA0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
+>>> +		value = OVL_MOUT_EN_RDMA;
+>>> +	} else if (cur == DDP_COMPONENT_OD0 && next == DDP_COMPONENT_RDMA0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+>>> +		value = OD_MOUT_EN_RDMA0;
+>>> +	} else if (cur == DDP_COMPONENT_UFOE && next == DDP_COMPONENT_DSI0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_UFOE_MOUT_EN;
+>>> +		value = UFOE_MOUT_EN_DSI0;
+>>> +	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_OVL1_MOUT_EN;
+>>> +		value = OVL1_MOUT_EN_COLOR1;
+>>> +	} else if (cur == DDP_COMPONENT_GAMMA && next == DDP_COMPONENT_RDMA1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_GAMMA_MOUT_EN;
+>>> +		value = GAMMA_MOUT_EN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_OD1 && next == DDP_COMPONENT_RDMA1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+>>> +		value = OD1_MOUT_EN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> +		value = RDMA0_SOUT_DPI0;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DPI1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> +		value = RDMA0_SOUT_DPI1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> +		value = RDMA0_SOUT_DSI1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI2) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> +		value = RDMA0_SOUT_DSI2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA0 && next == DDP_COMPONENT_DSI3) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA0_SOUT_EN;
+>>> +		value = RDMA0_SOUT_DSI3;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> +		value = RDMA1_SOUT_DSI1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> +		value = RDMA1_SOUT_DSI2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> +		value = RDMA1_SOUT_DSI3;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> +		value = RDMA1_SOUT_DPI0;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>>> +		value = RDMA1_SOUT_DPI1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> +		value = RDMA2_SOUT_DPI0;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> +		value = RDMA2_SOUT_DPI1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> +		value = RDMA2_SOUT_DSI1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> +		value = RDMA2_SOUT_DSI2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_RDMA2_SOUT;
+>>> +		value = RDMA2_SOUT_DSI3;
+>>> +	} else {
+>>> +		value = 0;
+>>> +	}
+>>> +
+>>> +	return value;
+>>> +}
+>>> +
+>>> +static unsigned int mtk_mmsys_ddp_sel_in(enum mtk_ddp_comp_id cur,
+>>> +					 enum mtk_ddp_comp_id next,
+>>> +					 unsigned int *addr)
+>>> +{
+>>> +	unsigned int value;
+>>> +
+>>> +	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_COLOR0_SEL_IN;
+>>> +		value = COLOR0_SEL_IN_OVL0;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+>>> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> +		value = DPI0_SEL_IN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+>>> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> +		value = DPI1_SEL_IN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+>>> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> +		value = DSI0_SEL_IN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+>>> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>>> +		value = DSI1_SEL_IN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI2) {
+>>> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> +		value = DSI2_SEL_IN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI3) {
+>>> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>>> +		value = DSI3_SEL_IN_RDMA1;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI0) {
+>>> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> +		value = DPI0_SEL_IN_RDMA2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DPI1) {
+>>> +		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>>> +		value = DPI1_SEL_IN_RDMA2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI0) {
+>>> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> +		value = DSI0_SEL_IN_RDMA2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI1) {
+>>> +		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>>> +		value = DSI1_SEL_IN_RDMA2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI2) {
+>>> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> +		value = DSI2_SEL_IN_RDMA2;
+>>> +	} else if (cur == DDP_COMPONENT_RDMA2 && next == DDP_COMPONENT_DSI3) {
+>>> +		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+>>> +		value = DSI3_SEL_IN_RDMA2;
+>>> +	} else if (cur == DDP_COMPONENT_OVL1 && next == DDP_COMPONENT_COLOR1) {
+>>> +		*addr = DISP_REG_CONFIG_DISP_COLOR1_SEL_IN;
+>>> +		value = COLOR1_SEL_IN_OVL1;
+>>> +	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+>>> +		*addr = DISP_REG_CONFIG_DSI_SEL;
+>>> +		value = DSI_SEL_IN_BLS;
+>>> +	} else {
+>>> +		value = 0;
+>>> +	}
+>>> +
+>>> +	return value;
+>>> +}
+>>> +
+>>> +static void mtk_mmsys_ddp_sout_sel(void __iomem *config_regs,
+>>> +				   enum mtk_ddp_comp_id cur,
+>>> +				   enum mtk_ddp_comp_id next)
+>>> +{
+>>> +	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+>>> +		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+>>> +			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+>>> +	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+>>> +		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+>>> +			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+>>> +		writel_relaxed(DSI_SEL_IN_RDMA,
+>>> +			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+>>> +		writel_relaxed(DPI_SEL_IN_BLS,
+>>> +			       config_regs + DISP_REG_CONFIG_DPI_SEL);
+>>> +	}
+>>> +}
+>>> +
+>>> +void mtk_mmsys_ddp_connect(struct device *dev,
+>>> +			   enum mtk_ddp_comp_id cur,
+>>> +			   enum mtk_ddp_comp_id next)
+>>> +{
+>>> +	void __iomem *config_regs = dev_get_drvdata(dev);
+>>> +	unsigned int addr, value, reg;
+>>> +
+>>> +	value = mtk_mmsys_ddp_mout_en(cur, next, &addr);
+>>> +	if (value) {
+>>> +		reg = readl_relaxed(config_regs + addr) | value;
+>>> +		writel_relaxed(reg, config_regs + addr);
+>>> +	}
+>>> +
+>>> +	mtk_mmsys_ddp_sout_sel(config_regs, cur, next);
+>>> +
+>>> +	value = mtk_mmsys_ddp_sel_in(cur, next, &addr);
+>>> +	if (value) {
+>>> +		reg = readl_relaxed(config_regs + addr) | value;
+>>> +		writel_relaxed(reg, config_regs + addr);
+>>> +	}
+>>> +}
+>>> +
+>>> +void mtk_mmsys_ddp_disconnect(struct device *dev,
+>>> +			      enum mtk_ddp_comp_id cur,
+>>> +			      enum mtk_ddp_comp_id next)
+>>> +{
+>>> +	void __iomem *config_regs = dev_get_drvdata(dev);
+>>> +	unsigned int addr, value, reg;
+>>> +
+>>> +	value = mtk_mmsys_ddp_mout_en(cur, next, &addr);
+>>> +	if (value) {
+>>> +		reg = readl_relaxed(config_regs + addr) & ~value;
+>>> +		writel_relaxed(reg, config_regs + addr);
+>>> +	}
+>>> +
+>>> +	value = mtk_mmsys_ddp_sel_in(cur, next, &addr);
+>>> +	if (value) {
+>>> +		reg = readl_relaxed(config_regs + addr) & ~value;
+>>> +		writel_relaxed(reg, config_regs + addr);
+>>> +	}
+>>> +}
+>>> +
+>>>  static int mtk_mmsys_probe(struct platform_device *pdev)
+>>>  {
+>>>  	const struct mtk_mmsys_driver_data *data;
+>>> +	struct device *dev = &pdev->dev;
+>>>  	struct platform_device *clks;
+>>> +	void __iomem *config_regs;
+>>> +	struct resource *mem;
+>>> +	int ret;
+>>> +
+>>> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +	config_regs = devm_ioremap_resource(dev, mem);
+>>> +	if (IS_ERR(config_regs)) {
+>>> +		ret = PTR_ERR(config_regs);
+>>> +		dev_err(dev, "Failed to ioremap mmsys-config resource: %d\n",
+>>> +			ret);
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	platform_set_drvdata(pdev, config_regs);
+>>>  
+>>>  	data = of_device_get_match_data(&pdev->dev);
+>>>  
+>>> diff --git a/include/linux/soc/mediatek/mtk-mmsys.h b/include/linux/soc/mediatek/mtk-mmsys.h
+>>> new file mode 100644
+>>> index 000000000000..7bab5d9a3d31
+>>> --- /dev/null
+>>> +++ b/include/linux/soc/mediatek/mtk-mmsys.h
+>>> @@ -0,0 +1,20 @@
+>>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>>> +/*
+>>> + * Copyright (c) 2015 MediaTek Inc.
+>>> + */
+>>> +
+>>> +#ifndef __MTK_MMSYS_H
+>>> +#define __MTK_MMSYS_H
+>>> +
+>>> +enum mtk_ddp_comp_id;
+>>> +struct device;
+>>> +
+>>> +void mtk_mmsys_ddp_connect(struct device *dev,
+>>> +			   enum mtk_ddp_comp_id cur,
+>>> +			   enum mtk_ddp_comp_id next);
+>>> +
+>>> +void mtk_mmsys_ddp_disconnect(struct device *dev,
+>>> +			      enum mtk_ddp_comp_id cur,
+>>> +			      enum mtk_ddp_comp_id next);
+>>> +
+>>> +#endif /* __MTK_MMSYS_H */
+>>>
+> 
