@@ -2,168 +2,157 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19EFFC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87564C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E408B20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:19:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B34E20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgCZRTU (ORCPT
+        id S1728271AbgCZRUA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:19:20 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:33102 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZRTT (ORCPT
+        Thu, 26 Mar 2020 13:20:00 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:33487 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgCZRUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:19:19 -0400
-Received: by mail-io1-f72.google.com with SMTP id w25so5897784iom.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:19:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=89AASuIsuhq2TDnjrU3eDHxKk/9xmva/NohKkxqdSAA=;
-        b=U6ZaXiZozEHC3Th/WP3aCaEVuSLQBBjDwCXdUioDRNko5hlMHu6XuLDi986l48wa83
-         YehOekaHyRxWBtUyc7jlLt70ndVtU4l8/gLi1bD5m4kkmeXSM3QcJupURezMXGSEl+2S
-         5VmQsrLHABHBdVSanqnA4fyIPX63tfpjdq0eU3Ixg+vEAu1S3gdCy4vMHPyAcf1WRHL7
-         bAp75N+cbJ5P3thMnj1Aev/lCVoIBpq9nsi/s+oph5MUu2rAg5/NTlOLu/6U7rKS5pBM
-         5Qxqq2tG08H0qrOoR5g43NUKEzEODBsOY6gjqmNz905udVxfHMRNGrmlpjv+9elyq+4J
-         +nPw==
-X-Gm-Message-State: ANhLgQ2tEs65uVDdJbsmz0md0gGupGRaQwRRs1WatYe0uzVlyY0Tzc5L
-        uYyOc8DqBXfjXHXTD1Tses+of/8dGnwu323Wk7rlX44LGTGO
-X-Google-Smtp-Source: ADFU+vtgCXMrV1x/q2M3+wuvcIE1En+W91TuXhXYhJ2UHktcg8B/cDWeG3d/eunelo+KoKiVVOL84bsHeOR9XFS3l5pv3/hObVKD
+        Thu, 26 Mar 2020 13:20:00 -0400
+Received: from [192.168.1.183] ([37.4.249.171]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1N0o3X-1jThV40qCT-00wjRV; Thu, 26 Mar 2020 18:19:43 +0100
+Subject: Re: [PATCH] drm/vc4: Fix HDMI mode validation
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     maxime@cerno.tech, linux-rpi-kernel@lists.infradead.org,
+        f.fainelli@gmail.com,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ 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 AQ==
+Message-ID: <c4b3e083-ac6e-b321-f0eb-f20e8ec3b1a6@i2se.com>
+Date:   Thu, 26 Mar 2020 18:19:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:dcc6:: with SMTP id b6mr7549715ilr.113.1585243156443;
- Thu, 26 Mar 2020 10:19:16 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 10:19:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000038f92e05a1c52f43@google.com>
-Subject: KMSAN: kernel-infoleak in copyout (2)
-From:   syzbot <syzbot+fa5414772d5c445dac3c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, edumazet@google.com, glider@google.com,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        pabeni@redhat.com, syzkaller-bugs@googlegroups.com,
-        yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200326122001.22215-1-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:jxnsSan8U4WMipWwpPaGVAHUJ/Z1BIbGoVGlGnqpqaUvFljgSv2
+ kGamaUmPk0oVqFBAC5FWBAhgzpBGv3qAS9HFUTDqXsb2YhhQzcucoT7yXG40Fzc7iOK0nnM
+ 8W3eMtNuFVBMiVXlEfI6uahaZOH3RqNsrorwXTwdSVpXZ7Jow8CDhF1u7Uotr5KpHJabAuL
+ 2K03A304nne3QpyJfv2TQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uRiD4JPgA9Y=:R52O4wtjVVuCv5/m/UActh
+ k7q2ucmvdo39XzRPK8M+Ua3dLBnpJyy2+iBVnB5xw3/sKS/VYiDQQCMZus2OImTvnV5chgYR9
+ SNTPV5vikNWw1Vqc7co2jRfoaFBl+BMQuqj51lHrFUzZCTuOUSOyh9fgHnnSKdjRRw77oPlhQ
+ Ljq6Wt9ZZ8ca1XTPoTQq/3Eg3KWtrdW5U8hUaRYmelHj9HVcG2Ug1vOXvkI5aRi484upEny3P
+ 0iJ6QHZWL5hmPuiCLy6YL0IRay+NEdMSuBDUys+0OKmAm9xyG+U27rhX91zcM7jnqx6RDvR52
+ F6cwUO1lKRezhSJ7mc6/Vm3d3qt7S2uzXCqES8q9k+Xrmdn4AHIW5yindbDtL9dfQSZR685wt
+ 9AnbRcRWw5JHav/YZJOWWEiRWb0MCL4qNg66Fv2TbxtUevLegjn8MSHARX4D0/LGLasXeHC13
+ HjEh2n4ClCZ5knu2bGDmwVXw9yfHmnZqCavAXRgIup+G7MePEgqwIEEqPv2MpJk9KjmcW6cfV
+ A85VPbgr5F6FBc8RvN9EtBFStQcFbEOnaBCs+rSzv4d+VaqYdrBDwJd6GTuEEtlgY/nbW8PKt
+ zE+vLT4YidsGNzjWj9lheX2+DsXqyAp5dZjdQBU+cr/UZOQJdypbgP7Gi6lDYnkprLJwWbwma
+ p35fk4SZL9l/altcl9WkMuLAqQ1dH5JOFeq4DEiARHGBdTq7EjGiyqqwXqRIfC3vaVS/O9E7N
+ 1FCOBViimkUr8OKtS2uMDRlqgQM9iYUJ1BUGvGuW/Ta9YugCaEptqKVgHGnh0yEltXBsD02Li
+ VOKw23obX3U7emk+lCLL0SAIiX0lmcqJ78PvvZCXSu6Ex9ywJPcEt/Pq/FObLYpbbbrpI73
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Am 26.03.20 um 13:20 schrieb Nicolas Saenz Julienne:
+> Current mode validation impedes setting up some video modes which should
+> be supported otherwise. Namely 1920x1200@60Hz.
+>
+> Fix this by lowering the minimum HDMI state machine clock to pixel clock
+> ratio allowed.
+>
+> Fixes: 32e823c63e90 ("drm/vc4: Reject HDMI modes with too high of clocks")
+> Reported-by: Stefan Wahren <stefan.wahren@i2se.com>
+> Suggested-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  drivers/gpu/drm/vc4/vc4_hdmi.c | 20 ++++++++++++++++----
+>  1 file changed, 16 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> index cea18dc15f77..340719238753 100644
+> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> @@ -681,11 +681,23 @@ static enum drm_mode_status
+>  vc4_hdmi_encoder_mode_valid(struct drm_encoder *crtc,
+>  			    const struct drm_display_mode *mode)
+>  {
+> -	/* HSM clock must be 108% of the pixel clock.  Additionally,
+> -	 * the AXI clock needs to be at least 25% of pixel clock, but
+> -	 * HSM ends up being the limiting factor.
+> +	/*
+> +	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
+> +	 * be faster than pixel clock, infinitesimally faster, tested in
+> +	 * simulation. Otherwise, exact value is unimportant for HDMI
+> +	 * operation." This conflicts with bcm2835's vc4 documentation, which
+> +	 * states HSM's clock has to be at least 108% of the pixel clock.
+> +	 *
+> +	 * Real life tests reveal that vc4's firmware statement holds up, and
+> +	 * users are able to use pixel clocks closer to HSM's, namely for
+> +	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
+> +	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
 
-syzbot found the following crash on:
+s/RPi0-3/bcm2835/ ?
 
-HEAD commit:    686a4f77 kmsan: don't compile memmove
-git tree:       https://github.com/google/kmsan.git master
-console output: https://syzkaller.appspot.com/x/log.txt?x=13235a31e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e10654781bc1f11c
-dashboard link: https://syzkaller.appspot.com/bug?extid=fa5414772d5c445dac3c
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164789e9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1014a229e00000
+Beside this nit:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+fa5414772d5c445dac3c@syzkaller.appspotmail.com
+Tested-by: Stefan Wahren <stefan.wahre@i2se.com>
 
-=====================================================
-BUG: KMSAN: kernel-infoleak in kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
-CPU: 1 PID: 11522 Comm: syz-executor835 Not tainted 5.5.0-rc5-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1c9/0x220 lib/dump_stack.c:118
- kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
- kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
- kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
- copyout+0x15a/0x1e0 lib/iov_iter.c:145
- _copy_to_iter+0x34e/0x2420 lib/iov_iter.c:633
- copy_to_iter include/linux/uio.h:138 [inline]
- simple_copy_to_iter+0xd7/0x130 net/core/datagram.c:515
- __skb_datagram_iter+0x25f/0xfc0 net/core/datagram.c:423
- skb_copy_datagram_iter+0x292/0x2b0 net/core/datagram.c:529
- tun_put_user drivers/net/tun.c:2144 [inline]
- tun_do_read+0x2471/0x2df0 drivers/net/tun.c:2228
- tun_chr_read_iter+0x229/0x460 drivers/net/tun.c:2247
- call_read_iter include/linux/fs.h:1896 [inline]
- new_sync_read fs/read_write.c:414 [inline]
- __vfs_read+0xa64/0xc80 fs/read_write.c:427
- vfs_read+0x346/0x6a0 fs/read_write.c:461
- ksys_read+0x267/0x450 fs/read_write.c:587
- __do_sys_read fs/read_write.c:597 [inline]
- __se_sys_read+0x92/0xb0 fs/read_write.c:595
- __x64_sys_read+0x4a/0x70 fs/read_write.c:595
- do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x403f40
-Code: 01 f0 ff ff 0f 83 a0 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 83 3d 6d a0 2d 00 00 75 14 b8 00 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 74 0d 00 00 c3 48 83 ec 08 e8 da 02 00 00
-RSP: 002b:00007ffe8e33e1d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000403f40
-RDX: 00000000000003e8 RSI: 00007ffe8e33e1e0 RDI: 00000000000000f0
-RBP: 000000000002640f R08: 0000000000000000 R09: 0000000000000004
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 00000000004051d0 R14: 0000000000000000 R15: 0000000000000000
-
-Uninit was stored to memory at:
- kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
- kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
- kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
- kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
- __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
- pskb_expand_head+0x38b/0x1b00 net/core/skbuff.c:1637
- __skb_cow include/linux/skbuff.h:3120 [inline]
- skb_cow_head include/linux/skbuff.h:3154 [inline]
- batadv_skb_head_push+0x234/0x350 net/batman-adv/soft-interface.c:74
- batadv_send_skb_packet+0x1a7/0x8c0 net/batman-adv/send.c:86
- batadv_send_broadcast_skb+0x76/0x90 net/batman-adv/send.c:127
- batadv_iv_ogm_send_to_if net/batman-adv/bat_iv_ogm.c:393 [inline]
- batadv_iv_ogm_emit net/batman-adv/bat_iv_ogm.c:419 [inline]
- batadv_iv_send_outstanding_bat_ogm_packet+0x97e/0xd50 net/batman-adv/bat_iv_ogm.c:1706
- process_one_work+0x1552/0x1ef0 kernel/workqueue.c:2264
- worker_thread+0xef6/0x2450 kernel/workqueue.c:2410
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-
-Uninit was created at:
- kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
- kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:307 [inline]
- kmsan_alloc_page+0x12a/0x310 mm/kmsan/kmsan_shadow.c:336
- __alloc_pages_nodemask+0x57f2/0x5f60 mm/page_alloc.c:4800
- __alloc_pages include/linux/gfp.h:498 [inline]
- __alloc_pages_node include/linux/gfp.h:511 [inline]
- alloc_pages_node include/linux/gfp.h:525 [inline]
- __page_frag_cache_refill mm/page_alloc.c:4875 [inline]
- page_frag_alloc+0x3ae/0x910 mm/page_alloc.c:4905
- __netdev_alloc_skb+0x703/0xbb0 net/core/skbuff.c:455
- __netdev_alloc_skb_ip_align include/linux/skbuff.h:2801 [inline]
- netdev_alloc_skb_ip_align include/linux/skbuff.h:2811 [inline]
- batadv_iv_ogm_aggregate_new net/batman-adv/bat_iv_ogm.c:558 [inline]
- batadv_iv_ogm_queue_add+0x10da/0x1900 net/batman-adv/bat_iv_ogm.c:670
- batadv_iv_ogm_schedule_buff net/batman-adv/bat_iv_ogm.c:845 [inline]
- batadv_iv_ogm_schedule+0x107b/0x13c0 net/batman-adv/bat_iv_ogm.c:865
- batadv_iv_send_outstanding_bat_ogm_packet+0xbae/0xd50 net/batman-adv/bat_iv_ogm.c:1718
- process_one_work+0x1552/0x1ef0 kernel/workqueue.c:2264
- worker_thread+0xef6/0x2450 kernel/workqueue.c:2410
- kthread+0x4b5/0x4f0 kernel/kthread.c:256
- ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
-
-Bytes 52-53 of 146 are uninitialized
-Memory access of size 146 starts at ffff9ecbf8eb0c40
-Data copied to user address 00007ffe8e33e1e0
-=====================================================
+Thanks
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
