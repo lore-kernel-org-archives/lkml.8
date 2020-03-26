@@ -2,291 +2,222 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 536BFC2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:26:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF69520714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:24:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="JwpeMjK3"
+	by mail.kernel.org (Postfix) with ESMTP id 2BEC820714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgCZLYc (ORCPT
+        id S1728031AbgCZL0q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:24:32 -0400
-Received: from mout.web.de ([212.227.15.4]:55425 "EHLO mout.web.de"
+        Thu, 26 Mar 2020 07:26:46 -0400
+Received: from mga17.intel.com ([192.55.52.151]:9890 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727688AbgCZLYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:24:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1585221867;
-        bh=Z+9sFC4cAbNzJXxzzeYsDQUq/tv/qxB79OliLkrBa9o=;
-        h=X-UI-Sender-Class:Date:From:To:Cc:Subject:In-Reply-To:References;
-        b=JwpeMjK3BwdSorLFcodZFXBwYqIAnmnFhZP0IZa7lHJfNkUCaQ3qF/5xX7PTP/yJI
-         xOO7qmbMZoZYTxDLayLkhwu97JSyGkwN47Rr1PgFg8nMNHIiE3vwUg9Hpcd6JceIK6
-         fRgT7nNxqusE1G9SbFJnZGINJm0gqaNdQHlxiop0=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from luklap ([89.247.255.128]) by smtp.web.de (mrweb004
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0LocJe-1jkQqn2eni-00gUKp; Thu, 26
- Mar 2020 12:24:27 +0100
-Date:   Thu, 26 Mar 2020 12:24:18 +0100
-From:   Lukas Straub <lukasstraub2@web.de>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        dm-devel <dm-devel@redhat.com>,
-        Mikulas Patocka <mpatocka@redhat.com>
-Subject: Re: [PATCH v2] dm-integrity: Prevent RMW for full metadata buffer
- writes
-Message-ID: <20200326122418.741b2ffc@luklap>
-In-Reply-To: <20200324191148.GA2921@redhat.com>
-References: <20200227142601.61f3cd54@luklap>
-        <20200324171821.GA2444@redhat.com>
-        <20200324195912.518dc87c@luklap>
-        <20200324191148.GA2921@redhat.com>
+        id S1727560AbgCZL0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:26:45 -0400
+IronPort-SDR: 7C3kS7zrNh/hCiyB5w5F/vcVoP3DMrSSq8fyYNuvI9iHo74M3QmHNK7swOyYGwif/eaSqcJMzp
+ UaWQXW4ZHqKQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 04:26:44 -0700
+IronPort-SDR: j+CX21XIILRChtNrHQMbIj0SlMiqShprtb0zcBZPdehxP4557gVhBxKOezUEUVceIPa8QALX4P
+ mphdgBgGDe2A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
+   d="scan'208";a="240931447"
+Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
+  by orsmga008.jf.intel.com with ESMTP; 26 Mar 2020 04:26:41 -0700
+Subject: Re: [PATCH v8 3/5] usb: xhci: Add support for Renesas controller with
+ memory
+To:     Vinod Koul <vkoul@kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?Q?Andreas_B=c3=b6hler?= <dev@aboehler.at>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200323170601.419809-1-vkoul@kernel.org>
+ <20200323170601.419809-4-vkoul@kernel.org>
+From:   Mathias Nyman <mathias.nyman@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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 fiD/
+Message-ID: <6ea778a7-6d58-6dae-bd65-3a63a945fb97@linux.intel.com>
+Date:   Thu, 26 Mar 2020 13:29:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rBuFSl4aDuDI2ufSEpF2qcj";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Provags-ID: V03:K1:J8uqv5axDQNEgR1Ps1F6+B1T/JmFHn6v3TJPKAlwsFpaMMEPObT
- miKPZ8At4CC1USmSi3VAJ+JLu7IeWkpK2qMlK6uS4etjv9r196nm80/FgKFObaYXfAsb38I
- 4NHu1Gcach/eU6V+sZcHULbP4JK3arVSXSlYylOxXacS2wSbedTeQZl6B+4uBLTkoSPDT5f
- GrA9USOkqiRRN3u6sOMgw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Xh8/46vE/oY=:An3NeBCTkbRM8qGlraf1jI
- 1RN4xPZWvakgwcM6ytlYnWIyHYNK7RUAcSmsGJMhZZavL0uXyImR+0hQRoMDK6ryhSfw4tHhl
- 7ecHn00HAMH4MXDpVWahmI8oVEtC6KNLhhiUoZHpffV3nq9UgF6Ya+jYWQc7Nee4a5KKnqqFS
- 0diCnrNyppfCco5hL1ACTxyAclBZ1k1e7BJj6clYBZUBihfBVTk51nvVHsrgYpLlChB0mh/2R
- AGdoKhVDqSuDmemDBtARyXhxRiNbe2Zx7onsymx2vUkUmM+gaKNkUPi+qgythgDYraVm9TTN4
- ifycDDqaroax7Al709S5RZv/rj9etDPo70VDEGEZaWOIoyGrXE5Erxc2Z2Ws8/RREYLrxPcDD
- id8jnxa/eEYR2jz6310iTkR5rmWV6jmDGZxOgL7FwdmVFG2LWsbAtwn+ZEsecufyyLB0/fde1
- MRNAm3I3f4MHu6G3Ry6NqaUNtZoaJLpiTNFoRV9DdmQ2oBS1h8Hsjhd5WQKyvzuemNd5UpLMB
- KGrog/1vgjS9ekGGaeX+bVr6cz1uGyEj0cWp3TOR3notix/iHKLRa8tUxuInjieb1NbiNP3Ux
- ybtc1x+vF65XR3zxXBR6c1Hz0dqcJpgl2o3nIagAD42hx9qDwrMpAZu/EHD56KRGzkg6Z92aW
- bTv6M9ZebPWYCLQAduRacixxP1OWoTZgUXJYJvbRW4xRV/44nR82OmI2Ht3JsHrg8KaH/E0ba
- rIpUqWLjVveVo6EeigvkhyTOGxXgtcGaewOPJv900qgEjuEfvvaYRBcGa7tBwHD4RsFbLQ6xu
- oiCI+hX5qIGFN4q8IugmyHjXJCqIQXtE5+uYZOQYoyRHS1RM6/XWxXow/zf6LJVefhjRazfot
- 8qOEdLRTaYtKcx5jxMaGTKBc+Erd1qXeXBNOtO74S3ZpvKtsiE0mHQYEmGVX1+zAdw0+Px8/9
- N2Ybe/8zAixtzGwHMMcMRtHVcz05A20Z4NnYgD1hYMXV01ug7VvZ1RPR+IuKLppeuHt7WqlC0
- 2dYuZRCxubmOOSZb2MjjwQcnnJn/pFHGzIzC7D84o1giLj8xwWUomiV60OxiJEsUANXCzHXb0
- Emwdyf6cDBJKw0wEIqPLEeSejOv2q9GdlpsLQgrZnzDWMEwRhSzcFL8+eHUYOtbJ4QETjk5tz
- XQDHeUmG+kPO+iftP9OM2gBMaOtrQmuKJ+vaT2EcyZiRxjpn9dvuqk92h7RQbiDkVF0P93XgT
- WCFxcsGiVlh8G8DmZ
+In-Reply-To: <20200323170601.419809-4-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rBuFSl4aDuDI2ufSEpF2qcj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Vinod
 
-On Tue, 24 Mar 2020 15:11:49 -0400
-Mike Snitzer <snitzer@redhat.com> wrote:
+On 23.3.2020 19.05, Vinod Koul wrote:
+> Some rensas controller like uPD720201 and uPD720202 need firmware to be
+> loaded. Add these devices in table and invoke renesas firmware loader
+> functions to check and load the firmware into device memory when
+> required.
+> 
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/usb/host/xhci-pci-renesas.c |  1 +
+>  drivers/usb/host/xhci-pci.c         | 29 ++++++++++++++++++++++++++++-
+>  drivers/usb/host/xhci-pci.h         |  3 +++
+>  3 files changed, 32 insertions(+), 1 deletion(-)
+> 
 
-> On Tue, Mar 24 2020 at  2:59pm -0400,
-> Lukas Straub <lukasstraub2@web.de> wrote:
->=20
-> > On Tue, 24 Mar 2020 13:18:22 -0400
-> > Mike Snitzer <snitzer@redhat.com> wrote:
-> >  =20
-> > > On Thu, Feb 27 2020 at  8:26am -0500,
-> > > Lukas Straub <lukasstraub2@web.de> wrote:
-> > >  =20
-> > > > If a full metadata buffer is being written, don't read it first. Th=
-is
-> > > > prevents a read-modify-write cycle and increases performance on HDDs
-> > > > considerably.
-> > > >=20
-> > > > To do this we now calculate the checksums for all sectors in the bi=
-o in one
-> > > > go in integrity_metadata and then pass the result to dm_integrity_r=
-w_tag,
-> > > > which now checks if we overwrite the whole buffer.
-> > > >=20
-> > > > Benchmarking with a 5400RPM HDD with bitmap mode:
-> > > > integritysetup format --no-wipe --batch-mode --interleave-sectors $=
-((64*1024)) -t 4 -s 512 -I crc32c -B /dev/sdc
-> > > > integritysetup open --buffer-sectors=3D1 -I crc32c -B /dev/sdc hdda=
-_integ
-> > > > dd if=3D/dev/zero of=3D/dev/mapper/hdda_integ bs=3D64K count=3D$((1=
-6*1024*4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
-> > > >=20
-> > > > Without patch:
-> > > > 4294967296 bytes (4.3 GB, 4.0 GiB) copied, 400.326 s, 10.7 MB/s
-> > > >=20
-> > > > With patch:
-> > > > 4294967296 bytes (4.3 GB, 4.0 GiB) copied, 41.2057 s, 104 MB/s
-> > > >=20
-> > > > Signed-off-by: Lukas Straub <lukasstraub2@web.de>
-> > > > ---
-> > > > Hello Everyone,
-> > > > So here is v2, now checking if we overwrite a whole metadata buffer=
- instead
-> > > > of the (buggy) check if we overwrite a whole tag area before.
-> > > > Performance stayed the same (with --buffer-sectors=3D1).
-> > > >=20
-> > > > The only quirk now is that it advertises a very big optimal io size=
- in the
-> > > > standard configuration (where buffer_sectors=3D128). Is this a Prob=
-lem?
-> > > >=20
-> > > > v2:
-> > > >  -fix dm_integrity_rw_tag to check if we overwrite a whole metadat =
-buffer
-> > > >  -fix optimal io size to check if we overwrite a whole metadata buf=
-fer
-> > > >=20
-> > > > Regards,
-> > > > Lukas Straub   =20
-> > >=20
-> > >=20
-> > > Not sure why you didn't cc Mikulas but I just checked with him and he
-> > > thinks:
-> > >=20
-> > > You're only seeing a boost because you're using 512-byte sector and
-> > > 512-byte buffer. Patch helps that case but hurts in most other cases
-> > > (due to small buffers). =20
-> >=20
-> > Hmm, buffer-sectors is still user configurable. If the user wants fast
-> > write performance on slow HDDs he can set a small buffer-sector and
-> > benefit from this patch. With the default buffer-sectors=3D128 it
-> > shouldn't have any impact. =20
->=20
-> OK, if you'd be willing to conduct tests to prove there is no impact
-> with larger buffers that'd certainly help reinforce your position and
-> make it easier for me to take your patch.
->=20
-> But if you're just testing against slow HDD testbeds then the test
-> coverage isn't wide enough.
->=20
-> Thanks,
-> Mike
->=20
+It's unfortunate if firmware loading couldn't be initiated in a PCI fixup hook
+for this Renesas controller. What was the reason it failed?
 
-Sure,
-This time testing with an Samsung 850 EVO SSD:
+Nicolas Saenz Julienne just submitted a solution like that for Raspberry Pi 4
+where firmware loading is initiated in pci-quirks.c quirk_usb_early_handoff()
 
-without patch:
+https://lore.kernel.org/lkml/20200324182812.20420-1-nsaenzjulienne@suse.de
 
-root@teststore:/home/lukas# integritysetup format --no-wipe --batch-mode -I=
- crc32c -B /dev/sdc1
-root@teststore:/home/lukas# integritysetup open -I crc32c -B /dev/sdc1 ssda=
-_integ
-root@teststore:/home/lukas# dd if=3D/dev/zero of=3D/dev/mapper/ssda_integ b=
-s=3D64K count=3D$((16*1024*4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
-4177264640 bytes (4.2 GB, 3.9 GiB) copied, 28 s, 149 MB/s
-65536+0 records in
-65536+0 records out
-4294967296 bytes (4.3 GB, 4.0 GiB) copied, 28.8946 s, 149 MB/s
-root@teststore:/home/lukas# dd if=3D/dev/zero of=3D/dev/mapper/ssda_integ b=
-s=3D4M count=3D$((256*4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
-4211081216 bytes (4.2 GB, 3.9 GiB) copied, 22 s, 191 MB/s
-1024+0 records in
-1024+0 records out
-4294967296 bytes (4.3 GB, 4.0 GiB) copied, 22.6355 s, 190 MB/s
-root@teststore:/home/lukas# time mkfs.ext4 /dev/mapper/ssda_integ 4g
-mke2fs 1.45.5 (07-Jan-2020)
-Creating filesystem with 1048576 4k blocks and 262144 inodes
-Filesystem UUID: 679c4808-d549-4576-a8ef-4c46c78c6070
-Superblock backups stored on blocks:
-        32768, 98304, 163840, 229376, 294912, 819200, 884736
-
-Allocating group tables: done
-Writing inode tables: done
-Creating journal (16384 blocks): done
-Writing superblocks and filesystem accounting information: done
+Is he doing something different than what was done for the Renesas controller?
 
 
-real    0m0.318s
-user    0m0.016s
-sys     0m0.001s
-root@teststore:/home/lukas# mount /dev/mapper/ssda_integ /mnt/
-root@teststore:/home/lukas# cd /mnt/
-root@teststore:/mnt# time tar -xJf /home/lukas/linux-5.5.4.tar.xz
+> diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
+> index c588277ac9b8..d413d53df94b 100644
+> --- a/drivers/usb/host/xhci-pci-renesas.c
+> +++ b/drivers/usb/host/xhci-pci-renesas.c
+> @@ -336,6 +336,7 @@ static void renesas_fw_callback(const struct firmware *fw,
+>  		goto cleanup;
+>  	}
+>  
+> +	xhci_pci_probe(pdev, ctx->id);
+>  	return;
 
-real    0m18.708s
-user    0m14.351s
-sys     0m8.585s
-root@teststore:/mnt# time rm -rf linux-5.5.4/
+I haven't looked into this but instead of calling xhci_pci_probe() here in the async fw
+loading callback could we just return -EPROBE_DEFER until firmware is loaded when
+xhci_pci_probe() is originally called?
 
-real    0m3.226s
-user    0m0.117s
-sys     0m2.958s
+>  
+>  cleanup:
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index a19752178216..7e63658542ac 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -15,6 +15,7 @@
+>  
+>  #include "xhci.h"
+>  #include "xhci-trace.h"
+> +#include "xhci-pci.h"
+>  
+>  #define SSIC_PORT_NUM		2
+>  #define SSIC_PORT_CFG2		0x880c
+> @@ -312,11 +313,25 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
+>   * We need to register our own PCI probe function (instead of the USB core's
+>   * function) in order to create a second roothub under xHCI.
+>   */
+> -static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+> +int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
+>  {
+>  	int retval;
+>  	struct xhci_hcd *xhci;
+>  	struct usb_hcd *hcd;
+> +	char *renesas_fw;
+> +
+> +	renesas_fw = (char *)id->driver_data;
 
+driver_data is useful for other things than just renesas firmware loading.
+Heikki suggested a long time ago to use it for passing the quirk flags as well, which
+makes sense.
 
-with patch:
+We probably need a structure, something like
 
-root@teststore:/home/lukas# integritysetup format --no-wipe --batch-mode -I=
- crc32c -B /dev/sdc1
-root@teststore:/home/lukas# integritysetup open -I crc32c -B /dev/sdc1 ssda=
-_integ
-root@teststore:/home/lukas# dd if=3D/dev/zero of=3D/dev/mapper/ssda_integ b=
-s=3D64K count=3D$((16*1024*4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
-4169007104 bytes (4.2 GB, 3.9 GiB) copied, 27 s, 154 MB/s
-65536+0 records in
-65536+0 records out
-4294967296 bytes (4.3 GB, 4.0 GiB) copied, 27.9165 s, 154 MB/s
-root@teststore:/home/lukas# dd if=3D/dev/zero of=3D/dev/mapper/ssda_integ b=
-s=3D4M count=3D$((256*4)) conv=3Dfsync oflag=3Ddirect status=3Dprogress
-4169138176 bytes (4.2 GB, 3.9 GiB) copied, 22 s, 189 MB/s
-1024+0 records in
-1024+0 records out
-4294967296 bytes (4.3 GB, 4.0 GiB) copied, 22.9181 s, 187 MB/s
-root@teststore:/home/lukas# time mkfs.ext4 /dev/mapper/ssda_integ 4g
-mke2fs 1.45.5 (07-Jan-2020)
-Creating filesystem with 1048576 4k blocks and 262144 inodes
-Filesystem UUID: 9a9decad-19e2-46a4-8cc5-ce27238829f2
-Superblock backups stored on blocks:=20
-        32768, 98304, 163840, 229376, 294912, 819200, 884736
+struct xhci_driver_data = {
+	u64 quirks;
+	const char *firmware;
+};
 
-Allocating group tables: done                           =20
-Writing inode tables: done                           =20
-Creating journal (16384 blocks): done
-Writing superblocks and filesystem accounting information: done=20
+> +	if (renesas_fw) {
+> +		retval = renesas_xhci_pci_probe(dev, id);
+> +		switch (retval) {
+> +		case 0: /* fw check success, continue */
+> +			break;
+> +		case 1: /* fw will be loaded by async load */
+> +			return 0;
+> +		default: /* error */
+> +			return retval;
+> +		}
+> +	}
+>  
 
+If returning -EPROBE_DEFER until firmware is loaded is an option then we would prevent probe
+from returning success while the renesas controller is still loading firmware.
 
-real    0m0.341s
-user    0m0.000s
-sys     0m0.016s
-root@teststore:/home/lukas# mount /dev/mapper/ssda_integ /mnt/
-root@teststore:/home/lukas# cd /mnt/
-root@teststore:/mnt# time tar -xJf /home/lukas/linux-5.5.4.tar.xz
+So we would end up with something like this:
+(we can add a quirk flag for renesas firmware loading)
 
-real    0m18.409s
-user    0m14.191s
-sys     0m8.585s
-root@teststore:/mnt# time rm -rf linux-5.5.4/
+int xhci_pci_probe(..)
+{
+	...
+	struct xhci_driver_data *data = id->driver_data;
+	if (data && data->quirks & XHCI_RENESAS_FW_QUIRK) { 
+		if (!xhci_renesas_fw_ready(...))
+			return -EPROBE_DEFER
+	}
+}
 
-real    0m3.200s
-user    0m0.133s
-sys     0m2.979s
+xhci_renesas_fw_ready() would need to initiate firmware loading unless
+firmware is already running or loading.
 
+Would that work for you?
 
-Regards,
-Lukas Straub
-
---Sig_/rBuFSl4aDuDI2ufSEpF2qcj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEg/qxWKDZuPtyYo+kNasLKJxdslgFAl58kOIACgkQNasLKJxd
-sljn2Q//fdRtqln3arcfUfX72NS0AlgI0CCCB7uwcn974EK4BeqEKJeu612dloWE
-I9CXr6d47xbsJ0V3rsiPyLilbFWLc4898optf0PqEvI8rQ4ksbY9lEuS0vqkymSR
-GeIMEQNbpn5uK+K+zVDGnR5Yg1+XYsfxTwGtwotHmFGMfYBYnCIClEc2gPykMW+Z
-9hfaCdpLYAy51yHqawZsIjz7wdPfp5EQB2Mcs4nl4vV9rp24T+Vs8qOaA2E1c1OE
-hGpSX9b+Gs0UW5pT6DJyScugqIdkSEvKwGyz1riisrLHnUP3M9akDlVcMUU/Q8o3
-xV9N473P7ZYUP3dqcHPUQoeTP4xhzWXM6cQHPVWNHfaTQz7c+gJP6duRw5kT2PVD
-1AEuciRZcSqvz6dXoYoY2pCQ/nh7Ry4T2yqi/rVQhity10ZJRKYXWYviwnRP+Kxg
-wPfONRya5iMHBKHspO6eVpkS2B6jPd4UHhiDFnj1/Ls66ijo3G4VccdNl0OWpjv6
-tSTP3Cl2BrC9NjwzerhFSmU+7K5WReOWeah0eOeiBRV5BDrZ4x8FZA6QqhHjBKlQ
-7TXyhRf7KcK06rgB3tRUtG3/P7kQx3KY8H4sLOtlngYgqBYmAstXBa0BG7Md51v0
-qI5Y2smMmHI/UBnaPw+xZZTxqHBF4A/jAJLAZZs5krKUuiSTdNQ=
-=pSN3
------END PGP SIGNATURE-----
-
---Sig_/rBuFSl4aDuDI2ufSEpF2qcj--
+-Mathias
