@@ -2,116 +2,370 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50973C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:23:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F50C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:24:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24CCE2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 327DD20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:24:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dY7wSC08"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hF44TNvR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbgCZUXo (ORCPT
+        id S1728671AbgCZUY2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:23:44 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44417 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbgCZUXn (ORCPT
+        Thu, 26 Mar 2020 16:24:28 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:38482 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726363AbgCZUY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:23:43 -0400
-Received: by mail-qk1-f196.google.com with SMTP id j4so8334246qkc.11
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:23:42 -0700 (PDT)
+        Thu, 26 Mar 2020 16:24:27 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c21so2709107pfo.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:24:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hJWp5t89/iwbfn8Ca+Lrz1rZRbdYA2KCpWmXHJOj3y4=;
-        b=dY7wSC0838pzka4AzUdCK19Pqo/xSg0AU8qIfHTom1OXY5mFHlZIYMENXzpLnBMDcC
-         NwYnyykFW1mIgRuaJe2SIZNN+JLl1bR6XMi/axhztQ+3Lol92UZB9R5juK0hc6a1xaWl
-         o5DOw2ARWnmKhSSoBhVBErNkXtykPQzMjcX8c=
+         :content-disposition:in-reply-to;
+        bh=zBgzqhTqK1mBdkfW2kfeNGpuWAOmIlYkjSer/QpmXaY=;
+        b=hF44TNvRZS6fP/TBLQ+eTUo65LcFLunCU56NfImQ9qkk/KI1S64ZjFJSV50o8oFjHP
+         4PBkXGevimND9FPv2cJfP75rxrLTvh+CrIpjNYOVCRga33pXkPBdAYg71WGGmp0AINsY
+         J1gYrtnzja8jNB2exIZLkNLJW/rbvxpuJ3mhs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hJWp5t89/iwbfn8Ca+Lrz1rZRbdYA2KCpWmXHJOj3y4=;
-        b=nDWzljTZFPrnQHPLyHDqAbeNdENkR0qykl+fwlE6BBjKgGdK21m4312sGrUpe1WzaR
-         f3tQm8YDFskv01KUg4Cwcum17NF5SIOq+CFx9kJH6PVcuWo6dRheIGO4sYRCokzPjX1y
-         O15Sn+3VYl1iGnGsmbsArfjrnSi1Vt/mKHPJlTMzFN73m0yfbVT+kbnaFbWmhZHtHe4q
-         EVctcFgta5ieG4fcI1C56xJxjrw2x5OdcQS2Pwgm1u48TKOOfdPeKYr7egkY/u/aTUjK
-         ZT8AtCKQR/4kxaKtHAcnAlhHcJV0yMJAr4X9/POG9QLItBbAiHBOz/BqaXmpR5yq9qW9
-         v6Vg==
-X-Gm-Message-State: ANhLgQ3rbB2abfGZkMoP6K7Wag2H58DVgtt4x9lRprHijQzyVa/UdEo7
-        8Z8mMH0eUh0cp++u3y10MlPgpw==
-X-Google-Smtp-Source: ADFU+vvdfgPWrcllkj1WQ8cugXCsD6gKi4uamCH0UN8ejJIKkiAcGgtzhXH9Q2UhVC/2+6inHbi62w==
-X-Received: by 2002:a05:620a:539:: with SMTP id h25mr10212915qkh.395.1585254222181;
-        Thu, 26 Mar 2020 13:23:42 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id z6sm2092718qka.34.2020.03.26.13.23.40
+         :mime-version:content-disposition:in-reply-to;
+        bh=zBgzqhTqK1mBdkfW2kfeNGpuWAOmIlYkjSer/QpmXaY=;
+        b=uPO+TiroGeVsuNJ9Qv+gFxpC2ykLLibXUzEL9twppbG27XypcQGg8bGLXUgn4msfwD
+         BGkvq0t16K5s39mZCSwDB0v5bN5WXCqa34dB1FJ8DggmC9OYXzFnjcv9S2HHhFoUCiVR
+         G3hVoWIxwXD+m5L7gA38XX8HM7BtVRDgitBzqCk1d/PVTQ1bnoheEhFVrXg+vm5zFfUC
+         OdsI8upzPGTWFtCZlux8IQEci706z4ZaxqP/zfzZYQW+2ULDvxyqDEAqPXCW1Q/uSpC0
+         2tdqJaUIXqOyyOh+IV+IzuzAI+MnsFpoMbkSTfcJf7JP/4D6qcHx08FEk5fXaiCteo+P
+         Xrow==
+X-Gm-Message-State: ANhLgQ3dHPCICAU9Oc4N0FlpFmbRJ4UPUMvNzps7hpHkkbKyqe+xpA5H
+        TSzD+zF4H6tlzTzpxK3LDjpcbA==
+X-Google-Smtp-Source: ADFU+vutXGwaXmeKf8yD5wYFArutZREIVw5lpPEfxULQO9/7LswEhDltNx5M2vIOpo+19JNWKYCvVQ==
+X-Received: by 2002:a62:7c15:: with SMTP id x21mr11286758pfc.132.1585254263685;
+        Thu, 26 Mar 2020 13:24:23 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y22sm2377221pfr.68.2020.03.26.13.24.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 13:23:40 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 16:23:40 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Sonny Rao <sonnyrao@google.com>, Waiman Long <longman@redhat.com>,
-        linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
-        Jesse Barnes <jsbarnes@google.com>, vpillai@digitalocean.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Li Zefan <lizefan@huawei.com>
-Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
-Message-ID: <20200326202340.GA146657@google.com>
-References: <20200326191623.129285-1-joel@joelfernandes.org>
- <20200326192035.GO162390@mtj.duckdns.org>
- <20200326194448.GA133524@google.com>
- <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
- <CAPz6YkVUsDz456z8-X2G_EDd-uet1rRNnh2sDUpdcoWp_fkDDw@mail.gmail.com>
- <20200326201649.GQ162390@mtj.duckdns.org>
+        Thu, 26 Mar 2020 13:24:21 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 13:24:20 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
+Subject: Re: [RFC v3 1/2] kernel/sysctl: support setting sysctl parameters
+ from kernel command line
+Message-ID: <202003261256.950F1E5@keescook>
+References: <20200326181606.7027-1-vbabka@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326201649.GQ162390@mtj.duckdns.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20200326181606.7027-1-vbabka@suse.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:18:59PM -0400, Tejun Heo wrote:
-> On Thu, Mar 26, 2020 at 01:05:04PM -0700, Sonny Rao wrote:
-> > I am surprised if anyone actually wants this behavior, we (Chrome OS)
+On Thu, Mar 26, 2020 at 07:16:05PM +0100, Vlastimil Babka wrote:
+> A recently proposed patch to add vm_swappiness command line parameter in
+> addition to existing sysctl [1] made me wonder why we don't have a general
+> support for passing sysctl parameters via command line. Googling found only
+> somebody else wondering the same [2], but I haven't found any prior discussion
+> with reasons why not to do this.
 > 
-> The behavior is silly but consistent in that it doesn't allow empty active
-> cpusets and it has been like that for many many years now.
+> Settings the vm_swappiness issue aside (the underlying issue might be solved in
+> a different way), quick search of kernel-parameters.txt shows there are already
+> some that exist as both sysctl and kernel parameter - hung_task_panic,
+> nmi_watchdog, numa_zonelist_order, traceoff_on_warning. A general mechanism
+> would remove the need to add more of those one-offs and might be handy in
+> situations where configuration by e.g. /etc/sysctl.d/ is impractical.
 > 
-> > found out about it accidentally, and then found that Android had been
-> > carrying a patch to fix it.  And if it were a desirable behavior then
-> > why isn't it an option in v2?
+> Hence, this patch adds a new parse_args() pass that looks for parameters
+> prefixed by 'sysctl.' and tries to interpret them as writes to the
+> corresponding sys/ files using an temporary in-kernel procfs mount. This
+> mechanism was suggested by Eric W. Biederman [3], as it handles all dynamically
+> registered sysctl tables. Errors due to e.g. invalid parameter name or value
+> are reported in the kernel log.
 > 
-> Nobody is saying it's a good behavior (hence the change in cgroup2) and there
-> are situations where changing things like this is justifiable, but, here:
+> The processing is hooked right before the init process is loaded, as some
+> handlers might be more complicated than simple setters and might need some
+> subsystems to be initialized. At the moment the init process can be started and
+> eventually execute a process writing to /proc/sys/ then it should be also fine
+> to do that from the kernel.
 > 
-> * The proposed change makes the interface inconsistent and does so
->   unconditionally on what is now a mostly legacy interface.
+> Sysctls registered later on module load time are not set by this mechanism -
+> it's expected that in such scenarios, setting sysctl values from userspace is
+> practical enough.
 > 
-> * There already is a newer version of the interface which includes the
->   desired behavior.
+> [1] https://lore.kernel.org/r/BL0PR02MB560167492CA4094C91589930E9FC0@BL0PR02MB5601.namprd02.prod.outlook.com/
+> [2] https://unix.stackexchange.com/questions/558802/how-to-set-sysctl-using-kernel-command-line-parameter
+> [3] https://lore.kernel.org/r/87bloj2skm.fsf@x220.int.ebiederm.org/
 > 
-> * I forgot but as Waiman pointed out, you can even opt-in to the new
->   behavior, which is more comprehensive without the inconsitencies,
->   while staying on cgroup1.
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+> Changes in v3:
+> - use temporary procfs mount as Eric suggested. Seems to be the better option
+>   after all. Naming wise it simply converts all . to / - according to strace the
+>   sysctl tool seems to be doing the same.
+> 
+> Since the major change, I'm sending another RFC. If this approach is ok, then
+> it probably needs just some tweaks to the various error prints, and then
+> converting the rest of existing on-off aliases (if I come up with an idea how
+> to find them all). Thanks for all the feedback so far.
 
-Thank you Tejun, Waiman and Sonny. I confirmed the cgroup_v2_mode option
-fixes cgroup v1's broken behavior.
+Yeah, I think you can drop "RFC" from this in the next version -- you're
+well into getting this finalized IMO.
 
-We will use this mount option on our systems to fix it.
+> 
+>  .../admin-guide/kernel-parameters.txt         |  9 ++
+>  fs/proc/proc_sysctl.c                         | 90 +++++++++++++++++++
+>  include/linux/sysctl.h                        |  4 +
+>  init/main.c                                   |  2 +
+>  4 files changed, 105 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c07815d230bc..0c7e032e7c2e 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4793,6 +4793,15 @@
+>  
+>  	switches=	[HW,M68k]
+>  
+> +	sysctl.*=	[KNL]
+> +			Set a sysctl parameter, right before loading the init
+> +			process, as if the value was written to the respective
+> +			/proc/sys/... file. Unrecognized parameters and invalid
+> +			values are reported in the kernel log. Sysctls
+> +			registered later by a loaded module cannot be set this
+> +			way.
 
-thanks,
+Maybe add: "Both '.' and '/' are recognized as separators."
 
- - Joel
+> +			Example: sysctl.vm.swappiness=40
+> +
+>  	sysfs.deprecated=0|1 [KNL]
+>  			Enable/disable old style sysfs layout for old udev
+>  			on older distributions. When this option is enabled
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index c75bb4632ed1..8ee3273e4540 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/bpf-cgroup.h>
+> +#include <linux/mount.h>
+>  #include "internal.h"
+>  
+>  static const struct dentry_operations proc_sys_dentry_operations;
+> @@ -1725,3 +1726,92 @@ int __init proc_sys_init(void)
+>  
+>  	return sysctl_init();
+>  }
+> +
+> +struct vfsmount *proc_mnt = NULL;
 
+Er, I had a bunch of comments about how this should be declared static
+etc, but decided on a different suggestion entirely. See below...
+
+> +
+> +/* Set sysctl value passed on kernel command line. */
+> +static int process_sysctl_arg(char *param, char *val,
+> +			       const char *unused, void *arg)
+> +{
+> +	char *path;
+> +	struct file_system_type *proc_fs_type;
+> +	struct file *file;
+> +	int len;
+> +	int err;
+> +	loff_t pos = 0;
+> +	ssize_t wret;
+> +
+> +	if (strncmp(param, "sysctl", sizeof("sysctl") - 1))
+> +		return 0;
+> +
+> +	param += sizeof("sysctl") - 1;
+> +
+> +	if (param[0] != '/' && param[0] != '.')
+> +		return 0;
+> +
+> +	param++;
+> +
+> +	if (!proc_mnt) {
+> +		proc_fs_type = get_fs_type("proc");
+> +		if (!proc_fs_type) {
+> +			pr_err("Failed to mount procfs to set sysctl from command line");
+> +			return 0;
+> +		}
+> +		proc_mnt = kern_mount(proc_fs_type);
+> +		put_filesystem(proc_fs_type);
+> +		if (IS_ERR(proc_mnt)) {
+> +			pr_err("Failed to mount procfs to set sysctl from command line");
+> +			proc_mnt = NULL;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	len = 4 + strlen(param) + 1;
+> +	path = kmalloc(len, GFP_KERNEL);
+> +	if (!path)
+> +		panic("%s: Failed to allocate %d bytes t\n", __func__, len);
+> +
+> +	strcpy(path, "sys/");
+> +	strcat(path, param);
+> +	strreplace(path, '.', '/');
+
+You can do the replacement against the param directly, and also avoid
+all the open-coded string manipulations:
+
+	strreplace(param, '.', '/');
+	path = kasprintf(GFP_KERNEL, "sys/%s", param);
+	if (!path)
+		panic("%s: Failed to allocate path for %s\n", __func__, param);
+
+> +
+> +	file = file_open_root(proc_mnt->mnt_root, proc_mnt, path, O_WRONLY, 0);
+> +	if (IS_ERR(file)) {
+> +		err = PTR_ERR(file);
+> +		pr_err("Error %d opening proc file %s to set sysctl parameter '%s=%s'",
+> +			err, path, param, val);
+> +		goto out;
+> +	}
+> +	len = strlen(val);
+> +	wret = kernel_write(file, val, len, &pos);
+> +	if (wret < 0) {
+> +		err = wret;
+> +		pr_err("Error %d writing to proc file %s to set sysctl parameter '%s=%s'",
+> +			err, path, param, val);
+> +	} else if (wret != len) {
+> +		pr_err("Wrote only %ld bytes of %d  writing to proc file %s to set sysctl parameter '%s=%s'",
+> +			wret, len, path, param, val);
+> +	}
+> +
+> +	filp_close(file, NULL);
+
+Please check the return value of filp_close() and treat that as an error
+for this function too.
+
+> +out:
+> +	kfree(path);
+> +	return 0;
+> +}
+> +
+> +void do_sysctl_args(void)
+> +{
+> +	char *command_line;
+> +
+> +	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+> +	if (!command_line)
+> +		panic("%s: Failed to allocate copy of command line\n", __func__);
+> +
+> +	parse_args("Setting sysctl args", command_line,
+> +		   NULL, 0, -1, -1, NULL, process_sysctl_arg);
+> +
+> +	if (proc_mnt)
+> +		kern_unmount(proc_mnt);
+
+I don't recommend sharing allocation lifetimes between two functions
+(process_sysctl_arg() allocs proc_mnt, and do_sysctl_args() frees it).
+And since you have a scoped lifetime, why allocate it or have it as a
+global at all? It can be stack-allocated and passed to the handler:
+
+void do_sysctl_args(void)
+{
+	struct file_system_type *proc_fs_type;
+	struct vfsmount *proc_mnt;
+	char *command_line;
+
+	proc_fs_type = get_fs_type("proc");
+	if (!proc_fs_type) {
+		pr_err("Failed to mount procfs to set sysctl from command line");
+		return;
+	}
+	proc_mnt = kern_mount(proc_fs_type);
+	put_filesystem(proc_fs_type);
+	if (IS_ERR(proc_mnt)) {
+		pr_err("Failed to mount procfs to set sysctl from command line");
+		return;
+	}
+
+	command_line = kstrdup(saved_command_line, GFP_KERNEL);
+	if (!command_line)
+		panic("%s: Failed to allocate copy of command line\n",
+			__func__);
+
+	parse_args("Setting sysctl args", command_line,
+		   NULL, 0, -1, -1, proc_mnt, process_sysctl_arg);
+
+	kfree(command_line);
+	kern_unmount(proc_mnt);
+}
+
+And then pull the mount from (the hilariously overloaded name) "arg":
+
+static int process_sysctl_arg(char *param, char *val,
+			       const char *unused, void *arg)
+{
+	struct vfsmount *proc_mnt = (struct vfsmount *)arg;
+	char *path;
+
+	if (!arg)
+		...fread out...
+
+	etc
+
+> diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+> index 02fa84493f23..5f3f2a00d75f 100644
+> --- a/include/linux/sysctl.h
+> +++ b/include/linux/sysctl.h
+> @@ -206,6 +206,7 @@ struct ctl_table_header *register_sysctl_paths(const struct ctl_path *path,
+>  void unregister_sysctl_table(struct ctl_table_header * table);
+>  
+>  extern int sysctl_init(void);
+> +void do_sysctl_args(void);
+>  
+>  extern struct ctl_table sysctl_mount_point[];
+>  
+> @@ -236,6 +237,9 @@ static inline void setup_sysctl_set(struct ctl_table_set *p,
+>  {
+>  }
+>  
+> +void do_sysctl_args(void)
+> +{
+> +}
+>  #endif /* CONFIG_SYSCTL */
+>  
+>  int sysctl_max_threads(struct ctl_table *table, int write,
+> diff --git a/init/main.c b/init/main.c
+> index ee4947af823f..a91ea166a731 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -1367,6 +1367,8 @@ static int __ref kernel_init(void *unused)
+>  
+>  	rcu_end_inkernel_boot();
+>  
+> +	do_sysctl_args();
+> +
+>  	if (ramdisk_execute_command) {
+>  		ret = run_init_process(ramdisk_execute_command);
+>  		if (!ret)
+> -- 
+> 2.25.1
+> 
+
+Looking good! I'm excited to see the next version. :)
+
+-- 
+Kees Cook
