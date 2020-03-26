@@ -2,214 +2,216 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C472C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF74C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168B320719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 404CF20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hBGaI3ZA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X75Xw+yH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbgCZRmj (ORCPT
+        id S1727985AbgCZRnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:42:39 -0400
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36904 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbgCZRmj (ORCPT
+        Thu, 26 Mar 2020 13:43:12 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:34330 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726363AbgCZRnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:42:39 -0400
-Received: by mail-pj1-f66.google.com with SMTP id o12so2704817pjs.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pi3s+hsQEc9m8KDmVv9mSsGP5/0IqLYBx14WB1G7v7g=;
-        b=hBGaI3ZAbh8EF/9Pw5vh4P3kwXvhPvbRNmKo0T6S0GXuLkO1Y259C8aA3uyZE7Vguf
-         VY4bD5uL+dTsvcLdr3Dzx2hW4RC/RXLml7ZVCQ3jTdIi/Jjr94Ynun+DXRwv7w1WPyqd
-         AYShLYfxNHfUO4lXIp+J//7CWi+MZiiMthPcZ5J4a/DfIpVGViwjP6UUqI305A1G4KxQ
-         AASwLj49vY46ZYwf7o58g8Yf9sYrvmqTEwppr+qSQOMIUoQ7dQ4F9/vwmBTaC6hm8B4o
-         eqptE6iNyB8uOyO0gVt9ukW6Xnz7uQNQGxa9oD5RYbLdhGyAhib1Y1FpuZFcW5IqcWcl
-         +NeQ==
+        Thu, 26 Mar 2020 13:43:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585244589;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=iY1VQzG5YGZeuqalkw7ZWUxW/oZQYRokOGvysW5G5q0=;
+        b=X75Xw+yHJPwHX9kga+vAt+45C0xdN2JVqTSZ8ntBpeeygmcj8AYBXKlDE1QS2XonhoSyA+
+        ci0p+ysGRuMeZ7JiIJdR8ytk9v+BAvCrqweQaWBCyt3F6pggv3/O9ewfuPT/6nzVXd3BdC
+        cWhgpIfyi0uqQr/oXC7/zm9j+isGGP0=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-490-ldtxsiROPjmMc5hJxGunew-1; Thu, 26 Mar 2020 13:43:08 -0400
+X-MC-Unique: ldtxsiROPjmMc5hJxGunew-1
+Received: by mail-wm1-f71.google.com with SMTP id s14so2481225wmj.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:43:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Pi3s+hsQEc9m8KDmVv9mSsGP5/0IqLYBx14WB1G7v7g=;
-        b=B3mtX0xKuGcSSbIvaUXYw9vuCYKH5+duEHSPNiK/cfILy6mA5FVMuodjvjKKWz1wnU
-         +EWcWntFhpYc5gE85riLLsm3FS8MY1qKmWdcfUpihsyls9FI52n2c4y7Zo5IU7b35SDD
-         srFQgEILTNzJfTH3IaUUVwDn4r4Qmi0Ae9Movluu6+55FWRA7CGMLDu27WHFidQzkXbv
-         nkYphmaXVPBt+rbg2MW4TV66koDmX3+DVREQ3SbBYEz2z//4sJrUZdw8DUyioDMktrtN
-         8NpyiJZnQUGBZrsGzspI8lo/5+apoSokjqS+MKuieTWv1bMCbIqLvNVwum+zb59MAuEn
-         i7xQ==
-X-Gm-Message-State: ANhLgQ0lRBvNepdK9/mVkV4XscLW7Nyck3JU13sNV/3CM5OXEGk2Fhqq
-        2Og5DfKr4IzqQyyzINmsBkc=
-X-Google-Smtp-Source: ADFU+vtOOB4YT138AG39SOK4IzfdmgDSBLxPqSj8uEcIJySFjzTzwvcbFIyUUVC/KFkZJT84bChUrQ==
-X-Received: by 2002:a17:902:ba8e:: with SMTP id k14mr8841190pls.298.1585244557355;
-        Thu, 26 Mar 2020 10:42:37 -0700 (PDT)
-Received: from localhost.localdomain (c-67-165-113-11.hsd1.wa.comcast.net. [67.165.113.11])
-        by smtp.gmail.com with ESMTPSA id q71sm2160373pfc.92.2020.03.26.10.42.36
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=iY1VQzG5YGZeuqalkw7ZWUxW/oZQYRokOGvysW5G5q0=;
+        b=AU7PtODX9bi0+LXP0X1yLMz8BzR9Nm4uKbTH8jG1Hrfahyb7/Cr/8obbREhfqtZyAk
+         ew5b1togA2K/AD0a+pcmQfiSMiueHih0aAGHXd33BoHqGGQf4s0/tGhG7Um/47udi9Jo
+         wcd6zdpTyrbd04Vh+XFTZEbsdpJaIAjLMlh3iVRKLdboB/QcHDxg0rtCwn0KP/pBWxez
+         MMbNlO3f6EO0IvGU5rTAiAWFHoBGI1FjDdVnwx7gJCRyCn+kS6bp3SuNpqFrfdvAAGAq
+         VqjyFlK/4N7AfsAtsm0bwY8VHzne4H7FYeFPLZY7hqDskcnjsYtGsqWX9yyO0i1GndmS
+         UfGQ==
+X-Gm-Message-State: ANhLgQ3kkaemrn+rKMOiQsY+E1aCSRaLzZjCo/NzEHjzd6sD80DlPnNi
+        HJ3lmRCfkZpQ3uon4TqIa80djL8noUEinaF/aP1q6klYuUV4N2ICtGAu2gqDdJQW7KnODieUOND
+        6AwGH2fX3qeLXYRapCRIpyCcQ
+X-Received: by 2002:a1c:f409:: with SMTP id z9mr1104039wma.51.1585244586896;
+        Thu, 26 Mar 2020 10:43:06 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtMPwHwvPhttNZ6hV7WchIpLI2fmUMkAhr+s1EXwiqdIt4GRMnfd7iJuY6ed0EETpPwr/6N7A==
+X-Received: by 2002:a1c:f409:: with SMTP id z9mr1104010wma.51.1585244586553;
+        Thu, 26 Mar 2020 10:43:06 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id p13sm4605885wru.3.2020.03.26.10.43.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 10:42:36 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Chris Healy <cphealy@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-imx@nxp.com
-Subject: [PATCH] ARM: vf610: report soc info via soc device
-Date:   Thu, 26 Mar 2020 10:42:32 -0700
-Message-Id: <20200326174232.23365-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 26 Mar 2020 10:43:05 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Andrea Parri <parri.andrea@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, linux-hyperv@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Dexuan Cui <decui@microsoft.com>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [RFC PATCH 03/11] Drivers: hv: vmbus: Replace the per-CPU channel lists with a global array of channels
+In-Reply-To: <20200326170518.GA14314@andrea>
+References: <20200325225505.23998-1-parri.andrea@gmail.com> <20200325225505.23998-4-parri.andrea@gmail.com> <87y2rn4287.fsf@vitty.brq.redhat.com> <20200326170518.GA14314@andrea>
+Date:   Thu, 26 Mar 2020 18:43:04 +0100
+Message-ID: <87pncz3tcn.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch adds plumbing to soc device info code necessary to support
-Vybrid devices. Use case in mind for this is CAAM driver, which
-utilizes said API.
+Andrea Parri <parri.andrea@gmail.com> writes:
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-imx@nxp.com
----
- arch/arm/mach-imx/cpu.c        | 16 ++++++++++
- arch/arm/mach-imx/mach-vf610.c | 53 ++++++++++++++++++++++++++++++++++
- arch/arm/mach-imx/mxc.h        |  6 ++++
- 3 files changed, 75 insertions(+)
+> On Thu, Mar 26, 2020 at 03:31:20PM +0100, Vitaly Kuznetsov wrote:
+>> "Andrea Parri (Microsoft)" <parri.andrea@gmail.com> writes:
+>> 
+>> > When Hyper-V sends an interrupt to the guest, the guest has to figure
+>> > out which channel the interrupt is associated with.  Hyper-V sets a bit
+>> > in a memory page that is shared with the guest, indicating a particular
+>> > "relid" that the interrupt is associated with.  The current Linux code
+>> > then uses a set of per-CPU linked lists to map a given "relid" to a
+>> > pointer to a channel structure.
+>> >
+>> > This design introduces a synchronization problem if the CPU that Hyper-V
+>> > will interrupt for a certain channel is changed.  If the interrupt comes
+>> > on the "old CPU" and the channel was already moved to the per-CPU list
+>> > of the "new CPU", then the relid -> channel mapping will fail and the
+>> > interrupt is dropped.  Similarly, if the interrupt comes on the new CPU
+>> > but the channel was not moved to the per-CPU list of the new CPU, then
+>> > the mapping will fail and the interrupt is dropped.
+>> >
+>> > Relids are integers ranging from 0 to 2047.  The mapping from relids to
+>> > channel structures can be done by setting up an array with 2048 entries,
+>> > each entry being a pointer to a channel structure (hence total size ~16K
+>> > bytes, which is not a problem).  The array is global, so there are no
+>> > per-CPU linked lists to update.   The array can be searched and updated
+>> > by simply loading and storing the array at the specified index.  With no
+>> > per-CPU data structures, the above mentioned synchronization problem is
+>> > avoided and the relid2channel() function gets simpler.
+>> >
+>> > Suggested-by: Michael Kelley <mikelley@microsoft.com>
+>> > Signed-off-by: Andrea Parri (Microsoft) <parri.andrea@gmail.com>
+>> > ---
+>> >  drivers/hv/channel_mgmt.c | 158 ++++++++++++++++++++++----------------
+>> >  drivers/hv/connection.c   |  38 +++------
+>> >  drivers/hv/hv.c           |   2 -
+>> >  drivers/hv/hyperv_vmbus.h |  14 ++--
+>> >  drivers/hv/vmbus_drv.c    |  48 +++++++-----
+>> >  include/linux/hyperv.h    |   5 --
+>> >  6 files changed, 139 insertions(+), 126 deletions(-)
+>> >
+>> > diff --git a/drivers/hv/channel_mgmt.c b/drivers/hv/channel_mgmt.c
+>> > index 1191f3d76d111..9b1449c839575 100644
+>> > --- a/drivers/hv/channel_mgmt.c
+>> > +++ b/drivers/hv/channel_mgmt.c
+>> > @@ -319,7 +319,6 @@ static struct vmbus_channel *alloc_channel(void)
+>> >  	init_completion(&channel->rescind_event);
+>> >  
+>> >  	INIT_LIST_HEAD(&channel->sc_list);
+>> > -	INIT_LIST_HEAD(&channel->percpu_list);
+>> >  
+>> >  	tasklet_init(&channel->callback_event,
+>> >  		     vmbus_on_event, (unsigned long)channel);
+>> > @@ -340,23 +339,28 @@ static void free_channel(struct vmbus_channel *channel)
+>> >  	kobject_put(&channel->kobj);
+>> >  }
+>> >  
+>> > -static void percpu_channel_enq(void *arg)
+>> > +void vmbus_channel_map_relid(struct vmbus_channel *channel)
+>> >  {
+>> > -	struct vmbus_channel *channel = arg;
+>> > -	struct hv_per_cpu_context *hv_cpu
+>> > -		= this_cpu_ptr(hv_context.cpu_context);
+>> > -
+>> > -	list_add_tail_rcu(&channel->percpu_list, &hv_cpu->chan_list);
+>> > +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
+>> > +		return;
+>> > +	/*
+>> > +	 * Pairs with the READ_ONCE() in vmbus_chan_sched().  Guarantees
+>> > +	 * that vmbus_chan_sched() will find up-to-date data.
+>> > +	 */
+>> > +	smp_store_release(
+>> > +		&vmbus_connection.channels[channel->offermsg.child_relid],
+>> > +		channel);
+>> >  }
+>> >  
+>> > -static void percpu_channel_deq(void *arg)
+>> > +void vmbus_channel_unmap_relid(struct vmbus_channel *channel)
+>> >  {
+>> > -	struct vmbus_channel *channel = arg;
+>> > -
+>> > -	list_del_rcu(&channel->percpu_list);
+>> > +	if (WARN_ON(channel->offermsg.child_relid >= MAX_CHANNEL_RELIDS))
+>> > +		return;
+>> > +	WRITE_ONCE(
+>> > +		vmbus_connection.channels[channel->offermsg.child_relid],
+>> > +		NULL);
+>> 
+>> I don't think this smp_store_release()/WRITE_ONCE() fanciness gives you
+>> anything. Basically, without proper synchronization with a lock there is
+>> no such constructions which will give you any additional guarantee on
+>> top of just doing X=1. E.g. smp_store_release() is just 
+>>   barrier();
+>>   *p = v;
+>> if I'm not mistaken. Nobody tells you when *some other CPU* will see the
+>> update - 'eventually' is your best guess. Here, you're only setting one
+>> pointer.
+>> 
+>> Percpu structures have an advantage: we (almost) never access them from
+>> different CPUs so just doing updates atomically (and writing 64bit
+>> pointer on x86_64 is atomic) is OK.
+>> 
+>> I haven't looked at all possible scenarios but I'd suggest protecting
+>> this array with a spinlock (in case we can have simultaneous accesses
+>> from different CPUs and care about the result, of course).
+>
+> The smp_store_release()+READ_ONCE() pair should guarantee that any store
+> to the channel fields performed before (in program order) the "mapping"
+> of the channel are visible to the CPU which observes that mapping; this
+> guarantee is expected to hold for all architectures.
 
-diff --git a/arch/arm/mach-imx/cpu.c b/arch/arm/mach-imx/cpu.c
-index 06f8d64b65af..e3d12b21d6f6 100644
---- a/arch/arm/mach-imx/cpu.c
-+++ b/arch/arm/mach-imx/cpu.c
-@@ -172,6 +172,22 @@ struct device * __init imx_soc_device_init(void)
- 		ocotp_compat = "fsl,imx7ulp-ocotp";
- 		soc_id = "i.MX7ULP";
- 		break;
-+	case MXC_CPU_VF500:
-+		ocotp_compat = "fsl,vf610-ocotp";
-+		soc_id = "VF500";
-+		break;
-+	case MXC_CPU_VF510:
-+		ocotp_compat = "fsl,vf610-ocotp";
-+		soc_id = "VF510";
-+		break;
-+	case MXC_CPU_VF600:
-+		ocotp_compat = "fsl,vf610-ocotp";
-+		soc_id = "VF600";
-+		break;
-+	case MXC_CPU_VF610:
-+		ocotp_compat = "fsl,vf610-ocotp";
-+		soc_id = "VF610";
-+		break;
- 	default:
- 		soc_id = "Unknown";
- 	}
-diff --git a/arch/arm/mach-imx/mach-vf610.c b/arch/arm/mach-imx/mach-vf610.c
-index 9c929b09310c..565dc08412a2 100644
---- a/arch/arm/mach-imx/mach-vf610.c
-+++ b/arch/arm/mach-imx/mach-vf610.c
-@@ -3,11 +3,63 @@
-  * Copyright 2012-2013 Freescale Semiconductor, Inc.
-  */
+Yes, basically the order is preserved (but no guarantees WHEN another
+CPU will see it).
 
-+#include <linux/of_address.h>
- #include <linux/of_platform.h>
-+#include <linux/io.h>
-+
- #include <linux/irqchip.h>
- #include <asm/mach/arch.h>
- #include <asm/hardware/cache-l2x0.h>
+>
+> Notice that this apporach follows the current/upstream code, cf. the
+> rcu_assign_pointer() in list_add_tail_rcu() and notice that (both before
+> and after this series) vmbus_chan_sched() accesses the channel array
+> without any mutex/lock held.
+>
+> I'd be inclined to stick to the current code (unless more turns out to
+> be required).  Thoughts?
 
-+#include "common.h"
-+#include "hardware.h"
-+
-+#define MSCM_CPxCOUNT		0x00c
-+#define MSCM_CPxCFG1		0x014
-+
-+static void __init vf610_detect_cpu(void)
-+{
-+	struct device_node *np;
-+	u32 cpxcount, cpxcfg1;
-+	unsigned int cpu_type;
-+	void __iomem *mscm;
-+
-+	np = of_find_compatible_node(NULL, NULL, "fsl,vf610-mscm-cpucfg");
-+	if (WARN_ON(!np))
-+		return;
-+
-+	mscm = of_iomap(np, 0);
-+	of_node_put(np);
-+
-+	if (WARN_ON(!mscm))
-+		return;
-+
-+	cpxcount = readl_relaxed(mscm + MSCM_CPxCOUNT);
-+	cpxcfg1  = readl_relaxed(mscm + MSCM_CPxCFG1);
-+
-+	iounmap(mscm);
-+
-+	cpu_type = cpxcount ? MXC_CPU_VF600 : MXC_CPU_VF500;
-+
-+	if (cpxcfg1)
-+		cpu_type |= MXC_CPU_VFx10;
-+
-+	mxc_set_cpu_type(cpu_type);
-+}
-+
-+static void __init vf610_init_machine(void)
-+{
-+	struct device *parent;
-+
-+	vf610_detect_cpu();
-+
-+	parent = imx_soc_device_init();
-+	if (parent == NULL)
-+		pr_warn("failed to initialize soc device\n");
-+
-+	of_platform_default_populate(NULL, NULL, parent);
-+}
-+
- static const char * const vf610_dt_compat[] __initconst = {
- 	"fsl,vf500",
- 	"fsl,vf510",
-@@ -20,5 +72,6 @@ static const char * const vf610_dt_compat[] __initconst = {
- DT_MACHINE_START(VYBRID_VF610, "Freescale Vybrid VF5xx/VF6xx (Device Tree)")
- 	.l2c_aux_val	= 0,
- 	.l2c_aux_mask	= ~0,
-+	.init_machine   = vf610_init_machine,
- 	.dt_compat	= vf610_dt_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-imx/mxc.h b/arch/arm/mach-imx/mxc.h
-index 2bfd2d59b4a6..48e6d781f15b 100644
---- a/arch/arm/mach-imx/mxc.h
-+++ b/arch/arm/mach-imx/mxc.h
-@@ -33,6 +33,12 @@
- #define MXC_CPU_IMX7D		0x72
- #define MXC_CPU_IMX7ULP		0xff
+Correct me if I'm wrong, but currently vmbus_chan_sched() accesses
+per-cpu list of channels on the same CPU so we don't need a spinlock to
+guarantee that during an interrupt we'll be able to see the update if it
+happened before the interrupt (in chronological order). With a global
+list of relids, who guarantees that an interrupt handler on another CPU
+will actually see the modified list? 
 
-+#define MXC_CPU_VFx10		0x010
-+#define MXC_CPU_VF500		0x500
-+#define MXC_CPU_VF510		(MXC_CPU_VF500 | MXC_CPU_VFx10)
-+#define MXC_CPU_VF600		0x600
-+#define MXC_CPU_VF610		(MXC_CPU_VF600 | MXC_CPU_VFx10)
-+
- #define IMX_DDR_TYPE_LPDDR2		1
+-- 
+Vitaly
 
- #ifndef __ASSEMBLY__
---
-2.21.0
