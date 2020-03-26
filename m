@@ -2,147 +2,129 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60489C2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACD50C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363292073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E19E206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:11:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lPpmx9yP"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="c0tBcOqS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbgCZUGz (ORCPT
+        id S1727984AbgCZULu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:06:55 -0400
-Received: from mail-vk1-f202.google.com ([209.85.221.202]:56923 "EHLO
-        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728752AbgCZUGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:06:54 -0400
-Received: by mail-vk1-f202.google.com with SMTP id e186so2546595vkh.23
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:06:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Y8Q8F3IH8c2hotjV+QMJ3kSw7Jeojd38t24yU7GezVM=;
-        b=lPpmx9yPrL/MYyExIQJGT42ZfXmoCaxGEUrGYFUYgtzqZErnqz25tEHuBVs6UbKG03
-         cbq05kXjAStd0QUwzzsPx/m4hLKByFqoRBu0ZMko8DOGfpMbfqphPTAc1n4aoSx+jUiD
-         GUkRqspDcIHkNyB21E+AmXM76aByOoFTLmj5Z68AhLoDMFd2yhNWF9wo2X0u1uuBOqyP
-         yWaZ/1SYoC2exZSC6kN0hyxiU7LLLW36qCYgUEFeqhpAMNQye8oOAMZk5AE/478eAua1
-         38w9tfa8n6lzqlf4LQ8lmPqLhDyBDGb2agpgeh/LtUoaVTpE4nt/fnX+IkzbBesH8+78
-         Azyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Y8Q8F3IH8c2hotjV+QMJ3kSw7Jeojd38t24yU7GezVM=;
-        b=HfJESZfL2C21u6M+rrA0aBT+rcnBZkMQYwnvwytRHirfNBKeftkbGrtZl9BXBOUrJi
-         LDaOAQABV0ct/9mcNP67/NJP1lw5dWjgK0QTpncDD+kUw6AfhRgArrGiWoV5kZk1pwA8
-         fga+Zi4FqrEJud2ZFR1r7dsh+pJF9NNgZUG3dtAJyAVZbX8TTX64JZ/mZTYZq+NUWecg
-         uQlUwTrVV/EPwXedPC84ACkRzR3aT+AnO3bF7go+S6+SszPb+oMH0Axd4s9PttKOaMp4
-         okgMYv3NsZsDyKY7pJ5bBJ+RFe38eAcowLSEUeMUcdgAk/hlmEK6NG1w0/pNmFqhChxR
-         EKxg==
-X-Gm-Message-State: ANhLgQ2VeFP32sCSxCy+gd8CFv65mwaMF2pax0n0vcPopeMpp3ItDTlf
-        D63I8yw+ghC5066DtWG1UIuWlgR2S1w=
-X-Google-Smtp-Source: ADFU+vusyX36d2CY3Mx/oaqEexC02/Z3H/IlNDB9bKUbWp7T4L1OJf34Zf2nIPvcXbTAxx7+cBlBgkr2U4g=
-X-Received: by 2002:ab0:424:: with SMTP id 33mr8765913uav.143.1585253213293;
- Thu, 26 Mar 2020 13:06:53 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 13:06:34 -0700
-In-Reply-To: <20200326200634.222009-1-dancol@google.com>
-Message-Id: <20200326200634.222009-4-dancol@google.com>
-Mime-Version: 1.0
-References: <20200326181456.132742-1-dancol@google.com> <20200326200634.222009-1-dancol@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v4 3/3] Wire UFFD up to SELinux
-From:   Daniel Colascione <dancol@google.com>
-To:     timmurray@google.com, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
-        nnk@google.com, sds@tycho.nsa.gov, lokeshgidra@google.com,
-        jmorris@namei.org
-Cc:     Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 26 Mar 2020 16:11:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:57510 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbgCZULu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 16:11:50 -0400
+Received: from zn.tnic (p200300EC2F0A49004CB08B568021E004.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:4900:4cb0:8b56:8021:e004])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2DC961EC0626;
+        Thu, 26 Mar 2020 21:11:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1585253508;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=PrESSnpiQpeyEnZVO2sr/PNnhIexYw4+4+Gg/n72Er4=;
+        b=c0tBcOqSU9e4nZEuADM41EdBHYNpKdFJnzwnJhbLoIplCRJmBnMhYr9zSIUj1feHQgB4Iq
+        tmEJJKOozc+Ct9IpRyAyXm8C1Xpvm29alFj6PkbT8VSI5bzj97jwwYZTvxNnw9aDp4wz4Y
+        IJ8curNYCqmhBe+EF5B1FQ7b+eVjpbw=
+Date:   Thu, 26 Mar 2020 21:11:42 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>
+Subject: Re: [PATCH 1/2] Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+Message-ID: <20200326201142.GJ11398@zn.tnic>
+References: <20200326193021.255002-1-hjl.tools@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200326193021.255002-1-hjl.tools@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change gives userfaultfd file descriptors a real security
-context, allowing policy to act on them.
+On Thu, Mar 26, 2020 at 12:30:20PM -0700, H.J. Lu wrote:
+> In x86 kernel, .exit.text and .exit.data sections are discarded at
+> runtime, not by linker.  Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+> and define it in x86 kernel linker script to keep them.
+> 
+> Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> ---
+>  arch/x86/kernel/vmlinux.lds.S     |  1 +
+>  include/asm-generic/vmlinux.lds.h | 10 ++++++++--
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+> index e3296aa028fe..7206e1ac23dd 100644
+> --- a/arch/x86/kernel/vmlinux.lds.S
+> +++ b/arch/x86/kernel/vmlinux.lds.S
+> @@ -21,6 +21,7 @@
+>  #define LOAD_OFFSET __START_KERNEL_map
+>  #endif
+>  
+> +#define RUNTIME_DISCARD_EXIT
+>  #define EMITS_PT_NOTE
+>  #define RO_EXCEPTION_TABLE_ALIGN	16
+>  
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index e00f41aa8ec4..6b943fb8c5fd 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -894,10 +894,16 @@
+>   * section definitions so that such archs put those in earlier section
+>   * definitions.
+>   */
+> +#ifdef RUNTIME_DISCARD_EXIT
+> +#define EXIT_DISCARDS
+> +#else
+> +#define EXIT_DISCARDS							\
+> +	EXIT_TEXT							\
+> +	EXIT_DATA
+> +#endif
 
-Signed-off-by: Daniel Colascione <dancol@google.com>
----
- fs/userfaultfd.c | 30 ++++++++++++++++++++++++++----
- 1 file changed, 26 insertions(+), 4 deletions(-)
+/me goes back and reads the old thread on this...
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 37df7c9eedb1..78ff5d898733 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -76,6 +76,8 @@ struct userfaultfd_ctx {
- 	bool mmap_changing;
- 	/* mm with one ore more vmas attached to this userfaultfd_ctx */
- 	struct mm_struct *mm;
-+	/* The inode that owns this context --- not a strong reference.  */
-+	const struct inode *owner;
- };
- 
- struct userfaultfd_fork_ctx {
-@@ -1022,8 +1024,10 @@ static int resolve_userfault_fork(struct userfaultfd_ctx *ctx,
- {
- 	int fd;
- 
--	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, new,
--			      O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS));
-+	fd = anon_inode_getfd_secure(
-+		"[userfaultfd]", &userfaultfd_fops, new,
-+		O_RDWR | (new->flags & UFFD_SHARED_FCNTL_FLAGS),
-+		ctx->owner);
- 	if (fd < 0)
- 		return fd;
- 
-@@ -1945,6 +1949,7 @@ static void init_once_userfaultfd_ctx(void *mem)
- 
- SYSCALL_DEFINE1(userfaultfd, int, flags)
- {
-+	struct file *file;
- 	struct userfaultfd_ctx *ctx;
- 	int fd;
- 
-@@ -1974,8 +1979,25 @@ SYSCALL_DEFINE1(userfaultfd, int, flags)
- 	/* prevent the mm struct to be freed */
- 	mmgrab(ctx->mm);
- 
--	fd = anon_inode_getfd("[userfaultfd]", &userfaultfd_fops, ctx,
--			      O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS));
-+	file = anon_inode_getfile_secure(
-+		"[userfaultfd]", &userfaultfd_fops, ctx,
-+		O_RDWR | (flags & UFFD_SHARED_FCNTL_FLAGS),
-+		NULL);
-+	if (IS_ERR(file)) {
-+		fd = PTR_ERR(file);
-+		goto out;
-+	}
-+
-+	fd = get_unused_fd_flags(O_RDONLY | O_CLOEXEC);
-+	if (fd < 0) {
-+		fput(file);
-+		goto out;
-+	}
-+
-+	ctx->owner = file_inode(file);
-+	fd_install(fd, file);
-+
-+out:
- 	if (fd < 0) {
- 		mmdrop(ctx->mm);
- 		kmem_cache_free(userfaultfd_ctx_cachep, ctx);
+Kees, do you expect other arches to actually need this
+RUNTIME_DISCARD_EXIT thing or was that a hypothetical thing?
+
+/me searches more...
+
+oh, there's a patchset from you
+
+https://lkml.kernel.org/r/20200228002244.15240-1-keescook@chromium.org
+
+which already contains this patch *and* an ARM64 patch which defines
+RUNTIME_DISCARD_EXIT so I'm guessing ARM64 wants to discard at runtime
+too.
+
+Which leaves the question why is H.J. sending that patch separate and
+you carry it in a patchset about orphan section warning? Seems like it
+wants to be in your patchset?
+
+Thx.
+
 -- 
-2.25.1.696.g5e7596f4ac-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
