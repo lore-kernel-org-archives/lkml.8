@@ -2,84 +2,125 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FDBEC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48418C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:51:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A2D20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:49:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D69920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 02:51:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="XBVHyY5L"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EhNyXOJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbgCZCtv (ORCPT
+        id S1727690AbgCZCvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 22:49:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50808 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727576AbgCZCtv (ORCPT
+        Wed, 25 Mar 2020 22:51:20 -0400
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:34800 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727600AbgCZCvU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 22:49:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=uIV1dMF8f1Bx0qqtr1nXCMlrLokE0SVaAEV1OmGtP74=; b=XBVHyY5LqgEp/M2/ztuf9zK8pB
-        fW3/IgQhGLqx1X1dHycX+BGaX+wSL+jgzgzuqaJtVRv0eDJRqcsUE35sDbn5MNrwUgWf+xIOuRQ8K
-        WwYuXJwIw5ixD12I2x0wWSg0Ik8LfxJkFUgIwrBIsEwtKGOa2R1DOXMBhSgkXFZW2s9YZMLmGtdJH
-        s2ZyRzlQ8DPzjk2MwWhdHuHGsm6TIifU/IolnPYBaK0rA0iRzL4+OPSkNjXVTu1a0YH9pD41Lhj1i
-        hK3OCplTUTSBFppLyDSLgbuK66xHzdQx2cf4E+ex1CDwHajldIEPb1kOpDoWbhbrhW6sYbGdADYQa
-        4gDgzwqw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHIaY-0000PW-8h; Thu, 26 Mar 2020 02:49:46 +0000
-Date:   Wed, 25 Mar 2020 19:49:46 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, pv-drivers@vmware.com,
-        linux-graphics-maintainer@vmware.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Ralph Campbell <rcampbell@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Roland Scheidegger <sroland@vmware.com>
-Subject: Re: [PATCH v7 1/9] fs: Constify vma argument to vma_is_dax
-Message-ID: <20200326024946.GE22483@bombadil.infradead.org>
-References: <20200324201123.3118-1-thomas_os@shipmail.org>
- <20200324201123.3118-2-thomas_os@shipmail.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200324201123.3118-2-thomas_os@shipmail.org>
+        Wed, 25 Mar 2020 22:51:20 -0400
+Received: by mail-pj1-f66.google.com with SMTP id q16so2894979pje.1;
+        Wed, 25 Mar 2020 19:51:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=igL6DNSPoj0Vd+3rnmZ1ATU2MAewKl3lRauvu90YjFc=;
+        b=EhNyXOJtZJBINozD050ITWqUebkFSh+/1Pc5dAtnoLCpTZAyDgQ1B6FkQyzpVGgsv3
+         lQkN7Ep6zXxkzUpzBreVdMGGKhL7sfbFQ3o1O5MvGa1wkYJhv2I2MZFLzwcS14lnfSPP
+         OM9E95lNQy8zsOAbmCF+s4eb8wG8Lh8KXrRt0mkFfFhF6fVYTR/Nt2NVP+1ApXC0h+4B
+         H2tlTa2aL0ZxV4cCCZzTr0YMk9mXvo6w4pB2eKRr8h8xiHcdWh52Yqi/nJoSqPj4GtoR
+         E5GqbV36L91NAWkYJVRDtt2zawgnnYqM5gfwZ5p7ZoBVBS09GdwxUi838DQXKIDOHjtN
+         jbCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=igL6DNSPoj0Vd+3rnmZ1ATU2MAewKl3lRauvu90YjFc=;
+        b=X2cg7qi1XSBqdc73sVvSBe0uKo+TOAhHNxNkzmFweaAuEIPPGgrL0G4KeSzkzT7DjG
+         oTmU26BUbpMgB+p4SKfHH4S1QlCgvpwMZ+wRpt+sK7NIXebpaVxUteJXOIcS5ft3QLj+
+         fsml7kcYn7pEkQB//of8fG4oU3Sk5lu6Um//tRomiIjhduGh42fNl8zDuJ8FThLYtYet
+         IndrJF51RQXPMuFRIHp1vYKoASsgJrQr/KQCgBfGlNSRDjf7rl5G5eibqJzeyxmYbTVm
+         QvPGhp2UCKjfItLaBI2X1N+IhR/hc9XPR6NQdU34TQCN/ZDAlOF8jnjffQsWTO0hAhe9
+         fOoQ==
+X-Gm-Message-State: ANhLgQ2HkJN9xC04UNX1K9yMHC4o0wa2GqZoNUg4KkMzA8AWJQ2n3l3c
+        if8BLfZKJkPJACDmwaKmTVM=
+X-Google-Smtp-Source: ADFU+vugEpysstLmXUtexy5TL0tcEq5GVSyeLoJH2VZstNoq4RQ699Uifam3hHfGzRi377sbuz0Hxg==
+X-Received: by 2002:a17:90a:276e:: with SMTP id o101mr683369pje.104.1585191078590;
+        Wed, 25 Mar 2020 19:51:18 -0700 (PDT)
+Received: from dev.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id f45sm466200pjg.29.2020.03.25.19.51.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 25 Mar 2020 19:51:17 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     bsingharora@gmail.com, akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] kernel/taskstats: fix wrong nla type for {cgroup,task}stats policy
+Date:   Wed, 25 Mar 2020 22:50:42 -0400
+Message-Id: <1585191042-9935-1-git-send-email-laoar.shao@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:11:15PM +0100, Thomas Hellström (VMware) wrote:
-> From: "Thomas Hellstrom (VMware)" <thomas_os@shipmail.org>
-> 
-> The function is used by upcoming vma_is_special_huge() with which we want
-> to use a const vma argument. Since for vma_is_dax() the vma argument is
-> only dereferenced for reading, constify it.
-> 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-> Cc: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: "Christian König" <christian.koenig@amd.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Thomas Hellstrom (VMware) <thomas_os@shipmail.org>
-> Reviewed-by: Roland Scheidegger <sroland@vmware.com>
-> Acked-by: Christian König <christian.koenig@amd.com>
+After our server is upgraded to a newer kernel, we found that it
+continuesly print a warning in the kernel message. The warning is,
+[832984.946322] netlink: 'irmas.lc': attribute type 1 has an invalid length.
 
-Acked-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+irmas.lc is one of our container monitor daemons, and it will use
+CGROUPSTATS_CMD_GET to get the cgroupstats, that is similar with
+tools/accounting/getdelays.c. We can also produce this warning with
+getdelays. For example, after running bellow command
+	$ ./getdelays -C /sys/fs/cgroup/memory
+then you can find a warning in dmesg,
+[61607.229318] netlink: 'getdelays': attribute type 1 has an invalid length.
+
+This warning is introduced in commit 6e237d099fac ("netlink: Relax attr
+validation for fixed length types"), which is used to check whether
+attributes using types NLA_U* and NLA_S* have an exact length.
+
+Regarding this issue, the root cause is cgroupstats_cmd_get_policy defines
+a wrong type as NLA_U32, while it should be NLA_NESTED an its minimal
+length is NLA_HDRLEN. That is similar to taskstats_cmd_get_policy.
+
+As this behavior change really breaks our application, we'd better
+cc stable as well.
+
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Cc: stable@vger.kernel.org
+---
+ kernel/taskstats.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/taskstats.c b/kernel/taskstats.c
+index e2ac0e3..b90a520 100644
+--- a/kernel/taskstats.c
++++ b/kernel/taskstats.c
+@@ -35,8 +35,8 @@
+ static struct genl_family family;
+ 
+ static const struct nla_policy taskstats_cmd_get_policy[TASKSTATS_CMD_ATTR_MAX+1] = {
+-	[TASKSTATS_CMD_ATTR_PID]  = { .type = NLA_U32 },
+-	[TASKSTATS_CMD_ATTR_TGID] = { .type = NLA_U32 },
++	[TASKSTATS_CMD_ATTR_PID]  = { .type = NLA_NESTED },
++	[TASKSTATS_CMD_ATTR_TGID] = { .type = NLA_NESTED },
+ 	[TASKSTATS_CMD_ATTR_REGISTER_CPUMASK] = { .type = NLA_STRING },
+ 	[TASKSTATS_CMD_ATTR_DEREGISTER_CPUMASK] = { .type = NLA_STRING },};
+ 
+@@ -45,7 +45,7 @@
+  * Make sure they are always aligned.
+  */
+ static const struct nla_policy cgroupstats_cmd_get_policy[TASKSTATS_CMD_ATTR_MAX+1] = {
+-	[CGROUPSTATS_CMD_ATTR_FD] = { .type = NLA_U32 },
++	[CGROUPSTATS_CMD_ATTR_FD] = { .type = NLA_NESTED },
+ };
+ 
+ struct listener {
+-- 
+1.8.3.1
+
