@@ -2,89 +2,127 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8574DC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B8BC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682E8206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49D0620719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:44:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=metafoo.de header.i=@metafoo.de header.b="kIn+QipP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgCZHnd (ORCPT
+        id S1727701AbgCZHod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:43:33 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:41582 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726138AbgCZHnd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:43:33 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_973XHxe+TMgAA--.30S2;
-        Thu, 26 Mar 2020 15:42:47 +0800 (CST)
-From:   bibo mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Allison Randal <allison@lohutok.net>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] MIPS: xilfpga: Removed unused header files
-Date:   Thu, 26 Mar 2020 03:42:47 -0400
-Message-Id: <1585208567-17979-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9Dx_973XHxe+TMgAA--.30S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GrW8Wr4rCFyUJF13ArWUurg_yoWDXwcEka
-        sFva1fur1fWr4xXrW7Jws3GFyUG397ur93Gr95Jrn0vw4Yqr4qvay8GFW7XrW7u398Zr4r
-        ZFyFvr1Ykay3KjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb7kYjsxI4VWkCwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
-        C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
-        F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r
-        4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCY02Avz4vE-syl42xK82IY
-        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
-        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF
-        0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0x
-        vE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-        aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU7eOJUUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+        Thu, 26 Mar 2020 03:44:33 -0400
+Received: from www381.your-server.de ([78.46.137.84]:44578 "EHLO
+        www381.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbgCZHod (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 03:44:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=metafoo.de;
+         s=default2002; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:
+        MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=7QaSOnUI/EJ9EDvESN5tQ9P5eS5ryHrNNO2QCFGCfgE=; b=kIn+QipPmKOmt9KAXvkAPNMj+N
+        nTaZfUZg/QRXeFcrZhVE6wy8BSDPN+0h1536BsnqNbvWn/Z2fSFULxf/smYkg2P5UX/Wkwut0Yjup
+        e7ldLzIcwNvrfXrmMyyJZgrbXqLb+zpfHR4icixEcxKFtKO1z89ZctVm2/t1BnT+Kw85U2Cl3zWkN
+        P2V9efiqkew0tyZNuTZbPvxtVDJT2N0AWZOyEGcVDJ3iF03oRXpKmFgF9IR17UCui3XLynZ52aQnV
+        NQ8WmZ4P0Mj/Y1GtRodL/fNmPzCi0G940emMCpukffeFVKJiIFwmoVFDMJ1Slx+7cCZP6swK1tBbb
+        /QqVNfag==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www381.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <lars@metafoo.de>)
+        id 1jHNBk-0007A6-6o; Thu, 26 Mar 2020 08:44:28 +0100
+Received: from [82.135.74.79] (helo=[192.168.178.20])
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <lars@metafoo.de>)
+        id 1jHNBj-000HsL-T0; Thu, 26 Mar 2020 08:44:27 +0100
+Subject: Re: [PATCH v2] iio: buffer: Don't allow buffers without any channels
+ enabled to be activated
+To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>,
+        "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>
+Cc:     "pmeerw@pmeerw.ne" <pmeerw@pmeerw.ne>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>
+References: <20200320104031.31701-1-alexandru.ardelean@analog.com>
+ <20200325100112.85107-1-alexandru.ardelean@analog.com>
+ <CAHp75VfVggWZ6WhOa=nUrxyd0dJrTbZd9NnUMhQ_S=kncrAhOw@mail.gmail.com>
+ <62b90724f16fa3a2c54b7e7f2321587a328d7209.camel@analog.com>
+From:   Lars-Peter Clausen <lars@metafoo.de>
+Message-ID: <f74263bc-5d42-db67-942e-f5970c71381e@metafoo.de>
+Date:   Thu, 26 Mar 2020 08:44:27 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <62b90724f16fa3a2c54b7e7f2321587a328d7209.camel@analog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Authenticated-Sender: lars@metafoo.de
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25762/Wed Mar 25 14:09:24 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Header in directory asm/mach-xilfpga is not used any more.
-Remove it here, and it passes to compile with xilfpga_defconfig
-
-Signed-off-by: bibo mao <maobibo@loongson.cn>
----
- arch/mips/include/asm/mach-xilfpga/irq.h | 14 --------------
- 1 file changed, 14 deletions(-)
- delete mode 100644 arch/mips/include/asm/mach-xilfpga/irq.h
-
-diff --git a/arch/mips/include/asm/mach-xilfpga/irq.h b/arch/mips/include/asm/mach-xilfpga/irq.h
-deleted file mode 100644
-index 15ad29e..0000000
---- a/arch/mips/include/asm/mach-xilfpga/irq.h
-+++ /dev/null
-@@ -1,14 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-or-later */
--/*
-- * Copyright (C) 2015 Imagination Technologies
-- * Author: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-- */
--
--#ifndef __MIPS_ASM_MACH_XILFPGA_IRQ_H__
--#define __MIPS_ASM_MACH_XILFPGA_IRQ_H__
--
--#define NR_IRQS 32
--
--#include <asm/mach-generic/irq.h>
--
--#endif /* __MIPS_ASM_MACH_XILFPGA_IRQ_H__ */
--- 
-1.8.3.1
-
+On 3/26/20 8:42 AM, Ardelean, Alexandru wrote:
+> On Wed, 2020-03-25 at 17:57 +0200, Andy Shevchenko wrote:
+>> [External]
+>>
+>> On Wed, Mar 25, 2020 at 12:02 PM Alexandru Ardelean
+>> <alexandru.ardelean@analog.com> wrote:
+>>> From: Lars-Peter Clausen <lars@metafoo.de>
+>>>
+>>> Before activating a buffer make sure that at least one channel is enabled.
+>>> Activating a buffer with 0 channels enabled doesn't make too much sense and
+>>> disallowing this case makes sure that individual driver don't have to add
+>>> special case code to handle it.
+>>>
+>>> Currently, without this patch enabling a buffer is possible and no error is
+>>> produced. With this patch -EINVAL is returned.
+>>>
+>>> An example of execution with this patch and some instrumented print-code:
+>>>     root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+>>>     root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+>>>     0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer-
+>>>> scan_mask 00000000
+>>>     1: iio_verify_update 753
+>>>     2:__iio_update_buffers 1115 ret -22
+>>>     3: iio_buffer_store_enable 1241 ret -22
+>>>     -bash: echo: write error: Invalid argument
+>>> 1, 2 & 3 are exit-error paths. 0 the first print in iio_verify_update()
+>>> rergardless of error path.
+>>>
+>>> Without this patch (and same instrumented print-code):
+>>>     root@analog:~# cd /sys/bus/iio/devices/iio\:device3/buffer
+>>>     root@analog:/sys/bus/iio/devices/iio:device3/buffer# echo 1 > enable
+>>>     0: iio_verify_update 748 indio_dev->masklength 2 *insert_buffer-
+>>>> scan_mask 00000000
+>>>     root@analog:/sys/bus/iio/devices/iio:device3/buffer#
+>>> Buffer is enabled with no error.
+>>>
+>>> Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+>>> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+>>> ---
+>>>
+>>> Changelog v1 -> v2:
+>>> * moved check in iio_verify_update()
+>>> * added dev_dbg() message; should help some folks understand the message
+>>> * documented steps to reproduce
+>>> * added Fixes tag; hopefully the tag is the good one; if needed, it can be
+>>>    dropped; this has been around for ~8 years; no idea if it's worth
+>>>    backporting
+>> Where?
+> stable/fixes/lts-kernels
+> don't have a really good clue about where these things need backporting;
+What Andy means is that there is no Fixes tag :)
