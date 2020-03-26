@@ -2,103 +2,96 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D7BC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85254C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:36:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F286A2077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="V3sdbZ6C"
+	by mail.kernel.org (Postfix) with ESMTP id 4E3332082D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585262201;
+	bh=0DtT905qVdWNBDrBCna0NgQ5Od+cslLqNzlrUIModX8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=Gz6v/jvN/jpqOVNOnab2jW/NAl6f+P1sh11ceBDDyVvndXlxH1vFzsr8WF8IA1p3I
+	 JiFispHTzEDzzvGaQdI6eatvmcI/ylv3CTuAvZj8hSX19n8MSfAigKUft3Xf7dV4Gc
+	 AKgDl8JvSJAfC16fqePn8lQkUQCW8kmnrizW5pdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCZWgG (ORCPT
+        id S1727699AbgCZWgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:36:06 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41892 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZWgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:36:06 -0400
-Received: by mail-qt1-f195.google.com with SMTP id i3so7036739qtv.8
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jcJBwUc87Jwe+9cOfSIvE+QFlU+cxqdBx8XRklms6k8=;
-        b=V3sdbZ6CxWcM8nunlXYfN3PzwezVfPUPS8L7pO57bgPnlAU91nvRWM8XK+3SPNwiON
-         tnUSf1pbWCI6eUfj02DGKhVs5M/0eK+Jsch78es8S4Jgcwc8DznGYN+VjyIXR6+eionk
-         6/DDDlO0MLkmCm4mJUJN53NtmX7DTVvEReJ0gZhMbvli1NiAbVknnX/q8JG3uP6RQ6OR
-         x3sK/AeBmf7KIOd/QoO8C5gA4IbLUx/Qq177dfBqTcGhnGey8X3wuC2TH/US4TTkER4S
-         RroXw0XSM5PCgtMg7jesVPWuljoNrMM06/Wr5Y+H/LCdkTBVSsd7EGkDfkKMcn+FJzxA
-         zwqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jcJBwUc87Jwe+9cOfSIvE+QFlU+cxqdBx8XRklms6k8=;
-        b=QltEpbGAh0TcmotMHhHJVper+sKOMP9fl++Zrul+6rJVOesmSKF8RUFjPTGI5pjPCr
-         2OzVarV77gimKaCpI+29OXW6/BPbLWMyBDBqGzJApCa3z2pY5Lz1tmykbLpdpIF3vVtn
-         FFeiNW8HihMUB1uJP0btewk+yxCmSjTlMQR/G/w1h4VWLZxoW1Wt7ecfIr54rNlhKPHZ
-         RPB0OgRrVSUy5Qye9EXWLuAQEDlXMnmYbKIGZioekT2KUr5Xh6mzPV1WIlWOjWB2D9Qp
-         ZIK5lnHpDUEi2yq3fwuQUiLTNThRphGHYxj1wyPlaMyCj5sjSony+8E0d/H9nKsUAwSz
-         X4rg==
-X-Gm-Message-State: ANhLgQ0XBguyOaQGuKum3gXSe1JFWC1c5mM6Sh7kIiBrs7z392wplaDN
-        fWGkrrqa3ax7oWhQLjzoq083hw==
-X-Google-Smtp-Source: ADFU+vvN1aO/CdBkNZbFR64XEwxbdEc/AQl3mOpROijPvKW0dCXxErokR05tF2hQt4ClPkC3tqfHPw==
-X-Received: by 2002:ac8:6697:: with SMTP id d23mr10956191qtp.8.1585262165441;
-        Thu, 26 Mar 2020 15:36:05 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id m1sm2571690qtm.22.2020.03.26.15.36.04
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 26 Mar 2020 15:36:04 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jHb6a-0003Z0-7r; Thu, 26 Mar 2020 19:36:04 -0300
-Date:   Thu, 26 Mar 2020 19:36:04 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm/page_alloc.c: leverage compiler to zero out
- used_mask
-Message-ID: <20200326223604.GP20941@ziepe.ca>
-References: <20200326222445.18781-1-richard.weiyang@gmail.com>
+        Thu, 26 Mar 2020 18:36:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgCZWgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 18:36:40 -0400
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 573642077D;
+        Thu, 26 Mar 2020 22:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585262199;
+        bh=0DtT905qVdWNBDrBCna0NgQ5Od+cslLqNzlrUIModX8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=tsBKZvCW4tQGv92f3syNeoLj0fegellrPHn5oyyzz27WysT5sEoVMOjlJdtOvesIG
+         ZTeEWtcDOyoSqORBEaNSRz0SRSisNtNXaspmqixgUCw+L421lOZU+yNKOuyudYUrl+
+         y9aeDUwoE0p5uWYEswtwhtCKp4a9TXRRfssbIeiw=
+Date:   Thu, 26 Mar 2020 17:36:37 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v18 10/11] PCI/DPC: Add Error Disconnect Recover (EDR)
+ support
+Message-ID: <20200326223637.GA106135@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326222445.18781-1-richard.weiyang@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <f71c989b-b8f8-3437-b086-a97c2aa1e2c5@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 10:24:44PM +0000, Wei Yang wrote:
-> Since we always clear used_mask before getting node order, we can
-> leverage compiler to do this instead of at run time.
+On Tue, Mar 24, 2020 at 06:00:31PM -0700, Kuppuswamy, Sathyanarayanan wrote:
+> Hi Bjorn,
 > 
-> Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
->  mm/page_alloc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 0e823bca3f2f..2144b6ceb119 100644
-> +++ b/mm/page_alloc.c
-> @@ -5587,14 +5587,13 @@ static void build_zonelists(pg_data_t *pgdat)
->  {
->  	static int node_order[MAX_NUMNODES];
->  	int node, load, nr_nodes = 0;
-> -	nodemask_t used_mask;
-> +	nodemask_t used_mask = {.bits = {0}};
+> On 3/24/20 2:37 PM, Bjorn Helgaas wrote:
+> > This is really ugly.  What's the story on this firmware?  It sounds
+> > defective to me.
+>
+> I think there is no defined standard for this. I have checked few
+> _DSM implementations. Some of them return default value and some
+> don't. But atleast in the test hardware I use, we need this check.
 
-If this style is to be done it should just be '= {}';
+I agree that I don't see anything in the ACPI spec v6.3 about what
+should happen if we supply a Function Index that isn't supported.
+That looks like a hole in the spec.
 
-This case demonstrates why the popular '= {0}' idiom is not such a
-good idea, as it only works if the first member is an integral type.
+> > Or is everybody that uses _DSM supposed to check before evaluating it?
+>
+> I think its safer to do this check.
+>
+> > E.g.,
+> > 
+> >    if (!acpi_check_dsm(...))
+> >      return -EINVAL;
+> > 
+> >    obj = acpi_evaluate_dsm(...);
+> > 
+> > If everybody is supposed to do this, it seems like the check part
+> > should be moved into acpi_evaluate_dsm().
 
-Jason
+So my question, and I guess this is really for Rafael, is that since
+it seems like *everybody* needs to use acpi_check_dsm() in order to
+use acpi_evaluate_dsm() safely, why don't we move the check *into*
+acpi_evaluate_dsm()?
+
+It's just error prone if we expect everybody to call both interfaces.
+
+Bjorn
