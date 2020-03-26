@@ -2,102 +2,161 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 674E5C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2400AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C8742070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:54:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE4CD2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:55:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Uon02VIS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F851KLD/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgCZUym (ORCPT
+        id S1727636AbgCZUzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:54:42 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40611 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbgCZUyl (ORCPT
+        Thu, 26 Mar 2020 16:55:20 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:37641 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbgCZUzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:54:41 -0400
-Received: by mail-io1-f65.google.com with SMTP id k9so7637641iov.7
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:54:41 -0700 (PDT)
+        Thu, 26 Mar 2020 16:55:20 -0400
+Received: by mail-io1-f68.google.com with SMTP id q9so7644234iod.4;
+        Thu, 26 Mar 2020 13:55:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=qIpHqCITSlYq28ZrJK7yCjm9889luVYT0dj9kJsGITk=;
-        b=Uon02VISKzAqEHBzK9cAGSYsu3Qc5mvKQe0UNv3bzOXpocEW541GOj4o7jeU1eFLEf
-         FCfPXPngZNSGwcn7DzfGZFny+hmAQxoGR0gOGQvVoQ/SHcrWe7LB/UV2tgP8bQQwZLXk
-         qv1cACG8+rK+gl+lqDtENPtWyDRQ2noPT+Ow5TPxoSNoWghNoB8jZT+3NOkoOl2aUH1P
-         XqkVKvWIumZ9IFErd1dVxFSxVXxMtebypV6OuVjjlOG6dBn7tv/pFEamtOBLcRGG65bs
-         zkvfjglNTrwHmkbRiXA6JddZPeT4I/iO/e7MEFB1N/1Uc5420lVVQivh9f5LhzReltxl
-         N44Q==
+        bh=tARXV4zRsb3hlr19d3d5crPq290pTsOZH+FqO6859YE=;
+        b=F851KLD/PngBFC3+D8zfF4GUIKki3kvDxOK2i9jhvVwKExaqiC3WmMQ81XYEgaVNWc
+         gmUuFe1dFltI398KtXOk1T9sfwfFHOqd1PiaEemFKcJerb+hC8RWhgPW66frhxQcEWoS
+         U62TQN5kgq9P0g+1ZR3Gw+eaSJtEyKcs7XOXMbpZQzzd4zT478N8kobe5Jnc3DSXNdxf
+         J1SWG6l0pSFkiDfDNKv3OH9+NEJTafrwmGlXgvrXhSMpzDklclRjQ5Iokr3SWJG79UsX
+         Y2TrYNwNYjNH8zZTjHQs+qyMaArx4L/wJ6oa/aofFKaotvufZJ9dJM51UH3U4I7jNDE+
+         v01Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qIpHqCITSlYq28ZrJK7yCjm9889luVYT0dj9kJsGITk=;
-        b=kSinpZh8MMq+iWWYExtRg7pBdmrLCFzHRfBFA27X0yaR2ovRi2IGIPriJoapjJYesl
-         XbNAs70gj88xuXLYAIAyqUpMaUueTzyPgiRLyLppYNI43jqRTaw7TH00mmzMGMzegBlI
-         PM3Ds9eEjSdejjKl4AsqGM4INXnHO81S6VSpuJo2stx717Jko1fF7gAewV8mrCLGiIEu
-         xSMo0fWqNmS+DciyRTqVGLW6NtSSU1V5BZenCHX2kG4UlTQ2wkfp5BGG8CPA7iVPTCM+
-         lAa7v/RYyc3cs7wIJ0WwMdAQPCCDcKoqTZ1x0pa/lufl7Tlo7DeTHBtr8FFZOiiu3W86
-         oFTA==
-X-Gm-Message-State: ANhLgQ0K7Lf5sNU6uFyGeQd2+TG1sYm0++hzmsDyeZgmYw3RHQ3yuxeg
-        6UdnO5eJffiI2LidedxfPLqYWmcpxoYkCcDmSKoKjw==
-X-Google-Smtp-Source: ADFU+vtevMH/ScxX0+FfrRrjbtXu5Z8zBAJlGo7wIoSFADSBRTftgXQxvct5MOt73cc2XvWulS4HQ++eUxWzTIUAxS4=
-X-Received: by 2002:a6b:580d:: with SMTP id m13mr9737394iob.59.1585256080560;
- Thu, 26 Mar 2020 13:54:40 -0700 (PDT)
+        bh=tARXV4zRsb3hlr19d3d5crPq290pTsOZH+FqO6859YE=;
+        b=cQ2HdyO5XcUlNAzcsN9e9mcy3GzeVPUMUSHvGCGl9sOguq970BdtdbqtPZrwqY6UqW
+         6OYfl9YUGaumN8MS2SmKjtFgtOUJ5439N4jPp576xuBrqaQxbKEe62hkJ0eMH3AW8lC3
+         dr1ASmCXdGjlwp3U6LfvNG+e3/Q8XDf8O5roxGzGf9tOwEd0enMky6jHhmpvVmIr6yeV
+         xo1FtdR8vDnWbc7274TIL6DMPmAGBnNqfBvrMy8AJpvIKsRFwKZz0cu9oQeOMU6SWJId
+         JJeKtZ3DO1n1zOalgamXtcXhMReL7i1PNDossU37Gws2d2FocCg1pFIGzt98kMFxWxTa
+         XRqw==
+X-Gm-Message-State: ANhLgQ2W/M5DzmmI0TAuYZD8jTGQBZ4tBxp3sRx8QHQTTya5yw2bIyST
+        LelpSPcht1WI6kJGD96v3SJz2ZGl1A8tvgyqfj0=
+X-Google-Smtp-Source: ADFU+vvEhVdAi6cy8FMfdw2tGKtXdnM6Kv2N332jUL3j9MI30fugJLCa0/14G/rkL4JHbHM/gpb7MHKPCl9j+Z9jbyk=
+X-Received: by 2002:a5d:84d0:: with SMTP id z16mr9395501ior.88.1585256118641;
+ Thu, 26 Mar 2020 13:55:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200325194317.526492-1-ross.philipson@oracle.com>
- <CACdnJut56WuqO=uLff0qy1Jp=C6f_sRxLpRBsrzb6byBsFYdCg@mail.gmail.com> <bacbc25a-c724-d2fd-40bd-065799cd6195@apertussolutions.com>
-In-Reply-To: <bacbc25a-c724-d2fd-40bd-065799cd6195@apertussolutions.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 26 Mar 2020 13:54:28 -0700
-Message-ID: <CACdnJusRATYv3Une5r14KHJVEg5COVW9B_BNViUXjavSxZ6d5A@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel support
-To:     "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Cc:     Ross Philipson <ross.philipson@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-doc@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, trenchboot-devel@googlegroups.com
+References: <20200326103926.20888-1-kai.heng.feng@canonical.com>
+ <CAKgT0UfFnXcSSsXvxk8+xiZvyzDh+8V-9bCT-z5U+MEVoAVKLw@mail.gmail.com> <98E86E5A-4EE9-4CB5-81CF-49C3E74C3AE6@canonical.com>
+In-Reply-To: <98E86E5A-4EE9-4CB5-81CF-49C3E74C3AE6@canonical.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Thu, 26 Mar 2020 13:55:07 -0700
+Message-ID: <CAKgT0UcigwjL10i4FReJqQip7zYgU4F5BEk1T-K824vPRRCmuQ@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] igb: Use a sperate mutex insead of rtnl_lock()
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "David S. Miller" <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 1:50 PM Daniel P. Smith
-<dpsmith@apertussolutions.com> wrote:
-> It is not part of the EFI entry point as we are not entering the kernel
-> from EFI but I will address that further in my response to Andy. The
-> expectation is that if you are on an UEFI platform then EBS should have
-> already been called.
+On Thu, Mar 26, 2020 at 10:16 AM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> Hi Alexander,
+>
+> > On Mar 27, 2020, at 00:27, Alexander Duyck <alexander.duyck@gmail.com> wrote:
+> >
+> > On Thu, Mar 26, 2020 at 3:39 AM Kai-Heng Feng
+> > <kai.heng.feng@canonical.com <mailto:kai.heng.feng@canonical.com>> wrote:
+> >>
+> >> Commit 9474933caf21 ("igb: close/suspend race in netif_device_detach")
+> >> fixed race condition between close and power management ops by using
+> >> rtnl_lock().
+> >>
+> >> This fix is a preparation for next patch, to prevent a dead lock under
+> >> rtnl_lock() when calling runtime resume routine.
+> >>
+> >> However, we can't use device_lock() in igb_close() because when module
+> >> is getting removed, the lock is already held for igb_remove(), and
+> >> igb_close() gets called during unregistering the netdev, hence causing a
+> >> deadlock. So let's introduce a new mutex so we don't cause a deadlock
+> >> with driver core or netdev core.
+> >>
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >
+> > So this description doesn't make much sense to me. You describe the
+> > use of the device_lock() in igb_close() but it isn't used there.
+>
+> Sorry I forgot to add a revision number.
+> It was used by previous version and Aaron found a regression when device_lock() is used.
+>
+> > In addition it seems like you are arbitrarily moving code that was
+> > wrapped in the rtnl_lock out of it. I'm not entirely sure that is safe
+> > since there are calls within many of these functions that assume the
+> > rtnl_lock is held and changing that is likely going to introduce more
+> > issues.
+>
+> The reason why rtnl lock needs to be removed is because of the following patch:
+> https://lore.kernel.org/lkml/20200207101005.4454-2-kai.heng.feng@canonical.com/
+>
+> Ethtools helpers already held rtnl_lock, so to prevent a deadlock, my idea is to use another lock to solve what "igb: close/suspend race in netif_device_detach" originally tried to fix.
 
-Ok. In that case should the EFI boot stub optionally be calling this
-instead of startup_32?
+No offense, but that is a horrible reason to be removing the
+rtnl_lock. It basically makes things worse since it is guaranteeing
+the device can be in flux while you are trying to record the state of
+the device.
 
-> With respect to using the firmware's TPM code, one
-> of the purposes of a TCG Dynamic Launch is to remove the firmware from
-> the code being trusted in making the integrity measurement of the
-> kernel. I trust the firmware to initialize the hardware because I have
-> to and it does give a trust chain, aka the SRTM, that can attest to what
-> was used during that process. When the OS kernel is being started that
-> trust chain has become weak (or even broken). I want a new trust chain
-> that can provide better footing for asserting the integrity of the
-> kernel and this is what Dynamic Launch gives us. I would like to think I
-> did a fair job explaining this at LSS last fall[1][2] and would
-> recommend those that are curious to review the slides/watch the
-> presentation.
+Wouldn't it make more sense to check for pm_runtime_suspended and if
+the interface is down and simply report SPEED_UNKNOWN rather than
+trying to instrument the driver so that you can force it out of the
+power management state to report statistics for an interface that we
+know is already down?
 
-PCs depend on the availability of EFI runtime services - it's not
-possible to just assert that they're untrusted and so unsupported. The
-TPM code is part of boot services which (based on your design) are
-unavailable at this point, so I agree that you need your own
-implementation.
+> >
+> > So it looks like nobody ever really reviewed commit 888f22931478
+> > ("igb: Free IRQs when device is hotplugged"). What I would recommend
+> > is reverting it and instead we fix the remaining pieces that need to
+> > be addressed in igb so it more closely matches what we have in e1000e
+> > after commit a7023819404a ("e1000e: Use rtnl_lock to prevent race
+> > conditions between net and pci/pm"). From what I can tell the only
+> > pieces that are really missing is to update igb_io_error_detected so
+> > that in addition to igb_down it will call igb_free_irq, and then in
+> > addition we should be wrapping most of the code in that function with
+> > an rtnl_lock since it is detaching a device and making modifications
+> > to it.
+>
+> In addition to that, igb_shutdown() indirectly calls igb_close() when netdev unregistering the device.
+
+Yes, that is how it is supposed to be. We are modifying core state of
+the netdevice and should only do so while holding the rtnl_lock.
+
+> My "only scratch the surface" approach is because I don't have a reproducer for commit "igb: close/suspend race in netif_device_detach", and I am afraid of breaking it.
+>
+> Kai-Heng
+
+This is taking things in the wrong direction. My advice is if you
+cannot get reliable link information when the device is in a
+pm_runtime_suspended state would be to simply test for that and report
+the value out. Again, you can take a look at e1000e since it already
+appears to be doing all this in e1000e_get_link_ksettings. We don't
+need to have the drivers diverge from each other in solutions for
+this. It is much easier to maintain if they can all be making use of
+the same approach.
+
+Thanks.
+
+- Alex
