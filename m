@@ -2,337 +2,114 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B678C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F71C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED806206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1070E20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:57:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hi6vwbex"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BmWaLXH+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgCZT5Y (ORCPT
+        id S1728649AbgCZT5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:57:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41882 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727612AbgCZT5Y (ORCPT
+        Thu, 26 Mar 2020 15:57:31 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:31220 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727446AbgCZT5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:57:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=npXztQNsueHlShWJd1lOnCg5QbqP/9CD5NFcbhBoQwQ=; b=hi6vwbexGa7OxE3FSXG0Ir++zO
-        jCSpro7RRA6yK0bIRcAhkB7OlbPG58vBocYxwn5RFQqminyMEVfCHZw3pvXE3pMBI9dangfXgXQBw
-        V9s4dFfca+mC2hDJ/EP4Phi0l+svuhjenaOK3+ZB5Zf8x36GywqIh977G3q+j+xy1COPAiDM6bfb6
-        fCyYDf1B2+r/ubKEH5LY4ZQeYVntusBrk7/jXJjcF6rslCbUSTC5oMhUJbWuUTLPNCG+M6hdje7CF
-        gdZ8d4a5c4TIypERmQTPbKuHC8CX/pLsqos2yfzXCbDcYlsIXCGoVAcV7FXm549cBNmpByGosnpuJ
-        srn4aalQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHYcz-00075z-1S; Thu, 26 Mar 2020 19:57:21 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 41579983531; Thu, 26 Mar 2020 20:57:18 +0100 (CET)
-Date:   Thu, 26 Mar 2020 20:57:18 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz
-Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
-Message-ID: <20200326195718.GD2452@worktop.programming.kicks-ass.net>
-References: <20200325174525.772641599@infradead.org>
- <20200325174605.369570202@infradead.org>
- <20200326113049.GD20696@hirez.programming.kicks-ass.net>
- <20200326135620.tlmof5fa7p5wct62@treble>
- <20200326154938.GO20713@hirez.programming.kicks-ass.net>
+        Thu, 26 Mar 2020 15:57:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585252649;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+HcwVk5VdvJ1LeKecVY6pFDWmsucvzIVlRkfrm9XQWo=;
+        b=BmWaLXH+/vRVPPM6LB3TVTtZosaMA9utLxpyFd/A6iZjyIPIUUOj49OLi5sFurI9HG9R1s
+        O0sbqeYtLkK+1zUV687FPdHD8DZP80y8PYIZ9TQxrxJIDBxJdmRZH1g6nyQN+br7wndZhE
+        /g/+3gC8fFlWSzilH9HezckX5msoe4s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-383-UpZU49OxOLqsAvXMWVVkzA-1; Thu, 26 Mar 2020 15:57:27 -0400
+X-MC-Unique: UpZU49OxOLqsAvXMWVVkzA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E40EC8017CC;
+        Thu, 26 Mar 2020 19:57:19 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-112.rdu2.redhat.com [10.10.117.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06A669CA3;
+        Thu, 26 Mar 2020 19:57:11 +0000 (UTC)
+Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
+To:     Joel Fernandes <joel@joelfernandes.org>, Tejun Heo <tj@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
+        jsbarnes@google.com, sonnyrao@google.com, vpillai@digitalocean.com,
+        peterz@infradead.org, Guenter Roeck <groeck@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+References: <20200326191623.129285-1-joel@joelfernandes.org>
+ <20200326192035.GO162390@mtj.duckdns.org>
+ <20200326194448.GA133524@google.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
+Date:   Thu, 26 Mar 2020 15:57:11 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326154938.GO20713@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200326194448.GA133524@google.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 04:49:38PM +0100, Peter Zijlstra wrote:
-> > The 'insn == first' check isn't ideal, but at least it works (I think?).
-> 
-> It works, yes, for exactly this one case.
+On 3/26/20 3:44 PM, Joel Fernandes wrote:
+> Hi Tejun,
+>
+> On Thu, Mar 26, 2020 at 03:20:35PM -0400, Tejun Heo wrote:
+>> On Thu, Mar 26, 2020 at 03:16:23PM -0400, Joel Fernandes (Google) wrote:
+>>> This deliberately changes the behavior of the per-cpuset
+>>> cpus file to not be effected by hotplug. When a cpu is offlined,
+>>> it will be removed from the cpuset/cpus file. When a cpu is onlined,
+>>> if the cpuset originally requested that that cpu was part of the cpuset,
+>>> that cpu will be restored to the cpuset. The cpus files still
+>>> have to be hierachical, but the ranges no longer have to be out of
+>>> the currently online cpus, just the physically present cpus.
+>> This is already the behavior on cgroup2 and I don't think we want to
+>> introduce this big a behavior change to cgroup1 cpuset at this point.
+> It is not really that big a change. Please go over the patch, we are not
+> changing anything with how ->cpus_allowed works and interacts with the rest
+> of the system and the scheduler. We have just introduced a new mask to keep
+> track of which CPUs were requested without them being affected by hotplug. On
+> CPU onlining, we restore the state of ->cpus_allowed as not be affected by
+> hotplug.
+>
+> There's 3 companies that have this issue so that should tell you something.
+> We don't want to carry this patch forever. Many people consider the hotplug
+> behavior to be completely broken.
+>
+I think Tejun is concerned about a change in the default behavior of
+cpuset v1.
 
-How's this? Ignore the ignore_cfi bits, that's a 'failed' experiment.
+There is a special v2 mode for cpuset that is enabled by the mount
+option "cpuset_v2_mode". This causes the cpuset v1 to adopt some of the
+v2 behavior. I introduced this v2 mode a while back to address, I think,
+a similar concern. Could you try that to see if it is able to address
+your problem? If not, you can make some code adjustment within the
+framework of the v2 mode. As long as it is an opt-in, I think we are
+open to further change.
 
----
- arch/x86/include/asm/orc_types.h       |   2 +
- arch/x86/include/asm/processor.h       |   6 +-
- arch/x86/include/asm/unwind_hints.h    |   4 ++
- tools/arch/x86/include/asm/orc_types.h |   2 +
- tools/objtool/check.c                  | 109 +++++++++++++++++++--------------
- tools/objtool/check.h                  |   3 +-
- 6 files changed, 75 insertions(+), 51 deletions(-)
-
-diff --git a/arch/x86/include/asm/orc_types.h b/arch/x86/include/asm/orc_types.h
-index 6e060907c163..82b5c685341a 100644
---- a/arch/x86/include/asm/orc_types.h
-+++ b/arch/x86/include/asm/orc_types.h
-@@ -60,6 +60,8 @@
- #define ORC_TYPE_REGS_IRET		2
- #define UNWIND_HINT_TYPE_SAVE		3
- #define UNWIND_HINT_TYPE_RESTORE	4
-+#define UNWIND_HINT_TYPE_IGNORE		5
-+#define UNWIND_HINT_TYPE_IRET_CONT	6
-
- #ifndef __ASSEMBLY__
- /*
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 94789db550df..45c74cbc0a83 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -728,8 +728,8 @@ static inline void sync_core(void)
- 	unsigned int tmp;
-
- 	asm volatile (
--		UNWIND_HINT_SAVE
- 		"mov %%ss, %0\n\t"
-+		UNWIND_HINT_SAVE
- 		"pushq %q0\n\t"
- 		"pushq %%rsp\n\t"
- 		"addq $8, (%%rsp)\n\t"
-@@ -737,9 +737,9 @@ static inline void sync_core(void)
- 		"mov %%cs, %0\n\t"
- 		"pushq %q0\n\t"
- 		"pushq $1f\n\t"
-+		UNWIND_HINT_IRET_CONT
- 		"iretq\n\t"
--		UNWIND_HINT_RESTORE
--		"1:"
-+		"1:\n\t"
- 		: "=&r" (tmp), ASM_CALL_CONSTRAINT : : "cc", "memory");
- #endif
- }
-diff --git a/arch/x86/include/asm/unwind_hints.h b/arch/x86/include/asm/unwind_hints.h
-index f5e2eb12cb71..d8a07749c323 100644
---- a/arch/x86/include/asm/unwind_hints.h
-+++ b/arch/x86/include/asm/unwind_hints.h
-@@ -112,6 +112,10 @@
-
- #define UNWIND_HINT_RESTORE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_RESTORE, 0)
-
-+#define UNWIND_HINT_IGNORE UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_IGNORE, 0)
-+
-+#define UNWIND_HINT_IRET_CONT UNWIND_HINT(0, 0, UNWIND_HINT_TYPE_IRET_CONT, 0)
-+
- #endif /* __ASSEMBLY__ */
-
- #endif /* _ASM_X86_UNWIND_HINTS_H */
-diff --git a/tools/arch/x86/include/asm/orc_types.h b/tools/arch/x86/include/asm/orc_types.h
-index 6e060907c163..82b5c685341a 100644
---- a/tools/arch/x86/include/asm/orc_types.h
-+++ b/tools/arch/x86/include/asm/orc_types.h
-@@ -60,6 +60,8 @@
- #define ORC_TYPE_REGS_IRET		2
- #define UNWIND_HINT_TYPE_SAVE		3
- #define UNWIND_HINT_TYPE_RESTORE	4
-+#define UNWIND_HINT_TYPE_IGNORE		5
-+#define UNWIND_HINT_TYPE_IRET_CONT	6
-
- #ifndef __ASSEMBLY__
- /*
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index e637a4a38d2a..03bac6cb313c 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -1259,14 +1259,25 @@ static int read_unwind_hints(struct objtool_file *file)
-
- 		cfa = &insn->state.cfa;
-
--		if (hint->type == UNWIND_HINT_TYPE_SAVE) {
-+		switch (hint->type) {
-+		case UNWIND_HINT_TYPE_SAVE:
- 			insn->save = true;
- 			continue;
-
--		} else if (hint->type == UNWIND_HINT_TYPE_RESTORE) {
-+		case UNWIND_HINT_TYPE_RESTORE:
- 			insn->restore = true;
--			insn->hint = true;
- 			continue;
-+
-+		case UNWIND_HINT_TYPE_IGNORE:
-+			insn->ignore_cfi = true;
-+			continue;
-+
-+		case UNWIND_HINT_TYPE_IRET_CONT:
-+			insn->iret_cont = true;
-+			continue;
-+
-+		default:
-+			break;
- 		}
-
- 		insn->hint = true;
-@@ -1558,6 +1569,9 @@ static int update_insn_state(struct instruction *insn, struct insn_state *state)
- 	struct cfi_reg *cfa = &state->cfa;
- 	struct cfi_reg *regs = state->regs;
-
-+	if (insn->ignore_cfi)
-+		return 0;
-+
- 	/* stack operations don't make sense with an undefined CFA */
- 	if (cfa->base == CFI_UNDEFINED) {
- 		if (insn->func) {
-@@ -1993,6 +2007,37 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
- 	return validate_call(insn, state);
- }
-
-+static int insn_hint_restore(struct objtool_file *file, struct section *sec,
-+			     struct symbol *func, struct instruction *insn,
-+			     struct insn_state *state)
-+{
-+	struct instruction *save_insn, *i;
-+
-+	i = insn;
-+	save_insn = NULL;
-+	func_for_each_insn_continue_reverse(file, func, i) {
-+		if (i->save) {
-+			save_insn = i;
-+			break;
-+		}
-+	}
-+
-+	if (!save_insn) {
-+		WARN_FUNC("no corresponding CFI save for CFI restore",
-+			  sec, insn->offset);
-+		return 1;
-+	}
-+
-+	if (!save_insn->visited) {
-+		WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
-+			  sec, insn->offset);
-+		return 1;
-+	}
-+
-+	*state = save_insn->state;
-+	return 0;
-+}
-+
- /*
-  * Follow the branch starting at the given instruction, and recursively follow
-  * any other branches (jumps).  Meanwhile, track the frame pointer state at
-@@ -2000,15 +2045,14 @@ static int validate_sibling_call(struct instruction *insn, struct insn_state *st
-  * tools/objtool/Documentation/stack-validation.txt.
-  */
- static int validate_branch(struct objtool_file *file, struct symbol *func,
--			   struct instruction *first, struct insn_state state)
-+			   struct instruction *insn, struct insn_state state)
- {
-+	struct instruction *next_insn;
- 	struct alternative *alt;
--	struct instruction *insn, *next_insn;
- 	struct section *sec;
- 	u8 visited;
- 	int ret;
-
--	insn = first;
- 	sec = insn->sec;
-
- 	if (insn->alt_group && list_empty(&insn->alts)) {
-@@ -2034,7 +2078,7 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
-
- 		visited = 1 << state.uaccess;
- 		if (insn->visited) {
--			if (!insn->hint && !insn_state_match(insn, &state))
-+			if ((!insn->hint && !insn->restore) && !insn_state_match(insn, &state))
- 				return 1;
-
- 			if (insn->visited & visited)
-@@ -2042,47 +2086,12 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 		}
-
- 		if (insn->hint) {
--			if (insn->restore) {
--				struct instruction *save_insn, *i;
--
--				i = insn;
--				save_insn = NULL;
--				func_for_each_insn_continue_reverse(file, func, i) {
--					if (i->save) {
--						save_insn = i;
--						break;
--					}
--				}
--
--				if (!save_insn) {
--					WARN_FUNC("no corresponding CFI save for CFI restore",
--						  sec, insn->offset);
--					return 1;
--				}
--
--				if (!save_insn->visited) {
--					/*
--					 * Oops, no state to copy yet.
--					 * Hopefully we can reach this
--					 * instruction from another branch
--					 * after the save insn has been
--					 * visited.
--					 */
--					if (insn == first)
--						return 0;
--
--					WARN_FUNC("objtool isn't smart enough to handle this CFI save/restore combo",
--						  sec, insn->offset);
--					return 1;
--				}
--
--				insn->state = save_insn->state;
--			}
--
- 			state = insn->state;
--
--		} else
-+		} else {
-+			if (insn->restore)
-+				insn_hint_restore(file, sec, func, insn, &state);
- 			insn->state = state;
-+		}
-
- 		insn->visited |= visited;
-
-@@ -2191,11 +2200,17 @@ static int validate_branch(struct objtool_file *file, struct symbol *func,
- 			break;
-
- 		case INSN_CONTEXT_SWITCH:
--			if (func && (!next_insn || !next_insn->hint)) {
-+			if (insn->iret_cont) {
-+				insn_hint_restore(file, sec, func, insn, &state);
-+				break;
-+			}
-+
-+			if (func) {
- 				WARN_FUNC("unsupported instruction in callable function",
- 					  sec, insn->offset);
- 				return 1;
- 			}
-+
- 			return 0;
-
- 		case INSN_STACK:
-diff --git a/tools/objtool/check.h b/tools/objtool/check.h
-index 6d875ca6fce0..f2b6172e119b 100644
---- a/tools/objtool/check.h
-+++ b/tools/objtool/check.h
-@@ -33,7 +33,8 @@ struct instruction {
- 	unsigned int len;
- 	enum insn_type type;
- 	unsigned long immediate;
--	bool alt_group, dead_end, ignore, hint, save, restore, ignore_alts;
-+	bool alt_group, dead_end, ignore, ignore_alts;
-+	bool hint, save, restore, ignore_cfi, iret_cont;
- 	bool retpoline_safe;
- 	u8 visited;
- 	struct symbol *call_dest;
+Cheers,
+Longman
 
