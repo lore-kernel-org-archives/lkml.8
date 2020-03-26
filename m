@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA782C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C80C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE478206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27340206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728561AbgCZPJl (ORCPT
+        id S1728573AbgCZPJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:09:41 -0400
-Received: from 8bytes.org ([81.169.241.247]:55834 "EHLO theia.8bytes.org"
+        Thu, 26 Mar 2020 11:09:46 -0400
+Received: from 8bytes.org ([81.169.241.247]:55878 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbgCZPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728071AbgCZPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 11:08:51 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 516677BA; Thu, 26 Mar 2020 16:08:47 +0100 (CET)
+        id 498025ED; Thu, 26 Mar 2020 16:08:46 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -37,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v4 08/16] iommu: Introduce accessors for iommu private data
-Date:   Thu, 26 Mar 2020 16:08:33 +0100
-Message-Id: <20200326150841.10083-9-joro@8bytes.org>
+Subject: [PATCH v4 04/16] iommu/tegra-gart: Remove direct access of dev->iommu_fwspec
+Date:   Thu, 26 Mar 2020 16:08:29 +0100
+Message-Id: <20200326150841.10083-5-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200326150841.10083-1-joro@8bytes.org>
 References: <20200326150841.10083-1-joro@8bytes.org>
@@ -50,38 +51,28 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Add dev_iommu_priv_get/set() functions to access per-device iommu
-private data. This makes it easier to move the pointer to a different
-location.
+Use the accessor functions instead of directly dereferencing
+dev->iommu_fwspec.
 
-Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- include/linux/iommu.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/iommu/tegra-gart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index f5edc21a644d..056900e75758 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -627,6 +627,16 @@ static inline void dev_iommu_fwspec_set(struct device *dev,
- 	dev->iommu->fwspec = fwspec;
- }
+diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+index 3fb7ba72507d..db6559e8336f 100644
+--- a/drivers/iommu/tegra-gart.c
++++ b/drivers/iommu/tegra-gart.c
+@@ -247,7 +247,7 @@ static int gart_iommu_add_device(struct device *dev)
+ {
+ 	struct iommu_group *group;
  
-+static inline void *dev_iommu_priv_get(struct device *dev)
-+{
-+	return dev->iommu->fwspec->iommu_priv;
-+}
-+
-+static inline void dev_iommu_priv_set(struct device *dev, void *priv)
-+{
-+	dev->iommu->fwspec->iommu_priv = priv;
-+}
-+
- int iommu_probe_device(struct device *dev);
- void iommu_release_device(struct device *dev);
+-	if (!dev->iommu_fwspec)
++	if (!dev_iommu_fwspec_get(dev))
+ 		return -ENODEV;
  
+ 	group = iommu_group_get_for_dev(dev);
 -- 
 2.17.1
 
