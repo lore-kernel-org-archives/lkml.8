@@ -2,222 +2,138 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 536BFC2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D075EC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC820714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D7920714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="McsYNAFO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgCZL0q (ORCPT
+        id S1728087AbgCZL1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:26:46 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9890 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgCZL0p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:26:45 -0400
-IronPort-SDR: 7C3kS7zrNh/hCiyB5w5F/vcVoP3DMrSSq8fyYNuvI9iHo74M3QmHNK7swOyYGwif/eaSqcJMzp
- UaWQXW4ZHqKQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 04:26:44 -0700
-IronPort-SDR: j+CX21XIILRChtNrHQMbIj0SlMiqShprtb0zcBZPdehxP4557gVhBxKOezUEUVceIPa8QALX4P
- mphdgBgGDe2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="240931447"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga008.jf.intel.com with ESMTP; 26 Mar 2020 04:26:41 -0700
-Subject: Re: [PATCH v8 3/5] usb: xhci: Add support for Renesas controller with
- memory
-To:     Vinod Koul <vkoul@kernel.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?Q?Andreas_B=c3=b6hler?= <dev@aboehler.at>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200323170601.419809-1-vkoul@kernel.org>
- <20200323170601.419809-4-vkoul@kernel.org>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <6ea778a7-6d58-6dae-bd65-3a63a945fb97@linux.intel.com>
-Date:   Thu, 26 Mar 2020 13:29:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200323170601.419809-4-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Thu, 26 Mar 2020 07:27:42 -0400
+Received: from mail-eopbgr80071.outbound.protection.outlook.com ([40.107.8.71]:4580
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727560AbgCZL1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:27:42 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hcE0t/+P/ROT7bJqhMuRE+o/8HkX5ukQtoBcR2LkKrwaeZtKuBrueU1/cdBe+GjeVxBuTmRFoh6Fa+jIP0HsmLR7Srs/ta3cx42SC8g7SIV6d/+4Z9myU4Sr2IxzYUQ57KlLG6IalH3Ss15m/IVspJhtnKynGet58aPM1/VpTm1TbTsW3kGOYfGrjBy43ifeT+6Cd+U0f1rdcbF2yqDkLi/uVna7IS46Y1iSpfH1dAZf4V2464IRSnoFR+eZDrgqRfSNKlgdlYh6uhJUf4UsEII1N9pGvPpLK1ssAc8KZvOOe0NZdVn6WgZDWT4C+Z8gBH0MO8tbKRJqsZud7Oc/OQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=881QD6+SCFjpQD28jCSSQPDg3w4/ooncGEL1dHSZSYY=;
+ b=RFgfKUtTsyLm0aze/i/S8/WqO7Kkr4aH4pE+UDt3xbA2Ytl3nw9Wl1OdF+554z7Ws9CMVV7p5CNbazuJIZ8RRvKOgNKrOZEWX2e/WlH3eCjUEiL6pDpZ/GXelYFOkSYHZfFr6v/wlv//KiK8M7+hfyHas8Y5XxQP7Wx3V7xG0ZwSobIAHJ1xSIOEPVtZwwAvgn2s0jhm0VrntK/khbjEqs//esrabAkbBi5MwXNEsQ9Jx6vcsW7lBt9Ofd5uMGZjWnUb3eh0WCfiiaAMdVpjcz2P8GmlfRCLOke+cV7ME0CFvE24VfqTSfVdxrPPMNEcXvz5pCxCkB1TpDEWPkULvw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=881QD6+SCFjpQD28jCSSQPDg3w4/ooncGEL1dHSZSYY=;
+ b=McsYNAFOdo+N/U4JywO14dPPqsrsofvjYmeQl0RNJhTqW2Y64AVLKdCugzh4rtOGsYsmf3sFN0JZ5EoZ6CDfLKAGZxS3ASGfz9fu1fENMJD3dfK4cMSYgNGPY9y5ZGKYNq8G4xxy605pLkXSklkDLU0kO6rLUylDqo7VHaapkPg=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (52.135.57.84) by
+ AM7PR04MB7109.eurprd04.prod.outlook.com (52.135.57.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Thu, 26 Mar 2020 11:27:39 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::902c:71:6377:4273]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::902c:71:6377:4273%5]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
+ 11:27:39 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+CC:     Leo Li <leoyang.li@nxp.com>, "balbi@kernel.org" <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] usb: gadget: fsl: remove unused variable
+ 'driver_desc'
+Thread-Topic: [PATCH -next] usb: gadget: fsl: remove unused variable
+ 'driver_desc'
+Thread-Index: AQHWAz46AEx9LC9yH0mnhgCbnlg976havLiA
+Date:   Thu, 26 Mar 2020 11:27:38 +0000
+Message-ID: <20200326112759.GB23632@b29397-desktop>
+References: <20200326071419.19240-1-yuehaibing@huawei.com>
+In-Reply-To: <20200326071419.19240-1-yuehaibing@huawei.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peter.chen@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 88ca04b9-f938-41dc-d988-08d7d178b0ed
+x-ms-traffictypediagnostic: AM7PR04MB7109:|AM7PR04MB7109:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB71094A505D179E5D93EEFEA18BCF0@AM7PR04MB7109.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1360;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(54906003)(5660300002)(6506007)(53546011)(8676002)(33656002)(478600001)(2906002)(44832011)(8936002)(26005)(6916009)(71200400001)(1076003)(66476007)(66556008)(64756008)(66446008)(4744005)(4326008)(91956017)(6512007)(86362001)(66946007)(76116006)(9686003)(316002)(33716001)(6486002)(81166006)(186003)(81156014);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7109;H:AM7PR04MB7157.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NB4n2WwV6gNRhhBlHxuRWIgH/M+O6LqeznisGC5xQxg9XRq0TecnWQcfwN1tpQkfKaHZPVua9+BfVGN8LdmKMgfvcvSFUQEz/MrEnRCO2X22bpcKPiXtqvdkmVkT0qFISN484wHV0bA6PTGe2imh+ZE6x+Yec+gCWLGgz8a169E30+bYs1PeaxcI//025CNB5sxI4Y9v4znY+hmp6RUtdw05QkouU5Yk1T0K7KhKZNtLMk7ckVWGEmDcANxjEgarJr4N7k5lzgeD8bzS70H+GdBmPdIjDNKui8+X/SDVC1kd1FeodKYhmzNTR7Iu/NRDccv0MGuXKyPOyg+2ufrKz2uwNY7M6dWvQPVTWvYjGo7J1t+8GVegvpbeDJD+k7uk3Mb2UG8U/5TiZmU129RUtW/zAEex49sXzEjPX+0kGMsv8xw8n/z9jDJhAlY0ZZ/h
+x-ms-exchange-antispam-messagedata: t6a5bzMGvRmlYW7adR0kSacCBiShuQbMoUI8Woh7NEJvtEbyrGHoUB7c+L8g4spFPFCQ4WpJbKskVmCw+kccnUH/IkCSpNheaKHrhnogSph2lfEvWMgbBQx5DClblVI3gPGI7KwanRi0N9nwqBypoQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4243D766E89A814D926F964C91D19B01@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 88ca04b9-f938-41dc-d988-08d7d178b0ed
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 11:27:39.0325
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bIYnYNPCxCaDSRWn0xoz/r9T+/BYdpQ6sjwEm/oSqj92ir95Xss3TgGKkdTEQC42v9skXe/nSFJ+6nfan9zJTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod
-
-On 23.3.2020 19.05, Vinod Koul wrote:
-> Some rensas controller like uPD720201 and uPD720202 need firmware to be
-> loaded. Add these devices in table and invoke renesas firmware loader
-> functions to check and load the firmware into device memory when
-> required.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+On 20-03-26 15:14:19, YueHaibing wrote:
+> drivers/usb/gadget/udc/fsl_udc_core.c:56:19:
+>  warning: 'driver_desc' defined but not used [-Wunused-const-variable=3D]
+>=20
+> It is never used, so remove it.
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 > ---
->  drivers/usb/host/xhci-pci-renesas.c |  1 +
->  drivers/usb/host/xhci-pci.c         | 29 ++++++++++++++++++++++++++++-
->  drivers/usb/host/xhci-pci.h         |  3 +++
->  3 files changed, 32 insertions(+), 1 deletion(-)
-> 
+>  drivers/usb/gadget/udc/fsl_udc_core.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/usb/gadget/udc/fsl_udc_core.c b/drivers/usb/gadget/u=
+dc/fsl_udc_core.c
+> index ec6eda426223..febabde62f71 100644
+> --- a/drivers/usb/gadget/udc/fsl_udc_core.c
+> +++ b/drivers/usb/gadget/udc/fsl_udc_core.c
+> @@ -53,7 +53,6 @@
+>  #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
+> =20
+>  static const char driver_name[] =3D "fsl-usb2-udc";
+> -static const char driver_desc[] =3D DRIVER_DESC;
+> =20
+>  static struct usb_dr_device __iomem *dr_regs;
+> =20
+> --=20
+> 2.17.1
+>=20
+>=20
 
-It's unfortunate if firmware loading couldn't be initiated in a PCI fixup hook
-for this Renesas controller. What was the reason it failed?
+Reviewed-by: Peter Chen <peter.chen@nxp.com>
 
-Nicolas Saenz Julienne just submitted a solution like that for Raspberry Pi 4
-where firmware loading is initiated in pci-quirks.c quirk_usb_early_handoff()
+--=20
 
-https://lore.kernel.org/lkml/20200324182812.20420-1-nsaenzjulienne@suse.de
-
-Is he doing something different than what was done for the Renesas controller?
-
-
-> diff --git a/drivers/usb/host/xhci-pci-renesas.c b/drivers/usb/host/xhci-pci-renesas.c
-> index c588277ac9b8..d413d53df94b 100644
-> --- a/drivers/usb/host/xhci-pci-renesas.c
-> +++ b/drivers/usb/host/xhci-pci-renesas.c
-> @@ -336,6 +336,7 @@ static void renesas_fw_callback(const struct firmware *fw,
->  		goto cleanup;
->  	}
->  
-> +	xhci_pci_probe(pdev, ctx->id);
->  	return;
-
-I haven't looked into this but instead of calling xhci_pci_probe() here in the async fw
-loading callback could we just return -EPROBE_DEFER until firmware is loaded when
-xhci_pci_probe() is originally called?
-
->  
->  cleanup:
-> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> index a19752178216..7e63658542ac 100644
-> --- a/drivers/usb/host/xhci-pci.c
-> +++ b/drivers/usb/host/xhci-pci.c
-> @@ -15,6 +15,7 @@
->  
->  #include "xhci.h"
->  #include "xhci-trace.h"
-> +#include "xhci-pci.h"
->  
->  #define SSIC_PORT_NUM		2
->  #define SSIC_PORT_CFG2		0x880c
-> @@ -312,11 +313,25 @@ static int xhci_pci_setup(struct usb_hcd *hcd)
->   * We need to register our own PCI probe function (instead of the USB core's
->   * function) in order to create a second roothub under xHCI.
->   */
-> -static int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
-> +int xhci_pci_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  {
->  	int retval;
->  	struct xhci_hcd *xhci;
->  	struct usb_hcd *hcd;
-> +	char *renesas_fw;
-> +
-> +	renesas_fw = (char *)id->driver_data;
-
-driver_data is useful for other things than just renesas firmware loading.
-Heikki suggested a long time ago to use it for passing the quirk flags as well, which
-makes sense.
-
-We probably need a structure, something like
-
-struct xhci_driver_data = {
-	u64 quirks;
-	const char *firmware;
-};
-
-> +	if (renesas_fw) {
-> +		retval = renesas_xhci_pci_probe(dev, id);
-> +		switch (retval) {
-> +		case 0: /* fw check success, continue */
-> +			break;
-> +		case 1: /* fw will be loaded by async load */
-> +			return 0;
-> +		default: /* error */
-> +			return retval;
-> +		}
-> +	}
->  
-
-If returning -EPROBE_DEFER until firmware is loaded is an option then we would prevent probe
-from returning success while the renesas controller is still loading firmware.
-
-So we would end up with something like this:
-(we can add a quirk flag for renesas firmware loading)
-
-int xhci_pci_probe(..)
-{
-	...
-	struct xhci_driver_data *data = id->driver_data;
-	if (data && data->quirks & XHCI_RENESAS_FW_QUIRK) { 
-		if (!xhci_renesas_fw_ready(...))
-			return -EPROBE_DEFER
-	}
-}
-
-xhci_renesas_fw_ready() would need to initiate firmware loading unless
-firmware is already running or loading.
-
-Would that work for you?
-
--Mathias
+Thanks,
+Peter Chen=
