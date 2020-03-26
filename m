@@ -2,83 +2,152 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ED8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF18C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324CF2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3573C2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N4P2EUYl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2qxRrFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727345AbgCZTYP (ORCPT
+        id S1728566AbgCZTYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:24:15 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:26603 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726067AbgCZTYO (ORCPT
+        Thu, 26 Mar 2020 15:24:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36240 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726067AbgCZTYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:24:14 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585250654; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=BMGoGHSXOZ233X67YkN/RH91FjPrQ4uEb9ABNdJUj+I=;
- b=N4P2EUYlLeCLHvNLoX6nMMrUHjVpr/puSt+q3D3Wv/TOGGNVeVRW0suSvOaG8XV4aFP/79tH
- piWuNiBeOf2Wfh0P7WkrIuX2Mv+kCLxVX2xazNeT9j8mMZq4JyBekSHPNu7jqZCIM3kTM2VG
- kVJ1zTWe2EJmJJQWL/NwEoz91EY=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7d0150.7f7026ef9e68-smtp-out-n04;
- Thu, 26 Mar 2020 19:24:00 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 21025C433BA; Thu, 26 Mar 2020 19:24:00 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B7A75C433D2;
-        Thu, 26 Mar 2020 19:23:55 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B7A75C433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 26 Mar 2020 15:24:32 -0400
+Received: by mail-qt1-f194.google.com with SMTP id m33so6498599qtb.3;
+        Thu, 26 Mar 2020 12:24:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FEhcUh84bEc/ZJo24v7isk+pCzKy0P8TtrN2Mpn38Rk=;
+        b=U2qxRrFnbEHa2D9PLecSl88ns17wfHcnQxs4UZAG/TJThEFPKfAFBYutyoISMOgNu4
+         LuF6aIa3gyACxiKe5JgeccNh+IF7VgjP8jvLBS3USw/7qJNYvTyfUEVV1QMdbrsy5xAp
+         G9RuyqJBF1pemXZhkOwJ0I60G8trXLpk60YJQSz1K+crOf/YvDZqhNQDdDlmsUy76LK5
+         tGDs/xrnm0dYAVFU8gdOFLKArv1jWWhTKSWHKCcLfVBAq0cKcYygzu5+XzaNgCwjqDqW
+         x5U+amugAIUufvuZ219lDV1SG1g29pvI661bPyNuIyfTUNN723VmYA2e4PO5LqcJ4a7a
+         xikA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FEhcUh84bEc/ZJo24v7isk+pCzKy0P8TtrN2Mpn38Rk=;
+        b=s6EcxWbkRdg+iKVFbif/MoN+t6rnDjLToakkUmMhiy+JkjXgUl75U7w+tfxEW7iwkl
+         m2NU+Uz/ynWC1jvGhGbNDgw8Fmi5GfRxtYNpbs55S5ngxU9WTWwR5ABx7WGzbi4LA9vo
+         EIb+6J9qrB6ryRwr3G4ljVSRxD4yIu7vMHN+KCidRHx29E6c2/c1MHRgaEwCnjFes55c
+         j5lhDjHGUct67AleIi54xJ2AkHyXb/tJKNSqQjRVvGC2KH+7+4Df+11ZXGZzFdTp7uv7
+         AR/5kFwEepdL1OHMBDQ8mW2xNSSuvDqJNlhwBgFgTMHNdmI5+5F32/exlYgYT92534nL
+         QVdQ==
+X-Gm-Message-State: ANhLgQ0RBIDGZO35EmthRX0kIZ0dypTVpAWVFQl+L/iCc0TvMQL3aCUY
+        EcxzSN4CDevR9I/6nrZ4usziUvQtEK8Mmw+aYYE=
+X-Google-Smtp-Source: ADFU+vuERR7TjbqcQKMpfu+Nv4ITtl5vdxV4bU6tZC4S+KNkO2aANpBuxPbk4P97fN3IWVyovMbhtdXBju4zMz751bo=
+X-Received: by 2002:ac8:7cb0:: with SMTP id z16mr9954834qtv.59.1585250671361;
+ Thu, 26 Mar 2020 12:24:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] hostap: convert to struct proc_ops
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200326032432.20384-1-yuehaibing@huawei.com>
-References: <20200326032432.20384-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <j@w1.fi>, <davem@davemloft.net>, <yuehaibing@huawei.com>,
-        <andriy.shevchenko@linux.intel.com>, <sfr@canb.auug.org.au>,
-        <akpm@linux-foundation.org>, <adobriyan@gmail.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200326192400.21025C433BA@smtp.codeaurora.org>
-Date:   Thu, 26 Mar 2020 19:24:00 +0000 (UTC)
+References: <20200326142823.26277-1-kpsingh@chromium.org> <20200326142823.26277-8-kpsingh@chromium.org>
+In-Reply-To: <20200326142823.26277-8-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Thu, 26 Mar 2020 12:24:20 -0700
+Message-ID: <CAEf4BzZRe_kFR4yzhPFGgauvYLKvre1reuGp=5=jq_nvQGAayw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v7 7/8] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
+        Brendan Jackman <jackmanb@google.com>,
+        Florent Revest <revest@google.com>,
+        Thomas Garnier <thgarnie@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        James Morris <jmorris@namei.org>,
+        Kees Cook <keescook@chromium.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
+On Thu, Mar 26, 2020 at 7:30 AM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> * Load/attach a BPF program that hooks to file_mprotect (int)
+>   and bprm_committed_creds (void).
+> * Perform an action that triggers the hook.
+> * Verify if the audit event was received using the shared global
+>   variables for the process executed.
+> * Verify if the mprotect returns a -EPERM.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> Reviewed-by: Brendan Jackman <jackmanb@google.com>
+> Reviewed-by: Florent Revest <revest@google.com>
+> Reviewed-by: Thomas Garnier <thgarnie@google.com>
+> ---
 
-> commit 97a32539b956 ("proc: convert everything to "struct proc_ops"")
-> forget do this convering for prism2_download_aux_dump_proc_fops.
-> 
-> Fixes: 97a32539b956 ("proc: convert everything to "struct proc_ops"")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Please fix endlines below. With that:
 
-Patch applied to wireless-drivers-next.git, thanks.
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-3af4da165f48 hostap: convert to struct proc_ops
+>  tools/testing/selftests/bpf/config            |  2 +
+>  .../selftests/bpf/prog_tests/test_lsm.c       | 86 +++++++++++++++++++
+>  tools/testing/selftests/bpf/progs/lsm.c       | 48 +++++++++++
+>  3 files changed, 136 insertions(+)
+>  create mode 100644 tools/testing/selftests/bpf/prog_tests/test_lsm.c
+>  create mode 100644 tools/testing/selftests/bpf/progs/lsm.c
+>
 
--- 
-https://patchwork.kernel.org/patch/11459139/
+[...]
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> +void test_test_lsm(void)
+> +{
+> +       struct lsm *skel = NULL;
+> +       int err, duration = 0;
+> +
+> +       skel = lsm__open_and_load();
+> +       if (CHECK(!skel, "skel_load", "lsm skeleton failed\n"))
+> +               goto close_prog;
+> +
+> +       err = lsm__attach(skel);
+> +       if (CHECK(err, "attach", "lsm attach failed: %d\n", err))
+> +               goto close_prog;
+> +
+> +       err = exec_cmd(&skel->bss->monitored_pid);
+> +       if (CHECK(err < 0, "exec_cmd", "err %d errno %d\n", err, errno))
+> +               goto close_prog;
+> +
+> +       CHECK(skel->bss->bprm_count != 1, "bprm_count", "bprm_count = %d",
+
+\n is missing
+
+> +             skel->bss->bprm_count);
+> +
+> +       skel->bss->monitored_pid = getpid();
+> +
+> +       err = heap_mprotect();
+> +       if (CHECK(errno != EPERM, "heap_mprotect", "want errno=EPERM, got %d\n",
+> +                 errno))
+> +               goto close_prog;
+> +
+> +       CHECK(skel->bss->mprotect_count != 1, "mprotect_count",
+> +             "mprotect_count = %d", skel->bss->mprotect_count);
+
+\n is missing
+
+> +
+> +close_prog:
+> +       lsm__destroy(skel);
+> +}
+
+[...]
