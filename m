@@ -2,106 +2,135 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD87C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:18:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DC4C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8867D206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:18:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jyEnc4F3"
+	by mail.kernel.org (Postfix) with ESMTP id 5D3CA2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:19:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgCZOSI (ORCPT
+        id S1727855AbgCZOTO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:18:08 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:36347 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgCZOSI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:18:08 -0400
-Received: by mail-pj1-f68.google.com with SMTP id nu11so2461827pjb.1;
-        Thu, 26 Mar 2020 07:18:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BA2bA9PavUC7l7dbOSeDNGiZmDysCoavq5nh0AKiFpY=;
-        b=jyEnc4F39900X3l7jblWNG3p0e4wzQF8tYoEsOLU0HfEZa1i5EVX6jRqFleD+SHmEQ
-         79zOTgjI5TxA/Tc/SybR0T3OkTkDOhVK5PhpF7M4WFfQuh54uPLmUdegVJH1xlH/PjgW
-         4E1gMLyay0W4PkcGASKSNGmPbDG6QyKGzszx04BUSkiI5d9mJxsKPl8bvDPwNkq2hhYW
-         sGRStwwcVZdphe3bKY+zgymraMQGl4WDYs4B+8YIgMlhKtRHEokEp5fb6qAZA/KOx/FS
-         nkKHon4++DPYXUNluZlaz9w3LiCOXuiCgTZ8LB9WFNTwqAAA9LbmHoLvNdfwPFcWTila
-         ZKXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BA2bA9PavUC7l7dbOSeDNGiZmDysCoavq5nh0AKiFpY=;
-        b=CQFkAxw2Djh9kv8Vr/LAAPrqFymxu+u/G9/TlgxXwS76J5dIMS/WD2qMFIwBv2u4+K
-         11eS161PkvW/mwnPF0juY1sVqgwAIFXJ1qyAxXvuyx/XPltJ20ZGo3JKjaSIDxnYeYmT
-         /fdqwQw9Fhj5SXa5NlucvcBHbLPNb3KZMwqdgwqY8BEFX+gCth9nHDTgYwr2CTZv3pWA
-         yf8DPf7AWy8LlQTZZo3nocOlcGnIy42fcg81gO6zsAoWLsi2xGyHYtn90TeP9xgnKrU4
-         O5HJ851CzGm1ys6HrLdW9rWXImnwHVO2Tu5pyH7rEwUOG7dwoWkKYaaNnmEBOOpHt9FA
-         UClw==
-X-Gm-Message-State: ANhLgQ36PMCKoP561hHQfBnnEhj8jBGbtP24v4AKoAURBire+IudVY9x
-        oyq3Nl4NJ8KB5ghlVpsw+PI=
-X-Google-Smtp-Source: ADFU+vsIwvpB25Rifcmkllw3Yln+dgc/3yaAaaH6TDoiKd25tKlDJPlPSD6wqJHK/AI4Y07gtLiCPQ==
-X-Received: by 2002:a17:902:a986:: with SMTP id bh6mr7751713plb.100.1585232286954;
-        Thu, 26 Mar 2020 07:18:06 -0700 (PDT)
-Received: from localhost (c-73-241-114-122.hsd1.ca.comcast.net. [73.241.114.122])
-        by smtp.gmail.com with ESMTPSA id a3sm1788882pfg.172.2020.03.26.07.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 07:18:06 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 07:18:04 -0700
-From:   Richard Cochran <richardcochran@gmail.com>
-To:     Grygorii Strashko <grygorii.strashko@ti.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 02/11] net: ethernet: ti: cpts: separate hw
- counter read from timecounter
-Message-ID: <20200326141804.GC20841@localhost>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
- <20200320194244.4703-3-grygorii.strashko@ti.com>
+        Thu, 26 Mar 2020 10:19:14 -0400
+Received: from mga03.intel.com ([134.134.136.65]:50598 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727593AbgCZOTN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:19:13 -0400
+IronPort-SDR: H7N3W0DwLWj9N+wkYSjSF4pOTnxmFvJe94eRYX0PVcXFouTs2onLI109dnNjL5y49jmy+vAfu0
+ x+KAPomQ4jNQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 07:19:13 -0700
+IronPort-SDR: 8epfGZ80D72BQJCR2DI3poWT2+ZDzO18AfKjAN91uMZwJIeD2hycw4bdD+kJQZfbIK0uS3XCan
+ vQUdw/bJJkMg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
+   d="scan'208";a="448641976"
+Received: from irsmsx110.ger.corp.intel.com ([163.33.3.25])
+  by fmsmga006.fm.intel.com with ESMTP; 26 Mar 2020 07:19:09 -0700
+Received: from irsmsx106.ger.corp.intel.com ([169.254.8.159]) by
+ irsmsx110.ger.corp.intel.com ([169.254.15.208]) with mapi id 14.03.0439.000;
+ Thu, 26 Mar 2020 14:19:08 +0000
+From:   "Hunter, Adrian" <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+CC:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mingbo Zhang <whensungoes@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
+ instructions
+Thread-Topic: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
+ instructions
+Thread-Index: AQHV8RdZnJl7srk+20GWxk75DLFbbahaOnmAgAA834CAAJL5gIAABeQg
+Date:   Thu, 26 Mar 2020 14:19:07 +0000
+Message-ID: <363DA0ED52042842948283D2FC38E4649C72EFF3@IRSMSX106.ger.corp.intel.com>
+References: <20200303045033.6137-1-whensungoes@gmail.com>
+ <20200326103153.de709903f26fee0918414bd2@kernel.org>
+ <bac567dd-9810-4919-365e-b3dfb54a6c4b@intel.com>
+ <20200326135547.GA20397@redhat.com>
+In-Reply-To: <20200326135547.GA20397@redhat.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [163.33.239.180]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200320194244.4703-3-grygorii.strashko@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 20, 2020 at 09:42:35PM +0200, Grygorii Strashko wrote:
-> Separate hw counter read from timecounter code:
-> - add CPTS context field to store current HW counter value
-> - move HW timestamp request and FIFO read code out of timecounter code
-> - convert cyc2time on event reception in cpts_fifo_read()
-> - call timecounter_read() in cpts_fifo_read() to update tk->cycle_last
+> -----Original Message-----
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Sent: Thursday, March 26, 2020 3:56 PM
+> To: Hunter, Adrian <adrian.hunter@intel.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>; Mingbo Zhang
+> <whensungoes@gmail.com>; Arnaldo Carvalho de Melo
+> <acme@kernel.org>; x86@kernel.org; Thomas Gleixner
+> <tglx@linutronix.de>; Ingo Molnar <mingo@redhat.com>; Borislav Petkov
+> <bp@alien8.de>; H. Peter Anvin <hpa@zytor.com>; Andi Kleen
+> <ak@linux.intel.com>; Josh Poimboeuf <jpoimboe@redhat.com>; linux-
+> kernel@vger.kernel.org
+> Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
+> instructions
+> 
+> Em Thu, Mar 26, 2020 at 07:09:45AM +0200, Adrian Hunter escreveu:
+> > On 26/03/20 3:31 am, Masami Hiramatsu wrote:
+> > > Hi,
+> > >
+> > > On Mon,  2 Mar 2020 23:50:30 -0500
+> > > Mingbo Zhang <whensungoes@gmail.com> wrote:
+> > >
+> > >> Intel CET instructions are not described in the Intel SDM. When
+> > >> trying to get the instruction length, the following instructions
+> > >> get wrong (missing ModR/M byte).
+> > >>
+> > >> RDSSPD r32
+> > >> RSDDPQ r64
+> > >> ENDBR32
+> > >> ENDBR64
+> > >> WRSSD r/m32, r32
+> > >> WRSSQ r/m64, r64
+> > >>
+> > >> RDSSPD/Q and ENDBR32/64 use the same opcode (f3 0f 1e) slot, which
+> > >> is described in SDM as Reserved-NOP with no encoding characters,
+> > >> and got an empty slot in the opcode map. WRSSD/Q (0f 38 f6) also got
+> an empty slot.
+> > >>
+> > >
+> > > This looks good to me. BTW, wouldn't we need to add decode test cases
+> to perf?
+> > >
+> > > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > >
+> > > Thank you,
+> > >
+> >
+> > We have correct patches that you ack'ed for CET here:
+> >
+> >
+> > https://lore.kernel.org/lkml/20200204171425.28073-1-yu-cheng.yu@intel.
+> > com/
+> >
+> > But they have not yet been applied.
+> >
+> > Sorry for the confusion.
+> 
+> I'll collect them, thanks for pointing this out.
 
-This comment tells us WHAT the patch does, but does not help because
-we can see that from the patch itself.  Instead, the comment should
-tell us WHY is change is needed.
+The patches are in tip courtesy of Borislav Petkov thank you!
 
-I was left scratching my head, with the question, what is the purpose
-here?  Maybe the answer is to be found later on in the series.
-
-Here is commit message pattern to follow that I learned from tglx:
-
-1. context
-2. problem
-3. solution
-
-For this patch, the sentence, "Separate hw counter read from
-timecounter code" is #3.
-
-Thanks,
-Richard
