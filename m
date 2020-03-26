@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE7CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04765C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:45:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40F3F206E6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:45:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9FB9206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:45:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="oXf3ZOxT"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="1s2evVvN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbgCZNpx (ORCPT
+        id S1728001AbgCZNpz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:45:53 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46717 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbgCZNpY (ORCPT
+        Thu, 26 Mar 2020 09:45:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44630 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727856AbgCZNpX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:45:24 -0400
-Received: by mail-wr1-f68.google.com with SMTP id j17so7787935wru.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 06:45:22 -0700 (PDT)
+        Thu, 26 Mar 2020 09:45:23 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m17so7812578wrw.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 06:45:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XFHG5+N/s7f8jdUDEuCLFX/hWvMN/ArmpVpj0Lv1sZA=;
-        b=oXf3ZOxT4u0zMm5X8QXKxA/Q0qhLbk+gSoUGuuMLTzLUfeSUrEFeACmZINOcW2EEXU
-         CKrD6SLol01NFTX/JeEUGG35dddkPw/Wzpj2pLlqi+YrG5keEtTyam9smIlrcwVT8scQ
-         UfjfA167zZQLtnuyRkTCJfRhnlydB5flGx4Pk4unP28Zac6qi9uEcaRkbSXJ0D8ri9Vx
-         5xmp1Z61F2D2jQuz7sCET3QqvIXPneZuVcdetl1+m7+oYaGtTrnu358/FURXTiM6IMHI
-         Z1rchVCAB8I5rlZdI2J7rB8p1YCTCrLQPuYRVvB7JRAyXoBLFKeBw3LVfbQ6OqCLxdnX
-         FXVg==
+        bh=ADzYgjGOgHOtUw/QufLYo/yFk6QQng/fuo3s/mdjUtc=;
+        b=1s2evVvNNcsCiZwNF+IKILngbPXtpEtC60KEFj75x7JmCErDv4LrIl6nC3rJz3LP8p
+         jAKd/Oi+fcgckOsneV6gQF/QcR//pdLAhqjnxXaSBYUshH+qYVVPEJ8PBs+ujKpEEr/C
+         yAxKrykeRL/tjZNXpUNPScltaieME7HBUgOQLfZIVFM51jADa6ZRzy2tqcMbfL6QGA6y
+         dL4aqpAW17F5BZQz2quzRcXe650GxzVMh8eqL2BI9DYHyUbxvGlQ62Ci1mCNC6mrpFee
+         4U67t5ZLabg1dztYg+po0LWhru7Om/H3pL66V9I7wlcOotrZuoT+5Qo6e9wPKpp3hDiL
+         Y+Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XFHG5+N/s7f8jdUDEuCLFX/hWvMN/ArmpVpj0Lv1sZA=;
-        b=oFb/PTHS96kdixqXwEP+HFikr3rXPQ6NfOQMbSZIZnjRSupkZqQ442vzYfpDbhZc7m
-         XHxBLqUZIwCRQiGr3PoNye3SUldowjfZkI/MkaaWKMWTqoZPLr5UuHeeBotPNWU2Iqqz
-         FTZPPT7Mh35Sg86lee3azxR0sSAhEo/BKXj8I6yntefGn0TjsGZC/z/drD1azXnwsXkb
-         BfScZi399lSd1XWY64B4utTUnD44rBSZYCF0p2WRG6B2tLdhUIwt/sCRrwqZA1JX1Lfn
-         X0vBVnSlwpRzkS+xv+JdaQOtKMuv8DVzFZ1Ne3uKCEkGDcKz7BWhN2mcb/yVHM2FcT/8
-         GPbA==
-X-Gm-Message-State: ANhLgQ0q+zP25aOOVVkeVMWpyGqzaVGsDyoBz9HQXXqgq8jrSzOdFF7Q
-        O1xqtOCxxyc1N3x450sHlDO9og==
-X-Google-Smtp-Source: ADFU+vu7yb/02zWifja9JlrE8hb/mJzudE0Zpo/fJUGlHmyIkrsZlmbUV8smuqOCGgaGjd6t28l6cg==
-X-Received: by 2002:adf:b35d:: with SMTP id k29mr9627002wrd.239.1585230321357;
-        Thu, 26 Mar 2020 06:45:21 -0700 (PDT)
+        bh=ADzYgjGOgHOtUw/QufLYo/yFk6QQng/fuo3s/mdjUtc=;
+        b=h8b/XukK+NSH2VsqzWotp5AGn6JM3lQ8TECT9Cq6Fr8j5b32x+95AIWWfTez0UT2TP
+         ooHhU+wOXfBPRYENaIjs4gSnlZ1rzNIuF2tjnu+rJMrdNAjH7cyVxdtklKwwxtqqUzIT
+         7KnUANH57uXTMFmPCi1sZH4CgFhqy1T+fWOytdpWHhzA7HOn3CVoFk3betiFddlR3nLw
+         +MSS2vE3o2MrKPCWkPb7l+DkartfSs/VhjOqfd60JKTfs7TzzNcOqezaUUlzX5fSGwaL
+         UsGAlEnyYbXctpYvMLwYTlu7+mtxnzlA2S89ZANqcWGhElCRabdwBl9izvJSwGYV+yUV
+         Vz+g==
+X-Gm-Message-State: ANhLgQ1qlcXkhOvY/7CdePGi66PBPBQGJu3JE9FQtNNihVkKarQtFjsH
+        T3mlzuPdmNsRF9WfUp+9lVQrdQ==
+X-Google-Smtp-Source: ADFU+vtfhKfdRRfS/g5hPSgJvWSebA28iSEs/QoA3gp5cLK3H+Astw/T4q2ZHHg33v0wi8RW8gyAXA==
+X-Received: by 2002:adf:9022:: with SMTP id h31mr9259345wrh.223.1585230319979;
+        Thu, 26 Mar 2020 06:45:19 -0700 (PDT)
 Received: from bender.baylibre.local ([2a01:e35:2ec0:82b0:5c5f:613e:f775:b6a2])
-        by smtp.gmail.com with ESMTPSA id h29sm4079617wrc.64.2020.03.26.06.45.20
+        by smtp.gmail.com with ESMTPSA id h29sm4079617wrc.64.2020.03.26.06.45.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 06:45:20 -0700 (PDT)
+        Thu, 26 Mar 2020 06:45:19 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     kishon@ti.com, balbi@kernel.org, khilman@baylibre.com,
         martin.blumenstingl@googlemail.com
 Cc:     Neil Armstrong <narmstrong@baylibre.com>,
         linux-amlogic@lists.infradead.org, linux-usb@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/14] usb: dwc3: meson-g12a: support the GXL/GXM DWC3 host phy disconnect
-Date:   Thu, 26 Mar 2020 14:45:00 +0100
-Message-Id: <20200326134507.4808-9-narmstrong@baylibre.com>
+Subject: [PATCH v2 07/14] usb: dwc3: meson-g12a: refactor usb init
+Date:   Thu, 26 Mar 2020 14:44:59 +0100
+Message-Id: <20200326134507.4808-8-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200326134507.4808-1-narmstrong@baylibre.com>
 References: <20200326134507.4808-1-narmstrong@baylibre.com>
@@ -75,96 +75,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On the Amlogic GXL/GXM SoCs, the OTG PHY status signals are always
-connected to the DWC3 controller, thus crashing the controller when
-switching to OTG mode when port is not populated with a device/cable to
-Host.
+Refactor the USB init code patch to handle the Amlogic GXL/GXM needing
+to initialize the OTG port as Peripheral mode for the DWC2 IP to probe
+correctly.
 
-Amlogic added a bit to disconnect the OTG PHY status signals from the DWC3
-to be used when switching the OTG PHY as Device to the DWC2 controller.
-
-The drawback is that it makes the DWC3 port state machine stall and needs
-a full reset of the DWC3 controller to get connect status to the port
-connected to the OTG PHY, but not the other one.
+A secondary, post_init callback is added to setup the OTG PHY mode after
+the sub-nodes probe.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- drivers/usb/dwc3/dwc3-meson-g12a.c | 34 ++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ drivers/usb/dwc3/dwc3-meson-g12a.c | 46 +++++++++++++++++++++---------
+ 1 file changed, 33 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/usb/dwc3/dwc3-meson-g12a.c b/drivers/usb/dwc3/dwc3-meson-g12a.c
-index 43b398b7b1f7..f3f247d38606 100644
+index 328e74def56f..43b398b7b1f7 100644
 --- a/drivers/usb/dwc3/dwc3-meson-g12a.c
 +++ b/drivers/usb/dwc3/dwc3-meson-g12a.c
-@@ -131,6 +131,7 @@ struct dwc3_meson_g12a;
+@@ -140,6 +140,8 @@ struct dwc3_meson_g12a_drvdata {
+ 			     enum phy_mode mode);
+ 	int (*set_phy_mode)(struct dwc3_meson_g12a *priv, int i,
+ 			    enum phy_mode mode);
++	int (*usb_init)(struct dwc3_meson_g12a *priv);
++	int (*usb_post_init)(struct dwc3_meson_g12a *priv);
+ };
  
- struct dwc3_meson_g12a_drvdata {
- 	bool otg_switch_supported;
-+	bool otg_phy_host_port_disable;
- 	struct clk_bulk_data *clks;
- 	int num_clks;
- 	const char **phy_names;
-@@ -155,6 +156,19 @@ static int dwc3_meson_g12a_set_phy_mode(struct dwc3_meson_g12a *priv,
+ static int dwc3_meson_g12a_setup_regmaps(struct dwc3_meson_g12a *priv,
+@@ -151,6 +153,8 @@ static int dwc3_meson_g12a_usb2_init_phy(struct dwc3_meson_g12a *priv, int i,
+ static int dwc3_meson_g12a_set_phy_mode(struct dwc3_meson_g12a *priv,
+ 					int i, enum phy_mode mode);
  
- static int dwc3_meson_g12a_usb_init(struct dwc3_meson_g12a *priv);
- 
-+/*
-+ * For GXL and GXM SoCs:
-+ * USB Phy muxing between the DWC2 Device controller and the DWC3 Host
-+ * controller is buggy when switching from Device to Host when USB port
-+ * is unpopulated, it causes the DWC3 to hard crash.
-+ * When populated (including OTG switching with ID pin), the switch works
-+ * like a charm like on the G12A platforms.
-+ * In order to still switch from Host to Device on an USB Type-A port,
-+ * an U2_PORT_DISABLE bit has been added to disconnect the DWC3 Host
-+ * controller from the port, but when used the DWC3 controller must be
-+ * reset to recover usage of the port.
-+ */
++static int dwc3_meson_g12a_usb_init(struct dwc3_meson_g12a *priv);
 +
  static struct dwc3_meson_g12a_drvdata g12a_drvdata = {
  	.otg_switch_supported = true,
  	.clks = meson_g12a_clocks,
-@@ -290,6 +304,13 @@ static void dwc3_meson_g12a_usb_otg_apply_mode(struct dwc3_meson_g12a *priv,
- 					       enum phy_mode mode)
+@@ -160,6 +164,7 @@ static struct dwc3_meson_g12a_drvdata g12a_drvdata = {
+ 	.setup_regmaps = dwc3_meson_g12a_setup_regmaps,
+ 	.usb2_init_phy = dwc3_meson_g12a_usb2_init_phy,
+ 	.set_phy_mode = dwc3_meson_g12a_set_phy_mode,
++	.usb_init = dwc3_meson_g12a_usb_init,
+ };
+ 
+ static struct dwc3_meson_g12a_drvdata a1_drvdata = {
+@@ -171,6 +176,7 @@ static struct dwc3_meson_g12a_drvdata a1_drvdata = {
+ 	.setup_regmaps = dwc3_meson_g12a_setup_regmaps,
+ 	.usb2_init_phy = dwc3_meson_g12a_usb2_init_phy,
+ 	.set_phy_mode = dwc3_meson_g12a_set_phy_mode,
++	.usb_init = dwc3_meson_g12a_usb_init,
+ };
+ 
+ struct dwc3_meson_g12a {
+@@ -231,15 +237,11 @@ static int dwc3_meson_g12a_usb2_init_phy(struct dwc3_meson_g12a *priv, int i,
+ 	return 0;
+ }
+ 
+-static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv)
++static int dwc3_meson_g12a_usb2_init(struct dwc3_meson_g12a *priv,
++				     enum phy_mode mode)
  {
- 	if (mode == PHY_MODE_USB_DEVICE) {
-+		if (priv->otg_mode != USB_DR_MODE_OTG &&
-+		    priv->drvdata->otg_phy_host_port_disable)
-+			/* Isolate the OTG PHY port from the Host Controller */
-+			regmap_update_bits(priv->usb_glue_regmap, USB_R1,
-+				USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK,
-+				FIELD_PREP(USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK,
-+					   BIT(USB2_OTG_PHY)));
+ 	int i, ret;
+ 
+-	if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
+-		priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
+-	else
+-		priv->otg_phy_mode = PHY_MODE_USB_HOST;
+-
+ 	for (i = 0; i < priv->drvdata->num_phys; ++i) {
+ 		if (!priv->phys[i])
+ 			continue;
+@@ -284,9 +286,10 @@ static void dwc3_meson_g12a_usb3_init(struct dwc3_meson_g12a *priv)
+ 			FIELD_PREP(USB_R1_P30_PCS_TX_SWING_FULL_MASK, 127));
+ }
+ 
+-static void dwc3_meson_g12a_usb_otg_apply_mode(struct dwc3_meson_g12a *priv)
++static void dwc3_meson_g12a_usb_otg_apply_mode(struct dwc3_meson_g12a *priv,
++					       enum phy_mode mode)
+ {
+-	if (priv->otg_phy_mode == PHY_MODE_USB_DEVICE) {
++	if (mode == PHY_MODE_USB_DEVICE) {
  		regmap_update_bits(priv->usb_glue_regmap, USB_R0,
  				USB_R0_U2D_ACT, USB_R0_U2D_ACT);
  		regmap_update_bits(priv->usb_glue_regmap, USB_R0,
-@@ -297,6 +318,12 @@ static void dwc3_meson_g12a_usb_otg_apply_mode(struct dwc3_meson_g12a *priv,
- 		regmap_update_bits(priv->usb_glue_regmap, USB_R4,
- 				USB_R4_P21_SLEEP_M0, USB_R4_P21_SLEEP_M0);
- 	} else {
-+		if (priv->otg_mode != USB_DR_MODE_OTG &&
-+		    priv->drvdata->otg_phy_host_port_disable) {
-+			regmap_update_bits(priv->usb_glue_regmap, USB_R1,
-+				USB_R1_U3H_HOST_U2_PORT_DISABLE_MASK, 0);
-+			msleep(500);
-+		}
- 		regmap_update_bits(priv->usb_glue_regmap, USB_R0,
- 				USB_R0_U2D_ACT, 0);
- 		regmap_update_bits(priv->usb_glue_regmap, USB_R4,
-@@ -429,6 +456,13 @@ static int dwc3_meson_g12a_role_set(struct device *dev, enum usb_role role)
- 	if (mode == priv->otg_phy_mode)
- 		return 0;
- 
-+	if (priv->drvdata->otg_phy_host_port_disable)
-+		dev_warn_once(priv->dev, "Manual OTG switch is broken on this "\
-+					 "SoC, when manual switching from "\
-+					 "Host to device, DWC3 controller "\
-+					 "will need to be resetted in order "\
-+					 "to recover usage of the Host port");
-+
- 	return dwc3_meson_g12a_otg_mode_set(priv, mode);
+@@ -301,11 +304,12 @@ static void dwc3_meson_g12a_usb_otg_apply_mode(struct dwc3_meson_g12a *priv)
+ 	}
  }
  
+-static int dwc3_meson_g12a_usb_init(struct dwc3_meson_g12a *priv)
++static int dwc3_meson_g12a_usb_init_glue(struct dwc3_meson_g12a *priv,
++					 enum phy_mode mode)
+ {
+ 	int ret;
+ 
+-	ret = dwc3_meson_g12a_usb2_init(priv);
++	ret = dwc3_meson_g12a_usb2_init(priv, mode);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -327,7 +331,7 @@ static int dwc3_meson_g12a_usb_init(struct dwc3_meson_g12a *priv)
+ 	if (priv->usb3_ports)
+ 		dwc3_meson_g12a_usb3_init(priv);
+ 
+-	dwc3_meson_g12a_usb_otg_apply_mode(priv);
++	dwc3_meson_g12a_usb_otg_apply_mode(priv, mode);
+ 
+ 	return 0;
+ }
+@@ -406,7 +410,7 @@ static int dwc3_meson_g12a_otg_mode_set(struct dwc3_meson_g12a *priv,
+ 	if (ret)
+ 		return ret;
+ 
+-	dwc3_meson_g12a_usb_otg_apply_mode(priv);
++	dwc3_meson_g12a_usb_otg_apply_mode(priv, mode);
+ 
+ 	return 0;
+ }
+@@ -553,6 +557,11 @@ static int dwc3_meson_g12a_setup_regmaps(struct dwc3_meson_g12a *priv,
+ 	return 0;
+ }
+ 
++static int dwc3_meson_g12a_usb_init(struct dwc3_meson_g12a *priv)
++{
++	return dwc3_meson_g12a_usb_init_glue(priv, priv->otg_phy_mode);
++}
++
+ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ {
+ 	struct dwc3_meson_g12a	*priv;
+@@ -620,7 +629,12 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 	/* Get dr_mode */
+ 	priv->otg_mode = usb_get_dr_mode(dev);
+ 
+-	ret = dwc3_meson_g12a_usb_init(priv);
++	if (priv->otg_mode == USB_DR_MODE_PERIPHERAL)
++		priv->otg_phy_mode = PHY_MODE_USB_DEVICE;
++	else
++		priv->otg_phy_mode = PHY_MODE_USB_HOST;
++
++	ret = priv->drvdata->usb_init(priv);
+ 	if (ret)
+ 		goto err_disable_clks;
+ 
+@@ -642,6 +656,12 @@ static int dwc3_meson_g12a_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto err_phys_power;
+ 
++	if (priv->drvdata->usb_post_init) {
++		ret = priv->drvdata->usb_post_init(priv);
++		if (ret)
++			goto err_phys_power;
++	}
++
+ 	ret = dwc3_meson_g12a_otg_init(pdev, priv);
+ 	if (ret)
+ 		goto err_phys_power;
 -- 
 2.22.0
 
