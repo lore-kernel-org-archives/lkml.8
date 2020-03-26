@@ -2,152 +2,84 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF18C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85743C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3573C2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D1C20722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:29:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U2qxRrFn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WyNS53qV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgCZTYd (ORCPT
+        id S1727976AbgCZT3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:24:33 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36240 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZTYc (ORCPT
+        Thu, 26 Mar 2020 15:29:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33752 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbgCZT3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:24:32 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m33so6498599qtb.3;
-        Thu, 26 Mar 2020 12:24:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FEhcUh84bEc/ZJo24v7isk+pCzKy0P8TtrN2Mpn38Rk=;
-        b=U2qxRrFnbEHa2D9PLecSl88ns17wfHcnQxs4UZAG/TJThEFPKfAFBYutyoISMOgNu4
-         LuF6aIa3gyACxiKe5JgeccNh+IF7VgjP8jvLBS3USw/7qJNYvTyfUEVV1QMdbrsy5xAp
-         G9RuyqJBF1pemXZhkOwJ0I60G8trXLpk60YJQSz1K+crOf/YvDZqhNQDdDlmsUy76LK5
-         tGDs/xrnm0dYAVFU8gdOFLKArv1jWWhTKSWHKCcLfVBAq0cKcYygzu5+XzaNgCwjqDqW
-         x5U+amugAIUufvuZ219lDV1SG1g29pvI661bPyNuIyfTUNN723VmYA2e4PO5LqcJ4a7a
-         xikA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FEhcUh84bEc/ZJo24v7isk+pCzKy0P8TtrN2Mpn38Rk=;
-        b=s6EcxWbkRdg+iKVFbif/MoN+t6rnDjLToakkUmMhiy+JkjXgUl75U7w+tfxEW7iwkl
-         m2NU+Uz/ynWC1jvGhGbNDgw8Fmi5GfRxtYNpbs55S5ngxU9WTWwR5ABx7WGzbi4LA9vo
-         EIb+6J9qrB6ryRwr3G4ljVSRxD4yIu7vMHN+KCidRHx29E6c2/c1MHRgaEwCnjFes55c
-         j5lhDjHGUct67AleIi54xJ2AkHyXb/tJKNSqQjRVvGC2KH+7+4Df+11ZXGZzFdTp7uv7
-         AR/5kFwEepdL1OHMBDQ8mW2xNSSuvDqJNlhwBgFgTMHNdmI5+5F32/exlYgYT92534nL
-         QVdQ==
-X-Gm-Message-State: ANhLgQ0RBIDGZO35EmthRX0kIZ0dypTVpAWVFQl+L/iCc0TvMQL3aCUY
-        EcxzSN4CDevR9I/6nrZ4usziUvQtEK8Mmw+aYYE=
-X-Google-Smtp-Source: ADFU+vuERR7TjbqcQKMpfu+Nv4ITtl5vdxV4bU6tZC4S+KNkO2aANpBuxPbk4P97fN3IWVyovMbhtdXBju4zMz751bo=
-X-Received: by 2002:ac8:7cb0:: with SMTP id z16mr9954834qtv.59.1585250671361;
- Thu, 26 Mar 2020 12:24:31 -0700 (PDT)
+        Thu, 26 Mar 2020 15:29:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RiybZnpQ2WaLYTPz6WPtaCIYyJYUacUfjAVruDdMh28=; b=WyNS53qVaBPLJxtnyg6zCRT8aW
+        NAQI18Fv5s/ccyV5MYoUvVjm9fZ/8VhPGZDJDezjc+jtIBJS9D3KHB5vZ12w1IMDa/Q9izMz8Z83v
+        5wodJSYCjlOoMtWFOB29IdV1qxCD6qGhT1w/KRDFoAuAweulmwlo46fVxKlB7pyqRpYV2korbzWWB
+        bPTZQn/LZm1RvvVfDidjUO2UnCuna1AmNMSdxt/R7tbEhmPRKz8/4RwC22ROwd1Zs+cj+kouAN10L
+        pLuWABYvg9fVxcVuJCIb0UDE/zWdLLBcAR8qq+23S9RUGIe70n0euFuQuTQaQxJYeyGCjW6L5hN0c
+        eViGdNag==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jHYCJ-0004JK-Qg; Thu, 26 Mar 2020 19:29:47 +0000
+Date:   Thu, 26 Mar 2020 12:29:47 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     peter@bikeshed.quignogs.org.uk
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-doc@vger.kernel.org,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 1/1] A compact idiom to add code examples in kerneldoc
+ comments.
+Message-ID: <20200326192947.GM22483@bombadil.infradead.org>
+References: <20200311133027.2c77f348@lwn.net>
+ <20200326191628.10052-1-peter@bikeshed.quignogs.org.uk>
+ <20200326191628.10052-2-peter@bikeshed.quignogs.org.uk>
 MIME-Version: 1.0
-References: <20200326142823.26277-1-kpsingh@chromium.org> <20200326142823.26277-8-kpsingh@chromium.org>
-In-Reply-To: <20200326142823.26277-8-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 26 Mar 2020 12:24:20 -0700
-Message-ID: <CAEf4BzZRe_kFR4yzhPFGgauvYLKvre1reuGp=5=jq_nvQGAayw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v7 7/8] bpf: lsm: Add selftests for BPF_PROG_TYPE_LSM
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-security-module@vger.kernel.org,
-        Brendan Jackman <jackmanb@google.com>,
-        Florent Revest <revest@google.com>,
-        Thomas Garnier <thgarnie@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        James Morris <jmorris@namei.org>,
-        Kees Cook <keescook@chromium.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326191628.10052-2-peter@bikeshed.quignogs.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 7:30 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> * Load/attach a BPF program that hooks to file_mprotect (int)
->   and bprm_committed_creds (void).
-> * Perform an action that triggers the hook.
-> * Verify if the audit event was received using the shared global
->   variables for the process executed.
-> * Verify if the mprotect returns a -EPERM.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Reviewed-by: Brendan Jackman <jackmanb@google.com>
-> Reviewed-by: Florent Revest <revest@google.com>
-> Reviewed-by: Thomas Garnier <thgarnie@google.com>
-> ---
+On Thu, Mar 26, 2020 at 07:16:28PM +0000, peter@bikeshed.quignogs.org.uk wrote:
+> From: Peter Lister <peter@bikeshed.quignogs.org.uk>
+> 
+> scripts/kernel-doc - When a double colon follows a section heading
+> (e.g. Example::), write a double colon line to the ReST output to make
+> the following text (e.g. a code snippet) into a literal block.
 
-Please fix endlines below. With that:
+I think this is a good idea
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+> -
+> +    # $doc_sect is a regex which searches for section names.
+> +    # If it matches:
+> +    #   $1 is the section name
+> +    #   $2 is a colon if the section name was followed by a double colon.
+> +    #   $3 the rest of the content after the colon (or double colon).
 
->  tools/testing/selftests/bpf/config            |  2 +
->  .../selftests/bpf/prog_tests/test_lsm.c       | 86 +++++++++++++++++++
->  tools/testing/selftests/bpf/progs/lsm.c       | 48 +++++++++++
->  3 files changed, 136 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/prog_tests/test_lsm.c
->  create mode 100644 tools/testing/selftests/bpf/progs/lsm.c
->
+I would add an extra 'is' after $3.
 
-[...]
+>      if (/$doc_sect/i) { # case insensitive for supported section names
+>  	$newsection = $1;
+> -	$newcontents = $2;
+> -
+> +	# If $2 is ':', the section name was followed by a double
+> +	# colon, so insert a containing just '::' to make the
 
-> +void test_test_lsm(void)
-> +{
-> +       struct lsm *skel = NULL;
-> +       int err, duration = 0;
-> +
-> +       skel = lsm__open_and_load();
-> +       if (CHECK(!skel, "skel_load", "lsm skeleton failed\n"))
-> +               goto close_prog;
-> +
-> +       err = lsm__attach(skel);
-> +       if (CHECK(err, "attach", "lsm attach failed: %d\n", err))
-> +               goto close_prog;
-> +
-> +       err = exec_cmd(&skel->bss->monitored_pid);
-> +       if (CHECK(err < 0, "exec_cmd", "err %d errno %d\n", err, errno))
-> +               goto close_prog;
-> +
-> +       CHECK(skel->bss->bprm_count != 1, "bprm_count", "bprm_count = %d",
+Missing word between 'a' and 'containing'?
 
-\n is missing
-
-> +             skel->bss->bprm_count);
-> +
-> +       skel->bss->monitored_pid = getpid();
-> +
-> +       err = heap_mprotect();
-> +       if (CHECK(errno != EPERM, "heap_mprotect", "want errno=EPERM, got %d\n",
-> +                 errno))
-> +               goto close_prog;
-> +
-> +       CHECK(skel->bss->mprotect_count != 1, "mprotect_count",
-> +             "mprotect_count = %d", skel->bss->mprotect_count);
-
-\n is missing
-
-> +
-> +close_prog:
-> +       lsm__destroy(skel);
-> +}
-
-[...]
