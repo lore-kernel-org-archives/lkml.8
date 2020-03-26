@@ -2,165 +2,102 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E66CAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE24C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6A0420719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:46:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F27BD20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KDrb3yRV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M77B4lXT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgCZVqb (ORCPT
+        id S1727509AbgCZVrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:46:31 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45223 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZVqb (ORCPT
+        Thu, 26 Mar 2020 17:47:48 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:59451 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726296AbgCZVrr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:46:31 -0400
-Received: by mail-ua1-f65.google.com with SMTP id 9so2737581uav.12
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/WxmZx0thKIzAyntPIgPikT7TZr1mNakTInFwraNuk4=;
-        b=KDrb3yRVSq1dleHX3HBy6uXNJmWiXJ3KffLvnbRDCHJgT6iuka8borub++gqor4QxA
-         /HC0APK4hDXxNmFPIvnkB3tjOpo8s2sEv6A6Asuc2UfMyHKLtp3ZAxB8fMiF7bnTIrsk
-         c3F41vwvHgVGxvF9siKeLwYgfC8MUTgLeg4w8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/WxmZx0thKIzAyntPIgPikT7TZr1mNakTInFwraNuk4=;
-        b=XzeBc6uEhOyIILbdsJKebSWsX+x4kpylT47IYYceMTHxt76MVI+3lusvqSnGpCZW3k
-         56UdHnpz5LsFXis0vD3G8TWZzxMGGTy7FngIYY13e9h9H7AAj4/Jd2aoBE/L1KmQPikp
-         ZHN/yId8c4AgU4h1blNKzBsXduCQv3fdUoHBX3lpF1yI2SeIZjNl2IZYW7m9pYx9yT1m
-         /Q2BdW/gVVbMJlwUxgXlXvBPQGwhMmlTy1Fs34bCWEVFOMzmqyKX3plUg0kXl+DZECa0
-         2h/JmQFqd143cHFuMJnuN4rPNA9vGO9RdekOyzjwpZUfgKsOxE693pudxTnBeQkTpox/
-         rzhA==
-X-Gm-Message-State: ANhLgQ3bMcfK/Nfi3WVRurgo/Sxy9nL94Od4Z2cZXUBuX+Q12Mw68AWS
-        r7dCKk01bcJOOKGpFVVTECNox5Rhct8=
-X-Google-Smtp-Source: ADFU+vsIpTE/ob4lf4WdGLPlhzYKuiTb1nB5xkGpDZb3SE71gEKLMKHdCCSMJt5BYCMXjASi7+KvTw==
-X-Received: by 2002:a9f:2204:: with SMTP id 4mr8462480uad.87.1585259189837;
-        Thu, 26 Mar 2020 14:46:29 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id x63sm1580880vkc.33.2020.03.26.14.46.28
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 14:46:28 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id h35so2755497uae.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:46:28 -0700 (PDT)
-X-Received: by 2002:a9f:21b8:: with SMTP id 53mr3898828uac.8.1585259188027;
- Thu, 26 Mar 2020 14:46:28 -0700 (PDT)
+        Thu, 26 Mar 2020 17:47:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585259266;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d/7D0H39fzxBW1aDOQOylNWNd9Qe3dOSz4cHq2u2z+8=;
+        b=M77B4lXTvWrbbGsMv9+hfV74fw7GPxXc5riEuIvO0UfD15tn60Efx+qWONIuw59nlH+UAA
+        O9cBXnnWboz8RbnwhYZvwReCMfRRnZBq8GAPs9iUgGPx/nPWasSZQSL2jXBUtdCZ/Ahax9
+        IzwrKFWveEjPnVjVo/TDgCvo5HxQZOg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-274-Za6QPCxyOTqu3ComYKIBKQ-1; Thu, 26 Mar 2020 17:47:42 -0400
+X-MC-Unique: Za6QPCxyOTqu3ComYKIBKQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46A16107ACC4;
+        Thu, 26 Mar 2020 21:47:40 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-117-112.rdu2.redhat.com [10.10.117.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E82FA19C69;
+        Thu, 26 Mar 2020 21:47:36 +0000 (UTC)
+Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
+To:     Sonny Rao <sonnyrao@google.com>
+Cc:     Joel Fernandes <joel@joelfernandes.org>, Tejun Heo <tj@kernel.org>,
+        linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
+        Jesse Barnes <jsbarnes@google.com>, vpillai@digitalocean.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+References: <20200326191623.129285-1-joel@joelfernandes.org>
+ <20200326192035.GO162390@mtj.duckdns.org>
+ <20200326194448.GA133524@google.com>
+ <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
+ <CAPz6YkVUsDz456z8-X2G_EDd-uet1rRNnh2sDUpdcoWp_fkDDw@mail.gmail.com>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e9093ab2-f61f-edf1-5da7-fce5101d6dbf@redhat.com>
+Date:   Thu, 26 Mar 2020 17:47:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org> <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Mar 2020 14:46:15 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
-Message-ID: <CAD=FV=Vbo3JC6mBJXq+q+DQPC_bbNtn3bbScG5N8wzJZm87YuA@mail.gmail.com>
-Subject: Re: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS
- for active request
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAPz6YkVUsDz456z8-X2G_EDd-uet1rRNnh2sDUpdcoWp_fkDDw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Thu, Mar 26, 2020 at 10:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On 3/26/20 4:05 PM, Sonny Rao wrote:
+>> I think Tejun is concerned about a change in the default behavior of
+>> cpuset v1.
+>>
+>> There is a special v2 mode for cpuset that is enabled by the mount
+>> option "cpuset_v2_mode". This causes the cpuset v1 to adopt some of the
+>> v2 behavior. I introduced this v2 mode a while back to address, I think,
+>> a similar concern. Could you try that to see if it is able to address
+>> your problem? If not, you can make some code adjustment within the
+>> framework of the v2 mode. As long as it is an opt-in, I think we are
+>> open to further change.
+> I am surprised if anyone actually wants this behavior, we (Chrome OS)
+> found out about it accidentally, and then found that Android had been
+> carrying a patch to fix it.  And if it were a desirable behavior then
+> why isn't it an option in v2?
 >
-> When there are more than one WAKE TCS available and there is no dedicated
-> ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
-> transfer to complete in first WAKE TCS blocks using another free WAKE TCS
-> to complete current request.
->
-> Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
-> is re-purposed to be used for Active mode. Clear only currently used
-> WAKE TCS's register configuration.
->
-> Mark the caches as dirty so next time when rpmh_flush() is invoked it
-> can invalidate and program cached sleep and wake sets again.
->
-> Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> ---
->  drivers/soc/qcom/rpmh-rsc.c | 29 +++++++++++++++++++----------
->  1 file changed, 19 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-> index 8fa70b4..c0513af 100644
-> --- a/drivers/soc/qcom/rpmh-rsc.c
-> +++ b/drivers/soc/qcom/rpmh-rsc.c
-> @@ -154,8 +154,9 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
->  static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
->                                          const struct tcs_request *msg)
->  {
-> -       int type, ret;
-> +       int type;
->         struct tcs_group *tcs;
-> +       unsigned long flags;
->
->         switch (msg->state) {
->         case RPMH_ACTIVE_ONLY_STATE:
-> @@ -175,18 +176,18 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
->          * If we are making an active request on a RSC that does not have a
->          * dedicated TCS for active state use, then re-purpose a wake TCS to
->          * send active votes.
-> -        * NOTE: The driver must be aware that this RSC does not have a
-> -        * dedicated AMC, and therefore would invalidate the sleep and wake
-> -        * TCSes before making an active state request.
-> +        *
-> +        * NOTE: Mark caches as dirty here since existing data in wake TCS will
-> +        * be lost. rpmh_flush() will processed for dirty caches to restore
-> +        * data.
->          */
->         tcs = get_tcs_of_type(drv, type);
->         if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
->                 tcs = get_tcs_of_type(drv, WAKE_TCS);
-> -               if (tcs->num_tcs) {
-> -                       ret = rpmh_rsc_invalidate(drv);
-> -                       if (ret)
-> -                               return ERR_PTR(ret);
-> -               }
-> +
-> +               spin_lock_irqsave(&drv->client.cache_lock, flags);
-> +               drv->client.dirty = true;
-> +               spin_unlock_irqrestore(&drv->client.cache_lock, flags);
+I am a bit confused. The v2 mode make cpuset v1 behaves more like cpuset
+v2. The original v1 behavior has some obvious issue that was fixed in
+v2. So what v2 option are you talking about?
 
-This seems like a huge abstraction violation.  Why can't rpmh_write()
-/ rpmh_write_async() / rpmh_write_batch() just always unconditionally
-mark the cache dirty?  Are there really lots of cases when those calls
-are made and they do nothing?
+Regards,
+Longman
 
-
-Other than that this patch seems sane to me and addresses one of the
-comments I had in:
-
-https://lore.kernel.org/r/CAD=FV=XmBQb8yfx14T-tMQ68F-h=3UHog744b3X3JZViu15+4g@mail.gmail.com
-
-...interestingly after your patch I guess now I guess tcs_invalidate()
-no longer needs spinlocks since it's only ever called from PM code on
-the last CPU.  ...if you agree, I can always do it in my cleanup
-series.  See:
-
-https://lore.kernel.org/r/CAD=FV=Xp1o68HnC2-hMnffDDsi+jjgc9pNrdNuypjQZbS5K4nQ@mail.gmail.com
-
--Doug
