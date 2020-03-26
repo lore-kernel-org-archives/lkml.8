@@ -2,103 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D6C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A082C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A14082073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585231817;
-	bh=PeDZLWIRhhe2o42I/gqvyiiMuKNamoLO8nfHcq+EkCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Fjyh+0ZEztRy0lWdUy5ODnmCkx45lyoVSkHb5MXU1g5BCywmiWykY9jrLM+cslgFH
-	 IdQjoJVuE35wce/SE+RPKzXzf3e9ipCHsw1V4+aShtIEvgGsZSJ4euFIEBRMmNXLF3
-	 ak5mivtUoV1iYflL4pYi6AFVkGZayF7Qw1C7EPLQ=
+	by mail.kernel.org (Postfix) with ESMTP id D3BBD206F6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:10:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="Atl/wt6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727909AbgCZOKQ (ORCPT
+        id S1727915AbgCZOKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:10:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56444 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727822AbgCZOKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:10:16 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CF95206F8;
-        Thu, 26 Mar 2020 14:10:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585231815;
-        bh=PeDZLWIRhhe2o42I/gqvyiiMuKNamoLO8nfHcq+EkCc=;
+        Thu, 26 Mar 2020 10:10:50 -0400
+Received: from one.firstfloor.org ([193.170.194.197]:35836 "EHLO
+        one.firstfloor.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgCZOKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:10:50 -0400
+Received: by one.firstfloor.org (Postfix, from userid 503)
+        id F138E8733C; Thu, 26 Mar 2020 15:10:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+        s=mail; t=1585231847;
+        bh=gtlaDC8+1MnEKKvFmSZFeaFwgBKvGDYgeKA6K1fcej4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+HavB7wzgTYW3kPySjLPPoFLj+9aNlpEq50YxNDKKRzsgG7ARI+2fa1J4sYhcmvd
-         BTOyHlkLNotN2GwwHNkryJ4W1nlUR+pAx11lVOgV1quJL231pXotHGVltvYV2fn+QM
-         DqMa1ugiLPJgmlRKMJI7hjcDNVP3f/Fapum5Uwqg=
-Date:   Thu, 26 Mar 2020 15:10:11 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Eugene Syromiatnikov <esyr@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Michael Williams <michael.williams@arm.com>,
-        Chunyan Zhang <zhang.chunyan@linaro.org>,
-        "Dmitry V. Levin" <ldv@altlinux.org>
-Subject: Re: [PATCH] coresight: do not use the BIT() macro in the UAPI header
-Message-ID: <20200326141011.GA1313869@kroah.com>
-References: <20200324042213.GA10452@asgard.redhat.com>
- <CANLsYkwVybRG9L6gDJTzZ=eXut66vJYfuEtOfLzaYaVpdybT1A@mail.gmail.com>
+        b=Atl/wt6RZcvoL6jy6Yt0O/5l4UWsejLFnQptGxZ8OnNjWuwJTtUBBJAn9kuDC+KIf
+         SbqlXG+wt08q3iQJ5PjbEVXUBbO3Qg0ro2D0Gs2kr1mjrRJvrggCFDFgcP87nzfl0J
+         brucGMzVB1TAm+GSsqPIjXfEgqD+DS3uvXV+lmf4=
+Date:   Thu, 26 Mar 2020 07:10:47 -0700
+From:   Andi Kleen <andi@firstfloor.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Andi Kleen <andi@firstfloor.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>
+Subject: Re: [PATCH] x86/speculation: Allow overriding seccomp speculation
+ disable
+Message-ID: <20200326141046.giyacwh46bfcbvjy@two.firstfloor.org>
+References: <20200312231222.81861-1-andi@firstfloor.org>
+ <87sgi1rcje.fsf@nanos.tec.linutronix.de>
+ <202003211916.8078081E0@keescook>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANLsYkwVybRG9L6gDJTzZ=eXut66vJYfuEtOfLzaYaVpdybT1A@mail.gmail.com>
+In-Reply-To: <202003211916.8078081E0@keescook>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 24, 2020 at 09:31:15AM -0600, Mathieu Poirier wrote:
-> On Mon, 23 Mar 2020 at 22:22, Eugene Syromiatnikov <esyr@redhat.com> wrote:
-> >
-> > The BIT() macro definition is not available for the UAPI headers
-> > (moreover, it can be defined differently in the user space); replace
-> > its usage with the _BITUL() macro that is defined in <linux/const.h>.
-> >
-> > Fixes: 237483aa5cf4 ("coresight: stm: adding driver for CoreSight STM component")
-> > Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
-> > ---
-> >  include/uapi/linux/coresight-stm.h | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/include/uapi/linux/coresight-stm.h b/include/uapi/linux/coresight-stm.h
-> > index aac550a..8847dbf 100644
-> > --- a/include/uapi/linux/coresight-stm.h
-> > +++ b/include/uapi/linux/coresight-stm.h
-> > @@ -2,8 +2,10 @@
-> >  #ifndef __UAPI_CORESIGHT_STM_H_
-> >  #define __UAPI_CORESIGHT_STM_H_
-> >
-> > -#define STM_FLAG_TIMESTAMPED   BIT(3)
-> > -#define STM_FLAG_GUARANTEED    BIT(7)
-> > +#include <linux/const.h>
-> > +
-> > +#define STM_FLAG_TIMESTAMPED   _BITUL(3)
-> > +#define STM_FLAG_GUARANTEED    _BITUL(7)
-> 
-> Greg, if you want to pick this up right away:
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
-> Otherwise let me know and I'll add it to my next tree.
+> The point of the defaults was to grandfather older seccomp users into
+> speculation mitigations. Newly built seccomp users can choose to disable
+> this with SECCOMP_FILTER_FLAG_SPEC_ALLOW when applying seccomp filters.
+> The rationale was that once a process knows how to manage its exposure,
+> it can choose to leave off the automatic enabling. I don't see any
+> mention of that method in the commit log, so if there is some reason
+> it's not workable, that would need to be discussed first.
 
-I'll take it now, thanks.
+SECCOMP_FILTER_FLAG_SPEC_ALLOW doesn't completely solve the problem because
+it enables everything, including cross process defenses, like Spectre.
 
-greg k-h
+The motivation of my patch was to only allow to disable SSBD, which
+is only relevant for in process attacks, which are completely
+mitigated by process isolation, which is now widely deployed.
+
+Completely mitigating Spectre (which could be cross process) is harder,
+and it doesn't have have as bad a performance impact as SSBD.
+
+> 
+> And the force disable matches the design goals of seccomp: no applied
+> restrictions can be later relaxed for a process. I'm more in favor of
+
+It seems to me this design goal is not useful for 
+speculation defenses. If an attacker can call prctl they don't
+need speculation attacks anymore, they can just read the memory
+directly.
+
+> changing the behavior of SPEC_STORE_BYPASS_CMD_AUTO, but probably not for
+> another 3 years at least. (To get us to at least 5 years since Meltdown,
+> which is relatively close to various longer LTS cycles.)
+
+The seccomp defenses are mainly for web browsers, whose life cycles have
+nothing to do with LTS cycles. Web browsers are updated much faster
+because of their bazillion other security holes. If someone doesn't
+update their web browser they are completely open to other attacks anyways.
+So we can assume they do, and the browsers usually enforce it in 
+some way.
+
+I'm not aware of anything else that is not a browser that would rely on the
+seccomp heuristic. Are you?
+
+Anyways back to the opt-in:
+
+Anyways one way to keep your design goals would be to split the SECCOMP
+flags into flags for SSBD and SPECTRE. Then at least the web browser
+could reenable it
+
+-Andi
+
