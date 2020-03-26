@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E2ABC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96554C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C3720838
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D94E20774
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265365;
-	bh=ZRHdGGkfhDo9JmWaKIaBpioaKTS8YGwYZySmOSLLH3M=;
+	s=default; t=1585265371;
+	bh=LIjwsWyqlUInC8u3+aJqbbUPHNjkh/lu20+hMwM4/+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GJeEDzWMJO3hVKZG2nGA2fmwPSULRovUfF8lrdj0t61D9yPw/wZoPT7QvDsa8635P
-	 Lk72JY2d+7rp0HCBXxIq3JyYhhPJEmsE0FaY6HFlgBjLQMXF9vmZSs6b2mEc/q6q9F
-	 H/M7klA0rgeBhASjK7OVm9v14P5gvqcZS/M0RHAk=
+	b=n5tDxtWqdC7fHaoEshPXTsSPiyIAnVVgNEfCpUddNMw68MCiMB1NIOvUnqzO3C5hj
+	 q98EP/oHX5fSzNZ5WiIbs2E7ZVASyhShyVL6FM4hquqs0LG2SNQNG4UTa8WoqCjETW
+	 X5eGGYhXbsWZmUWo2ih7Zo8RloEE+fi1yCiWrzmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727958AbgCZX3X (ORCPT
+        id S1727677AbgCZXYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:29:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43490 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727763AbgCZXYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:11 -0400
+        id S1727560AbgCZXYC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:02 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2E712073E;
-        Thu, 26 Mar 2020 23:24:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B593F2073E;
+        Thu, 26 Mar 2020 23:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265050;
-        bh=ZRHdGGkfhDo9JmWaKIaBpioaKTS8YGwYZySmOSLLH3M=;
+        s=default; t=1585265041;
+        bh=LIjwsWyqlUInC8u3+aJqbbUPHNjkh/lu20+hMwM4/+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lpWCw+o3Lzyeb3v2W7qUHZmwt0w866oJoEhrkq7wpkZuT3d7Bl+MsvSVw1PNF6Uv4
-         YQd7OiJ9Upg8hep94K7HC+UKHmjmRkuoQMpZE9MKwHQxIJKv66tjWU69OAb4VfkfI9
-         k6b88arYbbDfNFfkDZdnluhjvWx5p/ydTf5aC8qU=
+        b=l2Z6CQYhRtWDviNoomYNLTg9I/8wjHSILPqfeIGZJVd0/7AuCPBNrO/o3N3aa13Yu
+         r8M4X7AlMucgw2hMzWGRazUtXSBjXEkNcCqFUzeSiMatlpBMlf1ZCEXJ6FTwQAfgWm
+         9EYqgd5q5DWP3jw7m12LaGIbtQv4+RgO73MSqyGo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 11/28] initramfs: restore default compression behavior
-Date:   Thu, 26 Mar 2020 19:23:40 -0400
-Message-Id: <20200326232357.7516-11-sashal@kernel.org>
+Cc:     Prabhath Sajeepa <psajeepa@purestorage.com>,
+        Roland Dreier <roland@purestorage.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.5 03/28] nvme-rdma: Avoid double freeing of async event data
+Date:   Thu, 26 Mar 2020 19:23:32 -0400
+Message-Id: <20200326232357.7516-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -59,77 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Prabhath Sajeepa <psajeepa@purestorage.com>
 
-[ Upstream commit 785d74ec3bbf26ac7f6e92e6e96a259aec0f107a ]
+[ Upstream commit 9134ae2a2546cb96abddcd4469a79c77ee3a4480 ]
 
-Even though INITRAMFS_SOURCE kconfig option isn't set in most of
-defconfigs it is used (set) extensively by various build systems.
-Commit f26661e12765 ("initramfs: make initramfs compression choice
-non-optional") has changed default compression mode. Previously we
-compress initramfs using available compression algorithm. Now
-we don't use any compression at all by default.
-It significantly increases the image size in case of build system
-chooses embedded initramfs. Initially I faced with this issue while
-using buildroot.
+The timeout of identify cmd, which is invoked as part of admin queue
+creation, can result in freeing of async event data both in
+nvme_rdma_timeout handler and error handling path of
+nvme_rdma_configure_admin queue thus causing NULL pointer reference.
+Call Trace:
+ ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
+ nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
+ nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
+ __vfs_write+0x1b/0x40
+ vfs_write+0xb2/0x1b0
+ ksys_write+0x61/0xd0
+ __x64_sys_write+0x1a/0x20
+ do_syscall_64+0x60/0x1e0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-As of today it's not possible to set preferred compression mode
-in target defconfig as this option depends on INITRAMFS_SOURCE
-being set. Modification of all build systems either doesn't look
-like good option.
-
-Let's instead rewrite initramfs compression mode choices list
-the way that "INITRAMFS_COMPRESSION_NONE" will be the last option
-in the list. In that case it will be chosen only if all other
-options (which implements any compression) are not available.
-
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Reviewed-by: Roland Dreier <roland@purestorage.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- usr/Kconfig | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/nvme/host/rdma.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/usr/Kconfig b/usr/Kconfig
-index a6b68503d1774..a80cc79722745 100644
---- a/usr/Kconfig
-+++ b/usr/Kconfig
-@@ -131,17 +131,6 @@ choice
- 
- 	  If in doubt, select 'None'
- 
--config INITRAMFS_COMPRESSION_NONE
--	bool "None"
--	help
--	  Do not compress the built-in initramfs at all. This may sound wasteful
--	  in space, but, you should be aware that the built-in initramfs will be
--	  compressed at a later stage anyways along with the rest of the kernel,
--	  on those architectures that support this. However, not compressing the
--	  initramfs may lead to slightly higher memory consumption during a
--	  short time at boot, while both the cpio image and the unpacked
--	  filesystem image will be present in memory simultaneously
--
- config INITRAMFS_COMPRESSION_GZIP
- 	bool "Gzip"
- 	depends on RD_GZIP
-@@ -214,6 +203,17 @@ config INITRAMFS_COMPRESSION_LZ4
- 	  If you choose this, keep in mind that most distros don't provide lz4
- 	  by default which could cause a build failure.
- 
-+config INITRAMFS_COMPRESSION_NONE
-+	bool "None"
-+	help
-+	  Do not compress the built-in initramfs at all. This may sound wasteful
-+	  in space, but, you should be aware that the built-in initramfs will be
-+	  compressed at a later stage anyways along with the rest of the kernel,
-+	  on those architectures that support this. However, not compressing the
-+	  initramfs may lead to slightly higher memory consumption during a
-+	  short time at boot, while both the cpio image and the unpacked
-+	  filesystem image will be present in memory simultaneously
-+
- endchoice
- 
- config INITRAMFS_COMPRESSION
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index 3e85c5cacefd2..0fe08c4dfd2f1 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -850,9 +850,11 @@ static int nvme_rdma_configure_admin_queue(struct nvme_rdma_ctrl *ctrl,
+ 	if (new)
+ 		blk_mq_free_tag_set(ctrl->ctrl.admin_tagset);
+ out_free_async_qe:
+-	nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
+-		sizeof(struct nvme_command), DMA_TO_DEVICE);
+-	ctrl->async_event_sqe.data = NULL;
++	if (ctrl->async_event_sqe.data) {
++		nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
++			sizeof(struct nvme_command), DMA_TO_DEVICE);
++		ctrl->async_event_sqe.data = NULL;
++	}
+ out_free_queue:
+ 	nvme_rdma_free_queue(&ctrl->queues[0]);
+ 	return error;
 -- 
 2.20.1
 
