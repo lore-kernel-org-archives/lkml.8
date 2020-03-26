@@ -2,91 +2,88 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39903C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8BDEC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBF722070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C862070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 08:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ZSxbNEfk"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="boOyqsmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgCZIRT (ORCPT
+        id S1727906AbgCZISK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 04:17:19 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5186 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727682AbgCZIRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 04:17:19 -0400
-X-UUID: 8c21512c61704ae4a13ac9883f90b28b-20200326
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=TUh0oyKKWlFuiaOE7fmc1z5kxisyWDAyryXR2g5CLqg=;
-        b=ZSxbNEfk+E6+9b+mtfqZnBwGGFQR00xv7n/73tjl5DCwvKyO1JRIBr6Aump8Q3sEXInsOmEQcS/qgAaVLPVtys+A2IijjwDaQB1TrUSBaODJlCx1fCwPIJUqezfTVbGy39LRXUb5l/sa4PrPykaZdp5ED4GXAp89Tloed+Snjyo=;
-X-UUID: 8c21512c61704ae4a13ac9883f90b28b-20200326
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1873759620; Thu, 26 Mar 2020 16:17:15 +0800
-Received: from mtkcas07.mediatek.inc (172.21.101.84) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 26 Mar 2020 16:17:13 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 26 Mar 2020 16:17:14 +0800
-Message-ID: <1585210634.4609.1.camel@mtksdccf07>
-Subject: Re: [PATCH v4 1/1] scsi: ufs: Enable block layer runtime PM for
- well-known logical units
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
-        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
-        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
-        <saravanak@google.com>, <salyzyn@google.com>,
-        "Alim Akhtar" <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "open list" <linux-kernel@vger.kernel.org>
-Date:   Thu, 26 Mar 2020 16:17:14 +0800
-In-Reply-To: <1585185003-31156-1-git-send-email-cang@codeaurora.org>
-References: <1585185003-31156-1-git-send-email-cang@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 26 Mar 2020 04:18:10 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:35275 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727821AbgCZISJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 04:18:09 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 293077ea;
+        Thu, 26 Mar 2020 08:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=z54i3Rpd8bQwLDnVNFV/yezuxLU=; b=boOyqs
+        mCdG+80LeYcjASWpkQ1zMThj2uZPRyQj63aULJ1eho1PEeJxY053blYBVEDv/+X7
+        OBQ/dBvu36pqu+6GHtzv5FnIDYJ8+m+UpNZddescE9+TJew8ZdyolfWdn7qCgNwm
+        hCDQQZZIBJP70J+3MGGaus93N2IUKDn1UavfBtBSFRk4AtjJCPc/vVInIjmHn4rp
+        9nXPZ9Perj3Rk83uKKf3OPmeCafWNMnHZ2UW709Lpc/xjEXipaADr7IcjmiVm9Er
+        qA90IZHHNfiJD+f6KrFTRwRM8Vhig7u1XfQF2UZX5KM4Hl2qhbUe96EyxkSi5RwR
+        yE1MyvOm+wrsj6Vw==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id f22236e6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 26 Mar 2020 08:10:45 +0000 (UTC)
+Received: by mail-io1-xd36.google.com with SMTP id k9so5139001iov.7;
+        Thu, 26 Mar 2020 01:18:06 -0700 (PDT)
+X-Gm-Message-State: ANhLgQ3XXTfJD2Ff639k67Y0c3BAp/U3FUB4V5ieGUaWa70y8GQopE/p
+        x7aUHw6BxH3iMuvq1jZNZ1glMxnQZEqeTiVu7ag=
+X-Google-Smtp-Source: ADFU+vsTJTCXcFJHQUwui8dbQzcKfWOUCgQIPLG0bwuItksw1ry6Mg259oUoldQgsVo9bcGoroXnNzuIzCxg8dcm+jA=
+X-Received: by 2002:a02:2a4a:: with SMTP id w71mr6759564jaw.75.1585210385536;
+ Thu, 26 Mar 2020 01:13:05 -0700 (PDT)
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200326080104.27286-1-masahiroy@kernel.org>
+In-Reply-To: <20200326080104.27286-1-masahiroy@kernel.org>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Thu, 26 Mar 2020 02:12:54 -0600
+X-Gmail-Original-Message-ID: <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
+Message-ID: <CAHmME9pnAvgErYkcvvdakvfMY8ZGKfwHHNYzpVtJ913Tgp16CQ@mail.gmail.com>
+Subject: Re: [PATCH v2 00/16] x86, crypto: remove always-defined CONFIG_AS_*
+ and cosolidate Kconfig/Makefiles
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David S. Miller" <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Jim Kukunas <james.t.kukunas@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        NeilBrown <neilb@suse.de>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Yuanhan Liu <yuanhan.liu@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBXZWQsIDIwMjAtMDMtMjUgYXQgMTg6MDkgLTA3MDAsIENhbiBHdW8gd3Jv
-dGU6DQo+IEJsb2NrIGxheWVyIFJQTSBpcyBlbmFibGVkIGZvciB0aGUgZ2VuZXJuYWwgVUZTIFND
-U0kgZGV2aWNlcyB3aGVuIHRoZXkgYXJlDQo+IHByb2JlZCBieSB0aGVpciBkcml2ZXIuIEhvd2V2
-ZXIgYmxvY2sgbGF5ZXIgUlBNIGlzIG5vdCBlbmFibGVkIGZvciBVRlMNCj4gd2VsbC1rbm93biBT
-Q1NJIGRldmljZXMuDQo+IA0KPiBBcyBVRlMgU0NTSSBkZXZpY2VzIGhhdmUgdGhlaXIgY29ycmVz
-cG9uZGluZyBCU0cgY2hhciBkZXZpY2VzLCBhY2Nlc3NpbmcNCj4gYSBCU0cgY2hhciBkZXZpY2Ug
-dmlhIElPQ1RMIG1heSBzZW5kIHJlcXVlc3RzIHRvIGl0cyBjb3JyZXNwb25kaW5nIFNDU0kNCj4g
-ZGV2aWNlIHRocm91Z2ggaXRzIHJlcXVlc3QgcXVldWUuIElmIEJTRyBJT0NUTCBzZW5kcyBhIHJl
-cXVlc3QgdG8gYQ0KPiB3ZWxsLWtub3duIFNDU0kgZGV2aWNlIHdoZW4gaGJhIGlzIG5vdCBydW50
-aW1lIGFjdGl2ZSwgZHVlIHRvIGJsb2NrIGxheWVyDQo+IFJQTSBpcyBub3QgZWFuYmxlZCBmb3Ig
-dGhlIHdlbGwta25vd24gU0NTSSBkZXZpY2VzLCBoYmEsIHdoaWNoIGlzIGF0IHRoZQ0KPiB0b3Ag
-b2YgYSBzY3NpIGRldmljZSdzIHBhcmVudCBjaGFpbiwgc2hhbGwgbm90IGJlIHJlc3VtZWQsIHRo
-ZW4gdW5leHBlY3RlZA0KPiBlcnJvciB3b3VsZCBoYXBwZW4uDQo+IA0KPiBUaGlzIGNoYW5nZSBl
-bmFibGVzIGJsb2NrIGxheWVyIFJQTSBmb3IgdGhlIHdlbGwta25vd24gU0NTSSBkZXZpY2VzLCBz
-bw0KPiB0aGF0IGJsb2NrIGxheWVyIGNhbiBoYW5kbGUgUlBNIGZvciB0aGUgd2VsbC1rbm93biBT
-Q1NJIGRldmljZXMganVzdCBsaWtlDQo+IGZvciB0aGUgZ2VuZXJhbCBTQ1NJIGRldmljZXMuDQo+
-IA0KPiBTaWduZWQtb2ZmLWJ5OiBDYW4gR3VvIDxjYW5nQGNvZGVhdXJvcmEub3JnPg0KPiBSZXZp
-ZXdlZC1ieTogQXZyaSBBbHRtYW4gPGF2cmkuYWx0bWFuQHdkYy5jb20+DQoNCkxvb2tzIGdvb2Qh
-DQpUaGFua3MgdG8gbWFrZSBSUE0gZm9yIFVGUyBjb21wbGV0ZWQhDQoNClJldmlld2VkLWJ5OiBT
-dGFubGV5IENodSA8c3RhbmxleS5jaHVAbWVkaWF0ZWsuY29tPg0KDQo=
+Very little has changed from last time, and this whole series still
+looks good to me. I think I already ack'd most packages, but in case
+it helps:
 
+Reviewed-by: Jason A. Donenfeld <Jason@zx2c4.com>
+
+Since this touches a lot of stuff, it might be best to get it in as
+early as possible during the merge window, as I imagine new code being
+added is going to want to be touching those makefiles too.
