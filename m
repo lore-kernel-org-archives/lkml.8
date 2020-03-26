@@ -2,106 +2,164 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCC9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B45C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9F020714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 202AC20748
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:34:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="j6BSIz+m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgCZJai (ORCPT
+        id S1727826AbgCZJe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:30:38 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:38520 "EHLO huawei.com"
+        Thu, 26 Mar 2020 05:34:57 -0400
+Received: from mail-eopbgr80074.outbound.protection.outlook.com ([40.107.8.74]:17646
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726354AbgCZJah (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:30:37 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0D07C7169ACE85BE893B;
-        Thu, 26 Mar 2020 17:30:35 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 26 Mar
- 2020 17:30:30 +0800
-Subject: Re: [PATCH v2 3/5] f2fs: fix to avoid NULL pointer dereference
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200325091811.60725-1-yuchao0@huawei.com>
- <20200325155014.GB65658@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <b20a846a-6035-6f5e-72a9-adb1b5399bbd@huawei.com>
-Date:   Thu, 26 Mar 2020 17:30:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20200325155014.GB65658@google.com>
-Content-Type: text/plain; charset="windows-1252"
+        id S1726540AbgCZJe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:34:56 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=NicxeHN+5qZNUhYPI95PqPPiSrq5RlgRmZk/CMMMipwgTgGUGaNY1GcePpkwnV18pUIf8oiPZ5vfLpkzACxF1uHCesBMSl1X6oZCss9uV8JhZt2n2+nSxkmL7c9vjjYhzbVRSk+O/+3WaZ4wICvzPc5crfPvCnd368dKRSjbZvOHb3AIdH8Qc+ksCQT/IdOiR4SVUnI7az72cWH39IHT/hBVw1lmM561yW+mR1k9B/URzM1OlzNd9GCJyw7V2bQDlc59DvxtO9+iQJHM4t9IZ23qQgh/XRyN6H3xOejlHhjv6HPU+W/5ZS24PvbnO8RQx7tkyWs8WTASSH/UmxXWIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UfxNIHVLEMtGyqDrFQ5WExruhP6s3/KlC/1nf4TjxhA=;
+ b=K/L1+hDejXXQu7sPdy7ktCUE4cem9cbJo5957n005zCgink6aLbIDpe7zyheVPtI2UfXiIkthDsN6nfLjX9DBv/js9OIu73Ty3MULPysurW5IZMkBBIcFy8vbS4sfjkxj9Fsxmj/FOD9Z3aCA/E3hcYdn+jmOHWw3tpnxD3DWAn2t07/hcbsoclH/NlvIUNrqu1uOrDAbDAI+NNagZoEofXv4WBMZJ2ynNCJBQ1prfliCBQwmJK1f4YVvqUU3WxRN/m8JfukKJQVJSTUA6ESEOsYhJgY+HxSedUfUgrWlyNHfzZ8MwZJVztEYGre8yWXzv0uRQHAdn1ttBOW4duDNw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UfxNIHVLEMtGyqDrFQ5WExruhP6s3/KlC/1nf4TjxhA=;
+ b=j6BSIz+mbhAxWBvI7FWiEKwbTzRBkbHBoNmQpE0Wkq/cwaVjvQKasjzHwuBK2Y6SRoMyO4baD077V8j2R3XBx/kY3PPDaJ74O69+TTkCJCELHcw4HaCQp+vQY/HWBhpFTGURUKqCGhjxWBz3ItZ8K6wAcnebilhbu/s0QOVErUY=
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com (10.141.174.88) by
+ AM7PR04MB7080.eurprd04.prod.outlook.com (52.135.58.7) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2835.19; Thu, 26 Mar 2020 09:34:53 +0000
+Received: from AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::dcc0:6a0:c64b:9f94]) by AM7PR04MB6885.eurprd04.prod.outlook.com
+ ([fe80::dcc0:6a0:c64b:9f94%2]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
+ 09:34:53 +0000
+From:   "Y.b. Lu" <yangbo.lu@nxp.com>
+To:     Richard Cochran <richardcochran@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+Subject: RE: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Thread-Topic: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+Thread-Index: AQHV/qQWBIiKj5A/T0WD8BjMeGVxRqhXvRSAgADnAvCAALTjgIABSqMQ
+Date:   Thu, 26 Mar 2020 09:34:52 +0000
+Message-ID: <AM7PR04MB68853749A1196B30C917A232F8CF0@AM7PR04MB6885.eurprd04.prod.outlook.com>
+References: <20200320103726.32559-1-yangbo.lu@nxp.com>
+ <20200320103726.32559-7-yangbo.lu@nxp.com> <20200324130733.GA18149@localhost>
+ <AM7PR04MB688500546D0FC4A64F0DA19DF8CE0@AM7PR04MB6885.eurprd04.prod.outlook.com>
+ <20200325134147.GB32284@localhost>
+In-Reply-To: <20200325134147.GB32284@localhost>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=yangbo.lu@nxp.com; 
+x-originating-ip: [92.121.36.198]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0f903f43-6b07-4c06-472c-08d7d168f007
+x-ms-traffictypediagnostic: AM7PR04MB7080:|AM7PR04MB7080:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM7PR04MB7080DFE6DE3ECBDD177D0D3EF8CF0@AM7PR04MB7080.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1388;
+x-forefront-prvs: 0354B4BED2
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(366004)(376002)(396003)(86362001)(7696005)(4326008)(5660300002)(2906002)(55016002)(6916009)(33656002)(52536014)(6506007)(9686003)(53546011)(76116006)(66946007)(316002)(54906003)(26005)(186003)(66556008)(66476007)(66446008)(64756008)(8936002)(478600001)(81156014)(8676002)(81166006)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM7PR04MB7080;H:AM7PR04MB6885.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s3ywO7V+li3Cj1tIhojGN6GKpe4EfIUvz68AaHSpUYzgjCKsJqVlu5JJKWwPt3Ne7wiQJ8XsDgJu5aCizmwqbKOOxpxOQc6vL0kVvAKrN54Zf82Aa5ZH2z+rqnWMRcuV3XLZ2Oy7J4axyfLWx9xyr50oXuHmE6C+2lrezzlBRLQYwHlmqfj2GuQd5kyziQHICSR9+VOxnxDLoseEORdjFq/VZ0YsQxpEgiVuv9LZg0XXP8mRt3OpuqNV5SrJltyfLvIwjH8S+BtYL7udV0u/+7msVKN55uo5ANcPtnp0xKDmzu4xz0DiV6hd8IwyNlcq6cSx8Wbf7vf3pJdPSsNMEwveToqmYgjR4voG27G6wL9cu3CD7W6hR+VsxLJhhnjx4XHIWF9Q58/YLGnF53LoSAt4JZL+zajyXCN4N3A+dsRdt+cLLjrdMZy0AE1Ua5+R
+x-ms-exchange-antispam-messagedata: 89RjFlzbDZH7abbyKdQFW6r/B9PSLxWdI7SH2Lv4lokG7xSEXegu8YGsB46x4PyOyrvd8TrL4EEV+HWk1y3ws61tzeiy8OTNYb2sBr5xw4/MToT6xK1ZxhTTUcj1tii42x7NeHKMubM2HNDna9ks1Q==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f903f43-6b07-4c06-472c-08d7d168f007
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 09:34:52.8952
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wQULQH6Ae/O2dU4ZRojuuFi4VV8U9OCN3ILoM+TxCtHti7HDY0hLlc/3e6gpdi1Ewjnx8g+4t3ncxZhgkKSiNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7080
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
+Hi Richard,
 
-I've made that diff as a patch and changed title and commit message a
-bit, let's merge the new one.
+> -----Original Message-----
+> From: Richard Cochran <richardcochran@gmail.com>
+> Sent: Wednesday, March 25, 2020 9:42 PM
+> To: Y.b. Lu <yangbo.lu@nxp.com>
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; David S . Mille=
+r
+> <davem@davemloft.net>; Vladimir Oltean <vladimir.oltean@nxp.com>;
+> Claudiu Manoil <claudiu.manoil@nxp.com>; Andrew Lunn <andrew@lunn.ch>;
+> Vivien Didelot <vivien.didelot@gmail.com>; Florian Fainelli
+> <f.fainelli@gmail.com>; Alexandre Belloni <alexandre.belloni@bootlin.com>=
+;
+> Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>
+> Subject: Re: [PATCH 6/6] ptp_ocelot: support 4 programmable pins
+>=20
+> On Wed, Mar 25, 2020 at 03:08:46AM +0000, Y.b. Lu wrote:
+>=20
+> > The calling should be like this,
+> > ptp_set_pinfunc (hold pincfg_mux)
+> > ---> ptp_disable_pinfunc
+> >    ---> .enable
+> >       ---> ptp_find_pin (hold pincfg_mux)
+>=20
+> I see.  The call
+>=20
+>     ptp_disable_pinfunc() --> .enable()
+>=20
+> is really
+>=20
+>     ptp_disable_pinfunc() --> .enable(on=3D0)
+>=20
+> or disable.
+>=20
+> All of the other drivers (except mv88e6xxx which has a bug) avoid the
+> deadlock by only calling ptp_find_pin() when invoked by .enable(on=3D1);
+>=20
+> Of course, that is horrible, and I am going to find a way to fix it.
 
-Thanks,
+Thanks a lot.
+Do you think it is ok to move protection into ptp_set_pinfunc() to protect =
+just pin_config accessing?
+ptp_disable_pinfunc() not touching pin_config could be out of protection.
+But it seems indeed total ptp_set_pinfunc() should be under protection...
 
-On 2020/3/25 23:50, Jaegeuk Kim wrote:
-> Hi Chao,
-> 
-> I don't want to rebase old commit at this moment, so applied on top of the tree.
-> 
+>=20
+> For now, maybe you can drop the "programmable pins" feature for your
+> driver?  After all, the pins are not programmable.
+
+I still want to confirm, did you mean the deadlock issue? Or you thought th=
+e pin supports only PTP_PF_PEROUT in hardware?
+I could modify commit messages to indicate the pin supports both PTP_PF_PER=
+OUT and PTP_PF_EXTTS, and PTP_PF_EXTTS support will be added in the future.
+Thanks a lot.
+
+>=20
 > Thanks,
-> 
-> On 03/25, Chao Yu wrote:
->> Unable to handle kernel NULL pointer dereference at virtual address 00000000
->> PC is at f2fs_free_dic+0x60/0x2c8
->> LR is at f2fs_decompress_pages+0x3c4/0x3e8
->> f2fs_free_dic+0x60/0x2c8
->> f2fs_decompress_pages+0x3c4/0x3e8
->> __read_end_io+0x78/0x19c
->> f2fs_post_read_work+0x6c/0x94
->> process_one_work+0x210/0x48c
->> worker_thread+0x2e8/0x44c
->> kthread+0x110/0x120
->> ret_from_fork+0x10/0x18
->>
->> In f2fs_free_dic(), we can not use f2fs_put_page(,1) to release dic->tpages[i],
->> as the page's mapping is NULL.
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->> v2:
->> - fix to skip release tpages[i] if it is NULL in error path.
->>  fs/f2fs/compress.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
->> index ef7dd04312fe..6e10800729b6 100644
->> --- a/fs/f2fs/compress.c
->> +++ b/fs/f2fs/compress.c
->> @@ -1137,7 +1137,10 @@ void f2fs_free_dic(struct decompress_io_ctx *dic)
->>  		for (i = 0; i < dic->cluster_size; i++) {
->>  			if (dic->rpages[i])
->>  				continue;
->> -			f2fs_put_page(dic->tpages[i], 1);
->> +			if (!dic->tpages[i])
->> +				continue;
->> +			unlock_page(dic->tpages[i]);
->> +			put_page(dic->tpages[i]);
->>  		}
->>  		kfree(dic->tpages);
->>  	}
->> -- 
->> 2.18.0.rc1
-> .
-> 
+> Richard
