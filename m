@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B74FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99206C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E5A20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6E020409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265188;
-	bh=W0Nkmr1pxbEzsY8D6fArEYRWcqQZNP6Afga//UVAqKg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdu+XyHyjnPB8dlbLiY9k9++LIV+tPHwf1bp67Xi2rytagZi3LwH+Dg3IhD+UgQoy
-	 GlBJVcVJEq1/CUOjbWruqomhYswbtIYjzUAMhWN0QWnQLoOhsqym4kaNd+vTyMqP/S
-	 4EA5KXEfW4M7MQ3PW0PgXYEr0EBwf5xm3Ig7q424=
+	s=default; t=1585265192;
+	bh=VKo7GUQA1DEzSdCU5wZrrVDD4YMnhnpG+D9De3uLcFQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=u+Me3atzbYGm8B0/cJHK2jtgSN3o4PlO5SB1ibAVmUqcz1S9HknWtVRuIsN0cnt+N
+	 vSDOOYVV13Y9bb6RQ+3Fd1p6/y2bKgBn3xk4tGF7/Z5tEJ1nBfB/0jBX99+0JvIn8W
+	 LJkG9rx18ZMMDxTPB4kpZpORMRY11GiKpu41JEzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgCZX01 (ORCPT
+        id S1728278AbgCZXZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46290 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:25:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727722AbgCZXZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:23 -0400
+        id S1728255AbgCZXZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F40F2082D;
-        Thu, 26 Mar 2020 23:25:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9AE220409;
+        Thu, 26 Mar 2020 23:25:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265123;
-        bh=W0Nkmr1pxbEzsY8D6fArEYRWcqQZNP6Afga//UVAqKg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GwK6BAXiHZfGIPv2xx9MbO/Z0dua/kECw5gtC7evPFhGqm7erhMgKRslhe55MNpmB
-         ZfSYwSmax4hJNSZ2aNbmNCtz7DwLW2vsiepTQ8k2Z8nNwqe8POoHE4lEfulNEB57vf
-         Mx2vtMO2VuYPtroXrbcxqQsQy98GaCKHWv55gVzw=
+        s=default; t=1585265115;
+        bh=VKo7GUQA1DEzSdCU5wZrrVDD4YMnhnpG+D9De3uLcFQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OjUZF0a/99t3Gkb6e7xJ+cO9+MeYALU7Q/Sp5/gkwLpPs44qJ744yPc6afKl697+t
+         6J19hNgcYo6Cl8cvzXFJ2r5TSpLCzJXf+dgPuEY63LfLYIg6H3YYmDLVjIRe3Z7vrG
+         b3RCAicwggGC8ErOqB+hdWWSqfTAWt5E70LkfzXk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.14 08/10] ALSA: pcm: oss: Avoid plugin buffer overflow
-Date:   Thu, 26 Mar 2020 19:25:11 -0400
-Message-Id: <20200326232513.8212-8-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 01/10] drm/bridge: dw-hdmi: fix AVI frame colorimetry
+Date:   Thu, 26 Mar 2020 19:25:04 -0400
+Message-Id: <20200326232513.8212-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232513.8212-1-sashal@kernel.org>
-References: <20200326232513.8212-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,72 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit f2ecf903ef06eb1bbbfa969db9889643d487e73a ]
+[ Upstream commit e8dca30f7118461d47e1c3510d0e31b277439151 ]
 
-Each OSS PCM plugins allocate its internal buffer per pre-calculation
-of the max buffer size through the chain of plugins (calling
-src_frames and dst_frames callbacks).  This works for most plugins,
-but the rate plugin might behave incorrectly.  The calculation in the
-rate plugin involves with the fractional position, i.e. it may vary
-depending on the input position.  Since the buffer size
-pre-calculation is always done with the offset zero, it may return a
-shorter size than it might be; this may result in the out-of-bound
-access as spotted by fuzzer.
+CTA-861-F explicitly states that for RGB colorspace colorimetry should
+be set to "none". Fix that.
 
-This patch addresses those possible buffer overflow accesses by simply
-setting the upper limit per the given buffer size for each plugin
-before src_frames() and after dst_frames() calls.
-
-Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
-Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and encodings")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200304232512.51616-2-jernej.skrabec@siol.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_plugin.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 46 +++++++++++++----------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
-diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
-index b8ab46b8298de..6583eb411f82a 100644
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
- 			plugin_next = plugin->next;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pc
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index cc1094f901255..96cf64d0ee824 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1348,28 +1348,34 @@ static void hdmi_config_AVI(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+ 		frame.colorspace = HDMI_COLORSPACE_RGB;
+ 
+ 	/* Set up colorimetry */
+-	switch (hdmi->hdmi_data.enc_out_encoding) {
+-	case V4L2_YCBCR_ENC_601:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
++	if (!hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
++		switch (hdmi->hdmi_data.enc_out_encoding) {
++		case V4L2_YCBCR_ENC_601:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		case V4L2_YCBCR_ENC_709:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
++			break;
++		default: /* Carries no data */
+ 			frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		}
++	} else {
++		frame.colorimetry = HDMI_COLORIMETRY_NONE;
+ 		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
+-	case V4L2_YCBCR_ENC_709:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
+-			frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
+-		break;
+-	default: /* Carries no data */
+-		frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
++			HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+ 	}
+ 
+ 	frame.scan_mode = HDMI_SCAN_MODE_NONE;
 -- 
 2.20.1
 
