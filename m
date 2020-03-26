@@ -7,50 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DB9C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62479C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 484BD2083E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3123D208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265117;
-	bh=HZKph1vlL2+lbjT545LdjST3edbD4zKJanui7XS+8/I=;
+	s=default; t=1585265122;
+	bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjokx63f5rlATPL+kWFB7QughJruLxtdhfJjqpec9+McqkSAy7Z2amfeXDDAWsB9p
-	 mRtX2X1jlTsmEgLMHozxtNUAzAcAhkknpSzp15IQRD6XCaxGE/pEP7IW5VwGcB6wVn
-	 QOlt44TBGoyxSyLwo2/HFg1OxO86dPFGNuxRuiko=
+	b=DIIt3AaZHAd2EWHObsIZolxN3Gnl/JyFU966svb4lx3bBEXxphgjuZb+APLtm89QY
+	 xNBqudicOEQu2aOhGSUEknBfxLvr7tpa5hC62NQ76sH8gM+FPgMVWMABs2LMj4IuVo
+	 P7fE6J9tJOvR5XTeNhkOAnbi37QNaYIl4zCipdTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbgCZXZP (ORCPT
+        id S1728289AbgCZXZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:25:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45802 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:25:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbgCZXZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:25:10 -0400
+        id S1727701AbgCZXZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A794820A8B;
-        Thu, 26 Mar 2020 23:25:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBD852082D;
+        Thu, 26 Mar 2020 23:25:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265109;
-        bh=HZKph1vlL2+lbjT545LdjST3edbD4zKJanui7XS+8/I=;
+        s=default; t=1585265117;
+        bh=TOlzQZqFBlXXk6vVW3nEQ7OnPHurudRh2uEU+6f1lvY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wSMWWDw1/NpEuunTdz8VQ6HoEzW8OSGALIY2B8jVct6vKxtpZ7TgrmpQov6hpa1ZJ
-         DKUzIN6dYLZ3RxAMUali20mDHBin0IeGhD/gZebIydBSrKSB/T7rrf+6Z4T/pz50nr
-         a+ZdGYqGcLvhJH1pe7YAHRi7zZ0JiPeQz6EE3mFs=
+        b=VcyCalg0QfG6orqJTIAZRpTozXFiSat3BqSSKA1MIv+ffexmLQSJFGW2L0KjUZDCy
+         KvQpMRMDTYa5iIQaOgIccJ1tiyDWPERlBNiVS6HvOGhKmDIr6XW90Jyoa1HXQZ89G6
+         bz7wrTSOlgfJrl2xH0PuPjj4bMHavmO0MYf2zCP0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 12/15] ALSA: pcm: oss: Avoid plugin buffer overflow
-Date:   Thu, 26 Mar 2020 19:24:52 -0400
-Message-Id: <20200326232455.8029-12-sashal@kernel.org>
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 03/10] drm/bochs: downgrade pci_request_region failure from error to warning
+Date:   Thu, 26 Mar 2020 19:25:06 -0400
+Message-Id: <20200326232513.8212-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232455.8029-1-sashal@kernel.org>
-References: <20200326232455.8029-1-sashal@kernel.org>
+In-Reply-To: <20200326232513.8212-1-sashal@kernel.org>
+References: <20200326232513.8212-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,72 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit f2ecf903ef06eb1bbbfa969db9889643d487e73a ]
+[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
 
-Each OSS PCM plugins allocate its internal buffer per pre-calculation
-of the max buffer size through the chain of plugins (calling
-src_frames and dst_frames callbacks).  This works for most plugins,
-but the rate plugin might behave incorrectly.  The calculation in the
-rate plugin involves with the fractional position, i.e. it may vary
-depending on the input position.  Since the buffer size
-pre-calculation is always done with the offset zero, it may return a
-shorter size than it might be; this may result in the out-of-bound
-access as spotted by fuzzer.
+Shutdown of firmware framebuffer has a bunch of problems.  Because
+of this the framebuffer region might still be reserved even after
+drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 
-This patch addresses those possible buffer overflow accesses by simply
-setting the upper limit per the given buffer size for each plugin
-before src_frames() and after dst_frames() calls.
+Don't consider pci_request_region() failure for the framebuffer
+region as fatal error to workaround this issue.
 
-Reported-by: syzbot+e1fe9f44fb8ecf4fb5dd@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/000000000000b25ea005a02bcf21@google.com
-Link: https://lore.kernel.org/r/20200309082148.19855-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/oss/pcm_plugin.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/sound/core/oss/pcm_plugin.c b/sound/core/oss/pcm_plugin.c
-index 31cb2acf8afcc..9b588c6a6f099 100644
---- a/sound/core/oss/pcm_plugin.c
-+++ b/sound/core/oss/pcm_plugin.c
-@@ -209,6 +209,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin && drv_frames > 0) {
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames)
- 				drv_frames = plugin->src_frames(plugin, drv_frames);
-@@ -220,6 +222,8 @@ snd_pcm_sframes_t snd_pcm_plug_client_size(struct snd_pcm_substream *plug, snd_p
- 			plugin_next = plugin->next;
- 			if (plugin->dst_frames)
- 				drv_frames = plugin->dst_frames(plugin, drv_frames);
-+			if (drv_frames > plugin->buf_frames)
-+				drv_frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else
-@@ -248,11 +252,15 @@ snd_pcm_sframes_t snd_pcm_plug_slave_size(struct snd_pcm_substream *plug, snd_pc
- 				if (frames < 0)
- 					return frames;
- 			}
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin = plugin_next;
- 		}
- 	} else if (stream == SNDRV_PCM_STREAM_CAPTURE) {
- 		plugin = snd_pcm_plug_last(plug);
- 		while (plugin) {
-+			if (frames > plugin->buf_frames)
-+				frames = plugin->buf_frames;
- 			plugin_prev = plugin->prev;
- 			if (plugin->src_frames) {
- 				frames = plugin->src_frames(plugin, frames);
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index a39b0343c197d..401c218567af9 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -97,10 +97,8 @@ int bochs_hw_init(struct drm_device *dev, uint32_t flags)
+ 		size = min(size, mem);
+ 	}
+ 
+-	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
+-		DRM_ERROR("Cannot request framebuffer\n");
+-		return -EBUSY;
+-	}
++	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
++		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
+ 
+ 	bochs->fb_map = ioremap(addr, size);
+ 	if (bochs->fb_map == NULL) {
 -- 
 2.20.1
 
