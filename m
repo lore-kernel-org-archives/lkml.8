@@ -2,197 +2,92 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C29D4C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743EBC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D46820719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585187097;
-	bh=8LbJ1rOzX1zYoBejYpdC7F7zcKGB/JvH0asXD8eYU9E=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:List-ID:From;
-	b=YjQUX6uD/dzI5YcyDNTIVL59m3hjFD6OXfSnSeSZNar6uGdJLoT9djO/NUNWank+c
-	 NAW6SouwP3H2AMkPBZOdqfk0Mjf/VqE1864nRj/ldiFF+Ss6RlkyboE5h3gekOd2Xt
-	 pxsfaioCn0Acsxqsfq627nVYl08SA0CtHGBtEaYE=
+	by mail.kernel.org (Postfix) with ESMTP id 3AA9B2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 01:47:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ltqiGJtx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgCZBo4 (ORCPT
+        id S1727661AbgCZBrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 21:44:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59070 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727561AbgCZBoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 21:44:55 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1027020714;
-        Thu, 26 Mar 2020 01:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585187094;
-        bh=8LbJ1rOzX1zYoBejYpdC7F7zcKGB/JvH0asXD8eYU9E=;
-        h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=oEs++OaVBTcEmslMsPj+RGYKdfCXHQLyvbzyViFcH0FvbwO86DXYq9nSqLVoiaSmz
-         kb/33HUX8VTBtuxqpFrP/iAt11KpyvSCYr8VQ9qIXcG1uK3odHz6cjL7t7AThk7OVq
-         GDwsJgi7Nl64caeYnTF2AUaC1UX1J5j+SB+Mulrc=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200325171109.cohnsw3s57ckaqud@ubsrv2.baikal.int>
-References: <20200306130231.05BBC8030795@mail.baikalelectronics.ru> <20200323024611.16039-1-Sergey.Semin@baikalelectronics.ru> <20200323100109.k2gckdyneyzo23fb@gilmour.lan> <20200323135017.4vi5nwam2rlpepgn@ubsrv2.baikal.int> <20200324101243.GG1922688@smile.fi.intel.com> <20200325171109.cohnsw3s57ckaqud@ubsrv2.baikal.int>
-Subject: Re: [PATCH v2] serial: 8250_dw: Fix common clocks usage race condition
-From:   Stephen Boyd <sboyd@kernel.org>
-Cc:     Maxime Ripard <maxime@cerno.tech>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Maxim Kaurkin <Maxim.Kaurkin@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
-        Ekaterina Skachko <Ekaterina.Skachko@baikalelectronics.ru>,
-        Vadim Vlasov <V.Vlasov@baikalelectronics.ru>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Chen-Yu Tsai <wens@csie.org>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Jisheng Zhang <Jisheng.Zhang@synaptics.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Catalin Marina s <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Semin <Sergey.Semin@baikalelectronics.ru>
-Date:   Wed, 25 Mar 2020 18:44:53 -0700
-Message-ID: <158518709322.125146.10069235641747677647@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9
+        Wed, 25 Mar 2020 21:47:13 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45519 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727561AbgCZBrN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 21:47:13 -0400
+Received: by mail-qt1-f193.google.com with SMTP id t17so4013179qtn.12;
+        Wed, 25 Mar 2020 18:47:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=MGtWCUE+uLFl5+4WGJ6FqY8rhfqoAZ5ZAEsAc4trkZs=;
+        b=ltqiGJtxYKfKmBd2X3uQeeC1CB7LoxZAoGGHqnmmcWQe3jdwrVNbvwFGZdBolLPMXO
+         DPq/Ns0wEwrdp6+KCfzekylFb7yKyV97QkUigEHc2S05USUlgcs+qTeLi4xY1rBad/Nl
+         8hNAk0seTOtm0wgE8ucdH+XVvleMD/hX2ORbldQsoWJKHzv3VVWO8DZAjG/QDPkAr1fl
+         PhBoth93LhMh/NvgvBA40iCEM7R/2oQ497BQ1zE6iu2cElbILGk4od8lwj7wSivL07fQ
+         /VHovnLi7Ry1HIeVg+qXZQVNZe7Dy4Ix8v7eOkyB54xm2JwNbHHdAbq77JgAeMl8DcjF
+         WmOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=MGtWCUE+uLFl5+4WGJ6FqY8rhfqoAZ5ZAEsAc4trkZs=;
+        b=N4ZDIH9CbXyjHmC4UFBLk9S6gfbDVYOn5Ay3htQ0nDa7oTdOL1n2G8aWEg5MRjBtqE
+         AAQ0RfiWDNmj+5QCa18JceVST5PNmbLYg2XsV+oSwqtdTpqr8RlFVQHVYc4bg6w1/9oU
+         MFTa8fA+f7/2bpeA2UDfO3EDMohKbox9VSdS+kyY+gyVM2oRptmzhNM7NenInGFwgOsO
+         OboKdGOyJveXnMbLC0MzMUzcRdBzqNyXFwIUmxwmPGvhcZjbQYo6Zr0MVOpLwmCif2Ge
+         T8z9m9//7i3w4aWdhV4HzQJdSW40fQMart1oA/kBVFG4BvRwU5AUVqcV92oRfMpKqEyD
+         M2Rw==
+X-Gm-Message-State: ANhLgQ22grTJIfev5OdVKFHcd8TIx8Sp1kxZDmjrkhZpFrcZI9+OtEtW
+        Yf8cR4FG0fnFDmTqtTyIVh4lN4zs
+X-Google-Smtp-Source: ADFU+vtytdWCaVsgkuuzqgdL1SaQsMSfBx3mJkY2Um7hkLzrVcoaW7DF+RGEQryoI5ARhhibaZ8SyA==
+X-Received: by 2002:ac8:554f:: with SMTP id o15mr5922854qtr.154.1585187231831;
+        Wed, 25 Mar 2020 18:47:11 -0700 (PDT)
+Received: from localhost.localdomain (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id h129sm463552qkf.54.2020.03.25.18.47.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Wed, 25 Mar 2020 18:47:11 -0700 (PDT)
+From:   frowand.list@gmail.com
+To:     Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Alan Tull <atull@kernel.org>
+Subject: [PATCH 0/2] of: unittest gpio unittest error exposes tracking error
+Date:   Wed, 25 Mar 2020 20:45:29 -0500
+Message-Id: <1585187131-21642-1-git-send-email-frowand.list@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Sergey Semin (2020-03-25 10:11:09)
-> On Tue, Mar 24, 2020 at 12:12:43PM +0200, Andy Shevchenko wrote:
-> > On Mon, Mar 23, 2020 at 04:50:17PM +0300, Sergey Semin wrote:
-> > > On Mon, Mar 23, 2020 at 11:01:09AM +0100, Maxime Ripard wrote:
-> >=20
-> > > > clk_rate_exclusive_get is pretty intrusive, and due to the usual
-> > > > topology of clock trees, this will lock down 3-4 parent clocks to
-> > > > their current rate as well. In the Allwinner SoCs case for example,
-> > > > this will lock down the same PLL than the one used by the CPU,
-> > > > preventing cpufreq from running.
-> > >=20
-> > > Speaking about weak design of a SoC' clock tree. Our problems are not=
-hing
-> > > with respect to the Allwinner SoC, in which case of changing the
-> > > CPU-frequency may cause the UART glitches subsequently causing data
-> > > transfer artefacts.) Moreover as I can see the same issue may raise f=
-or
-> > > I2C, QSPI, PWM devices there.
-> > >=20
-> > > Anyway your concern does make sense.
-> > >=20
-> > > > However, the 8250 has a pretty wide range of dividers and can adapt=
- to
-> > > > any reasonable parent clock rate, so we don't really need to lock t=
-he
-> > > > rate either, we can simply react to a parent clock rate change using
-> > > > the clock notifiers, just like the SiFive UART is doing.
-> > > >=20
-> > > > I tried to do that, but given that I don't really have an extensive
-> > > > knowledge of the 8250, I couldn't find a way to stop the TX of chars
-> > > > while we change the clock rate. I'm not sure if this is a big deal =
-or
-> > > > not, the SiFive UART doesn't seem to care.
-> > >=20
-> > > Yes, your solution is also possible, but even in case of stopping Tx/=
-Rx it
-> > > doesn't lack drawbacks. First of all AFAIK there is no easy way to ju=
-st
-> > > pause the transfers. We'd have to first wait for the current transfers
-> > > to be completed, then somehow lock the port usage (both Tx and Rx
-> > > traffic), permit the reference clock rate change, accordingly adjust =
-the
-> > > UART clock divider, and finally unlock the port. While if we don't mi=
-nd
-> > > to occasionally have UART data glitches, we can just adjust the UART =
-ref
-> > > divider synchronously with ref clock rate change as you and SiFive UA=
-RT
-> > > driver suggest.
-> > >=20
-> > > So we are now at a zugzwang - a fork to three not that good solutions:
-> > > 1) lock the whole clock branch and provide a glitchless interfaces. B=
-ut
-> > > by doing so we may (in case of Allwinner SoCs we will) lockup some ve=
-ry
-> > > important functionality like CPU-frequency change while the UART port=
- is
-> > > started up. In this case we won't have the data glitches.
-> > > 2) just adjust the UART clock divider in case of reference clock rate
-> > > change (use the SiFive UART driver approach). In this case we may hav=
-e the
-> > > data corruption.
-> > > 3) somehow implement the algo: wait for the transfers to be completed,
-> > > lock UART interface (it's possible for Tx, but for Rx in case of no h=
-andshake
-> > > enabled it's simply impossible), permit the ref clock rate change,
-> > > adjust the UART divider, then unlock the UART interface. In this case=
- the data
-> > > glitches still may happen (if no modem control is available or
-> > > handshakes are disabled).
-> > >=20
-> > > As for the cases of Baikal-T1 UARTs the first solutions is the most s=
-uitable.
-> > > We don't lock anything valuable, since a base PLL output isn't direct=
-ly
-> > > connected to any device and it's rate once setup isn't changed during=
- the
-> > > system running. On the other hand I don't mind to implement the second
-> > > solution, even though it's prone to data glitches. Regarding the solu=
-tion
-> > > 3) I won't even try. It's too complicated, I don't have time and
-> > > test-infrastructure for this.
-> > >=20
-> > > So Andy what do you think?
-> >=20
-> > From Intel HW perspective the first two are okay, but since Maxime is a=
-gainst
-> > first, you have the only option from your list. Perhaps somebody may gi=
-ve
-> > option 4) here...
-> >=20
->=20
-> Ok then. I'll implement the option 2) in v3 if noone gives any alternativ=
-es
-> before that.
->=20
+From: Frank Rowand <frank.rowand@sony.com>
 
-Sorry, I haven't really read the thread but I'll quickly reply with
-this.
+kernel test robot reported "WARNING: held lock freed!" triggered by
+unittest_gpio_remove().
 
-Maybe option 4 is to make the uart driver a clk provider that consumes
-the single reference clk like it is already doing today? Then when the
-rate changes up above for the clk implemented here the clk set rate op
-for the newly implemented clk can go poke the uart registers to maintain
-the baud or whatever?
+This warning is from a bad kfree() call from an unexpected call to
+unittest_gpio_remove().  The unexpected call is due to an error
+with unittest overlay tracking.
 
-That is close to how the notifier design would work, but it avoids
-keeping the notifiers around given that the notifiers are not preferred.
-It is also closer to reality, the uart has a divider or mux internally
-that we don't model as a clk, but we could just as easily model as such.
+Patch 1/2 fixes the kfree bug.
+
+Patch 2/2 fixes the unittest overlay tracking bug.
+
+Frank Rowand (2):
+  of: gpio unittest kfree() wrong object
+  of: some unittest overlays not untracked
+
+ drivers/of/unittest.c | 32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
+
+-- 
+Frank Rowand <frank.rowand@sony.com>
+
