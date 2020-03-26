@@ -2,140 +2,208 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D07C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C2D6C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 407922073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C8F32070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fmVv4Jh5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727903AbgCZJoT (ORCPT
+        id S1727881AbgCZJpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:44:19 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:60276 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727729AbgCZJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:44:18 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C03A666A181C6217AC79;
-        Thu, 26 Mar 2020 17:44:07 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.487.0; Thu, 26 Mar 2020 17:43:58 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH] f2fs: switch discard_policy.timeout to bool type
-Date:   Thu, 26 Mar 2020 17:43:56 +0800
-Message-ID: <20200326094356.87838-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 26 Mar 2020 05:45:22 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:36644 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbgCZJpW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:45:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02Q9j8SE074969;
+        Thu, 26 Mar 2020 04:45:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585215908;
+        bh=Uo4/pxe9xGciqRZVGsz/aZE4/YhZj0j7qdyZVpdOgus=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fmVv4Jh5C8mEp8bbxg75iaj0fejDJ/FOb2VOQhi9aNdLnLqodRw2w9AhGYQ1ofwQp
+         z9NggWO5xWugjVfNEJHAxPMFj3BA3Ag1CDxrd9uzOUkW3cK2EAftHs3dLvUI19Wt0/
+         IqoLgKGXbIuDKy89sHrloKa1m+75WuOBLVGBESw8=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02Q9j8fC017392
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 26 Mar 2020 04:45:08 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
+ Mar 2020 04:45:08 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 26 Mar 2020 04:45:08 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02Q9j5hT123802;
+        Thu, 26 Mar 2020 04:45:06 -0500
+Subject: Re: [PATCH v3] driver core: Break infinite loop when deferred probe
+ can't be satisfied
+To:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Saravana Kannan <saravanak@google.com>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Mark Brown <broonie@kernel.org>, Ferry Toth <fntoth@gmail.com>,
+        <grant.likely@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Android Kernel Team <kernel-team@android.com>
+References: <20200324175719.62496-1-andriy.shevchenko@linux.intel.com>
+ <20200325032901.29551-1-saravanak@google.com>
+ <20200325125120.GX1922688@smile.fi.intel.com>
+ <CAGETcx_TGw24UqX7pXZePyskrao6zwnKTq8mBk9g_7jokqAqkA@mail.gmail.com>
+ <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ca661616-f5bf-d92f-9173-172792797b16@ti.com>
+Date:   Thu, 26 Mar 2020 11:45:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CAJZ5v0jB1hqzYK8ezjf1_1yMCudNXNS-CsrUJQcmL4W5mBD6fQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While checking discard timeout, we use specified type
-UMOUNT_DISCARD_TIMEOUT, so just replace doplicy.timeout with
-it, and switch doplicy.timeout to bool type.
+Hi,
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
- fs/f2fs/f2fs.h    |  2 +-
- fs/f2fs/segment.c | 20 ++++++++++----------
- 2 files changed, 11 insertions(+), 11 deletions(-)
+On 26/03/2020 10.39, Rafael J. Wysocki wrote:
+> On Wed, Mar 25, 2020 at 11:09 PM Saravana Kannan <saravanak@google.com> wrote:
+>>
+>> On Wed, Mar 25, 2020 at 5:51 AM Andy Shevchenko
+>> <andriy.shevchenko@linux.intel.com> wrote:
+>>>
+> 
+> [cut]
+> 
+>>>
+>>> Yes, it's (unlikely) possible (*), but it will give one more iteration per such
+>>> case. It's definitely better than infinite loop. Do you agree?
+>>
+>> Sorry I wasn't being clear (I was in a rush). I'm saying this patch
+>> can reintroduce the bug where the deferred probe isn't triggered when
+>> it should be.
+>>
+>> Let's take a simple execution flow.
+>>
+>> probe_okay is at 10.
+>>
+>> Thread-A
+>>   really_probe(Device-A)
+>>     local_probe_okay_count = 10
+>>     Device-A probe function is running...
+>>
+>> Thread-B
+>>   really_probe(Device-B)
+>>     Device-B probes successfully.
+>>     probe_okay incremented to 11
+>>
+>> Thread-C
+>>   Device-C (which had bound earlier) is unbound (say module is
+>> unloaded or a million other reasons).
+>>   probe_okay is decremented to 10.
+>>
+>> Thread-A continues
+>>   Device-A probe function returns -EPROBE_DEFER
+>>   driver_deferred_probe_add_trigger() doesn't do anything because
+>>     local_probe_okay_count == probe_okay
+>>   But Device-A might have deferred probe waiting on Device-B.
+>>   Device-A never probes.
+>>
+>>> *) It means during probe you have _intensive_ removing, of course you may keep
+>>> kernel busy with iterations, but it has no practical sense. DoS attacks more
+>>> effective in different ways.
+>>
+>> I wasn't worried about DoS attacks. More of a functional correctness
+>> issue what I explained above.
+> 
+> The code is functionally incorrect as is already AFAICS.
+> 
+>> Anyway, if your issue and similar issues can be handles in driver core
+>> in a clean way without breaking other cases, I don't have any problem
+>> with that. Just that, I think the current solution breaks other cases.
+> 
+> OK, so the situation right now is that commit 58b116bce136 has
+> introduced a regression and so it needs to be fixed or reverted.  The
+> cases that were previously broken and were unbroken by that commit
+> don't matter here, so you cannot argue that they would be "broken".
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index d3eda362582f..9274399d9505 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -330,8 +330,8 @@ struct discard_policy {
- 	bool io_aware;			/* issue discard in idle time */
- 	bool sync;			/* submit discard with REQ_SYNC flag */
- 	bool ordered;			/* issue discard by lba order */
-+	bool timeout;			/* discard timeout for put_super */
- 	unsigned int granularity;	/* discard granularity */
--	int timeout;			/* discard timeout for put_super */
- };
- 
- struct discard_cmd_control {
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 83d778ebea71..86e944700535 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1083,7 +1083,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
- 
- 	dpolicy->max_requests = DEF_MAX_DISCARD_REQUEST;
- 	dpolicy->io_aware_gran = MAX_PLIST_NUM;
--	dpolicy->timeout = 0;
-+	dpolicy->timeout = false;
- 
- 	if (discard_type == DPOLICY_BG) {
- 		dpolicy->min_interval = DEF_MIN_DISCARD_ISSUE_TIME;
-@@ -1108,6 +1108,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
- 		dpolicy->io_aware = false;
- 		/* we need to issue all to keep CP_TRIMMED_FLAG */
- 		dpolicy->granularity = 1;
-+		dpolicy->timeout = true;
- 	}
- }
- 
-@@ -1490,8 +1491,8 @@ static bool __should_discard_retry(struct f2fs_sb_info *sbi,
- 
- 	mutex_lock(&dcc->cmd_lock);
- 	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
--		if (dpolicy->timeout != 0 &&
--			f2fs_time_over(sbi, dpolicy->timeout)) {
-+		if (dpolicy->timeout &&
-+			f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT)) {
- 			retry = false;
- 			break;
- 		}
-@@ -1521,13 +1522,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
- 	int i, err, issued = 0;
- 	bool io_interrupted = false;
- 
--	if (dpolicy->timeout != 0)
--		f2fs_update_time(sbi, dpolicy->timeout);
-+	if (dpolicy->timeout)
-+		f2fs_update_time(sbi, UMOUNT_DISCARD_TIMEOUT);
- 
- retry:
- 	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
--		if (dpolicy->timeout != 0 &&
--				f2fs_time_over(sbi, dpolicy->timeout))
-+		if (dpolicy->timeout &&
-+				f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT))
- 			break;
- 
- 		if (i + 1 < dpolicy->granularity)
-@@ -1548,8 +1549,8 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
- 		list_for_each_entry_safe(dc, tmp, pend_list, list) {
- 			f2fs_bug_on(sbi, dc->state != D_PREP);
- 
--			if (dpolicy->timeout != 0 &&
--				f2fs_time_over(sbi, dpolicy->timeout))
-+			if (dpolicy->timeout &&
-+				f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT))
- 				break;
- 
- 			if (dpolicy->io_aware && i < dpolicy->io_aware_gran &&
-@@ -1741,7 +1742,6 @@ bool f2fs_issue_discard_timeout(struct f2fs_sb_info *sbi)
- 
- 	__init_discard_policy(sbi, &dpolicy, DPOLICY_UMOUNT,
- 					dcc->discard_granularity);
--	dpolicy.timeout = UMOUNT_DISCARD_TIMEOUT;
- 	__issue_discard_cmd(sbi, &dpolicy);
- 	dropped = __drop_discard_cmd(sbi);
- 
--- 
-2.18.0.rc1
+commit 58b116bce136 is from 2014 and the whole ULPI support for dwc3
+came in a year later.
+While I agree that 58b116bce136 fail to handle came a year later, but
+technically it did not introduced a regression.
 
+The revert on the other hand is going to introduce a regression as
+things were working fine since 2014. Not sure why the dwc3 issue got
+this long to be noticed as the 58b116bce136 was already in kernel when
+the ULPI support was added...
+
+> It looks to me like the original issue fixed by the commit in question
+> needs to be addressed differently, so I would vote for reverting it
+> and starting over.
+
+Fwiw my original approach was a bit different:
+https://lore.kernel.org/patchwork/patch/454800/
+
+Greg changed it to what ended up in the kernel:
+https://lore.kernel.org/patchwork/cover/454799/
+
+>> As an alternate solution, assuming "linux,extcon-name" is coming
+>> from some firmware, you might want to look into the fw_devlink
+>> feature.
+> 
+> That would be a workaround for a driver core issue, though, wouldn't it?
+> 
+>> That feature allows driver core to add device links from firmware
+>> information. If you can get that feature to create device links from
+>> your dwc3.0.auto (or its parent pci_dev?) to the extcon supplier
+>> device, all of this can be sidestepped and your dwc3.0.auto's (or the
+>> dwc pci_dev's) probe will be triggered only after extcon is probed.
+>>
+>> I have very little familiarity with PCI/ACPI. I spent about an hour or
+>> two poking at ACPI scan/property code. The relationship between a
+>> pci_dev and an acpi_device is a bit confusing to me because I see:
+>>
+>> static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
+>> {
+>>         struct property_entry *p = (struct property_entry *)id->driver_data;
+>>         struct dwc3_pci         *dwc;
+>>         struct resource         res[2];
+>>         int                     ret;
+>>         struct device           *dev = &pci->dev;
+>> ....
+>>         dwc->dwc3 = platform_device_alloc("dwc3", PLATFORM_DEVID_AUTO);
+>> ....
+>>         ACPI_COMPANION_SET(&dwc->dwc3->dev, ACPI_COMPANION(dev));
+>>
+>> And ACPI_COMPANION returns an acpi_device by looking at dev->fwnode.
+>> So how the heck is a pci_device.dev.fwnode pointing to an
+>> acpi_device.fwnode?
+> 
+> acpi_device is an of_node counterpart (or it is an fwnode itself if you will).
+> 
+> Thanks!
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
