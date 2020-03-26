@@ -2,93 +2,130 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F65DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D99CDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 410A12070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA65520409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbgCZLpK convert rfc822-to-8bit (ORCPT
+        id S1728154AbgCZLqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:45:10 -0400
-Received: from mail-oln040092071108.outbound.protection.outlook.com ([40.92.71.108]:13131
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727948AbgCZLpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:45:09 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=guKjNLNOzhaR8zmHUXmJmFOpTjVVJHKLlyCcURoIa07CiqMBGoYZfs3lyJtNaewojiLzz4dZIZQB5EZ8UKwd2Ss9PcYnW6+xoiWRmc8Dzq4Rw24vBCqIPDtDDXNunBlnNMdYbfweb8cY9ju/DbAH+SHxHYxGv4F5cUfDMBscE3x17zwHvBdtVLm/2LQB+pL3cjRGqFaC48+MMb2sjTAUphH2C/pNIKHW8WgrzxSR5ZG8RqgD5HCkvFJvjh+xRIZawDX86XIxkrH8rOZm0dTbGrP1a7FutJFwWPpU53Bxl5OnZFtMSkm9xF4n41aYCdoNXqXNOqJ3xU3Zi4vs6u+i6w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ubZ0J+6WJ4jMurRddyNk8osUo5OHq/ij8Qb25ZoaKi4=;
- b=B8P87RpRU9yPcHThyuxCf6KmQoU382HJ0wB0I93cLwI5tpMk4QtXKrJ2Xt+nF7vm9kU8KLyzdOFPG3tEq8KdyuvQUC8q/neOqCDmZ3UVT6D6EnZqTRR8o+C4xEeowG4lDVdw0vSwOzQblOIAf+Ku01YmcL2tVJhxAzZbmPZJJubExH2JC/xvSYXooe7MV55CvKRIWNtD4edjsRTglns7Y5jrNBwsLEG0EJs4kgwCsb/D38+eByQ94sVNe9yg9p5TqFPv/x4ii/psU4PBy2qdXcMrXCj0punW4Rn2zLF/eYSX7pQB8VT64c0e9nhBGnTLwpbJ/Wc7DQ7qMyG6tJc49w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from DB5EUR03FT011.eop-EUR03.prod.protection.outlook.com
- (2a01:111:e400:7e0a::47) by
- DB5EUR03HT217.eop-EUR03.prod.protection.outlook.com (2a01:111:e400:7e0a::221)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.17; Thu, 26 Mar
- 2020 11:45:07 +0000
-Received: from PR1PR05MB5546.eurprd05.prod.outlook.com (10.152.20.55) by
- DB5EUR03FT011.mail.protection.outlook.com (10.152.20.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Thu, 26 Mar 2020 11:45:07 +0000
-Received: from PR1PR05MB5546.eurprd05.prod.outlook.com
- ([fe80::558c:f4bc:44ce:6add]) by PR1PR05MB5546.eurprd05.prod.outlook.com
- ([fe80::558c:f4bc:44ce:6add%7]) with mapi id 15.20.2835.023; Thu, 26 Mar 2020
- 11:45:07 +0000
-From:   outlook user <Pingo-Power@hotmail.fr>
-To:     LKML <linux-kernel@vger.kernel.org>
-Subject: ScreenPad diplay
-Thread-Topic: ScreenPad diplay
-Thread-Index: AQHWA2JAGSO8/iYYv0mN949P/Zm2CKhawG/g
-Date:   Thu, 26 Mar 2020 11:45:07 +0000
-Message-ID: <PR1PR05MB554664CE22000F934D6A5C0397CF0@PR1PR05MB5546.eurprd05.prod.outlook.com>
-References: <PR1PR05MB55466D0D588E939CC540423A97CF0@PR1PR05MB5546.eurprd05.prod.outlook.com>
-In-Reply-To: <PR1PR05MB55466D0D588E939CC540423A97CF0@PR1PR05MB5546.eurprd05.prod.outlook.com>
-Accept-Language: fr-FR, en-US
-Content-Language: fr-FR
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-incomingtopheadermarker: OriginalChecksum:66FACCD22849A9C44744A328B12558187F469C02D6C74F0CAAE4BBB42C12907D;UpperCasedChecksum:CF98F2CC4DC45552E8EA5E781DC427E17871E557F2A8113A3CB2D31311286981;SizeAsReceived:6869;Count:45
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [JXbT2XcAehuIt6f7BKLg68Z8CpS4/K34]
-x-ms-publictraffictype: Email
-x-incomingheadercount: 45
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 385b2bca-9497-4e1a-3b43-08d7d17b21ec
-x-ms-traffictypediagnostic: DB5EUR03HT217:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 594TJ0SjQNOASPZjNzpyVZ5jN2AR2QEx7mrLoSSADZf2UrGyeWpI64QJCGnI7fP2lNiULdHf5SRyjV5X76+Ahyo2GjmS9tPS07FoyP8Mz9fO3b3JiiJSNpdBCvFK3ITOiKjMvqndTb7Ujd4HS42J3Qt/ZXB4DBGaPPD1SP306Z47I195H2Jjq8QdEYhh2Z+m
-x-ms-exchange-antispam-messagedata: +hWdnBbUcw73A3Q1tn4eDRSZmleYNqH+6/vQJiwrYv6OrVe4Z9t071DRDA/khwq6IpAKmXUwmG205xNi3RvNivWMeWByNJObWQ8sBFc7e9+FcSmWyYeCZrJ7S3NI9b+LJ0+tX6NcYRkgDxitzKoSlQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Thu, 26 Mar 2020 07:46:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55924 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727994AbgCZLqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:46:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 618D9AD9F;
+        Thu, 26 Mar 2020 11:45:58 +0000 (UTC)
+Subject: Re: [PATCH v7 2/2] tty: add rpmsg driver
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suman Anna <s-anna@ti.com>,
+        Fabien DESSENNE <fabien.dessenne@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        xiang xiao <xiaoxiang781216@gmail.com>
+References: <20200324170407.16470-1-arnaud.pouliquen@st.com>
+ <20200324170407.16470-3-arnaud.pouliquen@st.com>
+ <e458f805-c746-c88e-98f4-d874a7552933@suse.cz>
+ <1e4ce821-dd9b-bb04-774b-58a255834cf5@st.com>
+ <ec061c30-eace-1df9-fa7b-71a61e5710a2@suse.cz>
+ <2512639d-424f-9647-4dbd-3b3459465888@st.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <3e666fa0-2f4d-9958-887e-8830049ccbe8@suse.cz>
+Date:   Thu, 26 Mar 2020 12:45:57 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 385b2bca-9497-4e1a-3b43-08d7d17b21ec
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Mar 2020 11:45:07.5927
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB5EUR03HT217
+In-Reply-To: <2512639d-424f-9647-4dbd-3b3459465888@st.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm not on the mailing list, I want to receive a carbon copy of each reply to this topic
+On 26. 03. 20, 12:40, Arnaud POULIQUEN wrote:
+>>>>> +	/*
+>>>>> +	 * Try to send the message to remote processor, if failed return 0 as
+>>>>> +	 * no data sent
+>>>>> +	 */
+>>>>> +	ret = rpmsg_trysendto(cport->d_ept, tmpbuf, msg_size, cport->data_dst);
+>>>>
+>>>> data of rpmsg_trysendto is not const. OK, you seem you need to change
+>>>> that first, I see no blocker for that.
+>>>
+>>> I created a temporary buffer to ensure that buffer to sent does not exceed the 
+>>> MTU size.
+>>> But perhaps this is an useless protection as the rpmsg_tty_write_room already
+>>> return the MTU value, and so the 'len' variable can not be higher that value
+>>> returned by the write_room?
+>>
+>> You still can limit it by msg_size without cloning the buffer, right?
+> you are right, but in this case i need to cast the buff to suppress compilation
+> warning on const and I don't know if all compilers will accept this...
+>  
+> pbuf = (u8 *)buf;
+> ret = rpmsg_trysendto(cport->d_ept, pbuf, msg_size, cport->data_dst);
 
-When I run the system on Intel APU, Xrandr say that I've only eDP-1 (connected) (my main screen) and HDMI-1 (disconnected) (the HDMI port of my computer). The KDE UI stills seems to detects somethings because he pops up the equivalent of "Super+P" pop-up in
- Windows (the one who asks you where you want to diplay your desktop). But here, only the HDMI port and main screen works, not the ScreenPad, I don't know where to find logs of why the display manager pops up
+No, don't do that. Read my first message again; in particular:
 
-When I run it on nVidia GPU (optimus-manager to switch), the ScreenPad goes on, on a black screen. Xrandr lists eDP-1 (same), HDMI-0 (connected) and HDMI-1 (not connected). I guess here that HDMI-0 should be the ScreenPad. But I don't know how to display something
- on it, or even manipulate the display. If i change resolution it doesn't changes anything on the ScreenPad, not even a flickering
+> data of rpmsg_trysendto is not const. OK, you seem you need to change
+> that first, I see no blocker for that.
+
+thanks,
+-- 
+js
+suse labs
