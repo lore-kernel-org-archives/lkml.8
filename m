@@ -2,110 +2,119 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D14C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:03:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74A5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FE120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:03:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F34E2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 16:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zl5mMF/H"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ysHzBPwO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728350AbgCZQDV (ORCPT
+        id S1728484AbgCZQDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 12:03:21 -0400
-Received: from mail-wr1-f46.google.com ([209.85.221.46]:46183 "EHLO
-        mail-wr1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727670AbgCZQDU (ORCPT
+        Thu, 26 Mar 2020 12:03:24 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:36772 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727670AbgCZQDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 12:03:20 -0400
-Received: by mail-wr1-f46.google.com with SMTP id j17so8397152wru.13;
-        Thu, 26 Mar 2020 09:03:19 -0700 (PDT)
+        Thu, 26 Mar 2020 12:03:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id s1so5302214lfd.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 09:03:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PuNByyv3siGkvbhEPycVCa/IKpHpjzZf/6rC1PXvGxA=;
-        b=Zl5mMF/H1oqVlonG48JjLmrvN45dZOEwKZ01kOHvwsp/yg33B0FUmVnoNLfJXM25qJ
-         wld3dnY6W3aTGLDFJl5pixXabyDddwsdLYl+jGK41vBDqdK0CVpocHANQJYtfeNMjn/c
-         bKwt54lFgo7UuXf1TeFA0HC139CArdNXqlLd/gY+j724Bal5tBefdTFZ8lzAhJb+2Kkp
-         Ox0KU2Z4CeFjzVcKvWTpub89N7gsZ4TGGeZbBZDZVvLDf0g0UBOJauNuKxtSBfHe43/L
-         EW+2AIYeFrBzQnoLgo5rwOCXknuTPtDGI2Mss0q9HQlNra1VdgWlb5GcEwQh7abd9Lkb
-         3wkA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xsryagRvVoFbMcFk5ndWvfGYfunGGRbmaGXhKdSiUek=;
+        b=ysHzBPwOVcBR9JOSVKRcaDNPdGCt48vT1oXTkE1P488x04V0hIlMkHTQ9qFkuiIPDM
+         lrDk+rsC+4cLeTMta7k5qsFJ9tncl2Y8xsP2sYnzW7ho8VIxanUrOOMQpaKHI/5PCASR
+         md1D5YIB7GCjjADYz/KRetihwuEq3c65ZpgotYCzWyKSfCe2neCEUKe21oOOpjH46SwG
+         XOixwF6KUlRbeOYhTPlmfJnaT9TjgSRhK0wy+/TH2nUYtE/UkUX+ISxm8xXvqPltYG2i
+         62RsRFZhEDzBwwbI2NNxRmfj0kwnNRfHZmcFjNfFovXVRwMLZpW51clMVCxmIPTQptyN
+         2Xjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PuNByyv3siGkvbhEPycVCa/IKpHpjzZf/6rC1PXvGxA=;
-        b=IrnoVfXd59+CJnOnrYkD7nDICRLkUCcaCDSsszdUolzE1sYDYgbRx7dxu/HK3ESEFL
-         o+nXRiQ+f3XcE+I7mHHBU4CA+LWOyxL3/hPRTJXFinBpTl9rzvO1OypBFA0kTdOnNtCL
-         rXbgbErm1duelmWjUv4ZKUL34XjysqDtKOxf3AJFg811s1uvxSZwQtk3POZu4JjJ+z7M
-         qUKhn5yxfctpG6t+7m9vzt4dXCFhs8tu34bRKVqG8OC/zwEKaDwl2v7tjH5hWkXTGwmb
-         DiSzsYyFIanzsywx8TmAPF2HqialUbeEBPlTEYHNArnTVnTRDIVR02f2s0gI3pRwtj1j
-         2WxQ==
-X-Gm-Message-State: ANhLgQ3Es1vooS9JEgt5WtdRGqVB+csBDl1UBJkepokT3F+TnhWS9wXx
-        UriO4V1rLILQAf7Hg4xK/biupCoc
-X-Google-Smtp-Source: ADFU+vst6w9oQGmN5Epfx6vNxd+NzIylAwdJtZNvAk9/eq53r+Xok4rbrZH9juCGZr/2xuU+dI09Lg==
-X-Received: by 2002:adf:b3d4:: with SMTP id x20mr9851913wrd.269.1585238598438;
-        Thu, 26 Mar 2020 09:03:18 -0700 (PDT)
-Received: from [192.168.1.125] (46-126-183-173.dynamic.hispeed.ch. [46.126.183.173])
-        by smtp.gmail.com with ESMTPSA id h5sm4116253wro.83.2020.03.26.09.03.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 09:03:17 -0700 (PDT)
-Subject: Re: [PATCH][next] drm/vmwgfx: fix spelling mistake "Cound" -> "Could"
-To:     Colin King <colin.king@canonical.com>,
-        VMware Graphics <linux-graphics-maintainer@vmware.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200326101911.241233-1-colin.king@canonical.com>
-From:   Roland Scheidegger <rscheidegger.oss@gmail.com>
-Message-ID: <d9ee5ec4-7341-decd-a382-3004fd367beb@gmail.com>
-Date:   Thu, 26 Mar 2020 17:03:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.2.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xsryagRvVoFbMcFk5ndWvfGYfunGGRbmaGXhKdSiUek=;
+        b=d8NNbU7CflaF2N1DKrnUBmIbeHYft7u5kAJ2iZ8avwDsADgoKzmNc/CMCqfny06xiV
+         oVroll5Dx57HD0+IeXw6IOa94YjQxFRUM426ZVTgrl230avaUTowKEYmRAv80hSlWJIX
+         S5fZN1PoNHd1h3lTSUHb70h/R1zXr7Udcp4c9h+4FTl63i9im/Xs3PDQpwwC22wPG4mS
+         IiUeJNGfqNPUMbLKmDHMyzuYZqrH8Xdrw5P4Xft+y72dfEK6fUiQ/6ZvqXBivqdTpzt0
+         IvZO1E18jxniiYu4PuFIbyRU1kJqEVepC2Gpb9nCpqw9+7D40Gsw2bFgPIKKl4dLaaEc
+         o8PA==
+X-Gm-Message-State: ANhLgQ0XfrrmTgdNYXmT85AkUAS/34svUEKPGKUYDPnWUhMKyfSoCGTS
+        gO4JiQMYGQDhlqj9og771Cmd1jadBGcuzckK/WtPEA==
+X-Google-Smtp-Source: ADFU+vsPCjuvq+fZsWLA4/OXHd/Qhuz2rJukqcHy8gyX/twtEzJaEJhADKOK74SHMGwQc+BDJykgiPfIqS7GYrH3L50=
+X-Received: by 2002:ac2:4c29:: with SMTP id u9mr6293876lfq.149.1585238602095;
+ Thu, 26 Mar 2020 09:03:22 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200326101911.241233-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+References: <1585201349-70192-1-git-send-email-aubrey.li@intel.com>
+In-Reply-To: <1585201349-70192-1-git-send-email-aubrey.li@intel.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Thu, 26 Mar 2020 17:03:10 +0100
+Message-ID: <CAKfTPtBWQDkmkuxPTEC8QY1PXicZ51w7tjDPRm2rYM+8QN5rLQ@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Fix negative imbalance in imbalance calculation
+To:     Aubrey Li <aubrey.li@intel.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Vineeth Pillai <vpillai@digitalocean.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Phil Auld <pauld@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 26 Mar 2020 at 06:53, Aubrey Li <aubrey.li@intel.com> wrote:
+>
+> A negative imbalance value was observed after imbalance calculation,
+> this happens when the local sched group type is group_fully_busy,
+> and the average load of local group is greater than the selected
+> busiest group. Fix this problem by comparing the average load of the
+> local and busiest group before imbalance calculation formula.
+>
+> Suggested-by: Vincent Guittot <vincent.guittot@linaro.org>
+> Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+> Cc: Phil Auld <pauld@redhat.com>
 
-Am 26.03.20 um 11:19 schrieb Colin King:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a DRM_ERROR error message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+
 > ---
->  drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-> index 367d5b87ee6a..2e61a4ecd8ef 100644
-> --- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-> +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-> @@ -3037,7 +3037,7 @@ static int vmw_cmd_dx_bind_streamoutput(struct vmw_private *dev_priv,
->  	res = vmw_dx_streamoutput_lookup(vmw_context_res_man(ctx_node->ctx),
->  					 cmd->body.soid);
->  	if (IS_ERR(res)) {
-> -		DRM_ERROR("Cound not find streamoutput to bind.\n");
-> +		DRM_ERROR("Could not find streamoutput to bind.\n");
->  		return PTR_ERR(res);
->  	}
->  
-> 
-
-Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+>  kernel/sched/fair.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index c1217bf..4a2ba3f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8761,6 +8761,14 @@ static inline void calculate_imbalance(struct lb_env *env, struct sd_lb_stats *s
+>
+>                 sds->avg_load = (sds->total_load * SCHED_CAPACITY_SCALE) /
+>                                 sds->total_capacity;
+> +               /*
+> +                * If the local group is more loaded than the selected
+> +                * busiest group don't try to pull any tasks.
+> +                */
+> +               if (local->avg_load >= busiest->avg_load) {
+> +                       env->imbalance = 0;
+> +                       return;
+> +               }
+>         }
+>
+>         /*
+> --
+> 2.7.4
+>
