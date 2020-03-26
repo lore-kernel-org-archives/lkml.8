@@ -2,145 +2,216 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD23EC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3B6C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B679120722
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38C2C2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Np7R0YYr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kqojkeDO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgCZRi4 (ORCPT
+        id S1728644AbgCZRjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:38:56 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:53316 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727560AbgCZRiz (ORCPT
+        Thu, 26 Mar 2020 13:39:14 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33890 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727541AbgCZRjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:38:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585244335; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=lBERYswXbXkRLKXPF3LYOFcyNJ0hu4IHUonwIlAyUwo=; b=Np7R0YYr6BagPXbMpz/jT9vgAImbkagybnurfX2qPkFzZUUq0wGRCm7w44O7kDD7suaCr1C/
- 5LN12EXQ9LWtpCD1a1q2CFxFR1+IRPj9+oWvndUzw9TVA8Wd9WKSP4Zx9dmHitFqc+ILbF6P
- iqUTNKTHaFdgvQLr3WRJCJjzdXk=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7ce8a5.7f760c140378-smtp-out-n04;
- Thu, 26 Mar 2020 17:38:45 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2C7CAC43636; Thu, 26 Mar 2020 17:38:45 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F22B0C44793;
-        Thu, 26 Mar 2020 17:38:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F22B0C44793
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, evgreen@chromium.org, dianders@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, mka@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v14 6/6] soc: qcom: rpmh-rsc: Allow using free WAKE TCS for active request
-Date:   Thu, 26 Mar 2020 23:07:50 +0530
-Message-Id: <1585244270-637-7-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
-References: <1585244270-637-1-git-send-email-mkshah@codeaurora.org>
+        Thu, 26 Mar 2020 13:39:13 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 26so7986761wmk.1;
+        Thu, 26 Mar 2020 10:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HpNuF66K0DwGIA2W7BsAFtvMAN5a4ZcafM59XWZDNzw=;
+        b=kqojkeDOTK2W9h5Sy+09ys68xx80S80Uf/X1IBo3l4i4cH5F4emJ3JeXQtt2Eoq73B
+         WflWJocUIKpX3GAmYD5CxWKnvYr/M3py8QFdHD17ud6saxlThWWEjR6jAg85Spk39ks2
+         4JsXQKtvqsp/JTKtbYNVd4IRE4AL4S6A0ETd/Q/3sZAsLgXXdcgFlUq98c3NV52LKRkD
+         hKDKuP2ro+wD4DmVT1BxbAGE4WrugBwyxjvIy7He9vKCats9jM0OB/kuS+fI8vT0/fkQ
+         rdkLLJiI5t9h89/2GGXQ2e5/g35NPpcSUsjXcQLgr1oyIuPjWHTPtBXXL6kfVZiI+GyB
+         M0YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HpNuF66K0DwGIA2W7BsAFtvMAN5a4ZcafM59XWZDNzw=;
+        b=eZHBW7oejwa0yx6OEqRRcZRB3omKyS8V+EMu7mbmoG/KYk9ZalKsBiqovnwgBoLgS4
+         ZZ22ucnYr4k1t3CE0eMoEEVBlU4VpXISVGh/1B5nN/BkUAK+AhiwlJG0T2IqOyeOOt1r
+         DURQLI3sICCqEutvbmlul5vtW0Dp9bP50jb2gEBQBtsVrJxmiiULI5seSUb3MNuUkAXh
+         jMSy2GUNy/70GWV7SzshF1p3bXM5H6akqBHlbyuYvyvM4MxL/OdKNDNsjS/W2ltUKI8e
+         JoqsXkyMYeXYbkO0TziLFcyxmAhqWd46UHdadBdLU9HGisKI+z1lJfgrImCSGl1EAk4k
+         uJbg==
+X-Gm-Message-State: ANhLgQ15Bl/aKCf4W1/IC5UkzkzanGv3CQZvjSkMdAUSWsf9EIWrztt/
+        Bdx0Uxa/lSTi3NZmsY9LnZ8=
+X-Google-Smtp-Source: ADFU+vufbLUwN19BQJGQ//UtXe37wcvKBLYq5YbRQfK92fMa0Gl9hLO0BL4sWPG/AcG/ZXgaQjLTSQ==
+X-Received: by 2002:a05:600c:54f:: with SMTP id k15mr1038530wmc.76.1585244351188;
+        Thu, 26 Mar 2020 10:39:11 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f29:6000:d031:3b7b:1a72:8f94? (p200300EA8F296000D0313B7B1A728F94.dip0.t-ipconnect.de. [2003:ea:8f29:6000:d031:3b7b:1a72:8f94])
+        by smtp.googlemail.com with ESMTPSA id b11sm4497416wrq.26.2020.03.26.10.39.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 10:39:10 -0700 (PDT)
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH] net: core: provide devm_register_netdev()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200326131721.6404-1-brgl@bgdev.pl>
+Message-ID: <c71a132d-dc33-0b8a-29e0-9cf93056ef52@gmail.com>
+Date:   Thu, 26 Mar 2020 18:39:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
+MIME-Version: 1.0
+In-Reply-To: <20200326131721.6404-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When there are more than one WAKE TCS available and there is no dedicated
-ACTIVE TCS available, invalidating all WAKE TCSes and waiting for current
-transfer to complete in first WAKE TCS blocks using another free WAKE TCS
-to complete current request.
+On 26.03.2020 14:17, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Create a new source file for networking devres helpers and provide
+> devm_register_netdev() - a managed variant of register_netdev().
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+> I'm writing a new ethernet driver and I realized there's no devres
+> variant for register_netdev(). Since this is the only function I need
+> to get rid of the remove() callback, I thought I'll just go ahead and
+> add it and send it even before the driver to make it available to other
+> drivers.
+> 
 
-Remove rpmh_rsc_invalidate() to happen from tcs_write() when WAKE TCSes
-is re-purposed to be used for Active mode. Clear only currently used
-WAKE TCS's register configuration.
+Such a new functionality typically is accepted as part of series adding
+at least one user only. Therefore best submit it together with the new
+network driver.
 
-Mark the caches as dirty so next time when rpmh_flush() is invoked it
-can invalidate and program cached sleep and wake sets again.
+>  .../driver-api/driver-model/devres.rst        |  3 ++
+>  include/linux/netdevice.h                     |  1 +
+>  net/core/Makefile                             |  2 +-
+>  net/core/devres.c                             | 41 +++++++++++++++++++
+>  4 files changed, 46 insertions(+), 1 deletion(-)
+>  create mode 100644 net/core/devres.c
+> 
+> diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+> index 46c13780994c..11a03b65196e 100644
+> --- a/Documentation/driver-api/driver-model/devres.rst
+> +++ b/Documentation/driver-api/driver-model/devres.rst
+> @@ -372,6 +372,9 @@ MUX
+>    devm_mux_chip_register()
+>    devm_mux_control_get()
+>  
+> +NET
+> +  devm_register_netdev()
+> +
+>  PER-CPU MEM
+>    devm_alloc_percpu()
+>    devm_free_percpu()
+> diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+> index 6c3f7032e8d9..710a7bcfc3dc 100644
+> --- a/include/linux/netdevice.h
+> +++ b/include/linux/netdevice.h
+> @@ -4196,6 +4196,7 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
+>  			 count)
+>  
+>  int register_netdev(struct net_device *dev);
+> +int devm_register_netdev(struct device *dev, struct net_device *ndev);
+>  void unregister_netdev(struct net_device *dev);
+>  
+>  /* General hardware address lists handling functions */
+> diff --git a/net/core/Makefile b/net/core/Makefile
+> index 3e2c378e5f31..f530894068d2 100644
+> --- a/net/core/Makefile
+> +++ b/net/core/Makefile
+> @@ -8,7 +8,7 @@ obj-y := sock.o request_sock.o skbuff.o datagram.o stream.o scm.o \
+>  
+>  obj-$(CONFIG_SYSCTL) += sysctl_net_core.o
+>  
+> -obj-y		     += dev.o dev_addr_lists.o dst.o netevent.o \
+> +obj-y		     += dev.o devres.o dev_addr_lists.o dst.o netevent.o \
+>  			neighbour.o rtnetlink.o utils.o link_watch.o filter.o \
+>  			sock_diag.o dev_ioctl.o tso.o sock_reuseport.o \
+>  			fib_notifier.o xdp.o flow_offload.o
+> diff --git a/net/core/devres.c b/net/core/devres.c
+> new file mode 100644
+> index 000000000000..3c080abd1935
+> --- /dev/null
+> +++ b/net/core/devres.c
 
-Fixes: 2de4b8d33eab (drivers: qcom: rpmh-rsc: allow active requests from wake TCS)
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/rpmh-rsc.c | 29 +++++++++++++++++++----------
- 1 file changed, 19 insertions(+), 10 deletions(-)
+Why a new source file and not just add the function to net/core/dev.c?
 
-diff --git a/drivers/soc/qcom/rpmh-rsc.c b/drivers/soc/qcom/rpmh-rsc.c
-index 8fa70b4..c0513af 100644
---- a/drivers/soc/qcom/rpmh-rsc.c
-+++ b/drivers/soc/qcom/rpmh-rsc.c
-@@ -154,8 +154,9 @@ int rpmh_rsc_invalidate(struct rsc_drv *drv)
- static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
- 					 const struct tcs_request *msg)
- {
--	int type, ret;
-+	int type;
- 	struct tcs_group *tcs;
-+	unsigned long flags;
- 
- 	switch (msg->state) {
- 	case RPMH_ACTIVE_ONLY_STATE:
-@@ -175,18 +176,18 @@ static struct tcs_group *get_tcs_for_msg(struct rsc_drv *drv,
- 	 * If we are making an active request on a RSC that does not have a
- 	 * dedicated TCS for active state use, then re-purpose a wake TCS to
- 	 * send active votes.
--	 * NOTE: The driver must be aware that this RSC does not have a
--	 * dedicated AMC, and therefore would invalidate the sleep and wake
--	 * TCSes before making an active state request.
-+	 *
-+	 * NOTE: Mark caches as dirty here since existing data in wake TCS will
-+	 * be lost. rpmh_flush() will processed for dirty caches to restore
-+	 * data.
- 	 */
- 	tcs = get_tcs_of_type(drv, type);
- 	if (msg->state == RPMH_ACTIVE_ONLY_STATE && !tcs->num_tcs) {
- 		tcs = get_tcs_of_type(drv, WAKE_TCS);
--		if (tcs->num_tcs) {
--			ret = rpmh_rsc_invalidate(drv);
--			if (ret)
--				return ERR_PTR(ret);
--		}
-+
-+		spin_lock_irqsave(&drv->client.cache_lock, flags);
-+		drv->client.dirty = true;
-+		spin_unlock_irqrestore(&drv->client.cache_lock, flags);
- 	}
- 
- 	return tcs;
-@@ -412,8 +413,16 @@ static int tcs_write(struct rsc_drv *drv, const struct tcs_request *msg)
- 
- 	tcs->req[tcs_id - tcs->offset] = msg;
- 	set_bit(tcs_id, drv->tcs_in_use);
--	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS)
-+	if (msg->state == RPMH_ACTIVE_ONLY_STATE && tcs->type != ACTIVE_TCS) {
-+		/*
-+		 * Clear previously programmed WAKE commands in selected
-+		 * repurposed TCS to avoid triggering them. tcs->slots will be
-+		 * cleaned from rpmh_flush() by invoking rpmh_rsc_invalidate()
-+		 */
-+		write_tcs_reg_sync(drv, RSC_DRV_CMD_ENABLE, tcs_id, 0);
-+		write_tcs_reg_sync(drv, RSC_DRV_CMD_WAIT_FOR_CMPL, tcs_id, 0);
- 		enable_tcs_irq(drv, tcs_id, true);
-+	}
- 	spin_unlock(&drv->lock);
- 
- 	__tcs_buffer_write(drv, tcs_id, 0, msg);
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+> @@ -0,0 +1,41 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2020 BayLibre SAS
+> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/netdevice.h>
+> +
+> +struct netdevice_devres {
+> +	struct net_device *ndev;
+> +};
+> +
+
+Adding such a struct isn't strictly needed.
+
+> +static void devm_netdev_release(struct device *dev, void *res)
+> +{
+> +	struct netdevice_devres *this = res;
+> +
+> +	unregister_netdev(this->ndev);
+> +}
+> +
+> +int devm_register_netdev(struct device *dev, struct net_device *ndev)
+> +{
+
+In this function you'd need to consider the dependency on a previous
+call to devm_alloc_etherdev(). If the netdevice is allocated non-managed,
+then free_netdev() would be called whilst the netdevice is still
+registered, what would trigger a BUG_ON(). Therefore devm_register_netdev()
+should return an error if the netdevice was allocated non-managed.
+The mentioned scenario would result from a severe programming error
+of course, but there are less experienced driver authors and the net core
+should deal gently with wrong API usage.
+
+An example how this could be done you can find in the PCI subsystem,
+see pcim_release() and related functions like pcim_enable() and
+pcim_set_mwi().
+
+> +	struct netdevice_devres *devres;
+> +	int ret;
+> +
+> +	devres = devres_alloc(devm_netdev_release, sizeof(*devres), GFP_KERNEL);
+> +	if (!devres)
+> +		return -ENOMEM;
+> +
+> +	ret = register_netdev(ndev);
+> +	if (ret) {
+> +		devres_free(devres);
+> +		return ret;
+> +	}
+> +
+> +	devres->ndev = ndev;
+> +	devres_add(dev, devres);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(devm_register_netdev);
+> 
+
