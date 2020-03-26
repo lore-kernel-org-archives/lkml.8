@@ -4,24 +4,23 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D3DC2D0F0
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D005BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB3F120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B382D2076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728327AbgCZPIx (ORCPT
+        id S1728347AbgCZPIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:08:53 -0400
-Received: from 8bytes.org ([81.169.241.247]:55804 "EHLO theia.8bytes.org"
+        Thu, 26 Mar 2020 11:08:55 -0400
+Received: from 8bytes.org ([81.169.241.247]:55856 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgCZPIs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:08:48 -0400
+        id S1728110AbgCZPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 11:08:51 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id A256357; Thu, 26 Mar 2020 16:08:45 +0100 (CET)
+        id 1D83375B; Thu, 26 Mar 2020 16:08:46 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -38,9 +37,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v4 01/16] iommu: Define dev_iommu_fwspec_get() for !CONFIG_IOMMU_API
-Date:   Thu, 26 Mar 2020 16:08:26 +0100
-Message-Id: <20200326150841.10083-2-joro@8bytes.org>
+Subject: [PATCH v4 07/16] iommu/arm-smmu: Fix uninitilized variable warning
+Date:   Thu, 26 Mar 2020 16:08:32 +0100
+Message-Id: <20200326150841.10083-8-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200326150841.10083-1-joro@8bytes.org>
 References: <20200326150841.10083-1-joro@8bytes.org>
@@ -51,32 +50,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-There are users outside of the IOMMU code that need to call that
-function. Define it for !CONFIG_IOMMU_API too so that compilation does
-not break.
+Some unrelated changes in the iommu code caused a new warning to
+appear in the arm-smmu driver:
 
-Reported-by: kbuild test robot <lkp@intel.com>
+  CC      drivers/iommu/arm-smmu.o
+drivers/iommu/arm-smmu.c: In function 'arm_smmu_add_device':
+drivers/iommu/arm-smmu.c:1441:2: warning: 'smmu' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  arm_smmu_rpm_put(smmu);
+  ^~~~~~~~~~~~~~~~~~~~~~
+
+The warning is a false positive, but initialize the variable to NULL
+to get rid of it.
+
+Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- include/linux/iommu.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/iommu/arm-smmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/iommu.h b/include/linux/iommu.h
-index d1b5f4d98569..3c4ca041d7a2 100644
---- a/include/linux/iommu.h
-+++ b/include/linux/iommu.h
-@@ -1073,6 +1073,10 @@ static inline int iommu_sva_unbind_gpasid(struct iommu_domain *domain,
- 	return -ENODEV;
- }
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 16c4b87af42b..980aae73b45b 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -1383,7 +1383,7 @@ struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
  
-+static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_IOMMU_API */
- 
- #ifdef CONFIG_IOMMU_DEBUGFS
+ static int arm_smmu_add_device(struct device *dev)
+ {
+-	struct arm_smmu_device *smmu;
++	struct arm_smmu_device *smmu = NULL;
+ 	struct arm_smmu_master_cfg *cfg;
+ 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
+ 	int i, ret;
 -- 
 2.17.1
 
