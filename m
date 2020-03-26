@@ -2,143 +2,106 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BE1C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33519C2D0ED
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54DB120719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0444A20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:08:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="wrz5U+Ks"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qAM3YCcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgCZVHQ (ORCPT
+        id S1727666AbgCZVIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:07:16 -0400
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:52564 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbgCZVHQ (ORCPT
+        Thu, 26 Mar 2020 17:08:06 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43244 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbgCZVIF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:07:16 -0400
-Received: by mail-pj1-f65.google.com with SMTP id ng8so2990186pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:07:15 -0700 (PDT)
+        Thu, 26 Mar 2020 17:08:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id g27so7957730ljn.10
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:08:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=8rtaFDP8GcbTj75WszhswVptWti542U0uRqtEvpMYC0=;
-        b=wrz5U+KszfyvzOwAYp3Gf18jn/Xeao85K4yJb8urPG+rm1TTTkZllKhGv5h2WHufR7
-         ymbUM3O+u5VWMWfUq5OO47Nhq50DZrHzqwooB+iF+gcZScTh9H0domCk00wWi0Hrc1ch
-         FeBbo8o+ZAFAr9W6VKSQy4lGNJCaWC5cnrCztMOIN5E3D/9nyZ9Yw0rhrthbkT+b6Fk6
-         Be2Xy4iid0n6O+2y3Q6/XsMiUC0gG8TX4sE448AHs8nyY2waDMQBkgLL+jp7ZmGRYGF7
-         roJPR5Zxxvgs1ZTzHgqi2dOujPvltZ5YqaDWnYjMLArpaMhqQvYdhLoyEu1RmX1soPlO
-         XXZA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qAyBvgO4bOnc2gaynrGXEwwg2q9+bev/7Krv5slmOVU=;
+        b=qAM3YCcZs+npTx9BPPePlvKxpXslhpkUmEgugnm4zAlkgCuERkzo5/Ny5AqJKWuNI0
+         ee9NxL1Vene0EIe9MIIcEKVSNl3ELO9DzQV1v6OPZG/ymJS0GzpS5HpxEvajOFYGjLg/
+         8hTPoBBa+SZXYZv6GDDVEZOCIWiZqN1g2fSUO5WXwcWQv99jmowC0bv5jm8HQyAY9R0W
+         WdBbuyvVCJZ2oMFZsQJAT+IreTv93hXErVplWvMb+uKMkrZFThR29bTqy3mIrEYIHPb1
+         cOi1OYNIA3oIG4m5I6aUIgAH2xkWc7L3IilysL0bNP6jOWASQMrsZRbeWVUn4aYTPotV
+         ivYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=8rtaFDP8GcbTj75WszhswVptWti542U0uRqtEvpMYC0=;
-        b=HG0n5CkRbodRRpCTkPYfl/K+RdwQSt4zO2VkIxuk6ajEBgXOzJpnmb/dT0ETc0PwPh
-         yKtcglE4B3+WQ3jOBzVU1LncMbfdlyTDXxFP/hZuLrYiy5ageE49Yb9OeqkmjGfptikI
-         uhdxksmxIAun8WMEFAH0ZNPcgq9suU3f8Myi/f6Jzf8kylMkbsobveXIQ6S/pd4x1dfg
-         NkaHAtUfrLAhmOpbnh5c3nXEbgcINy8GQ6ZYaS3IMreItUc+otO5ERetBgc/nFe2Ye9h
-         Labc6A8OgjU3Oi08ssrqBOtUdTeOgA2V0HYMEj3xaJKCepADdimAge/hGyKFpXokdoiW
-         Fbtg==
-X-Gm-Message-State: ANhLgQ30FDn47v2bJ731X3zAHkLkLISz3XkD6IHU61aLgJjsqBj+VbX1
-        lGFzpIjKiTjz1JQUE+PW33A+uw==
-X-Google-Smtp-Source: ADFU+vs/gQt7DwnC89BguUGR8gw6uoQQFuwimrUa4QgFnh3ARc6uPbXH4A7q5Ab/5x4QvwGqzjCkSg==
-X-Received: by 2002:a17:90a:4809:: with SMTP id a9mr2118171pjh.73.1585256833989;
-        Thu, 26 Mar 2020 14:07:13 -0700 (PDT)
-Received: from ?IPv6:2600:1010:b02d:4a43:b951:4512:59f9:ba7d? ([2600:1010:b02d:4a43:b951:4512:59f9:ba7d])
-        by smtp.gmail.com with ESMTPSA id y9sm2537232pfo.135.2020.03.26.14.07.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 14:07:13 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Andy Lutomirski <luto@amacapital.net>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel support
-Date:   Thu, 26 Mar 2020 14:07:10 -0700
-Message-Id: <BB670F86-9362-4A8C-8BE6-64A5AF9537A7@amacapital.net>
-References: <CACdnJusd7m-c0zLmAjSq9Sb9HxyCkhyyp5W=4FMdysgu7_g=Sw@mail.gmail.com>
-Cc:     Daniel Kiper <daniel.kiper@oracle.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-doc@vger.kernel.org, dpsmith@apertussolutions.com,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        trenchboot-devel@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>, leif@nuviainc.com,
-        eric.snowberg@oracle.com, piotr.krol@3mdeb.com,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        andrew.cooper3@citrix.com
-In-Reply-To: <CACdnJusd7m-c0zLmAjSq9Sb9HxyCkhyyp5W=4FMdysgu7_g=Sw@mail.gmail.com>
-To:     Matthew Garrett <mjg59@google.com>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qAyBvgO4bOnc2gaynrGXEwwg2q9+bev/7Krv5slmOVU=;
+        b=AcTWSa4/rOu9nLdi2VLHEp13ZznHyFOq9hkCAMiplKVjoC40d2vCzutTC+S0Fx0x/U
+         g3ha9N/fTSK4Tne8vt1YncXa19loumSO5VNyUgK0lX/kJZqMxA+eHHF3zYSxvj/Rm/4e
+         CEgSYVd/4JnGHBn1F/iOgjrLtiuU2DDpRXdMWiWGuWQPiaSuHsup4TL5bpQQzzEdtUPH
+         Vctb3mEJApWQnxtyYqliVPjgu6RyGjeJYNsfwyOtAJJmjdXsddg5bP46QWW4lVIkepf4
+         2L8NqSqUwlCY+XDRSvFZjV6/CEb3gzpoLsd4XFP3XG0My0+Gsl8Uu6eKZvGl/CvoohFp
+         NFyg==
+X-Gm-Message-State: AGi0PubaUVpyc7w0V0HBBvNkPcVA80vfZQ/nvGca6PLfKs+91jyxRykw
+        nI8JgaAGHlncMhQ3nLuqJS9sx4un7fW+DH8I+3SIzw==
+X-Google-Smtp-Source: APiQypKkTPp+fGz1ypK0j7lnjDyL1kGteAfWqjf8dTuHziw1bMtpKGCBe6kauaYbNGvlyl7GaC+Y5sCmhx3hwF0rDz8=
+X-Received: by 2002:a05:651c:28a:: with SMTP id b10mr3830382ljo.223.1585256882978;
+ Thu, 26 Mar 2020 14:08:02 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200324135328.5796-1-geert+renesas@glider.be> <20200324135653.6676-1-geert+renesas@glider.be>
+In-Reply-To: <20200324135653.6676-1-geert+renesas@glider.be>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 26 Mar 2020 22:07:51 +0100
+Message-ID: <CACRpkdb=AVvyo6EOigKv+t5L4U=VjJ-16_ERimDvVWuCiU4Mxg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/8] ARM: integrator: impd1: Use GPIO_LOOKUP() helper macro
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harish Jenny K N <harish_kandiga@mentor.com>,
+        Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Alexander Graf <graf@amazon.com>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Phil Reid <preid@electromag.com.au>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        QEMU Developers <qemu-devel@nongnu.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 24, 2020 at 2:57 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
+> impd1_probe() fills in the GPIO lookup table by manually populating an
+> array of gpiod_lookup structures.  Use the existing GPIO_LOOKUP() helper
+> macro instead, to relax a dependency on the gpiod_lookup structure's
+> member names.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+> While this patch is a dependency for "[PATCH v6 4/8] gpiolib: Add
+> support for GPIO lookup by line name", it can be applied independently.
+> But an Acked-by would be nice, too.
 
-> On Mar 26, 2020, at 1:40 PM, Matthew Garrett <mjg59@google.com> wrote:
->=20
-> =EF=BB=BFOn Thu, Mar 26, 2020 at 1:33 PM Andy Lutomirski <luto@amacapital.=
-net> wrote:
->> As a straw-man approach: make the rule that we never call EFI after secur=
-e launch. Instead we write out any firmware variables that we want to change=
- on disk somewhere.  When we want to commit those changes, we reboot, commit=
- the changes, and re-launch. Or we deactivate the kernel kexec-style, seal t=
-he image against PCRs, blow away PCRs, call EFI, relaunch, unseal the PCRs, a=
-nd continue on our merry way.
->=20
-> That breaks the memory overwrite protection code, where a variable is
-> set at boot and cleared on a controlled reboot.
+I simply applied this patch for v5.7 in the GPIO tree since I am the
+maintainer of this platform, and I might want to change stuff around
+Integrator next cycle so it's good to have this covered.
 
-Can you elaborate?  I=E2=80=99m not familiar with this.
-
-> We'd also need to read
-> every variable and pass those values to the kernel in some way so the
-> read interfaces still work.
-
-Indeed.
-
-> Some platforms may also expect to be able
-> to use the EFI reboot call.
-
-Reboot is easy-ish: idle all APs, zero all but one page of text and the page=
- tables, and call reboot. There aren=E2=80=99t any secrets that need to stay=
- in memory when rebooting.
-
-
-> As for the second approach - how would we
-> verify that the EFI code hadn't modified any user pages? Those
-> wouldn't be measured during the second secure launch. If we're calling
-> the code at runtime then I think we need to assert that it's trusted.
-
-Maybe you=E2=80=99re misunderstanding my suggestion.  I=E2=80=99m suggesting=
- that we hibernate the whole running system to memory (more like kexec jump t=
-han hibernate) and authenticated-encrypt the whole thing (including user mem=
-ory) with a PCR-sealed key. We jump to a stub that zaps PCRs does EFI calls.=
- Then we re-launch and decrypt memory.
-
-Kind of like S3 implementation wise too except with an encryption step.  And=
- if we support secure launch and S3 together we probably have to implement t=
-his.
-
->=20
->> I=E2=80=99m not sure how SMM fits in to this whole mess.
->=20
-> SMM's basically an unsolved problem, which makes the whole DRTM
-> approach somewhat questionable unless you include the whole firmware
-> in the TCB, which is kind of what we're trying to get away from.
->=20
->> If we insist on allowing EFI calls and SMM, then we may be able to *measu=
-re* our exposure to potentially malicious firmware, but we can=E2=80=99t eli=
-minate it. I personally trust OEM firmware about as far as I can throw it.
+Yours,
+Linus Walleij
