@@ -2,94 +2,113 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFECC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 047B4C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D24520714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:15:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8DD2073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 11:15:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dpziWW8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbgCZLPk (ORCPT
+        id S1728104AbgCZLP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 07:15:40 -0400
-Received: from foss.arm.com ([217.140.110.172]:59242 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727688AbgCZLPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 07:15:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD1087FA;
-        Thu, 26 Mar 2020 04:15:39 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 531823F71F;
-        Thu, 26 Mar 2020 04:15:36 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 11:15:21 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Elena Reshetova <elena.reshetova@intel.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jann Horn <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] arm64: entry: Enable random_kstack_offset support
-Message-ID: <20200326111521.GA72909@C02TD0UTHF1T.local>
-References: <20200324203231.64324-1-keescook@chromium.org>
- <20200324203231.64324-6-keescook@chromium.org>
- <20200325132127.GB12236@lakrids.cambridge.arm.com>
- <202003251319.AECA788D63@keescook>
+        Thu, 26 Mar 2020 07:15:56 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51098 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727688AbgCZLPz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 07:15:55 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02QBFn1A042315;
+        Thu, 26 Mar 2020 06:15:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1585221349;
+        bh=bOS94acSo/exyAvWv52I6FnDJtwIpP6T6a3M0B2Qwfs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=dpziWW8nx8O6lTnhDun9JvqMKJi4E8EcElHif4A2e/wzthkO3PPT2nr+OSIDXOTbu
+         72O/XkLJo+8auZ5qX1/TG7S9qLOsm7Kl89sSCDCdq2MQQwfHLDObyuYo6cuEeqrb8e
+         Lb/e9Ysglfapti9bWLGhQ3ZIXunhKted90EuD2ZU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02QBFnZ1018085
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 26 Mar 2020 06:15:49 -0500
+Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
+ Mar 2020 06:15:49 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 26 Mar 2020 06:15:49 -0500
+Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QBFkp6048362;
+        Thu, 26 Mar 2020 06:15:47 -0500
+Subject: Re: [PATCH net-next v3 08/11] net: ethernet: ti: cpts: move rx
+ timestamp processing to ptp worker only
+To:     Richard Cochran <richardcochran@gmail.com>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
+        Murali Karicheri <m-karicheri2@ti.com>,
+        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200320194244.4703-1-grygorii.strashko@ti.com>
+ <20200320194244.4703-9-grygorii.strashko@ti.com>
+ <20200324134343.GD18149@localhost>
+ <13dd9d58-7417-2f39-aa7d-dceae946482c@ti.com>
+ <20200324165414.GA30483@localhost>
+From:   Grygorii Strashko <grygorii.strashko@ti.com>
+Message-ID: <7fe92a12-798b-c008-5578-b34411717c5e@ti.com>
+Date:   Thu, 26 Mar 2020 13:15:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003251319.AECA788D63@keescook>
+In-Reply-To: <20200324165414.GA30483@localhost>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 01:22:07PM -0700, Kees Cook wrote:
-> On Wed, Mar 25, 2020 at 01:21:27PM +0000, Mark Rutland wrote:
-> > On Tue, Mar 24, 2020 at 01:32:31PM -0700, Kees Cook wrote:
-> > > Allow for a randomized stack offset on a per-syscall basis, with roughly
-> > > 5 bits of entropy.
-> > > 
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > 
-> > Just to check, do you have an idea of the impact on arm64? Patch 3 had
-> > figures for x86 where it reads the TSC, and it's unclear to me how
-> > get_random_int() compares to that.
+Hi Richard
+
+On 24/03/2020 18:54, Richard Cochran wrote:
+> On Tue, Mar 24, 2020 at 05:34:34PM +0200, Grygorii Strashko wrote:
+>> I tested both ways and kept this version as i'v not seen any degradation,
+>> but, of course, i'll redo the test (or may be you can advise what test to run).
 > 
-> I didn't do a measurement on arm64 since I don't have a good bare-metal
-> test environment. I know Andy Lutomirki has plans for making
-> get_random_get() as fast as possible, so that's why I used it here.
+> Measure the time delay from when the frame arrives in the stack until
+> that frame+RxTimestamp arrives in the application.  I expect the round
+> about way via kthread takes longer.
+>   
+>> My thoughts were - network stack might not immediately deliver packet to the application
+> 
+> The network stack always delivers the packet, but you artificially
+> delay that delivery by calling netif_receive_skb() later on from
+> cpts_match_rx_ts().
+> 
+>> and PTP worker can be tuned (pri and smp_affinity),
+> 
+> That won't avoid the net softirq.
+> 
+>> resulted code will be more structured,
+> 
+> I am afraid people will copy this pattern in new drivers.  It really
+> does not make much sense.
 
-Ok. I suspect I also won't get the chance to test that in the next few
-days, but if I do I'll try to share the results.
+I did additional testing and will drop this patch.
+Any other comments from you side?
 
-My concern here was that, get_random_int() has to grab a spinlock and
-mess with IRQ masking, so has the potential to block for much longer,
-but that might not be an issue in practice, and I don't think that
-should block these patches.
+Thank you.
 
-> I couldn't figure out if there was a comparable instruction like rdtsc
-> in aarch64 (it seems there's a cycle counter, but I found nothing in
-> the kernel that seemed to actually use it)?
-
-AArch64 doesn't have a direct equivalent. The generic counter
-(CNTxCT_EL0) is the closest thing, but its nominal frequency is
-typically much lower than the nominal CPU clock frequency (unlike TSC
-where they're the same). The cycle counter (PMCCNTR_EL0) is part of the
-PMU, and can't be relied on in the same way (e.g. as perf reprograms it
-to generate overflow events, and it can stop for things like WFI/WFE).
-
-Thanks,
-Mark.
+-- 
+Best regards,
+grygorii
