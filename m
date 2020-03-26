@@ -7,58 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72C04C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36198C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A59F206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063B32076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FhIoyUmr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aw0P04YP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgCZOoY (ORCPT
+        id S1728130AbgCZOo2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:44:24 -0400
-Received: from mail-wm1-f73.google.com ([209.85.128.73]:56095 "EHLO
-        mail-wm1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727832AbgCZOoV (ORCPT
+        Thu, 26 Mar 2020 10:44:28 -0400
+Received: from mail-qk1-f201.google.com ([209.85.222.201]:42502 "EHLO
+        mail-qk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728060AbgCZOoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:44:21 -0400
-Received: by mail-wm1-f73.google.com with SMTP id i9so704826wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:44:20 -0700 (PDT)
+        Thu, 26 Mar 2020 10:44:25 -0400
+Received: by mail-qk1-f201.google.com with SMTP id f206so4955603qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:44:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=pUHuESTKj8oX3rFdN5fYGgzuMeb9qfGw8IwhPoMTDMA=;
-        b=FhIoyUmrn4ShByWsJAyife9npYZwAwtImGROiYB3g54hnYVqJHuVPKFwiLyFVD2JjF
-         4hH1g2oXBbrKMrLg45cPPblaUO8K5EKVM53f49H9ca8i6t3BfL7OfI1PAYb6Y6VMND9M
-         sqGui/aWUV+7roKV6oKPGulSLk3qzR1qMb3We2uY1F16QGAYN0KjbFnZxuyO6p4pywi+
-         532T1vUIQRpkS1a7CCJ0moHhsFP1WuN06DKLupDZQ/RoADiJUGpfMTUthW/b7VHoZ1nu
-         /wCHuS57uOKExIDF+B1o8DHWja5DUTEy06HKQPs4LFR3+AEr0o1tFXhqigq2DiMhtNMA
-         2f2A==
+        bh=uADEPLEkmZYfl7wsDudGbWabefvMuQ72zIel8QzC/WU=;
+        b=aw0P04YP4yvA8GnGIM0IcXnPvtJDys1Gity150L+KCmm0IC/T5fGbPj9kC4kCEVNJ4
+         9z8syQlUrww+G4voblWJf75Z6KRzu3d24JGR6TiMNBqStsOdio+mylrao3e92CrcY7LK
+         QzGJpMPFaY45X6JLhgAw7rhDD+F0Jz0PwZW4ROIJm1pbACbd03E6sTciNdO6Xb2xvYY6
+         IZSF2/47CDqMxYpMpTRNU0RubDpO+/S7+m5G//Uh2q+GRU58O9NWqPvP4lH4TsxRICYL
+         ggJg3t9A9DyAAdsoXV3c1yfF6ts0TtxS3q+Q5j0mxGcUldYz06whBc5d1uUs/TmcGMxB
+         GeZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=pUHuESTKj8oX3rFdN5fYGgzuMeb9qfGw8IwhPoMTDMA=;
-        b=ji0Q3Y+ZgG12OkD+C1H9zl/9diFVdHfyivWmKoc5rmW3sv6sdE9hG8u4tJTUb1f/q5
-         559vOpOQ0VjH+4Bb2NUOCGmoJ5S8rAtHJnkNmT4AIu2bFtOcAHdvug2/c5PWjveluY26
-         cEr1kvvKC2MF04gxM3pTpzkbCVL8YrKq9cLmbZIr1imFbX+VgKSMK1ath3DRree1DIRz
-         +DcfWpJXFctmdE0nkNlzb9sl3K2wrDsYKvSIdrBLXjr02uU72n9aZVnMPFqxxZz03HzY
-         7pASZtbAt7kizqDPMK30Z5a27UW3teUxqlbo5m4sD4kgEbQu8zpcM2Iqscw+C4U865H8
-         M7Gw==
-X-Gm-Message-State: ANhLgQ3VSoHMhjYNp/Qz0XJIq7Y6BZiPqnGxhpEa0E3wBNNksm3cexz1
-        5yWPF6l2AMHYTn4xuKW7FPqfTven1op65rKE
-X-Google-Smtp-Source: ADFU+vs0KXaxlxADpXExCJIuRumete/6F3eTe5emAyvJp6l9dhGeqpsgqwUVVX03+S11UXk7EkQ4taSnSeGcmyij
-X-Received: by 2002:a5d:4003:: with SMTP id n3mr9356095wrp.176.1585233859680;
- Thu, 26 Mar 2020 07:44:19 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 15:44:01 +0100
+        bh=uADEPLEkmZYfl7wsDudGbWabefvMuQ72zIel8QzC/WU=;
+        b=GEuMSHzSKtUFKWNniNAQUKy1yK7J9JFz4bx2UzItyynA6XkFhwAD+OcSNnMTRy2OYP
+         81ZFofplsb1UNrkKmyd0VbUpysnCkhncUVkZ/MosVLkvRAWzrhCQyyctqmv77+SIHp8Y
+         LAUQ3qX55AOpXMkvUzYyWPTbA0roeouynhlCwlzemF6FWd7u10R5vsblqL+vfqjs9Yq1
+         PmGEj3UFosPuyuOI/NSh7ghFu2RI7We/Im5k7GgvL8eg33ybCjhVx34zsU1HAiBlWyQE
+         /DOtYJa035F9rEPE09WIkwQiAFkIp8C3z7DzNawS131+7Qwp+gPjTPlkgvZWfa/lWc4c
+         uSLQ==
+X-Gm-Message-State: ANhLgQ3Ef9roKH8KIdHMhSN+fDvQ6KzuQWdv4m8Cn0M/8NoMEEsNOHzh
+        HAtkV4gUleNQs7Mv2wBsye7bIHrH6/HGec/s
+X-Google-Smtp-Source: ADFU+vs4gqRNBmQXkP6I3fFSrAC8BH3/Wz+XULZj0Pml6O/pA3hyTV2hkInmZiNHUchejwlpgz8UdPROVbbRnL5U
+X-Received: by 2002:ac8:3565:: with SMTP id z34mr8683029qtb.168.1585233862532;
+ Thu, 26 Mar 2020 07:44:22 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 15:44:02 +0100
 In-Reply-To: <cover.1585233617.git.andreyknvl@google.com>
-Message-Id: <9d9134359725a965627b7e8f2652069f86f1d1fa.1585233617.git.andreyknvl@google.com>
+Message-Id: <6644839d3567df61ade3c4b246a46cacbe4f9e11.1585233617.git.andreyknvl@google.com>
 Mime-Version: 1.0
 References: <cover.1585233617.git.andreyknvl@google.com>
 X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
-Subject: [PATCH v4 2/7] kcov: fix potential use-after-free in kcov_remote_start
+Subject: [PATCH v4 3/7] kcov: move t->kcov assignments into kcov_start/stop
 From:   Andrey Konovalov <andreyknvl@google.com>
 To:     Dmitry Vyukov <dvyukov@google.com>
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -74,59 +74,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If vmalloc() fails in kcov_remote_start() we'll access remote->kcov
-without holding kcov_remote_lock, so remote might potentially be freed
-at that point. Cache kcov pointer in a local variable.
+Every time kcov_start/stop() is called, t->kcov is also assigned, so
+move the assignment into the functions.
 
 Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 ---
- kernel/kcov.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ kernel/kcov.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
 diff --git a/kernel/kcov.c b/kernel/kcov.c
-index f6bd119c9419..cc5900ac2467 100644
+index cc5900ac2467..888d0a236b04 100644
 --- a/kernel/kcov.c
 +++ b/kernel/kcov.c
-@@ -748,6 +748,7 @@ static const struct file_operations kcov_fops = {
- void kcov_remote_start(u64 handle)
+@@ -309,10 +309,12 @@ void notrace __sanitizer_cov_trace_switch(u64 val, u64 *cases)
+ EXPORT_SYMBOL(__sanitizer_cov_trace_switch);
+ #endif /* ifdef CONFIG_KCOV_ENABLE_COMPARISONS */
+ 
+-static void kcov_start(struct task_struct *t, unsigned int size,
+-			void *area, enum kcov_mode mode, int sequence)
++static void kcov_start(struct task_struct *t, struct kcov *kcov,
++			unsigned int size, void *area, enum kcov_mode mode,
++			int sequence)
  {
- 	struct kcov_remote *remote;
-+	struct kcov *kcov;
- 	void *area;
- 	struct task_struct *t;
- 	unsigned int size;
-@@ -774,16 +775,17 @@ void kcov_remote_start(u64 handle)
- 		spin_unlock(&kcov_remote_lock);
- 		return;
- 	}
-+	kcov = remote->kcov;
- 	/* Put in kcov_remote_stop(). */
--	kcov_get(remote->kcov);
--	t->kcov = remote->kcov;
-+	kcov_get(kcov);
+ 	kcov_debug("t = %px, size = %u, area = %px\n", t, size, area);
 +	t->kcov = kcov;
+ 	/* Cache in task struct for performance. */
+ 	t->kcov_size = size;
+ 	t->kcov_area = area;
+@@ -326,6 +328,7 @@ static void kcov_stop(struct task_struct *t)
+ {
+ 	WRITE_ONCE(t->kcov_mode, KCOV_MODE_DISABLED);
+ 	barrier();
++	t->kcov = NULL;
+ 	t->kcov_size = 0;
+ 	t->kcov_area = NULL;
+ }
+@@ -333,7 +336,6 @@ static void kcov_stop(struct task_struct *t)
+ static void kcov_task_reset(struct task_struct *t)
+ {
+ 	kcov_stop(t);
+-	t->kcov = NULL;
+ 	t->kcov_sequence = 0;
+ 	t->kcov_handle = 0;
+ }
+@@ -584,9 +586,8 @@ static int kcov_ioctl_locked(struct kcov *kcov, unsigned int cmd,
+ 			return mode;
+ 		kcov_fault_in_area(kcov);
+ 		kcov->mode = mode;
+-		kcov_start(t, kcov->size, kcov->area, kcov->mode,
++		kcov_start(t, kcov, kcov->size, kcov->area, kcov->mode,
+ 				kcov->sequence);
+-		t->kcov = kcov;
+ 		kcov->t = t;
+ 		/* Put either in kcov_task_exit() or in KCOV_DISABLE. */
+ 		kcov_get(kcov);
+@@ -778,7 +779,6 @@ void kcov_remote_start(u64 handle)
+ 	kcov = remote->kcov;
+ 	/* Put in kcov_remote_stop(). */
+ 	kcov_get(kcov);
+-	t->kcov = kcov;
  	/*
  	 * Read kcov fields before unlock to prevent races with
  	 * KCOV_DISABLE / kcov_remote_reset().
- 	 */
--	size = remote->kcov->remote_size;
--	mode = remote->kcov->mode;
--	sequence = remote->kcov->sequence;
-+	size = kcov->remote_size;
-+	mode = kcov->mode;
-+	sequence = kcov->sequence;
- 	area = kcov_remote_area_get(size);
- 	spin_unlock(&kcov_remote_lock);
- 
-@@ -791,7 +793,7 @@ void kcov_remote_start(u64 handle)
+@@ -792,7 +792,6 @@ void kcov_remote_start(u64 handle)
+ 	if (!area) {
  		area = vmalloc(size * sizeof(unsigned long));
  		if (!area) {
- 			t->kcov = NULL;
--			kcov_put(remote->kcov);
-+			kcov_put(kcov);
+-			t->kcov = NULL;
+ 			kcov_put(kcov);
  			return;
  		}
- 	}
+@@ -800,7 +799,7 @@ void kcov_remote_start(u64 handle)
+ 	/* Reset coverage size. */
+ 	*(u64 *)area = 0;
+ 
+-	kcov_start(t, size, area, mode, sequence);
++	kcov_start(t, kcov, size, area, mode, sequence);
+ 
+ }
+ EXPORT_SYMBOL(kcov_remote_start);
+@@ -873,7 +872,6 @@ void kcov_remote_stop(void)
+ 		return;
+ 
+ 	kcov_stop(t);
+-	t->kcov = NULL;
+ 
+ 	spin_lock(&kcov->lock);
+ 	/*
 -- 
 2.26.0.rc2.310.g2932bb562d-goog
 
