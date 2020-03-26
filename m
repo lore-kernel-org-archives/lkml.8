@@ -2,144 +2,116 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9B0C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50973C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05EB2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24CCE2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eTMbaAy1"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="dY7wSC08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgCZUWD (ORCPT
+        id S1728650AbgCZUXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:22:03 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38080 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZUWD (ORCPT
+        Thu, 26 Mar 2020 16:23:44 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44417 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgCZUXn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:22:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id m15so7541946iob.5
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:22:02 -0700 (PDT)
+        Thu, 26 Mar 2020 16:23:43 -0400
+Received: by mail-qk1-f196.google.com with SMTP id j4so8334246qkc.11
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ve/X6nHv2D9AeZXHvnlLIPat8X+ApJ24OWPwiA11jpg=;
-        b=eTMbaAy1ljXYsDh1ZmCCkUFh2WC7cuyf1r/HQ4XcoH5XIXxgjWcj8fiGwrpaPWQsPO
-         Qg5ks7UOdihafX2mNEKfYyoH/uMfHXDwvOreiDYiBcm5inEw/6Ec4qFbUWHjRr3rg7ko
-         2DmPAxoedazshDdluWxYv/5V+QV5qa8sawJiSm7NJFgQE+dkUGR9JhA0qETScS+sam7E
-         eztiXVUs00b93SomNzbbtJpNS5qgR/dlsN6KLWpx2WOLQntljV/lR+36hJERuI7Ukcb+
-         uN15b6H7s+Dun+rTOG3KuU/bgDNgh8GEKp/2/6ejdCCHhbKdeu7WGxxB0p8uqsOcv7Ko
-         kX6A==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hJWp5t89/iwbfn8Ca+Lrz1rZRbdYA2KCpWmXHJOj3y4=;
+        b=dY7wSC0838pzka4AzUdCK19Pqo/xSg0AU8qIfHTom1OXY5mFHlZIYMENXzpLnBMDcC
+         NwYnyykFW1mIgRuaJe2SIZNN+JLl1bR6XMi/axhztQ+3Lol92UZB9R5juK0hc6a1xaWl
+         o5DOw2ARWnmKhSSoBhVBErNkXtykPQzMjcX8c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ve/X6nHv2D9AeZXHvnlLIPat8X+ApJ24OWPwiA11jpg=;
-        b=C4J5lHIxaE/nXfzkDgQ/D1vcFsjOXbR0E6eOqVjmWEtiHMJI9ouED6BurU2KH0Ca7Y
-         n8IRhoLLLYRobpe9HjUb9nVZ92dJmEpEW5yGI407u6tSHEnF78UYbpvgFrjndZNA6E25
-         d0bkVL/1mCKbeqmqow7OXQvsou5yAiHt/stY4xO8yMw9MC14nu2JEiI5MjO1/AWLziU/
-         4eiKTNXzjiuhljJDt/UEo+Z+tRmokhokA9HUCHxmkE8whlCnbNvnOYr1v2pl8UjehaFK
-         3TpVRfDG1hD8losbX4pKXnUxq9DDYBgpuMLYK4QLC4ddKQ6kmD0G3K+w11FYwZsjVaP+
-         NkwQ==
-X-Gm-Message-State: ANhLgQ35LnU1yM1kAyzp/a0QhWGXvUP+p0f9+AeU4IsdQElMGncQfAPh
-        STYgYKpXZpKDMnzy0F2vBi+rYZXfRQBTenH4cjrRmw==
-X-Google-Smtp-Source: ADFU+vvU1L1B/iLuaUUbHk/RIQMtqZfXXx5k6U+m5rd0ApTfjWWSSmZSzDVhnSmUXDvdtdOOPjhMvVfMlailtJw8LDo=
-X-Received: by 2002:a6b:8ed7:: with SMTP id q206mr9378070iod.148.1585254122300;
- Thu, 26 Mar 2020 13:22:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hJWp5t89/iwbfn8Ca+Lrz1rZRbdYA2KCpWmXHJOj3y4=;
+        b=nDWzljTZFPrnQHPLyHDqAbeNdENkR0qykl+fwlE6BBjKgGdK21m4312sGrUpe1WzaR
+         f3tQm8YDFskv01KUg4Cwcum17NF5SIOq+CFx9kJH6PVcuWo6dRheIGO4sYRCokzPjX1y
+         O15Sn+3VYl1iGnGsmbsArfjrnSi1Vt/mKHPJlTMzFN73m0yfbVT+kbnaFbWmhZHtHe4q
+         EVctcFgta5ieG4fcI1C56xJxjrw2x5OdcQS2Pwgm1u48TKOOfdPeKYr7egkY/u/aTUjK
+         ZT8AtCKQR/4kxaKtHAcnAlhHcJV0yMJAr4X9/POG9QLItBbAiHBOz/BqaXmpR5yq9qW9
+         v6Vg==
+X-Gm-Message-State: ANhLgQ3rbB2abfGZkMoP6K7Wag2H58DVgtt4x9lRprHijQzyVa/UdEo7
+        8Z8mMH0eUh0cp++u3y10MlPgpw==
+X-Google-Smtp-Source: ADFU+vvdfgPWrcllkj1WQ8cugXCsD6gKi4uamCH0UN8ejJIKkiAcGgtzhXH9Q2UhVC/2+6inHbi62w==
+X-Received: by 2002:a05:620a:539:: with SMTP id h25mr10212915qkh.395.1585254222181;
+        Thu, 26 Mar 2020 13:23:42 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id z6sm2092718qka.34.2020.03.26.13.23.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 13:23:40 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 16:23:40 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Sonny Rao <sonnyrao@google.com>, Waiman Long <longman@redhat.com>,
+        linux-kernel@vger.kernel.org, Dmitry Shmidt <dimitrysh@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>, kernel-team@android.com,
+        Jesse Barnes <jsbarnes@google.com>, vpillai@digitalocean.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, cgroups@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+Subject: Re: [PATCH RFC] cpuset: Make cpusets get restored on hotplug
+Message-ID: <20200326202340.GA146657@google.com>
+References: <20200326191623.129285-1-joel@joelfernandes.org>
+ <20200326192035.GO162390@mtj.duckdns.org>
+ <20200326194448.GA133524@google.com>
+ <972a5c1b-6721-ac20-cec5-617af67e617d@redhat.com>
+ <CAPz6YkVUsDz456z8-X2G_EDd-uet1rRNnh2sDUpdcoWp_fkDDw@mail.gmail.com>
+ <20200326201649.GQ162390@mtj.duckdns.org>
 MIME-Version: 1.0
-References: <20200310155058.1607-1-mathieu.poirier@linaro.org> <591bd727-32af-9ea2-8c46-98f46ee3711e@ti.com>
-In-Reply-To: <591bd727-32af-9ea2-8c46-98f46ee3711e@ti.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Thu, 26 Mar 2020 14:21:51 -0600
-Message-ID: <CANLsYkyv+4cSCY27kA6qfo2XMzXy_h+DmXTe0nVZuUkC0kyRUQ@mail.gmail.com>
-Subject: Re: [PATCH v2] rpmsg: core: Add wildcard match for name service
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc <linux-remoteproc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200326201649.GQ162390@mtj.duckdns.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020 at 09:06, Suman Anna <s-anna@ti.com> wrote:
->
-> Hi Mathieu,
->
-> On 3/10/20 10:50 AM, Mathieu Poirier wrote:
-> > Adding the capability to supplement the base definition published
-> > by an rpmsg_driver with a postfix description so that it is possible
-> > for several entity to use the same service.
-> >
-> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Acked-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->
-> So, the concern I have here is that we are retrofitting this into the
-> existing 32-byte name field, and the question is if it is going to be
-> enough in general. That's the reason I went with the additional 32-byte
-> field with the "rpmsg: add a description field" patch.
->
+On Thu, Mar 26, 2020 at 04:18:59PM -0400, Tejun Heo wrote:
+> On Thu, Mar 26, 2020 at 01:05:04PM -0700, Sonny Rao wrote:
+> > I am surprised if anyone actually wants this behavior, we (Chrome OS)
+> 
+> The behavior is silly but consistent in that it doesn't allow empty active
+> cpusets and it has been like that for many many years now.
+> 
+> > found out about it accidentally, and then found that Android had been
+> > carrying a patch to fix it.  And if it were a desirable behavior then
+> > why isn't it an option in v2?
+> 
+> Nobody is saying it's a good behavior (hence the change in cgroup2) and there
+> are situations where changing things like this is justifiable, but, here:
+> 
+> * The proposed change makes the interface inconsistent and does so
+>   unconditionally on what is now a mostly legacy interface.
+> 
+> * There already is a newer version of the interface which includes the
+>   desired behavior.
+> 
+> * I forgot but as Waiman pointed out, you can even opt-in to the new
+>   behavior, which is more comprehensive without the inconsitencies,
+>   while staying on cgroup1.
 
-That's a valid concern.
+Thank you Tejun, Waiman and Sonny. I confirmed the cgroup_v2_mode option
+fixes cgroup v1's broken behavior.
 
-Did you consider increasing the size of RPMSG_NAME_SIZE to 64? Have
-you found cases where that wouldn't work?  I did a survey of all the
-places the #define is used and all destination buffers are also using
-the same #define in their definition.  It would also be backward
-compatible with firmware implementations that use 32 byte.
+We will use this mount option on our systems to fix it.
 
-Thanks,
-Mathieu
+thanks,
 
-> regards
-> Suman
->
-> > ---
-> > Changes for V2:
-> > - Added Arnaud's Acked-by.
-> > - Rebased to latest rproc-next.
-> >
-> >  drivers/rpmsg/rpmsg_core.c | 20 +++++++++++++++++++-
-> >  1 file changed, 19 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/rpmsg/rpmsg_core.c b/drivers/rpmsg/rpmsg_core.c
-> > index e330ec4dfc33..bfd25978fa35 100644
-> > --- a/drivers/rpmsg/rpmsg_core.c
-> > +++ b/drivers/rpmsg/rpmsg_core.c
-> > @@ -399,7 +399,25 @@ ATTRIBUTE_GROUPS(rpmsg_dev);
-> >  static inline int rpmsg_id_match(const struct rpmsg_device *rpdev,
-> >                                 const struct rpmsg_device_id *id)
-> >  {
-> > -     return strncmp(id->name, rpdev->id.name, RPMSG_NAME_SIZE) == 0;
-> > +     size_t len = min_t(size_t, strlen(id->name), RPMSG_NAME_SIZE);
-> > +
-> > +     /*
-> > +      * Allow for wildcard matches.  For example if rpmsg_driver::id_table
-> > +      * is:
-> > +      *
-> > +      * static struct rpmsg_device_id rpmsg_driver_sample_id_table[] = {
-> > +      *      { .name = "rpmsg-client-sample" },
-> > +      *      { },
-> > +      * }
-> > +      *
-> > +      * Then it is possible to support "rpmsg-client-sample*", i.e:
-> > +      *      rpmsg-client-sample
-> > +      *      rpmsg-client-sample_instance0
-> > +      *      rpmsg-client-sample_instance1
-> > +      *      ...
-> > +      *      rpmsg-client-sample_instanceX
-> > +      */
-> > +     return strncmp(id->name, rpdev->id.name, len) == 0;
-> >  }
-> >
-> >  /* match rpmsg channel and rpmsg driver */
-> >
->
+ - Joel
+
