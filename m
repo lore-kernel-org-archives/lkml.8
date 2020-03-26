@@ -2,143 +2,133 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2835CC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B898C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8492073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:45:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFDE20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:47:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b6EBDV5D"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="U7md1OlT";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="U7md1OlT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727766AbgCZWpO (ORCPT
+        id S1727495AbgCZWrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:45:14 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34938 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726296AbgCZWpH (ORCPT
+        Thu, 26 Mar 2020 18:47:17 -0400
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:53248 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726296AbgCZWrR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:45:07 -0400
-Received: by mail-pf1-f196.google.com with SMTP id u68so3532142pfb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:45:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=uXFWCA6HsRoFU7UHbCkibQyhhxiptzgR3ncwTu65yOs=;
-        b=b6EBDV5D14KVHV3wD3Ol5xWcqk/VSycmLNDdgJZ9srR1xMjA8/P+83qr06g+dwDBF3
-         tpkK0HVrqwYlyhyNs/6Fb9jrYz1YUFN1U7dIz0f2lGUMngq8+meZbD8zi0FnI1x2ZtmN
-         1NWQpNJL3NrsmF2m+TgTg8rdjT0TVisGMeu9gwy2G1GFTZHLc7kKDbJT2g0kdR4dBT1K
-         G/YP2FpEUoY6ZLU2tq9MsyfKtUB3dyAVMgzesmCp+jCzo7yLR7Vu2OCfOFWCzzioei41
-         GEZmdwuTUB+wOIx8RY0OI4BaDASpGUy6JVpuOmO70/NECorFsuLdy/35S5QODhrSfwKD
-         o/Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=uXFWCA6HsRoFU7UHbCkibQyhhxiptzgR3ncwTu65yOs=;
-        b=NLybMBUd8OVIQEZFgf2pXesmOlIUvtWSAx0/8UXWhtNUCe3T5ABezkwzU35YgJR5cA
-         q8R7ZntFPrbF4PD2/rQXzH4x8eCGc5cHfOtTAPEHeWRRos3eJcdZX6IZG4oKwpia6ajj
-         45a3cWDRGyvUjKjzvixNaX5pt53+g6nDngMA4et18/ynINWJ5TwfOJeTmBo8f+WR9fmJ
-         1ZiEpUgVpdWXB2zcF8W3T2itZ9JjfwN0edZznbq/NCegrJKDJWH21Xci2M116lUluXP/
-         usTREicbRonsF21WhOgTQNIMjBjEPy9YIROlo95V/pvzMk1kjQ3rYjJpiXEiTXmfH4oL
-         soPw==
-X-Gm-Message-State: ANhLgQ3QDhy+YZVy4Z6ZcdMa/nzJ8mzmMrGc2KxGz4NmXu9N5/zJaw+h
-        nBWm16L9WZl9Uj0CEKqAgvTojUAdr+A=
-X-Google-Smtp-Source: ADFU+vu9KGqoAE4crBP4wJCZ1UO5CXpzN5sdzapPizXKKa7HM9pL5RtmXtBOe7hYseU2KlJwcR0Mww==
-X-Received: by 2002:a63:60d:: with SMTP id 13mr10693526pgg.151.1585262706292;
-        Thu, 26 Mar 2020 15:45:06 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id g10sm2592788pfk.90.2020.03.26.15.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 15:45:05 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: [PATCH v3 3/3] soc: qcom: rpmhpd: Allow RPMHPD driver to be loaded as a module
-Date:   Thu, 26 Mar 2020 22:44:59 +0000
-Message-Id: <20200326224459.105170-4-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200326224459.105170-1-john.stultz@linaro.org>
-References: <20200326224459.105170-1-john.stultz@linaro.org>
+        Thu, 26 Mar 2020 18:47:17 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id ADD058EE178;
+        Thu, 26 Mar 2020 15:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1585262836;
+        bh=hRVf8NlKn3i8rNQchhttvFvJ9qlop4GBPFXG8dhOHXw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=U7md1OlTrio/h+3wMf9IviRtC/1ZPDuUWWYj42WG9GkmmJMvjMTXhGjEsNNZpfoWD
+         6I6HSVSe4Em26NI/fvyDxOvhFhnkQ422guLsVB/TBg91iRnuK7bF3nN2cToS6J2YD8
+         Hp7xbubUssmYBDhEgbkTLg1F+o/U63+BTMzQsj/Y=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id Dep9nIyQbzLD; Thu, 26 Mar 2020 15:47:16 -0700 (PDT)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 0ABA18EE15F;
+        Thu, 26 Mar 2020 15:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1585262836;
+        bh=hRVf8NlKn3i8rNQchhttvFvJ9qlop4GBPFXG8dhOHXw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=U7md1OlTrio/h+3wMf9IviRtC/1ZPDuUWWYj42WG9GkmmJMvjMTXhGjEsNNZpfoWD
+         6I6HSVSe4Em26NI/fvyDxOvhFhnkQ422guLsVB/TBg91iRnuK7bF3nN2cToS6J2YD8
+         Hp7xbubUssmYBDhEgbkTLg1F+o/U63+BTMzQsj/Y=
+Message-ID: <1585262834.3581.8.camel@HansenPartnership.com>
+Subject: Re: [PATCH] parisc: Regenerate parisc defconfigs
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Helge Deller <deller@gmx.de>, Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Thu, 26 Mar 2020 15:47:14 -0700
+In-Reply-To: <20200326221921.GA20495@ls3530.fritz.box>
+References: <20200326202006.GA160630@roeck-us.net>
+         <20200326221921.GA20495@ls3530.fritz.box>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allow the rpmhpd driver to be loaded as a permenent
-module. Meaning it can be loaded from a module, but then cannot
-be unloaded.
+On Thu, 2020-03-26 at 23:19 +0100, Helge Deller wrote:
+> * Guenter Roeck <linux@roeck-us.net>:
+> > On Mon, Feb 03, 2020 at 10:31:22PM +0100, Helge Deller wrote:
+> > > Regenerate the 32- and 64-bit defconfigs and drop the outdated
+> > > specific
+> > > machine defconfigs for the 712, A500, B160, C3000 and C8000
+> > > workstations.
+> > > ---
+> > >  arch/parisc/configs/712_defconfig           | 181 --------------
+> > > -
+> > >  arch/parisc/configs/a500_defconfig          | 177 --------------
+> > > -
+> > >  arch/parisc/configs/defconfig               | 206 --------------
+> > > ---
+> > 
+> > Since the removal of arch/parisc/configs/defconfig, "make
+> > ARCH=parisc
+> > defconfig" results in an endless recursive make loop.
+> 
+> Can you please test the patch below?
+> Helge
+> 
+> ----
+> [PATCH] parisc: Fix defconfig selection
+> 
+> Fix the recursive loop when running "make ARCH=parisc defconfig".
+> 
+> Fixes: 84669923e1ed ("parisc: Regenerate parisc defconfigs")
+> Noticed-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Helge Deller <deller@gmx.de>
+> 
+> diff --git a/arch/parisc/Kconfig b/arch/parisc/Kconfig
+> index 71034b54d74e..3801a2ef9bca 100644
+> --- a/arch/parisc/Kconfig
+> +++ b/arch/parisc/Kconfig
+> @@ -79,6 +79,11 @@ config MMU
+>  config STACK_GROWSUP
+>  	def_bool y
+> 
+> +config ARCH_DEFCONFIG
+> +	string
+> +	default "arch/parisc/configs/generic-32bit_defconfig" if
+> !64BIT
+> +	default "arch/parisc/configs/generic-64bit_defconfig" if
+> 64BIT
+> +
+>  config GENERIC_LOCKBREAK
+>  	bool
+>  	default y
+> diff --git a/arch/parisc/Makefile b/arch/parisc/Makefile
+> index dca8f2de8cf5..628cd8bb7ad8 100644
+> --- a/arch/parisc/Makefile
+> +++ b/arch/parisc/Makefile
+> @@ -34,6 +34,13 @@ CC_ARCHES	= hppa hppa2.0 hppa1.1
+>  LD_BFD		:= elf32-hppa-linux
+>  endif
+> 
+> +# select defconfig based on actual architecture
+> +ifeq ($(shell uname -m),parisc64)
 
-Ideally, it would include a remove hook and related logic, but
-apparently the genpd code isn't able to track usage and cleaning
-things up?
+This won't work for cross builds.  You should be able to use
+$(CONFIG_64BIT) here, though.
 
-So making it a permenent module at least improves things slightly
-over requiring it to be a built in driver.
-
-Feedback would be appreciated!
-
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- drivers/soc/qcom/Kconfig  | 2 +-
- drivers/soc/qcom/rpmhpd.c | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index ac91eaf810f7..ffc04285840b 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -114,7 +114,7 @@ config QCOM_RPMH
- 	  help apply the aggregated state on the resource.
- 
- config QCOM_RPMHPD
--	bool "Qualcomm RPMh Power domain driver"
-+	tristate "Qualcomm RPMh Power domain driver"
- 	depends on QCOM_RPMH && QCOM_COMMAND_DB
- 	help
- 	  QCOM RPMh Power domain driver to support power-domains with
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index 4d264d0672c4..0bb12d5870a7 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -4,6 +4,7 @@
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/pm_domain.h>
- #include <linux/slab.h>
-@@ -189,6 +190,7 @@ static const struct of_device_id rpmhpd_match_table[] = {
- 	{ .compatible = "qcom,sm8150-rpmhpd", .data = &sm8150_desc },
- 	{ }
- };
-+MODULE_DEVICE_TABLE(of, rpmhpd_match_table);
- 
- static int rpmhpd_send_corner(struct rpmhpd *pd, int state,
- 			      unsigned int corner, bool sync)
-@@ -460,3 +462,6 @@ static int __init rpmhpd_init(void)
- 	return platform_driver_register(&rpmhpd_driver);
- }
- core_initcall(rpmhpd_init);
-+
-+MODULE_DESCRIPTION("Qualcomm Technologies, Inc. RPMh Power Domain Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+James
 
