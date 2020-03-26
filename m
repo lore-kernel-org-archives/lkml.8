@@ -2,88 +2,133 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53BE4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67610C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 288E120748
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42129206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 13:57:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IjiyS6se"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L2p42bnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbgCZN42 (ORCPT
+        id S1727771AbgCZN5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 09:56:28 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:53697 "EHLO
+        Thu, 26 Mar 2020 09:57:18 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45511 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727719AbgCZN41 (ORCPT
+        by vger.kernel.org with ESMTP id S1727612AbgCZN5R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 09:56:27 -0400
+        Thu, 26 Mar 2020 09:57:17 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585230987;
+        s=mimecast20190719; t=1585231035;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FXv3fMoVKY2zuGHET+HIX0s7UbodBDHLQThNOb8pISg=;
-        b=IjiyS6sevBJ1Oe73lBaMfAMzWtdrOThiMuFeK4OvXmVCATFFuiC/C6nrRMn1r2ev88bXIc
-        8ZB31BUSvIBFwnhQGz9AJPTfWWDS29txrm8tH+XuPnL7yxG/9pNXNM7zJMhND36ioMyqld
-        ZrrEjWu/1bTzfLMKVB7STUkqSV/n8D8=
+        bh=uTy9XzunUpSqneSBWA8G2EaCSTiTKP7tCVW6EiON0Oc=;
+        b=L2p42bnGJWVElHNvl6AAemYAHywKfbRHCaq07e9DxhgvZame76U+t6/pevNU7Xdrh/8B4+
+        7l4Zt2cd2a/SOkeWC1Bn3mlgoLnvw7xCvDQktGva7699/OCeTuwQxF/gR7cvicSUZIYbuc
+        LxrYyG/ssooXVqzzLqKsCeFrlB3Jc2w=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-cpyZBhleMH20OQhTkwuzoQ-1; Thu, 26 Mar 2020 09:56:25 -0400
-X-MC-Unique: cpyZBhleMH20OQhTkwuzoQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-154-aLmbfdiSP4iuwWm6Alh4Rw-1; Thu, 26 Mar 2020 09:57:12 -0400
+X-MC-Unique: aLmbfdiSP4iuwWm6Alh4Rw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD9AB189F764;
-        Thu, 26 Mar 2020 13:56:23 +0000 (UTC)
-Received: from treble (ovpn-112-176.rdu2.redhat.com [10.10.112.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0DFD25C1B0;
-        Thu, 26 Mar 2020 13:56:22 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 08:56:20 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org, x86@kernel.org,
-        mhiramat@kernel.org, mbenes@suse.cz
-Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
-Message-ID: <20200326135620.tlmof5fa7p5wct62@treble>
-References: <20200325174525.772641599@infradead.org>
- <20200325174605.369570202@infradead.org>
- <20200326113049.GD20696@hirez.programming.kicks-ass.net>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 82830800D50;
+        Thu, 26 Mar 2020 13:57:09 +0000 (UTC)
+Received: from [10.72.12.19] (ovpn-12-19.pek2.redhat.com [10.72.12.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFE2E60BF3;
+        Thu, 26 Mar 2020 13:56:49 +0000 (UTC)
+Subject: Re: [PATCH V8 9/9] virtio: Intel IFC VF driver for VDPA
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
+        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
+        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        Bie Tiwei <tiwei.bie@intel.com>
+References: <20200325082711.1107-1-jasowang@redhat.com>
+ <20200325082711.1107-10-jasowang@redhat.com>
+ <20200325123410.GX13183@mellanox.com>
+ <ed04692d-236c-2eee-4429-6ef4d5d165fe@redhat.com>
+ <20200326121705.GJ13183@mellanox.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a03edad7-e1c9-ae2f-5843-d63907289a3f@redhat.com>
+Date:   Thu, 26 Mar 2020 21:56:48 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200326113049.GD20696@hirez.programming.kicks-ass.net>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200326121705.GJ13183@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:30:49PM +0100, Peter Zijlstra wrote:
-> This isn't ideal either; stuffing code with NOPs just to make
-> annotations work is certainly sub-optimal, but given that sync_core()
-> is stupid expensive in any case, one extra nop isn't going to be a
-> problem here.
 
-/me puts his hardened objtool maintainer's glasses on...
+On 2020/3/26 =E4=B8=8B=E5=8D=888:17, Jason Gunthorpe wrote:
+> On Thu, Mar 26, 2020 at 01:50:53PM +0800, Jason Wang wrote:
+>
+>>>> +	adapter->vdpa.dma_dev =3D dev;
+>>>> +	ret =3D vdpa_register_device(&adapter->vdpa);
+>>>> +	if (ret) {
+>>>> +		IFCVF_ERR(adapter->dev, "Failed to register ifcvf to vdpa bus");
+>>>> +		goto err_msix;
+>>>> +	}
+>>>> +
+>>>> +	return 0;
+>>>> +
+>>>> +err_msix:
+>>>> +	put_device(&adapter->vdpa.dev);
+>>>> +	return ret;
+>>>> +err_alloc:
+>>>> +	pci_free_irq_vectors(pdev);
+>>>> +err_vectors:
+>>>> +	pci_release_regions(pdev);
+>>>> +err_regions:
+>>>> +	pci_disable_device(pdev);
+>>>> +err_enable:
+>>>> +	return ret;
+>>>> +}
+>>> I personally don't like seeing goto unwinds with multiple returns, an=
+d
+>>> here I think it is actually a tiny bug.
+>>>
+>>> All touches to the PCI device must stop before the driver core
+>>> remove() returns - so these pci function cannot be in the kref put
+>>> release function anyhow.
+>>
+>> I'm not sure I get here. IFCVF held refcnt of its PCI parent, so it lo=
+oks to
+>> me it's safe to free PCI resources in vDPA free callback?
+> The refcnt doesn't prevent the driver core from re-binding the
+> pci_device to another driver. Then the refcount put would do a
+> pci_disable_device() after another driver has started
+>
+> For this reason all touches to a struct pci_device must stop before
+> remove returns.
+>
+> Jason
 
-The problem is, when you do this kind of change to somebody else's code
--- like adding a NOP to driver code -- there's a 90% chance they'll NACK
-it and tell you to fix your shit.  Because they'll be happy to tell you
-the code itself should never be changed just to "make objtool happy".
 
-And honestly, they'd be right, and there's not much you can say in
-reply.  And then we end up having to fix it in objtool again anyway.
+Ok, will send a new version shortly.
 
-The 'insn == first' check isn't ideal, but at least it works (I think?).
+Thanks
 
-Maybe there's some cleaner approach.  I'll need to think about it later
-after I make some progress on the massive oil well fire I call my INBOX.
 
--- 
-Josh
+>
 
