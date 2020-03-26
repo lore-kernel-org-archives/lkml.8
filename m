@@ -2,107 +2,158 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA6CC2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B44C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5A8D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:14:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qLmdwtzO"
+	by mail.kernel.org (Postfix) with ESMTP id 6630220775
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585253701;
+	bh=o1vMvq4OXn5LTOH+tAFfGSmQddiNm84t7AUPsdzQFuU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=I6dt0arf5fdrtyIfhUc+nVs2d2cdDof3QwM2oQ0TWQND3l8hnb5BBWRmobgpfteoQ
+	 9dGt30jknNfzZLAgl7ggTCi/38K6mKm2lMm2gDhJWS9fUI9olHdp7N0hHMbdNSjtJF
+	 f7x+FvweOCWur5XOA3598JsRSULEPCg4bD9CYx44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbgCZUOo (ORCPT
+        id S1728684AbgCZUPA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:14:44 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51976 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726363AbgCZUOo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:14:44 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02QKEeaD034295;
-        Thu, 26 Mar 2020 15:14:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1585253680;
-        bh=/hiNc32oAn99+EkX8tTkuyw258yWvcvbz/j5ciBIP4w=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qLmdwtzOPKxpGhr7HIGOEPQ5R79JH4CmuEq3hWOdGZjX3NFMheP8+9OFVuGgNUdkM
-         yCefOG3eaA33eDU5sEJ78b0TJit8jaEkG8uJ3dpnA08oa4g2jIkXPbk2dwEc5Sn4QQ
-         3mIbYUJa0uV1tdcPdZGnWWgzCZ4dzW7hIi+sfd44=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QKEdq2049378;
-        Thu, 26 Mar 2020 15:14:39 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 26
- Mar 2020 15:14:39 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 26 Mar 2020 15:14:39 -0500
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02QKEab7029539;
-        Thu, 26 Mar 2020 15:14:37 -0500
-Subject: Re: [PATCH net-next v3 02/11] net: ethernet: ti: cpts: separate hw
- counter read from timecounter
-To:     Richard Cochran <richardcochran@gmail.com>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        netdev <netdev@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20200320194244.4703-1-grygorii.strashko@ti.com>
- <20200320194244.4703-3-grygorii.strashko@ti.com>
- <20200326141804.GC20841@localhost>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <3f319e48-d955-c821-7bed-c85c634976f1@ti.com>
-Date:   Thu, 26 Mar 2020 22:14:31 +0200
+        Thu, 26 Mar 2020 16:15:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38532 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbgCZUPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 16:15:00 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DCF02070A;
+        Thu, 26 Mar 2020 20:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585253698;
+        bh=o1vMvq4OXn5LTOH+tAFfGSmQddiNm84t7AUPsdzQFuU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ChYsyZVKrOjooEmo6qcud+pXwOAddaMliBnjJ6d/jq56naAHn7gqJvMaXnFyzMqqD
+         M7+kvDPwVeV7QDs/5ja6ycvMAya+St2RxH8s8nW0is6EHpeOilp9xPeOXJF1lnmFmA
+         vI72t0ZThRt5T5zqJ+smP/VOjqsH4AQc+5N7rPC8=
+Subject: Re: [PATCH v8 kunit-next 0/4] kunit: add debugfs representation to
+ show results
+To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        linux-kselftest@vger.kernel.org
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        shuah <shuah@kernel.org>
+References: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <2333d91d-2575-87ba-d8bb-60023cc19990@kernel.org>
+Date:   Thu, 26 Mar 2020 14:14:46 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200326141804.GC20841@localhost>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <1585232710-322-1-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/26/20 8:25 AM, Alan Maguire wrote:
+> When kunit tests are run on native (i.e. non-UML) environments, the results
+> of test execution are often intermixed with dmesg output.  This patch
+> series attempts to solve this by providing a debugfs representation
+> of the results of the last test run, available as
+> 
+> /sys/kernel/debug/kunit/<testsuite>/results
+> 
+> Changes since v7:
+> 
+> - renamed KUNIT_INDENT[2] to KUNIT_SUBTEST_INDENT, KUNIT_SUBSUBTEST_INDENT
+>    and added more description to their definitions to clarify why they
+>    are defined as they are (Shuah)
+> - defined KUNIT_SUBSUBTEST_INDENT directly as 8 spaces to avoid
+>    checkpatch error (Shuah)
+> 
+> Changes since v6:
+> 
+> - fixed regexp parsing in kunit_parser.py to ensure test results are read
+>    successfully with 4-space indentation (Brendan, patch 3)
+> 
+> Changes since v5:
+> 
+> - replaced undefined behaviour use of snprintf(buf, ..., buf) in
+>    kunit_log() with a function to append string to existing log
+>    (Frank, patch 1)
+> - added clarification on log size limitations to documentation
+>    (Frank, patch 4)
+> 
+> Changes since v4:
+> 
+> - added suite-level log expectations to kunit log test (Brendan, patch 2)
+> - added log expectations (of it being NULL) for case where
+>    CONFIG_KUNIT_DEBUGFS=n to kunit log test (patch 2)
+> - added patch 3 which replaces subtest tab indentation with 4 space
+>    indentation as per TAP 14 spec (Frank, patch 3)
+> 
+> Changes since v3:
+> 
+> - added CONFIG_KUNIT_DEBUGFS to support conditional compilation of debugfs
+>    representation, including string logging (Frank, patch 1)
+> - removed unneeded NULL check for test_case in
+>    kunit_suite_for_each_test_case() (Frank, patch 1)
+> - added kunit log test to verify logging multiple strings works
+>    (Frank, patch 2)
+> - rephrased description of results file (Frank, patch 3)
+> 
+> Changes since v2:
+> 
+> - updated kunit_status2str() to kunit_status_to_string() and made it
+>    static inline in include/kunit/test.h (Brendan)
+> - added log string to struct kunit_suite and kunit_case, with log
+>    pointer in struct kunit pointing at the case log.  This allows us
+>    to collect kunit_[err|info|warning]() messages at the same time
+>    as we printk() them.  This solves for the most part the sharing
+>    of log messages between test execution and debugfs since we
+>    just print the suite log (which contains the test suite preamble)
+>    and the individual test logs.  The only exception is the suite-level
+>    status, which we cannot store in the suite log as it would mean
+>    we'd print the suite and its status prior to the suite's results.
+>    (Brendan, patch 1)
+> - dropped debugfs-based kunit run patch for now so as not to cause
+>    problems with tests currently under development (Brendan)
+> - fixed doc issues with code block (Brendan, patch 3)
+> 
+> Changes since v1:
+>   - trimmed unneeded include files in lib/kunit/debugfs.c (Greg)
+>   - renamed global debugfs functions to be prefixed with kunit_ (Greg)
+>   - removed error checking for debugfs operations (Greg)
+> 
+> Alan Maguire (4):
+>    kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
+>    kunit: add log test
+>    kunit: subtests should be indented 4 spaces according to TAP
+>    kunit: update documentation to describe debugfs representation
+> 
+>   Documentation/dev-tools/kunit/usage.rst |  14 +++
+>   include/kunit/test.h                    |  63 ++++++++++++--
+>   lib/kunit/Kconfig                       |   8 ++
+>   lib/kunit/Makefile                      |   4 +
+>   lib/kunit/assert.c                      |  79 ++++++++---------
+>   lib/kunit/debugfs.c                     | 116 +++++++++++++++++++++++++
+>   lib/kunit/debugfs.h                     |  30 +++++++
+>   lib/kunit/kunit-test.c                  |  44 +++++++++-
+>   lib/kunit/test.c                        | 148 +++++++++++++++++++++++++-------
+>   tools/testing/kunit/kunit_parser.py     |  10 +--
+>   10 files changed, 430 insertions(+), 86 deletions(-)
+>   create mode 100644 lib/kunit/debugfs.c
+>   create mode 100644 lib/kunit/debugfs.h
+> 
 
+Thanks. Applied to linux-kselftest kunit for 5.7-rc1.
 
-On 26/03/2020 16:18, Richard Cochran wrote:
-> On Fri, Mar 20, 2020 at 09:42:35PM +0200, Grygorii Strashko wrote:
->> Separate hw counter read from timecounter code:
->> - add CPTS context field to store current HW counter value
->> - move HW timestamp request and FIFO read code out of timecounter code
->> - convert cyc2time on event reception in cpts_fifo_read()
->> - call timecounter_read() in cpts_fifo_read() to update tk->cycle_last
-> 
-> This comment tells us WHAT the patch does, but does not help because
-> we can see that from the patch itself.  Instead, the comment should
-> tell us WHY is change is needed.
-> 
-> I was left scratching my head, with the question, what is the purpose
-> here?  Maybe the answer is to be found later on in the series.
-> 
-> Here is commit message pattern to follow that I learned from tglx:
-> 
-> 1. context
-> 2. problem
-> 3. solution
-> 
-> For this patch, the sentence, "Separate hw counter read from
-> timecounter code" is #3.
-
-Sorry, will update.
-
--- 
-Best regards,
-grygorii
+thanks,
+-- Shuah
