@@ -2,297 +2,195 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D1AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A22FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BED1A20714
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:08:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D77352073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 18:09:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jrNkkzuv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YQHUd4g2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgCZSId (ORCPT
+        id S1726422AbgCZSJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 14:08:33 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42771 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726422AbgCZSId (ORCPT
+        Thu, 26 Mar 2020 14:09:01 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38632 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgCZSJB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:08:33 -0400
-Received: by mail-vs1-f67.google.com with SMTP id s10so4482414vsi.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:08:32 -0700 (PDT)
+        Thu, 26 Mar 2020 14:09:01 -0400
+Received: by mail-ot1-f65.google.com with SMTP id t28so6882339ott.5
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:09:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ngNG7FcAFdi6qUqXDItDrlIQbQkclatNBvHZIWasQ8Y=;
-        b=jrNkkzuvx/B254D8dXPyhZA5O4yNe6rB//gmliu8UXNwykzFIPCicNqhY8aQgQYnpf
-         QZte8ATjde4jYUUqroMYKhMlr7410iGYXmPyeTynBC+GDVpEO3r+6vnEbt1qhmuOMw5W
-         WWmevbhe/J2napAEbfd160TEn2hcABJeO31UI=
+        bh=U23zV80H/fWBc+iRgD1UjAaCfCC2dZVzJMDMBndseY4=;
+        b=YQHUd4g2qLXtQjXBE4UkMWhIR8nDbvEUaciILNOK1DDGTPkVwxPnjuXXEl+PQHbM/1
+         y6LDzWG05v6UkDFD+hMNUXbok89dYzFWteDm2vjHupA5u+YtneTqEU/fVPzR8E2nTUZ8
+         66uNDVPrLuINvhQ8gOBxGfgdzbAs3VvT6YKpRtj30g+Zjzz8nXk+owbQRhHorhxFTmVZ
+         JIwHb/KAKnILqy/tO+qHlvAZde4hejp45M8JGZWeHHHHfQO45fI7cyUT1Q5iH6ZbiFhu
+         pJ49aMWlxdim62oSWBo3EI1E9poJSoNy/2Z0hdT7sSaBj/1L3nU1I2G8IPtyJeA6+sqi
+         K6Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ngNG7FcAFdi6qUqXDItDrlIQbQkclatNBvHZIWasQ8Y=;
-        b=DdrW/z+to0k95M3zHeXcbql+cBFzn9J8neLBy0c/4clnYWddr9eNDEvEPoweJdm0l/
-         I4Zi90NDJVvISNcR7WCWV8OD27CFLqtmHjX6WIagpCCBux0aRyo0LXowUsBzrd8VXi0D
-         EXraVMWlajsjSMGM72AAKWlp5ox11Jhi6XyugTbef/59cjxKoh4ZqAhxTyOpwW96HwEW
-         s3HMBpSlDkTFwxvl9pwhOpsJ1v082JdvUXIjs4vN5h4H7li0LdRl1egKQkmEuH0sGVZQ
-         xp4b3q7og7VUAkKaJwXjrODsBqQhYYpLs4mfg1etIGLWSuotziLf301PQ8irxOgrRRq1
-         AebQ==
-X-Gm-Message-State: ANhLgQ3Sx84pqd6D7st3MCAi+113GikQYHaDxoWLkpFqzZDQ4o3//+bI
-        /RtnYJjNvg61WTzRJF18RyM0NtAc1xs=
-X-Google-Smtp-Source: ADFU+vtEvgsliN+wS2nlL0xFS6hivgiA8tIZaHjHRJIncEf7gVYg7uZ1Rhb7dm91jB4VLet1SJWDdQ==
-X-Received: by 2002:a67:fa47:: with SMTP id j7mr7847473vsq.128.1585246108148;
-        Thu, 26 Mar 2020 11:08:28 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id b79sm1333916vkb.47.2020.03.26.11.08.27
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 11:08:27 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id d23so2249172uak.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 11:08:27 -0700 (PDT)
-X-Received: by 2002:a9f:300a:: with SMTP id h10mr7546050uab.91.1585246105256;
- Thu, 26 Mar 2020 11:08:25 -0700 (PDT)
+        bh=U23zV80H/fWBc+iRgD1UjAaCfCC2dZVzJMDMBndseY4=;
+        b=l0Wmo7FsV8lZ3FNLDtY5okLP/do4i4vU/IGkAaYooAkwObh3+7moDnEX0lHdXFUJqa
+         4Mr5O2E4N3gMibCQcCaQyo8tsB6SBu1kmqjQrVh7sgdtwA/TPWFfHj6RGmMQZ2WLInld
+         n1RrGNp9QzUiRt/iW9pEHm5n+jZnZ4whu9elJNcXmnDh5FKgIdHPW+iDVQYsPPAigRKQ
+         xFbVMvQq2pm29Js9Utr+x96TP8SvfECHYoJFzOWJ5n7tJV4ULKIDtX/4JBA7qmTfh78t
+         oLQEHFmTxdQ7qX/y3/XI0FGxhNXkjmJo0nkMnZN6R6hq716nTCTVqIgbhJkohaMADuYY
+         Pwgg==
+X-Gm-Message-State: ANhLgQ3IviGygA7rP2OR6leeBRJIjQhYdpeRznlYvZ54krjWTLLNE5KE
+        MFxDfbo0XBnvEk1fQWv9gDffZPVSA9DiOpsZrHavog==
+X-Google-Smtp-Source: ADFU+vvpl+5OQEhCNCLDYCWe7itQaBuqxVZA0v7+jdNtoVBCkI1H0Pb9vRkZPwD2wnPPVM/+flWYswsezj+oPgatsOA=
+X-Received: by 2002:a4a:4190:: with SMTP id x138mr6179666ooa.35.1585246139794;
+ Thu, 26 Mar 2020 11:08:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <1583746236-13325-1-git-send-email-mkshah@codeaurora.org>
- <1583746236-13325-5-git-send-email-mkshah@codeaurora.org> <CAD=FV=VknUHs8R6pu3pBCR-D50ibeuSVVp9=_t7NLa4U+06XKQ@mail.gmail.com>
- <8810b558-f552-19dc-a5dc-4e64b37f35d8@codeaurora.org> <CAD=FV=XajZ5V_uZryghaBkH=4jv4T-ifuQE2NKbU4RgNVho_9A@mail.gmail.com>
- <e7723b03-ce7e-ff4b-e2b4-3d93f970748c@codeaurora.org> <CAD=FV=XFL9UZ44Q0xjMVsuok+CK9iWs4X3fkWXFHZrkw-ptfXw@mail.gmail.com>
- <5a5274ac-41f4-b06d-ff49-c00cef67aa7f@codeaurora.org> <CAD=FV=VPSahhK71k_D+nfL1=5QE5sKMQT=6zzyEF7+JWMcTxsg@mail.gmail.com>
- <3247c8d1-2222-e05a-e14f-41966a29fda0@codeaurora.org>
-In-Reply-To: <3247c8d1-2222-e05a-e14f-41966a29fda0@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 26 Mar 2020 11:08:13 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XWD0jyLU0H4CkEr5d+tZs8+NrVS-4my61rUds8dEjvng@mail.gmail.com>
-Message-ID: <CAD=FV=XWD0jyLU0H4CkEr5d+tZs8+NrVS-4my61rUds8dEjvng@mail.gmail.com>
-Subject: Re: Re: [PATCH v13 4/5] soc: qcom: rpmh: Invoke rpmh_flush() for
- dirty caches
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+References: <20200111052125.238212-1-saravanak@google.com> <158460766637.28353.11325960928759668587.tip-bot2@tip-bot2>
+ <20200324175955.GA16972@arm.com> <CAGETcx8Qhy3y66vJyi8kRvg1+hXf-goDvyty-bsG5qFrA-CKgg@mail.gmail.com>
+ <CAGETcx80wvGnS0-MwJ9M9RR9Mny0jmmep+JfwaUJUOR2bfJYsQ@mail.gmail.com>
+ <87lfnoxg2a.fsf@nanos.tec.linutronix.de> <CAGETcx_3GSKmSveiGrM2vQp=q57iZYc0T4ELMY7Zw8UwzPEnYA@mail.gmail.com>
+ <87imirxv57.fsf@nanos.tec.linutronix.de> <CAL_JsqLas2mi-kTrEY=9vnopU57qwJNDtvui0erMghfG4-pOZw@mail.gmail.com>
+In-Reply-To: <CAL_JsqLas2mi-kTrEY=9vnopU57qwJNDtvui0erMghfG4-pOZw@mail.gmail.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Thu, 26 Mar 2020 11:08:23 -0700
+Message-ID: <CAGETcx_MC7weVSYF9CpWt_5Otf3G1Hd75Z8_0LcN0SS42UDyJw@mail.gmail.com>
+Subject: Re: [tip: timers/core] clocksource/drivers/timer-probe: Avoid
+ creating dead devices
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-tip-commits@vger.kernel.org, x86 <x86@kernel.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Pawel Moll <pawel.moll@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Mar 25, 2020 at 10:16 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Thu, Mar 26, 2020 at 8:02 AM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> Hi,
+> On Thu, Mar 26, 2020 at 4:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> >
+> > Saravana Kannan <saravanak@google.com> writes:
+> > > On Wed, Mar 25, 2020 at 2:47 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> > >
+> > >> Saravana Kannan <saravanak@google.com> writes:
+> > >> > On Tue, Mar 24, 2020 at 11:34 AM Saravana Kannan <saravanak@google.com> wrote:
+> > >> > I took a closer look. So two different drivers [1] [2] are saying they
+> > >> > know how to handle "arm,vexpress-sysreg" and are expecting to run at
+> > >> > the same time. That seems a bit unusual to me. I wonder if this is a
+> > >> > violation of the device-driver model because this expectation would
+> > >> > never be allowed if these device drivers were actual drivers
+> > >> > registered with driver-core. But that's a discussion for another time.
+> > >> >
+> > >> > To fix this issue you are facing, this patch should work:
+> > >> > https://lore.kernel.org/lkml/20200324195302.203115-1-saravanak@google.com/T/#u
+> > >>
+> > >> Sorry, that's not a fix. That's a crude hack.
+> > >
+> > > If device nodes are being handled by drivers without binding a driver
+> > > to struct devices, then not setting OF_POPULATED is wrong. So the
+> > > original patch sets it. There are also very valid reasons for allowing
+> > > OF_POPULATED to be cleared by a driver as discussed here [1].
+> > >
+> > > The approach of the original patch (setting the flag and letting the
+> > > driver sometimes clear it) is also followed by many other frameworks
+> > > like irq, clk, i2c, etc. Even ingenic-timer.c already does it for the
+> > > exact same reason.
+> > >
+> > > So, why is the vexpress fix a crude hack?
+> >
+> > If it's the right thing to do and accepted by the DT folks, then the
+> > changelog should provide a proper explanation for it. The one you
+> > provided just baffles me. Plus the clearing of the flag really needs a
+> > big fat comment.
 >
-> On 3/12/2020 8:41 PM, Doug Anderson wrote:
-> > Hi,
+> IMO, commit 4f41fe386a946 should be reverted and be done with it.
+> There's no way the timer core can know whether a specific node should
+> be scanned or not. If you really want to avoid a struct device, then
+> set OF_POPULATED in specific timer drivers. But I'd rather not see
+> more places mucking with OF_POPULATED. It's really only bus code that
+> should be touching it.
+
+Since most drivers don't need the struct device, my patch sets the
+flag in the timer core. And for the few exception cases where the
+device is needed, we can clear the flag in the driver. That'll reduce
+the number of places mucking with OF_POPULATED.
+
+Does this seem okay to you?
+
+> Is having a struct device really a problem? If we want to save memory
+> usage, I have some ideas that would save much more than 1 or 2 struct
+> devices.
+
+Keep in mind that struct devices cost more than one struct device of
+memory. They also create a bunch of sysfs nodes, uevents, etc.
+
+> > It still does not make any sense to me.
 > >
-> > Quoting below may look funny since you replied with HTML mail and all
-> > old quoting was lost.  :(  I tried my best.
-> >
-> > On Thu, Mar 12, 2020 at 3:32 AM Maulik Shah <mkshah@codeaurora.org> wrote:
-> >>> Specifically I wouldn't trust all callers of rpmh_write() /
-> >>> rpmh_write_async() to never send the same data.  If it was just an
-> >>> speed/power optimization then sure you could trust them, but this is
-> >>> for correctness.
-> >> yes we should trust callers not to send duplicate data.
-> > I guess we'll see how this works out.  Since this only affects the
-> > "zero active-only" case and I'm pretty sure that case has more
-> > important issues, I'm OK w/ ignoring for now.
-> >
-> >
-> >>> Hrmm, thinking about this again, though, I'm still not convinced I
-> >>> understand what prevents the firmware from triggering "sleep mode"
-> >>> while the sleep/wake TCS is being borrowed for an active-only
-> >>> transaction.  If we're sitting in rpmh_write() and sleeping in
-> >>> wait_for_completion_timeout() couldn't the system go idle and trigger
-> >>> sleep mode?  In OSI-mode (with last man down) you'll always have a
-> >>> rpmh_flush() called by the last man down so you know you can make sure
-> >>> you're in a consistent state (one final flush and no more active-only
-> >> transactions will happen).  Without last man down you have to assume
-> >>> it can happen at any time don't you?
-> >>>
-> >>> ...so I guess I'll go back to asserting that zero-active-TCS is
-> >>> incompatible with non-OSI unless you have some way to prevent the
-> >>> sleep mode from being triggered while you've borrowed the wake TCS.
-> >> i had change for this in v4 to handle same.
-> >>
-> >> Link: https://patchwork.kernel.org/patch/11366205/
-> >>
-> >> + /*
-> >> + * RPMh domain can not be powered off when there is pending ACK for
-> >> + * ACTIVE_TCS request. Exit when controller is busy.
-> >> + */
-> >>
-> >> before calling rpmh_flush() we check ctrlr is idle (ensuring
-> >>
-> >> tcs_is_free() check passes)  this will ensure that
-> >>
-> >> previous active transaction is completed before going ahead.
-> >>
-> >> i will add this check in v14.
-> >>
-> >> since this curretntly check for ACTIVE TCS only, i will update it to check the repurposed "WAKE TCS" is also free.
-> > The difficulty isn't in adding a simple check, it's in adding a check
-> > that is race free and handles locking properly.  Specifically looking
-> > at your the v4 you pointed to, I see things like this:
-> >
-> >   if (!rpmh_rsc_ctrlr_is_idle(drv))
-> >     return -EBUSY;
-> >   return rpmh_flush(&drv->client);
-> >
-> > The rpmh_rsc_ctrlr_is_idle() grabs a spin lock implying that there
-> > could be other people acting on RPMh at the same time (otherwise, why
-> > do you even need locks?).  ...but when it returns the lock is
-> > released.  Once the lock is dropped then other clients are free to
-> > start using RPMH because nothing prevents them.  ...then you go ahead
-> > and start flushing.
-> >
-> > Said another way: due to the way you've structured locking in that
-> > patch rpmh_rsc_ctrlr_is_idle() is inherently dangerous because it
-> > returns an instantaneous state that may well have changed between the
-> > spin_unlock_irqrestore() at the end of the function and when the
-> > function returns.
-> >
-> > You could, of course, fix this by requiring that the caller hold the
-> > 'drv->lock' for both the calls to rpmh_rsc_ctrlr_is_idle() and
-> > rpmh_flush() (ignoring the fact the drv->lock is nominally part of
-> > rpmh-rsc.c and not rpmh.c).  Now it would be safe from the problem I
-> > described.  ...but now you get into a new problem.  If you ever hold
-> > two locks you always need to make sure you grab them in the same order
-> > any time you grab them both.  ...but tcs_write() we first grab a
-> > tcs_lock and _then_ drv->lock.  That means the "fix" of holding
-> > drv->lock for both the calls to rpmh_rsc_ctrlr_is_idle() and
-> > rpmh_flush() won't work because rpmh_flush() will need to grab a
-> > tcs_lock.  Possibly we could make this work by eliminating the "tcs
-> > lock" and just having the one big "drv->lock" protect everything (or
-> > introducing a new "super lock" making the other two meaningless).  It
-> > would certainly be easier to reason about...
-> Thanks Doug.
+> > arm,vexpress-sysreg is a MFD device, so can the ARM people please
+> > explain, why the sched clock part is not just another MFD sub-device or
+> > simply has it's own DT match?
 >
-> Agree, a simple check won't help here.
+> The issue is DT nodes and Linux drivers aren't necessarily 1-1. That
+> would be nice, but hardware is messy and DT doesn't abstract that
+> away. If we tried to always make things 1-1, then if/when the Linux
+> driver structure changes we'd have to change the DT.
+
+I agree with this. I'm definitely not asking to create a node just
+because we want another struct device.
+
+> If we decided to
+> add a node now, we'd still have to support the old DT for backwards
+> compatibility.
+
+Right, I agree it's too late to fix this DT for vexpress-sysreg now.
+
+> We also have to consider the structure for another OS
+> may be different.
 >
-> From above discussions, summarizing out 3 items that gets impacted when using rpmh_start/end_transaction().
->
-> 1. rpmh_write_async() becomes of little use since drivers may need to wait for rpmh_flush() to finish
-> if caches becomes dirty in between.
+> Generally, if I see a node with a compatible only it gets NAKed as
+> that's a sure sign of someone just trying to bind a driver and not
+> describing the h/w. We only do MFD sub-devices if those devices
+> provide or consume other DT resources.
 
-I think this is really just a problem if there are no dedicated ACTIVE
-TCS.  I think rpmh_flush() is pretty quick normally because all it's
-doing is writing to register space, not waiting for any transactions
-to finish.  The reason it's bad if there are no dedicated ACTIVE TCS
-is that now we have to block waiting for the active transaction to
-finish.
+If we have a timer MFD, it'd technically consume a fixed-clock and not
+be empty. vexpress-sysreg just assumes the clock is 24 MHz right now.
 
+My point about the vexpress DT nodes being weird is not about Linux
+devices, rather it's that:
+1. It's already a MFD
+2. Most of the functions are separated clearly into their functional
+device nodes
+3. However, the timer functionality is combined with the parent MFD
+device when the parent MFD device implements a completely separate
+function (gpio?). Why?
 
-> 2. It creates more pressure on WAKE TCS when there is no dedicated ACTIVE TCS. Transactions are delayed
-> if rpmh_flush() is in progress holding the locks and new request comes in to send Active only data.
-> 3. rpmh_rsc_ctrlr_is_idle() needs locking if ANY cpu can be calling this, this may require reordering of
-> locks / increase the time for which locks are held during rpmh transactions. On downstream variant we don't
-> have locking in this since in OSI, only last CPU is invoking it and it is the only one invoking this function.
->
-> Given above impact this approach seem not so simple as i though of earlier. i have alternate solution which
-> uses cpu_pm_notifications() and invokes rpmh_flush() for non-OSI targets. This approach should not impact
-> above 3 items.
+If one wants to split out the functions, do it fully. If one wants it
+all under one mega driver (ugh!) then combine it all. Going halfway
+causes these weird issues. That's my complaint about how the DT layout
+is for this device.
 
-Grepping for "cpu_pm_notifications" finds nothing, but I think you
-mean you're going to register for notifications with
-register_pm_notifier().
+Having said all that, I'd rather manipulate the OF_POPULATED flag than
+break DT backward compatibility at this point.
 
-OK.  I guess I'm a bit confused here, though.  Maybe you can help
-clear up my understanding.  I thought that one of the things you were
-trying to solve with all the "last man down" type solutions was to
-handle when RPMH wanted to transition into its sleep mode without a
-full system suspend.  I thought that the RPMH sleep mode ran sometimes
-when all the CPUs were idle and we were pretty sure they were going to
-be idle for a while.
+But in general, I think we should try to reject two separate drivers
+claiming to be compatible with the same device and expecting to work
+at the same time. That's just weird.
 
-If this whole time all you've needed is to run at suspend time then it
-feels like we could have avoided a whole lot of complexity.  ...but
-again, maybe I'm just misunderstanding.
-
-
-> I will soon post out v14 with this, testing in progress.
->
-> >
-> > NOTE: the only way I'm able to reason about all the above things is
-> > because I spent all the time to document what rpmh-rsc is doing and
-> > what assumptions the various functions had [1].  It'd be great if that
-> > could get a review.
-> Sure.
-> >
-> >
-> >>> This whole "no active TCS" is really quite a mess.  Given how broken
-> >>> it seems to me it almost feels like we should remove "no active TCS"
-> >>> from the driver for now and then re-add it in a later patch when we
-> >>> can really validate everything.  I tried addressing this in my
-> >>> rpmh-rsc cleanup series and every time I thought I had a good solution
-> >>> I could find another way to break it.
-> >>>
-> >>> Do you actually have the "no active TCS" case working on the current
-> >>> code, or does it only work on some downstream variant of the driver?
-> >>>
-> >>> It works fine on downstream variant. Some checks are still needed like above from v4
-> >>>
-> >>> since we do rpmh_flush() immediatly for dirty caches now.
-> > OK.  So I take it you haven't tested the "zero active" case with the
-> > upstream code?  In theory it should be easy to test, right?  Just hack
-> > the driver to pretend there are zero active TCSs?
->
-> No, it won't work out this way. if we want to test with zero active case, need to pick up [2].
->
-> [2] also need follow up fixes to work. This change is also in my to do
-> list to get merged. I will include a change in v14 series at the end, it can help test this series
-> for zero active tcs as well.
-
-I would just provide a pointer to it in the description.  If it was
-already there and I missed it, then sorry.  :(
-
-
-> Note that it doesn't have any dependency with this series and current series can get merged
-> without [2].
-
-Ah, this was a patch I wasn't aware of.  I haven't had time to go scan
-for patches that weren't pointed in my direction.  I'll go review it
-now.  When I briefly looked at trying to solve this problem myself I
-seem to remember it being harder to get all the locking right / races
-fixed, so I'm a little surprised that patch is so short...  Maybe I
-was overthinking...
-
-
-> > Which SoCs in specific need the zero active TCSs?  We are spending a
-> > lot of time talking about this and reviewing the code with this in
-> > mind.  It adds a lot of complexity to the driver.  If nothing under
-> > active development needs it I think we should do ourselves a favor and
-> > remove it for now, then add it back later.  Otherwise this whole
-> > process is just going to take a lot more time.
-> >
-> There are multiple SoCs having zero active TCSes in downstream code. So we can not remove it.
->
-> As i said above we need [2] plus some fixes to have zero active TCS working fine on upstream driver.
-
-If you have it working then no need to remove it.  ...but without that
-patch it was clearly not working and it was adding a lot of complexity
-to handle it.  In fact, this flushing patch series would have likely
-been easy to get finalized / landed if we hadn't needed to deal with
-the zero active TCS case.  It still feels like an option to say that
-the "zero active TCS" case is only supported when you have OSI mode
-unless you know of instances where we need that.
-
-
-Hrm, I see you just posted v14 while I was writing this.  I guess I'll
-go check that out now.  Maybe it will answer some of the questions I
-had.
-
-
--Doug
+-Saravana
