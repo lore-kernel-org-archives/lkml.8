@@ -7,166 +7,213 @@ X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F0AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0284C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFD2420737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10F22073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 17:28:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vk5A2110"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EYPhvjCC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgCZR1q (ORCPT
+        id S1728274AbgCZR2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 13:27:46 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46617 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726163AbgCZR1q (ORCPT
+        Thu, 26 Mar 2020 13:28:06 -0400
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:50735 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbgCZR2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 13:27:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id q3so3090791pff.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:27:45 -0700 (PDT)
+        Thu, 26 Mar 2020 13:28:06 -0400
+Received: by mail-pj1-f67.google.com with SMTP id v13so2759908pjb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 10:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4NpphCo6vE9dSdPy5tXFH6AEvJXO9V2xgWr809lDT+E=;
-        b=vk5A2110hpX8Vi2G7l4CelrZ0PBKZxzXuC+ocVVr0YAJSJ+NV9SiEaG2QyVLsJarm4
-         Ko9bvreoYNuKaZFdgG2YhPT53ncz9hlXKukNiqCVb8UKtyOb82zO5cqpqCEBesg5oID0
-         fuwbqtW1njapxdxpGkCj39MIYKtnKXDqROO+Nf4V5JS+Q5QcnkcbYK+3UzcqFuKUwpdw
-         +MnDrKcivQ7Ht+j/digPFASfivaJqZguRGJRPy6IVW51jKwCeWL17CZNQE5tUXljreys
-         lrcAdAILbwZvmzi1KAgpQhUpiB/mEfhAlAK+NxJ7qFuOq/a2L4/zHI2w6dZZ6GG3CJjb
-         gkSA==
+        h=from:to:cc:subject:references:date:in-reply-to:message-id
+         :user-agent:mime-version;
+        bh=D0/COPPGR5pb1BR3H03WQvoeG9Sl2jWxjAzThIYaXiU=;
+        b=EYPhvjCCQaUdd5QO0PGwDwWJyqK6MoHmiV6e4PerQpMgN9GsI1tT3LFFZ2dJ0doV+0
+         SBZlrqNEw/0YlclYl800HXHJOlcq0ak/PaeaKCXy1b/wK7/fW9lcglKQGUVCHUajFfF8
+         MtD6N3IujSm0MH8gPZEZ9kcO13GM3OyYQtEJdWowPvpWJXzvz4WwblN9cBnXAyIL/m9A
+         Tj3zLkSNVpz9MNnqpCYQ/f526+IfnM69wZemQ69crGUWKMQuKoHUj9XZLfIgCOa9kSlA
+         qfzVSlV4j3rYcAxgQY7JFP2kFnWgJ5Z6pvzXh42VqEGOtJrmR9HxSUn7ZsOgER7FE8Fb
+         IP/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4NpphCo6vE9dSdPy5tXFH6AEvJXO9V2xgWr809lDT+E=;
-        b=bqIFEXKQWEuYKBUxsgZv9bmmeY0GDJZPe381fz1Cdvs3WGAA98fwulsUiBLSrp8NPt
-         p021X28DJ3phnYJ9OPKLtdOsAEdi8uoW5gLxWu0KejBShUw9topOBE3wWPmOVvKL42PS
-         gcKm3eJEFRTmAdsOJurB6vEyXZKjh0Cp3BSeqNYykJ9dG6Gc9nBb7pG/Xgyd7POCwySj
-         rFeDrdPOsN8Iimep5Ig2Ob/I0qPDLSbLaxHLAgQz/GsyUVZl649QZzvZbwnGfrvqBP+n
-         NF0RtgOs4EmLBp9nCteshx0hXrzGesb4TCBd61fUKv67Y7ZnHmQSUtb9qIe21qfAGLX6
-         bz8g==
-X-Gm-Message-State: ANhLgQ2Hvl7CzBB3RfXZGa3mSm35D8N+Z5aEOagzUla8tRY66QpQURU8
-        zxSeARDSdFExItAMUpQXnfdZ2jR0/z0BRUBmoIKOEA==
-X-Google-Smtp-Source: ADFU+vsiPeXQcElObWb2nGl0HCkVtxk6f4mwf/y/m6oZlpernVWbNYrxUPYeukJrSSe7jeBfXaslhnuTzW2nqXvmWwE=
-X-Received: by 2002:a05:6a00:42:: with SMTP id i2mr9962966pfk.108.1585243664874;
- Thu, 26 Mar 2020 10:27:44 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
+         :message-id:user-agent:mime-version;
+        bh=D0/COPPGR5pb1BR3H03WQvoeG9Sl2jWxjAzThIYaXiU=;
+        b=Jkw3G0xm1MW1tULWJArW0Fc5fRQZCqRZ3MSLyP9D47OSVP3TJ4QUa6S33rtmzN6T7e
+         rTt7P5DmEzuKNQkeC9G/YcMHz0HsFpHHsRts2LO0UGmNgMeudr+xiLqy3ipRmMrE/FSB
+         1ZCxlpvdz+BiWgyuusza5U6WkWaHlchhiOtCNnLP06iNY/9vGLyBaxdC2mYQEv1RFBOP
+         gajGeV4hPZZAiFE6YWhmJowah+bAkNZDw8p2XHLqEhDipF9KvU8IZsn3OGVYl/HkzSyl
+         OnNwATbrLJpVk1iRh1hIUxz7cQpqebc5lCF9CkFpNDhSkNmg/VUr1La6suuDd+2Jztnk
+         tuGQ==
+X-Gm-Message-State: ANhLgQ0pFmpVbAkJpR653RgUenu6pQA3zo/jEzmk1FiTnmXJ60yebBd1
+        mErIZ0IrklV035IJVYrWW8Uvnw==
+X-Google-Smtp-Source: ADFU+vsGUV+u72QL3wvgmlf/0qF3uTbOK0AGnHQp1wLenHfJudPEtBeh7qETUWSHWBOUlfHBAmNGNA==
+X-Received: by 2002:a17:902:8546:: with SMTP id d6mr9174931plo.193.1585243683102;
+        Thu, 26 Mar 2020 10:28:03 -0700 (PDT)
+Received: from bsegall-glaptop.localhost (c-73-71-82-80.hsd1.ca.comcast.net. [73.71.82.80])
+        by smtp.gmail.com with ESMTPSA id u18sm2150070pfl.40.2020.03.26.10.28.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 10:28:01 -0700 (PDT)
+From:   bsegall@google.com
+To:     Huaixin Chang <changhuaixin@linux.alibaba.com>
+Cc:     linux-kernel@vger.kernel.org, shanpeic@linux.alibaba.com,
+        yun.wang@linux.alibaba.com, xlpang@linux.alibaba.com,
+        peterz@infradead.org, mingo@redhat.com, bsegall@google.com,
+        chiluk+linux@indeed.com, vincent.guittot@linaro.org
+Subject: Re: [PATCH v2] sched: Fix race between runtime distribution and assignment
+References: <20200325092602.22471-1-changhuaixin@linux.alibaba.com>
+        <20200326065606.19193-1-changhuaixin@linux.alibaba.com>
+Date:   Thu, 26 Mar 2020 10:27:59 -0700
+In-Reply-To: <20200326065606.19193-1-changhuaixin@linux.alibaba.com> (Huaixin
+        Chang's message of "Thu, 26 Mar 2020 14:56:06 +0800")
+Message-ID: <xm26v9mrni00.fsf@google.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-References: <20200324084821.29944-1-masahiroy@kernel.org> <20200324084821.29944-2-masahiroy@kernel.org>
- <CAKwvOd=AXnAjoa0iOhPc4S49ZpDDX9BYB-BZQc=6Z0dygVYLPA@mail.gmail.com> <CAK7LNATXz=x7M-HOfWLf1fc_km5qBYa5u1i3Bj30C7aoJPGjSA@mail.gmail.com>
-In-Reply-To: <CAK7LNATXz=x7M-HOfWLf1fc_km5qBYa5u1i3Bj30C7aoJPGjSA@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Thu, 26 Mar 2020 10:27:33 -0700
-Message-ID: <CAKwvOdmGLmbghDAguisUZFUvGiBQVnfEogAFCtXaDLPxOLVYmA@mail.gmail.com>
-Subject: Re: [PATCH 01/16] lib/raid6/test: fix build on distros whose /bin/sh
- is not bash
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Jim Kukunas <james.t.kukunas@linux.intel.com>,
-        NeilBrown <neilb@suse.de>,
-        Yuanhan Liu <yuanhan.liu@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 25, 2020 at 11:49 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Wed, Mar 25, 2020 at 1:36 AM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > On Tue, Mar 24, 2020 at 1:49 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> > >
-> > > You can test raid6 library code from user-space, like this:
-> > >
-> > >   $ cd lib/raid6/test
-> > >   $ make
-> > >
-> > > The command in $(shell ...) function is evaluated by /bin/sh by default.
-> > > (or, you can change the default shell by setting 'SHELL' in Makefile)
-> > >
-> > > Currently '>&/dev/null' is used to sink both stdout and stderr. Because
-> > > this code is bash-ism, it only works when /bin/sh is a symbolic link to
-> > > bash (this is the case on RHEL etc.)
-> > >
-> > > This does not work on Ubuntu where /bin/sh is a symbolic link to dash.
-> > >
-> > > I see lots of
-> > >
-> > >   /bin/sh: 1: Syntax error: Bad fd number
-> > >
-> > > and
-> > >
-> > >   warning "your version of binutils lacks ... support"
-> > >
-> > > Replace it with portable '>/dev/null 2>&1'.
-> > >
-> > > Fixes: 4f8c55c5ad49 ("lib/raid6: build proper files on corresponding arch")
-> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > > Acked-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> > > ---
-> > >
-> > >  lib/raid6/test/Makefile | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/lib/raid6/test/Makefile b/lib/raid6/test/Makefile
-> > > index 3ab8720aa2f8..b9e6c3648be1 100644
-> > > --- a/lib/raid6/test/Makefile
-> > > +++ b/lib/raid6/test/Makefile
-> > > @@ -35,13 +35,13 @@ endif
-> > >  ifeq ($(IS_X86),yes)
-> > >          OBJS   += mmx.o sse1.o sse2.o avx2.o recov_ssse3.o recov_avx2.o avx512.o recov_avx512.o
-> > >          CFLAGS += $(shell echo "pshufb %xmm0, %xmm0" |         \
-> > > -                    gcc -c -x assembler - >&/dev/null &&       \
-> > > +                    gcc -c -x assembler - >/dev/null 2>&1 &&   \
-> > >                      rm ./-.o && echo -DCONFIG_AS_SSSE3=1)
-> > >          CFLAGS += $(shell echo "vpbroadcastb %xmm0, %ymm1" |   \
-> > > -                    gcc -c -x assembler - >&/dev/null &&       \
-> > > +                    gcc -c -x assembler - >/dev/null 2>&1 &&   \
-> > >                      rm ./-.o && echo -DCONFIG_AS_AVX2=1)
-> > >         CFLAGS += $(shell echo "vpmovm2b %k1, %zmm5" |          \
-> > > -                   gcc -c -x assembler - >&/dev/null &&        \
-> > > +                   gcc -c -x assembler - >/dev/null 2>&1 &&    \
-> >
-> > These should all use $(CC) rather than hardcode gcc.
->
->
-> Right, I had noticed this.
->
-> We often fall between
-> "let's fix this too while we are here"
-> vs
-> "do not do multiple things in a single patch"
->
->
-> If we replace gcc -> $(CC),
-> we also need to touch line 51 for consistency:
->
->        gcc -c -x c - >/dev/null && rm ./-.o && echo yes)
->
-> ..., which is not our main interest now.
->
-> So, I leave it to a follow-up patch
-> if somebody has interest in it.
+Huaixin Chang <changhuaixin@linux.alibaba.com> writes:
 
-Haha, ok, no worries.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> Currently, there is a potential race between distribute_cfs_runtime()
+> and assign_cfs_rq_runtime(). Race happens when cfs_b->runtime is read,
+> distributes without holding lock and finds out there is not enough
+> runtime to charge against after distribution. Because
+> assign_cfs_rq_runtime() might be called during distribution, and use
+> cfs_b->runtime at the same time.
+>
+> Fibtest is the tool to test this race. Assume all gcfs_rq is throttled
+> and cfs period timer runs, slow threads might run and sleep, returning
+> unused cfs_rq runtime and keeping min_cfs_rq_runtime in their local
+> pool. If all this happens sufficiently quickly, cfs_b->runtime will drop
+> a lot. If runtime distributed is large too, over-use of runtime happens.
+>
+> A runtime over-using by about 70 percent of quota is seen when we
+> test fibtest on a 96-core machine. We run fibtest with 1 fast thread and
+> 95 slow threads in test group, configure 10ms quota for this group and
+> see the CPU usage of fibtest is 17.0%, which is far more than the
+> expected 10%.
+>
+> On a smaller machine with 32 cores, we also run fibtest with 96
+> threads. CPU usage is more than 12%, which is also more than expected
+> 10%. This shows that on similar workloads, this race do affect CPU
+> bandwidth control.
+>
+> Solve this by holding lock inside distribute_cfs_runtime().
 
--- 
-Thanks,
-~Nick Desaulniers
+Some minor requests below, other than that
+
+Reviewed-by: Ben Segall <bsegall@google.com>
+
+>
+> Fixes: c06f04c70489 ("sched: Fix potential near-infinite distribute_cfs_runtime() loop")
+> Signed-off-by: Huaixin Chang <changhuaixin@linux.alibaba.com>
+> ---
+> v2: fix spelling, initialize variable rumaining in distribute_cfs_runtime()
+> ---
+>  kernel/sched/fair.c | 31 ++++++++++++-------------------
+>  1 file changed, 12 insertions(+), 19 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index c1217bfe5e81..fd30e06a7ffc 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -4629,11 +4629,11 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+>  		resched_curr(rq);
+>  }
+>  
+> -static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+> +static void distribute_cfs_runtime(struct cfs_bandwidth *cfs_b)
+>  {
+>  	struct cfs_rq *cfs_rq;
+> -	u64 runtime;
+> -	u64 starting_runtime = remaining;
+> +	u64 runtime, remaining = 1;
+> +	unsigned long flags;
+>  
+>  	rcu_read_lock();
+>  	list_for_each_entry_rcu(cfs_rq, &cfs_b->throttled_cfs_rq,
+> @@ -4648,10 +4648,13 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+>  		/* By the above check, this should never be true */
+>  		SCHED_WARN_ON(cfs_rq->runtime_remaining > 0);
+>  
+> +		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+
+No need for _irqsave/_irqrestore, the rqlock already did.
+
+>  		runtime = -cfs_rq->runtime_remaining + 1;
+> -		if (runtime > remaining)
+> -			runtime = remaining;
+> -		remaining -= runtime;
+> +		if (runtime > cfs_b->runtime)
+> +			runtime = cfs_b->runtime;
+> +		cfs_b->runtime -= runtime;
+> +		remaining = cfs_b->runtime;
+> +		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+>  
+>  		cfs_rq->runtime_remaining += runtime;
+>  
+> @@ -4666,8 +4669,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+>  			break;
+>  	}
+>  	rcu_read_unlock();
+> -
+> -	return starting_runtime - remaining;
+>  }
+>  
+>  /*
+> @@ -4678,7 +4679,6 @@ static u64 distribute_cfs_runtime(struct cfs_bandwidth *cfs_b, u64 remaining)
+>   */
+>  static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, unsigned long flags)
+>  {
+> -	u64 runtime;
+>  	int throttled;
+>  
+>  	/* no need to continue the timer with no bandwidth constraint */
+> @@ -4708,23 +4708,17 @@ static int do_sched_cfs_period_timer(struct cfs_bandwidth *cfs_b, int overrun, u
+>  
+>  	/*
+>  	 * This check is repeated as we are holding onto the new bandwidth while
+> -	 * we unthrottle. This can potentially race with an unthrottled group
+> -	 * trying to acquire new bandwidth from the global pool. This can result
+> -	 * in us over-using our runtime if it is all used during this loop, but
+> -	 * only by limited amounts in that extreme case.
+> +	 * we unthrottle.
+
+"This check is repeated as we release cfs_b->lock while we unthrottle."
+or something like that. This code is no longer even holding onto the new
+bandwidth on its own.
+
+>  	 */
+>  	while (throttled && cfs_b->runtime > 0 && !cfs_b->distribute_running) {
+> -		runtime = cfs_b->runtime;
+>  		cfs_b->distribute_running = 1;
+>  		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+>  		/* we can't nest cfs_b->lock while distributing bandwidth */
+> -		runtime = distribute_cfs_runtime(cfs_b, runtime);
+> +		distribute_cfs_runtime(cfs_b);
+>  		raw_spin_lock_irqsave(&cfs_b->lock, flags);
+>  
+>  		cfs_b->distribute_running = 0;
+>  		throttled = !list_empty(&cfs_b->throttled_cfs_rq);
+> -
+> -		lsub_positive(&cfs_b->runtime, runtime);
+>  	}
+>  
+>  	/*
+> @@ -4858,10 +4852,9 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+>  	if (!runtime)
+>  		return;
+>  
+> -	runtime = distribute_cfs_runtime(cfs_b, runtime);
+> +	distribute_cfs_runtime(cfs_b);
+>  
+>  	raw_spin_lock_irqsave(&cfs_b->lock, flags);
+> -	lsub_positive(&cfs_b->runtime, runtime);
+>  	cfs_b->distribute_running = 0;
+>  	raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+>  }
