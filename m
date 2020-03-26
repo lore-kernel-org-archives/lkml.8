@@ -2,112 +2,213 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CA7AC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:46:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A46C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64AC82070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:46:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MRHiR+J1"
+	by mail.kernel.org (Postfix) with ESMTP id DD4852073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgCZJqn (ORCPT
+        id S1727848AbgCZJr4 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:46:43 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:43155 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727773AbgCZJqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:46:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585216001;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nmP9/4eydnX5iyBBhajAJRXc7M9FYD0cP2/UdQw5GkI=;
-        b=MRHiR+J1zotW8xiZgga/2oNeSOAcIq5XIoH47Ca/b5pMTPl+qkqn11UDtnFA+Z+t3hd7aX
-        +PE4YZ+xUp4ZumvfaG2fsVLEFy+YdMq1l3wqzJbbBYLmjBhr3RfSST8+N55QVeH3m+utub
-        LG6z2kPNgzr3vBoJa52QnqGD2HAMYD0=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-SDGffcIuPMSP9ZgLIpgrkg-1; Thu, 26 Mar 2020 05:46:39 -0400
-X-MC-Unique: SDGffcIuPMSP9ZgLIpgrkg-1
-Received: by mail-wr1-f71.google.com with SMTP id v6so2731200wrg.22
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 02:46:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nmP9/4eydnX5iyBBhajAJRXc7M9FYD0cP2/UdQw5GkI=;
-        b=GkIeUuxrMpt3QL1FSoo9oqRvlXmbf/TICkSM7LZuh+PPG4E2dqpAHFLylAmhcsWBUL
-         y0PhKlGJMpMJhM1ZoWl527qGSmNGCKvt3PSraXTjX7khaPzlCy+0qTlF1b60ERaLRGgf
-         xqpaomNI7+v2dA+4YtorWXIpwIWLoPPlCxQ+QB5UMB5svajyJkdp7bBc8T95yDgF9p4i
-         hitdXGghSAy9UIQm08fT0ehMqoH5PN0oINYwlkan7CBYbC/cpV/g4S9sbSLzGqAj4fde
-         FtUpOVME7eilj2D2WHi/ElkG0vVMAovsUTW1UtMMJLUQGFbRIMqoHVGNm/U9SAD123zt
-         EzuA==
-X-Gm-Message-State: ANhLgQ2LJSoE3j4GJQApkvCTLoVmjCcK0xKACyU2B2MRdkf3qicJQKFN
-        MWlvGz1Ncy0p14yVAUvBUyCBxME2O1QS3jUdg9m/pS5idtb6isOXLAYgs3gdKB/VSGtthC/BzbB
-        LQuarCWUL/KDO4sbxdCPLYDYH
-X-Received: by 2002:a1c:6885:: with SMTP id d127mr2260420wmc.33.1585215998425;
-        Thu, 26 Mar 2020 02:46:38 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vs2HiEIlBvxuqoG1NPUwv2DHm8ecXV4uGGxlIvnY/ct/LrMTIIEN3SuZPLvHBRJ1XX4In36cg==
-X-Received: by 2002:a1c:6885:: with SMTP id d127mr2260399wmc.33.1585215998141;
-        Thu, 26 Mar 2020 02:46:38 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
-        by smtp.gmail.com with ESMTPSA id y189sm2854521wmb.26.2020.03.26.02.46.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Mar 2020 02:46:37 -0700 (PDT)
-Subject: Re: [PATCH 0/3] KVM: X86: Single target IPI fastpath enhancement
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1585189202-1708-1-git-send-email-wanpengli@tencent.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <353a0717-4c97-9945-caa9-10037274f4a8@redhat.com>
-Date:   Thu, 26 Mar 2020 10:46:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1585189202-1708-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=windows-1252
+        Thu, 26 Mar 2020 05:47:56 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2606 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726292AbgCZJrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:47:55 -0400
+Received: from lhreml705-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 94680B43317A3F13F0F7;
+        Thu, 26 Mar 2020 09:47:53 +0000 (GMT)
+Received: from lhreml711-chm.china.huawei.com (10.201.108.62) by
+ lhreml705-cah.china.huawei.com (10.201.108.46) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 26 Mar 2020 09:47:52 +0000
+Received: from lhreml715-chm.china.huawei.com (10.201.108.66) by
+ lhreml711-chm.china.huawei.com (10.201.108.62) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Thu, 26 Mar 2020 09:47:52 +0000
+Received: from lhreml715-chm.china.huawei.com ([10.201.108.66]) by
+ lhreml715-chm.china.huawei.com ([10.201.108.66]) with mapi id 15.01.1713.004;
+ Thu, 26 Mar 2020 09:47:52 +0000
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
+        "james.morse@arm.com" <james.morse@arm.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "zhangliguang@linux.alibaba.com" <zhangliguang@linux.alibaba.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Linuxarm <linuxarm@huawei.com>,
+        Jonathan Cameron <jonathan.cameron@huawei.com>,
+        tanxiaofei <tanxiaofei@huawei.com>,
+        yangyicong <yangyicong@huawei.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: RE: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
+ controller errors
+Thread-Topic: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
+ controller errors
+Thread-Index: AQHWAsv5Pa1C0kaXt0i5HExQ9lFwB6haoF/g
+Date:   Thu, 26 Mar 2020 09:47:52 +0000
+Message-ID: <d1f2f313ea8e45689b5818489759faac@huawei.com>
+References: <24330bd8-afaa-d7ac-594c-f9fda4242400@huawei.com>
+ <20200325173639.GA484@google.com>
+In-Reply-To: <20200325173639.GA484@google.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.47.27.105]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/03/20 03:19, Wanpeng Li wrote:
-> The original single target IPI fastpath patch forgot to filter the 
-> ICR destination shorthand field. Multicast IPI is not suitable for 
-> this feature since wakeup the multiple sleeping vCPUs will extend 
-> the interrupt disabled time, it especially worse in the over-subscribe 
-> and VM has a little bit more vCPUs scenario. Let's narrow it down to 
-> single target IPI. In addition, this patchset micro-optimize virtual 
-> IPI emulation sequence for fastpath.
-> 
-> Wanpeng Li (3):
->   KVM: X86: Delay read msr data iff writes ICR MSR
->   KVM: X86: Narrow down the IPI fastpath to single target IPI
->   KVM: X86: Micro-optimize IPI fastpath delay
-> 
->  arch/x86/kvm/lapic.c |  4 ++--
->  arch/x86/kvm/lapic.h |  1 +
->  arch/x86/kvm/x86.c   | 14 +++++++++++---
->  3 files changed, 14 insertions(+), 5 deletions(-)
-> 
+Hi Bjorn,
 
-Queued 2 for 5.6 and 1-3 for 5.7, thanks.
+Thanks for the feedbacks.
 
-Paolo
+>-----Original Message-----
+>From: Bjorn Helgaas [mailto:helgaas@kernel.org]
+>Sent: 25 March 2020 17:37
+>To: Shiju Jose <shiju.jose@huawei.com>
+>Cc: linux-acpi@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>kernel@vger.kernel.org; rjw@rjwysocki.net; lenb@kernel.org; bp@alien8.de;
+>james.morse@arm.com; tony.luck@intel.com; gregkh@linuxfoundation.org;
+>zhangliguang@linux.alibaba.com; tglx@linutronix.de; Linuxarm
+><linuxarm@huawei.com>; Jonathan Cameron
+><jonathan.cameron@huawei.com>; tanxiaofei <tanxiaofei@huawei.com>;
+>yangyicong <yangyicong@huawei.com>; Dan Carpenter
+><dan.carpenter@oracle.com>
+>Subject: Re: [PATCH v5 2/2] PCI: HIP: Add handling of HiSilicon HIP PCIe
+>controller errors
+>
+>[+cc Dan]
+>
+>On Wed, Mar 25, 2020 at 01:55:18PM +0000, Shiju Jose wrote:
+>> The HiSilicon HIP PCIe controller is capable of handling errors on
+>> root port and perform port reset separately at each root port.
+>>
+>> This patch add error handling driver for HIP PCIe controller to log
+>> and report recoverable errors. Perform root port reset and restore
+>> link status after the recovery.
+>>
+>> Following are some of the PCIe controller's recoverable errors 1.
+>> completion transmission timeout error.
+>> 2. CRS retry counter over the threshold error.
+>> 3. ECC 2 bit errors
+>> 4. AXI bresponse/rresponse errors etc.
+>>
+>> Also fix the following Smatch warning:
+>> warn: should '((((1))) << (9 + i))' be a 64 bit type?
+>> if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+>>      ^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+>
+>I'm glad you did this fix, and thanks for acknowledging Dan, but I don't think it's
+>necessary to mention it in the commit log here because it won't really be useful
+>in the future.  It's only relevant when comparing the unmerged versions of this
+>series, e.g., v4 compared to v3.
+Sure. We will delete this.
 
+>
+>If we were fixing something that's already been merged upstream, we should
+>absolutely include this, but since this hasn't been merged yet Dan's report is
+>basically the same as other review comments, which we normally just address
+>and mention in the change history in the [0/n] cover letter (as you're already
+>doing, thanks for that!).
+
+>
+>Also, I think it's nice to CC: anybody who has commented on previous versions
+>of the patch series, so I added Dan to the CC: list here.
+>That way he can chime in if we're not addressing his report correctly.
+>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+>> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+>> --
+>> drivers/pci/controller/Kconfig           |   8 +
+>> drivers/pci/controller/Makefile          |   1 +
+>> drivers/pci/controller/pcie-hisi-error.c | 336
+>> +++++++++++++++++++++++++++++++
+>> 3 files changed, 345 insertions(+)
+>> create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+>
+>As I mentioned in the other message, I think this file should be
+>drivers/pci/controller/dwc/pcie-hisi-error.c so it's right next to pcie-hisi.c.  If
+>there's some reason it needs to be here instead, please mention that in the
+>commit log.
+>
+>> ---
+>>  drivers/pci/controller/Kconfig           |   8 +
+>>  drivers/pci/controller/Makefile          |   1 +
+>>  drivers/pci/controller/pcie-hisi-error.c | 357
+>> +++++++++++++++++++++++
+>>  3 files changed, 366 insertions(+)
+>>  create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+>
+>> +struct hisi_pcie_err_data {
+>> +	u64   val_bits;
+>> +	u8    version;
+>> +	u8    soc_id;
+>> +	u8    socket_id;
+>> +	u8    nimbus_id;
+>> +	u8    sub_module_id;
+>> +	u8    core_id;
+>> +	u8    port_id;
+>> +	u8    err_severity;
+>> +	u16   err_type;
+>> +	u8    reserv[2];
+>> +	u32   err_misc[HISI_PCIE_ERR_MISC_REGS];
+>> +};
+>> +
+>> +struct hisi_pcie_err_info {
+>> +	struct hisi_pcie_err_data err_data;
+>> +	struct platform_device *pdev;
+>> +};
+>> +
+>> +struct hisi_pcie_err_private {
+>> +	struct notifier_block nb;
+>> +	struct platform_device *pdev;
+>> +};
+>
+>Either align all the struct members or none of them.  Currently
+>hisi_pcie_err_data is aligned but hisi_pcie_err_info and hisi_pcie_err_private
+>are not.
+We will align the structures. 
+
+>
+>> +	/* Call the ACPI handle to reset root port */
+>
+>Superfluous comment.
+We will remove this comment.
+ 
+>
+>> +	s = acpi_evaluate_integer(handle, "RST", &arg_list, &data);
+>> +	if (ACPI_FAILURE(s)) {
+>> +		dev_err(dev, "No RST method\n");
+>> +		return -EIO;
+>> +	}
+>
+>> +static void hisi_pcie_handle_one_error(const struct
+>> +hisi_pcie_err_data
+>> *err,
+>> +				    struct platform_device *pdev)
+>
+>Align "struct platform_device ..." under "const struct hisi_pcie_err_data ...".
+sure.
+
+>
+>Bjorn
+
+Thanks,
+Shiju
