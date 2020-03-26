@@ -2,146 +2,115 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984B0C2D0EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A18C2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A682082D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B06D207FC
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 04:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U2j9vCU/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NXJHsvIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbgCZEF3 (ORCPT
+        id S1726279AbgCZERp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 00:05:29 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:57163 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725306AbgCZEF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 00:05:29 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nrxK27Brz9sRf;
-        Thu, 26 Mar 2020 15:05:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1585195526;
-        bh=y6wc+bAg2cv8RRvpmTntAaNF+jfJE2C9OgwhDstWIzM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=U2j9vCU/dqjvazpizlGlL3cNB/2fpPWqjxWhg+ocMefazmHXVT2TJCU3EyfreJJ7X
-         +/p32uP1yzStkOOxx3LFYE6BBOYc6vvpI8iOgUw5uiLGWsK4Pv7cpU0Hjm2BJYwM56
-         PRG6hYPzICS6b5L/tsy++FJiOma3c75MT8qZCyPHCANe4uKM5vVh+bDATaDcAOx00m
-         bM2eU0ATdfQ5iceLd/8dcIXALovR/gYNmF9smGzR4SksN9U+y0wh2BFs+4lO9bInoY
-         aJT3ISN8813x3Dp8LbtSOWEVBgARuZkUu7VOF9ZWeHTZYJHwWEm3AHLw2Np6OX6qpr
-         Eyn9m9arNxrqQ==
-Date:   Thu, 26 Mar 2020 15:05:23 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Gayatri Kammela <gayatri.kammela@intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: linux-next: manual merge of the drivers-x86 tree with the tip tree
-Message-ID: <20200326150523.02c4ec48@canb.auug.org.au>
+        Thu, 26 Mar 2020 00:17:45 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43185 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725842AbgCZERo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 00:17:44 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a5so4232795qtw.10;
+        Wed, 25 Mar 2020 21:17:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fHENaFwhjg8MWbs9vsqxRQSS59TKIMR/3p0Xb3bb18k=;
+        b=NXJHsvIyKikoFaqS2xXynvDQ3DC3REU/yyiojhLAa9Vh7tA5nBu+PKWLD+LgkwWUa8
+         I8n30GSrOr04sbs6B/KIlZ68ilysIEh3KpBBo2C3nKrW91Hp+bjbw8flv4tL3AADcPgU
+         4BMYkYee/KRH7/TFWRnvn/nXm5vScqBwfAQUuLIvE2xHDbZPBWPg66w5tUpv8qG3rv0s
+         mbUFnF0rdesdUD7fCBeuGkikL8w+W0dZ6iny2jUAjJNAoyYdWonRjSwEJ5MPp6xtlwD9
+         XgBXrEyXI0u8gMsV5M1mquiPJC+0m21BLJ6OGndGgetRn0oFnXZQB9pM9QW1XaRqxHDy
+         wVNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fHENaFwhjg8MWbs9vsqxRQSS59TKIMR/3p0Xb3bb18k=;
+        b=BEw6rP/KJuyR88pmMVvJtbr/Kwxhje5jNgCmjYSNzud34DhK0bzGRxJqSVdZluAuPj
+         YsKy8OlIGJMzp7HYMRP0WLtxCbIlyPNKkQB55RCOlAaS8Cv4DTP9V7V8St+Ebpu41MUm
+         pMxzU+x3wYkB5pRttzUcQfVAW4TGazqngYLCnOS94ktQhC+DxcWufPXWZgLHaniVcmPj
+         8wTUrzyihOFNUGjtd3+OH7r+MEB7tfRzF8JXIwOZeLWpiTRJXBydsMY/D/n2Cu5RGyd2
+         TWXIqeeOP9M+gKbgTIWNIoujQlfXrWdf8Ddy/ocj8f0wnY7jZO8edpVQ25Z57wph5I9g
+         +Gqg==
+X-Gm-Message-State: ANhLgQ0Gqd76bNwLabPrhxBSADcWy4S5E5pPTIcQxKGV/Qn0cZc58Mgz
+        XB1LDXvt9UXFKztJrjPl+DeuybEmZ4y4G+StMi8=
+X-Google-Smtp-Source: ADFU+vvyvipOj8rsPkAgiIMk18Cbe+Y0jlQySYFKCUfo/wKMOuZawNX+BWxy/hR2o/RxP9Lgicfvigq8Qxfngbcofj0=
+X-Received: by 2002:ac8:1865:: with SMTP id n34mr6031028qtk.93.1585196262155;
+ Wed, 25 Mar 2020 21:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/siu_20fGEtIi5bWhFcgiQ/a";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20200326031613.19372-1-yuehaibing@huawei.com>
+In-Reply-To: <20200326031613.19372-1-yuehaibing@huawei.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 25 Mar 2020 21:17:30 -0700
+Message-ID: <CAEf4BzbeXgvahiDcV+bkMOrgud6-BryPaKUPV+eDQ=TjjqZaLA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] bpf: remove unused vairable 'bpf_xdp_link_lops'
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        john fastabend <john.fastabend@gmail.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/siu_20fGEtIi5bWhFcgiQ/a
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 25, 2020 at 8:16 PM YueHaibing <yuehaibing@huawei.com> wrote:
+>
+> kernel/bpf/syscall.c:2263:34: warning: 'bpf_xdp_link_lops' defined but not used [-Wunused-const-variable=]
+>  static const struct bpf_link_ops bpf_xdp_link_lops;
+>                                   ^~~~~~~~~~~~~~~~~
+>
+> commit 70ed506c3bbc ("bpf: Introduce pinnable bpf_link abstraction")
+> involded this unused variable, remove it.
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
 
-Hi all,
+Yeah, I noticed this when I was adding bpf_cgroup_link (and replaced
+this declaration with bpf_cgroup_link_lops. But I guess we can fix it
+sooner.
 
-Today's linux-next merge of the drivers-x86 tree got a conflict in:
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-  drivers/platform/x86/intel_pmc_core.c
-
-between commit:
-
-  a69b3b1d4cf0 ("platform/x86: Convert to new CPU match macros")
-
-from the tip tree and commit:
-
-  16292bed9c56 ("platform/x86: intel_pmc_core: Add Atom based Jasper Lake (=
-JSL) platform support")
-
-from the drivers-x86 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/platform/x86/intel_pmc_core.c
-index 3df33ff50faa,d265cd5b1f45..000000000000
---- a/drivers/platform/x86/intel_pmc_core.c
-+++ b/drivers/platform/x86/intel_pmc_core.c
-@@@ -871,18 -1144,19 +1144,19 @@@ static inline void pmc_core_dbgfs_unreg
-  #endif /* CONFIG_DEBUG_FS */
- =20
-  static const struct x86_cpu_id intel_pmc_core_ids[] =3D {
- -	INTEL_CPU_FAM6(SKYLAKE_L, spt_reg_map),
- -	INTEL_CPU_FAM6(SKYLAKE, spt_reg_map),
- -	INTEL_CPU_FAM6(KABYLAKE_L, spt_reg_map),
- -	INTEL_CPU_FAM6(KABYLAKE, spt_reg_map),
- -	INTEL_CPU_FAM6(CANNONLAKE_L, cnp_reg_map),
- -	INTEL_CPU_FAM6(ICELAKE_L, icl_reg_map),
- -	INTEL_CPU_FAM6(ICELAKE_NNPI, icl_reg_map),
- -	INTEL_CPU_FAM6(COMETLAKE, cnp_reg_map),
- -	INTEL_CPU_FAM6(COMETLAKE_L, cnp_reg_map),
- -	INTEL_CPU_FAM6(TIGERLAKE_L, tgl_reg_map),
- -	INTEL_CPU_FAM6(TIGERLAKE, tgl_reg_map),
- -	INTEL_CPU_FAM6(ATOM_TREMONT, tgl_reg_map),
- -	INTEL_CPU_FAM6(ATOM_TREMONT_L, tgl_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE_L,		&spt_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(SKYLAKE,		&spt_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE_L,		&spt_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(KABYLAKE,		&spt_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(CANNONLAKE_L,	&cnp_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_L,		&icl_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(ICELAKE_NNPI,	&icl_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE,		&cnp_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(COMETLAKE_L,		&cnp_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE_L,		&tgl_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(TIGERLAKE,		&tgl_reg_map),
- +	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT,	&tgl_reg_map),
-++	X86_MATCH_INTEL_FAM6_MODEL(ATOM_TREMONT_L,	&tgl_reg_map),
-  	{}
-  };
- =20
-
---Sig_/siu_20fGEtIi5bWhFcgiQ/a
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl58KgMACgkQAVBC80lX
-0Gw1TAgAmQ9ahkh4EuK3YQBH9Rtz/xdNsXRZ0OO7DtrjYtr1xxTeBuJu5y52y0KR
-mw3WKu1hCmD0bVmhqBZyib0HRxaFtPlHj9sTnJ/XGG/JufVIRPxolJY8bGlnamdP
-Yc0aA1x454YUmJ6GrC5kc1rqQDbAgxiES+eTbTF/dJrM6dVgmLR7v3GkGTL9uWmA
-vP6niD0BWAAHtXJZ9aQDOuirf9zxG8LZB/9/qU8Fk5gF1eFdXvYJu+FvqH3MOJSi
-9jC/uw4LrIx6MRTo88bFwSmkt8vwz+b9DBxLsyVfCKung5ouCquzym82Mo8d1DBU
-qOderz/La/5aJ6yv74cZIXfQ89nozw==
-=4db6
------END PGP SIGNATURE-----
-
---Sig_/siu_20fGEtIi5bWhFcgiQ/a--
+>  kernel/bpf/syscall.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 85567a6ea5f9..7774e55c9881 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -2252,7 +2252,6 @@ static int bpf_link_release(struct inode *inode, struct file *filp)
+>  #ifdef CONFIG_PROC_FS
+>  static const struct bpf_link_ops bpf_raw_tp_lops;
+>  static const struct bpf_link_ops bpf_tracing_link_lops;
+> -static const struct bpf_link_ops bpf_xdp_link_lops;
+>
+>  static void bpf_link_show_fdinfo(struct seq_file *m, struct file *filp)
+>  {
+> --
+> 2.17.1
+>
+>
