@@ -2,215 +2,172 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F656C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8DD4C2D0E9
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1855D2070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86E1E2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 19:14:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585250088;
+	bh=dApfC/BGFaA1bhwnJYqIGGbxr9bhUJ1IHIm0PEL1xaE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WnWyyxqMrUpHfPRnOndOqRzB9ltuiRFhpYzn5hi0Tzt4OlKCYJbp2rhQof+1CqBnb
+	 XdjdhuVw699GYii+Gw5BhO+kve/rKwU1LcJLL/ZKZw9FcQwsntCGK0Man1Ha1/iRZm
+	 pleICahLU+8IT8IwWf3Nl7RK3b7e72Z9ZDX4jdRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbgCZTOS (ORCPT
+        id S1728437AbgCZTOr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 15:14:18 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52240 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgCZTOR (ORCPT
+        Thu, 26 Mar 2020 15:14:47 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:38475 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgCZTOr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 15:14:17 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id 530B4297A10
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Jeffrey Kardatzke <jkardatzke@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org,
-        Ezequiel Garcia <ezequiel@collabora.com>
-Subject: [PATCH v4] dt-bindings: rockchip-vpu: Convert bindings to json-schema
-Date:   Thu, 26 Mar 2020 16:13:43 -0300
-Message-Id: <20200326191343.1989-1-ezequiel@collabora.com>
-X-Mailer: git-send-email 2.26.0.rc2
-In-Reply-To: <20200325213439.16509-8-ezequiel@collabora.com>
-References: <20200325213439.16509-8-ezequiel@collabora.com>
+        Thu, 26 Mar 2020 15:14:47 -0400
+Received: by mail-oi1-f196.google.com with SMTP id w2so6592464oic.5;
+        Thu, 26 Mar 2020 12:14:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QXEle+ZD53+MFHWcLgdRW1ZIu+1OkbpjksE2lr+1gKg=;
+        b=WNF38S/M/dFbhm+YapzzoP5MEt1c3ageOc5gu4bQMXKoeRqwopcFbc/5AqfjBfrGDa
+         NVUdWFairNhwluzfIHXGGgqOGujiVE6SzivgmkQWy6j+rDEuNsPya2IQ2HiW7PXK69pG
+         vve/OJyoHD0jVf4/+attRuADZr7l3kDedXxT2r864xOBa7kEIxN23Q9f+s7EJuZld56/
+         8Imf3xW3lw1p+n/L9wvITImNYbg7Veo4J59vUQhRfv6rJ0iarhK3t4hEKrgeBO+cpeMK
+         zn6YAcjUWAU3W4K5zv+8fgBKn8eBYCy8tTzBmQrVI9RPMRFGCzrVunDP4FnTeuYu9P6v
+         /cnQ==
+X-Gm-Message-State: ANhLgQ3MV4WHCesfQSvo62CMpS2UnHRu4cgqjkO4qrYj/do0KHjcTH/b
+        Ry0S6yML3XkKZRGIfJy6wRPfqC8nlYxI6TRjCSA=
+X-Google-Smtp-Source: ADFU+vsfTSr1oKjoNtVzFV6kqJLSFnimlr7Skrn5pUSOrTjmvEX49Crb7bSqm4rySP49deJhBqwBJs2Mm4RbPbj6rDQ=
+X-Received: by 2002:aca:5155:: with SMTP id f82mr1398128oib.103.1585250086360;
+ Thu, 26 Mar 2020 12:14:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200326144630.15011-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20200326144630.15011-1-daniel.lezcano@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 26 Mar 2020 20:14:34 +0100
+Message-ID: <CAJZ5v0iDuv0doOzFd140A17fhLKsdgZXbc_XMOuhUeDt70Jz+g@mail.gmail.com>
+Subject: Re: [PATCH] powercap/drivers/idle_inject: Specify idle state max latency
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "open list:POWER MANAGEMENT CORE" <linux-pm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert Rockchip VPU (Hantro IP block) codec driver documentation to
-json-schema.
+On Thu, Mar 26, 2020 at 3:48 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> Currently the idle injection framework uses the play_idle() function
+> which puts the current CPU in an idle state. The idle state is the
+> deepest one, as specified by the latency constraint when calling the
+> subsequent play_idle_precise() function with the INT_MAX.
+>
+> The idle_injection is used by the cpuidle_cooling device which
+> computes the idle / run duration to mitigate the temperature by
+> injecting idle cycles. The cooling device has no control on the depth
+> of the idle state.
+>
+> Allow finer control of the idle injection mechanism by allowing to
+> specify the latency for the idle state. Thus the cooling device has
+> the ability to have a guarantee on the exit latency of the idle states
+> it is injecting.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  drivers/powercap/idle_inject.c | 27 ++++++++++++++++++++++++++-
+>  include/linux/idle_inject.h    |  6 ++++++
+>  2 files changed, 32 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+> index cd1270614cc6..15e6f9b8023f 100644
+> --- a/drivers/powercap/idle_inject.c
+> +++ b/drivers/powercap/idle_inject.c
+> @@ -61,12 +61,14 @@ struct idle_inject_thread {
+>   * @timer: idle injection period timer
+>   * @idle_duration_us: duration of CPU idle time to inject
+>   * @run_duration_us: duration of CPU run time to allow
+> + * @latency_us: max allowed latency
+>   * @cpumask: mask of CPUs affected by idle injection
+>   */
+>  struct idle_inject_device {
+>         struct hrtimer timer;
+>         unsigned int idle_duration_us;
+>         unsigned int run_duration_us;
+> +       unsigned int latency_us;
+>         unsigned long int cpumask[0];
+>  };
+>
+> @@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
+>          */
+>         iit->should_run = 0;
+>
+> -       play_idle(READ_ONCE(ii_dev->idle_duration_us));
+> +       play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
+> +                         READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
+>  }
+>
+>  /**
+> @@ -169,6 +172,27 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+>         *idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
+>  }
+>
+> +/**
+> + * idle_inject_set_latency - set the maximum latency allowed
+> + * @latency_us: set the latency requirement for the idle state
+> + */
+> +void idle_inject_set_latency(struct idle_inject_device *ii_dev,
+> +                            unsigned int latency_us)
+> +{
+> +       WRITE_ONCE(ii_dev->latency_us, latency_us);
+> +}
+> +
+> +/**
+> + * idle_inject_get_latency - get the allowed latency
+> + *
+> + * Return: an unsigned int corresponding to the latency requirement
+> + * for the idle state
+> + */
+> +unsigned int idle_inject_get_latency(struct idle_inject_device *ii_dev)
+> +{
+> +       return READ_ONCE(ii_dev->latency_us);
+> +}
+> +
+>  /**
+>   * idle_inject_start - start idle injections
+>   * @ii_dev: idle injection control device structure
+> @@ -297,6 +321,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
+>         cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
+>         hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+>         ii_dev->timer.function = idle_inject_timer_fn;
+> +       ii_dev->latency_us = UINT_MAX;
+>
+>         for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
+>
+> diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
+> index a445cd1a36c5..b573fee589b9 100644
+> --- a/include/linux/idle_inject.h
+> +++ b/include/linux/idle_inject.h
+> @@ -26,4 +26,10 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
+>  void idle_inject_get_duration(struct idle_inject_device *ii_dev,
+>                                  unsigned int *run_duration_us,
+>                                  unsigned int *idle_duration_us);
+> +
+> +void idle_inject_set_latency(struct idle_inject_device *ii_dev,
+> +                            unsigned int latency_ns);
+> +
+> +unsigned int idle_inject_get_latency(struct idle_inject_device *ii_dev);
+> +
+>  #endif /* __IDLE_INJECT_H__ */
+> --
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
----
-v4:
-* Fix issues pointed out by Rob,
-  and make sure now dt_binding_check passes.
-
- .../bindings/media/rockchip-vpu.txt           | 43 -----------
- .../bindings/media/rockchip-vpu.yaml          | 74 +++++++++++++++++++
- MAINTAINERS                                   |  2 +-
- 3 files changed, 75 insertions(+), 44 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-
-diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.txt b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
-deleted file mode 100644
-index 339252d9c515..000000000000
---- a/Documentation/devicetree/bindings/media/rockchip-vpu.txt
-+++ /dev/null
-@@ -1,43 +0,0 @@
--device-tree bindings for rockchip VPU codec
--
--Rockchip (Video Processing Unit) present in various Rockchip platforms,
--such as RK3288, RK3328 and RK3399.
--
--Required properties:
--- compatible: value should be one of the following
--		"rockchip,rk3288-vpu";
--		"rockchip,rk3328-vpu";
--		"rockchip,rk3399-vpu";
--- interrupts: encoding and decoding interrupt specifiers
--- interrupt-names: should be
--		"vepu", "vdpu" on RK3288 and RK3399,
--		"vdpu" on RK3328.
--- clocks: phandle to VPU aclk, hclk clocks
--- clock-names: should be "aclk" and "hclk"
--- power-domains: phandle to power domain node
--- iommus: phandle to a iommu node
--
--Example:
--SoC-specific DT entry:
--	vpu: video-codec@ff9a0000 {
--		compatible = "rockchip,rk3288-vpu";
--		reg = <0x0 0xff9a0000 0x0 0x800>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "vepu", "vdpu";
--		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
--		clock-names = "aclk", "hclk";
--		power-domains = <&power RK3288_PD_VIDEO>;
--		iommus = <&vpu_mmu>;
--	};
--
--	vpu: video-codec@ff350000 {
--		compatible = "rockchip,rk3328-vpu";
--		reg = <0x0 0xff350000 0x0 0x800>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--		interrupt-names = "vdpu";
--		clocks = <&cru ACLK_VPU>, <&cru HCLK_VPU>;
--		clock-names = "aclk", "hclk";
--		power-domains = <&power RK3328_PD_VPU>;
--		iommus = <&vpu_mmu>;
--	};
-diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.yaml b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-new file mode 100644
-index 000000000000..d7a42e6f9bcf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-vpu.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/media/rockchip-vpu.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Hantro G1 VPU codecs implemented on Rockchip SoCs
-+
-+maintainers:
-+  - Ezequiel Garcia <ezequiel@collabora.com>
-+
-+description:
-+  Hantro G1 video encode and decode accelerators present on Rockchip SoCs.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - rockchip,rk3288-vpu
-+      - rockchip,rk3328-vpu
-+      - rockchip,rk3399-vpu
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 2
-+
-+  interrupt-names:
-+    items:
-+      - const: vepu
-+      - const: vdpu
-+
-+  clocks:
-+    maxItems: 2
-+
-+  clock-names:
-+    items:
-+      - const: aclk
-+      - const: hclk
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  iommus:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+        #include <dt-bindings/clock/rk3288-cru.h>
-+        #include <dt-bindings/interrupt-controller/arm-gic.h>
-+        #include <dt-bindings/power/rk3288-power.h>
-+
-+        vpu: video-codec@ff9a0000 {
-+                compatible = "rockchip,rk3288-vpu";
-+                reg = <0x0 0xff9a0000 0x0 0x800>;
-+                interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+                             <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+                interrupt-names = "vepu", "vdpu";
-+                clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
-+                clock-names = "aclk", "hclk";
-+                power-domains = <&power RK3288_PD_VIDEO>;
-+                iommus = <&vpu_mmu>;
-+        };
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d66ac41ef587..2b8b3e7f3df3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -14320,7 +14320,7 @@ L:	linux-rockchip@lists.infradead.org
- S:	Maintained
- F:	drivers/staging/media/hantro/
- F:	Documentation/devicetree/bindings/media/nxp,imx8mq-vpu.yaml
--F:	Documentation/devicetree/bindings/media/rockchip-vpu.txt
-+F:	Documentation/devicetree/bindings/media/rockchip-vpu.yaml
- 
- ROCKER DRIVER
- M:	Jiri Pirko <jiri@resnulli.us>
--- 
-2.26.0.rc2
-
+I would like to see a user of idle_inject_get_latency() before this goes in.
