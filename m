@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E8AC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CD7C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55C7206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E26206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:02:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="TPV+j3xY"
+	dkim=temperror (0-bit key) header.d=phytec.de header.i=@phytec.de header.b="g2hoOhE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgCZPCF (ORCPT
+        id S1727979AbgCZPCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:02:05 -0400
+        Thu, 26 Mar 2020 11:02:08 -0400
 Received: from mickerik.phytec.de ([195.145.39.210]:46414 "EHLO
         mickerik.phytec.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZPCF (ORCPT
+        with ESMTP id S1727895AbgCZPCG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:02:05 -0400
+        Thu, 26 Mar 2020 11:02:06 -0400
 DKIM-Signature: v=1; a=rsa-sha256; d=phytec.de; s=a1; c=relaxed/simple;
         q=dns/txt; i=@phytec.de; t=1585234924; x=1587826924;
         h=From:Sender:Reply-To:Subject:Date:Message-Id:To:Cc:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=z2mlDmUTVL8bamKSgP9kkGknh9FvkyYg3rvvPm37X4Q=;
-        b=TPV+j3xYLPi/szZNWzSPvj3Qxqy6XFqbU9pzIWY+kiVsdQk7SPqydxOYrVrvc5pk
-        6Bg/i+jxtn1wEgqbpEwOAKfvQDyje+Ndkr1dBM7jC+FjAZeXHpIxExFOj6i+UMuG
-        gRBT2lreLWnhDVN98uBuNizfGUCe4I3Xy+6d9ldVM2E=;
-X-AuditID: c39127d2-583ff70000001db9-a4-5e7cc3ecbc8d
+        bh=ZtaKUFL4WFPqauqkay4ZKL991OIGk+dXJk8/oBMqrxM=;
+        b=g2hoOhE/uF2KCdfKa2xcZv4hOkncq+ytoBl8JK7seW5JWgwrhwfEgnDo/tHacGu+
+        GjMGxETN0Efe1/h/QtaLdYJs2ityWdE6S1uFrClSN+OEjcIBttPY79xRCqq23NXF
+        yPRUNnMZhTk60FqR6ilFGTofofaoAXjvkmPY1KifumA=;
+X-AuditID: c39127d2-583ff70000001db9-a6-5e7cc3ec7c4b
 Received: from idefix.phytec.de (Unknown_Domain [172.16.0.10])
-        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id 14.1C.07609.CE3CC7E5; Thu, 26 Mar 2020 16:02:04 +0100 (CET)
+        by mickerik.phytec.de (PHYTEC Mail Gateway) with SMTP id D4.1C.07609.CE3CC7E5; Thu, 26 Mar 2020 16:02:04 +0100 (CET)
 Received: from augenblix2.phytec.de ([172.16.0.56])
           by idefix.phytec.de (IBM Domino Release 9.0.1FP7)
-          with ESMTP id 2020032616020393-89374 ;
-          Thu, 26 Mar 2020 16:02:03 +0100 
+          with ESMTP id 2020032616020440-89376 ;
+          Thu, 26 Mar 2020 16:02:04 +0100 
 From:   Stefan Riedmueller <s.riedmueller@phytec.de>
 To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Support Opensource <support.opensource@diasemi.com>
 Cc:     linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] watchdog: da9062: Use pre-configured timeout until userspace takes over
-Date:   Thu, 26 Mar 2020 16:02:01 +0100
-Message-Id: <20200326150203.371673-1-s.riedmueller@phytec.de>
+Subject: [PATCH 3/3] watchdog: da9062: No need to ping manually before setting timeout
+Date:   Thu, 26 Mar 2020 16:02:03 +0100
+Message-Id: <20200326150203.371673-3-s.riedmueller@phytec.de>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200326150203.371673-1-s.riedmueller@phytec.de>
+References: <20200326150203.371673-1-s.riedmueller@phytec.de>
 MIME-Version: 1.0
 X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17, 2016) at
  26.03.2020 16:02:04,
@@ -56,76 +58,55 @@ X-MIMETrack: Itemize by SMTP Server on Idefix/Phytec(Release 9.0.1FP7|August  17
  26.03.2020 16:02:04
 X-TNEFEvaluated: 1
 Content-Transfer-Encoding: quoted-printable
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOLMWRmVeSWpSXmKPExsWyRoCBS/fN4Zo4g9VL+C0u75rDZnFj3T52
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsWyRoCBS/fN4Zo4g0fXNS0u75rDZnFj3T52
         iycLzzBZ7G29yGzx+OU/ZgdWjxWf9D1WrlnD6rHzewO7x+dNcgEsUVw2Kak5mWWpRfp2CVwZ
-        H28ZFXTxVfzf0s3ewPiSu4uRk0NCwETi3oerjF2MXBxCAlsZJfrvNbJAOOcYJZ7/vcQGUsUm
-        YCSxYFojE0hCRKCNUWLP0VmMIAlmAQeJx3MfgtnCAjES27ZMZgKxWQRUJZq+7GUGsXkFbCWu
-        tLcD2RxA6+QlDh/KgggLSpyc+QRsmYTAFUaJ47d7WCBOEpI4vfgsM8R8bYllC18zT2Dkm4Wk
-        ZxaS1AJGplWMQrmZydmpRZnZegUZlSWpyXopqZsYgYF3eKL6pR2MfXM8DjEycTAeYpTgYFYS
-        4X0aWRMnxJuSWFmVWpQfX1Sak1p8iFGag0VJnHcDb0mYkEB6YklqdmpqQWoRTJaJg1OqgdHl
-        /zNTM0dh0/goGenJVzQb+/SXnt9puCx0xcaQ7ui5NxL2v5m2MLjv5c9DzMphj9KmJzid2nPI
-        7W/UuRczgk54ctSYFQJjjnF7ae5Rt39PQndMXffOqvV8uk9X4LZPl1db9z+z6pQ1Fvlgmzxv
-        xoeIL+dexBZY8N9fdaDtzYa2LRMajOI+8CmxFGckGmoxFxUnAgDn9A2bKgIAAA==
+        N47cZiw4yllxsP0yWwPjB/YuRk4OCQETia0/pzN1MXJxCAlsZZR4//YYC4RzjlFi4vKHrCBV
+        bAJGEgumNYJViQi0MUrsOTqLESTBLOAg8XjuQzBbWCBMYu+kVWA2i4CqxJ7OW0wgNq+ArcTH
+        SW1AUzmA1slLHD6UBRLmFLCT2PxwFwuILQRUsn9xOztEuaDEyZlPwI6QELjCKHH8dg8LxKlC
+        EqcXn2WG2KstsWzha+YJjAKzkPTMQpJawMi0ilEoNzM5O7UoM1uvIKOyJDVZLyV1EyMwVA9P
+        VL+0g7FvjschRiYOxkOMEhzMSiK8TyNr4oR4UxIrq1KL8uOLSnNSiw8xSnOwKInzbuAtCRMS
+        SE8sSc1OTS1ILYLJMnFwSjUwrn7TzZe1d41X96Swf29qHJmjGGpasmN2+B9n3Ca1eOo1d+md
+        ZUoi81YYXL6/8FOM0iztbP63z+ZevMjnuUb7c13tJZ0lDpeOnSho1N3umCCtF/OdWyhehdPx
+        tcSutu9hJu/vzlp3p4/XZfW1BzvfOrwxarjnunLL2enht/m52YOv/65fzeLopMRSnJFoqMVc
+        VJwIANV+3R9DAgAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the watchdog is already running during probe read back its
-pre-configured timeout (set e.g. by the bootloader) and use it to ping
-the watchdog until userspace takes over. Otherwise the default timeout
-set before might not result in a fast enough ping.
+There is actually no need to ping the watchdog before disabling it
+during timeout change. Disabling the watchdog already takes care of
+resetting the counter.
+
+This fixes an issue during boot when the userspace watchdog handler takes
+over and the watchdog is already running. Opening the watchdog in this case
+leads to the first ping and directly after that without the required
+heartbeat delay a second ping issued by the set=5Ftimeout call. Due to the
+missing delay this resulted in a reset.
 
 Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
 ---
- drivers/watchdog/da9062=5Fwdt.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/watchdog/da9062=5Fwdt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
 diff --git a/drivers/watchdog/da9062=5Fwdt.c b/drivers/watchdog/da9062=5Fwd=
 t.c
-index 0ad15d55071c..6d81b1276b87 100644
+index 6d81b1276b87..c5bd075c8b14 100644
 --- a/drivers/watchdog/da9062=5Fwdt.c
 +++ b/drivers/watchdog/da9062=5Fwdt.c
-@@ -35,6 +35,14 @@ struct da9062=5Fwatchdog {
- 	bool use=5Fsw=5Fpm;
- };
-=20
-+static unsigned int da9062=5Fwdt=5Fread=5Ftimeout(struct da9062=5Fwatchdog=
- *wdt)
-+{
-+	int val;
-+
-+	regmap=5Fread(wdt->hw->regmap, DA9062AA=5FCONTROL=5FD, &val);
-+	return wdt=5Ftimeout[val & DA9062AA=5FTWDSCALE=5FMASK];
-+}
-+
- static unsigned int da9062=5Fwdt=5Ftimeout=5Fto=5Fsel(unsigned int secs)
+@@ -66,11 +66,6 @@ static int da9062=5Fwdt=5Fupdate=5Ftimeout=5Fregister(st=
+ruct da9062=5Fwatchdog *wdt,
+ 					      unsigned int regval)
  {
- 	unsigned int i;
-@@ -184,6 +192,7 @@ static int da9062=5Fwdt=5Fprobe(struct platform=5Fdevic=
-e *pdev)
- {
- 	struct device *dev =3D &pdev->dev;
- 	int ret;
-+	int timeout;
- 	struct da9062 *chip;
- 	struct da9062=5Fwatchdog *wdt;
+ 	struct da9062 *chip =3D wdt->hw;
+-	int ret;
+-
+-	ret =3D da9062=5Freset=5Fwatchdog=5Ftimer(wdt);
+-	if (ret)
+-		return ret;
 =20
-@@ -213,6 +222,13 @@ static int da9062=5Fwdt=5Fprobe(struct platform=5Fdevi=
-ce *pdev)
- 	watchdog=5Fset=5Fdrvdata(&wdt->wdtdev, wdt);
- 	dev=5Fset=5Fdrvdata(dev, &wdt->wdtdev);
-=20
-+	timeout =3D da9062=5Fwdt=5Fread=5Ftimeout(wdt);
-+	if (timeout > 0) {
-+		wdt->wdtdev.timeout =3D timeout;
-+		set=5Fbit(WDOG=5FHW=5FRUNNING, &wdt->wdtdev.status);
-+		dev=5Finfo(wdt->hw->dev, "watchdog is running (%u s)", timeout);
-+	}
-+
- 	ret =3D devm=5Fwatchdog=5Fregister=5Fdevice(dev, &wdt->wdtdev);
- 	if (ret < 0)
- 		return ret;
+ 	regmap=5Fupdate=5Fbits(chip->regmap,
+ 				  DA9062AA=5FCONTROL=5FD,
 --=20
 2.23.0
 
