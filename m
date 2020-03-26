@@ -2,282 +2,153 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54DA1C2D0E5
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0E20C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0A320658
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:43:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="OjCourkV"
+	by mail.kernel.org (Postfix) with ESMTP id 7AE4120719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 21:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbgCZVng (ORCPT
+        id S1727560AbgCZVo0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 17:43:36 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:36173 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZVng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 17:43:36 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g62so9680456wme.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 14:43:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=f1NDn439r2NKX2oz5ZXFZ71Km/k0SiSxc8ZOwV4UNkM=;
-        b=OjCourkV/MTqGFeOswaVFQKQOplgKPa1zgys4mGBsxi9hAycFeq4i7NQjVeYvQYYIl
-         Z5C2H5mjphkQ+Nzq2zlU7T2vv8LZ/NSe84Rr6iRA3IieJSPTBIV+JoDOcG6K4wpyQoRZ
-         J/de/gJN5I9LMtrwEK6Or+ioTpGm8lNkGQ4HCR0llDNYMPMqWxVKs6jmh/+jHxnwzP7L
-         cw0COxWs9e/U1bP2id4ENhz6rqKaqFx/0xAWfHGEsXqI5cEg9y5EHkmEHrW3QMCSlPzM
-         2ssLLxfTvxst3538bmc6yz2LSgwjSFKx6gc+tyKcSTosPXYfo5Ni3KfomzX3a+kPJ9d1
-         9MEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=f1NDn439r2NKX2oz5ZXFZ71Km/k0SiSxc8ZOwV4UNkM=;
-        b=uJk4Rq4QJYgAbYAmIq2aU+LvRKXfx1RrPZB7nR7tGIYCPfRyOPPwyl+VMprJLzbFWd
-         wlSUXjKFzDQsZF0bqhTH3f+JhfUeqgNIu8XA+wEG6DWdN03qRhoIt8mycEFhSTvPe8zQ
-         RDtFkQUW8ru6wFkGXbVXr5FdZv03Uw0oZxLRIvBoWnAjFwIkMuWJphuEq8rfCbRJBxQK
-         +iJwJMOo4NcEiLysuNaLtURvVVNava1CCMs9CTyHnY3knuFTYi4RQifsvGvM5qP35xpn
-         79wMSEiX1qj9yQN0A/AgvmyIItMNEhENi7Hzn1fz1MoGPElP8+McasQWlnKQfLXDjS3l
-         w66A==
-X-Gm-Message-State: ANhLgQ2InrRspQeOCLrFpsXdYwj/NjAcgHhlKp57mJyqdQ4dlNJkFlCJ
-        4YZ4+3gZRsxf5Nif/oV1pwfLWXgdCC3a2HtFD9Cs
-X-Google-Smtp-Source: ADFU+vtd+d+BeyjdXRco3BnmIUGbwN18p+gYCa+hvrOkYjQFzeB/QMBSlWf+/g2wWZKCyOEOqWoJhGQRRup/idE8gng=
-X-Received: by 2002:adf:e807:: with SMTP id o7mr12050229wrm.77.1585259011235;
- Thu, 26 Mar 2020 14:43:31 -0700 (PDT)
+        Thu, 26 Mar 2020 17:44:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49692 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726270AbgCZVo0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 17:44:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 12261AA7C;
+        Thu, 26 Mar 2020 21:44:24 +0000 (UTC)
+From:   NeilBrown <neilb@suse.de>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linux-kernel@vger.kernel.org
+Date:   Fri, 27 Mar 2020 08:44:17 +1100
+Cc:     linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
+In-Reply-To: <2e2d1293-c978-3f1d-5a1e-dc43dc2ad06b@wanadoo.fr>
+References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr> <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com> <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr> <87wo786o80.fsf@notabene.neil.brown.name> <2e2d1293-c978-3f1d-5a1e-dc43dc2ad06b@wanadoo.fr>
+Message-ID: <87r1xe7pvy.fsf@notabene.neil.brown.name>
 MIME-Version: 1.0
-References: <20200224193436.26860-1-atish.patra@wdc.com> <mhng-a36eb560-2fbf-4fba-8416-8181a2c8ad5b@palmerdabbelt-glaptop1>
- <CAEn-LTo=GP5OMZiaBi8BL1etLcGrCyofQrtQ4-JOo5zcpCLu8A@mail.gmail.com> <CAEn-LTokKZXgoNgDi2e5XW2WgL5O+e5UVs7wX2ndqecCdPnN4g@mail.gmail.com>
-In-Reply-To: <CAEn-LTokKZXgoNgDi2e5XW2WgL5O+e5UVs7wX2ndqecCdPnN4g@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Thu, 26 Mar 2020 14:43:20 -0700
-Message-ID: <CAOnJCUL4BcAFXd6HyOW_eq6mm7PWFNW6yP1srkvTO+=W67AJ-A@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: Move all address space definition macros to one place
-To:     David Abdurachmanov <david.abdurachmanov@gmail.com>
-Cc:     Palmer Dabbelt <palmerdabbelt@google.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Nick Hu <nickhu@andestech.com>,
-        Bjorn Topel <bjorn.topel@gmail.com>,
-        Anup Patel <Anup.Patel@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Atish Patra <Atish.Patra@wdc.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Thomas Gleixner <tglx@linutronix.de>, akpm@linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 23, 2020 at 3:32 AM David Abdurachmanov
-<david.abdurachmanov@gmail.com> wrote:
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Mar 26 2020, Christophe JAILLET wrote:
+
+> Le 25/03/2020 =C3=A0 23:53, NeilBrown a =C3=A9crit=C2=A0:
+>> Can I suggest something more like this:
+>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+>> index de3c077733a7..0292f45b70f6 100644
+>> --- a/net/sunrpc/svc_xprt.c
+>> +++ b/net/sunrpc/svc_xprt.c
+>> @@ -115,16 +115,9 @@ int svc_print_xprts(char *buf, int maxlen)
+>>   	buf[0] =3D '\0';
+>>=20=20=20
+>>   	spin_lock(&svc_xprt_class_lock);
+>> -	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+>> -		int slen;
+>> -
+>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, xcl->xcl_max_payload);
+>> -		slen =3D strlen(tmpstr);
+>> -		if (len + slen > maxlen)
+>> -			break;
+>> -		len +=3D slen;
+>> -		strcat(buf, tmpstr);
+>> -	}
+>> +	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list)
+>> +		len +=3D scnprintf(buf + len, maxlen - len, "%s %d\n",
+>> +				 xcl->xcl_name, xcl->xcl_max_payload);
+>>   	spin_unlock(&svc_xprt_class_lock);
+>>=20=20=20
+>>   	return len;
+>>
+>> NeilBrown
 >
-> On Sat, Mar 21, 2020 at 10:29 PM David Abdurachmanov
-> <david.abdurachmanov@gmail.com> wrote:
-> >
-> > On Fri, Mar 6, 2020 at 2:20 AM Palmer Dabbelt <palmerdabbelt@google.com=
-> wrote:
-> > >
-> > > On Mon, 24 Feb 2020 11:34:36 PST (-0800), Atish Patra wrote:
-> > > > If both CONFIG_KASAN and CONFIG_SPARSEMEM_VMEMMAP are set, we get t=
-he
-> > > > following compilation error.
-> > > >
-> > > > ---------------------------------------------------------------
-> > > > ./arch/riscv/include/asm/pgtable-64.h: In function =E2=80=98pud_pag=
-e=E2=80=99:
-> > > > ./include/asm-generic/memory_model.h:54:29: error: =E2=80=98vmemmap=
-=E2=80=99 undeclared
-> > > > (first use in this function); did you mean =E2=80=98mem_map=E2=80=
-=99?
-> > > >  #define __pfn_to_page(pfn) (vmemmap + (pfn))
-> > > >                              ^~~~~~~
-> > > > ./include/asm-generic/memory_model.h:82:21: note: in expansion of
-> > > > macro =E2=80=98__pfn_to_page=E2=80=99
-> > > >
-> > > >  #define pfn_to_page __pfn_to_page
-> > > >                      ^~~~~~~~~~~~~
-> > > > ./arch/riscv/include/asm/pgtable-64.h:70:9: note: in expansion of m=
-acro
-> > > > =E2=80=98pfn_to_page=E2=80=99
-> > > >   return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
-> > > > ---------------------------------------------------------------
-> > > >
-> > > > Fix the compliation errors by moving all the address space definiti=
-on
-> > > > macros before including pgtable-64.h.
-> > > >
-> > > > Cc: stable@vger.kernel.org
-> > > > Fixes: 8ad8b72721d0 (riscv: Add KASAN support)
-> > > >
-> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > ---
-> > > >  arch/riscv/include/asm/pgtable.h | 78 +++++++++++++++++-----------=
-----
-> > > >  1 file changed, 41 insertions(+), 37 deletions(-)
-> > > >
-> > > > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/=
-asm/pgtable.h
-> > > > index 453afb0a570a..4f6ee48a42e8 100644
-> > > > --- a/arch/riscv/include/asm/pgtable.h
-> > > > +++ b/arch/riscv/include/asm/pgtable.h
-> > > > @@ -19,6 +19,47 @@
-> > > >  #include <asm/tlbflush.h>
-> > > >  #include <linux/mm_types.h>
-> > > >
-> > > > +#ifdef CONFIG_MMU
-> > > > +
-> > > > +#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-> > > > +#define VMALLOC_END      (PAGE_OFFSET - 1)
-> > > > +#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-> > > > +
-> > > > +#define BPF_JIT_REGION_SIZE  (SZ_128M)
-> > > > +#define BPF_JIT_REGION_START (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
-> > > > +#define BPF_JIT_REGION_END   (VMALLOC_END)
-> > > > +
-> > > > +/*
-> > > > + * Roughly size the vmemmap space to be large enough to fit enough
-> > > > + * struct pages to map half the virtual address space. Then
-> > > > + * position vmemmap directly below the VMALLOC region.
-> > > > + */
-> > > > +#define VMEMMAP_SHIFT \
-> > > > +     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-> > > > +#define VMEMMAP_SIZE BIT(VMEMMAP_SHIFT)
-> > > > +#define VMEMMAP_END  (VMALLOC_START - 1)
-> > > > +#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
-> > > > +
-> > > > +/*
-> > > > + * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if k=
-ernel
-> > > > + * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
-> > > > + */
-> > > > +#define vmemmap              ((struct page *)VMEMMAP_START)
-> > > > +
-> > > > +#define PCI_IO_SIZE      SZ_16M
-> > > > +#define PCI_IO_END       VMEMMAP_START
-> > > > +#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-> > > > +
-> > > > +#define FIXADDR_TOP      PCI_IO_START
-> > > > +#ifdef CONFIG_64BIT
-> > > > +#define FIXADDR_SIZE     PMD_SIZE
-> > > > +#else
-> > > > +#define FIXADDR_SIZE     PGDIR_SIZE
-> > > > +#endif
-> > > > +#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-> > > > +
-> > > > +#endif
-> > > > +
-> > > >  #ifdef CONFIG_64BIT
-> > > >  #include <asm/pgtable-64.h>
-> > > >  #else
-> > > > @@ -90,31 +131,6 @@ extern pgd_t swapper_pg_dir[];
-> > > >  #define __S110       PAGE_SHARED_EXEC
-> > > >  #define __S111       PAGE_SHARED_EXEC
-> > > >
-> > > > -#define VMALLOC_SIZE     (KERN_VIRT_SIZE >> 1)
-> > > > -#define VMALLOC_END      (PAGE_OFFSET - 1)
-> > > > -#define VMALLOC_START    (PAGE_OFFSET - VMALLOC_SIZE)
-> > > > -
-> > > > -#define BPF_JIT_REGION_SIZE  (SZ_128M)
-> > > > -#define BPF_JIT_REGION_START (PAGE_OFFSET - BPF_JIT_REGION_SIZE)
-> > > > -#define BPF_JIT_REGION_END   (VMALLOC_END)
-> > > > -
-> > > > -/*
-> > > > - * Roughly size the vmemmap space to be large enough to fit enough
-> > > > - * struct pages to map half the virtual address space. Then
-> > > > - * position vmemmap directly below the VMALLOC region.
-> > > > - */
-> > > > -#define VMEMMAP_SHIFT \
-> > > > -     (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
-> > > > -#define VMEMMAP_SIZE BIT(VMEMMAP_SHIFT)
-> > > > -#define VMEMMAP_END  (VMALLOC_START - 1)
-> > > > -#define VMEMMAP_START        (VMALLOC_START - VMEMMAP_SIZE)
-> > > > -
-> > > > -/*
-> > > > - * Define vmemmap for pfn_to_page & page_to_pfn calls. Needed if k=
-ernel
-> > > > - * is configured with CONFIG_SPARSEMEM_VMEMMAP enabled.
-> > > > - */
-> > > > -#define vmemmap              ((struct page *)VMEMMAP_START)
-> > > > -
-> > > >  static inline int pmd_present(pmd_t pmd)
-> > > >  {
-> > > >       return (pmd_val(pmd) & (_PAGE_PRESENT | _PAGE_PROT_NONE));
-> > > > @@ -452,18 +468,6 @@ static inline int ptep_clear_flush_young(struc=
-t vm_area_struct *vma,
-> > > >  #define __pte_to_swp_entry(pte)      ((swp_entry_t) { pte_val(pte)=
- })
-> > > >  #define __swp_entry_to_pte(x)        ((pte_t) { (x).val })
-> > > >
-> > > > -#define PCI_IO_SIZE      SZ_16M
-> > > > -#define PCI_IO_END       VMEMMAP_START
-> > > > -#define PCI_IO_START     (PCI_IO_END - PCI_IO_SIZE)
-> > > > -
-> > > > -#define FIXADDR_TOP      PCI_IO_START
-> > > > -#ifdef CONFIG_64BIT
-> > > > -#define FIXADDR_SIZE     PMD_SIZE
-> > > > -#else
-> > > > -#define FIXADDR_SIZE     PGDIR_SIZE
-> > > > -#endif
-> > > > -#define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
-> > > > -
-> > > >  /*
-> > > >   * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
-> > > >   * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
-> > >
-> > > While this isn't technically a fix, I'm inclined to target it for the=
- RCs just
-> > > to avoid conflicts.  I've put it on for-next now so the builders have=
- some time
-> > > to chew on things, as I don't want to put in a non-fix too quickly.
-> >
-> > I hit the same issue in Fedora/RISCV while building kernel-5.6.0-0.rc6,=
- and
-> > we don't have KASAN selected. We do have CONFIG_SPARSEMEM_VMEMMAP
-> > selected.
-> >
-
-Yes. I just verified that. CONFIG_SPARSEMEM_VMEMMAP is enough to
-trigger the build error.
-The code that raises the compilation error is added by kasan patchset,
-but it is not dependent upon kasan.
-
---- a/arch/riscv/include/asm/pgtable-64.h
-+++ b/arch/riscv/include/asm/pgtable-64.h
-@@ -58,6 +58,11 @@ static inline unsigned long pud_page_vaddr(pud_t pud)
-        return (unsigned long)pfn_to_virt(pud_val(pud) >> _PAGE_PFN_SHIFT);
- }
-
-+static inline struct page *pud_page(pud_t pud)
-+{
-+       return pfn_to_page(pud_val(pud) >> _PAGE_PFN_SHIFT);
-+}
-+
-
-@palmer: I am not sure if it is too late for an RC-fix. If not, can
-you send it as an RC-fix ?
-
-Let me know if you want me to respin the patch editing the commit text.
-
-> > I will try this patch tomorrow.
-> >
-> Confirmed to solve my build errors with kernel in Fedora/RISCV.
+> Hi,
 >
-> david
+> this was what I suggested in the patch:
+>  =C2=A0=C2=A0=C2=A0 ---
+>  =C2=A0=C2=A0=C2=A0 This patch should have no functional change.
+>  =C2=A0=C2=A0=C2=A0 We could go further, use scnprintf and write directly=
+ in the=20
+> destination
+>  =C2=A0=C2=A0=C2=A0 buffer. However, this could lead to a truncated last =
+line.
+>  =C2=A0=C2=A0=C2=A0 ---
+
+Sorry - I missed that.
+So add
+
+ end =3D strrchr(tmpstr, '\n');
+ if (end)
+    end[1] =3D 0;
+ else
+    tmpstr[0] =3D 0;
+
+or maybe something like
+	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
+		int l =3D snprintf(buf + len, maxlen - len, "%s %d\n",
+				 xcl->xcl_name, xcl->xcl_max_payload);
+                if (l < maxlen - len)
+                	len +=3D l;
+        }
+        buf[len] =3D 0;
+
+There really is no need to have the secondary buffer, and I think doing
+so just complicates the code.
+That last version is a change of behaviour in that it will skip over
+lines that are too long, rather than aborting on the first one.
+I don't know which is preferred.
+
+Thanks,
+NeilBrown
+=20
+
 >
+> And Chuck Lever confirmed that:
+>  =C2=A0=C2=A0=C2=A0 That's exactly what this function is trying to avoid.=
+ As part of any
+>  =C2=A0=C2=A0=C2=A0 change in this area, it would be good to replace the =
+current block
+>  =C2=A0=C2=A0=C2=A0 comment before this function with a Doxygen-format co=
+mment that
+>  =C2=A0=C2=A0=C2=A0 documents that goal.
+>
+> So, I will only send a V2 based on comments already received.
+>
+> CJ
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
---=20
-Regards,
-Atish
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEG8Yp69OQ2HB7X0l6Oeye3VZigbkFAl59IjEACgkQOeye3VZi
+gbmUPg/9EV6cZxRae5hgXZCWW9ODQKt1pH+ZIMVmP2UWNb+3mv6hPhNsGY1ED3xE
+4Ktqrz/6hiP8WHvNjZfmy1dAU7pqBnBJbZyfpfe2bBcvYZW7YI3oH/aliB+3KoLa
+qJ3FljZh9XnnaJ3f8qv77+G3+6vnrFioJhw1dFjn8WQZMY5FLPEUdLMu92GrKvQl
+I5DKtHTubYZ2OAT5n+D1duYfmiUBy9zV39ed1poMhfhAWuyYtprUGXiWw16DiDfH
+dbD5chlzkKL0HQwKclWTBpoxXoYn2NiUSNOiLmLRKZKBCHC1ry5+awc6nIy2xISI
+SuwRZfnCTuUYxFKjHO42ZqWgt0rX9xL+31mCbZt5jSV4ODo5jHSmAkSEwzcYNzwr
+GSe9o2T/Km6p0eWROf+mrxSy+NGmZqMpKqCkldWcu+dMA9o9UWk0AIfuU4vJTfkK
+LFxj86WFiL+r369g3XWPcyYh41v8iZmz48I1JV92IZ2xxCS+eI0KeoCw9cMA31IR
+S7BCSI5KazLdA8QVoVyTZX44SSvq9tiHTTrmrsIWtCU6k777o72o5E+bccyubCMb
+Wo6kFjlkahhCjF5UzY8HhnFofK218VGrhOIXqZ+X6nctA2KRDHPaSEQ1rXq509sO
+aWXiq5sSoIrwStrkyIk/6R1O/zGZDmgRJ0AvlUjxRjdio4wsyII=
+=oJ/H
+-----END PGP SIGNATURE-----
+--=-=-=--
