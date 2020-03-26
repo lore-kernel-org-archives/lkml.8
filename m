@@ -2,173 +2,106 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF83C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E10C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904E12076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CzKLV+U8"
+	by mail.kernel.org (Postfix) with ESMTP id 7923F2078B
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1585234173;
+	bh=Ug1D44mwlx8j3F/CjHJhs2v08/ZQjLO4bJ6bUCCSm98=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=ahv1CpgJkozUS8jQxS0PgpKenLweZ3CyGRRFxkM0S2kjSIj0ri94kTY/5l62USVwT
+	 XsdSGTDqWdvOZ85hro4Y2gBFFr+veEeVD0hK14CjKzrQQqrgTbUQAM6906R+f9+D7O
+	 YXBDReDD2c9SV15cBnXmRvTcHA6537rJoSUK34Ug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728231AbgCZOsu (ORCPT
+        id S1727881AbgCZOtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:48:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42756 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728120AbgCZOsu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:48:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id h15so8122561wrx.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:48:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=VjZPz6gNRy+HKuPVRsIUCX6v0qqfQqCeDyDKuH2Fc6Y=;
-        b=CzKLV+U8excn0ZlDehTqAqC8OpRyele35n2KY/KR4YH8uoGXziz1qrZLlnBFq23u0V
-         tkHzDpeX7fqdUgIEXkQYEYTaUSQsU5cFZN95e6K0ihzluBJLu1xyELeMklqxJeHSY28d
-         7tVmAYlshj6kQ4zlg/GhBbm9rI6BIwV8k0EjIctT8RrmoEFl3r69eUnVlImvI75HP6uy
-         Tj0W/v5N7T106VOztY4NSn9F0SQbk1gO6YOkNpd3vV+rOFviGkHGtV/2hsqDe3+hs6t8
-         Xb+5bg1VCwEpreZ6JWkRkt8lJPxFoTG58wdTdeCisROBa1M2K5ZDI/Ah/QUYJSzl8s9J
-         G2DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=VjZPz6gNRy+HKuPVRsIUCX6v0qqfQqCeDyDKuH2Fc6Y=;
-        b=aytSQWUnbVOrDv3TZ2r5/y3Zj/QdlUhlyjpWNedzTxjYGaMfimnd+MD1SHXSZ7a+nW
-         3mWZAVqoIwWjDWE50yYQGgJl8AttlSwrUM2UprE7oWaKPX1G509uf6ERsf+hROK5U4HD
-         2F/+9F4FFsE48Uruco8j97ozNBX+GwXlXqICwvyJpZl+nTR/btpLltrLR1l14Pt+nDCD
-         OkwJ9wPE8snXS61XaLiraWuVFoECbju31/dJrt/ZsBZItnOKQkKqrbJdlU88YjREEZPM
-         ROSy/mKpxOA2bSH2GFzYPUFqRi7/M1UAOaIwLfESaJzVafkwFh8YCGUfnn/G+EZ+W2zB
-         zr/Q==
-X-Gm-Message-State: ANhLgQ0Zaf4WX+2+ps3rpqWjHQxXF86KYtqbt1MJ7wQI0aNyYfr/6re/
-        Oy0F/7kaYfiYmpYK1jqE6j+Luw==
-X-Google-Smtp-Source: ADFU+vvsIUVbNG7cb7Biho+bWS/MelZlhfzehAM+r/hladbvposUqs123z5VJYVN/eodv8UaEPw2jg==
-X-Received: by 2002:adf:f50d:: with SMTP id q13mr10092175wro.374.1585234127462;
-        Thu, 26 Mar 2020 07:48:47 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:e34:ed2f:f020:c0b:a340:75e5:7701])
-        by smtp.gmail.com with ESMTPSA id v8sm3980984wrw.2.2020.03.26.07.48.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 07:48:46 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org
-Cc:     daniel.lezcano@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-pm@vger.kernel.org (open list:POWER MANAGEMENT CORE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] powercap/drivers/idle_inject: Specify idle state max latency
-Date:   Thu, 26 Mar 2020 15:46:25 +0100
-Message-Id: <20200326144630.15011-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Thu, 26 Mar 2020 10:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726363AbgCZOtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:49:32 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 217312076A;
+        Thu, 26 Mar 2020 14:49:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1585234171;
+        bh=Ug1D44mwlx8j3F/CjHJhs2v08/ZQjLO4bJ6bUCCSm98=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YTXzjOdR9HmKH5G1vrzE5EcgwMp/HKuIKt6wYEB6z0UUl1D+lhxGIWGQRGDAs/axP
+         Rxt2gR1ShmIfcdE0QvRt6sgE0X3r7+R3Enh5GnU+eNOg32iECPZchmWnUr5EGiDTSK
+         rgVmJzYvQ3PxTRv3mmQggxMKFmq4liEAJizqtORc=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Paul McKenney <paulmck@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Alexandre Chartre <alexandre.chartre@oracle.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH -tip 0/4] kprobes: Support __kprobes and NOKPROBE_SYMBOL in modules
+Date:   Thu, 26 Mar 2020 23:49:23 +0900
+Message-Id: <158523416289.24735.10455512519475919061.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the idle injection framework uses the play_idle() function
-which puts the current CPU in an idle state. The idle state is the
-deepest one, as specified by the latency constraint when calling the
-subsequent play_idle_precise() function with the INT_MAX.
+Hi,
 
-The idle_injection is used by the cpuidle_cooling device which
-computes the idle / run duration to mitigate the temperature by
-injecting idle cycles. The cooling device has no control on the depth
-of the idle state.
+Here is a series for adding support of __kprobes attribute
+and NOKPROBE_SYMBOL() macro in modules. With this series,
+kprobes user can add its handlers and sub-functions to kprobe
+blacklist so that other kprobes don't probe it.
 
-Allow finer control of the idle injection mechanism by allowing to
-specify the latency for the idle state. Thus the cooling device has
-the ability to have a guarantee on the exit latency of the idle states
-it is injecting.
+Note that user should not use both __kprobes and NOKPROBE_SYMBOL()
+to same function. In that case, the function will appear twice
+on the blacklist, and that is a waste of memory.
 
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Thomas, it is easy to add ".noinstr.text" support to this series.
+as same as __kprobes (.kprobes.text) support in [2/4], we can
+add mod->noinstr_text_start and mod->noinstr_text_size and
+register it in add_module_kprobe_blacklist().
+
+
+Thank you,
+
 ---
- drivers/powercap/idle_inject.c | 27 ++++++++++++++++++++++++++-
- include/linux/idle_inject.h    |  6 ++++++
- 2 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
-index cd1270614cc6..15e6f9b8023f 100644
---- a/drivers/powercap/idle_inject.c
-+++ b/drivers/powercap/idle_inject.c
-@@ -61,12 +61,14 @@ struct idle_inject_thread {
-  * @timer: idle injection period timer
-  * @idle_duration_us: duration of CPU idle time to inject
-  * @run_duration_us: duration of CPU run time to allow
-+ * @latency_us: max allowed latency
-  * @cpumask: mask of CPUs affected by idle injection
-  */
- struct idle_inject_device {
- 	struct hrtimer timer;
- 	unsigned int idle_duration_us;
- 	unsigned int run_duration_us;
-+	unsigned int latency_us;
- 	unsigned long int cpumask[0];
- };
- 
-@@ -138,7 +140,8 @@ static void idle_inject_fn(unsigned int cpu)
- 	 */
- 	iit->should_run = 0;
- 
--	play_idle(READ_ONCE(ii_dev->idle_duration_us));
-+	play_idle_precise(READ_ONCE(ii_dev->idle_duration_us) * NSEC_PER_USEC,
-+			  READ_ONCE(ii_dev->latency_us) * NSEC_PER_USEC);
- }
- 
- /**
-@@ -169,6 +172,27 @@ void idle_inject_get_duration(struct idle_inject_device *ii_dev,
- 	*idle_duration_us = READ_ONCE(ii_dev->idle_duration_us);
- }
- 
-+/**
-+ * idle_inject_set_latency - set the maximum latency allowed
-+ * @latency_us: set the latency requirement for the idle state
-+ */
-+void idle_inject_set_latency(struct idle_inject_device *ii_dev,
-+			     unsigned int latency_us)
-+{
-+	WRITE_ONCE(ii_dev->latency_us, latency_us);
-+}
-+
-+/**
-+ * idle_inject_get_latency - get the allowed latency
-+ *
-+ * Return: an unsigned int corresponding to the latency requirement
-+ * for the idle state
-+ */
-+unsigned int idle_inject_get_latency(struct idle_inject_device *ii_dev)
-+{
-+	return READ_ONCE(ii_dev->latency_us);
-+}
-+
- /**
-  * idle_inject_start - start idle injections
-  * @ii_dev: idle injection control device structure
-@@ -297,6 +321,7 @@ struct idle_inject_device *idle_inject_register(struct cpumask *cpumask)
- 	cpumask_copy(to_cpumask(ii_dev->cpumask), cpumask);
- 	hrtimer_init(&ii_dev->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	ii_dev->timer.function = idle_inject_timer_fn;
-+	ii_dev->latency_us = UINT_MAX;
- 
- 	for_each_cpu(cpu, to_cpumask(ii_dev->cpumask)) {
- 
-diff --git a/include/linux/idle_inject.h b/include/linux/idle_inject.h
-index a445cd1a36c5..b573fee589b9 100644
---- a/include/linux/idle_inject.h
-+++ b/include/linux/idle_inject.h
-@@ -26,4 +26,10 @@ void idle_inject_set_duration(struct idle_inject_device *ii_dev,
- void idle_inject_get_duration(struct idle_inject_device *ii_dev,
- 				 unsigned int *run_duration_us,
- 				 unsigned int *idle_duration_us);
-+
-+void idle_inject_set_latency(struct idle_inject_device *ii_dev,
-+			     unsigned int latency_ns);
-+
-+unsigned int idle_inject_get_latency(struct idle_inject_device *ii_dev);
-+
- #endif /* __IDLE_INJECT_H__ */
--- 
-2.17.1
+Masami Hiramatsu (4):
+      kprobes: Lock kprobe_mutex while showing kprobe_blacklist
+      kprobes: Support __kprobes blacklist in modules
+      kprobes: Support NOKPROBE_SYMBOL() in modules
+      samples/kprobes: Add __kprobes and NOKPROBE_SYMBOL() for handlers.
 
+
+ include/linux/module.h              |    6 +++
+ kernel/kprobes.c                    |   67 ++++++++++++++++++++++++++++++++++-
+ kernel/module.c                     |    7 ++++
+ samples/kprobes/kprobe_example.c    |    6 ++-
+ samples/kprobes/kretprobe_example.c |    2 +
+ 5 files changed, 85 insertions(+), 3 deletions(-)
+
+--
+Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
