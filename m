@@ -2,146 +2,111 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 150ECC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F086AC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E836F206F6
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C84732076A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:44:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T7rfAJNo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgCZOoj (ORCPT
+        id S1728316AbgCZOoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:44:39 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52416 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728172AbgCZOoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:44:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 72A88AC22;
-        Thu, 26 Mar 2020 14:44:31 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 15:44:30 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     tglx@linutronix.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org, mhiramat@kernel.org
-Subject: Re: [PATCH v4 01/13] objtool: Remove CFI save/restore special case
-In-Reply-To: <20200326125844.GD20760@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LSU.2.21.2003261537380.17254@pobox.suse.cz>
-References: <20200325174525.772641599@infradead.org> <20200325174605.369570202@infradead.org> <20200326113049.GD20696@hirez.programming.kicks-ass.net> <20200326125844.GD20760@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 26 Mar 2020 10:44:44 -0400
+Received: from mail-wr1-f73.google.com ([209.85.221.73]:54133 "EHLO
+        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbgCZOoi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 10:44:38 -0400
+Received: by mail-wr1-f73.google.com with SMTP id c8so1259868wru.20
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:44:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=BlSTEEJDHJm2U/4O7K2LlSQNpyzxY2AHmNeqxBMGqLE=;
+        b=T7rfAJNouLP3QFbM7TjP2jKWn6OXe65PojXJkkX0Qk8dDkngAXWRVnPYsr8VxL1ujL
+         +c6h+Q2mhiAEGAZzGrjdL5kHYOFN3oHTyYRbTbzsD1HOOF9s1L3ZXQ5WQgk0ugjvhzoT
+         RglWzWjx+LDQPZRsXCDn6CJBZD5VRg4q+irS+8ww6cO54kjukjRDPxQBtYWdF+LXxx6g
+         Rr5R7U4IG8Z6F2v9gHuUdr/x+/7NDk0OpSI5FzKBZBkAKtIVzl2M4cGxT61BGgV1ILzd
+         jxr1PH63vVfKFE1rWp6cPQ13CoQTvQqOIPdfbAwgWZN/xAZudV1B7iWOy9z+iQuGcsVH
+         Kxjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=BlSTEEJDHJm2U/4O7K2LlSQNpyzxY2AHmNeqxBMGqLE=;
+        b=Skv5viRi7GJVIyjk+nD90Zk+mow2429nHmzRyllpfg6rJXWF9zsBb0C5KRLX28aZ36
+         Cs/6rF6o4LKL8AtgTNfn4KrHTRlRnXuJQZDoqU2A8nO5gacM9wzwc6+6BjUOjYlgfbvh
+         I8SXGuf7jCTGHFFAiMoiDWylw5w3uP6oFgY3w/6uT2FQcXi82TutwXJ42pXR/K1ypWyc
+         0uImqj4cbGKMYzhxXn1u/NSeaKg19GiGTsKvnp+YOtfO2Vos1O0gsUtArOKD3ZRGtbiU
+         H6oI2H9f4pC+qyhMXvT40wKA6OrDDBl9WAJxvRoflBR0dS7JNxi60jjGTZzed5A25Inv
+         5AGA==
+X-Gm-Message-State: ANhLgQ0JqRebot9yWo5iea4FptDoWQ87+gV0nJU3462VZXz9d63duxY6
+        0wDZwNbLriFy1fNr+ui2sjchq08c7isDDWsb
+X-Google-Smtp-Source: ADFU+vu4Wmk3bo0iTn0SCfakv1wwE8avBfBttA5grmmbe01DRbQuLXjTHB3LsyiFQwggR2UX3CWXHn0Kedt0netC
+X-Received: by 2002:adf:db0a:: with SMTP id s10mr6783005wri.361.1585233874611;
+ Thu, 26 Mar 2020 07:44:34 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 15:44:06 +0100
+In-Reply-To: <cover.1585233617.git.andreyknvl@google.com>
+Message-Id: <4520671eeb604adbc2432c248b0c07fbaa5519ef.1585233617.git.andreyknvl@google.com>
+Mime-Version: 1.0
+References: <cover.1585233617.git.andreyknvl@google.com>
+X-Mailer: git-send-email 2.26.0.rc2.310.g2932bb562d-goog
+Subject: [PATCH v4 7/7] usb: core: kcov: collect coverage from usb complete callback
+From:   Andrey Konovalov <andreyknvl@google.com>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Alexander Potapenko <glider@google.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 26 Mar 2020, Peter Zijlstra wrote:
+This patch adds kcov_remote_start/stop() callbacks around the urb
+complete() callback that is executed in softirq context when dummy_hcd
+is in use. As the result, kcov can be used to collect coverage from those
+callbacks, which is used to facilitate coverage-guided fuzzing with
+syzkaller.
 
-> On Thu, Mar 26, 2020 at 12:30:50PM +0100, Peter Zijlstra wrote:
-> 
-> > There is a special case in the UNWIND_HINT_RESTORE code. When, upon
-> > looking for the UNWIND_HINT_SAVE instruction to restore from, it finds
-> > the instruction hasn't been visited yet, it normally issues a WARN,
-> > except when this HINT_SAVE instruction is the first instruction of
-> > this branch.
-> > 
-> > The reason for this special case comes apparent when we remove it;
-> > code like:
-> > 
-> > 	if (cond) {
-> > 		UNWIND_HINT_SAVE
-> > 		// do stuff
-> > 		UNWIND_HINT_RESTORE
-> > 	}
-> > 	// more stuff
-> > 
-> > will now trigger the warning. This is because UNWIND_HINT_RESTORE is
-> > just a label, and there is nothing keeping it inside the (extended)
-> > basic block covered by @cond. It will attach itself to the first
-> > instruction of 'more stuff' and we'll hit it outside of the @cond,
-> > confusing things.
-> > 
-> > I don't much like this special case, it confuses things and will come
-> > apart horribly if/when the annotation needs to support nesting.
-> > Instead extend the affected code to at least form an extended basic
-> > block.
-> > 
-> > In particular, of the 2 users of this annotation: ftrace_regs_caller()
-> > and sync_core(), only the latter suffers this problem. Extend it's
-> > code sequence with a NOP to make it an extended basic block.
-> > 
-> > This isn't ideal either; stuffing code with NOPs just to make
-> > annotations work is certainly sub-optimal, but given that sync_core()
-> > is stupid expensive in any case, one extra nop isn't going to be a
-> > problem here.
-> 
-> So instr_begin() / instr_end() have this exact problem, but worse. Those
-> actually do nest and I've ran into the following situation:
-> 
-> 	if (cond1) {
-> 		instr_begin();
-> 		// code1
-> 		instr_end();
-> 	}
-> 	// code
-> 
-> 	if (cond2) {
-> 		instr_begin();
-> 		// code2
-> 		instr_end();
-> 	}
-> 	// tail
-> 
-> Where objtool then finds the path: !cond1, cond2, which ends up at code2
-> with 0, instead of 1.
-> 
-> I've also seen:
-> 
-> 	if (cond) {
-> 		instr_begin();
-> 		// code1
-> 		instr_end();
-> 	}
-> 	instr_begin();
-> 	// code2
-> 	instr_end();
-> 
-> Where instr_end() and instr_begin() merge onto the same instruction of
-> code2 as a 0, and again code2 will issue a false warning.
-> 
-> You can also not make objtool lift the end marker to the previous
-> instruction, because then:
-> 
-> 	if (cond1) {
-> 		instr_begin();
-> 		if (cond2) {
-> 			// code2
-> 		}
-> 		instr_end();
-> 	}
-> 
-> Suffers the reverse problem, instr_end() becomes part of the @cond2
-> block and cond1 grows a path that misses it entirely.
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+---
+ drivers/usb/core/hcd.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-One could argue that this is really nasty and the correct way should be
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index aa45840d8273..de624c47e190 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -31,6 +31,7 @@
+ #include <linux/types.h>
+ #include <linux/genalloc.h>
+ #include <linux/io.h>
++#include <linux/kcov.h>
+ 
+ #include <linux/phy/phy.h>
+ #include <linux/usb.h>
+@@ -1645,7 +1646,9 @@ static void __usb_hcd_giveback_urb(struct urb *urb)
+ 
+ 	/* pass ownership to the completion handler */
+ 	urb->status = status;
++	kcov_remote_start_usb((u64)urb->dev->bus->busnum);
+ 	urb->complete(urb);
++	kcov_remote_stop();
+ 
+ 	usb_anchor_resume_wakeups(anchor);
+ 	atomic_dec(&urb->use_count);
+-- 
+2.26.0.rc2.310.g2932bb562d-goog
 
-	if (cond1) {
-		if (cond2) {
-			instr_begin();
-			// code2
-			instr_end();
-		}
-	}
-
-Then it should work if instr_begin() marks the next instruction and 
-instr_end() marks the previous one, no? There is a corner case when code2 
-is exactly one instruction, so instr counting would have to be updated.
-
-Hopefully there is a better way.
-
-Miroslav
