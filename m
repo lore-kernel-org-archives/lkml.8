@@ -2,84 +2,152 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E63C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DA5C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF122076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675BA2070A
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:17:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d7wm7zg6"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="rWfQwQVZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgCZMJg (ORCPT
+        id S1728207AbgCZMRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:09:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34598 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727994AbgCZMJf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:09:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FeHFmR2HFOSLpZwF6PvR5+pvj6qF67mmDLhfwwnJn8I=; b=d7wm7zg6MAykTct18NooO5kWgE
-        nRf1+5VD9LzKZVbAPBqJOoYNwXL7mu5UlhjKHF+1zMJKx4cPOlWKsEI9GC82ZUru+pFfsjERvvtTB
-        3b6HyOVU92eyqXauUdu2HuLo3+qeh1ZF56obpzkaQMBQf1hZFkdcIc6jC6deWVlGuXjj3pekpPtg4
-        YELDXRgJUlGnPLKgX9hjkbBEALSmEx2KNFx9V/22wE3BZ8C/1y8D7Liw0Y5d5m8SbBsO6HKJwC5Mx
-        jPmFv97W+YRhgCCBy49DCxhKrAzzqYmyB18QPfsPyRBhpsjrZN6acliqHqRFkkSF7Uby8jy+qfKPs
-        a/NDbODA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jHRKF-0001tv-58; Thu, 26 Mar 2020 12:09:31 +0000
-Date:   Thu, 26 Mar 2020 05:09:31 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michel Lespinasse <walken@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laurent Dufour <ldufour@linux.ibm.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Liam Howlett <Liam.Howlett@oracle.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        David Rientjes <rientjes@google.com>,
-        Hugh Dickins <hughd@google.com>, Ying Han <yinghan@google.com>
-Subject: Re: [PATCH 5/8] mmap locking API: convert nested write lock sites
-Message-ID: <20200326120931.GF22483@bombadil.infradead.org>
-References: <20200326070236.235835-1-walken@google.com>
- <20200326070236.235835-6-walken@google.com>
-MIME-Version: 1.0
+        Thu, 26 Mar 2020 08:17:16 -0400
+Received: from mail-eopbgr00063.outbound.protection.outlook.com ([40.107.0.63]:54243
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727841AbgCZMRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:17:16 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=divM5xc/aYJJzXrPLOwLm9HHtGqj7SXDz9+0/p7LV9efhKx3m0OdVgEedK4TU8PrI8dOXwTueEdGRkaJjiB4kG+HfUWFP0maqPVpWmDSOVjTtMKZHHhnj6LjsI5IfkUnQi8Z8coevqw1lvKytdFG1KPNqHXeoxuEq2x9rgaJYinT4f57MX6ERMVd0zgHUZaCvuFaqAvn4yorzgG4MMEBl8Woy2oINJ1y+4F1qmMgFFWOeDqcF+/Gq85uiynnx3rVKfP4hA2t57HeXoAo54FBTVrIiiezYQleQv1LKRZ7/gxGWlEQ0AQ08y7zG0me9B9SlXl7ZBqL0AHr1F3NPKLMPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8kf2msLgn2Y6bPR4XlOADAK5LICYmgcHyBGVHIP7x5s=;
+ b=dOy0NoMAEtKOzxHRMxagPKZZirg5lkZiVY/emtpmBtcsfbykyzxlmsoLKq69j7QEvRdd+VjTlzidvecYvNABtYMWH8Va607LOyxe8C8DH5zu0s2cqZLovAlgcq7bBZIpSwA8RUkOGxA0uyox3IW+0hXO/LOVt6rvHMSGahoie8r6YkUp2UfNAz1nB8p82keSlRuo8wlrylOL9uT0Q32x8DUBVOsBARi9JsaaguAWyIKenruvAHTyedKHloNCx5HJNG9QNic9ouQaCRhQXmoA/6M0gZ4Hhn+7V0rjDuRIa8ER6WWoJGzSH4eY6uvHCwfYyKO/hfwBB8yuI+J9TMzR7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8kf2msLgn2Y6bPR4XlOADAK5LICYmgcHyBGVHIP7x5s=;
+ b=rWfQwQVZddF3wSfdl44kW9TcZPv21RCGglaHrApx+V3JJUJxt60wecWZZOF30ViR7pt5i2eGPbkd7JHDoEGMJEbdOTQCJaSWIXqL9V6cxNa9uBxDNPo0mLUtXJiDxmeXoYMyB4AwkeMhZiS6fhQRLR9k6aUCEAWRjLAqZajAQk0=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5853.eurprd05.prod.outlook.com (20.178.125.211) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.19; Thu, 26 Mar 2020 12:17:12 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::18d2:a9ea:519:add3%7]) with mapi id 15.20.2856.019; Thu, 26 Mar 2020
+ 12:17:11 +0000
+Date:   Thu, 26 Mar 2020 09:17:05 -0300
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com, eperezma@redhat.com,
+        lulu@redhat.com, parav@mellanox.com, kevin.tian@intel.com,
+        stefanha@redhat.com, rdunlap@infradead.org, hch@infradead.org,
+        aadam@redhat.com, jiri@mellanox.com, shahafs@mellanox.com,
+        hanand@xilinx.com, mhabets@solarflare.com, gdawar@xilinx.com,
+        saugatm@xilinx.com, vmireyno@marvell.com,
+        Bie Tiwei <tiwei.bie@intel.com>
+Subject: Re: [PATCH V8 9/9] virtio: Intel IFC VF driver for VDPA
+Message-ID: <20200326121705.GJ13183@mellanox.com>
+References: <20200325082711.1107-1-jasowang@redhat.com>
+ <20200325082711.1107-10-jasowang@redhat.com>
+ <20200325123410.GX13183@mellanox.com>
+ <ed04692d-236c-2eee-4429-6ef4d5d165fe@redhat.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200326070236.235835-6-walken@google.com>
+In-Reply-To: <ed04692d-236c-2eee-4429-6ef4d5d165fe@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: BL0PR03CA0012.namprd03.prod.outlook.com
+ (2603:10b6:208:2d::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by BL0PR03CA0012.namprd03.prod.outlook.com (2603:10b6:208:2d::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend Transport; Thu, 26 Mar 2020 12:17:11 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1jHRRZ-0003kY-Ac; Thu, 26 Mar 2020 09:17:05 -0300
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c2efe42e-1115-46e5-11ad-08d7d17f9c92
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5853:|VI1PR05MB5853:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB58537EF3DCA4B72DC49FD733CFCF0@VI1PR05MB5853.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0354B4BED2
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR05MB4141.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(366004)(376002)(26005)(1076003)(478600001)(9786002)(8676002)(81156014)(81166006)(8936002)(186003)(316002)(52116002)(2906002)(9746002)(6916009)(66556008)(66476007)(66946007)(7416002)(4326008)(5660300002)(86362001)(36756003)(33656002)(2616005)(24400500001);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J2bRjluQP8K2zSNOzjRD6zLaSySAoQ625fEWofB+jXkHnb0wNaZ9FGMhblWNwEVjmD7B7HGHnMAHtdcsSStdSPIADvJbnBZRFf5Zhn71YJe/R/x/u807GKCMNV7zK2ImGoi7NMRFInMutShHITs/mpY2cOoYD5jLzB5nP/hK1tv1fvt2MlUQstO2DpXCaZacqMlE2e4mYWC3xO+ynilMX2lT7n2EqD5nQLvWgG1cTOZEUGCAzIBb+giuWgqR9CKBxy59TpAy+Q/vACPBUgWYEIl42AHHHTdUZOZ/MC7R/+TirmnyLZvDJeHvbYLq1UX+Tb7g1YYajlFQb39f9HGa3HLxj+CA1XbeEezPp9vg48PITqDmqssmQcIr6Uauwyug9dFGcLL6/GpOkfs5SZua/lU9cSs1XOCuo6u2VAQv/PLJIOVSNBR9ROzNp9KYkC9zEGMOCVXQifocHBuD1NImuOLY1JfH5srTvLut17YKC/NBHz9bgmlefRrNhzAuXlht
+X-MS-Exchange-AntiSpam-MessageData: 22bXDp0f+v7oC2C42v83iadYQDV++m0Uc7kZCrLIZgUymmB6R/3apJX68rLdSx6WAYqcpWZCIcOr/5GzMQLqXPbSdU5Ad1nzcN+lbr+UTaK5dyHPvnXlJNvdLfh5NWWVT7W4HWQgNbUOrUTypyPloQ==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2efe42e-1115-46e5-11ad-08d7d17f9c92
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2020 12:17:11.7262
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wVIVZIBRIuuHDoWGv+kAaFVV5Dm6ZEokNNECIl4H4YCwd+h5zzuDnz0cPqEaZxInVLv3p2o6Uzse/1N5WuSK7Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5853
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 12:02:33AM -0700, Michel Lespinasse wrote:
-> @@ -47,9 +48,9 @@ static inline void activate_mm(struct mm_struct *old, struct mm_struct *new)
->  	 * when the new ->mm is used for the first time.
->  	 */
->  	__switch_mm(&new->context.id);
-> -	down_write_nested(&new->mmap_sem, 1);
-> +	mmap_write_lock_nested(new, 1);
->  	uml_setup_stubs(new);
-> -	mmap_write_unlock(new);
-> +	mmap_write_unlock_nested(new);
+On Thu, Mar 26, 2020 at 01:50:53PM +0800, Jason Wang wrote:
 
-This is a bit of an oddity.  We don't usually have an unlock_nested()
-variant (a quick grep finds only something complicated in reiserfs).
-That's because it's legitimate to release locks in a different order from
-the one they were acquired in (eg lock A, lock B, unlock A, unlock B), and
-it's not clear whether "nested" would follow the lock (ie unlock_nested B)
-or whether it would follow the code (ie unlock_nested A).
+> > > +	adapter->vdpa.dma_dev = dev;
+> > > +	ret = vdpa_register_device(&adapter->vdpa);
+> > > +	if (ret) {
+> > > +		IFCVF_ERR(adapter->dev, "Failed to register ifcvf to vdpa bus");
+> > > +		goto err_msix;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +
+> > > +err_msix:
+> > > +	put_device(&adapter->vdpa.dev);
+> > > +	return ret;
+> > > +err_alloc:
+> > > +	pci_free_irq_vectors(pdev);
+> > > +err_vectors:
+> > > +	pci_release_regions(pdev);
+> > > +err_regions:
+> > > +	pci_disable_device(pdev);
+> > > +err_enable:
+> > > +	return ret;
+> > > +}
+> > I personally don't like seeing goto unwinds with multiple returns, and
+> > here I think it is actually a tiny bug.
+> > 
+> > All touches to the PCI device must stop before the driver core
+> > remove() returns - so these pci function cannot be in the kref put
+> > release function anyhow.
+> 
+> 
+> I'm not sure I get here. IFCVF held refcnt of its PCI parent, so it looks to
+> me it's safe to free PCI resources in vDPA free callback?
 
-Does your future API require knowing the nested nature at the unlock
-point?  And if so, does it require it for A or B in the above scenario?
-And how does it mix with lock A or B being of a different type (eg a
-plain mutex or a spinlock)?
+The refcnt doesn't prevent the driver core from re-binding the
+pci_device to another driver. Then the refcount put would do a
+pci_disable_device() after another driver has started
+
+For this reason all touches to a struct pci_device must stop before
+remove returns.
+
+Jason
