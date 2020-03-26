@@ -2,128 +2,118 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E828C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DED3C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1CF12073E
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lbSiQuYz"
+	by mail.kernel.org (Postfix) with ESMTP id 1989720658
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727689AbgCZXAC (ORCPT
+        id S1727714AbgCZXAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:00:02 -0400
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46598 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgCZXAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:00:01 -0400
-Received: by mail-il1-f196.google.com with SMTP id e8so7025974ilc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 15:59:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FYvxodz7d4pB6VdW2wEtyiPcxDIa/w32jDzfvDzkoU8=;
-        b=lbSiQuYzsX/YLfN+amKkN7JbC15Gb8HRMWXLvWiCBK258OaPQEQ7d9xfRenumyr08U
-         YcKjxNgsNm/3FM0LY9dxX6E4qwllOE6RUd1Tbiw0IzQBxryQx2UmIQQmhoX2Zv9oPyRU
-         EEZrrO75nib7VAy3lsA/9BP7HHZ/uRgXXcV1lCJBcLT/bwC72VJKZxO4fvIszMKoCotW
-         UtI9ZiiAn9BeiOpisURIzjiSa7pSDbIScdakKPDZ1XO9aJihiQGhVIu6//DNihisrNpg
-         sWHefA17+Q6Jk5zeb3Rr3/2u/YynXU1YfG3L+MUb5k4y2Ee0C54t+20F/mCHyaJiaTl4
-         AKaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FYvxodz7d4pB6VdW2wEtyiPcxDIa/w32jDzfvDzkoU8=;
-        b=W+pSy0s+svxptbG6WTdufD4pVC0fMNZU4eCsD57QtPKWv6doMdj5Tz1DL1gNQdh6I1
-         1iCi6ghyGiB0CbDRmPnEBD3Ve/JxEOwS33U9gHjs1yqUItGwVWmUtvxvMWL7z5+nCKOg
-         24j/3xbKJuMU6JpESNukW0kFSX8neMZU5I5g2xrDjGOZeenLaIkEpQS8Aow1sSnAhJip
-         mDOyF+gX9ob6xYpkWlcZ2ZCte5rb8JDtXULZFzH2XFh3wokNMySTpJ2SGqzMni3eP3Ns
-         t5r2tgqNKZJUxTytep9w2ZoJmjuarCGJ65X7hxdJKTrNVwF0dKRPRHHSq1teILUxjFzg
-         zBoQ==
-X-Gm-Message-State: ANhLgQ0o51RH9pzJmro+FRW9D3hiqkMfYKCGLrFmG/Ex+v4h++ZW1JY2
-        5Jx/lqaK/BBsz+F4mRJKLK24wUhxBEWGyC8+z9fOBw==
-X-Google-Smtp-Source: ADFU+vuAPTvM3KUXkmj+Y6Uglnz+a3Q5ZiayBinGz1MOoF086L2mOH6jeDwzcK/I0VCF5aU669EVQfotwXDcBSc3SYg=
-X-Received: by 2002:a92:358b:: with SMTP id c11mr10435037ilf.64.1585263598976;
- Thu, 26 Mar 2020 15:59:58 -0700 (PDT)
+        Thu, 26 Mar 2020 19:00:12 -0400
+Received: from mga11.intel.com ([192.55.52.93]:50975 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726067AbgCZXAL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:00:11 -0400
+IronPort-SDR: G0aP8z/CSLnvR9NC9SxnmipN3vMyj/9zOoZu7vDpuaw1azgfWVki3ulgdsIOZ3bhqdlr3LmaWr
+ V0S1MRyKGmPQ==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 16:00:10 -0700
+IronPort-SDR: hr4DlIGJJajnI21ytr0GccMbmOOjn00AD32T6nqoGIswBkUyoPvRrOpCG7PC+aEPVQEwUq5Qky
+ AQYb+qK8E1PQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,310,1580803200"; 
+   d="scan'208";a="250948850"
+Received: from lirivera-mobl1.amr.corp.intel.com (HELO [10.251.8.87]) ([10.251.8.87])
+  by orsmga006.jf.intel.com with ESMTP; 26 Mar 2020 16:00:10 -0700
+Subject: Re: [PATCH 2/2] mm/madvise: skip MADV_PAGEOUT on shared swap cache
+ pages
+To:     Minchan Kim <minchan@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, mhocko@suse.com, jannh@google.com,
+        vbabka@suse.cz, dancol@google.com, joel@joelfernandes.org,
+        akpm@linux-foundation.org
+References: <20200323234147.558EBA81@viggo.jf.intel.com>
+ <20200323234151.10AF5617@viggo.jf.intel.com>
+ <20200326062835.GB110624@google.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <23ed6b05-3dd4-5683-a1d3-57d67a180c77@intel.com>
+Date:   Thu, 26 Mar 2020 16:00:09 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CACdnJusd7m-c0zLmAjSq9Sb9HxyCkhyyp5W=4FMdysgu7_g=Sw@mail.gmail.com>
- <BB670F86-9362-4A8C-8BE6-64A5AF9537A7@amacapital.net> <CACdnJus6H3LQww8hkTMpPKN7u_sb1PXmgPwQOCSVZR_fi7GMrA@mail.gmail.com>
- <CALCETrU4W7q=QyTX_iq_kN4nVK58WoOD0F_NBt7z8p7xiE7hfA@mail.gmail.com>
-In-Reply-To: <CALCETrU4W7q=QyTX_iq_kN4nVK58WoOD0F_NBt7z8p7xiE7hfA@mail.gmail.com>
-From:   Matthew Garrett <mjg59@google.com>
-Date:   Thu, 26 Mar 2020 15:59:47 -0700
-Message-ID: <CACdnJuu9sqzUWjPJRPOY6pKDJxTqwwf6NQEWQewXtufPQHikOg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/12] x86: Trenchboot secure late launch Linux kernel support
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Daniel Kiper <daniel.kiper@oracle.com>,
-        Ross Philipson <ross.philipson@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "Daniel P. Smith" <dpsmith@apertussolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        trenchboot-devel@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>, leif@nuviainc.com,
-        eric.snowberg@oracle.com, piotr.krol@3mdeb.com,
-        krystian.hebel@3mdeb.com, michal.zygowski@3mdeb.com,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200326062835.GB110624@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 3:52 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Thu, Mar 26, 2020 at 2:28 PM Matthew Garrett <mjg59@google.com> wrote:
-> > https://trustedcomputinggroup.org/wp-content/uploads/TCG_PlatformResetAttackMitigationSpecification_1.10_published.pdf
-> > - you want to protect in-memory secrets from a physically present
-> > attacker hitting the reset button, booting something else and just
-> > dumping RAM. This is avoided by setting a variable at boot time (in
-> > the boot stub), and then clearing it on reboot once the secrets have
-> > been cleared from RAM. If the variable isn't cleared, the firmware
-> > overwrites all RAM contents before booting anything else.
->
-> I admit my information is rather dated, but I'm pretty sure that at
-> least some and possibly all TXT implementations solve this more
-> directly.  In particular, as I understand it, when you TXT-launch
-> anything, a nonvolatile flag in the chipset is set.  On reboot, the
-> chipset will not allow access to memory *at all* until an
-> authenticated code module wipes memory and clears that flag.
+On 3/25/20 11:28 PM, Minchan Kim wrote:
+>> diff -puN mm/madvise.c~madv-pageout-ignore-shared-swap-cache mm/madvise.c
+>> --- a/mm/madvise.c~madv-pageout-ignore-shared-swap-cache	2020-03-23 16:30:52.022385888 -0700
+>> +++ b/mm/madvise.c	2020-03-23 16:41:15.448384333 -0700
+>> @@ -261,6 +261,7 @@ static struct page *pte_get_reclaim_page
+>>  {
+>>  	swp_entry_t entry;
+>>  	struct page *page;
+>> +	int nr_page_references = 0;
+> nit: just 'referenced' would be enough.
 
-Mm, yes, this one might be something we can just ignore in the TXT case.
+I guess I could track one bit like that.  But, it would require checking
+both page_mapcount() and page_swapcount() for being >1.  This way, I
+just accumulate the count and have a check at a single place.
 
-> > When you say "re-launch", you mean perform a second secure launch? I
-> > think that would work, as long as we could reconstruct an identical
-> > state to ensure that the PCR17 values matched - and that seems like a
-> > hard problem.
->
-> Exactly.  I would hope that performing a second secure launch would
-> reproduce the same post-launch PCRs as the first launch.  If the
-> kernel were wise enough to record all PCR extensions, it could replay
-> them.
-
-That presumably depends on how much state is in the measured region -
-we can't just measure the code in order to assert that we're secure.
-
-> In any case, I'm kind of with Daniel here.  We survived for quite a
-> long time without EFI variables at all.  The ability to write them is
-> nice, and we certainly need some way, however awkward, to write them
-> on rare occasions, but I don't think we really need painless runtime
-> writes to EFI variables.
-
-I'm fine with a solution that involves jumping through some hoops, but
-it feels like simply supporting measuring and passing through the
-runtime services would be fine - if you want to keep them outside the
-TCB, build a kernel that doesn't have EFI runtime service support and
-skip that measurement?
+I think it ends up much simpler this way.
