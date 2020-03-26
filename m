@@ -4,23 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D005BC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB624C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B382D2076A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9505B2082D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:08:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgCZPIz (ORCPT
+        id S1728382AbgCZPI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:08:55 -0400
-Received: from 8bytes.org ([81.169.241.247]:55856 "EHLO theia.8bytes.org"
+        Thu, 26 Mar 2020 11:08:58 -0400
+Received: from 8bytes.org ([81.169.241.247]:55896 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728110AbgCZPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728077AbgCZPIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 26 Mar 2020 11:08:51 -0400
 Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 1D83375B; Thu, 26 Mar 2020 16:08:46 +0100 (CET)
+        id C624C694; Thu, 26 Mar 2020 16:08:46 +0100 (CET)
 From:   Joerg Roedel <joro@8bytes.org>
 To:     iommu@lists.linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
@@ -37,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH v4 07/16] iommu/arm-smmu: Fix uninitilized variable warning
-Date:   Thu, 26 Mar 2020 16:08:32 +0100
-Message-Id: <20200326150841.10083-8-joro@8bytes.org>
+Subject: [PATCH v4 05/16] iommu: Rename struct iommu_param to dev_iommu
+Date:   Thu, 26 Mar 2020 16:08:30 +0100
+Message-Id: <20200326150841.10083-6-joro@8bytes.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200326150841.10083-1-joro@8bytes.org>
 References: <20200326150841.10083-1-joro@8bytes.org>
@@ -50,38 +51,173 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Joerg Roedel <jroedel@suse.de>
 
-Some unrelated changes in the iommu code caused a new warning to
-appear in the arm-smmu driver:
+The term dev_iommu aligns better with other existing structures and
+their accessor functions.
 
-  CC      drivers/iommu/arm-smmu.o
-drivers/iommu/arm-smmu.c: In function 'arm_smmu_add_device':
-drivers/iommu/arm-smmu.c:1441:2: warning: 'smmu' may be used uninitialized in this function [-Wmaybe-uninitialized]
-  arm_smmu_rpm_put(smmu);
-  ^~~~~~~~~~~~~~~~~~~~~~
-
-The warning is a false positive, but initialize the variable to NULL
-to get rid of it.
-
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Tested-by: Will Deacon <will@kernel.org> # arm-smmu
 Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
 Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- drivers/iommu/arm-smmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/iommu/iommu.c  | 28 ++++++++++++++--------------
+ include/linux/device.h |  6 +++---
+ include/linux/iommu.h  |  4 ++--
+ 3 files changed, 19 insertions(+), 19 deletions(-)
 
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 16c4b87af42b..980aae73b45b 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -1383,7 +1383,7 @@ struct arm_smmu_device *arm_smmu_get_by_fwnode(struct fwnode_handle *fwnode)
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 3e3528436e0b..beac2ef063dd 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -152,9 +152,9 @@ void iommu_device_unregister(struct iommu_device *iommu)
+ }
+ EXPORT_SYMBOL_GPL(iommu_device_unregister);
  
- static int arm_smmu_add_device(struct device *dev)
+-static struct iommu_param *iommu_get_dev_param(struct device *dev)
++static struct dev_iommu *dev_iommu_get(struct device *dev)
  {
--	struct arm_smmu_device *smmu;
-+	struct arm_smmu_device *smmu = NULL;
- 	struct arm_smmu_master_cfg *cfg;
- 	struct iommu_fwspec *fwspec = dev_iommu_fwspec_get(dev);
- 	int i, ret;
+-	struct iommu_param *param = dev->iommu_param;
++	struct dev_iommu *param = dev->iommu;
+ 
+ 	if (param)
+ 		return param;
+@@ -164,14 +164,14 @@ static struct iommu_param *iommu_get_dev_param(struct device *dev)
+ 		return NULL;
+ 
+ 	mutex_init(&param->lock);
+-	dev->iommu_param = param;
++	dev->iommu = param;
+ 	return param;
+ }
+ 
+-static void iommu_free_dev_param(struct device *dev)
++static void dev_iommu_free(struct device *dev)
+ {
+-	kfree(dev->iommu_param);
+-	dev->iommu_param = NULL;
++	kfree(dev->iommu);
++	dev->iommu = NULL;
+ }
+ 
+ int iommu_probe_device(struct device *dev)
+@@ -183,7 +183,7 @@ int iommu_probe_device(struct device *dev)
+ 	if (!ops)
+ 		return -EINVAL;
+ 
+-	if (!iommu_get_dev_param(dev))
++	if (!dev_iommu_get(dev))
+ 		return -ENOMEM;
+ 
+ 	if (!try_module_get(ops->owner)) {
+@@ -200,7 +200,7 @@ int iommu_probe_device(struct device *dev)
+ err_module_put:
+ 	module_put(ops->owner);
+ err_free_dev_param:
+-	iommu_free_dev_param(dev);
++	dev_iommu_free(dev);
+ 	return ret;
+ }
+ 
+@@ -211,9 +211,9 @@ void iommu_release_device(struct device *dev)
+ 	if (dev->iommu_group)
+ 		ops->remove_device(dev);
+ 
+-	if (dev->iommu_param) {
++	if (dev->iommu) {
+ 		module_put(ops->owner);
+-		iommu_free_dev_param(dev);
++		dev_iommu_free(dev);
+ 	}
+ }
+ 
+@@ -972,7 +972,7 @@ int iommu_register_device_fault_handler(struct device *dev,
+ 					iommu_dev_fault_handler_t handler,
+ 					void *data)
+ {
+-	struct iommu_param *param = dev->iommu_param;
++	struct dev_iommu *param = dev->iommu;
+ 	int ret = 0;
+ 
+ 	if (!param)
+@@ -1015,7 +1015,7 @@ EXPORT_SYMBOL_GPL(iommu_register_device_fault_handler);
+  */
+ int iommu_unregister_device_fault_handler(struct device *dev)
+ {
+-	struct iommu_param *param = dev->iommu_param;
++	struct dev_iommu *param = dev->iommu;
+ 	int ret = 0;
+ 
+ 	if (!param)
+@@ -1055,7 +1055,7 @@ EXPORT_SYMBOL_GPL(iommu_unregister_device_fault_handler);
+  */
+ int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
+ {
+-	struct iommu_param *param = dev->iommu_param;
++	struct dev_iommu *param = dev->iommu;
+ 	struct iommu_fault_event *evt_pending = NULL;
+ 	struct iommu_fault_param *fparam;
+ 	int ret = 0;
+@@ -1104,7 +1104,7 @@ int iommu_page_response(struct device *dev,
+ 	int ret = -EINVAL;
+ 	struct iommu_fault_event *evt;
+ 	struct iommu_fault_page_request *prm;
+-	struct iommu_param *param = dev->iommu_param;
++	struct dev_iommu *param = dev->iommu;
+ 	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+ 
+ 	if (!domain || !domain->ops->page_response)
+diff --git a/include/linux/device.h b/include/linux/device.h
+index fa04dfd22bbc..405a8f11bec1 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -44,7 +44,7 @@ struct iommu_ops;
+ struct iommu_group;
+ struct iommu_fwspec;
+ struct dev_pin_info;
+-struct iommu_param;
++struct dev_iommu;
+ 
+ /**
+  * struct subsys_interface - interfaces to device functions
+@@ -514,7 +514,7 @@ struct dev_links_info {
+  * 		device (i.e. the bus driver that discovered the device).
+  * @iommu_group: IOMMU group the device belongs to.
+  * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
+- * @iommu_param: Per device generic IOMMU runtime data
++ * @iommu:	Per device generic IOMMU runtime data
+  *
+  * @offline_disabled: If set, the device is permanently online.
+  * @offline:	Set after successful invocation of bus type's .offline().
+@@ -614,7 +614,7 @@ struct device {
+ 	void	(*release)(struct device *dev);
+ 	struct iommu_group	*iommu_group;
+ 	struct iommu_fwspec	*iommu_fwspec;
+-	struct iommu_param	*iommu_param;
++	struct dev_iommu	*iommu;
+ 
+ 	bool			offline_disabled:1;
+ 	bool			offline:1;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 3c4ca041d7a2..1c9fa5c1174b 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -365,7 +365,7 @@ struct iommu_fault_param {
+ };
+ 
+ /**
+- * struct iommu_param - collection of per-device IOMMU data
++ * struct dev_iommu - Collection of per-device IOMMU data
+  *
+  * @fault_param: IOMMU detected device fault reporting data
+  *
+@@ -373,7 +373,7 @@ struct iommu_fault_param {
+  *	struct iommu_group	*iommu_group;
+  *	struct iommu_fwspec	*iommu_fwspec;
+  */
+-struct iommu_param {
++struct dev_iommu {
+ 	struct mutex lock;
+ 	struct iommu_fault_param *fault_param;
+ };
 -- 
 2.17.1
 
