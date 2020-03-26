@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10540C2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17C9BC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA80C20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E180D20409
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265310;
-	bh=OtlQIGTdzG3Q8cgGhGQT9pGdOUBBXdJWpQ6hGKqJ2Jc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MYCSr7XWIaeNs/XK4UurxI+wxyiMGG3ROD+zf3ylOhbQHjg8rMDe5aiU4V1VtZ6SD
-	 lPeoiAOUz9VngO//oNfxD5SbAORlkviMnTknzHTJXXYiHaRLKnAJ+dp4ljBFv/buQD
-	 HsqIZRtvErQlN+2bo096Hi05i7yBBbSeJibFDwd8=
+	s=default; t=1585265315;
+	bh=nCuI1nEjnAxkebuA8OYduxofJdAq3GQs0YZgGX+585U=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=LaKRLshtzHTLy3sc6MIiD8YkTvBTaX/JWABr6Ew80yKcZcC0wQBt3Epswy5KZRhu3
+	 t7ruQxGeSBpUcceNt7+jgydbyISBw6bNXkFGFr8FPuxSEd1Gn0yB7ry756IDZw5LuV
+	 IwLrOBh7LpRM2inB5nTXyUuWZZfumG5sy1DKTM74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgCZX2a (ORCPT
+        id S1728336AbgCZX2e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:28:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44354 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:28:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44306 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbgCZXYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:35 -0400
+        id S1727841AbgCZXYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0F1520848;
-        Thu, 26 Mar 2020 23:24:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A131E2077D;
+        Thu, 26 Mar 2020 23:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265074;
-        bh=OtlQIGTdzG3Q8cgGhGQT9pGdOUBBXdJWpQ6hGKqJ2Jc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0W+Dtcyvw/c1TKzkkrByQcQZhEXM2kBuzjxiNoYQfL2a8LIwrcNRKnwRC/xbZJYCO
-         VkMrLq3jhHKjf2JUN1vemHtqlq3IFcBNbZjenpMZ/WmUyF3U0GSg694S1XGAcMy8pr
-         VUtoxpRUySc4pBxJRaMDYclR9fWRIx8B+HwVBnPU=
+        s=default; t=1585265073;
+        bh=nCuI1nEjnAxkebuA8OYduxofJdAq3GQs0YZgGX+585U=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VLq9Mx4kpM3IbIBEHdtSEbzMXoj3obWy3dUwGdLAlSciU8tO9DthUrhevDR8KNJa1
+         4B54bKQgVAavLgRfUCNZh8N3IRdeUyyJ2IQqpiGqc/AXps/pE98mgSUpKKVD8nhvAL
+         gHfyzYusyoAcQBj7k3+5gZYbdm4db5AwJVfEJkOU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Prabhath Sajeepa <psajeepa@purestorage.com>,
-        Roland Dreier <roland@purestorage.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
-Subject: [PATCH AUTOSEL 5.4 02/19] nvme-rdma: Avoid double freeing of async event data
-Date:   Thu, 26 Mar 2020 19:24:14 -0400
-Message-Id: <20200326232431.7816-2-sashal@kernel.org>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 01/19] drm/bridge: dw-hdmi: fix AVI frame colorimetry
+Date:   Thu, 26 Mar 2020 19:24:13 -0400
+Message-Id: <20200326232431.7816-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200326232431.7816-1-sashal@kernel.org>
-References: <20200326232431.7816-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,54 +58,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prabhath Sajeepa <psajeepa@purestorage.com>
+From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-[ Upstream commit 9134ae2a2546cb96abddcd4469a79c77ee3a4480 ]
+[ Upstream commit e8dca30f7118461d47e1c3510d0e31b277439151 ]
 
-The timeout of identify cmd, which is invoked as part of admin queue
-creation, can result in freeing of async event data both in
-nvme_rdma_timeout handler and error handling path of
-nvme_rdma_configure_admin queue thus causing NULL pointer reference.
-Call Trace:
- ? nvme_rdma_setup_ctrl+0x223/0x800 [nvme_rdma]
- nvme_rdma_create_ctrl+0x2ba/0x3f7 [nvme_rdma]
- nvmf_dev_write+0xa54/0xcc6 [nvme_fabrics]
- __vfs_write+0x1b/0x40
- vfs_write+0xb2/0x1b0
- ksys_write+0x61/0xd0
- __x64_sys_write+0x1a/0x20
- do_syscall_64+0x60/0x1e0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+CTA-861-F explicitly states that for RGB colorspace colorimetry should
+be set to "none". Fix that.
 
-Reviewed-by: Roland Dreier <roland@purestorage.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Fixes: def23aa7e982 ("drm: bridge: dw-hdmi: Switch to V4L bus format and encodings")
+Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200304232512.51616-2-jernej.skrabec@siol.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/rdma.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 46 +++++++++++++----------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index 4ff51da3b13fa..73e8475ddc8ab 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -850,9 +850,11 @@ static int nvme_rdma_configure_admin_queue(struct nvme_rdma_ctrl *ctrl,
- 	if (new)
- 		blk_mq_free_tag_set(ctrl->ctrl.admin_tagset);
- out_free_async_qe:
--	nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
--		sizeof(struct nvme_command), DMA_TO_DEVICE);
--	ctrl->async_event_sqe.data = NULL;
-+	if (ctrl->async_event_sqe.data) {
-+		nvme_rdma_free_qe(ctrl->device->dev, &ctrl->async_event_sqe,
-+			sizeof(struct nvme_command), DMA_TO_DEVICE);
-+		ctrl->async_event_sqe.data = NULL;
-+	}
- out_free_queue:
- 	nvme_rdma_free_queue(&ctrl->queues[0]);
- 	return error;
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 1326f2c734bf8..41bf4aaff21c4 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1576,28 +1576,34 @@ static void hdmi_config_AVI(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+ 		frame.colorspace = HDMI_COLORSPACE_RGB;
+ 
+ 	/* Set up colorimetry */
+-	switch (hdmi->hdmi_data.enc_out_encoding) {
+-	case V4L2_YCBCR_ENC_601:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
++	if (!hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
++		switch (hdmi->hdmi_data.enc_out_encoding) {
++		case V4L2_YCBCR_ENC_601:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV601)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		case V4L2_YCBCR_ENC_709:
++			if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
++				frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
++			else
++				frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
++			break;
++		default: /* Carries no data */
+ 			frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
++			frame.extended_colorimetry =
++					HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
++			break;
++		}
++	} else {
++		frame.colorimetry = HDMI_COLORIMETRY_NONE;
+ 		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
+-	case V4L2_YCBCR_ENC_709:
+-		if (hdmi->hdmi_data.enc_in_encoding == V4L2_YCBCR_ENC_XV709)
+-			frame.colorimetry = HDMI_COLORIMETRY_EXTENDED;
+-		else
+-			frame.colorimetry = HDMI_COLORIMETRY_ITU_709;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_709;
+-		break;
+-	default: /* Carries no data */
+-		frame.colorimetry = HDMI_COLORIMETRY_ITU_601;
+-		frame.extended_colorimetry =
+-				HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+-		break;
++			HDMI_EXTENDED_COLORIMETRY_XV_YCC_601;
+ 	}
+ 
+ 	frame.scan_mode = HDMI_SCAN_MODE_NONE;
 -- 
 2.20.1
 
