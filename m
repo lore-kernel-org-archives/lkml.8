@@ -6,138 +6,191 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DECC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38DD7C2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 825BB208FE
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D01D208E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:28:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbgCZX2E (ORCPT
+        id S1728153AbgCZX2C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:28:04 -0400
-Received: from smtprelay0110.hostedemail.com ([216.40.44.110]:41350 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728106AbgCZX17 (ORCPT
+        Thu, 26 Mar 2020 19:28:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58428 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728186AbgCZX2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:27:59 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 95D65180A7355;
-        Thu, 26 Mar 2020 23:27:58 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: food14_286f5c524e222
-X-Filterd-Recvd-Size: 5098
-Received: from XPS-9350.home (unknown [47.151.136.130])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Thu, 26 Mar 2020 23:27:57 +0000 (UTC)
-Message-ID: <5aa5aad6fb1678230c260337dc066cd449a2bf32.camel@perches.com>
-Subject: [PATCH] MAINTAINERS: List the section entries in the preferred order
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Thu, 26 Mar 2020 16:26:06 -0700
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Thu, 26 Mar 2020 19:28:00 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QN37e3115286;
+        Thu, 26 Mar 2020 19:27:24 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywf2kyp7h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 19:27:24 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02QN7XfB003164;
+        Thu, 26 Mar 2020 19:27:20 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ywf2kyp5n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 19:27:19 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02QNOwTM031251;
+        Thu, 26 Mar 2020 23:27:14 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01dal.us.ibm.com with ESMTP id 2ywawmgu13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 23:27:14 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QNRD0K50331954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 23:27:13 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32EC2AE05C;
+        Thu, 26 Mar 2020 23:27:13 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0E36AE062;
+        Thu, 26 Mar 2020 23:27:04 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.162.45])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 26 Mar 2020 23:27:04 +0000 (GMT)
+Message-ID: <d8ad4ef329bda280cac4103ad69a391fee63eaf8.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Enrico Weigelt <info@metux.net>,
+        Allison Randal <allison@lohutok.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Thu, 26 Mar 2020 20:26:59 -0300
+In-Reply-To: <20200326222836.501404-1-leonardo@linux.ibm.com>
+References: <20200326222836.501404-1-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-FVin2VQG/dF3wxpzlErY"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_14:2020-03-26,2020-03-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ suspectscore=0 adultscore=0 priorityscore=1501 spamscore=0 phishscore=0
+ malwarescore=0 mlxlogscore=999 clxscore=1015 mlxscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003260166
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The MAINTAINERS file header has never shown a preferred order for the
-section entries but scripts/parse-maintainers.pl added a preferred
-order with commit 61f741645a35 ("parse-maintainers: Add section pattern
-sorting")
 
-Commit 5cdbec108fd2 ("parse-maintainers: Do not sort section content by
-default") changed the preferred order to be a bit more sensible.
+--=-FVin2VQG/dF3wxpzlErY
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the MAINTAINERS section description block to use this preferred
-section entry ordering.
+oops, forgot to EXPORT_SYMBOL.=20
+arch_spin_lock*() is used on modules.
 
-Add a slightly better description for the N: entry too.
+Sending v2.
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- MAINTAINERS | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+On Thu, 2020-03-26 at 19:28 -0300, Leonardo Bras wrote:
+> During a crash, there is chance that the cpus that handle the NMI IPI
+> are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
+> will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
+>=20
+> This is a problem if the system has kdump set up, given if it crashes
+> for any reason kdump may not be saved for crash analysis.
+>=20
+> Skip spinlocks after NMI IPI is sent to all other cpus.
+>=20
+> Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/spinlock.h | 6 ++++++
+>  arch/powerpc/kexec/crash.c          | 3 +++
+>  2 files changed, 9 insertions(+)
+>=20
+> diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/a=
+sm/spinlock.h
+> index 860228e917dc..a6381d110795 100644
+> --- a/arch/powerpc/include/asm/spinlock.h
+> +++ b/arch/powerpc/include/asm/spinlock.h
+> @@ -111,6 +111,8 @@ static inline void splpar_spin_yield(arch_spinlock_t =
+*lock) {};
+>  static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
+>  #endif
+> =20
+> +extern bool crash_skip_spinlock __read_mostly;
+> +
+>  static inline bool is_shared_processor(void)
+>  {
+>  #ifdef CONFIG_PPC_SPLPAR
+> @@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lo=
+ck)
+>  		if (likely(__arch_spin_trylock(lock) =3D=3D 0))
+>  			break;
+>  		do {
+> +			if (unlikely(crash_skip_spinlock))
+> +				return;
+>  			HMT_low();
+>  			if (is_shared_processor())
+>  				splpar_spin_yield(lock);
+> @@ -161,6 +165,8 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsi=
+gned long flags)
+>  		local_save_flags(flags_dis);
+>  		local_irq_restore(flags);
+>  		do {
+> +			if (unlikely(crash_skip_spinlock))
+> +				return;
+>  			HMT_low();
+>  			if (is_shared_processor())
+>  				splpar_spin_yield(lock);
+> diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+> index d488311efab1..8a522380027d 100644
+> --- a/arch/powerpc/kexec/crash.c
+> +++ b/arch/powerpc/kexec/crash.c
+> @@ -66,6 +66,8 @@ static int handle_fault(struct pt_regs *regs)
+> =20
+>  #ifdef CONFIG_SMP
+> =20
+> +bool crash_skip_spinlock;
+> +
+>  static atomic_t cpus_in_crash;
+>  void crash_ipi_callback(struct pt_regs *regs)
+>  {
+> @@ -129,6 +131,7 @@ static void crash_kexec_prepare_cpus(int cpu)
+>  	/* Would it be better to replace the trap vector here? */
+> =20
+>  	if (atomic_read(&cpus_in_crash) >=3D ncpus) {
+> +		crash_skip_spinlock =3D true;
+>  		printk(KERN_EMERG "IPI complete\n");
+>  		return;
+>  	}
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5060aa..ae4db4a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -77,21 +77,13 @@ Tips for patch submitters
- 
- 8.	Happy hacking.
- 
--Descriptions of section entries
---------------------------------
-+Descriptions of section entries and preferred order
-+---------------------------------------------------
- 
- 	M: *Mail* patches to: FullName <address@domain>
- 	R: Designated *Reviewer*: FullName <address@domain>
- 	   These reviewers should be CCed on patches.
- 	L: *Mailing list* that is relevant to this area
--	W: *Web-page* with status/info
--	B: URI for where to file *bugs*. A web-page with detailed bug
--	   filing info, a direct bug tracker link, or a mailto: URI.
--	C: URI for *chat* protocol, server and channel where developers
--	   usually hang out, for example irc://server/channel.
--	Q: *Patchwork* web based patch tracking system site
--	T: *SCM* tree type and location.
--	   Type is one of: git, hg, quilt, stgit, topgit
- 	S: *Status*, one of the following:
- 	   Supported:	Someone is actually paid to look after this.
- 	   Maintained:	Someone actually looks after it.
-@@ -102,30 +94,39 @@ Descriptions of section entries
- 	   Obsolete:	Old code. Something tagged obsolete generally means
- 			it has been replaced by a better system and you
- 			should be using that.
-+	W: *Web-page* with status/info
-+	Q: *Patchwork* web based patch tracking system site
-+	B: URI for where to file *bugs*. A web-page with detailed bug
-+	   filing info, a direct bug tracker link, or a mailto: URI.
-+	C: URI for *chat* protocol, server and channel where developers
-+	   usually hang out, for example irc://server/channel.
- 	P: Subsystem Profile document for more details submitting
- 	   patches to the given subsystem. This is either an in-tree file,
- 	   or a URI. See Documentation/maintainer/maintainer-entry-profile.rst
- 	   for details.
-+	T: *SCM* tree type and location.
-+	   Type is one of: git, hg, quilt, stgit, topgit
- 	F: *Files* and directories wildcard patterns.
- 	   A trailing slash includes all files and subdirectory files.
- 	   F:	drivers/net/	all files in and below drivers/net
- 	   F:	drivers/net/*	all files in drivers/net, but not below
- 	   F:	*/net/*		all files in "any top level directory"/net
- 	   One pattern per line.  Multiple F: lines acceptable.
-+	X: *Excluded* files and directories that are NOT maintained, same
-+	   rules as F:. Files exclusions are tested before file matches.
-+	   Can be useful for excluding a specific subdirectory, for instance:
-+	   F:	net/
-+	   X:	net/ipv6/
-+	   matches all files in and below net excluding net/ipv6/
- 	N: Files and directories *Regex* patterns.
--	   N:	[^a-z]tegra	all files whose path contains the word tegra
-+	   N:	[^a-z]tegra	all files whose path contains tegra
-+	                        (not including files like integrator)
- 	   One pattern per line.  Multiple N: lines acceptable.
- 	   scripts/get_maintainer.pl has different behavior for files that
- 	   match F: pattern and matches of N: patterns.  By default,
- 	   get_maintainer will not look at git log history when an F: pattern
- 	   match occurs.  When an N: match occurs, git log history is used
- 	   to also notify the people that have git commit signatures.
--	X: *Excluded* files and directories that are NOT maintained, same
--	   rules as F:. Files exclusions are tested before file matches.
--	   Can be useful for excluding a specific subdirectory, for instance:
--	   F:	net/
--	   X:	net/ipv6/
--	   matches all files in and below net excluding net/ipv6/
- 	K: *Content regex* (perl extended) pattern match in a patch or file.
- 	   For instance:
- 	   K: of_get_profile
+--=-FVin2VQG/dF3wxpzlErY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl59OkMACgkQlQYWtz9S
+ttTdfxAAxfhffzM9iTgF/t3ay/7HkmkImzVE3dqBCSrCsUNMOI7eO2+Oba7a0Ia6
+Qr+sqoya33yFOHgzsPlj8fSIcaNRxw5qoNU4Mvt/IO+7veVkGfXl6DCvUnjGWRMS
+rZnkQoFb7ilh7ik9yW0zyg5geH7b6IBILDXdMnslGqsQK4G3AkH70Pb/INxvVfOz
+v+qIGriALpQ/PRPKoxbjk7v8ETtkaCvxDsIF05ynnzRr+uPuqydcCWRD5nO8nwBk
+XtF/4RL8zowSnPmlR0s7AMV0Mr7uaNvhrEtKpK9ugl817OGosGgYd76TDbn3n+Ga
+VxK63NNQkUgnUV6gToPoEwSdqSGC6hA31X6y5B6ckLJdjpc1wO+OngBaMUvO0sPE
+tuSN86f4IlaYIHY0szfMdhpoX2ptzN7LSsQwgkYwCrx9RfUrhKGzWIMK+FTH9eF3
+yBHbIkKY+GS3KMnp+lsdtbgNHm4MuEmF4U/TMj6SUi5XPlGKMy9hf/lxucLC5fyA
+ZhZQE3q4U9k2QVSJmZvw/i6jhSi99RbseBe1qt0mwLReDSlP/HUzy6QVky9bh+w5
+1wzAJyQWmM0jCMkAZWDI5ckeV+3Y6tRc5Lor1JTS1LbrG78qyRttq9zaioeSU3C2
+h0StSxKOcPDTIeg3LkZ4cZWubcLo5rwmHNjB5mn/RlRGu4oFqO4=
+=aPwG
+-----END PGP SIGNATURE-----
+
+--=-FVin2VQG/dF3wxpzlErY--
 
