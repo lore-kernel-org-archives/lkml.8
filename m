@@ -2,70 +2,118 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A8DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98CDFC2D0E7
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:27:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925A120737
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707D520737
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 03:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c+9Ubtkw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgCZD0d (ORCPT
+        id S1727763AbgCZD1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 25 Mar 2020 23:26:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12195 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727585AbgCZD0d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 25 Mar 2020 23:26:33 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CC6F2547DC91B3604199;
-        Thu, 26 Mar 2020 11:26:29 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.487.0; Thu, 26 Mar 2020
- 11:26:21 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <ricky_wu@realtek.com>, <tglx@linutronix.de>,
-        <ulf.hansson@linaro.org>, <yuehaibing@huawei.com>,
-        <lee.jones@linaro.org>, <micky_ching@realsil.com.cn>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] misc: rtsx: set correct pcr_ops for rts522A
-Date:   Thu, 26 Mar 2020 11:26:18 +0800
-Message-ID: <20200326032618.20472-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Wed, 25 Mar 2020 23:27:33 -0400
+Received: from ozlabs.org ([203.11.71.1]:40923 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727612AbgCZD1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 25 Mar 2020 23:27:33 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48nr5Z0XdJz9sSH;
+        Thu, 26 Mar 2020 14:27:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1585193250;
+        bh=ZKW7qcECKhZTwsefzZv3KK0kIUy8HwxrSNINue5nCKs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=c+9UbtkwAW96p6Br+QzTYW/T3AyEVUODTofZrCm+Oi/BqcS9TH4rVDEiSjp8pm8o9
+         QEYb7n637GWve85Hp9VM47n9U53DdxkvtvnF2FvzWOivdVbmo5P2WygjIwnBTdsfd3
+         nZ42XDPTVdTBLiISrip/t0ZF0gYQxHYOJ6KmMBz9vT2Na3gXbmfv9fLG7QjTImzei8
+         1p6xBOoneIYOfwGx/g92bMlxQ+DXrMxY/eL0A7gzM6ECbZeOEFawSDhrRHwXcp9G5N
+         TgxK6zi+TixVFKl0q7U2oKzyrrKFtRcp2lRjfOllDZM2EedTmjQzsorYzN3XUKrCqm
+         QLzY+A7TgYlDQ==
+Date:   Thu, 26 Mar 2020 14:27:27 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Paolo Bonzini <pbonzini@redhat.com>, KVM <kvm@vger.kernel.org>,
+        Greg KH <greg@kroah.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Andrew Jones <drjones@redhat.com>
+Subject: linux-next: manual merge of the kvm tree with the spdx tree
+Message-ID: <20200326142727.6991104f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/VtZ6W2G_3YXyJV6tZQUt48y";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rts522a should use rts522a_pcr_ops, which is
-diffrent with rts5227 in phy/hw init setting.
+--Sig_/VtZ6W2G_3YXyJV6tZQUt48y
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Fixes: ce6a5acc9387 ("mfd: rtsx: Add support for rts522A")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/misc/cardreader/rts5227.c | 1 +
- 1 file changed, 1 insertion(+)
+Hi all,
 
-diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
-index 423fecc19fc4..3a9467aaa435 100644
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -394,6 +394,7 @@ static const struct pcr_ops rts522a_pcr_ops = {
- void rts522a_init_params(struct rtsx_pcr *pcr)
- {
- 	rts5227_init_params(pcr);
-+	pcr->ops = &rts522a_pcr_ops;
- 	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
- 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
- 
--- 
-2.17.1
+Today's linux-next merge of the kvm tree got a conflict in:
 
+  tools/testing/selftests/kvm/.gitignore
 
+between commit:
+
+  d198b34f3855 (".gitignore: add SPDX License Identifier")
+
+from the spdx tree and commit:
+
+  1914f624f5e3 ("selftests: KVM: SVM: Add vmcall test to gitignore")
+
+from the kvm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/testing/selftests/kvm/.gitignore
+index 2f85dc944fbd,16877c3daabf..000000000000
+--- a/tools/testing/selftests/kvm/.gitignore
++++ b/tools/testing/selftests/kvm/.gitignore
+@@@ -1,6 -1,6 +1,7 @@@
+ +# SPDX-License-Identifier: GPL-2.0-only
+- /s390x/sync_regs_test
+  /s390x/memop
++ /s390x/resets
++ /s390x/sync_regs_test
+  /x86_64/cr4_cpuid_sync_test
+  /x86_64/evmcs_test
+  /x86_64/hyperv_cpuid
+
+--Sig_/VtZ6W2G_3YXyJV6tZQUt48y
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl58IR8ACgkQAVBC80lX
+0GwFSwf9Hl5x/JggSMeSvHGQsBqJIqanz2n818jJh/abF0ssh8XqI2Laz1iJD/4D
+EEKEhVSpZeDAFKseL5KC/xAi+lP5mRyrOirK0EolG+mPYDuyvGZnRferP9BITvgL
+Fb6ZNh0YZwp+P13hmU/r50goHdyt7KMrIp6CXLJkMBEq/8AM+QurePpFlx5K/PDR
+KGjgj+2Rt34hdpV95CFaV4KZ9LNaZigS44HOPA31qlecEQnhAljjk2s0jqwrz+Gi
+HEyuWAtz01IVkZFMmZAGG9gBsjyEPtRITnW0jzrkWuVFpIoTKg7iVb5HoMbXA+S/
+k3tdvYfZXMz4t3cGbKdYegDQV7i+KA==
+=5Cf/
+-----END PGP SIGNATURE-----
+
+--Sig_/VtZ6W2G_3YXyJV6tZQUt48y--
