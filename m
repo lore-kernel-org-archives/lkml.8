@@ -2,672 +2,449 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13014C2D0E9
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82105C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EF52070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45216206E6
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 20:06:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="mytuH9Rs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fAshHZ+Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgCZUGG (ORCPT
+        id S1728731AbgCZUGt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 16:06:06 -0400
-Received: from ssl.serverraum.org ([176.9.125.105]:45133 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727770AbgCZUGF (ORCPT
+        Thu, 26 Mar 2020 16:06:49 -0400
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:54123 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728660AbgCZUGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 16:06:05 -0400
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id DA8F82222E;
-        Thu, 26 Mar 2020 21:05:51 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1585253161;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6Su5YbX7HX5TxViPoYjV7m52PeSCqZzDYRmf1SJwLiQ=;
-        b=mytuH9Rsozp23uOCtqTLsuIxKzxIv3pikEjfuolYqQAWHnTTK4Q3bH4DgbOFT3BB8K2zRm
-        1leCC+kAJw9QIwlV3IG4F1Ntn/0PuVoTapAptLv8ArOB6AfQV9IRTGmi8WRch0GZaa071m
-        51MNI7pIr714EcxPTxuv7pOqYrdddGw=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Thu, 26 Mar 2020 21:05:51 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc:     linux-gpio <linux-gpio@vger.kernel.org>,
-        linux-devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org,
-        linux-pwm@vger.kernel.org,
-        LINUXWATCHDOG <linux-watchdog@vger.kernel.org>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Lee Jones <lee.jones@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH 12/18] gpio: add support for the sl28cpld GPIO controller
-In-Reply-To: <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
-References: <20200317205017.28280-1-michael@walle.cc>
- <20200317205017.28280-13-michael@walle.cc>
- <CAMpxmJW770v6JLdveEe1hkgNEJByVyArhorSyUZBYOyFiVyOeg@mail.gmail.com>
- <9c310f2a11913d4d089ef1b07671be00@walle.cc>
- <CAMpxmJXmD-M+Wbj6=wgFgP2aDxbqDN=ceHi1XDun4iwdLm55Zg@mail.gmail.com>
-Message-ID: <22944c9b62aa69da418de7766b7741bd@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.3.10
-X-Spamd-Bar: +
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: DA8F82222E
-X-Spamd-Result: default: False [1.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[21];
-         NEURAL_HAM(-0.00)[-0.467];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[vger.kernel.org,lists.infradead.org,linaro.org,kernel.org,suse.com,roeck-us.net,gmail.com,pengutronix.de,linux-watchdog.org,nxp.com,linutronix.de,lakedaemon.net];
-         MID_RHS_MATCH_FROM(0.00)[];
-         SUSPICIOUS_RECIPS(1.50)[]
+        Thu, 26 Mar 2020 16:06:48 -0400
+Received: by mail-pj1-f74.google.com with SMTP id l5so5532655pjr.3
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 13:06:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=PVSwrvgjQE4kHOREjmYboSRHDQEjtQZz+pfSq1QNzRM=;
+        b=fAshHZ+QfAUpjSsm5LB2GCuEMSmaI+uOd0OSFMcRdZduS8R1Vw5QlKd88PdqNbgyof
+         2MPjdW97zMnbMoDplPGnYp1Saf/M48cZX8x4zFxI+sCdYFTYe4vEF1iiQIKLSso3SVCq
+         cCdtJBaDYgAWo6TrZpbO2y1mVzqUCPaAKdsUzxphGQo0hiwxw19StHR7BBK10y1909hE
+         +5PbEbs9c1xkbjh9g6DU5oHZNphxlAYLZvA42WDzF5V9CZLF1rbOdBhCaEYCskTS05/j
+         gdOL0nEvKp+84wcrsj3x/i4MRkM6j+THLcZ8eWKlyAHiBvEACHn6TgmRWxMM54EHfSbr
+         KfPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=PVSwrvgjQE4kHOREjmYboSRHDQEjtQZz+pfSq1QNzRM=;
+        b=So99VtVUmeofKuoYw6hI5Zz11QJ0b5coQVHuEytvA48suEGb7QiCT29oYnAvQb+j03
+         EolIvkYcf6zVAvmbmwdhMHkLouhQ9KpH2gHAeX1oVEBRis91YBeQqnWUFvYwvaHk0N7/
+         RfZnnjBrCuv5TzNVl6e7542wxu62Vg2a7PI5VYarwUP9iX3XFWJ9iaEuFL/JtxFONVwz
+         kpU0dAzuYxTXbAve4maSuPmbd7+9n9hk2QCQ8A6FQ0MWjs69KeUcRr3kl9lLZa2pafk7
+         OXvo7CR5gnPD2OkaE6skoUcLHM4eTQ/QkAHBKtmiMXNLtdfZObTFTeQ8EUG7NwRPzZwD
+         DxyQ==
+X-Gm-Message-State: ANhLgQ0+d9TVWEl4dJy4GBMP5rZxAM/wxxSB89IPtK9tMuQBeBp+BjJ6
+        JFE5/oPlxIytti32saSOzuOUJrj61sw=
+X-Google-Smtp-Source: ADFU+vt2nsyHQf4Ri/E3096WPwNm/QjrzhH0m1BcyB4bLSACpbtYLSr4OT7XeJlvWX3iesfKdXFwG3Vd4v8=
+X-Received: by 2002:a63:7409:: with SMTP id p9mr10150468pgc.206.1585253206759;
+ Thu, 26 Mar 2020 13:06:46 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 13:06:32 -0700
+In-Reply-To: <20200326200634.222009-1-dancol@google.com>
+Message-Id: <20200326200634.222009-2-dancol@google.com>
+Mime-Version: 1.0
+References: <20200326181456.132742-1-dancol@google.com> <20200326200634.222009-1-dancol@google.com>
+X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
+Subject: [PATCH v4 1/3] Add a new LSM-supporting anonymous inode interface
+From:   Daniel Colascione <dancol@google.com>
+To:     timmurray@google.com, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, viro@zeniv.linux.org.uk, paul@paul-moore.com,
+        nnk@google.com, sds@tycho.nsa.gov, lokeshgidra@google.com,
+        jmorris@namei.org
+Cc:     Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartosz,
+This change adds two new functions, anon_inode_getfile_secure and
+anon_inode_getfd_secure, that create anonymous-node files with
+individual non-S_PRIVATE inodes to which security modules can apply
+policy. Existing callers continue using the original singleton-inode
+kind of anonymous-inode file. We can transition anonymous inode users
+to the new kind of anonymous inode in individual patches for the sake
+of bisection and review.
 
-Am 2020-03-25 12:50, schrieb Bartosz Golaszewski:
-> śr., 18 mar 2020 o 13:45 Michael Walle <michael@walle.cc> napisał(a):
->> 
->> Hi Bartosz,
->> 
->> Am 2020-03-18 10:14, schrieb Bartosz Golaszewski:
->> > wt., 17 mar 2020 o 21:50 Michael Walle <michael@walle.cc> napisał(a):
->> >>
->> >> This adds support for the GPIO controller of the sl28 board management
->> >> controller. This driver is part of a multi-function device.
->> >>
->> >> Signed-off-by: Michael Walle <michael@walle.cc>
->> >
->> > Hi Michael,
->> >
->> > thanks for the driver. Please take a look at some comments below.
->> 
->> well, thank you for the very fast review!
->> 
->> >> ---
->> >>  drivers/gpio/Kconfig         |  11 ++
->> >>  drivers/gpio/Makefile        |   1 +
->> >>  drivers/gpio/gpio-sl28cpld.c | 332
->> >> +++++++++++++++++++++++++++++++++++
->> >>  3 files changed, 344 insertions(+)
->> >>  create mode 100644 drivers/gpio/gpio-sl28cpld.c
->> >>
->> >> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
->> >> index 3cbf8882a0dd..516e47017ef5 100644
->> >> --- a/drivers/gpio/Kconfig
->> >> +++ b/drivers/gpio/Kconfig
->> >> @@ -1211,6 +1211,17 @@ config GPIO_RC5T583
->> >>           This driver provides the support for driving/reading the
->> >> gpio pins
->> >>           of RC5T583 device through standard gpio library.
->> >>
->> >> +config GPIO_SL28CPLD
->> >> +       tristate "Kontron sl28 GPIO"
->> >> +       depends on MFD_SL28CPLD
->> >> +       depends on OF_GPIO
->> >> +       select GPIOLIB_IRQCHIP
->> >
->> > Please see below - I think both are not needed.
->> >
->> >> +       help
->> >> +         This enables support for the GPIOs found on the Kontron sl28
->> >> CPLD.
->> >> +
->> >> +         This driver can also be built as a module. If so, the module
->> >> will be
->> >> +         called gpio-sl28cpld.
->> >> +
->> >>  config GPIO_STMPE
->> >>         bool "STMPE GPIOs"
->> >>         depends on MFD_STMPE
->> >> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
->> >> index 0b571264ddbc..0ca2d52c78e8 100644
->> >> --- a/drivers/gpio/Makefile
->> >> +++ b/drivers/gpio/Makefile
->> >> @@ -127,6 +127,7 @@ obj-$(CONFIG_GPIO_SCH311X)          +=
->> >> gpio-sch311x.o
->> >>  obj-$(CONFIG_GPIO_SCH)                 += gpio-sch.o
->> >>  obj-$(CONFIG_GPIO_SIFIVE)              += gpio-sifive.o
->> >>  obj-$(CONFIG_GPIO_SIOX)                        += gpio-siox.o
->> >> +obj-$(CONFIG_GPIO_SL28CPLD)            += gpio-sl28cpld.o
->> >>  obj-$(CONFIG_GPIO_SODAVILLE)           += gpio-sodaville.o
->> >>  obj-$(CONFIG_GPIO_SPEAR_SPICS)         += gpio-spear-spics.o
->> >>  obj-$(CONFIG_GPIO_SPRD)                        += gpio-sprd.o
->> >> diff --git a/drivers/gpio/gpio-sl28cpld.c
->> >> b/drivers/gpio/gpio-sl28cpld.c
->> >> new file mode 100644
->> >> index 000000000000..94f82013882f
->> >> --- /dev/null
->> >> +++ b/drivers/gpio/gpio-sl28cpld.c
->> >> @@ -0,0 +1,332 @@
->> >> +// SPDX-License-Identifier: GPL-2.0-only
->> >> +/*
->> >> + * SMARC-sAL28 GPIO driver.
->> >> + *
->> >> + * Copyright 2019 Kontron Europe GmbH
->> >> + */
->> >> +
->> >> +#include <linux/kernel.h>
->> >> +#include <linux/module.h>
->> >> +#include <linux/of.h>
->> >> +#include <linux/of_device.h>
->> >> +#include <linux/of_address.h>
->> >> +#include <linux/interrupt.h>
->> >> +#include <linux/regmap.h>
->> >> +#include <linux/platform_device.h>
->> >> +#include <linux/gpio/driver.h>
->> >> +
->> >> +#define GPIO_REG_DIR   0
->> >> +#define GPIO_REG_OUT   1
->> >> +#define GPIO_REG_IN    2
->> >> +#define GPIO_REG_IE    3
->> >> +#define GPIO_REG_IP    4
->> >
->> > These values would be more clear if they were defined as hex.
->> >
->> >> +
->> >> +#define GPI_REG_IN     0
->> >> +
->> >> +#define GPO_REG_OUT    0
->> >
->> > Please also use a common prefix even for defines.
->> 
->> ok
->> 
->> >
->> >> +
->> >> +enum sl28cpld_gpio_type {
->> >> +       sl28cpld_gpio,
->> >> +       sl28cpld_gpi,
->> >> +       sl28cpld_gpo,
->> >> +};
->> >
->> > Enum values should be all upper-case.
->> 
->> ok
->> 
->> >> +
->> >> +struct sl28cpld_gpio {
->> >> +       struct gpio_chip gpio_chip;
->> >> +       struct irq_chip irq_chip;
->> >> +       struct regmap *regmap;
->> >> +       u32 offset;
->> >> +       struct mutex lock;
->> >> +       u8 ie;
->> >> +};
->> >> +
->> >> +static void sl28cpld_gpio_set_reg(struct gpio_chip *chip, unsigned
->> >> int reg,
->> >> +                                 unsigned int offset, int value)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
->> >> +       unsigned int mask = 1 << offset;
->> >> +       unsigned int val = value << offset;
->> >> +
->> >> +       regmap_update_bits(gpio->regmap, gpio->offset + reg, mask,
->> >> val);
->> >> +}
->> >> +
->> >> +static void sl28cpld_gpio_set(struct gpio_chip *chip, unsigned int
->> >> offset,
->> >> +                             int value)
->> >> +{
->> >> +       sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
->> >> +}
->> >> +
->> >> +static void sl28cpld_gpo_set(struct gpio_chip *chip, unsigned int
->> >> offset,
->> >> +                            int value)
->> >> +{
->> >> +       sl28cpld_gpio_set_reg(chip, GPO_REG_OUT, offset, value);
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_get_reg(struct gpio_chip *chip, unsigned int
->> >> reg,
->> >> +                                unsigned int offset)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
->> >> +       unsigned int mask = 1 << offset;
->> >> +       unsigned int val;
->> >> +       int ret;
->> >> +
->> >> +       ret = regmap_read(gpio->regmap, gpio->offset + reg, &val);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       return (val & mask) ? 1 : 0;
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_get(struct gpio_chip *chip, unsigned int
->> >> offset)
->> >> +{
->> >> +       return sl28cpld_gpio_get_reg(chip, GPIO_REG_IN, offset);
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpi_get(struct gpio_chip *chip, unsigned int
->> >> offset)
->> >> +{
->> >> +       return sl28cpld_gpio_get_reg(chip, GPI_REG_IN, offset);
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_get_direction(struct gpio_chip *chip,
->> >> +                                      unsigned int offset)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
->> >> +       unsigned int reg;
->> >> +       int ret;
->> >> +
->> >> +       ret = regmap_read(gpio->regmap, gpio->offset + GPIO_REG_DIR,
->> >> &reg);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       if (reg & (1 << offset))
->> >> +               return GPIO_LINE_DIRECTION_OUT;
->> >> +       else
->> >> +               return GPIO_LINE_DIRECTION_IN;
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_set_direction(struct gpio_chip *chip,
->> >> +                                      unsigned int offset,
->> >> +                                      bool output)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio = gpiochip_get_data(chip);
->> >> +       unsigned int mask = 1 << offset;
->> >> +       unsigned int val = (output) ? mask : 0;
->> >> +
->> >> +       return regmap_update_bits(gpio->regmap, gpio->offset +
->> >> GPIO_REG_DIR,
->> >> +                                 mask, val);
->> >> +
->> >
->> > Stray newline.
->> ok
->> 
->> >
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_direction_input(struct gpio_chip *chip,
->> >> +                                        unsigned int offset)
->> >> +{
->> >> +       return sl28cpld_gpio_set_direction(chip, offset, false);
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_direction_output(struct gpio_chip *chip,
->> >> +                                         unsigned int offset, int
->> >> value)
->> >> +{
->> >> +       sl28cpld_gpio_set_reg(chip, GPIO_REG_OUT, offset, value);
->> >> +       return sl28cpld_gpio_set_direction(chip, offset, true);
->> >> +}
->> >> +
->> >> +static void sl28cpld_gpio_irq_lock(struct irq_data *data)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio =
->> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
->> >> +
->> >> +       mutex_lock(&gpio->lock);
->> >
->> > How does that actually lock anything?
->> 
->> TBH, I took that from gpio-pcf857x.c. But that
->>   (1) don't uses regmap
->>   (2) also uses that lock on other places.
->> 
->> I'll dig deeper into that and try to understand why there is a lock at
->> all and why this callback is actually called _irq_lock() because that
->> made me wonder.
->> 
->> > Regmap uses a different lock and
->> > if you want to make sure nobody modifies the GPIO registers than you'd
->> > need to use the same lock. Also: this looks a lot like a task for
->> > regmap_irqchip - maybe you could use it here or in the core mfd
->> > module?
->> 
->> regmap_irqchip will register the interrupt controller on the device
->> which owns the regmap, ie. the parent. So (1) the phandle would need 
->> to
->> point to the parent device instead of the GPIO subnode and (2) I'm
->> already using the regmap_irqchip for the interrupt controller. I don't
->> know if you can actually have that multiple times.
->> 
->> there was a discussion which might apply partly to (1):
->>   https://lore.kernel.org/patchwork/patch/802608/
->> 
-> 
-> In that case maybe you should use the disable_locking option in
-> regmap_config and provide your own callbacks that you can use in the
-> irqchip code too?
+The new functions accept an optional context_inode parameter that
+callers can use to provide additional contextual information to
+security modules, e.g., indicating that one anonymous struct file is a
+logical child of another, allowing a security model to propagate
+security information from one to the other.
 
-But how would that solve problem (1). And keep in mind, that the
-reqmap_irqchip is actually used for the interrupt controller, which
-is not this gpio controller.
+Signed-off-by: Daniel Colascione <dancol@google.com>
+---
+ fs/anon_inodes.c            | 196 ++++++++++++++++++++++++++++--------
+ include/linux/anon_inodes.h |  13 +++
+ include/linux/lsm_hooks.h   |  11 ++
+ include/linux/security.h    |   3 +
+ security/security.c         |   9 ++
+ 5 files changed, 190 insertions(+), 42 deletions(-)
 
-Ie. the interrupt controller of the sl28cpld uses the regmap_irqchip
-and all interrupt phandles pointing to the interrupt controller will
-reference the toplevel node. Any phandles pointing to the gpio
-controller will reference the GPIO subnode.
+diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+index 89714308c25b..024059e333dc 100644
+--- a/fs/anon_inodes.c
++++ b/fs/anon_inodes.c
+@@ -55,75 +55,135 @@ static struct file_system_type anon_inode_fs_type = {
+ 	.kill_sb	= kill_anon_super,
+ };
+ 
+-/**
+- * anon_inode_getfile - creates a new file instance by hooking it up to an
+- *                      anonymous inode, and a dentry that describe the "class"
+- *                      of the file
+- *
+- * @name:    [in]    name of the "class" of the new file
+- * @fops:    [in]    file operations for the new file
+- * @priv:    [in]    private data for the new file (will be file's private_data)
+- * @flags:   [in]    flags
+- *
+- * Creates a new file by hooking it on a single inode. This is useful for files
+- * that do not need to have a full-fledged inode in order to operate correctly.
+- * All the files created with anon_inode_getfile() will share a single inode,
+- * hence saving memory and avoiding code duplication for the file/inode/dentry
+- * setup.  Returns the newly created file* or an error pointer.
+- */
+-struct file *anon_inode_getfile(const char *name,
+-				const struct file_operations *fops,
+-				void *priv, int flags)
++static struct inode *anon_inode_make_secure_inode(
++	const char *name,
++	const struct inode *context_inode,
++	const struct file_operations *fops)
++{
++	struct inode *inode;
++	const struct qstr qname = QSTR_INIT(name, strlen(name));
++	int error;
++
++	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
++	if (IS_ERR(inode))
++		return inode;
++	inode->i_flags &= ~S_PRIVATE;
++	error =	security_inode_init_security_anon(
++		inode, &qname, context_inode);
++	if (error) {
++		iput(inode);
++		return ERR_PTR(error);
++	}
++	return inode;
++}
++
++struct file *_anon_inode_getfile(const char *name,
++				 const struct file_operations *fops,
++				 void *priv, int flags,
++				 const struct inode *context_inode,
++				 bool secure)
+ {
++	struct inode *inode;
+ 	struct file *file;
+ 
+-	if (IS_ERR(anon_inode_inode))
+-		return ERR_PTR(-ENODEV);
++	if (secure) {
++		inode =	anon_inode_make_secure_inode(
++			name, context_inode, fops);
++		if (IS_ERR(inode))
++			return ERR_PTR(PTR_ERR(inode));
++	} else {
++		inode =	anon_inode_inode;
++		if (IS_ERR(inode))
++			return ERR_PTR(-ENODEV);
++		/*
++		 * We know the anon_inode inode count is always
++		 * greater than zero, so ihold() is safe.
++		 */
++		ihold(inode);
++	}
+ 
+-	if (fops->owner && !try_module_get(fops->owner))
+-		return ERR_PTR(-ENOENT);
++	if (fops->owner && !try_module_get(fops->owner)) {
++		file = ERR_PTR(-ENOENT);
++		goto err;
++	}
+ 
+-	/*
+-	 * We know the anon_inode inode count is always greater than zero,
+-	 * so ihold() is safe.
+-	 */
+-	ihold(anon_inode_inode);
+-	file = alloc_file_pseudo(anon_inode_inode, anon_inode_mnt, name,
++	file = alloc_file_pseudo(inode, anon_inode_mnt, name,
+ 				 flags & (O_ACCMODE | O_NONBLOCK), fops);
+ 	if (IS_ERR(file))
+ 		goto err;
+ 
+-	file->f_mapping = anon_inode_inode->i_mapping;
++	file->f_mapping = inode->i_mapping;
+ 
+ 	file->private_data = priv;
+ 
+ 	return file;
+ 
+ err:
+-	iput(anon_inode_inode);
++	iput(inode);
+ 	module_put(fops->owner);
+ 	return file;
+ }
+-EXPORT_SYMBOL_GPL(anon_inode_getfile);
+ 
+ /**
+- * anon_inode_getfd - creates a new file instance by hooking it up to an
+- *                    anonymous inode, and a dentry that describe the "class"
+- *                    of the file
++ * anon_inode_getfile_secure - creates a new file instance by hooking
++ *                             it up to a new anonymous inode and a
++ *                             dentry that describe the "class" of the
++ *                             file.  Make it possible to use security
++ *                             modules to control access to the
++ *                             new file.
+  *
+  * @name:    [in]    name of the "class" of the new file
+  * @fops:    [in]    file operations for the new file
+  * @priv:    [in]    private data for the new file (will be file's private_data)
+- * @flags:   [in]    flags
++ * @flags:   [in]    flags for the file
++ * @anon_inode_flags: [in] flags for anon_inode*
++ *
++ * Creates a new file by hooking it on an unspecified inode. This is
++ * useful for files that do not need to have a full-fledged inode in
++ * order to operate correctly.  All the files created with
++ * anon_inode_getfile_secure() will have distinct inodes, avoiding
++ * code duplication for the file/inode/dentry setup.  Returns the
++ * newly created file* or an error pointer.
++ */
++struct file *anon_inode_getfile_secure(const char *name,
++				       const struct file_operations *fops,
++				       void *priv, int flags,
++				       const struct inode *context_inode)
++{
++	return _anon_inode_getfile(
++		name, fops, priv, flags, context_inode, true);
++}
++EXPORT_SYMBOL_GPL(anon_inode_getfile_secure);
++
++/**
++ * anon_inode_getfile - creates a new file instance by hooking it up
++ *                      to an anonymous inode and a dentry that
++ *                      describe the "class" of the file.
++ *
++ * @name:    [in]    name of the "class" of the new file
++ * @fops:    [in]    file operations for the new file
++ * @priv:    [in]    private data for the new file (will be file's private_data)
++ * @flags:   [in]    flags for the file
+  *
+- * Creates a new file by hooking it on a single inode. This is useful for files
++ * Creates a new file by hooking it on an unspecified inode. This is useful for files
+  * that do not need to have a full-fledged inode in order to operate correctly.
+- * All the files created with anon_inode_getfd() will share a single inode,
++ * All the files created with anon_inode_getfile() will share a single inode,
+  * hence saving memory and avoiding code duplication for the file/inode/dentry
+- * setup.  Returns new descriptor or an error code.
++ * setup.  Returns the newly created file* or an error pointer.
+  */
+-int anon_inode_getfd(const char *name, const struct file_operations *fops,
+-		     void *priv, int flags)
++struct file *anon_inode_getfile(const char *name,
++				const struct file_operations *fops,
++				void *priv, int flags)
++{
++	return _anon_inode_getfile(name, fops, priv, flags, NULL, false);
++}
++EXPORT_SYMBOL_GPL(anon_inode_getfile);
++
++static int _anon_inode_getfd(const char *name,
++			     const struct file_operations *fops,
++			     void *priv, int flags,
++			     const struct inode *context_inode,
++			     bool secure)
+ {
+ 	int error, fd;
+ 	struct file *file;
+@@ -133,7 +193,8 @@ int anon_inode_getfd(const char *name, const struct file_operations *fops,
+ 		return error;
+ 	fd = error;
+ 
+-	file = anon_inode_getfile(name, fops, priv, flags);
++	file = _anon_inode_getfile(name, fops, priv, flags, context_inode,
++				   secure);
+ 	if (IS_ERR(file)) {
+ 		error = PTR_ERR(file);
+ 		goto err_put_unused_fd;
+@@ -146,6 +207,57 @@ int anon_inode_getfd(const char *name, const struct file_operations *fops,
+ 	put_unused_fd(fd);
+ 	return error;
+ }
++
++/**
++ * anon_inode_getfd_secure - creates a new file instance by hooking it
++ *                           up to a new anonymous inode and a dentry
++ *                           that describe the "class" of the file.
++ *                           Make it possible to use security modules
++ *                           to control access to the new file.
++ *
++ * @name:    [in]    name of the "class" of the new file
++ * @fops:    [in]    file operations for the new file
++ * @priv:    [in]    private data for the new file (will be file's private_data)
++ * @flags:   [in]    flags
++ *
++ * Creates a new file by hooking it on an unspecified inode. This is
++ * useful for files that do not need to have a full-fledged inode in
++ * order to operate correctly.  All the files created with
++ * anon_inode_getfile_secure() will have distinct inodes, avoiding
++ * code duplication for the file/inode/dentry setup.  Returns a newly
++ * created file descriptor or an error code.
++ */
++int anon_inode_getfd_secure(const char *name, const struct file_operations *fops,
++			    void *priv, int flags,
++			    const struct inode *context_inode)
++{
++	return _anon_inode_getfd(name, fops, priv, flags,
++				 context_inode, true);
++}
++EXPORT_SYMBOL_GPL(anon_inode_getfd_secure);
++
++/**
++ * anon_inode_getfd - creates a new file instance by hooking it up to
++ *                    an anonymous inode and a dentry that describe
++ *                    the "class" of the file
++ *
++ * @name:    [in]    name of the "class" of the new file
++ * @fops:    [in]    file operations for the new file
++ * @priv:    [in]    private data for the new file (will be file's private_data)
++ * @flags:   [in]    flags
++ *
++ * Creates a new file by hooking it on an unspecified inode. This is
++ * useful for files that do not need to have a full-fledged inode in
++ * order to operate correctly.  All the files created with
++ * anon_inode_getfile() will use the same singleton inode, reducing
++ * memory use and avoiding code duplication for the file/inode/dentry
++ * setup.  Returns a newly created file descriptor or an error code.
++ */
++int anon_inode_getfd(const char *name, const struct file_operations *fops,
++		     void *priv, int flags)
++{
++	return _anon_inode_getfd(name, fops, priv, flags, NULL, false);
++}
+ EXPORT_SYMBOL_GPL(anon_inode_getfd);
+ 
+ static int __init anon_inode_init(void)
+diff --git a/include/linux/anon_inodes.h b/include/linux/anon_inodes.h
+index d0d7d96261ad..67bd85d92dca 100644
+--- a/include/linux/anon_inodes.h
++++ b/include/linux/anon_inodes.h
+@@ -10,12 +10,25 @@
+ #define _LINUX_ANON_INODES_H
+ 
+ struct file_operations;
++struct inode;
++
++struct file *anon_inode_getfile_secure(const char *name,
++				       const struct file_operations *fops,
++				       void *priv, int flags,
++				       const struct inode *context_inode);
+ 
+ struct file *anon_inode_getfile(const char *name,
+ 				const struct file_operations *fops,
+ 				void *priv, int flags);
++
++int anon_inode_getfd_secure(const char *name,
++			    const struct file_operations *fops,
++			    void *priv, int flags,
++			    const struct inode *context_inode);
++
+ int anon_inode_getfd(const char *name, const struct file_operations *fops,
+ 		     void *priv, int flags);
+ 
++
+ #endif /* _LINUX_ANON_INODES_H */
+ 
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 20d8cf194fb7..5434c1d285b2 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -215,6 +215,13 @@
+  *	Returns 0 if @name and @value have been successfully set,
+  *	-EOPNOTSUPP if no security attribute is needed, or
+  *	-ENOMEM on memory allocation failure.
++ * @inode_init_security_anon:
++ *      Set up a secure anonymous inode.
++ *      @inode contains the inode structure
++ *      @name name of the anonymous inode class
++ *      @context_inode optional related inode
++ *	Returns 0 on success. Returns -EPERM if	the security module denies
++ *	the creation of this inode.
+  * @inode_create:
+  *	Check permission to create a regular file.
+  *	@dir contains inode structure of the parent of the new file.
+@@ -1552,6 +1559,9 @@ union security_list_options {
+ 					const struct qstr *qstr,
+ 					const char **name, void **value,
+ 					size_t *len);
++	int (*inode_init_security_anon)(struct inode *inode,
++					const struct qstr *name,
++					const struct inode *context_inode);
+ 	int (*inode_create)(struct inode *dir, struct dentry *dentry,
+ 				umode_t mode);
+ 	int (*inode_link)(struct dentry *old_dentry, struct inode *dir,
+@@ -1884,6 +1894,7 @@ struct security_hook_heads {
+ 	struct hlist_head inode_alloc_security;
+ 	struct hlist_head inode_free_security;
+ 	struct hlist_head inode_init_security;
++	struct hlist_head inode_init_security_anon;
+ 	struct hlist_head inode_create;
+ 	struct hlist_head inode_link;
+ 	struct hlist_head inode_unlink;
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 64b19f050343..2108c3ce0666 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -320,6 +320,9 @@ void security_inode_free(struct inode *inode);
+ int security_inode_init_security(struct inode *inode, struct inode *dir,
+ 				 const struct qstr *qstr,
+ 				 initxattrs initxattrs, void *fs_data);
++int security_inode_init_security_anon(struct inode *inode,
++				      const struct qstr *name,
++				      const struct inode *context_inode);
+ int security_old_inode_init_security(struct inode *inode, struct inode *dir,
+ 				     const struct qstr *qstr, const char **name,
+ 				     void **value, size_t *len);
+diff --git a/security/security.c b/security/security.c
+index 565bc9b67276..70bfebada024 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -1033,6 +1033,15 @@ int security_inode_init_security(struct inode *inode, struct inode *dir,
+ }
+ EXPORT_SYMBOL(security_inode_init_security);
+ 
++int
++security_inode_init_security_anon(struct inode *inode,
++				  const struct qstr *name,
++				  const struct inode *context_inode)
++{
++	return call_int_hook(inode_init_security_anon, 0, inode, name,
++			     context_inode);
++}
++
+ int security_old_inode_init_security(struct inode *inode, struct inode *dir,
+ 				     const struct qstr *qstr, const char **name,
+ 				     void **value, size_t *len)
+-- 
+2.25.1.696.g5e7596f4ac-goog
 
-> 
->> >
->> >> +}
->> >> +
->> >> +static void sl28cpld_gpio_irq_sync_unlock(struct irq_data *data)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio =
->> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
->> >> +
->> >> +       regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IE,
->> >> gpio->ie);
->> >> +       mutex_unlock(&gpio->lock);
->> >> +}
->> >> +
->> >> +static void sl28cpld_gpio_irq_disable(struct irq_data *data)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio =
->> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
->> >> +
->> >> +       if (data->hwirq >= 8)
->> >> +               return;
->> >> +
->> >> +       gpio->ie &= ~(1 << data->hwirq);
->> >> +}
->> >> +
->> >> +static void sl28cpld_gpio_irq_enable(struct irq_data *data)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio =
->> >> +               gpiochip_get_data(irq_data_get_irq_chip_data(data));
->> >> +
->> >> +       if (data->hwirq >= 8)
->> >> +               return;
->> >> +
->> >> +       gpio->ie |= (1 << data->hwirq);
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_irq_set_type(struct irq_data *data, unsigned
->> >> int type)
->> >> +{
->> >> +       /* only edge triggered interrupts on both edges are supported
->> >> */
->> >> +       return (type == IRQ_TYPE_EDGE_BOTH) ? 0 : -EINVAL;
->> >> +}
->> >> +
->> >> +static irqreturn_t sl28cpld_gpio_irq_thread(int irq, void *data)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio = data;
->> >> +       unsigned int ip;
->> >> +       unsigned int virq;
->> >> +       int pin;
->> >> +       int ret;
->> >> +
->> >> +       ret = regmap_read(gpio->regmap, gpio->offset + GPIO_REG_IP,
->> >> &ip);
->> >> +       if (ret)
->> >> +               return IRQ_NONE;
->> >> +
->> >> +       /* mask other pending interrupts which are not enabled */
->> >> +       ip &= gpio->ie;
->> >> +
->> >> +       /* ack the interrupts */
->> >> +       regmap_write(gpio->regmap, gpio->offset + GPIO_REG_IP, ip);
->> >> +
->> >> +       /* and handle them */
->> >> +       while (ip) {
->> >> +               pin = __ffs(ip);
->> >> +               ip &= ~BIT(pin);
->> >> +
->> >> +               virq = irq_find_mapping(gpio->gpio_chip.irq.domain,
->> >> pin);
->> >> +               if (virq)
->> >> +                       handle_nested_irq(virq);
->> >> +       }
->> >> +
->> >> +       return IRQ_HANDLED;
->> >> +}
->> >
->> > This definitely looks like parts of regmap_irqchip reimplemented.
->> > Please check if you could reuse it - it would save a lot of code.
->> 
->> See above. I'd be happy to reuse the code though.
->> 
->> >
->> >> +
->> >> +static int sl28_cpld_gpio_irq_init(struct platform_device *pdev, int
->> >> irq)
->> >> +{
->> >> +       struct sl28cpld_gpio *gpio = platform_get_drvdata(pdev);
->> >> +       struct irq_chip *irq_chip = &gpio->irq_chip;
->> >> +       int ret;
->> >> +
->> >> +       irq_chip->name = "sl28cpld-gpio-irq",
->> >> +       irq_chip->irq_bus_lock = sl28cpld_gpio_irq_lock,
->> >> +       irq_chip->irq_bus_sync_unlock = sl28cpld_gpio_irq_sync_unlock,
->> >> +       irq_chip->irq_disable = sl28cpld_gpio_irq_disable,
->> >> +       irq_chip->irq_enable = sl28cpld_gpio_irq_enable,
->> >> +       irq_chip->irq_set_type = sl28cpld_gpio_irq_set_type,
->> >> +       irq_chip->flags = IRQCHIP_SKIP_SET_WAKE,
->> >> +
->> >> +       ret = gpiochip_irqchip_add_nested(&gpio->gpio_chip, irq_chip,
->> >> 0,
->> >> +                                         handle_simple_irq,
->> >> IRQ_TYPE_NONE);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
->> >> +                                       sl28cpld_gpio_irq_thread,
->> >> +                                       IRQF_SHARED | IRQF_ONESHOT,
->> >> +                                       pdev->name, gpio);
->> >> +       if (ret)
->> >> +               return ret;
->> >> +
->> >> +       gpiochip_set_nested_irqchip(&gpio->gpio_chip, irq_chip, irq);
->> >> +
->> >> +       return 0;
->> >> +}
->> >> +
->> >> +static int sl28cpld_gpio_probe(struct platform_device *pdev)
->> >> +{
->> >> +       enum sl28cpld_gpio_type type =
->> >> +               platform_get_device_id(pdev)->driver_data;
->> >> +       struct device_node *np = pdev->dev.of_node;
->> >> +       struct sl28cpld_gpio *gpio;
->> >> +       struct gpio_chip *chip;
->> >> +       struct resource *res;
->> >> +       bool irq_support = false;
->> >> +       int ret;
->> >> +       int irq;
->> >> +
->> >> +       gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
->> >> +       if (!gpio)
->> >> +               return -ENOMEM;
->> >> +
->> >> +       if (!pdev->dev.parent)
->> >> +               return -ENODEV;
->> >
->> > Why not check this before allocating any memory?
->> 
->> I'll change that, you're not the first one which notices that. My 
->> reason
->> was to have the check together with the dev_get_regmap() which uses 
->> the
->> parent, expecting that the error case only happen exceptionally.
->> 
->> >
->> >> +
->> >> +       gpio->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> >> +       if (!gpio->regmap)
->> >> +               return -ENODEV;
->> >> +
->> >> +       res = platform_get_resource(pdev, IORESOURCE_REG, 0);
->> >> +       if (!res)
->> >> +               return -EINVAL;
->> >> +       gpio->offset = res->start;
->> >> +
->> >
->> > This isn't how IO resources are used. What are you trying to achieve
->> > here?
->> 
->> Mh are you sure? The blueprint for this were the regulators in
->> drivers/regulators/, eg the wm831x-ldo.c. IORESOURCE_REG isn't used
->> that often. But here is what I want to achieve (for which I haven't
->> found any existing drivers for now):
->>   (1) the individual blocks of the overall sl28cpld may be used
->>       multiple times, eg. this driver only has the offset to a
->>       base address. So if there are two blocks, this mfd core
->>       driver will register two devices for this driver with
->>       different base offsets, which are passed by IORESOURCE_REG
->>   (2) I wanted to avoid having a private mfd include with some
->>       kind of "proprietary" method how to get that offset
->>   (3) the mfd core driver is the one knowing the offset, thus it
->>       is possible to have different flavours of the sl28cpld
->> 
-> 
-> Ok, now I see it's documented in the bindings. Thanks for the 
-> explanation.
-> 
->> 
->> >
->> >> +       /* initialize struct gpio_chip */
->> >> +       mutex_init(&gpio->lock);
->> >> +       chip = &gpio->gpio_chip;
->> >> +       chip->parent = &pdev->dev;
->> >> +       chip->label = dev_name(&pdev->dev);
->> >> +       chip->owner = THIS_MODULE;
->> >> +       chip->can_sleep = true;
->> >> +       chip->base = -1;
->> >> +       chip->ngpio = 8;
->> >> +
->> >> +       switch (type) {
->> >> +       case sl28cpld_gpio:
->> >> +               chip->get_direction = sl28cpld_gpio_get_direction;
->> >> +               chip->direction_input = sl28cpld_gpio_direction_input;
->> >> +               chip->direction_output =
->> >> sl28cpld_gpio_direction_output;
->> >> +               chip->get = sl28cpld_gpio_get;
->> >> +               chip->set = sl28cpld_gpio_set;
->> >> +               irq_support = true;
->> >> +               break;
->> >> +       case sl28cpld_gpo:
->> >> +               chip->set = sl28cpld_gpo_set;
->> >> +               chip->get = sl28cpld_gpi_get;
->> >> +               break;
->> >> +       case sl28cpld_gpi:
->> >> +               chip->get = sl28cpld_gpi_get;
->> >> +               break;
->> >> +       }
->> >> +
->> >> +       ret = devm_gpiochip_add_data(&pdev->dev, chip, gpio);
->> >> +       if (ret < 0)
->> >> +               return ret;
->> >> +
->> >> +       platform_set_drvdata(pdev, gpio);
->> >> +
->> >> +       if (irq_support && of_property_read_bool(np,
->> >> "interrupt-controller")) {
->> >
->> > You're depending on OF_GPIO for this one function. Please switch to
->> > device_property_read_bool() instead.
->> 
->> ok
->> 
->> 
->> >
->> >> +               irq = platform_get_irq(pdev, 0);
->> >> +               if (irq < 0)
->> >> +                       return ret;
->> >> +
->> >> +               ret = sl28_cpld_gpio_irq_init(pdev, irq);
->> >> +               if (ret)
->> >> +                       return ret;
->> >> +       }
->> >> +
->> >> +       return 0;
->> >> +}
->> >> +
->> >> +static const struct platform_device_id sl28cpld_gpio_id_table[] = {
->> >> +       {"sl28cpld-gpio", sl28cpld_gpio},
->> >> +       {"sl28cpld-gpi", sl28cpld_gpi},
->> >> +       {"sl28cpld-gpo", sl28cpld_gpo},
->> >
->> > Could you explain this a bit more? Is this the same component with
->> > input/output-only lines or three different components?
->> 
->> These are actually three different components. Ie. you could have a
->> flavour where you have one GPIO (sl28cpld-gpio) and two output-only
->> ones (sl28cpld-gpo). Is that what you wanted to know?
->> 
-> 
-> Yes, thanks. This could use some documentation in the bindings though.
-
-ok. thats easy ;)
-
--michael
-
-> Bartosz
-> 
->> >
->> >> +};
->> >> +MODULE_DEVICE_TABLE(platform, sl28cpld_gpio_id_table);
->> >> +
->> >> +static struct platform_driver sl28cpld_gpio_driver = {
->> >> +       .probe = sl28cpld_gpio_probe,
->> >> +       .id_table = sl28cpld_gpio_id_table,
->> >> +       .driver = {
->> >> +               .name = "sl28cpld-gpio",
->> >> +       },
->> >> +};
->> >> +module_platform_driver(sl28cpld_gpio_driver);
->> >> +
->> >> +MODULE_DESCRIPTION("sl28cpld GPIO Driver");
->> >> +MODULE_LICENSE("GPL");
->> >
->> > I think you could use a MODULE_ALIAS() here if you want this module to
->> > be loaded automatically by udev.
->> 
->> ok, I'll look into that.
->> 
->> thanks,
->> -michael
->> 
->> >
->> >> --
->> >> 2.20.1
->> >>
->> >
->> > Best regards,
->> > Bartosz Golaszewski
