@@ -2,101 +2,114 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D8FC2D0E7
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E36F2C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:23:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 174D620772
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:21:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BAoU/QSh"
+	by mail.kernel.org (Postfix) with ESMTP id BEADC20714
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:23:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgCZHVe (ORCPT
+        id S1727600AbgCZHXh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:21:34 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:34983 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbgCZHVd (ORCPT
+        Thu, 26 Mar 2020 03:23:37 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:61316
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726014AbgCZHXh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:21:33 -0400
-Received: by mail-pl1-f193.google.com with SMTP id g6so1816625plt.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:21:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=nFKrUEgeFa7EbhKVQYAD2wP/31kNz1QwptTeG1sEwow=;
-        b=BAoU/QShY6ywU3pTWp1V9cChIjzV8h5Z2dICalBhYAji0uRIBMWN+0ukKItBUNd6Xs
-         wrjaYp9RpQG3zUspc+8FvPKincpU6/Ue05WbJvfgDbkfUqECTXqNLnKKBbSPk0gb6y9C
-         FQ2g6g6XgCa+cXCJ6Sp5AxnFS7G5GwjNl+4Lo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=nFKrUEgeFa7EbhKVQYAD2wP/31kNz1QwptTeG1sEwow=;
-        b=eTUMN6F1HKobX+VGaKPFC/sfd+H73p8I5beKO9a/9Ev0CXCIH+PHcL5TOEEw2Px8vO
-         Y/B8pndvhzdqGytPiw29yl0DW9dmOP6BiQH+zszssHUgmJx5NpMiNJHfAs1UD6GRQb3t
-         nPiaVaPydHhF2odm4w5WKbAlEdzoTvgnFqR3EGIbc4tbCz4buIRm+nPgb9C7MPUku186
-         W9Aj2O8ah4uvjyhwHYa8x/7lvtEuU3e1ZmN7XWHSJZqd/0cbKlBT1wJQ3N+2MHYqNSmc
-         eJRxL2hdV0Roj5YSOikLc28Epwtxy/hcMjc2v8I8M94I/7BzKwDcpX393KCObr1xcCD5
-         ZROA==
-X-Gm-Message-State: ANhLgQ0aw1+9y6ZUAMDBrJD2ZeTJtn8RcjHR7S8VgHRw7FWlEcVRIkU5
-        atZCmDggHlLiw4oVX6rMWxblmQ==
-X-Google-Smtp-Source: ADFU+vsRXQ2gRszQo8R/li9R/yQ8ZllZsAs3VyIOYY8ZCPe+z6YoAiBt8mcHHzlQCiWmcataarR3/w==
-X-Received: by 2002:a17:902:b692:: with SMTP id c18mr7014861pls.7.1585207292475;
-        Thu, 26 Mar 2020 00:21:32 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r4sm922290pgp.53.2020.03.26.00.21.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 00:21:31 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 00:21:30 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Ivan Teterevkov <ivan.teterevkov@nutanix.com>,
-        David Rientjes <rientjes@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Guilherme G . Piccoli" <gpiccoli@canonical.com>
-Subject: Re: [RFC v2 1/2] kernel/sysctl: support setting sysctl parameters
- from kernel command line
-Message-ID: <202003260018.81648AA67@keescook>
-References: <20200325120345.12946-1-vbabka@suse.cz>
- <874kuc5b5z.fsf@x220.int.ebiederm.org>
- <20200326065829.GC27965@dhcp22.suse.cz>
+        Thu, 26 Mar 2020 03:23:37 -0400
+X-IronPort-AV: E=Sophos;i="5.72,307,1580770800"; 
+   d="scan'208";a="343773967"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 08:23:35 +0100
+Date:   Thu, 26 Mar 2020 08:23:34 +0100 (CET)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Simran Singhal <singhalsimran0@gmail.com>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        outreachy-kernel <outreachy-kernel@googlegroups.com>
+Subject: Re: [Outreachy kernel] [PATCH] staging: rtl8723bs: Clean up tests
+ if NULL returned on failure
+In-Reply-To: <20200325222908.GA5370@simran-Inspiron-5558>
+Message-ID: <alpine.DEB.2.21.2003260822280.3019@hadrien>
+References: <20200325222908.GA5370@simran-Inspiron-5558>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200326065829.GC27965@dhcp22.suse.cz>
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 26, 2020 at 07:58:29AM +0100, Michal Hocko wrote:
-> On Wed 25-03-20 17:20:40, Eric W. Biederman wrote:
-> > Vlastimil Babka <vbabka@suse.cz> writes:
-> [...]
-> > > +	if (strncmp(param, "sysctl.", sizeof("sysctl.") - 1))
-> > > +		return 0;
-> > 
-> > Is there any way we can use a slash separated path.  I know
-> > in practice there are not any sysctl names that don't have
-> > a '.' in them but why should we artifically limit ourselves?
-> 
-> Because this is the normal userspace interface? Why should it be any
-> different from calling sysctl?
 
-Right. The common method from userspace is dot-separated (which I agree
-is weird, but it's been like this for ages: see manpages sysctl(8) and
-sysctl.conf(5) for the details and examples). While "/" is accepted by
-sysctl, the files shipped in /etc/sysctl.d/ are all using "."  separators.
 
--- 
-Kees Cook
+On Thu, 26 Mar 2020, Simran Singhal wrote:
+
+> Some functions like kmalloc/kzalloc return NULL on failure.
+> When NULL represents failure, !x is commonly used.
+
+Try for a shorter subject line.  "Simplify NULL tests" would do.  Then the
+log message should be in the imperative.
+
+julia
+
+
+>
+> This was done using Coccinelle:
+> @@
+> expression *e;
+> identifier l1;
+> @@
+>
+> e = \(kmalloc\|kzalloc\|kcalloc\|devm_kzalloc\)(...);
+> ...
+> - e == NULL
+> + !e
+>
+> Signed-off-by: Simran Singhal <singhalsimran0@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> index 29f36cca3972..5c27c11f006a 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> @@ -474,7 +474,7 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+>  			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+>  			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+>  			pwep = kzalloc(wep_total_len, GFP_KERNEL);
+> -			if (pwep == NULL) {
+> +			if (!pwep) {
+>  				RT_TRACE(_module_rtl871x_ioctl_os_c, _drv_err_, (" wpa_set_encryption: pwep allocate fail !!!\n"));
+>  				goto exit;
+>  			}
+> @@ -2137,7 +2137,7 @@ static int rtw_wx_set_enc_ext(struct net_device *dev,
+>
+>  	param_len = sizeof(struct ieee_param) + pext->key_len;
+>  	param = kzalloc(param_len, GFP_KERNEL);
+> -	if (param == NULL)
+> +	if (!param)
+>  		return -1;
+>
+>  	param->cmd = IEEE_CMD_SET_ENCRYPTION;
+> @@ -3491,7 +3491,7 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
+>  			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+>  			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+>  			pwep = kzalloc(wep_total_len, GFP_KERNEL);
+> -			if (pwep == NULL) {
+> +			if (!pwep) {
+>  				DBG_871X(" r871x_set_encryption: pwep allocate fail !!!\n");
+>  				goto exit;
+>  			}
+> --
+> 2.17.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "outreachy-kernel" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to outreachy-kernel+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/outreachy-kernel/20200325222908.GA5370%40simran-Inspiron-5558.
+>
