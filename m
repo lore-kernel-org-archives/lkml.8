@@ -2,82 +2,140 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE8EC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D07C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:44:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5010212CC
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:43:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BoGQCLA1"
+	by mail.kernel.org (Postfix) with ESMTP id 407922073E
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 09:44:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgCZJnp (ORCPT
+        id S1727903AbgCZJoT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 05:43:45 -0400
-Received: from mail27.static.mailgun.info ([104.130.122.27]:28902 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726292AbgCZJnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 05:43:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1585215823; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=3IlGhUqNJijTIwuRbDcDxuXhaZ7kecPrANGlpvtz3o0=;
- b=BoGQCLA1T9eMFKA2tEniYhpiCb9fLEGHUDkS6Y6BTKT969NCvmgv25ruf+wFHfgYodMpMryX
- aTp725Vtc1besphKoY3/I2eFUA5pKmrsqdt+PLsUbq39tHUuXb6BtNaffLdX0o21ShBVAqz9
- e2FtTfUyy4H8/CrusG5Ne2uSMmo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e7c7940.7f87b3843ab0-smtp-out-n03;
- Thu, 26 Mar 2020 09:43:28 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id CDA68C433BA; Thu, 26 Mar 2020 09:43:27 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C250AC433D2;
-        Thu, 26 Mar 2020 09:43:25 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C250AC433D2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Thu, 26 Mar 2020 05:44:19 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60276 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727729AbgCZJoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 05:44:18 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C03A666A181C6217AC79;
+        Thu, 26 Mar 2020 17:44:07 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.487.0; Thu, 26 Mar 2020 17:43:58 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH] f2fs: switch discard_policy.timeout to bool type
+Date:   Thu, 26 Mar 2020 17:43:56 +0800
+Message-ID: <20200326094356.87838-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v2 1/2] rtl8xxxu: add enumeration for channel bandwidth
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200320063833.1058-2-chiu@endlessm.com>
-References: <20200320063833.1058-2-chiu@endlessm.com>
-To:     Chris Chiu <chiu@endlessm.com>
-Cc:     Jes.Sorensen@gmail.com, davem@davemloft.net,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@endlessm.com
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200326094327.CDA68C433BA@smtp.codeaurora.org>
-Date:   Thu, 26 Mar 2020 09:43:27 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chris Chiu <chiu@endlessm.com> wrote:
+While checking discard timeout, we use specified type
+UMOUNT_DISCARD_TIMEOUT, so just replace doplicy.timeout with
+it, and switch doplicy.timeout to bool type.
 
-> There's a data field in H2C and C2H commands which is used to
-> carry channel bandwidth information. Add enumeration to make it
-> more descriptive in code.
-> 
-> Signed-off-by: Chris Chiu <chiu@endlessm.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h    |  2 +-
+ fs/f2fs/segment.c | 20 ++++++++++----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-2 patches applied to wireless-drivers-next.git, thanks.
-
-a66b8b4108f1 rtl8xxxu: add enumeration for channel bandwidth
-0985d3a410ac rtl8xxxu: Feed current txrate information for mac80211
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index d3eda362582f..9274399d9505 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -330,8 +330,8 @@ struct discard_policy {
+ 	bool io_aware;			/* issue discard in idle time */
+ 	bool sync;			/* submit discard with REQ_SYNC flag */
+ 	bool ordered;			/* issue discard by lba order */
++	bool timeout;			/* discard timeout for put_super */
+ 	unsigned int granularity;	/* discard granularity */
+-	int timeout;			/* discard timeout for put_super */
+ };
+ 
+ struct discard_cmd_control {
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 83d778ebea71..86e944700535 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1083,7 +1083,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+ 
+ 	dpolicy->max_requests = DEF_MAX_DISCARD_REQUEST;
+ 	dpolicy->io_aware_gran = MAX_PLIST_NUM;
+-	dpolicy->timeout = 0;
++	dpolicy->timeout = false;
+ 
+ 	if (discard_type == DPOLICY_BG) {
+ 		dpolicy->min_interval = DEF_MIN_DISCARD_ISSUE_TIME;
+@@ -1108,6 +1108,7 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+ 		dpolicy->io_aware = false;
+ 		/* we need to issue all to keep CP_TRIMMED_FLAG */
+ 		dpolicy->granularity = 1;
++		dpolicy->timeout = true;
+ 	}
+ }
+ 
+@@ -1490,8 +1491,8 @@ static bool __should_discard_retry(struct f2fs_sb_info *sbi,
+ 
+ 	mutex_lock(&dcc->cmd_lock);
+ 	list_for_each_entry_safe(dc, tmp, &(dcc->retry_list), list) {
+-		if (dpolicy->timeout != 0 &&
+-			f2fs_time_over(sbi, dpolicy->timeout)) {
++		if (dpolicy->timeout &&
++			f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT)) {
+ 			retry = false;
+ 			break;
+ 		}
+@@ -1521,13 +1522,13 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 	int i, err, issued = 0;
+ 	bool io_interrupted = false;
+ 
+-	if (dpolicy->timeout != 0)
+-		f2fs_update_time(sbi, dpolicy->timeout);
++	if (dpolicy->timeout)
++		f2fs_update_time(sbi, UMOUNT_DISCARD_TIMEOUT);
+ 
+ retry:
+ 	for (i = MAX_PLIST_NUM - 1; i >= 0; i--) {
+-		if (dpolicy->timeout != 0 &&
+-				f2fs_time_over(sbi, dpolicy->timeout))
++		if (dpolicy->timeout &&
++				f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT))
+ 			break;
+ 
+ 		if (i + 1 < dpolicy->granularity)
+@@ -1548,8 +1549,8 @@ static int __issue_discard_cmd(struct f2fs_sb_info *sbi,
+ 		list_for_each_entry_safe(dc, tmp, pend_list, list) {
+ 			f2fs_bug_on(sbi, dc->state != D_PREP);
+ 
+-			if (dpolicy->timeout != 0 &&
+-				f2fs_time_over(sbi, dpolicy->timeout))
++			if (dpolicy->timeout &&
++				f2fs_time_over(sbi, UMOUNT_DISCARD_TIMEOUT))
+ 				break;
+ 
+ 			if (dpolicy->io_aware && i < dpolicy->io_aware_gran &&
+@@ -1741,7 +1742,6 @@ bool f2fs_issue_discard_timeout(struct f2fs_sb_info *sbi)
+ 
+ 	__init_discard_policy(sbi, &dpolicy, DPOLICY_UMOUNT,
+ 					dcc->discard_granularity);
+-	dpolicy.timeout = UMOUNT_DISCARD_TIMEOUT;
+ 	__issue_discard_cmd(sbi, &dpolicy);
+ 	dropped = __drop_discard_cmd(sbi);
+ 
 -- 
-https://patchwork.kernel.org/patch/11448459/
+2.18.0.rc1
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
