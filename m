@@ -2,168 +2,156 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B697C2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58562C43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7742077D
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:29:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OSvQga1K"
+	by mail.kernel.org (Postfix) with ESMTP id 3174E2077D
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 22:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgCZW3v (ORCPT
+        id S1727674AbgCZWaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 18:29:51 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:55132 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726270AbgCZW3v (ORCPT
+        Thu, 26 Mar 2020 18:30:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33400 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726270AbgCZWaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 18:29:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QMSYv0178468;
-        Thu, 26 Mar 2020 22:29:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=AbnF9vL8V5KcErLA/dx3AbUSHBS3ZjKSUCbowOPIxBQ=;
- b=OSvQga1K+wfyGCM+thkdl6gQ6QHkKbTxVPkn1eo+KofzPr8bhKUaE0P5mNGwqS3jlmpG
- hGyCiDR24GbFuCl2ewyo6tbQWcqt7JWvgMd4PKVcMotgJkoCj2OfA/eCahe9eKlxf/Y9
- D2+Ef3FfxMq5mksmKSSFXLsR0bQ6iGfDCPeBrw9b711H9cyvudTplqHybroFSEm9wd4c
- GzdcA946rESJE5punlDl6SiojrvVtOwaau6kxSITrU3yf8bZidQqJF8eC7rbBDJvRxSr
- chfIFIxIrL8WwzcvS1/vhqUhsJmNC1JYxCY0Jc6krGCC8b0XXPNeVw9zFtqZNQnDVeY7 xw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 300urk36pt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 22:29:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QMQb85133092;
-        Thu, 26 Mar 2020 22:29:44 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 30073epnya-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 22:29:44 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 02QMThpU029885;
-        Thu, 26 Mar 2020 22:29:43 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 26 Mar 2020 15:29:43 -0700
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH 2/2] SUNRPC: Optimize 'svc_print_xprts()'
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <87r1xe7pvy.fsf@notabene.neil.brown.name>
-Date:   Thu, 26 Mar 2020 18:29:41 -0400
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <9AC34F25-68B7-4184-9A91-A6D026F6BA6F@oracle.com>
-References: <20200325070452.22043-1-christophe.jaillet@wanadoo.fr>
- <EA5BCDB2-DB05-4B26-8635-E6F5C231DDC6@oracle.com>
- <42afbf1f-19e1-a05c-e70c-1d46eaba3a71@wanadoo.fr>
- <87wo786o80.fsf@notabene.neil.brown.name>
- <2e2d1293-c978-3f1d-5a1e-dc43dc2ad06b@wanadoo.fr>
- <87r1xe7pvy.fsf@notabene.neil.brown.name>
-To:     Neil Brown <neilb@suse.de>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=988 adultscore=0
- suspectscore=0 mlxscore=0 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260163
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 clxscore=1015 lowpriorityscore=0 mlxscore=0 phishscore=0
- bulkscore=0 impostorscore=0 adultscore=0 malwarescore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003260163
+        Thu, 26 Mar 2020 18:30:01 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QM45pp017367;
+        Thu, 26 Mar 2020 18:29:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7wg67t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 18:29:29 -0400
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02QMGvZP149162;
+        Thu, 26 Mar 2020 18:29:29 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7wg67j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 18:29:29 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02QMPKDj016953;
+        Thu, 26 Mar 2020 22:29:27 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 2ywaw9d6bv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Mar 2020 22:29:27 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QMTR8E51839366
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 22:29:27 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76774AE05F;
+        Thu, 26 Mar 2020 22:29:27 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04A8EAE05C;
+        Thu, 26 Mar 2020 22:29:04 +0000 (GMT)
+Received: from LeoBras.aus.stglabs.ibm.com (unknown [9.85.162.45])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 26 Mar 2020 22:29:04 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Enrico Weigelt <info@metux.net>,
+        Leonardo Bras <leonardo@linux.ibm.com>,
+        Allison Randal <allison@lohutok.net>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 1/1] ppc/crash: Skip spinlocks during crash
+Date:   Thu, 26 Mar 2020 19:28:37 -0300
+Message-Id: <20200326222836.501404-1-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-26_13:2020-03-26,2020-03-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 phishscore=0 spamscore=0 adultscore=0
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003260157
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+During a crash, there is chance that the cpus that handle the NMI IPI
+are holding a spin_lock. If this spin_lock is needed by crashing_cpu it
+will cause a deadlock. (rtas_lock and printk logbuf_log as of today)
 
+This is a problem if the system has kdump set up, given if it crashes
+for any reason kdump may not be saved for crash analysis.
 
-> On Mar 26, 2020, at 5:44 PM, NeilBrown <neilb@suse.de> wrote:
->=20
-> On Thu, Mar 26 2020, Christophe JAILLET wrote:
->=20
->> Le 25/03/2020 =C3=A0 23:53, NeilBrown a =C3=A9crit :
->>> Can I suggest something more like this:
->>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>> index de3c077733a7..0292f45b70f6 100644
->>> --- a/net/sunrpc/svc_xprt.c
->>> +++ b/net/sunrpc/svc_xprt.c
->>> @@ -115,16 +115,9 @@ int svc_print_xprts(char *buf, int maxlen)
->>>  	buf[0] =3D '\0';
->>>=20
->>>  	spin_lock(&svc_xprt_class_lock);
->>> -	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
->>> -		int slen;
->>> -
->>> -		sprintf(tmpstr, "%s %d\n", xcl->xcl_name, =
-xcl->xcl_max_payload);
->>> -		slen =3D strlen(tmpstr);
->>> -		if (len + slen > maxlen)
->>> -			break;
->>> -		len +=3D slen;
->>> -		strcat(buf, tmpstr);
->>> -	}
->>> +	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list)
->>> +		len +=3D scnprintf(buf + len, maxlen - len, "%s %d\n",
->>> +				 xcl->xcl_name, xcl->xcl_max_payload);
->>>  	spin_unlock(&svc_xprt_class_lock);
->>>=20
->>>  	return len;
->>>=20
->>> NeilBrown
->>=20
->> Hi,
->>=20
->> this was what I suggested in the patch:
->>     ---
->>     This patch should have no functional change.
->>     We could go further, use scnprintf and write directly in the=20
->> destination
->>     buffer. However, this could lead to a truncated last line.
->>     ---
->=20
-> Sorry - I missed that.
-> So add
->=20
-> end =3D strrchr(tmpstr, '\n');
-> if (end)
->    end[1] =3D 0;
-> else
->    tmpstr[0] =3D 0;
->=20
-> or maybe something like
-> 	list_for_each_entry(xcl, &svc_xprt_class_list, xcl_list) {
-> 		int l =3D snprintf(buf + len, maxlen - len, "%s %d\n",
-> 				 xcl->xcl_name, xcl->xcl_max_payload);
->                if (l < maxlen - len)
->                	len +=3D l;
->        }
->        buf[len] =3D 0;
->=20
-> There really is no need to have the secondary buffer, and I think =
-doing
-> so just complicates the code.
+Skip spinlocks after NMI IPI is sent to all other cpus.
 
-In the interest of getting this fix into the upcoming merge window, =
-let's
-stick with the temporary buffer approach. Thanks!
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/include/asm/spinlock.h | 6 ++++++
+ arch/powerpc/kexec/crash.c          | 3 +++
+ 2 files changed, 9 insertions(+)
 
-
---
-Chuck Lever
-
-
+diff --git a/arch/powerpc/include/asm/spinlock.h b/arch/powerpc/include/asm/spinlock.h
+index 860228e917dc..a6381d110795 100644
+--- a/arch/powerpc/include/asm/spinlock.h
++++ b/arch/powerpc/include/asm/spinlock.h
+@@ -111,6 +111,8 @@ static inline void splpar_spin_yield(arch_spinlock_t *lock) {};
+ static inline void splpar_rw_yield(arch_rwlock_t *lock) {};
+ #endif
+ 
++extern bool crash_skip_spinlock __read_mostly;
++
+ static inline bool is_shared_processor(void)
+ {
+ #ifdef CONFIG_PPC_SPLPAR
+@@ -142,6 +144,8 @@ static inline void arch_spin_lock(arch_spinlock_t *lock)
+ 		if (likely(__arch_spin_trylock(lock) == 0))
+ 			break;
+ 		do {
++			if (unlikely(crash_skip_spinlock))
++				return;
+ 			HMT_low();
+ 			if (is_shared_processor())
+ 				splpar_spin_yield(lock);
+@@ -161,6 +165,8 @@ void arch_spin_lock_flags(arch_spinlock_t *lock, unsigned long flags)
+ 		local_save_flags(flags_dis);
+ 		local_irq_restore(flags);
+ 		do {
++			if (unlikely(crash_skip_spinlock))
++				return;
+ 			HMT_low();
+ 			if (is_shared_processor())
+ 				splpar_spin_yield(lock);
+diff --git a/arch/powerpc/kexec/crash.c b/arch/powerpc/kexec/crash.c
+index d488311efab1..8a522380027d 100644
+--- a/arch/powerpc/kexec/crash.c
++++ b/arch/powerpc/kexec/crash.c
+@@ -66,6 +66,8 @@ static int handle_fault(struct pt_regs *regs)
+ 
+ #ifdef CONFIG_SMP
+ 
++bool crash_skip_spinlock;
++
+ static atomic_t cpus_in_crash;
+ void crash_ipi_callback(struct pt_regs *regs)
+ {
+@@ -129,6 +131,7 @@ static void crash_kexec_prepare_cpus(int cpu)
+ 	/* Would it be better to replace the trap vector here? */
+ 
+ 	if (atomic_read(&cpus_in_crash) >= ncpus) {
++		crash_skip_spinlock = true;
+ 		printk(KERN_EMERG "IPI complete\n");
+ 		return;
+ 	}
+-- 
+2.24.1
 
