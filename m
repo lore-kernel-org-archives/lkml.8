@@ -7,109 +7,109 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B0BC2D0E8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D6BC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:05:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E9FA20719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:04:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26CFB20719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 07:05:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="QXXK4666"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="taDdNolt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727683AbgCZHEC (ORCPT
+        id S1726363AbgCZHFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 03:04:02 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39137 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726279AbgCZHEC (ORCPT
+        Thu, 26 Mar 2020 03:05:24 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37392 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZHFX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 03:04:02 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so6379471wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:04:00 -0700 (PDT)
+        Thu, 26 Mar 2020 03:05:23 -0400
+Received: by mail-wr1-f66.google.com with SMTP id w10so6413772wrm.4
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 00:05:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OnfX0OE0ma/Av42U9uoiSTKulXAJE+HJ9d0B8OOmxos=;
-        b=QXXK46669W6vE9wVHhEA66Ox9m5ddadnJ2mSRmkcSCFaPr98OUaojd6Y5FUjv4ZSs+
-         GzhWBIx0gwve6woafwhvjawtw7n9AFML7j3z6JbtbtPBE8Xn6M+nrMN+u7IQviIgm99v
-         ZeNkgwCkf/0ukl7C7JWAB2CMHSogz5wFn7Ugpva/56qL+KUD9HIKLxHNJKoT6McMhT0W
-         euVVaCDann0vTlj7NN6j9HiADFzmrsAlCBPxCHHrBKQs/SJYyKmKGb5Xr/DLwLip+CR2
-         gp/nUZFjNs3EZoBbmy4hBuF5em/QCjxSbjM3BgYHpW9+lTGJtKv1hZc4vS+77Q+c4ysy
-         MFPg==
+         :cc:content-transfer-encoding;
+        bh=AJlAnoiw58fGjW5ZSKtwSmqYhPIqzzq4WS5XfLGHaaQ=;
+        b=taDdNoltvV89M1V4/Ua8Z67ESbkzBrNMkGyBlzEf3XE9f0SsUv7ZblJVoVMhraN7WZ
+         8EqlLRxCw6NMCjtt0NlBFloOHOaoodK3MAaGMKsc48l2HCgugPwGZZ6J1egWFFq4wQrk
+         elbKhq0S0N0OlJiVQimE9k7XoI/VP/MiRiMsJagw7tlVoq30Y9Qcc8hb1y9LIcWwzUsa
+         4mttZS87clBSM7sRITkRHdgEtPC7P7KNAl+d6feYFc2OQzGwmiZ19VcqcaGMeBnOXyBn
+         Ag6B+Mn5dIzucrRYyNUgdUKKLBOTuM6ZvhNRlC5PbOBgdkSAl1guP4KkFz9OXOMhWAm+
+         mAug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OnfX0OE0ma/Av42U9uoiSTKulXAJE+HJ9d0B8OOmxos=;
-        b=G9Fu+6sHeNJoUF8EXhuuCln14kcOWeGqxzwCFxbjBUAQBGXqfTCUcAVm56lRsGz+14
-         ojanKIIChWrSBaNH3FlPHHSaMMKhLm7urZyFkKOxtAYjeM7D+bRPcCypnKt/M4s0r/+q
-         xTGGqGSDr06KHCSyFV7dj+s78b6MrYOadegkAAbdmFPhNFseM0bPH50AHxcvtsq+h+Kp
-         ki1P0nHZ2eKUkOmh2Un2G6c72yHQMbDiCgouIz2UiSFoTpAwRRd/GGcKfjsYURDuzN9+
-         u7Oua3gIhST3EpTb/fVwvN8gbDbkEsfpGs6Pm1tBruqcttODE3g7PSddCt2GOfadZIZX
-         E0vw==
-X-Gm-Message-State: ANhLgQ0CI9EgQs/2kQigURh3rw9JYLIf6HmkjWqDYJatgx6qu1xzbYNF
-        qqHY/viaUUsy9kS84gur+g5MG/ykrBRGW2qfpJIYTg==
-X-Google-Smtp-Source: ADFU+vvmAe5q2S2uktbITom5JQ9VBVLvh1KAt20YhWxpacdHL4eK/daDkLZcSd9w2y56WpFTbk1b6CJ9SZ717v2JK/0=
-X-Received: by 2002:adf:f3c5:: with SMTP id g5mr7627562wrp.230.1585206239889;
- Thu, 26 Mar 2020 00:03:59 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=AJlAnoiw58fGjW5ZSKtwSmqYhPIqzzq4WS5XfLGHaaQ=;
+        b=hQCG6XF9P7bjdh/yztQJqBhAVpLdBHyyhM5YlPzJ+lRESDNqU56JDnb/ZcPY5G9t+i
+         MWyfzDi47UWOn3tkIrm4ODvPLoAT/r9Jn5Ev82b52w4ZOeC++0s+6XfPw3NNIIYefKtE
+         V6momsGX3Zj/MrgBT0ZdEszn5DqsoFMEsq2Qc3w8x7Jd6FA6pHQTtX/dkxy1ryzDnJUi
+         GBtIaUz05ZrUe8l3AWY6CCbbk7EA82QAT4Xi56TLMfwPVevOJnmjTw+alD5XQrgE6eEt
+         K4jReRxdYTTJW7l3Qwurzks3Wfre9jvRWADZ3Nqiwco0IXdoFmB5JMRDuM7PQA6cW0Rg
+         r5Bg==
+X-Gm-Message-State: ANhLgQ2xuGozLFo9RsTAadyuwj8QhSC4AoUR4Qgfwgbt72JXhjAfllMS
+        FPvleNxx5T7he+Oowpv022hSFfflVfGhTMP0GPzmaQ==
+X-Google-Smtp-Source: ADFU+vvNUnSHK8fH4kjGh10dV9rtTMZU5X9hIHxfdBcrp1tcqLLnJH5gkaosz3Flj1HyIorU9Bj3JTK5rodtY9QDmZY=
+X-Received: by 2002:a5d:4acd:: with SMTP id y13mr7591248wrs.61.1585206320468;
+ Thu, 26 Mar 2020 00:05:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200322110028.18279-1-alex@ghiti.fr> <20200322110028.18279-7-alex@ghiti.fr>
-In-Reply-To: <20200322110028.18279-7-alex@ghiti.fr>
+References: <20200322110028.18279-1-alex@ghiti.fr> <20200322110028.18279-8-alex@ghiti.fr>
+In-Reply-To: <20200322110028.18279-8-alex@ghiti.fr>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 26 Mar 2020 12:33:48 +0530
-Message-ID: <CAAhSdy317iJy4u2cXpN7pYzAZazSGKasm86JYBVz9MMn3uZA4g@mail.gmail.com>
-Subject: Re: [RFC PATCH 6/7] dt-bindings: riscv: Remove "riscv,svXX" property
- from device-tree
+Date:   Thu, 26 Mar 2020 12:35:08 +0530
+Message-ID: <CAAhSdy3kV6kVHM-sL2uFBgq85EOiKWRJrfNvd+MPiOjKQJwavQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 7/7] riscv: Explicit comment about user virtual
+ address space size
 To:     Alexandre Ghiti <alex@ghiti.fr>
 Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Zong Li <zong.li@sifive.com>, Christoph Hellwig <hch@lst.de>,
         linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+Device tree mailing list
-
-On Sun, Mar 22, 2020 at 4:36 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+On Sun, Mar 22, 2020 at 4:37 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
 >
-> This property can not be used before virtual memory is set up
-> and then the  distinction between sv39 and sv48 is done at runtime
-> using SATP csr property: this property is now useless, so remove it.
+> Define precisely the size of the user accessible virtual space size
+> for sv32/39/48 mmu types and explain why the whole virtual address
+> space is split into 2 equal chunks between kernel and user space.
 >
 > Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 > ---
->  Documentation/devicetree/bindings/riscv/cpus.yaml | 13 -------------
->  1 file changed, 13 deletions(-)
+>  arch/riscv/include/asm/pgtable.h | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> index 04819ad379c2..12baabbac213 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-> @@ -39,19 +39,6 @@ properties:
->        Identifies that the hart uses the RISC-V instruction set
->        and identifies the type of the hart.
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
+table.h
+> index 06361db3f486..be117a0b4ea1 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -456,8 +456,15 @@ static inline int ptep_clear_flush_young(struct vm_a=
+rea_struct *vma,
+>  #define FIXADDR_START    (FIXADDR_TOP - FIXADDR_SIZE)
 >
-> -  mmu-type:
-> -    allOf:
-> -      - $ref: "/schemas/types.yaml#/definitions/string"
-> -      - enum:
-> -          - riscv,sv32
-> -          - riscv,sv39
-> -          - riscv,sv48
-> -    description:
-> -      Identifies the MMU address translation mode used on this
-> -      hart.  These values originate from the RISC-V Privileged
-> -      Specification document, available from
-> -      https://riscv.org/specifications/
-> -
->    riscv,isa:
->      allOf:
->        - $ref: "/schemas/types.yaml#/definitions/string"
+>  /*
+> - * Task size is 0x4000000000 for RV64 or 0x9fc00000 for RV32.
+> - * Note that PGDIR_SIZE must evenly divide TASK_SIZE.
+> + * Task size is:
+> + * -     0x9fc00000 (~2.5GB) for RV32.
+> + * -   0x4000000000 ( 256GB) for RV64 using SV39 mmu
+> + * - 0x800000000000 ( 128TB) for RV64 using SV48 mmu
+> + *
+> + * Note that PGDIR_SIZE must evenly divide TASK_SIZE since "RISC-V
+> + * Instruction Set Manual Volume II: Privileged Architecture" states tha=
+t
+> + * "load and store effective addresses, which are 64bits, must have bits
+> + * 63=E2=80=9348 all equal to bit 47, or else a page-fault exception wil=
+l occur."
+>   */
+>  #ifdef CONFIG_64BIT
+>  #define TASK_SIZE (PGDIR_SIZE * PTRS_PER_PGD / 2)
 > --
 > 2.20.1
 >
