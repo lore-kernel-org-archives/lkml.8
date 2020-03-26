@@ -2,163 +2,105 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8232C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0CCC2D0E8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:27:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E5F32070A
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:26:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MQByxbVl"
+	by mail.kernel.org (Postfix) with ESMTP id 9BFE021473
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 12:27:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgCZM0G (ORCPT
+        id S1728153AbgCZM1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 08:26:06 -0400
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:46879 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728130AbgCZM0G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 08:26:06 -0400
-Received: by mail-qk1-f202.google.com with SMTP id a136so4598214qkc.13
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 05:26:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:cc;
-        bh=O3ShDQrtiu8+pg3UlxnzbuJX0+OLY5w2L0aep49Ejc0=;
-        b=MQByxbVlVJp4RopLJjrhk7Cl5OOK7Z+tE981XejY58sfAFufb6q/1G2a3BfPZGejnV
-         umD5pTupvm7YF8SSgtRtm+hbn5I1XSPO39a2rKTFL3Udk3TGY9tq2XPYAdYHz9jC5gWv
-         8Q7BFJNq7+Vhk+qxMkP2IaxqVqPoj2Jwmos8HOINzfnicBXv1G7X/IQBe4hjwPHM8s6k
-         d3hbVLkcLut0rX3Rj/82jBPQ+qnGXw8neY9lMNW74/7lupmyalzA9rQ8jslqVEI5AfSR
-         ssB2+oFXJFmnrDNYasZgdATjeHLU5wifQ1CU9uKHbjZ9xOBgqx2Vht9fGzgJRLaXJOfH
-         DikQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:cc;
-        bh=O3ShDQrtiu8+pg3UlxnzbuJX0+OLY5w2L0aep49Ejc0=;
-        b=ihcjjjDEOKDiTQrM2UAT5vTWUwFNkxXlkctb0BbYW67orTFvAxWID3vLsN4OrQHdX9
-         szm5/0wWNVCSUto9PkxJgjOgQOKS687nSeJ1vzIt8Yx7T9jERX5bCgzO25pmMNPPKAYd
-         l74VMVHlDoUyb/Rkk80lGwHNp9nzO11TMKUC4hWOWCEp65HWismuTZS9ObFp5t+uz2ki
-         Dc/81bjpABmP0PiOKUpXWVFVZXNQDUvBauK354H7EBfXtsnvq4Sge3uGH/BsjKkAPqez
-         dBq618OAg7J3mPWW+cCT6kr+K0KiCBC7gqgodCu1djqRKXJFZ3D7IbbnZMhc0YOoMqpn
-         FK0g==
-X-Gm-Message-State: ANhLgQ0JZF+485yGcd1xOdRrdaC6asX+sVubO78xqCK1uRVUklW2zGz/
-        fMBYD2iKRZlUl28zzrKhmuUdXTzl5RJ4
-X-Google-Smtp-Source: ADFU+vuM3EAedB+BfY4Wg6CbL2JJgBzDNbKT82s9N1sws3PTOvHzgmHXEdpXVZCAAofBknnbQLzuaxjn5lUs
-X-Received: by 2002:ac8:6918:: with SMTP id e24mr7741961qtr.141.1585225563444;
- Thu, 26 Mar 2020 05:26:03 -0700 (PDT)
-Date:   Thu, 26 Mar 2020 13:25:54 +0100
-In-Reply-To: <20200323114207.222412-1-courbet@google.com>
-Message-Id: <20200326122555.129831-1-courbet@google.com>
-Mime-Version: 1.0
-References: <20200323114207.222412-1-courbet@google.com>
-X-Mailer: git-send-email 2.25.1.696.g5e7596f4ac-goog
-Subject: [PATCH v4]     x86: Alias memset to __builtin_memset.
-From:   Clement Courbet <courbet@google.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Joe Perches <joe@perches.com>,
-        Bernd Petrovitsch <bernd@petrovitsch.priv.at>,
-        Clement Courbet <courbet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Thu, 26 Mar 2020 08:27:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:59878 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727781AbgCZM1u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 08:27:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6623C30E;
+        Thu, 26 Mar 2020 05:27:49 -0700 (PDT)
+Received: from e107158-lin (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B55D3F71F;
+        Thu, 26 Mar 2020 05:27:48 -0700 (PDT)
+Date:   Thu, 26 Mar 2020 12:27:45 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Oliver Neukum <oneukum@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        Linux-pm mailing list <linux-pm@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: lockdep warning in urb.c:363 usb_submit_urb
+Message-ID: <20200326122744.kbtlmev2ravn3wey@e107158-lin>
+References: <20200325150017.xhabucfo3v6i234o@e107158-lin>
+ <Pine.LNX.4.44L0.2003251631360.1724-100000@netrider.rowland.org>
+ <CAJZ5v0gqNnoT41=Vm7AtbH8PMW+qPGighK7Up3q2rS+B0jBKFg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0gqNnoT41=Vm7AtbH8PMW+qPGighK7Up3q2rS+B0jBKFg@mail.gmail.com>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-    Recent compilers know the meaning of builtins (`memset`,
-    `memcpy`, ...) and can replace calls by inline code when
-    deemed better. For example, `memset(p, 0, 4)` will be lowered
-    to a four-byte zero store.
+On 03/25/20 22:28, Rafael J. Wysocki wrote:
+> On Wed, Mar 25, 2020 at 9:49 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> >
+> > On Wed, 25 Mar 2020, Qais Yousef wrote:
+> >
+> > > Thanks for all the hints Alan.
+> > >
+> > > I think I figured it out, the below patch seems to fix it for me. Looking
+> > > at other drivers resume functions it seems we're missing the
+> > > pm_runtime_disable()->set_active()->enable() dance. Doing that fixes the
+> > > warning and the dev_err() in driver/base/power.
+> >
+> > Ah, yes.  This should have been added years ago; guess I forgot.  :-(
+> >
+> > > I don't see xhci-plat.c doing that, I wonder if it needs it too.
+> > >
+> > > I'm not well versed about the details and the rules here. So my fix could be
+> > > a hack, though it does seem the right thing to do.
+> > >
+> > > I wonder why the power core doesn't handle this transparently..
+> >
+> > Initially, we didn't want the PM core to do this automatically because
+> > we thought some devices might want to remain runtime-suspended
+> > following a system resume, and only the device driver would know what
+> > to do.
+> >
+> > Raphael, now that we have the direct_complete mechanism, can we revisit
+> > this?  Should the PM core automatically call pm_runtime_set_active() if
+> > dev->power.direct_complete isn't set?  Perhaps in device_resume_early()
+> > prior to the pm_runtime_enable() call?
+> >
+> > It's possible we discussed this and decided against it at the time when
+> > direct_complete was added, but if so I don't remember what was said.
+> 
+> Me neither. :-)
+> 
+> That said complexity has grown since then and there are the
+> DPM_FLAG_SMART_SUSPEND and DPM_FLAG_LEAVE_SUSPENDED flags that can be
+> used to control that behavior to some extent.
+> 
+> Setting DPM_FLAG_SMART_SUSPEND alone, in particular, causes
+> pm_runtime_set_active() to be called at the noirq stage of device
+> resume either by the core or by bus types (e.g. PCI) etc.
+> 
+> It looks like ohci-platform might use DPM_FLAG_SMART_SUSPEND, but I
+> need to take a closer look at that (possibly later this week).
 
-    When using -ffreestanding (this is the case e.g. building on
-    clang), these optimizations are disabled. This means that **all**
-    memsets, including those with small, constant sizes, will result
-    in an actual call to memset.
+Okay I take it this was root caused correctly and now it's a question of which
+is a better fix.
 
-    We have identified several spots where we have high CPU usage
-    because of this. For example, a single one of these memsets is
-    responsible for about 0.3% of our total CPU usage in the kernel.
+Thanks!
 
-    Aliasing `memset` to `__builtin_memset` allows the compiler to
-    perform this optimization even when -ffreestanding is used.
-    There is no change when -ffreestanding is not used.
-
-    Below is a diff (clang) for `update_sg_lb_stats()`, which
-    includes the aforementionned hot memset:
-        memset(sgs, 0, sizeof(*sgs));
-
-    Diff:
-        movq %rsi, %rbx        ~~~>  movq $0x0, 0x40(%r8)
-        movq %rdi, %r15        ~~~>  movq $0x0, 0x38(%r8)
-        movl $0x48, %edx       ~~~>  movq $0x0, 0x30(%r8)
-        movq %r8, %rdi         ~~~>  movq $0x0, 0x28(%r8)
-        xorl %esi, %esi        ~~~>  movq $0x0, 0x20(%r8)
-        callq <memset>         ~~~>  movq $0x0, 0x18(%r8)
-                               ~~~>  movq $0x0, 0x10(%r8)
-                               ~~~>  movq $0x0, 0x8(%r8)
-                               ~~~>  movq $0x0, (%r8)
-
-    In terms of code size, this shrins the clang-built kernel a
-    bit (-0.022%):
-    440383608 vmlinux.clang.before
-    440285512 vmlinux.clang.after
-
-Signed-off-by: Clement Courbet <courbet@google.com>
-
----
-
-changes in v2:
-  - Removed ifdef(GNUC >= 4).
-  - Disabled change when CONFIG_FORTIFY_SOURCE is set.
-
-changes in v3:
-  - Fixed commit message: the kernel shrinks in size.
-
-changes in v4:
-  - Properly parenthesize the macro.
----
- arch/x86/include/asm/string_64.h | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/x86/include/asm/string_64.h b/arch/x86/include/asm/string_64.h
-index 75314c3dbe47..1bfa825e9ad3 100644
---- a/arch/x86/include/asm/string_64.h
-+++ b/arch/x86/include/asm/string_64.h
-@@ -18,6 +18,15 @@ extern void *__memcpy(void *to, const void *from, size_t len);
- void *memset(void *s, int c, size_t n);
- void *__memset(void *s, int c, size_t n);
- 
-+/* Recent compilers can generate much better code for known size and/or
-+ * fill values, and will fallback on `memset` if they fail.
-+ * We alias `memset` to `__builtin_memset` explicitly to inform the compiler to
-+ * perform this optimization even when -ffreestanding is used.
-+ */
-+#if !defined(CONFIG_FORTIFY_SOURCE)
-+#define memset(s, c, count) __builtin_memset((s), (c), (count))
-+#endif
-+
- #define __HAVE_ARCH_MEMSET16
- static inline void *memset16(uint16_t *s, uint16_t v, size_t n)
- {
-@@ -74,6 +83,7 @@ int strcmp(const char *cs, const char *ct);
- #undef memcpy
- #define memcpy(dst, src, len) __memcpy(dst, src, len)
- #define memmove(dst, src, len) __memmove(dst, src, len)
-+#undef memset
- #define memset(s, c, n) __memset(s, c, n)
- 
- #ifndef __NO_FORTIFY
--- 
-2.25.1.696.g5e7596f4ac-goog
-
+--
+Qais Yousef
