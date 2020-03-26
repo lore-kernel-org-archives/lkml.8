@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6FEC2D0EF
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15A7C2D0EE
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A22620409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B06E206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265055;
-	bh=q7wvOp/B+vcsKe//MRTz/um2sZICyj6+bgXMc/jce7k=;
+	s=default; t=1585265060;
+	bh=JZKbPbuU2UHbrb6VuFFKYu3d0IBGpuh9U6WpdN5Q95o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ICArJ94gigVZ3lzimuEuesjTFs/MR/VKzFnZnrQjMNi+QfsEUfTZxdXTQmVSgNGFI
-	 yyR2nDCsWPEGrYuBbCMzUCIc2Avql/3h82Lluyp++nDCjCQ/kzmM+uGLQ21GBLM7SN
-	 /Cgd86h+rf1n5Z+DMQ+jGI8Qy4bUb5QrRQ/8BX1Y=
+	b=BiYNFe7Xzh4VlO/EqzO9mKpiTiPD80O+e58k5NZwSWbvl3DSaS5pdbr5M1zfEfCq6
+	 FYZvff1ISHL6I4ztgtVUYzuvKCserksVjgn5HZXpmZf0fOQ5S6z4qiA0kqmaLPGeDo
+	 Hzoxb9XVHD17MlADhZcp3uafbVOmphrGY7z6VqeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgCZXYN (ORCPT
+        id S1727706AbgCZXYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:24:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43354 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727719AbgCZXYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:07 -0400
+        id S1727749AbgCZXYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:10 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77BE42074D;
-        Thu, 26 Mar 2020 23:24:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BACE520714;
+        Thu, 26 Mar 2020 23:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265047;
-        bh=q7wvOp/B+vcsKe//MRTz/um2sZICyj6+bgXMc/jce7k=;
+        s=default; t=1585265049;
+        bh=JZKbPbuU2UHbrb6VuFFKYu3d0IBGpuh9U6WpdN5Q95o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t6PxG26Cv/HG2KtE1WmvTHZhLXbIox26JvVyaqmpg0lzmxTWEf6del734yseTjDIf
-         2Bm3CPugmjMKaqKe/C617J9e16z+kOJFZgA2FGwQsgZpM4MR0++6XE7Fn58G3hrNLh
-         SEf/vRjyKFOM7jpVsDqInocmnuUXL/E3ZCUvE4qU=
+        b=iktXMYx29K1vJn5wFXvHF/OSu4Gepi8EpWoZap1K+jIOBVWJZq+QIHPTgGubsv32G
+         egzBfH8muiHofYoWQC3omtr/NhYilRIOMyak+NwcF/fp0xKgTDeKH+ty/8wY0a7av+
+         Cnl7OcIeiR6Vnjh/eDKo7AdsWY2lcBZcqkXfmogs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Evan Quan <evan.quan@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+Cc:     Gerd Hoffmann <kraxel@redhat.com>,
+        =?UTF-8?q?Marek=20Marczykowski-G=C3=B3recki?= 
+        <marmarek@invisiblethingslab.com>, Sam Ravnborg <sam@ravnborg.org>,
+        Sasha Levin <sashal@kernel.org>,
+        virtualization@lists.linux-foundation.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 08/28] drm/amdgpu: add fbdev suspend/resume on gpu reset
-Date:   Thu, 26 Mar 2020 19:23:37 -0400
-Message-Id: <20200326232357.7516-8-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 10/28] drm/bochs: downgrade pci_request_region failure from error to warning
+Date:   Thu, 26 Mar 2020 19:23:39 -0400
+Message-Id: <20200326232357.7516-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -60,44 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Gerd Hoffmann <kraxel@redhat.com>
 
-[ Upstream commit 063e768ebd27d3ec0d6908b7f8ea9b0a732b9949 ]
+[ Upstream commit 8c34cd1a7f089dc03933289c5d4a4d1489549828 ]
 
-This can fix the baco reset failure seen on Navi10.
-And this should be a low risk fix as the same sequence
-is already used for system suspend/resume.
+Shutdown of firmware framebuffer has a bunch of problems.  Because
+of this the framebuffer region might still be reserved even after
+drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Don't consider pci_request_region() failure for the framebuffer
+region as fatal error to workaround this issue.
+
+Reported-by: Marek Marczykowski-Górecki <marmarek@invisiblethingslab.com>
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200313084152.2734-1-kraxel@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_device.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/bochs/bochs_hw.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-index 332b9c24a2cd0..9a8a1c6ca3210 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_device.c
-@@ -3854,6 +3854,8 @@ static int amdgpu_do_asic_reset(struct amdgpu_hive_info *hive,
- 				if (r)
- 					goto out;
+diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/bochs_hw.c
+index e567bdfa2ab8e..bb1391784caf0 100644
+--- a/drivers/gpu/drm/bochs/bochs_hw.c
++++ b/drivers/gpu/drm/bochs/bochs_hw.c
+@@ -156,10 +156,8 @@ int bochs_hw_init(struct drm_device *dev)
+ 		size = min(size, mem);
+ 	}
  
-+				amdgpu_fbdev_set_suspend(tmp_adev, 0);
-+
- 				/* must succeed. */
- 				amdgpu_ras_resume(tmp_adev);
+-	if (pci_request_region(pdev, 0, "bochs-drm") != 0) {
+-		DRM_ERROR("Cannot request framebuffer\n");
+-		return -EBUSY;
+-	}
++	if (pci_request_region(pdev, 0, "bochs-drm") != 0)
++		DRM_WARN("Cannot request framebuffer, boot fb still active?\n");
  
-@@ -4023,6 +4025,8 @@ int amdgpu_device_gpu_recover(struct amdgpu_device *adev,
- 		 */
- 		amdgpu_unregister_gpu_instance(tmp_adev);
- 
-+		amdgpu_fbdev_set_suspend(adev, 1);
-+
- 		/* disable ras on ALL IPs */
- 		if (!in_ras_intr && amdgpu_device_ip_need_full_reset(tmp_adev))
- 			amdgpu_ras_suspend(tmp_adev);
+ 	bochs->fb_map = ioremap(addr, size);
+ 	if (bochs->fb_map == NULL) {
 -- 
 2.20.1
 
