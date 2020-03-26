@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18695C43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 641B6C2D0F0
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D772D20409
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C60220857
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 23:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1585265343;
-	bh=ugF1C5/vF94YwU2OV9TAX2LV23Lfxd+eXmOauT11yTw=;
+	s=default; t=1585265348;
+	bh=629k0DPY3vqxQVcs7Zz5sRGuST/M3Q7/nuJZ7I4W9ZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tMCoX92UYxd1ZHzxmex8ZMf5iBi06z+z5TQuhGVzKHvJrsFOyIU9tt+CXWEUJDdUP
-	 Sn7Nzpw3Z2xdGhk+r8h6OCQ2vEMLTgyw7ZZCYDIbzEzhqjvyyuNcGrDJvZhqnAaiuK
-	 4tM4wSrmR/Lf3+ZyMjfuCI9nuNJ6A9nfrbAR/CZg=
+	b=LYkOCK12/DdrQFpJaWXlnN5UMqn9BufPblp/fpRu6PR0N80u+aHUjKqpS88yMJltu
+	 1NGIK8H5+VYR94azH19AnLTgbP+QGYvxHcwf8Y2Vy0ueZDysubhMcKpHA6DH5U+PA8
+	 ZRVkp5CVGUaEH2LL7rLquzs8LJDA+HMDLl/4Ejs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbgCZX3C (ORCPT
+        id S1727851AbgCZXYW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 19:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44000 "EHLO mail.kernel.org"
+        Thu, 26 Mar 2020 19:24:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727867AbgCZXYX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 19:24:23 -0400
+        id S1727770AbgCZXYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 19:24:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDAA20719;
-        Thu, 26 Mar 2020 23:24:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11EFC2074D;
+        Thu, 26 Mar 2020 23:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1585265063;
-        bh=ugF1C5/vF94YwU2OV9TAX2LV23Lfxd+eXmOauT11yTw=;
+        s=default; t=1585265051;
+        bh=629k0DPY3vqxQVcs7Zz5sRGuST/M3Q7/nuJZ7I4W9ZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ng01d3FS/SB7hl1mg7H5P6dqdR43ZqI+QKEy+OH/bk5xJxYMuEjOvtVKBlmCp8SrG
-         n/Kc9p6/J1nyJ4sPjwrn4KiAbxtOWbpa+eWFi4KY8/0tyyVN1BFDUFBeNXGZmXZEgb
-         NFTSl0eMPM4GGA4vA5w04v85ME3DNfKA6SzOfMEA=
+        b=lstc4Ptt+VK7KK7n5NT6PhaNddIADnyacyXBkiLbHNXhbXhvtWgLiVfpyJdOb6QDj
+         5a6O2f5XMJ6qcxk2rJ5t+5Up9sU3fyVDVluDTHVSx+O3EKNJ5tgR5mWNksMsi4YHo8
+         LgokkNyyjp/x0Tb1tdelUaqK/4JMg2OQyPiiM0Aw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>, linux-btrfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 22/28] btrfs: fix removal of raid[56|1c34} incompat flags after removing block group
-Date:   Thu, 26 Mar 2020 19:23:51 -0400
-Message-Id: <20200326232357.7516-22-sashal@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, greybus-dev@lists.linaro.org,
+        devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 5.5 12/28] staging: greybus: loopback_test: fix potential path truncation
+Date:   Thu, 26 Mar 2020 19:23:41 -0400
+Message-Id: <20200326232357.7516-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200326232357.7516-1-sashal@kernel.org>
 References: <20200326232357.7516-1-sashal@kernel.org>
@@ -58,43 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit d8e6fd5c7991033037842b32c9774370a038e902 ]
+[ Upstream commit f16023834863932f95dfad13fac3fc47f77d2f29 ]
 
-We are incorrectly dropping the raid56 and raid1c34 incompat flags when
-there are still raid56 and raid1c34 block groups, not when we do not any
-of those anymore. The logic just got unintentionally broken after adding
-the support for the raid1c34 modes.
+Newer GCC warns about a possible truncation of a generated sysfs path
+name as we're concatenating a directory path with a file name and
+placing the result in a buffer that is half the size of the maximum
+length of the directory path (which is user controlled).
 
-Fix this by clear the flags only if we do not have block groups with the
-respective profiles.
+loopback_test.c: In function 'open_poll_files':
+loopback_test.c:651:31: warning: '%s' directive output may be truncated writing up to 511 bytes into a region of size 255 [-Wformat-truncation=]
+  651 |   snprintf(buf, sizeof(buf), "%s%s", dev->sysfs_entry, "iteration_count");
+      |                               ^~
+loopback_test.c:651:3: note: 'snprintf' output between 16 and 527 bytes into a destination of size 255
+  651 |   snprintf(buf, sizeof(buf), "%s%s", dev->sysfs_entry, "iteration_count");
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: 9c907446dce3 ("btrfs: drop incompat bit for raid1c34 after last block group is gone")
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fix this by making sure the buffer is large enough the concatenated
+strings.
+
+Fixes: 6b0658f68786 ("greybus: tools: Add tools directory to greybus repo and add loopback")
+Fixes: 9250c0ee2626 ("greybus: Loopback_test: use poll instead of inotify")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20200312110151.22028-3-johan@kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/block-group.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/staging/greybus/tools/loopback_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 6934a5b8708fe..acf0b7d879bc0 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -849,9 +849,9 @@ static void clear_incompat_bg_bits(struct btrfs_fs_info *fs_info, u64 flags)
- 				found_raid1c34 = true;
- 			up_read(&sinfo->groups_sem);
- 		}
--		if (found_raid56)
-+		if (!found_raid56)
- 			btrfs_clear_fs_incompat(fs_info, RAID56);
--		if (found_raid1c34)
-+		if (!found_raid1c34)
- 			btrfs_clear_fs_incompat(fs_info, RAID1C34);
- 	}
- }
+diff --git a/drivers/staging/greybus/tools/loopback_test.c b/drivers/staging/greybus/tools/loopback_test.c
+index ba6f905f26fad..5ce7d6fa086cc 100644
+--- a/drivers/staging/greybus/tools/loopback_test.c
++++ b/drivers/staging/greybus/tools/loopback_test.c
+@@ -637,7 +637,7 @@ int find_loopback_devices(struct loopback_test *t)
+ static int open_poll_files(struct loopback_test *t)
+ {
+ 	struct loopback_device *dev;
+-	char buf[MAX_STR_LEN];
++	char buf[MAX_SYSFS_PATH + MAX_STR_LEN];
+ 	char dummy;
+ 	int fds_idx = 0;
+ 	int i;
 -- 
 2.20.1
 
