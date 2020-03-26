@@ -6,58 +6,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBCCC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B71FC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA8120719
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C1A520719
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 06:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="GtxD/Ymy"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="QtYjUzf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgCZGLN (ORCPT
+        id S1726354AbgCZGMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 02:11:13 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39286 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbgCZGLM (ORCPT
+        Thu, 26 Mar 2020 02:12:24 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:40286 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbgCZGMX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:11:12 -0400
-Received: by mail-wm1-f67.google.com with SMTP id a9so5656499wmj.4
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 23:11:10 -0700 (PDT)
+        Thu, 26 Mar 2020 02:12:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id u10so6275812wro.7
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Mar 2020 23:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=brainfault-org.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wVoY4lXNG7Gme6In75qZRg7QM7A7s34V74dfLUTDGcs=;
-        b=GtxD/Ymy4a3u/qavJ6N3vSmF7WFooVCXwwer/gGsgIPEbvwmYrmqd0jJOeFyK52yIp
-         RYQQ9dWaTIwuPTjfLV5Aa576UprjHLL0LCIF11YkWNScM9z+iMHBYJkKJqBM1xWVoaka
-         Z/t8ltbj3yaMwq6HuMCBhzhpEMcccMnSneBQe0EnsRUPOW556BNfnl0HKyU/I8RP/kwr
-         +/1ONxRdmVeD9Kq8veipry4nQ7tVTGcZdndYVOmXtprTTjQnruexgiFBFI3KSOJ4laCa
-         TTD0ceety+MZBlbTIRbyFEQ/+RkliIqQyGJ2h+LrK03xlt55jWZySMS9CbQevndt12w0
-         PiPA==
+        bh=6iVJEBE2l6FzbfPyR2ep6scPrGoajxaZ4h+lpNzkdaU=;
+        b=QtYjUzf2P1l3aZ5ViM0AXCBNEOmeCg7YkcK9AKPKQkAxtoYvAEzhuiIGxUC93SLGJB
+         SWZqn9Ip8CnObGCYhZoyKQ6goFeZwS7ZgT7qoZOiKXCWz+KNIXTIvJ8f3OcziFoDm/lU
+         vJGeYXQgq/Ps18Q/m+RuVGx5YNIfnC/f4RM7oC878jRwQB1vsHXtwP9leiPXy0rLwpff
+         15FG4NQCoU9Ro8TgJW5sDX099+gN/CyeFtLaDZgFUQ8309kCFYwo2zptEO5qkEB85zP8
+         X37hqA59dosccmGC/Hr+EXMwCl1Y0dgSPT5K4y8vQbZyxjhxyU+draLsHUjksR7BRXnW
+         7V3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wVoY4lXNG7Gme6In75qZRg7QM7A7s34V74dfLUTDGcs=;
-        b=tENNAWVG/neGPxbCVgK3Dpole9YqIGL27gBbB4AYk+p1nRldOUPm15qMx7LOKdQyWW
-         GP9uwoscWaPcDCUQR43EKACIJi+OahtfP1zDjljYUe5pRW0lANhjsQK5h8oGBuK57qA/
-         TzOkBgSZo/8p1c4ggx8CzrS27yGomA9Bzj8cMPsBAPmao34ieaixHopnDsa0MXEQT3Sb
-         62XZW6zMYXW7+ri0k2x8lWB/11qM91cnI53DWpGojE1etrCub+yEvhh9nKd/zSxqaQsm
-         lK3yczG6QIWnI4kHmaHuD/Uuyl49x7TRnxz6gvKN8plbkvGf0rmrgmnNP7KdX6RPTjlc
-         T9ag==
-X-Gm-Message-State: ANhLgQ3QuZsvli/oqysSPpg9R1XeqvJtpLrGpZpsKwl6A+bkEPbiKLTr
-        pyPRTzioYJFlaflBnr3SkcEIWodRHEXV07T6/b9n/A==
-X-Google-Smtp-Source: ADFU+vsqhAlYdX+RsBSOloOfGm9U+XspxBQnGbxpbbZtXLQIswfFSd9oqt4deDJoTKHdqXuonoUnouk920iaT6bCSFA=
-X-Received: by 2002:a1c:6385:: with SMTP id x127mr1306256wmb.141.1585203069267;
- Wed, 25 Mar 2020 23:11:09 -0700 (PDT)
+        bh=6iVJEBE2l6FzbfPyR2ep6scPrGoajxaZ4h+lpNzkdaU=;
+        b=LLU1k+9QGFd2uHPbntDCuU35pBOi4b3Y9pQ3RrWiQNHJTu/cUE6y/mfU+fgSIrt64z
+         zadK0wgf5wXaHyJxUe7AgUp+OMiNl3YD09d33IyD/hm2TZtzZrUR3i3TMJtAAPtL7u8o
+         343DjWzz+KJiHNm+nEZ/RaychbuAAkWws6LPDoga/B9yaTptsl2i0GbiI8kGgoAvjopu
+         b4OP2zGTVse9V7O9GEc3bDN7COnUPAivuXojmDI79R60k67C2oDmMUToja2zIl5s6pwg
+         g4TdgQQi0kUzmz7WLbTGObOGVVbnTjxVh1oWSPTcpckja3IAj3U2nfc6iloPkJ9M+iRA
+         +CPg==
+X-Gm-Message-State: ANhLgQ0c8xVFdoog7CwLjryxR122HsFFzje1dAI9IMuC1CthYHVeodP+
+        ycM7RwtHXhwveBUvvH9qB7Att3tsMnMHaRHwprTVXOwgZ2w=
+X-Google-Smtp-Source: ADFU+vsGBcgrtymYA34TGX39gbGyDbIzJbSU5IUH9Cuy+Iq3wu9SECnH/1EMq8qEeGQG6GaxjYtwW03efdZ5dyifAf8=
+X-Received: by 2002:adf:f309:: with SMTP id i9mr7987326wro.0.1585203140990;
+ Wed, 25 Mar 2020 23:12:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200322110028.18279-1-alex@ghiti.fr> <20200322110028.18279-2-alex@ghiti.fr>
-In-Reply-To: <20200322110028.18279-2-alex@ghiti.fr>
+References: <20200322110028.18279-1-alex@ghiti.fr> <20200322110028.18279-3-alex@ghiti.fr>
+In-Reply-To: <20200322110028.18279-3-alex@ghiti.fr>
 From:   Anup Patel <anup@brainfault.org>
-Date:   Thu, 26 Mar 2020 11:40:56 +0530
-Message-ID: <CAAhSdy2OJp244wpgjxiY1ViYCnsMBmT3XA79X+D21fVTWZRhPA@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/7] riscv: Get rid of compile time logic with MAX_EARLY_MAPPING_SIZE
+Date:   Thu, 26 Mar 2020 11:42:07 +0530
+Message-ID: <CAAhSdy2er5y4xTBFFsR3Sx2Jffn=5Pn3KHXopwdOTCC5UJRmDA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/7] riscv: Allow to dynamically define VA_BITS
 To:     Alexandre Ghiti <alex@ghiti.fr>
 Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -70,55 +70,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Mar 22, 2020 at 4:31 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
+On Sun, Mar 22, 2020 at 4:32 PM Alexandre Ghiti <alex@ghiti.fr> wrote:
 >
-> There is no need to compare at compile time MAX_EARLY_MAPPING_SIZE value
-> with PGDIR_SIZE since MAX_EARLY_MAPPING_SIZE is set to 128MB which is less
-> than PGDIR_SIZE that is equal to 1GB: that allows to simplify early_pmd
-> definition.
+> With 4-level page table folding at runtime, we don't know at compile time
+> the size of the virtual address space so we must set VA_BITS dynamically
+> so that sparsemem reserves the right amount of memory for struct pages.
 >
 > Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 > ---
->  arch/riscv/mm/init.c | 16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
+>  arch/riscv/Kconfig                 | 10 ----------
+>  arch/riscv/include/asm/pgtable.h   | 10 +++++++++-
+>  arch/riscv/include/asm/sparsemem.h |  2 +-
+>  3 files changed, 10 insertions(+), 12 deletions(-)
 >
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 238bd0033c3f..18bbb426848e 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -247,13 +247,7 @@ static void __init create_pte_mapping(pte_t *ptep,
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index f5f3d474504d..8e4b1cbcf2c2 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -99,16 +99,6 @@ config ZONE_DMA32
+>         bool
+>         default y if 64BIT
 >
->  pmd_t trampoline_pmd[PTRS_PER_PMD] __page_aligned_bss;
->  pmd_t fixmap_pmd[PTRS_PER_PMD] __page_aligned_bss;
+> -config VA_BITS
+> -       int
+> -       default 32 if 32BIT
+> -       default 39 if 64BIT
 > -
-> -#if MAX_EARLY_MAPPING_SIZE < PGDIR_SIZE
-> -#define NUM_EARLY_PMDS         1UL
-> -#else
-> -#define NUM_EARLY_PMDS         (1UL + MAX_EARLY_MAPPING_SIZE / PGDIR_SIZE)
-> -#endif
-> -pmd_t early_pmd[PTRS_PER_PMD * NUM_EARLY_PMDS] __initdata __aligned(PAGE_SIZE);
-> +pmd_t early_pmd[PTRS_PER_PMD] __initdata __aligned(PAGE_SIZE);
->
->  static pmd_t *__init get_pmd_virt(phys_addr_t pa)
->  {
-> @@ -267,14 +261,12 @@ static pmd_t *__init get_pmd_virt(phys_addr_t pa)
->
->  static phys_addr_t __init alloc_pmd(uintptr_t va)
->  {
-> -       uintptr_t pmd_num;
+> -config PA_BITS
+> -       int
+> -       default 34 if 32BIT
+> -       default 56 if 64BIT
 > -
->         if (mmu_enabled)
->                 return memblock_phys_alloc(PAGE_SIZE, PAGE_SIZE);
+>  config PAGE_OFFSET
+>         hex
+>         default 0xC0000000 if 32BIT && MAXPHYSMEM_2GB
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 185ffe3723ec..dce401eed1d3 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -26,6 +26,14 @@
+>  #endif /* CONFIG_64BIT */
 >
-> -       pmd_num = (va - PAGE_OFFSET) >> PGDIR_SHIFT;
-> -       BUG_ON(pmd_num >= NUM_EARLY_PMDS);
-> -       return (uintptr_t)&early_pmd[pmd_num * PTRS_PER_PMD];
-> +       BUG_ON((va - PAGE_OFFSET) >> PGDIR_SHIFT);
+>  #ifdef CONFIG_MMU
+> +#ifdef CONFIG_64BIT
+> +#define VA_BITS                39
+> +#define PA_BITS                56
+> +#else
+> +#define VA_BITS                32
+> +#define PA_BITS                34
+> +#endif
 > +
-> +       return (uintptr_t)early_pmd;
->  }
+>  /* Number of entries in the page global directory */
+>  #define PTRS_PER_PGD    (PAGE_SIZE / sizeof(pgd_t))
+>  /* Number of entries in the page table */
+> @@ -108,7 +116,7 @@ extern pgd_t swapper_pg_dir[];
+>   * position vmemmap directly below the VMALLOC region.
+>   */
+>  #define VMEMMAP_SHIFT \
+> -       (CONFIG_VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+> +       (VA_BITS - PAGE_SHIFT - 1 + STRUCT_PAGE_MAX_SHIFT)
+>  #define VMEMMAP_SIZE   BIT(VMEMMAP_SHIFT)
+>  #define VMEMMAP_END    (VMALLOC_START - 1)
+>  #define VMEMMAP_START  (VMALLOC_START - VMEMMAP_SIZE)
+> diff --git a/arch/riscv/include/asm/sparsemem.h b/arch/riscv/include/asm/sparsemem.h
+> index 45a7018a8118..f08d72155bc8 100644
+> --- a/arch/riscv/include/asm/sparsemem.h
+> +++ b/arch/riscv/include/asm/sparsemem.h
+> @@ -4,7 +4,7 @@
+>  #define _ASM_RISCV_SPARSEMEM_H
 >
->  static void __init create_pmd_mapping(pmd_t *pmdp,
+>  #ifdef CONFIG_SPARSEMEM
+> -#define MAX_PHYSMEM_BITS       CONFIG_PA_BITS
+> +#define MAX_PHYSMEM_BITS       PA_BITS
+>  #define SECTION_SIZE_BITS      27
+>  #endif /* CONFIG_SPARSEMEM */
+>
 > --
 > 2.20.1
 >
