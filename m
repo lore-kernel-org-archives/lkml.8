@@ -2,100 +2,152 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D258FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACDDDC43331
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A54C2206F8
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FFF206F8
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 15:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbgCZPJ2 (ORCPT
+        id S1728269AbgCZPJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 11:09:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:17880 "EHLO mga11.intel.com"
+        Thu, 26 Mar 2020 11:09:36 -0400
+Received: from 8bytes.org ([81.169.241.247]:55914 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728269AbgCZPJ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 11:09:27 -0400
-IronPort-SDR: 7x7LOdjTPs40A6ZKdaqVSeQFEbmalSDR3389wllgNs2T+t365kccNKU0rrNgXVAgF6rePud2GE
- KN6x0HIZxMoA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2020 08:09:26 -0700
-IronPort-SDR: 0olWpR3BrHOQAdLf02zYkwm6exIzj8RlT59MYX5rIQSqQ8WWjOXXO4S2Rk0kt1UhRQJefA2hw2
- ZTFvsFleDGzg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,308,1580803200"; 
-   d="scan'208";a="394014406"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.249.169.99]) ([10.249.169.99])
-  by orsmga004.jf.intel.com with ESMTP; 26 Mar 2020 08:09:22 -0700
-Subject: Re: [PATCH v6 8/8] kvm: vmx: virtualize split lock detection
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>
-References: <20200324151859.31068-1-xiaoyao.li@intel.com>
- <20200324151859.31068-9-xiaoyao.li@intel.com>
- <87eethz2p6.fsf@nanos.tec.linutronix.de>
- <88b01989-25cd-90af-bfe8-c236bd5d1dbf@intel.com>
- <87d08zxtgl.fsf@nanos.tec.linutronix.de>
- <1d98bddd-a6a4-2fcc-476b-c9b19f65c6b6@intel.com>
- <87a743xj0n.fsf@nanos.tec.linutronix.de>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <e58484ac-e355-299d-131c-6e8c12b0b1d0@intel.com>
-Date:   Thu, 26 Mar 2020 23:09:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
-MIME-Version: 1.0
-In-Reply-To: <87a743xj0n.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        id S1728090AbgCZPIw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 26 Mar 2020 11:08:52 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id E6979736; Thu, 26 Mar 2020 16:08:46 +0100 (CET)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, guohanjun@huawei.com,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH v4 06/16] iommu: Move iommu_fwspec to struct dev_iommu
+Date:   Thu, 26 Mar 2020 16:08:31 +0100
+Message-Id: <20200326150841.10083-7-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200326150841.10083-1-joro@8bytes.org>
+References: <20200326150841.10083-1-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/26/2020 10:55 PM, Thomas Gleixner wrote:
-> Xiaoyao Li <xiaoyao.li@intel.com> writes:
->> On 3/26/2020 7:10 PM, Thomas Gleixner wrote:
->> If the host has it disabled, !split_lock_detect_on() is true, it skips
->> following check due to ||
->>
->> if (!boot_cpu_has(X86_FEATURE_SPLIT_LOCK)) {
->> 	inject #AC back to guest
-and 	return 1;
+From: Joerg Roedel <jroedel@suse.de>
 
-> 
-> That'd be a regular #AC, right?
+Move the iommu_fwspec pointer in struct device into struct dev_iommu.
+This is a step in the effort to reduce the iommu related pointers in
+struct device to one.
 
-Yes.
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: Will Deacon <will@kernel.org> # arm-smmu
+Reviewed-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ drivers/iommu/iommu.c  |  3 +++
+ include/linux/device.h |  3 ---
+ include/linux/iommu.h  | 12 ++++++++----
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
->> } else {
->> 	if (guest_alignment_check_enabled() || guest_sld_on())
->> 		inject #AC back to guest
-and 		return 1;
-
-> Here is clearly an else path missing.
-
-the else path is fall through.
-
-i.e. calling handle_user_split_lock().
-
-If cannot handle, it falls through to report #AC to user space (QEMU)
-
->> }
-> 
-
-If there is no problem with the above. So what's the problem of the 
-original?
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index beac2ef063dd..826a67ba247f 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -2405,6 +2405,9 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+ 	if (fwspec)
+ 		return ops == fwspec->ops ? 0 : -EINVAL;
+ 
++	if (!dev_iommu_get(dev))
++		return -ENOMEM;
++
+ 	fwspec = kzalloc(sizeof(*fwspec), GFP_KERNEL);
+ 	if (!fwspec)
+ 		return -ENOMEM;
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 405a8f11bec1..fc1427ab7e85 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -42,7 +42,6 @@ struct device_node;
+ struct fwnode_handle;
+ struct iommu_ops;
+ struct iommu_group;
+-struct iommu_fwspec;
+ struct dev_pin_info;
+ struct dev_iommu;
+ 
+@@ -513,7 +512,6 @@ struct dev_links_info {
+  * 		gone away. This should be set by the allocator of the
+  * 		device (i.e. the bus driver that discovered the device).
+  * @iommu_group: IOMMU group the device belongs to.
+- * @iommu_fwspec: IOMMU-specific properties supplied by firmware.
+  * @iommu:	Per device generic IOMMU runtime data
+  *
+  * @offline_disabled: If set, the device is permanently online.
+@@ -613,7 +611,6 @@ struct device {
+ 
+ 	void	(*release)(struct device *dev);
+ 	struct iommu_group	*iommu_group;
+-	struct iommu_fwspec	*iommu_fwspec;
+ 	struct dev_iommu	*iommu;
+ 
+ 	bool			offline_disabled:1;
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 1c9fa5c1174b..f5edc21a644d 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -368,14 +368,15 @@ struct iommu_fault_param {
+  * struct dev_iommu - Collection of per-device IOMMU data
+  *
+  * @fault_param: IOMMU detected device fault reporting data
++ * @fwspec:	 IOMMU fwspec data
+  *
+  * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
+  *	struct iommu_group	*iommu_group;
+- *	struct iommu_fwspec	*iommu_fwspec;
+  */
+ struct dev_iommu {
+ 	struct mutex lock;
+-	struct iommu_fault_param *fault_param;
++	struct iommu_fault_param	*fault_param;
++	struct iommu_fwspec		*fwspec;
+ };
+ 
+ int  iommu_device_register(struct iommu_device *iommu);
+@@ -614,13 +615,16 @@ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+ 
+ static inline struct iommu_fwspec *dev_iommu_fwspec_get(struct device *dev)
+ {
+-	return dev->iommu_fwspec;
++	if (dev->iommu)
++		return dev->iommu->fwspec;
++	else
++		return NULL;
+ }
+ 
+ static inline void dev_iommu_fwspec_set(struct device *dev,
+ 					struct iommu_fwspec *fwspec)
+ {
+-	dev->iommu_fwspec = fwspec;
++	dev->iommu->fwspec = fwspec;
+ }
+ 
+ int iommu_probe_device(struct device *dev);
+-- 
+2.17.1
 
