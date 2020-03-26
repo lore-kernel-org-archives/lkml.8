@@ -2,154 +2,123 @@ Return-Path: <SRS0=aGSP=5L=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70CBC43331
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D46C2D0E5
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AC7320775
-	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCEC820722
+	for <linux-kernel@archiver.kernel.org>; Thu, 26 Mar 2020 14:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ovEuv/Sk"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SqSLOyHX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728120AbgCZO5d (ORCPT
+        id S1727801AbgCZO7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 26 Mar 2020 10:57:33 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42120 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727831AbgCZO5c (ORCPT
+        Thu, 26 Mar 2020 10:59:02 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:4922 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727821AbgCZO7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 26 Mar 2020 10:57:32 -0400
-Received: by mail-qt1-f196.google.com with SMTP id t9so5478868qto.9
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Mar 2020 07:57:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Ae/cSBEsHntpDVcOFjQz46ynMe+UadTdLe4WT8p1RpU=;
-        b=ovEuv/Sk3SHlUrsbYzcjLJ8FJjziOHL6wrJf4miHPFqHIFF6wEre4H/VvYqiUrbl6Y
-         EYoU/yPN+QPgpXfxQXy5TDCE5MrcZSi0YvSyDU3oNhHCfDhmRwyJZdhzt0c6/9axFG8b
-         6Gkeo06YdfTTGo4FM/gHL8Xpoghqp5L3hLFPjeVIGLlUJVvf2TnyEkIweGD8WPOlPYfj
-         St8nb9gDjc2fbljl6WgnEumcDrahkX+1yRYJPX2PXYOJtyJE1oeqUG+e09FGPY/Dr76x
-         5s61CepEz8PivIA6Pa6g/zJmQwiOA63otedD2m+Sdb6J//FBXLM4lHRair4Xv7jrpR0D
-         ARKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Ae/cSBEsHntpDVcOFjQz46ynMe+UadTdLe4WT8p1RpU=;
-        b=W6MXdONLp2ianE3aveQ6+p8HDcrdna6FjV0g56Bg20LLCFSDDP8IdzizgdxEhPEyk7
-         eT//wukFZWJ7zbuClslm1JLQ2V8UT370y4J4khRtobSnBJPkrobtDuZRGDb8yJZ8uJnP
-         8LCSn97YXAwAYM8fgU3M+LSR5zMSgpHbGiNaXmXMPCBnmWZC1byvlX9SOMolq5QQooGx
-         saKRnYfJFh5E5ueCuUN3Ag1I/0d5IreLXx9a7z2j1RWwqMw2vlT+qMIUDb9D3/uD+PtN
-         tk01j+L7dHFXqYiqsko+qd0so3Uu4Y6k+PjIit7DYRvZaRvptTYFdXyxB0RPJE5ZUKNH
-         20PA==
-X-Gm-Message-State: ANhLgQ2TRrLPtWSIB23QUldi1GWzORY0WRpq7W0svNImH5w+fzAhjFDz
-        LFMeFcja67x4fR8/dHtTfzA=
-X-Google-Smtp-Source: ADFU+vtO86qMHCeT5oLRkvadbqZbTiUSR4B2NCmdCE9lY5uUnyAI4yzp89k7zaK7n5NJdIgsHt+a6A==
-X-Received: by 2002:aed:3981:: with SMTP id m1mr8776154qte.35.1585234650090;
-        Thu, 26 Mar 2020 07:57:30 -0700 (PDT)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id f93sm1725423qtd.26.2020.03.26.07.57.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 07:57:29 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id E650140061; Thu, 26 Mar 2020 11:57:26 -0300 (-03)
-Date:   Thu, 26 Mar 2020 11:57:26 -0300
-To:     "Hunter, Adrian" <adrian.hunter@intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mingbo Zhang <whensungoes@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
- instructions
-Message-ID: <20200326145726.GC6411@kernel.org>
-References: <20200303045033.6137-1-whensungoes@gmail.com>
- <20200326103153.de709903f26fee0918414bd2@kernel.org>
- <bac567dd-9810-4919-365e-b3dfb54a6c4b@intel.com>
- <20200326135547.GA20397@redhat.com>
- <363DA0ED52042842948283D2FC38E4649C72EFF3@IRSMSX106.ger.corp.intel.com>
+        Thu, 26 Mar 2020 10:59:02 -0400
+X-UUID: 3b0233988805467bb0e81fa145363b3d-20200326
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=Wz22YepjvknPTT9ZKt5FiQJcqf5sA/7i5zIs+ibGrZ4=;
+        b=SqSLOyHXrBpAitkBidGCJ+3b5YisFxhwgjBJdS8wNh0FkMflt3HKNZm8WQoYzI4/2sWCaj/ykWw3b9s8L2bqzC5aJ6HtbONsOdinWnxIOYeFN3FZWHg7c2Axf5XXzD/3bQPei6i8ua9kWNkr/t5bGVWIDnvEwX5Q8zfBa1hmE6Q=;
+X-UUID: 3b0233988805467bb0e81fa145363b3d-20200326
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1827274245; Thu, 26 Mar 2020 22:57:25 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 26 Mar 2020 22:57:23 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 26 Mar 2020 22:57:20 +0800
+Message-ID: <1585234641.12089.7.camel@mtksdaap41>
+Subject: Re: [RESEND PATCH v6 00/17] add drm support for MT8183
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Yongqiang Niu <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Thu, 26 Mar 2020 22:57:21 +0800
+In-Reply-To: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+References: <1578021148-32413-1-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <363DA0ED52042842948283D2FC38E4649C72EFF3@IRSMSX106.ger.corp.intel.com>
-X-Url:  http://acmel.wordpress.com
+X-TM-SNTS-SMTP: 0F6801C5DB930AB9FF671AA0D74D3E125BF3CAC024BE411DDBC607B4DE40F1C22000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 26, 2020 at 02:19:07PM +0000, Hunter, Adrian escreveu:
-> > -----Original Message-----
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Sent: Thursday, March 26, 2020 3:56 PM
-> > To: Hunter, Adrian <adrian.hunter@intel.com>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>; Mingbo Zhang
-> > <whensungoes@gmail.com>; Arnaldo Carvalho de Melo
-> > <acme@kernel.org>; x86@kernel.org; Thomas Gleixner
-> > <tglx@linutronix.de>; Ingo Molnar <mingo@redhat.com>; Borislav Petkov
-> > <bp@alien8.de>; H. Peter Anvin <hpa@zytor.com>; Andi Kleen
-> > <ak@linux.intel.com>; Josh Poimboeuf <jpoimboe@redhat.com>; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET
-> > instructions
-> > 
-> > Em Thu, Mar 26, 2020 at 07:09:45AM +0200, Adrian Hunter escreveu:
-> > > On 26/03/20 3:31 am, Masami Hiramatsu wrote:
-> > > > Hi,
-> > > >
-> > > > On Mon,  2 Mar 2020 23:50:30 -0500
-> > > > Mingbo Zhang <whensungoes@gmail.com> wrote:
-> > > >
-> > > >> Intel CET instructions are not described in the Intel SDM. When
-> > > >> trying to get the instruction length, the following instructions
-> > > >> get wrong (missing ModR/M byte).
-> > > >>
-> > > >> RDSSPD r32
-> > > >> RSDDPQ r64
-> > > >> ENDBR32
-> > > >> ENDBR64
-> > > >> WRSSD r/m32, r32
-> > > >> WRSSQ r/m64, r64
-> > > >>
-> > > >> RDSSPD/Q and ENDBR32/64 use the same opcode (f3 0f 1e) slot, which
-> > > >> is described in SDM as Reserved-NOP with no encoding characters,
-> > > >> and got an empty slot in the opcode map. WRSSD/Q (0f 38 f6) also got
-> > an empty slot.
-> > > >>
-> > > >
-> > > > This looks good to me. BTW, wouldn't we need to add decode test cases
-> > to perf?
-> > > >
-> > > > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > >
-> > > > Thank you,
-> > > >
-> > >
-> > > We have correct patches that you ack'ed for CET here:
-> > >
-> > >
-> > > https://lore.kernel.org/lkml/20200204171425.28073-1-yu-cheng.yu@intel.
-> > > com/
-> > >
-> > > But they have not yet been applied.
-> > >
-> > > Sorry for the confusion.
-> > 
-> > I'll collect them, thanks for pointing this out.
-> 
-> The patches are in tip courtesy of Borislav Petkov thank you!
+SGksIFlvbmdxaWFuZzoNCg0KSW4gWzFdLCBNYXR0aGlhcyBoYXMgYXBwbGllZCBiZWxvdyBzZXJp
+ZXMgdG8gZml4IG1tc3lzIGRyaXZlciBwcm9iZQ0KcHJvYmxlbS4gUGxlYXNlIGJhc2Ugb24gdGhh
+dCBzZXJpZXMgdG8gcmVzZW5kIHlvdXIgcGF0Y2hlcy4NCg0Kc29jIC8gZHJtOiBtZWRpYXRlazog
+Rml4IG1lZGlhdGVrLWRybSBkZXZpY2UgcHJvYmluZwlzb2MgLyBkcm06DQptZWRpYXRlazogTW92
+ZSByb3V0aW5nIGNvbnRyb2wgdG8gbW1zeXMgZGV2aWNlCWNsayAvIHNvYzogbWVkaWF0ZWs6IE1v
+dmUNCm10ODE3MyBNTVNZUyB0byBwbGF0Zm9ybSBkcml2ZXIJZHQtYmluZGluZ3M6IG1lZGlhdGVr
+OiBVcGRhdGUgbW1zeXMNCmJpbmRpbmcgdG8gcmVmbGVjdCBpdCBpcyBhIHN5c3RlbSBjb250cm9s
+bGVyCWRybS9tZWRpYXRlazogT21pdCB3YXJuaW5nDQpvbiBwcm9iZSBkZWZlcnMNCg0KWzFdDQpo
+dHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9tYXR0aGlhcy5i
+Z2cvbGludXguZ2l0L2xvZy8/aD1mb3ItbmV4dA0KDQpSZWdhcmRzLA0KQ0sNCg0KT24gRnJpLCAy
+MDIwLTAxLTAzIGF0IDExOjEyICswODAwLCBZb25ncWlhbmcgTml1IHdyb3RlOg0KPiBUaGlzIHNl
+cmllcyBhcmUgYmFzZWQgb24gNS41LXJjMSBhbmQgcHJvdmlkIDE3IHBhdGNoDQo+IHRvIHN1cHBv
+cnQgbWVkaWF0ZWsgU09DIE1UODE4Mw0KPiANCj4gQ2hhbmdlIHNpbmNlIHY1DQo+IC0gZml4IHJl
+dmlld2VkIGlzc3VlIGluIHY1DQo+IGJhc2UgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+cm9qZWN0L2xpbnV4LW1lZGlhdGVrL2xpc3QvP3Nlcmllcz0yMTMyMTkNCj4gDQo+IENoYW5nZSBz
+aW5jZSB2NA0KPiAtIGZpeCByZXZpZXdlZCBpc3N1ZSBpbiB2NA0KPiANCj4gQ2hhbmdlIHNpbmNl
+IHYzDQo+IC0gZml4IHJldmlld2VkIGlzc3VlIGluIHYzDQo+IC0gZml4IHR5cGUgZXJyb3IgaW4g
+djMNCj4gLSBmaXggY29uZmxpY3Qgd2l0aCBpb21tdSBwYXRjaA0KPiANCj4gQ2hhbmdlIHNpbmNl
+IHYyDQo+IC0gZml4IHJldmlld2VkIGlzc3VlIGluIHYyDQo+IC0gYWRkIG11dGV4IG5vZGUgaW50
+byBkdHMgZmlsZQ0KPiANCj4gQ2hhbmdlcyBzaW5jZSB2MToNCj4gLSBmaXggcmV2aWV3ZWQgaXNz
+dWUgaW4gdjENCj4gLSBhZGQgZHRzIGZvciBtdDgxODMgZGlzcGxheSBub2Rlcw0KPiAtIGFkanVz
+dCBkaXNwbGF5IGNsb2NrIGNvbnRyb2wgZmxvdyBpbiBwYXRjaCAyMg0KPiAtIGFkZCB2bWFwIHN1
+cHBvcnQgZm9yIG1lZGlhdGVrIGRybSBpbiBwYXRjaCAyMw0KPiAtIGZpeCBwYWdlIG9mZnNldCBp
+c3N1ZSBmb3IgbW1hcCBmdW5jdGlvbiBpbiBwYXRjaCAyNA0KPiAtIGVuYWJsZSBhbGxvd19mYl9t
+b2RpZmllcnMgZm9yIG1lZGlhdGVrIGRybSBpbiBwYXRjaCAyNQ0KPiANCj4gWW9uZ3FpYW5nIE5p
+dSAoMTcpOg0KPiAgIGR0LWJpbmRpbmdzOiBtZWRpYXRlazogYWRkIHJkbWFfZmlmb19zaXplIGRl
+c2NyaXB0aW9uIGZvciBtdDgxODMNCj4gICAgIGRpc3BsYXkNCj4gICBhcm02NDogZHRzOiBhZGQg
+ZGlzcGxheSBub2RlcyBmb3IgbXQ4MTgzDQo+ICAgZHJtL21lZGlhdGVrOiBtb3ZlIGRzaS9kcGkg
+c2VsZWN0IGlucHV0IGludG8gbXRrX2RkcF9zZWxfaW4NCj4gICBkcm0vbWVkaWF0ZWs6IG1ha2Ug
+c291dCBzZWxlY3QgZnVuY3Rpb24gZm9ybWF0IHNhbWUgd2l0aCBzZWxlY3QgaW5wdXQNCj4gICBk
+cm0vbWVkaWF0ZWs6IGFkZCBtbXN5cyBwcml2YXRlIGRhdGEgZm9yIGRkcCBwYXRoIGNvbmZpZw0K
+PiAgIGRybS9tZWRpYXRlazogYWRkIHByaXZhdGUgZGF0YSBmb3IgcmRtYTEgdG8gZHBpMCBjb25u
+ZWN0aW9uDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgcHJpdmF0ZSBkYXRhIGZvciByZG1hMSB0byBk
+c2kwIGNvbm5lY3Rpb24NCj4gICBkcm0vbWVkaWF0ZWs6IG1vdmUgcmRtYSBzb3V0IGZyb20gbXRr
+X2RkcF9tb3V0X2VuIGludG8NCj4gICAgIG10a19kZHBfc291dF9zZWwNCj4gICBkcm0vbWVkaWF0
+ZWs6IGFkZCBjb25uZWN0aW9uIGZyb20gT1ZMMCB0byBPVkxfMkwwDQo+ICAgZHJtL21lZGlhdGVr
+OiBhZGQgY29ubmVjdGlvbiBmcm9tIFJETUEwIHRvIENPTE9SMA0KPiAgIGRybS9tZWRpYXRlazog
+YWRkIGNvbm5lY3Rpb24gZnJvbSBSRE1BMSB0byBEU0kwDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQg
+Y29ubmVjdGlvbiBmcm9tIE9WTF8yTDAgdG8gUkRNQTANCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBj
+b25uZWN0aW9uIGZyb20gT1ZMXzJMMSB0byBSRE1BMQ0KPiAgIGRybS9tZWRpYXRlazogYWRkIGNv
+bm5lY3Rpb24gZnJvbSBESVRIRVIwIHRvIERTSTANCj4gICBkcm0vbWVkaWF0ZWs6IGFkZCBjb25u
+ZWN0aW9uIGZyb20gUkRNQTAgdG8gRFNJMA0KPiAgIGRybS9tZWRpYXRlazogYWRkIGZpZm9fc2l6
+ZSBpbnRvIHJkbWEgcHJpdmF0ZSBkYXRhDQo+ICAgZHJtL21lZGlhdGVrOiBhZGQgc3VwcG9ydCBm
+b3IgbWVkaWF0ZWsgU09DIE1UODE4Mw0KPiANCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L21lZGlh
+dGVrL21lZGlhdGVrLGRpc3AudHh0ICAgIHwgIDEzICsNCj4gIGFyY2gvYXJtNjQvYm9vdC9kdHMv
+bWVkaWF0ZWsvbXQ4MTgzLmR0c2kgICAgICAgICAgIHwgIDk4ICsrKysrKysNCj4gIGRyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyAgICAgICAgICAgIHwgIDE4ICsrDQo+ICBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jICAgICAgICAgICB8ICAyNSAr
+LQ0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jICAgICAgICAgICAg
+fCAgIDQgKw0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgICAgICAg
+ICAgICAgfCAyODggKysrKysrKysrKysrKysrKy0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHAuaCAgICAgICAgICAgICB8ICAgNyArDQo+ICBkcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgICAgICB8ICA0OSArKysrDQo+ICBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaCAgICAgICAgICAgICB8ICAgMyArDQo+
+ICA5IGZpbGVzIGNoYW5nZWQsIDQzNSBpbnNlcnRpb25zKCspLCA3MCBkZWxldGlvbnMoLSkNCj4g
+DQoNCg==
 
-Ok, thanks Borislav,
-
-- Arnaldo
